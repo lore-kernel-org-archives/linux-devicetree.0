@@ -1,197 +1,149 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] MTD: Add device-tree support to fsmc_nand
-Date: Fri, 16 Mar 2012 10:19:31 +0100
-Message-ID: <1331889571-3372-1-git-send-email-sr@denx.de>
+From: Zhao Chenhui <chenhui.zhao@freescale.com>
+Subject: [PATCH v4 3/4] fsl_pmc: Add API to enable device as wakeup event source
+Date: Fri, 16 Mar 2012 17:27:44 +0800
+Message-ID: <1331890064-25321-1-git-send-email-chenhui.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, galak@kernel.crashing.org, leoli@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to configure the FSMC NAND driver (used amongst
-others on SPEAr platforms) via device-tree instead of platform_data.
+Add APIs for setting wakeup source and lossless Ethernet in low power modes.
+These APIs can be used by wake-on-packet feature.
 
-Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Dave Liu <daveliu@freescale.com>
+Signed-off-by: Li Yang <leoli@freescale.com>
+Signed-off-by: Jin Qing <b24347@freescale.com>
+Signed-off-by: Zhao Chenhui <chenhui.zhao@freescale.com>
 ---
- .../devicetree/bindings/mtd/fsmc-nand.txt          |   33 ++++++++++++
- drivers/mtd/nand/fsmc_nand.c                       |   57 +++++++++++++++++++-
- include/linux/mtd/fsmc.h                           |    4 +-
- 3 files changed, 91 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/fsmc-nand.txt
+ arch/powerpc/sysdev/fsl_pmc.c |   71 ++++++++++++++++++++++++++++++++++++++++-
+ arch/powerpc/sysdev/fsl_soc.h |    9 +++++
+ 2 files changed, 79 insertions(+), 1 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/fsmc-nand.txt b/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-new file mode 100644
-index 0000000..e2c663b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-@@ -0,0 +1,33 @@
-+* FSMC NAND
-+
-+Required properties:
-+- compatible : "st,spear600-fsmc-nand"
-+- reg : Address range of the mtd chip
-+- reg-names: Should contain the reg names "fsmc_regs" and "nand_data"
-+- st,ale-off : Chip specific offset to ALE
-+- st,cle-off : Chip specific offset to CLE
-+
-+Optional properties:
-+- bank-width : Width (in bytes) of the device.  If not present, the width
-+  defaults to 1 byte
-+- nand-skip-bbtscan: Indicates the the BBT scanning should be skipped
-+
-+Example:
-+
-+	fsmc: flash@d1800000 {
-+		compatible = "st,spear600-fsmc-nand";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0xd1800000 0x1000	/* FSMC Register */
-+		       0xd2000000 0x4000>;	/* NAND Base */
-+		reg-names = "fsmc_regs", "nand_data";
-+		st,ale-off = <0x20000>;
-+		st,cle-off = <0x10000>;
-+
-+		bank-width = <1>;
-+		nand-skip-bbtscan;
-+
-+		partition@0 {
-+			...
-+		};
-+	};
-diff --git a/drivers/mtd/nand/fsmc_nand.c b/drivers/mtd/nand/fsmc_nand.c
-index 0490182..1b8330e 100644
---- a/drivers/mtd/nand/fsmc_nand.c
-+++ b/drivers/mtd/nand/fsmc_nand.c
-@@ -31,6 +31,7 @@
- #include <linux/mtd/nand.h>
- #include <linux/mtd/nand_ecc.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- #include <linux/mtd/partitions.h>
- #include <linux/io.h>
- #include <linux/slab.h>
-@@ -854,6 +855,38 @@ static bool filter(struct dma_chan *chan, void *slave)
- 	return true;
- }
+diff --git a/arch/powerpc/sysdev/fsl_pmc.c b/arch/powerpc/sysdev/fsl_pmc.c
+index 2b7f62d..c0c41d6 100644
+--- a/arch/powerpc/sysdev/fsl_pmc.c
++++ b/arch/powerpc/sysdev/fsl_pmc.c
+@@ -33,6 +33,7 @@ struct pmc_regs {
+ 	__be32 powmgtcsr;
+ #define POWMGTCSR_SLP		0x00020000
+ #define POWMGTCSR_DPSLP		0x00100000
++#define POWMGTCSR_LOSSLESS	0x00400000
+ 	__be32 res3[2];
+ 	__be32 pmcdr;
+ };
+@@ -42,6 +43,74 @@ static unsigned int pmc_flag;
  
-+#ifdef CONFIG_OF
-+static int __devinit fsmc_nand_probe_config_dt(struct platform_device *pdev,
-+					       struct device_node *np)
-+{
-+	struct fsmc_nand_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	u32 val;
+ #define PMC_SLEEP	0x1
+ #define PMC_DEEP_SLEEP	0x2
++#define PMC_LOSSLESS	0x4
 +
-+	/* Set default NAND width to 8 bits */
-+	pdata->width = 8;
-+	if (!of_property_read_u32(np, "bank-width", &val)) {
-+		if (val == 2) {
-+			pdata->width = 16;
-+		} else if (val != 1) {
-+			dev_err(&pdev->dev, "invalid bank-width %u\n", val);
-+			return -EINVAL;
-+		}
++/**
++ * mpc85xx_pmc_set_wake - enable devices as wakeup event source
++ * @pdev: platform device affected
++ * @enable: True to enable event generation; false to disable
++ *
++ * This enables the device as a wakeup event source, or disables it.
++ *
++ * RETURN VALUE:
++ * 0 is returned on success
++ * -EINVAL is returned if device is not supposed to wake up the system
++ * Error code depending on the platform is returned if both the platform and
++ * the native mechanism fail to enable the generation of wake-up events
++ */
++int mpc85xx_pmc_set_wake(struct platform_device *pdev, bool enable)
++{
++	int ret = 0;
++	struct device_node *clk_np;
++	u32 *prop;
++	u32 pmcdr_mask;
++
++	if (!pmc_regs) {
++		pr_err("%s: PMC is unavailable\n", __func__);
++		return -ENODEV;
 +	}
-+	of_property_read_u32(np, "st,ale-off", &pdata->ale_off);
-+	of_property_read_u32(np, "st,cle-off", &pdata->cle_off);
-+	if (of_get_property(np, "nand-skip-bbtscan", NULL))
-+		pdata->options = NAND_SKIP_BBTSCAN;
 +
-+	return 0;
++	if (enable && !device_may_wakeup(&pdev->dev))
++		return -EINVAL;
++
++	clk_np = of_parse_phandle(pdev->dev.of_node, "fsl,pmc-handle", 0);
++	if (!clk_np)
++		return -EINVAL;
++
++	prop = (u32 *)of_get_property(clk_np, "fsl,pmcdr-mask", NULL);
++	if (!prop) {
++		ret = -EINVAL;
++		goto out;
++	}
++	pmcdr_mask = be32_to_cpup(prop);
++
++	if (enable)
++		/* clear to enable clock in low power mode */
++		clrbits32(&pmc_regs->pmcdr, pmcdr_mask);
++	else
++		setbits32(&pmc_regs->pmcdr, pmcdr_mask);
++
++out:
++	of_node_put(clk_np);
++	return ret;
 +}
-+#else
-+static int __devinit fsmc_nand_probe_config_dt(struct platform_device *pdev,
-+					       struct device_node *np)
++EXPORT_SYMBOL_GPL(mpc85xx_pmc_set_wake);
++
++/**
++ * mpc85xx_pmc_set_lossless_ethernet - enable lossless ethernet
++ * in (deep) sleep mode
++ * @enable: True to enable event generation; false to disable
++ */
++void mpc85xx_pmc_set_lossless_ethernet(int enable)
 +{
-+	return -ENOSYS;
++	if (pmc_flag & PMC_LOSSLESS) {
++		if (enable)
++			setbits32(&pmc_regs->powmgtcsr,	POWMGTCSR_LOSSLESS);
++		else
++			clrbits32(&pmc_regs->powmgtcsr, POWMGTCSR_LOSSLESS);
++	}
 +}
-+#endif
-+
- /*
-  * fsmc_nand_probe - Probe function
-  * @pdev:       platform device structure
-@@ -861,6 +894,8 @@ static bool filter(struct dma_chan *chan, void *slave)
- static int __init fsmc_nand_probe(struct platform_device *pdev)
++EXPORT_SYMBOL_GPL(mpc85xx_pmc_set_lossless_ethernet);
+ 
+ static int pmc_suspend_enter(suspend_state_t state)
  {
- 	struct fsmc_nand_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	struct device_node __maybe_unused *np = pdev->dev.of_node;
-+	struct mtd_part_parser_data ppdata = {};
- 	struct fsmc_nand_data *host;
- 	struct mtd_info *mtd;
- 	struct nand_chip *nand;
-@@ -870,6 +905,16 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
- 	u32 pid;
- 	int i;
+@@ -116,7 +185,7 @@ static int pmc_probe(struct platform_device *pdev)
+ 		pmc_flag |= PMC_DEEP_SLEEP;
  
-+	if (np) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		pdev->dev.platform_data = pdata;
-+		ret = fsmc_nand_probe_config_dt(pdev, np);
-+		if (ret) {
-+			dev_err(&pdev->dev, "no platform data\n");
-+			return -ENODEV;
-+		}
-+	}
-+
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "platform data is NULL\n");
- 		return -EINVAL;
-@@ -1113,7 +1158,8 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
- 	 * Check for partition info passed
- 	 */
- 	host->mtd.name = "nand";
--	ret = mtd_device_parse_register(&host->mtd, NULL, NULL,
-+	ppdata.of_node = np;
-+	ret = mtd_device_parse_register(&host->mtd, NULL, &ppdata,
- 					host->partitions, host->nr_partitions);
- 	if (ret)
- 		goto err_probe;
-@@ -1183,11 +1229,20 @@ static int fsmc_nand_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(fsmc_nand_pm_ops, fsmc_nand_suspend, fsmc_nand_resume);
- #endif
+ 	if (of_device_is_compatible(np, "fsl,p1022-pmc"))
+-		pmc_flag |= PMC_DEEP_SLEEP;
++		pmc_flag |= PMC_DEEP_SLEEP | PMC_LOSSLESS;
  
-+#ifdef CONFIG_OF
-+static const struct of_device_id fsmc_nand_id_table[] = {
-+	{ .compatible = "st,spear600-fsmc-nand" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, fsmc_nand_id_table);
+ 	suspend_set_ops(&pmc_suspend_ops);
+ 
+diff --git a/arch/powerpc/sysdev/fsl_soc.h b/arch/powerpc/sysdev/fsl_soc.h
+index 949377d..8976534 100644
+--- a/arch/powerpc/sysdev/fsl_soc.h
++++ b/arch/powerpc/sysdev/fsl_soc.h
+@@ -3,6 +3,7 @@
+ #ifdef __KERNEL__
+ 
+ #include <asm/mmu.h>
++#include <linux/platform_device.h>
+ 
+ struct spi_device;
+ 
+@@ -21,6 +22,14 @@ struct device_node;
+ 
+ extern void fsl_rstcr_restart(char *cmd);
+ 
++#ifdef CONFIG_FSL_PMC
++extern int mpc85xx_pmc_set_wake(struct platform_device *pdev, bool enable);
++extern void mpc85xx_pmc_set_lossless_ethernet(int enable);
++#else
++#define mpc85xx_pmc_set_wake(pdev, enable)		do { } while (0)
++#define mpc85xx_pmc_set_lossless_ethernet(enable)	do { } while (0)
 +#endif
 +
- static struct platform_driver fsmc_nand_driver = {
- 	.remove = fsmc_nand_remove,
- 	.driver = {
- 		.owner = THIS_MODULE,
- 		.name = "fsmc-nand",
-+		.of_match_table = of_match_ptr(fsmc_nand_id_table),
- #ifdef CONFIG_PM
- 		.pm = &fsmc_nand_pm_ops,
- #endif
-diff --git a/include/linux/mtd/fsmc.h b/include/linux/mtd/fsmc.h
-index 823359c..b200292 100644
---- a/include/linux/mtd/fsmc.h
-+++ b/include/linux/mtd/fsmc.h
-@@ -156,8 +156,8 @@ struct fsmc_nand_platform_data {
- 	unsigned int		bank;
+ #if defined(CONFIG_FB_FSL_DIU) || defined(CONFIG_FB_FSL_DIU_MODULE)
  
- 	/* CLE, ALE offsets */
--	unsigned long           cle_off;
--	unsigned long           ale_off;
-+	unsigned int		cle_off;
-+	unsigned int		ale_off;
- 	enum access_mode	mode;
- 
- 	void			(*select_bank)(uint32_t bank, uint32_t busw);
+ /* The different ports that the DIU can be connected to */
 -- 
-1.7.9.2
+1.6.4.1
