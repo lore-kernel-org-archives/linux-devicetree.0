@@ -1,51 +1,37 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] powerpc/85xx:Add usb controller version info
-Date: Fri, 16 Mar 2012 10:06:56 -0500
-Message-ID: <AB89D415-45D5-42A5-B145-83BFA80694DB@kernel.crashing.org>
-References: <1326865248-3333-1-git-send-email-ramneek.mehresh@freescale.com>
-Mime-Version: 1.0 (Apple Message framework v1257)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326865248-3333-1-git-send-email-ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: [PATCH v2 0/2] [media] s5p-tv: Add initial DT-support to s5p-tv's
+ subdevices
+Date: Fri, 16 Mar 2012 16:42:10 +0100
+Message-ID: <1331912532-7798-1-git-send-email-k.lewandowsk@samsung.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: t.stanislaws@samsung.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, thomas.abraham@linaro.org, m.szyprowski@samsung.com, kyungmin.park@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Changes since v1:
+ - dropped patch for sii9234 driver - driver itself hasn't been merged yet
+ - changed compatible string to name first known SoC having given features
+   (IP blocks, actually) [Thanks Thomas!]
 
-On Jan 17, 2012, at 11:40 PM, Ramneek Mehresh wrote:
 
-> Add usb controller version info for the following:
-> MPC8536, P1010, P1020, P1021, P1022, P1023, P2020, P2041,
-> P3041, P3060, P5020
-> 
-> Signed-off-by: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> Applies on git://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git
-> (branch next)
-> 
-> arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi |    4 ++--
-> arch/powerpc/boot/dts/fsl/p1010si-post.dtsi   |    3 +++
-> arch/powerpc/boot/dts/fsl/p1020si-post.dtsi   |    6 ++++++
-> arch/powerpc/boot/dts/fsl/p1021si-post.dtsi   |    3 +++
-> arch/powerpc/boot/dts/fsl/p1022si-post.dtsi   |    6 ++++++
-> arch/powerpc/boot/dts/fsl/p1023si-post.dtsi   |    3 +++
-> arch/powerpc/boot/dts/fsl/p2020si-post.dtsi   |    3 +++
-> arch/powerpc/boot/dts/fsl/p2041si-post.dtsi   |    2 ++
-> arch/powerpc/boot/dts/fsl/p3041si-post.dtsi   |    2 ++
-> arch/powerpc/boot/dts/fsl/p3060si-post.dtsi   |    6 ++++++
-> arch/powerpc/boot/dts/fsl/p5020si-post.dtsi   |    2 ++
-> 11 files changed, 38 insertions(+), 2 deletions(-)
+This patchset adds initial device tree support to drivers used by
+s5p-tv on Exynos4.
 
-applied
+DT support for s5p-tv driver itself would benefit from changes to v4l
+core (missing OF helper functions) and thus, will be sent later in
+separate patchset.
 
-- k
+Karol Lewandowski (2):
+  s5p-tv: Add initial DT-support for TV mixer
+  s5p-tv: Add initial DT-support for HDMIPHY
+
+ drivers/media/video/s5p-tv/hdmiphy_drv.c |   10 ++++++++++
+ drivers/media/video/s5p-tv/mixer_drv.c   |    9 +++++++++
+ 2 files changed, 19 insertions(+), 0 deletions(-)
+
+-- 
+1.7.9
