@@ -1,60 +1,49 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] of: Add generic device tree DMA helpers
-Date: Sat, 17 Mar 2012 16:03:02 +0000
-Message-ID: <201203171603.02230.arnd@arndb.de>
-References: <4F22DEF2.5000807@ti.com> <20120315092652.GA16389@n2100.arm.linux.org.uk> <20120317094217.6BA143E0908@localhost>
+From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] Device Tree Bindings for Freescale TDM controller
+Date: Sat, 17 Mar 2012 16:04:54 +0000
+Message-ID: <CAOZdJXVVGOwDBAEaWzJwynvrqBgYD-qE-FiFgyPwEfTX5su9Pg@mail.gmail.com>
+References: <1331861451-15427-1-git-send-email-poonam.aggrwal@freescale.com>
+ <4F63868D.1030507@freescale.com>
+ <ACB6D0C0104CFF42A45A5D82A0DD4F3D09D518@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120317094217.6BA143E0908@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <ACB6D0C0104CFF42A45A5D82A0DD4F3D09D518-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
+Content-ID: <4D61017D1927C54EBC7B0E3E91A13D68-725oAoX4OcF2GV6JINhBVAC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Aggrwal Poonam-B10812 <B10812-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Singh Sandeep-B37400 <B37400-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 17 March 2012, Grant Likely wrote:
-> On Thu, 15 Mar 2012 09:26:52 +0000, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
-> > On Thu, Mar 15, 2012 at 09:22:06AM +0000, Arnd Bergmann wrote:
-> > > On Thursday 15 March 2012, Nicolas Ferre wrote:
-> > > > Add some basic helpers to retrieve a DMA controller device_node and the
-> > > > DMA request specifications. By making DMA controllers register a generic
-> > > > translation function, we allow the management of any type of DMA requests
-> > > > specification.
-> > > > The void * output of an of_dma_xlate() function that will be implemented
-> > > > by the DMA controller can carry any type of "dma-request" argument.
-> > > > 
-> > > > The DMA client will search its associated DMA controller in the list and
-> > > > call the registered of_dam_xlate() function to retrieve the request values.
-> > > > 
-> > > > One simple xlate function is provided for the "single number" type of
-> > > > request binding.
-> > > > 
-> > > > This implementation is independent from dmaengine so it can also be used
-> > > > by legacy drivers.
-> > > > 
-> > > > For legacy reason another API will export the DMA request number into a
-> > > > Linux resource of type IORESOURCE_DMA.
-> > > 
-> > > This looks very good. I missed the first version of this patch, but was
-> > > thinking of very similar bindings.
-> > 
-> > There's one issue which is concerning me - when we switch OMAP to use
-> > DMA engine, it won't use numeric stuff anymore but the DMA engine way
-> > of requesting a channel (match function + data).
-> > 
-> > How does that fit into this scheme?
-> 
-> Not well as the current patch set stands.  The xlate function doesn't return
-> any context for the dma channel number that it returns, so the driver cannot
-> figure out which DMA controller to use if there are multiple.
+On Sat, Mar 17, 2012 at 2:33 AM, Aggrwal Poonam-B10812
+<B10812-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>
+>> > + =A0- clock-frequency
+>> > + =A0 =A0 =A0Usage: optional
+>> > + =A0 =A0 =A0Value type: <u32>
+>> > + =A0 =A0 =A0Definition: The frequency at which the TDM block is opera=
+ting.
+>>
+>> Will this frequency ever need to be > 4GHz?
+> Don't think so, at max this will be CCB, not sure if CCB on our platforms=
+ may get bigger than 4G ever.
 
-Shouldn't that be part of the data returned by xlate? I was under the impression
-that this would be the data that you would pass into dma_request_channel, together
-with a filter function that find the instance from the data.
+Apparently, 4GB is the new 640K.
 
-That's why I suggested adding another helper function that would provide a
-generic filter function for the dt binding doing just that.
+In Poonam's defense, every clock frequency property in the device tree
+is a 32-bit integer.  I've never seen a 64-bit one.
 
-	Arnd
+-- =
+
+Timur Tabi
+Linux kernel developer at Freescale
