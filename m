@@ -1,28 +1,38 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3] stmmac: Add device-tree support
-Date: Fri, 16 Mar 2012 22:49:15 -0700 (PDT)
-Message-ID: <20120316.224915.680873475462715286.davem@davemloft.net>
-References: <1331650597-16747-1-git-send-email-sr@denx.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: issues calling of_platform_bus_probe() twice
+Date: Sat, 17 Mar 2012 07:27:17 +0000
+Message-ID: <20120317072717.738953E08CE@localhost>
+References: <31B4E554-FA95-431D-B353-92680CD14A0A@kernel.crashing.org>
+ <1331933034.3105.171.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1331650597-16747-1-git-send-email-sr@denx.de>
-Sender: netdev-owner@vger.kernel.org
-To: sr@denx.de
-Cc: netdev@vger.kernel.org, devicetree-discuss@ozlabs.org, spear-devel@list.st.com, peppe.cavallaro@st.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1331933034.3105.171.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Discuss" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org list" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Roese <sr@denx.de>
-Date: Tue, 13 Mar 2012 15:56:37 +0100
-
-> This patch adds support to configure the STMMAC ethernet driver via
-> device-tree instead of platform_data.
+On Sat, 17 Mar 2012 08:23:54 +1100, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> On Fri, 2012-03-16 at 16:21 -0500, Kumar Gala wrote:
+> > Guys,
+> > 
+> > Are you aware of any reason that we can't call of_platform_bus_probe()
+> > or multiple times.  Timur's run into an issue in which all devices
+> > don't get registered properly if we call of_platform_bus_probe() times
+> > with different of_device_id struct's.
 > 
-> Currently, only the properties needed on SPEAr600 are provided. All
-> other properties should be added once needed on other platforms.
-> 
-> Signed-off-by: Stefan Roese <sr@denx.de>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Nothing comes to mind... Grant ?
 
-Applied, thanks.
+Neither for me.  Should work.
+
+g.
