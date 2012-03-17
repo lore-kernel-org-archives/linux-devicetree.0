@@ -1,38 +1,194 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: issues calling of_platform_bus_probe() twice
-Date: Sat, 17 Mar 2012 07:27:17 +0000
-Message-ID: <20120317072717.738953E08CE@localhost>
-References: <31B4E554-FA95-431D-B353-92680CD14A0A@kernel.crashing.org>
- <1331933034.3105.171.camel@pasglop>
+From: Aggrwal Poonam-B10812 <B10812@freescale.com>
+Subject: RE: [PATCH] Device Tree Bindings for Freescale TDM controller
+Date: Sat, 17 Mar 2012 07:33:32 +0000
+Message-ID: <ACB6D0C0104CFF42A45A5D82A0DD4F3D09D518@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1331861451-15427-1-git-send-email-poonam.aggrwal@freescale.com>
+ <4F63868D.1030507@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331933034.3105.171.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Discuss" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org list" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4F63868D.1030507@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Singh Sandeep-B37400 <B37400@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 17 Mar 2012 08:23:54 +1100, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> On Fri, 2012-03-16 at 16:21 -0500, Kumar Gala wrote:
-> > Guys,
-> > 
-> > Are you aware of any reason that we can't call of_platform_bus_probe()
-> > or multiple times.  Timur's run into an issue in which all devices
-> > don't get registered properly if we call of_platform_bus_probe() times
-> > with different of_device_id struct's.
+Thanks Scott for the review.
+
+Will send an updated revision with the comments taken care.
+
+Regards
+Poonam
+
+> -----Original Message-----
+> From: Wood Scott-B07421
+> Sent: Saturday, March 17, 2012 12:00 AM
+> To: Aggrwal Poonam-B10812
+> Cc: devicetree-discuss@lists.ozlabs.org; linuxppc-dev@lists.ozlabs.org;
+> Singh Sandeep-B37400
+> Subject: Re: [PATCH] Device Tree Bindings for Freescale TDM controller
 > 
-> Nothing comes to mind... Grant ?
-
-Neither for me.  Should work.
-
-g.
+> On 03/15/2012 08:30 PM, Poonam Aggrwal wrote:
+> > From: Poonam Aggrwal <poonam.aggrwal@freescale.com>
+> >
+> > This TDM controller is available in various Freescale SOCs like
+> > MPC8315, P1020, P1022, P1010.
+> >
+> > Signed-off-by: Sandeep Singh <Sandeep@freescale.com>
+> > Signed-off-by: Poonam Aggrwal <poonam.aggrwal@freescale.com>
+> > ---
+> >  Documentation/devicetree/bindings/tdm/fsl-tdm.txt |   71
+> +++++++++++++++++++++
+> >  1 files changed, 71 insertions(+), 0 deletions(-)  create mode 100644
+> > Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> > b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> > new file mode 100644
+> > index 0000000..61431e3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> > @@ -0,0 +1,71 @@
+> > +=====================================================================
+> > +TDM Device Tree Binding
+> > +Copyright (C) 2012 Freescale Semiconductor Inc.
+> > +
+> > +NOTE: The bindings described in this document are preliminary and
+> > +subject to change.
+> > +
+> > +=====================================================================
+> > +TDM (Time Division Multiplexing)
+> > +
+> > +DESCRIPTION
+> > +
+> > +The TDM is full duplex serial port designed to allow various devices
+> > +including digital signal processors (DSPs) to communicate with a
+> > +variety of serial devices including industry standard framers, codecs,
+> other DSPs and microprocessors.
+> > +
+> > +The below properties describe the device tree bindings for Freescale
+> > +TDM controller.
+> > +This TDM controller is available on various Freescale Processors like
+> > +MPC8313, P1020, P1022 and P1010.
+> > +
+> > +PROPERTIES
+> > +
+> > +  - compatible
+> > +      Usage: required
+> > +      Value type: <string>
+> > +      Definition: Should contain "fsl,mpc8315-tdm".
+> > +	  So mpc8313 will have compatible = "fsl,mpc8315-tdm";
+> > +	  p1010 will have compatible "fsl,p1010-tdm", "fsl,mpc8315-tdm";
+> 
+> Shouldn't mpc8313 have:
+> compatible = "fsl,mpc8313-tdm", "fsl,mpc8315-tdm"?
+> 
+> I thought we were going to use 8313 as the canonical implementation, not
+> 8315.
+MPC8315 was the first FSL platform to have this controller.
+MPC8313 does not have TDM.
+> 
+> > +  - reg
+> > +      Usage: required
+> > +      Value type: <tdm-reg-offset tdm-reg-size dmac-reg-offset dmac-
+> reg-size>
+> > +      Definition: A standard property. Specifies the physical address
+> > +	  offset and length of the TDM registers and TDM DMAC registers for
+> > +	  the device.
+> 
+> Just say there's two reg resources, and that the first is the TDM
+> registers and the second is the TDM DMAC registers.
+> 
+> It's typically not going to be the actual physical address, but rather an
+> offset that gets translated through a parent node's ranges.
+Okay, I think we missed this comment, you already gave this earlier.
+Sorry for that.
+> 
+> Remove "value type"; it's standard.
+> 
+Okay. So just definition must suffice, right?
+> > +  - clock-frequency
+> > +      Usage: optional
+> > +      Value type: <u32>
+> > +      Definition: The frequency at which the TDM block is operating.
+> 
+> Will this frequency ever need to be > 4GHz?
+Don't think so, at max this will be CCB, not sure if CCB on our platforms may get bigger than 4G ever.
+> 
+> Might want to specify as u32 or u64, as ePAPR suggests.
+Means Value type: <u32 or u64>?
+In this case the driver must always use 64bit data structure to read this. Is this correct?
+> 
+> > +  - interrupts
+> > +      Usage: required
+> > +      Value type: <tdm-err-intr tdm-err-intr-type dmac-intr dmac-intr-
+> type>
+> > +      Definition: This field defines two interrupt specifiers namely
+> interrupt
+> > +	  number and interrupt type for TDM error and TDM DMAC.
+> 
+> What is "tdm-err-intr-type"?  The interrupt specifier encoding is defined
+> by the interrupt controller.  There might be one cell, two cells, four
+> cells, etc.  Remove "value type", it's standard.
+> 
+okay
+> > +  - phy-handle
+> > +      Usage: optional
+> > +      Value type: <phandle>
+> > +      Definition: Phandle of the line controller node or framer node
+> eg. SLIC,
+> > +	  E1\T1 etc.
+> 
+> Use a forward slash -- this isn't a Windows filesystem path. :-)
+> 
+Okay, agreed.
+> > +  - fsl-max-time-slots
+> > +      Usage: required
+> > +      Value type: <u32>
+> > +      Definition: Maximum number of 8-bit time slots in one TDM frame.
+> > +	  This is the maximum number which TDM hardware supports.
+> 
+> fsl,tdm-max-time-slots
+Sure. This again got missed.
+> 
+> > +
+> > +EXAMPLE
+> > +
+> > +	tdm@16000 {
+> > +		device_type = "tdm";
+> 
+> No device_type
+Okay.
+> 
+> > +		compatible = "fsl,p1010-tdm", "fsl,mpc8315-tdm";
+> > +		reg = <0x16000 0x200 0x2c000 0x2000>;
+> > +		clock-frequency = <0>;
+> 
+> Show a real clock-frequency, perhaps with a comment saying it's typically
+> filled in by boot software.
+Okay.
+> 
+> > +		interrupts = <16 8 62 8>;
+> > +		phy-handle = <zarlink1>
+> 
+> That phy-handle is invalid syntax, perhaps you meant:
+> 
+> 	phy-handle = <&zarlink1>;
+Yes. Will correct it.
+> 
+> > +		fsl-max-time-slots = <128>
+> 
+> Missing semicolons on the last two properties.
+> 
+Ok.
+> -Scott
