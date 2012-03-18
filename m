@@ -1,58 +1,69 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/3] i2c-s3c2410: Drop unused define
-Date: Sun, 18 Mar 2012 20:49:37 +0000
-Message-ID: <20120318204937.0F6AB3E07BF@localhost>
-References: <1331657679-31302-1-git-send-email-k.lewandowsk@samsung.com> <1331657679-31302-2-git-send-email-k.lewandowsk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1331657679-31302-2-git-send-email-k.lewandowsk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: ben-linux@fluff.org
-Cc: thomas.abraham@linaro.org, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, t.stanislaws@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Subject: Re: [PATCH] drivers/ata/pata_mpc52xx.c: drop unneeded devm cleanup functions
+Date: Sun, 18 Mar 2012 20:58:19 +0000
+Message-ID: <20120318205820.013643E07BF@localhost>
+References: <1331415352-10260-1-git-send-email-Julia.Lawall@lip6.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1331415352-10260-1-git-send-email-Julia.Lawall@lip6.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Julia Lawall <Julia.Lawall@lip6.fr>, Jeff Garzik <jgarzik@pobox.com>
+Cc: kernel-janitors@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Mar 2012 17:54:37 +0100, Karol Lewandowski <k.lewandowsk@samsung.com> wrote:
-> Use standard of_match_ptr() to avoid defining variable unused
-> in non device tree builds.
+On Sat, 10 Mar 2012 22:35:52 +0100, Julia Lawall <Julia.Lawall@lip6.fr> wrote:
+> From: Julia Lawall <Julia.Lawall@lip6.fr>
 > 
-> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> There is no need to call the devm cleanup functions on failure of a probe
+> or remove function.
+> 
+> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+> Acked-by: Wolfram Sang <w.sang@pengutronix.de>
 
 Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
+> 
 > ---
->  drivers/i2c/busses/i2c-s3c2410.c |    4 +---
->  1 files changed, 1 insertions(+), 3 deletions(-)
+> Changed subject.  Included Wolfram's ACK.
 > 
-> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-> index 737f721..85e3664 100644
-> --- a/drivers/i2c/busses/i2c-s3c2410.c
-> +++ b/drivers/i2c/busses/i2c-s3c2410.c
-> @@ -1128,8 +1128,6 @@ static const struct of_device_id s3c24xx_i2c_match[] = {
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, s3c24xx_i2c_match);
-> -#else
-> -#define s3c24xx_i2c_match NULL
->  #endif
->  
->  static struct platform_driver s3c24xx_i2c_driver = {
-> @@ -1140,7 +1138,7 @@ static struct platform_driver s3c24xx_i2c_driver = {
->  		.owner	= THIS_MODULE,
->  		.name	= "s3c-i2c",
->  		.pm	= S3C24XX_DEV_PM_OPS,
-> -		.of_match_table = s3c24xx_i2c_match,
-> +		.of_match_table = of_match_ptr(s3c24xx_i2c_match),
->  	},
->  };
->  
-> -- 
-> 1.7.9
+>  drivers/ata/pata_mpc52xx.c |   11 -----------
+>  1 file changed, 11 deletions(-)
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> diff --git a/drivers/ata/pata_mpc52xx.c b/drivers/ata/pata_mpc52xx.c
+> index 00748ae..1f02008 100644
+> --- a/drivers/ata/pata_mpc52xx.c
+> +++ b/drivers/ata/pata_mpc52xx.c
+> @@ -806,17 +806,12 @@ mpc52xx_ata_probe(struct platform_device *op)
+>  	return 0;
+>  
+>   err:
+> -	devm_release_mem_region(&op->dev, res_mem.start, sizeof(*ata_regs));
+>  	if (ata_irq)
+>  		irq_dispose_mapping(ata_irq);
+>  	if (task_irq)
+>  		irq_dispose_mapping(task_irq);
+>  	if (dmatsk)
+>  		bcom_ata_release(dmatsk);
+> -	if (ata_regs)
+> -		devm_iounmap(&op->dev, ata_regs);
+> -	if (priv)
+> -		devm_kfree(&op->dev, priv);
+>  	return rv;
+>  }
+>  
+> @@ -835,12 +830,6 @@ mpc52xx_ata_remove(struct platform_device *op)
+>  	bcom_ata_release(priv->dmatsk);
+>  	irq_dispose_mapping(priv->ata_irq);
+>  
+> -	/* Clear up IO allocations */
+> -	devm_iounmap(&op->dev, priv->ata_regs);
+> -	devm_release_mem_region(&op->dev, priv->ata_regs_pa,
+> -				sizeof(*priv->ata_regs));
+> -	devm_kfree(&op->dev, priv);
+> -
+>  	return 0;
+>  }
+>  
+> 
 
 -- 
 Grant Likely, B.Sc, P.Eng.
