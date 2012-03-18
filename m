@@ -1,21 +1,59 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 4/4] misc: emif: add device tree support to emif driver
-Date: Sun, 18 Mar 2012 20:48:52 +0000
-Message-ID: <20120318204852.664953E07BF@localhost>
-References: <1331836447-7584-1-git-send-email-aneesh@ti.com> <1331836447-7584-5-git-send-email-aneesh@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1331836447-7584-5-git-send-email-aneesh@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Aneesh V <aneesh@ti.com>, Rajendra Nayak <rnayak@ti.com>, Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH 1/3] i2c-s3c2410: Drop unused define
+Date: Sun, 18 Mar 2012 20:49:37 +0000
+Message-ID: <20120318204937.0F6AB3E07BF@localhost>
+References: <1331657679-31302-1-git-send-email-k.lewandowsk@samsung.com> <1331657679-31302-2-git-send-email-k.lewandowsk@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1331657679-31302-2-git-send-email-k.lewandowsk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: ben-linux@fluff.org
+Cc: thomas.abraham@linaro.org, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, t.stanislaws@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Mar 2012 00:04:07 +0530, Aneesh V <aneesh@ti.com> wrote:
-> Cc: Rajendra Nayak <rnayak@ti.com>
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Signed-off-by: Aneesh V <aneesh@ti.com>
+On Tue, 13 Mar 2012 17:54:37 +0100, Karol Lewandowski <k.lewandowsk@samsung.com> wrote:
+> Use standard of_match_ptr() to avoid defining variable unused
+> in non device tree builds.
+> 
+> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 
-All 4 look okay to me.
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  drivers/i2c/busses/i2c-s3c2410.c |    4 +---
+>  1 files changed, 1 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
+> index 737f721..85e3664 100644
+> --- a/drivers/i2c/busses/i2c-s3c2410.c
+> +++ b/drivers/i2c/busses/i2c-s3c2410.c
+> @@ -1128,8 +1128,6 @@ static const struct of_device_id s3c24xx_i2c_match[] = {
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, s3c24xx_i2c_match);
+> -#else
+> -#define s3c24xx_i2c_match NULL
+>  #endif
+>  
+>  static struct platform_driver s3c24xx_i2c_driver = {
+> @@ -1140,7 +1138,7 @@ static struct platform_driver s3c24xx_i2c_driver = {
+>  		.owner	= THIS_MODULE,
+>  		.name	= "s3c-i2c",
+>  		.pm	= S3C24XX_DEV_PM_OPS,
+> -		.of_match_table = s3c24xx_i2c_match,
+> +		.of_match_table = of_match_ptr(s3c24xx_i2c_match),
+>  	},
+>  };
+>  
+> -- 
+> 1.7.9
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
