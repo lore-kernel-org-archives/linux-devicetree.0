@@ -1,35 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] of: Add generic device tree DMA helpers
-Date: Sun, 18 Mar 2012 15:10:14 +0000
-Message-ID: <201203181510.14428.arnd@arndb.de>
-References: <4F22DEF2.5000807@ti.com> <20120317104751.4F00E3E0910@localhost> <20120318092241.GA23839@avionic-0098.mockup.avionic-design.de>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH v2] dtc: Add -i option to support search paths
+Date: Sun, 18 Mar 2012 10:53:43 -0500
+Message-ID: <E1S9IQR-0002HH-EY@jdl.com>
+References: <1331082612-10612-1-git-send-email-sjg@chromium.org>
+ <1331780653-13750-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120318092241.GA23839@avionic-0098.mockup.avionic-design.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-omap@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1331780653-13750-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 18 March 2012, Thierry Reding wrote:
-> Not enough information to check signature validity.  Show Details
->   * Grant Likely wrote:
-> > On Thu, 15 Mar 2012 11:27:36 +0100, Thierry Reding <thierry.reding@avionic-design.de> wrote:
-> > > So if we decide to explicitly allow specifying names, then we can always add
-> > > a pwm-names property (or <name>-pwm-names respectively) to use as label and
-> > > fallback to the user OF device node name if that property is not present.
-> > 
-> > After implementing both schemes (ie. interrupts+interrupt-names && [*-]gpios)
-> > I definitely prefer the fixed property name plus a separate names property.
-> > It is easier to use common code with that scheme, and easier to statically
-> > check for correctness.
+> It is often inconvenient to place device tree files in the same directory
+> as their includes, or to specify the full path to include files.
 > 
-> Okay. Would everyone be happy with "pwms" and "pwm-names"?
+> An example of this is in U-Boot where we have a .dtsi file for each SOC
+> type, and this is included by the board .dts file. We need to either use
+> a mechanism like:
+> 
+> /include/ ARCH_CPU_DTS
+> 
+> with sed or cpp to perform the replacement with the correct path, or
+> we must specify the full path in the file:
+> 
+> /include/ "../../arch/arm/dts/tegra20.dtsi"
+> 
+> The first option is not desirable since it requires anyone compiling the
+> file to first pre-process it. The second is not desirable since it
+> introduces a path which is project-specific into a file which is supposed
+> to be a hardware description. For example Linux and U-Boot are unlikely to
+> put these include files in the same place.
+> 
+> It is much more convenient to specify the search patch on the command line
+> as is done with C pre-processors, for example.
+> 
+> Introduce a -i option to add to the list of search paths used to find
+> source and include files.
+> 
+> We cannot use -I as it is already in use. Other suggestions welcome.
+> 
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> Changes in v2:
+> - Add test for finding a file in the same dir as the last file read
+> - Fix comment typo
+> - Move struct search_path to C file
 
-Sounds good. I would have suggested "pwm", but the plural also works since
-that is used for "interrupts", too.
 
-	Arnd
+Applied.
+
+Thanks,
+jdl
