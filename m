@@ -1,83 +1,48 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH] MTD: Add device-tree support to fsmc_nand
-Date: Mon, 19 Mar 2012 19:03:04 +0200
-Message-ID: <1332176584.11468.4.camel@sauron.fi.intel.com>
-References: <1331889571-3372-1-git-send-email-sr@denx.de>
-Reply-To: dedekind1@gmail.com
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] Device Tree Bindings for Freescale TDM controller
+Date: Mon, 19 Mar 2012 12:27:57 -0500
+Message-ID: <4F676C9D.2070301@freescale.com>
+References: <1331861451-15427-1-git-send-email-poonam.aggrwal@freescale.com>
+ <4F63868D.1030507@freescale.com>
+ <ACB6D0C0104CFF42A45A5D82A0DD4F3D09D518@039-SN2MPN1-013.039d.mgd.msft.net>
+ <CAOZdJXVU=1bW8_OTMecJHuWaa6_023UnUsfQTX8MGqd3E4SRAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8972502758606068591=="
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1331889571-3372-1-git-send-email-sr@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: linux-mtd-bounces@lists.infradead.org
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Stefan Roese <sr@denx.de>
-Cc: Viresh Kumar <viresh.kumar@st.com>, spear-devel@list.st.com, linux-mtd@lists.infradead.org, devicetree-discuss@ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CAOZdJXVU=1bW8_OTMecJHuWaa6_023UnUsfQTX8MGqd3E4SRAg@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Tabi Timur-B04825 <B04825@freescale.com>
+Cc: Wood Scott-B07421 <B07421@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Aggrwal Poonam-B10812 <B10812@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Singh Sandeep-B37400 <B37400@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
+On 03/17/2012 11:07 AM, Tabi Timur-B04825 wrote:
+> On Sat, Mar 17, 2012 at 2:33 AM, Aggrwal Poonam-B10812
+> <B10812@freescale.com> wrote:
+>>
+>>>> +           compatible = "fsl,p1010-tdm", "fsl,mpc8315-tdm";
+>>>> +           reg = <0x16000 0x200 0x2c000 0x2000>;
+>>>> +           clock-frequency = <0>;
+>>>
+>>> Show a real clock-frequency, perhaps with a comment saying it's typically
+>>> filled in by boot software.
+> 
+>> Okay.
+> 
+> Scott, are you suggesting that Poonam put a non-zero number in the DTS
+> for clock-frequency?  If so, then I don't think that's a good idea, if
+> U-Boot will always override it.
 
---===============8972502758606068591==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-W+0wGxT/dZQ9sDcX76gz"
+This is a device tree binding document, not U-Boot specific.  It
+describes what Linux (or another OS) can expect to see, not how it gets
+there.
 
-
---=-W+0wGxT/dZQ9sDcX76gz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2012-03-16 at 10:19 +0100, Stefan Roese wrote:
-> This patch adds support to configure the FSMC NAND driver (used amongst
-> others on SPEAr platforms) via device-tree instead of platform_data.
->=20
-> Signed-off-by: Stefan Roese <sr@denx.de>
-
-Pushed to l2-mtd.git, thanks!
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-W+0wGxT/dZQ9sDcX76gz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJPZ2bIAAoJECmIfjd9wqK0694QAIHlo/oULY37l2TC9V/EFq21
-mXYtPX06Q3dfMv35/O1bLqkHLbYlm4kRMWQ3mL+0PPHHuLxy8xTh9LPbs6qQ84Rl
-9WOlpQb2tr+oNRBsHMKSqe9rLdHjh1WdJpy6TLv1Ri+XzB+vgDw7I1vI87H8DNoe
-McmNX8RBvomWHaSYpe5VpLX2yMAVGrgEwaUxpyovUS8yYqJO2ZzMdFwLn+qrLKDQ
-8Jf4FfFQMvavYgTfn8Z6PKofdEK2+tJWR+Ra4P6nby0UFT640IirvCFgebU7QFR7
-eL7PulzqzqXwWWvPxuZskbM++yYGnZykoWJyMqMAFoZ4hSIHgi6i0srZ1iw4NfNk
-Tqb866wXD0TBrcxWM7LzxHIX2rTPL0J2E7EBINcs6hhPFVzc2zuGHkTbfNxbCvGK
-VGsgPC36Jtuqz0qBLpNcyI3RxkAj3Po3WFB08N5m//6x4rFSflP6bIVFVntDV3mR
-hPU+vp45XRzZUzZRnf3P61GigbKtPU7PfEyBjQLAkWuJZBgfb9Ot7gZE1EcIE+2d
-qQVcy2gFq+i41Litj2WHyunxLAtnegnEITBc1y5font2z9JU+HoWB4VZc23RxOY1
-C+eFk+GjZd+hi6sn9+Cpz+s1V6NqgMQ0BSNUC28xwHJx5OMr2+rpQu7YjH8l/4Uq
-zfn+zlfAdthv8ZOFMDax
-=vtDE
------END PGP SIGNATURE-----
-
---=-W+0wGxT/dZQ9sDcX76gz--
-
-
-
---===============8972502758606068591==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
---===============8972502758606068591==--
+-Scott
