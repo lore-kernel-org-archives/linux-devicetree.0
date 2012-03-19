@@ -1,107 +1,210 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH] of: Add generic device tree DMA helpers
-Date: Mon, 19 Mar 2012 16:58:52 +0100
-Message-ID: <4F6757BC.50408@ti.com>
-References: <4F22DEF2.5000807@ti.com> <1331800690-21518-1-git-send-email-nicolas.ferre@atmel.com> <20120317094059.7C2333E08E2@localhost> <201203182013.22790.arnd@arndb.de> <4F6736B4.4090509@atmel.com> <20120319152059.GE16389@n2100.arm.linux.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/8] dt: add property iteration helpers
+Date: Mon, 19 Mar 2012 11:00:46 -0500
+Message-ID: <4F67582E.9080901@gmail.com>
+References: <1331931269-12262-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120319152059.GE16389@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1331931269-12262-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/19/2012 4:20 PM, Russell King - ARM Linux wrote:
-> On Mon, Mar 19, 2012 at 02:37:56PM +0100, Nicolas Ferre wrote:
->> On 03/18/2012 09:13 PM, Arnd Bergmann :
->>> On Saturday 17 March 2012, Grant Likely wrote:
->>>>> +static LIST_HEAD(of_dma_list);
->>>>> +
->>>>> +struct of_dma {
->>>>> +     struct list_head of_dma_controllers;
->>>>> +     struct device_node *of_node;
->>>>> +     int of_dma_n_cells;
->>>>> +     int (*of_dma_xlate)(struct of_phandle_args *dma_spec, void *data);
->>>>> +};
->>>>
->>>> This _xlate is nearly useless as a generic API.  It solves the problem for
->>>> the specific case where the driver is hard-coded to know which DMA engine
->>>> to talk to, but since the returned data doesn't provide any context, it
->>>> isn't useful if there are multiple DMA controllers to choose from.
->>>>
->>>> The void *data pointer must be replaced with a typed structure so that
->>>> context can be returned.
->>>
->>> I've read up a bit more on how the existing drivers use the filter
->>> functions, it seems there are multiple classes of them, the classes
->>> that I've encountered are:
->>>
->>> 1. matches on chan->device pointer and/or chan_id
->>
->> I have the impression that we are now talking about *channel* selection.
->> It is not the purpose of those helper functions. It is just to retrieve
->> a *request line* for a particular slave interface.
->
-> The request line on what though?  The DMA controller, or something
-> else?
+On 03/16/2012 03:54 PM, Stephen Warren wrote:
+> This patch adds macros for_each_u32_property_value and
+> for_each_string_property_value, which iterate over an array of values
+> within a device-tree property. Usage is for example:
+> 
+> struct of_iter_string_prop iter;
+> for_each_string_property_value(iter, np, "pins")
+>         printk("Got value %s\n", iter.value);
+> 
 
-The idea is just to represent the request line from the IP to the DMA 
-controller. This is exactly the same pattern than for the IRQ line 
-toward the IRQ controller.
+This seems overly complex and exposes a new struct primarily for
+temporary storage. In your use, you only really use the ptr to each
+string, so why not something like this:
 
-> The reason I ask is because on ARM boards, the DMA controller has N
-> request lines.  Three of those request lines are multiplexed in an
-> external FPGA to select between N different peripherals.
->
-> For example, the UART and MMCI may be routed to the FPGA multiplexer,
-> and either could be routed to DMA controller request signal 0, 1, or 2,
-> whereas a different UART might be routed directly to DMA controller
-> request signal 3 and 4.
->
-> At the moment, we handle this via platform data and callbacks passed
-> into the PL080 DMA driver, by matching virtual DMA channels based upon
-> strings looked up in the platform data.  This gives the range of
-> DMA request signal numbers on the controller, and calls a platform
-> provided function to setup the multiplexer.
->
-> Clearly, if your proposal is all about DMA controller request signals
-> only, the above scheme can't be represented in DT...
+const char *of_prop_next_string(struct property *p, const char *cur)
+{
+	int len;
+	if (!prop)
+		return NULL;
+	if (!cur)
+		return prop->value;
+	
+	len = strlen(cur) + 1;
+	if (cur + len > prop->value + prop->length)
+		return NULL;
+	return cur + len;
+}
 
-Yes, this is the goal. I guess in your case you do need some DMA nexus 
-node like DT is already providing for the IRQ. But you still should be 
-able to describe how the HW blocks are interconnected.
+#define of_property_for_each_string(prop, s) \
+for (prop = of_find_property(), s = of_prop_next_string(prop, NULL); \
+     s; \
+     s = of_prop_next_string(prop, s))
 
-> and that's what
-> worries me - the fact is that the DMA engine API can and does cope
-> with this but it seems that we're building restrictions in with DT on
-> what can be represented.
+Rob
 
-But then you are mixing the SW representation and the HW one. DMAengine 
-is the Linux way of managing DMA channel. DT is supposed to be OS 
-agnostic and just describe the HW.
-So you cannot take into account some DMAengine specificity to define the 
-DT binding. At least in theory.
 
-> That makes me wonder whether the model that's being chosen is anywhere
-> near correct for the DMA engine API.
-
-That's not the goal. The goal is to describe how the DMA request lines 
-are connected from the IP to the controller.
-
-> Now, as I've said before, I'm trying to work on creating an OMAP DMA engine
-> implementation, and I'd _really_ like to have the freedom to do what's
-> necessary there without having to think one bit about DT getting in the
-> way.  To put it another way, I don't want to be constrained by any weirdo
-> DT representations at the moment, and I really don't want to waste time
-> discussing them at the moment, rather than getting on with that job.
-> Because if I end up discussing this at length, I'm not going to be able
-> to do anything on the OMAP DMA engine stuff.
-
-The current way of representing the DMA requests for OMAP SDMA is pretty 
-straightforward and fit well with the current binding. It looks to me 
-that this is the ARM boards that will be tricky to handle.
-
-Regards,
-Benoit
+> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> ---
+>  include/linux/of_iter_prop.h |  139 ++++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 139 insertions(+), 0 deletions(-)
+>  create mode 100644 include/linux/of_iter_prop.h
+> 
+> diff --git a/include/linux/of_iter_prop.h b/include/linux/of_iter_prop.h
+> new file mode 100644
+> index 0000000..57e9e6a
+> --- /dev/null
+> +++ b/include/linux/of_iter_prop.h
+> @@ -0,0 +1,139 @@
+> +/*
+> + * Copyright (c) 2011-2012 NVIDIA CORPORATION. All rights reserved.
+> + *
+> + * Iterate over properties that store arrays.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#ifndef __OF_ITER_PROP_H__
+> +#define __OF_ITER_PROP_H__
+> +
+> +#include <linux/of.h>
+> +
+> +#ifdef CONFIG_OF
+> +struct of_iter_u32_prop {
+> +	const struct property *prop;
+> +	int len;
+> +	const __be32 *pvalue;
+> +	u32 value;
+> +};
+> +
+> +static inline void of_iter_u32_next(struct of_iter_u32_prop *iter)
+> +{
+> +	if (!iter->len)
+> +		return;
+> +
+> +	iter->len--;
+> +	if (iter->len)
+> +		iter->value = be32_to_cpup(iter->pvalue++);
+> +}
+> +
+> +static inline void of_iter_u32_init(struct of_iter_u32_prop *iter,
+> +				    const struct device_node *np,
+> +				    const char *name)
+> +{
+> +	iter->prop = of_find_property(np, name, &iter->len);
+> +	if (!iter->prop) {
+> +		iter->len = 0;
+> +		return;
+> +	}
+> +
+> +	iter->pvalue = iter->prop->value;
+> +	if (!iter->pvalue) {
+> +		iter->len = 0;
+> +		return;
+> +	}
+> +
+> +	iter->len /= sizeof(*iter->pvalue);
+> +
+> +	if (iter->len)
+> +		iter->value = be32_to_cpup(iter->pvalue++);
+> +}
+> +
+> +static inline bool of_iter_u32_test(struct of_iter_u32_prop *iter)
+> +{
+> +	return iter->len > 0;
+> +}
+> +
+> +#define for_each_u32_property_value(iter, np, prop_name) \
+> +	for (of_iter_u32_init(&iter, np, prop_name); \
+> +	     of_iter_u32_test(&iter); \
+> +	     of_iter_u32_next(&iter))
+> +
+> +struct of_iter_string_prop {
+> +	const struct property *prop;
+> +	int len;
+> +	const char *value;
+> +	const char *after;
+> +};
+> +
+> +static inline void of_iter_string_init(struct of_iter_string_prop *iter,
+> +				       const struct device_node *np,
+> +				       const char *name)
+> +{
+> +	iter->prop = of_find_property(np, name, &iter->len);
+> +	if (!iter->prop) {
+> +		iter->value = NULL;
+> +		return;
+> +	}
+> +
+> +	iter->value = iter->prop->value;
+> +	if (!iter->value)
+> +		return;
+> +
+> +	iter->after = iter->value + iter->len;
+> +}
+> +
+> +static inline bool of_iter_string_test(struct of_iter_string_prop *iter)
+> +{
+> +	if (!iter->value)
+> +		return false;
+> +
+> +	return iter->value < iter->after;
+> +}
+> +
+> +static inline void of_iter_string_next(struct of_iter_string_prop *iter)
+> +{
+> +	int len;
+> +
+> +	if (!iter->value)
+> +		return;
+> +
+> +	len = strnlen(iter->value, iter->len);
+> +	iter->len -= len + 1;
+> +	iter->value += len + 1;
+> +}
+> +
+> +#define for_each_string_property_value(iter, np, prop_name) \
+> +	for (of_iter_string_init(&iter, np, prop_name); \
+> +	     of_iter_string_test(&iter); \
+> +	     of_iter_string_next(&iter))
+> +
+> +#else
+> +struct of_iter_u32_prop {
+> +	u32 value;
+> +};
+> +
+> +#define for_each_u32_property_value(iter, np, prop_name) \
+> +	while (0)
+> +
+> +struct of_iter_string_prop {
+> +	const char *value;
+> +};
+> +
+> +#define for_each_string_property_value(iter, np, prop_name) \
+> +	while (0)
+> +
+> +#endif /* CONFIG_OF */
+> +
+> +#endif /* __OF_ITER_PROP_H__ */
