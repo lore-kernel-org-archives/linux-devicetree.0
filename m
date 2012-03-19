@@ -1,60 +1,83 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] of: Add generic device tree DMA helpers
-Date: Mon, 19 Mar 2012 10:54:01 -0600
-Message-ID: <4F6764A9.8090907@wwwdotorg.org>
-References: <4F22DEF2.5000807@ti.com> <201203191501.10232.arnd@arndb.de>
- <4F674BC4.2070802@wwwdotorg.org> <201203191545.40933.arnd@arndb.de>
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Subject: Re: [PATCH] MTD: Add device-tree support to fsmc_nand
+Date: Mon, 19 Mar 2012 19:03:04 +0200
+Message-ID: <1332176584.11468.4.camel@sauron.fi.intel.com>
+References: <1331889571-3372-1-git-send-email-sr@denx.de>
+Reply-To: dedekind1@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203191545.40933.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============8972502758606068591=="
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1331889571-3372-1-git-send-email-sr@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Stefan Roese <sr@denx.de>
+Cc: Viresh Kumar <viresh.kumar@st.com>, spear-devel@list.st.com, linux-mtd@lists.infradead.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2012 09:45 AM, Arnd Bergmann wrote:
-> On Monday 19 March 2012, Stephen Warren wrote:
->>> Maybe one can use named properties in a new device node in that case,
->>> like this:
->>>
->>>       bus {
->>>               dma: dma-controller {
->>>                       #dma-cells = <1>;
->>>               };
->>>
->>>               device {
->>>                       compatible = "device";
->>>                       channel: dma-channel {
->>>                               type = <0x1>;
->>>                               name = "foo";
->>>                               number = <23>;
->>>                               direction = <3>;
->>>                       };
->>>                       dma-requests = <&dma &channel>;
->>>               };
->>>       };
->>
->> For reference, this is very similar to how the pinctrl bindings work,
->> except that they require the "channel" node to be a child of the DMA
->> controller, and hence "dma-requests" doesn't contain <&dma &channel>,
->> just <&channel>, since "dma" is the parent (or grand-parent) of "channel".
-> 
-> Right, but the difference beytween the pinctrl binding and what I
-> describe here is that the channel description would be part of the
-> dma engine driver specific binding, not the generic binding that
-> is visible to device drivers.
 
-That's actually true for pinctrl as well: Common pinctrl bindings cover
-the content/format of "dma-requests" and a requirement for a
-"dma-channel" node, whereas the per-pin-controller bindings define the
-content of node "dma-channel".
+--===============8972502758606068591==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-W+0wGxT/dZQ9sDcX76gz"
+
+
+--=-W+0wGxT/dZQ9sDcX76gz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, 2012-03-16 at 10:19 +0100, Stefan Roese wrote:
+> This patch adds support to configure the FSMC NAND driver (used amongst
+> others on SPEAr platforms) via device-tree instead of platform_data.
+>=20
+> Signed-off-by: Stefan Roese <sr@denx.de>
+
+Pushed to l2-mtd.git, thanks!
+
+--=20
+Best Regards,
+Artem Bityutskiy
+
+--=-W+0wGxT/dZQ9sDcX76gz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAABAgAGBQJPZ2bIAAoJECmIfjd9wqK0694QAIHlo/oULY37l2TC9V/EFq21
+mXYtPX06Q3dfMv35/O1bLqkHLbYlm4kRMWQ3mL+0PPHHuLxy8xTh9LPbs6qQ84Rl
+9WOlpQb2tr+oNRBsHMKSqe9rLdHjh1WdJpy6TLv1Ri+XzB+vgDw7I1vI87H8DNoe
+McmNX8RBvomWHaSYpe5VpLX2yMAVGrgEwaUxpyovUS8yYqJO2ZzMdFwLn+qrLKDQ
+8Jf4FfFQMvavYgTfn8Z6PKofdEK2+tJWR+Ra4P6nby0UFT640IirvCFgebU7QFR7
+eL7PulzqzqXwWWvPxuZskbM++yYGnZykoWJyMqMAFoZ4hSIHgi6i0srZ1iw4NfNk
+Tqb866wXD0TBrcxWM7LzxHIX2rTPL0J2E7EBINcs6hhPFVzc2zuGHkTbfNxbCvGK
+VGsgPC36Jtuqz0qBLpNcyI3RxkAj3Po3WFB08N5m//6x4rFSflP6bIVFVntDV3mR
+hPU+vp45XRzZUzZRnf3P61GigbKtPU7PfEyBjQLAkWuJZBgfb9Ot7gZE1EcIE+2d
+qQVcy2gFq+i41Litj2WHyunxLAtnegnEITBc1y5font2z9JU+HoWB4VZc23RxOY1
+C+eFk+GjZd+hi6sn9+Cpz+s1V6NqgMQ0BSNUC28xwHJx5OMr2+rpQu7YjH8l/4Uq
+zfn+zlfAdthv8ZOFMDax
+=vtDE
+-----END PGP SIGNATURE-----
+
+--=-W+0wGxT/dZQ9sDcX76gz--
+
+
+
+--===============8972502758606068591==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+--===============8972502758606068591==--
