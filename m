@@ -1,50 +1,131 @@
-From: Timur Tabi <b04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] Device Tree Bindings for Freescale TDM controller
-Date: Mon, 19 Mar 2012 12:32:14 -0500
-Message-ID: <4F676D9E.6000609@freescale.com>
-References: <1331861451-15427-1-git-send-email-poonam.aggrwal@freescale.com>
- <4F63868D.1030507@freescale.com>
- <ACB6D0C0104CFF42A45A5D82A0DD4F3D09D518@039-SN2MPN1-013.039d.mgd.msft.net>
- <CAOZdJXVU=1bW8_OTMecJHuWaa6_023UnUsfQTX8MGqd3E4SRAg@mail.gmail.com>
- <4F676C9D.2070301@freescale.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH] of: Add generic device tree DMA helpers
+Date: Mon, 19 Mar 2012 18:49:18 +0100
+Message-ID: <4F67719E.7040403@ti.com>
+References: <4F22DEF2.5000807@ti.com> <20120317094059.7C2333E08E2@localhost> <4F6734DD.3020203@atmel.com> <201203191406.35064.arnd@arndb.de> <20120319153334.GF16389@n2100.arm.linux.org.uk> <4F675F64.6070306@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F676C9D.2070301-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Aggrwal Poonam-B10812 <B10812-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Singh Sandeep-B37400 <B37400-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F675F64.6070306@atmel.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Scott Wood wrote:
->> > Scott, are you suggesting that Poonam put a non-zero number in the DTS
->> > for clock-frequency?  If so, then I don't think that's a good idea, if
->> > U-Boot will always override it.
+Hi Nico,
 
-> This is a device tree binding document, not U-Boot specific.  It
-> describes what Linux (or another OS) can expect to see, not how it gets
-> there.
+On 3/19/2012 5:31 PM, Nicolas Ferre wrote:
+> On 03/19/2012 04:33 PM, Russell King - ARM Linux :
+>> On Mon, Mar 19, 2012 at 02:06:34PM +0000, Arnd Bergmann wrote:
+>>> ==== mmci ====
+>>> /* in drivers/dma/ste_dma40.c, others in pl330.c, coh901318.c, ... */
+>>> bool stedma40_filter(struct dma_chan *chan, void *data)
+>>> {
+>>>          struct stedma40_chan_cfg *info = data;
+>>>          struct d40_chan *d40c = container_of(chan, struct d40_chan, chan);
+>>>          int err;
+>>>
+>>>          err = d40_validate_conf(d40c, info);
+>>>          if (!err)
+>>>                  d40c->dma_cfg = *info;
+>>>          d40c->configured = true;
+>>>
+>>>          return err == 0;
+>>> }
+>>> EXPORT_SYMBOL(stedma40_filter);
+>>>
+>>> /* in mmci.h */
+>>> struct mmci_platform_data {
+>>> 	...
+>>>          bool (*dma_filter)(struct dma_chan *chan, void *filter_param);
+>>>          void *dma_rx_param;
+>>>          void *dma_tx_param;
+>>> };
+>>>
+>>> /* in mmci.c */
+>>> static void __devinit mmci_dma_setup(struct mmci_host *host)
+>>> {
+>>> 	...
+>>>          host->dma_rx_channel = dma_request_channel(mask, plat->dma_filter, plat->dma_rx_param);
+>>> 	...
+>>> }
+>>>
+>>> ====
+>>>
+>>> Whatever we come up with obviously needs to work with both drivers.
+>>> I think we will end up with something closer to the second one, except
+>>> that the dma parameters do not come from platform_data but from the
+>>> #dma-request property, which also identifies the controller and channel.
+>>
+>> Firstly, define what you mean by "the DMA parameters".  Things like burst
+>> size, register width, register address?  That should all be known by the
+>> peripheral driver and _not_ be encoded into DT in any way - and this
+>> information should be passed to the DMA engine driver for the well defined
+>> API for that purpose.
+>>
+>> Secondly, there are platforms (Samsung) where peripherals are connected
+>> to more than one DMA controller, and either DMA controller can be used -
+>> I'm told by Jassi that there's reasons why you'd want to select one or
+>> other as the target at runtime.
+>>
+>> Whether it's appropriate for DT to know that or not, I'm not certain at
+>> the moment - I suspect the _right_ solution would be a radical DMA engine
+>> redesign which moves _all_ slave DMA to a virtual channel representation,
+>> and for the virtual channels to be scheduled onto a set of physical DMA
+>> channels over a range of DMA devices.  Obviously, there's restrictions on
+>> which virtual channels could be scheduled onto which physical channels of
+>> which DMA devices.
+>
+> OMG! the dmaengine drivers are already not so obvious to understand. I
+> fear that trying to mimic some special behaviors within relatively
+> simple dmaengine drivers will bring confusion and prevent people to
+> read/contribute and fix those simple ones...
+>
+>> It seems to me, therefore, that any attempt to come up with some kind of
+>> DT based representation of the current scheme is doomed to fail, and will
+>> at some point become obsolete.
+>>
+>> I think instead, rather than trying to fix this now, we persist with what
+>> we have, but organize an effort to clean up and restructure the DMA engine
+>> code so that:
+>>
+>> (a) things like the Samsung, and ARM board oddities can be easily dealt
+>>   with in a driver independent manner.
+>> (b) get rid of all the duplicated functionality between each different
+>>   DMA engine implementation, separating this out into core code, and
+>>   simplifying the drivers.
+>>
+>> The _big_ problem I see is that if we try to represent the existing
+>> solution in DT, we're going to get locked into that way of doing things
+>> and then any major restructuring of the DMA engine stuff will become an
+>> impossibility - especially if we start specifying things by DMA request
+>> signal numbers on DMA engines.
+>
+> Even if I understand your point, I wonder what is the solution for us
+> that have a pretty simple representation of *hardware* to code into DT:
+> should we wait for a big rework? Should we go for a private DMA binding
+> for each of us that have just the need for a quite simple representation?
+>
+> I must say that I am puzzled by recent discussion on the topic (mix of
+> "channel" and "request" notions, plan for a complete rework of dmaengine
+> that can delay DT representation of DMA slave-controller relationship,
+> even my own doubts on the "void *" output parameter, etc.). It seems
+> that I am not familiar with all those cases and that I cannot go further
+> with a generic DT representation...
 
-That doesn't really answer my question.  We currently have many properties
-that define a clock frequency, and the DTS sets them all to 0, with the
-intent of having U-Boot update them.  Now maybe these should all be
-deleted, but it seems that setting them to a non-zero value is wrong,
-because it might mislead people into thinking that the property is not
-updated by U-Boot.  When you see something like this:
+I do agree that it appears that some DMA controllers are way more 
+complex that the one we were trying to support.
+On OMAP, the DMA channels and the DMA requests are completely 
+orthogonal, and thus I do not have to provide any information about the 
+channel in the DT binding since the SW can affect any request to any 
+channel.
+Reading the various points from Russell and Arnd, it seems that this is 
+not always the case :-(
+I guess this is probably the main cause of confusion in this discussion.
 
-	clock-frequency = <0>;
+So I do not know either how we can progress further on that without a 
+clear understanding of what all these DMA controllers are capable of.
 
-It's pretty obvious that U-boot will fill it in.
-
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+Regards,
+Benoit
