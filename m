@@ -1,13 +1,11 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: versatile-pb/ab fix MMC IRQs
-Date: Mon, 19 Mar 2012 00:57:18 +0100
-Message-ID: <CACRpkdYu-kSW0SEkMWXiuuu+sy5h2qLSBCYn+vo-NpdohzaM6A@mail.gmail.com>
-References: <1330682843-21163-1-git-send-email-linus.walleij@linaro.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: [PATCH] Don't use non-standard echo options for fdtget-runtest.sh
+Date: Mon, 19 Mar 2012 12:56:33 +1100
+Message-ID: <1332122193-8323-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1330682843-21163-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,23 +15,34 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: jdl-CYoMK+44s/E@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 2, 2012 at 11:07 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+fdtget-runtest.sh currently uses the "-e" option to echo, for interpreting
+string escapes.  But this option is only understood by some versions of
+echo - the one in bash does, but the one in dash does not.  In fact since
+I reworked the fdtget tests a while back, we no longer need the escape
+expanding feature of echo here, so this patch simple removes the -e to
+fix the problem (the testsuite now passes when /bin/sh is dash).
 
-> The MMCI driver will not work without two IRQs since this is not
-> flagged as a single-irq variant. Looking through the complex IRQ
-> definition for the MMCI on the versatile (including an #if 1
-> statement forcing MMCI IRQ0 to the VIC) this appears to the the
-> correct IRQ number for both models.
->
-> Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Niklas Hernaeus <niklas.hernaeus-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+---
+ tests/fdtget-runtest.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Ping on this and 2/2, could go in as fixes as well.
-
-Yours,
-Linus Walleij
+diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
+index 982fbe1..dac7f9a 100755
+--- a/tests/fdtget-runtest.sh
++++ b/tests/fdtget-runtest.sh
+@@ -8,7 +8,7 @@ rm -f $LOG $EXPECT
+ trap "rm -f $LOG $EXPECT" 0
+ 
+ expect="$1"
+-echo -e $expect >$EXPECT
++echo $expect >$EXPECT
+ shift
+ 
+ verbose_run_log_check "$LOG" $VALGRIND $DTGET "$@"
+-- 
+1.7.9.1
