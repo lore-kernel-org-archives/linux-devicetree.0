@@ -1,19 +1,17 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Subject: Re: kirkwood devicetree respin
-Date: Tue, 20 Mar 2012 15:16:12 -0400
-Message-ID: <20120320191612.GF2484@titan.lakedaemon.net>
+Date: Tue, 20 Mar 2012 20:32:22 +0100
+Message-ID: <20120320193222.GD8315@lunn.ch>
 References: <20120312214325.GD5050@titan.lakedaemon.net>
  <201203131557.49488.arnd@arndb.de>
  <20120320172238.GC2484@titan.lakedaemon.net>
- <alpine.LFD.2.02.1203201401410.24151@xanadu.home>
- <20120320182459.GD2484@titan.lakedaemon.net>
- <alpine.LFD.2.02.1203201454540.24151@xanadu.home>
+ <201203201915.08317.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.02.1203201454540.24151-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+In-Reply-To: <201203201915.08317.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,49 +21,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, michael-QKn5cuLxLXY@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2012 at 03:03:45PM -0400, Nicolas Pitre wrote:
-> On Tue, 20 Mar 2012, Jason Cooper wrote:
-> 
-> > On Tue, Mar 20, 2012 at 02:03:23PM -0400, Nicolas Pitre wrote:
-> > > On Tue, 20 Mar 2012, Jason Cooper wrote:
-> > > 
-> > > > I figure most folks will build orion-ehci as a module and use an initrd.
-> > > 
-> > > Possibly, however that doesn't mean this shouldn't be fixed anyway.
+On Tue, Mar 20, 2012 at 07:15:07PM +0000, Arnd Bergmann wrote:
+> On Tuesday 20 March 2012, Jason Cooper wrote:
+> > diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+> > index 6c6a5a3..0808417 100644
+> > --- a/drivers/usb/host/ehci-orion.c
+> > +++ b/drivers/usb/host/ehci-orion.c
+> > @@ -318,3 +318,5 @@ static struct platform_driver ehci_orion_driver = {
+> >         .shutdown       = usb_hcd_platform_shutdown,
+> >         .driver.name    = "orion-ehci",
+> >  };
+> > +
+> > +module_platform_driver(ehci_orion_driver);
 > > 
-> > Yes, I didn't mean to imply otherwise.  I know new patches for v3.4 are
-> > no longer being accepted (they should already be in for-next, right?)
-> > So, I'm not sure what the disposition of this patch should be.
+> This actually looks wrong to me, because the ehci driver has an
+> interesting way of pulling in platform specific drivers.
 > 
-> Just send it to arm-soc as usual, identifying it as a fix.
-> Or, given that this is USB related, you might send it to 
-> linux-usb-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
-
-Ok.
-
-> > If it's appropriate to push it into v3.4[-rc?], great.  I just didn't
-> > want to assume that and appear to be pushing patches after the for-next
-> > window closed.  I'll send it whereever you guys advise.
+> I'm pretty sure that it will break modular builds, which can only
+> have one module_init function in them. It's not clear to me why this
+> patch actually fixes the problem either. Could it be that you have
+> multiple platform driver back-ends for ehci enabled at the same time?
 > 
-> It is always appropriate to send bug fixes.  This is the kind of patches 
-> for which there is a -rc period.
+> That should not be possible in theory and at least give a warning, but
+> the ehci probing method is a bit fragile so I would not be too surprised.
 
-good to know.
+Hi Jason
 
-> It is too late for v3.3 now as it was released 2 days ago.  However if 
-> v3.3 is also broken then the fix for v3.4-rc can carry the 
-> "CC: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" annotation so it'll be picked up for 
-> v3.3.1 as well.
+I fell fowl of something in this area. Do you have CONFIG_USB_EHCI_MV=y?
+Make sure you do not have this. 
 
-It should only be broken for folks trying to boot a mainline u-boot and
-kernel on the dreamplug without an initrd.  That requires v3.4.  There
-maybe some other folks I don't know about so I'll add the CC just in
-case.
+drivers/usb/host/ehci-hcd.c has some unusual code, and if you have
+both CONFIG_USB_EHCI_MV and CONFIG_PLAT_ORION, the CONFIG_USB_EHCI_MV
+is given preference and the Orion driver never gets its probe
+functions called etc.
 
-Thanks for the clarification,
-
-Jason.
+	  Andrew
