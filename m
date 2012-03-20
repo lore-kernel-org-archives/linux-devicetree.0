@@ -1,71 +1,144 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: kirkwood devicetree respin
-Date: Tue, 20 Mar 2012 19:06:29 -0400
-Message-ID: <20120320230629.GJ2484@titan.lakedaemon.net>
-References: <20120312214325.GD5050@titan.lakedaemon.net>
- <201203202057.38365.arnd@arndb.de>
- <20120320220156.GI2484@titan.lakedaemon.net>
- <201203202215.09227.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201203202215.09227.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH V3] dt: add property iteration helpers
+Date: Tue, 20 Mar 2012 17:08:19 -0600
+Message-ID: <1332284899-24702-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2012 at 10:15:09PM +0000, Arnd Bergmann wrote:
-> On Tuesday 20 March 2012, Jason Cooper wrote:
-> > > If you want to add a dependency, it should be
-> > > 
-> > >       depends on PLAT_PXA
-> > > 
-> > > Most other platform drivers have a dependency on the platform
-> > > they are for, but USB_EHCI_MV was only recently added, and nobody
-> > > has bothered to fix this yet.
-> >
-> > It's my understanding that will make the driver visible in menuconfig
-> > for PLAT_PXA.  That may be useful, but what I'm trying to fix is a new
-> > user (me) from selecting USB_EHCI_MV on PLAT_ORION.  It breaks when
-> > you do that (at runtime).
-> 
-> Are those two things not the same? The dependency makes the driver
-> visible only on PLAT_PXA, which means it is invisible on PLAT_ORION
-> and you can no longer select it. PLAT_PXA and PLAT_ORION are mutually
-> exclusive.
+This patch adds macros of_property_for_each_u32() and
+of_property_for_each_string(), which iterate over an array of values
+within a device-tree property. Usage is for example:
 
-Ok, that's what I missed.
+struct property *prop;
+const __be32 *p;
+u32 u;
+of_property_for_each_u32(np, "propname", prop, p, u)
+	printk("U32 value: %x\n", u);
 
-...
-> > > > Maybe also -Werror for that one file to catch other similar cases?
-> > > 
-> > > No, we are actually trying to make sure that any configuration you pick
-> > > results in a kernel that builds, so that would be counterproductive.
-> > 
-> > I would argue it should build and work.  Otherwise, there's no point
-> > in having a successful compile.  So, maybe the answer is not to have
-> > it as a configuration option.  Or, at least, invisible in menuconfig.
-> 
-> Making USB_EHCI_MV invisible everywhere would also be possible, in that
-> case the right logic would be
-> 
-> config USB_EHCI_MV
-> 	def_bool y
-> 	depends on USB_EHCI_HCD && PLAT_PXA
-> 	select USB_EHCI_ROOT_HUB_TT
-> 
-> This would unconditionally enable the pxa ehci driver whenever the
-> common ehci code is enabled, which is a reasonable choice, and matches
-> the behavior of the orion driver.
+struct property *prop;
+const char *s;
+of_property_for_each_string(np, "propname", prop, s)
+	printk("String value: %s\n", s);
 
-Ok, I'll gin up a patch for this and CC: stable / linux-usb.
+Based on work by Rob Herring <robherring2@gmail.com>
 
-thx,
+Signed-off-by: Stephen Warren <swarren@wwwdotorg.org>
+---
+v3: Moved code in base.c, defines/prototypes into of.h.
+v2: Simplified the implementation per suggestion by Rob Herring.
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not reposting them to avoid spamming people, but I have pinctrl changes
+that depend on this, so if this could be merged through the pinctrl tree,
+or somehow pulled into that tree, that'd be great.
+
+ drivers/of/base.c  |   41 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h |   35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 5806449..d9bfd49 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1260,3 +1260,44 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+ 	return id;
+ }
+ EXPORT_SYMBOL_GPL(of_alias_get_id);
++
++const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
++			       u32 *pu)
++{
++	const void *curv = cur;
++
++	if (!prop)
++		return NULL;
++
++	if (!cur) {
++		curv = prop->value;
++		goto out_val;
++	}
++
++	curv += sizeof(*cur);
++	if (curv >= prop->value + prop->length)
++		return NULL;
++
++out_val:
++	*pu = be32_to_cpup(curv);
++	return curv;
++}
++EXPORT_SYMBOL_GPL(of_prop_next_u32);
++
++const char *of_prop_next_string(struct property *prop, const char *cur)
++{
++	const void *curv = cur;
++
++	if (!prop)
++		return NULL;
++
++	if (!cur)
++		return prop->value;
++
++	curv += strlen(cur) + 1;
++	if (curv >= prop->value + prop->length)
++		return NULL;
++
++	return curv;
++}
++EXPORT_SYMBOL_GPL(of_prop_next_string);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index ba5d849..7c58550 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -269,6 +269,37 @@ extern void of_detach_node(struct device_node *);
+ #endif
+ 
+ #define of_match_ptr(_ptr)	(_ptr)
++
++/*
++ * struct property *prop;
++ * const __be32 *p;
++ * u32 u;
++ *
++ * of_property_for_each_u32(np, "propname", prop, p, u)
++ *         printk("U32 value: %x\n", u);
++ */
++const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
++			       u32 *pu);
++#define of_property_for_each_u32(np, propname, prop, p, u)	\
++	for (prop = of_find_property(np, propname, NULL),	\
++		p = of_prop_next_u32(prop, NULL, &u);		\
++		p;						\
++		p = of_prop_next_u32(prop, p, &u))
++
++/*
++ * struct property *prop;
++ * const char *s;
++ *
++ * of_property_for_each_string(np, "propname", prop, s)
++ *         printk("String value: %s\n", s);
++ */
++const char *of_prop_next_string(struct property *prop, const char *cur);
++#define of_property_for_each_string(np, propname, prop, s)	\
++	for (prop = of_find_property(np, propname, NULL),	\
++		s = of_prop_next_string(prop, NULL);		\
++		s;						\
++		s = of_prop_next_string(prop, s))
++
+ #else /* CONFIG_OF */
+ 
+ static inline bool of_have_populated_dt(void)
+@@ -359,6 +390,10 @@ static inline int of_machine_is_compatible(const char *compat)
+ 
+ #define of_match_ptr(_ptr)	NULL
+ #define of_match_node(_matches, _node)	NULL
++#define of_property_for_each_u32(np, propname, prop, p, u) \
++	while (0)
++#define of_property_for_each_string(np, propname, prop, s) \
++	while (0)
+ #endif /* CONFIG_OF */
+ 
+ /**
+-- 
+1.7.0.4
