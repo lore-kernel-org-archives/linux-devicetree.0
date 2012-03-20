@@ -1,57 +1,101 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v4 07/10] pwm: tegra: Add device tree support
-Date: Tue, 20 Mar 2012 09:48:07 +0100
-Message-ID: <20120320084807.GC20249@avionic-0098.adnet.avionic-design.de>
-References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de>
- <1331740593-10807-8-git-send-email-thierry.reding@avionic-design.de>
- <4F67EE9A.6080101@wwwdotorg.org>
+From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Subject: Re: [PATCH] gpio: Add Altera GPIO driver
+Date: Tue, 20 Mar 2012 10:47:41 +0100
+Message-ID: <20120320094741.GQ21503@distanz.ch>
+References: <1328551142-8439-1-git-send-email-tklauser@distanz.ch>
+ <20120312160418.816A83E07B0@localhost>
+ <20120313113126.GL21503@distanz.ch>
+ <20120313181324.EBBA83E053B@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tqI+Z3u+9OQ7kwn0"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F67EE9A.6080101-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20120313181324.EBBA83E053B@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2012-03-13 at 19:13:24 +0100, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Tue, 13 Mar 2012 12:31:26 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
+> > On 2012-03-12 at 17:04:18 +0100, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > > On Mon,  6 Feb 2012 18:59:02 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
+> > > > This driver supports the Altera PIO core.
+> > > > 
+> > > > Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+> > > > Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+> > > > ---
+> > > > This driver was submitted already about a year ago by Thomas, was
+> > > > adjusted by him according to some remarks made by Grant and was then
+> > > > included in the -mm tree [1] for some time but dropped again
+> > > > (couldn't find out when and why exactly).
+> > > > 
+> > > > [0] http://article.gmane.org/gmane.linux.drivers.devicetree/4231
+> > > > [1] http://article.gmane.org/gmane.linux.kernel.commits.mm/65119
+> > > > 
+> > > > So this is a new attempt towards getting this driver into mainline
+> > > > from the nios2 tree. The following changes have been made atop the
+> > > > version submitted by Thomas:
+> > > > 
+> > > > - Changed driver name to new naming convention
+> > > > - Usage of of_property_read_u32 in the probe function
+> > > 
+> > > This looks like a pretty generic memory-mapped gpio chip.  It should use the
+> > > gpio-generic infrastructure instead of open-coding all of the accessor hooks.
+> > 
+> > Thanks a lot for the hint.
+> > 
+> > I'm trying to figure out how this could work together with
+> > of_mm_gpio_chip which we use in the driver. Both bgpio_chip and
+> > of_mm_gpio_chip contain a struct gpio_chip, so I suppose we can only
+> > "be" either one of them in our driver? What would be the prefered way to
+> > do this?
+> 
+> Hmmm, you are correct.  However, of_mm_gpio_chip() is the only part of
+> drivers/of/gpio.c that isn't usable by gpio-generic.c.  Focus on gpio-generic.
 
---tqI+Z3u+9OQ7kwn0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll do that, thanks.
 
-* Stephen Warren wrote:
-> On 03/14/2012 09:56 AM, Thierry Reding wrote:
-> > Add auxdata to instantiate the PWFM controller from a device tree,
-> > include the corresponding nodes in the dtsi files for Tegra 20 and
-> > Tegra 30 and add binding documentation.
-> >=20
-> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
->=20
-> > +++ b/Documentation/devicetree/bindings/pwm/tegra-pwm.txt
->=20
-> Can this please be named nvidia,tegra20-pwm.txt so that if we need
-> different bindings for any future Tegra PWM, we won't have any filename
-> conflicts?
+> > Also as we need to register the driver from platform specific setup code
+> > (in the out-of-mainline nios2 port only atm) very early on, we don't
+> > have a struct platform_device or struct device available which we would
+> > need to pass to bgpio_init. What's the best way to solve this?
+> 
+> There are 2 halves to gpio-generic.  The library of helper functions (get/set/etc.)
+> and the basic-mmio-gpio device driver.  It /should/ be safe to call bgpio_init without
+> a struct platform_device, but right now the code doesn't protect against it.  That is
+> a bug that you can easily fix.
+> 
+> However, why are you initializing it very early in platform specific code?  That is
+> very strongly discouraged.  GPIO controllers are just another device.
 
-That file already documents the bindings for Tegra 20 and Tegra 30, that's
-why I chose the move generic name. Could this perhaps be documented within
-the file instead? Or should I rather add a nvidia,tegra30-pwm.txt with a
-reference to the nvidia,tegra20-pwm.txt?
+I couldn't really find out a reason why we do this, maybe it's just
+because the driver was initially based on gpio-xilinx and it's what
+they do there. I'll check with Thomas (the original author of
+gpio-altera) about this.
 
-Thierry
+> > And another issue I came across: gpio-generic only seems to support
+> > 8/16/32/64 bit wide GPIO registers. The Altera GPIO controller can have
+> > from 1 to 32 bits per register depending on the configuration in the
+> > FPGA (though it will still always be a 32bit register). In bgpio_init
+> > the size passed is checked for being a number of 2 and the number then
+> > written to the bits member. What would be the best way to still
+> > determine the "real" number of GPIOs available in the driver then?
+> 
+> The gpio-generic code is a work in progress; feel free to submit patches to get
+> it to behave the way you need it to.  Ultimately, I want all simple mm gpio drivers
+> to use gpio-generic.
 
---tqI+Z3u+9OQ7kwn0
-Content-Type: application/pgp-signature
+Ok. I hope I can provide a good example with gpio-altera then :)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk9oREcACgkQZ+BJyKLjJp9k0gCeLtj1cyfQT0WL4uUnA9lwVzjq
-9c8AnRkDNNP1nluXIxdbmhUKDIBMr3JO
-=gszj
------END PGP SIGNATURE-----
-
---tqI+Z3u+9OQ7kwn0--
+Thanks
+Tobias
