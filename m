@@ -1,108 +1,32 @@
-From: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH][v2] Device Tree Bindings for Freescale TDM controller
-Date: Tue, 20 Mar 2012 06:32:49 +0530
-Message-ID: <1332205369-26260-1-git-send-email-poonam.aggrwal@freescale.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4 01/10] PWM: add pwm framework support
+Date: Mon, 19 Mar 2012 19:55:27 -0600
+Message-ID: <4F67E38F.6080300@wwwdotorg.org>
+References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de> <1331740593-10807-2-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Sandeep Singh <Sandeep-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1331740593-10807-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This TDM controller is available in various Freescale SOCs like MPC8315, P1020,
-P1022, P1010.
+On 03/14/2012 09:56 AM, Thierry Reding wrote:
+> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> This patch adds framework support for PWM (pulse width modulation) devices.
+...
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+...
+> +/**
+> + * pwmchip_add() - register a new pwm
+> + * @chip: the pwm
+> + *
+> + * register a new pwm. pwm->pwm_id must be initialized. if pwm_id < 0 then
+> + * a dynamically assigned id will be used, otherwise the id specified,
+> + */
 
-Signed-off-by: Sandeep Singh <Sandeep-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-Changes in v2:
-	- Incorporated Scott's Review comments
- Documentation/devicetree/bindings/tdm/fsl-tdm.txt |   67 +++++++++++++++++++++
- 1 files changed, 67 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-
-diff --git a/Documentation/devicetree/bindings/tdm/fsl-tdm.txt b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-new file mode 100644
-index 0000000..6553dbe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-@@ -0,0 +1,67 @@
-+=====================================================================
-+TDM Device Tree Binding
-+Copyright (C) 2012 Freescale Semiconductor Inc.
-+
-+NOTE: The bindings described in this document are preliminary
-+and subject to change.
-+
-+=====================================================================
-+TDM (Time Division Multiplexing)
-+
-+DESCRIPTION
-+
-+The TDM is full duplex serial port designed to allow various devices including
-+digital signal processors (DSPs) to communicate with a variety of serial devices
-+including industry standard framers, codecs, other DSPs and microprocessors.
-+
-+The below properties describe the device tree bindings for Freescale TDM
-+controller.
-+This TDM controller is available on various Freescale Processors like
-+MPC8315, P1020, P1022 and P1010.
-+
-+PROPERTIES
-+
-+  - compatible
-+      Usage: required
-+      Value type: <string>
-+      Definition: Should contain "fsl,mpc8315-tdm".
-+	  So mpc8315 will have compatible = "fsl,mpc8315-tdm";
-+	  p1010 will have compatible "fsl,p1010-tdm", "fsl,mpc8315-tdm";
-+
-+  - reg
-+      Usage: required
-+      Definition: There are two reg resources. First is for  TDM registers and
-+	  the second for TDM DMAC registers.
-+
-+  - clock-frequency
-+      Usage: optional
-+      Value type: <u32>
-+      Definition: The frequency at which the TDM block is operating.
-+
-+  - interrupts
-+      Usage: required
-+      Definition: This field defines the interrupt specifiers for the two
-+      interrupts. First is for TDM error and second for TDM DMAC.
-+
-+  - phy-handle
-+      Usage: optional
-+      Value type: <phandle>
-+      Definition: Phandle of the line controller node or framer node eg. SLIC,
-+	  E1/T1 etc.
-+
-+  - fsl,max-time-slots
-+      Usage: required
-+      Value type: <u32>
-+      Definition: Maximum number of 8-bit time slots in one TDM frame.
-+	  This is the maximum number which TDM hardware supports.
-+
-+EXAMPLE
-+
-+	tdm@16000 {
-+		compatible = "fsl,p1010-tdm", "fsl,mpc8315-tdm";
-+		reg = <0x16000 0x200 0x2c000 0x2000>;
-+		clock-frequency = <399999999>; /* typically filled by u-boot */
-+		interrupts = <16 8 62 8>;
-+		phy-handle = <&zarlink1>;
-+		fsl-max-time-slots = <128>;
-+	};
--- 
-1.6.5.6
+I don't see anywhere in the code that implements "if pwm_id < 0 then a
+dynamically assigned id will be used".
