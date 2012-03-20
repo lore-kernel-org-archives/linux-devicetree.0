@@ -1,59 +1,28 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [PATCH] of: dma/fixup
-Date: Tue, 20 Mar 2012 11:17:36 +0100
-Message-ID: <1332238657-12668-1-git-send-email-nicolas.ferre@atmel.com>
-References: <6b5dc1fadfd03a48093338b6981c0a7ae7662212.1332237596.git.nicolas.ferre@atmel.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/8] pinctrl: Include <linux/bug.h> to prevent compile errors
+Date: Tue, 20 Mar 2012 13:12:52 +0100
+Message-ID: <CACRpkdYxhgh7AcQSJrRg4Nn4yY-+REdfK+ZXbDPs9E9b3s8goQ@mail.gmail.com>
+References: <1331931269-12262-1-git-send-email-swarren@wwwdotorg.org>
+	<1331931269-12262-2-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6b5dc1fadfd03a48093338b6981c0a7ae7662212.1332237596.git.nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: b-cousson@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org
-Cc: vinod.koul@linux.intel.com, swarren@nvidia.com, arnd@arndb.de, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-omap@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1331931269-12262-2-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
----
- include/linux/of_dma.h |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+On Fri, Mar 16, 2012 at 9:54 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-index 2865480..da95e37 100644
---- a/include/linux/of_dma.h
-+++ b/include/linux/of_dma.h
-@@ -18,7 +18,7 @@
- 
- struct device_node;
- 
--#ifdef CONFIG_OF_DMA
-+#ifdef CONFIG_OF
- 
- extern int of_dma_controller_register(struct device_node *np,
- 			int (*of_dma_xlate)(struct of_phandle_args *, void *));
-@@ -29,7 +29,7 @@ extern unsigned int of_dma_count(struct device_node *np);
- 
- extern int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec,
- 				      void *dma_req);
--#else /* CONFIG_OF_DMA */
-+#else /* CONFIG_OF */
- 
- static int of_dma_controller_register(struct device_node *np,
- 			int (*of_dma_xlate)(struct of_phandle_args *, void *))
-@@ -55,6 +55,6 @@ static int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec,
- {
- 	return -ENOSYS;
- }
--#endif /* CONFIG_OF_DMA */
-+#endif /* CONFIG_OF */
- 
- #endif /* __LINUX_OF_DMA_H */
--- 
-1.7.9
+> Macros in <linux/pinctrl/machine.h> call ARRAY_SIZE(), the definition of
+> which eventually calls BUILD_BUG_ON_ZERO(), which is defined in
+> <linux/bug.h>. Include that so that every .c file using the pinctrl macros
+> doesn't have to do that itself.
+>
+> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> ---
+> v2: Fix accidental replacing of pinctrl-state.h with pinctrl.h
+
+Applied. Thanks!
+Linus Walleij
