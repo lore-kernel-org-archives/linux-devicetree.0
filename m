@@ -1,101 +1,210 @@
-From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH] gpio: Add Altera GPIO driver
-Date: Tue, 20 Mar 2012 10:47:41 +0100
-Message-ID: <20120320094741.GQ21503@distanz.ch>
-References: <1328551142-8439-1-git-send-email-tklauser@distanz.ch>
- <20120312160418.816A83E07B0@localhost>
- <20120313113126.GL21503@distanz.ch>
- <20120313181324.EBBA83E053B@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120313181324.EBBA83E053B@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: [PATCH 2/2] of: selftest/dma: Add selftest for new DT DMA request helpers
+Date: Tue, 20 Mar 2012 11:13:32 +0100
+Message-ID: <066e4deaddca8ac368c2c355c3a77daa9e9057cf.1332237596.git.nicolas.ferre@atmel.com>
+References: <1331800690-21518-1-git-send-email-nicolas.ferre@atmel.com>
+ <6b5dc1fadfd03a48093338b6981c0a7ae7662212.1332237596.git.nicolas.ferre@atmel.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <6b5dc1fadfd03a48093338b6981c0a7ae7662212.1332237596.git.nicolas.ferre@atmel.com>
+In-Reply-To: <6b5dc1fadfd03a48093338b6981c0a7ae7662212.1332237596.git.nicolas.ferre@atmel.com>
+References: <6b5dc1fadfd03a48093338b6981c0a7ae7662212.1332237596.git.nicolas.ferre@atmel.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: b-cousson@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, vinod.koul@linux.intel.com, Nicolas Ferre <nicolas.ferre@atmel.com>, Stephen Warren <swarren@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 2012-03-13 at 19:13:24 +0100, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Tue, 13 Mar 2012 12:31:26 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
-> > On 2012-03-12 at 17:04:18 +0100, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > > On Mon,  6 Feb 2012 18:59:02 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
-> > > > This driver supports the Altera PIO core.
-> > > > 
-> > > > Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> > > > Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-> > > > ---
-> > > > This driver was submitted already about a year ago by Thomas, was
-> > > > adjusted by him according to some remarks made by Grant and was then
-> > > > included in the -mm tree [1] for some time but dropped again
-> > > > (couldn't find out when and why exactly).
-> > > > 
-> > > > [0] http://article.gmane.org/gmane.linux.drivers.devicetree/4231
-> > > > [1] http://article.gmane.org/gmane.linux.kernel.commits.mm/65119
-> > > > 
-> > > > So this is a new attempt towards getting this driver into mainline
-> > > > from the nios2 tree. The following changes have been made atop the
-> > > > version submitted by Thomas:
-> > > > 
-> > > > - Changed driver name to new naming convention
-> > > > - Usage of of_property_read_u32 in the probe function
-> > > 
-> > > This looks like a pretty generic memory-mapped gpio chip.  It should use the
-> > > gpio-generic infrastructure instead of open-coding all of the accessor hooks.
-> > 
-> > Thanks a lot for the hint.
-> > 
-> > I'm trying to figure out how this could work together with
-> > of_mm_gpio_chip which we use in the driver. Both bgpio_chip and
-> > of_mm_gpio_chip contain a struct gpio_chip, so I suppose we can only
-> > "be" either one of them in our driver? What would be the prefered way to
-> > do this?
-> 
-> Hmmm, you are correct.  However, of_mm_gpio_chip() is the only part of
-> drivers/of/gpio.c that isn't usable by gpio-generic.c.  Focus on gpio-generic.
+Those selftests are covering the new DT DMA helpers. They will test both
+error and normal cases.
+A custom .xlate() function is also provided to show the use of this API in case
+of a different need than the single cell argument.
 
-I'll do that, thanks.
+Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Benoit Cousson <b-cousson@ti.com>
+Cc: Stephen Warren <swarren@nvidia.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/boot/dts/at91sam9m10g45ek.dts     |    2 +
+ arch/arm/boot/dts/testcases/tests-dma.dtsi |   24 +++++++
+ arch/arm/boot/dts/testcases/tests.dtsi     |    1 +
+ drivers/of/selftest.c                      |  100 ++++++++++++++++++++++++++++
+ 4 files changed, 127 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/testcases/tests-dma.dtsi
 
-> > Also as we need to register the driver from platform specific setup code
-> > (in the out-of-mainline nios2 port only atm) very early on, we don't
-> > have a struct platform_device or struct device available which we would
-> > need to pass to bgpio_init. What's the best way to solve this?
-> 
-> There are 2 halves to gpio-generic.  The library of helper functions (get/set/etc.)
-> and the basic-mmio-gpio device driver.  It /should/ be safe to call bgpio_init without
-> a struct platform_device, but right now the code doesn't protect against it.  That is
-> a bug that you can easily fix.
-> 
-> However, why are you initializing it very early in platform specific code?  That is
-> very strongly discouraged.  GPIO controllers are just another device.
+diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+index a387e77..18a8f3c 100644
+--- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
++++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+@@ -38,3 +38,5 @@
+ 		};
+ 	};
+ };
++
++/include/ "testcases/tests.dtsi"
+diff --git a/arch/arm/boot/dts/testcases/tests-dma.dtsi b/arch/arm/boot/dts/testcases/tests-dma.dtsi
+new file mode 100644
+index 0000000..5f0ba93
+--- /dev/null
++++ b/arch/arm/boot/dts/testcases/tests-dma.dtsi
+@@ -0,0 +1,24 @@
++
++/ {
++	testcase-data {
++		dma-tests {
++			testdmac0: test-dma-controller0 {
++				#dma-cells = <1>;
++			};
++
++			testdmac1: test-dma-controller1 {
++				#dma-cells = <2>;
++			};
++
++			dma-slave-a {
++				dma-request = <&testdmac0 42>;
++			};
++			dma-slave-b {
++				dma-request = <&testdmac1 24>; /* wrong number of values */
++			};
++			dma-slave-c {
++				dma-request = <&testdmac1 24 25>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/testcases/tests.dtsi b/arch/arm/boot/dts/testcases/tests.dtsi
+index a7c5067..e3afb2b 100644
+--- a/arch/arm/boot/dts/testcases/tests.dtsi
++++ b/arch/arm/boot/dts/testcases/tests.dtsi
+@@ -1 +1,2 @@
+ /include/ "tests-phandle.dtsi"
++/include/ "tests-dma.dtsi"
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index f24ffd7..3281bfd 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -9,6 +9,7 @@
+ #include <linux/errno.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_dma.h>
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+@@ -148,6 +149,104 @@ static void __init of_selftest_property_match_string(void)
+ 	selftest(rc == -EILSEQ, "unterminated string; rc=%i", rc);
+ }
+ 
++struct two_cells {
++	int cell1;
++	int cell2;
++};
++
++static int of_dma_xlate_twonumbercell(struct of_phandle_args *dma_spec, void *cells)
++{
++	struct two_cells *tc;
++
++	if (!dma_spec)
++		return -EINVAL;
++	if (!cells)
++		return -ENOBUFS;
++	if (WARN_ON(dma_spec->args_count != 2))
++		return -EINVAL;
++
++	tc = (struct two_cells *)cells;
++
++	tc->cell1 = dma_spec->args[0];
++	tc->cell2 = dma_spec->args[1];
++	return 0;
++}
++
++static void __init of_selftest_dma(void)
++{
++	struct device_node *dma_controller0_np;
++	struct device_node *dma_controller1_np;
++	struct device_node *dma_slave_np;
++	int rc;
++	int dma_req;
++	struct two_cells tc;
++
++	pr_info("start\n");
++	dma_controller0_np = of_find_node_by_path("/testcase-data/dma-tests/test-dma-controller0");
++	dma_slave_np = of_find_node_by_path("/testcase-data/dma-tests/dma-slave-a");
++	if (!dma_controller0_np || !dma_slave_np) {
++		pr_err("No testcase data in device tree\n");
++		return;
++	}
++
++	/* wrong usage: DMA controller not registered yet! */
++	rc = of_get_dma_request(dma_slave_np, 0, &dma_req);
++	selftest(rc == -ENODEV, "selftest DMA slave request expected:-ENODEV got:%i\n", rc);
++
++	/* test DMA controller registration */
++	rc = of_dma_controller_register(dma_controller0_np, of_dma_xlate_onenumbercell);
++	selftest(rc == 0, "selftest DMA controller not found: got:%i\n", rc);
++
++	/* wrong usage and error code tests */
++	rc = of_get_dma_request(dma_slave_np, 1, &dma_req);
++	selftest(rc == -EINVAL, "selftest DMA slave request expected:-EINVAL got:%i\n", rc);
++
++	rc = of_get_dma_request(dma_slave_np, 0, NULL);
++	selftest(rc == -ENOBUFS, "selftest DMA slave request expected:-ENOBUFS got:%i\n", rc);
++
++	/* proper use of the API */
++	rc = of_get_dma_request(dma_slave_np, 0, &dma_req);
++	selftest(rc == 0, "selftest DMA slave request error: got:%i\n", rc);
++	selftest(dma_req == 42, "selftest DMA slave request line expected:42 got:%i\n", dma_req);
++
++	of_dma_controller_free(dma_controller0_np);
++
++	/* wrong usage: DMA controller not registered anymore! */
++	rc = of_get_dma_request(dma_slave_np, 0, &dma_req);
++	selftest(rc == -ENODEV, "selftest DMA slave request expected:-ENODEV got:%i\n", rc);
++
++	/* use with a two values DMA request specification */
++	dma_controller1_np = of_find_node_by_path("/testcase-data/dma-tests/test-dma-controller1");
++	dma_slave_np = of_find_node_by_path("/testcase-data/dma-tests/dma-slave-b");
++	if (!dma_controller1_np || !dma_slave_np) {
++		pr_err("No testcase data in device tree\n");
++		return;
++	}
++
++	/* DMA controller registration with custom .xlate() function */
++	rc = of_dma_controller_register(dma_controller1_np, of_dma_xlate_twonumbercell);
++	selftest(rc == 0, "selftest DMA controller not found: got:%i\n", rc);
++
++	/* wrong number of cells */
++	rc = of_get_dma_request(dma_slave_np, 0, &tc);
++	selftest(rc == -EINVAL, "selftest DMA slave request expected:-EINVAL got:%i\n", rc);
++
++	dma_slave_np = of_find_node_by_path("/testcase-data/dma-tests/dma-slave-c");
++	if (!dma_slave_np) {
++		pr_err("No dma-slave-c data in device tree\n");
++		return;
++	}
++
++	/* proper use of the API */
++	rc = of_get_dma_request(dma_slave_np, 0, &tc);
++	selftest(rc == 0, "selftest DMA slave request error: got:%i\n", rc);
++	selftest(tc.cell1 == 24, "selftest DMA slave request line expected:24 got:%i\n", tc.cell1);
++	selftest(tc.cell2 == 25, "selftest DMA slave request line expected:25 got:%i\n", tc.cell2);
++
++	of_dma_controller_free(dma_controller1_np);
++	pr_info("end - %s\n", selftest_passed ? "PASS" : "FAIL");
++}
++
+ static int __init of_selftest(void)
+ {
+ 	struct device_node *np;
+@@ -162,6 +261,7 @@ static int __init of_selftest(void)
+ 	pr_info("start of selftest - you will see error messages\n");
+ 	of_selftest_parse_phandle_with_args();
+ 	of_selftest_property_match_string();
++	of_selftest_dma();
+ 	pr_info("end of selftest - %s\n", selftest_passed ? "PASS" : "FAIL");
+ 	return 0;
+ }
+-- 
+1.7.9
 
-I couldn't really find out a reason why we do this, maybe it's just
-because the driver was initially based on gpio-xilinx and it's what
-they do there. I'll check with Thomas (the original author of
-gpio-altera) about this.
-
-> > And another issue I came across: gpio-generic only seems to support
-> > 8/16/32/64 bit wide GPIO registers. The Altera GPIO controller can have
-> > from 1 to 32 bits per register depending on the configuration in the
-> > FPGA (though it will still always be a 32bit register). In bgpio_init
-> > the size passed is checked for being a number of 2 and the number then
-> > written to the bits member. What would be the best way to still
-> > determine the "real" number of GPIOs available in the driver then?
-> 
-> The gpio-generic code is a work in progress; feel free to submit patches to get
-> it to behave the way you need it to.  Ultimately, I want all simple mm gpio drivers
-> to use gpio-generic.
-
-Ok. I hope I can provide a good example with gpio-altera then :)
-
-Thanks
-Tobias
