@@ -1,49 +1,144 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: remoteproc: Resource table for IRQs
-Date: Tue, 20 Mar 2012 19:34:05 +0200
-Message-ID: <CAK=WgbaX7HJJkAW-rn4e7BHstgV+zvSnjzg980gGui9ZCRxMqQ@mail.gmail.com>
-References: <4F5F1657.9090200@monstr.eu> <CAK=WgbamnCRrEGM-xRZGie+ZoiyZx3uudXb-_dopEj7yMQYuUA@mail.gmail.com>
- <4F6736B9.4070307@monstr.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F6736B9.4070307@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, "Guzman Lugo, Fernando" <fernando.lugo@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V2 1/6] dt: add property iteration helpers
+Date: Tue, 20 Mar 2012 11:44:34 -0600
+Message-ID: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+This patch adds macros of_property_for_each_u32() and
+of_property_for_each_string(), which iterate over an array of values
+within a device-tree property. Usage is for example:
 
-On Mon, Mar 19, 2012 at 3:38 PM, Michal Simek <monstr@monstr.eu> wrote:
-> Maybe I am trying to do things more complicated than they are but
-> I still see that make sense to do it.
+struct property *prop;
+const __be32 *p;
+u32 u;
+of_property_for_each_u32(np, "propname", prop, p, u)
+	printk("U32 value: %x\n", u);
 
-I agree, it definitely does.
+struct property *prop;
+const char *s;
+of_property_for_each_string(np, "propname", prop, s)
+	printk("String value: %s\n", s);
 
-OMAP4 is using this kind of resource allocation for a plethora of resources.
+Based on work by Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-In general there are two options to do this:
+Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+---
+v2: Simplified the implementation per suggestion by Rob Herring.
+---
+ include/linux/of_iter_prop.h |  101 ++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 101 insertions(+), 0 deletions(-)
+ create mode 100644 include/linux/of_iter_prop.h
 
-- static, via remoteproc (firmware tells us about its resources
-requirements via the resource table, Linux allocates them before
-booting firmware)
-- dynamic, via rpmsg (firmware tells us about its resources
-requirements by sending a message just before the relevant use case
-kicks in, Linux allocates it only at that point)
-
-The former consumes the resource as long as the remote processor is
-powered on, but it's super simple: just add a new resource type.
-
-The latter consumes the resource on when really needed, but it
-requires a "resource manager": an rpmsg driver which does this kind of
-resource allocation and tracking. Fernando (cc'ed) implemented it
-already, and will be posting sometimes in the near future (it's
-already available in Fernando's github tree if you're interested).
-
-> What do you think?
-
-Go for it :)
-
-Thanks,
-Ohad.
+diff --git a/include/linux/of_iter_prop.h b/include/linux/of_iter_prop.h
+new file mode 100644
+index 0000000..e3df23c
+--- /dev/null
++++ b/include/linux/of_iter_prop.h
+@@ -0,0 +1,101 @@
++/*
++ * Copyright (c) 2011-2012 NVIDIA CORPORATION. All rights reserved.
++ *
++ * Iterate over properties that store arrays.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#ifndef __OF_ITER_PROP_H__
++#define __OF_ITER_PROP_H__
++
++#include <linux/of.h>
++
++#ifdef CONFIG_OF
++static inline const __be32 *of_prop_next_u32(struct property *prop,
++					     const __be32 *cur, u32 *pu)
++{
++	const void *curv = cur;
++
++	if (!prop)
++		return NULL;
++
++	if (!cur) {
++		curv = prop->value;
++		goto out_val;
++	}
++
++	curv += sizeof(*cur);
++	if (curv >= prop->value + prop->length)
++		return NULL;
++
++out_val:
++	*pu = be32_to_cpup(curv);
++	return curv;
++}
++
++/*
++ * struct property *prop;
++ * const __be32 *p;
++ * u32 u;
++ *
++ * of_property_for_each_u32(np, "propname", prop, p, u)
++ *         printk("U32 value: %x\n", u);
++ */
++#define of_property_for_each_u32(np, propname, prop, p, u)	\
++	for (prop = of_find_property(np, propname, NULL),	\
++		p = of_prop_next_u32(prop, NULL, &u);		\
++		p;						\
++		p = of_prop_next_u32(prop, p, &u))
++
++static inline const char *of_prop_next_string(struct property *prop,
++					      const char *cur)
++{
++	const void *curv = cur;
++
++	if (!prop)
++		return NULL;
++
++	if (!cur)
++		return prop->value;
++
++	curv += strlen(cur) + 1;
++	if (curv >= prop->value + prop->length)
++		return NULL;
++
++	return curv;
++}
++
++/*
++ * struct property *prop;
++ * const char *s;
++ *
++ * of_property_for_each_string(np, "propname", prop, s)
++ *         printk("String value: %s\n", s);
++ */
++#define of_property_for_each_string(np, propname, prop, s)	\
++	for (prop = of_find_property(np, propname, NULL),	\
++		s = of_prop_next_string(prop, NULL);		\
++		s;						\
++		s = of_prop_next_string(prop, s))
++
++#else
++
++#define of_property_for_each_u32(np, propname, prop, p, u) \
++	while (0)
++
++#define of_property_for_each_string(np, propname, prop, s) \
++	while (0)
++
++#endif /* CONFIG_OF */
++
++#endif /* __OF_ITER_PROP_H__ */
+-- 
+1.7.0.4
