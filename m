@@ -1,154 +1,56 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/6] dt: add property iteration helpers
-Date: Tue, 20 Mar 2012 15:03:10 -0500
-Message-ID: <4F68E27E.3000408@gmail.com>
-References: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: kirkwood devicetree respin
+Date: Tue, 20 Mar 2012 21:45:04 +0100
+Message-ID: <20120320204504.GE8315@lunn.ch>
+References: <20120312214325.GD5050@titan.lakedaemon.net>
+ <201203131557.49488.arnd@arndb.de>
+ <20120320172238.GC2484@titan.lakedaemon.net>
+ <201203201915.08317.arnd@arndb.de>
+ <20120320193222.GD8315@lunn.ch>
+ <20120320194449.GH2484@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1332265479-1260-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120320194449.GH2484-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2012 12:44 PM, Stephen Warren wrote:
-> This patch adds macros of_property_for_each_u32() and
-> of_property_for_each_string(), which iterate over an array of values
-> within a device-tree property. Usage is for example:
+> > Hi Jason
+> > 
+> > I fell fowl of something in this area. Do you have CONFIG_USB_EHCI_MV=y?
+> > Make sure you do not have this. 
+> > 
+> > drivers/usb/host/ehci-hcd.c has some unusual code, and if you have
+> > both CONFIG_USB_EHCI_MV and CONFIG_PLAT_ORION, the CONFIG_USB_EHCI_MV
+> > is given preference and the Orion driver never gets its probe
+> > functions called etc.
 > 
-> struct property *prop;
-> const __be32 *p;
-> u32 u;
-> of_property_for_each_u32(np, "propname", prop, p, u)
-> 	printk("U32 value: %x\n", u);
+> waddaya know?  The compile warnings went away, and the d*mn thing booted
+> fine.
 > 
-> struct property *prop;
-> const char *s;
-> of_property_for_each_string(np, "propname", prop, s)
-> 	printk("String value: %s\n", s);
-> 
-> Based on work by Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> ---
-> v2: Simplified the implementation per suggestion by Rob Herring.
-> ---
->  include/linux/of_iter_prop.h |  101 ++++++++++++++++++++++++++++++++++++++++++
->  1 files changed, 101 insertions(+), 0 deletions(-)
->  create mode 100644 include/linux/of_iter_prop.h
+> Is there a scenario where someone would want to select
+> CONFIG_USB_EHCI_MV in menuconfig?
 
-I don't think this makes sense to be a new header as it's use is pretty
-much the same as other property functions. I would un-inline the helper
-functions to of/base.c and move the defines to of.h.
+Not on an Orion platform, as far as i know. Maybe
 
-Rob
+config USB_EHCI_MV
+        bool "EHCI support for Marvell on-chip controller"
+-        depends on USB_EHCI_HCD
++        depends on USB_EHCI_HCD && !PLAT_ORION
+        select USB_EHCI_ROOT_HUB_TT
+        ---help---
+          Enables support for Marvell (including PXA and MMP series) on-chip
+          USB SPH and OTG controller. SPH is a single port host, and it can
+          only be EHCI host. OTG is controller that can switch to host mode.
 
-> diff --git a/include/linux/of_iter_prop.h b/include/linux/of_iter_prop.h
-> new file mode 100644
-> index 0000000..e3df23c
-> --- /dev/null
-> +++ b/include/linux/of_iter_prop.h
-> @@ -0,0 +1,101 @@
-> +/*
-> + * Copyright (c) 2011-2012 NVIDIA CORPORATION. All rights reserved.
-> + *
-> + * Iterate over properties that store arrays.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#ifndef __OF_ITER_PROP_H__
-> +#define __OF_ITER_PROP_H__
-> +
-> +#include <linux/of.h>
-> +
-> +#ifdef CONFIG_OF
-> +static inline const __be32 *of_prop_next_u32(struct property *prop,
-> +					     const __be32 *cur, u32 *pu)
-> +{
-> +	const void *curv = cur;
-> +
-> +	if (!prop)
-> +		return NULL;
-> +
-> +	if (!cur) {
-> +		curv = prop->value;
-> +		goto out_val;
-> +	}
-> +
-> +	curv += sizeof(*cur);
-> +	if (curv >= prop->value + prop->length)
-> +		return NULL;
-> +
-> +out_val:
-> +	*pu = be32_to_cpup(curv);
-> +	return curv;
-> +}
-> +
-> +/*
-> + * struct property *prop;
-> + * const __be32 *p;
-> + * u32 u;
-> + *
-> + * of_property_for_each_u32(np, "propname", prop, p, u)
-> + *         printk("U32 value: %x\n", u);
-> + */
-> +#define of_property_for_each_u32(np, propname, prop, p, u)	\
-> +	for (prop = of_find_property(np, propname, NULL),	\
-> +		p = of_prop_next_u32(prop, NULL, &u);		\
-> +		p;						\
-> +		p = of_prop_next_u32(prop, p, &u))
-> +
-> +static inline const char *of_prop_next_string(struct property *prop,
-> +					      const char *cur)
-> +{
-> +	const void *curv = cur;
-> +
-> +	if (!prop)
-> +		return NULL;
-> +
-> +	if (!cur)
-> +		return prop->value;
-> +
-> +	curv += strlen(cur) + 1;
-> +	if (curv >= prop->value + prop->length)
-> +		return NULL;
-> +
-> +	return curv;
-> +}
-> +
-> +/*
-> + * struct property *prop;
-> + * const char *s;
-> + *
-> + * of_property_for_each_string(np, "propname", prop, s)
-> + *         printk("String value: %s\n", s);
-> + */
-> +#define of_property_for_each_string(np, propname, prop, s)	\
-> +	for (prop = of_find_property(np, propname, NULL),	\
-> +		s = of_prop_next_string(prop, NULL);		\
-> +		s;						\
-> +		s = of_prop_next_string(prop, s))
-> +
-> +#else
-> +
-> +#define of_property_for_each_u32(np, propname, prop, p, u) \
-> +	while (0)
-> +
-> +#define of_property_for_each_string(np, propname, prop, s) \
-> +	while (0)
-> +
-> +#endif /* CONFIG_OF */
-> +
-> +#endif /* __OF_ITER_PROP_H__ */
+Maybe also -Werror for that one file to catch other similar cases?
+
+Andrew
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
