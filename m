@@ -1,60 +1,49 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: kirkwood devicetree respin
-Date: Tue, 20 Mar 2012 13:22:38 -0400
-Message-ID: <20120320172238.GC2484@titan.lakedaemon.net>
-References: <20120312214325.GD5050@titan.lakedaemon.net>
- <201203131557.49488.arnd@arndb.de>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: remoteproc: Resource table for IRQs
+Date: Tue, 20 Mar 2012 19:34:05 +0200
+Message-ID: <CAK=WgbaX7HJJkAW-rn4e7BHstgV+zvSnjzg980gGui9ZCRxMqQ@mail.gmail.com>
+References: <4F5F1657.9090200@monstr.eu> <CAK=WgbamnCRrEGM-xRZGie+ZoiyZx3uudXb-_dopEj7yMQYuUA@mail.gmail.com>
+ <4F6736B9.4070307@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201203131557.49488.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: andrew-g2DYL2Zd6BY@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F6736B9.4070307@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: monstr@monstr.eu
+Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, "Guzman Lugo, Fernando" <fernando.lugo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 13, 2012 at 03:57:49PM +0000, Arnd Bergmann wrote:
-> On Monday 12 March 2012, Jason Cooper wrote:
-> > Only issue I have (I think unrelated) is that orion-ehci isn't coming
-> > up.  But these patches don't touch that, so I think it might be my
-> > config again.  Although it doesn't look like it...
-> 
-> I looked at your patches but also couldn't find anything that hints
-> at why ehci would break.
+Hi Michal,
 
-I figured it out.  Apparently, dreamplug is the first board to put root
-on usb-attached microsd card.  And I'm the first one to try to compile
-orion-ehci into the kernel.  ;-)
+On Mon, Mar 19, 2012 at 3:38 PM, Michal Simek <monstr@monstr.eu> wrote:
+> Maybe I am trying to do things more complicated than they are but
+> I still see that make sense to do it.
 
-The following fix the problem:
+I agree, it definitely does.
 
-diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-index 6c6a5a3..0808417 100644
---- a/drivers/usb/host/ehci-orion.c
-+++ b/drivers/usb/host/ehci-orion.c
-@@ -318,3 +318,5 @@ static struct platform_driver ehci_orion_driver = {
-        .shutdown       = usb_hcd_platform_shutdown,
-        .driver.name    = "orion-ehci",
- };
-+
-+module_platform_driver(ehci_orion_driver);
+OMAP4 is using this kind of resource allocation for a plethora of resources.
 
+In general there are two options to do this:
 
+- static, via remoteproc (firmware tells us about its resources
+requirements via the resource table, Linux allocates them before
+booting firmware)
+- dynamic, via rpmsg (firmware tells us about its resources
+requirements by sending a message just before the relevant use case
+kicks in, Linux allocates it only at that point)
 
-I figure most folks will build orion-ehci as a module and use an initrd.
-In the meantime, I'll carry this patch in my stack for v3.5.  Unless you
-would prefer to do something different.
+The former consumes the resource as long as the remote processor is
+powered on, but it's super simple: just add a new resource type.
 
-thx,
+The latter consumes the resource on when really needed, but it
+requires a "resource manager": an rpmsg driver which does this kind of
+resource allocation and tracking. Fernando (cc'ed) implemented it
+already, and will be posting sometimes in the near future (it's
+already available in Fernando's github tree if you're interested).
 
-Jason.
+> What do you think?
+
+Go for it :)
+
+Thanks,
+Ohad.
