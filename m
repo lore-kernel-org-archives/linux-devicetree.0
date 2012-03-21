@@ -1,54 +1,40 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
-Date: Wed, 21 Mar 2012 14:26:53 +1100
-Message-ID: <20120321032653.GB15997@truffala.fritz.box>
-References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: Device node for a controller with two interrupt parents
+Date: Wed, 21 Mar 2012 14:41:51 +1100
+Message-ID: <20120321034151.GC15997@truffala.fritz.box>
+References: <CAJuYYwT1uKaUDuh98i4B286az-_26YCN31UXXFWsP=_M-UL_vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1332296626-19707-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <CAJuYYwT1uKaUDuh98i4B286az-_26YCN31UXXFWsP=_M-UL_vg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2012 at 08:23:46PM -0600, Stephen Warren wrote:
-> On Ubuntu, /bin/sh is dash (at least by default), and dash's echo doesn't
-> accept the -e option. This means that fdtget-runtest.sh's EXPECT file will
-> contain "-e foo" rather than just "foo", which causes a test failure.
+On Wed, Mar 21, 2012 at 07:55:43AM +0530, Thomas Abraham wrote:
+> Hi,
 > 
-> To work around this, run /bin/echo instead of (builtin) echo, which has
-> more chance of supporting the -e option.
+> Exynos5 includes a gpio wakeup interrupt controller that generates 32
+> interrupts. The first 16 interrupts are routed to the interrupt
+> combiner controller. The last 16 are muxed into one interrupt and this
+> interrupt line is connected to the GIC interrupt controller.
 > 
-> Another possible fix is to change all the #! lines to /bin/bash rather
-> than /bin/sh, and change run_tests.sh to invoke sub-scripts using $SHELL
-> instead of just "sh". However, that would require bash specifically, which
-> may not be desirable.
-> 
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> So, the wakeup interrupt controller node in device tree requires two
+> interrupt parents. I do not know how to handle this. Any suggestions
+> will be very helpful.
 
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-
-Jon, please apply.
-
-I don't think this fix is perfect - for example, I wonder what will
-happen if /bin/echo is actually a busybox instance.  But it's
-definitely better than right now, where the testsuite will give
-failures out of the box on the default setup for several major
-distros.
-
-And as Stephen suggests, I would prefer not to make the test scripts
-bash specific.
+This has occurred before, for example on the MAL device on 440EP (see
+the bamboo board dts for example).  The semi-standard approach is to
+make the node an interrupt-nexus for itself.  That is in the node's
+interrupts property, just list 0..N giving as many interrupts as you
+need.  Set the node's interrupt-parent to point to the node itself,
+then add interrupt-map and interrupt-map-mask properties which remap
+those interrupts 0..N to the correct interrupts on the actual
+interrupt controllers.  Each entry in the interrupt map specifies an
+interrupt parent phandle, so you can distribute the irqs to multiple
+interrupt controllers that way.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
