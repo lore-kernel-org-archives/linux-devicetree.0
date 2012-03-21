@@ -1,137 +1,69 @@
-From: Dong Aisheng <aisheng.dong@freescale.com>
-Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
-Date: Wed, 21 Mar 2012 19:06:15 +0800
-Message-ID: <20120321110613.GA4905@shlinux2.ap.freescale.net>
-References: <20120315105927.GE13022@shlinux2.ap.freescale.net>
- <20321.53468.310199.875966@ipc1.ka-ro>
- <20120316030134.GA5161@shlinux2.ap.freescale.net>
- <20120318184749.BB15D3E07BF@localhost>
- <20326.55337.249575.289067@ipc1.ka-ro>
- <20120319150601.B783A3E05A5@localhost>
- <20327.25470.723875.916422@ipc1.ka-ro>
- <20120319220224.ABF5A3E0A04@localhost>
- <CAA+hA=R8hLZMyRASRim28MNzX4jyE3nsaJ3DPzgxDtUmqtH62w@mail.gmail.com>
- <20328.33660.472382.117901@ipc1.ka-ro>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
+Date: Wed, 21 Mar 2012 17:02:05 +0530
+Message-ID: <4F69BC35.4010400@st.com>
+References: <1331650032-15274-1-git-send-email-sr@denx.de>
+ <4F61AFAB.6080301@st.com> <201203151138.51508.sr@denx.de>
+ <201203151339.36173.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20328.33660.472382.117901@ipc1.ka-ro>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Dong Aisheng <dongas86@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Dong Aisheng-B29396 <B29396@freescale.com>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Guo Shawn-R65073 <r65073@freescale.com>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201203151339.36173.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2012 at 09:17:48PM +0800, Lothar Wa=DFmann wrote:
-> Hi,
->=20
-> Dong Aisheng writes:
-> > On Mon, Mar 19, 2012 at 3:02 PM, Grant Likely <grant.likely@secretl=
-ab.ca> wrote:
-> > > On Mon, 19 Mar 2012 17:49:02 +0100, Lothar Wa=DFmann <LW@KARO-ele=
-ctronics.de> wrote:
-> > >> Hi,
-> > >>
-> > >> Grant Likely writes:
-> > >> > On Mon, 19 Mar 2012 07:54:33 +0100, Lothar Wa=DFmann <LW@KARO-=
-electronics.de> wrote:
-> > >> > > Grant Likely writes:
-> > >> > > > On Fri, 16 Mar 2012 11:01:35 +0800, Dong Aisheng <aisheng.=
-dong@freescale.com> wrote:
-> > >> > > > > On Thu, Mar 15, 2012 at 07:22:04PM +0800, Lothar Wa=DFma=
-nn wrote:
-> > >> > > > > > Dong Aisheng writes:
-> > >> > > > > > > On Thu, Mar 15, 2012 at 02:53:29PM +0800, Lothar Wa=DF=
-mann wrote:
-> > >> > > > > > Anyway there is no definite spec how the MAC address(e=
-s) are stored
-> > >> > > > > > in the fuse map. Thus reading the MAC from there is mo=
-re or less
-> > >> > > > > > platform specific.
-> > >> > > > > >
-> > >> > > > > It's just provide one more option since there are custom=
-ers storing the MAC
-> > >> > > > > in the fuse map.
-> > >> > > >
-> > >> > > > That should be straight forward to support; have a propert=
-y that
-> > >> > > > specifies the method used for fetching/calculating the MAC=
-=2E
-> > >> > > >
-> > >> > > Executable code stored inside a DT blob? ;)
-> > >> >
-> > >> > I know you're joking here, but I'm going to answer seriously
-> > >> > anyway... Absolutely not. =A0What I'm suggesting is a property=
- that
-> > >> > specifies the method used to determine the mac address. =A0Som=
-ething
-> > >> > like (off the top of my head):
-> > >> >
-> > >> > =A0 =A0 local-mac-address =3D [01 02 03 00 00 00];
-> > >> > =A0 =A0 local-mac-mask =3D [0xff 0xff 0xff 0 0 0];
-> > >> > =A0 =A0 mac-encoding =3D "append-serial-number";
-> > >> >
-> > >> That still does not specify where the remaining part of the MAC =
-is
-> > >> stored and how it should be retrieved.
-> > >
-> > > I'm suggesting that you define a string that means something spec=
-ific;
-> > > that hopefully can be shared by multiple platforms. =A0For exampl=
-e,
-> > > "append-serial-number" might mean start with the values selected =
-by
-> > > AND of local-mac-address and local-mac-mask, and OR in the board'=
-s
-> > > serial number. =A0You would need to define something that worked =
-if this
-> > > was the solution you used.
-> > >
-> > I'm intend to Grant's this suggestion.
-> > This can be shared by all other imx platforms which stores mac addr=
-ess in
-> > fuse map and this is commonly used by customer.
-> > Then we do not need keep writing repeat code for different platform=
-s
-> > via platform
-> > data.
-> >=20
-> > For Lothar's question, we can add a property fuse_mac_offset to ind=
-icate
-> > read mac from fuse map and where to read it.
-> >
-> That's not really enough. The format (big-endian vs. little-endian)
-> may also differ. But it's not really necessary, if the solution with
-> prom_update_property() works, since then platform code has full
-> control over the MAC.
->=20
-> > For how many bytes to read, we can calculate it from the local-mac-=
-mask.
-> > For example, local-mac-mask =3D [0xff 0xff 0xff 0 0 0], we can get =
-the size
-> > as 3 bypes.
-> >=20
-> > Then we have three properties:
-> > local-mac-address =3D [01 02 03 00 00 00];
-> > local-mac-mask =3D [0xff 0xff 0xff 0 0 0];
-> > fuse_mac_offset =3D <1>;
-> >=20
-> > In fec driver, the final mac address can be got by:
-> > local-mac-address & local-mac-mask | (read_fuse(1) & 0xffffff)
-> >=20
-> > Lathar,
-> > Do you think if this is ok?
-> >
-> No. IMO the FEC driver itself should not read any fuses.
-> Reading fuses is a SoC specific thing and the FEC driver should not
-> depend on the idiosyncrasies of some SoC wrt. anything else but the
-> implementation of the FEC itself.
->=20
-Yes, i think i'm agree with this point.
-Okay, i will do that with prom_update_property.
-Thanks for suggestion.
+On 3/15/2012 7:09 PM, Arnd Bergmann wrote:
+> On Thursday 15 March 2012, Stefan Roese wrote:
+>> On Thursday 15 March 2012 10:00:27 Viresh Kumar wrote:
+>>> On 3/15/2012 2:18 PM, Stefan Roese wrote:
+>>>>>>>> +static const struct of_device_id vic_of_match[] __initconst = {
+>>>>>>>> +     { .compatible = "arm,pl190-vic", .data = vic_of_init, },
+>>>>>>>> +     { /* Sentinel */ }
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static void __init spear6xx_dt_init_irq(void)
+>>>>>>>> +{
+>>>>>>>> +     of_irq_init(vic_of_match);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>
+>>>>>> What about adding this routine in vic.c file, which can then be used
+>>>>>> by all platforms, instead of replicating this code.
+>>>>
+>>>> We can't move vic_of_match to the vic.c, since there are differences
+>>>> between the boards using it. And only moving spear6xx_dt_init_irq()
+>>>> (renamed of course) doesn't seem worth it.
+>>>
+>>> I knew this. Actually my thought was, we have two compatible strings for
+>>> vic: pl190 and pl192.
+>>>
+>>> So, create two vic_of_match* arrays and two vic*_dt_init_irq() routines.
+>>> That will solve the issue i believe.
+>>
+>> I still don't think its worth it. But please feel free to send an add-on 
+>> patch, to "clean this up".
+> 
+> What's wrong with one vic_dt_init_irq() function and an array with two entries?
 
-Regards
-Dong Aisheng
+Hey Arnd,
 
+Actually i was doing 3xx DT porting and again came to this thing. I believe what
+you suggested should be fine too as the actual vic model/name is going to be
+passed from .dts file.
+
+If this is acceptable to you, i will add patch for both vic & gic in my
+patchset.
+
+-- 
+viresh
