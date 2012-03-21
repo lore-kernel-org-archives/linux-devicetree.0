@@ -1,43 +1,36 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: Device node for a controller with two interrupt parents
-Date: Wed, 21 Mar 2012 14:41:51 +1100
-Message-ID: <20120321034151.GC15997@truffala.fritz.box>
-References: <CAJuYYwT1uKaUDuh98i4B286az-_26YCN31UXXFWsP=_M-UL_vg@mail.gmail.com>
+From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Subject: Re: kirkwood devicetree respin
+Date: Tue, 20 Mar 2012 23:54:53 -0400 (EDT)
+Message-ID: <alpine.LFD.2.02.1203202348150.24151@xanadu.home>
+References: <20120312214325.GD5050@titan.lakedaemon.net>
+ <201203202057.38365.arnd@arndb.de>
+ <20120320220156.GI2484@titan.lakedaemon.net> <201203202215.09227.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJuYYwT1uKaUDuh98i4B286az-_26YCN31UXXFWsP=_M-UL_vg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <201203202215.09227.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2012 at 07:55:43AM +0530, Thomas Abraham wrote:
-> Hi,
-> 
-> Exynos5 includes a gpio wakeup interrupt controller that generates 32
-> interrupts. The first 16 interrupts are routed to the interrupt
-> combiner controller. The last 16 are muxed into one interrupt and this
-> interrupt line is connected to the GIC interrupt controller.
-> 
-> So, the wakeup interrupt controller node in device tree requires two
-> interrupt parents. I do not know how to handle this. Any suggestions
-> will be very helpful.
+On Tue, 20 Mar 2012, Arnd Bergmann wrote:
 
-This has occurred before, for example on the MAL device on 440EP (see
-the bamboo board dts for example).  The semi-standard approach is to
-make the node an interrupt-nexus for itself.  That is in the node's
-interrupts property, just list 0..N giving as many interrupts as you
-need.  Set the node's interrupt-parent to point to the node itself,
-then add interrupt-map and interrupt-map-mask properties which remap
-those interrupts 0..N to the correct interrupts on the actual
-interrupt controllers.  Each entry in the interrupt map specifies an
-interrupt parent phandle, so you can distribute the irqs to multiple
-interrupt controllers that way.
+> ehci-orion only makes sense on PLAT_ORION, and they never have any
+> other platform ehci driver.
+> 
+> ehci-mv only makese sense on PLAT_PXA, and they  also don't have any
+> other platform ehci driver.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+BTW, as someone who once was the active maintainer for PXA, and later 
+the active maintainer for Orion, I should say that ehci-mv is a terribly 
+bad name (as demonstrated, not all Marvell SOCs use ehci-mv) and 
+confusion would be much reduced if it was renamed to ehci-pxa.
+
+
+Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
