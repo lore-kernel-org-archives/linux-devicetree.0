@@ -1,115 +1,79 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Wed, 21 Mar 2012 14:42:50 +0000
-Message-ID: <201203211442.50683.arnd@arndb.de>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <201203211404.35847.arnd@arndb.de>
- <CAOh2x=mtjvitkhz=BXOZPAaKZ2i3QQuKrYA3HcHNERHhF5xFoA@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: EHCI_MV confusion was: Re: kirkwood devicetree respin
+Date: Wed, 21 Mar 2012 11:12:19 -0400
+Message-ID: <20120321151219.GM2484@titan.lakedaemon.net>
+References: <20120321133609.GK2484@titan.lakedaemon.net>
+ <Pine.LNX.4.44L0.1203210955140.1369-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOh2x=mtjvitkhz=BXOZPAaKZ2i3QQuKrYA3HcHNERHhF5xFoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: viresh kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1203210955140.1369-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 21 March 2012, viresh kumar wrote:
-> On Wed, Mar 21, 2012 at 7:34 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 21 March 2012, viresh kumar wrote:
-> >> - Pinmux: I would remove our padmux and use pinmux, but what about its
-> >> DT support.
-> >>   I know stephen had few patches for it, but don't know there
-> >> progress. I don't want to
-> >>   do stuff twice. First add support for it in board and the *.dts files.
-> >
-> > AFAICT, the pinmux DT binding should be ready for v3.5, I don't think it
-> > made it into v3.4.
+On Wed, Mar 21, 2012 at 09:56:24AM -0400, Alan Stern wrote:
+> On Wed, 21 Mar 2012, Jason Cooper wrote:
 > 
-> So, i can add stuff in board file for pinmux for now?
-
-Probably yes. It depends on the scale though: if you add more code than
-what is needed to convert to the pinctrl framework, we might decide that
-it's not worth it.
-
-Note that moving to the pinctrl subsystem can be done independent from
-doing the device tree conversion, and it does not depend on the
-pinctrl dt binding even if you already have DT support.
-
-> > I've looked at this earlier today out of curiosity and found:
-> >
-> > clock.c: almost identical, can be easily merged, or both copies
-> >         kept around during transition.
+> > On Tue, Mar 20, 2012 at 11:54:53PM -0400, Nicolas Pitre wrote:
+> > > On Tue, 20 Mar 2012, Arnd Bergmann wrote:
+> > > 
+> > > > ehci-orion only makes sense on PLAT_ORION, and they never have any
+> > > > other platform ehci driver.
+> > > > 
+> > > > ehci-mv only makese sense on PLAT_PXA, and they  also don't have any
+> > > > other platform ehci driver.
+> > > 
+> > > BTW, as someone who once was the active maintainer for PXA, and later 
+> > > the active maintainer for Orion, I should say that ehci-mv is a terribly 
+> > > bad name (as demonstrated, not all Marvell SOCs use ehci-mv) and 
+> > > confusion would be much reduced if it was renamed to ehci-pxa.
+> > 
+> > How about like this (to differentiate against pxa168):
+> > 
+> > diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> > index 353cdd4..e1bc205 100644
+> > --- a/drivers/usb/host/Kconfig
+> > +++ b/drivers/usb/host/Kconfig
+> > @@ -194,8 +194,8 @@ config USB_EHCI_S5P
+> >         help
+> >          Enable support for the S5P SOC's on-chip EHCI controller.
+> >  
+> > -config USB_EHCI_MV
+> > -       bool "EHCI support for Marvell on-chip controller"
+> > +config USB_EHCI_MV_PXA
+> > +       bool "EHCI support for Marvell PXA on-chip controller"
+> >         depends on USB_EHCI_HCD
+> >         select USB_EHCI_ROOT_HUB_TT
+> >         ---help---
+> > diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
+> > index a007a9f..4e1ec71 100644
+> > --- a/drivers/usb/host/ehci-hcd.c
+> > +++ b/drivers/usb/host/ehci-hcd.c
+> > @@ -1371,8 +1371,8 @@ MODULE_LICENSE ("GPL");
+> >  #define PLATFORM_DRIVER                ehci_xls_driver
+> >  #endif
+> >  
+> > -#ifdef CONFIG_USB_EHCI_MV
+> > -#include "ehci-mv.c"
+> > +#ifdef CONFIG_USB_EHCI_MV_PXA
+> > +#include "ehci-mvpxa.c"
+> >  #define        PLATFORM_DRIVER         ehci_mv_driver
+> >  #endif
 > 
-> Would make it very confusing if we merge these two. Some clock
-> structures are same, but others are not. Mostly differences are in the
-> macros (or bit positions in registers), rather than hierarchy. So, i would
-> like to keep them separate. But still have a look again to see if they can
-> really be merged.
+> You guys have spent an awful lot of time and effort beating a dead 
+> horse.  See commit a219b666e89bd2f7810b4eaaf4d7382ad0e6ecb1 (usb: host: 
+> add dependence for USB_EHCI_MV).
 
-Ok, I see.
+Ahh, that explains it.  My series was based off of v3.3-rc3, this made
+it in v3.3-rc5.
 
-> > misc_regs.h: can be merged into clock.c
-> 
-> it has more than clock stuff. it is used in pinmux and some other places too,
-> that may not be in mainline for now.
+thx,
 
-Right, I was only looking at the stuff that is actually being used in mainline.
-However I think this file should not be needed at all -- any contents that
-are specific to one driver can just live in that driver, and stuff that is
-shared across multiple drivers generally looks like it is also shared between
-3xx and 6xx.
-
-> > Once you have taken care of these, files, you can enable building 3xx
-> > and 6xx together, and move the contents of mach-spear3xx, mach-spear6xx
-> > and plat-spear into one directory.
-> 
-> plat-spear would be required for 13xx too. So, merging 3xx and 6xx only would
-> be possible.
-
-There is not all that much that can be shared here:
-
-* clock.c would go into drivers/clk/ for spear13xx and possibly for the others
-  too.
-* padmux.c would go into drivers/pinctrl
-* time.c would go into drivers/clocksource
-* shirq.c is potentially shared, but we've discussed in the past about
-  creating a new drivers/irqchip where this can live.
-* restart.c is very small, there is no harm in duplicating this.
-* The header files will have to go elsewhere, too, as we move towards
-  have a single multiplatform zImage.
-
-> > Ok, excellent. Note that there is no requirement to do it all in the order
-> > you line out above. You can always get support for new stuff into the
-> > existing platform without cleaning up all of it right away, as long as you
-> > have a good balance between cleanups and new functionality.
-> 
-> Ya. I just wanted to get some hands on experience with this new stuff, before
-> touching 13xx.
-
-Good idea. As Stefan has shown, it's not really all that hard to get a lot
-done for the older platforms, and spear13xx will likely be much harder
-because of the increased hardware complexity.
-
-> > In particular, you don't have to start using pinctrl and the common clk
-> > immediately for spear3xx, although you might find that it helps you.
-> 
-> But, can i update padmux and clock framework of SPEAr platform? Because
-> without the latest code for both padmux and clock, other code for SPEAr
-> might not be that effective or usable.
-
-Yes, you can do updates in there that are logical and keep the current
-basic structure or improve it. I would only object if you do a more or
-less complete rewrite of those files but don't use the common infrastructure
-in the process.
-
-	Arnd
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
