@@ -1,69 +1,84 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Wed, 21 Mar 2012 17:02:05 +0530
-Message-ID: <4F69BC35.4010400@st.com>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <4F61AFAB.6080301@st.com> <201203151138.51508.sr@denx.de>
- <201203151339.36173.arnd@arndb.de>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: kirkwood devicetree respin
+Date: Wed, 21 Mar 2012 13:45:48 +0200
+Message-ID: <20120321114546.GC3092@arwen.pp.htv.fi>
+References: <20120312214325.GD5050@titan.lakedaemon.net>
+ <20120321083428.GA25111@lunn.ch>
+ <CAN1soZyObqAPq=fhn8eB1z0aYqTs87oNBsF_AXbo6kq9fpvhMA@mail.gmail.com>
+ <201203211009.40934.arnd@arndb.de>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203151339.36173.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="z3ND3gJe4e1E4uwh"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201203211009.40934.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/15/2012 7:09 PM, Arnd Bergmann wrote:
-> On Thursday 15 March 2012, Stefan Roese wrote:
->> On Thursday 15 March 2012 10:00:27 Viresh Kumar wrote:
->>> On 3/15/2012 2:18 PM, Stefan Roese wrote:
->>>>>>>> +static const struct of_device_id vic_of_match[] __initconst = {
->>>>>>>> +     { .compatible = "arm,pl190-vic", .data = vic_of_init, },
->>>>>>>> +     { /* Sentinel */ }
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static void __init spear6xx_dt_init_irq(void)
->>>>>>>> +{
->>>>>>>> +     of_irq_init(vic_of_match);
->>>>>>>> +}
->>>>>>>> +
->>>>>>
->>>>>> What about adding this routine in vic.c file, which can then be used
->>>>>> by all platforms, instead of replicating this code.
->>>>
->>>> We can't move vic_of_match to the vic.c, since there are differences
->>>> between the boards using it. And only moving spear6xx_dt_init_irq()
->>>> (renamed of course) doesn't seem worth it.
->>>
->>> I knew this. Actually my thought was, we have two compatible strings for
->>> vic: pl190 and pl192.
->>>
->>> So, create two vic_of_match* arrays and two vic*_dt_init_irq() routines.
->>> That will solve the issue i believe.
->>
->> I still don't think its worth it. But please feel free to send an add-on 
->> patch, to "clean this up".
-> 
-> What's wrong with one vic_dt_init_irq() function and an array with two entries?
 
-Hey Arnd,
+--z3ND3gJe4e1E4uwh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Actually i was doing 3xx DT porting and again came to this thing. I believe what
-you suggested should be fine too as the actual vic model/name is going to be
-passed from .dts file.
+On Wed, Mar 21, 2012 at 10:09:40AM +0000, Arnd Bergmann wrote:
+> On Wednesday 21 March 2012, Haojian Zhuang wrote:
+> > The driver isn't used by any other platform. It's only used in
+> > arch-pxa & arch-mmp.
+> >=20
+> > I can't find the original mail. But I remembered that maintainer said
+> > the driver should be built with any other platform, even with x86. So
+> > we aren't allowed to append it in Kconfig.
+>=20
+> I generally make the recommendation that any driver should be able to
+> get built on any system. However, in this particular case, it's clearly
+> a bug, because you cannot build it together with another platform driver.
+>=20
+> That will change when we get to multiplatform builds on ARM that where we
+> actually need to find a way to make that possible.
 
-If this is acceptable to you, i will add patch for both vic & gic in my
-patchset.
+I have explained an easy way to achieve that to Alan Stern, but he did
+not like it. Basically, we should add a platform_device to ehci-hcd.ko
+and make ehci-{omap,mv,fsl,atmel,etc} a parent device/driver which
+basically passes the correct resources and handle platform-specific
+details.
 
--- 
-viresh
+That way, we could build everything together and udev would load the
+correct modules for us.
+
+For an example of what I mean, see drivers/usb/dwc3/core.c,
+drivers/usb/dwc3/dwc3-omap.c, and drivers/usb/dwc3/dwc3-pci.c
+
+--=20
+balbi
+
+--z3ND3gJe4e1E4uwh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPab9qAAoJEIaOsuA1yqREdrgP/0d8vumi/aprJpp86tJ7susO
+8fKw5F2F1TRb/hufA1qaQfj6xaejOLHjnhYzEcVgI+pUUXYM8dcfzOgs/MXfcmKh
+9IaJ35JZOfA732gUEZT5KxpHpNSYDwSrDQhA29j2Z74P8VP2uMapW8paCpoeYQE1
+xIv7QY5YkviuWBkb0yF4NvTA+UMfbHJp7GxazO0GNZ3tAXQPu34gOo73d6TTYkZw
+t7MoIVLlPauN4N6qefzY3F6RUz9/q3rN5Jxi7bvZwcPyppmZ8GmMuJm5yY356Q4B
+Spbv5p9IdfBWM/kkwH4Li2DE0Xkl1yRWaDPEvqB0bvXJmYRRhs9IzhR6cypqDNet
+phX31/D6M68k2sbvnrpQlj43kEt53ushOa1r2IsOE3tNokq6l0WCmqQGg0JRgG+L
+cEd3gH3gv8PI3MosKBbJiI/fgMgt6Adzs7QZjOiOn8p2DvonED+xTKpM7W+ycNPy
+XgNWzUmD/4w8Pjl5EMFiJdGgixGSPHdOpnqHeEYsuAL92zrdYwjEPSLGflv2pj++
+gCSKL+vcTcM9DLW/+PKYMvqPYn3AXa9PdARsa9rHtZOu/gPKKlo+IfKb/GIpoeL7
+8yMtaEDJMQRCNpMmVBjJeqec7p/TAIunrKtZeUogu49ziFQzJzDZB0qYtHYbOLd9
+3M4gHgpL+XSkSVK/UDzH
+=b4qB
+-----END PGP SIGNATURE-----
+
+--z3ND3gJe4e1E4uwh--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
