@@ -1,88 +1,115 @@
-From: viresh kumar <viresh.linux@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Wed, 21 Mar 2012 19:48:26 +0530
-Message-ID: <CAOh2x=mtjvitkhz=BXOZPAaKZ2i3QQuKrYA3HcHNERHhF5xFoA@mail.gmail.com>
+Date: Wed, 21 Mar 2012 14:42:50 +0000
+Message-ID: <201203211442.50683.arnd@arndb.de>
 References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <201203211236.37891.arnd@arndb.de>
- <CAOh2x==J4qkp29w+v=GWORBua-DE3yb0MRGOtBLyELxbGZwcuA@mail.gmail.com>
  <201203211404.35847.arnd@arndb.de>
+ <CAOh2x=mtjvitkhz=BXOZPAaKZ2i3QQuKrYA3HcHNERHhF5xFoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201203211404.35847.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stefan Roese <sr@denx.de>, spear-devel <spear-devel@list.st.com>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOh2x=mtjvitkhz=BXOZPAaKZ2i3QQuKrYA3HcHNERHhF5xFoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: viresh kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2012 at 7:34 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 21 March 2012, viresh kumar wrote:
->> - Pinmux: I would remove our padmux and use pinmux, but what about its
->> DT support.
->> =A0 I know stephen had few patches for it, but don't know there
->> progress. I don't want to
->> =A0 do stuff twice. First add support for it in board and the *.dts file=
-s.
->
-> AFAICT, the pinmux DT binding should be ready for v3.5, I don't think it
-> made it into v3.4.
+On Wednesday 21 March 2012, viresh kumar wrote:
+> On Wed, Mar 21, 2012 at 7:34 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Wednesday 21 March 2012, viresh kumar wrote:
+> >> - Pinmux: I would remove our padmux and use pinmux, but what about its
+> >> DT support.
+> >>   I know stephen had few patches for it, but don't know there
+> >> progress. I don't want to
+> >>   do stuff twice. First add support for it in board and the *.dts files.
+> >
+> > AFAICT, the pinmux DT binding should be ready for v3.5, I don't think it
+> > made it into v3.4.
+> 
+> So, i can add stuff in board file for pinmux for now?
 
-So, i can add stuff in board file for pinmux for now?
+Probably yes. It depends on the scale though: if you add more code than
+what is needed to convert to the pinctrl framework, we might decide that
+it's not worth it.
 
-> I've looked at this earlier today out of curiosity and found:
->
-> clock.c: almost identical, can be easily merged, or both copies
-> =A0 =A0 =A0 =A0 kept around during transition.
+Note that moving to the pinctrl subsystem can be done independent from
+doing the device tree conversion, and it does not depend on the
+pinctrl dt binding even if you already have DT support.
 
-Would make it very confusing if we merge these two. Some clock
-structures are same, but others are not. Mostly differences are in the
-macros (or bit positions in registers), rather than hierarchy. So, i would
-like to keep them separate. But still have a look again to see if they can
-really be merged.
+> > I've looked at this earlier today out of curiosity and found:
+> >
+> > clock.c: almost identical, can be easily merged, or both copies
+> >         kept around during transition.
+> 
+> Would make it very confusing if we merge these two. Some clock
+> structures are same, but others are not. Mostly differences are in the
+> macros (or bit positions in registers), rather than hierarchy. So, i would
+> like to keep them separate. But still have a look again to see if they can
+> really be merged.
 
-> misc_regs.h: can be merged into clock.c
+Ok, I see.
 
-it has more than clock stuff. it is used in pinmux and some other places to=
-o,
-that may not be in mainline for now.
+> > misc_regs.h: can be merged into clock.c
+> 
+> it has more than clock stuff. it is used in pinmux and some other places too,
+> that may not be in mainline for now.
 
-> Once you have taken care of these, files, you can enable building 3xx
-> and 6xx together, and move the contents of mach-spear3xx, mach-spear6xx
-> and plat-spear into one directory.
+Right, I was only looking at the stuff that is actually being used in mainline.
+However I think this file should not be needed at all -- any contents that
+are specific to one driver can just live in that driver, and stuff that is
+shared across multiple drivers generally looks like it is also shared between
+3xx and 6xx.
 
-plat-spear would be required for 13xx too. So, merging 3xx and 6xx only wou=
-ld
-be possible.
+> > Once you have taken care of these, files, you can enable building 3xx
+> > and 6xx together, and move the contents of mach-spear3xx, mach-spear6xx
+> > and plat-spear into one directory.
+> 
+> plat-spear would be required for 13xx too. So, merging 3xx and 6xx only would
+> be possible.
 
-> Ok, excellent. Note that there is no requirement to do it all in the order
-> you line out above. You can always get support for new stuff into the
-> existing platform without cleaning up all of it right away, as long as you
-> have a good balance between cleanups and new functionality.
+There is not all that much that can be shared here:
 
-Ya. I just wanted to get some hands on experience with this new stuff, befo=
-re
-touching 13xx.
+* clock.c would go into drivers/clk/ for spear13xx and possibly for the others
+  too.
+* padmux.c would go into drivers/pinctrl
+* time.c would go into drivers/clocksource
+* shirq.c is potentially shared, but we've discussed in the past about
+  creating a new drivers/irqchip where this can live.
+* restart.c is very small, there is no harm in duplicating this.
+* The header files will have to go elsewhere, too, as we move towards
+  have a single multiplatform zImage.
 
-> In particular, you don't have to start using pinctrl and the common clk
-> immediately for spear3xx, although you might find that it helps you.
+> > Ok, excellent. Note that there is no requirement to do it all in the order
+> > you line out above. You can always get support for new stuff into the
+> > existing platform without cleaning up all of it right away, as long as you
+> > have a good balance between cleanups and new functionality.
+> 
+> Ya. I just wanted to get some hands on experience with this new stuff, before
+> touching 13xx.
 
-But, can i update padmux and clock framework of SPEAr platform? Because
-without the latest code for both padmux and clock, other code for SPEAr
-might not be that effective or usable.
+Good idea. As Stefan has shown, it's not really all that hard to get a lot
+done for the older platforms, and spear13xx will likely be much harder
+because of the increased hardware complexity.
 
-> For spear13xx, the platform being completely new, I would however ask
-> you to use those from the start.
+> > In particular, you don't have to start using pinctrl and the common clk
+> > immediately for spear3xx, although you might find that it helps you.
+> 
+> But, can i update padmux and clock framework of SPEAr platform? Because
+> without the latest code for both padmux and clock, other code for SPEAr
+> might not be that effective or usable.
 
-Sure.
+Yes, you can do updates in there that are logical and keep the current
+basic structure or improve it. I would only object if you do a more or
+less complete rewrite of those files but don't use the common infrastructure
+in the process.
 
---
-viresh
+	Arnd
