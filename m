@@ -1,73 +1,36 @@
-From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH V2 6/6] pinctrl: tegra: Add complete device tree support
-Date: Wed, 21 Mar 2012 17:35:06 +0800
-Message-ID: <20120321093504.GA12118@shlinux2.ap.freescale.net>
-References: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org>
- <1332265479-1260-6-git-send-email-swarren@wwwdotorg.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: kirkwood devicetree respin
+Date: Wed, 21 Mar 2012 10:09:40 +0000
+Message-ID: <201203211009.40934.arnd@arndb.de>
+References: <20120312214325.GD5050@titan.lakedaemon.net> <20120321083428.GA25111@lunn.ch> <CAN1soZyObqAPq=fhn8eB1z0aYqTs87oNBsF_AXbo6kq9fpvhMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1332265479-1260-6-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAN1soZyObqAPq=fhn8eB1z0aYqTs87oNBsF_AXbo6kq9fpvhMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2012 at 01:44:39AM +0800, Stephen Warren wrote:
-> Implement pinctrl_ops dt_node_to_map() and dt_free_map(). These allow
-> complete specification of the desired pinmux configuration using device
-> tree.
+On Wednesday 21 March 2012, Haojian Zhuang wrote:
+> The driver isn't used by any other platform. It's only used in
+> arch-pxa & arch-mmp.
 > 
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> ---
-> v2: Rebase on of_property_for_each_string() API changes.
-> ---
-Nice code and a good example to people.
+> I can't find the original mail. But I remembered that maintainer said
+> the driver should be built with any other platform, even with x86. So
+> we aren't allowed to append it in Kconfig.
 
-A small suggestion below:
-> +static int add_map_configs(struct pinctrl_map **map, unsigned *num_maps,
-> +			   const char *group, unsigned long *configs,
-> +			   unsigned num_configs)
-> +{
-> +	unsigned i = *num_maps;
-> +	unsigned long *dup_configs;
-> +	int ret;
-> +
-> +	dup_configs = kmemdup(configs, num_configs * sizeof(*dup_configs),
-> +			      GFP_KERNEL);
-> +	if (!dup_configs)
-> +		return -ENOMEM;
-> +
-> +	ret = add_map(map, num_maps);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	(*map)[i].type = PIN_MAP_TYPE_CONFIGS_GROUP;
-It still does not support PIN_MAP_TYPE_CONFIGS_PIN, right?
+I generally make the recommendation that any driver should be able to
+get built on any system. However, in this particular case, it's clearly
+a bug, because you cannot build it together with another platform driver.
 
-> +	for_each_child_of_node(np_config, np) {
-> +		ret = of_property_read_string(np, "nvidia,function", &function);
-> +		if (ret < 0)
-> +			function = NULL;
-> +
-> +		for (i = 0; i < ARRAY_SIZE(cfg_params); i++) {
-> +			ret = of_property_read_u32(np, cfg_params[i].property,
-> +						   &val);
-> +			if (!ret) {
-> +				config = TEGRA_PINCONF_PACK(
-> +						cfg_params[i].param, val);
-> +				ret = add_config(&configs, &num_configs,
-> +						 config);
-> +				if (ret < 0)
-> +					goto error;
-> +			}
-> +		}
-> +
-> +		of_property_for_each_string(np, "nvidia,pins", prop, group) {
-If we calculate out the strings count and allocate corresponding size array, we may not
-need to keep krealloc the maps and configs array size for each entry.
-And this may be a little higher efficient.
+That will change when we get to multiplatform builds on ARM that where we
+actually need to find a way to make that possible.
 
-Regards
-Dong Aisheng
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
