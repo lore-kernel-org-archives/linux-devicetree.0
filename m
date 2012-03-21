@@ -1,37 +1,52 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 2/2] MTD: Add device-tree support to spear_smi
-Date: Wed, 21 Mar 2012 14:12:59 +0100
-Message-ID: <201203211413.00013.sr@denx.de>
-References: <1331894531-21411-1-git-send-email-sr@denx.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: kirkwood devicetree respin
+Date: Wed, 21 Mar 2012 13:17:38 +0000
+Message-ID: <201203211317.38339.arnd@arndb.de>
+References: <20120312214325.GD5050@titan.lakedaemon.net> <201203211009.40934.arnd@arndb.de> <20120321114546.GC3092@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331894531-21411-1-git-send-email-sr-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120321114546.GC3092-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Artem,
+On Wednesday 21 March 2012, Felipe Balbi wrote:
+> I have explained an easy way to achieve that to Alan Stern, but he did
+> not like it. Basically, we should add a platform_device to ehci-hcd.ko
+> and make ehci-{omap,mv,fsl,atmel,etc} a parent device/driver which
+> basically passes the correct resources and handle platform-specific
+> details.
+> 
+> That way, we could build everything together and udev would load the
+> correct modules for us.
+> 
+> For an example of what I mean, see drivers/usb/dwc3/core.c,
+> drivers/usb/dwc3/dwc3-omap.c, and drivers/usb/dwc3/dwc3-pci.c
 
-On Friday 16 March 2012 11:42:11 Stefan Roese wrote:
-> This patch adds support to configure the SPEAr SMI driver via
-> device-tree instead of platform_data.
+While that way clearly works and can solve the problem we have
+with ehci today, I think it's easier and more consistent with
+other drivers to do it the opposite way, as we have recently
+discussed in the context of ohci:
 
-I noticed that you pushed the first part of this patch:
+Make the base driver a loadable module that does not register
+any struct device_driver at all, but just exports functions to
+other module. The hardware specific drivers then each register
+to their own bus and use the functions exported by the
+main driver, with a way to override them with their own versions.
 
-[PATCH 1/2] MTD: spear_smi: Remove default partition information from driver
+Alan suggested a variation of that where we actually export
+a default "struct hc_driver" instead of the individual functions,
+which has the advantage of having to export fewer symbols, but
+otherwise is similar to what we do elsewhere.
 
-into l2-mtd.git. What's do plan for this patch?
+See libata, sdhci, serial-8250 or xhci for examples of this way.
 
-Thanks,
-Stefan
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
