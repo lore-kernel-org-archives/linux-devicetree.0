@@ -1,123 +1,235 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: kirkwood devicetree respin
-Date: Thu, 22 Mar 2012 10:13:16 +0200
-Message-ID: <20120322081315.GG31160@arwen.pp.htv.fi>
-References: <20120312214325.GD5050@titan.lakedaemon.net>
- <201203211009.40934.arnd@arndb.de>
- <20120321114546.GC3092@arwen.pp.htv.fi>
- <201203211317.38339.arnd@arndb.de>
- <20120321132230.GL3092@arwen.pp.htv.fi>
- <A2CA0424C0A6F04399FB9E1CD98E0304090B77CA@US01WEMBX2.internal.synopsys.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: Device node for a controller with two interrupt parents
+Date: Wed, 21 Mar 2012 15:13:21 +0000
+Message-ID: <20120321151321.34A813E095F@localhost>
+References: <CAJuYYwT1uKaUDuh98i4B286az-_26YCN31UXXFWsP=_M-UL_vg@mail.gmail.com> <20120321034151.GC15997@truffala.fritz.box> <CAJuYYwSv9aoCWNJ9=m9LjaaGqvzEA07SHt6wT56HTNLQdkNU2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Sw7tCqrGA+HQ0/zt"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <A2CA0424C0A6F04399FB9E1CD98E0304090B77CA-Yu2iAY70zvrYN67daEjeMPufCSb+aD3WLzEdoUbNIic@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michael-QKn5cuLxLXY@public.gmane.org" <michael-QKn5cuLxLXY@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJuYYwSv9aoCWNJ9=m9LjaaGqvzEA07SHt6wT56HTNLQdkNU2Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>, David Gibson <david@gibson.dropbear.id.au>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-
---Sw7tCqrGA+HQ0/zt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Mar 21, 2012 at 08:06:12PM +0000, Paul Zimmerman wrote:
-> > From: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-usb-owner-u79uwXL29Tb/PtFMR13I2A@public.gmane.org=
-el.org] On Behalf Of Felipe Balbi
-> > Sent: Wednesday, March 21, 2012 6:23 AM
-> >=20
-> > On Wed, Mar 21, 2012 at 01:17:38PM +0000, Arnd Bergmann wrote:
-> > > On Wednesday 21 March 2012, Felipe Balbi wrote:
-> > > > I have explained an easy way to achieve that to Alan Stern, but he =
-did
-> > > > not like it. Basically, we should add a platform_device to ehci-hcd=
-=2Eko
-> > > > and make ehci-{omap,mv,fsl,atmel,etc} a parent device/driver which
-> > > > basically passes the correct resources and handle platform-specific
-> > > > details.
-> > > >
-> > > > That way, we could build everything together and udev would load the
-> > > > correct modules for us.
-> > > >
-> > > > For an example of what I mean, see drivers/usb/dwc3/core.c,
-> > > > drivers/usb/dwc3/dwc3-omap.c, and drivers/usb/dwc3/dwc3-pci.c
-> > >
-> > > While that way clearly works and can solve the problem we have
-> > > with ehci today, I think it's easier and more consistent with
-> > > other drivers to do it the opposite way, as we have recently
-> > > discussed in the context of ohci:
-> > >
-> > > Make the base driver a loadable module that does not register
-> > > any struct device_driver at all, but just exports functions to
-> > > other module. The hardware specific drivers then each register
-> > > to their own bus and use the functions exported by the
-> > > main driver, with a way to override them with their own versions.
-> > >
-> > > Alan suggested a variation of that where we actually export
-> > > a default "struct hc_driver" instead of the individual functions,
-> > > which has the advantage of having to export fewer symbols, but
-> > > otherwise is similar to what we do elsewhere.
-> > >
-> > > See libata, sdhci, serial-8250 or xhci for examples of this way.
-> >=20
-> > that is likely to work, indeed. My suggestion would make PM simpler
-> > though and avoid some code duplication in the long run, meaning that
-> > ehci-hcd.ko could have its own dev_pm_ops which e.g. knows how to save
-> > EHCI's context while ehci-omap.c knows how to save OMAP-specific
-> > context, toggle clocks, set pads in safe mode (when needed) and so on.
-> >=20
-> > But fair enough, both ways would work fine.
+On Wed, 21 Mar 2012 19:05:26 +0530, Thomas Abraham <thomas.abraham@lina=
+ro.org> wrote:
+> Hi David,
 >=20
-> I would also recommend your/Alan's approach to this over Felipe's way.
-> We have a DWC3 platform with an (admittedly oddball) PM implementation
-> that requires the bus driver to have some knowledge of the base driver's
-> internal state, and needs the two drivers to be able to communicate with
-> each other. With the base driver being a separate platform device, this
-> is nearly impossible to achieve in a clean way. If the DWC3 driver was
-> designed the way you and Alan are recommending, it would be easy.
+> On 21 March 2012 09:11, David Gibson <david@gibson.dropbear.id.au> wr=
+ote:
+> > On Wed, Mar 21, 2012 at 07:55:43AM +0530, Thomas Abraham wrote:
+> >> Hi,
+> >>
+> >> Exynos5 includes a gpio wakeup interrupt controller that generates=
+ 32
+> >> interrupts. The first 16 interrupts are routed to the interrupt
+> >> combiner controller. The last 16 are muxed into one interrupt and =
+this
+> >> interrupt line is connected to the GIC interrupt controller.
+> >>
+> >> So, the wakeup interrupt controller node in device tree requires t=
+wo
+> >> interrupt parents. I do not know how to handle this. Any suggestio=
+ns
+> >> will be very helpful.
+> >
+> > This has occurred before, for example on the MAL device on 440EP (s=
+ee
+> > the bamboo board dts for example). =C2=A0The semi-standard approach=
+ is to
+> > make the node an interrupt-nexus for itself. =C2=A0That is in the n=
+ode's
+> > interrupts property, just list 0..N giving as many interrupts as yo=
+u
+> > need. =C2=A0Set the node's interrupt-parent to point to the node it=
+self,
+> > then add interrupt-map and interrupt-map-mask properties which rema=
+p
+> > those interrupts 0..N to the correct interrupts on the actual
+> > interrupt controllers. =C2=A0Each entry in the interrupt map specif=
+ies an
+> > interrupt parent phandle, so you can distribute the irqs to multipl=
+e
+> > interrupt controllers that way.
 >=20
-> I'm trying to convince Felipe to change the DWC3 driver design to
-> accommodate this, but I hold out little hope for that :)
+> Thanks for your suggestion and pointing out an example. I tried this
+> approach for Exynos4 and Exynos5. It mostly works but there are two
+> issues here.
+>=20
+> 1. In the Exynos5 case, the wakeup interrupt controller (which has tw=
+o
+> separate interrupt parents - gic and combiner) is itself a interrupt
+> controller and has the 'interrupt-controller' property. So
+> of_irq_map_raw() function does not process the interrupt-map in the
+> wakeup interrupt controller device node. I did the following change t=
+o
+> get past this but I am not sure if this the correct thing to do.
+>=20
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 9cf0060..892ac95 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -152,7 +152,8 @@ int of_irq_map_raw(struct device_node *parent,
+> const __be32 *intspec,
+>                 /* Now check if cursor is an interrupt-controller and=
+ if it is
+>                  * then we are done
+>                  */
+> -               if (of_get_property(ipar, "interrupt-controller", NUL=
+L) !=3D
+> +               if (!of_get_property(ipar, "interrupt-map", &imaplen)=
+ &&
+> +                       of_get_property(ipar, "interrupt-controller",=
+ NULL) !=3D
+>                                 NULL) {
+>                         pr_debug(" -> got it !\n");
+>                         for (i =3D 0; i < intsize; i++)
 
-yeah, I'm not thinking on taking that patch, sorry. Didn't you say SNPS
-had agreed on rebuilding the FPGA system so that it's a more standard
-PCIe implementation ?
+Okay, so you're saying there are three important aspects to this
+device:
+1) it terminates interrupts from other devices (therefore needs an
+   interrupt controller driver)
+2) it passes some interrupts through untouched (interrupt controller
+   driver doesn't need to touch them; it directly raises an irq on the
+   gic or combiner)
+3) It is able generate interrupt signals on it's own (independent of
+   any attached devices)
 
-I still owe you another possible implementation for the whole PM thing,
-sorry about the delay.
+Do I understand correctly?
+
+Your patch above solves the problem for #2 above, but it breaks #1
+because interrupts from external devices can no longer be terminated
+on the wakeup controller node (they'll always get passed through).
+
+--- Possible solution 1 ---
+If other devices *don't* use the wakeup node as their interrupt
+parent, then you should be able to simply drop the
+interrupt-controller property and make the other devices directly
+reference the gic and combiner.
+
+--- Possible solution 2 ---
+Split the interrupt map into a separate node:
+
+
+	wakeup_eint: interrupt-controller@11000000 {
+		compatible =3D "samsung,exynos4210-wakeup-eint";
+		reg =3D <0x11000000 0x1000>;
+		interrupt-controller;
+		#interrupt-cells =3D <1>;
+		interrupt-parent =3D <&wakeup_map>;
+		interrupts =3D <0 1 2 3 f 5 6 7 8 9 10 11 12 13 14 15 16>;
+
+		wakeup_map: interrupt-map {
+			#interrupt-cells =3D <1>;
+			#address-cells =3D <0>;
+			interrupt-map =3D <0 &gic 0 16 0>,
+					<1 &gic 0 17 0>,
+					<2 &gic 0 18 0>,
+					<3 &gic 0 19 0>,
+					<4 &gic 0 20 0>,
+					<5 &gic 0 21 0>,
+					<6 &gic 0 22 0>,
+					<7 &gic 0 23 0>,
+					<8 &gic 0 24 0>,
+					<9 &gic 0 25 0>,
+					<10 &gic 0 26 0>,
+					<11 &gic 0 27 0>,
+					<12 &gic 0 28 0>,
+					<13 &gic 0 29 0>,
+					<14 &gic 0 30 0>,
+					<15 &gic 0 31 0>,
+					<16 &combiner 2 4>;
+		};
+	};
+
+--- possible solution 3 ---
+'interrupts' just isn't sufficient for some devices; add a binding for
+a 'interrupts-multiparent' that can be used instead of 'interrupts'
+and uses the format <phandle> <specifier> [<phandle> <specifier> [...]]=
+=2E
+
+I'm not opposed to this solution since it is a more natural binding
+for multiparented interrupt controllers, but I won't commit to it
+without feedback and agreement from Mitch, Ben, David Gibson, etc.
+
+
+>=20
+>=20
+> 2. The of_irq_init() function (mainly used on the arm platforms) look=
+s
+> for nodes with 'interrupt-controller' and initializes them with the
+> parents initialized first. In the Exynos4/5 case, the wakeup interrup=
+t
+> has two interrupt parents and of_irq_init() function does not seem to
+> be consider this case. And hence, the wakeup interrupt controller is
+> being initialized, without the combiner being initialized.
+>=20
+> The following are the interrupt-controller nodes, that I have been
+> testing with (slightly modified for testing)
+>=20
+>        gic:interrupt-controller@10490000 {
+>                compatible =3D "arm,cortex-a9-gic";
+>                #interrupt-cells =3D <3>;
+>                #address-cells =3D <0>;
+>                #size-cells =3D <0>;
+>                interrupt-controller;
+>                cpu-offset =3D <0x8000>;
+>                reg =3D <0x10490000 0x1000>, <0x10480000 0x100>;
+>        };
+>=20
+>        combiner:interrupt-controller@10440000 {
+>                compatible =3D "samsung,exynos4210-combiner";
+>                #interrupt-cells =3D <2>;
+>                interrupt-controller;
+>                samsung,combiner-nr =3D <16>;
+>                reg =3D <0x10440000 0x1000>;
+>                interrupts =3D <0 0 0>, <0 1 0>, <0 2 0>, <0 3 0>,
+>                             <0 4 0>, <0 5 0>, <0 6 0>, <0 7 0>,
+>                             <0 8 0>, <0 9 0>, <0 10 0>, <0 11 0>,
+>                             <0 12 0>, <0 13 0>, <0 14 0>, <0 15 0>;
+>        };
+>=20
+>        wakeup_eint: interrupt-controller@11000000 {
+>                compatible =3D "samsung,exynos4210-wakeup-eint";
+>                reg =3D <0x11000000 0x1000>;
+>                interrupt-controller;
+>                #interrupt-cells =3D <1>;
+>                interrupt-parent =3D <&wakeup_eint>;
+>                interrupts =3D <0x0>, <0x1>, <0x2>, <0x3>,
+>                                <0x4>, <0x5>, <0x6>, <0x7>,
+>                                <0x8>, <0x9>, <0xa>, <0xb>,
+>                                <0xc>, <0xd>, <0xe>, <0xf>,
+>                                <0x10>;
+>                #address-cells =3D <0>;
+>                #size-cells =3D <0>;
+>                interrupt-map =3D <0x0 &gic 0 16 0>,
+>                                <0x1 &gic 0 17 0>,
+>                                <0x2 &gic 0 18 0>,
+>                                <0x3 &gic 0 19 0>,
+>                                <0x4 &gic 0 20 0>,
+>                                <0x5 &gic 0 21 0>,
+>                                <0x6 &gic 0 22 0>,
+>                                <0x7 &gic 0 23 0>,
+>                                <0x8 &gic 0 24 0>,
+>                                <0x9 &gic 0 25 0>,
+>                                <0xa &gic 0 26 0>,
+>                                <0xb &gic 0 27 0>,
+>                                <0xc &gic 0 28 0>,
+>                                <0xd &gic 0 29 0>,
+>                                <0xe &gic 0 30 0>,
+>                                <0xf &gic 0 31 0>,
+>                                <0x10 &combiner 2 4>;
+>        };
+>=20
+> Thanks,
+> Thomas.
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 
 --=20
-balbi
-
---Sw7tCqrGA+HQ0/zt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPat8bAAoJEIaOsuA1yqRE/4IQAKCJ3ffoxDCxymeJkqTZxk0x
-l1d2ODA5z6tdzIHNIok2xuR/JmCKtKuJ7dSdiuLwu+UcvywmLEb6erF8UxEqNSNp
-5x6W3/kiVz71bk8vDYPCZWCZwMk5u0xS36L9SZN2rI7r2HKss/Oe1mS0ju/Yt7Rt
-jRj3xusGzDsJe+aESEUourbyMFJvsFVhQuecb4h2FjU655c4SoOWbSRB/D+PR0Tg
-zluZJ6VtWKW+gZvyrpFhmLq/wlB3uM8JlE9L/kTBshtkBQnUnWzoZJFx3lueZgqu
-fzflwMj2LGOtRpxmVqLkn7X+eoXzVpXUIuPaz4ruRWHVC9b0jPW8b6HRNFoI1Azg
-tA6+Y1JzVZV25jRE8k/wPXkImtq18StcHO2YZvv91YemRnLGMCH61dGS4624xBKC
-A2MMYcyD4LogBREuMLh+5ZUezM6i6EOG/NnkI0AeuTu0dXHTLU2xlsu/Biz7NIfm
-ry3C9+2/N2ZSoyjKq6lKWQa8zQ3FA/RFR/IxJ2Ly2xA4M7i0vf+PviWfsBBTlTHO
-gEj/lIWMnDKXgqWlSBHt7EqEQ9mtSBD/buu8UH2czUFaaCE1KNqmIa6IG9QPoRG/
-9AXMqQjRoV8Ow/4LV4EBpjHLTZE9q7bg+2tVlbPlQfiYx1FrSg0hSL10M7ndnTB4
-u5VkbJQHyiXSLnFZ7xdr
-=N1Pv
------END PGP SIGNATURE-----
-
---Sw7tCqrGA+HQ0/zt--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
