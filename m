@@ -1,90 +1,79 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2 6/6] pinctrl: tegra: Add complete device tree support
-Date: Wed, 21 Mar 2012 10:07:27 -0600
-Message-ID: <4F69FCBF.3050708@wwwdotorg.org>
-References: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org> <1332265479-1260-6-git-send-email-swarren@wwwdotorg.org> <20120321093504.GA12118@shlinux2.ap.freescale.net>
+From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Subject: Re: EHCI_MV confusion was: Re: kirkwood devicetree respin
+Date: Wed, 21 Mar 2012 12:18:33 -0400 (EDT)
+Message-ID: <alpine.LFD.2.02.1203211216010.24151@xanadu.home>
+References: <Pine.LNX.4.44L0.1203210955140.1369-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120321093504.GA12118@shlinux2.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "dongas86@gmail.com" <dongas86@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "tony@atomide.com" <tony@atomide.com>, "sjg@chromium.org" <sjg@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <Pine.LNX.4.44L0.1203210955140.1369-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2012 03:35 AM, Dong Aisheng wrote:
-> On Wed, Mar 21, 2012 at 01:44:39AM +0800, Stephen Warren wrote:
->> Implement pinctrl_ops dt_node_to_map() and dt_free_map(). These allow
->> complete specification of the desired pinmux configuration using device
->> tree.
->>
->> Signed-off-by: Stephen Warren <swarren@wwwdotorg.org>
->> ---
->> v2: Rebase on of_property_for_each_string() API changes.
->> ---
-> Nice code and a good example to people.
+On Wed, 21 Mar 2012, Alan Stern wrote:
+
+> On Wed, 21 Mar 2012, Jason Cooper wrote:
 > 
-> A small suggestion below:
->> +static int add_map_configs(struct pinctrl_map **map, unsigned *num_maps,
->> +			   const char *group, unsigned long *configs,
->> +			   unsigned num_configs)
->> +{
->> +	unsigned i = *num_maps;
->> +	unsigned long *dup_configs;
->> +	int ret;
->> +
->> +	dup_configs = kmemdup(configs, num_configs * sizeof(*dup_configs),
->> +			      GFP_KERNEL);
->> +	if (!dup_configs)
->> +		return -ENOMEM;
->> +
->> +	ret = add_map(map, num_maps);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	(*map)[i].type = PIN_MAP_TYPE_CONFIGS_GROUP;
->
-> It still does not support PIN_MAP_TYPE_CONFIGS_PIN, right?
+> > On Tue, Mar 20, 2012 at 11:54:53PM -0400, Nicolas Pitre wrote:
+> > > On Tue, 20 Mar 2012, Arnd Bergmann wrote:
+> > > 
+> > > > ehci-orion only makes sense on PLAT_ORION, and they never have any
+> > > > other platform ehci driver.
+> > > > 
+> > > > ehci-mv only makese sense on PLAT_PXA, and they  also don't have any
+> > > > other platform ehci driver.
+> > > 
+> > > BTW, as someone who once was the active maintainer for PXA, and later 
+> > > the active maintainer for Orion, I should say that ehci-mv is a terribly 
+> > > bad name (as demonstrated, not all Marvell SOCs use ehci-mv) and 
+> > > confusion would be much reduced if it was renamed to ehci-pxa.
+> > 
+> > How about like this (to differentiate against pxa168):
+> > 
+> > diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> > index 353cdd4..e1bc205 100644
+> > --- a/drivers/usb/host/Kconfig
+> > +++ b/drivers/usb/host/Kconfig
+> > @@ -194,8 +194,8 @@ config USB_EHCI_S5P
+> >         help
+> >          Enable support for the S5P SOC's on-chip EHCI controller.
+> >  
+> > -config USB_EHCI_MV
+> > -       bool "EHCI support for Marvell on-chip controller"
+> > +config USB_EHCI_MV_PXA
+> > +       bool "EHCI support for Marvell PXA on-chip controller"
+> >         depends on USB_EHCI_HCD
+> >         select USB_EHCI_ROOT_HUB_TT
+> >         ---help---
+> > diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
+> > index a007a9f..4e1ec71 100644
+> > --- a/drivers/usb/host/ehci-hcd.c
+> > +++ b/drivers/usb/host/ehci-hcd.c
+> > @@ -1371,8 +1371,8 @@ MODULE_LICENSE ("GPL");
+> >  #define PLATFORM_DRIVER                ehci_xls_driver
+> >  #endif
+> >  
+> > -#ifdef CONFIG_USB_EHCI_MV
+> > -#include "ehci-mv.c"
+> > +#ifdef CONFIG_USB_EHCI_MV_PXA
+> > +#include "ehci-mvpxa.c"
+> >  #define        PLATFORM_DRIVER         ehci_mv_driver
+> >  #endif
+> 
+> You guys have spent an awful lot of time and effort beating a dead 
+> horse.  See commit a219b666e89bd2f7810b4eaaf4d7382ad0e6ecb1 (usb: host: 
+> add dependence for USB_EHCI_MV).
 
-Yes.
+I think there is still value in the rename.  "mv" is a really bad 
+qualifier for an IP block from a company that has many of them for the 
+same purpose.
 
-This is mainly due to a pinctrl core limitation. The core only supports
-muxing on groups, so even though the Tegra30 HW supports muxing per pin,
-the driver must define a group for each pin. Given that, it's simplest
-just to do all the pin config on those same groups.
 
-If/when the pinctrl core supports muxing per pin, we can take advantage
-of this within the Tegra pinctrl driver without affecting the binding at
-all.
-
->> +	for_each_child_of_node(np_config, np) {
->> +		ret = of_property_read_string(np, "nvidia,function", &function);
->> +		if (ret < 0)
->> +			function = NULL;
->> +
->> +		for (i = 0; i < ARRAY_SIZE(cfg_params); i++) {
->> +			ret = of_property_read_u32(np, cfg_params[i].property,
->> +						   &val);
->> +			if (!ret) {
->> +				config = TEGRA_PINCONF_PACK(
->> +						cfg_params[i].param, val);
->> +				ret = add_config(&configs, &num_configs,
->> +						 config);
->> +				if (ret < 0)
->> +					goto error;
->> +			}
->> +		}
->> +
->> +		of_property_for_each_string(np, "nvidia,pins", prop, group) {
->
-> If we calculate out the strings count and allocate corresponding size array, we may not
-> need to keep krealloc the maps and configs array size for each entry.
-> And this may be a little higher efficient.
-
-That's true. However, it'd require the code to loop once to determine
-how many properties are present and how many entries there are in the
-pin list. Then, loop again to actually construct the mapping table
-array. This is all added complexity that doesn't affect correctness. I'd
-rather get the simple code going first, and then refine it later if
-there turns out to be a performance issue.
+Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
