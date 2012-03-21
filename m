@@ -1,57 +1,53 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 2/3] i2c-s3c2410: Rework device type handling
-Date: Wed, 21 Mar 2012 20:30:32 +0000
-Message-ID: <20120321203032.GQ3226@opensource.wolfsonmicro.com>
-References: <1332357113-2973-1-git-send-email-k.lewandowsk@samsung.com>
- <1332357113-2973-3-git-send-email-k.lewandowsk@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: dtsi vs dts files, where to better understand this
+Date: Wed, 21 Mar 2012 14:36:35 -0600
+Message-ID: <4F6A3BD3.4040805@wwwdotorg.org>
+References: <89736f85-54aa-4f71-814e-91ae5ce33bdc@VA3EHSMHS017.ehs.local>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z87VqPJ/HsYrR2WM"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1332357113-2973-3-git-send-email-k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <89736f85-54aa-4f71-814e-91ae5ce33bdc-+Ck8Kgl/v0+44QFJ4H5SYbjjLBE8jN/0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 03/21/2012 12:36 PM, John Linn wrote:
+> Hi,
+> 
+> I've done some digging and not found any info, maybe I looked in the
+> wrong places.
+> 
+> I'm trying to better understand how the dtsi file works with the dts
+> file and what can go in each file.
 
---z87VqPJ/HsYrR2WM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The basic idea is that what's inside the SoC is identical across all
+boards using that SoC. This information is put into the .dtsi file so it
+can be included by the .dts file for any boards using the SoC.
 
-On Wed, Mar 21, 2012 at 08:11:52PM +0100, Karol Lewandowski wrote:
-> Reorganize driver a bit to better handle device tree-based systems:
->=20
->  - move machine type to driver's private structure instead of
->    quering platform device variants in runtime
->=20
->  - replace s3c24xx_i2c_type enum with unsigned int that holds
->    bitmask with revision-specific quirks
+Anything that's board-specific goes into the board's individual .dts
+file. This might be new nodes to e.g. define which chips are connected
+to an I2C bus hosted by the SoC, and much more.
 
-Reviewed-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Where properties existing in both, the most recent value in parsing
+order overrides any earlier values. So for example, if the .dtsi file
+said that 'status = "disabled"' for a particular HW module, the board
+.dts could later override it by saying 'status = "okay"' within the same
+node.
 
---z87VqPJ/HsYrR2WM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+One other factor: Something like an SDHCI controller may have properties
+that are defined by the SoC (e.g. compatible, reg, interrupts), and
+properties that are defined by the board (e.g. the GPIO ID to use for
+CD, WP, etc.). Just set the relevant properties in the .dtsi and .dts
+files and they'll get merged together to form the final device tree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPajphAAoJEBus8iNuMP3dMwwP/jgjBp+gspHKZZlU3EX9OZzl
-9shg8+4X22tppGQziiCZkqeWmaaHExVyFBvBIcLvpb1WRcroJafLEFqrC5O/AOKr
-C2G3S16Q3NYvrGShGVqxU6M1FSges8v4y0PKkClSzcdot8FsAKr035aFw19LblRv
-3HlZhiKQTNDivzVW31UkmkKMf+Kvqg3eJmwyT6RXwkRMEP1AmjXLSXxDfafFGFOJ
-qN7krly9N8A/vBZOFiAC6TS8zepGIYR3lwU/9rSYyMeDprEgcEayL7FwoTKAawQC
-MCl1ZvRolJViIkrhivYk/sGXo0f7144q1Vf5324qiVl7Tjh57hYxwxhynCXDJVUB
-P0IkBXKq+3fcskvTsLkbJy9r0EfnHD3AQWOziQHv4dnvwnZUC58nYgtq2lzIyL4/
-KzpqjGc+Kgw3VIfzEAyBIiNo+LVyVJfugL22169CZZrs7mOxcVkOG/Tbt27tei2w
-S3k01hLSmaWCotgAcwNzTLh7wqaSxs5RAp8TRcXCvcQhgCvgNnYpHo+3vVrutfHA
-+szVZl6ZEf58RLm9ehpI/7bp5G8cWgJXJaYv7Z4mv6KrAIBVQzsKVcCLvp2eaZfS
-Oq3RA8j6eLTjAKxoz33ABY9daAPYaRZlDN3cgTiS4+HXk40UF63uLvjGs9D+FJAY
-HaCuFRAm1MngMv1Y8l+l
-=ANMQ
------END PGP SIGNATURE-----
-
---z87VqPJ/HsYrR2WM--
+Was that what you were looking for?
