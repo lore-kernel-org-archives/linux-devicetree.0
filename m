@@ -1,36 +1,55 @@
-From: Karol Lewandowski <k.lewandowsk@samsung.com>
-Subject: Re: [PATCH 2/3] i2c-s3c2410: Rework device type handling
-Date: Wed, 21 Mar 2012 12:54:03 +0100
-Message-ID: <4F69C15B.8080909@samsung.com>
-References: <1331657679-31302-1-git-send-email-k.lewandowsk@samsung.com>
- <1331657679-31302-3-git-send-email-k.lewandowsk@samsung.com>
- <20120314172915.GB13393@sirena.org.uk> <4F61BEC8.4030008@samsung.com>
- <20120315125630.GK3138@opensource.wolfsonmicro.com>
- <4F621EC9.6020106@samsung.com>
- <20120319195540.GH12384@opensource.wolfsonmicro.com>
- <4F69AE96.6060901@samsung.com>
- <20120321115036.GB3226@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
+Date: Wed, 21 Mar 2012 12:36:37 +0000
+Message-ID: <201203211236.37891.arnd@arndb.de>
+References: <1331650032-15274-1-git-send-email-sr@denx.de>
+ <201203151339.36173.arnd@arndb.de> <4F69BC35.4010400@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20120321115036.GB3226@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: ben-linux@fluff.org, thomas.abraham@linaro.org, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, t.stanislaws@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>, w.sang@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F69BC35.4010400-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21.03.2012 12:50, Mark Brown wrote:
-
-> On Wed, Mar 21, 2012 at 11:33:58AM +0100, Karol Lewandowski wrote:
+On Wednesday 21 March 2012, Viresh Kumar wrote:
+> > 
+> > What's wrong with one vic_dt_init_irq() function and an array with two entries?
 > 
->> What do you think about following changes, then?
+> Hey Arnd,
 > 
-> That looks reasonable.
+> Actually i was doing 3xx DT porting and again came to this thing. I believe what
+> you suggested should be fine too as the actual vic model/name is going to be
+> passed from .dts file.
+> 
+> If this is acceptable to you, i will add patch for both vic & gic in my
+> patchset.
 
+Ok, sounds good.
 
-Thanks. I'll incorporate this change and post whole patchset again.
+Let's make sure we're on the same page with the process though. I hope
+you're aware that I took Stefan's spear6xx v5 patch. I just now saw that
+you were not on Cc on the submission of the patch nor on my reply, but you
+had given your Ack on the patch. Just let me know how you want to handle
+these things in the future -- the normal way would be to always let you
+forward the patches to me, rather than having them applied to arm-soc
+directly.
 
-Regards,
--- 
-Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
+Regarding the spear3xx patches, I'm looking forward to your patches.
+I think spear is simple and clean enough that it can serve as an example
+for others doing DT conversion. Do you also plan to unify 3xx and 6xx?
+I think there is hardly anything left in mach-spear6xx that justifies
+having a separate platform, especially since with the DT conversion done,
+we can actually remove most of the header file contents as well.
+
+	Arnd
