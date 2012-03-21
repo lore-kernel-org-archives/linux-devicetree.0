@@ -1,17 +1,13 @@
-From: Kushwaha Prabhakar-B32579 <B32579-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH][v2] powerpc/85xx:Add BSC9131 RDB Support
-Date: Wed, 21 Mar 2012 17:45:12 +0000
-Message-ID: <071A08F2C6A57E4E94D980ECA553F8745B298F@039-SN1MPN1-004.039d.mgd.msft.net>
-References: <1331973588-29896-1-git-send-email-prabhakar@freescale.com>
- <6E492C67-B422-46B2-9A8E-C1E9B6C534E7@kernel.crashing.org>
- <071A08F2C6A57E4E94D980ECA553F8745B28E5@039-SN1MPN1-004.039d.mgd.msft.net>
- <F67F01CF-E431-42B7-BA59-EBC6A792FC69@kernel.crashing.org>
-Mime-Version: 1.0
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH][v2] Device Tree Bindings for Freescale TDM controller
+Date: Wed, 21 Mar 2012 13:06:57 -0500
+Message-ID: <BDBDFD28-0980-491C-B384-BB1F6730211E@kernel.crashing.org>
+References: <1332205369-26260-1-git-send-email-poonam.aggrwal@freescale.com>
+Mime-Version: 1.0 (Apple Message framework v1257)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <F67F01CF-E431-42B7-BA59-EBC6A792FC69-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1332205369-26260-1-git-send-email-poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,114 +17,106 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Srivastava Rajan-B34330 <B34330-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mehresh Ramneek-B31383 <B31383-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Goyal Akhil-B35197 <B35197-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jain Priyanka-B32167 <B32167-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Sandeep Singh <Sandeep-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Kumar for clarifying my doubts.
 
-> -----Original Message-----
-> From: Kumar Gala [mailto:galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org]
-> Sent: Wednesday, March 21, 2012 11:08 PM
-> To: Kushwaha Prabhakar-B32579
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> Jain Priyanka-B32167; Mehresh Ramneek-B31383; Srivastava Rajan-B34330;
-> Goyal Akhil-B35197
-> Subject: Re: [PATCH][v2] powerpc/85xx:Add BSC9131 RDB Support
+On Mar 19, 2012, at 8:02 PM, Poonam Aggrwal wrote:
+
+> This TDM controller is available in various Freescale SOCs like MPC8315, P1020,
+> P1022, P1010.
+> 
+> Signed-off-by: Sandeep Singh <Sandeep-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Changes in v2:
+> 	- Incorporated Scott's Review comments
+> Documentation/devicetree/bindings/tdm/fsl-tdm.txt |   67 +++++++++++++++++++++
+> 1 files changed, 67 insertions(+), 0 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/tdm/fsl-tdm.txt b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> new file mode 100644
+> index 0000000..6553dbe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> @@ -0,0 +1,67 @@
+> +=====================================================================
+> +TDM Device Tree Binding
+> +Copyright (C) 2012 Freescale Semiconductor Inc.
+> +
+> +NOTE: The bindings described in this document are preliminary
+> +and subject to change.
+> +
+> +=====================================================================
+> +TDM (Time Division Multiplexing)
+> +
+> +DESCRIPTION
+> +
+> +The TDM is full duplex serial port designed to allow various devices including
+> +digital signal processors (DSPs) to communicate with a variety of serial devices
+> +including industry standard framers, codecs, other DSPs and microprocessors.
+> +
+> +The below properties describe the device tree bindings for Freescale TDM
+> +controller.
+> +This TDM controller is available on various Freescale Processors like
+> +MPC8315, P1020, P1022 and P1010.
+> +
+> +PROPERTIES
+> +
+> +  - compatible
+> +      Usage: required
+> +      Value type: <string>
+> +      Definition: Should contain "fsl,mpc8315-tdm".
+> +	  So mpc8315 will have compatible = "fsl,mpc8315-tdm";
+> +	  p1010 will have compatible "fsl,p1010-tdm", "fsl,mpc8315-tdm";
+> +
+> +  - reg
+> +      Usage: required
+> +      Definition: There are two reg resources. First is for  TDM registers and
+> +	  the second for TDM DMAC registers.
+> +
+> +  - clock-frequency
+> +      Usage: optional
+> +      Value type: <u32>
+> +      Definition: The frequency at which the TDM block is operating.
+> +
+> +  - interrupts
+> +      Usage: required
+> +      Definition: This field defines the interrupt specifiers for the two
+> +      interrupts. First is for TDM error and second for TDM DMAC.
+> +
+> +  - phy-handle
+> +      Usage: optional
+> +      Value type: <phandle>
+> +      Definition: Phandle of the line controller node or framer node eg. SLIC,
+> +	  E1/T1 etc.
+
+Which way are we going with the name of such handle properties?  Ie should this be 'tdm-phy-handle' or keeping it generic is ok?
+
+> +
+> +  - fsl,max-time-slots
+> +      Usage: required
+> +      Value type: <u32>
+> +      Definition: Maximum number of 8-bit time slots in one TDM frame.
+> +	  This is the maximum number which TDM hardware supports.
+> +
+> +EXAMPLE
+> +
+> +	tdm@16000 {
+> +		compatible = "fsl,p1010-tdm", "fsl,mpc8315-tdm";
+> +		reg = <0x16000 0x200 0x2c000 0x2000>;
+> +		clock-frequency = <399999999>; /* typically filled by u-boot */
+> +		interrupts = <16 8 62 8>;
+> +		phy-handle = <&zarlink1>;
+> +		fsl-max-time-slots = <128>;
+> +	};
+> -- 
+> 1.6.5.6
 > 
 > 
-> On Mar 21, 2012, at 12:29 PM, Kushwaha Prabhakar-B32579 wrote:
-> 
-> >>
-> >>
-> >> [snip]
-> >>
-> >
-> > ??
-> > Not getting you..
-> 
-> Just meant, I was removing parts of the patch in the email to reduce
-> things.
-> 
-
-Oh :)
-
-
-> >
-> >>> diff --git a/arch/powerpc/platforms/85xx/bsc913x_rdb.c
-> >>> b/arch/powerpc/platforms/85xx/bsc913x_rdb.c
-> >>> new file mode 100644
-> >>> index 0000000..611c289
-> >>> --- /dev/null
-> >>> +++ b/arch/powerpc/platforms/85xx/bsc913x_rdb.c
-> >>> @@ -0,0 +1,95 @@
-> >>> +/*
-> >>> + * BSC913xRDB Board Setup
-> >>> + *
-> >>> + * Author: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >>> + *
-> >>> + * Copyright 2011-2012 Freescale Semiconductor Inc.
-> >>> + *
-> >>> + * This program is free software; you can redistribute  it and/or
-> >>> +modify it
-> >>> + * under  the terms of  the GNU General  Public License as
-> >>> +published by the
-> >>> + * Free Software Foundation;  either version 2 of the  License, or
-> >>> +(at your
-> >>> + * option) any later version.
-> >>> + */
-> >>> +
-> >>> +#include <linux/of_platform.h>
-> >>> +#include <linux/pci.h>
-> >>> +#include <asm/mpic.h>
-> >>> +#include <sysdev/fsl_soc.h>
-> >>> +#include <asm/udbg.h>
-> >>> +
-> >>> +void __init bsc913x_rdb_pic_init(void) {
-> >>> +	struct mpic *mpic;
-> >>> +	struct resource r;
-> >>> +	struct device_node *np;
-> >>> +
-> >>> +	np = of_find_node_by_type(NULL, "open-pic");
-> >>> +	if (!np) {
-> >>> +		pr_err("bsc913x: Could not find open-pic node\n");
-> >>> +		return;
-> >>> +	}
-> >>> +
-> >>> +	if (of_address_to_resource(np, 0, &r)) {
-> >>> +		pr_err("bsc913x: Failed to map mpic register space\n");
-> >>> +		of_node_put(np);
-> >>> +		return;
-> >>> +	}
-> >>> +
-> >>> +	mpic = mpic_alloc(np, r.start, MPIC_WANTS_RESET |
-> >>> +	  MPIC_BIG_ENDIAN | MPIC_BROKEN_FRR_NIRQS | MPIC_SINGLE_DEST_CPU,
-> >>> +	  0, 256, " OpenPIC  ");
-> >>> +
-> >>> +	of_node_put(np);
-> >>> +
-> >>> +	if (!mpic)
-> >>> +		pr_err("bsc913x: Failed to allocate MPIC structure\n");
-> >>> +	else
-> >>> +		mpic_init(mpic);
-> >>> +}
-> >>> +
-> >>
-> >> This code is still out of date w/other board ports.  Have you tried
-> >> building this against upstream??
-> >>
-> >
-> > I build with powerpc.git.
-> > do you mean build with upstream code base ??
-> > git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git
-> >
-> 
-> I mean if you use my 'next' branch of galak/powerpc.git and apply this
-> patch, and enable it.  For example MPIC_BROKEN_FRR_NIRQS doesn't exist
-> anymore
-> 
-
-
-I did on master branch. I will check on "next" branch and if required send new patch version.
-
---Prabhakar
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
