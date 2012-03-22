@@ -1,173 +1,102 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V3 2/6] dt: pinctrl: Document device tree binding
-Date: Thu, 22 Mar 2012 12:27:18 -0600
-Message-ID: <1332440842-1098-2-git-send-email-swarren@wwwdotorg.org>
-References: <1332440842-1098-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1332440842-1098-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, linus.walleij@stericsson.com, B29396@freescale.com, s.hauer@pengutronix.de, dongas86@gmail.com, shawn.guo@linaro.org, thomas.abraham@linaro.org, tony@atomide.com, sjg@chromium.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
+From: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: RE: kirkwood devicetree respin
+Date: Thu, 22 Mar 2012 18:28:26 +0000
+Message-ID: <A2CA0424C0A6F04399FB9E1CD98E0304090B7F02@US01WEMBX2.internal.synopsys.com>
+References: <20120312214325.GD5050@titan.lakedaemon.net>
+ <201203211009.40934.arnd@arndb.de> <20120321114546.GC3092@arwen.pp.htv.fi>
+ <201203211317.38339.arnd@arndb.de> <20120321132230.GL3092@arwen.pp.htv.fi>
+ <A2CA0424C0A6F04399FB9E1CD98E0304090B77CA@US01WEMBX2.internal.synopsys.com>
+ <20120322081315.GG31160@arwen.pp.htv.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120322081315.GG31160-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The core pin controller bindings define:
-* The fact that pin controllers expose pin configurations as nodes in
-  device tree.
-* That the bindings for those pin configuration nodes is defined by the
-  individual pin controller drivers.
-* A standardized set of properties for client devices to define numbered
-  or named pin configuration states, each referring to some number of the
-  afore-mentioned pin configuration nodes.
-* That the bindings for the client devices determines the set of numbered
-  or named states that must exist.
+> From: Felipe Balbi [mailto:balbi-l0cyMroinI0@public.gmane.org]
+> Sent: Thursday, March 22, 2012 1:13 AM
+> 
+> On Wed, Mar 21, 2012 at 08:06:12PM +0000, Paul Zimmerman wrote:
+> > > From: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Felipe
+> Balbi
+> > > Sent: Wednesday, March 21, 2012 6:23 AM
+> > >
+> > > On Wed, Mar 21, 2012 at 01:17:38PM +0000, Arnd Bergmann wrote:
+> > > > On Wednesday 21 March 2012, Felipe Balbi wrote:
+> > > > > I have explained an easy way to achieve that to Alan Stern, but he did
+> > > > > not like it. Basically, we should add a platform_device to ehci-hcd.ko
+> > > > > and make ehci-{omap,mv,fsl,atmel,etc} a parent device/driver which
+> > > > > basically passes the correct resources and handle platform-specific
+> > > > > details.
+> > > > >
+> > > > > That way, we could build everything together and udev would load the
+> > > > > correct modules for us.
+> > > > >
+> > > > > For an example of what I mean, see drivers/usb/dwc3/core.c,
+> > > > > drivers/usb/dwc3/dwc3-omap.c, and drivers/usb/dwc3/dwc3-pci.c
+> > > >
+> > > > While that way clearly works and can solve the problem we have
+> > > > with ehci today, I think it's easier and more consistent with
+> > > > other drivers to do it the opposite way, as we have recently
+> > > > discussed in the context of ohci:
+> > > >
+> > > > Make the base driver a loadable module that does not register
+> > > > any struct device_driver at all, but just exports functions to
+> > > > other module. The hardware specific drivers then each register
+> > > > to their own bus and use the functions exported by the
+> > > > main driver, with a way to override them with their own versions.
+> > > >
+> > > > Alan suggested a variation of that where we actually export
+> > > > a default "struct hc_driver" instead of the individual functions,
+> > > > which has the advantage of having to export fewer symbols, but
+> > > > otherwise is similar to what we do elsewhere.
+> > > >
+> > > > See libata, sdhci, serial-8250 or xhci for examples of this way.
+> > >
+> > > that is likely to work, indeed. My suggestion would make PM simpler
+> > > though and avoid some code duplication in the long run, meaning that
+> > > ehci-hcd.ko could have its own dev_pm_ops which e.g. knows how to save
+> > > EHCI's context while ehci-omap.c knows how to save OMAP-specific
+> > > context, toggle clocks, set pads in safe mode (when needed) and so on.
+> > >
+> > > But fair enough, both ways would work fine.
+> >
+> > I would also recommend your/Alan's approach to this over Felipe's way.
+> > We have a DWC3 platform with an (admittedly oddball) PM implementation
+> > that requires the bus driver to have some knowledge of the base driver's
+> > internal state, and needs the two drivers to be able to communicate with
+> > each other. With the base driver being a separate platform device, this
+> > is nearly impossible to achieve in a clean way. If the DWC3 driver was
+> > designed the way you and Alan are recommending, it would be easy.
+> >
+> > I'm trying to convince Felipe to change the DWC3 driver design to
+> > accommodate this, but I hold out little hope for that :)
+> 
+> yeah, I'm not thinking on taking that patch, sorry. Didn't you say SNPS
+> had agreed on rebuilding the FPGA system so that it's a more standard
+> PCIe implementation ?
+> 
+> I still owe you another possible implementation for the whole PM thing,
+> sorry about the delay.
 
-Signed-off-by: Stephen Warren <swarren@wwwdotorg.org>
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Simon Glass <sjg@chromium.org>
-Acked-by: Dong Aisheng <dong.aisheng@linaro.org>
----
-v2: Fix a couple of grammar-os per Randy Dunlap. Add example of a client
-device that references no pin configuration nodes per Dong Aisheng.
----
- .../bindings/pinctrl/pinctrl-bindings.txt          |  128 ++++++++++++++++++++
- 1 files changed, 128 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+Dropped the other folks from CC since they probably aren't interested.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-new file mode 100644
-index 0000000..c95ea82
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -0,0 +1,128 @@
-+== Introduction ==
-+
-+Hardware modules that control pin multiplexing or configuration parameters
-+such as pull-up/down, tri-state, drive-strength etc are designated as pin
-+controllers. Each pin controller must be represented as a node in device tree,
-+just like any other hardware module.
-+
-+Hardware modules whose signals are affected by pin configuration are
-+designated client devices. Again, each client device must be represented as a
-+node in device tree, just like any other hardware module.
-+
-+For a client device to operate correctly, certain pin controllers must
-+set up certain specific pin configurations. Some client devices need a
-+single static pin configuration, e.g. set up during initialization. Others
-+need to reconfigure pins at run-time, for example to tri-state pins when the
-+device is inactive. Hence, each client device can define a set of named
-+states. The number and names of those states is defined by the client device's
-+own binding.
-+
-+The common pinctrl bindings defined in this file provide an infrastructure
-+for client device device tree nodes to map those state names to the pin
-+configuration used by those states.
-+
-+Note that pin controllers themselves may also be client devices of themselves.
-+For example, a pin controller may set up its own "active" state when the
-+driver loads. This would allow representing a board's static pin configuration
-+in a single place, rather than splitting it across multiple client device
-+nodes. The decision to do this or not somewhat rests with the author of
-+individual board device tree files, and any requirements imposed by the
-+bindings for the individual client devices in use by that board, i.e. whether
-+they require certain specific named states for dynamic pin configuration.
-+
-+== Pinctrl client devices ==
-+
-+For each client device individually, every pin state is assigned an integer
-+ID. These numbers start at 0, and are contiguous. For each state ID, a unique
-+property exists to define the pin configuration. Each state may also be
-+assigned a name. When names are used, another property exists to map from
-+those names to the integer IDs.
-+
-+Each client device's own binding determines the set of states the must be
-+defined in its device tree node, and whether to define the set of state
-+IDs that must be provided, or whether to define the set of state names that
-+must be provided.
-+
-+Required properties:
-+pinctrl-0:	List of phandles, each pointing at a pin configuration
-+		node. These referenced pin configuration nodes must be child
-+		nodes of the pin controller that they configure. Multiple
-+		entries may exist in this list so that multiple pin
-+		controllers may be configured, or so that a state may be built
-+		from multiple nodes for a single pin controller, each
-+		contributing part of the overall configuration. See the next
-+		section of this document for details of the format of these
-+		pin configuration nodes.
-+
-+		In some cases, it may be useful to define a state, but for it
-+		to be empty. This may be required when a common IP block is
-+		used in an SoC either without a pin controller, or where the
-+		pin controller does not affect the HW module in question. If
-+		the binding for that IP block requires certain pin states to
-+		exist, they must still be defined, but may be left empty.
-+
-+Optional properties:
-+pinctrl-1:	List of phandles, each pointing at a pin configuration
-+		node within a pin controller.
-+...
-+pinctrl-n:	List of phandles, each pointing at a pin configuration
-+		node within a pin controller.
-+pinctrl-names:	The list of names to assign states. List entry 0 defines the
-+		name for integer state ID 0, list entry 1 for state ID 1, and
-+		so on.
-+
-+For example:
-+
-+	/* For a client device requiring named states */
-+	device {
-+		pinctrl-names = "active", "idle";
-+		pinctrl-0 = <&state_0_node_a>;
-+		pinctrl-1 = <&state_1_node_a &state_1_node_b>;
-+	};
-+
-+	/* For the same device if using state IDs */
-+	device {
-+		pinctrl-0 = <&state_0_node_a>;
-+		pinctrl-1 = <&state_1_node_a &state_1_node_b>;
-+	};
-+
-+	/*
-+	 * For an IP block whose binding supports pin configuration,
-+	 * but in use on an SoC that doesn't have any pin control hardware
-+	 */
-+	device {
-+		pinctrl-names = "active", "idle";
-+		pinctrl-0 = <>;
-+		pinctrl-1 = <>;
-+	};
-+
-+== Pin controller devices ==
-+
-+Pin controller devices should contain the pin configuration nodes that client
-+devices reference.
-+
-+For example:
-+
-+	pincontroller {
-+		... /* Standard DT properties for the device itself elided */
-+
-+		state_0_node_a {
-+			...
-+		};
-+		state_1_node_a {
-+			...
-+		};
-+		state_1_node_b {
-+			...
-+		};
-+	}
-+
-+The contents of each of those pin configuration child nodes is defined
-+entirely by the binding for the individual pin controller device. There
-+exists no common standard for this content.
-+
-+The pin configuration nodes need not be direct children of the pin controller
-+device; they may be grandchildren, for example. Whether this is legal, and
-+whether there is any interaction between the child and intermediate parent
-+nodes, is again defined entirely by the binding for the individual pin
-+controller device.
+The FPGA rework is very low priority, those guys have more important
+stuff to work on at the moment. Plus management doesn't understand
+why the current design won't work, since the Synopsys driver supports
+it OK.
+
+So I'm not sure when the FPGA rework will happen.
+
 -- 
-1.7.0.4
+Paul
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
