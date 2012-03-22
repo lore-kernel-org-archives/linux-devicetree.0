@@ -1,11 +1,16 @@
-From: Sylwester Nawrocki <snjw23@gmail.com>
-Subject: Handling device shared SFR on dt platform
-Date: Wed, 21 Mar 2012 23:38:11 +0100
-Message-ID: <4F6A5853.9090809@gmail.com>
+From: viresh kumar <viresh.linux@gmail.com>
+Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
+Date: Thu, 22 Mar 2012 06:15:45 +0530
+Message-ID: <CAOh2x=nZUobbRJo7kdAwmEG+s51BabxPwUVz=S3oNJyTpuRpCQ@mail.gmail.com>
+References: <1331650032-15274-1-git-send-email-sr@denx.de>
+ <CAOh2x==J4qkp29w+v=GWORBua-DE3yb0MRGOtBLyELxbGZwcuA@mail.gmail.com>
+ <201203211404.35847.arnd@arndb.de>
+ <201203211826.38993.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201203211826.38993.arnd@arndb.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,37 +20,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stefan Roese <sr@denx.de>, spear-devel <spear-devel@list.st.com>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 21, 2012 at 11:56 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> I just noticed that you have git trees on http://git.stlinux.com/,
+> which I would personally prefer you to use actually. git.kernel.org
+> is most useful for people that don't have their own git servers.
 
-Hello,
+Ah, that's even better for me too. I don't really have to manage
+two trees.
 
-I'm working on adding the device tree support for two devices that
-share some IO registers. Exactly, there is one shared SFR that 
-contains a common bit to enable two PHY devices, and another two
-bits, each to separately reset each PHY.
+Just to understand the flow, how does this work now?
+There can be two sources of patches:
+- From ST internal developers
+- From external developers
 
-Currently this shared register is statically memory mapped and it is
-handled by a platform specific callback, that both drivers use to
-control their corresponding (sub)devices in synchronised manner.
+Should i apply them all to my tree and then send you a pull request?
+Or you automatically pull everyday from some specific branch?
 
-The two devices are a MIPI-CSI2 receiver and a MIPI-DSI transmitter, 
-and the common register is there to control the camera and the display 
-port PHY. The hardware design is a bit unfortunate, but there is not
-much I could do about it.
-
-The callback can be looked at at:
-http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=blob;f=arch/arm/plat-s5p/setup-mipiphy.c
-
-I have been trying to find method to handle this on a dt platform. 
-Has anyone faced similar issue before ? I would appreciate any ideas
-or suggestions.
-
-One of ideas was to create some sort of PHY framework, similar to
-clock API, and perhaps handle such platform quirks outside DT.
+Sorry i am new to this. :(
 
 --
-
-Thanks,
-Sylwester
+viresh
