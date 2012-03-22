@@ -1,145 +1,74 @@
-From: Aggrwal Poonam-B10812 <B10812-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH][v2] Device Tree Bindings for Freescale TDM controller
-Date: Thu, 22 Mar 2012 05:26:35 +0000
-Message-ID: <ACB6D0C0104CFF42A45A5D82A0DD4F3D09F06A@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1332205369-26260-1-git-send-email-poonam.aggrwal@freescale.com>
- <BDBDFD28-0980-491C-B384-BB1F6730211E@kernel.crashing.org>
+From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V2 3/6] pinctrl: core device tree mapping table parsing
+ support
+Date: Thu, 22 Mar 2012 13:49:29 +0800
+Message-ID: <20120322054928.GD840@shlinux2.ap.freescale.net>
+References: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org>
+ <1332265479-1260-3-git-send-email-swarren@wwwdotorg.org>
+ <20120321073116.GE3191@shlinux2.ap.freescale.net>
+ <4F69F844.3060102@wwwdotorg.org>
+ <4F6A0F05.90104@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <BDBDFD28-0980-491C-B384-BB1F6730211E-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Singh Sandeep-B37400 <B37400-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F6A0F05.90104-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 22, 2012 at 01:25:25AM +0800, Stephen Warren wrote:
+> On 03/21/2012 09:48 AM, Stephen Warren wrote:
+> > On 03/21/2012 01:31 AM, Dong Aisheng wrote:
+> >> On Wed, Mar 21, 2012 at 01:44:36AM +0800, Stephen Warren wrote:
+> ...
+> >>> +int pinctrl_dt_to_map(struct pinctrl *p)
+> >>> +{
+> >>> +	struct device_node *np = p->dev->of_node;
+> >>> +	int state, ret;
+> >>> +	char *propname;
+> >>> +	struct property *prop;
+> >>> +	const char *statename;
+> >>> +	const __be32 *list;
+> >>> +	int size, config;
+> >>> +	phandle phandle;
+> >>> +	struct device_node *np_config;
+> >>> +	struct pinctrl_dt_map *dt_map;
+> >>
+> >> Add NULL np checking?
+> > 
+> > Oops yes. I though I had that somewhere, but evidently not...
+> 
+> It turns out this isn't needed; of_node_get() and of_find_property()
+> both handle a NULL np just fine. Still, I suppose this might not always
+> be true for arbitrary code that's in pinctrl_dt_to_map(), so perhaps we
+> should add this anyway.
+> 
+Yes, and it's meaningless to keep going forward if np is NULL.
 
+> >>> +		}
+> >>> +
+> >>> +		/* For every referenced pin configuration node in it */
+> >>> +		for (config = 0; config < size; config++) {
+> >>> +			phandle = be32_to_cpup(list++);
+> >>> +
+> >>> +			/* Look up the pin configuration node */
+> >>> +			np_config = of_find_node_by_phandle(phandle);
+> >>
+> >> One option is using of_parse_phandle, then we do not need calculate
+> >> the phandle offset by ourselves.
+> >> Like:
+> >> np_config = of_parse_phandle(propname , config);
+> > 
+> > Yes, that's a good idea. I'll try that.
+> 
+> I looked at this more, and the existing code is a lot more efficient;
+> of_parse_phandle() internally calls of_find_property() each time, which
+> this pinctrl code has already done. I'd rather just leave this as it is.
+> Are you OK with that?
+> 
+Yes, i'm ok with it.
 
-> -----Original Message-----
-> From: Kumar Gala [mailto:galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org]
-> Sent: Wednesday, March 21, 2012 11:37 PM
-> To: Aggrwal Poonam-B10812
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> Singh Sandeep-B37400
-> Subject: Re: [PATCH][v2] Device Tree Bindings for Freescale TDM
-> controller
-> 
-> 
-> On Mar 19, 2012, at 8:02 PM, Poonam Aggrwal wrote:
-> 
-> > This TDM controller is available in various Freescale SOCs like
-> > MPC8315, P1020, P1022, P1010.
-> >
-> > Signed-off-by: Sandeep Singh <Sandeep-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> > Changes in v2:
-> > 	- Incorporated Scott's Review comments
-> > Documentation/devicetree/bindings/tdm/fsl-tdm.txt |   67
-> +++++++++++++++++++++
-> > 1 files changed, 67 insertions(+), 0 deletions(-) create mode 100644
-> > Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-> > b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-> > new file mode 100644
-> > index 0000000..6553dbe
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-> > @@ -0,0 +1,67 @@
-> > +=====================================================================
-> > +TDM Device Tree Binding
-> > +Copyright (C) 2012 Freescale Semiconductor Inc.
-> > +
-> > +NOTE: The bindings described in this document are preliminary and
-> > +subject to change.
-> > +
-> > +=====================================================================
-> > +TDM (Time Division Multiplexing)
-> > +
-> > +DESCRIPTION
-> > +
-> > +The TDM is full duplex serial port designed to allow various devices
-> > +including digital signal processors (DSPs) to communicate with a
-> > +variety of serial devices including industry standard framers, codecs,
-> other DSPs and microprocessors.
-> > +
-> > +The below properties describe the device tree bindings for Freescale
-> > +TDM controller.
-> > +This TDM controller is available on various Freescale Processors like
-> > +MPC8315, P1020, P1022 and P1010.
-> > +
-> > +PROPERTIES
-> > +
-> > +  - compatible
-> > +      Usage: required
-> > +      Value type: <string>
-> > +      Definition: Should contain "fsl,mpc8315-tdm".
-> > +	  So mpc8315 will have compatible = "fsl,mpc8315-tdm";
-> > +	  p1010 will have compatible "fsl,p1010-tdm", "fsl,mpc8315-tdm";
-> > +
-> > +  - reg
-> > +      Usage: required
-> > +      Definition: There are two reg resources. First is for  TDM
-> registers and
-> > +	  the second for TDM DMAC registers.
-> > +
-> > +  - clock-frequency
-> > +      Usage: optional
-> > +      Value type: <u32>
-> > +      Definition: The frequency at which the TDM block is operating.
-> > +
-> > +  - interrupts
-> > +      Usage: required
-> > +      Definition: This field defines the interrupt specifiers for the
-> two
-> > +      interrupts. First is for TDM error and second for TDM DMAC.
-> > +
-> > +  - phy-handle
-> > +      Usage: optional
-> > +      Value type: <phandle>
-> > +      Definition: Phandle of the line controller node or framer node
-> eg. SLIC,
-> > +	  E1/T1 etc.
-> 
-> Which way are we going with the name of such handle properties?  Ie
-> should this be 'tdm-phy-handle' or keeping it generic is ok?
-> 
-tdm-phy-handle looks better, but generally all the devices mention just phy-handle (usb, tsec) 
-> > +
-> > +  - fsl,max-time-slots
-> > +      Usage: required
-> > +      Value type: <u32>
-> > +      Definition: Maximum number of 8-bit time slots in one TDM frame.
-> > +	  This is the maximum number which TDM hardware supports.
-> > +
-> > +EXAMPLE
-> > +
-> > +	tdm@16000 {
-> > +		compatible = "fsl,p1010-tdm", "fsl,mpc8315-tdm";
-> > +		reg = <0x16000 0x200 0x2c000 0x2000>;
-> > +		clock-frequency = <399999999>; /* typically filled by u-boot
-> */
-> > +		interrupts = <16 8 62 8>;
-> > +		phy-handle = <&zarlink1>;
-> > +		fsl-max-time-slots = <128>;
-> > +	};
-> > --
-> > 1.6.5.6
-> >
-> >
-> > _______________________________________________
-> > Linuxppc-dev mailing list
-> > Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > https://lists.ozlabs.org/listinfo/linuxppc-dev
-> 
+Regards
+Dong Aisheng
