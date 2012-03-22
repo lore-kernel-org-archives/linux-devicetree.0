@@ -1,97 +1,50 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: dtsi vs dts files, where to better understand this
-Date: Thu, 22 Mar 2012 12:01:45 +1100
-Message-ID: <20120322010145.GH15997@truffala.fritz.box>
-References: <89736f85-54aa-4f71-814e-91ae5ce33bdc@VA3EHSMHS017.ehs.local>
- <4F6A3BD3.4040805@wwwdotorg.org>
- <d09d039e-88ba-41d3-ac51-8de1a11d806b@VA3EHSMHS032.ehs.local>
+From: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: EHCI_MV confusion was: Re: kirkwood devicetree respin
+Date: Wed, 21 Mar 2012 18:39:40 -0700
+Message-ID: <175CCF5F49938B4D99B2E3EF7F558EBE1A17B7FEE0@SC-VEXCH4.marvell.com>
+References: <alpine.LFD.2.02.1203211216010.24151@xanadu.home>
+ <Pine.LNX.4.44L0.1203211226310.1369-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d09d039e-88ba-41d3-ac51-8de1a11d806b-+Ck8Kgl/v0/HU/wHWYriTLjjLBE8jN/0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1203211226310.1369-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michael-QKn5cuLxLXY@public.gmane.org" <michael-QKn5cuLxLXY@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2012 at 02:50:09PM -0600, John Linn wrote:
-> > -----Original Message-----
-> > From: Stephen Warren [mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org]
-> > Sent: Wednesday, March 21, 2012 1:37 PM
-> > To: John Linn
-> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Subject: Re: dtsi vs dts files, where to better understand this
-> > 
-> > On 03/21/2012 12:36 PM, John Linn wrote:
-> > > Hi,
-> > >
-> > > I've done some digging and not found any info, maybe I looked in the
-> > > wrong places.
-> > >
-> > > I'm trying to better understand how the dtsi file works with the dts
-> > > file and what can go in each file.
-> > 
-> > The basic idea is that what's inside the SoC is identical across all
-> > boards using that SoC. This information is put into the .dtsi file so
-> > it
-> > can be included by the .dts file for any boards using the SoC.
-> > 
-> > Anything that's board-specific goes into the board's individual .dts
-> > file. This might be new nodes to e.g. define which chips are connected
-> > to an I2C bus hosted by the SoC, and much more.
-> > 
-> > Where properties existing in both, the most recent value in parsing
-> > order overrides any earlier values. So for example, if the .dtsi file
-> > said that 'status = "disabled"' for a particular HW module, the board
-> > .dts could later override it by saying 'status = "okay"' within the
-> > same
-> > node.
-> > 
-> > One other factor: Something like an SDHCI controller may have
-> > properties
-> > that are defined by the SoC (e.g. compatible, reg, interrupts), and
-> > properties that are defined by the board (e.g. the GPIO ID to use for
-> > CD, WP, etc.). Just set the relevant properties in the .dtsi and .dts
-> > files and they'll get merged together to form the final device tree.
-> > 
-> > Was that what you were looking for?
-> 
-> That was very helpful.  I was hoping there were details written
-> somewhere I had missed.  My apologies if I'm just not getting it yet :)
-> 
-> It's not clear to me how the hierarchy is maintained across both files
-> such as an i2c controller would be in the dtsi, while the i2c eeprom on
-> the bus is in the board file.
-> 
-> Do I have to duplicate the i2c controller (and the bus it's on also) in
-> the board file? It's not clear how smart the merge is.
-> 
-> The examples in the 3.3 tree don't seem that clear to me yet.
-
-The model used by dtc for this is a "stack of overlays".  Once the
-/include/s are processed you effectively have one big dts file with
-several partial trees specified one after another.  The first one
-always starts at /, the later ones can start at / but more likely
-start at a subtree of the first tree, specified by a path or a label.
-
-dtc then starts with the first tree and lays the later trees over it
-in order.  If the same property is specified in a later tree, it
-replaces the value from an earlier tree.  If the same node is
-specified, its properties and subnodes are merged into the existing
-version.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFsYW4gU3Rlcm4gW21haWx0
+bzpzdGVybkByb3dsYW5kLmhhcnZhcmQuZWR1XQ0KPiBTZW50OiAyMDEyxOoz1MIyMsjVIDA6MjgN
+Cj4gVG86IE5pY29sYXMgUGl0cmUNCj4gQ2M6IE5laWwgWmhhbmc7IEphc29uIENvb3BlcjsgQXJu
+ZCBCZXJnbWFubjsgQW5kcmV3IEx1bm47IEphbWllIExlbnRpbjsgVVNCDQo+IGxpc3Q7IG1pY2hh
+ZWxAd2FsbGUuY2M7IGRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBFSENJX01WIGNvbmZ1c2lvbiB3YXM6IFJlOiBraXJrd29vZCBkZXZpY2V0cmVlIHJl
+c3Bpbg0KPiANCj4gT24gV2VkLCAyMSBNYXIgMjAxMiwgTmljb2xhcyBQaXRyZSB3cm90ZToNCj4g
+DQo+ID4gT24gV2VkLCAyMSBNYXIgMjAxMiwgQWxhbiBTdGVybiB3cm90ZToNCj4gPg0KPiA+ID4g
+T24gV2VkLCAyMSBNYXIgMjAxMiwgSmFzb24gQ29vcGVyIHdyb3RlOg0KPiA+ID4NCj4gPiA+ID4g
+T24gVHVlLCBNYXIgMjAsIDIwMTIgYXQgMTE6NTQ6NTNQTSAtMDQwMCwgTmljb2xhcyBQaXRyZSB3
+cm90ZToNCj4gPiA+ID4gPiBPbiBUdWUsIDIwIE1hciAyMDEyLCBBcm5kIEJlcmdtYW5uIHdyb3Rl
+Og0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBlaGNpLW9yaW9uIG9ubHkgbWFrZXMgc2Vuc2Ugb24g
+UExBVF9PUklPTiwgYW5kIHRoZXkgbmV2ZXIgaGF2ZSBhbnkNCj4gPiA+ID4gPiA+IG90aGVyIHBs
+YXRmb3JtIGVoY2kgZHJpdmVyLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IGVoY2ktbXYgb25s
+eSBtYWtlc2Ugc2Vuc2Ugb24gUExBVF9QWEEsIGFuZCB0aGV5ICBhbHNvIGRvbid0IGhhdmUgYW55
+DQo+ID4gPiA+ID4gPiBvdGhlciBwbGF0Zm9ybSBlaGNpIGRyaXZlci4NCj4gPiA+ID4gPg0KPiA+
+ID4gPiA+IEJUVywgYXMgc29tZW9uZSB3aG8gb25jZSB3YXMgdGhlIGFjdGl2ZSBtYWludGFpbmVy
+IGZvciBQWEEsIGFuZCBsYXRlcg0KPiA+ID4gPiA+IHRoZSBhY3RpdmUgbWFpbnRhaW5lciBmb3Ig
+T3Jpb24sIEkgc2hvdWxkIHNheSB0aGF0IGVoY2ktbXYgaXMgYQ0KPiB0ZXJyaWJseQ0KPiA+ID4g
+PiA+IGJhZCBuYW1lIChhcyBkZW1vbnN0cmF0ZWQsIG5vdCBhbGwgTWFydmVsbCBTT0NzIHVzZSBl
+aGNpLW12KSBhbmQNCj4gPiA+ID4gPiBjb25mdXNpb24gd291bGQgYmUgbXVjaCByZWR1Y2VkIGlm
+IGl0IHdhcyByZW5hbWVkIHRvIGVoY2ktcHhhLg0KPiANCj4gPiBJIHRoaW5rIHRoZXJlIGlzIHN0
+aWxsIHZhbHVlIGluIHRoZSByZW5hbWUuICAibXYiIGlzIGEgcmVhbGx5IGJhZA0KPiA+IHF1YWxp
+ZmllciBmb3IgYW4gSVAgYmxvY2sgZnJvbSBhIGNvbXBhbnkgdGhhdCBoYXMgbWFueSBvZiB0aGVt
+IGZvciB0aGUNCj4gPiBzYW1lIHB1cnBvc2UuDQoNCldlIGhhdmUgc3VibWl0dGVkIGEgcGF0Y2gg
+dG8gcmVtb3ZlIGVoY2ktcHhhMTY4LmMuDQpBbmQgd2UgaGF2ZSBwbGFuIHRvIHJlbmFtZSB0aGUg
+ZHJpdmVyIG5hbWUgZm9yIGVoY2ktbXYuYy4NClRoYW5rcy4NCg0KPiANCj4gVGhlbiB5b3Ugc2hv
+dWxkIGRpc2N1c3MgdGhpcyB3aXRoIHRoZSBkcml2ZXIncyBtYWludGFpbmVyIChDQydlZCkuDQo+
+IA0KPiBBbGFuIFN0ZXJuDQoNCg0KQmVzdCBSZWdhcmRzLA0KTmVpbCBaaGFuZw0K
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
