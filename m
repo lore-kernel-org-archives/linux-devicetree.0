@@ -1,64 +1,73 @@
-From: Viresh Kumar <viresh.kumar@st.com>
-Subject: Re: [PATCH V2 1/2] Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
-Date: Wed, 28 Mar 2012 10:25:51 +0530
-Message-ID: <4F7299D7.4020006@st.com>
-References: <4aba6f2cd9f050f419660555bdb661915c1be9b1.1332826100.git.viresh.kumar@st.com> <4F71E0A6.4080703@wwwdotorg.org>
+From: viresh kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
+Date: Thu, 22 Mar 2012 14:21:56 +0530
+Message-ID: <CAOh2x==PYg3oUc9EpPKHQ+_7Vj8CGGkJysLS3aM1Xen=0bsk_A@mail.gmail.com>
+References: <1331650032-15274-1-git-send-email-sr@denx.de>
+ <201203211826.38993.arnd@arndb.de>
+ <CAOh2x=nZUobbRJo7kdAwmEG+s51BabxPwUVz=S3oNJyTpuRpCQ@mail.gmail.com>
+ <201203220810.00628.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <4F71E0A6.4080703@wwwdotorg.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, spear-devel <spear-devel@list.st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "sr@denx.de" <sr@denx.de>
+Content-Type: multipart/mixed; boundary="===============7000161258789408021=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201203220810.00628.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/27/2012 9:15 PM, Stephen Warren wrote:
->> >  static int __devinit tegra_kbc_probe(struct platform_device *pdev)
-> ...
->> > +	if (pdev->dev.of_node) {
->> > +		/* FIXME: Add handling of linux,fn-keymap here */
->> > +		err = matrix_keypad_of_build_keymap(&pdev->dev, KBC_ROW_SHIFT,
->> > +				input_dev->keycode, input_dev->keybit,
->> > +				"linux,keymap");
-> Where do input_dev->keycode/keybit get allocated? As far as I can tell,
-> matrix_keypad_of_build_keymap() just writes to those and assumes they're
-> already allocated.
+--===============7000161258789408021==
+Content-Type: multipart/alternative; boundary=f46d043c079639157a04bbd105ed
 
-If i am not reading the code incorrectly, keycode is allocated memory with
-kbc. And then we do this:
+--f46d043c079639157a04bbd105ed
+Content-Type: text/plain; charset=ISO-8859-1
 
-	input_dev->keycode = kbc->keycode;
+On Mar 22, 2012 1:40 PM, "Arnd Bergmann" <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>
 
-keybit is again present as part of struct input_dev.
-Am i missing something.
+> Don't hesitate to ask if you have further process questions, I
+> know this can be confusing and we're doing things much stricter
+> than other maintainters in order to keep up with ~600 patches
+> per merge window.
 
->> > diff --git a/drivers/input/of_keymap.c b/drivers/input/of_keymap.c
-> ...
->> > +int matrix_keypad_of_build_keymap(struct device *dev, unsigned int row_shift,
-> ...
->> > +		keymap[MATRIX_SCAN_CODE(row, col, row_shift)] = code;
->> > +		__set_bit(code, keybit);
-> How bit are keymap and keybit?
+Everything is clear. Thanks.
 
-Couldn't get this one. :(
-Can you please elaborate the question a bit?
+--
+Viresh
 
-> I think we need range-checking here to
-> make sure that row/col/row_shift/code are valid and in-range.
+--f46d043c079639157a04bbd105ed
+Content-Type: text/html; charset=ISO-8859-1
 
-I picked this directly from matrix_keypad_build_keymap() as is.
-Anyway there is no loss in improving it. :)
+<p><br>
+On Mar 22, 2012 1:40 PM, &quot;Arnd Bergmann&quot; &lt;<a href="mailto:arnd-r2nGTMty4D4@public.gmane.org">arnd-r2nGTMty4D4@public.gmane.org</a>&gt; wrote:<br>
+&gt;</p>
+<p>&gt; Don&#39;t hesitate to ask if you have further process questions, I<br>
+&gt; know this can be confusing and we&#39;re doing things much stricter<br>
+&gt; than other maintainters in order to keep up with ~600 patches<br>
+&gt; per merge window.</p>
+<p>Everything is clear. Thanks.</p>
+<p>--<br>
+Viresh<br>
+</p>
 
-What kind of range-check you are looking for?
-Currently we do following
+--f46d043c079639157a04bbd105ed--
 
-		unsigned int row = KEY_ROW(key);
-		unsigned int col = KEY_COL(key);
-		unsigned short code = KEY_VAL(key);
+--===============7000161258789408021==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-All these macros '&' 'key' with 0xFF, 0xFF and 0xFFFF.
-Which is also kind of range checking.
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
--- 
-viresh
+--===============7000161258789408021==--
