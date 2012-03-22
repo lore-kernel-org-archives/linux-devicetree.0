@@ -1,89 +1,97 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: Device node for a controller with two interrupt parents
-Date: Thu, 22 Mar 2012 12:05:24 +1100
-Message-ID: <20120322010524.GI15997@truffala.fritz.box>
-References: <CAJuYYwT1uKaUDuh98i4B286az-_26YCN31UXXFWsP=_M-UL_vg@mail.gmail.com>
- <20120321034151.GC15997@truffala.fritz.box>
- <CAJuYYwSv9aoCWNJ9=m9LjaaGqvzEA07SHt6wT56HTNLQdkNU2Q@mail.gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: dtsi vs dts files, where to better understand this
+Date: Thu, 22 Mar 2012 12:01:45 +1100
+Message-ID: <20120322010145.GH15997@truffala.fritz.box>
+References: <89736f85-54aa-4f71-814e-91ae5ce33bdc@VA3EHSMHS017.ehs.local>
+ <4F6A3BD3.4040805@wwwdotorg.org>
+ <d09d039e-88ba-41d3-ac51-8de1a11d806b@VA3EHSMHS032.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAJuYYwSv9aoCWNJ9=m9LjaaGqvzEA07SHt6wT56HTNLQdkNU2Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
+In-Reply-To: <d09d039e-88ba-41d3-ac51-8de1a11d806b-+Ck8Kgl/v0/HU/wHWYriTLjjLBE8jN/0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Linn <John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2012 at 07:05:26PM +0530, Thomas Abraham wrote:
-> Hi David,
->=20
-> On 21 March 2012 09:11, David Gibson <david@gibson.dropbear.id.au> wr=
-ote:
-> > On Wed, Mar 21, 2012 at 07:55:43AM +0530, Thomas Abraham wrote:
-> >> Hi,
-> >>
-> >> Exynos5 includes a gpio wakeup interrupt controller that generates=
- 32
-> >> interrupts. The first 16 interrupts are routed to the interrupt
-> >> combiner controller. The last 16 are muxed into one interrupt and =
-this
-> >> interrupt line is connected to the GIC interrupt controller.
-> >>
-> >> So, the wakeup interrupt controller node in device tree requires t=
-wo
-> >> interrupt parents. I do not know how to handle this. Any suggestio=
-ns
-> >> will be very helpful.
-> >
-> > This has occurred before, for example on the MAL device on 440EP (s=
-ee
-> > the bamboo board dts for example). =A0The semi-standard approach is=
- to
-> > make the node an interrupt-nexus for itself. =A0That is in the node=
-'s
-> > interrupts property, just list 0..N giving as many interrupts as yo=
-u
-> > need. =A0Set the node's interrupt-parent to point to the node itsel=
-f,
-> > then add interrupt-map and interrupt-map-mask properties which rema=
-p
-> > those interrupts 0..N to the correct interrupts on the actual
-> > interrupt controllers. =A0Each entry in the interrupt map specifies=
- an
-> > interrupt parent phandle, so you can distribute the irqs to multipl=
-e
-> > interrupt controllers that way.
->=20
-> Thanks for your suggestion and pointing out an example. I tried this
-> approach for Exynos4 and Exynos5. It mostly works but there are two
-> issues here.
->=20
-> 1. In the Exynos5 case, the wakeup interrupt controller (which has tw=
-o
-> separate interrupt parents - gic and combiner) is itself a interrupt
-> controller and has the 'interrupt-controller' property. So
-> of_irq_map_raw() function does not process the interrupt-map in the
-> wakeup interrupt controller device node. I did the following change t=
-o
-> get past this but I am not sure if this the correct thing to do.
+On Wed, Mar 21, 2012 at 02:50:09PM -0600, John Linn wrote:
+> > -----Original Message-----
+> > From: Stephen Warren [mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org]
+> > Sent: Wednesday, March 21, 2012 1:37 PM
+> > To: John Linn
+> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > Subject: Re: dtsi vs dts files, where to better understand this
+> > 
+> > On 03/21/2012 12:36 PM, John Linn wrote:
+> > > Hi,
+> > >
+> > > I've done some digging and not found any info, maybe I looked in the
+> > > wrong places.
+> > >
+> > > I'm trying to better understand how the dtsi file works with the dts
+> > > file and what can go in each file.
+> > 
+> > The basic idea is that what's inside the SoC is identical across all
+> > boards using that SoC. This information is put into the .dtsi file so
+> > it
+> > can be included by the .dts file for any boards using the SoC.
+> > 
+> > Anything that's board-specific goes into the board's individual .dts
+> > file. This might be new nodes to e.g. define which chips are connected
+> > to an I2C bus hosted by the SoC, and much more.
+> > 
+> > Where properties existing in both, the most recent value in parsing
+> > order overrides any earlier values. So for example, if the .dtsi file
+> > said that 'status = "disabled"' for a particular HW module, the board
+> > .dts could later override it by saying 'status = "okay"' within the
+> > same
+> > node.
+> > 
+> > One other factor: Something like an SDHCI controller may have
+> > properties
+> > that are defined by the SoC (e.g. compatible, reg, interrupts), and
+> > properties that are defined by the board (e.g. the GPIO ID to use for
+> > CD, WP, etc.). Just set the relevant properties in the .dtsi and .dts
+> > files and they'll get merged together to form the final device tree.
+> > 
+> > Was that what you were looking for?
+> 
+> That was very helpful.  I was hoping there were details written
+> somewhere I had missed.  My apologies if I'm just not getting it yet :)
+> 
+> It's not clear to me how the hierarchy is maintained across both files
+> such as an i2c controller would be in the dtsi, while the i2c eeprom on
+> the bus is in the board file.
+> 
+> Do I have to duplicate the i2c controller (and the bus it's on also) in
+> the board file? It's not clear how smart the merge is.
+> 
+> The examples in the 3.3 tree don't seem that clear to me yet.
 
-That might work, but it obviously won't help you with existing
-kernels.  I think a better idea is not to try to make the
-interrupt-controller and interrupt-nexus the same node in this case.
-Instead add an intermediate nexus node to remap the
-interrupt-controller's output interrupts into it's various parents.
-You could make this fake nexus node a subnode of the interrupt
-controller itself.
+The model used by dtc for this is a "stack of overlays".  Once the
+/include/s are processed you effectively have one big dts file with
+several partial trees specified one after another.  The first one
+always starts at /, the later ones can start at / but more likely
+start at a subtree of the first tree, specified by a path or a label.
 
-It's a bit of a hack, but it should work with existing parsing code,
-and I think it's better than inventing a whole new convention to cover
-this case.
+dtc then starts with the first tree and lays the later trees over it
+in order.  If the same property is specified in a later tree, it
+replaces the value from an earlier tree.  If the same node is
+specified, its properties and subnodes are merged into the existing
+version.
 
---=20
+-- 
 David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _oth=
-er_
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
