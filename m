@@ -1,57 +1,105 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH 4/4] arm: at91: dt: sam9g25ek add mci support
-Date: Thu, 22 Mar 2012 15:53:01 +0100
-Message-ID: <4F6B3CCD.7070105@atmel.com>
-References: <1332352994-20983-1-git-send-email-ludovic.desroches@atmel.com> <1332352994-20983-5-git-send-email-ludovic.desroches@atmel.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 5/6] dt: Document Tegra20/30 pinctrl binding
+Date: Thu, 22 Mar 2012 09:45:31 -0600
+Message-ID: <4F6B491B.8040506@wwwdotorg.org>
+References: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org> <1332265479-1260-5-git-send-email-swarren@wwwdotorg.org> <20120321091919.GA18592@shlinux2.ap.freescale.net> <4F69FA5A.9020504@wwwdotorg.org> <20120322040024.GB840@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1332352994-20983-5-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ludovic.desroches@atmel.com
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120322040024.GB840-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2012 07:03 PM, ludovic.desroches@atmel.com :
-> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+On 03/21/2012 10:00 PM, Dong Aisheng wrote:
+> On Wed, Mar 21, 2012 at 11:57:14PM +0800, Stephen Warren wrote:
+>> On 03/21/2012 03:19 AM, Dong Aisheng wrote:
+>>> On Wed, Mar 21, 2012 at 01:44:38AM +0800, Stephen Warren wrote:
+>>>> Define a new binding for the Tegra pin controller, which is capable of
+>>>> defining all aspects of desired pin multiplexing and pin configuration.
+>>>> This is all based on the new common pinctrl bindings.
+>>>>
+>>>> Add Tegra30 binding based on Tegra20 binding.
+...
+>>>> +Example board file extract:
+>>>> +
+>>>> +	pinctrl@70000000 {
+>>>> +		sdmmc4_default: pinmux {
+>>>> +			sdmmc4_clk_pcc4 {
+>>>> +				nvidia,pins =	"sdmmc4_clk_pcc4",
+>>>> +						"sdmmc4_rst_n_pcc3";
+>>>> +				nvidia,function = "sdmmc4";
+>>>> +				nvidia,pull = <0>;
+>>>> +				nvidia,tristate = <0>;
+>>>> +			};
+>>>> +			sdmmc4_dat0_paa0 {
+>>>> +				nvidia,pins =	"sdmmc4_dat0_paa0",
+>>>> +						"sdmmc4_dat1_paa1",
+>>>> +						"sdmmc4_dat2_paa2",
+>>>> +						"sdmmc4_dat3_paa3",
+>>>> +						"sdmmc4_dat4_paa4",
+>>>> +						"sdmmc4_dat5_paa5",
+>>>> +						"sdmmc4_dat6_paa6",
+>>>> +						"sdmmc4_dat7_paa7";
+>>>> +				nvidia,function = "sdmmc4";
+>>>> +				nvidia,pull = <2>;
+>>>> +				nvidia,tristate = <0>;
+>>>
+>>> It seems it does not support per pin config for tegra30 and we have to
+>>> separate them in different nodes with same group config value, right?
+>>
+>> Sorry, I don't understand the question.
+>
+> I meant for tegra, the config(not mux) in one pinctrl node functions
+> on all entities in nvidia,pins, IOW, all pin or group must have the
+> same config.
+> So we can not set them differently in one node.
 > 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> For example, considering if  sdmmc4_dat0_paa0 is nvidia,pull <0>
+> while sdmmc4_dat1_paa1 is nvidia,pull <1>.
+> Then we need to separate them in different pinctrl nodes, right?
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Yes, that's true.
 
-> ---
->  arch/arm/boot/dts/at91sam9g25ek.dts |   16 ++++++++++++++++
->  1 files changed, 16 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-> index 7a13d09..960de2b 100644
-> --- a/arch/arm/boot/dts/at91sam9g25ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-> @@ -32,6 +32,22 @@
->  				phy-mode = "rmii";
->  				status = "okay";
->  			};
-> +
-> +			mmc0: mmc@f0008000 {
-> +				status = "okay";
-> +				slot@0 {
-> +					bus-width = <4>;
-> +					cd-gpios = <&pioD 15 0>;
-> +				};
-> +			};
-> +
-> +			mmc1: mmc@f000c000 {
-> +				status = "okay";
-> +				slot@0 {
-> +					bus-width = <4>;
-> +					cd-gpios = <&pioD 14 0>;
-> +				};
-> +			};
->  		};
->  
->  		usb0: ohci@00600000 {
+However, note that you can have more than one node affecting a
+particular pin or group if you want. For example, you could have one set
+of nodes that sets the mux, another set of nodes that sets
+pullup/down/none, another set that sets tristate/driven. That way,
+within each set of nodes, you get to group together all pins with
+similar properties. This is all because we take the list of affected
+pins/groups from the nvidia,pins property, rather than e.g. the node
+name, so it's possible to list the same pin/group in multiple nodes. An
+example from the Tegra Harmony board file:
 
+There's one node for each mux function that's used, specifying which
+pins/groups it's used on:
 
--- 
-Nicolas Ferre
+    ata {
+            pins = "ata";
+            function = "ide";
+    };
+    atb {
+            nvidia,pins = "atb", "gma", "gme";
+            nvidia,function = "sdio4";
+    };
+    ... many other nodes for other functions
+
+There's also one node for each combination of pull and tristate that's
+used, specifying which pins/groups it's used on:
+
+    conf_ata {
+            nvidia,pins = "ata", "atb", "atc", "atd", "ate",
+                    "cdev1", "dap1", "dtb", "gma", "gmb",
+                    "gmc", "gmd", "gme", "gpu7", "gpv",
+                    "i2cp", "pta", "rm", "slxa", "slxk",
+                    "spia", "spib";
+            nvidia,pull = <0>;
+            nvidia,tristate = <0>;
+    };
+    ... many other nodes for other pull/tristate combinations
+
+I ran a script to group the various pins into nodes in different ways,
+and this particular combination seemed to generate the smallest device
+tree source file for Harmony.
