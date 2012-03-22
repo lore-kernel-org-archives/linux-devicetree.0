@@ -1,105 +1,239 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 5/6] dt: Document Tegra20/30 pinctrl binding
-Date: Thu, 22 Mar 2012 09:45:31 -0600
-Message-ID: <4F6B491B.8040506@wwwdotorg.org>
-References: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org> <1332265479-1260-5-git-send-email-swarren@wwwdotorg.org> <20120321091919.GA18592@shlinux2.ap.freescale.net> <4F69FA5A.9020504@wwwdotorg.org> <20120322040024.GB840@shlinux2.ap.freescale.net>
+From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH] USB: Add DT probing support to ehci-spear and ohci-spear
+Date: Thu, 22 Mar 2012 16:50:02 +0100
+Message-ID: <1332431402-20606-1-git-send-email-sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120322040024.GB840-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2012 10:00 PM, Dong Aisheng wrote:
-> On Wed, Mar 21, 2012 at 11:57:14PM +0800, Stephen Warren wrote:
->> On 03/21/2012 03:19 AM, Dong Aisheng wrote:
->>> On Wed, Mar 21, 2012 at 01:44:38AM +0800, Stephen Warren wrote:
->>>> Define a new binding for the Tegra pin controller, which is capable of
->>>> defining all aspects of desired pin multiplexing and pin configuration.
->>>> This is all based on the new common pinctrl bindings.
->>>>
->>>> Add Tegra30 binding based on Tegra20 binding.
-...
->>>> +Example board file extract:
->>>> +
->>>> +	pinctrl@70000000 {
->>>> +		sdmmc4_default: pinmux {
->>>> +			sdmmc4_clk_pcc4 {
->>>> +				nvidia,pins =	"sdmmc4_clk_pcc4",
->>>> +						"sdmmc4_rst_n_pcc3";
->>>> +				nvidia,function = "sdmmc4";
->>>> +				nvidia,pull = <0>;
->>>> +				nvidia,tristate = <0>;
->>>> +			};
->>>> +			sdmmc4_dat0_paa0 {
->>>> +				nvidia,pins =	"sdmmc4_dat0_paa0",
->>>> +						"sdmmc4_dat1_paa1",
->>>> +						"sdmmc4_dat2_paa2",
->>>> +						"sdmmc4_dat3_paa3",
->>>> +						"sdmmc4_dat4_paa4",
->>>> +						"sdmmc4_dat5_paa5",
->>>> +						"sdmmc4_dat6_paa6",
->>>> +						"sdmmc4_dat7_paa7";
->>>> +				nvidia,function = "sdmmc4";
->>>> +				nvidia,pull = <2>;
->>>> +				nvidia,tristate = <0>;
->>>
->>> It seems it does not support per pin config for tegra30 and we have to
->>> separate them in different nodes with same group config value, right?
->>
->> Sorry, I don't understand the question.
->
-> I meant for tegra, the config(not mux) in one pinctrl node functions
-> on all entities in nvidia,pins, IOW, all pin or group must have the
-> same config.
-> So we can not set them differently in one node.
-> 
-> For example, considering if  sdmmc4_dat0_paa0 is nvidia,pull <0>
-> while sdmmc4_dat1_paa1 is nvidia,pull <1>.
-> Then we need to separate them in different pinctrl nodes, right?
+This patch adds support to configure the SPEAr EHCI & OHCI driver via
+device-tree instead of platform_data.
 
-Yes, that's true.
+Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+---
+ .../devicetree/bindings/usb/spear-usb.txt          |   39 ++++++++++++++++++++
+ drivers/usb/host/ehci-spear.c                      |   32 +++++++++++++---
+ drivers/usb/host/ohci-spear.c                      |   32 +++++++++++++---
+ 3 files changed, 91 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/spear-usb.txt
 
-However, note that you can have more than one node affecting a
-particular pin or group if you want. For example, you could have one set
-of nodes that sets the mux, another set of nodes that sets
-pullup/down/none, another set that sets tristate/driven. That way,
-within each set of nodes, you get to group together all pins with
-similar properties. This is all because we take the list of affected
-pins/groups from the nvidia,pins property, rather than e.g. the node
-name, so it's possible to list the same pin/group in multiple nodes. An
-example from the Tegra Harmony board file:
-
-There's one node for each mux function that's used, specifying which
-pins/groups it's used on:
-
-    ata {
-            pins = "ata";
-            function = "ide";
-    };
-    atb {
-            nvidia,pins = "atb", "gma", "gme";
-            nvidia,function = "sdio4";
-    };
-    ... many other nodes for other functions
-
-There's also one node for each combination of pull and tristate that's
-used, specifying which pins/groups it's used on:
-
-    conf_ata {
-            nvidia,pins = "ata", "atb", "atc", "atd", "ate",
-                    "cdev1", "dap1", "dtb", "gma", "gmb",
-                    "gmc", "gmd", "gme", "gpu7", "gpv",
-                    "i2cp", "pta", "rm", "slxa", "slxk",
-                    "spia", "spib";
-            nvidia,pull = <0>;
-            nvidia,tristate = <0>;
-    };
-    ... many other nodes for other pull/tristate combinations
-
-I ran a script to group the various pins into nodes in different ways,
-and this particular combination seemed to generate the smallest device
-tree source file for Harmony.
+diff --git a/Documentation/devicetree/bindings/usb/spear-usb.txt b/Documentation/devicetree/bindings/usb/spear-usb.txt
+new file mode 100644
+index 0000000..f8a464a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/spear-usb.txt
+@@ -0,0 +1,39 @@
++ST SPEAr SoC USB controllers:
++-----------------------------
++
++EHCI:
++-----
++
++Required properties:
++- compatible: "st,spear600-ehci"
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- interrupts: Should contain the EHCI interrupt
++
++Example:
++
++	ehci@e1800000 {
++		compatible = "st,spear600-ehci", "usb-ehci";
++		reg = <0xe1800000 0x1000>;
++		interrupt-parent = <&vic1>;
++		interrupts = <27>;
++	};
++
++
++OHCI:
++-----
++
++Required properties:
++- compatible: "st,spear600-ohci"
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- interrupts: Should contain the OHCI interrupt
++
++Example:
++
++	ohci@e1900000 {
++		compatible = "st,spear600-ohci", "usb-ohci";
++		reg = <0xe1800000 0x1000>;
++		interrupt-parent = <&vic1>;
++		interrupts = <26>;
++	};
+diff --git a/drivers/usb/host/ehci-spear.c b/drivers/usb/host/ehci-spear.c
+index 6e92855..2e3c89a 100644
+--- a/drivers/usb/host/ehci-spear.c
++++ b/drivers/usb/host/ehci-spear.c
+@@ -13,6 +13,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/jiffies.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+ 
+@@ -168,6 +169,8 @@ static int ehci_spear_drv_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(ehci_spear_pm_ops, ehci_spear_drv_suspend,
+ 		ehci_spear_drv_resume);
+ 
++static u64 spear_ehci_dma_mask = DMA_BIT_MASK(32);
++
+ static int spear_ehci_hcd_drv_probe(struct platform_device *pdev)
+ {
+ 	struct usb_hcd *hcd ;
+@@ -175,12 +178,9 @@ static int spear_ehci_hcd_drv_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	struct clk *usbh_clk;
+ 	const struct hc_driver *driver = &ehci_spear_hc_driver;
+-	int *pdata = pdev->dev.platform_data;
+ 	int irq, retval;
+ 	char clk_name[20] = "usbh_clk";
+-
+-	if (pdata == NULL)
+-		return -EFAULT;
++	static int instance = -1;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+@@ -191,8 +191,22 @@ static int spear_ehci_hcd_drv_probe(struct platform_device *pdev)
+ 		goto fail_irq_get;
+ 	}
+ 
+-	if (*pdata >= 0)
+-		sprintf(clk_name, "usbh.%01d_clk", *pdata);
++	/*
++	 * Right now device-tree probed devices don't get dma_mask set.
++	 * Since shared usb code relies on it, set it here for now.
++	 * Once we have dma capability bindings this can go away.
++	 */
++	if (!pdev->dev.dma_mask)
++		pdev->dev.dma_mask = &spear_ehci_dma_mask;
++
++	/*
++	 * Increment the device instance, when probing via device-tree
++	 */
++	if (pdev->id < 0)
++		instance++;
++	else
++		instance = pdev->id;
++	sprintf(clk_name, "usbh.%01d_clk", instance);
+ 
+ 	usbh_clk = clk_get(NULL, clk_name);
+ 	if (IS_ERR(usbh_clk)) {
+@@ -277,6 +291,11 @@ static int spear_ehci_hcd_drv_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static struct of_device_id spear_ehci_id_table[] __devinitdata = {
++	{ .compatible = "st,spear600-ehci", },
++	{ },
++};
++
+ static struct platform_driver spear_ehci_hcd_driver = {
+ 	.probe		= spear_ehci_hcd_drv_probe,
+ 	.remove		= spear_ehci_hcd_drv_remove,
+@@ -285,6 +304,7 @@ static struct platform_driver spear_ehci_hcd_driver = {
+ 		.name = "spear-ehci",
+ 		.bus = &platform_bus_type,
+ 		.pm = &ehci_spear_pm_ops,
++		.of_match_table = of_match_ptr(spear_ehci_id_table),
+ 	}
+ };
+ 
+diff --git a/drivers/usb/host/ohci-spear.c b/drivers/usb/host/ohci-spear.c
+index 95c1648..eb4640b 100644
+--- a/drivers/usb/host/ohci-spear.c
++++ b/drivers/usb/host/ohci-spear.c
+@@ -14,6 +14,7 @@
+ #include <linux/signal.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
++#include <linux/of.h>
+ 
+ struct spear_ohci {
+ 	struct ohci_hcd ohci;
+@@ -90,6 +91,8 @@ static const struct hc_driver ohci_spear_hc_driver = {
+ 	.start_port_reset	= ohci_start_port_reset,
+ };
+ 
++static u64 spear_ohci_dma_mask = DMA_BIT_MASK(32);
++
+ static int spear_ohci_hcd_drv_probe(struct platform_device *pdev)
+ {
+ 	const struct hc_driver *driver = &ohci_spear_hc_driver;
+@@ -98,11 +101,8 @@ static int spear_ohci_hcd_drv_probe(struct platform_device *pdev)
+ 	struct spear_ohci *ohci_p;
+ 	struct resource *res;
+ 	int retval, irq;
+-	int *pdata = pdev->dev.platform_data;
+ 	char clk_name[20] = "usbh_clk";
+-
+-	if (pdata == NULL)
+-		return -EFAULT;
++	static int instance = -1;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+@@ -110,8 +110,22 @@ static int spear_ohci_hcd_drv_probe(struct platform_device *pdev)
+ 		goto fail_irq_get;
+ 	}
+ 
+-	if (*pdata >= 0)
+-		sprintf(clk_name, "usbh.%01d_clk", *pdata);
++	/*
++	 * Right now device-tree probed devices don't get dma_mask set.
++	 * Since shared usb code relies on it, set it here for now.
++	 * Once we have dma capability bindings this can go away.
++	 */
++	if (!pdev->dev.dma_mask)
++		pdev->dev.dma_mask = &spear_ohci_dma_mask;
++
++	/*
++	 * Increment the device instance, when probing via device-tree
++	 */
++	if (pdev->id < 0)
++		instance++;
++	else
++		instance = pdev->id;
++	sprintf(clk_name, "usbh.%01d_clk", instance);
+ 
+ 	usbh_clk = clk_get(NULL, clk_name);
+ 	if (IS_ERR(usbh_clk)) {
+@@ -222,6 +236,11 @@ static int spear_ohci_hcd_drv_resume(struct platform_device *dev)
+ }
+ #endif
+ 
++static struct of_device_id spear_ohci_id_table[] __devinitdata = {
++	{ .compatible = "st,spear600-ohci", },
++	{ },
++};
++
+ /* Driver definition to register with the platform bus */
+ static struct platform_driver spear_ohci_hcd_driver = {
+ 	.probe =	spear_ohci_hcd_drv_probe,
+@@ -233,6 +252,7 @@ static struct platform_driver spear_ohci_hcd_driver = {
+ 	.driver = {
+ 		.owner = THIS_MODULE,
+ 		.name = "spear-ohci",
++		.of_match_table = of_match_ptr(spear_ohci_id_table),
+ 	},
+ };
+ 
+-- 
+1.7.9.2
