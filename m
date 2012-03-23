@@ -1,70 +1,163 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] mtd: spear-smi: Update compatible property
-Date: Fri, 23 Mar 2012 14:18:07 +0530
-Message-ID: <97859bb4d86d008968a784339be8567094c487a1.1332492461.git.viresh.kumar@st.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH 1/4] mmc: atmel-mci: add device tree support
+Date: Fri, 23 Mar 2012 11:38:01 +0100
+Message-ID: <20120323103801.GH3473@ldesroches-Latitude-E6320>
+References: <1332352994-20983-1-git-send-email-ludovic.desroches@atmel.com>
+ <1332352994-20983-2-git-send-email-ludovic.desroches@atmel.com>
+ <4F6B3C48.90002@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: sr-ynQEQJNshbs@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F6B3C48.90002@atmel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: ludovic.desroches@atmel.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-SPEAr SMI controller version is same for all SPEAr machines. Thus we don't need
-per machine compatible property in driver.
+On Thu, Mar 22, 2012 at 03:50:48PM +0100, Nicolas Ferre wrote:
+> On 03/21/2012 07:03 PM, ludovic.desroches@atmel.com :
 
-Thus this patch updates compatible entry to: "st,spear-smi", so that it
-works for all SPEAr machines.
+[...]
 
-Signed-off-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
----
- .../devicetree/bindings/mtd/spear_smi.txt          |    4 ++--
- drivers/mtd/devices/spear_smi.c                    |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+> > diff --git a/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> > new file mode 100644
+> > index 0000000..657f9de
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> > @@ -0,0 +1,55 @@
+> > +* Atmel High Speed MultiMedia Card Interface
+> > +
+> > +This controller on atmel products provides an interface for MMC, SD and SDIO
+> > +types of memory cards.
+> > +
+> > +1) MCI node
+> > +
+> > +Required properties:
+> > +- compatible: no blank "atmel,hsmci"
+> > +- reg: should contain HSMCI registers location and length
+> > +- interrupts: should contain HSMCI interrupt number
+> > +- at least one slot node
+> > +
+> > +The node contains child nodes for each slot that the platform uses
+> > +
+> > +Example MCI node:
+> > +
+> > +mmc0: mmc@f0008000 {
+> > +	compatible = "atmel,hsmci";
+> > +	reg = <0xf0008000 0x600>;
+> > +	interrupts = <12 4>;
+> > +
+> > +	[ child node definitions...]
+> > +};
+> > +
+> > +2) slot nodes
+> > +
+> > +Optional properties:
+> > +- bus-width: number of data lines connected to the controller
+> > +- cd-gpios: specify GPIOs for card detection
+> > +- cd-invert: invert the value of external card detect gpio line
+> > +- wp-gpios: specify GPIOs for write protection
+> > +
+> > +Example slot node:
+> > +
+> > +slot@0 {
+> > +	bus-width = <4>;
+> > +	cd-gpios = <&pioD 15 0>
+> > +	cd-invert;
+> > +};
+> > +
+> > +Example full MCI node:
+> > +mmc0: mmc@f0008000 {
+> > +	compatible = "atmel,hsmci";
+> > +	reg = <0xf0008000 0x600>;
+> > +	interrupts = <12 4>;
+> > +	slot@0 {
+> > +		bus-width = <4>;
+> > +		cd-gpios = <&pioD 15 0>
+> > +		cd-invert;
+> > +	};
+> > +	slot@1 {
+> > +		bus-width = <4>;
+> > +	};
+> > +};
 
-diff --git a/Documentation/devicetree/bindings/mtd/spear_smi.txt b/Documentation/devicetree/bindings/mtd/spear_smi.txt
-index 7248aad..80dfd96 100644
---- a/Documentation/devicetree/bindings/mtd/spear_smi.txt
-+++ b/Documentation/devicetree/bindings/mtd/spear_smi.txt
-@@ -1,7 +1,7 @@
- * SPEAr SMI
- 
- Required properties:
--- compatible : "st,spear600-smi"
-+- compatible : "st,spear-smi"
- - reg : Address range of the mtd chip
- - #address-cells, #size-cells : Must be present if the device has sub-nodes
-   representing partitions.
-@@ -16,7 +16,7 @@ Optional properties:
- Example:
- 
- 	smi: flash@fc000000 {
--		compatible = "st,spear600-smi";
-+		compatible = "st,spear-smi";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		reg = <0xfc000000 0x1000>;
-diff --git a/drivers/mtd/devices/spear_smi.c b/drivers/mtd/devices/spear_smi.c
-index bebce11..f392594 100644
---- a/drivers/mtd/devices/spear_smi.c
-+++ b/drivers/mtd/devices/spear_smi.c
-@@ -1113,7 +1113,7 @@ int spear_smi_resume(struct platform_device *pdev)
- 
- #ifdef CONFIG_OF
- static const struct of_device_id spear_smi_id_table[] = {
--	{ .compatible = "st,spear600-smi" },
-+	{ .compatible = "st,spear-smi" },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, spear_smi_id_table);
--- 
-1.7.8.110.g4cb5d
+[...]
+
+> > +static void __init
+> > +atmci_get_of_slots(struct device *dev, struct mci_platform_data *pdata)
+> > +{
+> > +	struct device_node *np = dev->of_node;
+> > +	struct device_node *cnp;
+> > +	unsigned int slot_nb = 0;
+> > +
+> > +	if (!np)
+> > +		return;
+> > +
+> > +	for_each_child_of_node(np, cnp) {
+> > +		if (slot_nb > (ATMCI_MAX_NR_SLOTS-1)) {
+> > +			dev_warn(dev, "can't have more than %d slots\n",
+> > +			         ATMCI_MAX_NR_SLOTS);
+> > +			break;
+> > +		}
+> > +		if (of_property_read_u32(cnp, "bus-width",
+> > +		                         &pdata->slot[slot_nb].bus_width))
+> > +			pdata->slot[slot_nb].bus_width = 1;
+> > +
+> > +		pdata->slot[slot_nb].detect_pin =
+> > +			of_get_named_gpio(cnp, "cd-gpios", 0);
+> > +
+> > +		if (of_find_property(cnp, "cd-invert", NULL))
+> > +			pdata->slot[slot_nb].detect_is_active_high = true;
+> > +
+> > +		pdata->slot[slot_nb].wp_pin =
+> > +			of_get_named_gpio(cnp, "wp-gpios", 0);
+> > +
+> > +		slot_nb++;
+> > +	}
+> > +}
+
+In fact this part of code is not correct. Each mci can have two slots: slot0
+and slot1. If someone wants to use only slot1, I will fill only pdata->slot[0]
+that is incorrect because later in the driver there is:
+
+if (pdata->slot[0].bus_width) {
+	ret = atmci_init_slot(host, &pdata->slot[0], 
+			0, ATMCI_SDCSEL_SLOT_A, ATMCI_SDIOIRQA);
+	if (!ret)
+		nr_slots++;
+}
+if (pdata->slot[1].bus_width) {
+	ret = atmci_init_slot(host, &pdata->slot[1],
+			1, ATMCI_SDCSEL_SLOT_B, ATMCI_SDIOIRQB);
+	if (!ret)
+		nr_slots++;
+}
+
+So what is the best solution to solve this issue?
+
+- Adding a property slot id? I would like to use only existing bindings hoping 
+we can have a generic binding for mmc.
+
+- Using aliases?
+aliases {
+	slot0 = &mmc-slot0;
+}
+
+mmc0: mmc@f0008000 {
+	compatible = "atmel,hsmci";
+	reg = <0xf0008000 0x600>;
+	interrupts = <12 4>;              
+	mmc-slot0: slot@0 {
+	};                                                                
+	status = "disabled";
+};
+
+- Using reg property as an index?
+
+
+Thanks for your help.
+
+Regards
+
+Ludovic
