@@ -1,155 +1,554 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] ARM: imx28: add basic dt support
-Date: Fri, 23 Mar 2012 15:43:54 +0100
-Message-ID: <201203231543.54588.marek.vasut@gmail.com>
-References: <1332513070-5400-1-git-send-email-b29396@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1332513070-5400-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V4] pinctrl: core device tree mapping table parsing support
+Date: Fri, 23 Mar 2012 10:29:46 -0600
+Message-ID: <1332520186-23476-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Dong Aisheng,
+During pinctrl_get(), if the client device has a device tree node, look
+for the common pinctrl properties there. If found, parse the referenced
+device tree nodes, with the help of the pinctrl drivers, and generate
+mapping table entries from them.
 
-> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> This patch includes basic dt support which can boot via nfs rootfs.
-> 
-> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v1->v2:
->  * Some fixes addressed Rob's review comments.
->    Remove using of OF_DEV_AUXDATA.
->  * Remove mac address from dts file
->    Currently we use the mac address got from uboot to work.
->    Will submit a p separate atch using prom_update_property to fix this
->    issue for driver based on suggestions from Grant and Lothar.
->  * rename mxs-dt.c to mach-mxs.c which is supposed to support mx23 dt
->    too in the future.
->  * add compatible string "fsl,imx28" per Sascha's suggestion
->  * add more devices in dtsi file
->    For those devices still not in use, set the state to "disabled"
->    by default.
-> 
-> For other patches i sent with this in the first series like mmc and sdma
-> dt support, i will send out them separately since this patch does not
-> depend on them and does not block you to run dt via nfs rootfs.
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt |    4 +
->  arch/arm/boot/dts/imx28-evk.dts               |   35 +++
+During pinctrl_put(), free any results of device tree parsing.
 
-Isn't this supposed to be "mx28evk.dts"?
+Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+---
+v4: Remove extraneous strlen(prop) check. Register map table chunks as
+    soon as they are parsed from DT rather than waiting until a device's
+    entire DT node is parsed. Add dev_dbg() for the pinctrl_dt_to_map()
+    !np case. Simplify tail calls to dt_remember_or_free_map() to just
+    return the result of the function call in all cases; no need to
+    explicitly check the error code before returning it.
+v3: Add explit check for devies without dev->of_node. Add comments re:
+    lack of pctldev for PIN_MAP_TYPE_DUMMY_STATE.
+v2: Place most code into new file devicetree.c
 
->  arch/arm/boot/dts/imx28.dtsi                  |  358
-> +++++++++++++++++++++++++ arch/arm/mach-mxs/Kconfig                     | 
->   8 +
->  arch/arm/mach-mxs/Makefile                    |    1 +
->  arch/arm/mach-mxs/clock-mx28.c                |    4 +
->  arch/arm/mach-mxs/mach-mxs.c                  |   69 +++++
->  7 files changed, 479 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/imx28-evk.dts
->  create mode 100644 arch/arm/boot/dts/imx28.dtsi
->  create mode 100644 arch/arm/mach-mxs/mach-mxs.c
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
-> b/Documentation/devicetree/bindings/arm/fsl.txt index 54bddda..9f21faf
-> 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -1,6 +1,10 @@
->  Freescale i.MX Platforms Device Tree Bindings
->  -----------------------------------------------
-> 
-> +i.MX28 Evaluation Kit
-> +Required root node properties:
-> +    - compatible = "fsl,imx28-evk", "fsl,imx28";
-> +
->  i.MX51 Babbage Board
->  Required root node properties:
->      - compatible = "fsl,imx51-babbage", "fsl,imx51";
-> diff --git a/arch/arm/boot/dts/imx28-evk.dts
-> b/arch/arm/boot/dts/imx28-evk.dts new file mode 100644
-> index 0000000..5402495
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx28-evk.dts
-> @@ -0,0 +1,35 @@
-> +/*
-> + * Copyright 2012 Freescale Semiconductor, Inc.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "imx28.dtsi"
-> +
-> +/ {
-> +	model = "Freescale i.MX28 Evaluation Kit";
-> +	compatible = "fsl,imx28-evk", "fsl,imx28";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x40000000 0x08000000>;
-> +	};
-> +
-> +	ahb@80080000 {
-> +		ethernet@800f0000 {
+Linus, since v4 of this series only affects this one patch, I'm only
+reposting this one patch to reduce spamming. You can take all of v3
+except slot this patch in place of the equivalent patch there (patch
+#3). I hope this isn't too confusing!
 
-fec@... would be more readable, but I think this was decided before to be like 
-this?
+ drivers/pinctrl/Makefile        |    1 +
+ drivers/pinctrl/core.c          |   72 +++++++++---
+ drivers/pinctrl/core.h          |   11 ++-
+ drivers/pinctrl/devicetree.c    |  249 +++++++++++++++++++++++++++++++++++++++
+ drivers/pinctrl/devicetree.h    |   35 ++++++
+ include/linux/pinctrl/pinctrl.h |    7 +
+ 6 files changed, 357 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/pinctrl/devicetree.c
+ create mode 100644 drivers/pinctrl/devicetree.h
 
-> +			phy-mode = "rmii";
-> +			status = "okay";
-> +		};
-> +
-
-[...]
-
-> diff --git a/arch/arm/mach-mxs/Makefile b/arch/arm/mach-mxs/Makefile
-> index 908bf9a..8328c45 100644
-> --- a/arch/arm/mach-mxs/Makefile
-> +++ b/arch/arm/mach-mxs/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_PM) += pm.o
->  obj-$(CONFIG_SOC_IMX23) += clock-mx23.o
->  obj-$(CONFIG_SOC_IMX28) += clock-mx28.o
-> 
-> +obj-$(CONFIG_MACH_MXS_DT) += mach-mxs.o
->  obj-$(CONFIG_MACH_STMP378X_DEVB) += mach-stmp378x_devb.o
->  obj-$(CONFIG_MACH_MX23EVK) += mach-mx23evk.o
->  obj-$(CONFIG_MACH_MX28EVK) += mach-mx28evk.o
-> diff --git a/arch/arm/mach-mxs/clock-mx28.c
-> b/arch/arm/mach-mxs/clock-mx28.c index 5d68e41..88ed30c 100644
-> --- a/arch/arm/mach-mxs/clock-mx28.c
-> +++ b/arch/arm/mach-mxs/clock-mx28.c
-> @@ -671,6 +671,10 @@ static struct clk_lookup lookups[] = {
->  	_REGISTER_CLOCK("imx28-fb", NULL, lcdif_clk)
->  	_REGISTER_CLOCK("mxs-saif.0", NULL, saif0_clk)
->  	_REGISTER_CLOCK("mxs-saif.1", NULL, saif1_clk)
-> +	/* for DT */
-> +	_REGISTER_CLOCK("80074000.serial", NULL, uart_clk)
-> +	_REGISTER_CLOCK("800f0000.ethernet", NULL, fec_clk)
-> +	_REGISTER_CLOCK("800f4000.ethernet", NULL, fec_clk)
-
-Wasn't the DT stuff supposed to be more symbolic? Aka. this seems weird.
-
->  };
-> 
->  static int clk_misc_init(void)
-
-Best regards,
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 6d4150b..049c9fb 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -5,6 +5,7 @@ ccflags-$(CONFIG_DEBUG_PINCTRL)	+= -DDEBUG
+ obj-$(CONFIG_PINCTRL)		+= core.o
+ obj-$(CONFIG_PINMUX)		+= pinmux.o
+ obj-$(CONFIG_PINCONF)		+= pinconf.o
++obj-$(CONFIG_OF)		+= devicetree.o
+ obj-$(CONFIG_GENERIC_PINCONF)	+= pinconf-generic.o
+ obj-$(CONFIG_PINCTRL_PXA3xx)	+= pinctrl-pxa3xx.o
+ obj-$(CONFIG_PINCTRL_MMP2)	+= pinctrl-mmp2.o
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index df6296c..832f71d 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -26,6 +26,7 @@
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/machine.h>
+ #include "core.h"
++#include "devicetree.h"
+ #include "pinmux.h"
+ #include "pinconf.h"
+ 
+@@ -45,7 +46,7 @@ struct pinctrl_maps {
+ DEFINE_MUTEX(pinctrl_mutex);
+ 
+ /* Global list of pin control devices (struct pinctrl_dev) */
+-static LIST_HEAD(pinctrldev_list);
++LIST_HEAD(pinctrldev_list);
+ 
+ /* List of pin controller handles (struct pinctrl) */
+ static LIST_HEAD(pinctrl_list);
+@@ -579,6 +580,13 @@ static struct pinctrl *create_pinctrl(struct device *dev)
+ 	}
+ 	p->dev = dev;
+ 	INIT_LIST_HEAD(&p->states);
++	INIT_LIST_HEAD(&p->dt_maps);
++
++	ret = pinctrl_dt_to_map(p);
++	if (ret < 0) {
++		kfree(p);
++		return ERR_PTR(ret);
++	}
+ 
+ 	devname = dev_name(dev);
+ 
+@@ -662,6 +670,8 @@ static void pinctrl_put_locked(struct pinctrl *p, bool inlist)
+ 		kfree(state);
+ 	}
+ 
++	pinctrl_dt_free_maps(p);
++
+ 	if (inlist)
+ 		list_del(&p->node);
+ 	kfree(p);
+@@ -787,15 +797,8 @@ int pinctrl_select_state(struct pinctrl *p, struct pinctrl_state *state)
+ }
+ EXPORT_SYMBOL_GPL(pinctrl_select_state);
+ 
+-/**
+- * pinctrl_register_mappings() - register a set of pin controller mappings
+- * @maps: the pincontrol mappings table to register. This should probably be
+- *	marked with __initdata so it can be discarded after boot. This
+- *	function will perform a shallow copy for the mapping entries.
+- * @num_maps: the number of maps in the mapping table
+- */
+-int pinctrl_register_mappings(struct pinctrl_map const *maps,
+-			      unsigned num_maps)
++int pinctrl_register_map(struct pinctrl_map const *maps, unsigned num_maps,
++			 bool dup, bool locked)
+ {
+ 	int i, ret;
+ 	struct pinctrl_maps *maps_node;
+@@ -851,20 +854,52 @@ int pinctrl_register_mappings(struct pinctrl_map const *maps,
+ 	}
+ 
+ 	maps_node->num_maps = num_maps;
+-	maps_node->maps = kmemdup(maps, sizeof(*maps) * num_maps, GFP_KERNEL);
+-	if (!maps_node->maps) {
+-		pr_err("failed to duplicate mapping table\n");
+-		kfree(maps_node);
+-		return -ENOMEM;
++	if (dup) {
++		maps_node->maps = kmemdup(maps, sizeof(*maps) * num_maps,
++					  GFP_KERNEL);
++		if (!maps_node->maps) {
++			pr_err("failed to duplicate mapping table\n");
++			kfree(maps_node);
++			return -ENOMEM;
++		}
++	} else {
++		maps_node->maps = maps;
+ 	}
+ 
+-	mutex_lock(&pinctrl_mutex);
++	if (!locked)
++		mutex_lock(&pinctrl_mutex);
+ 	list_add_tail(&maps_node->node, &pinctrl_maps);
+-	mutex_unlock(&pinctrl_mutex);
++	if (!locked)
++		mutex_unlock(&pinctrl_mutex);
+ 
+ 	return 0;
+ }
+ 
++/**
++ * pinctrl_register_mappings() - register a set of pin controller mappings
++ * @maps: the pincontrol mappings table to register. This should probably be
++ *	marked with __initdata so it can be discarded after boot. This
++ *	function will perform a shallow copy for the mapping entries.
++ * @num_maps: the number of maps in the mapping table
++ */
++int pinctrl_register_mappings(struct pinctrl_map const *maps,
++			      unsigned num_maps)
++{
++	return pinctrl_register_map(maps, num_maps, true, false);
++}
++
++void pinctrl_unregister_map(struct pinctrl_map const *map)
++{
++	struct pinctrl_maps *maps_node;
++
++	list_for_each_entry(maps_node, &pinctrl_maps, node) {
++		if (maps_node->maps == map) {
++			list_del(&maps_node->node);
++			return;
++		}
++	}
++}
++
+ #ifdef CONFIG_DEBUG_FS
+ 
+ static int pinctrl_pins_show(struct seq_file *s, void *what)
+@@ -1231,6 +1266,9 @@ static int pinctrl_check_ops(struct pinctrl_dev *pctldev)
+ 	    !ops->get_group_pins)
+ 		return -EINVAL;
+ 
++	if (ops->dt_node_to_map && !ops->dt_free_map)
++		return -EINVAL;
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+index 17ecf65..98ae808 100644
+--- a/drivers/pinctrl/core.h
++++ b/drivers/pinctrl/core.h
+@@ -52,12 +52,15 @@ struct pinctrl_dev {
+  * @dev: the device using this pin control handle
+  * @states: a list of states for this device
+  * @state: the current state
++ * @dt_maps: the mapping table chunks dynamically parsed from device tree for
++ *	this device, if any
+  */
+ struct pinctrl {
+ 	struct list_head node;
+ 	struct device *dev;
+ 	struct list_head states;
+ 	struct pinctrl_state *state;
++	struct list_head dt_maps;
+ };
+ 
+ /**
+@@ -100,7 +103,8 @@ struct pinctrl_setting_configs {
+  * struct pinctrl_setting - an individual mux or config setting
+  * @node: list node for struct pinctrl_settings's @settings field
+  * @type: the type of setting
+- * @pctldev: pin control device handling to be programmed
++ * @pctldev: pin control device handling to be programmed. Not used for
++ *   PIN_MAP_TYPE_DUMMY_STATE.
+  * @data: Data specific to the setting type
+  */
+ struct pinctrl_setting {
+@@ -153,4 +157,9 @@ static inline struct pin_desc *pin_desc_get(struct pinctrl_dev *pctldev,
+ 	return radix_tree_lookup(&pctldev->pin_desc_tree, pin);
+ }
+ 
++int pinctrl_register_map(struct pinctrl_map const *maps, unsigned num_maps,
++			 bool dup, bool locked);
++void pinctrl_unregister_map(struct pinctrl_map const *map);
++
+ extern struct mutex pinctrl_mutex;
++extern struct list_head pinctrldev_list;
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+new file mode 100644
+index 0000000..5ef2feb
+--- /dev/null
++++ b/drivers/pinctrl/devicetree.c
+@@ -0,0 +1,249 @@
++/*
++ * Device tree integration for the pin control subsystem
++ *
++ * Copyright (C) 2012 NVIDIA CORPORATION. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/device.h>
++#include <linux/of.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/slab.h>
++
++#include "core.h"
++#include "devicetree.h"
++
++/**
++ * struct pinctrl_dt_map - mapping table chunk parsed from device tree
++ * @node: list node for struct pinctrl's @dt_maps field
++ * @pctldev: the pin controller that allocated this struct, and will free it
++ * @maps: the mapping table entries
++ */
++struct pinctrl_dt_map {
++	struct list_head node;
++	struct pinctrl_dev *pctldev;
++	struct pinctrl_map *map;
++	unsigned num_maps;
++};
++
++static void dt_free_map(struct pinctrl_dev *pctldev,
++		     struct pinctrl_map *map, unsigned num_maps)
++{
++	if (pctldev) {
++		struct pinctrl_ops *ops = pctldev->desc->pctlops;
++		ops->dt_free_map(pctldev, map, num_maps);
++	} else {
++		/* There is no pctldev for PIN_MAP_TYPE_DUMMY_STATE */
++		kfree(map);
++	}
++}
++
++void pinctrl_dt_free_maps(struct pinctrl *p)
++{
++	struct pinctrl_dt_map *dt_map, *n1;
++
++	list_for_each_entry_safe(dt_map, n1, &p->dt_maps, node) {
++		pinctrl_unregister_map(dt_map->map);
++		list_del(&dt_map->node);
++		dt_free_map(dt_map->pctldev, dt_map->map,
++			    dt_map->num_maps);
++		kfree(dt_map);
++	}
++
++	of_node_put(p->dev->of_node);
++}
++
++static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
++				   struct pinctrl_dev *pctldev,
++				   struct pinctrl_map *map, unsigned num_maps)
++{
++	int i;
++	struct pinctrl_dt_map *dt_map;
++
++	/* Initialize common mapping table entry fields */
++	for (i = 0; i < num_maps; i++) {
++		map[i].dev_name = dev_name(p->dev);
++		map[i].name = statename;
++		if (pctldev)
++			map[i].ctrl_dev_name = dev_name(pctldev->dev);
++	}
++
++	/* Remember the converted mapping table entries */
++	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
++	if (!dt_map) {
++		dev_err(p->dev, "failed to alloc struct pinctrl_dt_map\n");
++		dt_free_map(pctldev, map, num_maps);
++		return -ENOMEM;
++	}
++
++	dt_map->pctldev = pctldev;
++	dt_map->map = map;
++	dt_map->num_maps = num_maps;
++	list_add_tail(&dt_map->node, &p->dt_maps);
++
++	return pinctrl_register_map(map, num_maps, false, true);
++}
++
++static struct pinctrl_dev *find_pinctrl_by_of_node(struct device_node *np)
++{
++	struct pinctrl_dev *pctldev;
++
++	list_for_each_entry(pctldev, &pinctrldev_list, node)
++		if (pctldev->dev->of_node == np)
++			return pctldev;
++
++	return NULL;
++}
++
++static int dt_to_map_one_config(struct pinctrl *p, const char *statename,
++				struct device_node *np_config)
++{
++	struct device_node *np_pctldev;
++	struct pinctrl_dev *pctldev;
++	struct pinctrl_ops *ops;
++	int ret;
++	struct pinctrl_map *map;
++	unsigned num_maps;
++
++	/* Find the pin controller containing np_config */
++	np_pctldev = of_node_get(np_config);
++	for (;;) {
++		np_pctldev = of_get_next_parent(np_pctldev);
++		if (!np_pctldev || of_node_is_root(np_pctldev)) {
++			dev_err(p->dev, "could not find pctldev for node %s\n",
++				np_config->full_name);
++			of_node_put(np_pctldev);
++			/* FIXME: This should trigger deferrered probe */
++			return -ENODEV;
++		}
++		pctldev = find_pinctrl_by_of_node(np_pctldev);
++		if (pctldev)
++			break;
++	}
++	of_node_put(np_pctldev);
++
++	/*
++	 * Call pinctrl driver to parse device tree node, and
++	 * generate mapping table entries
++	 */
++	ops = pctldev->desc->pctlops;
++	if (!ops->dt_node_to_map) {
++		dev_err(p->dev, "pctldev %s doesn't support DT\n",
++			dev_name(pctldev->dev));
++		return -ENODEV;
++	}
++	ret = ops->dt_node_to_map(pctldev, np_config, &map, &num_maps);
++	if (ret < 0)
++		return ret;
++
++	/* Stash the mapping table chunk away for later use */
++	return dt_remember_or_free_map(p, statename, pctldev, map, num_maps);
++}
++
++static int dt_remember_dummy_state(struct pinctrl *p, const char *statename)
++{
++	struct pinctrl_map *map;
++
++	map = kzalloc(sizeof(*map), GFP_KERNEL);
++	if (!map) {
++		dev_err(p->dev, "failed to alloc struct pinctrl_map\n");
++		return -ENOMEM;
++	}
++
++	/* There is no pctldev for PIN_MAP_TYPE_DUMMY_STATE */
++	map->type = PIN_MAP_TYPE_DUMMY_STATE;
++
++	return dt_remember_or_free_map(p, statename, NULL, map, 1);
++}
++
++int pinctrl_dt_to_map(struct pinctrl *p)
++{
++	struct device_node *np = p->dev->of_node;
++	int state, ret;
++	char *propname;
++	struct property *prop;
++	const char *statename;
++	const __be32 *list;
++	int size, config;
++	phandle phandle;
++	struct device_node *np_config;
++
++	/* CONFIG_OF enabled, p->dev not instantiated from DT */
++	if (!np) {
++		dev_dbg(p->dev, "no of_node; not parsing pinctrl DT\n");
++		return 0;
++	}
++
++	/* We may store pointers to property names within the node */
++	of_node_get(np);
++
++	/* For each defined state ID */
++	for (state = 0; ; state++) {
++		/* Retrieve the pinctrl-* property */
++		propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
++		prop = of_find_property(np, propname, &size);
++		kfree(propname);
++		if (!prop)
++			break;
++		list = prop->value;
++		size /= sizeof(*list);
++
++		/* Determine whether pinctrl-names property names the state */
++		ret = of_property_read_string_index(np, "pinctrl-names",
++						    state, &statename);
++		/*
++		 * If not, statename is just the integer state ID. But rather
++		 * than dynamically allocate it and have to free it later,
++		 * just point part way into the property name for the string.
++		 */
++		if (ret < 0) {
++			/* strlen("pinctrl-") == 8 */
++			statename = prop->name + 8;
++		}
++
++		/* For every referenced pin configuration node in it */
++		for (config = 0; config < size; config++) {
++			phandle = be32_to_cpup(list++);
++
++			/* Look up the pin configuration node */
++			np_config = of_find_node_by_phandle(phandle);
++			if (!np_config) {
++				dev_err(p->dev,
++					"prop %s index %i invalid phandle\n",
++					prop->name, config);
++				ret = -EINVAL;
++				goto err;
++			}
++
++			/* Parse the node */
++			ret = dt_to_map_one_config(p, statename, np_config);
++			of_node_put(np_config);
++			if (ret < 0)
++				goto err;
++		}
++
++		/* No entries in DT? Generate a dummy state table entry */
++		if (!size) {
++			ret = dt_remember_dummy_state(p, statename);
++			if (ret < 0)
++				goto err;
++		}
++	}
++
++	return 0;
++
++err:
++	pinctrl_dt_free_maps(p);
++	return ret;
++}
+diff --git a/drivers/pinctrl/devicetree.h b/drivers/pinctrl/devicetree.h
+new file mode 100644
+index 0000000..760bc49
+--- /dev/null
++++ b/drivers/pinctrl/devicetree.h
+@@ -0,0 +1,35 @@
++/*
++ * Internal interface to pinctrl device tree integration
++ *
++ * Copyright (C) 2012 NVIDIA CORPORATION. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifdef CONFIG_OF
++
++void pinctrl_dt_free_maps(struct pinctrl *p);
++int pinctrl_dt_to_map(struct pinctrl *p);
++
++#else
++
++static inline int pinctrl_dt_to_map(struct pinctrl *p)
++{
++	return 0;
++}
++
++static inline void pinctrl_dt_free_maps(struct pinctrl *p)
++{
++}
++
++#endif
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+index 4e9f078..aa92cde 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -21,9 +21,11 @@
+ 
+ struct device;
+ struct pinctrl_dev;
++struct pinctrl_map;
+ struct pinmux_ops;
+ struct pinconf_ops;
+ struct gpio_chip;
++struct device_node;
+ 
+ /**
+  * struct pinctrl_pin_desc - boards/machines provide information on their
+@@ -83,6 +85,11 @@ struct pinctrl_ops {
+ 			       unsigned *num_pins);
+ 	void (*pin_dbg_show) (struct pinctrl_dev *pctldev, struct seq_file *s,
+ 			  unsigned offset);
++	int (*dt_node_to_map) (struct pinctrl_dev *pctldev,
++			       struct device_node *np_config,
++			       struct pinctrl_map **map, unsigned *num_maps);
++	void (*dt_free_map) (struct pinctrl_dev *pctldev,
++			     struct pinctrl_map *map, unsigned num_maps);
+ };
+ 
+ /**
+-- 
+1.7.0.4
