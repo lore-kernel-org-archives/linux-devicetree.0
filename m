@@ -1,44 +1,144 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] USB: Add DT probing support to ehci-spear and ohci-spear
-Date: Fri, 23 Mar 2012 09:00:01 +0100
-Message-ID: <201203230900.02280.sr@denx.de>
-References: <1332431402-20606-1-git-send-email-sr@denx.de> <4F6BF275.9040007@st.com>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 1/2] ARM: VIC: Create common infrastructure for vic DT bindings
+Date: Fri, 23 Mar 2012 13:19:26 +0530
+Message-ID: <4bfe7af3761f6f40506a2089fd67866015f6d7f3.1332488625.git.viresh.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4F6BF275.9040007-qxv4g6HH51o@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, deepak sikri <deepak.sikri-qxv4g6HH51o@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
+Few platforms define there own struct of_device_id[] for vic pl19*. They don't
+do anything specific in init_irq() other than of_irq_init().
 
-On Friday 23 March 2012 04:48:05 Viresh Kumar wrote:
-> On 3/22/2012 9:20 PM, Stefan Roese wrote:
-> > +static struct of_device_id spear_ohci_id_table[] __devinitdata = {
-> > +	{ .compatible = "st,spear600-ohci", },
-> 
-> Hi Stefan,
-> 
-> I have this question for other drivers (fsmc, stmmac...) as well:
-> Why do we name it spear600-ohci and not spear-ohci?
-> Because i believe we have same version of USB on all SPEAr SoCs.
+This patch creates this struct array in vic.c and make other platforms use it.
 
-There could be differences between the IP cores integrated into the SoCs. I 
-only tested on spear600, so thats what I integrated into the drivers. While 
-supporting more SoCs (SPEAr300 etc) to those drivers, you should add the 
-specific compatible properties to the lists.
+Signed-off-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/common/vic.c               |   14 +++++++++++++-
+ arch/arm/include/asm/hardware/vic.h |    3 ++-
+ arch/arm/mach-picoxcell/common.c    |   12 +-----------
+ arch/arm/mach-spear6xx/spear6xx.c   |   12 +-----------
+ 4 files changed, 17 insertions(+), 24 deletions(-)
 
-If the IP core doesn't differ between those SoCs, then it might make sense to 
-change this property to something more general, like "st,spear-ohci" (etc). 
-Not 100% sure though. Other DT experts might have more insight here.
-
-Thanks,
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
+index 7a66311..190813e 100644
+--- a/arch/arm/common/vic.c
++++ b/arch/arm/common/vic.c
+@@ -398,7 +398,8 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
+ }
+ 
+ #ifdef CONFIG_OF
+-int __init vic_of_init(struct device_node *node, struct device_node *parent)
++static int __init vic_of_init(struct device_node *node, struct device_node
++		*parent)
+ {
+ 	void __iomem *regs;
+ 	int irq_base;
+@@ -423,6 +424,17 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
+ 
+ 	return -EIO;
+ }
++
++static const struct of_device_id vic_of_match[] __initconst = {
++	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
++	{ .compatible = "arm,pl192-vic", .data = vic_of_init, },
++	{ /* Sentinel */ }
++};
++
++void __init vic_init_irq(void)
++{
++	of_irq_init(vic_of_match);
++}
+ #endif /* CONFIG OF */
+ 
+ /*
+diff --git a/arch/arm/include/asm/hardware/vic.h b/arch/arm/include/asm/hardware/vic.h
+index e14af1a..02056a8 100644
+--- a/arch/arm/include/asm/hardware/vic.h
++++ b/arch/arm/include/asm/hardware/vic.h
+@@ -42,6 +42,7 @@
+ 
+ #ifndef __ASSEMBLY__
+ #include <linux/compiler.h>
++#include <linux/init.h>
+ #include <linux/types.h>
+ 
+ struct device_node;
+@@ -50,7 +51,7 @@ struct pt_regs;
+ void __vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources,
+ 		u32 resume_sources, struct device_node *node);
+ void vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources, u32 resume_sources);
+-int vic_of_init(struct device_node *node, struct device_node *parent);
++void __init vic_init_irq(void);
+ void vic_handle_irq(struct pt_regs *regs);
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/arm/mach-picoxcell/common.c b/arch/arm/mach-picoxcell/common.c
+index a2e8ae8..fa0d7e9 100644
+--- a/arch/arm/mach-picoxcell/common.c
++++ b/arch/arm/mach-picoxcell/common.c
+@@ -68,16 +68,6 @@ static const char *picoxcell_dt_match[] = {
+ 	NULL
+ };
+ 
+-static const struct of_device_id vic_of_match[] __initconst = {
+-	{ .compatible = "arm,pl192-vic", .data = vic_of_init, },
+-	{ /* Sentinel */ }
+-};
+-
+-static void __init picoxcell_init_irq(void)
+-{
+-	of_irq_init(vic_of_match);
+-}
+-
+ static void picoxcell_wdt_restart(char mode, const char *cmd)
+ {
+ 	/*
+@@ -95,7 +85,7 @@ static void picoxcell_wdt_restart(char mode, const char *cmd)
+ DT_MACHINE_START(PICOXCELL, "Picochip picoXcell")
+ 	.map_io		= picoxcell_map_io,
+ 	.nr_irqs	= NR_IRQS_LEGACY,
+-	.init_irq	= picoxcell_init_irq,
++	.init_irq	= vic_init_irq,
+ 	.handle_irq	= vic_handle_irq,
+ 	.timer		= &picoxcell_timer,
+ 	.init_machine	= picoxcell_init_machine,
+diff --git a/arch/arm/mach-spear6xx/spear6xx.c b/arch/arm/mach-spear6xx/spear6xx.c
+index 2ed8b14..d436118 100644
+--- a/arch/arm/mach-spear6xx/spear6xx.c
++++ b/arch/arm/mach-spear6xx/spear6xx.c
+@@ -102,19 +102,9 @@ static const char *spear600_dt_board_compat[] = {
+ 	NULL
+ };
+ 
+-static const struct of_device_id vic_of_match[] __initconst = {
+-	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
+-	{ /* Sentinel */ }
+-};
+-
+-static void __init spear6xx_dt_init_irq(void)
+-{
+-	of_irq_init(vic_of_match);
+-}
+-
+ DT_MACHINE_START(SPEAR600_DT, "ST SPEAr600 (Flattened Device Tree)")
+ 	.map_io		=	spear6xx_map_io,
+-	.init_irq	=	spear6xx_dt_init_irq,
++	.init_irq	=	vic_init_irq,
+ 	.handle_irq	=	vic_handle_irq,
+ 	.timer		=	&spear6xx_timer,
+ 	.init_machine	=	spear600_dt_init,
+-- 
+1.7.8.110.g4cb5d
