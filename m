@@ -1,216 +1,40 @@
 From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 2/2] ARM: GIC: Create common infrastructure for GIC DT bindings
-Date: Fri, 23 Mar 2012 13:19:27 +0530
-Message-ID: <23b4d2ea357a7a785b6c42d0fa7ae9478bad552b.1332488625.git.viresh.kumar@st.com>
-References: <4bfe7af3761f6f40506a2089fd67866015f6d7f3.1332488625.git.viresh.kumar@st.com>
+Subject: Re: [PATCH] USB: Add DT probing support to ehci-spear and ohci-spear
+Date: Fri, 23 Mar 2012 13:37:01 +0530
+Message-ID: <4F6C2F25.8030402@st.com>
+References: <1332431402-20606-1-git-send-email-sr@denx.de> <4F6BF275.9040007@st.com> <201203230900.02280.sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4bfe7af3761f6f40506a2089fd67866015f6d7f3.1332488625.git.viresh.kumar-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201203230900.02280.sr-ynQEQJNshbs@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Deepak SIKRI <deepak.sikri-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Few platforms define there own struct of_device_id[] for GIC. They don't
-do anything specific in init_irq() other than of_irq_init().
+On 3/23/2012 1:30 PM, Stefan Roese wrote:
+> There could be differences between the IP cores integrated into the SoCs. I 
+> only tested on spear600, so thats what I integrated into the drivers. While 
+> supporting more SoCs (SPEAr300 etc) to those drivers, you should add the 
+> specific compatible properties to the lists.
 
-This patch creates this struct array in gic.c and make other platforms use it.
+Ya. That's what i was expecting.
 
-Signed-off-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
----
- arch/arm/common/gic.c               |   10 ++++++++++
- arch/arm/include/asm/hardware/gic.h |    1 +
- arch/arm/mach-exynos/common.c       |    9 +--------
- arch/arm/mach-highbank/highbank.c   |    7 +------
- arch/arm/mach-imx/mach-imx6q.c      |    2 +-
- arch/arm/mach-tegra/common.c        |    7 +------
- arch/arm/mach-ux500/cpu.c           |    7 +------
- arch/arm/mach-vexpress/v2m.c        |   12 +-----------
- 8 files changed, 17 insertions(+), 38 deletions(-)
+> If the IP core doesn't differ between those SoCs, then it might make sense to 
+> change this property to something more general, like "st,spear-ohci" (etc). 
+> Not 100% sure though. Other DT experts might have more insight here.
 
-diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
-index aa52699..77afdae 100644
---- a/arch/arm/common/gic.c
-+++ b/arch/arm/common/gic.c
-@@ -781,4 +781,14 @@ int __init gic_of_init(struct device_node *node, struct device_node *parent)
- 	gic_cnt++;
- 	return 0;
- }
-+
-+static const struct of_device_id gic_of_match[] __initconst = {
-+	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
-+	{ /* Sentinel */ }
-+};
-+
-+void __init gic_init_irq(void)
-+{
-+	of_irq_init(gic_of_match);
-+}
- #endif
-diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
-index 4b1ce6c..7bce4bd 100644
---- a/arch/arm/include/asm/hardware/gic.h
-+++ b/arch/arm/include/asm/hardware/gic.h
-@@ -42,6 +42,7 @@ void gic_init_bases(unsigned int, int, void __iomem *, void __iomem *,
- 		    u32 offset, struct device_node *);
- int gic_of_init(struct device_node *node, struct device_node *parent);
- void gic_secondary_init(unsigned int);
-+void __init gic_init_irq(void);
- void gic_handle_irq(struct pt_regs *regs);
- void gic_cascade_irq(unsigned int gic_nr, unsigned int irq);
- void gic_raise_softirq(const struct cpumask *mask, unsigned int irq);
-diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
-index 85ed8b5..76f6079 100644
---- a/arch/arm/mach-exynos/common.c
-+++ b/arch/arm/mach-exynos/common.c
-@@ -502,13 +502,6 @@ static void __init combiner_init(unsigned int combiner_nr, void __iomem *base,
- 	}
- }
- 
--#ifdef CONFIG_OF
--static const struct of_device_id exynos4_dt_irq_match[] = {
--	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
--	{},
--};
--#endif
--
- void __init exynos4_init_irq(void)
- {
- 	int irq;
-@@ -520,7 +513,7 @@ void __init exynos4_init_irq(void)
- 		gic_init_bases(0, IRQ_PPI(0), S5P_VA_GIC_DIST, S5P_VA_GIC_CPU, gic_bank_offset, NULL);
- #ifdef CONFIG_OF
- 	else
--		of_irq_init(exynos4_dt_irq_match);
-+		gic_init_irq();
- #endif
- 
- 	for (irq = 0; irq < EXYNOS4_MAX_COMBINER_NR; irq++) {
-diff --git a/arch/arm/mach-highbank/highbank.c b/arch/arm/mach-highbank/highbank.c
-index 410a112..42b30c6 100644
---- a/arch/arm/mach-highbank/highbank.c
-+++ b/arch/arm/mach-highbank/highbank.c
-@@ -80,14 +80,9 @@ void highbank_set_cpu_jump(int cpu, void *jump_addr)
- 			  HB_JUMP_TABLE_PHYS(cpu) + 15);
- }
- 
--const static struct of_device_id irq_match[] = {
--	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
--	{}
--};
--
- static void __init highbank_init_irq(void)
- {
--	of_irq_init(irq_match);
-+	gic_init_irq();
- 	l2x0_of_init(0, ~0UL);
- }
- 
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 7696dfa..ebaf6c5 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -105,7 +105,6 @@ static int __init imx6q_gpio_add_irq_domain(struct device_node *np,
- }
- 
- static const struct of_device_id imx6q_irq_match[] __initconst = {
--	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
- 	{ .compatible = "fsl,imx6q-gpio", .data = imx6q_gpio_add_irq_domain, },
- 	{ /* sentinel */ }
- };
-@@ -115,6 +114,7 @@ static void __init imx6q_init_irq(void)
- 	l2x0_of_init(0, ~0UL);
- 	imx_src_init();
- 	imx_gpc_init();
-+	gic_init_irq();
- 	of_irq_init(imx6q_irq_match);
- }
- 
-diff --git a/arch/arm/mach-tegra/common.c b/arch/arm/mach-tegra/common.c
-index 22df10f..c8d6208 100644
---- a/arch/arm/mach-tegra/common.c
-+++ b/arch/arm/mach-tegra/common.c
-@@ -52,15 +52,10 @@ u32 tegra_uart_config[3] = {
- };
- 
- #ifdef CONFIG_OF
--static const struct of_device_id tegra_dt_irq_match[] __initconst = {
--	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init },
--	{ }
--};
--
- void __init tegra_dt_init_irq(void)
- {
- 	tegra_init_irq();
--	of_irq_init(tegra_dt_irq_match);
-+	gic_init_irq();
- }
- #endif
- 
-diff --git a/arch/arm/mach-ux500/cpu.c b/arch/arm/mach-ux500/cpu.c
-index d11f389..3bb6f13 100644
---- a/arch/arm/mach-ux500/cpu.c
-+++ b/arch/arm/mach-ux500/cpu.c
-@@ -30,11 +30,6 @@
- 
- void __iomem *_PRCMU_BASE;
- 
--static const struct of_device_id ux500_dt_irq_match[] = {
--	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
--	{},
--};
--
- void __init ux500_init_irq(void)
- {
- 	void __iomem *dist_base;
-@@ -51,7 +46,7 @@ void __init ux500_init_irq(void)
- 
- #ifdef CONFIG_OF
- 	if (of_have_populated_dt())
--		of_irq_init(ux500_dt_irq_match);
-+		gic_init_irq();
- 	else
- #endif
- 		gic_init(0, 29, dist_base, cpu_base);
-diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
-index 47cdcca..3d875f2 100644
---- a/arch/arm/mach-vexpress/v2m.c
-+++ b/arch/arm/mach-vexpress/v2m.c
-@@ -619,16 +619,6 @@ void __init v2m_dt_init_early(void)
- 	versatile_sched_clock_init(v2m_sysreg_base + V2M_SYS_24MHZ, 24000000);
- }
- 
--static  struct of_device_id vexpress_irq_match[] __initdata = {
--	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
--	{}
--};
--
--static void __init v2m_dt_init_irq(void)
--{
--	of_irq_init(vexpress_irq_match);
--}
--
- static void __init v2m_dt_timer_init(void)
- {
- 	struct device_node *node;
-@@ -677,7 +667,7 @@ DT_MACHINE_START(VEXPRESS_DT, "ARM-Versatile Express")
- 	.dt_compat	= v2m_dt_match,
- 	.map_io		= v2m_dt_map_io,
- 	.init_early	= v2m_dt_init_early,
--	.init_irq	= v2m_dt_init_irq,
-+	.init_irq	= gic_init_irq,
- 	.timer		= &v2m_dt_timer,
- 	.init_machine	= v2m_dt_init,
- 	.handle_irq	= gic_handle_irq,
+Ok. FSMC version is same for 3xx and 6xx. Is different for 13xx.
+But driver is capable of detecting the version itself and so we might
+go ahead with "st,spear-fsmc there"
+
+SMI, EHCI and OHCI have exactly the same version for all three families of SoC's.
+So, we must better name them "st,spear-***"
+
 -- 
-1.7.8.110.g4cb5d
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
