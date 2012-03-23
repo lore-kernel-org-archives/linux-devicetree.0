@@ -1,163 +1,152 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH 1/4] mmc: atmel-mci: add device tree support
-Date: Fri, 23 Mar 2012 11:38:01 +0100
-Message-ID: <20120323103801.GH3473@ldesroches-Latitude-E6320>
-References: <1332352994-20983-1-git-send-email-ludovic.desroches@atmel.com>
- <1332352994-20983-2-git-send-email-ludovic.desroches@atmel.com>
- <4F6B3C48.90002@atmel.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: Device node for a controller with two interrupt parents
+Date: Fri, 23 Mar 2012 16:18:09 +0530
+Message-ID: <CAJuYYwQapeMthSxSgpaJ5fQNQnyvducgGyi-75WrjZut6akh+w@mail.gmail.com>
+References: <CAJuYYwT1uKaUDuh98i4B286az-_26YCN31UXXFWsP=_M-UL_vg@mail.gmail.com>
+	<20120321034151.GC15997@truffala.fritz.box>
+	<CAJuYYwSv9aoCWNJ9=m9LjaaGqvzEA07SHt6wT56HTNLQdkNU2Q@mail.gmail.com>
+	<20120321151321.34A813E095F@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F6B3C48.90002@atmel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: ludovic.desroches@atmel.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20120321151321.34A813E095F@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: David Gibson <david@gibson.dropbear.id.au>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 22, 2012 at 03:50:48PM +0100, Nicolas Ferre wrote:
-> On 03/21/2012 07:03 PM, ludovic.desroches@atmel.com :
+Hi Grant,
+
+On 21 March 2012 20:43, Grant Likely <grant.likely@secretlab.ca> wrote:
+> Okay, so you're saying there are three important aspects to this
+> device:
+> 1) it terminates interrupts from other devices (therefore needs an
+> =A0 interrupt controller driver)
+> 2) it passes some interrupts through untouched (interrupt controller
+> =A0 driver doesn't need to touch them; it directly raises an irq on t=
+he
+> =A0 gic or combiner)
+> 3) It is able generate interrupt signals on it's own (independent of
+> =A0 any attached devices)
+>
+> Do I understand correctly?
+
+#1 is applicable but not #2 and #3 (if I have interpreted the above
+correctly). The wakeup interrupt controller looks for an edge or level
+on pins (which are connected to external devices) and generates a
+interrupt (to gic or combiner) when the set condition on that pin is
+found (edge or level).
+
+>
+> Your patch above solves the problem for #2 above, but it breaks #1
+> because interrupts from external devices can no longer be terminated
+> on the wakeup controller node (they'll always get passed through).
+
+Ok.
+
+>
+> --- Possible solution 1 ---
+> If other devices *don't* use the wakeup node as their interrupt
+> parent, then you should be able to simply drop the
+> interrupt-controller property and make the other devices directly
+> reference the gic and combiner.
+
+Other devices use wakeup node as interrupt controller. The wakeup
+interrupt controller supports masking, unmasking and prioritization of
+the wakeup interrupts. The interrupt-controller property can be
+dropped but then of_irq_init() function cannot be used.
+
+>
+> --- Possible solution 2 ---
+> Split the interrupt map into a separate node:
+>
+>
+> =A0 =A0 =A0 =A0wakeup_eint: interrupt-controller@11000000 {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "samsung,exynos4210-wak=
+eup-eint";
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0x11000000 0x1000>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupt-controller;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#interrupt-cells =3D <1>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupt-parent =3D <&wakeup_map>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupts =3D <0 1 2 3 f 5 6 7 8 9 10=
+ 11 12 13 14 15 16>;
+>
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0wakeup_map: interrupt-map {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#interrupt-cells =3D <=
+1>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#address-cells =3D <0>=
+;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupt-map =3D <0 &=
+gic 0 16 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<1 &gic 0 17 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<2 &gic 0 18 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<3 &gic 0 19 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<4 &gic 0 20 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<5 &gic 0 21 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<6 &gic 0 22 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<7 &gic 0 23 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<8 &gic 0 24 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<9 &gic 0 25 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<10 &gic 0 26 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<11 &gic 0 27 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<12 &gic 0 28 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<13 &gic 0 29 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<14 &gic 0 30 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<15 &gic 0 31 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0<16 &combiner 2 4>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
+> =A0 =A0 =A0 =A0};
+
+I have tested with this and it works but of_irq_init() function cannot
+be used because 'wakeup_map' is set as interrupt parent and
+'wakeup_map' is not a interrupt-controller. So of_irq_init() does not
+invoke the initialization function for the wakeup node. If the machine
+init code explicitly looks for this node and calls the corresponding
+initialization function, it works fine.
+
+>
+> --- possible solution 3 ---
+> 'interrupts' just isn't sufficient for some devices; add a binding fo=
+r
+> a 'interrupts-multiparent' that can be used instead of 'interrupts'
+> and uses the format <phandle> <specifier> [<phandle> <specifier> [...=
+]].
+
+This would be the ideal case. In addition to this, the
+interrupt-parent property handling should be modified to support
+multiple parent phandles like <&parent1 [&parent2] [&parent3] ....>.
+This will be useful to extend the capability of of_irq_init() to
+handle interrupt-controller node with multiple interrupt parents.
+
+>
+> I'm not opposed to this solution since it is a more natural binding
+> for multiparented interrupt controllers, but I won't commit to it
+> without feedback and agreement from Mitch, Ben, David Gibson, etc.
+
+Ok. For now, I will go ahead and use solution #2 which you and David
+have suggested. And correspondingly add explicit lookup of wakeup node
+and call to its initialization function in the machine init code.
+
+Thanks for your suggestions.
+
+Regards,
+Thomas.
 
 [...]
-
-> > diff --git a/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
-> > new file mode 100644
-> > index 0000000..657f9de
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
-> > @@ -0,0 +1,55 @@
-> > +* Atmel High Speed MultiMedia Card Interface
-> > +
-> > +This controller on atmel products provides an interface for MMC, SD and SDIO
-> > +types of memory cards.
-> > +
-> > +1) MCI node
-> > +
-> > +Required properties:
-> > +- compatible: no blank "atmel,hsmci"
-> > +- reg: should contain HSMCI registers location and length
-> > +- interrupts: should contain HSMCI interrupt number
-> > +- at least one slot node
-> > +
-> > +The node contains child nodes for each slot that the platform uses
-> > +
-> > +Example MCI node:
-> > +
-> > +mmc0: mmc@f0008000 {
-> > +	compatible = "atmel,hsmci";
-> > +	reg = <0xf0008000 0x600>;
-> > +	interrupts = <12 4>;
-> > +
-> > +	[ child node definitions...]
-> > +};
-> > +
-> > +2) slot nodes
-> > +
-> > +Optional properties:
-> > +- bus-width: number of data lines connected to the controller
-> > +- cd-gpios: specify GPIOs for card detection
-> > +- cd-invert: invert the value of external card detect gpio line
-> > +- wp-gpios: specify GPIOs for write protection
-> > +
-> > +Example slot node:
-> > +
-> > +slot@0 {
-> > +	bus-width = <4>;
-> > +	cd-gpios = <&pioD 15 0>
-> > +	cd-invert;
-> > +};
-> > +
-> > +Example full MCI node:
-> > +mmc0: mmc@f0008000 {
-> > +	compatible = "atmel,hsmci";
-> > +	reg = <0xf0008000 0x600>;
-> > +	interrupts = <12 4>;
-> > +	slot@0 {
-> > +		bus-width = <4>;
-> > +		cd-gpios = <&pioD 15 0>
-> > +		cd-invert;
-> > +	};
-> > +	slot@1 {
-> > +		bus-width = <4>;
-> > +	};
-> > +};
-
-[...]
-
-> > +static void __init
-> > +atmci_get_of_slots(struct device *dev, struct mci_platform_data *pdata)
-> > +{
-> > +	struct device_node *np = dev->of_node;
-> > +	struct device_node *cnp;
-> > +	unsigned int slot_nb = 0;
-> > +
-> > +	if (!np)
-> > +		return;
-> > +
-> > +	for_each_child_of_node(np, cnp) {
-> > +		if (slot_nb > (ATMCI_MAX_NR_SLOTS-1)) {
-> > +			dev_warn(dev, "can't have more than %d slots\n",
-> > +			         ATMCI_MAX_NR_SLOTS);
-> > +			break;
-> > +		}
-> > +		if (of_property_read_u32(cnp, "bus-width",
-> > +		                         &pdata->slot[slot_nb].bus_width))
-> > +			pdata->slot[slot_nb].bus_width = 1;
-> > +
-> > +		pdata->slot[slot_nb].detect_pin =
-> > +			of_get_named_gpio(cnp, "cd-gpios", 0);
-> > +
-> > +		if (of_find_property(cnp, "cd-invert", NULL))
-> > +			pdata->slot[slot_nb].detect_is_active_high = true;
-> > +
-> > +		pdata->slot[slot_nb].wp_pin =
-> > +			of_get_named_gpio(cnp, "wp-gpios", 0);
-> > +
-> > +		slot_nb++;
-> > +	}
-> > +}
-
-In fact this part of code is not correct. Each mci can have two slots: slot0
-and slot1. If someone wants to use only slot1, I will fill only pdata->slot[0]
-that is incorrect because later in the driver there is:
-
-if (pdata->slot[0].bus_width) {
-	ret = atmci_init_slot(host, &pdata->slot[0], 
-			0, ATMCI_SDCSEL_SLOT_A, ATMCI_SDIOIRQA);
-	if (!ret)
-		nr_slots++;
-}
-if (pdata->slot[1].bus_width) {
-	ret = atmci_init_slot(host, &pdata->slot[1],
-			1, ATMCI_SDCSEL_SLOT_B, ATMCI_SDIOIRQB);
-	if (!ret)
-		nr_slots++;
-}
-
-So what is the best solution to solve this issue?
-
-- Adding a property slot id? I would like to use only existing bindings hoping 
-we can have a generic binding for mmc.
-
-- Using aliases?
-aliases {
-	slot0 = &mmc-slot0;
-}
-
-mmc0: mmc@f0008000 {
-	compatible = "atmel,hsmci";
-	reg = <0xf0008000 0x600>;
-	interrupts = <12 4>;              
-	mmc-slot0: slot@0 {
-	};                                                                
-	status = "disabled";
-};
-
-- Using reg property as an index?
-
-
-Thanks for your help.
-
-Regards
-
-Ludovic
