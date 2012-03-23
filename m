@@ -1,102 +1,117 @@
-From: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: RE: kirkwood devicetree respin
-Date: Thu, 22 Mar 2012 18:28:26 +0000
-Message-ID: <A2CA0424C0A6F04399FB9E1CD98E0304090B7F02@US01WEMBX2.internal.synopsys.com>
-References: <20120312214325.GD5050@titan.lakedaemon.net>
- <201203211009.40934.arnd@arndb.de> <20120321114546.GC3092@arwen.pp.htv.fi>
- <201203211317.38339.arnd@arndb.de> <20120321132230.GL3092@arwen.pp.htv.fi>
- <A2CA0424C0A6F04399FB9E1CD98E0304090B77CA@US01WEMBX2.internal.synopsys.com>
- <20120322081315.GG31160@arwen.pp.htv.fi>
+From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V3 3/6] pinctrl: core device tree mapping table parsing
+ support
+Date: Fri, 23 Mar 2012 11:55:49 +0800
+Message-ID: <20120323035548.GA23958@shlinux2.ap.freescale.net>
+References: <1332440842-1098-1-git-send-email-swarren@wwwdotorg.org>
+ <1332440842-1098-3-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120322081315.GG31160-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1332440842-1098-3-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Felipe Balbi [mailto:balbi-l0cyMroinI0@public.gmane.org]
-> Sent: Thursday, March 22, 2012 1:13 AM
+On Fri, Mar 23, 2012 at 02:27:19AM +0800, Stephen Warren wrote:
+> During pinctrl_get(), if the client device has a device tree node, look
+> for the common pinctrl properties there. If found, parse the referenced
+> device tree nodes, with the help of the pinctrl drivers, and generate
+> mapping table entries from them.
 > 
-> On Wed, Mar 21, 2012 at 08:06:12PM +0000, Paul Zimmerman wrote:
-> > > From: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Felipe
-> Balbi
-> > > Sent: Wednesday, March 21, 2012 6:23 AM
-> > >
-> > > On Wed, Mar 21, 2012 at 01:17:38PM +0000, Arnd Bergmann wrote:
-> > > > On Wednesday 21 March 2012, Felipe Balbi wrote:
-> > > > > I have explained an easy way to achieve that to Alan Stern, but he did
-> > > > > not like it. Basically, we should add a platform_device to ehci-hcd.ko
-> > > > > and make ehci-{omap,mv,fsl,atmel,etc} a parent device/driver which
-> > > > > basically passes the correct resources and handle platform-specific
-> > > > > details.
-> > > > >
-> > > > > That way, we could build everything together and udev would load the
-> > > > > correct modules for us.
-> > > > >
-> > > > > For an example of what I mean, see drivers/usb/dwc3/core.c,
-> > > > > drivers/usb/dwc3/dwc3-omap.c, and drivers/usb/dwc3/dwc3-pci.c
-> > > >
-> > > > While that way clearly works and can solve the problem we have
-> > > > with ehci today, I think it's easier and more consistent with
-> > > > other drivers to do it the opposite way, as we have recently
-> > > > discussed in the context of ohci:
-> > > >
-> > > > Make the base driver a loadable module that does not register
-> > > > any struct device_driver at all, but just exports functions to
-> > > > other module. The hardware specific drivers then each register
-> > > > to their own bus and use the functions exported by the
-> > > > main driver, with a way to override them with their own versions.
-> > > >
-> > > > Alan suggested a variation of that where we actually export
-> > > > a default "struct hc_driver" instead of the individual functions,
-> > > > which has the advantage of having to export fewer symbols, but
-> > > > otherwise is similar to what we do elsewhere.
-> > > >
-> > > > See libata, sdhci, serial-8250 or xhci for examples of this way.
-> > >
-> > > that is likely to work, indeed. My suggestion would make PM simpler
-> > > though and avoid some code duplication in the long run, meaning that
-> > > ehci-hcd.ko could have its own dev_pm_ops which e.g. knows how to save
-> > > EHCI's context while ehci-omap.c knows how to save OMAP-specific
-> > > context, toggle clocks, set pads in safe mode (when needed) and so on.
-> > >
-> > > But fair enough, both ways would work fine.
-> >
-> > I would also recommend your/Alan's approach to this over Felipe's way.
-> > We have a DWC3 platform with an (admittedly oddball) PM implementation
-> > that requires the bus driver to have some knowledge of the base driver's
-> > internal state, and needs the two drivers to be able to communicate with
-> > each other. With the base driver being a separate platform device, this
-> > is nearly impossible to achieve in a clean way. If the DWC3 driver was
-> > designed the way you and Alan are recommending, it would be easy.
-> >
-> > I'm trying to convince Felipe to change the DWC3 driver design to
-> > accommodate this, but I hold out little hope for that :)
+> During pinctrl_put(), free any results of device tree parsing.
 > 
-> yeah, I'm not thinking on taking that patch, sorry. Didn't you say SNPS
-> had agreed on rebuilding the FPGA system so that it's a more standard
-> PCIe implementation ?
+> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> ---
+> v3: Add explit check for devies without dev->of_node. Add comments re:
+>     lack of pctldev for PIN_MAP_TYPE_DUMMY_STATE.
+> v2: Place most code into new file devicetree.c
 > 
-> I still owe you another possible implementation for the whole PM thing,
-> sorry about the delay.
+> pinctrl core dt fixup
+> ---
+.......
+> +int pinctrl_dt_to_map(struct pinctrl *p)
+> +{
+> +	struct device_node *np = p->dev->of_node;
+> +	int state, ret;
+> +	char *propname;
+> +	struct property *prop;
+> +	const char *statename;
+> +	const __be32 *list;
+> +	int size, config;
+> +	phandle phandle;
+> +	struct device_node *np_config;
+> +	struct pinctrl_dt_map *dt_map;
+> +
+> +	/* CONFIG_OF enabled, p->dev not instantiated from DT */
+> +	if (!np)
+> +		return 0;
+> +
+> +	/* We may store pointers to property names within the node */
+> +	of_node_get(np);
+> +
+> +	/* For each defined state ID */
+> +	for (state = 0; ; state++) {
+> +		/* Retrieve the pinctrl-* property */
+> +		propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
+> +		prop = of_find_property(np, propname, &size);
+> +		kfree(propname);
+> +		if (!prop)
+> +			break;
+> +		list = prop->value;
+> +		size /= sizeof(*list);
+> +
+> +		/* Determine whether pinctrl-names property names the state */
+> +		ret = of_property_read_string_index(np, "pinctrl-names",
+> +						    state, &statename);
+> +		/*
+> +		 * If not, statename is just the integer state ID. But rather
+> +		 * than dynamically allocate it and have to free it later,
+> +		 * just point part way into the property name for the string.
+> +		 */
+> +		if (ret < 0) {
+> +			/* strlen("pinctrl-") == 8 */
+> +			if (strlen(prop->name) < 8) {
+You thought this checking is still needed?
+prop->name should be exactly what you search above ("pinctrl-%d"), right?
 
-Dropped the other folks from CC since they probably aren't interested.
+> +				dev_err(p->dev, "prop %s inconsistent length\n",
+> +					prop->name);
+> +				ret = -EINVAL;
+> +				goto err;
+> +			}
+> +			statename = prop->name + 8;
+> +		}
+> +
+> +		/* For every referenced pin configuration node in it */
+> +		for (config = 0; config < size; config++) {
+> +			phandle = be32_to_cpup(list++);
+> +
+> +			/* Look up the pin configuration node */
+> +			np_config = of_find_node_by_phandle(phandle);
+> +			if (!np_config) {
+> +				dev_err(p->dev,
+> +					"prop %s index %i invalid phandle\n",
+> +					prop->name, config);
+> +				ret = -EINVAL;
+> +				goto err;
+> +			}
+> +
+> +			/* Parse the node */
+> +			ret = dt_to_map_one_config(p, statename, np_config);
+> +			of_node_put(np_config);
+> +			if (ret < 0)
+> +				goto err;
+> +		}
+> +
+> +		/* No entries in DT? Generate a dummy state table entry */
+> +		if (!size) {
+> +			ret = dt_remember_dummy_state(p, statename);
+It seems we're still keeping the intermediate pinctrl_dt_map, although
+not know the result you found,
+but i'm ok we just do it currently.
 
-The FPGA rework is very low priority, those guys have more important
-stuff to work on at the moment. Plus management doesn't understand
-why the current design won't work, since the Synopsys driver supports
-it OK.
-
-So I'm not sure when the FPGA rework will happen.
-
--- 
-Paul
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Dong Aisheng
