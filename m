@@ -1,32 +1,44 @@
-From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH V3 6/6] pinctrl: tegra: Add complete device tree support
-Date: Fri, 23 Mar 2012 15:16:30 +0800
-Message-ID: <20120323071629.GC23958@shlinux2.ap.freescale.net>
-References: <1332440842-1098-1-git-send-email-swarren@wwwdotorg.org>
- <1332440842-1098-6-git-send-email-swarren@wwwdotorg.org>
+From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] USB: Add DT probing support to ehci-spear and ohci-spear
+Date: Fri, 23 Mar 2012 09:00:01 +0100
+Message-ID: <201203230900.02280.sr@denx.de>
+References: <1332431402-20606-1-git-send-email-sr@denx.de> <4F6BF275.9040007@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1332440842-1098-6-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4F6BF275.9040007-qxv4g6HH51o@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, deepak sikri <deepak.sikri-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2012 at 02:27:22AM +0800, Stephen Warren wrote:
-> Implement pinctrl_ops dt_node_to_map() and dt_free_map(). These allow
-> complete specification of the desired pinmux configuration using device
-> tree.
-> 
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> ---
-> v3: Rebase on of_property_for_each_string() API changes.
->     Improve DT parsing so it only calls krealloc() on the top-level map
->     table once per subnode, rather than once per subnode/pin combination.
-> v2: Rebase on of_property_for_each_string() API changes.
-> ---
-Acked-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Viresh,
 
-Regards
-Dong Aisheng
+On Friday 23 March 2012 04:48:05 Viresh Kumar wrote:
+> On 3/22/2012 9:20 PM, Stefan Roese wrote:
+> > +static struct of_device_id spear_ohci_id_table[] __devinitdata = {
+> > +	{ .compatible = "st,spear600-ohci", },
+> 
+> Hi Stefan,
+> 
+> I have this question for other drivers (fsmc, stmmac...) as well:
+> Why do we name it spear600-ohci and not spear-ohci?
+> Because i believe we have same version of USB on all SPEAr SoCs.
+
+There could be differences between the IP cores integrated into the SoCs. I 
+only tested on spear600, so thats what I integrated into the drivers. While 
+supporting more SoCs (SPEAr300 etc) to those drivers, you should add the 
+specific compatible properties to the lists.
+
+If the IP core doesn't differ between those SoCs, then it might make sense to 
+change this property to something more general, like "st,spear-ohci" (etc). 
+Not 100% sure though. Other DT experts might have more insight here.
+
+Thanks,
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
