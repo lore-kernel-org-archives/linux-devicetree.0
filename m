@@ -1,34 +1,207 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: Re: [git pull] PCI changes (including maintainer change)
-Date: Fri, 23 Mar 2012 14:29:33 -0700
-Message-ID: <CAE9FiQVs5+BVmn46xeXR_GwOYBkYy73-aSKYHQUv3EoTTiUtYQ@mail.gmail.com>
-References: <20120322144817.796e3a8a@jbarnes-desktop>
-	<CAE9FiQV96Uz9fU=v4=eBbAogOeehuBM3eHgSr0QW_C68ceADcQ@mail.gmail.com>
-	<CA+55aFx+dXoJ=MGmpyzepDjBDv8LpXqdxUBCbdrakMKBsKpmTw@mail.gmail.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7] of/lib: Allow scripts/dtc/libfdt to be used from kernel
+ code
+Date: Fri, 23 Mar 2012 16:09:15 -0700
+Message-ID: <1332544155-20380-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CA+55aFx+dXoJ=MGmpyzepDjBDv8LpXqdxUBCbdrakMKBsKpmTw@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jesse Barnes <jbarnes@virtuousgeek.org>, Ralf Baechle <ralf@linux-mips.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2012 at 2:10 PM, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Fri, Mar 23, 2012 at 12:58 PM, Yinghai Lu <yinghai@kernel.org> wrote:
->>
->> There are some merge conflicts. Hope attached patch could help Linus a
->> little bit.
->
-> Hmm. My merge does not agree with yours at all in the MIPS
-> pcibios_fixup_bus() area.
->
-> Your patch re-introduces the device resource fixup that Bjorn removed,
-> for example.
->
-> I think my merge is correct, but hey, people should double-check.
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-yes, you are right.
+libfdt is part of the device tree support in scripts/dtc/libfdt.  For
+some platforms that use the Device Tree, we want to be able to edit
+the flattened device tree form.
 
-Yinghai
+We don't want to burden kernel builds that do not require it, so we
+gate compilation of libfdt files with CONFIG_LIBFDT.  So if it is
+needed, you need to do this in your Kconfig:
+
+	select LIBFDT
+
+And in the Makefile of the code using libfdt something like:
+
+ccflags-y := -I$(src)/../../../scripts/dtc/libfdt
+
+Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+---
+
+This patch has been seen several times before as part of a larger
+patch set for my OCTEON Device Tree work.  After further refinement to
+my patches that depend on core Device Tree functionality, this is the
+only remaining patch to the common 'core' code.
+
+Here is the history:
+
+v7: No changes other that to split from other, now unneeded, patches.
+
+v6: No changes other than to split these out of the MIPS/OCTEON patch
+    set to allow them to be merged separately if desired.
+
+v5: Build libfdt in the lib directory instead of devices/of, and
+    include all libfdt files.
+
+    Changes to of_find_node_by_path() requested by Grant Likely.
+
+v4: No changes to these two patches.
+
+v3: libfdt building moved to devices/of/libfdt.  Cleanup and style
+    improvements as suggested by Grant Likely.
+
+v2: No changes to these two patches.
+
+There are a couple of possibility for merging this.
+
+1) Via the Device Tree maintainers, thus blocking the follow-ons until
+   it is merged.
+
+2) Via Ralf's Linux/MIPS tree with the rest of the patches after
+   Device Tree maintainer sign-off.
+
+ include/linux/libfdt.h     |    8 ++++++++
+ include/linux/libfdt_env.h |   13 +++++++++++++
+ lib/Kconfig                |    6 ++++++
+ lib/Makefile               |    5 +++++
+ lib/fdt.c                  |    2 ++
+ lib/fdt_ro.c               |    2 ++
+ lib/fdt_rw.c               |    2 ++
+ lib/fdt_strerror.c         |    2 ++
+ lib/fdt_sw.c               |    2 ++
+ lib/fdt_wip.c              |    2 ++
+ 10 files changed, 44 insertions(+), 0 deletions(-)
+ create mode 100644 include/linux/libfdt.h
+ create mode 100644 include/linux/libfdt_env.h
+ create mode 100644 lib/fdt.c
+ create mode 100644 lib/fdt_ro.c
+ create mode 100644 lib/fdt_rw.c
+ create mode 100644 lib/fdt_strerror.c
+ create mode 100644 lib/fdt_sw.c
+ create mode 100644 lib/fdt_wip.c
+
+diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
+new file mode 100644
+index 0000000..4c0306c
+--- /dev/null
++++ b/include/linux/libfdt.h
+@@ -0,0 +1,8 @@
++#ifndef _INCLUDE_LIBFDT_H_
++#define _INCLUDE_LIBFDT_H_
++
++#include <linux/libfdt_env.h>
++#include "../../scripts/dtc/libfdt/fdt.h"
++#include "../../scripts/dtc/libfdt/libfdt.h"
++
++#endif /* _INCLUDE_LIBFDT_H_ */
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+new file mode 100644
+index 0000000..01508c7
+--- /dev/null
++++ b/include/linux/libfdt_env.h
+@@ -0,0 +1,13 @@
++#ifndef _LIBFDT_ENV_H
++#define _LIBFDT_ENV_H
++
++#include <linux/string.h>
++
++#include <asm/byteorder.h>
++
++#define fdt32_to_cpu(x) be32_to_cpu(x)
++#define cpu_to_fdt32(x) cpu_to_be32(x)
++#define fdt64_to_cpu(x) be64_to_cpu(x)
++#define cpu_to_fdt64(x) cpu_to_be64(x)
++
++#endif /* _LIBFDT_ENV_H */
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 028aba9..e2da829 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -316,4 +316,10 @@ config SIGNATURE
+ 	  Digital signature verification. Currently only RSA is supported.
+ 	  Implementation is done using GnuPG MPI library
+ 
++#
++# libfdt files, only selected if needed.
++#
++config LIBFDT
++	bool
++
+ endmenu
+diff --git a/lib/Makefile b/lib/Makefile
+index 18515f0..1c6c198 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -123,6 +123,11 @@ obj-$(CONFIG_SIGNATURE) += digsig.o
+ 
+ obj-$(CONFIG_CLZ_TAB) += clz_tab.o
+ 
++libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o
++$(foreach file, $(libfdt_files), \
++	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
++lib-$(CONFIG_LIBFDT) += $(libfdt_files)
++
+ hostprogs-y	:= gen_crc32table
+ clean-files	:= crc32table.h
+ 
+diff --git a/lib/fdt.c b/lib/fdt.c
+new file mode 100644
+index 0000000..97f2006
+--- /dev/null
++++ b/lib/fdt.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt.c"
+diff --git a/lib/fdt_ro.c b/lib/fdt_ro.c
+new file mode 100644
+index 0000000..f73c04e
+--- /dev/null
++++ b/lib/fdt_ro.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_ro.c"
+diff --git a/lib/fdt_rw.c b/lib/fdt_rw.c
+new file mode 100644
+index 0000000..0c1f0f4
+--- /dev/null
++++ b/lib/fdt_rw.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_rw.c"
+diff --git a/lib/fdt_strerror.c b/lib/fdt_strerror.c
+new file mode 100644
+index 0000000..8713e3f
+--- /dev/null
++++ b/lib/fdt_strerror.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_strerror.c"
+diff --git a/lib/fdt_sw.c b/lib/fdt_sw.c
+new file mode 100644
+index 0000000..9ac7e50
+--- /dev/null
++++ b/lib/fdt_sw.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_sw.c"
+diff --git a/lib/fdt_wip.c b/lib/fdt_wip.c
+new file mode 100644
+index 0000000..45b3fc3
+--- /dev/null
++++ b/lib/fdt_wip.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_wip.c"
+-- 
+1.7.2.3
