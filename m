@@ -1,11 +1,13 @@
 From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/2] ARM: VIC: Create common infrastructure for vic DT bindings
-Date: Fri, 23 Mar 2012 13:19:26 +0530
-Message-ID: <4bfe7af3761f6f40506a2089fd67866015f6d7f3.1332488625.git.viresh.kumar@st.com>
+Subject: [PATCH 2/2] ARM: GIC: Create common infrastructure for GIC DT bindings
+Date: Fri, 23 Mar 2012 13:19:27 +0530
+Message-ID: <23b4d2ea357a7a785b6c42d0fa7ae9478bad552b.1332488625.git.viresh.kumar@st.com>
+References: <4bfe7af3761f6f40506a2089fd67866015f6d7f3.1332488625.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4bfe7af3761f6f40506a2089fd67866015f6d7f3.1332488625.git.viresh.kumar-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,126 +21,196 @@ To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane
 Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Few platforms define there own struct of_device_id[] for vic pl19*. They don't
+Few platforms define there own struct of_device_id[] for GIC. They don't
 do anything specific in init_irq() other than of_irq_init().
 
-This patch creates this struct array in vic.c and make other platforms use it.
+This patch creates this struct array in gic.c and make other platforms use it.
 
 Signed-off-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
 ---
- arch/arm/common/vic.c               |   14 +++++++++++++-
- arch/arm/include/asm/hardware/vic.h |    3 ++-
- arch/arm/mach-picoxcell/common.c    |   12 +-----------
- arch/arm/mach-spear6xx/spear6xx.c   |   12 +-----------
- 4 files changed, 17 insertions(+), 24 deletions(-)
+ arch/arm/common/gic.c               |   10 ++++++++++
+ arch/arm/include/asm/hardware/gic.h |    1 +
+ arch/arm/mach-exynos/common.c       |    9 +--------
+ arch/arm/mach-highbank/highbank.c   |    7 +------
+ arch/arm/mach-imx/mach-imx6q.c      |    2 +-
+ arch/arm/mach-tegra/common.c        |    7 +------
+ arch/arm/mach-ux500/cpu.c           |    7 +------
+ arch/arm/mach-vexpress/v2m.c        |   12 +-----------
+ 8 files changed, 17 insertions(+), 38 deletions(-)
 
-diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-index 7a66311..190813e 100644
---- a/arch/arm/common/vic.c
-+++ b/arch/arm/common/vic.c
-@@ -398,7 +398,8 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
- }
- 
- #ifdef CONFIG_OF
--int __init vic_of_init(struct device_node *node, struct device_node *parent)
-+static int __init vic_of_init(struct device_node *node, struct device_node
-+		*parent)
- {
- 	void __iomem *regs;
- 	int irq_base;
-@@ -423,6 +424,17 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
- 
- 	return -EIO;
+diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+index aa52699..77afdae 100644
+--- a/arch/arm/common/gic.c
++++ b/arch/arm/common/gic.c
+@@ -781,4 +781,14 @@ int __init gic_of_init(struct device_node *node, struct device_node *parent)
+ 	gic_cnt++;
+ 	return 0;
  }
 +
-+static const struct of_device_id vic_of_match[] __initconst = {
-+	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
-+	{ .compatible = "arm,pl192-vic", .data = vic_of_init, },
++static const struct of_device_id gic_of_match[] __initconst = {
++	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
 +	{ /* Sentinel */ }
 +};
 +
-+void __init vic_init_irq(void)
++void __init gic_init_irq(void)
 +{
-+	of_irq_init(vic_of_match);
++	of_irq_init(gic_of_match);
 +}
- #endif /* CONFIG OF */
+ #endif
+diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
+index 4b1ce6c..7bce4bd 100644
+--- a/arch/arm/include/asm/hardware/gic.h
++++ b/arch/arm/include/asm/hardware/gic.h
+@@ -42,6 +42,7 @@ void gic_init_bases(unsigned int, int, void __iomem *, void __iomem *,
+ 		    u32 offset, struct device_node *);
+ int gic_of_init(struct device_node *node, struct device_node *parent);
+ void gic_secondary_init(unsigned int);
++void __init gic_init_irq(void);
+ void gic_handle_irq(struct pt_regs *regs);
+ void gic_cascade_irq(unsigned int gic_nr, unsigned int irq);
+ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq);
+diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+index 85ed8b5..76f6079 100644
+--- a/arch/arm/mach-exynos/common.c
++++ b/arch/arm/mach-exynos/common.c
+@@ -502,13 +502,6 @@ static void __init combiner_init(unsigned int combiner_nr, void __iomem *base,
+ 	}
+ }
  
- /*
-diff --git a/arch/arm/include/asm/hardware/vic.h b/arch/arm/include/asm/hardware/vic.h
-index e14af1a..02056a8 100644
---- a/arch/arm/include/asm/hardware/vic.h
-+++ b/arch/arm/include/asm/hardware/vic.h
-@@ -42,6 +42,7 @@
- 
- #ifndef __ASSEMBLY__
- #include <linux/compiler.h>
-+#include <linux/init.h>
- #include <linux/types.h>
- 
- struct device_node;
-@@ -50,7 +51,7 @@ struct pt_regs;
- void __vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources,
- 		u32 resume_sources, struct device_node *node);
- void vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources, u32 resume_sources);
--int vic_of_init(struct device_node *node, struct device_node *parent);
-+void __init vic_init_irq(void);
- void vic_handle_irq(struct pt_regs *regs);
- 
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/arm/mach-picoxcell/common.c b/arch/arm/mach-picoxcell/common.c
-index a2e8ae8..fa0d7e9 100644
---- a/arch/arm/mach-picoxcell/common.c
-+++ b/arch/arm/mach-picoxcell/common.c
-@@ -68,16 +68,6 @@ static const char *picoxcell_dt_match[] = {
- 	NULL
- };
- 
--static const struct of_device_id vic_of_match[] __initconst = {
--	{ .compatible = "arm,pl192-vic", .data = vic_of_init, },
--	{ /* Sentinel */ }
+-#ifdef CONFIG_OF
+-static const struct of_device_id exynos4_dt_irq_match[] = {
+-	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
+-	{},
 -};
+-#endif
 -
--static void __init picoxcell_init_irq(void)
--{
--	of_irq_init(vic_of_match);
--}
--
- static void picoxcell_wdt_restart(char mode, const char *cmd)
+ void __init exynos4_init_irq(void)
  {
- 	/*
-@@ -95,7 +85,7 @@ static void picoxcell_wdt_restart(char mode, const char *cmd)
- DT_MACHINE_START(PICOXCELL, "Picochip picoXcell")
- 	.map_io		= picoxcell_map_io,
- 	.nr_irqs	= NR_IRQS_LEGACY,
--	.init_irq	= picoxcell_init_irq,
-+	.init_irq	= vic_init_irq,
- 	.handle_irq	= vic_handle_irq,
- 	.timer		= &picoxcell_timer,
- 	.init_machine	= picoxcell_init_machine,
-diff --git a/arch/arm/mach-spear6xx/spear6xx.c b/arch/arm/mach-spear6xx/spear6xx.c
-index 2ed8b14..d436118 100644
---- a/arch/arm/mach-spear6xx/spear6xx.c
-+++ b/arch/arm/mach-spear6xx/spear6xx.c
-@@ -102,19 +102,9 @@ static const char *spear600_dt_board_compat[] = {
- 	NULL
- };
+ 	int irq;
+@@ -520,7 +513,7 @@ void __init exynos4_init_irq(void)
+ 		gic_init_bases(0, IRQ_PPI(0), S5P_VA_GIC_DIST, S5P_VA_GIC_CPU, gic_bank_offset, NULL);
+ #ifdef CONFIG_OF
+ 	else
+-		of_irq_init(exynos4_dt_irq_match);
++		gic_init_irq();
+ #endif
  
--static const struct of_device_id vic_of_match[] __initconst = {
--	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
--	{ /* Sentinel */ }
+ 	for (irq = 0; irq < EXYNOS4_MAX_COMBINER_NR; irq++) {
+diff --git a/arch/arm/mach-highbank/highbank.c b/arch/arm/mach-highbank/highbank.c
+index 410a112..42b30c6 100644
+--- a/arch/arm/mach-highbank/highbank.c
++++ b/arch/arm/mach-highbank/highbank.c
+@@ -80,14 +80,9 @@ void highbank_set_cpu_jump(int cpu, void *jump_addr)
+ 			  HB_JUMP_TABLE_PHYS(cpu) + 15);
+ }
+ 
+-const static struct of_device_id irq_match[] = {
+-	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
+-	{}
 -};
 -
--static void __init spear6xx_dt_init_irq(void)
+ static void __init highbank_init_irq(void)
+ {
+-	of_irq_init(irq_match);
++	gic_init_irq();
+ 	l2x0_of_init(0, ~0UL);
+ }
+ 
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index 7696dfa..ebaf6c5 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -105,7 +105,6 @@ static int __init imx6q_gpio_add_irq_domain(struct device_node *np,
+ }
+ 
+ static const struct of_device_id imx6q_irq_match[] __initconst = {
+-	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
+ 	{ .compatible = "fsl,imx6q-gpio", .data = imx6q_gpio_add_irq_domain, },
+ 	{ /* sentinel */ }
+ };
+@@ -115,6 +114,7 @@ static void __init imx6q_init_irq(void)
+ 	l2x0_of_init(0, ~0UL);
+ 	imx_src_init();
+ 	imx_gpc_init();
++	gic_init_irq();
+ 	of_irq_init(imx6q_irq_match);
+ }
+ 
+diff --git a/arch/arm/mach-tegra/common.c b/arch/arm/mach-tegra/common.c
+index 22df10f..c8d6208 100644
+--- a/arch/arm/mach-tegra/common.c
++++ b/arch/arm/mach-tegra/common.c
+@@ -52,15 +52,10 @@ u32 tegra_uart_config[3] = {
+ };
+ 
+ #ifdef CONFIG_OF
+-static const struct of_device_id tegra_dt_irq_match[] __initconst = {
+-	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init },
+-	{ }
+-};
+-
+ void __init tegra_dt_init_irq(void)
+ {
+ 	tegra_init_irq();
+-	of_irq_init(tegra_dt_irq_match);
++	gic_init_irq();
+ }
+ #endif
+ 
+diff --git a/arch/arm/mach-ux500/cpu.c b/arch/arm/mach-ux500/cpu.c
+index d11f389..3bb6f13 100644
+--- a/arch/arm/mach-ux500/cpu.c
++++ b/arch/arm/mach-ux500/cpu.c
+@@ -30,11 +30,6 @@
+ 
+ void __iomem *_PRCMU_BASE;
+ 
+-static const struct of_device_id ux500_dt_irq_match[] = {
+-	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
+-	{},
+-};
+-
+ void __init ux500_init_irq(void)
+ {
+ 	void __iomem *dist_base;
+@@ -51,7 +46,7 @@ void __init ux500_init_irq(void)
+ 
+ #ifdef CONFIG_OF
+ 	if (of_have_populated_dt())
+-		of_irq_init(ux500_dt_irq_match);
++		gic_init_irq();
+ 	else
+ #endif
+ 		gic_init(0, 29, dist_base, cpu_base);
+diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
+index 47cdcca..3d875f2 100644
+--- a/arch/arm/mach-vexpress/v2m.c
++++ b/arch/arm/mach-vexpress/v2m.c
+@@ -619,16 +619,6 @@ void __init v2m_dt_init_early(void)
+ 	versatile_sched_clock_init(v2m_sysreg_base + V2M_SYS_24MHZ, 24000000);
+ }
+ 
+-static  struct of_device_id vexpress_irq_match[] __initdata = {
+-	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
+-	{}
+-};
+-
+-static void __init v2m_dt_init_irq(void)
 -{
--	of_irq_init(vic_of_match);
+-	of_irq_init(vexpress_irq_match);
 -}
 -
- DT_MACHINE_START(SPEAR600_DT, "ST SPEAr600 (Flattened Device Tree)")
- 	.map_io		=	spear6xx_map_io,
--	.init_irq	=	spear6xx_dt_init_irq,
-+	.init_irq	=	vic_init_irq,
- 	.handle_irq	=	vic_handle_irq,
- 	.timer		=	&spear6xx_timer,
- 	.init_machine	=	spear600_dt_init,
+ static void __init v2m_dt_timer_init(void)
+ {
+ 	struct device_node *node;
+@@ -677,7 +667,7 @@ DT_MACHINE_START(VEXPRESS_DT, "ARM-Versatile Express")
+ 	.dt_compat	= v2m_dt_match,
+ 	.map_io		= v2m_dt_map_io,
+ 	.init_early	= v2m_dt_init_early,
+-	.init_irq	= v2m_dt_init_irq,
++	.init_irq	= gic_init_irq,
+ 	.timer		= &v2m_dt_timer,
+ 	.init_machine	= v2m_dt_init,
+ 	.handle_irq	= gic_handle_irq,
 -- 
 1.7.8.110.g4cb5d
