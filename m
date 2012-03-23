@@ -1,7 +1,7 @@
 From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] mtd: fsmc-nand: Update compatible property
-Date: Fri, 23 Mar 2012 14:15:32 +0530
-Message-ID: <2667979af077daa0f1bff81db7e25f5c8157b4bc.1332492218.git.viresh.kumar@st.com>
+Subject: [PATCH] mtd: spear-smi: Update compatible property
+Date: Fri, 23 Mar 2012 14:18:07 +0530
+Message-ID: <97859bb4d86d008968a784339be8567094c487a1.1332492461.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -19,52 +19,52 @@ To: sr-ynQEQJNshbs@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@pub
 Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-FSMC NAND driver can verify device version by itself and so we wouldn't be
-required to have separate .compatible entries for different SPEAr SoCs.
+SPEAr SMI controller version is same for all SPEAr machines. Thus we don't need
+per machine compatible property in driver.
 
-Thus this patch updates compatible entry to: "st,spear-fsmc-nand", so that it
+Thus this patch updates compatible entry to: "st,spear-smi", so that it
 works for all SPEAr machines.
 
 Signed-off-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
 ---
- .../devicetree/bindings/mtd/fsmc-nand.txt          |    4 ++--
- drivers/mtd/nand/fsmc_nand.c                       |    2 +-
+ .../devicetree/bindings/mtd/spear_smi.txt          |    4 ++--
+ drivers/mtd/devices/spear_smi.c                    |    2 +-
  2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/fsmc-nand.txt b/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-index e2c663b..7551600 100644
---- a/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
+diff --git a/Documentation/devicetree/bindings/mtd/spear_smi.txt b/Documentation/devicetree/bindings/mtd/spear_smi.txt
+index 7248aad..80dfd96 100644
+--- a/Documentation/devicetree/bindings/mtd/spear_smi.txt
++++ b/Documentation/devicetree/bindings/mtd/spear_smi.txt
 @@ -1,7 +1,7 @@
- * FSMC NAND
+ * SPEAr SMI
  
  Required properties:
--- compatible : "st,spear600-fsmc-nand"
-+- compatible : "st,spear-fsmc-nand"
+-- compatible : "st,spear600-smi"
++- compatible : "st,spear-smi"
  - reg : Address range of the mtd chip
- - reg-names: Should contain the reg names "fsmc_regs" and "nand_data"
- - st,ale-off : Chip specific offset to ALE
-@@ -15,7 +15,7 @@ Optional properties:
+ - #address-cells, #size-cells : Must be present if the device has sub-nodes
+   representing partitions.
+@@ -16,7 +16,7 @@ Optional properties:
  Example:
  
- 	fsmc: flash@d1800000 {
--		compatible = "st,spear600-fsmc-nand";
-+		compatible = "st,spear-fsmc-nand";
+ 	smi: flash@fc000000 {
+-		compatible = "st,spear600-smi";
++		compatible = "st,spear-smi";
  		#address-cells = <1>;
  		#size-cells = <1>;
- 		reg = <0xd1800000 0x1000	/* FSMC Register */
-diff --git a/drivers/mtd/nand/fsmc_nand.c b/drivers/mtd/nand/fsmc_nand.c
-index 1b8330e..ecb103e 100644
---- a/drivers/mtd/nand/fsmc_nand.c
-+++ b/drivers/mtd/nand/fsmc_nand.c
-@@ -1231,7 +1231,7 @@ static SIMPLE_DEV_PM_OPS(fsmc_nand_pm_ops, fsmc_nand_suspend, fsmc_nand_resume);
+ 		reg = <0xfc000000 0x1000>;
+diff --git a/drivers/mtd/devices/spear_smi.c b/drivers/mtd/devices/spear_smi.c
+index bebce11..f392594 100644
+--- a/drivers/mtd/devices/spear_smi.c
++++ b/drivers/mtd/devices/spear_smi.c
+@@ -1113,7 +1113,7 @@ int spear_smi_resume(struct platform_device *pdev)
  
  #ifdef CONFIG_OF
- static const struct of_device_id fsmc_nand_id_table[] = {
--	{ .compatible = "st,spear600-fsmc-nand" },
-+	{ .compatible = "st,spear-fsmc-nand" },
+ static const struct of_device_id spear_smi_id_table[] = {
+-	{ .compatible = "st,spear600-smi" },
++	{ .compatible = "st,spear-smi" },
  	{}
  };
- MODULE_DEVICE_TABLE(of, fsmc_nand_id_table);
+ MODULE_DEVICE_TABLE(of, spear_smi_id_table);
 -- 
 1.7.8.110.g4cb5d
