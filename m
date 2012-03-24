@@ -1,15 +1,14 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] ARM: kirkwood: Basic support for DNS-320 and
- DNS-325
-Date: Sat, 24 Mar 2012 19:26:00 +0000
-Message-ID: <201203241926.00597.arnd@arndb.de>
-References: <1332594876-8673-1-git-send-email-jm@lentin.co.uk>
- <1332594876-8673-2-git-send-email-jm@lentin.co.uk>
+From: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
+Subject: Re: [PATCH] scripts: dtc: fix compile warnings
+Date: Sat, 24 Mar 2012 23:13:47 +0100
+Message-ID: <20120324221347.GA8947@sepie.suse.cz>
+References: <1327576807-19216-1-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1332594876-8673-2-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1327576807-19216-1-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,28 +18,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 24 March 2012, Jamie Lentin wrote:
-> 
-> Add support for the DNS-320 and DNS-325. Describe as much as currently possible
-> in the devicetree files, create a board-dnskw.c for everything else.
-> 
-> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-
-Looks good to me. 
-
-Jason, do you want to add these to your tree? You are already have some
-the patches for dreamplug, and I think it makes sense to update these two
-together when you have more patches.
-
-Since the dnskw board file contains mostly gpio setup, I think it would
-be good if one of you could take that part on next: once the gpio controller
-uses DT probing, you can move all the gpio leds and buttons into the
-device tree, which drastically shrinks the dnskw file.
-
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-	Arnd
+T24gVGh1LCBKYW4gMjYsIDIwMTIgYXQgMDE6MjA6MDdQTSArMDIwMCwgRmVsaXBlIEJhbGJpIHdy
+b3RlOgo+IEZpeCBmb2xsb3dpbmcgY29tcGlsZSB3YXJuaW5nczoKPiAKPiBzY3JpcHRzL2R0Yy9m
+bGF0dHJlZS5jOiBJbiBmdW5jdGlvbiDigJhmbGF0X3JlYWRfbWVtX3Jlc2VydmXigJk6Cj4gc2Ny
+aXB0cy9kdGMvZmxhdHRyZWUuYzo3MDA6MTQ6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmHDigJkgc2V0
+IGJ1dCBub3QgdXNlZAo+IAlbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0KPiAKPiBzY3JpcHRz
+L2R0Yy9kdGMuYzogSW4gZnVuY3Rpb24g4oCYbWFpbuKAmToKPiBzY3JpcHRzL2R0Yy9kdGMuYzox
+MDQ6MTc6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmGNoZWNr4oCZIHNldCBidXQgbm90IHVzZWQKPiAJ
+Wy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdCj4gCj4gU2lnbmVkLW9mZi1ieTogRmVsaXBlIEJh
+bGJpIDxiYWxiaUB0aS5jb20+CgpUaGlzIHdhcyBzb21laG93IGZvcmdvdHRlbiwgSSBhcHBsaWVk
+IHRoZSBwYXRjaCB0byBrYnVpbGQuZ2l0I2tidWlsZCBub3cuCgo+IC0tLQo+ICBzY3JpcHRzL2R0
+Yy9kdGMuYyAgICAgIHwgICAgNSArLS0tLQo+ICBzY3JpcHRzL2R0Yy9mbGF0dHJlZS5jIHwgICAg
+MiAtLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDEgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkK
+PiAKPiBkaWZmIC0tZ2l0IGEvc2NyaXB0cy9kdGMvZHRjLmMgYi9zY3JpcHRzL2R0Yy9kdGMuYwo+
+IGluZGV4IDQ1MWM5MmQuLjJlZjVlMmUgMTAwNjQ0Cj4gLS0tIGEvc2NyaXB0cy9kdGMvZHRjLmMK
+PiArKysgYi9zY3JpcHRzL2R0Yy9kdGMuYwo+IEBAIC0xMDEsNyArMTAxLDcgQEAgaW50IG1haW4o
+aW50IGFyZ2MsIGNoYXIgKmFyZ3ZbXSkKPiAgCWNvbnN0IGNoYXIgKm91dGZvcm0gPSAiZHRzIjsK
+PiAgCWNvbnN0IGNoYXIgKm91dG5hbWUgPSAiLSI7Cj4gIAljb25zdCBjaGFyICpkZXBuYW1lID0g
+TlVMTDsKPiAtCWludCBmb3JjZSA9IDAsIGNoZWNrID0gMCwgc29ydCA9IDA7Cj4gKwlpbnQgZm9y
+Y2UgPSAwLCBzb3J0ID0gMDsKPiAgCWNvbnN0IGNoYXIgKmFyZzsKPiAgCWludCBvcHQ7Cj4gIAlG
+SUxFICpvdXRmID0gTlVMTDsKPiBAQCAtMTQzLDkgKzE0Myw2IEBAIGludCBtYWluKGludCBhcmdj
+LCBjaGFyICphcmd2W10pCj4gIAkJY2FzZSAnZic6Cj4gIAkJCWZvcmNlID0gMTsKPiAgCQkJYnJl
+YWs7Cj4gLQkJY2FzZSAnYyc6Cj4gLQkJCWNoZWNrID0gMTsKPiAtCQkJYnJlYWs7CgpCVFcsIHlv
+dSBzaG91bGQgYWxzbyByZW1vdmUgJ2MnIGZyb20gdGhlIGdldG9wdCgpIHN0cmluZy4KCk1pY2hh
+bApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0
+cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMu
+b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
