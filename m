@@ -1,244 +1,55 @@
-From: Jamie Lentin <jm@lentin.co.uk>
-Subject: [PATCH V2 2/3] ARM: kirkwood: Convert orion-nand to fdt
-Date: Sat, 24 Mar 2012 13:14:35 +0000
-Message-ID: <1332594876-8673-3-git-send-email-jm@lentin.co.uk>
-References: <1332594876-8673-1-git-send-email-jm@lentin.co.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of/irq: add empty irq_of_parse_and_map() for non-dt builds
+Date: Sat, 24 Mar 2012 08:18:05 -0500
+Message-ID: <4F6DC98D.9040800@gmail.com>
+References: <1332581257-15989-1-git-send-email-thomas.abraham@linaro.org> <4F6DC847.8000902@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1332594876-8673-1-git-send-email-jm@lentin.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Jason <jason@lakedaemon.net>
-Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F6DC847.8000902@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Convert orion-nand to use fdt and add common setup to kirkwood.dtsi, including
-a default value for chip-delay (all current boards seem to use 25 anyway).
+On 03/24/2012 08:12 AM, Rob Herring wrote:
+> On 03/24/2012 04:27 AM, Thomas Abraham wrote:
+>> Add a empty irq_of_parse_and_map() that returns 0 for non-dt builds and
+>> avoid having #ifdef CONFIG_OF around all calls to irq_of_parse_and_map().
+>>
+>> Suggested-by: Grant Likely <grant.likely@secretlab.ca>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+> 
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
+> 
+> Go ahead and merge with the rest of your series.
+> 
 
-Add placeholder documentation for the bindings, for someone more knowledgable
-than me to fill in the details of the properties.
+Screwed up the lkml address, so just adding it back...
 
-Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
----
- .../devicetree/bindings/mtd/orion-nand.txt         |   46 ++++++++++++++++++++
- arch/arm/boot/dts/kirkwood.dtsi                    |   15 ++++++-
- arch/arm/mach-kirkwood/common.c                    |   12 +++++
- drivers/mtd/nand/orion_nand.c                      |   34 ++++++++++++++-
- 4 files changed, 104 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
+Rob
 
-diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-new file mode 100644
-index 0000000..d347999
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-@@ -0,0 +1,46 @@
-+NAND support for Marvell Orion SoC platforms
-+
-+Required properties:
-+- compatible : "mrvl,orion-nand".
-+- reg : Base physical address of the NAND and length of memory mapped
-+	region
-+
-+Optional properties:
-+- cle :
-+- ale :
-+- width :
-+- chip-delay :
-+
-+Examples:
-+
-+nand@f4000000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	cle = <0>;
-+	ale = <1>;
-+	width = <8>;
-+	chip-delay = <25>;
-+	compatible = "mrvl,orion-nand";
-+	reg = <0xf4000000 0x400>;
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0x100000>;
-+		read-only;
-+	};
-+
-+	partition@100000 {
-+		label = "uImage";
-+		reg = <0x0100000 0x200000>;
-+	};
-+
-+	partition@300000 {
-+		label = "dtb";
-+		reg = <0x0300000 0x100000>;
-+	};
-+
-+	partition@400000 {
-+		label = "root";
-+		reg = <0x0400000 0x7d00000>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index 3474ef8..82ffc3e 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -5,7 +5,7 @@
- 
- 	ocp@f1000000 {
- 		compatible = "simple-bus";
--		ranges = <0 0xf1000000 0x1000000>;
-+		ranges = <0 0xf1000000 0x4000000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-@@ -32,5 +32,18 @@
- 			reg = <0x10300 0x20>;
- 			interrupts = <53>;
- 		};
-+
-+		nand@3000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			cle = <0>;
-+			ale = <1>;
-+			width = <8>;
-+			compatible = "mrvl,orion-nand";
-+			reg = <0x3000000 0x400>;
-+			chip-delay = <25>;
-+			/* set partition map and/or chip-delay in board dts */
-+			status = "disabled";
-+		};
- 	};
- };
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index a02cae8..3ad0373 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -15,6 +15,7 @@
- #include <linux/ata_platform.h>
- #include <linux/mtd/nand.h>
- #include <linux/dma-mapping.h>
-+#include <linux/of.h>
- #include <net/dsa.h>
- #include <asm/page.h>
- #include <asm/timex.h>
-@@ -482,6 +483,9 @@ static int __init kirkwood_clock_gate(void)
- 	unsigned int curr = readl(CLOCK_GATING_CTRL);
- 	u32 dev, rev;
- 
-+#ifdef CONFIG_OF
-+	struct device_node *np;
-+#endif
- 	kirkwood_pcie_id(&dev, &rev);
- 	printk(KERN_DEBUG "Gating clock of unused units\n");
- 	printk(KERN_DEBUG "before: 0x%08x\n", curr);
-@@ -489,6 +493,14 @@ static int __init kirkwood_clock_gate(void)
- 	/* Make sure those units are accessible */
- 	writel(curr | CGC_SATA0 | CGC_SATA1 | CGC_PEX0 | CGC_PEX1, CLOCK_GATING_CTRL);
- 
-+#ifdef CONFIG_OF
-+	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-nand");
-+	if (np && of_device_is_available(np)) {
-+		kirkwood_clk_ctrl |= CGC_RUNIT;
-+		of_node_put(np);
-+	}
-+#endif
-+
- 	/* For SATA: first shutdown the phy */
- 	if (!(kirkwood_clk_ctrl & CGC_SATA0)) {
- 		/* Disable PLL and IVREF */
-diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-index 29f505a..4cb0244 100644
---- a/drivers/mtd/nand/orion_nand.c
-+++ b/drivers/mtd/nand/orion_nand.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
-@@ -74,11 +75,13 @@ static void orion_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
- static int __init orion_nand_probe(struct platform_device *pdev)
- {
- 	struct mtd_info *mtd;
-+	struct mtd_part_parser_data ppdata = {};
- 	struct nand_chip *nc;
- 	struct orion_nand_data *board;
- 	struct resource *res;
- 	void __iomem *io_base;
- 	int ret = 0;
-+	u32 val = 0;
- 
- 	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
- 	if (!nc) {
-@@ -101,7 +104,25 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 		goto no_res;
- 	}
- 
--	board = pdev->dev.platform_data;
-+	if (pdev->dev.of_node) {
-+		board = devm_kzalloc(&pdev->dev, sizeof(struct orion_nand_data),
-+					GFP_KERNEL);
-+		if (!board) {
-+			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
-+			ret = -ENOMEM;
-+			goto no_res;
-+		}
-+		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
-+			board->cle = (u8)val;
-+		if (!of_property_read_u32(pdev->dev.of_node, "ale", &val))
-+			board->ale = (u8)val;
-+		if (!of_property_read_u32(pdev->dev.of_node, "width", &val))
-+			board->width = (u8)val;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+						"chip-delay", &val))
-+			board->chip_delay = (u8)val;
-+	} else
-+		board = pdev->dev.platform_data;
- 
- 	mtd->priv = nc;
- 	mtd->owner = THIS_MODULE;
-@@ -129,7 +150,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 	}
- 
- 	mtd->name = "orion_nand";
--	ret = mtd_device_parse_register(mtd, NULL, 0,
-+	ppdata.of_node = pdev->dev.of_node;
-+	ret = mtd_device_parse_register(mtd, NULL, &ppdata,
- 			board->parts, board->nr_parts);
- 	if (ret) {
- 		nand_release(mtd);
-@@ -161,11 +183,19 @@ static int __devexit orion_nand_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id orion_nand_of_match_table[] = {
-+	{ .compatible = "mrvl,orion-nand", },
-+	{},
-+};
-+#endif
-+
- static struct platform_driver orion_nand_driver = {
- 	.remove		= __devexit_p(orion_nand_remove),
- 	.driver		= {
- 		.name	= "orion_nand",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(orion_nand_of_match_table),
- 	},
- };
- 
--- 
-1.7.9.1
+> Rob
+> 
+>>  include/linux/of_irq.h |    6 ++++++
+>>  1 files changed, 6 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+>> index d229ad3..5614355 100644
+>> --- a/include/linux/of_irq.h
+>> +++ b/include/linux/of_irq.h
+>> @@ -76,5 +76,11 @@ extern struct device_node *of_irq_find_parent(struct device_node *child);
+>>  extern void of_irq_init(const struct of_device_id *matches);
+>>  
+>>  #endif /* CONFIG_OF_IRQ */
+>> +#else /* CONFIG_OF */
+>> +static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+>> +						int index)
+>> +{
+>> +	return 0;
+>> +}
+>>  #endif /* CONFIG_OF */
+>>  #endif /* __OF_IRQ_H */
+> 
