@@ -1,15 +1,16 @@
-From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: Re: [PATCH V3 2/3] ARM: kirkwood: Convert orion-nand to fdt
-Date: Sun, 25 Mar 2012 00:17:24 +0000 (GMT)
-Message-ID: <alpine.DEB.2.02.1203250012060.8994@gonzo>
-References: <1332594876-8673-1-git-send-email-jm@lentin.co.uk>
- <1332594876-8673-3-git-send-email-jm@lentin.co.uk>
- <201203241901.00405.arnd@arndb.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device node for a controller with two interrupt parents
+Date: Sat, 24 Mar 2012 19:07:49 +0000
+Message-ID: <20120324190749.CA6F73E0AE2@localhost>
+References: <CAJuYYwT1uKaUDuh98i4B286az-_26YCN31UXXFWsP=_M-UL_vg@mail.gmail.com>
+ <20120321034151.GC15997@truffala.fritz.box>
+ <CAJuYYwSv9aoCWNJ9=m9LjaaGqvzEA07SHt6wT56HTNLQdkNU2Q@mail.gmail.com>
+ <20120321151321.34A813E095F@localhost>
+ <CAJuYYwQapeMthSxSgpaJ5fQNQnyvducgGyi-75WrjZut6akh+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6716536112659686775=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203241901.00405.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <CAJuYYwQapeMthSxSgpaJ5fQNQnyvducgGyi-75WrjZut6akh+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,323 +20,135 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert orion-nand to use fdt and add common setup to kirkwood.dtsi, including
-a default value for chip-delay (all current boards seem to use 25 anyway).
+--===============6716536112659686775==
+Content-Type: text/plain
 
-Add placeholder documentation for the bindings, for someone more knowledgable
-than me to fill in the details of the properties.
+On Fri, 23 Mar 2012 16:18:09 +0530, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Grant,
+> 
+> On 21 March 2012 20:43, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > Okay, so you're saying there are three important aspects to this
+> > device:
+> > 1) it terminates interrupts from other devices (therefore needs an
+> >   interrupt controller driver)
+> > 2) it passes some interrupts through untouched (interrupt controller
+> >   driver doesn't need to touch them; it directly raises an irq on the
+> >   gic or combiner)
+> > 3) It is able generate interrupt signals on it's own (independent of
+> >   any attached devices)
+> >
+> > Do I understand correctly?
+> 
+> #1 is applicable but not #2 and #3 (if I have interpreted the above
+> correctly). The wakeup interrupt controller looks for an edge or level
+> on pins (which are connected to external devices) and generates a
+> interrupt (to gic or combiner) when the set condition on that pin is
+> found (edge or level).
+> 
+> >
+> > Your patch above solves the problem for #2 above, but it breaks #1
+> > because interrupts from external devices can no longer be terminated
+> > on the wakeup controller node (they'll always get passed through).
+> 
+> Ok.
+> 
+> >
+> > --- Possible solution 1 ---
+> > If other devices *don't* use the wakeup node as their interrupt
+> > parent, then you should be able to simply drop the
+> > interrupt-controller property and make the other devices directly
+> > reference the gic and combiner.
+> 
+> Other devices use wakeup node as interrupt controller. The wakeup
+> interrupt controller supports masking, unmasking and prioritization of
+> the wakeup interrupts. The interrupt-controller property can be
+> dropped but then of_irq_init() function cannot be used.
+> 
+> >
+> > --- Possible solution 2 ---
+> > Split the interrupt map into a separate node:
+> >
+> >
+> >        wakeup_eint: interrupt-controller@11000000 {
+> >                compatible = "samsung,exynos4210-wakeup-eint";
+> >                reg = <0x11000000 0x1000>;
+> >                interrupt-controller;
+> >                #interrupt-cells = <1>;
+> >                interrupt-parent = <&wakeup_map>;
+> >                interrupts = <0 1 2 3 f 5 6 7 8 9 10 11 12 13 14 15 16>;
+> >
+> >                wakeup_map: interrupt-map {
+> >                        #interrupt-cells = <1>;
+> >                        #address-cells = <0>;
+> >                        interrupt-map = <0 &gic 0 16 0>,
+> >                                        <1 &gic 0 17 0>,
+> >                                        <2 &gic 0 18 0>,
+> >                                        <3 &gic 0 19 0>,
+> >                                        <4 &gic 0 20 0>,
+> >                                        <5 &gic 0 21 0>,
+> >                                        <6 &gic 0 22 0>,
+> >                                        <7 &gic 0 23 0>,
+> >                                        <8 &gic 0 24 0>,
+> >                                        <9 &gic 0 25 0>,
+> >                                        <10 &gic 0 26 0>,
+> >                                        <11 &gic 0 27 0>,
+> >                                        <12 &gic 0 28 0>,
+> >                                        <13 &gic 0 29 0>,
+> >                                        <14 &gic 0 30 0>,
+> >                                        <15 &gic 0 31 0>,
+> >                                        <16 &combiner 2 4>;
+> >                };
+> >        };
+> 
+> I have tested with this and it works but of_irq_init() function cannot
+> be used because 'wakeup_map' is set as interrupt parent and
+> 'wakeup_map' is not a interrupt-controller. So of_irq_init() does not
+> invoke the initialization function for the wakeup node. If the machine
+> init code explicitly looks for this node and calls the corresponding
+> initialization function, it works fine.
 
-Move common partition table documentation into a separate file and reference
-this.
+That's a bug in of_irq_init() then.  It should be fixed.
 
-Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
----
-Re-arranged documentation as you suggest, however it's tempting to have 
-this as a separate patch and add references to partition.txt for the other 
-binding documentation files. Let me know if you want me to do this.
+> 
+> >
+> > --- possible solution 3 ---
+> > 'interrupts' just isn't sufficient for some devices; add a binding for
+> > a 'interrupts-multiparent' that can be used instead of 'interrupts'
+> > and uses the format <phandle> <specifier> [<phandle> <specifier> [...]].
+> 
+> This would be the ideal case. In addition to this, the
+> interrupt-parent property handling should be modified to support
+> multiple parent phandles like <&parent1 [&parent2] [&parent3] ....>.
+> This will be useful to extend the capability of of_irq_init() to
+> handle interrupt-controller node with multiple interrupt parents.
+> 
+> >
+> > I'm not opposed to this solution since it is a more natural binding
+> > for multiparented interrupt controllers, but I won't commit to it
+> > without feedback and agreement from Mitch, Ben, David Gibson, etc.
+> 
+> Ok. For now, I will go ahead and use solution #2 which you and David
+> have suggested. And correspondingly add explicit lookup of wakeup node
+> and call to its initialization function in the machine init code.
 
-Cheers for your help!
+I'd really prefer a fix to of_irq_init() instead of hacking around it.
 
-  .../devicetree/bindings/mtd/mtd-physmap.txt        |   24 +--------
-  .../devicetree/bindings/mtd/orion-nand.txt         |   50 ++++++++++++++++++++
-  .../devicetree/bindings/mtd/partition.txt          |   38 +++++++++++++++
-  arch/arm/boot/dts/kirkwood.dtsi                    |   15 ++++++-
-  arch/arm/mach-kirkwood/common.c                    |   12 +++++
-  drivers/mtd/nand/orion_nand.c                      |   34 +++++++++++++-
-  6 files changed, 149 insertions(+), 24 deletions(-)
-  create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
-  create mode 100644 Documentation/devicetree/bindings/mtd/partition.txt
+g.
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-index 80152cb..9b873d4 100644
---- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-@@ -23,27 +23,9 @@ are defined:
-   - vendor-id : Contains the flash chip's vendor id (1 byte).
-   - device-id : Contains the flash chip's device id (1 byte).
 
--In addition to the information on the mtd bank itself, the
--device tree may optionally contain additional information
--describing partitions of the address space.  This can be
--used on platforms which have strong conventions about which
--portions of a flash are used for what purposes, but which don't
--use an on-flash partition table such as RedBoot.
--
--Each partition is represented as a sub-node of the mtd device.
--Each node's name represents the name of the corresponding
--partition of the mtd device.
--
--Flash partitions
-- - reg : The partition's offset and size within the mtd bank.
-- - label : (optional) The label / name for this partition.
--   If omitted, the label is taken from the node name (excluding
--   the unit address).
-- - read-only : (optional) This parameter, if present, is a hint to
--   Linux that this partition should only be mounted
--   read-only.  This is usually used for flash partitions
--   containing early-boot firmware images or data which should not
--   be clobbered.
-+In addition to the information on the mtd bank itself, the device tree may
-+optionally contain additional sub-nodes describing partitions of the address
-+space. See partition.txt for more detail.
+--===============6716536112659686775==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-  Example:
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-new file mode 100644
-index 0000000..e9acbd2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-@@ -0,0 +1,50 @@
-+NAND support for Marvell Orion SoC platforms
-+
-+Required properties:
-+- compatible : "mrvl,orion-nand".
-+- reg : Base physical address of the NAND and length of memory mapped
-+	region
-+
-+Optional properties:
-+- cle :
-+- ale :
-+- bank-width :
-+- chip-delay :
-+
-+In addition to the information on the mtd bank itself, the device tree may
-+optionally contain additional sub-nodes describing partitions of the address
-+space. See partition.txt for more detail.
-+
-+Examples:
-+
-+nand@f4000000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	cle = <0>;
-+	ale = <1>;
-+	bank-width = <8>;
-+	chip-delay = <25>;
-+	compatible = "mrvl,orion-nand";
-+	reg = <0xf4000000 0x400>;
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0x100000>;
-+		read-only;
-+	};
-+
-+	partition@100000 {
-+		label = "uImage";
-+		reg = <0x0100000 0x200000>;
-+	};
-+
-+	partition@300000 {
-+		label = "dtb";
-+		reg = <0x0300000 0x100000>;
-+	};
-+
-+	partition@400000 {
-+		label = "root";
-+		reg = <0x0400000 0x7d00000>;
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-new file mode 100644
-index 0000000..f114ce1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/partition.txt
-@@ -0,0 +1,38 @@
-+Representing flash partitions in devicetree
-+
-+Partitions can be represented by sub-nodes of an mtd device. This can be used
-+on platforms which have strong conventions about which portions of a flash are
-+used for what purposes, but which don't use an on-flash partition table such
-+as RedBoot.
-+
-+#address-cells & #size-cells must both be present in the mtd device and be
-+equal to 1.
-+
-+Required properties:
-+- reg : The partition's offset and size within the mtd bank.
-+
-+Optional properties:
-+- label : The label / name for this partition.  If omitted, the label is taken
-+  from the node name (excluding the unit address).
-+- read-only : This parameter, if present, is a hint to Linux that this
-+  partition should only be mounted read-only. This is usually used for flash
-+  partitions containing early-boot firmware images or data which should not be
-+  clobbered.
-+
-+Examples:
-+
-+
-+flash@0 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0x100000>;
-+		read-only;
-+	};
-+
-+	uimage@100000 {
-+		reg = <0x0100000 0x200000>;
-+	};
-+];
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index 3474ef8..6b80374 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -5,7 +5,7 @@
-
-  	ocp@f1000000 {
-  		compatible = "simple-bus";
--		ranges = <0 0xf1000000 0x1000000>;
-+		ranges = <0 0xf1000000 0x4000000>;
-  		#address-cells = <1>;
-  		#size-cells = <1>;
-
-@@ -32,5 +32,18 @@
-  			reg = <0x10300 0x20>;
-  			interrupts = <53>;
-  		};
-+
-+		nand@3000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			cle = <0>;
-+			ale = <1>;
-+			bank-width = <8>;
-+			compatible = "mrvl,orion-nand";
-+			reg = <0x3000000 0x400>;
-+			chip-delay = <25>;
-+			/* set partition map and/or chip-delay in board dts */
-+			status = "disabled";
-+		};
-  	};
-  };
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index a02cae8..3ad0373 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -15,6 +15,7 @@
-  #include <linux/ata_platform.h>
-  #include <linux/mtd/nand.h>
-  #include <linux/dma-mapping.h>
-+#include <linux/of.h>
-  #include <net/dsa.h>
-  #include <asm/page.h>
-  #include <asm/timex.h>
-@@ -482,6 +483,9 @@ static int __init kirkwood_clock_gate(void)
-  	unsigned int curr = readl(CLOCK_GATING_CTRL);
-  	u32 dev, rev;
-
-+#ifdef CONFIG_OF
-+	struct device_node *np;
-+#endif
-  	kirkwood_pcie_id(&dev, &rev);
-  	printk(KERN_DEBUG "Gating clock of unused units\n");
-  	printk(KERN_DEBUG "before: 0x%08x\n", curr);
-@@ -489,6 +493,14 @@ static int __init kirkwood_clock_gate(void)
-  	/* Make sure those units are accessible */
-  	writel(curr | CGC_SATA0 | CGC_SATA1 | CGC_PEX0 | CGC_PEX1, CLOCK_GATING_CTRL);
-
-+#ifdef CONFIG_OF
-+	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-nand");
-+	if (np && of_device_is_available(np)) {
-+		kirkwood_clk_ctrl |= CGC_RUNIT;
-+		of_node_put(np);
-+	}
-+#endif
-+
-  	/* For SATA: first shutdown the phy */
-  	if (!(kirkwood_clk_ctrl & CGC_SATA0)) {
-  		/* Disable PLL and IVREF */
-diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-index 29f505a..6a5f47b 100644
---- a/drivers/mtd/nand/orion_nand.c
-+++ b/drivers/mtd/nand/orion_nand.c
-@@ -13,6 +13,7 @@
-  #include <linux/slab.h>
-  #include <linux/module.h>
-  #include <linux/platform_device.h>
-+#include <linux/of.h>
-  #include <linux/mtd/mtd.h>
-  #include <linux/mtd/nand.h>
-  #include <linux/mtd/partitions.h>
-@@ -74,11 +75,13 @@ static void orion_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
-  static int __init orion_nand_probe(struct platform_device *pdev)
-  {
-  	struct mtd_info *mtd;
-+	struct mtd_part_parser_data ppdata = {};
-  	struct nand_chip *nc;
-  	struct orion_nand_data *board;
-  	struct resource *res;
-  	void __iomem *io_base;
-  	int ret = 0;
-+	u32 val = 0;
-
-  	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
-  	if (!nc) {
-@@ -101,7 +104,25 @@ static int __init orion_nand_probe(struct platform_device *pdev)
-  		goto no_res;
-  	}
-
--	board = pdev->dev.platform_data;
-+	if (pdev->dev.of_node) {
-+		board = devm_kzalloc(&pdev->dev, sizeof(struct orion_nand_data),
-+					GFP_KERNEL);
-+		if (!board) {
-+			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
-+			ret = -ENOMEM;
-+			goto no_res;
-+		}
-+		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
-+			board->cle = (u8)val;
-+		if (!of_property_read_u32(pdev->dev.of_node, "ale", &val))
-+			board->ale = (u8)val;
-+		if (!of_property_read_u32(pdev->dev.of_node, "bank-width", &val))
-+			board->width = (u8)val;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+						"chip-delay", &val))
-+			board->chip_delay = (u8)val;
-+	} else
-+		board = pdev->dev.platform_data;
-
-  	mtd->priv = nc;
-  	mtd->owner = THIS_MODULE;
-@@ -129,7 +150,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
-  	}
-
-  	mtd->name = "orion_nand";
--	ret = mtd_device_parse_register(mtd, NULL, 0,
-+	ppdata.of_node = pdev->dev.of_node;
-+	ret = mtd_device_parse_register(mtd, NULL, &ppdata,
-  			board->parts, board->nr_parts);
-  	if (ret) {
-  		nand_release(mtd);
-@@ -161,11 +183,19 @@ static int __devexit orion_nand_remove(struct platform_device *pdev)
-  	return 0;
-  }
-
-+#ifdef CONFIG_OF
-+static struct of_device_id orion_nand_of_match_table[] = {
-+	{ .compatible = "mrvl,orion-nand", },
-+	{},
-+};
-+#endif
-+
-  static struct platform_driver orion_nand_driver = {
-  	.remove		= __devexit_p(orion_nand_remove),
-  	.driver		= {
-  		.name	= "orion_nand",
-  		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(orion_nand_of_match_table),
-  	},
-  };
-
--- 
-1.7.9.1
+--===============6716536112659686775==--
