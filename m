@@ -1,48 +1,66 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] of/irq: add empty irq_of_parse_and_map() for non-dt builds
-Date: Sat, 24 Mar 2012 14:57:37 +0530
-Message-ID: <1332581257-15989-1-git-send-email-thomas.abraham@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v5 0/2] ARM: Exynos: Add irq_domain and device tree support for
+ combiner
+Date: Sat, 24 Mar 2012 15:03:01 +0530
+Message-ID: <1332581583-16100-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add a empty irq_of_parse_and_map() that returns 0 for non-dt builds and
-avoid having #ifdef CONFIG_OF around all calls to irq_of_parse_and_map().
+Changes since v4:
+- In patch 2/2, removed the #ifdef CONFIF_OF around irq_of_parse_and_map() as
+  suggested by Grant Likely. Hence this patch series depends on the patch
+  with subject "of/irq: add empty irq_of_parse_and_map() for non-dt builds".
 
-Suggested-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- include/linux/of_irq.h |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+- Rebased to the latest kgene/for-next branch which now includes support for
+  Exynos5. Since this patchset modifies portions of code that are common for
+  both Exynos4 and Exynos5, there are minor modifications in this patch series
+  to accommodate Exynos5 dt support as well.
 
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index d229ad3..5614355 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -76,5 +76,11 @@ extern struct device_node *of_irq_find_parent(struct device_node *child);
- extern void of_irq_init(const struct of_device_id *matches);
- 
- #endif /* CONFIG_OF_IRQ */
-+#else /* CONFIG_OF */
-+static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
-+						int index)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_OF */
- #endif /* __OF_IRQ_H */
--- 
-1.6.6.rc2
+- v4 of this patchset was acked by Grant Likely and Rob Herring. This patch
+  series (v5) has minor modifications over v4 to include Exynos5 support. Since
+  those modifications are minor (not related to irq_domain or dt functionality),
+  I am retaining the Ack from Grant and Rob for this series.
+
+Changes since v3:
+- In dt case, the use of fixed gic linux irq number to map the combiner
+  interrupt output is removed. This is replaced with the interrupt number
+  obtained from the gic irq domain. (Thanks to Rob Herring and Grant
+  Likely for this suggestion).
+- Split the patch into two parts - irq_domain and device tree support
+  addition.
+
+Changes since v2:
+- Rebased to Grant's irqdomain/next branch.
+
+Changes since v1:
+- Includes all changes suggested by Rob Herring.
+- Tested with SPARSE_IRQ enabled.
+
+This patchset adds irq_domain and device tree support for the Exynos Interrupt
+Combiner controller.
+
+The first patch adds a common irq domain for the interrupts managed by the
+interrupt combiners. All the instances of irq combiner reference the common irq
+domain for translating hardware interrupts to linux irq number.
+
+The second patch adds a interrupt specifier translator to support device tree
+based instantiation. It can translate interrupt specifiers for device nodes
+which use combiner as their interrupt parent.
+
+This patchset is based on
+http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git [for-next]
+
+with all patches merged from
+http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
+
+Thomas Abraham (2):
+  ARM: Exynos: Add irq_domain support for interrupt combiner
+  ARM: Exynos: Add device tree support for interrupt combiner
+
+ .../bindings/arm/samsung/interrupt-combiner.txt    |   52 ++++++++
+ arch/arm/mach-exynos/common.c                      |  138 ++++++++++++++-----
+ 2 files changed, 153 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung/interrupt-combiner.txt
