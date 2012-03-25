@@ -1,60 +1,48 @@
 From: viresh kumar <viresh.linux@gmail.com>
-Subject: Re: [PATCH] mtd: spear-smi: Update compatible property
-Date: Sun, 25 Mar 2012 12:55:45 +0530
-Message-ID: <CAOh2x=kjaSzBJf6QMrPXLggEdE5ioY1=KtBX2B6f9Pf+ujwNYw@mail.gmail.com>
-References: <97859bb4d86d008968a784339be8567094c487a1.1332492461.git.viresh.kumar@st.com>
- <4F6C8451.1020005@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: VIC: Create common infrastructure for vic DT
+ bindings
+Date: Sun, 25 Mar 2012 13:01:32 +0530
+Message-ID: <CAOh2x=n-sZ6jV1M9XY9cOp7_8EeRfvqkjL5y3AakgpYymFRHkg@mail.gmail.com>
+References: <4bfe7af3761f6f40506a2089fd67866015f6d7f3.1332488625.git.viresh.kumar@st.com>
+ <4F6C6F32.10800@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <4F6C8451.1020005@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: linux-mtd-bounces@lists.infradead.org
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F6C6F32.10800@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robherring2@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@ozlabs.org, artem.bityutskiy@linux.intel.com, spear-devel@list.st.com, linux-mtd@lists.infradead.org, sr@denx.de
+Cc: devicetree-discuss@ozlabs.org, linux@arm.linux.org.uk, linus.walleij@stericsson.com, pawel.moll@arm.com, srinidhi.kasagar@stericsson.com, spear-devel@list.st.com, rob.herring@calxeda.com, kgene.kim@samsung.com, arnd@arndb.de, kernel@pengutronix.de, ccross@android.com, sr@denx.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2012 at 7:40 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On 03/23/2012 03:48 AM, Viresh Kumar wrote:
->> SPEAr SMI controller version is same for all SPEAr machines. Thus we don't need
->> per machine compatible property in driver.
+On Fri, Mar 23, 2012 at 6:10 PM, Rob Herring <robherring2@gmail.com> wrote:
+> NAK
 >
-> Until the next chip...
+> None of these platforms have gpio interrupts or any other board
+> interrupt controllers which need to be initialized early?
 
-Sorry couldn't get you point here.
+Atleast SPEAr600 have GPIO interrupts.
 
->> Thus this patch updates compatible entry to: "st,spear-smi", so that it
->> works for all SPEAr machines.
->
-> There is no reason all machines can't use "st,spear600-smi" in their
-> dts. It doesn't have to be a spear600, just compatible with it. Really
-> you want the string to be the oldest SOC the block is in and then newer
-> SOCs can claim compatibility with the old version.
+> I don't think DT conversions are complete enough to tell.
 
-Got your point. But actually as we just had smi DT support patch recently,
-so we can name it better right now. In future, i agree with your point.
+Couldn't get your comment, sorry.
 
-> This is also bad that you would break any existing dtb's out there. This
-> is probably not a concern yet since it's all new and in transition, but
-> down the road this is something that can't be done.
+> We could do something like this, but there only needs to be a single
+> match list of all controllers and function. We should consolidate the
+> irqchips to drivers/irqchip first though. I have that action from Connect...
 
-Yes i agree. Actually i had patch for spear600-evb.dts ready with me, but
-just wanted to have inputs on this change before posting the complete
-patchset.
-
-Would post both patches again, with my 3xx DT support.
+That would be good.
+I am updating DT support for SPEAr3xx, where i need to use VIC OF
+support. So i would still like to get this patch going and you can consilidate
+code at irqchips level later. What do you say?
 
 --
 viresh
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
