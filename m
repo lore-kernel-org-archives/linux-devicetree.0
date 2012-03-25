@@ -1,48 +1,33 @@
-From: viresh kumar <viresh.linux@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: VIC: Create common infrastructure for vic DT
- bindings
-Date: Sun, 25 Mar 2012 13:01:32 +0530
-Message-ID: <CAOh2x=n-sZ6jV1M9XY9cOp7_8EeRfvqkjL5y3AakgpYymFRHkg@mail.gmail.com>
-References: <4bfe7af3761f6f40506a2089fd67866015f6d7f3.1332488625.git.viresh.kumar@st.com>
- <4F6C6F32.10800@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V3 2/3] ARM: kirkwood: Convert orion-nand to fdt
+Date: Sun, 25 Mar 2012 07:52:56 +0000
+Message-ID: <201203250752.56733.arnd@arndb.de>
+References: <1332594876-8673-1-git-send-email-jm@lentin.co.uk>
+ <201203241901.00405.arnd@arndb.de> <alpine.DEB.2.02.1203250012060.8994@gonzo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F6C6F32.10800@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@ozlabs.org, linux@arm.linux.org.uk, linus.walleij@stericsson.com, pawel.moll@arm.com, srinidhi.kasagar@stericsson.com, spear-devel@list.st.com, rob.herring@calxeda.com, kgene.kim@samsung.com, arnd@arndb.de, kernel@pengutronix.de, ccross@android.com, sr@denx.de, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1203250012060.8994@gonzo>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2012 at 6:10 PM, Rob Herring <robherring2@gmail.com> wrote:
-> NAK
->
-> None of these platforms have gpio interrupts or any other board
-> interrupt controllers which need to be initialized early?
+On Sunday 25 March 2012, Jamie Lentin wrote:
+> Re-arranged documentation as you suggest, however it's tempting to have 
+> this as a separate patch and add references to partition.txt for the other 
+> binding documentation files. Let me know if you want me to do this.
+> 
 
-Atleast SPEAr600 have GPIO interrupts.
+Sounds lika a good idea, yes. This version is also fine with me though,
 
-> I don't think DT conversions are complete enough to tell.
-
-Couldn't get your comment, sorry.
-
-> We could do something like this, but there only needs to be a single
-> match list of all controllers and function. We should consolidate the
-> irqchips to drivers/irqchip first though. I have that action from Connect...
-
-That would be good.
-I am updating DT support for SPEAr3xx, where i need to use VIC OF
-support. So i would still like to get this patch going and you can consilidate
-code at irqchips level later. What do you say?
-
---
-viresh
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
