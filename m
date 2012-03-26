@@ -1,83 +1,147 @@
 From: Viresh Kumar <viresh.kumar@st.com>
-Subject: [PATCH] rtc/spear: Add Device Tree probing capability
-Date: Mon, 26 Mar 2012 15:24:22 +0530
-Message-ID: <8747a4b3bdcfb7b3384c14ca909228e1164d0fc5.1332755275.git.viresh.kumar@st.com>
+Subject: [PATCH 1/2] input/of_keymap: Convert kzalloc to devm_kzalloc derivative
+Date: Mon, 26 Mar 2012 15:15:12 +0530
+Message-ID: <2d5fee8dbe4d188cad43b5e60e9bc8df682781a0.1332754641.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: akpm@linux-foundation.org
-Cc: devicetree-discuss@lists.ozlabs.org, rajeev-dlh.kumar@st.com, sr@denx.de, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, a.zummo@towertech.it, spear-devel@list.st.com, viresh.linux@gmail.com, Viresh Kumar <viresh.kumar@st.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: spear-devel@list.st.com, viresh.linux@gmail.com, swarren@nvidia.com, rajeev-dlh.kumar@st.com, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-SPEAr platforms now support DT and so must convert all drivers support DT. This
-patch adds DT probing support for rtc and updates its documentation too.
+matrix_keyboard_of_fill_keymap() routines allocates memory using kzalloc()
+routine. It is freed on call to matrix_keyboard_of_free_keymap() routine.
+
+This patch converts these kzalloc() calls to devm_kzalloc() and thus we don't
+require matrix_keyboard_of_free_keymap() anymore.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
 ---
- Documentation/devicetree/bindings/rtc/spear-rtc.txt |   18 ++++++++++++++++++
- drivers/rtc/rtc-spear.c                             |   10 ++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/spear-rtc.txt
+ drivers/input/keyboard/tegra-kbc.c  |   10 +++-------
+ drivers/input/of_keymap.c           |   18 +++++-------------
+ include/linux/input/matrix_keypad.h |   14 ++++----------
+ 3 files changed, 12 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/spear-rtc.txt b/Documentation/devicetree/bindings/rtc/spear-rtc.txt
-new file mode 100644
-index 0000000..928410f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/spear-rtc.txt
-@@ -0,0 +1,18 @@
-+* SPEAr RTC
-+
-+Required properties:
-+- compatible : "st,spear-rtc"
-+- reg : Address range of the rtc registers
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+- interrupt: Should contain the rtc interrupt number
-+
-+Example:
-+
-+	rtc@fc000000 {
-+		compatible = "st,spear-rtc";
-+		reg = <0xfc000000 0x1000>;
-+		interrupt-parent = <&vic1>;
-+		interrupts = <12>;
-+	};
-+
-diff --git a/drivers/rtc/rtc-spear.c b/drivers/rtc/rtc-spear.c
-index e38da0d..4a12fe5 100644
---- a/drivers/rtc/rtc-spear.c
-+++ b/drivers/rtc/rtc-spear.c
-@@ -16,6 +16,7 @@
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/rtc.h>
- #include <linux/slab.h>
-@@ -519,6 +520,14 @@ static void spear_rtc_shutdown(struct platform_device *pdev)
- 	clk_disable(config->clk);
+diff --git a/drivers/input/keyboard/tegra-kbc.c b/drivers/input/keyboard/tegra-kbc.c
+index 21c42f8..40ee63f 100644
+--- a/drivers/input/keyboard/tegra-kbc.c
++++ b/drivers/input/keyboard/tegra-kbc.c
+@@ -659,7 +659,8 @@ tegra_kbc_dt_parse_pdata(struct platform_device *pdev)
+ 		pdata->pin_cfg[KBC_MAX_ROW + i].type = PIN_CFG_COL;
+ 	}
+ 
+-	pdata->keymap_data = matrix_keyboard_of_fill_keymap(np, "linux,keymap");
++	pdata->keymap_data = matrix_keyboard_of_fill_keymap(&pdev->dev, np,
++			"linux,keymap");
+ 
+ 	/* FIXME: Add handling of linux,fn-keymap here */
+ 
+@@ -798,9 +799,6 @@ static int __devinit tegra_kbc_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, kbc);
+ 	device_init_wakeup(&pdev->dev, pdata->wakeup);
+ 
+-	if (!pdev->dev.platform_data)
+-		matrix_keyboard_of_free_keymap(pdata->keymap_data);
+-
+ 	return 0;
+ 
+ err_free_irq:
+@@ -815,10 +813,8 @@ err_free_mem:
+ 	input_free_device(input_dev);
+ 	kfree(kbc);
+ err_free_pdata:
+-	if (!pdev->dev.platform_data) {
+-		matrix_keyboard_of_free_keymap(pdata->keymap_data);
++	if (!pdev->dev.platform_data)
+ 		kfree(pdata);
+-	}
+ 
+ 	return err;
  }
+diff --git a/drivers/input/of_keymap.c b/drivers/input/of_keymap.c
+index 061493d..17eb27e 100644
+--- a/drivers/input/of_keymap.c
++++ b/drivers/input/of_keymap.c
+@@ -17,6 +17,7 @@
+  *
+  */
  
-+#ifdef CONFIG_OF
-+static const struct of_device_id spear_rtc_id_table[] = {
-+	{ .compatible = "st,spear-rtc" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, spear_rtc_id_table);
-+#endif
-+
- static struct platform_driver spear_rtc_driver = {
- 	.probe = spear_rtc_probe,
- 	.remove = __devexit_p(spear_rtc_remove),
-@@ -527,6 +536,7 @@ static struct platform_driver spear_rtc_driver = {
- 	.shutdown = spear_rtc_shutdown,
- 	.driver = {
- 		.name = "rtc-spear",
-+		.of_match_table = of_match_ptr(spear_rtc_id_table),
- 	},
- };
++#include <linux/device.h>
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/input.h>
+@@ -27,7 +28,7 @@
+ #include <linux/slab.h>
  
+ struct matrix_keymap_data *
+-matrix_keyboard_of_fill_keymap(struct device_node *np,
++matrix_keyboard_of_fill_keymap(struct device *dev, struct device_node *np,
+ 			       const char *propname)
+ {
+ 	struct matrix_keymap_data *kd;
+@@ -46,16 +47,16 @@ matrix_keyboard_of_fill_keymap(struct device_node *np,
+ 		return NULL;
+ 
+ 	if (proplen % sizeof(u32)) {
+-		pr_warn("Malformed keymap property %s in %s\n",
++		dev_warn(dev, "Malformed keymap property %s in %s\n",
+ 			propname, np->full_name);
+ 		return NULL;
+ 	}
+ 
+-	kd = kzalloc(sizeof(*kd), GFP_KERNEL);
++	kd = devm_kzalloc(dev, sizeof(*kd), GFP_KERNEL);
+ 	if (!kd)
+ 		return NULL;
+ 
+-	kd->keymap = keymap = kzalloc(proplen, GFP_KERNEL);
++	kd->keymap = keymap = devm_kzalloc(dev, proplen, GFP_KERNEL);
+ 	if (!kd->keymap) {
+ 		kfree(kd);
+ 		return NULL;
+@@ -76,12 +77,3 @@ matrix_keyboard_of_fill_keymap(struct device_node *np,
+ 	return kd;
+ }
+ EXPORT_SYMBOL_GPL(matrix_keyboard_of_fill_keymap);
+-
+-void matrix_keyboard_of_free_keymap(const struct matrix_keymap_data *kd)
+-{
+-	if (kd) {
+-		kfree(kd->keymap);
+-		kfree(kd);
+-	}
+-}
+-EXPORT_SYMBOL_GPL(matrix_keyboard_of_free_keymap);
+diff --git a/include/linux/input/matrix_keypad.h b/include/linux/input/matrix_keypad.h
+index 6c07ced..fb2e578 100644
+--- a/include/linux/input/matrix_keypad.h
++++ b/include/linux/input/matrix_keypad.h
+@@ -109,20 +109,14 @@ matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
+ 
+ #ifdef CONFIG_INPUT_OF_MATRIX_KEYMAP
+ struct matrix_keymap_data *
+-matrix_keyboard_of_fill_keymap(struct device_node *np, const char *propname);
+-
+-void matrix_keyboard_of_free_keymap(const struct matrix_keymap_data *kd);
++matrix_keyboard_of_fill_keymap(struct device *dev, struct device_node *np,
++		const char *propname);
+ #else
+ static inline struct matrix_keymap_data *
+-matrix_keyboard_of_fill_keymap(struct device_node *np, const char *propname)
++matrix_keyboard_of_fill_keymap(struct device *dev, struct device_node *np,
++		const char *propname)
+ {
+ 	return NULL;
+ }
+-
+-static inline void
+-matrix_keyboard_of_free_keymap(const struct matrix_keymap_data *kd)
+-{
+-}
+ #endif
+-
+ #endif /* _MATRIX_KEYPAD_H */
 -- 
 1.7.10.rc2.10.gb47606
+
