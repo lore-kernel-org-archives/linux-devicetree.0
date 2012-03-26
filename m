@@ -1,140 +1,64 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v7 0/4] MIPS: OCTEON: Use Device Tree.
-Date: Mon, 26 Mar 2012 12:31:17 -0700
-Message-ID: <1332790281-9648-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
+Date: Tue, 27 Mar 2012 10:37:09 +1100
+Message-ID: <20120326233709.GB9357@truffala.fritz.box>
+References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
+ <20120321032653.GB15997@truffala.fritz.box>
+ <20120326022350.GA13005@truffala.fritz.box>
+ <E1SC9hv-0007Gm-Py@jdl.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1SC9hv-0007Gm-Py-CYoMK+44s/E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+On Mon, Mar 26, 2012 at 08:11:35AM -0500, Jon Loeliger wrote:
+> > On Wed, Mar 21, 2012 at 02:26:53PM +1100, David Gibson wrote:
+> > > On Tue, Mar 20, 2012 at 08:23:46PM -0600, Stephen Warren wrote:
+> > > > On Ubuntu, /bin/sh is dash (at least by default), and dash's echo doesn't
+> > > > accept the -e option. This means that fdtget-runtest.sh's EXPECT file will
+> > > > contain "-e foo" rather than just "foo", which causes a test failure.
+> > > > 
+> > > > To work around this, run /bin/echo instead of (builtin) echo, which has
+> > > > more chance of supporting the -e option.
+> > > > 
+> > > > Another possible fix is to change all the #! lines to /bin/bash rather
+> > > > than /bin/sh, and change run_tests.sh to invoke sub-scripts using $SHELL
+> > > > instead of just "sh". However, that would require bash specifically, which
+> > > > may not be desirable.
+> > > > 
+> > > > Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> > > 
+> > > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> > > 
+> > > Jon, please apply.
+> > 
+> > Sorry Jon, you fell off the Cc list somehow.  Do you need me to resend
+> > Stephen's patch to apply?
+> 
+> Please.  Last mail I saw on this issue was you saying "This patch
+> isn't perfect." :-)
 
-This code has now had extensive testing, it is running on more
-than 10 different boards and SOC combinations.
+Uh, it was "this isn't perfect, but it's better than what we have,
+please apply".
 
-The patches in this set are all in the arch/mips tree and should
-probably be merged by Ralf.
-
-They do depend on this libfdt patch:
-
-https://lkml.org/lkml/2012/3/23/322
-
-As well as thses MIPS patches:
-
-http://www.linux-mips.org/archives/linux-mips/2012-03/msg00159.html
-
-New in v7:
-
-o irq_domain support revised based on feedback from Grant and Rob.
-
-New in v6:
-
-o Device Tree bindings updated based on feedback and more actual use.
-
-o Use of irq_domain support added to recent kernels.
-
-New in v5:
-
-o New irq triggering mode constants.
-
-o Boot protocol to pass flattened device tree from bootloader.  This
-  protocol may change based on attempts to arrive at a common protocol
-  for all MIPS boards.
-
-New in v4:
-
-o Cleanup and error checking suggested by Sergei Shtylyov.
-
-o Use device tree passed by bootloader if present.
-
-New in v3:
-
-o More updates to device tree bindings, and perhaps more importantly
-  descriptions/definitions of the bindings
-
-o Cleanup and style improvements as suggested by Grant Likley.
-
-o Omitted all the driver changes, as they are unchanged from the last
-  set, and at this stage the patches are just an RFC.
-
-New in v2:
-
-o Changed many device tree bindings.  They should be closer to the
-  standard naming scheme now.
-
-o Editing of the template device tree is done in the flattened form
-  using libfdt.
-
-o Standard platform driver functions used in preference to the
-  of_platform variety.
-
-v1:
-
-Background: The Octeon family of SOCs has a variety of on-chip
-controllers for Ethernet, MDIO, I2C, and several other I/O devices.
-These chips are used on boards with a great variety of different
-configurations.  To date, the configuration and bus topology
-information has been hard coded in the drivers and support code.
-
-To facilitate supporting new chips and boards, we are using the Device
-Tree to encode the configuration information.  The migration from the
-legacy approach to the device tree is as follows:
-
-o A device tree template is statically linked into the kernel image.
-  Based on SOC type and board type, legacy configuration probing code
-  is used to prune and patch the device tree template.
-
-o New SOCs and boards will directly use a device tree passed by the
-  bootloader.
-
-
-
-David Daney (4):
-  MIPS: Don't define early_init_devtree() and device_tree_init() in
-    prom.c for CPU_CAVIUM_OCTEON
-  MIPS: Octeon: Setup irq_domains for interrupts.
-  MIPS: Octeon: Add device tree source files.
-  MIPS: Octeon: Initialize and fixup device tree.
-
- .../bindings/ata/cavium-compact-flash.txt          |   30 +
- .../bindings/gpio/cavium-octeon-gpio.txt           |   48 ++
- .../devicetree/bindings/i2c/cavium-i2c.txt         |   34 ++
- .../devicetree/bindings/mips/cavium/bootbus.txt    |  126 ++++
- .../devicetree/bindings/mips/cavium/ciu.txt        |   26 +
- .../devicetree/bindings/mips/cavium/ciu2.txt       |   27 +
- .../devicetree/bindings/mips/cavium/dma-engine.txt |   21 +
- .../devicetree/bindings/mips/cavium/uctl.txt       |   47 ++
- .../devicetree/bindings/net/cavium-mdio.txt        |   27 +
- .../devicetree/bindings/net/cavium-mix.txt         |   40 ++
- .../devicetree/bindings/net/cavium-pip.txt         |   98 +++
- .../devicetree/bindings/serial/cavium-uart.txt     |   19 +
- arch/mips/Kconfig                                  |    2 +
- arch/mips/cavium-octeon/.gitignore                 |    2 +
- arch/mips/cavium-octeon/Makefile                   |   16 +
- arch/mips/cavium-octeon/octeon-irq.c               |  208 +++++++-
- arch/mips/cavium-octeon/octeon-platform.c          |  523 ++++++++++++++++-
- arch/mips/cavium-octeon/octeon_3xxx.dts            |  571 ++++++++++++++++++
- arch/mips/cavium-octeon/octeon_68xx.dts            |  625 ++++++++++++++++++++
- arch/mips/cavium-octeon/setup.c                    |   45 ++
- arch/mips/kernel/prom.c                            |    2 +
- 21 files changed, 2527 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/cavium-compact-flash.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/cavium-octeon-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/cavium-i2c.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/bootbus.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/ciu.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/ciu2.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/dma-engine.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/uctl.txt
- create mode 100644 Documentation/devicetree/bindings/net/cavium-mdio.txt
- create mode 100644 Documentation/devicetree/bindings/net/cavium-mix.txt
- create mode 100644 Documentation/devicetree/bindings/net/cavium-pip.txt
- create mode 100644 Documentation/devicetree/bindings/serial/cavium-uart.txt
- create mode 100644 arch/mips/cavium-octeon/.gitignore
- create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
- create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
+I've forwarded Stephen's patch to you again.
 
 -- 
-1.7.2.3
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
