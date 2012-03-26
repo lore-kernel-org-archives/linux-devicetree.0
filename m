@@ -1,88 +1,170 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v3 2/2] ARM: Exynos: Use lcd power control driver for lcd panel
-Date: Mon, 26 Mar 2012 14:16:40 +0530
-Message-ID: <1332751600-11371-3-git-send-email-thomas.abraham@linaro.org>
-References: <1332751600-11371-1-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1332751600-11371-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: rpurdie@rpsys.net, florianSchandinat@gmx.de, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, jg1.han@samsung.com, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, augulis.darius@gmail.com, ben-linux@fluff.org, lars@metafoo.de, patches@linaro.org
+From: Viresh Kumar <viresh.kumar@st.com>
+Subject: [PATCH 2/2] Input: spear-keyboard: add device tree bindings
+Date: Mon, 26 Mar 2012 15:15:13 +0530
+Message-ID: <a2d16bc563cf5c7e8eebf817de0a1eb08d7b96ba.1332754641.git.viresh.kumar@st.com>
+References: <2d5fee8dbe4d188cad43b5e60e9bc8df682781a0.1332754641.git.viresh.kumar@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <2d5fee8dbe4d188cad43b5e60e9bc8df682781a0.1332754641.git.viresh.kumar@st.com>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: spear-devel@list.st.com, viresh.linux@gmail.com, swarren@nvidia.com, rajeev-dlh.kumar@st.com, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The Hydis hv070wsa lcd panel used with the Origen board uses a gpio
-for reset and the Vcc supply to the panel can be controlled using
-a voltage regulator. Switch to using the lcd power control driver
-for controlling the power to the lcd panel.
+This adds simple DT bindings for spear-keyboard controller.
 
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
 ---
- arch/arm/mach-exynos/mach-origen.c |   29 ++++++-----------------------
- 1 files changed, 6 insertions(+), 23 deletions(-)
+ .../devicetree/bindings/input/spear-keyboard.txt   |   21 +++++++
+ drivers/input/keyboard/Kconfig                     |    1 +
+ drivers/input/keyboard/spear-keyboard.c            |   63 +++++++++++++++++++-
+ 3 files changed, 84 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/spear-keyboard.txt
 
-diff --git a/arch/arm/mach-exynos/mach-origen.c b/arch/arm/mach-exynos/mach-origen.c
-index d3b2e9d..6c4997c 100644
---- a/arch/arm/mach-exynos/mach-origen.c
-+++ b/arch/arm/mach-exynos/mach-origen.c
-@@ -26,7 +26,7 @@
- #include <asm/hardware/gic.h>
- #include <asm/mach-types.h>
+diff --git a/Documentation/devicetree/bindings/input/spear-keyboard.txt b/Documentation/devicetree/bindings/input/spear-keyboard.txt
+new file mode 100644
+index 0000000..3dc0103
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/spear-keyboard.txt
+@@ -0,0 +1,21 @@
++* SPEAr keyboard controller
++
++Required properties:
++- compatible: "st,spear-kbd"
++
++Optional properties, in addition to those specified by the shared
++matrix-keyboard bindings:
++- autorepeat: bool: enables key autorepeat
++- mode: keyboard mode: 0 - 9x9, 1 - 6x6, 2 - 2x2
++
++Example:
++
++kbd@fc400000 {
++	compatible = "st,spear-kbd";
++	reg = <0xfc400000 0x100>;
++	linux,keymap = < 0x00030012
++			 0x0102003a >;
++	autorepeat;
++	mode = <0>;
++};
++
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index f354813..6da2b02 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -522,6 +522,7 @@ config KEYBOARD_OMAP4
+ config KEYBOARD_SPEAR
+ 	tristate "ST SPEAR keyboard support"
+ 	depends on PLAT_SPEAR
++	select INPUT_OF_MATRIX_KEYMAP if USE_OF
+ 	help
+ 	  Say Y here if you want to use the SPEAR keyboard.
  
--#include <video/platform_lcd.h>
-+#include <video/lcd_pwrctrl.h>
+diff --git a/drivers/input/keyboard/spear-keyboard.c b/drivers/input/keyboard/spear-keyboard.c
+index 3b6b528..2a16519 100644
+--- a/drivers/input/keyboard/spear-keyboard.c
++++ b/drivers/input/keyboard/spear-keyboard.c
+@@ -19,6 +19,7 @@
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_wakeup.h>
+ #include <linux/slab.h>
+@@ -136,9 +137,43 @@ static void spear_kbd_close(struct input_dev *dev)
+ 	kbd->last_key = KEY_RESERVED;
+ }
  
- #include <plat/regs-serial.h>
- #include <plat/regs-fb-v4.h>
-@@ -129,7 +129,7 @@ static struct regulator_consumer_supply __initdata buck3_consumer[] = {
- 	REGULATOR_SUPPLY("vdd_g3d", "mali_drm"), /* G3D */
- };
- static struct regulator_consumer_supply __initdata buck7_consumer[] = {
--	REGULATOR_SUPPLY("vcc", "platform-lcd"), /* LCD */
-+	REGULATOR_SUPPLY("vcc-lcd", "lcd-pwrctrl.0"), /* LCD */
- };
++#ifdef CONFIG_OF
++static int __devinit spear_kbd_probe_dt(struct platform_device *pdev)
++{
++	struct kbd_platform_data *pdata = dev_get_platdata(&pdev->dev);
++	struct device_node *np = pdev->dev.of_node;
++	u32 val;
++
++	pdata->keymap = matrix_keyboard_of_fill_keymap(&pdev->dev, np,
++			"linux,keymap");
++	if (!pdata->keymap) {
++		dev_err(&pdev->dev, "DT: Invalid keymap array\n");
++		return -ENODEV;
++	}
++
++	if (of_property_read_bool(np, "autorepeat"))
++		pdata->rep = true;
++
++	if (!of_property_read_u32(np, "mode", &val)) {
++		pdata->mode = val;
++	} else {
++		dev_err(&pdev->dev, "DT: Invalid mode\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++#else
++static int __devinit spear_kbd_probe_dt(struct platform_device *pdev)
++{
++	return -ENOSYS;
++}
++#endif
++
+ static int __devinit spear_kbd_probe(struct platform_device *pdev)
+ {
+-	const struct kbd_platform_data *pdata = pdev->dev.platform_data;
++	struct kbd_platform_data *pdata;
++	struct device_node *np = pdev->dev.of_node;
+ 	const struct matrix_keymap_data *keymap;
+ 	struct spear_kbd *kbd;
+ 	struct input_dev *input_dev;
+@@ -146,6 +181,23 @@ static int __devinit spear_kbd_probe(struct platform_device *pdev)
+ 	int irq;
+ 	int error;
  
- static struct regulator_init_data __initdata max8997_ldo1_data = {
-@@ -384,7 +384,7 @@ static struct regulator_init_data __initdata max8997_buck7_data = {
- 		.name		= "VDD_LCD_3.3V",
- 		.min_uV		= 3300000,
- 		.max_uV		= 3300000,
--		.boot_on	= 1,
-+		.boot_on	= 0,
- 		.apply_uV	= 1,
- 		.valid_ops_mask	= REGULATOR_CHANGE_STATUS,
- 		.state_mem	= {
-@@ -553,29 +553,12 @@ static struct platform_device origen_device_gpiokeys = {
++	if (np) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata) {
++			dev_err(&pdev->dev, "DT: kzalloc failed\n");
++			return -ENOMEM;
++		}
++
++		pdev->dev.platform_data = pdata;
++		error = spear_kbd_probe_dt(pdev);
++		if (error) {
++			dev_err(&pdev->dev, "DT: no platform data\n");
++			return error;
++		}
++	} else {
++		pdata = dev_get_platdata(&pdev->dev);
++	}
++
+ 	if (!pdata) {
+ 		dev_err(&pdev->dev, "Invalid platform data\n");
+ 		return -EINVAL;
+@@ -317,6 +369,14 @@ static int spear_kbd_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(spear_kbd_pm_ops, spear_kbd_suspend, spear_kbd_resume);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id spear_kbd_id_table[] = {
++	{ .compatible = "st,spear-kbd" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, spear_kbd_id_table);
++#endif
++
+ static struct platform_driver spear_kbd_driver = {
+ 	.probe		= spear_kbd_probe,
+ 	.remove		= __devexit_p(spear_kbd_remove),
+@@ -324,6 +384,7 @@ static struct platform_driver spear_kbd_driver = {
+ 		.name	= "keyboard",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &spear_kbd_pm_ops,
++		.of_match_table = of_match_ptr(spear_kbd_id_table),
  	},
  };
- 
--static void lcd_hv070wsa_set_power(struct plat_lcd_data *pd, unsigned int power)
--{
--	int ret;
--
--	if (power)
--		ret = gpio_request_one(EXYNOS4_GPE3(4),
--					GPIOF_OUT_INIT_HIGH, "GPE3_4");
--	else
--		ret = gpio_request_one(EXYNOS4_GPE3(4),
--					GPIOF_OUT_INIT_LOW, "GPE3_4");
--
--	gpio_free(EXYNOS4_GPE3(4));
--
--	if (ret)
--		pr_err("failed to request gpio for LCD power: %d\n", ret);
--}
--
--static struct plat_lcd_data origen_lcd_hv070wsa_data = {
--	.set_power = lcd_hv070wsa_set_power,
-+static struct lcd_pwrctrl_data origen_lcd_hv070wsa_data = {
-+	.gpio	= EXYNOS4_GPE3(4),
- };
- 
- static struct platform_device origen_lcd_hv070wsa = {
--	.name			= "platform-lcd",
-+	.name			= "lcd-pwrctrl",
- 	.dev.parent		= &s5p_device_fimd0.dev,
- 	.dev.platform_data	= &origen_lcd_hv070wsa_data,
- };
+ module_platform_driver(spear_kbd_driver);
 -- 
-1.6.6.rc2
+1.7.10.rc2.10.gb47606
+
