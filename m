@@ -1,53 +1,34 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
-Date: Mon, 26 Mar 2012 13:23:50 +1100
-Message-ID: <20120326022350.GA13005@truffala.fritz.box>
-References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
- <20120321032653.GB15997@truffala.fritz.box>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4] pinctrl: core device tree mapping table parsing support
+Date: Mon, 26 Mar 2012 09:00:12 +0200
+Message-ID: <CACRpkdb1cp+A-b0hKUVyT_03hiLNTHm1qb=8xMUn-wk=UijO3g@mail.gmail.com>
+References: <1332520186-23476-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120321032653.GB15997-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: jdl-CYoMK+44s/E@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1332520186-23476-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2012 at 02:26:53PM +1100, David Gibson wrote:
-> On Tue, Mar 20, 2012 at 08:23:46PM -0600, Stephen Warren wrote:
-> > On Ubuntu, /bin/sh is dash (at least by default), and dash's echo doesn't
-> > accept the -e option. This means that fdtget-runtest.sh's EXPECT file will
-> > contain "-e foo" rather than just "foo", which causes a test failure.
-> > 
-> > To work around this, run /bin/echo instead of (builtin) echo, which has
-> > more chance of supporting the -e option.
-> > 
-> > Another possible fix is to change all the #! lines to /bin/bash rather
-> > than /bin/sh, and change run_tests.sh to invoke sub-scripts using $SHELL
-> > instead of just "sh". However, that would require bash specifically, which
-> > may not be desirable.
-> > 
-> > Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> 
-> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-> 
-> Jon, please apply.
+On Fri, Mar 23, 2012 at 5:29 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 
-Sorry Jon, you fell off the Cc list somehow.  Do you need me to resend
-Stephen's patch to apply?
+> During pinctrl_get(), if the client device has a device tree node, look
+> for the common pinctrl properties there. If found, parse the referenced
+> device tree nodes, with the help of the pinctrl drivers, and generate
+> mapping table entries from them.
+>
+> During pinctrl_put(), free any results of device tree parsing.
+>
+> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+I really like this patch, nice clean and right to the point.
+
+Can I have some more ACKs on it?
+
+If no response in a day or two I'll apply it anyway just because
+I like it.
+
+Thanks Stephen,
+Linus Walleij
