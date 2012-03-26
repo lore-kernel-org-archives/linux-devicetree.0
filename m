@@ -1,59 +1,34 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH] ARM: kirkwood: fdt: use IEEE1275 status = "okay".
-Date: Mon, 26 Mar 2012 16:52:55 +0000
-Message-ID: <1332780775-3694-1-git-send-email-jason@lakedaemon.net>
-References: <4F70991E.1000204@freescale.com>
+From: Roland Stigge <stigge@antcom.de>
+Subject: Re: uImage with integrated dtb file
+Date: Mon, 26 Mar 2012 18:48:23 +0200
+Message-ID: <4F709DD7.2080606@antcom.de>
+References: <4F6E5D5B.8050306@antcom.de> <4F7085DA.6030402@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F70991E.1000204-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F7085DA.6030402@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree-discuss@lists.ozlabs.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
- - This should prevent others from making the same mistake I did when searching
-   the code.
+On 26/03/12 17:06, Stephen Warren wrote:
+>>  quiet_cmd_uimage = UIMAGE  $@
+>> -      cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
+>> +      cmd_uimage = cat $< arch/arm/boot/*.dtb > $<.tmp ; \
+> 
+> That won't work well when multiple .dtb files are built.
 
- arch/arm/boot/dts/kirkwood-dreamplug.dts |    2 +-
- drivers/of/base.c                        |    1 +
- 2 files changed, 2 insertions(+), 1 deletions(-)
+That's completely correct! Therefore I called it "hack" (maybe
+forgetting to prefix it "ugly"), so please don't use it. ;-)
 
-diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-index a5376b8..7b2b961 100644
---- a/arch/arm/boot/dts/kirkwood-dreamplug.dts
-+++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-@@ -18,7 +18,7 @@
- 	ocp@f1000000 {
- 		serial@12000 {
- 			clock-frequency = <200000000>;
--			status = "ok";
-+			status = "okay";
- 		};
- 	};
- };
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 133908a..31eac15 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -285,6 +285,7 @@ int of_device_is_available(const struct device_node *device)
- 		return 1;
- 
- 	if (statlen > 0) {
-+		/* new boards should use "okay" according to IEEE1275 */
- 		if (!strcmp(status, "okay") || !strcmp(status, "ok"))
- 			return 1;
- 	}
--- 
-1.7.3.4
+Roland
