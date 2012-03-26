@@ -1,34 +1,44 @@
-From: Roland Stigge <stigge@antcom.de>
-Subject: Re: uImage with integrated dtb file
-Date: Mon, 26 Mar 2012 18:48:23 +0200
-Message-ID: <4F709DD7.2080606@antcom.de>
-References: <4F6E5D5B.8050306@antcom.de> <4F7085DA.6030402@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F7085DA.6030402@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v7 1/4] MIPS: Don't define early_init_devtree() and device_tree_init() in prom.c for CPU_CAVIUM_OCTEON
+Date: Mon, 26 Mar 2012 12:31:18 -0700
+Message-ID: <1332790281-9648-2-git-send-email-ddaney.cavm@gmail.com>
+References: <1332790281-9648-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1332790281-9648-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/03/12 17:06, Stephen Warren wrote:
->>  quiet_cmd_uimage = UIMAGE  $@
->> -      cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
->> +      cmd_uimage = cat $< arch/arm/boot/*.dtb > $<.tmp ; \
-> 
-> That won't work well when multiple .dtb files are built.
+From: David Daney <david.daney@cavium.com>
 
-That's completely correct! Therefore I called it "hack" (maybe
-forgetting to prefix it "ugly"), so please don't use it. ;-)
+This code is not common enough to be in a shared file, so OCTEON defines
+it's own versions.
 
-Roland
+When the last of this target specific code is moved out, we can remove
+all of this.
+
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ arch/mips/kernel/prom.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 558b539..4aaa5c0 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -60,6 +60,7 @@ void __init early_init_dt_setup_initrd_arch(unsigned long start,
+ }
+ #endif
+ 
++#ifndef CONFIG_CPU_CAVIUM_OCTEON
+ void __init early_init_devtree(void *params)
+ {
+ 	/* Setup flat device-tree pointer */
+@@ -95,3 +96,4 @@ void __init device_tree_init(void)
+ 	/* free the space reserved for the dt blob */
+ 	free_mem_mach(base, size);
+ }
++#endif /* !CONFIG_CPU_CAVIUM_OCTEON */
+-- 
+1.7.2.3
