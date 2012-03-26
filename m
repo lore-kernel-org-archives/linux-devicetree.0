@@ -1,57 +1,71 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] input/of_keymap: Convert kzalloc to devm_kzalloc
- derivative
-Date: Mon, 26 Mar 2012 08:55:02 -0700
-Message-ID: <20120326155502.GA25590@core.coreip.homeip.net>
-References: <2d5fee8dbe4d188cad43b5e60e9bc8df682781a0.1332754641.git.viresh.kumar@st.com>
- <4F708A89.4090503@wwwdotorg.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH V2 3/3] ARM: kirkwood: Define NAND partitions in dts
+Date: Mon, 26 Mar 2012 12:20:50 -0400
+Message-ID: <20120326162050.GT2484@titan.lakedaemon.net>
+References: <1332594876-8673-1-git-send-email-jm@lentin.co.uk>
+ <1332594876-8673-4-git-send-email-jm@lentin.co.uk>
+ <4F7090F9.5000603@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F708A89.4090503@wwwdotorg.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Viresh Kumar <viresh.kumar@st.com>, rajeev-dlh.kumar@st.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, linux-input@vger.kernel.org
+In-Reply-To: <4F7090F9.5000603-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 26, 2012 at 09:26:01AM -0600, Stephen Warren wrote:
-> On 03/26/2012 03:45 AM, Viresh Kumar wrote:
-> > matrix_keyboard_of_fill_keymap() routines allocates memory using kzalloc()
-> > routine. It is freed on call to matrix_keyboard_of_free_keymap() routine.
+On Mon, Mar 26, 2012 at 10:53:29AM -0500, Scott Wood wrote:
+> On 03/24/2012 08:14 AM, Jamie Lentin wrote:
+> > Use devicetree to define NAND partitions. Use D-link partition scheme by
+> > default, to be vaguely compatible with their userland.
 > > 
-> > This patch converts these kzalloc() calls to devm_kzalloc() and thus we don't
-> > require matrix_keyboard_of_free_keymap() anymore.
+> > Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/kirkwood-dns320.dts |   35 +++++++++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/kirkwood-dns325.dts |   35 +++++++++++++++++++++++++++++++++
+> >  arch/arm/mach-kirkwood/board-dnskw.c  |   31 -----------------------------
+> >  3 files changed, 70 insertions(+), 31 deletions(-)
 > > 
-> > Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
+> > diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
+> > index 58de7f2..fbf55ff 100644
+> > --- a/arch/arm/boot/dts/kirkwood-dns320.dts
+> > +++ b/arch/arm/boot/dts/kirkwood-dns320.dts
+> > @@ -25,5 +25,40 @@
+> >  			clock-frequency = <166666667>;
+> >  			status = "ok";
+> >  		};
+> > +
+> > +		nand@3000000 {
+> > +			status = "ok";
+> > +
 > 
-> The Tegra-related parts,
-> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-> 
-> But that said, Dmitry specifically requested that the devm_* function
-> not be used during initial review of this code; IIRC he preferred just
-> doing the explicit frees. I can't find a link right now though.
+> This should be "okay", not "ok" -- see IEEE1275.  Or just leave it out.
 
-Right, there is no need to haul allocated memory past the building of
-the "real" keymap anyway.
+Ack, but it needs to be there.  Most, but not all, kirkwood boards have
+nand, so we define it in kirkwood.dtsi and set it as disabled.
+Individual boards can then enable it as needed.
 
-Actually I want to change the interface so that we could do something
-like:
+As for 'okay', looks like we may need to patch of_device_is_available()
+in drivers/of/base.c (~284) if we want to be consistent with IEEE1275.
 
-	if (pdata->keymap) {
-		matrix_keypad_build_keymap(...)
-	} else {
-		error = matrix_keypad_build_of_keymap();
-		if (error)
-			goto blah;
-	}
+The following boards would need to be updated:
 
-So that one could override OF data with plaform data if needed and no
-freeing of intermediate platform-like keymap structure is requited.
-Or maybe encapsulate OF parsing directly into matrix_keypad_build_keymap
-if passed keymap data is NULL...
+arch/arm/boot/dts/kirkwood-dreamplug.dts
+arch/powerpc/boot/dts/currituck.dts
+arch/powerpc/boot/dts/iss4xx-mpic.dts
 
-Thanks.
+Grant, any thoughts on this?
 
--- 
-Dmitry
+thx,
+
+Jason.
