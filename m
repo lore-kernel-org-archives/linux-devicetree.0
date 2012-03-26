@@ -1,70 +1,31 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: uImage with integrated dtb file
-Date: Mon, 26 Mar 2012 09:06:02 -0600
-Message-ID: <4F7085DA.6030402@wwwdotorg.org>
-References: <4F6E5D5B.8050306@antcom.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/2] input/of_keymap: Convert kzalloc to devm_kzalloc
+ derivative
+Date: Mon, 26 Mar 2012 09:26:01 -0600
+Message-ID: <4F708A89.4090503@wwwdotorg.org>
+References: <2d5fee8dbe4d188cad43b5e60e9bc8df682781a0.1332754641.git.viresh.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F6E5D5B.8050306-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <2d5fee8dbe4d188cad43b5e60e9bc8df682781a0.1332754641.git.viresh.kumar@st.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@st.com>
+Cc: dmitry.torokhov@gmail.com, rajeev-dlh.kumar@st.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2012 05:48 PM, Roland Stigge wrote:
-> Hi,
+On 03/26/2012 03:45 AM, Viresh Kumar wrote:
+> matrix_keyboard_of_fill_keymap() routines allocates memory using kzalloc()
+> routine. It is freed on call to matrix_keyboard_of_free_keymap() routine.
 > 
-> since I will need to maintain some machines with DT enabled kernels but 
-> containing a U-Boot without DT support, I sometimes need to integrate a 
-> dtb file into uImage.
+> This patch converts these kzalloc() calls to devm_kzalloc() and thus we don't
+> require matrix_keyboard_of_free_keymap() anymore.
 > 
-> I'm sure others have got the same issue. But searching for a while I 
-> only got older/meanwhile neglected approaches like:
-> 
-> git://kernel.ubuntu.com/jk/dt/linux-2.6.git - branch: dtbimage
-> 
-> I'm currently using a simple hack like attached below.
-...
-> --- a/arch/arm/boot/Makefile
-...
->  quiet_cmd_uimage = UIMAGE  $@
-> -      cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
-> +      cmd_uimage = cat $< arch/arm/boot/*.dtb > $<.tmp ; \
+> Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
 
-That won't work well when multiple .dtb files are built. That's
-certainly common for Tegra, and probably most subarchs.
+The Tegra-related parts,
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
 
-The concatenation should be optional; people not using
-CONFIG_APPENDED_DTB (hopefully the majority) wouldn't want this for example.
-
-Please be aware of:
-
-https://lkml.org/lkml/2012/3/16/450
-Kbuild: centralize MKIMAGE and cmd_uimage definitions
-
-I believe previous discussion around this topic has resolved into people
-not wanting to make CONFIG_APPENDED_DTB to easy to use, so that people
-who don't need to use it won't be tempted to just use it instead of
-explicit FDT support in bootloaders. For example, see:
-
-https://lkml.org/lkml/2011/8/2/200
-Build a uImage with dtb already appended
-
-... which Grant has specifically stated he didn't want applied upstream
-for the reason I mention above.
-
-> +                  $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
->                    -C none -a $(LOADADDR) -e $(STARTADDR) \
-> -                  -n 'Linux-$(KERNELRELEASE)' -d $< $@
-> +                  -n 'Linux-$(KERNELRELEASE)' -d $<.tmp $@ ; \
-> +                  rm -f $<.tmp
+But that said, Dmitry specifically requested that the devm_* function
+not be used during initial review of this code; IIRC he preferred just
+doing the explicit frees. I can't find a link right now though.
