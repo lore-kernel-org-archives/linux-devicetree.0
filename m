@@ -1,129 +1,105 @@
-From: David Daney <david.daney@cavium.com>
-Subject: Re: [PATCH v7 3/4] MIPS: Octeon: Add device tree source files.
-Date: Tue, 27 Mar 2012 11:45:12 -0700
-Message-ID: <4F720AB8.7030508@cavium.com>
-References: <1332790281-9648-1-git-send-email-ddaney.cavm@gmail.com> <1332790281-9648-4-git-send-email-ddaney.cavm@gmail.com> <4F71282D.9060305@gmail.com>
+From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Subject: [PATCH V3 3/5] ARM: kirkwood: Allow nand to be configured via.
+ devicetree
+Date: Tue, 27 Mar 2012 22:54:13 +0100
+Message-ID: <1332885255-8304-4-git-send-email-jm@lentin.co.uk>
+References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F71282D.9060305@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1332885255-8304-1-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2012 07:38 PM, Rob Herring wrote:
-> On 03/26/2012 02:31 PM, David Daney wrote:
->> From: David Daney<david.daney@cavium.com>
-[...]
->> +++ b/Documentation/devicetree/bindings/gpio/cavium-octeon-gpio.txt
->> @@ -0,0 +1,48 @@
->> +* General Purpose Input Output (GPIO) bus.
->> +
->> +Properties:
->> +- compatible: "cavium,octeon-3860-gpio"
->> +
->> +  Compatibility with all cn3XXX, cn5XXX and cn6XXX SOCs.
->> +
->> +- reg: The base address of the GPIO unit's register bank.
->> +
->> +- gpio-controller: This is a GPIO controller.
->> +
->> +- #gpio-cells: Must be<2>.  The first cell is the GPIO pin.
->> +
->> +- interrupt-controller: The GPIO controller is also an interrupt
->> +  controller, any of its pins may be configured as an interrupt
->> +  source.
->> +
->> +- #interrupt-cells: Must be<2>.  The first cell is the GPIO pin
->> +   connected to the interrupt source.  The second cell is the interrupt
->> +   triggering protocol and may have one of four values:
->> +   1 - edge triggered on the rising edge.
->> +   2 - edge triggered on the falling edge
->> +   4 - level triggered active high.
->> +   8 - level triggered active low.
->> +
->> +- interrupts: Interrupt routing for pin 0.  The remaining pins are
->> +  also routed, but in a manner that can be derived from the pin0
->> +  routing, so they are not specified.
->> +
->> +Example:
->> +
->> +	gpio-controller@1070000000800 {
->> +		#gpio-cells =<2>;
->> +		compatible = "cavium,octeon-3860-gpio";
->> +		reg =<0x10700 0x00000800 0x0 0x100>;
->> +		gpio-controller;
->> +		/* Interrupts are specified by two parts:
->> +		 * 1) GPIO pin number (0..15)
->> +		 * 2) Triggering (1 - edge rising
->> +		 *		  2 - edge falling
->> +		 *		  4 - level active high
->> +		 *		  8 - level active low)
->> +		 */
->> +		interrupt-controller;
->> +		#interrupt-cells =<2>;
->> +		/* The GPIO pin connect to 16 consecutive CUI bits */
->> +		interrupts =<0 16>;
->
-> I think this should really be:
->
-> interrupts =<0 16  0 17  0 18  0 19 ... 0 31>;
+Add default configuration for NAND, to be enabled in your board config. Ensure
+clock gating is set appropriately when the NAND is enabled.
 
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+---
+ arch/arm/boot/dts/kirkwood.dtsi |   15 ++++++++++++++-
+ arch/arm/mach-kirkwood/common.c |   12 ++++++++++++
+ 2 files changed, 26 insertions(+), 1 deletions(-)
 
-Yes, probably it should be, I will try it.  I was having trouble getting 
-the dtc to accept it when I originally came up with the binding.  I will 
-try again.
-
-[...]
->> diff --git a/Documentation/devicetree/bindings/mips/cavium/bootbus.txt b/Documentation/devicetree/bindings/mips/cavium/bootbus.txt
->> new file mode 100644
->> index 0000000..6581478
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mips/cavium/bootbus.txt
->> @@ -0,0 +1,126 @@
->> +* Boot Bus
->> +
->> +The Octeon Boot Bus is a configurable parallel bus with 8 chip
->> +selects.  Each chip select is independently configurable.
->> +
->> +Properties:
->> +- compatible: "cavium,octeon-3860-bootbus"
->> +
->> +  Compatibility with all cn3XXX, cn5XXX and cn6XXX SOCs.
->> +
->> +- reg: The base address of the Boot Bus' register bank.
->> +
->> +- #address-cells: Must be<2>.  The first cell is the chip select
->> +   within the bootbus.  The second cell is the offset from the chip select.
->> +
->> +- #size-cells: Must be<1>.
->> +
->> +- ranges: There must be one one triplet of (child-bus-address,
->> +  parent-bus-address, length) for each active chip select.  If the
->> +  length element for any triplet is zero, the chip select is disabled,
->> +  making it inactive.
->> +
->> +The configuration parameters for each chip select are stored in child
->> +nodes.
->> +
->> +Configuration Properties:
->> +- compatible:  "cavium,octeon-3860-bootbus-config"
->> +
->> +- cavium,cs-index: A single cell indicating the chip select that
->> +  corresponds to this configuration.
->> +
->> +- cavium,t-adr: A cell specifying the ADR timing (in nS).
->
-> Add -ns to these time values.
-
-I would prefer not to.  There is already firmware in the field with 
-these bindings.  They were discussed here:
-
-http://www.linux-mips.org/archives/linux-mips/2011-06/msg00338.html
-
-Also there is precedence:  Few, if any, of the clock rate and frequency 
-properties end in '-hz'
-
-[...]
+diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+index 3474ef8..6b80374 100644
+--- a/arch/arm/boot/dts/kirkwood.dtsi
++++ b/arch/arm/boot/dts/kirkwood.dtsi
+@@ -5,7 +5,7 @@
+ 
+ 	ocp@f1000000 {
+ 		compatible = "simple-bus";
+-		ranges = <0 0xf1000000 0x1000000>;
++		ranges = <0 0xf1000000 0x4000000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+@@ -32,5 +32,18 @@
+ 			reg = <0x10300 0x20>;
+ 			interrupts = <53>;
+ 		};
++
++		nand@3000000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			cle = <0>;
++			ale = <1>;
++			bank-width = <8>;
++			compatible = "mrvl,orion-nand";
++			reg = <0x3000000 0x400>;
++			chip-delay = <25>;
++			/* set partition map and/or chip-delay in board dts */
++			status = "disabled";
++		};
+ 	};
+ };
+diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
+index a02cae8..3ad0373 100644
+--- a/arch/arm/mach-kirkwood/common.c
++++ b/arch/arm/mach-kirkwood/common.c
+@@ -15,6 +15,7 @@
+ #include <linux/ata_platform.h>
+ #include <linux/mtd/nand.h>
+ #include <linux/dma-mapping.h>
++#include <linux/of.h>
+ #include <net/dsa.h>
+ #include <asm/page.h>
+ #include <asm/timex.h>
+@@ -482,6 +483,9 @@ static int __init kirkwood_clock_gate(void)
+ 	unsigned int curr = readl(CLOCK_GATING_CTRL);
+ 	u32 dev, rev;
+ 
++#ifdef CONFIG_OF
++	struct device_node *np;
++#endif
+ 	kirkwood_pcie_id(&dev, &rev);
+ 	printk(KERN_DEBUG "Gating clock of unused units\n");
+ 	printk(KERN_DEBUG "before: 0x%08x\n", curr);
+@@ -489,6 +493,14 @@ static int __init kirkwood_clock_gate(void)
+ 	/* Make sure those units are accessible */
+ 	writel(curr | CGC_SATA0 | CGC_SATA1 | CGC_PEX0 | CGC_PEX1, CLOCK_GATING_CTRL);
+ 
++#ifdef CONFIG_OF
++	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-nand");
++	if (np && of_device_is_available(np)) {
++		kirkwood_clk_ctrl |= CGC_RUNIT;
++		of_node_put(np);
++	}
++#endif
++
+ 	/* For SATA: first shutdown the phy */
+ 	if (!(kirkwood_clk_ctrl & CGC_SATA0)) {
+ 		/* Disable PLL and IVREF */
+-- 
+1.7.9.1
