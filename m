@@ -1,61 +1,49 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Tue, 27 Mar 2012 13:59:16 +0000
-Message-ID: <201203271359.16553.arnd@arndb.de>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <201203271159.35306.arnd@arndb.de>
- <CAOh2x==7gNt2Jb3-EHz9-R1pTy6zL93FmUmTBMdpYUnW3F=9Uw@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2 1/2] Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
+Date: Tue, 27 Mar 2012 09:45:42 -0600
+Message-ID: <4F71E0A6.4080703@wwwdotorg.org>
+References: <4aba6f2cd9f050f419660555bdb661915c1be9b1.1332826100.git.viresh.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOh2x==7gNt2Jb3-EHz9-R1pTy6zL93FmUmTBMdpYUnW3F=9Uw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: viresh kumar <viresh.linux@gmail.com>
-Cc: spear-devel <spear-devel@list.st.com>, Stefan Roese <sr@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <4aba6f2cd9f050f419660555bdb661915c1be9b1.1332826100.git.viresh.kumar@st.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@st.com>
+Cc: dmitry.torokhov@gmail.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, linux-input@vger.kernel.org, sr@denx.de
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 March 2012, viresh kumar wrote:
-> On Mar 27, 2012 7:07 PM, "Arnd Bergmann" <arnd@arndb.de> wrote:
-> >
-> > On Tuesday 27 March 2012, Viresh Kumar wrote:
-> > > On 3/27/2012 4:45 PM, Arnd Bergmann wrote:
-> > > > On Tuesday 27 March 2012, Viresh Kumar wrote:
-> > > > The normal way is to turn around the logic so you don't have to include this test
-> > > > at all. Just have one soc-specific init_machine and map_io function, that calls
-> > > > both soc-specific and shared soc functions, e.g.
-> > >
-> > > But with that, i need multiple DT_MACHINE_START(). Isn't it?
-> > > Is this advisable?
-> >
-> > Having one DT_MACHINE_START per soc is ok if it helps you. Of course if you
-> > have multiple ones that are basically identical, it's simpler to just
-> > combine them.
+On 03/26/2012 11:38 PM, Viresh Kumar wrote:
+> We don't need to allocate memory for keymap in matrix_keyboard_of_fill_keymap(),
+> as this would only be used by matrix_keyboard_of_free_keymap(). Instead create
+> another routine matrix_keypad_of_build_keymap() which reads directly the
+> property from struct device_node and builds keymap.
 > 
-> That's what i have done in V1. And then only i came to
-> The first problem i mentioned.
-
-Right. I mean you can feel free to do whichever works best for you. If it's easy
-to combine the DT_MACHINE_START sections, then do, otherwise don't.
-
-> > Obviously that only works when you initialize the clocks from init_early()
-> > instead of from map_io(), but I think that would be the cleanest choice
-> > if you want to have single function with run-time dependencies.
+> With this eariler routines matrix_keyboard_of_fill_keymap() and
+> matrix_keyboard_of_free_keymap() go away.
 > 
-> But then why not use machine_init() for doing this too.
+> This patch also fixes tegra driver according to these changes.
 
-That would be even better. I think we should generally try do initialization
-as late as possible, ideally from initcalls. The init_early() function should
-only be used for code that absolutely has to be run from setup_arch() and
-no later, while the map_io() function should ideally only be used to set up
-the static mappings and nothing else.
+> diff --git a/drivers/input/keyboard/tegra-kbc.c b/drivers/input/keyboard/tegra-kbc.c
+...
+>  static int __devinit tegra_kbc_probe(struct platform_device *pdev)
+...
+> +	if (pdev->dev.of_node) {
+> +		/* FIXME: Add handling of linux,fn-keymap here */
+> +		err = matrix_keypad_of_build_keymap(&pdev->dev, KBC_ROW_SHIFT,
+> +				input_dev->keycode, input_dev->keybit,
+> +				"linux,keymap");
 
-	Arnd
+Where do input_dev->keycode/keybit get allocated? As far as I can tell,
+matrix_keypad_of_build_keymap() just writes to those and assumes they're
+already allocated.
+
+> diff --git a/drivers/input/of_keymap.c b/drivers/input/of_keymap.c
+...
+> +int matrix_keypad_of_build_keymap(struct device *dev, unsigned int row_shift,
+...
+> +		keymap[MATRIX_SCAN_CODE(row, col, row_shift)] = code;
+> +		__set_bit(code, keybit);
+
+How bit are keymap and keybit? I think we need range-checking here to
+make sure that row/col/row_shift/code are valid and in-range.
