@@ -1,13 +1,15 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH V3 2/2] Input: spear-keyboard: add device tree bindings
-Date: Wed, 28 Mar 2012 15:24:55 +0530
-Message-ID: <782f3bf6de204785b6d1bc389b58ec6cf3d722e4.1332826100.git.viresh.kumar@st.com>
-References: <4aba6f2cd9f050f419660555bdb661915c1be9b1.1332826100.git.viresh.kumar@st.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V2 5/7] ARM: SPEAr3xx: Add device-tree support to SPEAr3xx
+ architecture
+Date: Wed, 28 Mar 2012 12:27:31 +0000
+Message-ID: <201203281227.32299.arnd@arndb.de>
+References: <cover.1332926608.git.viresh.kumar@st.com>
+ <f4ad79023c6155d4de7e87c3cd798aadd493454e.1332926608.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4aba6f2cd9f050f419660555bdb661915c1be9b1.1332826100.git.viresh.kumar-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <f4ad79023c6155d4de7e87c3cd798aadd493454e.1332926608.git.viresh.kumar-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,192 +19,182 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org
+To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds simple DT bindings for spear-keyboard controller.
+On Wednesday 28 March 2012, Viresh Kumar wrote:
+> This patch adds a generic target for SPEAr3xx machines that can be configured
+> via the device-tree. Currently the following devices are supported via the
+> devicetree:
+> 
+> - VIC interrupts
+> - PL011 UART
+> - PL061 GPIO
+> - PL110 CLCD
+> - SP805 WDT
+> - Synopsys DW I2C
+> - Synopsys DW ethernet
+> - ST FSMC-NAND
+> - ST SPEAR-SMI
+> - ST SPEAR-KEYBOARD
+> - ST SPEAR-RTC
+> - ARASAN SDHCI-SPEAR
+> - SPEAR-EHCI
+> - SPEAR-OHCI
+> 
+> Other peripheral devices will follow in later patches.
 
-Signed-off-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
----
- .../devicetree/bindings/input/spear-keyboard.txt   |   21 +++++
- drivers/input/keyboard/Kconfig                     |    1 +
- drivers/input/keyboard/spear-keyboard.c            |   87 +++++++++++++++++---
- 3 files changed, 96 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/spear-keyboard.txt
+Hi Viresh,
 
-diff --git a/Documentation/devicetree/bindings/input/spear-keyboard.txt b/Documentation/devicetree/bindings/input/spear-keyboard.txt
-new file mode 100644
-index 0000000..e1bcf13
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/spear-keyboard.txt
-@@ -0,0 +1,21 @@
-+* SPEAr keyboard controller
-+
-+Required properties:
-+- compatible: "st,spear300-kbd"
-+
-+Optional properties, in addition to those specified by the shared
-+matrix-keyboard bindings:
-+- autorepeat: bool: enables key autorepeat
-+- st,mode: keyboard mode: 0 - 9x9, 1 - 6x6, 2 - 2x2
-+
-+Example:
-+
-+kbd@fc400000 {
-+	compatible = "st,spear300-kbd";
-+	reg = <0xfc400000 0x100>;
-+	linux,keymap = < 0x00030012
-+			 0x0102003a >;
-+	autorepeat;
-+	st,mode = <0>;
-+};
-+
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index f354813..6da2b02 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -522,6 +522,7 @@ config KEYBOARD_OMAP4
- config KEYBOARD_SPEAR
- 	tristate "ST SPEAR keyboard support"
- 	depends on PLAT_SPEAR
-+	select INPUT_OF_MATRIX_KEYMAP if USE_OF
- 	help
- 	  Say Y here if you want to use the SPEAR keyboard.
- 
-diff --git a/drivers/input/keyboard/spear-keyboard.c b/drivers/input/keyboard/spear-keyboard.c
-index 3b6b528..d72e4cb 100644
---- a/drivers/input/keyboard/spear-keyboard.c
-+++ b/drivers/input/keyboard/spear-keyboard.c
-@@ -19,6 +19,7 @@
- #include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_wakeup.h>
- #include <linux/slab.h>
-@@ -136,25 +137,66 @@ static void spear_kbd_close(struct input_dev *dev)
- 	kbd->last_key = KEY_RESERVED;
- }
- 
-+#ifdef CONFIG_OF
-+static int __devinit spear_kbd_probe_dt(struct platform_device *pdev)
-+{
-+	struct kbd_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
-+	u32 val;
-+
-+	if (of_property_read_bool(np, "autorepeat"))
-+		pdata->rep = true;
-+
-+	if (!of_property_read_u32(np, "st,mode", &val)) {
-+		pdata->mode = val;
-+	} else {
-+		dev_err(&pdev->dev, "DT: Invalid mode\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int __devinit spear_kbd_probe_dt(struct platform_device *pdev)
-+{
-+	return -ENOSYS;
-+}
-+#endif
-+
- static int __devinit spear_kbd_probe(struct platform_device *pdev)
- {
--	const struct kbd_platform_data *pdata = pdev->dev.platform_data;
--	const struct matrix_keymap_data *keymap;
-+	struct kbd_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	struct device_node *np = NULL;
- 	struct spear_kbd *kbd;
- 	struct input_dev *input_dev;
- 	struct resource *res;
- 	int irq;
- 	int error;
- 
--	if (!pdata) {
--		dev_err(&pdev->dev, "Invalid platform data\n");
--		return -EINVAL;
--	}
--
--	keymap = pdata->keymap;
--	if (!keymap) {
--		dev_err(&pdev->dev, "no keymap defined\n");
--		return -EINVAL;
-+	if (pdata) {
-+		if (!pdata->keymap) {
-+			dev_err(&pdev->dev, "Invalid platform data\n");
-+			return -EINVAL;
-+		}
-+	} else {
-+		np = pdev->dev.of_node;
-+		if (!np) {
-+			dev_err(&pdev->dev, "Failed: Neither DT nor Pdata is passed\n");
-+			return -EINVAL;
-+		}
-+
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			dev_err(&pdev->dev, "DT: kzalloc failed\n");
-+			return -ENOMEM;
-+		}
-+
-+		pdev->dev.platform_data = pdata;
-+		error = spear_kbd_probe_dt(pdev);
-+		if (error) {
-+			dev_err(&pdev->dev, "DT: no platform data\n");
-+			return error;
-+		}
- 	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -221,8 +263,18 @@ static int __devinit spear_kbd_probe(struct platform_device *pdev)
- 	input_dev->keycodesize = sizeof(kbd->keycodes[0]);
- 	input_dev->keycodemax = ARRAY_SIZE(kbd->keycodes);
- 
--	matrix_keypad_build_keymap(keymap, ROW_SHIFT,
--			input_dev->keycode, input_dev->keybit);
-+	if (np) {
-+		error = matrix_keypad_of_build_keymap(&pdev->dev, ROW_SHIFT,
-+				input_dev->keycode, input_dev->keybit,
-+				"linux,keymap");
-+		if (error) {
-+			dev_err(&pdev->dev, "OF: failed to build keymap\n");
-+			goto err_put_clk;
-+		}
-+	} else {
-+		matrix_keypad_build_keymap(pdata->keymap, ROW_SHIFT,
-+				input_dev->keycode, input_dev->keybit);
-+	}
- 
- 	input_set_drvdata(input_dev, kbd);
- 
-@@ -317,6 +369,14 @@ static int spear_kbd_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(spear_kbd_pm_ops, spear_kbd_suspend, spear_kbd_resume);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id spear_kbd_id_table[] = {
-+	{ .compatible = "st,spear300-kbd" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, spear_kbd_id_table);
-+#endif
-+
- static struct platform_driver spear_kbd_driver = {
- 	.probe		= spear_kbd_probe,
- 	.remove		= __devexit_p(spear_kbd_remove),
-@@ -324,6 +384,7 @@ static struct platform_driver spear_kbd_driver = {
- 		.name	= "keyboard",
- 		.owner	= THIS_MODULE,
- 		.pm	= &spear_kbd_pm_ops,
-+		.of_match_table = of_match_ptr(spear_kbd_id_table),
- 	},
- };
- module_platform_driver(spear_kbd_driver);
--- 
-1.7.10.rc2.10.gb47606
+I found a few small issues here, nothing serious:
+
+> @@ -192,9 +192,9 @@ machine-$(CONFIG_ARCH_VEXPRESS)		:= vexpress
+>  machine-$(CONFIG_ARCH_VT8500)		:= vt8500
+>  machine-$(CONFIG_ARCH_W90X900)		:= w90x900
+>  machine-$(CONFIG_FOOTBRIDGE)		:= footbridge
+> -machine-$(CONFIG_MACH_SPEAR300)		:= spear3xx
+> -machine-$(CONFIG_MACH_SPEAR310)		:= spear3xx
+> -machine-$(CONFIG_MACH_SPEAR320)		:= spear3xx
+> +machine-$(CONFIG_MACH_SPEAR300_DT)	:= spear3xx
+> +machine-$(CONFIG_MACH_SPEAR310_DT)	:= spear3xx
+> +machine-$(CONFIG_MACH_SPEAR320_DT)	:= spear3xx
+>  machine-$(CONFIG_MACH_SPEAR600)		:= spear6xx
+>  machine-$(CONFIG_ARCH_ZYNQ)		:= zynq
+
+Since you're actually removing the non-DT support, I don't see a point in
+renaming the config symbols. Your patch should become quite a bit smaller
+if you leave them the way they are now.
+
+> +/ {
+> +	ahb {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges = <0x60000000 0x60000000 0x50000000
+> +			  0xd0000000 0xd0000000 0x30000000>;
+> +
+> +		clcd@60000000 {
+> +			compatible = "arm,clcd-pl110", "arm,primecell";
+> +			reg = <0x60000000 0x1000>;
+> +			interrupt-parent = <&vic>;
+> +			interrupts = <30>;
+> +			status = "disabled";
+> +		};
+
+You can move the interrupt-parent property that points to vic into the
+root node to define vic as the default parent so you don't have to
+list it individually in all the nodes using it.
+
+> +
+> +			serial@d0000000 {
+> +			       status = "okay";
+> +			};
+> +
+> +			serial@b2000000 {
+> +			       status = "okay";
+> +			};
+> +
+> +			serial@b2080000 {
+> +			       status = "okay";
+> +			};
+> +
+> +			serial@b2100000 {
+> +			       status = "okay";
+> +			};
+> +
+> +			serial@b2180000 {
+> +			       status = "okay";
+> +			};
+> +
+> +			serial@b2200000 {
+> +			       status = "okay";
+> +			};
+
+Does spear310-evb really connect all seven serial ports?
+
+> +/* Add SPEAr300 auxdata to pass platform data */
+> +static struct of_dev_auxdata spear300_auxdata_lookup[] __initdata = {
+> +	SPEAR3XX_AUXDATA_LOOKUP,
+> +	{}
+> +};
+
+I don't really like the use of macros in this way. Better copy the
+contents here, especially if you don't expect to add more stuff to
+that macro.
+
+> -/* spear300 routine
+> +	if (of_machine_is_compatible("st,spear300-evb")) {
+> +		/* pmx initialization */
+> +		pmx_driver.mode = &spear300_photo_frame_mode;
+> +		pmx_driver.devs = spear300_evb_pmx_devs;
+> +		pmx_driver.devs_count = ARRAY_SIZE(spear300_evb_pmx_devs);
+> +	} else {
+> +		pr_err("Invalid board\n");
+> +		return;
+> +	}
+
+I would not report the board as invalid if it doesn't match your list.
+Just keep going here in the hope that the board does work with its
+device tree contents.
+
+> +
+> +/* Following will create static virtual/physical mappings */
+> +struct map_desc spear3xx_io_desc[] __initdata = {
+> +	{
+> +		.virtual	= VA_SPEAR3XX_ICM1_UART_BASE,
+> +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM1_UART_BASE),
+> +		.length		= SZ_4K,
+> +		.type		= MT_DEVICE
+> +	}, {
+> +		.virtual	= VA_SPEAR3XX_ML1_VIC_BASE,
+> +		.pfn		= __phys_to_pfn(SPEAR3XX_ML1_VIC_BASE),
+> +		.length		= SZ_4K,
+> +		.type		= MT_DEVICE
+> +	}, {
+> +		.virtual	= VA_SPEAR3XX_ICM3_SYS_CTRL_BASE,
+> +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM3_SYS_CTRL_BASE),
+> +		.length		= SZ_4K,
+> +		.type		= MT_DEVICE
+> +	}, {
+> +		.virtual	= VA_SPEAR3XX_ICM3_MISC_REG_BASE,
+> +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM3_MISC_REG_BASE),
+> +		.length		= SZ_4K,
+> +		.type		= MT_DEVICE
+> +	},
+> +};
+
+Note: there no real reason to just map 4K pages here, or to compute the
+virtual addresses using the IO_ADDRESS macro. Using larger mappings mean
+you have more efficient TLB lookup for any I/O windows that are located
+closely together.
+
+I would actually write this something like
+struct map_desc spear3xx_io_desc[] __initdata = {
+	{
+		.virtual = 0xf0000000,
+		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM1_2_BASE),
+		.length	 = SZ_16M,
+		.type	 = MT_DEVICE,
+	}, {
+		.virtual = 0xf1000000,
+		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM4_BASE),
+		.length  = 3 * SZ_16M,
+		.type	 = MT_DEVICE,
+	}, {
+		.virtual = 0xf4000000,
+		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM3_ML1_2_BASE),
+		.length  = 2 * SZ_16M,
+		.type	 = MT_DEVICE,
+	}, {
+		.virtual = 0xf6000000,
+		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM3_SMI_CTRL_BASE),
+		.length  = SZ_16M,
+		.type	 = MT_DEVICE,
+	},
+};
+
+This would cover almost all of your devices with just seven TLB entries,
+and ioremap can now find the right virtual addresses automatically.
+
+	Arnd
