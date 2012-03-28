@@ -1,61 +1,102 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] ARM: imx28: add basic dt support
-Date: Wed, 28 Mar 2012 21:22:29 +0800
-Message-ID: <20120328132227.GA3254@S2101-09.ap.freescale.net>
-References: <1332513070-5400-1-git-send-email-b29396@freescale.com>
- <20120328055801.GA3953@S2100-06.ap.freescale.net>
- <20120328095346.GA31901@shlinux2.ap.freescale.net>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v7 2/4] MIPS: Octeon: Setup irq_domains for interrupts.
+Date: Wed, 28 Mar 2012 09:21:29 -0500
+Message-ID: <4F731E69.8030907@gmail.com>
+References: <1332790281-9648-1-git-send-email-ddaney.cavm@gmail.com> <1332790281-9648-3-git-send-email-ddaney.cavm@gmail.com> <4F711E69.1080302@gmail.com> <4F7205F3.3000108@cavium.com> <4F7239A4.7070905@gmail.com> <4F723FDD.4080708@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120328095346.GA31901-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F723FDD.4080708@cavium.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 28, 2012 at 05:53:47PM +0800, Dong Aisheng wrote:
-> On Wed, Mar 28, 2012 at 01:58:04PM +0800, Guo Shawn-R65073 wrote:
-> > On Fri, Mar 23, 2012 at 10:31:10PM +0800, Dong Aisheng wrote:
-> > > From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-...
-> > > +static const char *imx28_dt_compat[] __initdata = {
-> > 
-> > mxs_dt_compat
-> > 
-> If changed like that, is it reasonable for mx23 to use this
-> compatible string list?
-> I planed to have separate compatible string for mx23 and mx28.
-
-Ok, I'm fine with that, since we will have separate DT_MACHINE_START
-for imx23 and imx28.
-
+On 03/27/2012 05:31 PM, David Daney wrote:
+> On 03/27/2012 03:05 PM, Rob Herring wrote:
+>> On 03/27/2012 01:24 PM, David Daney wrote:
+>>> On 03/26/2012 06:56 PM, Rob Herring wrote:
+>>>> On 03/26/2012 02:31 PM, David Daney wrote:
+>>>>> From: David Daney<david.daney@cavium.com>
+>>> [...]
+>>>>> +static bool octeon_irq_ciu_is_edge(unsigned int line, unsigned int
+>>>>> bit)
+>>>>> +{
+>>>>> +    bool edge = false;
+>>>>> +
+>>>>> +    if (line == 0)
+>>>>> +        switch (bit) {
+>>>>> +        case 48 ... 49: /* GMX DRP */
+>>>>> +        case 50: /* IPD_DRP */
+>>>>> +        case 52 ... 55: /* Timers */
+>>>>> +        case 58: /* MPI */
+>>>>> +            edge = true;
+>>>>> +            break;
+>>>>> +        default:
+>>>>> +            break;
+>>>>> +        }
+>>>>> +    else /* line == 1 */
+>>>>> +        switch (bit) {
+>>>>> +        case 47: /* PTP */
+>>>>> +            edge = true;
+>>>>> +            break;
+>>>>> +        default:
+>>>>> +            break;
+>>>>> +        }
+>>>>> +    return edge;
+>>>>
+>>>> Moving in the right direction, but I still don't get why this is not in
+>>>> the CIU binding as a 3rd cell?
+>>>
+>>> There are a several reasons, in no particular order they are:
+>>>
+>>> o There is no 3rd cell.  The bindings were discussed with Grant here:
+>>>    http://www.linux-mips.org/archives/linux-mips/2011-05/msg00355.html
+>>>
+>>
+>> Then add one.
 > 
-> > > +	"fsl,imx28",
-> > > +	"fsl,imx28-evk",
-> > 
-> > I would have the list sorted from the most specific to the most
-> > general.  That said, it's better to have "fsl,imx28" sorted after
-> > "fsl,imx28-evk".
-> > 
-> I prefer to keep the basic one first, then for future boards support
-> we just add them below rather than insert above the basic one "fsl,imx28".
-> However, it's really not a big deal.
-> If you persist to do like that, i can also do it.
+> I can't.  The dtb is already programmed into the bootloader ROMs,
+> changing the kernel code will not change that.  It is fait accompli.
 > 
-Yes, please.  Listing items from the most specific to the general is
-the rule for compatible property and match table.
+>>
+>>> o The edge/level thing cannot be changed, and the irq lines don't leave
+>>> the SOC, so hard coding it is possible.
+>>
+>> Right, but DT describes h/w connections and this is an aspect of the
+>> connection. This may be fixed for the SOC, but it's not fixed for the
+>> CIU (i.e. could change in future chips), right?
+> 
+> In theory yes.  However:
+> 
+> 1) The chip designers will not change it.
+> 
+> 2) There will likely be no more designs with either CIU or CIU2, so we
+> know what all the different possibilities are today.
+> 
+> When CIU3 is deployed, we will use the lessons we have learned to do
+> things the Right Way.
+> 
+>>
+>> There's 2 reasons why you would not put this into DTS:
+>>
+>> - All irq lines' trigger type are the same, fixed and known.
+>> - You can read a register to tell you the trigger type.
+>>
+>> Even if it's not going to change ever, it's still worth putting into the
+>> DTS as it is well suited for holding that data and it is just data.
+> 
+> Agreed that it could be in the DTS, and retrospect it probably should
+> have been put in the DTS, but it wasn't.  So I think what we have now is
+> a workable solution, and has the added attraction of working with
+> already deployed boards.
 
--- 
-Regards,
-Shawn
+Aren't you building in the dtb to the kernel?
+
+It could be argued it doesn't matter what you deployed without upstream
+review. But as long as this contained then this one is fine with me.
+However, this needs to be understood for each binding as I'm sure there
+must be some blocks which will get reused.
+
+Rob
