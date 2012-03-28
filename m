@@ -1,129 +1,89 @@
-From: Tom Warren <TWarren@nvidia.com>
-Subject: Re: [PATCH 1/2] fdt: Avoid early panic() when there is no
- FDT present
-Date: Wed, 28 Mar 2012 13:32:00 -0700
-Message-ID: <5FBF8E85CA34454794F0F7ECBA79798F37977BF634@HQMAIL04.nvidia.com>
-References: <1332965305-21151-1-git-send-email-sjg@chromium.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2 1/2] Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
+Date: Wed, 28 Mar 2012 15:28:01 -0600
+Message-ID: <4F738261.1060002@wwwdotorg.org>
+References: <4aba6f2cd9f050f419660555bdb661915c1be9b1.1332826100.git.viresh.kumar@st.com> <4F71E0A6.4080703@wwwdotorg.org> <4F7299D7.4020006@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1332965305-21151-1-git-send-email-sjg@chromium.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>, U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Jerry Van Baren <vanbaren@cideas.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <4F7299D7.4020006@st.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, spear-devel <spear-devel@list.st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "sr@denx.de" <sr@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Simon,
+On 03/27/2012 10:55 PM, Viresh Kumar wrote:
+> On 3/27/2012 9:15 PM, Stephen Warren wrote:
+>>>>  static int __devinit tegra_kbc_probe(struct platform_device *pdev)
+>> ...
+>>>> +	if (pdev->dev.of_node) {
+>>>> +		/* FIXME: Add handling of linux,fn-keymap here */
+>>>> +		err = matrix_keypad_of_build_keymap(&pdev->dev, KBC_ROW_SHIFT,
+>>>> +				input_dev->keycode, input_dev->keybit,
+>>>> +				"linux,keymap");
+>>
+>> Where do input_dev->keycode/keybit get allocated? As far as I can tell,
+>> matrix_keypad_of_build_keymap() just writes to those and assumes they're
+>> already allocated.
+> 
+> If i am not reading the code incorrectly, keycode is allocated memory with
+> kbc. And then we do this:
+> 
+> 	input_dev->keycode = kbc->keycode;
+> 
+> keybit is again present as part of struct input_dev.
+> Am i missing something.
 
-> -----Original Message-----
-> From: Simon Glass [mailto:sjg@chromium.org]
-> Sent: Wednesday, March 28, 2012 1:08 PM
-> To: U-Boot Mailing List
-> Cc: Tom Warren; Stephen Warren; Albert Aribaud; Simon Glass; Jerry Van
-> Baren; Devicetree Discuss
-> Subject: [PATCH 1/2] fdt: Avoid early panic() when there is no FDT present
-> 
-> CONFIG_OF_CONTROL requires a valid device tree. However, we cannot call
-> panic() before the console is set up since the message does not appear, and
-> we get a silent failure.
-> 
-> Remove the panic from fdtdec_check_fdt() and provide a new function to
-> prepare the fdt for use. This will be called after the console is ready.
-> 
-> Signed-off-by: Simon Glass <sjg@chromium.org>
+Ah right, I'd been looking inside input_allocate_device() rather than
+the specific driver's probe(). So, no issue here.
 
-Tested-by: Tom Warren <twarren@nvidia.com>
-Acked-by: Tom Warren <twarren@nvidia.com>
+>>>> diff --git a/drivers/input/of_keymap.c b/drivers/input/of_keymap.c
+>> ...
+>>>> +int matrix_keypad_of_build_keymap(struct device *dev, unsigned int row_shift,
+>> ...
+>>>> +		keymap[MATRIX_SCAN_CODE(row, col, row_shift)] = code;
+>>>> +		__set_bit(code, keybit);
+>> How bit are keymap and keybit?
+> 
+> Couldn't get this one. :(
+> Can you please elaborate the question a bit?
 
-> ---
->  include/fdtdec.h |   17 +++++++++++++++--
->  lib/fdtdec.c     |   24 +++++++++++++++++++-----
->  2 files changed, 34 insertions(+), 7 deletions(-)
+s/bit/big/ might make the question clearer:-)
+
+>> I think we need range-checking here to
+>> make sure that row/col/row_shift/code are valid and in-range.
 > 
-> diff --git a/include/fdtdec.h b/include/fdtdec.h index 766e0bd..d45acbe
-> 100644
-> --- a/include/fdtdec.h
-> +++ b/include/fdtdec.h
-> @@ -157,8 +157,21 @@ s32 fdtdec_get_int(const void *blob, int node, const
-> char *prop_name,  int fdtdec_get_is_enabled(const void *blob, int node);
+> I picked this directly from matrix_keypad_build_keymap() as is.
+> Anyway there is no loss in improving it. :)
 > 
->  /**
-> - * Checks whether we have a valid fdt available to control U-Boot, and
-> panic
-> - * if not.
-> + * Make sure we have a valid fdt available to control U-Boot.
-> + *
-> + * If not, a message is printed to the console if the console is ready.
-> + *
-> + * @return 0 if all ok, -1 if not
-> + */
-> +int fdtdec_prepare_fdt(void);
-> +
-> +/**
-> + * Checks that we have a valid fdt available to control U-Boot.
-> +
-> + * However, if not then for the moment nothing is done, since this
-> + function
-> + * is called too early to panic().
-> + *
-> + * @returns 0
->   */
->  int fdtdec_check_fdt(void);
+> What kind of range-check you are looking for?
+> Currently we do following
 > 
-> diff --git a/lib/fdtdec.c b/lib/fdtdec.c index 9241d13..0fb6d17 100644
-> --- a/lib/fdtdec.c
-> +++ b/lib/fdtdec.c
-> @@ -276,17 +276,31 @@ int fdtdec_add_aliases_for_id(const void *blob, const
-> char *name,
->  	return num_found;
->  }
+> 		unsigned int row = KEY_ROW(key);
+> 		unsigned int col = KEY_COL(key);
+> 		unsigned short code = KEY_VAL(key);
 > 
-> +int fdtdec_check_fdt(void)
-> +{
-> +	/*
-> +	 * We must have an FDT, but we cannot panic() yet since the console
-> +	 * is not ready. So for now, just assert(). Boards which need an
-> early
-> +	 * FDT (prior to console ready) will need to make their own
-> +	 * arrangements and do their own checks.
-> +	 */
-> +	assert(!fdtdec_prepare_fdt());
-> +	return 0;
-> +}
-> +
->  /*
->   * This function is a little odd in that it accesses global data. At some
->   * point if the architecture board.c files merge this will make more sense.
->   * Even now, it is common code.
->   */
-> -int fdtdec_check_fdt(void)
-> +int fdtdec_prepare_fdt(void)
->  {
-> -	/* We must have an fdt */
-> -	if (((uintptr_t)gd->fdt_blob & 3) || fdt_check_header(gd->fdt_blob))
-> -		panic("No valid fdt found - please append one to U-Boot\n"
-> -			"binary or define CONFIG_OF_EMBED\n");
-> +	if (((uintptr_t)gd->fdt_blob & 3) || fdt_check_header(gd->fdt_blob))
-> {
-> +		printf("No valid FDT found - please append one to U-Boot "
-> +			"binary, use u-boot-dtb.bin or define "
-> +			"CONFIG_OF_EMBED\n");
-> +		return -1;
-> +	}
->  	return 0;
->  }
-> 
-> --
-> 1.7.7.3
--- 
-nvpublic
+> All these macros '&' 'key' with 0xFF, 0xFF and 0xFFFF.
+> Which is also kind of range checking.
+
+The size of the keycode array is much smaller though:
+
+mach-tegra's kbc.h:
+
+#define KBC_MAX_ROW	16
+#define KBC_MAX_COL	8
+#define KBC_MAX_KEY	(KBC_MAX_ROW * KBC_MAX_COL)
+
+tegra-kbc.c:
+
+struct tegra_kbc {
+...
+	unsigned short keycode[KBC_MAX_KEY * 2];
+
+so the DT parsing can easily overflow this, and is driven by
+user-supplied data. I think you'll need to pass input_dev->keycodesize
+into matrix_keypad_of_build_keymap() to achieve the overall
+range-checking, but also checking col against (1<<row_shift) would be
+needed to make sure the individual "fields" of the array index don't
+overflow too.
