@@ -1,90 +1,71 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] of/irq: of_irq_init: Call initialization function for all controllers
-Date: Wed, 28 Mar 2012 11:32:20 +0530
-Message-ID: <CAJuYYwSTA_oibeF0maCeaMnw4z2hU33wBjW_ussfLY9S-=UEmA@mail.gmail.com>
-References: <CAJuYYwS5Srw2-D6hdk=-=YN3iB37+KTWVqQPPPVbb-e7it+uVQ@mail.gmail.com>
-	<1332679129-23864-1-git-send-email-thomas.abraham@linaro.org>
-	<4F6F37B6.3050506@gmail.com>
-	<CAJuYYwTzx8+J9oMRd7kJ=Qp5V4v0LVUYxdkAe8dMqVji0Dk4yg@mail.gmail.com>
-	<4F706947.2080405@gmail.com>
-	<CAJuYYwRxCTWxnof1HUqYVX4mbzWCxcab69CJyKxOh13bQbQ_5Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwRxCTWxnof1HUqYVX4mbzWCxcab69CJyKxOh13bQbQ_5Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, patches@linaro.org
+From: ludovic.desroches@atmel.com
+Subject: [PATCH v2 2/3] arm: at91: at91sam9x5 add mci support
+Date: Wed, 28 Mar 2012 12:05:49 +0200
+Message-ID: <1332929150-14240-3-git-send-email-ludovic.desroches@atmel.com>
+References: <1332929150-14240-1-git-send-email-ludovic.desroches@atmel.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1332929150-14240-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: nicolas.ferre@atmel.com, ludovic.desroches@atmel.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 March 2012 21:06, Thomas Abraham <thomas.abraham@linaro.org> wrote:
-> On 26 March 2012 18:34, Rob Herring <robherring2@gmail.com> wrote:
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
 
->> Your fix doesn't really guarantee the proper order either. It's still a
->> side effect of the implementation. Perhaps a retry mechanism would work.
->> Then the init for wakeup_eint can retry if the gic is not yet setup.
->
-> Ok. A retry mechanism would be most robust solution for this case.
->
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+---
+ arch/arm/boot/dts/at91sam9x5.dtsi |   24 ++++++++++++++++++++++++
+ arch/arm/mach-at91/at91sam9x5.c   |    2 ++
+ 2 files changed, 26 insertions(+), 0 deletions(-)
 
-Hi Rob,
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index c111001..c2ab650 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -191,6 +191,30 @@
+ 				interrupts = <27 4>;
+ 				status = "disabled";
+ 			};
++
++			mmc0: mmc@f0008000 {
++				compatible = "atmel,hsmci";
++				reg = <0xf0008000 0x600>;
++				interrupts = <12 4>;
++				status = "disabled";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				slot@0 {
++					reg = <0>;
++				};
++			};
++
++			mmc1: mmc@f000c000 {
++				compatible = "atmel,hsmci";
++				reg = <0xf000c000 0x600>;
++				interrupts = <26 4>;
++				status = "disabled";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				slot@0 {
++					reg = <0>;
++				};
++			};
+ 		};
+ 
+ 		nand0: nand@40000000 {
+diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
+index 13c8cae..39cbef3 100644
+--- a/arch/arm/mach-at91/at91sam9x5.c
++++ b/arch/arm/mach-at91/at91sam9x5.c
+@@ -225,6 +225,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("t0_clk", "f800c000.timer", &tcb0_clk),
+ 	CLKDEV_CON_DEV_ID("dma_clk", "ffffec00.dma-controller", &dma0_clk),
+ 	CLKDEV_CON_DEV_ID("dma_clk", "ffffee00.dma-controller", &dma1_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "f0008000.mmc", &mmc0_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "f000c000.mmc", &mmc1_clk),
+ 	CLKDEV_CON_ID("pioA", &pioAB_clk),
+ 	CLKDEV_CON_ID("pioB", &pioAB_clk),
+ 	CLKDEV_CON_ID("pioC", &pioCD_clk),
+-- 
+1.7.5.4
 
-I have attempted an implementation of the the retry mechanism in the
-of_irq_init() function. It allows initialization functions of
-interrupt controller nodes to report -EAGAIN indicating that the
-initialization was not complete and should be retried.
-
-I have tested this and it is working fine. But the complexity of the
-interrupt controller's intialization function increases because it has
-to undo some of the intialization steps it completed before finding
-that the its parent controller was not initialized.
-
-The following is the diff of the changes for of_irq_init() function.
-Please let know if this is acceptable.
-
-Thanks,
-Thomas.
-
-@@ -452,7 +454,6 @@ void __init of_irq_init(const struct of_device_id *matches)
- 			if (desc->interrupt_parent != parent)
- 				continue;
-
--			list_del(&desc->list);
- 			match = of_match_node(matches, desc->dev);
- 			if (WARN(!match->data,
- 			    "of_irq_init: no init function for %s\n",
-@@ -466,6 +467,14 @@ void __init of_irq_init(const struct of_device_id *matches)
- 				 desc->dev, desc->interrupt_parent);
- 			irq_init_cb = match->data;
- 			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
-+			if (ret == -EAGAIN)
-+				/*
-+				 * Interrupt controller's initialization did not
-+				 * complete and should be retried. So let its
-+				 * intc_desc be on intc_desc_list.
-+				 */
-+				continue;
-+			list_del(&desc->list);
- 			if (ret) {
- 				kfree(desc);
- 				continue;
-@@ -482,7 +491,18 @@ void __init of_irq_init(const struct of_device_id *matches)
- 		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
- 		if (list_empty(&intc_parent_list) || !desc) {
- 			pr_err("of_irq_init: children remain, but no parents\n");
--			break;
-+			/*
-+			 * If a search with NULL as parent did not result in any
-+			 * new parent being found, then the scan for matching
-+			 * interrupt controller nodes is considered as complete.
-+			 * Otherwise, if there are pending elements on the
-+			 * intc_desc_list, then retry this process again with
-+			 * NULL as parent.
-+			 */
-+			if (!parent)
-+				break;
-+			parent = NULL;
-+			continue;
- 		}
- 		list_del(&desc->list);
- 		parent = desc->dev;
