@@ -1,41 +1,50 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V3 5/5] mtd: Move fdt partition documentation to a
- seperate file
-Date: Wed, 28 Mar 2012 17:08:56 -0600
-Message-ID: <20120328230856.ECB9F3E1151@localhost>
-References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
- <1332885255-8304-6-git-send-email-jm@lentin.co.uk>
- <201203280817.12652.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201203280817.12652.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Jamie Lentin <jm@lentin.co.uk>
-Cc: devicetree-discuss@lists.ozlabs.org, Jason <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 2/4] MIPS: Octeon: Setup irq_domains for interrupts.
+Date: Wed, 28 Mar 2012 16:31:55 -0600
+Message-ID: <20120328223155.AD0A63E0DAA@localhost>
+References: <1332790281-9648-1-git-send-email-ddaney.cavm@gmail.com> <1332790281-9648-3-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1332790281-9648-3-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Mar 2012 08:17:12 +0000, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 27 March 2012, Jamie Lentin wrote:
-> > 
-> > Partitions are described in the same way for all mtd devices when using
-> > devicetree, move the documentation to a separate file and add references
-> > to it.
-> > 
-> > Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+On Mon, 26 Mar 2012 12:31:19 -0700, David Daney <ddaney.cavm@gmail.com> wrote:
+> From: David Daney <david.daney@cavium.com>
 > 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Create two domains.  One for the GPIO lines, and the other for on-chip
+> sources.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+[...]
+> +struct octeon_irq_gpio_domain_data {
+> +	unsigned int base_hwirq;
+> +};
 
-Merged, thanks (dropping the orion-nand.txt hunk) because I'm not
-applying the rest of the series!)
+Hmmm...
+
+> +static int octeon_irq_gpio_xlat(struct irq_domain *d,
+> +				struct device_node *node,
+> +				const u32 *intspec,
+> +				unsigned int intsize,
+> +				unsigned long *out_hwirq,
+> +				unsigned int *out_type)
+> +{
+[...]
+> +	*out_hwirq = gpiod->base_hwirq + pin;
+
+...base_hwirq is only used here...
+
+[...]
+> +		gpiod = kzalloc(sizeof (*gpiod), GFP_KERNEL);
+> +		if (gpiod) {
+> +			/* gpio domain host_data is the base hwirq number. */
+> +			gpiod->base_hwirq = 16;
+> +			irq_domain_add_linear(gpio_node, 16, &octeon_irq_domain_gpio_ops, gpiod);
+
+... and it is unconditionally set to 16.  It looks to me like
+base_hwirq and the associated kzalloc() is unnecessary.
 
 g.
