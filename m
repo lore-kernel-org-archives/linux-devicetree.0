@@ -1,44 +1,49 @@
-From: Viresh Kumar <viresh.kumar@st.com>
-Subject: [PATCH V2 3/7] SPEAr6xx: Add compilation support for dtbs using 'make
- dtbs'
-Date: Wed, 28 Mar 2012 15:00:13 +0530
-Message-ID: <bae0539600c2b9720b4d68dd9a19414a77d1626c.1332926608.git.viresh.kumar@st.com>
-References: <cover.1332926608.git.viresh.kumar@st.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add
+ device tree support
+Date: Wed, 28 Mar 2012 10:54:50 +0100
+Message-ID: <20120328095450.GA23005@sirena.org.uk>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
+ <003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>
+ <m2aa4pkq5g.fsf@bob.laptop.org>
+ <4F3CFEED.6060206@samsung.com>
+ <m239abgc32.fsf@bob.laptop.org>
+ <00b901ccf08d$2fc18b50$8f44a1f0$%kim@samsung.com>
+ <m2vcn0496y.fsf@bob.laptop.org>
+ <87k426vy9r.fsf@laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1332926608.git.viresh.kumar@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, arnd@arndb.de
-Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, sr@denx.de, plagnioj@jcrosoft.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87k426vy9r.fsf@laptop.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, 'Thomas Abraham' <thomas.abraham@linaro.org>, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-'make dtbs' compiles all dtbs for a family. For this we need to add entries for
-all board dtb's in Makefile.boot file. This patch does it.
+On Tue, Mar 27, 2012 at 11:50:24AM -0400, Chris Ball wrote:
+> On Tue, Feb 21 2012, Chris Ball wrote:
+> > On Tue, Feb 21 2012, Kukjin Kim wrote:
 
-Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
----
- arch/arm/mach-spear6xx/Makefile.boot |    2 ++
- 1 file changed, 2 insertions(+)
+> >> I created topic branch for this we talked. You can pull that following:
+> >>   git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+> >> v3.4-for-cjb
 
-diff --git a/arch/arm/mach-spear6xx/Makefile.boot b/arch/arm/mach-spear6xx/Makefile.boot
-index 4674a4c..af493da 100644
---- a/arch/arm/mach-spear6xx/Makefile.boot
-+++ b/arch/arm/mach-spear6xx/Makefile.boot
-@@ -1,3 +1,5 @@
- zreladdr-y	+= 0x00008000
- params_phys-y	:= 0x00000100
- initrd_phys-y	:= 0x00800000
-+
-+dtb-$(CONFIG_BOARD_SPEAR600_DT)	+= spear600-evb.dtb
--- 
-1.7.10.rc2.10.gb47606
+> >> If any problems, please kindly let me know.
+
+> > Pushed to mmc-next, thanks.  (I'm expecting that you'll do the merge
+> > to Linus.)
+
+> I was expecting you to merge these patches, but they aren't in the
+> arm-soc tree and haven't been sent to Linus, and we're in the last few
+> days of the merge window.
+
+> As a result I'm dropping this tree -- and all of the patches that I
+> have on top of it -- from mmc-next so that I can get a pull request
+> out.  This means that I'm dropping:
+
+If they're already in your tree why not just send them to Linus?  Given
+that everything's in git I don't understand why you'd need Kukjin to
+push them separately or what the benefit of that would be?
+
+This is all extremely frustrating fromm the contributor point of view.
