@@ -1,233 +1,104 @@
-From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] ARM: imx28: add basic dt support
-Date: Wed, 28 Mar 2012 17:53:47 +0800
-Message-ID: <20120328095346.GA31901@shlinux2.ap.freescale.net>
-References: <1332513070-5400-1-git-send-email-b29396@freescale.com>
- <20120328055801.GA3953@S2100-06.ap.freescale.net>
+From: Viresh Kumar <viresh.kumar@st.com>
+Subject: [PATCH V2 0/7] SPEAr DT support updates
+Date: Wed, 28 Mar 2012 15:00:10 +0530
+Message-ID: <cover.1332926608.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120328055801.GA3953-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, arnd@arndb.de
+Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, sr@denx.de, plagnioj@jcrosoft.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 28, 2012 at 01:58:04PM +0800, Guo Shawn-R65073 wrote:
-> On Fri, Mar 23, 2012 at 10:31:10PM +0800, Dong Aisheng wrote:
-> > From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-...
-> > +/dts-v1/;
-> > +/include/ "imx28.dtsi"
-> > +
-> > +/ {
-> > +	model = "Freescale i.MX28 Evaluation Kit";
-> > +	compatible = "fsl,imx28-evk", "fsl,imx28";
-> > +
-> > +	memory {
-> > +		device_type = "memory";
-> 
-> This is already in skeleton.dtsi included by imx28.dtsi.
-> 
-Correct.
+Hello,
 
-> > +/include/ "skeleton.dtsi"
-> > +
-> > +/ {
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> 
-> These two are already in skeleton.dtsi.
-> 
-will remove.
+This patchset updates DT support for SPEAr3xx and 6xx.
+It has following changes:
+- updates DT support Mainly for SPEAr3xx family
+- updates dma support for SPEAr6xx
+- updates defconfig
 
-> > +			icoll: interrupt-controller@80000000 {
-> > +				compatible = "fsl,imx28-icoll";
-> 
-> I would expect it be:
-> 
-> 	compatible = "fsl,imx28-icoll", "fsl,mxs-icoll";
-> 
-> So it can be matched by both imx23 and imx28.
-> 
-Yes, i can change like that.
+It has dependency on following patchsets:
+- ehci & ohci: http://www.spinics.net/lists/linux-usb/msg60362.html
+- rtc: http://lkml.org/lkml/2012/3/26/96
+- keyboard: http://www.spinics.net/lists/linux-input/msg19904.html
 
-> > +				#interrupt-cells = <1>;
-> > +			};
-> > +
-> > diff --git a/arch/arm/mach-mxs/Kconfig b/arch/arm/mach-mxs/Kconfig
-> > index c57f996..c776aef 100644
-> > --- a/arch/arm/mach-mxs/Kconfig
-> > +++ b/arch/arm/mach-mxs/Kconfig
-> > @@ -17,6 +17,14 @@ config SOC_IMX28
-> >  
-> >  comment "MXS platforms:"
-> >  
-> > +config MACH_MXS_DT
-> > +	bool "Support MXS platforms from device tree"
-> > +	select SOC_IMX28
-> > +	select USE_OF
-> > +	help
-> > +	  Include support for Freescale MXS platforms(i.MX23 and i.MX28)
-> > +	  using the device tree for discovery
-> > +
-> 
-> If I build mxs_defconfig with only MACH_MXS_DT enabled, I got
-> 
->   LD      .tmp_vmlinux1
-> arch/arm/mach-mxs/built-in.o: In function `mxs_add_amba_device':
-> arch/arm/mach-mxs/devices.c:89: undefined reference to `amba_device_register'
-> 
-It looks ideally we do not need to compile devices.c and devices/* for only dt.
+V2:
+- Separate DT_MACHINE_INIT macros are defined per SoC.
+- PATCH 1/7 was sent earlier as individual patch, and is now included in this
+  patchset for completeness.
+- clock support for ehci and ohci added
+- plat data for UART PL011 removed as it is not required
+- Minor issues fixed
 
-> It's caused by missing "select ARM_AMBA".  For non-dt build, it gets
-> selected under "config MXS_HAVE_AMBA_DUART" (mach-mxs/devices/Kconfig).
-> 
-> I intend to fix it in the following way.
-> 
-I agree with this temporary fix.
+Viresh Kumar (7):
+  SPEAr: Use CLKDEV_INIT for defining clk_lookups
+  SPEAr3xx: Add clock instance of usb hosts - ehci and ohci 0 and 1
+  SPEAr6xx: Add compilation support for dtbs using 'make dtbs'
+  SPEAr3xx: Replace printk() with pr_*()
+  ARM: SPEAr3xx: Add device-tree support to SPEAr3xx architecture
+  SPEAr: Add PL080 DMA support for 3xx and 6xx
+  SPEAr: Update defconfigs
 
-> --8<---
-> diff --git a/arch/arm/mach-mxs/Kconfig b/arch/arm/mach-mxs/Kconfig
-> index 570d5d5..d076452 100644
-> --- a/arch/arm/mach-mxs/Kconfig
-> +++ b/arch/arm/mach-mxs/Kconfig
-> @@ -7,11 +7,13 @@ config MXS_OCOTP
-> 
->  config SOC_IMX23
->         bool
-> +       select ARM_AMBA
->         select CPU_ARM926T
->         select HAVE_PWM
-> 
->  config SOC_IMX28
->         bool
-> +       select ARM_AMBA
->         select CPU_ARM926T
->         select HAVE_PWM
-> 
-> diff --git a/arch/arm/mach-mxs/devices/Kconfig b/arch/arm/mach-mxs/devices/Kconfig
-> index 18b6bf5..2febd62 100644
-> --- a/arch/arm/mach-mxs/devices/Kconfig
-> +++ b/arch/arm/mach-mxs/devices/Kconfig
-> @@ -1,6 +1,5 @@
->  config MXS_HAVE_AMBA_DUART
->         bool
-> -       select ARM_AMBA
-> 
-> --->8--
-> 
-> > +#include <linux/init.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_platform.h>
-> > +#include <asm/mach/arch.h>
-> > +#include <asm/mach/time.h>
-> > +#include <mach/common.h>
-> > +#include <mach/mx28.h>
-> 
-> This one is not needed.
-> 
-Correct.
+ Documentation/arm/SPEAr/overview.txt            |   13 +-
+ Documentation/devicetree/bindings/arm/spear.txt |   18 ++
+ arch/arm/Makefile                               |    6 +-
+ arch/arm/boot/dts/spear300-evb.dts              |  183 +++++++++++
+ arch/arm/boot/dts/spear300.dtsi                 |   74 +++++
+ arch/arm/boot/dts/spear310-evb.dts              |  111 +++++++
+ arch/arm/boot/dts/spear310.dtsi                 |   75 +++++
+ arch/arm/boot/dts/spear320-evb.dts              |  112 +++++++
+ arch/arm/boot/dts/spear320.dtsi                 |   92 ++++++
+ arch/arm/boot/dts/spear3xx.dtsi                 |  153 ++++++++++
+ arch/arm/boot/dts/spear600-evb.dts              |    4 +
+ arch/arm/boot/dts/spear600.dtsi                 |    8 +
+ arch/arm/configs/spear3xx_defconfig             |   52 +++-
+ arch/arm/configs/spear6xx_defconfig             |   41 ++-
+ arch/arm/mach-spear3xx/Kconfig                  |   40 +--
+ arch/arm/mach-spear3xx/Makefile                 |   19 +-
+ arch/arm/mach-spear3xx/Makefile.boot            |    4 +
+ arch/arm/mach-spear3xx/clock.c                  |  208 +++++++------
+ arch/arm/mach-spear3xx/include/mach/generic.h   |   52 ++--
+ arch/arm/mach-spear3xx/include/mach/irqs.h      |    6 +-
+ arch/arm/mach-spear3xx/include/mach/spear300.h  |    4 +-
+ arch/arm/mach-spear3xx/include/mach/spear310.h  |    4 +-
+ arch/arm/mach-spear3xx/include/mach/spear320.h  |    4 +-
+ arch/arm/mach-spear3xx/spear300.c               |  284 +++++++++++++++--
+ arch/arm/mach-spear3xx/spear300_evb.c           |   75 -----
+ arch/arm/mach-spear3xx/spear310.c               |  324 ++++++++++++++++++--
+ arch/arm/mach-spear3xx/spear310_evb.c           |   81 -----
+ arch/arm/mach-spear3xx/spear320.c               |  323 ++++++++++++++++++--
+ arch/arm/mach-spear3xx/spear320_evb.c           |   79 -----
+ arch/arm/mach-spear3xx/spear3xx.c               |  157 +++++-----
+ arch/arm/mach-spear6xx/Makefile.boot            |    2 +
+ arch/arm/mach-spear6xx/clock.c                  |   80 ++---
+ arch/arm/mach-spear6xx/spear6xx.c               |  372 ++++++++++++++++++++++-
+ arch/arm/plat-spear/Kconfig                     |    5 +-
+ arch/arm/plat-spear/Makefile                    |    4 +-
+ arch/arm/plat-spear/include/plat/pl080.h        |   21 ++
+ arch/arm/plat-spear/pl080.c                     |   79 +++++
+ 37 files changed, 2556 insertions(+), 613 deletions(-)
+ create mode 100644 arch/arm/boot/dts/spear300-evb.dts
+ create mode 100644 arch/arm/boot/dts/spear300.dtsi
+ create mode 100644 arch/arm/boot/dts/spear310-evb.dts
+ create mode 100644 arch/arm/boot/dts/spear310.dtsi
+ create mode 100644 arch/arm/boot/dts/spear320-evb.dts
+ create mode 100644 arch/arm/boot/dts/spear320.dtsi
+ create mode 100644 arch/arm/boot/dts/spear3xx.dtsi
+ delete mode 100644 arch/arm/mach-spear3xx/spear300_evb.c
+ delete mode 100644 arch/arm/mach-spear3xx/spear310_evb.c
+ delete mode 100644 arch/arm/mach-spear3xx/spear320_evb.c
+ create mode 100644 arch/arm/plat-spear/include/plat/pl080.h
+ create mode 100644 arch/arm/plat-spear/pl080.c
 
-> > +
-> > +static int __init imx28_icoll_add_irq_domain(struct device_node *np,
-> 
-> mxs_icoll_add_irq_domain
-> 
-> > +				struct device_node *interrupt_parent)
-> > +{
-> > +	irq_domain_add_simple(np, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id mxs_irq_match[] __initconst = {
-> > +	{ .compatible = "fsl,imx28-icoll", .data = imx28_icoll_add_irq_domain, },
-> 
-> "fsl,mxs-icoll"
-> 
-Will change.
-
-> > +	{ /* sentinel */ }
-> > +};
-> > +
-> > +static void __init mxs_dt_init_irq(void)
-> > +{
-> > +	icoll_init_irq();
-> > +	of_irq_init(mxs_irq_match);
-> > +}
-> > +
-> > +static void __init imx28_timer_init(void)
-> > +{
-> > +	mx28_clocks_init();
-> > +}
-> > +
-> > +static struct sys_timer imx28_timer = {
-> > +	.init = imx28_timer_init,
-> > +};
-> > +
-> > +static void __init imx28_machine_init(void)
-> 
-> mxs_init_machine(), so that imx23 can use it later and have the
-> function name somehow aligned with hook name .init_machine.
-> 
-I can do it, but, as icoll, that means we're doing things by assuming
-no difference between mx23 and mx28 before we really start mx23 dt work.
-However, i think at least of_platform_populate should be common.
-So i agree to change to mxs_init_machine right now.
-If any difference we may change accordingly latter.
-
-> > +{
-> > +       of_platform_populate(NULL, of_default_bus_match_table,
-> > +		NULL, NULL);
-> > +}
-> > +
-> > +static const char *imx28_dt_compat[] __initdata = {
-> 
-> mxs_dt_compat
-> 
-If changed like that, is it reasonable for mx23 to use this
-compatible string list?
-I planed to have separate compatible string for mx23 and mx28.
-
-> > +	"fsl,imx28",
-> > +	"fsl,imx28-evk",
-> 
-> I would have the list sorted from the most specific to the most
-> general.  That said, it's better to have "fsl,imx28" sorted after
-> "fsl,imx28-evk".
-> 
-I prefer to keep the basic one first, then for future boards support
-we just add them below rather than insert above the basic one "fsl,imx28".
-However, it's really not a big deal.
-If you persist to do like that, i can also do it.
-
-> > +	NULL,
-> > +};
-> > +
-> > +DT_MACHINE_START(IMX28, "Freescale i.MX28 (Device Tree)")
-> > +	.map_io		= mx28_map_io,
-> > +	.init_irq	= mxs_dt_init_irq,
-> > +	.timer		= &imx28_timer,
-> > +	.init_machine	= imx28_machine_init,
-> > +	.dt_compat	= imx28_dt_compat,
-> > +	.restart	= mxs_restart,
-> > +MACHINE_END
-> > -- 
-> > 1.7.0.4
-> > 
-> 
-
-Regards
-Dong Aisheng
+-- 
+1.7.10.rc2.10.gb47606
