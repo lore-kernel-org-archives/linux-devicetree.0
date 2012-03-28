@@ -1,89 +1,55 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2 1/2] Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
-Date: Wed, 28 Mar 2012 15:28:01 -0600
-Message-ID: <4F738261.1060002@wwwdotorg.org>
-References: <4aba6f2cd9f050f419660555bdb661915c1be9b1.1332826100.git.viresh.kumar@st.com> <4F71E0A6.4080703@wwwdotorg.org> <4F7299D7.4020006@st.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V3 2/5] mtd: Add orion_nand devicetree bindings
+Date: Wed, 28 Mar 2012 17:04:26 -0600
+Message-ID: <20120328230426.CF3A43E104C@localhost>
+References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
+ <1332885255-8304-3-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <4F7299D7.4020006@st.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@st.com>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, spear-devel <spear-devel@list.st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "sr@denx.de" <sr@denx.de>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1332885255-8304-3-git-send-email-jm@lentin.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Jason <jason@lakedaemon.net>
+Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2012 10:55 PM, Viresh Kumar wrote:
-> On 3/27/2012 9:15 PM, Stephen Warren wrote:
->>>>  static int __devinit tegra_kbc_probe(struct platform_device *pdev)
->> ...
->>>> +	if (pdev->dev.of_node) {
->>>> +		/* FIXME: Add handling of linux,fn-keymap here */
->>>> +		err = matrix_keypad_of_build_keymap(&pdev->dev, KBC_ROW_SHIFT,
->>>> +				input_dev->keycode, input_dev->keybit,
->>>> +				"linux,keymap");
->>
->> Where do input_dev->keycode/keybit get allocated? As far as I can tell,
->> matrix_keypad_of_build_keymap() just writes to those and assumes they're
->> already allocated.
+On Tue, 27 Mar 2012 22:54:12 +0100, Jamie Lentin <jm@lentin.co.uk> wrote:
+> Allow a NAND chip using the orion_nand driver to be described using devicetree.
 > 
-> If i am not reading the code incorrectly, keycode is allocated memory with
-> kbc. And then we do this:
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+> ---
+>  .../devicetree/bindings/mtd/orion-nand.txt         |   46 ++++++++++++++++++++
+>  drivers/mtd/nand/orion_nand.c                      |   35 ++++++++++++++-
+>  2 files changed, 79 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
 > 
-> 	input_dev->keycode = kbc->keycode;
-> 
-> keybit is again present as part of struct input_dev.
-> Am i missing something.
+> diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
+> new file mode 100644
+> index 0000000..22c7438
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
+> @@ -0,0 +1,46 @@
+> +NAND support for Marvell Orion SoC platforms
+> +
+> +Required properties:
+> +- compatible : "mrvl,orion-nand".
+> +- reg : Base physical address of the NAND and length of memory mapped
+> +	region
+> +
+> +Optional properties:
+> +- cle :
+> +- ale :
+> +- bank-width :
+> +- chip-delay :
 
-Ah right, I'd been looking inside input_allocate_device() rather than
-the specific driver's probe(). So, no issue here.
-
->>>> diff --git a/drivers/input/of_keymap.c b/drivers/input/of_keymap.c
->> ...
->>>> +int matrix_keypad_of_build_keymap(struct device *dev, unsigned int row_shift,
->> ...
->>>> +		keymap[MATRIX_SCAN_CODE(row, col, row_shift)] = code;
->>>> +		__set_bit(code, keybit);
->> How bit are keymap and keybit?
-> 
-> Couldn't get this one. :(
-> Can you please elaborate the question a bit?
-
-s/bit/big/ might make the question clearer:-)
-
->> I think we need range-checking here to
->> make sure that row/col/row_shift/code are valid and in-range.
-> 
-> I picked this directly from matrix_keypad_build_keymap() as is.
-> Anyway there is no loss in improving it. :)
-> 
-> What kind of range-check you are looking for?
-> Currently we do following
-> 
-> 		unsigned int row = KEY_ROW(key);
-> 		unsigned int col = KEY_COL(key);
-> 		unsigned short code = KEY_VAL(key);
-> 
-> All these macros '&' 'key' with 0xFF, 0xFF and 0xFFFF.
-> Which is also kind of range checking.
-
-The size of the keycode array is much smaller though:
-
-mach-tegra's kbc.h:
-
-#define KBC_MAX_ROW	16
-#define KBC_MAX_COL	8
-#define KBC_MAX_KEY	(KBC_MAX_ROW * KBC_MAX_COL)
-
-tegra-kbc.c:
-
-struct tegra_kbc {
-...
-	unsigned short keycode[KBC_MAX_KEY * 2];
-
-so the DT parsing can easily overflow this, and is driven by
-user-supplied data. I think you'll need to pass input_dev->keycodesize
-into matrix_keypad_of_build_keymap() to achieve the overall
-range-checking, but also checking col against (1<<row_shift) would be
-needed to make sure the individual "fields" of the array index don't
-overflow too.
+Please state what data these properties contain.  :-)
