@@ -1,51 +1,106 @@
-From: Sylwester Nawrocki <snjw23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Handling device shared SFR on dt platform
-Date: Wed, 28 Mar 2012 21:45:14 +0200
-Message-ID: <4F736A4A.6050302@gmail.com>
-References: <4F6A5853.9090809@gmail.com> <20120324193200.822AD3E0B06@localhost>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH 1/2] fdt: Avoid early panic() when there is no FDT
+	present
+Date: Wed, 28 Mar 2012 13:08:24 -0700
+Message-ID: <1332965305-21151-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120324193200.822AD3E0B06@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <u-boot-bounces@lists.denx.de>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Grant,
+CONFIG_OF_CONTROL requires a valid device tree. However, we cannot call
+panic() before the console is set up since the message does not appear,
+and we get a silent failure.
 
-On 03/24/2012 08:32 PM, Grant Likely wrote:
->
-> Generally, this is handled by having a third node for the shared
-> register block and both device nodes holding a phandle to it.
-> 
-> No, there isn't any common infrastructure for implementing this, but
-> it isn't very much code.
+Remove the panic from fdtdec_check_fdt() and provide a new function to
+prepare the fdt for use. This will be called after the console is ready.
 
-Thank you, that sounds good. I'm just wondering how to handle the shared
-resource access synchronisation. There is an IORESOURCE_MUXED resource type 
-flag which could be used to prevent drivers from stomping on each others 
-feet when accessing the shared register, if I understand the software muxed
-resource semantics correctly. That is, using something like 
-request_muxed_(mem_)region()/release_mem_region() for the shared register
-protection.
+Signed-off-by: Simon Glass <sjg@chromium.org>
+---
+ include/fdtdec.h |   17 +++++++++++++++--
+ lib/fdtdec.c     |   24 +++++++++++++++++++-----
+ 2 files changed, 34 insertions(+), 7 deletions(-)
 
-What concerns me, is an overhead from region request/ioremap(?)/release, just
-to access a single 32-bit register. I'm going to see if those accesses could
-be moved to only device driver's probe() and remove() callbacks and what might
-be the resulting power consumption increase from that, if any.
-
-
---
-
-Thanks,
-Sylwester
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 766e0bd..d45acbe 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -157,8 +157,21 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+ int fdtdec_get_is_enabled(const void *blob, int node);
+ 
+ /**
+- * Checks whether we have a valid fdt available to control U-Boot, and panic
+- * if not.
++ * Make sure we have a valid fdt available to control U-Boot.
++ *
++ * If not, a message is printed to the console if the console is ready.
++ *
++ * @return 0 if all ok, -1 if not
++ */
++int fdtdec_prepare_fdt(void);
++
++/**
++ * Checks that we have a valid fdt available to control U-Boot.
++
++ * However, if not then for the moment nothing is done, since this function
++ * is called too early to panic().
++ *
++ * @returns 0
+  */
+ int fdtdec_check_fdt(void);
+ 
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 9241d13..0fb6d17 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -276,17 +276,31 @@ int fdtdec_add_aliases_for_id(const void *blob, const char *name,
+ 	return num_found;
+ }
+ 
++int fdtdec_check_fdt(void)
++{
++	/*
++	 * We must have an FDT, but we cannot panic() yet since the console
++	 * is not ready. So for now, just assert(). Boards which need an early
++	 * FDT (prior to console ready) will need to make their own
++	 * arrangements and do their own checks.
++	 */
++	assert(!fdtdec_prepare_fdt());
++	return 0;
++}
++
+ /*
+  * This function is a little odd in that it accesses global data. At some
+  * point if the architecture board.c files merge this will make more sense.
+  * Even now, it is common code.
+  */
+-int fdtdec_check_fdt(void)
++int fdtdec_prepare_fdt(void)
+ {
+-	/* We must have an fdt */
+-	if (((uintptr_t)gd->fdt_blob & 3) || fdt_check_header(gd->fdt_blob))
+-		panic("No valid fdt found - please append one to U-Boot\n"
+-			"binary or define CONFIG_OF_EMBED\n");
++	if (((uintptr_t)gd->fdt_blob & 3) || fdt_check_header(gd->fdt_blob)) {
++		printf("No valid FDT found - please append one to U-Boot "
++			"binary, use u-boot-dtb.bin or define "
++			"CONFIG_OF_EMBED\n");
++		return -1;
++	}
+ 	return 0;
+ }
+ 
+-- 
+1.7.7.3
