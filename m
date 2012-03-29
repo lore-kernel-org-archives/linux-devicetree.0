@@ -1,59 +1,38 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 5/7] ARM: SPEAr3xx: Add device-tree support to SPEAr3xx
- architecture
-Date: Thu, 29 Mar 2012 07:53:04 +0000
-Message-ID: <201203290753.04758.arnd@arndb.de>
-References: <cover.1332926608.git.viresh.kumar@st.com>
- <201203281227.32299.arnd@arndb.de> <4F740386.2080509@st.com>
+From: Viresh Kumar <viresh.kumar@st.com>
+Subject: Re: [PATCH V2 1/2] Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
+Date: Thu, 29 Mar 2012 13:53:53 +0530
+Message-ID: <4F741C19.4080703@st.com>
+References: <4aba6f2cd9f050f419660555bdb661915c1be9b1.1332826100.git.viresh.kumar@st.com> <4F71E0A6.4080703@wwwdotorg.org> <4F7299D7.4020006@st.com> <4F738261.1060002@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F740386.2080509-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Cc: "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sr-ynQEQJNshbs@public.gmane.org" <sr-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <4F738261.1060002@wwwdotorg.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, spear-devel <spear-devel@list.st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "sr@denx.de" <sr@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 29 March 2012, Viresh Kumar wrote:
-> But there are few concerns.
-> Firstly, i wasn't aware that ioremap will reuse these mappings.
-> I believed that it will create new mappings and this is what i
-> saw till 2-6.37. What will happen if iounmap is called?
+On 3/29/2012 2:58 AM, Stephen Warren wrote:
+> so the DT parsing can easily overflow this, and is driven by
+> user-supplied data.
 
-Yes, it was a fairly recent change. iounmap on one of these areas
-will do nothing.
+Got it. This check is must.
 
-> Over that, board would not be using all the devices present in SoC. So,
-> we don't really need to map everything. And so above wouldn't be valid
-> there.
+> I think you'll need to pass input_dev->keycodesize
 
-That should not really be a concern, you only waste a little bit of
-the vmalloc space that you gained recently when ioremap was changed.
-Nothing should ever be able to get to those pointers other than by
-calling ioremap, so it doesn't hurt to have them mapped, except for
-the very unlikely scenario that you get a wild pointer dereference
-in the kernel that would otherwise result in an oops.
+you mean keycodemax here?
 
-> To avoid holes, that were created in my original mappings, i can pick your
-> idea of dropping IO_ADDRESS() in .virtual field and use tightly aligned
-> virtual address for all peripherals.
-> 
-> Like: UART - 4K - 0xf0000000 - 0xf0001000
->       SPI - 4K -  0xf0001000 - 0xf0002000
+> into matrix_keypad_of_build_keymap() to achieve the overall
+> range-checking.
 
-Well, if you use the 4k mappings here, you won't benefit from reduced
-TLB pressure through section maps, although you still get rid of IO_ADDRESS.
-I would not put any devices into the static mapping, other than those
-you need to access before mm_init() or when you can actually use the section
-mapping.
+Will do that.
 
-	Arnd
+> but also checking col against (1<<row_shift) would be
+> needed to make sure the individual "fields" of the array index don't
+> overflow too.
+
+Ok. Please cross check V3 to verify, i got you comments correctly.
+
+-- 
+viresh
