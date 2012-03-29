@@ -1,16 +1,15 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH V2 5/7] ARM: SPEAr3xx: Add device-tree support to SPEAr3xx
  architecture
-Date: Thu, 29 Mar 2012 12:09:02 +0530
-Message-ID: <4F740386.2080509@st.com>
+Date: Thu, 29 Mar 2012 07:53:04 +0000
+Message-ID: <201203290753.04758.arnd@arndb.de>
 References: <cover.1332926608.git.viresh.kumar@st.com>
- <f4ad79023c6155d4de7e87c3cd798aadd493454e.1332926608.git.viresh.kumar@st.com>
- <201203281227.32299.arnd@arndb.de>
+ <201203281227.32299.arnd@arndb.de> <4F740386.2080509@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203281227.32299.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <4F740386.2080509-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,98 +19,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
 Cc: "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sr-ynQEQJNshbs@public.gmane.org" <sr-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/28/2012 5:57 PM, Arnd Bergmann wrote:
+On Thursday 29 March 2012, Viresh Kumar wrote:
+> But there are few concerns.
+> Firstly, i wasn't aware that ioremap will reuse these mappings.
+> I believed that it will create new mappings and this is what i
+> saw till 2-6.37. What will happen if iounmap is called?
 
-Hi Arnd,
+Yes, it was a fairly recent change. iounmap on one of these areas
+will do nothing.
 
-Thanks for reviewing. :)
+> Over that, board would not be using all the devices present in SoC. So,
+> we don't really need to map everything. And so above wouldn't be valid
+> there.
 
-All comments accepted.
+That should not really be a concern, you only waste a little bit of
+the vmalloc space that you gained recently when ioremap was changed.
+Nothing should ever be able to get to those pointers other than by
+calling ioremap, so it doesn't hurt to have them mapped, except for
+the very unlikely scenario that you get a wild pointer dereference
+in the kernel that would otherwise result in an oops.
 
-> Does spear310-evb really connect all seven serial ports?
-
-Yes, since it was an evaluation board, it contained all of them.
-
->> +/* Following will create static virtual/physical mappings */
->> > +struct map_desc spear3xx_io_desc[] __initdata = {
->> > +	{
->> > +		.virtual	= VA_SPEAR3XX_ICM1_UART_BASE,
->> > +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM1_UART_BASE),
->> > +		.length		= SZ_4K,
->> > +		.type		= MT_DEVICE
->> > +	}, {
->> > +		.virtual	= VA_SPEAR3XX_ML1_VIC_BASE,
->> > +		.pfn		= __phys_to_pfn(SPEAR3XX_ML1_VIC_BASE),
->> > +		.length		= SZ_4K,
->> > +		.type		= MT_DEVICE
->> > +	}, {
->> > +		.virtual	= VA_SPEAR3XX_ICM3_SYS_CTRL_BASE,
->> > +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM3_SYS_CTRL_BASE),
->> > +		.length		= SZ_4K,
->> > +		.type		= MT_DEVICE
->> > +	}, {
->> > +		.virtual	= VA_SPEAR3XX_ICM3_MISC_REG_BASE,
->> > +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM3_MISC_REG_BASE),
->> > +		.length		= SZ_4K,
->> > +		.type		= MT_DEVICE
->> > +	},
->> > +};
-> Note: there no real reason to just map 4K pages here, or to compute the
-> virtual addresses using the IO_ADDRESS macro. Using larger mappings mean
-> you have more efficient TLB lookup for any I/O windows that are located
-> closely together.
-
-Agreed.
-
-> I would actually write this something like
-> struct map_desc spear3xx_io_desc[] __initdata = {
-> 	{
-> 		.virtual = 0xf0000000,
-> 		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM1_2_BASE),
-> 		.length	 = SZ_16M,
-> 		.type	 = MT_DEVICE,
-> 	}, {
-> 		.virtual = 0xf1000000,
-> 		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM4_BASE),
-> 		.length  = 3 * SZ_16M,
-> 		.type	 = MT_DEVICE,
-> 	}, {
-> 		.virtual = 0xf4000000,
-> 		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM3_ML1_2_BASE),
-> 		.length  = 2 * SZ_16M,
-> 		.type	 = MT_DEVICE,
-> 	}, {
-> 		.virtual = 0xf6000000,
-> 		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM3_SMI_CTRL_BASE),
-> 		.length  = SZ_16M,
-> 		.type	 = MT_DEVICE,
-> 	},
-> };
+> To avoid holes, that were created in my original mappings, i can pick your
+> idea of dropping IO_ADDRESS() in .virtual field and use tightly aligned
+> virtual address for all peripherals.
 > 
-> This would cover almost all of your devices with just seven TLB entries,
-> and ioremap can now find the right virtual addresses automatically.
+> Like: UART - 4K - 0xf0000000 - 0xf0001000
+>       SPI - 4K -  0xf0001000 - 0xf0002000
 
-But there are few concerns.
-Firstly, i wasn't aware that ioremap will reuse these mappings.
-I believed that it will create new mappings and this is what i
-saw till 2-6.37. What will happen if iounmap is called?
+Well, if you use the 4k mappings here, you won't benefit from reduced
+TLB pressure through section maps, although you still get rid of IO_ADDRESS.
+I would not put any devices into the static mapping, other than those
+you need to access before mm_init() or when you can actually use the section
+mapping.
 
-Over that, board would not be using all the devices present in SoC. So,
-we don't really need to map everything. And so above wouldn't be valid
-there.
-
-To avoid holes, that were created in my original mappings, i can pick your
-idea of dropping IO_ADDRESS() in .virtual field and use tightly aligned
-virtual address for all peripherals.
-
-Like: UART - 4K - 0xf0000000 - 0xf0001000
-      SPI - 4K -  0xf0001000 - 0xf0002000
-
-      ...
-
--- 
-viresh
+	Arnd
