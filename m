@@ -1,82 +1,117 @@
-From: Wolfgang Denk <wd@denx.de>
-Subject: Re: [PATCH 1/2] fdt: Avoid early panic() when there is no
-	FDT present
-Date: Thu, 29 Mar 2012 08:30:15 +0200
-Message-ID: <20120329063015.85A59202B18@gemini.denx.de>
-References: <1332965305-21151-1-git-send-email-sjg@chromium.org>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH V2 5/7] ARM: SPEAr3xx: Add device-tree support to SPEAr3xx
+ architecture
+Date: Thu, 29 Mar 2012 12:09:02 +0530
+Message-ID: <4F740386.2080509@st.com>
+References: <cover.1332926608.git.viresh.kumar@st.com>
+ <f4ad79023c6155d4de7e87c3cd798aadd493454e.1332926608.git.viresh.kumar@st.com>
+ <201203281227.32299.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-reply-to: <1332965305-21151-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201203281227.32299.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sr-ynQEQJNshbs@public.gmane.org" <sr-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Simon Glass,
+On 3/28/2012 5:57 PM, Arnd Bergmann wrote:
 
-In message <1332965305-21151-1-git-send-email-sjg@chromium.org> you wrote:
-> CONFIG_OF_CONTROL requires a valid device tree. However, we cannot call
-> panic() before the console is set up since the message does not appear,
-> and we get a silent failure.
-...
-> +int fdtdec_prepare_fdt(void);
-> +
-> +/**
-> + * Checks that we have a valid fdt available to control U-Boot.
-> +
-> + * However, if not then for the moment nothing is done, since this function
-> + * is called too early to panic().
-> + *
-> + * @returns 0
+Hi Arnd,
 
-If the function always returns 0, then it makes no sense to return any
-value at all.  Please make it void, then.
+Thanks for reviewing. :)
 
-> +int fdtdec_check_fdt(void)
-> +{
-> +	/*
-> +	 * We must have an FDT, but we cannot panic() yet since the console
-> +	 * is not ready. So for now, just assert(). Boards which need an early
-> +	 * FDT (prior to console ready) will need to make their own
-> +	 * arrangements and do their own checks.
-> +	 */
-> +	assert(!fdtdec_prepare_fdt());
-> +	return 0;
-> +}
+All comments accepted.
 
-Ditto - make that "void fdtdec_check_fdt(void)".
+> Does spear310-evb really connect all seven serial ports?
 
-> +int fdtdec_prepare_fdt(void)
-...
->  	return 0;
->  }
+Yes, since it was an evaluation board, it contained all of them.
 
-Ditto - make that "void fdtdec_prepare_fdt(void)".
+>> +/* Following will create static virtual/physical mappings */
+>> > +struct map_desc spear3xx_io_desc[] __initdata = {
+>> > +	{
+>> > +		.virtual	= VA_SPEAR3XX_ICM1_UART_BASE,
+>> > +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM1_UART_BASE),
+>> > +		.length		= SZ_4K,
+>> > +		.type		= MT_DEVICE
+>> > +	}, {
+>> > +		.virtual	= VA_SPEAR3XX_ML1_VIC_BASE,
+>> > +		.pfn		= __phys_to_pfn(SPEAR3XX_ML1_VIC_BASE),
+>> > +		.length		= SZ_4K,
+>> > +		.type		= MT_DEVICE
+>> > +	}, {
+>> > +		.virtual	= VA_SPEAR3XX_ICM3_SYS_CTRL_BASE,
+>> > +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM3_SYS_CTRL_BASE),
+>> > +		.length		= SZ_4K,
+>> > +		.type		= MT_DEVICE
+>> > +	}, {
+>> > +		.virtual	= VA_SPEAR3XX_ICM3_MISC_REG_BASE,
+>> > +		.pfn		= __phys_to_pfn(SPEAR3XX_ICM3_MISC_REG_BASE),
+>> > +		.length		= SZ_4K,
+>> > +		.type		= MT_DEVICE
+>> > +	},
+>> > +};
+> Note: there no real reason to just map 4K pages here, or to compute the
+> virtual addresses using the IO_ADDRESS macro. Using larger mappings mean
+> you have more efficient TLB lookup for any I/O windows that are located
+> closely together.
 
+Agreed.
 
-I have to admit that I do not understand how this patch will help you
-anything.  You write "we cannot panic()", but "just assert()".
+> I would actually write this something like
+> struct map_desc spear3xx_io_desc[] __initdata = {
+> 	{
+> 		.virtual = 0xf0000000,
+> 		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM1_2_BASE),
+> 		.length	 = SZ_16M,
+> 		.type	 = MT_DEVICE,
+> 	}, {
+> 		.virtual = 0xf1000000,
+> 		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM4_BASE),
+> 		.length  = 3 * SZ_16M,
+> 		.type	 = MT_DEVICE,
+> 	}, {
+> 		.virtual = 0xf4000000,
+> 		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM3_ML1_2_BASE),
+> 		.length  = 2 * SZ_16M,
+> 		.type	 = MT_DEVICE,
+> 	}, {
+> 		.virtual = 0xf6000000,
+> 		.pfn	 = __phys_to_pfn(SPEAR3XX_ICM3_SMI_CTRL_BASE),
+> 		.length  = SZ_16M,
+> 		.type	 = MT_DEVICE,
+> 	},
+> };
+> 
+> This would cover almost all of your devices with just seven TLB entries,
+> and ioremap can now find the right virtual addresses automatically.
 
-If the assertion fails, it will call __assert_fail() - which in turn
-will just call panic().  So you are out of the frying pan into the
-fire.
+But there are few concerns.
+Firstly, i wasn't aware that ioremap will reuse these mappings.
+I believed that it will create new mappings and this is what i
+saw till 2-6.37. What will happen if iounmap is called?
 
-Best regards,
+Over that, board would not be using all the devices present in SoC. So,
+we don't really need to map everything. And so above wouldn't be valid
+there.
 
-Wolfgang Denk
+To avoid holes, that were created in my original mappings, i can pick your
+idea of dropping IO_ADDRESS() in .virtual field and use tightly aligned
+virtual address for all peripherals.
+
+Like: UART - 4K - 0xf0000000 - 0xf0001000
+      SPI - 4K -  0xf0001000 - 0xf0002000
+
+      ...
 
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-Life. Don't talk to me about life.      - Marvin the Paranoid Android
+viresh
