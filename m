@@ -1,128 +1,105 @@
-From: David Daney <david.daney@cavium.com>
-Subject: Re: [PATCH v7 2/4] MIPS: Octeon: Setup irq_domains for interrupts.
-Date: Wed, 28 Mar 2012 18:46:27 -0700
-Message-ID: <4F73BEF3.8060500@cavium.com>
-References: <1332790281-9648-1-git-send-email-ddaney.cavm@gmail.com> <1332790281-9648-3-git-send-email-ddaney.cavm@gmail.com> <4F711E69.1080302@gmail.com> <4F7205F3.3000108@cavium.com> <4F7239A4.7070905@gmail.com> <4F723FDD.4080708@cavium.com> <4F731E69.8030907@gmail.com> <4F733945.6000804@cavium.com> <20120328220839.599E13E0C26@localhost>
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Schemas for device trees
+Date: Wed, 28 Mar 2012 22:17:04 -0400
+Message-ID: <CAKON4OyuU_M_DEAoqs9tRrHZEDu6GfSt+Sm7-qY8na_VSB4iUw@mail.gmail.com>
+References: <CAKON4OyW00PUX3-50GrMSa0RhXLHZX3abjQmVHHiYPY2DCN=mw@mail.gmail.com>
+ <20120328230235.98E0D3E0FC9@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120328220839.599E13E0C26@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120328230235.98E0D3E0FC9@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/28/2012 03:08 PM, Grant Likely wrote:
-> On Wed, 28 Mar 2012 09:16:05 -0700, David Daney<david.daney@cavium.com>  wrote:
->> On 03/28/2012 07:21 AM, Rob Herring wrote:
->>> On 03/27/2012 05:31 PM, David Daney wrote:
->>>> On 03/27/2012 03:05 PM, Rob Herring wrote:
->>>>> On 03/27/2012 01:24 PM, David Daney wrote:
->>>>>> On 03/26/2012 06:56 PM, Rob Herring wrote:
->>>>>>> On 03/26/2012 02:31 PM, David Daney wrote:
->>>>>>>> From: David Daney<david.daney@cavium.com>
->>>>>> [...]
->>>>>>>> +static bool octeon_irq_ciu_is_edge(unsigned int line, unsigned int
->>>>>>>> bit)
->>>>>>>> +{
->>>>>>>> +    bool edge = false;
->>>>>>>> +
->>>>>>>> +    if (line == 0)
->>>>>>>> +        switch (bit) {
->>>>>>>> +        case 48 ... 49: /* GMX DRP */
->>>>>>>> +        case 50: /* IPD_DRP */
->>>>>>>> +        case 52 ... 55: /* Timers */
->>>>>>>> +        case 58: /* MPI */
->>>>>>>> +            edge = true;
->>>>>>>> +            break;
->>>>>>>> +        default:
->>>>>>>> +            break;
->>>>>>>> +        }
->>>>>>>> +    else /* line == 1 */
->>>>>>>> +        switch (bit) {
->>>>>>>> +        case 47: /* PTP */
->>>>>>>> +            edge = true;
->>>>>>>> +            break;
->>>>>>>> +        default:
->>>>>>>> +            break;
->>>>>>>> +        }
->>>>>>>> +    return edge;
->>>>>>>
->>>>>>> Moving in the right direction, but I still don't get why this is not in
->>>>>>> the CIU binding as a 3rd cell?
->>>>>>
->>>>>> There are a several reasons, in no particular order they are:
->>>>>>
->>>>>> o There is no 3rd cell.  The bindings were discussed with Grant here:
->>>>>>      http://www.linux-mips.org/archives/linux-mips/2011-05/msg00355.html
->>>>>>
->>>>>
->>>>> Then add one.
->>>>
->>>> I can't.  The dtb is already programmed into the bootloader ROMs,
->>>> changing the kernel code will not change that.  It is fait accompli.
->>>>
->>>>>
->>>>>> o The edge/level thing cannot be changed, and the irq lines don't leave
->>>>>> the SOC, so hard coding it is possible.
->>>>>
->>>>> Right, but DT describes h/w connections and this is an aspect of the
->>>>> connection. This may be fixed for the SOC, but it's not fixed for the
->>>>> CIU (i.e. could change in future chips), right?
->>>>
->>>> In theory yes.  However:
->>>>
->>>> 1) The chip designers will not change it.
->>>>
->>>> 2) There will likely be no more designs with either CIU or CIU2, so we
->>>> know what all the different possibilities are today.
->>>>
->>>> When CIU3 is deployed, we will use the lessons we have learned to do
->>>> things the Right Way.
->>>>
->>>>>
->>>>> There's 2 reasons why you would not put this into DTS:
->>>>>
->>>>> - All irq lines' trigger type are the same, fixed and known.
->>>>> - You can read a register to tell you the trigger type.
->>>>>
->>>>> Even if it's not going to change ever, it's still worth putting into the
->>>>> DTS as it is well suited for holding that data and it is just data.
->>>>
->>>> Agreed that it could be in the DTS, and retrospect it probably should
->>>> have been put in the DTS, but it wasn't.  So I think what we have now is
->>>> a workable solution, and has the added attraction of working with
->>>> already deployed boards.
->>>
->>> Aren't you building in the dtb to the kernel?
->>
->> No.  This seems like a bit of a disconnect in this discussion.  From the
->> cover-letter:
->>
->> o A device tree template is statically linked into the kernel image.
->>     Based on SOC type and board type, legacy configuration probing code
->>     is used to prune and patch the device tree template.
->>
->> o New SOCs and boards will directly use a device tree passed by the
->>     bootloader.
->
-> I think the real surprise here is that Octeron is depending on a
-> masked-in copy of the device tree.  It has alwasy been a strong
-> recommendation to store the .dtb along side the kernel in reflashable
-> storage for exactly the reason that updates may be required.  Review
-> is vitally important, but nobody can foresee all the implications
-> until the bindings are actually used.
->
-> I'm not going to harp over this, I understand that you're hamstrung
-> here, but please do pass on to the firmware engineers that storing the
-> .dtb in masked rom is risky.
->
+Check out the XML schema stuff but another possibility is simply
+writing our own schema validation tools based on the existing DT
+syntax.  What device trees really need is a schema language, how we
+achieve it doesn't really matter.  A custom Perl app might be better
+in the Linux kernel world than verbose XML which is aimed web authors.
 
-Well in most cases it is not masked ROM, but rather some sort of 
-persistent but modifiable storage.  But still getting people (both 
-internal and external) to update it is not as easy as living with the 
-status quo.  The idea is that someone should be able to get a kernel.orq 
-kernel and use it, without having to re-flash their board's bootloader.
+The device tree gods would get together and develop this schema. The
+rest of us would have to author device trees that validate against
+this schema. If we can't make our hardware fit we would need to ask
+for changes to be made to the master schema. No more rolling your own
+DT syntax, everything would have to validate in order to be accepted
+into the kernel.  The schema is going to codify all of those English
+language bindings files.
 
-David Daney
+----------------------------------------------------------
+
+There is quite a bit to the XML schema language. A decent tutorial
+covering the highlights is here:
+http://www.w3schools.com/schema/schema_intro.asp
+
+You can do everything in text files, but there are also GUI tools for
+developing the schemas like XSD in Eclipse. XML schemas have been
+around for about ten years and their use is widespread on the Internet
+so there are lots of tools for working on them.
+
+Two pieces are needed.
+
+1) A fairly simple tool that converts DT syntax into XML.  This is
+just a straight forward mapping. I don't think there is anything in DT
+syntax that can't be mapped straight into XML.
+
+2) Schemas that are probably authored in a XML schema GUI of some kind
+(like Eclipse XSD).  These can get big and complex but just use a GUI
+tool to work on them. These schemas describe the possible valid device
+trees. Schemas can include other schemas, which lets you collect the
+various subsystems together.
+
+Once you have these two pieces you run a validation program than
+compares the XML version of the DT to the schema.  It will kick out
+errors. You probably already have a validator installed, try
+'xmllint'.
+
+The reference schema needed for validation can be kept in a specially
+formatted comment at the top of the DTS file or we can modify the
+device tree compiler to explicitly allow it.
+/* xsi:schemaLocation="http://www.w3schools.com note.xsd" */
+The schemas are commonly kept on a web sever and are fetched as
+needed. Doing it that way makes it easy to change them and keep
+everyone up to date.
+
+Piece of a simple schema:
+
+<xs:element name="note">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="to" type="xs:string"/>
+      <xs:element name="from" type="xs:string"/>
+      <xs:element name="heading" type="xs:string"/>
+      <xs:element name="body" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+Describes data like this:
+
+<note>
+<to>Joe</to>
+<from>Bill</from>
+</note>
+
+If you feed it this, you'd get a validation error.
+
+<note>
+<author>Joe</author>
+<from>Bill</from>
+</note>
+
+
+-- 
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
