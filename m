@@ -1,7 +1,7 @@
 From: Viresh Kumar <viresh.kumar@st.com>
-Subject: [PATCH V3 4/7] SPEAr3xx: Replace printk() with pr_*()
-Date: Thu, 29 Mar 2012 16:11:02 +0530
-Message-ID: <e852e09d702a241259924801c1fc306447e4dee2.1333017183.git.viresh.kumar@st.com>
+Subject: [PATCH V3 7/7] SPEAr: Update defconfigs
+Date: Thu, 29 Mar 2012 16:11:05 +0530
+Message-ID: <4af7a82d5d794c3004a53c8f8f71a11c1f4117c6.1333017183.git.viresh.kumar@st.com>
 References: <cover.1333017183.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,158 +21,195 @@ To: linux-arm-kernel@lists.infradead.org, arnd@arndb.de
 Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, sr@denx.de, plagnioj@jcrosoft.com
 List-Id: devicetree@vger.kernel.org
 
-For better print logs/messages, it is advisable to use pr_*() routines instead
-of directly calling printks. This patch removes direct calling of printks for
-spear3xx.
+Recently device tree support is added for SPEAr3xx & SPEAr6xx and we must
+upgrade defconfig for that to get compiled. This patches does it.
+
+There are few more rearrangements done in defconfig automatically, when i run
+make savedefconfig.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
 ---
- arch/arm/mach-spear3xx/spear300.c |    8 +++++---
- arch/arm/mach-spear3xx/spear310.c |   13 +++++++------
- arch/arm/mach-spear3xx/spear320.c |   11 ++++++-----
- arch/arm/mach-spear3xx/spear3xx.c |    2 ++
- 4 files changed, 20 insertions(+), 14 deletions(-)
+ arch/arm/configs/spear3xx_defconfig |   52 +++++++++++++++++++++++++++-------
+ arch/arm/configs/spear6xx_defconfig |   41 ++++++++++++++++++++++-----
+ 2 files changed, 74 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm/mach-spear3xx/spear300.c b/arch/arm/mach-spear3xx/spear300.c
-index f7db668..adee72b 100644
---- a/arch/arm/mach-spear3xx/spear300.c
-+++ b/arch/arm/mach-spear3xx/spear300.c
-@@ -11,6 +11,8 @@
-  * warranty of any kind, whether express or implied.
-  */
- 
-+#define pr_fmt(fmt) "SPEAr300: " fmt
-+
- #include <linux/types.h>
- #include <linux/amba/pl061.h>
- #include <linux/ptrace.h>
-@@ -447,7 +449,7 @@ void __init spear300_init(struct pmx_mode *pmx_mode, struct pmx_dev **pmx_devs,
- 	if (shirq_ras1.regs.base) {
- 		ret = spear_shirq_register(&shirq_ras1);
- 		if (ret)
--			printk(KERN_ERR "Error registering Shared IRQ\n");
-+			pr_err("Error registering Shared IRQ\n");
- 	}
- 
- 	/* pmx initialization */
-@@ -459,8 +461,8 @@ void __init spear300_init(struct pmx_mode *pmx_mode, struct pmx_dev **pmx_devs,
- 	if (pmx_driver.base) {
- 		ret = pmx_register(&pmx_driver);
- 		if (ret)
--			printk(KERN_ERR "padmux: registration failed. err no"
--					": %d\n", ret);
-+			pr_err("padmux: registration failed. err no: %d\n",
-+					ret);
- 		/* Free Mapping, device selection already done */
- 		iounmap(pmx_driver.base);
- 	}
-diff --git a/arch/arm/mach-spear3xx/spear310.c b/arch/arm/mach-spear3xx/spear310.c
-index febaa6f..b7c2876 100644
---- a/arch/arm/mach-spear3xx/spear310.c
-+++ b/arch/arm/mach-spear3xx/spear310.c
-@@ -11,6 +11,8 @@
-  * warranty of any kind, whether express or implied.
-  */
- 
-+#define pr_fmt(fmt) "SPEAr310: " fmt
-+
- #include <linux/ptrace.h>
- #include <asm/irq.h>
- #include <plat/shirq.h>
-@@ -274,25 +276,25 @@ void __init spear310_init(struct pmx_mode *pmx_mode, struct pmx_dev **pmx_devs,
- 		shirq_ras1.regs.base = base;
- 		ret = spear_shirq_register(&shirq_ras1);
- 		if (ret)
--			printk(KERN_ERR "Error registering Shared IRQ 1\n");
-+			pr_err("Error registering Shared IRQ 1\n");
- 
- 		/* shirq 2 */
- 		shirq_ras2.regs.base = base;
- 		ret = spear_shirq_register(&shirq_ras2);
- 		if (ret)
--			printk(KERN_ERR "Error registering Shared IRQ 2\n");
-+			pr_err("Error registering Shared IRQ 2\n");
- 
- 		/* shirq 3 */
- 		shirq_ras3.regs.base = base;
- 		ret = spear_shirq_register(&shirq_ras3);
- 		if (ret)
--			printk(KERN_ERR "Error registering Shared IRQ 3\n");
-+			pr_err("Error registering Shared IRQ 3\n");
- 
- 		/* shirq 4 */
- 		shirq_intrcomm_ras.regs.base = base;
- 		ret = spear_shirq_register(&shirq_intrcomm_ras);
- 		if (ret)
--			printk(KERN_ERR "Error registering Shared IRQ 4\n");
-+			pr_err("Error registering Shared IRQ 4\n");
- 	}
- 
- 	/* pmx initialization */
-@@ -303,6 +305,5 @@ void __init spear310_init(struct pmx_mode *pmx_mode, struct pmx_dev **pmx_devs,
- 
- 	ret = pmx_register(&pmx_driver);
- 	if (ret)
--		printk(KERN_ERR "padmux: registration failed. err no: %d\n",
--				ret);
-+		pr_err("padmux: registration failed. err no: %d\n", ret);
- }
-diff --git a/arch/arm/mach-spear3xx/spear320.c b/arch/arm/mach-spear3xx/spear320.c
-index deaaf19..7bd39c0 100644
---- a/arch/arm/mach-spear3xx/spear320.c
-+++ b/arch/arm/mach-spear3xx/spear320.c
-@@ -11,6 +11,8 @@
-  * warranty of any kind, whether express or implied.
-  */
- 
-+#define pr_fmt(fmt) "SPEAr320: " fmt
-+
- #include <linux/ptrace.h>
- #include <asm/irq.h>
- #include <plat/shirq.h>
-@@ -527,19 +529,19 @@ void __init spear320_init(struct pmx_mode *pmx_mode, struct pmx_dev **pmx_devs,
- 		shirq_ras1.regs.base = base;
- 		ret = spear_shirq_register(&shirq_ras1);
- 		if (ret)
--			printk(KERN_ERR "Error registering Shared IRQ 1\n");
-+			pr_err("Error registering Shared IRQ 1\n");
- 
- 		/* shirq 3 */
- 		shirq_ras3.regs.base = base;
- 		ret = spear_shirq_register(&shirq_ras3);
- 		if (ret)
--			printk(KERN_ERR "Error registering Shared IRQ 3\n");
-+			pr_err("Error registering Shared IRQ 3\n");
- 
- 		/* shirq 4 */
- 		shirq_intrcomm_ras.regs.base = base;
- 		ret = spear_shirq_register(&shirq_intrcomm_ras);
- 		if (ret)
--			printk(KERN_ERR "Error registering Shared IRQ 4\n");
-+			pr_err("Error registering Shared IRQ 4\n");
- 	}
- 
- 	/* pmx initialization */
-@@ -550,6 +552,5 @@ void __init spear320_init(struct pmx_mode *pmx_mode, struct pmx_dev **pmx_devs,
- 
- 	ret = pmx_register(&pmx_driver);
- 	if (ret)
--		printk(KERN_ERR "padmux: registration failed. err no: %d\n",
--				ret);
-+		pr_err("padmux: registration failed. err no: %d\n", ret);
- }
-diff --git a/arch/arm/mach-spear3xx/spear3xx.c b/arch/arm/mach-spear3xx/spear3xx.c
-index b1733c3..a236925 100644
---- a/arch/arm/mach-spear3xx/spear3xx.c
-+++ b/arch/arm/mach-spear3xx/spear3xx.c
-@@ -11,6 +11,8 @@
-  * warranty of any kind, whether express or implied.
-  */
- 
-+#define pr_fmt(fmt) "SPEAr3xx: " fmt
-+
- #include <linux/types.h>
- #include <linux/amba/pl061.h>
- #include <linux/ptrace.h>
+diff --git a/arch/arm/configs/spear3xx_defconfig b/arch/arm/configs/spear3xx_defconfig
+index fea7e1f..7ed4291 100644
+--- a/arch/arm/configs/spear3xx_defconfig
++++ b/arch/arm/configs/spear3xx_defconfig
+@@ -2,33 +2,67 @@ CONFIG_EXPERIMENTAL=y
+ CONFIG_SYSVIPC=y
+ CONFIG_BSD_PROCESS_ACCT=y
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_KALLSYMS_EXTRA_PASS=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
++CONFIG_PARTITION_ADVANCED=y
+ CONFIG_PLAT_SPEAR=y
+-CONFIG_BOARD_SPEAR300_EVB=y
+-CONFIG_BOARD_SPEAR310_EVB=y
+-CONFIG_BOARD_SPEAR320_EVB=y
++CONFIG_MACH_SPEAR300=y
++CONFIG_MACH_SPEAR310=y
++CONFIG_MACH_SPEAR320=y
+ CONFIG_BINFMT_MISC=y
++CONFIG_NET=y
+ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
++CONFIG_MTD=y
++CONFIG_MTD_NAND=y
++CONFIG_MTD_NAND_FSMC=y
+ CONFIG_BLK_DEV_RAM=y
+ CONFIG_BLK_DEV_RAM_SIZE=16384
++CONFIG_NETDEVICES=y
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++CONFIG_STMMAC_ETH=y
++# CONFIG_WLAN is not set
+ CONFIG_INPUT_FF_MEMLESS=y
+ # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+-# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_KEYBOARD_ATKBD is not set
++CONFIG_KEYBOARD_SPEAR=y
+ # CONFIG_INPUT_MOUSE is not set
++# CONFIG_LEGACY_PTYS is not set
+ CONFIG_SERIAL_AMBA_PL011=y
+ CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
+-# CONFIG_LEGACY_PTYS is not set
+ # CONFIG_HW_RANDOM is not set
+ CONFIG_RAW_DRIVER=y
+ CONFIG_MAX_RAW_DEVS=8192
++CONFIG_I2C=y
++CONFIG_I2C_DESIGNWARE_PLATFORM=y
++CONFIG_SPI=y
++CONFIG_SPI_PL022=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_PL061=y
+ # CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
++CONFIG_ARM_SP805_WATCHDOG=y
++CONFIG_FB=y
++CONFIG_FB_ARMCLCD=y
+ # CONFIG_HID_SUPPORT is not set
+-# CONFIG_USB_SUPPORT is not set
++CONFIG_USB=y
++# CONFIG_USB_DEVICE_CLASS is not set
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_MMC=y
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_SPEAR=y
++CONFIG_RTC_CLASS=y
++CONFIG_DMADEVICES=y
++CONFIG_AMBA_PL08X=y
++CONFIG_DMATEST=m
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT2_FS_XATTR=y
+ CONFIG_EXT2_FS_SECURITY=y
+@@ -39,8 +73,6 @@ CONFIG_MSDOS_FS=m
+ CONFIG_VFAT_FS=m
+ CONFIG_FAT_DEFAULT_IOCHARSET="ascii"
+ CONFIG_TMPFS=y
+-CONFIG_PARTITION_ADVANCED=y
+-CONFIG_NLS=y
+ CONFIG_NLS_DEFAULT="utf8"
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ASCII=m
+@@ -48,6 +80,4 @@ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_FS=y
+ CONFIG_DEBUG_KERNEL=y
+ CONFIG_DEBUG_SPINLOCK=y
+-CONFIG_DEBUG_SPINLOCK_SLEEP=y
+ CONFIG_DEBUG_INFO=y
+-# CONFIG_CRC32 is not set
+diff --git a/arch/arm/configs/spear6xx_defconfig b/arch/arm/configs/spear6xx_defconfig
+index cef2e83..cf94bc7 100644
+--- a/arch/arm/configs/spear6xx_defconfig
++++ b/arch/arm/configs/spear6xx_defconfig
+@@ -2,29 +2,58 @@ CONFIG_EXPERIMENTAL=y
+ CONFIG_SYSVIPC=y
+ CONFIG_BSD_PROCESS_ACCT=y
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_KALLSYMS_EXTRA_PASS=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
++CONFIG_PARTITION_ADVANCED=y
+ CONFIG_PLAT_SPEAR=y
+ CONFIG_ARCH_SPEAR6XX=y
+-CONFIG_BOARD_SPEAR600_EVB=y
++CONFIG_BOARD_SPEAR600_DT=y
+ CONFIG_BINFMT_MISC=y
++CONFIG_NET=y
+ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
++CONFIG_MTD=y
++CONFIG_MTD_NAND=y
++CONFIG_MTD_NAND_FSMC=y
+ CONFIG_BLK_DEV_RAM=y
+ CONFIG_BLK_DEV_RAM_SIZE=16384
++CONFIG_NETDEVICES=y
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++CONFIG_STMMAC_ETH=y
++# CONFIG_WLAN is not set
+ CONFIG_INPUT_FF_MEMLESS=y
+ # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_LEGACY_PTYS is not set
+ CONFIG_SERIAL_AMBA_PL011=y
+ CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
+-# CONFIG_LEGACY_PTYS is not set
+ CONFIG_RAW_DRIVER=y
+ CONFIG_MAX_RAW_DEVS=8192
++CONFIG_I2C=y
++CONFIG_I2C_DESIGNWARE_PLATFORM=y
++CONFIG_SPI=y
++CONFIG_SPI_PL022=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_PL061=y
+ # CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
++CONFIG_ARM_SP805_WATCHDOG=y
+ # CONFIG_HID_SUPPORT is not set
+-# CONFIG_USB_SUPPORT is not set
++CONFIG_USB=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_RTC_CLASS=y
++CONFIG_DMADEVICES=y
++CONFIG_AMBA_PL08X=y
++CONFIG_DMATEST=m
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT2_FS_XATTR=y
+ CONFIG_EXT2_FS_SECURITY=y
+@@ -35,8 +64,6 @@ CONFIG_MSDOS_FS=m
+ CONFIG_VFAT_FS=m
+ CONFIG_FAT_DEFAULT_IOCHARSET="ascii"
+ CONFIG_TMPFS=y
+-CONFIG_PARTITION_ADVANCED=y
+-CONFIG_NLS=y
+ CONFIG_NLS_DEFAULT="utf8"
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ASCII=m
+@@ -44,6 +71,4 @@ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_FS=y
+ CONFIG_DEBUG_KERNEL=y
+ CONFIG_DEBUG_SPINLOCK=y
+-CONFIG_DEBUG_SPINLOCK_SLEEP=y
+ CONFIG_DEBUG_INFO=y
+-# CONFIG_CRC32 is not set
 -- 
 1.7.9
