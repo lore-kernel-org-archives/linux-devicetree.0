@@ -1,44 +1,70 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH V3 3/7] SPEAr6xx: Add compilation support for dtbs using 'make
- dtbs'
-Date: Thu, 29 Mar 2012 16:11:01 +0530
-Message-ID: <b60bcdd8cca9d6d2bca5741344708599cae4f591.1333017183.git.viresh.kumar@st.com>
+From: Viresh Kumar <viresh.kumar@st.com>
+Subject: [PATCH V3 2/7] SPEAr3xx: Add clock instance of usb hosts - ehci and
+ ohci 0 and 1
+Date: Thu, 29 Mar 2012 16:11:00 +0530
+Message-ID: <4874b04e10d82eca2c48ce7a4ad69954532e55a3.1333017183.git.viresh.kumar@st.com>
 References: <cover.1333017183.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1333017183.git.viresh.kumar-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1333017183.git.viresh.kumar@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, arnd@arndb.de
+Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, sr@denx.de, plagnioj@jcrosoft.com
 List-Id: devicetree@vger.kernel.org
 
-'make dtbs' compiles all dtbs for a family. For this we need to add entries for
-all board dtb's in Makefile.boot file. This patch does it.
+This patch adds following clocks: "usbh.0_clk" and "usbh.1_clk". They are used
+by ehci and ohci drivers for SPEAr3xx usb host devices.
 
-Signed-off-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
 ---
- arch/arm/mach-spear6xx/Makefile.boot |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ arch/arm/mach-spear3xx/clock.c |   18 ++++++++++++++++++
+ 1 files changed, 18 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-spear6xx/Makefile.boot b/arch/arm/mach-spear6xx/Makefile.boot
-index 4674a4c..af493da 100644
---- a/arch/arm/mach-spear6xx/Makefile.boot
-+++ b/arch/arm/mach-spear6xx/Makefile.boot
-@@ -1,3 +1,5 @@
- zreladdr-y	+= 0x00008000
- params_phys-y	:= 0x00000100
- initrd_phys-y	:= 0x00800000
+diff --git a/arch/arm/mach-spear3xx/clock.c b/arch/arm/mach-spear3xx/clock.c
+index 6b2cd9b..47d4535 100644
+--- a/arch/arm/mach-spear3xx/clock.c
++++ b/arch/arm/mach-spear3xx/clock.c
+@@ -412,6 +412,21 @@ static struct clk usbd_clk = {
+ 	.recalc = &follow_parent,
+ };
+ 
++/* clock derived from usbh clk */
++/* usbh0 clock */
++static struct clk usbh0_clk = {
++	.flags = ALWAYS_ENABLED,
++	.pclk = &usbh_clk,
++	.recalc = &follow_parent,
++};
 +
-+dtb-$(CONFIG_BOARD_SPEAR600_DT)	+= spear600-evb.dtb
++/* usbh1 clock */
++static struct clk usbh1_clk = {
++	.flags = ALWAYS_ENABLED,
++	.pclk = &usbh_clk,
++	.recalc = &follow_parent,
++};
++
+ /* clock derived from ahb clk */
+ /* apb masks structure */
+ static struct bus_clk_masks apb_masks = {
+@@ -679,6 +694,9 @@ static struct clk_lookup spear_clk_lookups[] = {
+ 	/* clock derived from pll3 clk */
+ 	CLKDEV_INIT("designware_udc", NULL, &usbd_clk),
+ 	CLKDEV_INIT(NULL, "usbh_clk", &usbh_clk),
++	/* clock derived from usbh clk */
++	CLKDEV_INIT(NULL, "usbh.0_clk", &usbh0_clk),
++	CLKDEV_INIT(NULL, "usbh.1_clk", &usbh1_clk),
+ 	/* clock derived from ahb clk */
+ 	CLKDEV_INIT(NULL, "apb_clk", &apb_clk),
+ 	CLKDEV_INIT("i2c_designware.0", NULL, &i2c_clk),
 -- 
 1.7.9
