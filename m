@@ -1,57 +1,55 @@
-From: Rabin Vincent <rabin@rab.in>
-Subject: Re: [PATCH v2] video: s3c-fb: Add device tree support
-Date: Fri, 30 Mar 2012 21:25:14 +0530
-Message-ID: <CAH+eYFCrdtYC+v3tgqsaCS9-Y61JCwA1MLkkPtH14p=JWBbzBw@mail.gmail.com>
-References: <1333086797-1625-1-git-send-email-thomas.abraham@linaro.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V4 Resend 1/2] Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
+Date: Fri, 30 Mar 2012 12:45:34 -0600
+Message-ID: <4F75FF4E.4040602@wwwdotorg.org>
+References: <cover.1333009670.git.viresh.kumar@st.com> <406fb8092d6aca97a54add346a2528daefab9c8d.1333009670.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1333086797-1625-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, FlorianSchandinat@gmx.de, jg1.han@samsung.com, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, patches@linaro.org, linux-arm-kernel@lists.infradead.org, agust@denx.de
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <406fb8092d6aca97a54add346a2528daefab9c8d.1333009670.git.viresh.kumar@st.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@st.com>
+Cc: dmitry.torokhov@gmail.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, linux-input@vger.kernel.org, sr@denx.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 30, 2012 at 11:23, Thomas Abraham <thomas.abraham@linaro.or=
-g> wrote:
-> + =A0 =A0- samsung,fimd-display: The fimd controller is interfaced wi=
-th the a
-> + =A0 =A0 =A0display device such as a lcd panel. This property should=
- specify the
-> + =A0 =A0 =A0phandle of the display device node. For a display device=
- node that
-> + =A0 =A0 =A0represents a RGB type display interface, it is expected =
-to specify the
-> + =A0 =A0 =A0video interface timing using the following properties.
-> +
-> + =A0 =A0 =A0- lcd-htiming: Specifies the horizontal timing for the o=
-verlay. The
-> + =A0 =A0 =A0 =A0horizontal timing includes four parameters in the fo=
-llowing order.
-> +
-> + =A0 =A0 =A0 =A0- horizontal back porch (in number of lcd clocks)
-> + =A0 =A0 =A0 =A0- horizontal front porch (in number of lcd clocks)
-> + =A0 =A0 =A0 =A0- hsync pulse width (in number of lcd clocks)
-> + =A0 =A0 =A0 =A0- Display panels X resolution.
-> +
-> + =A0 =A0 =A0- lcd-vtiming: Specifies the vertical timing for the ove=
-rlay. The
-> + =A0 =A0 =A0 =A0vertical timing includes four parameters in the foll=
-owing order.
-> +
-> + =A0 =A0 =A0 =A0- vertical back porch (in number of lcd lines)
-> + =A0 =A0 =A0 =A0- vertical front porch (in number of lcd lines)
-> + =A0 =A0 =A0 =A0- vsync pulse width (in number of lcd clocks)
-> + =A0 =A0 =A0 =A0- Y resolution.
+On 03/29/2012 09:40 PM, Viresh Kumar wrote:
+> We don't need to allocate memory for keymap in matrix_keyboard_of_fill_keymap(),
+> as this would only be used by matrix_keyboard_of_free_keymap(). Instead create
+> another routine matrix_keypad_of_build_keymap() which reads directly the
+> property from struct device_node and builds keymap.
+> 
+> With this eariler routines matrix_keyboard_of_fill_keymap() and
+> matrix_keyboard_of_free_keymap() go away.
+> 
+> This patch also fixes tegra driver according to these changes.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
 
-In this old thread, it was suggested to use a raw EDID block to supply
-timings, and since then a couple of drivers in mainline (sm501fb and
-fsl-diu) are doing it that way:
+The error checking looks good now, so once the issues mentioned below
+are fixed:
 
-http://lists.ozlabs.org/pipermail/linuxppc-dev/2010-February/080683.htm=
-l
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
 
-Shouldn't this driver be doing the same thing?  If not, shouldn't
-whatever interface this is adding be provided in a common helper (like
-that old patch was trying to add) so it's standardized between drivers?
+> diff --git a/drivers/input/keyboard/tegra-kbc.c b/drivers/input/keyboard/tegra-kbc.c
+...
+>  #else
+> -static inline struct tegra_kbc_platform_data *tegra_kbc_dt_parse_pdata(
+> -	struct platform_device *pdev)
+> +static struct tegra_kbc_platform_data * __devinit
+> +tegra_kbc_dt_parse_pdata(struct device_node *np)
+
+This one should be "inline" and not "__devinit", i.e. like it was before.
+
+> diff --git a/include/linux/input/matrix_keypad.h b/include/linux/input/matrix_keypad.h
+...
+>  #else
+> -static inline struct matrix_keymap_data *
+> -matrix_keyboard_of_fill_keymap(struct device_node *np, const char *propname)
+> +int matrix_keypad_of_build_keymap(struct input_dev *idev,
+> +		unsigned int row_shift, const char *propname)
+>  {
+>  	return NULL;
+>  }
+
+This one should also be "static inline".
