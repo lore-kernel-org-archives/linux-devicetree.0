@@ -1,58 +1,80 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [GIT PULL] devicetree documentation updates
-Date: Thu, 29 Mar 2012 19:20:25 -0600
-Message-ID: <CACxGe6sY5wX4+_d4VhaY=grPe+DgATgrR5162cvwhK9uZ_K5Ww@mail.gmail.com>
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Schemas for device trees
+Date: Thu, 29 Mar 2012 21:59:22 -0400
+Message-ID: <CAKON4OwTiH9gKY-_m8mz3M0Fn31LLOvG4Y7UNWO0HgJhRk5xrA@mail.gmail.com>
+References: <CAKON4OyW00PUX3-50GrMSa0RhXLHZX3abjQmVHHiYPY2DCN=mw@mail.gmail.com>
+ <20120328230235.98E0D3E0FC9@localhost>
+ <CAKON4OyuU_M_DEAoqs9tRrHZEDu6GfSt+Sm7-qY8na_VSB4iUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKON4OyuU_M_DEAoqs9tRrHZEDu6GfSt+Sm7-qY8na_VSB4iUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+i2c provides an example of where a schema would be useful.
+>From the binding text files, I removed the common items
 
-Please pull these documentation changes for devicetree usage.
+fsl-i2c
+	i2c@1740 {
+		clock-frequency = <100000>;
+		fsl,timeout = <10000>;
+	};
+samsung-i2c
+	i2c@13870000 {
+		samsung,i2c-sda-delay = <100>;
+		samsung,i2c-max-bus-freq = <100000>;
+		samsung,i2c-slave-addr = <0>;
+	};
+ce4100-i2c.txt
+	i2c@0 {
+missing clock-frequency
+	};
+omap-i2c.txt
+i2c1: i2c@0 {
+    ti,hwmods = "i2c1";   -- I think this is because they are missing reg = <>
+    clock-frequency = <400000>;
+};
+arm-versatile.txt
+missing clock frequency
+i2c-designware.txt
+looks ok
+fsl-imx-i2c.txt
+looks ok
+cpm_qe/cpm/i2c.txt
+file is in wrong place
 
-Cheers,
-g.
+The schema probably should be:
+	i2c@address {
+		compatible = "xxxx";  - required
+		reg = <xxxx>; - required
+		interrupts = <xxx>;  - required?
+		interrupt-parent = <xxxx>; - if need
+		clock-frequency = <xxxx>;  - optional, schema says default is 100Khz
+		slave-addr = <xxxx>;  - optional, all of the controllers support slave mode
+		timeout = <xxxxx>; - optional
+		#address-cells = <1>;
+		#size-cells = <0>;
+		aaaa,bbbb = <xxxx> - private, must have a comma in the name
+      }
 
-The following changes since commit 735e941caa9a35f933297af0ab1e0ad6447411c4:
-
-  Merge tag 'common-clk-api' of
-git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc (2012-03-28
-12:38:06 -0700)
-
-are available in the git repository at:
-
-
-  git://git.secretlab.ca/git/linux-2.6 tags/devicetree-for-linus
-
-for you to fetch changes up to 31134efc681a5440e2b952eed3bf9a5306a95062:
-
-  dt: Linux DT usage model documentation (2012-03-29 19:13:50 -0600)
-
-----------------------------------------------------------------
-Devicetree documentation update for v3.4
-
-----------------------------------------------------------------
-Grant Likely (1):
-      dt: Linux DT usage model documentation
-
-Jamie Lentin (1):
-      mtd: Move fdt partition documentation to a seperate file
-
- .../devicetree/bindings/mtd/arm-versatile.txt      |    4 +-
- .../devicetree/bindings/mtd/atmel-dataflash.txt    |    3 +
- .../devicetree/bindings/mtd/fsl-upm-nand.txt       |    4 +
- .../devicetree/bindings/mtd/gpio-control-nand.txt  |    3 +
- .../devicetree/bindings/mtd/mtd-physmap.txt        |   23 +-
- .../devicetree/bindings/mtd/partition.txt          |   38 ++
- Documentation/devicetree/usage-model.txt           |  412 ++++++++++++++++++++
- 7 files changed, 464 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/partition.txt
- create mode 100644 Documentation/devicetree/usage-model.txt
-
+Once schemas are in place and everything is validating, another pass
+can be made to implement a common parser. The common parser would get
+all of these attributes and parse them into a struct.  Then we can
+work on making sure each driver actually implements these core
+attributes consistently.
 
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
