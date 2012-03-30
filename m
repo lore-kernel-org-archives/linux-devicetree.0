@@ -1,499 +1,618 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v2] video: s3c-fb: Add device tree support
-Date: Fri, 30 Mar 2012 11:23:17 +0530
-Message-ID: <1333086797-1625-1-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, jg1.han@samsung.com, patches@linaro.org
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/1] ARM: imx28: add basic dt support
+Date: Fri, 30 Mar 2012 14:31:18 +0800
+Message-ID: <1333089078-24724-1-git-send-email-b29396@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree based discovery support for Samsung's display controller
-framebuffer driver.
+From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Cc: Jingoo Han <jg1.han@samsung.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+This patch includes basic dt support which can boot via nfs rootfs.
+
+Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/fb/samsung-fb.txt          |  148 +++++++++++++
- drivers/video/s3c-fb.c                             |  230 +++++++++++++++++++-
- 2 files changed, 370 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/fb/samsung-fb.txt
+ChangeLog v2->v3:
+ * Some minor fixes suggested by Shawn Guo
+ChangeLog v1->v2:
+ * Some fixes addressed Rob's review comments.
+   Remove using of OF_DEV_AUXDATA.
+ * Remove mac address from dts file
+   Currently we use the mac address got from uboot to work.
+   Will submit a p separate atch using prom_update_property to fix this
+   issue for driver based on suggestions from Grant and Lothar.
+ * rename mxs-dt.c to mach-mxs.c which is supposed to support mx23 dt
+   too in the future.
+ * add compatible string "fsl,imx28" per Sascha's suggestion
+ * add more devices in dtsi file
+   For those devices still not in use, set the state to "disabled"
+   by default.
+---
+ Documentation/devicetree/bindings/arm/fsl.txt |    4 +
+ arch/arm/boot/dts/imx28-evk.dts               |   34 +++
+ arch/arm/boot/dts/imx28.dtsi                  |  356 +++++++++++++++++++++++++
+ arch/arm/mach-mxs/Kconfig                     |   10 +
+ arch/arm/mach-mxs/Makefile                    |    1 +
+ arch/arm/mach-mxs/clock-mx28.c                |    4 +
+ arch/arm/mach-mxs/devices/Kconfig             |    1 -
+ arch/arm/mach-mxs/mach-mxs.c                  |   68 +++++
+ 8 files changed, 477 insertions(+), 1 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx28-evk.dts
+ create mode 100644 arch/arm/boot/dts/imx28.dtsi
+ create mode 100644 arch/arm/mach-mxs/mach-mxs.c
 
-diff --git a/Documentation/devicetree/bindings/fb/samsung-fb.txt b/Documentation/devicetree/bindings/fb/samsung-fb.txt
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 54bddda..9f21faf 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -1,6 +1,10 @@
+ Freescale i.MX Platforms Device Tree Bindings
+ -----------------------------------------------
+ 
++i.MX28 Evaluation Kit
++Required root node properties:
++    - compatible = "fsl,imx28-evk", "fsl,imx28";
++
+ i.MX51 Babbage Board
+ Required root node properties:
+     - compatible = "fsl,imx51-babbage", "fsl,imx51";
+diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
 new file mode 100644
-index 0000000..612bd9f
+index 0000000..57703ec
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fb/samsung-fb.txt
-@@ -0,0 +1,148 @@
-+* Samsung Display Controller Framebuffer Controller
++++ b/arch/arm/boot/dts/imx28-evk.dts
+@@ -0,0 +1,34 @@
++/*
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
 +
-+The display controller is used to transfer image data from memory to a
-+external display device such as an RGB interface LCD panel. It supports
-+various color formats such as rgb and yuv. It also supports multiple window
-+overlays.
++/dts-v1/;
++/include/ "imx28.dtsi"
 +
-+Required properties:
++/ {
++	model = "Freescale i.MX28 Evaluation Kit";
++	compatible = "fsl,imx28-evk", "fsl,imx28";
 +
-+    - compatible: should be one of the following
-+      - samsung,exynos4210-fimd: for fimd compatible with Exynos4210 fimd
-+      - samsung,s5pv210-fimd: for fimd compatible with s5pv210 fimd
-+
-+    - reg: physical base address of the controller and length of memory
-+      mapped region.
-+
-+    - interrupts: Three interrupts should be specified. The format of the
-+      interrupt specifier depends on the interrupt controller. The interrupts
-+      should be specified in the following order.
-+      - VSYNC (Video Frame) interrupt
-+      - Video FIFO level interrupt
-+      - FIMD System Interrupt
-+
-+    - gpios: The gpios used to interface with the external LCD panel. For a
-+      panel with rgb interface, the gpio interface consists of video data
-+      lines, HSYNC, VSYNC, Pixel Clock and Data Enable. The gpio's used for
-+      these interface lines can be listed under this property in any order.
-+
-+    - samsung,fimd-display: The fimd controller is interfaced with the a
-+      display device such as a lcd panel. This property should specify the
-+      phandle of the display device node. For a display device node that
-+      represents a RGB type display interface, it is expected to specify the
-+      video interface timing using the following properties.
-+
-+      - lcd-htiming: Specifies the horizontal timing for the overlay. The
-+        horizontal timing includes four parameters in the following order.
-+
-+        - horizontal back porch (in number of lcd clocks)
-+        - horizontal front porch (in number of lcd clocks)
-+        - hsync pulse width (in number of lcd clocks)
-+        - Display panels X resolution.
-+
-+      - lcd-vtiming: Specifies the vertical timing for the overlay. The
-+        vertical timing includes four parameters in the following order.
-+
-+        - vertical back porch (in number of lcd lines)
-+        - vertical front porch (in number of lcd lines)
-+        - vsync pulse width (in number of lcd clocks)
-+        - Y resolution.
-+
-+    - Overlay/Windows: Multiple overlays/windows can be specified as child
-+      nodes. Each window should have the following properties (optional
-+      window properties are marked as 'optional').
-+
-+      - samsung,fimd-win-id: Specifies the window number of the fimd controller.
-+
-+      - samsung,fimd-win-bpp: Specifies the bits per pixel. Two values should
-+	be specified in the following order.
-+        - default-bpp: bpp supported by the overlay.
-+        - max-bpp: maximum required bpp for the overlay.
-+
-+      - samsung,fimd-win-res: (OPTIONAL) Specifies the window resolution in
-+        pixels. The resolution contains the X and Y pixel values with X being
-+        specified first. If this property is not specified, the window
-+        resolution is set to be equal to the display panel resolution.
-+
-+      - samsung,fimd-win-virtres: (OPTIONAL) Specifies the resolution of the
-+        virtual frame buffer for the window. The resolution contains the X
-+        and Y resolution in pixels with value of X being the specified first.
-+
-+Optional properties:
-+
-+    - samsung,fimd-vidout-rgb: Video output format is RGB.
-+    - samsung,fimd-inv-hsync: invert hsync pulse polarity.
-+    - samsung,fimd-inv-vsync: invert vsync pulse polarity.
-+    - samsung,fimd-inv-vclk: invert video clock polarity.
-+    - samsung,fimd-inv-vden: invert video enable signal polarity.
-+    - samsung,fimd-frame-rate: Number of video frames per second.
-+
-+Example:
-+
-+    The following is an example for the fimd framebuffer controller is split
-+    into two portions. The SoC specific portion can be specified in the SoC
-+    specific dts file. The board specific portion can be specified in the
-+    board specific dts file.
-+
-+    - SoC Specific portion
-+
-+	fimd@11C00000 {
-+		compatible = "samsung,exynos4210-fimd";
-+		interrupt-parent = <&combiner>;
-+		reg = <0x11C00000 0x8000>;
-+		interrupts = <11 1>, <11 0>, <11 2>;
++	memory {
++		reg = <0x40000000 0x08000000>;
 +	};
 +
-+    - Board Specific portion
-+
-+	fimd@11C00000 {
-+		samsung,fimd-display = <&lcd_fimd0>;
-+		samsung,fimd-vidout-rgb;
-+		samsung,fimd-inv-hsync;
-+		samsung,fimd-inv-vsync;
-+		samsung,fimd-inv-vclk;
-+		samsung,fimd-frame-rate = <60>;
-+
-+		gpios = <&gpf0 0 2 0 0>,
-+			<&gpf0 1 2 0 0>,
-+			<&gpf0 2 2 0 0>,
-+			<&gpf0 3 2 0 0>,
-+			<&gpf0 4 2 0 0>,
-+			<&gpf0 5 2 0 0>,
-+			<&gpf0 6 2 0 0>,
-+			<&gpf0 7 2 0 0>,
-+			<&gpf1 0 2 0 0>,
-+			<&gpf1 1 2 0 0>,
-+			<&gpf1 2 2 0 0>,
-+			<&gpf1 3 2 0 0>,
-+			<&gpf1 4 2 0 0>,
-+			<&gpf1 5 2 0 0>,
-+			<&gpf1 6 2 0 0>,
-+			<&gpf1 7 2 0 0>,
-+			<&gpf2 0 2 0 0>,
-+			<&gpf2 1 2 0 0>,
-+			<&gpf2 2 2 0 0>,
-+			<&gpf2 3 2 0 0>,
-+			<&gpf2 4 2 0 0>,
-+			<&gpf2 5 2 0 0>,
-+			<&gpf2 6 2 0 0>,
-+			<&gpf2 7 2 0 0>,
-+			<&gpf3 0 2 0 0>,
-+			<&gpf3 1 2 0 0>,
-+			<&gpf3 2 2 0 0>,
-+			<&gpf3 3 2 0 0>;
-+
-+		window0 {
-+			samsung,fimd-win-id = <0>;
-+			samsung,fimd-win-bpp = <32 24>;
-+			samsung,fimd-win-res = <512 300>;
-+			samsung,fimd-win-vres = <1024 600>;
++	ahb@80080000 {
++		ethernet@800f0000 {
++			phy-mode = "rmii";
++			status = "okay";
 +		};
 +
-+		window1 {
-+			samsung,fimd-win-id = <1>;
-+			samsung,fimd-win-bpp = <32 24>;
-+			samsung,fimd-win-res = <1024 200>;
-+			samsung,fimd-win-vres = <1024 600>;
++		ethernet@800f4000 {
++			phy-mode = "rmii";
++			status = "okay";
 +		};
 +	};
-diff --git a/drivers/video/s3c-fb.c b/drivers/video/s3c-fb.c
-index 18c84b8..b8be668 100644
---- a/drivers/video/s3c-fb.c
-+++ b/drivers/video/s3c-fb.c
-@@ -24,6 +24,8 @@
- #include <linux/uaccess.h>
- #include <linux/interrupt.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- 
- #include <mach/map.h>
- #include <plat/regs-fb-v4.h>
-@@ -220,6 +222,7 @@ struct s3c_fb {
- 	int			 irq_no;
- 	unsigned long		 irq_flags;
- 	struct s3c_fb_vsync	 vsync_info;
-+	int			 *gpios;
- };
- 
- /**
-@@ -1352,27 +1355,215 @@ static void s3c_fb_clear_win(struct s3c_fb *sfb, int win)
- 	writel(reg & ~SHADOWCON_WINx_PROTECT(win), regs + SHADOWCON);
- }
- 
-+#ifdef CONFIG_OF
-+static int s3c_fb_dt_parse_gpios(struct device *dev, struct s3c_fb *sfb,
-+						bool request)
-+{
-+	int nr_gpios, idx, gpio, ret;
-+
-+	nr_gpios = sfb->pdata->win[0]->max_bpp + 4;
-+	sfb->gpios = devm_kzalloc(dev, sizeof(int) * nr_gpios, GFP_KERNEL);
-+	if (!sfb->gpios) {
-+		dev_err(dev, "unable to allocate private data for gpio\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (idx = 0; idx < nr_gpios; idx++) {
-+		gpio = of_get_gpio(dev->of_node, idx);
-+		if (!gpio_is_valid(gpio)) {
-+			dev_err(dev, "invalid gpio[%d]: %d\n", idx, gpio);
-+			return -EINVAL;
-+		}
-+
-+		if (!request)
-+			continue;
-+
-+		ret = gpio_request(gpio, "fimd");
-+		if (ret) {
-+			dev_err(dev, "gpio [%d] request failed\n", gpio);
-+			goto gpio_free;
-+		}
-+		sfb->gpios[idx] = gpio;
-+	}
-+	return 0;
-+
-+gpio_free:
-+	while (--idx >= 0)
-+		gpio_free(sfb->gpios[idx]);
-+	return ret;
-+}
-+
-+static void s3c_fb_dt_free_gpios(struct s3c_fb *sfb)
-+{
-+	unsigned int idx, nr_gpio;
-+
-+	nr_gpio = sfb->pdata->win[0]->max_bpp + 4;
-+	for (idx = 0; idx < nr_gpio; idx++)
-+		gpio_free(sfb->gpios[idx]);
-+}
-+
-+static struct s3c_fb_platdata *s3c_fb_dt_parse_pdata(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node, *win_np;
-+	struct device_node *disp_np;
-+	struct s3c_fb_platdata *pd;
-+	struct s3c_fb_pd_win *win;
-+	u32 wnum = 0, data[4];
-+
-+	pd = devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
-+	if (!pd) {
-+		dev_err(dev, "memory allocation for pdata failed\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	pd->vtiming = devm_kzalloc(dev, sizeof(*pd->vtiming), GFP_KERNEL);
-+	if (!pd->vtiming) {
-+		dev_err(dev, "memory allocation for vtiming failed\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	if (of_get_property(np, "samsung,fimd-vidout-rgb", NULL))
-+		pd->vidcon0 |= VIDCON0_VIDOUT_RGB;
-+	if (of_get_property(np, "samsung,fimd-vidout-tv", NULL))
-+		pd->vidcon0 |= VIDCON0_VIDOUT_TV;
-+	if (of_get_property(np, "samsung,fimd-inv-hsync", NULL))
-+		pd->vidcon1 |= VIDCON1_INV_HSYNC;
-+	if (of_get_property(np, "samsung,fimd-inv-vsync", NULL))
-+		pd->vidcon1 |= VIDCON1_INV_VSYNC;
-+	if (of_get_property(np, "samsung,fimd-inv-vclk", NULL))
-+		pd->vidcon1 |= VIDCON1_INV_VCLK;
-+	if (of_get_property(np, "samsung,fimd-inv-vden", NULL))
-+		pd->vidcon1 |= VIDCON1_INV_VDEN;
-+
-+	disp_np = of_parse_phandle(np, "samsung,fimd-display", 0);
-+	if (!disp_np) {
-+		dev_err(dev, "unable to find display panel info\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (of_property_read_u32_array(disp_np, "lcd-htiming", data, 4)) {
-+		dev_err(dev, "invalid horizontal timing\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+	pd->vtiming->left_margin = data[0];
-+	pd->vtiming->right_margin = data[1];
-+	pd->vtiming->hsync_len = data[2];
-+	pd->vtiming->xres = data[3];
-+
-+	if (of_property_read_u32_array(disp_np, "lcd-vtiming", data, 4)) {
-+		dev_err(dev, "invalid vertical timing\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+	pd->vtiming->upper_margin = data[0];
-+	pd->vtiming->lower_margin = data[1];
-+	pd->vtiming->vsync_len = data[2];
-+	pd->vtiming->yres = data[3];
-+
-+	of_property_read_u32_array(np, "samsung,fimd-frame-rate",
-+				&pd->vtiming->refresh, 1);
-+
-+	for_each_child_of_node(np, win_np) {
-+		if (of_property_read_u32_array(win_np, "samsung,fimd-win-id",
-+						&wnum, 1)) {
-+			dev_err(dev, "window id not specified\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		win = devm_kzalloc(dev, sizeof(*win), GFP_KERNEL);
-+		if (!win) {
-+			dev_err(dev, "no memory for window[%d] data\n", wnum);
-+			return ERR_PTR(-ENOMEM);
-+		}
-+		pd->win[wnum] = win;
-+
-+		if (of_property_read_u32_array(win_np, "samsung,fimd-win-bpp",
-+						data, 2)) {
-+			dev_err(dev, "invalid window bpp\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+		win->default_bpp = data[0];
-+		win->max_bpp = data[1];
-+
-+		if (of_property_read_u32_array(win_np, "samsung,fimd-win-res",
-+						data, 2)) {
-+			dev_info(dev, "window [%d] resolution not specified. "
-+				"Using lcd resolution X[%d] and Y[%d]", wnum,
-+				pd->vtiming->xres, pd->vtiming->yres);
-+			win->xres = pd->vtiming->xres;
-+			win->yres = pd->vtiming->yres;
-+		} else {
-+			win->xres = data[0];
-+			win->yres = data[1];
-+		}
-+
-+		if (!of_property_read_u32_array(win_np,
-+				"samsung,fimd-win-virtres", data, 2)) {
-+			win->virtual_x = data[0];
-+			win->virtual_y = data[1];
-+		}
-+	}
-+
-+	return pd;
-+}
-+#else
-+static int s3c_fb_dt_parse_gpios(struct device *dev, struct s3c_fb *sfb,
-+						bool request)
-+{
-+	return 0;
-+}
-+
-+static void s3c_fb_dt_free_gpios(struct s3c_fb *sfb)
-+{
-+	return 0;
-+}
-+
-+static int s3c_fb_dt_parse_pdata(struct device *dev,
-+					struct s3c_fb_platdata **pdata)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_OF */
-+
-+static const struct of_device_id s3c_fb_dt_match[];
-+
-+static inline struct s3c_fb_driverdata *s3c_fb_get_driver_data(
-+			struct platform_device *pdev)
-+{
-+#ifdef CONFIG_OF
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(s3c_fb_dt_match, pdev->dev.of_node);
-+		return (struct s3c_fb_driverdata *)match->data;
-+	}
-+#endif
-+	return (struct s3c_fb_driverdata *)
-+			platform_get_device_id(pdev)->driver_data;
-+}
-+
- static int __devinit s3c_fb_probe(struct platform_device *pdev)
- {
--	const struct platform_device_id *platid;
- 	struct s3c_fb_driverdata *fbdrv;
- 	struct device *dev = &pdev->dev;
--	struct s3c_fb_platdata *pd;
-+	struct s3c_fb_platdata *pd = pdev->dev.platform_data;
- 	struct s3c_fb *sfb;
- 	struct resource *res;
- 	int win;
- 	int ret = 0;
- 	u32 reg;
- 
--	platid = platform_get_device_id(pdev);
--	fbdrv = (struct s3c_fb_driverdata *)platid->driver_data;
-+	fbdrv = s3c_fb_get_driver_data(pdev);
- 
- 	if (fbdrv->variant.nr_windows > S3C_FB_MAX_WIN) {
- 		dev_err(dev, "too many windows, cannot attach\n");
- 		return -EINVAL;
- 	}
- 
--	pd = pdev->dev.platform_data;
-+	if (pdev->dev.of_node) {
-+		pd = s3c_fb_dt_parse_pdata(&pdev->dev);
-+		if (IS_ERR(pd))
-+			return PTR_ERR(pd);
-+	}
-+
- 	if (!pd) {
- 		dev_err(dev, "no platform data specified\n");
- 		return -EINVAL;
-@@ -1449,7 +1640,12 @@ static int __devinit s3c_fb_probe(struct platform_device *pdev)
- 
- 	/* setup gpio and output polarity controls */
- 
--	pd->setup_gpio();
-+	if (dev->of_node) {
-+		if (s3c_fb_dt_parse_gpios(dev, sfb, true))
-+			goto err_lcd_clk;
-+	} else {
-+		pd->setup_gpio();
-+	}
- 
- 	writel(pd->vidcon1, sfb->regs + VIDCON1);
- 
-@@ -1499,6 +1695,7 @@ static int __devinit s3c_fb_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_pm_runtime:
-+	s3c_fb_dt_free_gpios(sfb);
- 	pm_runtime_put_sync(sfb->dev);
- 
- err_lcd_clk:
-@@ -1545,6 +1742,7 @@ static int __devexit s3c_fb_remove(struct platform_device *pdev)
- 
- 	pm_runtime_put_sync(sfb->dev);
- 	pm_runtime_disable(sfb->dev);
-+	s3c_fb_dt_free_gpios(sfb);
- 
- 	return 0;
- }
-@@ -1588,7 +1786,10 @@ static int s3c_fb_resume(struct device *dev)
- 		clk_enable(sfb->lcd_clk);
- 
- 	/* setup gpio and output polarity controls */
--	pd->setup_gpio();
-+	if (dev->of_node)
-+		s3c_fb_dt_parse_gpios(dev, sfb, false);
-+	else
-+		pd->setup_gpio();
- 	writel(pd->vidcon1, sfb->regs + VIDCON1);
- 
- 	/* set video clock running at under-run */
-@@ -1658,7 +1859,10 @@ static int s3c_fb_runtime_resume(struct device *dev)
- 		clk_enable(sfb->lcd_clk);
- 
- 	/* setup gpio and output polarity controls */
--	pd->setup_gpio();
-+	if (dev->of_node)
-+		s3c_fb_dt_parse_gpios(dev, sfb, false);
-+	else
-+		pd->setup_gpio();
- 	writel(pd->vidcon1, sfb->regs + VIDCON1);
- 
- 	return 0;
-@@ -2028,6 +2232,15 @@ static struct platform_device_id s3c_fb_driver_ids[] = {
- };
- MODULE_DEVICE_TABLE(platform, s3c_fb_driver_ids);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id s3c_fb_dt_match[] = {
-+	{ .compatible = "samsung,exynos4210-fimd",
-+		.data = (void *)&s3c_fb_data_exynos4 },
-+	{},
 +};
-+MODULE_DEVICE_TABLE(of, s3c_fb_dt_match);
-+#endif
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+new file mode 100644
+index 0000000..d1f4f8c
+--- /dev/null
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -0,0 +1,356 @@
++/*
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
 +
- static const struct dev_pm_ops s3cfb_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(s3c_fb_suspend, s3c_fb_resume)
- 	SET_RUNTIME_PM_OPS(s3c_fb_runtime_suspend, s3c_fb_runtime_resume,
-@@ -2042,6 +2255,7 @@ static struct platform_driver s3c_fb_driver = {
- 		.name	= "s3c-fb",
- 		.owner	= THIS_MODULE,
- 		.pm	= &s3cfb_pm_ops,
-+		.of_match_table	= of_match_ptr(s3c_fb_dt_match),
- 	},
++/include/ "skeleton.dtsi"
++
++/ {
++	interrupt-parent = <&icoll>;
++
++	aliases {
++		serial0 = &duart;
++	};
++
++	cpus {
++		cpu@0 {
++			compatible = "arm,arm926ejs";
++		};
++	};
++
++	apb@80000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x80000000 0x80000>;
++		ranges;
++
++		apbh@80000000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x80000000 0x3c900>;
++			ranges;
++
++			icoll: interrupt-controller@80000000 {
++				compatible = "fsl,imx28-icoll", "fsl,mxs-icoll";
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				reg = <0x80000000 0x2000>;
++			};
++
++			hsadc@80002000 {
++				reg = <0x80002000 2000>;
++				interrupts = <13 87>;
++				status = "disabled";
++			};
++
++			dma-apbh@80004000 {
++				reg = <0x80004000 2000>;
++				status = "disabled";
++			};
++
++			perfmon@80006000 {
++				reg = <0x80006000 800>;
++				interrupts = <27>;
++				status = "disabled";
++			};
++
++			bch@8000a000 {
++				reg = <0x8000a000 2000>;
++				interrupts = <41>;
++				status = "disabled";
++			};
++
++			gpmi@8000c000 {
++				reg = <0x8000c000 2000>;
++				interrupts = <42 88>;
++				status = "disabled";
++			};
++
++			ssp@80010000 {
++				reg = <0x80010000 2000>;
++				interrupts = <96 82>;
++				status = "disabled";
++			};
++
++			ssp@80012000 {
++				reg = <0x80012000 2000>;
++				interrupts = <97 83>;
++				status = "disabled";
++			};
++
++			ssp@80014000 {
++				reg = <0x80014000 2000>;
++				interrupts = <98 84>;
++				status = "disabled";
++			};
++
++			ssp@80016000 {
++				reg = <0x80016000 2000>;
++				interrupts = <99 85>;
++				status = "disabled";
++			};
++
++			pinctrl@80018000 {
++				reg = <0x80018000 2000>;
++				status = "disabled";
++			};
++
++			digctl@8001c000 {
++				reg = <0x8001c000 2000>;
++				interrupts = <89>;
++				status = "disabled";
++			};
++
++			etm@80022000 {
++				reg = <0x80022000 2000>;
++				status = "disabled";
++			};
++
++			dma-apbx@80024000 {
++				reg = <0x80024000 2000>;
++				status = "disabled";
++			};
++
++			dcp@80028000 {
++				reg = <0x80028000 2000>;
++				interrupts = <52 53 54>;
++				status = "disabled";
++			};
++
++			pxp@8002a000 {
++				reg = <0x8002a000 2000>;
++				interrupts = <39>;
++				status = "disabled";
++			};
++
++			ocotp@8002c000 {
++				reg = <0x8002c000 2000>;
++				status = "disabled";
++			};
++
++			axi-ahb@8002e000 {
++				reg = <0x8002e000 2000>;
++				status = "disabled";
++			};
++
++			lcdif@80030000 {
++				reg = <0x80030000 2000>;
++				interrupts = <38 86>;
++				status = "disabled";
++			};
++
++			can@80032000 {
++				reg = <0x80032000 2000>;
++				interrupts = <8>;
++				status = "disabled";
++			};
++
++			can@80034000 {
++				reg = <0x80034000 2000>;
++				interrupts = <9>;
++				status = "disabled";
++			};
++
++			simdbg@8003c000 {
++				reg = <0x8003c000 200>;
++				status = "disabled";
++			};
++
++			simgpmisel@8003c200 {
++				reg = <0x8003c200 100>;
++				status = "disabled";
++			};
++
++			simsspsel@8003c300 {
++				reg = <0x8003c300 100>;
++				status = "disabled";
++			};
++
++			simmemsel@8003c400 {
++				reg = <0x8003c400 100>;
++				status = "disabled";
++			};
++
++			gpiomon@8003c500 {
++				reg = <0x8003c500 100>;
++				status = "disabled";
++			};
++
++			simenet@8003c700 {
++				reg = <0x8003c700 100>;
++				status = "disabled";
++			};
++
++			armjtag@8003c800 {
++				reg = <0x8003c800 100>;
++				status = "disabled";
++			};
++                };
++
++		apbx@80040000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x80040000 0x40000>;
++			ranges;
++
++			clkctl@80040000 {
++				reg = <0x80040000 2000>;
++				status = "disabled";
++			};
++
++			saif@80042000 {
++				reg = <0x80042000 2000>;
++				interrupts = <59 80>;
++				status = "disabled";
++			};
++
++			power@80044000 {
++				reg = <0x80044000 2000>;
++				status = "disabled";
++			};
++
++			saif@80046000 {
++				reg = <0x80046000 2000>;
++				interrupts = <58 81>;
++				status = "disabled";
++			};
++
++			lradc@80050000 {
++				reg = <0x80050000 2000>;
++				status = "disabled";
++			};
++
++			spdif@80054000 {
++				reg = <0x80054000 2000>;
++				interrupts = <45 66>;
++				status = "disabled";
++			};
++
++			rtc@80056000 {
++				reg = <0x80056000 2000>;
++				interrupts = <28 29>;
++				status = "disabled";
++			};
++
++			i2c@80058000 {
++				reg = <0x80058000 2000>;
++				interrupts = <111 68>;
++				status = "disabled";
++			};
++
++			i2c@8005a000 {
++				reg = <0x8005a000 2000>;
++				interrupts = <110 69>;
++				status = "disabled";
++			};
++
++			pwm@80064000 {
++				reg = <0x80064000 2000>;
++				status = "disabled";
++			};
++
++			timrot@80068000 {
++				reg = <0x80068000 2000>;
++				status = "disabled";
++			};
++
++			serial@8006a000 {
++				reg = <0x8006a000 0x2000>;
++				interrupts = <112 70 71>;
++				status = "disabled";
++			};
++
++			serial@8006c000 {
++				reg = <0x8006c000 0x2000>;
++				interrupts = <113 72 73>;
++				status = "disabled";
++			};
++
++			serial@8006e000 {
++				reg = <0x8006e000 0x2000>;
++				interrupts = <114 74 75>;
++				status = "disabled";
++			};
++
++			serial@80070000 {
++				reg = <0x80070000 0x2000>;
++				interrupts = <115 76 77>;
++				status = "disabled";
++			};
++
++			serial@80072000 {
++				reg = <0x80072000 0x2000>;
++				interrupts = <116 78 79>;
++				status = "disabled";
++			};
++
++			duart: serial@80074000 {
++				compatible = "arm,pl011", "arm,primecell";
++				reg = <0x80074000 0x1000>;
++				interrupts = <47>;
++			};
++
++			usbphy@8007c000 {
++				reg = <0x8007c000 0x2000>;
++				status = "disabled";
++			};
++
++			usbphy@8007e000 {
++				reg = <0x8007e000 0x2000>;
++				status = "disabled";
++			};
++		};
++	};
++
++	ahb@80080000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x80080000 0x80000>;
++		ranges;
++
++		usbctrl@80080000 {
++			reg = <0x80080000 0x10000>;
++			status = "disabled";
++		};
++
++		usbctrl@80090000 {
++			reg = <0x80090000 0x10000>;
++			status = "disabled";
++		};
++
++		dflpt@800c0000 {
++			reg = <0x800c0000 0x10000>;
++			status = "disabled";
++		};
++
++		ethernet@800f0000 {
++			compatible = "fsl,imx28-fec";
++			reg = <0x800f0000 0x4000>;
++			interrupts = <101>;
++			status = "disabled";
++		};
++
++		ethernet@800f4000 {
++			compatible = "fsl,imx28-fec";
++			reg = <0x800f4000 0x4000>;
++			interrupts = <102>;
++			status = "disabled";
++		};
++
++		switch@800f8000 {
++			reg = <0x800f8000 0x8000>;
++			status = "disabled";
++		};
++
++	};
++};
+diff --git a/arch/arm/mach-mxs/Kconfig b/arch/arm/mach-mxs/Kconfig
+index c57f996..09fe0fb 100644
+--- a/arch/arm/mach-mxs/Kconfig
++++ b/arch/arm/mach-mxs/Kconfig
+@@ -7,16 +7,26 @@ config MXS_OCOTP
+ 
+ config SOC_IMX23
+ 	bool
++	select ARM_AMBA
+ 	select CPU_ARM926T
+ 	select HAVE_PWM
+ 
+ config SOC_IMX28
+ 	bool
++	select ARM_AMBA
+ 	select CPU_ARM926T
+ 	select HAVE_PWM
+ 
+ comment "MXS platforms:"
+ 
++config MACH_MXS_DT
++	bool "Support MXS platforms from device tree"
++	select SOC_IMX28
++	select USE_OF
++	help
++	  Include support for Freescale MXS platforms(i.MX23 and i.MX28)
++	  using the device tree for discovery
++
+ config MACH_STMP378X_DEVB
+ 	bool "Support STMP378x_devb Platform"
+ 	select SOC_IMX23
+diff --git a/arch/arm/mach-mxs/Makefile b/arch/arm/mach-mxs/Makefile
+index 908bf9a..8328c45 100644
+--- a/arch/arm/mach-mxs/Makefile
++++ b/arch/arm/mach-mxs/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_PM) += pm.o
+ obj-$(CONFIG_SOC_IMX23) += clock-mx23.o
+ obj-$(CONFIG_SOC_IMX28) += clock-mx28.o
+ 
++obj-$(CONFIG_MACH_MXS_DT) += mach-mxs.o
+ obj-$(CONFIG_MACH_STMP378X_DEVB) += mach-stmp378x_devb.o
+ obj-$(CONFIG_MACH_MX23EVK) += mach-mx23evk.o
+ obj-$(CONFIG_MACH_MX28EVK) += mach-mx28evk.o
+diff --git a/arch/arm/mach-mxs/clock-mx28.c b/arch/arm/mach-mxs/clock-mx28.c
+index 5d68e41..88ed30c 100644
+--- a/arch/arm/mach-mxs/clock-mx28.c
++++ b/arch/arm/mach-mxs/clock-mx28.c
+@@ -671,6 +671,10 @@ static struct clk_lookup lookups[] = {
+ 	_REGISTER_CLOCK("imx28-fb", NULL, lcdif_clk)
+ 	_REGISTER_CLOCK("mxs-saif.0", NULL, saif0_clk)
+ 	_REGISTER_CLOCK("mxs-saif.1", NULL, saif1_clk)
++	/* for DT */
++	_REGISTER_CLOCK("80074000.serial", NULL, uart_clk)
++	_REGISTER_CLOCK("800f0000.ethernet", NULL, fec_clk)
++	_REGISTER_CLOCK("800f4000.ethernet", NULL, fec_clk)
  };
  
+ static int clk_misc_init(void)
+diff --git a/arch/arm/mach-mxs/devices/Kconfig b/arch/arm/mach-mxs/devices/Kconfig
+index 18b6bf5..2febd62 100644
+--- a/arch/arm/mach-mxs/devices/Kconfig
++++ b/arch/arm/mach-mxs/devices/Kconfig
+@@ -1,6 +1,5 @@
+ config MXS_HAVE_AMBA_DUART
+ 	bool
+-	select ARM_AMBA
+ 
+ config MXS_HAVE_PLATFORM_AUART
+ 	bool
+diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
+new file mode 100644
+index 0000000..b2b6c37
+--- /dev/null
++++ b/arch/arm/mach-mxs/mach-mxs.c
+@@ -0,0 +1,68 @@
++/*
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ * Copyright 2012 Linaro Ltd.
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#include <linux/init.h>
++#include <linux/irqdomain.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/time.h>
++#include <mach/common.h>
++
++static int __init mxs_icoll_add_irq_domain(struct device_node *np,
++				struct device_node *interrupt_parent)
++{
++	irq_domain_add_simple(np, 0);
++
++	return 0;
++}
++
++static const struct of_device_id mxs_irq_match[] __initconst = {
++	{ .compatible = "fsl,mxs-icoll", .data = mxs_icoll_add_irq_domain, },
++	{ /* sentinel */ }
++};
++
++static void __init mxs_dt_init_irq(void)
++{
++	icoll_init_irq();
++	of_irq_init(mxs_irq_match);
++}
++
++static void __init imx28_timer_init(void)
++{
++	mx28_clocks_init();
++}
++
++static struct sys_timer imx28_timer = {
++	.init = imx28_timer_init,
++};
++
++static void __init mxs_machine_init(void)
++{
++       of_platform_populate(NULL, of_default_bus_match_table,
++				NULL, NULL);
++}
++
++static const char *imx28_dt_compat[] __initdata = {
++	"fsl,imx28-evk",
++	"fsl,imx28",
++	NULL,
++};
++
++DT_MACHINE_START(IMX28, "Freescale i.MX28 (Device Tree)")
++	.map_io		= mx28_map_io,
++	.init_irq	= mxs_dt_init_irq,
++	.timer		= &imx28_timer,
++	.init_machine	= mxs_machine_init,
++	.dt_compat	= imx28_dt_compat,
++	.restart	= mxs_restart,
++MACHINE_END
 -- 
-1.6.6.rc2
+1.7.0.4
