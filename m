@@ -1,63 +1,58 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v5 04/16] pwm: Add table-based lookup for static mappings
-Date: Thu, 29 Mar 2012 23:03:42 +0100
-Message-ID: <20120329220342.GK4153@opensource.wolfsonmicro.com>
-References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de>
- <1332945238-14897-5-git-send-email-thierry.reding@avionic-design.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [GIT PULL] devicetree documentation updates
+Date: Thu, 29 Mar 2012 19:20:25 -0600
+Message-ID: <CACxGe6sY5wX4+_d4VhaY=grPe+DgATgrR5162cvwhK9uZ_K5Ww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vk/v8fjDPiDepTtA"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1332945238-14897-5-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
---vk/v8fjDPiDepTtA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please pull these documentation changes for devicetree usage.
 
-On Wed, Mar 28, 2012 at 04:33:46PM +0200, Thierry Reding wrote:
+Cheers,
+g.
 
-> +	static struct pwm_lookup board_pwm_lookup[] = {
-> +		PWM_LOOKUP("tegra-pwm", 0, "pwm-backlight"),
-> +	};
+The following changes since commit 735e941caa9a35f933297af0ab1e0ad6447411c4:
 
-The clock and regulator APIs namespace the consumers by struct device -
-might this not be sensible here?  pwm_get() does already take the device
-as an argument.  It'd feel safer, and for example there's plenty of
-phones out there with two backlit displays...
+  Merge tag 'common-clk-api' of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc (2012-03-28
+12:38:06 -0700)
 
-> + * pwm_get() - look up and request a PWM device
-> + * @dev: device for PWM consumer
-> + * @provider: name of provider PWM chip
-> + * @index: per-chip index of PWM to request
+are available in the git repository at:
 
-The documentation is out of sync with the signature.
 
---vk/v8fjDPiDepTtA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+  git://git.secretlab.ca/git/linux-2.6 tags/devicetree-for-linus
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+for you to fetch changes up to 31134efc681a5440e2b952eed3bf9a5306a95062:
 
-iQIcBAEBAgAGBQJPdNwrAAoJEBus8iNuMP3dgn0P/ivbJo8dqKi/dia2JboA0H0k
-R5X0YUZSQZYJ4VQebi9vE1UO7Cg6piWU7jJXr1hJMpDtQSBWWfB3J+8bnGAO26+7
-mT/Ce4rn74I2bvw4m/b2SqxMnT0+0pM3yK79PGsETJX6dcv4bEVtMUFlajgmNS87
-O3Bzpt6/p6hPhQ3PK2r/MQkFN3x677CXbwwMVN9KB6ccFCp5QfvYf5heJiWebjhd
-kL3JWUORfAoWjOv68gJYuIHSXZYa87FlDAdfu1id9AkMNVUzzVluVFXnTyxZj0il
-RCLrFKkhaE8JaiskKCdkUBuuC4FY+YzNIvjSurnmmffJ6t0mx4iFvo6o4zTyIkze
-HTTERKcaEK9486iIG0g80SSA10uzMxW73LHx/LM32SGVUzHN1f31lPF4NcgrlYUM
-l+qcRsZLw3PIOloly1P92R+qxqzTLNw3zvAOeXXWxVE3Q2m2qWCM/NWcOm3LtTGc
-cPDgekpbEvpmxxXv0oUN2iS7mt26OVjLFmwkOaGzHjcI3UlGPRMGTHYQ8KijaSzt
-2oTgYodycnbbWFRE7tmC77wiJi1uqwGWOfNwLmbXjxk2zSBKaBXne10+wrGAR4D3
-lK3aDPkxjASOMiSo14UadaDX3CPeO1x+L3AAxE7QkfYgFN/DAg+e/lRpP1eSgII4
-fpCg4pI/U15jEuEpjtCc
-=4vkJ
------END PGP SIGNATURE-----
+  dt: Linux DT usage model documentation (2012-03-29 19:13:50 -0600)
 
---vk/v8fjDPiDepTtA--
+----------------------------------------------------------------
+Devicetree documentation update for v3.4
+
+----------------------------------------------------------------
+Grant Likely (1):
+      dt: Linux DT usage model documentation
+
+Jamie Lentin (1):
+      mtd: Move fdt partition documentation to a seperate file
+
+ .../devicetree/bindings/mtd/arm-versatile.txt      |    4 +-
+ .../devicetree/bindings/mtd/atmel-dataflash.txt    |    3 +
+ .../devicetree/bindings/mtd/fsl-upm-nand.txt       |    4 +
+ .../devicetree/bindings/mtd/gpio-control-nand.txt  |    3 +
+ .../devicetree/bindings/mtd/mtd-physmap.txt        |   23 +-
+ .../devicetree/bindings/mtd/partition.txt          |   38 ++
+ Documentation/devicetree/usage-model.txt           |  412 ++++++++++++++++++++
+ 7 files changed, 464 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/partition.txt
+ create mode 100644 Documentation/devicetree/usage-model.txt
+
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
