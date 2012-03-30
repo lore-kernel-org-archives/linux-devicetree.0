@@ -1,55 +1,111 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V4 Resend 1/2] Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
-Date: Fri, 30 Mar 2012 12:45:34 -0600
-Message-ID: <4F75FF4E.4040602@wwwdotorg.org>
-References: <cover.1333009670.git.viresh.kumar@st.com> <406fb8092d6aca97a54add346a2528daefab9c8d.1333009670.git.viresh.kumar@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 6/6] mmc: sdhci-s3c: Add device tree support
+Date: Fri, 30 Mar 2012 18:45:07 +0000
+Message-ID: <201203301845.07534.arnd@arndb.de>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org> <201203301136.05038.arnd@arndb.de> <4F75D5C0.5050307@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <406fb8092d6aca97a54add346a2528daefab9c8d.1333009670.git.viresh.kumar@st.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@st.com>
-Cc: dmitry.torokhov@gmail.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, viresh.linux@gmail.com, linux-input@vger.kernel.org, sr@denx.de
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4F75D5C0.5050307@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Viresh Kumar <viresh.kumar@st.com>, "cjb@laptop.org" <cjb@laptop.org>, "patches@linaro.org" <patches@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2012 09:40 PM, Viresh Kumar wrote:
-> We don't need to allocate memory for keymap in matrix_keyboard_of_fill_keymap(),
-> as this would only be used by matrix_keyboard_of_free_keymap(). Instead create
-> another routine matrix_keypad_of_build_keymap() which reads directly the
-> property from struct device_node and builds keymap.
+On Friday 30 March 2012, Stephen Warren wrote:
+> That property looks very reasonable.
 > 
-> With this eariler routines matrix_keyboard_of_fill_keymap() and
-> matrix_keyboard_of_free_keymap() go away.
+> Question: This would be a non-backwards-compatible change to the binding
+> definition. How should this be handled? In the past, I believe it's been
+> stated that new kernels need to run against old device trees, and hence
+> once a DT binding was defined and in use, it couldn't change except in a
+> backwards-compatible way. However, more recently, Grant has said that
+> his opinion is that (some or all?) bindings are currently considered
+> experimental and subject to change. And besides, the .dts files are
+> contained in the kernel tree at present... Some generally stated and
+> agreed upon policy here might be useful.
+
+I tried to leave the ones that look like they've been around for a while
+backwards compatible (gpio, esdhc), while changing the relatively new
+ones without backwards compatibility code.
+
+> > +Optional properties:
+> > +- cd-gpios : Specify GPIOs for card detection, see gpio binding
+> > +- wp-gpios : Specify GPIOs for write protection, see gpio binding
 > 
-> This patch also fixes tegra driver according to these changes.
+> > +- cd-inverted: when present, polarity on the wp gpio line is inverted
+> > +- wp-inverted: when present, polarity on the wp gpio line is inverted
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
+> I'm not sure about those two: Some of the GPIO bindings have flags in
+> the GPIO specifier (Tegra, ARM PL061, gpio.txt mentions the possibility
+> of polarity being in the specifier), and bit 0 of the flags is used to
+> indicate inversion. I think that either we should rely on GPIO
+> specifiers having such flags and remove these xxx-inverted properties
+> from the MMC binding, or remove that flag bit from the GPIO bindings.
 
-The error checking looks good now, so once the issues mentioned below
-are fixed:
+Maybe the GPIO maintainer can comment on this. My understanding is
+that not all gpio controllers support this in their bindings. If they
+do, I agree that we can remove the extra properties here.
 
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+> Note that anything using of_gpio_simple_xlate() is going to end up using
+> the GPIO flag definitions from <linux/of_gpio.h> in their GPIO
+> specifier, and there a number of active users of this feature; grep for
+> OF_GPIO_ACTIVE_LOW.
+> 
+> The rather begs the question why of_get_named_gpio() exists; surely
+> of_get_named_gpio_flags() should always be used so that consumers know
+> whether the GPIO value should be inverted, or are the GPIO flags
+> supposed to be processed by the OF/GPIO core or GPIO driver somehow, and
+> act transparently to GPIO consumers?
+> 
+> > diff --git a/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
+> ...
+> > -- interrupts : Should contain SD/MMC interrupt
+> > +- interrupt  : Should contain SD/MMC interrupt
+> 
+> Isn't that usually pluralized, so interrupts?
 
-> diff --git a/drivers/input/keyboard/tegra-kbc.c b/drivers/input/keyboard/tegra-kbc.c
-...
->  #else
-> -static inline struct tegra_kbc_platform_data *tegra_kbc_dt_parse_pdata(
-> -	struct platform_device *pdev)
-> +static struct tegra_kbc_platform_data * __devinit
-> +tegra_kbc_dt_parse_pdata(struct device_node *np)
+Right, my mistake.
 
-This one should be "inline" and not "__devinit", i.e. like it was before.
+> > +- bus-width : Number of data lines, can be <1>, <4>, or <8>
+> 
+> For the device-specific binding documentation, rather than repeating the
+> core bindings, shouldn't we say something like:
+> 
+> This binding is based on the core MMC bindings documented in mmc.txt.
+> This file only documents additions or changes to those bindings.
+> 
+> ... and then remove any of the common properties from the individual files?
 
-> diff --git a/include/linux/input/matrix_keypad.h b/include/linux/input/matrix_keypad.h
-...
->  #else
-> -static inline struct matrix_keymap_data *
-> -matrix_keyboard_of_fill_keymap(struct device_node *np, const char *propname)
-> +int matrix_keypad_of_build_keymap(struct input_dev *idev,
-> +		unsigned int row_shift, const char *propname)
->  {
->  	return NULL;
->  }
+yes, good idea.
 
-This one should also be "static inline".
+> > diff --git a/arch/arm/boot/dts/tegra-cardhu.dts b/arch/arm/boot/dts/tegra-cardhu.dts
+> ...
+> > @@ -66,5 +67,6 @@
+> >  
+> >       sdhci@78000400 {
+> >               support-8bit;
+> > +             bus-width = <8>;
+> >       };
+> >  };
+> 
+> Ah OK, so the first phase is to add all the new standardize properties,
+> then later remove all the legacy properties once the drivers have been
+> updated.
+> 
+> You've missed additions of "non-removable", but I can add them later. or
+> provide you an incremental patch or something.
+> 
+> > diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
+> 
+> This doesn't seem to decode cd-inverted, or do anything with the
+> bus-width property value that it reads. Was that intentional?
+
+For now, I was trying to get the binding document right. I suppose as a follow-up,
+we can actually add a common helper function to decode these attributes and set
+the right flag in the mmc device, but that is not urgent. Right now, I mainly
+want to make sure we gain no new users that have conflicting bindings.
+
+	Arnd
