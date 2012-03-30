@@ -1,7 +1,7 @@
 From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/1] ARM: imx28: add basic dt support
-Date: Fri, 30 Mar 2012 14:31:18 +0800
-Message-ID: <1333089078-24724-1-git-send-email-b29396@freescale.com>
+Subject: [PATCH v3 1/1] ARM: imx28: add basic dt support
+Date: Fri, 30 Mar 2012 14:32:10 +0800
+Message-ID: <1333089130-24832-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
