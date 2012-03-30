@@ -1,81 +1,31 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v5 05/16] pwm: Add device tree support
-Date: Fri, 30 Mar 2012 08:24:26 +0200
-Message-ID: <20120330062426.GA13051@avionic-0098.mockup.avionic-design.de>
-References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de>
- <1332945238-14897-6-git-send-email-thierry.reding@avionic-design.de>
- <20120329214717.GG4153@opensource.wolfsonmicro.com>
+From: Viresh Kumar <viresh.kumar@st.com>
+Subject: Re: [PATCH v3 6/6] mmc: sdhci-s3c: Add device tree support
+Date: Fri, 30 Mar 2012 12:03:53 +0530
+Message-ID: <4F7553D1.4030008@st.com>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org> <1328032576-9269-7-git-send-email-thomas.abraham@linaro.org> <201203271619.13320.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2414991990648032742=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120329214717.GG4153-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201203271619.13320.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>, "cjb@laptop.org" <cjb@laptop.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Rajendra Nayak <rnayak@ti.com>, Stephen Warren <swarren@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On 3/27/2012 9:49 PM, Arnd Bergmann wrote:
+> These bindings came up in a discussion IRC today. I think it's rather bad that
+> we can't agree on a common way to name the properties for mmc. We have
+> bindings being proposed or already included from Anton, Stephen, Shawn,
+> Rajendra, Viresh, Lee and Thomas. Almost all of them define GPIO pins
+> for card detect and write protect, as well properties to define the bus
+> width and high-speed modes, but we seem to have almost as many different
+> definitions of these as we have drivers.
+> 
+> Can we please come up with a common binding for these?
 
---===============2414991990648032742==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
-Content-Disposition: inline
+Is there any progress on this? Sorry i wasn't following all mails.
+How should i progress for sdhci-spear?
 
-
---wac7ysb48OaltWcw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-* Mark Brown wrote:
-> On Wed, Mar 28, 2012 at 04:33:47PM +0200, Thierry Reding wrote:
-> > +	pwm =3D pwm_request_from_chip(pc, args->args[0], NULL);
-> > +	if (IS_ERR(pwm))
-> > +		return ERR_PTR(-ENODEV);
->=20
-> It feels wrong to override the error code like this rather than passing
-> the error we got back to the caller.  Is there any great reason for
-> doing so?
-
-Yes, this certainly looks wrong. I must have forgotten to fix this up when
-of_pwm_simple_xlate() was converted to return a struct pwm_device instead of
-an int. Previous to that pwm_request_from_chip() would return NULL and
--ENODEV seemed like the proper error code for that situation.
-
-I'll change this to just return pwm.
-
-Thanks,
-Thierry
-
---wac7ysb48OaltWcw
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEUEARECAAYFAk91UZoACgkQZ+BJyKLjJp8gRwCeKWSXroflPVPlupUzVDbVkzPJ
-u5kAlRjVJNc7doCF3mAbNrn4/xuQ36A=
-=TmCj
------END PGP SIGNATURE-----
-
---wac7ysb48OaltWcw--
-
---===============2414991990648032742==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2414991990648032742==--
+-- 
+viresh
