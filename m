@@ -1,16 +1,13 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
-Date: Sat, 31 Mar 2012 09:17:18 -0500
-Message-ID: <E1SDz7G-00039C-2a@jdl.com>
-References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
- <20120321032653.GB15997@truffala.fritz.box>
- <20120326022350.GA13005@truffala.fritz.box> <E1SC9hv-0007Gm-Py@jdl.com>
- <20120326233709.GB9357@truffala.fritz.box>
+Subject: Re: [PATCH V2] dtc: Basic integer expressions
+Date: Sat, 31 Mar 2012 09:24:12 -0500
+Message-ID: <E1SDzDw-0003C1-Ag@jdl.com>
+References: <1332901483-3751-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20120326233709.GB9357-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-reply-to: <1332901483-3751-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,18 +17,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+> Written by David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>. Additions by me:
+> * Ported to ToT dtc.
+> * Renamed cell to integer throughout.
+> * Implemented value range checks.
+> * Allow L/UL/LL/ULL suffix on literals.
+> * Enabled the commented test.
 > 
-> Uh, it was "this isn't perfect, but it's better than what we have,
-> please apply".
+> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> ---
+> v2:
+> * s/cell/integer/ throughout.
+> * Allow signed-extended values to pass the overall cell range check.
+> * Allow L/UL/LL/ULL suffix on literals. This is purely for compatibility
+>   with C, and has no effect on dtc's processing.
+> * Enabled the 3 disabled tests.
+> 
+> I'm not sure if the literal suffix handling is hacky or not...
 
-Sorry, I misunderstood.
+I get this too:
 
-> I've forwarded Stephen's patch to you again.
+ CC tests/integer-expressions.o
+cc1: warnings being treated as errors
+tests/integer-expressions.c: In function 'main'
+tests/integer-expressions.c:105: error: format  tests/integer-expressions.o
+cc1: warnings being treated as errors
+tests/integer-expressions.c:105: error: format '%ld' expects type 'long int', but argument 3 has type 'unsigned int'
+make: *** [tests/integer-expressions.o] Error 1
 
-I've applied it.
+$ gcc --version
+gcc (Debian 4.4.5-8) 4.4.5
 
 jdl
