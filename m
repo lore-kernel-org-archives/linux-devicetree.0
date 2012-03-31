@@ -1,7 +1,7 @@
 From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: [PATCH V4 3/3] ARM: kirkwood: Define DNS-320/DNS-325 NAND in fdt
-Date: Sat, 31 Mar 2012 14:53:05 +0100
-Message-ID: <1333201985-2222-4-git-send-email-jm@lentin.co.uk>
+Subject: [PATCH V4 2/3] kirkwood: Allow nand to be configured via. devicetree
+Date: Sat, 31 Mar 2012 14:53:04 +0100
+Message-ID: <1333201985-2222-3-git-send-email-jm@lentin.co.uk>
 References: <1333201985-2222-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,165 +21,85 @@ To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason <jason-NLaQJdtUoK4B
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use devicetree to define NAND partitions. Use D-link partition scheme by
-default, to be vaguely compatible with their userland.
+Add default configuration for NAND, to be enabled in your board config. Ensure
+clock gating is set appropriately when the NAND is enabled.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 ---
-Unchanged since V3
+Update bank-width to be in bytes
 
- arch/arm/boot/dts/kirkwood-dns320.dts |   35 +++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/kirkwood-dns325.dts |   35 +++++++++++++++++++++++++++++++++
- arch/arm/mach-kirkwood/board-dnskw.c  |   31 -----------------------------
- 3 files changed, 70 insertions(+), 31 deletions(-)
+ arch/arm/boot/dts/kirkwood.dtsi |   15 ++++++++++++++-
+ arch/arm/mach-kirkwood/common.c |   12 ++++++++++++
+ 2 files changed, 26 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
-index 78c834f..dc09a73 100644
---- a/arch/arm/boot/dts/kirkwood-dns320.dts
-+++ b/arch/arm/boot/dts/kirkwood-dns320.dts
-@@ -25,5 +25,40 @@
- 			clock-frequency = <166666667>;
- 			status = "okay";
+diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+index 3474ef8..926528b 100644
+--- a/arch/arm/boot/dts/kirkwood.dtsi
++++ b/arch/arm/boot/dts/kirkwood.dtsi
+@@ -5,7 +5,7 @@
+ 
+ 	ocp@f1000000 {
+ 		compatible = "simple-bus";
+-		ranges = <0 0xf1000000 0x1000000>;
++		ranges = <0 0xf1000000 0x4000000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+@@ -32,5 +32,18 @@
+ 			reg = <0x10300 0x20>;
+ 			interrupts = <53>;
  		};
 +
 +		nand@3000000 {
-+			status = "okay";
-+
-+			partition@0 {
-+				label = "u-boot";
-+				reg = <0x0000000 0x100000>;
-+				read-only;
-+			};
-+
-+			partition@100000 {
-+				label = "uImage";
-+				reg = <0x0100000 0x500000>;
-+			};
-+
-+			partition@600000 {
-+				label = "ramdisk";
-+				reg = <0x0600000 0x500000>;
-+			};
-+
-+			partition@b00000 {
-+				label = "image";
-+				reg = <0x0b00000 0x6600000>;
-+			};
-+
-+			partition@7100000 {
-+				label = "mini firmware";
-+				reg = <0x7100000 0xa00000>;
-+			};
-+
-+			partition@7b00000 {
-+				label = "config";
-+				reg = <0x7b00000 0x500000>;
-+			};
++			#address-cells = <1>;
++			#size-cells = <1>;
++			cle = <0>;
++			ale = <1>;
++			bank-width = <1>;
++			compatible = "mrvl,orion-nand";
++			reg = <0x3000000 0x400>;
++			chip-delay = <25>;
++			/* set partition map and/or chip-delay in board dts */
++			status = "disabled";
 +		};
  	};
  };
-diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts b/arch/arm/boot/dts/kirkwood-dns325.dts
-index 23241ab..c2a5562 100644
---- a/arch/arm/boot/dts/kirkwood-dns325.dts
-+++ b/arch/arm/boot/dts/kirkwood-dns325.dts
-@@ -20,5 +20,40 @@
- 			clock-frequency = <200000000>;
- 			status = "okay";
- 		};
-+
-+		nand@3000000 {
-+			status = "okay";
-+
-+			partition@0 {
-+				label = "u-boot";
-+				reg = <0x0000000 0x100000>;
-+				read-only;
-+			};
-+
-+			partition@100000 {
-+				label = "uImage";
-+				reg = <0x0100000 0x500000>;
-+			};
-+
-+			partition@600000 {
-+				label = "ramdisk";
-+				reg = <0x0600000 0x500000>;
-+			};
-+
-+			partition@b00000 {
-+				label = "image";
-+				reg = <0x0b00000 0x6600000>;
-+			};
-+
-+			partition@7100000 {
-+				label = "mini firmware";
-+				reg = <0x7100000 0xa00000>;
-+			};
-+
-+			partition@7b00000 {
-+				label = "config";
-+				reg = <0x7b00000 0x500000>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm/mach-kirkwood/board-dnskw.c b/arch/arm/mach-kirkwood/board-dnskw.c
-index 7cb7f6a..dc4e80a 100644
---- a/arch/arm/mach-kirkwood/board-dnskw.c
-+++ b/arch/arm/mach-kirkwood/board-dnskw.c
-@@ -23,7 +23,6 @@
- #include <linux/gpio_keys.h>
- #include <linux/gpio-fan.h>
- #include <linux/leds.h>
--#include <linux/mtd/physmap.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
-@@ -32,35 +31,6 @@
- #include "common.h"
- #include "mpp.h"
+diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
+index a02cae8..3ad0373 100644
+--- a/arch/arm/mach-kirkwood/common.c
++++ b/arch/arm/mach-kirkwood/common.c
+@@ -15,6 +15,7 @@
+ #include <linux/ata_platform.h>
+ #include <linux/mtd/nand.h>
+ #include <linux/dma-mapping.h>
++#include <linux/of.h>
+ #include <net/dsa.h>
+ #include <asm/page.h>
+ #include <asm/timex.h>
+@@ -482,6 +483,9 @@ static int __init kirkwood_clock_gate(void)
+ 	unsigned int curr = readl(CLOCK_GATING_CTRL);
+ 	u32 dev, rev;
  
--static struct mtd_partition dnskw_nand_parts[] = {
--	{
--		.name		= "u-boot",
--		.offset		= 0,
--		.size		= SZ_1M,
--		.mask_flags	= MTD_WRITEABLE
--	}, {
--		.name		= "uImage",
--		.offset		= MTDPART_OFS_NXTBLK,
--		.size		= 5 * SZ_1M
--	}, {
--		.name		= "ramdisk",
--		.offset		= MTDPART_OFS_NXTBLK,
--		.size		= 5 * SZ_1M
--	}, {
--		.name		= "image",
--		.offset		= MTDPART_OFS_NXTBLK,
--		.size		= 102 * SZ_1M
--	}, {
--		.name		= "mini firmware",
--		.offset		= MTDPART_OFS_NXTBLK,
--		.size		= 10 * SZ_1M
--	}, {
--		.name		= "config",
--		.offset		= MTDPART_OFS_NXTBLK,
--		.size		= 5 * SZ_1M
--	},
--};
--
- static struct mv643xx_eth_platform_data dnskw_ge00_data = {
- 	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
- };
-@@ -272,7 +242,6 @@ static void __init dnskw_gpio_register(unsigned gpio, char *name, int def)
- void __init dnskw_init(void)
- {
- 	kirkwood_mpp_conf(dnskw_mpp_config);
--	kirkwood_nand_init(ARRAY_AND_SIZE(dnskw_nand_parts), 25);
++#ifdef CONFIG_OF
++	struct device_node *np;
++#endif
+ 	kirkwood_pcie_id(&dev, &rev);
+ 	printk(KERN_DEBUG "Gating clock of unused units\n");
+ 	printk(KERN_DEBUG "before: 0x%08x\n", curr);
+@@ -489,6 +493,14 @@ static int __init kirkwood_clock_gate(void)
+ 	/* Make sure those units are accessible */
+ 	writel(curr | CGC_SATA0 | CGC_SATA1 | CGC_PEX0 | CGC_PEX1, CLOCK_GATING_CTRL);
  
- 	kirkwood_ehci_init();
- 	kirkwood_ge00_init(&dnskw_ge00_data);
++#ifdef CONFIG_OF
++	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-nand");
++	if (np && of_device_is_available(np)) {
++		kirkwood_clk_ctrl |= CGC_RUNIT;
++		of_node_put(np);
++	}
++#endif
++
+ 	/* For SATA: first shutdown the phy */
+ 	if (!(kirkwood_clk_ctrl & CGC_SATA0)) {
+ 		/* Disable PLL and IVREF */
 -- 
 1.7.9.1
