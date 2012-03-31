@@ -1,55 +1,119 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH V2] dtc: Basic integer expressions
-Date: Sat, 31 Mar 2012 09:24:12 -0500
-Message-ID: <E1SDzDw-0003C1-Ag@jdl.com>
-References: <1332901483-3751-1-git-send-email-swarren@wwwdotorg.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v5 04/16] pwm: Add table-based lookup for static mappings
+Date: Sat, 31 Mar 2012 16:30:21 +0200
+Message-ID: <20120331143021.GA18382@avionic-0098.mockup.avionic-design.de>
+References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de>
+ <1332945238-14897-5-git-send-email-thierry.reding@avionic-design.de>
+ <20120329220342.GK4153@opensource.wolfsonmicro.com>
+ <20120330050641.GA21823@avionic-0098.mockup.avionic-design.de>
+ <20120330101800.GD21950@opensource.wolfsonmicro.com>
+ <20120330103840.GB961@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1332901483-3751-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120330103840.GB961-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Written by David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>. Additions by me:
-> * Ported to ToT dtc.
-> * Renamed cell to integer throughout.
-> * Implemented value range checks.
-> * Allow L/UL/LL/ULL suffix on literals.
-> * Enabled the commented test.
-> 
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> ---
-> v2:
-> * s/cell/integer/ throughout.
-> * Allow signed-extended values to pass the overall cell range check.
-> * Allow L/UL/LL/ULL suffix on literals. This is purely for compatibility
->   with C, and has no effect on dtc's processing.
-> * Enabled the 3 disabled tests.
-> 
-> I'm not sure if the literal suffix handling is hacky or not...
 
-I get this too:
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- CC tests/integer-expressions.o
-cc1: warnings being treated as errors
-tests/integer-expressions.c: In function 'main'
-tests/integer-expressions.c:105: error: format  tests/integer-expressions.o
-cc1: warnings being treated as errors
-tests/integer-expressions.c:105: error: format '%ld' expects type 'long int', but argument 3 has type 'unsigned int'
-make: *** [tests/integer-expressions.o] Error 1
+* Thierry Reding wrote:
+> * Mark Brown wrote:
+> > On Fri, Mar 30, 2012 at 07:06:41AM +0200, Thierry Reding wrote:
+> > > * Mark Brown wrote:
+> >=20
+> > > > The clock and regulator APIs namespace the consumers by struct devi=
+ce -
+> > > > might this not be sensible here?  pwm_get() does already take the d=
+evice
+> > > > as an argument.  It'd feel safer, and for example there's plenty of
+> > > > phones out there with two backlit displays...
+> >=20
+> > > That's actually how this is supposed to work. "pwm-backlight" in the =
+above
+> > > case is matched against the name of the struct device that you pass i=
+n to
+> > > pwm_get(). The only difference, at least as far as I can tell, to the=
+ clock
+> > > and regulator APIs is that a second name is not listed explicitly in =
+the
+> > > lookup table.
+> >=20
+> > Both clock and regulator APIs map (source) -> (dev, name).  This only
+> > has a mapping (source) -> (dev).
+> >=20
+> > > So compared with the clock and regulator APIs it doesn't make too muc=
+h sense
+> > > to pass both the struct device and the name to pwm_get() because it w=
+ill
+> > > match the device name against the consumer name in the lookup table f=
+irst and
+> > > only use the passed name if no match was found.
+> >=20
+> > This is different to what the clock and regulator APIs do - they look up
+> > the name in the context of the struct device.  This is because...
+> >=20
+> > > In case you have two backlight devices I would expect the following t=
+o work:
+> >=20
+> > > 	static struct pwm_lookup board_pwm_lookup[] =3D {
+> > > 		PWM_LOOKUP("tegra-pwm", 0, "pwm-backlight.0"),
+> > > 		PWM_LOOKUP("tegra-pwm", 1, "pwm-backlight.1"),
+> > > 	};
+> >=20
+> > ...if a single device uses more than one PWM then the above scheme won't
+> > work - unless I'm missing something?
+>=20
+> Right, now it makes more sense. So basically if I have a single device us=
+ing
+> two PWM devices, then I'll need to have something like this:
+>=20
+> 	static struct pwm_lookup board_pwm_lookup[] =3D {
+> 		PWM_LOOKUP("tegra-pwm", 0, "pwm-foo.0", "bar"),
+> 		PWM_LOOKUP("tegra-pwm", 1, "pwm-foo.0", "baz"),
+> 	};
+>=20
+> And then of course I'll need to have a second field by which the PWM devi=
+ce
+> can be identified. Good, I'll fix that up for the next round.
 
-$ gcc --version
-gcc (Debian 4.4.5-8) 4.4.5
+I've been thinking about this some more, and I can see this becoming a litt=
+le
+problem with the DT bindings because the unified pwm_get() always requests
+the first PWM specified in the "pwms" property.
 
-jdl
+The best solution that I could come up with is to not pass the index into t=
+he
+of_pwm_request() function but rather forward the consumer name as passed in=
+to
+pwm_get(). The of_pwm_request() could use the "pwm-names" property to do a
+reverse lookup of the index and request that. One good thing about that wou=
+ld
+be that I no longer need to export the of_pwm_request() function. The "bad"
+thing is that it'll make the "pwm-names" property mandatory if more than a
+single PWM is requested.
+
+Does that sound reasonable?
+
+Thierry
+
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk93FP0ACgkQZ+BJyKLjJp+IiACgnhpj1BGz3xcbtREZdtHiHRSG
+yRYAnAry7fS/+aQg1lSkscGgBDdq7LiV
+=tu8R
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
