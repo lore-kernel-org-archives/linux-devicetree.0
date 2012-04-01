@@ -1,30 +1,36 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 6/6] pinctrl: tegra: Add complete device tree support
-Date: Sun, 1 Apr 2012 19:29:19 +0200
-Message-ID: <CACRpkdav8x-Td-fH1Ree83GhNR8r7aA1dBsTQo2eU3nwwam21Q@mail.gmail.com>
-References: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org>
-	<1332265479-1260-6-git-send-email-swarren@wwwdotorg.org>
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
+Date: Sun, 01 Apr 2012 23:27:44 +0200
+Message-ID: <m2iphj3zxr.fsf@igel.home>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+	<1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1332265479-1260-6-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+	(Grant Likely's message of "Thu, 16 Feb 2012 02:09:07 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2012 at 6:44 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+Grant Likely <grant.likely@secretlab.ca> writes:
 
-> Implement pinctrl_ops dt_node_to_map() and dt_free_map(). These allow
-> complete specification of the desired pinmux configuration using device
-> tree.
->
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> ---
-> v2: Rebase on of_property_for_each_string() API changes.
+> This patch drops the powerpc-specific irq_map table and replaces it with
+> directly using the irq_alloc_desc()/irq_free_desc() interfaces for allocating
+> and freeing irq_desc structures.
 
-Stephen is this eligible for merge? Or does it need changes on top
-of the v4 core patch?
+This breaks irqs on PowerMac G5.  I see lost irq errors from the sata
+driver.
 
-Yours,
-Linus Walleij
+Note that the breakage only started after the series was merged into
+mainline.  But when transplanted upon the parent of the merge this is
+the commit that was blamed by bisect.  So something changed between
+v3.3-rc3 and the merge of this series that broke it.
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
