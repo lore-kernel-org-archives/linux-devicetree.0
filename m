@@ -1,79 +1,45 @@
-From: Jia Hongtao <B38951@freescale.com>
-Subject: [RFC] powerpc/fsl-pci: Document the "fsl,
- has-isa" property for Freescale PCI
-Date: Sun, 1 Apr 2012 14:56:36 +0800
-Message-ID: <1333263396-23932-1-git-send-email-B38951@freescale.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] mmc: sdhci-s3c: Add device tree support
+Date: Sun, 1 Apr 2012 12:29:49 +0100
+Message-ID: <20120401112949.GA19107@sirena.org.uk>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
+ <201203301136.05038.arnd@arndb.de> <4F75D5C0.5050307@wwwdotorg.org>
+ <201203301845.07534.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree-discuss@lists.ozlabs.org, b38951@freescale.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201203301845.07534.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If PCI is primary bus we should set isa_io/mem_base when parsing PCI bridge
-resources from device tree. The previous way to check the primary bus based
-on a hard-coded address named primary_phb_addr. Now we add a property named
-"fsl,has-isa" into device tree. In kernel we use this property to find out
-the bus is primary or not. This way is more flexible.
+On Fri, Mar 30, 2012 at 06:45:07PM +0000, Arnd Bergmann wrote:
+> On Friday 30 March 2012, Stephen Warren wrote:
 
-Signed-off-by: Jia Hongtao <B38951@freescale.com>
-Signed-off-by: Li Yang <leoli@freescale.com>
----
- .../devicetree/bindings/powerpc/fsl/pci.txt        |   36 ++++++++++++++++++++
- 1 files changed, 36 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/pci.txt
+> > > +- cd-inverted: when present, polarity on the wp gpio line is inverted
+> > > +- wp-inverted: when present, polarity on the wp gpio line is inverted
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/pci.txt b/Documentation/devicetree/bindings/powerpc/fsl/pci.txt
-new file mode 100644
-index 0000000..7b18090
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/pci.txt
-@@ -0,0 +1,36 @@
-+* Freescale PCI
-+
-+Freescale PCI specific property:
-+- fsl,has-isa : If PCI is primary bus we should set isa_io/mem_base when
-+                parsing PCI bridge resources. This property is an indicator
-+                to inform kernel the PCI is primary.
-+
-+Example (MPC8572DS)
-+	&pci0 {
-+		compatible = "fsl,mpc8548-pcie";
-+		device_type = "pci";
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		bus-range = <0 255>;
-+		clock-frequency = <33333333>;
-+		interrupts = <24 2 0 0>;
-+		fsl,has-isa;
-+
-+		pcie@0 {
-+			reg = <0 0 0 0 0>;
-+		#interrupt-cells = <1>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+			device_type = "pci";
-+			interrupts = <24 2 0 0>;
-+			interrupt-map-mask = <0xf800 0 0 7>;
-+
-+			interrupt-map = <
-+				/* IDSEL 0x0 */
-+				0000 0x0 0x0 0x1 &mpic 0x8 0x1 0x0 0x0
-+				0000 0x0 0x0 0x2 &mpic 0x9 0x1 0x0 0x0
-+				0000 0x0 0x0 0x3 &mpic 0xa 0x1 0x0 0x0
-+				0000 0x0 0x0 0x4 &mpic 0xb 0x1 0x0 0x0
-+				>;
-+		};
-+	};
--- 
-1.7.5.1
+> > I'm not sure about those two: Some of the GPIO bindings have flags in
+> > the GPIO specifier (Tegra, ARM PL061, gpio.txt mentions the possibility
+> > of polarity being in the specifier), and bit 0 of the flags is used to
+> > indicate inversion. I think that either we should rely on GPIO
+> > specifiers having such flags and remove these xxx-inverted properties
+> > from the MMC binding, or remove that flag bit from the GPIO bindings.
+
+> Maybe the GPIO maintainer can comment on this. My understanding is
+> that not all gpio controllers support this in their bindings. If they
+> do, I agree that we can remove the extra properties here.
+
+Surely it'd be better to fix this at the GPIO controller end rather than
+having a patchwork of approaches?
