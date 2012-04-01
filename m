@@ -1,16 +1,20 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] mmc: sdhci-s3c: Add device tree support
-Date: Sun, 1 Apr 2012 12:29:49 +0100
-Message-ID: <20120401112949.GA19107@sirena.org.uk>
-References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
- <201203301136.05038.arnd@arndb.de> <4F75D5C0.5050307@wwwdotorg.org>
- <201203301845.07534.arnd@arndb.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 04/16] pwm: Add table-based lookup for static mappings
+Date: Sun, 1 Apr 2012 23:20:46 +0800
+Message-ID: <20120401152042.GE2395@S2101-09.ap.freescale.net>
+References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de>
+ <1332945238-14897-5-git-send-email-thierry.reding@avionic-design.de>
+ <20120329220342.GK4153@opensource.wolfsonmicro.com>
+ <20120330050641.GA21823@avionic-0098.mockup.avionic-design.de>
+ <20120330101800.GD21950@opensource.wolfsonmicro.com>
+ <20120330103840.GB961@avionic-0098.mockup.avionic-design.de>
+ <20120331143021.GA18382@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201203301845.07534.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20120331143021.GA18382-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,26 +24,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 30, 2012 at 06:45:07PM +0000, Arnd Bergmann wrote:
-> On Friday 30 March 2012, Stephen Warren wrote:
+On Sat, Mar 31, 2012 at 04:30:21PM +0200, Thierry Reding wrote:
+...
+> The best solution that I could come up with is to not pass the index into the
+> of_pwm_request() function but rather forward the consumer name as passed into
+> pwm_get(). The of_pwm_request() could use the "pwm-names" property to do a
+> reverse lookup of the index and request that. One good thing about that would
+> be that I no longer need to export the of_pwm_request() function.
 
-> > > +- cd-inverted: when present, polarity on the wp gpio line is inverted
-> > > +- wp-inverted: when present, polarity on the wp gpio line is inverted
+I never understand why of_pwm_request() needs to be exported anyway.
+pwm_get() should be the only interface to pwm new/DT users, IMO.
 
-> > I'm not sure about those two: Some of the GPIO bindings have flags in
-> > the GPIO specifier (Tegra, ARM PL061, gpio.txt mentions the possibility
-> > of polarity being in the specifier), and bit 0 of the flags is used to
-> > indicate inversion. I think that either we should rely on GPIO
-> > specifiers having such flags and remove these xxx-inverted properties
-> > from the MMC binding, or remove that flag bit from the GPIO bindings.
+> The "bad"
+> thing is that it'll make the "pwm-names" property mandatory if more than a
+> single PWM is requested.
+> 
+You do not have to make it mandatory, but anyone requesting any pwm
+other than the first on in "pwms" list should fail.
 
-> Maybe the GPIO maintainer can comment on this. My understanding is
-> that not all gpio controllers support this in their bindings. If they
-> do, I agree that we can remove the extra properties here.
+> Does that sound reasonable?
+> 
+The above is exactly what clock DT does, so it sounds reasonable to me.
 
-Surely it'd be better to fix this at the GPIO controller end rather than
-having a patchwork of approaches?
+And I would expect the next version can just turn the second parameter
+of pwm_get() into the one that will be used to identify the pwm device
+rather than adding one more parameter.  Then we have pwm API well
+aligned with clk and regulator.
+
+-- 
+Regards,
+Shawn
