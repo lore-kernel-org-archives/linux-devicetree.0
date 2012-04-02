@@ -1,92 +1,92 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 01/23] fdt: Add function to locate an array in the device
- tree
-Date: Mon,  2 Apr 2012 16:18:41 -0700
-Message-ID: <1333408743-28720-2-git-send-email-sjg@chromium.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v3 02/23] fdt: Add function to return next
+	compatible subnode
+Date: Mon,  2 Apr 2012 16:18:42 -0700
+Message-ID: <1333408743-28720-3-git-send-email-sjg@chromium.org>
 References: <1333408743-28720-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1333408743-28720-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1333408743-28720-1-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
 List-Id: devicetree@vger.kernel.org
 
-fdtdec_locate_array() locates an integer array but does not copy it. This
-saves the caller having to allocated wasted space.
+We need to iterate through subnodes of a parent, looking only at
+compatible nodes. Add a utility function to do this for us.
 
-Access to array elements should be through the fdt32_to_cpu() macro.
-
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
-Changes in v2:
-- Add new fdtdec_locate_array() function
+Changes in v3:
+- Add new fdtdec_next_compatible_subnode() patch
 
- include/fdtdec.h |   19 +++++++++++++++++++
- lib/fdtdec.c     |   11 +++++++++++
- 2 files changed, 30 insertions(+), 0 deletions(-)
+ include/fdtdec.h |   17 +++++++++++++++++
+ lib/fdtdec.c     |   15 +++++++++++++++
+ 2 files changed, 32 insertions(+), 0 deletions(-)
 
 diff --git a/include/fdtdec.h b/include/fdtdec.h
-index 171c628..84f0768 100644
+index 84f0768..0351a25 100644
 --- a/include/fdtdec.h
 +++ b/include/fdtdec.h
-@@ -272,6 +272,25 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
- 		u32 *array, int count);
+@@ -117,6 +117,23 @@ int fdtdec_next_compatible(const void *blob, int node,
+ 		enum fdt_compat_id id);
  
  /**
-+ * Look up a property in a node and return a pointer to its contents as a
-+ * unsigned int array of given length. The property must have at least enough
-+ * data for the array ('count' cells). It may have more, but this will be
-+ * ignored. The data is not copied.
++ * Find the next compatible subnode for a peripheral.
 + *
-+ * Note that you must access elements of the array with fdt32_to_cpu(),
-+ * since the elements will be big endian even on a little endian machine.
++ * Do the first call with node set to the parent and depth = 0. This
++ * function will return the offset of the next compatible node. Next time
++ * you call this function, pass the node value returned last time, with
++ * depth unchanged, and the next node will be provided.
 + *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @param count		number of array elements
-+ * @return pointer to array if found, or NULL if the property is not
-+ *		found or there is not enough data
++ * @param blob		FDT blob to use
++ * @param node		Start node for search
++ * @param id		Compatible ID to look for (enum fdt_compat_id)
++ * @param depthp	Current depth (set to 0 before first call)
++ * @return offset of next compatible node, or -FDT_ERR_NOTFOUND if no more
 + */
-+const u32 *fdtdec_locate_array(const void *blob, int node,
-+			       const char *prop_name, int count);
++int fdtdec_next_compatible_subnode(const void *blob, int node,
++		enum fdt_compat_id id, int *depthp);
 +
 +/**
-  * Look up a boolean property in a node and return it.
-  *
-  * A boolean properly is true if present in the device tree and false if not
+  * Look up an address property in a node and return it as an address.
+  * The property must hold either one address with no trailing data or
+  * one address with a length. This is only tested on 32-bit machines.
 diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index bdec1a0..4a5ab71 100644
+index 4a5ab71..76d3808 100644
 --- a/lib/fdtdec.c
 +++ b/lib/fdtdec.c
-@@ -363,6 +363,17 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
- 	return err;
+@@ -133,6 +133,21 @@ int fdtdec_next_compatible(const void *blob, int node,
+ 	return fdt_node_offset_by_compatible(blob, node, compat_names[id]);
  }
  
-+const u32 *fdtdec_locate_array(const void *blob, int node,
-+			       const char *prop_name, int count)
++int fdtdec_next_compatible_subnode(const void *blob, int node,
++		enum fdt_compat_id id, int *depthp)
 +{
-+	const u32 *cell;
-+	int err;
++	do {
++		node = fdt_next_node(blob, node, depthp);
++	} while (*depthp > 1);
 +
-+	cell = get_prop_check_min_len(blob, node, prop_name,
-+				      sizeof(u32) * count, &err);
-+	return err ? NULL : cell;
++	/* If this is a direct subnode, and compatible, return it */
++	if (*depthp == 1 && 0 == fdt_node_check_compatible(
++						blob, node, compat_names[id]))
++		return node;
++
++	return -FDT_ERR_NOTFOUND;
 +}
 +
- int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
+ int fdtdec_next_alias(const void *blob, const char *name,
+ 		enum fdt_compat_id id, int *upto)
  {
- 	const s32 *cell;
 -- 
 1.7.7.3
