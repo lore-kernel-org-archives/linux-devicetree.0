@@ -1,58 +1,55 @@
-From: Viresh Kumar <viresh.kumar@st.com>
-Subject: [PATCH] fixup! Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
-Date: Mon, 2 Apr 2012 09:31:51 +0530
-Message-ID: <3d33526ed060e70cdd981f990e449d46a4566278.1333339090.git.viresh.kumar@st.com>
-References: <406fb8092d6aca97a54add346a2528daefab9c8d.1333009670.git.viresh.kumar@st.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
+ irq_alloc_desc() instead
+Date: Mon, 02 Apr 2012 14:21:57 +1000
+Message-ID: <1333340517.30734.42.camel@pasglop>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+ <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+ <m2iphj3zxr.fsf@igel.home>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <406fb8092d6aca97a54add346a2528daefab9c8d.1333009670.git.viresh.kumar@st.com>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: swarren@nvidia.com, spear-devel@list.st.com, viresh.linux@gmail.com, devicetree-discuss@lists.ozlabs.org, olof@lixom.net, linux-input@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <m2iphj3zxr.fsf-hBGjKatGTSWzQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Andreas Schwab <schwab-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+On Sun, 2012-04-01 at 23:27 +0200, Andreas Schwab wrote:
+> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> writes:
+> 
+> > This patch drops the powerpc-specific irq_map table and replaces it with
+> > directly using the irq_alloc_desc()/irq_free_desc() interfaces for allocating
+> > and freeing irq_desc structures.
+> 
+> This breaks irqs on PowerMac G5.  I see lost irq errors from the sata
+> driver.
+> 
+> Note that the breakage only started after the series was merged into
+> mainline.  But when transplanted upon the parent of the merge this is
+> the commit that was blamed by bisect.  So something changed between
+> v3.3-rc3 and the merge of this series that broke it.
 
-This is an incremental patch over patch
-"Input: of_keymap: Introduce matrix_keypad_of_build_keymap()"
+can you tell me more ? (What machine precisely, what .config etc...) ?
 
-sent earlier by me. Please squash it to that patch while applying.
+I tested here on two G5's:
 
-This contains last few changes suggested by Stephen on V4 of this patch.
----
- drivers/input/keyboard/tegra-kbc.c  |    4 ++--
- include/linux/input/matrix_keypad.h |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ - PowerMac7,3 aka Dual G5 AGP. This ones has U3 + K2 and
+uses cascaded MPICs
 
-diff --git a/drivers/input/keyboard/tegra-kbc.c b/drivers/input/keyboard/tegra-kbc.c
-index d1cc006..6300cc7 100644
---- a/drivers/input/keyboard/tegra-kbc.c
-+++ b/drivers/input/keyboard/tegra-kbc.c
-@@ -619,8 +619,8 @@ tegra_kbc_check_pin_cfg(const struct tegra_kbc_platform_data *pdata,
- }
- 
- #ifdef CONFIG_OF
--static struct tegra_kbc_platform_data * __devinit
--tegra_kbc_dt_parse_pdata(struct device_node *np)
-+static inline struct tegra_kbc_platform_data * tegra_kbc_dt_parse_pdata(
-+		struct device_node *np)
- {
- 	struct tegra_kbc_platform_data *pdata;
- 	u32 prop;
-diff --git a/include/linux/input/matrix_keypad.h b/include/linux/input/matrix_keypad.h
-index 341aca1..02b2118 100644
---- a/include/linux/input/matrix_keypad.h
-+++ b/include/linux/input/matrix_keypad.h
-@@ -111,7 +111,7 @@ matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
- int matrix_keypad_of_build_keymap(struct input_dev *idev,
- 		unsigned int row_shift, const char *propname);
- #else
--int matrix_keypad_of_build_keymap(struct input_dev *idev,
-+static inline int matrix_keypad_of_build_keymap(struct input_dev *idev,
- 		unsigned int row_shift, const char *propname)
- {
- 	return NULL;
--- 
-1.7.9
+ - PowerMac11,2 aka Quad G5. This one has U4 + K2 and uses a single MPIC
+in the northbridge
 
+And both appear to work fine with today upstream (basically -rc1).
+
+Cheers,
+Ben.
