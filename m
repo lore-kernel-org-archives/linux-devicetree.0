@@ -1,101 +1,33 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Schemas for device trees
-Date: Mon, 2 Apr 2012 09:38:36 -0400
-Message-ID: <CAKON4Ow+dZzMHcsBnM38zPgHcok64YF5bBN-9HDZDe=Yt+rTBA@mail.gmail.com>
-References: <CAKON4OyW00PUX3-50GrMSa0RhXLHZX3abjQmVHHiYPY2DCN=mw@mail.gmail.com>
- <20120328230235.98E0D3E0FC9@localhost>
- <CAKON4OyuU_M_DEAoqs9tRrHZEDu6GfSt+Sm7-qY8na_VSB4iUw@mail.gmail.com>
- <CAKON4OwTiH9gKY-_m8mz3M0Fn31LLOvG4Y7UNWO0HgJhRk5xrA@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 6/6] pinctrl: tegra: Add complete device tree support
+Date: Mon, 02 Apr 2012 09:34:15 -0600
+Message-ID: <4F79C6F7.4070701@wwwdotorg.org>
+References: <1332265479-1260-1-git-send-email-swarren@wwwdotorg.org>	<1332265479-1260-6-git-send-email-swarren@wwwdotorg.org> <CACRpkdav8x-Td-fH1Ree83GhNR8r7aA1dBsTQo2eU3nwwam21Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKON4OwTiH9gKY-_m8mz3M0Fn31LLOvG4Y7UNWO0HgJhRk5xrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdav8x-Td-fH1Ree83GhNR8r7aA1dBsTQo2eU3nwwam21Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 29, 2012 at 9:59 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> i2c provides an example of where a schema would be useful.
-> From the binding text files, I removed the common items
+On 04/01/2012 11:29 AM, Linus Walleij wrote:
+> On Tue, Mar 20, 2012 at 6:44 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> 
+>> Implement pinctrl_ops dt_node_to_map() and dt_free_map(). These allow
+>> complete specification of the desired pinmux configuration using device
+>> tree.
+>>
+>> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>> ---
+>> v2: Rebase on of_property_for_each_string() API changes.
+> 
+> Stephen is this eligible for merge? Or does it need changes on top
+> of the v4 core patch?
 
-Another reason for schemas, I just misspelled an attribute. It took me
-several hours to figure out why my system wasn't working. I ended up
-inserting printks in the driver looking for what was wrong before I
-figured out that the attribute was simply misspelled. I used
-slave-address when the attribute was slave-addr. Schema would have
-flagged the unknown attribute at compile time.
-
-------------------------------------------------------------
-
-Using XML schemas is a crazy idea. It would better to leverage the DTC
-and kernel infrastructure. We can use a scheme similar to kernel
-module support.
-
-The driver source for each OF compatible device would contain macros
-that generate a small schema that describes the device.
-
-Instantiation of the device in a real device tree...
-		ads7846@1 {
-			compatible = "ti,ads7846";
-			spi-max-frequency = <1200000>;
-			reg = <1>;
-			gpio_pendown = <&gpio_gpio 4 0>;
-			gpio_cs = <&gpio_ebi_i2stx_0 3 0>;
-		};
-
-schema for this would be something like
-
-{
-	compatible = "ti,ads7846";
-	inherits-from = "schema,spi-device"
-	gpio_pendown* = <&gpio_reference>;  /* star = optional */
-	gpio_cs = <&gpio_reference>;
-}
-for a spi host...
-{
-	compatible = "nxp,lpc31xx-spi";
-	inherits-from = "schema,spi-bus"
-};
-Compiling these drivers would generate two small files containing the
-schema snippets into a temp directory.
-
-Another permanent directory would hold the generic definitions.
-{
-	compatible = "schema,spi-device";
-	inherits-from = "schema,generic-device"
-	spi-max-frequency* = <0-50M>; /* range validation */
-};
-{
-	compatible = "schema,generic-device";
-	reg = <>;
-	interrupts = <>;
-};
-{
-	compatible = "schema,spi-bus";
-	inherits-from = "schema,generic-bus"
-	contains = {"schema,spi-device"}
-};
-{
-	compatible = "schema,generic-bus";
-	reg = <>;
-	interrupts = <>;
-	#address-cells = <>;
-	#size-cells = <>;				
-};
-
-Now the DT compiler can read in these schema snippets and use them to
-pattern match against the DT being compiled and perform validation.
-
--- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+I believe if you take everything from v3, except replace the one patch
+that I posted a v4 for, and you'll be set. I don't believe the v4
+changes in the intermediate patch required and changes to any later
+patches. Let me know if you want me to repost the series, thanks!
