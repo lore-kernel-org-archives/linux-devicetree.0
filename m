@@ -1,60 +1,92 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
-	irq_alloc_desc() instead
-Date: Mon, 2 Apr 2012 23:52:23 +0100
-Message-ID: <20120402225223.GN24211@n2100.arm.linux.org.uk>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca> <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home> <20120402202848.1EB833E02A7@localhost> <20120402215524.GM24211@n2100.arm.linux.org.uk> <1333406005.30734.61.camel@pasglop>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 01/23] fdt: Add function to locate an array in the device
+ tree
+Date: Mon,  2 Apr 2012 16:18:41 -0700
+Message-ID: <1333408743-28720-2-git-send-email-sjg@chromium.org>
+References: <1333408743-28720-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1333406005.30734.61.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Andreas Schwab <schwab@linux-m68k.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1333408743-28720-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 03, 2012 at 08:33:25AM +1000, Benjamin Herrenschmidt wrote:
-> On Mon, 2012-04-02 at 22:55 +0100, Russell King - ARM Linux wrote:
-> > Well, presumably someone is calling irq_set_irq_type() asking explicitly
-> > for IRQ_TYPE_NONE.  The code will now (as it always used to before David's
-> > change) do exactly what you ask this to: it will ask the type to be set
-> > to none.
-> > 
-> > If you don't want to set the type to none, don't call the interface asking
-> > for that to happen. 
-> 
-> I think part of the idea with NONE is to use it as "reset that interrupt
-> to the "default" setting, whatever that means ...
+fdtdec_locate_array() locates an integer array but does not copy it. This
+saves the caller having to allocated wasted space.
 
-No, it never was (anyone who thought that is plain wrong because that
-wasn't my original design.)
+Access to array elements should be through the fdt32_to_cpu() macro.
 
-NONE really did mean "I don't want any trigger level" for set_irq_type()
-as it was originally designed on ARM, and there's a number of PCMCIA
-socket drivers which rely on that behaviour: the reason is that with
-edge triggered interrupts, Linux normally remembers edges which happen
-with the interrupt disabled, and delivers those events when the interrupt
-is re-enabled.  There are situations (such as edge triggered status GPIOs)
-where we _really_ do want to ignore transitions on an edge triggered
-input.  And PCMCIA soc_common uses set_irq_type() with NONE to do this.
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes in v2:
+- Add new fdtdec_locate_array() function
 
-The reason you can't request an interrupt with a NONE type is because
-I saw that to be pointless - and in any case, the type is a bitmask and
-NONE ended up being zero.  Zero is also what you get with request_irq()
-used with drivers which don't pass any IRQ trigger flags, so request_irq()
-has to ignore this case.
+ include/fdtdec.h |   19 +++++++++++++++++++
+ lib/fdtdec.c     |   11 +++++++++++
+ 2 files changed, 30 insertions(+), 0 deletions(-)
 
-Now, arguably, we could say that there should be an interface for clearing
-pending edges in our interrupt model, but traditionally there hasn't been,
-even when my ARM IRQ stuff was moved forward into genirq.  However,
-subsequently changing genirq in a way which breaks previously working
-stuff is a regression, and that's what my revert addresses.
-
-If we want to fix it a better way, then sure, that'll be good.  But what
-we shouldn't do is re-introduce one regression to fix a different
-regression.
-
-So, Thomas, what do you think about providing a way that a disabled
-interrupt could have its pending status cleared such that when it's
-enabled, any queued events are ignored?  Maybe an enable_and_clear_irq() ?
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 171c628..84f0768 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -272,6 +272,25 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
+ 		u32 *array, int count);
+ 
+ /**
++ * Look up a property in a node and return a pointer to its contents as a
++ * unsigned int array of given length. The property must have at least enough
++ * data for the array ('count' cells). It may have more, but this will be
++ * ignored. The data is not copied.
++ *
++ * Note that you must access elements of the array with fdt32_to_cpu(),
++ * since the elements will be big endian even on a little endian machine.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param count		number of array elements
++ * @return pointer to array if found, or NULL if the property is not
++ *		found or there is not enough data
++ */
++const u32 *fdtdec_locate_array(const void *blob, int node,
++			       const char *prop_name, int count);
++
++/**
+  * Look up a boolean property in a node and return it.
+  *
+  * A boolean properly is true if present in the device tree and false if not
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index bdec1a0..4a5ab71 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -363,6 +363,17 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
+ 	return err;
+ }
+ 
++const u32 *fdtdec_locate_array(const void *blob, int node,
++			       const char *prop_name, int count)
++{
++	const u32 *cell;
++	int err;
++
++	cell = get_prop_check_min_len(blob, node, prop_name,
++				      sizeof(u32) * count, &err);
++	return err ? NULL : cell;
++}
++
+ int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
+ {
+ 	const s32 *cell;
+-- 
+1.7.7.3
