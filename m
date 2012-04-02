@@ -1,62 +1,101 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v5 09/16] pwm: tegra: Add device tree support
-Date: Mon, 2 Apr 2012 10:37:49 +0200
-Message-ID: <20120402083749.GA6576@avionic-0098.adnet.avionic-design.de>
-References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de>
- <1332945238-14897-10-git-send-email-thierry.reding@avionic-design.de>
- <4F7602CD.2010808@wwwdotorg.org>
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Schemas for device trees
+Date: Mon, 2 Apr 2012 09:38:36 -0400
+Message-ID: <CAKON4Ow+dZzMHcsBnM38zPgHcok64YF5bBN-9HDZDe=Yt+rTBA@mail.gmail.com>
+References: <CAKON4OyW00PUX3-50GrMSa0RhXLHZX3abjQmVHHiYPY2DCN=mw@mail.gmail.com>
+ <20120328230235.98E0D3E0FC9@localhost>
+ <CAKON4OyuU_M_DEAoqs9tRrHZEDu6GfSt+Sm7-qY8na_VSB4iUw@mail.gmail.com>
+ <CAKON4OwTiH9gKY-_m8mz3M0Fn31LLOvG4Y7UNWO0HgJhRk5xrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F7602CD.2010808-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKON4OwTiH9gKY-_m8mz3M0Fn31LLOvG4Y7UNWO0HgJhRk5xrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 29, 2012 at 9:59 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> i2c provides an example of where a schema would be useful.
+> From the binding text files, I removed the common items
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Another reason for schemas, I just misspelled an attribute. It took me
+several hours to figure out why my system wasn't working. I ended up
+inserting printks in the driver looking for what was wrong before I
+figured out that the attribute was simply misspelled. I used
+slave-address when the attribute was slave-addr. Schema would have
+flagged the unknown attribute at compile time.
 
-* Stephen Warren wrote:
-> On 03/28/2012 08:33 AM, Thierry Reding wrote:
-> > Add auxdata to instantiate the PWFM controller from a device tree,
-> > include the corresponding nodes in the dtsi files for Tegra 20 and
-> > Tegra 30 and add binding documentation.
-> >=20
-> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> > Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->=20
-> > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> ...
-> > +#ifdef CONFIG_OF
-> > +static struct of_device_id tegra_pwm_of_match[] =3D {
-> > +	{ .compatible =3D "nvidia,tegra20-pwm" },
-> > +	{ .compatible =3D "nvidia,tegra30-pwm" },
->=20
-> Could you swap those two lines, so that tegra30-pwm matches first. It
-> makes no difference at present, but might in the future if the driver
-> actually has to differentiate the two SoCs.
+------------------------------------------------------------
 
-I thought the matching order was determined by the compatible property in t=
-he
-device tree, not the OF match table of the driver.
+Using XML schemas is a crazy idea. It would better to leverage the DTC
+and kernel infrastructure. We can use a scheme similar to kernel
+module support.
 
-Thierry
+The driver source for each OF compatible device would contain macros
+that generate a small schema that describes the device.
 
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature
+Instantiation of the device in a real device tree...
+		ads7846@1 {
+			compatible = "ti,ads7846";
+			spi-max-frequency = <1200000>;
+			reg = <1>;
+			gpio_pendown = <&gpio_gpio 4 0>;
+			gpio_cs = <&gpio_ebi_i2stx_0 3 0>;
+		};
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+schema for this would be something like
 
-iEYEARECAAYFAk95ZV0ACgkQZ+BJyKLjJp/n6ACcC+nf0skcU25IvJvxZYNSPIF+
-mpoAoK4XUCdXUReq+2JqLjhrTlEKlq1a
-=GyhS
------END PGP SIGNATURE-----
+{
+	compatible = "ti,ads7846";
+	inherits-from = "schema,spi-device"
+	gpio_pendown* = <&gpio_reference>;  /* star = optional */
+	gpio_cs = <&gpio_reference>;
+}
+for a spi host...
+{
+	compatible = "nxp,lpc31xx-spi";
+	inherits-from = "schema,spi-bus"
+};
+Compiling these drivers would generate two small files containing the
+schema snippets into a temp directory.
 
---WIyZ46R2i8wDzkSu--
+Another permanent directory would hold the generic definitions.
+{
+	compatible = "schema,spi-device";
+	inherits-from = "schema,generic-device"
+	spi-max-frequency* = <0-50M>; /* range validation */
+};
+{
+	compatible = "schema,generic-device";
+	reg = <>;
+	interrupts = <>;
+};
+{
+	compatible = "schema,spi-bus";
+	inherits-from = "schema,generic-bus"
+	contains = {"schema,spi-device"}
+};
+{
+	compatible = "schema,generic-bus";
+	reg = <>;
+	interrupts = <>;
+	#address-cells = <>;
+	#size-cells = <>;				
+};
+
+Now the DT compiler can read in these schema snippets and use them to
+pattern match against the DT being compiled and perform validation.
+
+-- 
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
