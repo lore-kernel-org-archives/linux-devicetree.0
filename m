@@ -1,48 +1,52 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device
- tree support
-Date: Mon, 02 Apr 2012 12:08:23 -0700
-Message-ID: <4F79F927.5060707@samsung.com>
-References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org> <003401cce730$baf979a0$30ec6ce0$%kim@samsung.com> <m2aa4pkq5g.fsf@bob.laptop.org> <4F3CFEED.6060206@samsung.com> <m239abgc32.fsf@bob.laptop.org> <00b901ccf08d$2fc18b50$8f44a1f0$%kim@samsung.com> <m2vcn0496y.fsf@bob.laptop.org> <87k426vy9r.fsf@laptop.org> <20120328095450.GA23005@sirena.org.uk> <4F73D3D7.1010202@samsung.com> <87zkawmf08.fsf@laptop.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <87zkawmf08.fsf@laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-samsung-soc@vger.kernel.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, 'Thomas Abraham' <thomas.abraham@linaro.org>, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, 'Olof Johansson' <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
+Date: Mon, 02 Apr 2012 14:28:48 -0600
+Message-ID: <20120402202848.1EB833E02A7@localhost>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca> <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <m2hax2qeqs.fsf@igel.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Schwab <schwab@linux-m68k.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Chris Ball wrote:
-> Hi Kukjin,
->
-Hi,
+On Mon, 02 Apr 2012 18:29:15 +0200, Andreas Schwab <schwab@linux-m68k.org> wrote:
+> Andreas Schwab <schwab@linux-m68k.org> writes:
+> 
+> > Grant Likely <grant.likely@secretlab.ca> writes:
+> >
+> >> This patch drops the powerpc-specific irq_map table and replaces it with
+> >> directly using the irq_alloc_desc()/irq_free_desc() interfaces for allocating
+> >> and freeing irq_desc structures.
+> >
+> > This breaks irqs on PowerMac G5.  I see lost irq errors from the sata
+> > driver.
+> 
+> When I revert a09b659cd68c10ec6a30cb91ebd2c327fcd5bfe5 ("genirq: Fix
+> long-term regression in genirq irq_set_irq_type() handling") on top of
+> 3.4-rc1 the sata irq errors disappear, but I see a lot of spurious
+> interrupts.  Also the X server is broken somehow, though I don't know
+> whether that is related or a different bug.
 
-Sorry for late response.
+That change is:
 
-[...]
+@@ -61,8 +61,7 @@ int irq_set_irq_type(unsigned int irq, unsigned int type)
+                return -EINVAL;
+ 
+        type &= IRQ_TYPE_SENSE_MASK;
+-       if (type != IRQ_TYPE_NONE)
+-               ret = __irq_set_trigger(desc, irq, type);
++       ret = __irq_set_trigger(desc, irq, type);
+        irq_put_desc_busunlock(desc, flags);
+        return ret;
 
->
-> I can't send the tree as it is to Linus now, because Arnd has asked us
-> to hold off on these device tree bindings and work with the unified
-> bindings he's proposing instead.  (Rebasing to drop that patch will
-> introduce new conflicts.)
->
-OK, I see.
+So presumably irq_set_irq_type() is getting called with type ==
+IRQ_TYPE_NONE.  From Russell's description, presumably that would mean
+the G5 sata driver isn't setting the correct type for the interrupt,
+but I have *no* idea how that intersects with the change removing the
+powerpc irq map.
 
-> I'm going to send Mark Brown's two patches to Linus now, even though it
-> will cause a conflict in -next.  The rest (other than the device tree
-> bindings) are mergable after -rc1, because they're fixes, so we'll
-> eventually get everything except DT in to 3.4.  I think you should
-> just drop this patchset from your tree in linux-next entirely now.
->
-Yep, I dropped it in my -next.
+Can you dump out /debug/powerpc/virq_mapping from both before and
+after the irq_map patch is applied?
 
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+g.
