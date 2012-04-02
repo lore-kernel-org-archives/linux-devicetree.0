@@ -1,119 +1,221 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 22/23] tegra: fdt: Add EMC data for Tegra2 Seaboard
-Date: Mon,  2 Apr 2012 16:19:02 -0700
-Message-ID: <1333408743-28720-23-git-send-email-sjg@chromium.org>
-References: <1333408743-28720-1-git-send-email-sjg@chromium.org>
+From: Mitch Bradley <wmb@firmworks.com>
+Subject: Re: [PATCH v2 7/7] Document: devicetree: add OF documents for arch-mmp
+Date: Mon, 02 Apr 2012 13:21:53 -1000
+Message-ID: <4F7A3491.2060003@firmworks.com>
+References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
+ <1330950111-30797-8-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1333408743-28720-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1330950111-30797-8-git-send-email-haojian.zhuang@marvell.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Haojian Zhuang <haojian.zhuang@marvell.com>
+Cc: eric.y.miao@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds timings for T20 and T25 Seaboards, using the bindings found here:
+There are some inconsistencies in this patch as indicated in-line below:
 
-http://patchwork.ozlabs.org/patch/132928/
 
-We supply both full speed options for normal running, and half speed options
-for testing / development.
+On 3/5/2012 2:21 AM, Haojian Zhuang wrote:
+> Add OF support in Document/devicetree directory.
+>
+> Signed-off-by: Haojian Zhuang<haojian.zhuang@marvell.com>
+> ---
+>   Documentation/devicetree/bindings/arm/mrvl.txt     |    6 +++
+>   .../devicetree/bindings/gpio/mrvl-gpio.txt         |   23 ++++++++++++
+>   Documentation/devicetree/bindings/i2c/mrvl-i2c.txt |   37 ++++++++++++++++++++
+>   .../devicetree/bindings/rtc/sa1100-rtc.txt         |   17 +++++++++
+>   .../devicetree/bindings/serial/mrvl-serial.txt     |    4 ++
+>   5 files changed, 87 insertions(+), 0 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/arm/mrvl.txt
+>   create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+>   create mode 100644 Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
+>   create mode 100644 Documentation/devicetree/bindings/rtc/sa1100-rtc.txt
+>   create mode 100644 Documentation/devicetree/bindings/serial/mrvl-serial.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl.txt
+> new file mode 100644
+> index 0000000..d8de933
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mrvl.txt
+> @@ -0,0 +1,6 @@
+> +Marvell Platforms Device Tree Bindings
+> +----------------------------------------------------
+> +
+> +PXA168 Aspenite Board
+> +Required root node properties:
+> +	- compatible = "mrvl,pxa168-aspenite", "mrvl,pxa168";
+> diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> new file mode 100644
+> index 0000000..1e34cfe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> @@ -0,0 +1,23 @@
+> +* Marvell PXA GPIO controller
+> +
+> +Required properties:
+> +- compatible : Should be "mrvl,pxa-gpio" or "mrvl,mmp-gpio"
+> +- reg : Address and length of the register set for the device
+> +- interrupts : Should be the port interrupt shared by all gpio pins, if
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
+This sentence is incomplete.  Maybe the "one number." two lines below is 
+part of this sentence?  If so, I'm not sure I understand the meaning.  
+Did you mean to say "If a single interrupt is shared by all GPIO pins, 
+the value is a single integer." ?  What is the meaning if there are 
+multiple integers in the value?
+>
+> +- interrupt-name : Should be the name of irq resource.
 
- board/nvidia/dts/tegra2-seaboard.dts |   72 ++++++++++++++++++++++++++++++++++
- 1 files changed, 72 insertions(+), 0 deletions(-)
+"The name" implies that there is a single value, but the example below 
+shows multiple values.
 
-diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
-index 6ba3ec4..31e0f9d 100644
---- a/board/nvidia/dts/tegra2-seaboard.dts
-+++ b/board/nvidia/dts/tegra2-seaboard.dts
-@@ -89,4 +89,76 @@
- 	i2c@7000c500 {
- 		clock-frequency = <100000>;
- 	};
-+
-+	emc@7000f400 {
-+		emc-table@166500 {
-+			reg = <166500>;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = < 166500 >;
-+			nvidia,emc-registers = < 0x0000000a 0x00000021
-+				0x00000008 0x00000003 0x00000004 0x00000004
-+				0x00000002 0x0000000c 0x00000003 0x00000003
-+				0x00000002 0x00000001 0x00000004 0x00000005
-+				0x00000004 0x00000009 0x0000000d 0x000004df
-+				0x00000000 0x00000003 0x00000003 0x00000003
-+				0x00000003 0x00000001 0x0000000a 0x000000c8
-+				0x00000003 0x00000006 0x00000004 0x0000000f
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0xa04004ae
-+				0x007fd010 0x00000000 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000 >;
-+		};
-+		emc-table@333000 {
-+			reg = <333000>;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = < 333000 >;
-+			nvidia,emc-registers = < 0x00000014 0x00000041
-+				0x0000000f 0x00000005 0x00000004 0x00000005
-+				0x00000003 0x0000000c 0x00000005 0x00000005
-+				0x00000003 0x00000001 0x00000004 0x00000005
-+				0x00000004 0x00000009 0x0000000d 0x000009ff
-+				0x00000000 0x00000003 0x00000003 0x00000005
-+				0x00000005 0x00000001 0x0000000f 0x000000c8
-+				0x00000003 0x0000000c 0x00000006 0x0000000f
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0xe034048b
-+				0x007e8010 0x00000000 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000 >;
-+		};
-+
-+		emc-table@190000 {
-+			reg = < 190000 >;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = < 190000 >;
-+			nvidia,emc-registers = < 0x0000000c 0x00000026
-+				0x00000009 0x00000003 0x00000004 0x00000004
-+				0x00000002 0x0000000c 0x00000003 0x00000003
-+				0x00000002 0x00000001 0x00000004 0x00000005
-+				0x00000004 0x00000009 0x0000000d 0x0000059f
-+				0x00000000 0x00000003 0x00000003 0x00000003
-+				0x00000003 0x00000001 0x0000000b 0x000000c8
-+				0x00000003 0x00000007 0x00000004 0x0000000f
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0xa06204ae
-+				0x007dc010 0x00000000 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000 >;
-+		};
-+		emc-table@380000 {
-+			reg = < 380000 >;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = < 380000 >;
-+			nvidia,emc-registers = < 0x00000017 0x0000004b
-+				0x00000012 0x00000006 0x00000004 0x00000005
-+				0x00000003 0x0000000c 0x00000006 0x00000006
-+				0x00000003 0x00000001 0x00000004 0x00000005
-+				0x00000004 0x00000009 0x0000000d 0x00000b5f
-+				0x00000000 0x00000003 0x00000003 0x00000006
-+				0x00000006 0x00000001 0x00000011 0x000000c8
-+				0x00000003 0x0000000e 0x00000007 0x0000000f
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0xe044048b
-+				0x007d8010 0x00000000 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000 >;
-+		};
-+	};
- };
--- 
-1.7.7.3
+>
+> +  one number.
+
+See above.
+
+>
+> +- gpio-controller : Marks the device node as a gpio controller.
+> +- #gpio-cells : Should be one.  It is the pin number.
+> +
+> +Example:
+> +
+> +	gpio: gpio@d4019000 {
+> +		compatible = "mrvl,mmp-gpio", "mrvl,pxa-gpio";
+
+The text above says "mrvl,pxa-gpio" *or* "mrvl,mmp-gpio", but the 
+example has both.  If both are necessary, the word "and" would be more 
+appropriate.
+
+What is the point of having both names in the device tree?  If the Linux 
+driver is known to support the MMP version of the GPIO hardware, there 
+is no need for a "fallback" to the PXA version.   Fallback names are 
+rarely needed for Linux, because new customized Linux kernels are easy 
+to develop for new hardware.  Fallback names were intended for 
+commercial operating systems where the hardware vendor must work with an 
+OS version that is already in the field.
+
+>
+> +		reg =<0xd4019000 0x1000>;
+> +		interrupts =<49>,<17>,<18>;
+> +		interrupt-name = "gpio_mux", "gpio0", "gpio1";
+> +		gpio-controller;
+> +		#gpio-cells =<1>;
+> +		interrupt-controller;
+> +		#interrupt-cells =<1>;
+
+The text above does not mention "interrupt-controller" and 
+"#interrupt-cells" properties for this node.
+
+>
+> +      };
+> diff --git a/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt b/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
+> new file mode 100644
+> index 0000000..071eb3c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
+> @@ -0,0 +1,37 @@
+> +* I2C
+> +
+> +Required properties :
+> +
+> + - reg : Offset and length of the register set for the device
+> + - compatible : should be "mrvl,mmp-twsi" where CHIP is the name of a
+
+"CHIP" makes no sense in this sentence.  I presume that you meant to 
+refer to a template name that contains "CHIP", but "mrvl,mmp-twsi" does 
+not contain "CHIP".
+
+>
+> +   compatible processor, e.g. pxa168, pxa910, mmp2, mmp3.
+> +   For the pxa2xx/pxa3xx, an additional node "mrvl,pxa-i2c" is required
+> +   as shown in the example below.
+> +
+> +Recommended properties :
+> +
+> + - interrupts :<a b>  where a is the interrupt number and b is a
+> +   field that represents an encoding of the sense and level
+> +   information for the interrupt.  This should be encoded based on
+> +   the information in section 2) depending on the type of interrupt
+> +   controller you have.
+
+Was this text copied from somewhere else and not edited?  It doesn't 
+make sense here, and the example below has only a single number, so <a 
+b> cannot be correct.
+
+>
+> + - interrupt-parent : the phandle for the interrupt controller that
+> +   services interrupts for this device.
+
+There is no interrupt-parent property in the example below.  I presume 
+you mean to use the default where the device tree parent node is the 
+interrupt parent.  If so, you should say that.
+>
+> + - mrvl,i2c-polling : Disable interrupt of i2c controller. Polling
+> +   status register of i2c controller instead.
+> + - mrvl,i2c-fast-mode : Enable fast mode of i2c controller.
+> +
+> +Examples:
+> +	twsi1: i2c@d4011000 {
+> +		compatible = "mrvl,mmp-twsi", "mrvl,pxa-i2c";
+
+No need for two different values, as discussed above.
+
+>
+> +		reg =<0xd4011000 0x1000>;
+> +		interrupts =<7>;
+> +		mrvl,i2c-fast-mode;
+> +	};
+> +	
+> +	twsi2: i2c@d4025000 {
+> +		compatible = "mrvl,mmp-twsi", "mrvl,pxa-i2c";
+
+No need for two different values, as discussed above.
+
+>
+> +		reg =<0xd4025000 0x1000>;
+> +		interrupts =<58>;
+> +	};
+> +
+> diff --git a/Documentation/devicetree/bindings/rtc/sa1100-rtc.txt b/Documentation/devicetree/bindings/rtc/sa1100-rtc.txt
+> new file mode 100644
+> index 0000000..0cda19a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/sa1100-rtc.txt
+> @@ -0,0 +1,17 @@
+> +* Marvell Real Time Clock controller
+> +
+> +Required properties:
+> +- compatible: should be "mrvl,sa1100-rtc"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: Should be two. The first interrupt number is the rtc alarm
+> +  interrupt and the second interrupt number is the rtc hz interrupt.
+> +- interrupt-names: Assign name of irq resource.
+> +
+> +Example:
+> +	rtc: rtc@d4010000 {
+> +		compatible = "mrvl,mmp-rtc";
+> +		reg =<0xd4010000 0x1000>;
+> +		interrupts =<5>,<6>;
+> +		interrupt-name = "rtc 1Hz", "rtc alarm";
+> +	};
+> diff --git a/Documentation/devicetree/bindings/serial/mrvl-serial.txt b/Documentation/devicetree/bindings/serial/mrvl-serial.txt
+> new file mode 100644
+> index 0000000..d744340
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/mrvl-serial.txt
+> @@ -0,0 +1,4 @@
+> +PXA UART controller
+> +
+> +Required properties:
+> +- compatible : should be "mrvl,mmp-uart" or "mrvl,pxa-uart".
