@@ -1,58 +1,40 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2] dtc: Basic integer expressions
-Date: Mon, 02 Apr 2012 10:16:27 -0600
-Message-ID: <4F79D0DB.9010500@wwwdotorg.org>
-References: <1332901483-3751-1-git-send-email-swarren@wwwdotorg.org>
- <E1SDzDw-0003C1-Ag@jdl.com>
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
+Date: Mon, 02 Apr 2012 18:29:15 +0200
+Message-ID: <m2hax2qeqs.fsf@igel.home>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+	<1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+	<m2iphj3zxr.fsf@igel.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E1SDzDw-0003C1-Ag-CYoMK+44s/E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <m2iphj3zxr.fsf@igel.home> (Andreas Schwab's message of "Sun, 01
+	Apr 2012 23:27:44 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/31/2012 08:24 AM, Jon Loeliger wrote:
->> Written by David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>. Additions by me:
->> * Ported to ToT dtc.
->> * Renamed cell to integer throughout.
->> * Implemented value range checks.
->> * Allow L/UL/LL/ULL suffix on literals.
->> * Enabled the commented test.
->>
->> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->> ---
->> v2:
->> * s/cell/integer/ throughout.
->> * Allow signed-extended values to pass the overall cell range check.
->> * Allow L/UL/LL/ULL suffix on literals. This is purely for compatibility
->>   with C, and has no effect on dtc's processing.
->> * Enabled the 3 disabled tests.
->>
->> I'm not sure if the literal suffix handling is hacky or not...
-> 
-> I get this too:
-> 
->  CC tests/integer-expressions.o
-> cc1: warnings being treated as errors
-> tests/integer-expressions.c: In function 'main'
-> tests/integer-expressions.c:105: error: format  tests/integer-expressions.o
-> cc1: warnings being treated as errors
-> tests/integer-expressions.c:105: error: format '%ld' expects type 'long int', but argument 3 has type 'unsigned int'
-> make: *** [tests/integer-expressions.o] Error 1
-> 
-> $ gcc --version
-> gcc (Debian 4.4.5-8) 4.4.5
+Andreas Schwab <schwab@linux-m68k.org> writes:
 
-I assume this is a 32-bit system? I guess I can use <inttypes.h> to
-solve this if needed.
+> Grant Likely <grant.likely@secretlab.ca> writes:
+>
+>> This patch drops the powerpc-specific irq_map table and replaces it with
+>> directly using the irq_alloc_desc()/irq_free_desc() interfaces for allocating
+>> and freeing irq_desc structures.
+>
+> This breaks irqs on PowerMac G5.  I see lost irq errors from the sata
+> driver.
+
+When I revert a09b659cd68c10ec6a30cb91ebd2c327fcd5bfe5 ("genirq: Fix
+long-term regression in genirq irq_set_irq_type() handling") on top of
+3.4-rc1 the sata irq errors disappear, but I see a lot of spurious
+interrupts.  Also the X server is broken somehow, though I don't know
+whether that is related or a different bug.
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
