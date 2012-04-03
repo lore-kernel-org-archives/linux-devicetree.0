@@ -1,14 +1,14 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 1/7] serial: pxa: add OF support
-Date: Tue, 03 Apr 2012 09:45:05 -0600
-Message-ID: <20120403154505.21A5E3E04C1@localhost>
-References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
- <1330950111-30797-2-git-send-email-haojian.zhuang@marvell.com>
+Subject: Re: Handling device shared SFR on dt platform
+Date: Tue, 03 Apr 2012 10:04:54 -0600
+Message-ID: <20120403160454.BDFF23E0598@localhost>
+References: <4F6A5853.9090809@gmail.com>
+ <20120324193200.822AD3E0B06@localhost> <4F736A4A.6050302@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1330950111-30797-2-git-send-email-haojian.zhuang@marvell.com>
+In-Reply-To: <4F736A4A.6050302@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,159 +18,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, eric.y.miao@gmail.com
-Cc: Haojian Zhuang <haojian.zhuang@marvell.com>
+To: Sylwester Nawrocki <snjw23@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  5 Mar 2012 20:21:45 +0800, Haojian Zhuang <haojian.zhuang@marvell.com> wrote:
-> Parse uart device id from alias in DTS file.
+On Wed, 28 Mar 2012 21:45:14 +0200, Sylwester Nawrocki <snjw23@gmail.com> wrote:
+> Hello Grant,
 > 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang@marvell.com>
-> ---
->  drivers/tty/serial/pxa.c |   65 +++++++++++++++++++++++++++++++++++++--------
->  1 files changed, 53 insertions(+), 12 deletions(-)
-
-Binding documentation!
-
+> On 03/24/2012 08:32 PM, Grant Likely wrote:
+> >
+> > Generally, this is handled by having a third node for the shared
+> > register block and both device nodes holding a phandle to it.
+> > 
+> > No, there isn't any common infrastructure for implementing this, but
+> > it isn't very much code.
 > 
-> diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
-> index 5c8e3bb..a71855b 100644
-> --- a/drivers/tty/serial/pxa.c
-> +++ b/drivers/tty/serial/pxa.c
-> @@ -36,6 +36,7 @@
->  #include <linux/circ_buf.h>
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/tty.h>
->  #include <linux/tty_flip.h>
-> @@ -44,6 +45,8 @@
->  #include <linux/io.h>
->  #include <linux/slab.h>
->  
-> +#define PXA_NAME_LEN		8
-> +
->  struct uart_pxa_port {
->  	struct uart_port        port;
->  	unsigned char           ier;
-> @@ -781,6 +784,39 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
->  };
->  #endif
->  
-> +static struct of_device_id serial_pxa_dt_ids[] = {
-> +	{ .compatible = "mrvl,pxa-uart", },
-> +	{ .compatible = "mrvl,mmp-uart", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
-> +
-> +#ifdef CONFIG_OF
-> +static int serial_pxa_probe_dt(struct platform_device *pdev,
-> +			       struct uart_pxa_port *sport)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	int ret;
-> +
-> +	if (!np)
-> +		return 1;
-> +
-> +	ret = of_alias_get_id(np, "serial");
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
-> +		return ret;
-> +	}
-> +	sport->port.line = ret;
-> +	return 0;
-> +}
-> +#else
-> +static int serial_pxa_probe_dt(struct platform_device *pdev,
-> +			       struct uart_pxa_port *sport)
-> +{
-> +	return 1;
-> +}
-> +#endif
-> +
->  static int serial_pxa_probe(struct platform_device *dev)
->  {
->  	struct uart_pxa_port *sport;
-> @@ -808,34 +844,37 @@ static int serial_pxa_probe(struct platform_device *dev)
->  	sport->port.irq = irqres->start;
->  	sport->port.fifosize = 64;
->  	sport->port.ops = &serial_pxa_pops;
-> -	sport->port.line = dev->id;
->  	sport->port.dev = &dev->dev;
->  	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
->  	sport->port.uartclk = clk_get_rate(sport->clk);
-> -
-> -	switch (dev->id) {
-> -	case 0: sport->name = "FFUART"; break;
-> -	case 1: sport->name = "BTUART"; break;
-> -	case 2: sport->name = "STUART"; break;
-> -	case 3: sport->name = "HWUART"; break;
-> -	default:
-> -		sport->name = "???";
-> -		break;
-> +	sport->name = kzalloc(PXA_NAME_LEN, GFP_KERNEL);
-
-devm_kzalloc()
-
-> +	if (!sport->name) {
-> +		ret = -ENOMEM;
-> +		goto err_clk;
->  	}
->  
-> +	ret = serial_pxa_probe_dt(dev, sport);
-> +	if (ret > 0)
-> +		sport->port.line = dev->id;
-> +	else if (ret < 0)
-> +		goto err_clk;
-> +	snprintf(sport->name, PXA_NAME_LEN - 1, "UART%d", sport->port.line + 1);
-
-Why +1 here?  Won't that just cause confusion when compared with the
-DT aliases?
-
-> +
->  	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
->  	if (!sport->port.membase) {
->  		ret = -ENOMEM;
-> -		goto err_clk;
-> +		goto err_name;
->  	}
->  
-> -	serial_pxa_ports[dev->id] = sport;
-> +	serial_pxa_ports[sport->port.line] = sport;
->  
->  	uart_add_one_port(&serial_pxa_reg, &sport->port);
->  	platform_set_drvdata(dev, sport);
->  
->  	return 0;
->  
-> + err_name:
-> +	kfree(sport->name);
->   err_clk:
->  	clk_put(sport->clk);
->   err_free:
-> @@ -850,6 +889,7 @@ static int serial_pxa_remove(struct platform_device *dev)
->  	platform_set_drvdata(dev, NULL);
->  
->  	uart_remove_one_port(&serial_pxa_reg, &sport->port);
-> +	kfree(sport->name);
->  	clk_put(sport->clk);
->  	kfree(sport);
->  
-> @@ -866,6 +906,7 @@ static struct platform_driver serial_pxa_driver = {
->  #ifdef CONFIG_PM
->  		.pm	= &serial_pxa_pm_ops,
->  #endif
-> +		.of_match_table = serial_pxa_dt_ids,
->  	},
->  };
->  
-> -- 
-> 1.7.0.4
+> Thank you, that sounds good. I'm just wondering how to handle the shared
+> resource access synchronisation. There is an IORESOURCE_MUXED resource type 
+> flag which could be used to prevent drivers from stomping on each others 
+> feet when accessing the shared register, if I understand the software muxed
+> resource semantics correctly. That is, using something like 
+> request_muxed_(mem_)region()/release_mem_region() for the shared register
+> protection.
 > 
+> What concerns me, is an overhead from region request/ioremap(?)/release, just
+> to access a single 32-bit register. I'm going to see if those accesses could
+> be moved to only device driver's probe() and remove() callbacks and what might
+> be the resulting power consumption increase from that, if any.
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
+Personally, I'd just create a shared function used by both drivers to
+access the register and protect it with a spinlock.  That way the
+region only needs to be mapped once, and the overhead is as low as
+possible.
+
+g.
