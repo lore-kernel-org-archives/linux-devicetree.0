@@ -1,54 +1,143 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Handling device shared SFR on dt platform
-Date: Tue, 03 Apr 2012 10:04:54 -0600
-Message-ID: <20120403160454.BDFF23E0598@localhost>
-References: <4F6A5853.9090809@gmail.com>
- <20120324193200.822AD3E0B06@localhost> <4F736A4A.6050302@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2 13/13] ARM: at91: dt: remove unit-address part for
+ memory nodes
+Date: Tue, 03 Apr 2012 09:39:52 -0600
+Message-ID: <20120403153952.10DB33E04A0@localhost>
+References: <cover.1333437885.git.nicolas.ferre@atmel.com>
+ <1db62b280314855c35cb7a3188fc9d9cb8501948.1333437885.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F736A4A.6050302@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <snjw23@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1db62b280314855c35cb7a3188fc9d9cb8501948.1333437885.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Mar 2012 21:45:14 +0200, Sylwester Nawrocki <snjw23@gmail.com> wrote:
-> Hello Grant,
+On Tue,  3 Apr 2012 09:27:54 +0200, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 > 
-> On 03/24/2012 08:32 PM, Grant Likely wrote:
-> >
-> > Generally, this is handled by having a third node for the shared
-> > register block and both device nodes holding a phandle to it.
-> > 
-> > No, there isn't any common infrastructure for implementing this, but
-> > it isn't very much code.
-> 
-> Thank you, that sounds good. I'm just wondering how to handle the shared
-> resource access synchronisation. There is an IORESOURCE_MUXED resource type 
-> flag which could be used to prevent drivers from stomping on each others 
-> feet when accessing the shared register, if I understand the software muxed
-> resource semantics correctly. That is, using something like 
-> request_muxed_(mem_)region()/release_mem_region() for the shared register
-> protection.
-> 
-> What concerns me, is an overhead from region request/ioremap(?)/release, just
-> to access a single 32-bit register. I'm going to see if those accesses could
-> be moved to only device driver's probe() and remove() callbacks and what might
-> be the resulting power consumption increase from that, if any.
+> Having a unit-address different from 0 causes bad memory node detection
+> during early_init_dt_scan_memory.
 
-Personally, I'd just create a shared function used by both drivers to
-access the register and protect it with a spinlock.  That way the
-region only needs to be mapped once, and the overhead is as low as
-possible.
+Should be more detailed about the reason why.  The reason is that
+these .dts files include skeleton.dtsi which names the memory node
+"memory".  The code in this file creates a new memory node and doesn't
+modify the old one.
 
-g.
+Otherwise;
+
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> ---
+>  arch/arm/boot/dts/at91sam9g20.dtsi     |    2 +-
+>  arch/arm/boot/dts/at91sam9g45.dtsi     |    2 +-
+>  arch/arm/boot/dts/at91sam9m10g45ek.dts |    2 +-
+>  arch/arm/boot/dts/at91sam9x5.dtsi      |    2 +-
+>  arch/arm/boot/dts/at91sam9x5cm.dtsi    |    2 +-
+>  arch/arm/boot/dts/usb_a9g20.dts        |    2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
+> index 92f3662..799ad18 100644
+> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
+> @@ -35,7 +35,7 @@
+>  		};
+>  	};
+>  
+> -	memory@20000000 {
+> +	memory {
+>  		reg = <0x20000000 0x08000000>;
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> index 3d0c32f..9e6eb6e 100644
+> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> @@ -36,7 +36,7 @@
+>  		};
+>  	};
+>  
+> -	memory@70000000 {
+> +	memory {
+>  		reg = <0x70000000 0x10000000>;
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> index 6abb571..a3633bd 100644
+> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> @@ -17,7 +17,7 @@
+>  		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock1 rw rootfstype=jffs2";
+>  	};
+>  
+> -	memory@70000000 {
+> +	memory {
+>  		reg = <0x70000000 0x4000000>;
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+> index 6597177..70ab3a4 100644
+> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+> @@ -34,7 +34,7 @@
+>  		};
+>  	};
+>  
+> -	memory@20000000 {
+> +	memory {
+>  		reg = <0x20000000 0x10000000>;
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+> index 67936f8..31e7be2 100644
+> --- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+> @@ -8,7 +8,7 @@
+>   */
+>  
+>  / {
+> -	memory@20000000 {
+> +	memory {
+>  		reg = <0x20000000 0x8000000>;
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/usb_a9g20.dts b/arch/arm/boot/dts/usb_a9g20.dts
+> index 3b3c4e0..7c2399c 100644
+> --- a/arch/arm/boot/dts/usb_a9g20.dts
+> +++ b/arch/arm/boot/dts/usb_a9g20.dts
+> @@ -16,7 +16,7 @@
+>  		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
+>  	};
+>  
+> -	memory@20000000 {
+> +	memory {
+>  		reg = <0x20000000 0x4000000>;
+>  	};
+>  
+> -- 
+> 1.7.9.4
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
