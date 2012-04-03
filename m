@@ -1,40 +1,54 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 3/5] powerpc: dts: klondike: Add UART nodes
-Date: Tue, 03 Apr 2012 09:57:03 -0600
-Message-ID: <20120403155703.3B0593E053F@localhost>
-References: <1333348747-12713-1-git-send-email-tinamdar@apm.com> <1333348747-12713-2-git-send-email-tinamdar@apm.com> <1333348747-12713-3-git-send-email-tinamdar@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1333348747-12713-3-git-send-email-tinamdar@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: benh@kernel.crashing.org, jwboyer@gmail.com, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [PATCH] ARM: DT: Add binding for GIC virtualization extentions
+ (VGIC)
+Date: Tue, 03 Apr 2012 09:35:37 -0600
+Message-ID: <20120403153538.0D1B83E044A@localhost>
+References: <1333384217-13441-1-git-send-email-marc.zyngier@arm.com>
+ <4F7AC138.9020308@citrix.com> <4F7AC8A8.9020606@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F7AC8A8.9020606@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, David Vrabel <david.vrabel@citrix.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  2 Apr 2012 12:09:05 +0530, Tanmay Inamdar <tinamdar@apm.com> wrote:
-> Adding UART nodes in Klondike device tree file.
+On Tue, 03 Apr 2012 10:53:44 +0100, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On 03/04/12 10:22, David Vrabel wrote:
 > 
-> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
-> ---
-> :100644 100644 4ff2852... d5bf2e1... M	arch/powerpc/boot/dts/klondike.dts
->  arch/powerpc/boot/dts/klondike.dts |   24 ++++++++++++++++++++++++
->  1 files changed, 24 insertions(+), 0 deletions(-)
+> Hi David,
 > 
-> diff --git a/arch/powerpc/boot/dts/klondike.dts b/arch/powerpc/boot/dts/klondike.dts
-> index 4ff2852..d5bf2e1 100644
-> --- a/arch/powerpc/boot/dts/klondike.dts
-> +++ b/arch/powerpc/boot/dts/klondike.dts
-> @@ -222,6 +222,30 @@
->  				#size-cells = <1>;
->  				ranges;
->  				clock-frequency = <0>;
-> +
-> +				UART0: serial@50001000 {
-> +				       device_type = "serial";
-> +				       compatible = "ns16550";
-> +				       reg = <0x50001000 0x00000100>;
-> +				       virtual-reg = <0x50001000>;
+> > On 02/04/12 17:30, Marc Zyngier wrote:
+> >> The GICv2 can have virtualization extension support, consisting
+> >> of an additional set of registers and interrupts. Add the necessary
+> >> binding to the GIC DT documentation.
+> > 
+> > The Xen hypervisor's device tree support is very much incomplete so I've
+> > not looked into this is much detail.
+> > 
+> > Would it make more sense to extend the existing gic binding with the the
+> > additional information rather than adding a new node?
+> 
+> I'm actually torn between the two approaches. On one side, the VGIC is
+> part of the GIC spec, hence should be part of the GIC node. On the other
+> hand, it is logically handled by a different piece of software (the
+> hypervisor), and would normally be probed separately. Having a separate
+> node makes the probing more sensible.
 
-Why do you need virtual-reg?  The kernel should handle all iomapping
-properly without this.
+Don't get too hung up on the software side of things.  Describe it in
+a way that makes sense for the hardware.  There is lots of precidence
+for two hunks of software initializating from the same node; either by
+probe kicking off two init hooks, or by early init code going looking
+for the node manually.
 
 g.
