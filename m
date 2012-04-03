@@ -1,143 +1,49 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 13/13] ARM: at91: dt: remove unit-address part for
- memory nodes
-Date: Tue, 03 Apr 2012 09:39:52 -0600
-Message-ID: <20120403153952.10DB33E04A0@localhost>
-References: <cover.1333437885.git.nicolas.ferre@atmel.com>
- <1db62b280314855c35cb7a3188fc9d9cb8501948.1333437885.git.nicolas.ferre@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1db62b280314855c35cb7a3188fc9d9cb8501948.1333437885.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Subject: Re: [PATCH v5 09/16] pwm: tegra: Add device tree support
+Date: Tue, 03 Apr 2012 16:42:49 -0700
+Message-ID: <20120403234249.E292E3E03F3@localhost>
+References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de> <1332945238-14897-10-git-send-email-thierry.reding@avionic-design.de> <4F7602CD.2010808@wwwdotorg.org> <20120402083749.GA6576@avionic-0098.adnet.avionic-design.de> <4F79C8D4.2000306@wwwdotorg.org> <20120403175511.GA26399@avionic-0098.mockup.avionic-design.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120403175511.GA26399-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  3 Apr 2012 09:27:54 +0200, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On Tue, 3 Apr 2012 19:55:11 +0200, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> * Stephen Warren wrote:
+> > On 04/02/2012 02:37 AM, Thierry Reding wrote:
+> > > * Stephen Warren wrote:
+> > >> On 03/28/2012 08:33 AM, Thierry Reding wrote:
+> > >>> Add auxdata to instantiate the PWFM controller from a device tree,
+> > >>> include the corresponding nodes in the dtsi files for Tegra 20 and
+> > >>> Tegra 30 and add binding documentation.
+> > >>>
+> > >>> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> > >>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> > >>
+> > >>> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> > >> ...
+> > >>> +#ifdef CONFIG_OF
+> > >>> +static struct of_device_id tegra_pwm_of_match[] = {
+> > >>> +	{ .compatible = "nvidia,tegra20-pwm" },
+> > >>> +	{ .compatible = "nvidia,tegra30-pwm" },
+> > >>
+> > >> Could you swap those two lines, so that tegra30-pwm matches first. It
+> > >> makes no difference at present, but might in the future if the driver
+> > >> actually has to differentiate the two SoCs.
+> > > 
+> > > I thought the matching order was determined by the compatible property in the
+> > > device tree, not the OF match table of the driver.
+> > 
+> > At least logically, yes. However, of_match_device() appears to iterate
+> > over each match table entry, checking whether it matches any string in
+> > the compatible flag. Perhaps this could be considered a bug?
 > 
-> Having a unit-address different from 0 causes bad memory node detection
-> during early_init_dt_scan_memory.
+> It certainly is counter-intuitive. Maybe Grant or Rob can comment?
 
-Should be more detailed about the reason why.  The reason is that
-these .dts files include skeleton.dtsi which names the memory node
-"memory".  The code in this file creates a new memory node and doesn't
-modify the old one.
+Yes, it is a bug.  The order of of_device_id should be entirely
+irrelevant, and the order in the DT compatible property should
+determine which match entry is returned.
 
-Otherwise;
-
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
->  arch/arm/boot/dts/at91sam9g20.dtsi     |    2 +-
->  arch/arm/boot/dts/at91sam9g45.dtsi     |    2 +-
->  arch/arm/boot/dts/at91sam9m10g45ek.dts |    2 +-
->  arch/arm/boot/dts/at91sam9x5.dtsi      |    2 +-
->  arch/arm/boot/dts/at91sam9x5cm.dtsi    |    2 +-
->  arch/arm/boot/dts/usb_a9g20.dts        |    2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-> index 92f3662..799ad18 100644
-> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-> @@ -35,7 +35,7 @@
->  		};
->  	};
->  
-> -	memory@20000000 {
-> +	memory {
->  		reg = <0x20000000 0x08000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-> index 3d0c32f..9e6eb6e 100644
-> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -36,7 +36,7 @@
->  		};
->  	};
->  
-> -	memory@70000000 {
-> +	memory {
->  		reg = <0x70000000 0x10000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> index 6abb571..a3633bd 100644
-> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> @@ -17,7 +17,7 @@
->  		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock1 rw rootfstype=jffs2";
->  	};
->  
-> -	memory@70000000 {
-> +	memory {
->  		reg = <0x70000000 0x4000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-> index 6597177..70ab3a4 100644
-> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-> @@ -34,7 +34,7 @@
->  		};
->  	};
->  
-> -	memory@20000000 {
-> +	memory {
->  		reg = <0x20000000 0x10000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-> index 67936f8..31e7be2 100644
-> --- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-> @@ -8,7 +8,7 @@
->   */
->  
->  / {
-> -	memory@20000000 {
-> +	memory {
->  		reg = <0x20000000 0x8000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/usb_a9g20.dts b/arch/arm/boot/dts/usb_a9g20.dts
-> index 3b3c4e0..7c2399c 100644
-> --- a/arch/arm/boot/dts/usb_a9g20.dts
-> +++ b/arch/arm/boot/dts/usb_a9g20.dts
-> @@ -16,7 +16,7 @@
->  		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
->  	};
->  
-> -	memory@20000000 {
-> +	memory {
->  		reg = <0x20000000 0x4000000>;
->  	};
->  
-> -- 
-> 1.7.9.4
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
+g.
