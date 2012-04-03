@@ -1,33 +1,80 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
- irq_alloc_desc() instead
-Date: Tue, 3 Apr 2012 10:23:56 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1204031022030.2542@ionos>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca> <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home> <20120402202848.1EB833E02A7@localhost> <20120402215524.GM24211@n2100.arm.linux.org.uk>
- <1333406005.30734.61.camel@pasglop> <20120402225223.GN24211@n2100.arm.linux.org.uk>
+From: David Vrabel <david.vrabel@citrix.com>
+Subject: Re: [PATCH] ARM: DT: Add binding for GIC virtualization extentions
+ (VGIC)
+Date: Tue, 3 Apr 2012 10:22:00 +0100
+Message-ID: <4F7AC138.9020308@citrix.com>
+References: <1333384217-13441-1-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120402225223.GN24211@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@secretlab.ca>, Andreas Schwab <schwab@linux-m68k.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1333384217-13441-1-git-send-email-marc.zyngier@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2 Apr 2012, Russell King - ARM Linux wrote:
-> If we want to fix it a better way, then sure, that'll be good.  But what
-> we shouldn't do is re-introduce one regression to fix a different
-> regression.
+On 02/04/12 17:30, Marc Zyngier wrote:
+> The GICv2 can have virtualization extension support, consisting
+> of an additional set of registers and interrupts. Add the necessary
+> binding to the GIC DT documentation.
+
+The Xen hypervisor's device tree support is very much incomplete so I've
+not looked into this is much detail.
+
+Would it make more sense to extend the existing gic binding with the the
+additional information rather than adding a new node?
+
+David
+
 > 
-> So, Thomas, what do you think about providing a way that a disabled
-> interrupt could have its pending status cleared such that when it's
-> enabled, any queued events are ignored?  Maybe an enable_and_clear_irq() ?
- 
-We can make it a flag, which you can either add to the irq itself or
-hand it in on request_irq().
-
-Does that require a special chip->callback() function as well ?
-
-Thanks,
-
-	tglx
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/gic.txt |   29 +++++++++++++++++++++++++
+>  1 files changed, 29 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 9b4b82a..fb1b5ab 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -57,3 +57,32 @@ Example:
+>  		      <0xfff10100 0x100>;
+>  	};
+>  
+> +
+> +* GIC virtualization extensions (VGIC)
+> +
+> +For ARM cores that support the virtualization extensions, an
+> +additional node describes the VGIC hardware block. Only exists if the
+> +GIC is the primary interrupt controller.
+> +
+> +Required properties:
+> +- compatible : should be one of:
+> +	"arm,cortex-a15-vgic"
+> +	"arm,cortex-a7-vgic"
+> +	"arm,vgic"
+> +
+> +- reg : Specifies base physical address and size of the VGIC
+> +  registers. The first region is the GIC virtual interface control
+> +  register base and size.  the 2nd region is the GIC virtual cpu
+> +  interface register base and size.
+> +
+> +- interrupts : VGIC maintainance interrupt. Must be relative to the
+> +  primary GIC.
+> +
+> +Example:
+> +
+> +	vgic@2c004000 {
+> +		compatible = "arm,cortex-a15-vgic", "arm,vgic";
+> +		reg = <0x2c004000 0x2000>,
+> +		      <0x2c006000 0x2000>;
+> +		interrupts = <1 9 0xf04>;
+> +	};
