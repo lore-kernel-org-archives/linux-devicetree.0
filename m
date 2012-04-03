@@ -1,15 +1,14 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] ARM: DT: Add binding for GIC virtualization extentions
- (VGIC)
-Date: Tue, 03 Apr 2012 09:35:37 -0600
-Message-ID: <20120403153538.0D1B83E044A@localhost>
-References: <1333384217-13441-1-git-send-email-marc.zyngier@arm.com>
- <4F7AC138.9020308@citrix.com> <4F7AC8A8.9020606@arm.com>
+Subject: Re: [PATCH v2 1/7] serial: pxa: add OF support
+Date: Tue, 03 Apr 2012 09:45:05 -0600
+Message-ID: <20120403154505.21A5E3E04C1@localhost>
+References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
+ <1330950111-30797-2-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F7AC8A8.9020606@arm.com>
+In-Reply-To: <1330950111-30797-2-git-send-email-haojian.zhuang@marvell.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,36 +18,159 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>, David Vrabel <david.vrabel@citrix.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+To: arnd@arndb.de, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, eric.y.miao@gmail.com
+Cc: Haojian Zhuang <haojian.zhuang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Apr 2012 10:53:44 +0100, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On 03/04/12 10:22, David Vrabel wrote:
+On Mon,  5 Mar 2012 20:21:45 +0800, Haojian Zhuang <haojian.zhuang@marvell.com> wrote:
+> Parse uart device id from alias in DTS file.
 > 
-> Hi David,
-> 
-> > On 02/04/12 17:30, Marc Zyngier wrote:
-> >> The GICv2 can have virtualization extension support, consisting
-> >> of an additional set of registers and interrupts. Add the necessary
-> >> binding to the GIC DT documentation.
-> > 
-> > The Xen hypervisor's device tree support is very much incomplete so I've
-> > not looked into this is much detail.
-> > 
-> > Would it make more sense to extend the existing gic binding with the the
-> > additional information rather than adding a new node?
-> 
-> I'm actually torn between the two approaches. On one side, the VGIC is
-> part of the GIC spec, hence should be part of the GIC node. On the other
-> hand, it is logically handled by a different piece of software (the
-> hypervisor), and would normally be probed separately. Having a separate
-> node makes the probing more sensible.
+> Signed-off-by: Haojian Zhuang <haojian.zhuang@marvell.com>
+> ---
+>  drivers/tty/serial/pxa.c |   65 +++++++++++++++++++++++++++++++++++++--------
+>  1 files changed, 53 insertions(+), 12 deletions(-)
 
-Don't get too hung up on the software side of things.  Describe it in
-a way that makes sense for the hardware.  There is lots of precidence
-for two hunks of software initializating from the same node; either by
-probe kicking off two init hooks, or by early init code going looking
-for the node manually.
+Binding documentation!
 
-g.
+> 
+> diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+> index 5c8e3bb..a71855b 100644
+> --- a/drivers/tty/serial/pxa.c
+> +++ b/drivers/tty/serial/pxa.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/circ_buf.h>
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/tty.h>
+>  #include <linux/tty_flip.h>
+> @@ -44,6 +45,8 @@
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
+>  
+> +#define PXA_NAME_LEN		8
+> +
+>  struct uart_pxa_port {
+>  	struct uart_port        port;
+>  	unsigned char           ier;
+> @@ -781,6 +784,39 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
+>  };
+>  #endif
+>  
+> +static struct of_device_id serial_pxa_dt_ids[] = {
+> +	{ .compatible = "mrvl,pxa-uart", },
+> +	{ .compatible = "mrvl,mmp-uart", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
+> +
+> +#ifdef CONFIG_OF
+> +static int serial_pxa_probe_dt(struct platform_device *pdev,
+> +			       struct uart_pxa_port *sport)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int ret;
+> +
+> +	if (!np)
+> +		return 1;
+> +
+> +	ret = of_alias_get_id(np, "serial");
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
+> +		return ret;
+> +	}
+> +	sport->port.line = ret;
+> +	return 0;
+> +}
+> +#else
+> +static int serial_pxa_probe_dt(struct platform_device *pdev,
+> +			       struct uart_pxa_port *sport)
+> +{
+> +	return 1;
+> +}
+> +#endif
+> +
+>  static int serial_pxa_probe(struct platform_device *dev)
+>  {
+>  	struct uart_pxa_port *sport;
+> @@ -808,34 +844,37 @@ static int serial_pxa_probe(struct platform_device *dev)
+>  	sport->port.irq = irqres->start;
+>  	sport->port.fifosize = 64;
+>  	sport->port.ops = &serial_pxa_pops;
+> -	sport->port.line = dev->id;
+>  	sport->port.dev = &dev->dev;
+>  	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
+>  	sport->port.uartclk = clk_get_rate(sport->clk);
+> -
+> -	switch (dev->id) {
+> -	case 0: sport->name = "FFUART"; break;
+> -	case 1: sport->name = "BTUART"; break;
+> -	case 2: sport->name = "STUART"; break;
+> -	case 3: sport->name = "HWUART"; break;
+> -	default:
+> -		sport->name = "???";
+> -		break;
+> +	sport->name = kzalloc(PXA_NAME_LEN, GFP_KERNEL);
+
+devm_kzalloc()
+
+> +	if (!sport->name) {
+> +		ret = -ENOMEM;
+> +		goto err_clk;
+>  	}
+>  
+> +	ret = serial_pxa_probe_dt(dev, sport);
+> +	if (ret > 0)
+> +		sport->port.line = dev->id;
+> +	else if (ret < 0)
+> +		goto err_clk;
+> +	snprintf(sport->name, PXA_NAME_LEN - 1, "UART%d", sport->port.line + 1);
+
+Why +1 here?  Won't that just cause confusion when compared with the
+DT aliases?
+
+> +
+>  	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
+>  	if (!sport->port.membase) {
+>  		ret = -ENOMEM;
+> -		goto err_clk;
+> +		goto err_name;
+>  	}
+>  
+> -	serial_pxa_ports[dev->id] = sport;
+> +	serial_pxa_ports[sport->port.line] = sport;
+>  
+>  	uart_add_one_port(&serial_pxa_reg, &sport->port);
+>  	platform_set_drvdata(dev, sport);
+>  
+>  	return 0;
+>  
+> + err_name:
+> +	kfree(sport->name);
+>   err_clk:
+>  	clk_put(sport->clk);
+>   err_free:
+> @@ -850,6 +889,7 @@ static int serial_pxa_remove(struct platform_device *dev)
+>  	platform_set_drvdata(dev, NULL);
+>  
+>  	uart_remove_one_port(&serial_pxa_reg, &sport->port);
+> +	kfree(sport->name);
+>  	clk_put(sport->clk);
+>  	kfree(sport);
+>  
+> @@ -866,6 +906,7 @@ static struct platform_driver serial_pxa_driver = {
+>  #ifdef CONFIG_PM
+>  		.pm	= &serial_pxa_pm_ops,
+>  #endif
+> +		.of_match_table = serial_pxa_dt_ids,
+>  	},
+>  };
+>  
+> -- 
+> 1.7.0.4
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
