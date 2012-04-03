@@ -1,14 +1,19 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 13/13] ARM: at91: dt: remove unit-address part for memory
- nodes
-Date: Tue,  3 Apr 2012 09:27:54 +0200
-Message-ID: <1db62b280314855c35cb7a3188fc9d9cb8501948.1333437885.git.nicolas.ferre@atmel.com>
-References: <cover.1333437885.git.nicolas.ferre@atmel.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
+ irq_alloc_desc() instead
+Date: Tue, 3 Apr 2012 10:20:58 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1204031019320.2542@ionos>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+ <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+ <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
+ <20120402202848.1EB833E02A7@localhost>
+ <20120402215524.GM24211@n2100.arm.linux.org.uk>
+ <1333406005.30734.61.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1333437885.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1333406005.30734.61.camel@pasglop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,105 +23,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Andreas Schwab <schwab-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On Tue, 3 Apr 2012, Benjamin Herrenschmidt wrote:
 
-Having a unit-address different from 0 causes bad memory node detection
-during early_init_dt_scan_memory.
+> On Mon, 2012-04-02 at 22:55 +0100, Russell King - ARM Linux wrote:
+> > Well, presumably someone is calling irq_set_irq_type() asking explicitly
+> > for IRQ_TYPE_NONE.  The code will now (as it always used to before David's
+> > change) do exactly what you ask this to: it will ask the type to be set
+> > to none.
+> > 
+> > If you don't want to set the type to none, don't call the interface asking
+> > for that to happen. 
+> 
+> I think part of the idea with NONE is to use it as "reset that interrupt
+> to the "default" setting, whatever that means ...
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
----
- arch/arm/boot/dts/at91sam9g20.dtsi     |    2 +-
- arch/arm/boot/dts/at91sam9g45.dtsi     |    2 +-
- arch/arm/boot/dts/at91sam9m10g45ek.dts |    2 +-
- arch/arm/boot/dts/at91sam9x5.dtsi      |    2 +-
- arch/arm/boot/dts/at91sam9x5cm.dtsi    |    2 +-
- arch/arm/boot/dts/usb_a9g20.dts        |    2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+Well, the ship side set_type function could simply leave it alone and
+not touch the thing at all. That's how the core code did until we
+discovered that we broke Russells toys that way.
 
-diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-index 92f3662..799ad18 100644
---- a/arch/arm/boot/dts/at91sam9g20.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-@@ -35,7 +35,7 @@
- 		};
- 	};
- 
--	memory@20000000 {
-+	memory {
- 		reg = <0x20000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 3d0c32f..9e6eb6e 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -36,7 +36,7 @@
- 		};
- 	};
- 
--	memory@70000000 {
-+	memory {
- 		reg = <0x70000000 0x10000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 6abb571..a3633bd 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -17,7 +17,7 @@
- 		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock1 rw rootfstype=jffs2";
- 	};
- 
--	memory@70000000 {
-+	memory {
- 		reg = <0x70000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 6597177..70ab3a4 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -34,7 +34,7 @@
- 		};
- 	};
- 
--	memory@20000000 {
-+	memory {
- 		reg = <0x20000000 0x10000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-index 67936f8..31e7be2 100644
---- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-@@ -8,7 +8,7 @@
-  */
- 
- / {
--	memory@20000000 {
-+	memory {
- 		reg = <0x20000000 0x8000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/usb_a9g20.dts b/arch/arm/boot/dts/usb_a9g20.dts
-index 3b3c4e0..7c2399c 100644
---- a/arch/arm/boot/dts/usb_a9g20.dts
-+++ b/arch/arm/boot/dts/usb_a9g20.dts
-@@ -16,7 +16,7 @@
- 		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
- 	};
- 
--	memory@20000000 {
-+	memory {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
--- 
-1.7.9.4
+Thanks,
+
+	tglx
