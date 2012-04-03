@@ -1,46 +1,122 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3 22/23] tegra: fdt: Add EMC data for Tegra2
-	Seaboard
-Date: Mon, 2 Apr 2012 22:22:30 -0700
-Message-ID: <CAOesGMh1OaJ9DDj+xxfOf268J93WbOmpZSJutBLB3xQ+6W4C-w@mail.gmail.com>
-References: <1333408743-28720-1-git-send-email-sjg@chromium.org>
-	<1333408743-28720-23-git-send-email-sjg@chromium.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 13/13] ARM: at91: dt: remove unit-address part for memory
+ nodes
+Date: Tue,  3 Apr 2012 09:27:54 +0200
+Message-ID: <1db62b280314855c35cb7a3188fc9d9cb8501948.1333437885.git.nicolas.ferre@atmel.com>
+References: <cover.1333437885.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1333408743-28720-23-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1333437885.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 2, 2012 at 4:19 PM, Simon Glass <sjg@chromium.org> wrote:
-> This adds timings for T20 and T25 Seaboards, using the bindings found here:
->
-> http://patchwork.ozlabs.org/patch/132928/
->
-> We supply both full speed options for normal running, and half speed options
-> for testing / development.
->
-> Signed-off-by: Simon Glass <sjg@chromium.org>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-This seems incorrect to me. You provide both T20 and T25 EMC tables in
-the same device tree with no way to determine which one to use.
+Having a unit-address different from 0 causes bad memory node detection
+during early_init_dt_scan_memory.
 
-Unfortunately nvidia didn't use the boot straps to tell if they were
-on a t20 or t25 seaboard, so you'll just have to know. At the kernel
-side we chose to just ditch T20 since most boards still in use are
-T25.
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ arch/arm/boot/dts/at91sam9g20.dtsi     |    2 +-
+ arch/arm/boot/dts/at91sam9g45.dtsi     |    2 +-
+ arch/arm/boot/dts/at91sam9m10g45ek.dts |    2 +-
+ arch/arm/boot/dts/at91sam9x5.dtsi      |    2 +-
+ arch/arm/boot/dts/at91sam9x5cm.dtsi    |    2 +-
+ arch/arm/boot/dts/usb_a9g20.dts        |    2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-
-
--Olof
+diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
+index 92f3662..799ad18 100644
+--- a/arch/arm/boot/dts/at91sam9g20.dtsi
++++ b/arch/arm/boot/dts/at91sam9g20.dtsi
+@@ -35,7 +35,7 @@
+ 		};
+ 	};
+ 
+-	memory@20000000 {
++	memory {
+ 		reg = <0x20000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 3d0c32f..9e6eb6e 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -36,7 +36,7 @@
+ 		};
+ 	};
+ 
+-	memory@70000000 {
++	memory {
+ 		reg = <0x70000000 0x10000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+index 6abb571..a3633bd 100644
+--- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
++++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+@@ -17,7 +17,7 @@
+ 		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock1 rw rootfstype=jffs2";
+ 	};
+ 
+-	memory@70000000 {
++	memory {
+ 		reg = <0x70000000 0x4000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index 6597177..70ab3a4 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -34,7 +34,7 @@
+ 		};
+ 	};
+ 
+-	memory@20000000 {
++	memory {
+ 		reg = <0x20000000 0x10000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+index 67936f8..31e7be2 100644
+--- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+@@ -8,7 +8,7 @@
+  */
+ 
+ / {
+-	memory@20000000 {
++	memory {
+ 		reg = <0x20000000 0x8000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/usb_a9g20.dts b/arch/arm/boot/dts/usb_a9g20.dts
+index 3b3c4e0..7c2399c 100644
+--- a/arch/arm/boot/dts/usb_a9g20.dts
++++ b/arch/arm/boot/dts/usb_a9g20.dts
+@@ -16,7 +16,7 @@
+ 		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
+ 	};
+ 
+-	memory@20000000 {
++	memory {
+ 		reg = <0x20000000 0x4000000>;
+ 	};
+ 
+-- 
+1.7.9.4
