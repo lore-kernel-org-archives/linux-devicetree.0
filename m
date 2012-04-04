@@ -1,83 +1,60 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] at91: 3.4-rc1 fixes
-Date: Wed, 04 Apr 2012 19:03:27 +0200
-Message-ID: <4F7C7EDF.4000702@atmel.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v5 15/16] pwm-backlight: Add rudimentary device tree
+ support
+Date: Wed, 4 Apr 2012 20:11:21 +0200
+Message-ID: <20120404181121.GA19755@avionic-0098.mockup.avionic-design.de>
+References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de>
+ <1332945238-14897-16-git-send-email-thierry.reding@avionic-design.de>
+ <4F7603BC.2050300@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F7603BC.2050300-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd, Olof,
 
-I would like you to integrate this fist batch of AT91 related fixes. They
-are covering DT and USB related issues that we have seen on top of 3.4-rc1.
+--gKMricLos+KVdGMg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have also included modifications of the OHCI USB driver because they
-are also touching the core AT91 devices/board files and Device Tree files.
-The modification of "vbus_pin_active_low" in particular cannot be separated
-from the modification of .dts[i] and devices/board files.
+* Stephen Warren wrote:
+> On 03/28/2012 08:33 AM, Thierry Reding wrote:
+> > This commit adds very basic support for device tree probing. Currently,
+> > only a PWM and a list of distinct brightness levels can be specified.
+> > Enabling or disabling backlight power via GPIOs is not yet supported.
+> >=20
+> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+>=20
+> > diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-back=
+light b/Documentation/devicetree/bindings/video/backlight/pwm-backlight
+> > +Required properties:
+> > +  - compatible: "pwm-backlight"
+> > +  - pwms: OF device-tree PWM specification (see PWM binding[0])
+> > +  - num-brightness-levels: number of distinct brightness levels
+>=20
+> Do we need the "num-brightness-levels" property at all; it's just the
+> length of the brightness-levels property.
 
-Alan Stern for USB OHCI/EHCI and Grant Likely for DT gave me their "Acked-by"
-on concerned patches (thanks a lot guys!).
+No, we don't really need it. As you say, it can be derived from the property
+length.
 
-The following changes since commit dd775ae2549217d3ae09363e3edb305d0fa19928:
+Thierry
 
-  Linux 3.4-rc1 (2012-03-31 16:24:09 -0700)
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature
 
-are available in the git repository at:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-  git://github.com/at91linux/linux-at91.git at91-fixes
+iEYEARECAAYFAk98jskACgkQZ+BJyKLjJp8lAgCgms8ewu0tyGQcUIvaq0HQUtEl
+vUsAoLJ9fHC3kcZqUjbTauOxWJDyDJjm
+=Wk1H
+-----END PGP SIGNATURE-----
 
-for you to fetch changes up to dcce6ce802c271cd7c21f4730f301150577b2826:
-
-  ARM: at91: dt: remove unit-address part for memory nodes (2012-04-04 18:35:52 +0200)
-
-----------------------------------------------------------------
-Ludovic Desroches (1):
-      ARM: at91: dt: remove unit-address part for memory nodes
-
-Nicolas Ferre (11):
-      ARM: at91/at91sam9x5: add clkdev entries for DMA controllers
-      USB: ohci-at91: fix vbus_pin_active_low handling
-      ARM: at91/USB host: specify and handle properly vbus_pin_active_low
-      ARM: at91/dts: USB host vbus is active low
-      USB: ohci-at91: rework and fix initialization
-      USB: ohci-at91: change maximum number of ports
-      USB: ohci-at91: trivial return code name change
-      ARM: at91/at91sam9x5.dtsi: fix NAND ale/cle in DT file
-      ARM: at91/NAND DT bindings: add comments
-      USB: ehci-atmel: add needed of.h header file
-      ARM: at91: fix check of valid GPIO for SPI and USB
-
- .../devicetree/bindings/mtd/atmel-nand.txt         |   10 +-
- arch/arm/boot/dts/at91sam9g20.dtsi                 |    2 +-
- arch/arm/boot/dts/at91sam9g25ek.dts                |    4 +-
- arch/arm/boot/dts/at91sam9g45.dtsi                 |    2 +-
- arch/arm/boot/dts/at91sam9m10g45ek.dts             |    6 +-
- arch/arm/boot/dts/at91sam9x5.dtsi                  |    6 +-
- arch/arm/boot/dts/at91sam9x5cm.dtsi                |    2 +-
- arch/arm/boot/dts/usb_a9g20.dts                    |    2 +-
- arch/arm/mach-at91/at91sam9260_devices.c           |    3 +
- arch/arm/mach-at91/at91sam9261_devices.c           |    3 +
- arch/arm/mach-at91/at91sam9263_devices.c           |    6 +-
- arch/arm/mach-at91/at91sam9g45_devices.c           |   11 +-
- arch/arm/mach-at91/at91sam9rl_devices.c            |    3 +
- arch/arm/mach-at91/at91sam9x5.c                    |    2 +
- arch/arm/mach-at91/board-sam9263ek.c               |    1 +
- arch/arm/mach-at91/board-sam9m10g45ek.c            |    1 +
- arch/arm/mach-at91/include/mach/board.h            |   13 +-
- drivers/usb/host/ehci-atmel.c                      |    1 +
- drivers/usb/host/ohci-at91.c                       |  163 +++++++++++---------
- 19 files changed, 137 insertions(+), 104 deletions(-)
-
-Thanks, best regards,
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--gKMricLos+KVdGMg--
