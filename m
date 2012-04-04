@@ -1,92 +1,71 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [PATCH 3/5] powerpc: dts: klondike: Add UART nodes
-Date: Wed, 4 Apr 2012 11:09:30 +0530
-Message-ID: <CACoXjckmC-3p1Wx-fEQo0MmgH4rKGT4gRKjJ6BdvrjVy6dRrKw@mail.gmail.com>
-References: <1333348747-12713-1-git-send-email-tinamdar@apm.com>
- <1333348747-12713-2-git-send-email-tinamdar@apm.com>
- <1333348747-12713-3-git-send-email-tinamdar@apm.com>
- <20120403155703.3B0593E053F@localhost>
- <CA+5PVA4_PJ2T7LGM_N_WemQKY2u6bLg0QFk4wPpd=FGESx7eiQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 01/16] pwm: Add PWM framework support
+Date: Wed, 4 Apr 2012 14:36:08 +0800
+Message-ID: <20120404063605.GB7264@S2101-09.ap.freescale.net>
+References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de>
+ <1332945238-14897-2-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <CA+5PVA4_PJ2T7LGM_N_WemQKY2u6bLg0QFk4wPpd=FGESx7eiQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Josh Boyer <jwboyer@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1332945238-14897-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 4, 2012 at 6:19 AM, Josh Boyer <jwboyer@gmail.com> wrote:
-> On Tue, Apr 3, 2012 at 11:57 AM, Grant Likely <grant.likely@secretlab.ca>=
- wrote:
->> On Mon, =A02 Apr 2012 12:09:05 +0530, Tanmay Inamdar <tinamdar@apm.com> =
-wrote:
->>> Adding UART nodes in Klondike device tree file.
->>>
->>> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
->>> ---
->>> :100644 100644 4ff2852... d5bf2e1... M =A0 =A0 =A0 =A0arch/powerpc/boot=
-/dts/klondike.dts
->>> =A0arch/powerpc/boot/dts/klondike.dts | =A0 24 ++++++++++++++++++++++++
->>> =A01 files changed, 24 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/powerpc/boot/dts/klondike.dts b/arch/powerpc/boot/dts=
-/klondike.dts
->>> index 4ff2852..d5bf2e1 100644
->>> --- a/arch/powerpc/boot/dts/klondike.dts
->>> +++ b/arch/powerpc/boot/dts/klondike.dts
->>> @@ -222,6 +222,30 @@
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells=
- =3D <1>;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ranges;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-frequ=
-ency =3D <0>;
->>> +
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 UART0: serial=
-@50001000 {
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0device_type =3D "serial";
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0compatible =3D "ns16550";
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0reg =3D <0x50001000 0x00000100>;
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0virtual-reg =3D <0x50001000>;
->>
->> Why do you need virtual-reg? =A0The kernel should handle all iomapping
->> properly without this.
->
-> Right. =A0It's been used for platforms that actually use the
-> zImage/treeImage wrapper for printf support, but this uses u-boot as
-> far as I know. =A0It shouldn't need it.
->
+A couple of trivial editorial errors, otherwise,
 
-Agreed. 'virtual-reg' is not required here. I will remove it in next
-version of patch.
+Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> josh
-CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, =
+On Wed, Mar 28, 2012 at 04:33:43PM +0200, Thierry Reding wrote:
+> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> This patch adds framework support for PWM (pulse width modulation) devices.
+> 
+> The is a barebone PWM API already in the kernel under include/linux/pwm.h,
 
-is for the sole use of the intended recipient(s) and contains information=
-=A0
-that is confidential and proprietary to AppliedMicro Corporation or its sub=
-sidiaries. =
+s/The/There
 
-It is to be used solely for the purpose of furthering the parties' business=
- relationship. =
+> but it does not allow for multiple drivers as each of them implements the
+> pwm_*() functions.
+> 
+...
 
-All unauthorized review, use, disclosure or distribution is prohibited. =
+> +/**
+> + * pwm_request() - request a PWM device
+> + * @pwm: global PWM device index
 
-If you are not the intended recipient, please contact the sender by reply e=
--mail =
+s/pwm/pwm_id
 
-and destroy all copies of the original message.
+> + * @label: PWM device label
+> + */
+> +struct pwm_device *pwm_request(int pwm_id, const char *label)
+...
+
+> +/**
+> + * struct pwm_chip - abstract a PWM
+> + * @label: for diagnostics
+> + * @owner: helps prevent removal of modules exporting active PWMs
+
+The doc needs an update.
+
+Regards,
+Shawn
+
+> + * @ops: The callbacks for this PWM
+> + */
+> +struct pwm_chip {
+> +	int			pwm_id;
+> +	const char		*label;
+> +	struct pwm_ops		*ops;
+> +};
+> +
+> +int pwmchip_add(struct pwm_chip *chip);
+> +int pwmchip_remove(struct pwm_chip *chip);
+> +#endif
+> +
+>  #endif /* __LINUX_PWM_H */
+> -- 
+> 1.7.9.4
+> 
