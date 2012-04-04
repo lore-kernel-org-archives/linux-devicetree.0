@@ -1,39 +1,27 @@
 From: "Cousson, Benoit" <b-cousson@ti.com>
 Subject: Re: [PATCH 1/2] arm/dts: omap4-sdp: Add keypad data
-Date: Wed, 4 Apr 2012 15:48:19 +0200
-Message-ID: <4F7C5123.9050106@ti.com>
-References: <1333546221-19700-1-git-send-email-sourav.poddar@ti.com>
- <1333546221-19700-2-git-send-email-sourav.poddar@ti.com>
+Date: Wed, 4 Apr 2012 15:51:38 +0200
+Message-ID: <4F7C51EA.1040902@ti.com>
+References: <1333546221-19700-1-git-send-email-sourav.poddar@ti.com> <1333546221-19700-2-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 In-Reply-To: <1333546221-19700-2-git-send-email-sourav.poddar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-input-owner@vger.kernel.org
 To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
-
-Hi Sourav,
 
 On 4/4/2012 3:30 PM, Sourav Poddar wrote:
 > This patch add keypad data node in omap4 device tree
 > file.
 
-Nit: You should adapt first the driver to DT and document the binding 
-before using it.
+Nit #2: Never write "this patch" in a patch changelog... Because at some 
+point it will become a commit in a GIT tree.
 
-So this patch should be the second one.
+I think AKPM wrote something on that.
 
-Regards,
 Benoit
 
 >
@@ -361,3 +349,4 @@ Benoit
 > +		ti,hwmods = "kbd";
 > +	};
 >   };
+
