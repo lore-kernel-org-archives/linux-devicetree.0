@@ -1,49 +1,33 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC] powerpc/fsl-pci: Document the "fsl,
- has-isa" property for Freescale PCI
-Date: Wed, 4 Apr 2012 08:08:39 -0500
-Message-ID: <E3DD739D-1EC3-4BCA-AE26-1EAE7A086A1E@kernel.crashing.org>
-References: <1333263396-23932-1-git-send-email-B38951@freescale.com>
-Mime-Version: 1.0 (Apple Message framework v1257)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1333263396-23932-1-git-send-email-B38951-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jia Hongtao <B38951-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCH 0/2] Add device tree support for omap4 keypad
+Date: Wed, 4 Apr 2012 19:00:19 +0530
+Message-ID: <1333546221-19700-1-git-send-email-sourav.poddar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+This series adds device tree support for omap4
+onchip keypad.
 
-On Apr 1, 2012, at 1:56 AM, Jia Hongtao wrote:
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Felipe Balbi <balbi@ti.com>
 
-> If PCI is primary bus we should set isa_io/mem_base when parsing PCI bridge
-> resources from device tree. The previous way to check the primary bus based
-> on a hard-coded address named primary_phb_addr. Now we add a property named
-> "fsl,has-isa" into device tree. In kernel we use this property to find out
-> the bus is primary or not. This way is more flexible.
-> 
-> Signed-off-by: Jia Hongtao <B38951-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> .../devicetree/bindings/powerpc/fsl/pci.txt        |   36 ++++++++++++++++++++
-> 1 files changed, 36 insertions(+), 0 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/pci.txt
+Sourav Poddar (2):
+  arm/dts: omap4-sdp: Add keypad data
+  drivers: input: keypad: Add device tree support
 
-This isn't freescale specific, its linux specific.  If anything the property should be linux,has-isa.
+Test Info:
+-Tested on Omap4430 sdp with 3.4-rc1
 
-But in general I dont think this is a good idea.  In truth one could search the device tree for:
+ .../devicetree/bindings/input/omap-keypad.txt      |   52 ++++
+ arch/arm/boot/dts/omap4-sdp.dts                    |  291 ++++++++++++++++++++
+ arch/arm/boot/dts/omap4.dtsi                       |    5 +
+ drivers/input/keyboard/omap4-keypad.c              |  114 ++++++--
+ 4 files changed, 439 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/omap-keypad.txt
 
-	device_type = "isa";
-
-to try and set this dynamically.
-
-- k
