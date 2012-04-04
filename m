@@ -1,64 +1,471 @@
-From: Josh Boyer <jwboyer@gmail.com>
-Subject: Re: [PATCH 3/5] powerpc: dts: klondike: Add UART nodes
-Date: Tue, 3 Apr 2012 20:49:40 -0400
-Message-ID: <CA+5PVA4_PJ2T7LGM_N_WemQKY2u6bLg0QFk4wPpd=FGESx7eiQ@mail.gmail.com>
-References: <1333348747-12713-1-git-send-email-tinamdar@apm.com>
-	<1333348747-12713-2-git-send-email-tinamdar@apm.com>
-	<1333348747-12713-3-git-send-email-tinamdar@apm.com>
-	<20120403155703.3B0593E053F@localhost>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] dtc: Basic integer expressions
+Date: Tue,  3 Apr 2012 20:56:00 -0600
+Message-ID: <1333508160-7015-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120403155703.3B0593E053F@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 3, 2012 at 11:57 AM, Grant Likely <grant.likely@secretlab.c=
-a> wrote:
-> On Mon, =A02 Apr 2012 12:09:05 +0530, Tanmay Inamdar <tinamdar@apm.co=
-m> wrote:
->> Adding UART nodes in Klondike device tree file.
->>
->> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
->> ---
->> :100644 100644 4ff2852... d5bf2e1... M =A0 =A0 =A0 =A0arch/powerpc/b=
-oot/dts/klondike.dts
->> =A0arch/powerpc/boot/dts/klondike.dts | =A0 24 +++++++++++++++++++++=
-+++
->> =A01 files changed, 24 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/powerpc/boot/dts/klondike.dts b/arch/powerpc/boot/=
-dts/klondike.dts
->> index 4ff2852..d5bf2e1 100644
->> --- a/arch/powerpc/boot/dts/klondike.dts
->> +++ b/arch/powerpc/boot/dts/klondike.dts
->> @@ -222,6 +222,30 @@
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-ce=
-lls =3D <1>;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ranges;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-fr=
-equency =3D <0>;
->> +
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 UART0: ser=
-ial@50001000 {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0device_type =3D "serial";
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0compatible =3D "ns16550";
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0reg =3D <0x50001000 0x00000100>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0virtual-reg =3D <0x50001000>;
->
-> Why do you need virtual-reg? =A0The kernel should handle all iomappin=
-g
-> properly without this.
+Written by David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>. Additions by me:
+* Ported to ToT dtc.
+* Renamed cell to integer throughout.
+* Implemented value range checks.
+* Allow U/L/UL/LL/ULL suffix on literals.
+* Enabled the commented test.
 
-Right.  It's been used for platforms that actually use the
-zImage/treeImage wrapper for printf support, but this uses u-boot as
-far as I know.  It shouldn't need it.
+Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+---
+v3:
+* Fix printf warning by s/%ld/%zd/
+* Support plain "U" as an integer literal suffix
+* Fix misplaced semi-colons in grammar
+* Support integer expressions for /memreserve/ and /incbin/ too
+* Modify eval_literal to check U/L suffixes after strtoull call,
+  using strspn/strlen
+* Remove mention of libfdt from comment in tests/integer-expressions.c
+* Add comment to explain integer_prim range check
+v2:
+* s/cell/integer/ throughout.
+* Allow signed-extended values to pass the overall cell range check.
+* Allow L/UL/LL/ULL suffix on literals. This is purely for compatibility
+  with C, and has no effect on dtc's processing.
+* Enabled the 3 disabled tests.
+---
+ dtc-lexer.l                 |   11 +++-
+ dtc-parser.y                |  156 ++++++++++++++++++++++++++++++++++++-------
+ tests/Makefile.tests        |    3 +-
+ tests/integer-expressions.c |  117 ++++++++++++++++++++++++++++++++
+ tests/run_tests.sh          |    5 ++
+ 5 files changed, 266 insertions(+), 26 deletions(-)
+ create mode 100644 tests/integer-expressions.c
 
-josh
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index 73d190c..4715f31 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -110,7 +110,7 @@ static int pop_input_file(void);
+ 			return DT_LABEL;
+ 		}
+ 
+-<V1>[0-9]+|0[xX][0-9a-fA-F]+      {
++<V1>([0-9]+|0[xX][0-9a-fA-F]+)(U|L|UL|LL|ULL)? {
+ 			yylval.literal = xstrdup(yytext);
+ 			DPRINT("Literal: '%s'\n", yylval.literal);
+ 			return DT_LITERAL;
+@@ -164,6 +164,15 @@ static int pop_input_file(void);
+ <*>{COMMENT}+	/* eat C-style comments */
+ <*>{LINECOMMENT}+ /* eat C++-style comments */
+ 
++<*>"<<"		{ return DT_LSHIFT; };
++<*>">>"		{ return DT_RSHIFT; };
++<*>"<="		{ return DT_LE; };
++<*>">="		{ return DT_GE; };
++<*>"=="		{ return DT_EQ; };
++<*>"!="		{ return DT_NE; };
++<*>"&&"		{ return DT_AND; };
++<*>"||"		{ return DT_OR; };
++
+ <*>.		{
+ 			DPRINT("Char: %c (\\x%02x)\n", yytext[0],
+ 				(unsigned)yytext[0]);
+diff --git a/dtc-parser.y b/dtc-parser.y
+index 348616b..6d5c2c2 100644
+--- a/dtc-parser.y
++++ b/dtc-parser.y
+@@ -50,16 +50,17 @@ static unsigned char eval_char_literal(const char *s);
+ 		int		bits;
+ 	} array;
+ 
+-	uint64_t addr;
+ 	struct property *prop;
+ 	struct property *proplist;
+ 	struct node *node;
+ 	struct node *nodelist;
+ 	struct reserve_info *re;
++	uint64_t integer;
+ }
+ 
+ %token DT_V1
+ %token DT_MEMRESERVE
++%token DT_LSHIFT DT_RSHIFT DT_LE DT_GE DT_EQ DT_NE DT_AND DT_OR
+ %token DT_BITS
+ %token <propnodename> DT_PROPNODENAME
+ %token <literal> DT_LITERAL
+@@ -75,7 +76,6 @@ static unsigned char eval_char_literal(const char *s);
+ %type <data> propdataprefix
+ %type <re> memreserve
+ %type <re> memreserves
+-%type <addr> addr
+ %type <array> arrayprefix
+ %type <data> bytestring
+ %type <prop> propdef
+@@ -86,6 +86,21 @@ static unsigned char eval_char_literal(const char *s);
+ %type <node> subnode
+ %type <nodelist> subnodes
+ 
++%type <integer> integer_prim
++%type <integer> integer_unary
++%type <integer> integer_mul
++%type <integer> integer_add
++%type <integer> integer_shift
++%type <integer> integer_rela
++%type <integer> integer_eq
++%type <integer> integer_bitand
++%type <integer> integer_bitxor
++%type <integer> integer_bitor
++%type <integer> integer_and
++%type <integer> integer_or
++%type <integer> integer_trinary
++%type <integer> integer_expr
++
+ %%
+ 
+ sourcefile:
+@@ -108,7 +123,7 @@ memreserves:
+ 	;
+ 
+ memreserve:
+-	  DT_MEMRESERVE addr addr ';'
++	  DT_MEMRESERVE integer_prim integer_prim ';'
+ 		{
+ 			$$ = build_reserve_entry($2, $3);
+ 		}
+@@ -119,13 +134,6 @@ memreserve:
+ 		}
+ 	;
+ 
+-addr:
+-	  DT_LITERAL
+-		{
+-			$$ = eval_literal($1, 0, 64);
+-		}
+-	  ;
+-
+ devicetree:
+ 	  '/' nodedef
+ 		{
+@@ -198,7 +206,7 @@ propdata:
+ 		{
+ 			$$ = data_add_marker($1, REF_PATH, $2);
+ 		}
+-	| propdataprefix DT_INCBIN '(' DT_STRING ',' addr ',' addr ')'
++	| propdataprefix DT_INCBIN '(' DT_STRING ',' integer_prim ',' integer_prim ')'
+ 		{
+ 			FILE *f = srcfile_relative_open($4.val, NULL);
+ 			struct data d;
+@@ -267,17 +275,25 @@ arrayprefix:
+ 			$$.data = empty_data;
+ 			$$.bits = 32;
+ 		}
+-	| arrayprefix DT_LITERAL
+-		{
+-			uint64_t val = eval_literal($2, 0, $1.bits);
+-
+-			$$.data = data_append_integer($1.data, val, $1.bits);
+-		}
+-	| arrayprefix DT_CHAR_LITERAL
+-		{
+-			uint64_t val = eval_char_literal($2);
++	| arrayprefix integer_prim
++		{
++			if ($1.bits < 64) {
++				uint64_t mask = (1ULL << $1.bits) - 1;
++				/*
++				 * Bits above mask must either be all zero
++				 * (positive within range of mask) or all one
++				 * (negative and sign-extended). The second
++				 * condition is true if when we set all bits
++				 * within the mask to one (i.e. | in the
++				 * mask), all bits are one.
++				 */
++				if (($2 > mask) && (($2 | mask) != -1ULL))
++					print_error(
++						"integer value out of range "
++						"%016lx (%d bits)", $1.bits);
++			}
+ 
+-			$$.data = data_append_integer($1.data, val, $1.bits);
++			$$.data = data_append_integer($1.data, $2, $1.bits);
+ 		}
+ 	| arrayprefix DT_REF
+ 		{
+@@ -299,6 +315,95 @@ arrayprefix:
+ 		}
+ 	;
+ 
++integer_prim:
++	  DT_LITERAL
++		{
++			$$ = eval_literal($1, 0, 64);
++		}
++	| DT_CHAR_LITERAL
++		{
++			$$ = eval_char_literal($1);
++		}
++	| '(' integer_expr ')'
++		{
++			$$ = $2;
++		}
++	;
++
++integer_expr:
++	integer_trinary
++	;
++
++integer_trinary:
++	  integer_or
++	| integer_or '?' integer_expr ':' integer_trinary { $$ = $1 ? $3 : $5; }
++	;
++
++integer_or:
++	  integer_and
++	| integer_or DT_OR integer_and { $$ = $1 || $3; }
++	;
++
++integer_and:
++	  integer_bitor
++	| integer_and DT_AND integer_bitor { $$ = $1 && $3; }
++	;
++
++integer_bitor:
++	  integer_bitxor
++	| integer_bitor '|' integer_bitxor { $$ = $1 | $3; }
++	;
++
++integer_bitxor:
++	  integer_bitand
++	| integer_bitxor '^' integer_bitand { $$ = $1 ^ $3; }
++	;
++
++integer_bitand:
++	  integer_eq
++	| integer_bitand '&' integer_eq { $$ = $1 & $3; }
++	;
++
++integer_eq:
++	  integer_rela
++	| integer_eq DT_EQ integer_rela { $$ = $1 == $3; }
++	| integer_eq DT_NE integer_rela { $$ = $1 != $3; }
++	;
++
++integer_rela:
++	  integer_shift
++	| integer_rela '<' integer_shift { $$ = $1 < $3; }
++	| integer_rela '>' integer_shift { $$ = $1 > $3; }
++	| integer_rela DT_LE integer_shift { $$ = $1 <= $3; }
++	| integer_rela DT_GE integer_shift { $$ = $1 >= $3; }
++	;
++
++integer_shift:
++	  integer_shift DT_LSHIFT integer_add { $$ = $1 << $3; }
++	| integer_shift DT_RSHIFT integer_add { $$ = $1 >> $3; }
++	| integer_add
++	;
++
++integer_add:
++	  integer_add '+' integer_mul { $$ = $1 + $3; }
++	| integer_add '-' integer_mul { $$ = $1 - $3; }
++	| integer_mul
++	;
++
++integer_mul:
++	  integer_mul '*' integer_unary { $$ = $1 * $3; }
++	| integer_mul '/' integer_unary { $$ = $1 / $3; }
++	| integer_mul '%' integer_unary { $$ = $1 % $3; }
++	| integer_unary
++	;
++
++integer_unary:
++	  integer_prim
++	| '-' integer_unary { $$ = -$2; }
++	| '~' integer_unary { $$ = ~$2; }
++	| '!' integer_unary { $$ = !$2; }
++	;
++
+ bytestring:
+ 	  /* empty */
+ 		{
+@@ -366,9 +471,12 @@ static unsigned long long eval_literal(const char *s, int base, int bits)
+ 
+ 	errno = 0;
+ 	val = strtoull(s, &e, base);
+-	if (*e)
+-		print_error("bad characters in literal");
+-	else if ((errno == ERANGE)
++	if (*e) {
++		size_t uls = strspn(e, "UL");
++		if (e[uls])
++			print_error("bad characters in literal");
++	}
++	if ((errno == ERANGE)
+ 		 || ((bits < 64) && (val >= (1ULL << bits))))
+ 		print_error("literal out of range");
+ 	else if (errno != 0)
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index 2eee708..1795466 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -19,7 +19,8 @@ LIB_TESTS_L = get_mem_rsv \
+ 	dtbs_equal_ordered \
+ 	dtb_reverse dtbs_equal_unordered \
+ 	add_subnode_with_nops path_offset_aliases \
+-	utilfdt_test
++	utilfdt_test \
++	integer-expressions
+ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
+ 
+ LIBTREE_TESTS_L = truncated_property
+diff --git a/tests/integer-expressions.c b/tests/integer-expressions.c
+new file mode 100644
+index 0000000..5ba1566
+--- /dev/null
++++ b/tests/integer-expressions.c
+@@ -0,0 +1,117 @@
++/*
++ * Testcase for dtc expression support
++ *
++ * Copyright (C) 2008 David Gibson, IBM Corporation.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdint.h>
++#include <errno.h>
++
++
++#include <fdt.h>
++#include <libfdt.h>
++
++#include "tests.h"
++#include "testdata.h"
++
++struct test_expr {
++	const char *expr;
++	uint32_t result;
++} expr_table[] = {
++#define TE(expr)	{ #expr, (expr) }
++	TE(0xdeadbeef),
++	TE(-0x21524111),
++	TE(1+1),
++	TE(2*3),
++	TE(4/2),
++	TE(10/3),
++	TE(19%4),
++	TE(1 << 13),
++	TE(0x1000 >> 4),
++	TE(3*2+1), TE(3*(2+1)),
++	TE(1+2*3), TE((1+2)*3),
++	TE(1 < 2), TE(2 < 1), TE(1 < 1),
++	TE(1 <= 2), TE(2 <= 1), TE(1 <= 1),
++	TE(1 > 2), TE(2 > 1), TE(1 > 1),
++	TE(1 >= 2), TE(2 >= 1), TE(1 >= 1),
++	TE(1 == 1), TE(1 == 2),
++	TE(1 != 1), TE(1 != 2),
++	TE(0xabcdabcd & 0xffff0000),
++	TE(0xdead4110 ^ 0xf0f0f0f0),
++	TE(0xabcd0000 | 0x0000abcd),
++	TE(~0x21524110),
++	TE(~~0xdeadbeef),
++	TE(0 && 0), TE(17 && 0), TE(0 && 17), TE(17 && 17),
++	TE(0 || 0), TE(17 || 0), TE(0 || 17), TE(17 || 17),
++	TE(!0), TE(!1), TE(!17), TE(!!0), TE(!!17),
++	TE(0 ? 17 : 39), TE(1 ? 17 : 39), TE(17 ? 0xdeadbeef : 0xabcd1234),
++	TE(11 * 257 * 1321517ULL),
++	TE(123456790 - 4/2 + 17%4),
++};
++
++#define ARRAY_SIZE(x)	(sizeof(x) / sizeof((x)[0]))
++
++int main(int argc, char *argv[])
++{
++	void *fdt;
++	const uint32_t *res;
++	int reslen;
++	int i;
++
++	test_init(argc, argv);
++
++	if ((argc == 3) && (strcmp(argv[1], "-g") == 0)) {
++		FILE *f = fopen(argv[2], "w");
++
++		if (!f)
++			FAIL("Couldn't open \"%s\" for output: %s\n",
++			     argv[2], strerror(errno));
++
++		fprintf(f, "/dts-v1/;\n");
++		fprintf(f, "/ {\n");
++		fprintf(f, "\texpressions = <\n");
++		for (i = 0; i < ARRAY_SIZE(expr_table); i++)
++			fprintf(f, "\t\t(%s)\n", expr_table[i].expr);
++		fprintf(f, "\t>;\n");
++		fprintf(f, "};\n");
++		fclose(f);
++	} else {
++		fdt = load_blob_arg(argc, argv);
++
++		res = fdt_getprop(fdt, 0, "expressions", &reslen);
++
++		if (!res)
++			FAIL("Error retreiving expression results: %s\n",
++		     fdt_strerror(reslen));
++
++		if (reslen != (ARRAY_SIZE(expr_table) * sizeof(uint32_t)))
++			FAIL("Unexpected length of results %d instead of %zd\n",
++			     reslen, ARRAY_SIZE(expr_table) * sizeof(uint32_t));
++
++		for (i = 0; i < ARRAY_SIZE(expr_table); i++)
++			if (fdt32_to_cpu(res[i]) != expr_table[i].result)
++				FAIL("Incorrect result for expression \"%s\","
++				     " 0x%x instead of 0x%x\n",
++				     expr_table[i].expr, fdt32_to_cpu(res[i]),
++				     expr_table[i].result);
++	}
++
++	PASS();
++}
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index e470b82..ab8133c 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -404,6 +404,11 @@ dtc_tests () {
+     run_dtc_test -I dtb -O dts -o stdin_odts_test_tree1.dtb.test.dts - < test_tree1.dtb
+     run_wrap_test cmp stdin_odts_test_tree1.dtb.test.dts odts_test_tree1.dtb.test.dts
+ 
++    # Check integer expresisons
++    run_test integer-expressions -g integer-expressions.test.dts
++    run_dtc_test -I dts -O dtb -o integer-expressions.test.dtb integer-expressions.test.dts
++    run_test integer-expressions integer-expressions.test.dtb
++
+     # Check for graceful failure in some error conditions
+     run_sh_test dtc-fatal.sh -I dts -O dtb nosuchfile.dts
+     run_sh_test dtc-fatal.sh -I dtb -O dtb nosuchfile.dtb
+-- 
+1.7.5.4
