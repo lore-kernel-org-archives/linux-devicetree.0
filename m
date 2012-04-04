@@ -1,96 +1,92 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v5 09/16] pwm: tegra: Add device tree support
-Date: Wed, 4 Apr 2012 07:00:54 +0200
-Message-ID: <20120404050054.GA30807@avionic-0098.adnet.avionic-design.de>
-References: <1332945238-14897-1-git-send-email-thierry.reding@avionic-design.de>
- <1332945238-14897-10-git-send-email-thierry.reding@avionic-design.de>
- <4F7602CD.2010808@wwwdotorg.org>
- <20120402083749.GA6576@avionic-0098.adnet.avionic-design.de>
- <4F79C8D4.2000306@wwwdotorg.org>
- <20120403175511.GA26399@avionic-0098.mockup.avionic-design.de>
- <20120403234249.E292E3E03F3@localhost>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [PATCH 3/5] powerpc: dts: klondike: Add UART nodes
+Date: Wed, 4 Apr 2012 11:09:30 +0530
+Message-ID: <CACoXjckmC-3p1Wx-fEQo0MmgH4rKGT4gRKjJ6BdvrjVy6dRrKw@mail.gmail.com>
+References: <1333348747-12713-1-git-send-email-tinamdar@apm.com>
+ <1333348747-12713-2-git-send-email-tinamdar@apm.com>
+ <1333348747-12713-3-git-send-email-tinamdar@apm.com>
+ <20120403155703.3B0593E053F@localhost>
+ <CA+5PVA4_PJ2T7LGM_N_WemQKY2u6bLg0QFk4wPpd=FGESx7eiQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120403234249.E292E3E03F3@localhost>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CA+5PVA4_PJ2T7LGM_N_WemQKY2u6bLg0QFk4wPpd=FGESx7eiQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Josh Boyer <jwboyer@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 4, 2012 at 6:19 AM, Josh Boyer <jwboyer@gmail.com> wrote:
+> On Tue, Apr 3, 2012 at 11:57 AM, Grant Likely <grant.likely@secretlab.ca>=
+ wrote:
+>> On Mon, =A02 Apr 2012 12:09:05 +0530, Tanmay Inamdar <tinamdar@apm.com> =
+wrote:
+>>> Adding UART nodes in Klondike device tree file.
+>>>
+>>> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
+>>> ---
+>>> :100644 100644 4ff2852... d5bf2e1... M =A0 =A0 =A0 =A0arch/powerpc/boot=
+/dts/klondike.dts
+>>> =A0arch/powerpc/boot/dts/klondike.dts | =A0 24 ++++++++++++++++++++++++
+>>> =A01 files changed, 24 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/boot/dts/klondike.dts b/arch/powerpc/boot/dts=
+/klondike.dts
+>>> index 4ff2852..d5bf2e1 100644
+>>> --- a/arch/powerpc/boot/dts/klondike.dts
+>>> +++ b/arch/powerpc/boot/dts/klondike.dts
+>>> @@ -222,6 +222,30 @@
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells=
+ =3D <1>;
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ranges;
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-frequ=
+ency =3D <0>;
+>>> +
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 UART0: serial=
+@50001000 {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0device_type =3D "serial";
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0compatible =3D "ns16550";
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0reg =3D <0x50001000 0x00000100>;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0virtual-reg =3D <0x50001000>;
+>>
+>> Why do you need virtual-reg? =A0The kernel should handle all iomapping
+>> properly without this.
+>
+> Right. =A0It's been used for platforms that actually use the
+> zImage/treeImage wrapper for printf support, but this uses u-boot as
+> far as I know. =A0It shouldn't need it.
+>
 
---17pEHd4RhPHOinZp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Agreed. 'virtual-reg' is not required here. I will remove it in next
+version of patch.
 
-* Grant Likely wrote:
-> On Tue, 3 Apr 2012 19:55:11 +0200, Thierry Reding <thierry.reding@avionic=
--design.de> wrote:
-> > * Stephen Warren wrote:
-> > > On 04/02/2012 02:37 AM, Thierry Reding wrote:
-> > > > * Stephen Warren wrote:
-> > > >> On 03/28/2012 08:33 AM, Thierry Reding wrote:
-> > > >>> Add auxdata to instantiate the PWFM controller from a device tree,
-> > > >>> include the corresponding nodes in the dtsi files for Tegra 20 and
-> > > >>> Tegra 30 and add binding documentation.
-> > > >>>
-> > > >>> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> > > >>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> > > >>
-> > > >>> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> > > >> ...
-> > > >>> +#ifdef CONFIG_OF
-> > > >>> +static struct of_device_id tegra_pwm_of_match[] =3D {
-> > > >>> +	{ .compatible =3D "nvidia,tegra20-pwm" },
-> > > >>> +	{ .compatible =3D "nvidia,tegra30-pwm" },
-> > > >>
-> > > >> Could you swap those two lines, so that tegra30-pwm matches first.=
- It
-> > > >> makes no difference at present, but might in the future if the dri=
-ver
-> > > >> actually has to differentiate the two SoCs.
-> > > >=20
-> > > > I thought the matching order was determined by the compatible prope=
-rty in the
-> > > > device tree, not the OF match table of the driver.
-> > >=20
-> > > At least logically, yes. However, of_match_device() appears to iterate
-> > > over each match table entry, checking whether it matches any string in
-> > > the compatible flag. Perhaps this could be considered a bug?
-> >=20
-> > It certainly is counter-intuitive. Maybe Grant or Rob can comment?
->=20
-> Yes, it is a bug.  The order of of_device_id should be entirely
-> irrelevant, and the order in the DT compatible property should
-> determine which match entry is returned.
+> josh
+CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, =
 
-I've had a look at the code and it looks like a fix will not be entirely
-trivial. I think moving out the compatible check out of the while loop in
-of_match_node() and separately iterate over all strings in the compatible
-property would be the easiest. That will also prioritize the compatible
-match over matches by name and type but I think that's exactly what we
-want. From a quick look it certainly seems like the large majority of
-drivers match by compatible anyway.
+is for the sole use of the intended recipient(s) and contains information=
+=A0
+that is confidential and proprietary to AppliedMicro Corporation or its sub=
+sidiaries. =
 
-Do you want me to prepare a patch or can you take care of it?
+It is to be used solely for the purpose of furthering the parties' business=
+ relationship. =
 
-Stephen: Can I assume that you're fine with this Tegra PWM patch if such
-a change to the matching function is committed?
+All unauthorized review, use, disclosure or distribution is prohibited. =
 
-Thierry
+If you are not the intended recipient, please contact the sender by reply e=
+-mail =
 
---17pEHd4RhPHOinZp
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk971YYACgkQZ+BJyKLjJp8ENQCgruc1DmjFq7WAWzto815Wb0NG
-IDQAoJGq63ev6yaM0MckFSjbwikjdWvr
-=5qlX
------END PGP SIGNATURE-----
-
---17pEHd4RhPHOinZp--
+and destroy all copies of the original message.
