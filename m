@@ -1,47 +1,107 @@
-From: Andreas Schwab <schwab@linux-m68k.org>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
-Date: Thu, 05 Apr 2012 12:51:27 +0200
-Message-ID: <m21uo2v4cw.fsf@igel.home>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
-	<1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
-	<m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
-	<20120402202848.1EB833E02A7@localhost> <m2y5qdow0v.fsf@igel.home>
-	<20120404154020.40C513E09D5@localhost>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] ARM: DT: Add binding for GIC virtualization extentions
+ (VGIC)
+Date: Thu, 05 Apr 2012 13:59:56 +0100
+Message-ID: <4F7D974C.9050506@arm.com>
+References: <1333384217-13441-1-git-send-email-marc.zyngier@arm.com>
+ <4F7AC138.9020308@citrix.com> <4F7AC8A8.9020606@arm.com>
+ <20120403153538.0D1B83E044A@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120404154020.40C513E09D5@localhost> (Grant Likely's message of
-	"Wed, 04 Apr 2012 08:40:20 -0700")
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120403153538.0D1B83E044A@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, David Vrabel <david.vrabel@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely <grant.likely@secretlab.ca> writes:
+On 03/04/12 16:35, Grant Likely wrote:
 
-> I bet it is NR_IRQS related.  You have SPARSE_IRQ enabled, which means
-> the maximum number of irq_descs is IRQ_BITMAP_BITS (NR_IRQS + 8192).
+Hi Grant,
 
-The actual definition uses NR_IRQS + 8196.  Guess that's a typo.  (Does
-it really make sense to add NR_IRQS here?)
+> On Tue, 03 Apr 2012 10:53:44 +0100, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>> On 03/04/12 10:22, David Vrabel wrote:
+>>
+>> Hi David,
+>>
+>>> On 02/04/12 17:30, Marc Zyngier wrote:
+>>>> The GICv2 can have virtualization extension support, consisting
+>>>> of an additional set of registers and interrupts. Add the necessary
+>>>> binding to the GIC DT documentation.
+>>>
+>>> The Xen hypervisor's device tree support is very much incomplete so I've
+>>> not looked into this is much detail.
+>>>
+>>> Would it make more sense to extend the existing gic binding with the the
+>>> additional information rather than adding a new node?
+>>
+>> I'm actually torn between the two approaches. On one side, the VGIC is
+>> part of the GIC spec, hence should be part of the GIC node. On the other
+>> hand, it is logically handled by a different piece of software (the
+>> hypervisor), and would normally be probed separately. Having a separate
+>> node makes the probing more sensible.
+> 
+> Don't get too hung up on the software side of things.  Describe it in
+> a way that makes sense for the hardware.  There is lots of precidence
+> for two hunks of software initializating from the same node; either by
+> probe kicking off two init hooks, or by early init code going looking
+> for the node manually.
 
-> diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
-> index cf417e51..9edf499 100644
-> --- a/arch/powerpc/include/asm/irq.h
-> +++ b/arch/powerpc/include/asm/irq.h
-> @@ -20,7 +20,7 @@
->  
->  /* Define a way to iterate across irqs. */
->  #define for_each_irq(i) \
-> -       for ((i) = 0; (i) < NR_IRQS; ++(i))
-> +       for ((i) = 0; (i) < nr_irqs; ++(i))
+What I'm trying to avoid is a royal mess in the future if we get some
+other extension to the GIC.
 
-There are exactly two uses of for_each_irq, one is related to cpu
-hotplug, the other to kexec, so that cannot make any difference.
+Let's say we implement the following:
 
-Andreas.
+	gic: interrupt-controller@2c001000 {
+		compatible = "arm,cortex-a15-gic";
+		#interrupt-cells = <3>;
+		#address-cells = <1>;
+		interrupt-controller;
+		reg = <0x2c001000 0x1000>,
+		      <0x2c002000 0x100>,
+		      <0x2c004000 0x2000>,
+		      <0x2c006000 0x2000>;
+		interrupts = <1 9 0xf04>;
+	};
 
+It's all fine (the two last regions and the interrupt are for VGIC),
+until someone comes up with extension FOO which requires two new regions
+and am interrupt. It is then impossible to distinguish between the two,
+short of adding more attributes.
+
+How about this?
+
+	gic: interrupt-controller@2c001000 {
+		compatible = "arm,cortex-a15-gic";
+		#interrupt-cells = <3>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		interrupt-controller;
+		reg = <0x2c001000 0x1000>,
+		      <0x2c002000 0x100>;
+
+		vgic@2c004000 {
+			compatible = "arm,cortex-a15-vgic", "arm,vgic";
+			reg = <0x2c004000 0x2000>,
+			      <0x2c006000 0x2000>;
+			interrupts = <1 9 0xf04>;
+		};
+	};
+
+It cleanly separate the extension from the core GIC, and still make it
+part of the GIC node.
+
+What do you think?
+
+	M.
 -- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
-"And now for something completely different."
+Jazz is not dead. It just smells funny...
