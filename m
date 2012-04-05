@@ -1,14 +1,17 @@
 From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v4 22/23] tegra: fdt: Add EMC data for Tegra2
+Subject: Re: [PATCH v3 22/23] tegra: fdt: Add EMC data for Tegra2
 	Seaboard
-Date: Thu,  5 Apr 2012 14:55:15 -0700
-Message-ID: <1333662916-17958-23-git-send-email-sjg@chromium.org>
-References: <1333662916-17958-6-git-send-email-sjg@chromium.org>
+Date: Thu, 5 Apr 2012 14:58:29 -0700
+Message-ID: <CAPnjgZ01DwO6bGnidxUrD61sNgxUrii7AFnxPc5dh7kRQxCAuw@mail.gmail.com>
+References: <1333408743-28720-1-git-send-email-sjg@chromium.org>
+	<1333408743-28720-23-git-send-email-sjg@chromium.org>
+	<CAOesGMh1OaJ9DDj+xxfOf268J93WbOmpZSJutBLB3xQ+6W4C-w@mail.gmail.com>
+	<CAPnjgZ0xS2rv688y6VTNMX27OctBURn+jC2QN7HaSFqUy1jZ8g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1333662916-17958-6-git-send-email-sjg@chromium.org>
+In-Reply-To: <CAPnjgZ0xS2rv688y6VTNMX27OctBURn+jC2QN7HaSFqUy1jZ8g@mail.gmail.com>
 List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
 	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
 List-Archive: <http://lists.denx.de/pipermail/u-boot>
@@ -18,70 +21,51 @@ List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
 	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
 Sender: u-boot-bounces@lists.denx.de
 Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Stephen Warren <swarren@nvidia.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+To: Olof Johansson <olof@lixom.net>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds timings for T20 and T25 Seaboards, using the bindings found here:
+Hi,
 
-http://patchwork.ozlabs.org/patch/132928/
+On Tue, Apr 3, 2012 at 5:47 PM, Simon Glass <sjg@chromium.org> wrote:
+> Hi Olof,
+>
+> On Mon, Apr 2, 2012 at 10:22 PM, Olof Johansson <olof@lixom.net> wrote:
+>> On Mon, Apr 2, 2012 at 4:19 PM, Simon Glass <sjg@chromium.org> wrote:
+>>> This adds timings for T20 and T25 Seaboards, using the bindings found here:
+>>>
+>>> http://patchwork.ozlabs.org/patch/132928/
+>>>
+>>> We supply both full speed options for normal running, and half speed options
+>>> for testing / development.
+>>>
+>>> Signed-off-by: Simon Glass <sjg@chromium.org>
+>>
+>> This seems incorrect to me. You provide both T20 and T25 EMC tables in
+>> the same device tree with no way to determine which one to use.
+>>
+>> Unfortunately nvidia didn't use the boot straps to tell if they were
+>> on a t20 or t25 seaboard, so you'll just have to know. At the kernel
+>> side we chose to just ditch T20 since most boards still in use are
+>> T25.
+>
+> The selection of memory speed is down to the board. There is a later
+> patch in this series (just cc'd to you) which looks at the SOC ID to
+> determine whether it is T20 or T25, and selects the speed accordingly.
+> This speed is used to look up the correct table in the device tree
 
-We supply both full speed options for normal running, and half speed options
-for testing / development.
+Well if we really want to do this properly we should have a separate
+device tree file for the T20 Seaboard. Since the kernel has dropped
+T20 support, we should do the same. I have updated this patch.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
-Changes in v4:
-- Remove T20 memory timings - we only support T25 Seaboards
+Regards,
+Simon
 
- board/nvidia/dts/tegra2-seaboard.dts |   37 ++++++++++++++++++++++++++++++++++
- 1 files changed, 37 insertions(+), 0 deletions(-)
-
-diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
-index 6ba3ec4..08ada8c 100644
---- a/board/nvidia/dts/tegra2-seaboard.dts
-+++ b/board/nvidia/dts/tegra2-seaboard.dts
-@@ -89,4 +89,41 @@
- 	i2c@7000c500 {
- 		clock-frequency = <100000>;
- 	};
-+
-+	emc@7000f400 {
-+		emc-table@190000 {
-+			reg = < 190000 >;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = < 190000 >;
-+			nvidia,emc-registers = < 0x0000000c 0x00000026
-+				0x00000009 0x00000003 0x00000004 0x00000004
-+				0x00000002 0x0000000c 0x00000003 0x00000003
-+				0x00000002 0x00000001 0x00000004 0x00000005
-+				0x00000004 0x00000009 0x0000000d 0x0000059f
-+				0x00000000 0x00000003 0x00000003 0x00000003
-+				0x00000003 0x00000001 0x0000000b 0x000000c8
-+				0x00000003 0x00000007 0x00000004 0x0000000f
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0xa06204ae
-+				0x007dc010 0x00000000 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000 >;
-+		};
-+		emc-table@380000 {
-+			reg = < 380000 >;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = < 380000 >;
-+			nvidia,emc-registers = < 0x00000017 0x0000004b
-+				0x00000012 0x00000006 0x00000004 0x00000005
-+				0x00000003 0x0000000c 0x00000006 0x00000006
-+				0x00000003 0x00000001 0x00000004 0x00000005
-+				0x00000004 0x00000009 0x0000000d 0x00000b5f
-+				0x00000000 0x00000003 0x00000003 0x00000006
-+				0x00000006 0x00000001 0x00000011 0x000000c8
-+				0x00000003 0x0000000e 0x00000007 0x0000000f
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0xe044048b
-+				0x007d8010 0x00000000 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000 >;
-+		};
-+	};
- };
--- 
-1.7.7.3
+>
+>>
+>>
+>>
+>> -Olof
+>
+> Regards,
+> Simon
