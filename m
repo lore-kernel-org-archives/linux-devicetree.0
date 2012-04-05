@@ -1,71 +1,38 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v3 22/23] tegra: fdt: Add EMC data for Tegra2
-	Seaboard
-Date: Thu, 5 Apr 2012 14:58:29 -0700
-Message-ID: <CAPnjgZ01DwO6bGnidxUrD61sNgxUrii7AFnxPc5dh7kRQxCAuw@mail.gmail.com>
-References: <1333408743-28720-1-git-send-email-sjg@chromium.org>
-	<1333408743-28720-23-git-send-email-sjg@chromium.org>
-	<CAOesGMh1OaJ9DDj+xxfOf268J93WbOmpZSJutBLB3xQ+6W4C-w@mail.gmail.com>
-	<CAPnjgZ0xS2rv688y6VTNMX27OctBURn+jC2QN7HaSFqUy1jZ8g@mail.gmail.com>
+From: Ian Campbell <ijc@hellion.org.uk>
+Subject: Re: [PATCH 4/7 v4] ARM: kirkwood: add dreamplug (fdt) support.
+Date: Thu, 05 Apr 2012 23:07:36 +0100
+Message-ID: <1333663656.12209.62.camel@dagon.hellion.org.uk>
+References: <cover.1331601448.git.jason@lakedaemon.net>
+ <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CAPnjgZ0xS2rv688y6VTNMX27OctBURn+jC2QN7HaSFqUy1jZ8g@mail.gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Olof Johansson <olof@lixom.net>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason@lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: nicolas.pitre@linaro.org, andrew@lunn.ch, arnd@arndb.de, jm@lentin.co.uk, grant.likely@secretlab.ca, michael@walle.cc, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 2012-03-13 at 01:57 +0000, Jason Cooper wrote:
+> +DT_MACHINE_START(KIRKWOOD_DT, "Marvell Kirkwood (Flattened Device Tree)") 
 
-On Tue, Apr 3, 2012 at 5:47 PM, Simon Glass <sjg@chromium.org> wrote:
-> Hi Olof,
->
-> On Mon, Apr 2, 2012 at 10:22 PM, Olof Johansson <olof@lixom.net> wrote:
->> On Mon, Apr 2, 2012 at 4:19 PM, Simon Glass <sjg@chromium.org> wrote:
->>> This adds timings for T20 and T25 Seaboards, using the bindings found here:
->>>
->>> http://patchwork.ozlabs.org/patch/132928/
->>>
->>> We supply both full speed options for normal running, and half speed options
->>> for testing / development.
->>>
->>> Signed-off-by: Simon Glass <sjg@chromium.org>
->>
->> This seems incorrect to me. You provide both T20 and T25 EMC tables in
->> the same device tree with no way to determine which one to use.
->>
->> Unfortunately nvidia didn't use the boot straps to tell if they were
->> on a t20 or t25 seaboard, so you'll just have to know. At the kernel
->> side we chose to just ditch T20 since most boards still in use are
->> T25.
->
-> The selection of memory speed is down to the board. There is a later
-> patch in this series (just cc'd to you) which looks at the SOC ID to
-> determine whether it is T20 or T25, and selects the speed accordingly.
-> This speed is used to look up the correct table in the device tree
+This ends up as Machine: in /proc/cpuinfo, which seems to be normal?
 
-Well if we really want to do this properly we should have a separate
-device tree file for the T20 Seaboard. Since the kernel has dropped
-T20 support, we should do the same. I have updated this patch.
+Would it be worth trying to dynamically modify the machine string based
+on the actual hardware the kernel is running on?
 
-Regards,
-Simon
+Ian.
+-- 
+Ian Campbell
 
->
->>
->>
->>
->> -Olof
->
-> Regards,
-> Simon
+
+Genius is ten percent inspiration and fifty percent capital gains.
