@@ -1,197 +1,87 @@
-From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: [PATCH V4.1 1/3] mtd: Add orion_nand devicetree bindings
-Date: Thu,  5 Apr 2012 22:12:00 +0100
-Message-ID: <1333660320-29898-1-git-send-email-jm@lentin.co.uk>
-References: <1333201985-2222-2-git-send-email-jm@lentin.co.uk>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v4 22/23] tegra: fdt: Add EMC data for Tegra2
+	Seaboard
+Date: Thu,  5 Apr 2012 14:55:15 -0700
+Message-ID: <1333662916-17958-23-git-send-email-sjg@chromium.org>
+References: <1333662916-17958-6-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1333201985-2222-2-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1333662916-17958-6-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Stephen Warren <swarren@nvidia.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Allow a NAND chip using the orion_nand driver to be described using devicetree.
+This adds timings for T20 and T25 Seaboards, using the bindings found here:
 
-Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+http://patchwork.ozlabs.org/patch/132928/
+
+We supply both full speed options for normal running, and half speed options
+for testing / development.
+
+Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
-* WARN when bank-width is out of range, as suggested by Andrew Lunn 
+Changes in v4:
+- Remove T20 memory timings - we only support T25 Seaboards
 
-* Document all parameters.
-* Convert bank-width to be in bytes
-* Add explicit defaults for cle, ale and bank-width
+ board/nvidia/dts/tegra2-seaboard.dts |   37 ++++++++++++++++++++++++++++++++++
+ 1 files changed, 37 insertions(+), 0 deletions(-)
 
- .../devicetree/bindings/mtd/orion-nand.txt         |   50 ++++++++++++++++++++
- drivers/mtd/nand/orion_nand.c                      |   45 +++++++++++++++++-
- 2 files changed, 93 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-new file mode 100644
-index 0000000..b2356b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-@@ -0,0 +1,50 @@
-+NAND support for Marvell Orion SoC platforms
+diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
+index 6ba3ec4..08ada8c 100644
+--- a/board/nvidia/dts/tegra2-seaboard.dts
++++ b/board/nvidia/dts/tegra2-seaboard.dts
+@@ -89,4 +89,41 @@
+ 	i2c@7000c500 {
+ 		clock-frequency = <100000>;
+ 	};
 +
-+Required properties:
-+- compatible : "mrvl,orion-nand".
-+- reg : Base physical address of the NAND and length of memory mapped
-+	region
-+
-+Optional properties:
-+- cle : Address line number connected to CLE. Default is 0
-+- ale : Address line number connected to ALE. Default is 1
-+- bank-width : Width in bytes of the device. Default is 1
-+- chip-delay : Chip dependent delay for transferring data from array to read
-+               registers in usecs
-+
-+The device tree may optionally contain sub-nodes describing partitions of the
-+address space. See partition.txt for more detail.
-+
-+Example:
-+
-+nand@f4000000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	cle = <0>;
-+	ale = <1>;
-+	bank-width = <1>;
-+	chip-delay = <25>;
-+	compatible = "mrvl,orion-nand";
-+	reg = <0xf4000000 0x400>;
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0x100000>;
-+		read-only;
++	emc@7000f400 {
++		emc-table@190000 {
++			reg = < 190000 >;
++			compatible = "nvidia,tegra20-emc-table";
++			clock-frequency = < 190000 >;
++			nvidia,emc-registers = < 0x0000000c 0x00000026
++				0x00000009 0x00000003 0x00000004 0x00000004
++				0x00000002 0x0000000c 0x00000003 0x00000003
++				0x00000002 0x00000001 0x00000004 0x00000005
++				0x00000004 0x00000009 0x0000000d 0x0000059f
++				0x00000000 0x00000003 0x00000003 0x00000003
++				0x00000003 0x00000001 0x0000000b 0x000000c8
++				0x00000003 0x00000007 0x00000004 0x0000000f
++				0x00000002 0x00000000 0x00000000 0x00000002
++				0x00000000 0x00000000 0x00000083 0xa06204ae
++				0x007dc010 0x00000000 0x00000000 0x00000000
++				0x00000000 0x00000000 0x00000000 0x00000000 >;
++		};
++		emc-table@380000 {
++			reg = < 380000 >;
++			compatible = "nvidia,tegra20-emc-table";
++			clock-frequency = < 380000 >;
++			nvidia,emc-registers = < 0x00000017 0x0000004b
++				0x00000012 0x00000006 0x00000004 0x00000005
++				0x00000003 0x0000000c 0x00000006 0x00000006
++				0x00000003 0x00000001 0x00000004 0x00000005
++				0x00000004 0x00000009 0x0000000d 0x00000b5f
++				0x00000000 0x00000003 0x00000003 0x00000006
++				0x00000006 0x00000001 0x00000011 0x000000c8
++				0x00000003 0x0000000e 0x00000007 0x0000000f
++				0x00000002 0x00000000 0x00000000 0x00000002
++				0x00000000 0x00000000 0x00000083 0xe044048b
++				0x007d8010 0x00000000 0x00000000 0x00000000
++				0x00000000 0x00000000 0x00000000 0x00000000 >;
++		};
 +	};
-+
-+	partition@100000 {
-+		label = "uImage";
-+		reg = <0x0100000 0x200000>;
-+	};
-+
-+	partition@300000 {
-+		label = "dtb";
-+		reg = <0x0300000 0x100000>;
-+	};
-+
-+	partition@400000 {
-+		label = "root";
-+		reg = <0x0400000 0x7d00000>;
-+	};
-+};
-diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-index 29f505a..678ba73 100644
---- a/drivers/mtd/nand/orion_nand.c
-+++ b/drivers/mtd/nand/orion_nand.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
-@@ -74,11 +75,13 @@ static void orion_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
- static int __init orion_nand_probe(struct platform_device *pdev)
- {
- 	struct mtd_info *mtd;
-+	struct mtd_part_parser_data ppdata = {};
- 	struct nand_chip *nc;
- 	struct orion_nand_data *board;
- 	struct resource *res;
- 	void __iomem *io_base;
- 	int ret = 0;
-+	u32 val = 0;
- 
- 	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
- 	if (!nc) {
-@@ -101,7 +104,32 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 		goto no_res;
- 	}
- 
--	board = pdev->dev.platform_data;
-+	if (pdev->dev.of_node) {
-+		board = devm_kzalloc(&pdev->dev, sizeof(struct orion_nand_data),
-+					GFP_KERNEL);
-+		if (!board) {
-+			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
-+			ret = -ENOMEM;
-+			goto no_res;
-+		}
-+		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
-+			board->cle = (u8)val;
-+		else
-+			board->cle = 0;
-+		if (!of_property_read_u32(pdev->dev.of_node, "ale", &val))
-+			board->ale = (u8)val;
-+		else
-+			board->ale = 1;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+						"bank-width", &val))
-+			board->width = (u8)val * 8;
-+		else
-+			board->width = 8;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+						"chip-delay", &val))
-+			board->chip_delay = (u8)val;
-+	} else
-+		board = pdev->dev.platform_data;
- 
- 	mtd->priv = nc;
- 	mtd->owner = THIS_MODULE;
-@@ -115,6 +143,10 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 	if (board->chip_delay)
- 		nc->chip_delay = board->chip_delay;
- 
-+	WARN(board->width > 16,
-+		"%d bit bus width out of range (devicetree bank-width specified in bytes)",
-+		board->width);
-+
- 	if (board->width == 16)
- 		nc->options |= NAND_BUSWIDTH_16;
- 
-@@ -129,7 +161,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 	}
- 
- 	mtd->name = "orion_nand";
--	ret = mtd_device_parse_register(mtd, NULL, 0,
-+	ppdata.of_node = pdev->dev.of_node;
-+	ret = mtd_device_parse_register(mtd, NULL, &ppdata,
- 			board->parts, board->nr_parts);
- 	if (ret) {
- 		nand_release(mtd);
-@@ -161,11 +194,19 @@ static int __devexit orion_nand_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id orion_nand_of_match_table[] = {
-+	{ .compatible = "mrvl,orion-nand", },
-+	{},
-+};
-+#endif
-+
- static struct platform_driver orion_nand_driver = {
- 	.remove		= __devexit_p(orion_nand_remove),
- 	.driver		= {
- 		.name	= "orion_nand",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(orion_nand_of_match_table),
- 	},
  };
- 
 -- 
-1.7.9.1
+1.7.7.3
