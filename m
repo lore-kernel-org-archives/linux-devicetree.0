@@ -1,110 +1,66 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: Reparenting a platform device
-Date: Thu, 5 Apr 2012 20:08:05 +0200
-Message-ID: <20120405180805.GB11601@avionic-0098.adnet.avionic-design.de>
-References: <20120405084258.GA19798@avionic-0098.adnet.avionic-design.de>
- <4F7DBCEE.9080400@wwwdotorg.org>
- <20120405162318.GA10628@avionic-0098.adnet.avionic-design.de>
+From: David Brown <davidb@codeaurora.org>
+Subject: Point-to-point bus in device tree
+Date: Thu, 5 Apr 2012 11:15:09 -0700
+Message-ID: <20120405181509.GA28693@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8884549793756196800=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120405162318.GA10628-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Some MSM SoCs have a small serial-type "bus" that is used to
+communicate with the PMIC devices.  This interface is always
+point-to-point.  I'm doing a device-tree conversion of the driver that
+Ken Heitke posted last year <https://lkml.org/lkml/2011/2/17/503>.
 
---===============8884549793756196800==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
-Content-Disposition: inline
+A naive conversion to device tree, would result in something like
+this:
 
+	qcom,ssbi@500000 {
+		compatible = "qcom,ssbi";
+		reg = <0x500000 0x1000>;
+		qcom,controller-type = "ssbi";
 
---oLBj+sq0vYjzfsbl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+		qcom,pmic8058@0 {
+			reg = <0x0 0x01>;
+			...
+		}
+	}
 
-* Thierry Reding wrote:
-> * Stephen Warren wrote:
-> > On 04/05/2012 02:42 AM, Thierry Reding wrote:
-> > > Hi,
-> > >=20
-> > > I have a device tree where I have a GART device and a DRM device whic=
-h uses
-> > > the GART. The GART is implemented by an IOMMU driver (tegra-gart) and
-> > > requires the user device to be a child of the GART device (it explici=
-tly
-> > > checks for this when the user device is attached).
-> >=20
-> > Isn't this wrong?
-> >=20
-> > I would expect the device parent/child relationship to reflect the
-> > CPU-initiated register access bus topology.
-> >=20
-> > A device's interaction with an IOMMU is an aspect of a device's
-> > initiating accesses itself, not CPU-initiated register accesses.
->=20
-> Actually I have no idea why this was made a requirement. Maybe Hiroshi can
-> comment on this. The driver really only needs this to basically obtain a
-> pointer to itself. The MSM I/O MMU implementation does something similar,
-> though, and goes on to register actual child devices (they are instantiat=
-ed
-> in arch/arm/mach-msm/devices-iommu.c). Each of those devices is then assi=
-gned
-> a specific memory area it seems.
-[...]
-> I don't think having more than one device using the IOMMU will work prope=
-rly
-> anyway in the context of the Tegra GART driver because there is not means=
- to
-> allocate specific regions of the GART aperture to individual devices. So
-> really the one and only client actually needs to manage the allocations f=
-rom
-> the GART aperture.
+There would end up being an extraneous register for the device on the
+other end (there are no addresses), and there would need to be code in
+the ssbi driver to traverse this small tree to find these nodes.
 
-I've been thinking about this some more and it occurred to me that maybe it
-would be best to add an additional layer between the GART and the clients
-which could manage the allocations. Such a virtual device could actually be
-registered as a child of the GART device and allow individual drivers to
-request mappings from it so that there is a single instance handing them out
-and keep them consistent.
+Another approach would be to make the pmic driver the actual device,
+and just have it use the ssbi code as a library.  Something like:
 
-How does that sound?
+	qcom,pmic8058@500000 {
+		compatible = "qcom,pmic8058";
+		reg = <0x500000 0x1000>;
+		qcom,ssbi-type = "ssbi";
+		...
+	}
 
-Thierry
+This is a lot cleaner, takes less code, but doesn't technically
+represent how the hardware is really structured.
 
---oLBj+sq0vYjzfsbl
-Content-Type: application/pgp-signature
+Does anyone have strong (or weak) feelings about this?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Thanks,
+David
 
-iEYEARECAAYFAk9934UACgkQZ+BJyKLjJp+JTQCaAsO7hMrqmsPikuU+bZUQdlpp
-hQsAn3RvLwOGNlJaDihRs7stlpzCvX82
-=eNXu
------END PGP SIGNATURE-----
-
---oLBj+sq0vYjzfsbl--
-
---===============8884549793756196800==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8884549793756196800==--
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
