@@ -1,47 +1,68 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 4/7 v4] ARM: kirkwood: add dreamplug (fdt) support.
-Date: Thu, 5 Apr 2012 18:41:43 -0400
-Message-ID: <20120405224143.GL817@titan.lakedaemon.net>
-References: <cover.1331601448.git.jason@lakedaemon.net>
- <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason@lakedaemon.net>
- <1333663656.12209.62.camel@dagon.hellion.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1333663656.12209.62.camel-ztPmHsLffjjnO4AKDKe2m+kiAK3p4hvP@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH] irq/irq_domain: Quit ignoring error returns from irq_alloc_desc_from().
+Date: Thu,  5 Apr 2012 16:52:13 -0700
+Message-ID: <1333669933-25267-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 05, 2012 at 11:07:36PM +0100, Ian Campbell wrote:
-> On Tue, 2012-03-13 at 01:57 +0000, Jason Cooper wrote:
-> > +DT_MACHINE_START(KIRKWOOD_DT, "Marvell Kirkwood (Flattened Device Tree)") 
-> 
-> This ends up as Machine: in /proc/cpuinfo, which seems to be normal?
-> 
-> Would it be worth trying to dynamically modify the machine string based
-> on the actual hardware the kernel is running on?
+From: David Daney <david.daney@cavium.com>
 
-With CONFIG_PROC_DEVICETREE=y I get the following:
+In commit 4bbdd45a (irq_domain/powerpc: eliminate irq_map; use
+irq_alloc_desc() instead) code was added that ignores error returns
+from irq_alloc_desc_from() by (silently) casting the return value to
+unsigned.  The negitive value error return now suddenly looks like a
+valid irq number.
 
-$ cat /proc/device-tree/model
-Globalscale Technologies Dreamplug
+Commits cc79ca69 (irq_domain: Move irq_domain code from powerpc to
+kernel/irq) and 1bc04f2c (irq_domain: Add support for base irq and
+hwirq in legacy mappings) move this code to its current location in
+irqdomain.c
 
-It seems to me (I have no strong opinion here, just playing devil's
-advocate) that /proc/cpuinfo is indeed telling us about the processor
-(Marvell Kirkwood ...) Should it really be describing the board?
+The result of all of this is a null pointer dereference OOPS if one of
+the error cases is hit.
 
-thx,
+The fix: Don't cast away the negativeness of the return value and then
+check for errors.
 
-Jason.
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ kernel/irq/irqdomain.c |   11 ++++++-----
+ 1 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index af48e59..9d3e3ae 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -351,6 +351,7 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+ 				irq_hw_number_t hwirq)
+ {
+ 	unsigned int virq, hint;
++	int irq;
+ 
+ 	pr_debug("irq: irq_create_mapping(0x%p, 0x%lx)\n", domain, hwirq);
+ 
+@@ -380,14 +381,14 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+ 	hint = hwirq % irq_virq_count;
+ 	if (hint == 0)
+ 		hint++;
+-	virq = irq_alloc_desc_from(hint, 0);
+-	if (!virq)
+-		virq = irq_alloc_desc_from(1, 0);
+-	if (!virq) {
++	irq = irq_alloc_desc_from(hint, 0);
++	if (irq <= 0)
++		irq = irq_alloc_desc_from(1, 0);
++	if (irq <= 0) {
+ 		pr_debug("irq: -> virq allocation failed\n");
+ 		return 0;
+ 	}
+-
++	virq = irq;
+ 	if (irq_setup_virq(domain, virq, hwirq)) {
+ 		if (domain->revmap_type != IRQ_DOMAIN_MAP_LEGACY)
+ 			irq_free_desc(virq);
+-- 
+1.7.2.3
