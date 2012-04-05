@@ -1,38 +1,34 @@
-From: Ian Campbell <ijc@hellion.org.uk>
-Subject: Re: [PATCH 4/7 v4] ARM: kirkwood: add dreamplug (fdt) support.
-Date: Thu, 05 Apr 2012 23:07:36 +0100
-Message-ID: <1333663656.12209.62.camel@dagon.hellion.org.uk>
-References: <cover.1331601448.git.jason@lakedaemon.net>
- <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason@lakedaemon.net>
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
+Date: Fri, 06 Apr 2012 00:10:23 +0200
+Message-ID: <m2r4w1akz4.fsf@igel.home>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+	<1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+	<m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
+	<20120402202848.1EB833E02A7@localhost> <m2y5qdow0v.fsf@igel.home>
+	<20120404154020.40C513E09D5@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason@lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: nicolas.pitre@linaro.org, andrew@lunn.ch, arnd@arndb.de, jm@lentin.co.uk, grant.likely@secretlab.ca, michael@walle.cc, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120404154020.40C513E09D5@localhost> (Grant Likely's message of
+	"Wed, 04 Apr 2012 08:40:20 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2012-03-13 at 01:57 +0000, Jason Cooper wrote:
-> +DT_MACHINE_START(KIRKWOOD_DT, "Marvell Kirkwood (Flattened Device Tree)") 
+Grant Likely <grant.likely@secretlab.ca> writes:
 
-This ends up as Machine: in /proc/cpuinfo, which seems to be normal?
+> Can you attach console output logs for each of configs above and also
+> with NR_IRQS=128?  That might give me some clues as to which specific
+> code is causing the issues.
 
-Would it be worth trying to dynamically modify the machine string based
-on the actual hardware the kernel is running on?
+It really looks like the issue starts when irq_expand_nr_irqs is called
+the first time to make nr_irqs bigger than NR_IRQS.
 
-Ian.
+Andreas.
+
 -- 
-Ian Campbell
-
-
-Genius is ten percent inspiration and fifty percent capital gains.
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
