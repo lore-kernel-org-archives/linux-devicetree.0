@@ -1,66 +1,75 @@
-From: David Brown <davidb@codeaurora.org>
-Subject: Point-to-point bus in device tree
-Date: Thu, 5 Apr 2012 11:15:09 -0700
-Message-ID: <20120405181509.GA28693@codeaurora.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Reparenting a platform device
+Date: Thu, 05 Apr 2012 12:36:55 -0600
+Message-ID: <4F7DE647.7060409@wwwdotorg.org>
+References: <20120405084258.GA19798@avionic-0098.adnet.avionic-design.de>
+	<4F7DBCEE.9080400@wwwdotorg.org>
+	<20120405162318.GA10628@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120405162318.GA10628-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some MSM SoCs have a small serial-type "bus" that is used to
-communicate with the PMIC devices.  This interface is always
-point-to-point.  I'm doing a device-tree conversion of the driver that
-Ken Heitke posted last year <https://lkml.org/lkml/2011/2/17/503>.
+On 04/05/2012 10:23 AM, Thierry Reding wrote:
+> * Stephen Warren wrote:
+>> On 04/05/2012 02:42 AM, Thierry Reding wrote:
+>>> Hi,
+>>>
+>>> I have a device tree where I have a GART device and a DRM device which uses
+>>> the GART. The GART is implemented by an IOMMU driver (tegra-gart) and
+>>> requires the user device to be a child of the GART device (it explicitly
+>>> checks for this when the user device is attached).
+>>
+>> Isn't this wrong?
+>>
+>> I would expect the device parent/child relationship to reflect the
+>> CPU-initiated register access bus topology.
+>>
+>> A device's interaction with an IOMMU is an aspect of a device's
+>> initiating accesses itself, not CPU-initiated register accesses.
+> 
+> Actually I have no idea why this was made a requirement. Maybe Hiroshi can
+> comment on this. The driver really only needs this to basically obtain a
+> pointer to itself. The MSM I/O MMU implementation does something similar,
+> though, and goes on to register actual child devices (they are instantiated
+> in arch/arm/mach-msm/devices-iommu.c). Each of those devices is then assigned
+> a specific memory area it seems.
+> 
+>>> I've tried two alternatives to achieve this: create the GART device in the
+>>> user driver's .probe() function and explicitly set the DRM device's parent
+>>> to the resulting platform device like so:
+>>>
+>>> 	gart = platform_device_alloc(...);
+>>> 	...
+>>> 	pdev->dev.parent = &gart->dev;
+>>
+>> I guess that won't work when there's more than one device affected by
+>> the IOMMU?
+> 
+> I don't think having more than one device using the IOMMU will work properly
+> anyway in the context of the Tegra GART driver because there is not means to
+> allocate specific regions of the GART aperture to individual devices. So
+> really the one and only client actually needs to manage the allocations from
+> the GART aperture.
+> 
+> I'm also not sure if it makes much sense to use the GART from anything other
+> than the DRM driver.
 
-A naive conversion to device tree, would result in something like
-this:
-
-	qcom,ssbi@500000 {
-		compatible = "qcom,ssbi";
-		reg = <0x500000 0x1000>;
-		qcom,controller-type = "ssbi";
-
-		qcom,pmic8058@0 {
-			reg = <0x0 0x01>;
-			...
-		}
-	}
-
-There would end up being an extraneous register for the device on the
-other end (there are no addresses), and there would need to be code in
-the ssbi driver to traverse this small tree to find these nodes.
-
-Another approach would be to make the pmic driver the actual device,
-and just have it use the ssbi code as a library.  Something like:
-
-	qcom,pmic8058@500000 {
-		compatible = "qcom,pmic8058";
-		reg = <0x500000 0x1000>;
-		qcom,ssbi-type = "ssbi";
-		...
-	}
-
-This is a lot cleaner, takes less code, but doesn't technically
-represent how the hardware is really structured.
-
-Does anyone have strong (or weak) feelings about this?
-
-Thanks,
-David
-
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+I was thinking about this mostly from a Tegra30 perspective, where there
+are multiple devices affected by the SMMU, which is more capable that
+the Tegra20 GART, and can presumably support these multiple clients
+pretty independently. For Tegra20, I wouldn't be surprised if the DRM
+driver was the only client.
