@@ -1,84 +1,47 @@
-From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH] gpio: Add Altera GPIO driver
-Date: Thu, 5 Apr 2012 10:53:46 +0200
-Message-ID: <20120405085346.GC21503@distanz.ch>
-References: <1328551142-8439-1-git-send-email-tklauser@distanz.ch>
- <20120312160418.816A83E07B0@localhost>
- <20120313113126.GL21503@distanz.ch>
- <20120313181324.EBBA83E053B@localhost>
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
+Date: Thu, 05 Apr 2012 12:51:27 +0200
+Message-ID: <m21uo2v4cw.fsf@igel.home>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+	<1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+	<m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
+	<20120402202848.1EB833E02A7@localhost> <m2y5qdow0v.fsf@igel.home>
+	<20120404154020.40C513E09D5@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120313181324.EBBA83E053B@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120404154020.40C513E09D5@localhost> (Grant Likely's message of
+	"Wed, 04 Apr 2012 08:40:20 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2012-03-13 at 19:13:24 +0100, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Tue, 13 Mar 2012 12:31:26 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
-> > On 2012-03-12 at 17:04:18 +0100, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > > On Mon,  6 Feb 2012 18:59:02 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
-> > > > This driver supports the Altera PIO core.
-> > > > 
-> > > > Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> > > > Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-> > > > ---
-> > > > This driver was submitted already about a year ago by Thomas, was
-> > > > adjusted by him according to some remarks made by Grant and was then
-> > > > included in the -mm tree [1] for some time but dropped again
-> > > > (couldn't find out when and why exactly).
-> > > > 
-> > > > [0] http://article.gmane.org/gmane.linux.drivers.devicetree/4231
-> > > > [1] http://article.gmane.org/gmane.linux.kernel.commits.mm/65119
-> > > > 
-> > > > So this is a new attempt towards getting this driver into mainline
-> > > > from the nios2 tree. The following changes have been made atop the
-> > > > version submitted by Thomas:
-> > > > 
-> > > > - Changed driver name to new naming convention
-> > > > - Usage of of_property_read_u32 in the probe function
-> > > 
-> > > This looks like a pretty generic memory-mapped gpio chip.  It should use the
-> > > gpio-generic infrastructure instead of open-coding all of the accessor hooks.
-> > 
-> > Thanks a lot for the hint.
-> > 
-> > I'm trying to figure out how this could work together with
-> > of_mm_gpio_chip which we use in the driver. Both bgpio_chip and
-> > of_mm_gpio_chip contain a struct gpio_chip, so I suppose we can only
-> > "be" either one of them in our driver? What would be the prefered way to
-> > do this?
-> 
-> Hmmm, you are correct.  However, of_mm_gpio_chip() is the only part of
-> drivers/of/gpio.c that isn't usable by gpio-generic.c.  Focus on gpio-generic.
-> 
-> > Also as we need to register the driver from platform specific setup code
-> > (in the out-of-mainline nios2 port only atm) very early on, we don't
-> > have a struct platform_device or struct device available which we would
-> > need to pass to bgpio_init. What's the best way to solve this?
-> 
-> There are 2 halves to gpio-generic.  The library of helper functions (get/set/etc.)
-> and the basic-mmio-gpio device driver.  It /should/ be safe to call bgpio_init without
-> a struct platform_device, but right now the code doesn't protect against it.  That is
-> a bug that you can easily fix.
-> 
-> However, why are you initializing it very early in platform specific code?  That is
-> very strongly discouraged.  GPIO controllers are just another device.
+Grant Likely <grant.likely@secretlab.ca> writes:
 
-I checked with Thomas (the original author) about this. As far as he
-recalled, this was due to the fact that he wasn't able to specify in the
-device tree that the gpio device should be probed before devices using
-it (e.g. leds-gpio or i2c-gpio). I couldn't figure out whether this is
-still necessary or whether this is already ensured when the device tree
-devices are probed.
+> I bet it is NR_IRQS related.  You have SPARSE_IRQ enabled, which means
+> the maximum number of irq_descs is IRQ_BITMAP_BITS (NR_IRQS + 8192).
+
+The actual definition uses NR_IRQS + 8196.  Guess that's a typo.  (Does
+it really make sense to add NR_IRQS here?)
+
+> diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+> index cf417e51..9edf499 100644
+> --- a/arch/powerpc/include/asm/irq.h
+> +++ b/arch/powerpc/include/asm/irq.h
+> @@ -20,7 +20,7 @@
+>  
+>  /* Define a way to iterate across irqs. */
+>  #define for_each_irq(i) \
+> -       for ((i) = 0; (i) < NR_IRQS; ++(i))
+> +       for ((i) = 0; (i) < nr_irqs; ++(i))
+
+There are exactly two uses of for_each_irq, one is related to cpu
+hotplug, the other to kexec, so that cannot make any difference.
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
