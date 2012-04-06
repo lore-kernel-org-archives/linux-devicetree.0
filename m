@@ -1,51 +1,37 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
- irq_alloc_desc() instead
-Date: Sat, 07 Apr 2012 09:37:50 +1000
-Message-ID: <1333755470.3040.38.camel@pasglop>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
-	 <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
-	 <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
-	 <20120402202848.1EB833E02A7@localhost>
-	 <20120402215524.GM24211@n2100.arm.linux.org.uk>
-	 <1333406005.30734.61.camel@pasglop>
-	 <20120402225223.GN24211@n2100.arm.linux.org.uk>
-	 <1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] irq/irq_domain: Quit ignoring error returns from irq_alloc_desc_from().
+Date: Fri, 06 Apr 2012 16:56:07 -0700
+Message-ID: <20120406235607.DCCD53E15E9@localhost>
+References: <1333669933-25267-1-git-send-email-ddaney.cavm@gmail.com> <4F7E64E4.3080509@gmail.com> <4F7F1BDD.4070205@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <m24nsx9iz1.fsf@igel.home>
+In-Reply-To: <4F7F1BDD.4070205@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: David Daney <ddaney.cavm@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2012-04-06 at 13:51 +0200, Andreas Schwab wrote:
-> Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
+On Fri, 06 Apr 2012 09:37:49 -0700, David Daney <ddaney.cavm@gmail.com> wrote:
+> On 04/05/2012 08:37 PM, Rob Herring wrote:
+> > On 04/05/2012 06:52 PM, David Daney wrote:
+> >> From: David Daney<david.daney@cavium.com>
+> >> @@ -380,14 +381,14 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+> >>   	hint = hwirq % irq_virq_count;
+> >>   	if (hint == 0)
+> >>   		hint++;
+> >> -	virq = irq_alloc_desc_from(hint, 0);
+> >
+> > You are not looking at mainline. hint was removed in later versions, and
+> > the referenced commit ids don't exist.
 > 
-> > Ok. Doesn't matter anyway, this shouldn't be the problem in this
-> > specific case. IE. we shouldn't be setting that interrupt to NONE.
-> 
-> After removinge the call to irq_set_irq_type in mpic_host_map the irq
-> problem disappears.
-> 
-> Instead of the irq_set_irq_type(,NONE) calls from mpic_host_map I see
-> corresponding irq_set_irq_type(,LEVEL_LOW) calls now.
+> Please look at Linus' tree before making incorrect statements about 
+> whether or not code exists on the 'mainline'
 
-It's arguable that this irq_set_irq_type(,NONE) shouln't be there but
-still ... it's been around for ever and things worked :-) So something
--else- is causing the problem and I'd like to understand what exactly.
+Rob is indeed mistaken here, but please let's keep things civil.  I
+did write the patches to remove the hint, but I avoided merging them
+because I think they are risky.  I wanted to get the core irq_domain
+changes in first.  The removal of hint will be applied during the next
+merge window.
 
-(When I say arguable, I do mean it. There are some reasons to keep it
-even if we agree that it's not "setting a default" but marking the
-interrupt as somewhat disabled as Russell wants, that's fine with me, an
-MPIC external interrupt should -always- have a proper type set before
-being used).
+I will take your bug fix and get it pushed up to Linus soon.
 
-First we need to fix that business with NR_IRQS/nr_irqs everywhere, then
-if the problem persists, check why we aren't calling the proper
-irq_set_irq_type() after the mapping is established (we should be).
-
-Cheers,
-Ben.
+g.
