@@ -1,62 +1,59 @@
-From: David Brown <davidb@codeaurora.org>
-Subject: Re: Point-to-point bus in device tree
-Date: Fri, 6 Apr 2012 08:16:10 -0700
-Message-ID: <20120406151610.GA12888@codeaurora.org>
-References: <20120405181509.GA28693@codeaurora.org>
- <4F7DF142.5050601@wwwdotorg.org>
- <20120405200829.GA29747@codeaurora.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Reparenting a platform device
+Date: Fri, 06 Apr 2012 10:37:31 -0600
+Message-ID: <4F7F1BCB.7070608@wwwdotorg.org>
+References: <20120405084258.GA19798@avionic-0098.adnet.avionic-design.de>
+	<4F7DBCEE.9080400@wwwdotorg.org>
+	<20120405162318.GA10628@avionic-0098.adnet.avionic-design.de>
+	<20120405180805.GB11601@avionic-0098.adnet.avionic-design.de>
+	<4F7DF0B3.4050500@wwwdotorg.org>
+	<20120406072014.GA14250@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120405200829.GA29747@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120406072014.GA14250-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 05, 2012 at 01:08:29PM -0700, David Brown wrote:
-> On Thu, Apr 05, 2012 at 01:23:46PM -0600, Stephen Warren wrote:
-> > On 04/05/2012 12:15 PM, David Brown wrote:
-> > > Some MSM SoCs have a small serial-type "bus" that is used to
-> > > communicate with the PMIC devices.  This interface is always
-> > > point-to-point.  I'm doing a device-tree conversion of the driver that
-> > > Ken Heitke posted last year <https://lkml.org/lkml/2011/2/17/503>.
-> > > 
-> > > A naive conversion to device tree, would result in something like
-> > > this:
-> > > 
-> > > 	qcom,ssbi@500000 {
-> > > 		compatible = "qcom,ssbi";
-> > > 		reg = <0x500000 0x1000>;
-> > > 		qcom,controller-type = "ssbi";
-> > > 
-> > > 		qcom,pmic8058@0 {
-> > > 			reg = <0x0 0x01>;
-> > > 			...
-> > > 		}
-> > > 	}
-> > > 
-> > > There would end up being an extraneous register for the device on the
-> > > other end (there are no addresses), and there would need to be code in
-> > > the ssbi driver to traverse this small tree to find these nodes.
-> > 
-> > Isn't that extra code simply:
-> > 
-> > of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> > 
-> > That seems like pretty low overhead.
+On 04/06/2012 01:20 AM, Thierry Reding wrote:
+> * Stephen Warren wrote:
+>> I must admit I'm not at all familiar with the IOMMU APIs, but isn't the
+>> IOMMU driver/subsystem itself what is managing all the allocations and
+>> handing them out to clients? And client drivers do things like asking
+>> for N pages of memory mapped into their aperture? If that is true, I'm
+>> not sure what the purpose is of the intermediate device you propose.
+>> Sorry for being somewhat clueless.
 > 
-> True, but it still bothers me to have to have a bogus register.
+> That was my impression too at first. But it seems like all the IOMMU
+> subsystem does is map individual pages. So you pass it a physical address of
+> a page along with the IO virtual address to map it to. That's at least the
+> way it is handled for Tegra 2 GART (and from a quick look also by the Tegra 3
+> SMMU). For the SMMU the situation may be different because it may not have a
+> fixed aperture that needs to contain the IO virtual addresses, though I must
+> admit I haven't looked at Tegra 3 in enough detail to judge this.
+> 
+> So this intermediate device would be purely an allocator for the GART
+> aperture and handle the actual mapping via the IOMMU. This would probably be
+> really simple and is in fact now done in the DRM driver. The nice thing if
+> this would be a separate device is that it would be easy to make it a child
+> of the IOMMU and wouldn't be as counter-intuitive as making the DRM device
+> the IOMMU's child.
 
-Ok, not sure where I got that idea, but I don't appear to actually
-need a register in the pmic8058 node for of_platform_populate to
-create a platform device.  It only needs a compatible field.  So, it
-look like that matches just what I need.
+OK, I see.
 
-Thanks,
-David
+I'll defer to Hiroshi here; he's far more familiar with all this than I am.
 
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+My only comment is that I'd be surprised to see any kind of memory
+allocator represented as a driver (as opposed to a utility module) since
+it's not really representing an actual hardware block.
