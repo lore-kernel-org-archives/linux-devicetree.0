@@ -1,70 +1,44 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: Re: [PATCH 4/7 v4] ARM: kirkwood: add dreamplug (fdt) support.
-Date: Fri, 06 Apr 2012 09:52:24 +0100
-Message-ID: <1333702344.12209.70.camel@dagon.hellion.org.uk>
-References: <cover.1331601448.git.jason@lakedaemon.net>
- <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason@lakedaemon.net>
- <1333663656.12209.62.camel@dagon.hellion.org.uk>
- <20120405224143.GL817@titan.lakedaemon.net>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
+ irq_alloc_desc() instead
+Date: Fri, 6 Apr 2012 13:12:52 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1204061312210.2542@ionos>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca> <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home> <20120402202848.1EB833E02A7@localhost> <m2y5qdow0v.fsf@igel.home>
+ <20120404154020.40C513E09D5@localhost> <m21uo2v4cw.fsf@igel.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120405224143.GL817-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <m21uo2v4cw.fsf@igel.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Schwab <schwab@linux-m68k.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2012-04-05 at 18:41 -0400, Jason Cooper wrote:
-> On Thu, Apr 05, 2012 at 11:07:36PM +0100, Ian Campbell wrote:
-> > On Tue, 2012-03-13 at 01:57 +0000, Jason Cooper wrote:
-> > > +DT_MACHINE_START(KIRKWOOD_DT, "Marvell Kirkwood (Flattened Device Tree)") 
-> > 
-> > This ends up as Machine: in /proc/cpuinfo, which seems to be normal?
-> > 
-> > Would it be worth trying to dynamically modify the machine string based
-> > on the actual hardware the kernel is running on?
+On Thu, 5 Apr 2012, Andreas Schwab wrote:
+> Grant Likely <grant.likely@secretlab.ca> writes:
 > 
-> With CONFIG_PROC_DEVICETREE=y I get the following:
+> > I bet it is NR_IRQS related.  You have SPARSE_IRQ enabled, which means
+> > the maximum number of irq_descs is IRQ_BITMAP_BITS (NR_IRQS + 8192).
 > 
-> $ cat /proc/device-tree/model
-> Globalscale Technologies Dreamplug
-
-Yes, I just found that, thanks.
-
-BTW the impetus for my asking was http://bugs.debian.org/667681 against
-the flash-kernel tool which uses /proc/cpuinfo to know what magic runes
-are required for the particular board it is being run on.
-
-> It seems to me (I have no strong opinion here, just playing devil's
-> advocate) that /proc/cpuinfo is indeed telling us about the processor
-> (Marvell Kirkwood ...) Should it really be describing the board?
-
-The field is actually called "Hardware:" (not "Machine:" as I said
-above). Processor is actually covered separately ("Feroceon 88FR131 rev
-1 (v5l)" in this case). I'd expect Hardware: to say something more
-specific about the h/w platform, the string from /proc/device-tree/model
-is exactly what I think I would have expected.
-
-Ian.
-
+> The actual definition uses NR_IRQS + 8196.  Guess that's a typo.  (Does
+> it really make sense to add NR_IRQS here?)
 > 
-> thx,
+> > diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+> > index cf417e51..9edf499 100644
+> > --- a/arch/powerpc/include/asm/irq.h
+> > +++ b/arch/powerpc/include/asm/irq.h
+> > @@ -20,7 +20,7 @@
+> >  
+> >  /* Define a way to iterate across irqs. */
+> >  #define for_each_irq(i) \
+> > -       for ((i) = 0; (i) < NR_IRQS; ++(i))
+> > +       for ((i) = 0; (i) < nr_irqs; ++(i))
 > 
-> Jason.
-> 
+> There are exactly two uses of for_each_irq, one is related to cpu
+> hotplug, the other to kexec, so that cannot make any difference.
 
--- 
-Ian Campbell
+Though that wants to be fixed nevertheless.
 
+Thanks,
 
-Nostalgia isn't what it used to be.
+	tglx
