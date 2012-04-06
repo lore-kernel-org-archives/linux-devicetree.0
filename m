@@ -1,63 +1,62 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH 1/1] [v3] Add support 2 SATA ports for Maui and change
- filename from sata_dwc_460ex.c to sata_dwc_4xx.c
-Date: Fri, 06 Apr 2012 16:10:29 +0400
-Message-ID: <4F7EDD35.3070203@mvista.com>
-References: <1333690265-27857-1-git-send-email-tqnguyen@apm.com>
+From: David Brown <davidb@codeaurora.org>
+Subject: Re: Point-to-point bus in device tree
+Date: Fri, 6 Apr 2012 08:16:10 -0700
+Message-ID: <20120406151610.GA12888@codeaurora.org>
+References: <20120405181509.GA28693@codeaurora.org>
+ <4F7DF142.5050601@wwwdotorg.org>
+ <20120405200829.GA29747@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1333690265-27857-1-git-send-email-tqnguyen@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: "Thang Q. Nguyen" <tqnguyen@apm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jeff Garzik <jgarzik@pobox.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Phong Vo <pvo@apm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120405200829.GA29747@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Apr 05, 2012 at 01:08:29PM -0700, David Brown wrote:
+> On Thu, Apr 05, 2012 at 01:23:46PM -0600, Stephen Warren wrote:
+> > On 04/05/2012 12:15 PM, David Brown wrote:
+> > > Some MSM SoCs have a small serial-type "bus" that is used to
+> > > communicate with the PMIC devices.  This interface is always
+> > > point-to-point.  I'm doing a device-tree conversion of the driver that
+> > > Ken Heitke posted last year <https://lkml.org/lkml/2011/2/17/503>.
+> > > 
+> > > A naive conversion to device tree, would result in something like
+> > > this:
+> > > 
+> > > 	qcom,ssbi@500000 {
+> > > 		compatible = "qcom,ssbi";
+> > > 		reg = <0x500000 0x1000>;
+> > > 		qcom,controller-type = "ssbi";
+> > > 
+> > > 		qcom,pmic8058@0 {
+> > > 			reg = <0x0 0x01>;
+> > > 			...
+> > > 		}
+> > > 	}
+> > > 
+> > > There would end up being an extraneous register for the device on the
+> > > other end (there are no addresses), and there would need to be code in
+> > > the ssbi driver to traverse this small tree to find these nodes.
+> > 
+> > Isn't that extra code simply:
+> > 
+> > of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> > 
+> > That seems like pretty low overhead.
+> 
+> True, but it still bothers me to have to have a bogus register.
 
-On 06-04-2012 9:31, Thang Q. Nguyen wrote:
+Ok, not sure where I got that idea, but I don't appear to actually
+need a register in the pmic8058 node for of_platform_populate to
+create a platform device.  It only needs a compatible field.  So, it
+look like that matches just what I need.
 
-> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
-> ---
-> Changes for v2:
->         - Use git rename feature to change the driver to the newname and for
->           easier review.
+Thanks,
+David
 
-> Changes for v3:
-> 	- Remove materials not related to 2 SATA ports support. They will
-> 	 be added in another patches.
-
->   drivers/ata/Makefile                             |    2 +-
->   drivers/ata/{sata_dwc_460ex.c =>  sata_dwc_4xx.c} |  820 +++++++++++-----------
->   2 files changed, 430 insertions(+), 392 deletions(-)
->   rename drivers/ata/{sata_dwc_460ex.c =>  sata_dwc_4xx.c} (73%)
-
-> diff --git a/drivers/ata/sata_dwc_460ex.c b/drivers/ata/sata_dwc_4xx.c
-> similarity index 73%
-> rename from drivers/ata/sata_dwc_460ex.c
-> rename to drivers/ata/sata_dwc_4xx.c
-> index 69f7cde..07e9b36 100644
-> --- a/drivers/ata/sata_dwc_460ex.c
-> +++ b/drivers/ata/sata_dwc_4xx.c
-[...]
-> @@ -16,6 +14,15 @@
->    * under  the terms of  the GNU General  Public License as published by the
->    * Free Software Foundation;  either version 2 of the  License, or (at your
->    * option) any later version.
-> + *
-> + * CHANGES:
-> + * - Version 1.4:
-> + *   + Change filename from sata_dwc_460ex.c to sata_dwc_4xx.c
-> + *   + This driver supports more than one SATA port. Each SATA port has its
-> + *     own private attribute. Move sata_dwc_host_priv structure to
-> + *     sata_dwc_device and sata_dwc_device_port structures.
-> + *   + Change to use ata_bmdma_qc_issue and ata_bmdma_error_handler because
-> + *     the ata_sff_qc_issue and ata_sff_error_handler no longer support DMA.
-
-    This modification looks like a bug fix, and so should be separated and 
-posted before the dual-port patch.
-
-    I'll try to do more deltailed review on the weekend.
-
-MBR, Sergei
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
