@@ -1,123 +1,169 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] irq/irq_domain: Quit ignoring error returns from irq_alloc_desc_from().
-Date: Fri, 06 Apr 2012 12:32:29 -0500
-Message-ID: <4F7F28AD.4050109@gmail.com>
-References: <1333669933-25267-1-git-send-email-ddaney.cavm@gmail.com> <4F7E64E4.3080509@gmail.com> <4F7F1BDD.4070205@gmail.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 1/2] backlight: lcd: add driver for raster-type lcd's
+ with gpio controlled panel reset
+Date: Fri, 6 Apr 2012 16:17:20 -0700
+Message-ID: <20120406161720.cf464c39.akpm@linux-foundation.org>
+References: <1332751600-11371-1-git-send-email-thomas.abraham@linaro.org>
+	<1332751600-11371-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F7F1BDD.4070205@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1332751600-11371-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rpurdie@rpsys.net, florianSchandinat@gmx.de, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, jg1.han@samsung.com, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, augulis.darius@gmail.com, ben-linux@fluff.org, lars@metafoo.de, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2012 11:37 AM, David Daney wrote:
-> Rob,
-> 
-> What the he*%? ...
-> 
-> 
-> On 04/05/2012 08:37 PM, Rob Herring wrote:
->> On 04/05/2012 06:52 PM, David Daney wrote:
->>> From: David Daney<david.daney@cavium.com>
->>>
->>> In commit 4bbdd45a (irq_domain/powerpc: eliminate irq_map; use
->>> irq_alloc_desc() instead) code was added that ignores error returns
->>> from irq_alloc_desc_from() by (silently) casting the return value to
->>> unsigned.  The negitive value error return now suddenly looks like a
->>> valid irq number.
->>>
->>> Commits cc79ca69 (irq_domain: Move irq_domain code from powerpc to
->>> kernel/irq) and 1bc04f2c (irq_domain: Add support for base irq and
->>> hwirq in legacy mappings) move this code to its current location in
-> 
-> That would be commits:
-> 
-> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commitdiff;h=4bbdd45afdae208a7c4ade89cf602f89a6397cff
-> 
-> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commitdiff;h=cc79ca691c292e9fd44f589c7940b9654e22f2f6
-> 
-> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commitdiff;h=1bc04f2cf8c2a1feadbd994f50c40bb145bf2989
-> 
-> 
->>> irqdomain.c
->>>
->>> The result of all of this is a null pointer dereference OOPS if one of
->>> the error cases is hit.
->>>
->>> The fix: Don't cast away the negativeness of the return value and then
->>> check for errors.
->>>
->>> Signed-off-by: David Daney<david.daney@cavium.com>
->>> ---
->>>   kernel/irq/irqdomain.c |   11 ++++++-----
->>>   1 files changed, 6 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
->>> index af48e59..9d3e3ae 100644
->>> --- a/kernel/irq/irqdomain.c
->>> +++ b/kernel/irq/irqdomain.c
->>> @@ -351,6 +351,7 @@ unsigned int irq_create_mapping(struct irq_domain
->>> *domain,
->>>                   irq_hw_number_t hwirq)
->>>   {
->>>       unsigned int virq, hint;
->>> +    int irq;
->>>
->>>       pr_debug("irq: irq_create_mapping(0x%p, 0x%lx)\n", domain, hwirq);
->>>
->>> @@ -380,14 +381,14 @@ unsigned int irq_create_mapping(struct
->>> irq_domain *domain,
->>>       hint = hwirq % irq_virq_count;
->>>       if (hint == 0)
->>>           hint++;
->>> -    virq = irq_alloc_desc_from(hint, 0);
->>
->> You are not looking at mainline. hint was removed in later versions, and
->> the referenced commit ids don't exist.
-> 
-> Please look at Linus' tree before making incorrect statements about
-> whether or not code exists on the 'mainline'
-> 
-> The current kernel.org tree contains the bug and will cause anything
-> using irq_create_mapping() to crash in a semi-random manner.
-> 
 
-Doh, evidently I need git training... Sorry about that. I was looking at
-a 3.2 branch even though I did check that. Plus I was remembering Grant
-removed some of the hint code in later versions of the irq domain code.
+> Cc: rpurdie@rpsys.net, florianSchandinat@gmx.de, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, jg1.han@samsung.com, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, augulis.darius@gmail.com, ben-linux@fluff.org, lars@metafoo.de, patches@linaro.org
 
-My only comment is perhaps the pr_debug should be an error msg unless
-you get an error message already. Otherwise, FWIW:
+Poor me.  When someone sends a patch like this, I need to go and hunt
+down everyone's real names to nicely add them to the changelog's Cc:
+list.  I prefer that you do this ;)
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+You can add Cc:'s to the changelog yourself, of course.  Often that
+works out better than having me try to work out who might be
+interested in the patch.
 
-Off to find my brain,
-Rob
+On Mon, 26 Mar 2012 14:16:39 +0530
+Thomas Abraham <thomas.abraham@linaro.org> wrote:
+
+> Add a lcd panel driver for simple raster-type lcd's which uses a gpio
+> controlled panel reset. The driver controls the nRESET line of the panel
+> using a gpio connected from the host system. The Vcc supply to the panel
+> is (optionally) controlled using a voltage regulator. This driver excludes
+> support for lcd panels that use a serial command interface or direct
+> memory mapped IO interface.
+> 
+>
+> ...
+>
+> +struct lcd_pwrctrl {
+> +	struct device		*dev;
+> +	struct lcd_device	*lcd;
+> +	struct lcd_pwrctrl_data	*pdata;
+> +	struct regulator	*regulator;
+> +	unsigned int		power;
+> +	bool			suspended;
+> +	bool			pwr_en;
+
+Generally kernel code will avoid these unpronounceable abbreviations. 
+So we do
+
+pwr -> power
+en -> enable
+ctrl -> control
+
+etc.  It results in longer identifiers, but the code is more readable
+and, more importantly, more *rememberable*.  
+
+> +};
+> +
+> +static int lcd_pwrctrl_get_power(struct lcd_device *lcd)
+> +{
+> +	struct lcd_pwrctrl *lp = lcd_get_data(lcd);
+> +	return lp->power;
+> +}
+> +
+> +static int lcd_pwrctrl_set_power(struct lcd_device *lcd, int power)
+
+See, shouldn't that have been lcd_pwrctrl_set_pwr?
+
+If we avoid the abbreviations, such issues do not arise.
+
+> +{
+> +	struct lcd_pwrctrl *lp = lcd_get_data(lcd);
+> +	struct lcd_pwrctrl_data *pd = lp->pdata;
+> +	bool lcd_enable;
+> +	int lcd_reset, ret = 0;
+> +
+> +	lcd_enable = (power == FB_BLANK_POWERDOWN || lp->suspended) ? 0 : 1;
+
+This isn't how to use `bool'.  We can use
+
+	lcd_enable = (power == FB_BLANK_POWERDOWN) || lp->suspended;
 
 
-> David Daney
-> 
->>
->> Rob
->>
->>> -    if (!virq)
->>> -        virq = irq_alloc_desc_from(1, 0);
->>> -    if (!virq) {
->>> +    irq = irq_alloc_desc_from(hint, 0);
->>> +    if (irq<= 0)
->>> +        irq = irq_alloc_desc_from(1, 0);
->>> +    if (irq<= 0) {
->>>           pr_debug("irq: ->  virq allocation failed\n");
->>>           return 0;
->>>       }
->>> -
->>> +    virq = irq;
->>>       if (irq_setup_virq(domain, virq, hwirq)) {
->>>           if (domain->revmap_type != IRQ_DOMAIN_MAP_LEGACY)
->>>               irq_free_desc(virq);
->>
->>
-> 
+> +	lcd_reset = (pd->invert) ? !lcd_enable : lcd_enable;
+> +
+> +	if (lp->pwr_en == lcd_enable)
+> +		return 0;
+> +
+> +	if (!IS_ERR_OR_NULL(lp->regulator)) {
+> +		if (lcd_enable) {
+> +			if (regulator_enable(lp->regulator)) {
+> +				dev_info(lp->dev, "regulator enable failed\n");
+> +				ret = -EPERM;
+> +			}
+> +		} else {
+> +			if (regulator_disable(lp->regulator)) {
+> +				dev_info(lp->dev, "regulator disable failed\n");
+> +				ret = -EPERM;
+> +			}
+> +		}
+> +	}
+> +
+> +	gpio_direction_output(lp->pdata->gpio, lcd_reset);
+> +	lp->power = power;
+> +	lp->pwr_en = lcd_enable;
+
+Again, this could have been any of
+
+	lp->[power|pwr] = [power|pwr];
+	lp->[power|pwr]_[en|enable] = lcd_[en|enable];
+
+zillions of combinations!  If we just avoid the abbreviations, there is
+only one combination.
+
+> +	return ret;
+> +}
+> +
+>
+> ...
+>
+> +static int __devinit lcd_pwrctrl_probe(struct platform_device *pdev)
+> +{
+> +	struct lcd_pwrctrl *lp;
+> +	struct lcd_pwrctrl_data *pdata = pdev->dev.platform_data;
+> +	struct device *dev = &pdev->dev;
+> +	int err;
+> +
+> +#ifdef CONFIG_OF
+> +	if (dev->of_node) {
+> +		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +		if (!pdata) {
+> +			dev_err(dev, "memory allocation for pdata failed\n");
+> +			return -ENOMEM;
+> +		}
+> +		lcd_pwrctrl_parse_dt(dev, pdata);
+> +	}
+> +#endif
+> +
+> +	if (!pdata) {
+> +		dev_err(dev, "platform data not available\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	lp = devm_kzalloc(dev, sizeof(struct lcd_pwrctrl), GFP_KERNEL);
+
+Nit: I prefer sizeof(*lp) here, so I don't have to scroll back and
+check the type of lp.
+
+> +	if (!lp) {
+> +		dev_err(dev, "memory allocation failed for private data\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	err = gpio_request(pdata->gpio, "LCD-nRESET");
+> +	if (err) {
+> +		dev_err(dev, "gpio [%d] request failed\n", pdata->gpio);
+> +		return err;
+> +	}
+> +
+>
+> ...
+>
+
+The code looks OK to me, but I do think the naming decisions should be
+revisited, please.
