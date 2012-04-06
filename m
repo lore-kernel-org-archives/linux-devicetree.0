@@ -1,39 +1,39 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
- irq_alloc_desc() instead
-Date: Fri, 6 Apr 2012 13:28:38 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1204061327080.2542@ionos>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca> <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home> <20120402202848.1EB833E02A7@localhost> <m2y5qdow0v.fsf@igel.home>
- <20120404154020.40C513E09D5@localhost> <m2r4w1akz4.fsf@igel.home> <alpine.LFD.2.02.1204061315040.2542@ionos> <m2bon59k68.fsf@igel.home>
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
+Date: Fri, 06 Apr 2012 13:51:14 +0200
+Message-ID: <m24nsx9iz1.fsf@igel.home>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+	<1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+	<m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
+	<20120402202848.1EB833E02A7@localhost>
+	<20120402215524.GM24211@n2100.arm.linux.org.uk>
+	<1333406005.30734.61.camel@pasglop>
+	<20120402225223.GN24211@n2100.arm.linux.org.uk>
+	<1333409927.30734.62.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <m2bon59k68.fsf@igel.home>
+In-Reply-To: <1333409927.30734.62.camel@pasglop> (Benjamin Herrenschmidt's
+	message of "Tue, 03 Apr 2012 09:38:47 +1000")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
 
-On Fri, 6 Apr 2012, Andreas Schwab wrote:
+> Ok. Doesn't matter anyway, this shouldn't be the problem in this
+> specific case. IE. we shouldn't be setting that interrupt to NONE.
 
-> Thomas Gleixner <tglx@linutronix.de> writes:
-> 
-> > And it looks like the irqdomain code is the real culprit.
-> >
-> > void irq_set_virq_count(unsigned int count)
-> > {
-> >         pr_debug("irq: Trying to set virq count to %d\n", count);
-> >
-> >         BUG_ON(count < NUM_ISA_INTERRUPTS);
-> >         if (count < NR_IRQS)
-> >                 irq_virq_count = count;
-> > }
-> >
-> > That looks simply wrong.....
-> 
-> There is a single use of irq_set_virq_count, which is only relevant to
-> the PS3.
+After removinge the call to irq_set_irq_type in mpic_host_map the irq
+problem disappears.
 
-Though irq_virq_count is statically initialized to NR_IRQS and it's
-used in the code more than once.
+Instead of the irq_set_irq_type(,NONE) calls from mpic_host_map I see
+corresponding irq_set_irq_type(,LEVEL_LOW) calls now.
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
