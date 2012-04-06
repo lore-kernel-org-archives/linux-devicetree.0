@@ -1,86 +1,70 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: Reparenting a platform device
-Date: Fri, 6 Apr 2012 09:20:14 +0200
-Message-ID: <20120406072014.GA14250@avionic-0098.mockup.avionic-design.de>
-References: <20120405084258.GA19798@avionic-0098.adnet.avionic-design.de>
-	<4F7DBCEE.9080400@wwwdotorg.org>
-	<20120405162318.GA10628@avionic-0098.adnet.avionic-design.de>
-	<20120405180805.GB11601@avionic-0098.adnet.avionic-design.de>
-	<4F7DF0B3.4050500@wwwdotorg.org>
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: Re: [PATCH 4/7 v4] ARM: kirkwood: add dreamplug (fdt) support.
+Date: Fri, 06 Apr 2012 09:52:24 +0100
+Message-ID: <1333702344.12209.70.camel@dagon.hellion.org.uk>
+References: <cover.1331601448.git.jason@lakedaemon.net>
+ <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason@lakedaemon.net>
+ <1333663656.12209.62.camel@dagon.hellion.org.uk>
+ <20120405224143.GL817@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5433293624574738815=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <4F7DF0B3.4050500-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120405224143.GL817-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2012-04-05 at 18:41 -0400, Jason Cooper wrote:
+> On Thu, Apr 05, 2012 at 11:07:36PM +0100, Ian Campbell wrote:
+> > On Tue, 2012-03-13 at 01:57 +0000, Jason Cooper wrote:
+> > > +DT_MACHINE_START(KIRKWOOD_DT, "Marvell Kirkwood (Flattened Device Tree)") 
+> > 
+> > This ends up as Machine: in /proc/cpuinfo, which seems to be normal?
+> > 
+> > Would it be worth trying to dynamically modify the machine string based
+> > on the actual hardware the kernel is running on?
+> 
+> With CONFIG_PROC_DEVICETREE=y I get the following:
+> 
+> $ cat /proc/device-tree/model
+> Globalscale Technologies Dreamplug
 
---===============5433293624574738815==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Content-Disposition: inline
+Yes, I just found that, thanks.
+
+BTW the impetus for my asking was http://bugs.debian.org/667681 against
+the flash-kernel tool which uses /proc/cpuinfo to know what magic runes
+are required for the particular board it is being run on.
+
+> It seems to me (I have no strong opinion here, just playing devil's
+> advocate) that /proc/cpuinfo is indeed telling us about the processor
+> (Marvell Kirkwood ...) Should it really be describing the board?
+
+The field is actually called "Hardware:" (not "Machine:" as I said
+above). Processor is actually covered separately ("Feroceon 88FR131 rev
+1 (v5l)" in this case). I'd expect Hardware: to say something more
+specific about the h/w platform, the string from /proc/device-tree/model
+is exactly what I think I would have expected.
+
+Ian.
+
+> 
+> thx,
+> 
+> Jason.
+> 
+
+-- 
+Ian Campbell
 
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-* Stephen Warren wrote:
-> I must admit I'm not at all familiar with the IOMMU APIs, but isn't the
-> IOMMU driver/subsystem itself what is managing all the allocations and
-> handing them out to clients? And client drivers do things like asking
-> for N pages of memory mapped into their aperture? If that is true, I'm
-> not sure what the purpose is of the intermediate device you propose.
-> Sorry for being somewhat clueless.
-
-That was my impression too at first. But it seems like all the IOMMU
-subsystem does is map individual pages. So you pass it a physical address of
-a page along with the IO virtual address to map it to. That's at least the
-way it is handled for Tegra 2 GART (and from a quick look also by the Tegra 3
-SMMU). For the SMMU the situation may be different because it may not have a
-fixed aperture that needs to contain the IO virtual addresses, though I must
-admit I haven't looked at Tegra 3 in enough detail to judge this.
-
-So this intermediate device would be purely an allocator for the GART
-aperture and handle the actual mapping via the IOMMU. This would probably be
-really simple and is in fact now done in the DRM driver. The nice thing if
-this would be a separate device is that it would be easy to make it a child
-of the IOMMU and wouldn't be as counter-intuitive as making the DRM device
-the IOMMU's child.
-
-Thierry
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk9+mS4ACgkQZ+BJyKLjJp+tCQCeOaGIT3XwpQy3CwOPj5pgftxY
-wdwAmwTvtrhHNPhtjTM8YZtahgmwXe/2
-=a6UP
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
-
---===============5433293624574738815==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-iommu mailing list
-iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-https://lists.linuxfoundation.org/mailman/listinfo/iommu
---===============5433293624574738815==--
+Nostalgia isn't what it used to be.
