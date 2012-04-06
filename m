@@ -1,39 +1,63 @@
-From: Andreas Schwab <schwab@linux-m68k.org>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
-Date: Fri, 06 Apr 2012 13:51:14 +0200
-Message-ID: <m24nsx9iz1.fsf@igel.home>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
-	<1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
-	<m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
-	<20120402202848.1EB833E02A7@localhost>
-	<20120402215524.GM24211@n2100.arm.linux.org.uk>
-	<1333406005.30734.61.camel@pasglop>
-	<20120402225223.GN24211@n2100.arm.linux.org.uk>
-	<1333409927.30734.62.camel@pasglop>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [PATCH 1/1] [v3] Add support 2 SATA ports for Maui and change
+ filename from sata_dwc_460ex.c to sata_dwc_4xx.c
+Date: Fri, 06 Apr 2012 16:10:29 +0400
+Message-ID: <4F7EDD35.3070203@mvista.com>
+References: <1333690265-27857-1-git-send-email-tqnguyen@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1333409927.30734.62.camel@pasglop> (Benjamin Herrenschmidt's
-	message of "Tue, 03 Apr 2012 09:38:47 +1000")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1333690265-27857-1-git-send-email-tqnguyen@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: "Thang Q. Nguyen" <tqnguyen@apm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jeff Garzik <jgarzik@pobox.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Phong Vo <pvo@apm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
+Hello.
 
-> Ok. Doesn't matter anyway, this shouldn't be the problem in this
-> specific case. IE. we shouldn't be setting that interrupt to NONE.
+On 06-04-2012 9:31, Thang Q. Nguyen wrote:
 
-After removinge the call to irq_set_irq_type in mpic_host_map the irq
-problem disappears.
+> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
+> ---
+> Changes for v2:
+>         - Use git rename feature to change the driver to the newname and for
+>           easier review.
 
-Instead of the irq_set_irq_type(,NONE) calls from mpic_host_map I see
-corresponding irq_set_irq_type(,LEVEL_LOW) calls now.
+> Changes for v3:
+> 	- Remove materials not related to 2 SATA ports support. They will
+> 	 be added in another patches.
 
-Andreas.
+>   drivers/ata/Makefile                             |    2 +-
+>   drivers/ata/{sata_dwc_460ex.c =>  sata_dwc_4xx.c} |  820 +++++++++++-----------
+>   2 files changed, 430 insertions(+), 392 deletions(-)
+>   rename drivers/ata/{sata_dwc_460ex.c =>  sata_dwc_4xx.c} (73%)
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
-"And now for something completely different."
+> diff --git a/drivers/ata/sata_dwc_460ex.c b/drivers/ata/sata_dwc_4xx.c
+> similarity index 73%
+> rename from drivers/ata/sata_dwc_460ex.c
+> rename to drivers/ata/sata_dwc_4xx.c
+> index 69f7cde..07e9b36 100644
+> --- a/drivers/ata/sata_dwc_460ex.c
+> +++ b/drivers/ata/sata_dwc_4xx.c
+[...]
+> @@ -16,6 +14,15 @@
+>    * under  the terms of  the GNU General  Public License as published by the
+>    * Free Software Foundation;  either version 2 of the  License, or (at your
+>    * option) any later version.
+> + *
+> + * CHANGES:
+> + * - Version 1.4:
+> + *   + Change filename from sata_dwc_460ex.c to sata_dwc_4xx.c
+> + *   + This driver supports more than one SATA port. Each SATA port has its
+> + *     own private attribute. Move sata_dwc_host_priv structure to
+> + *     sata_dwc_device and sata_dwc_device_port structures.
+> + *   + Change to use ata_bmdma_qc_issue and ata_bmdma_error_handler because
+> + *     the ata_sff_qc_issue and ata_sff_error_handler no longer support DMA.
+
+    This modification looks like a bug fix, and so should be separated and 
+posted before the dual-port patch.
+
+    I'll try to do more deltailed review on the weekend.
+
+MBR, Sergei
