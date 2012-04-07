@@ -1,83 +1,55 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] irq/irq_domain: Quit ignoring error returns from irq_alloc_desc_from().
-Date: Fri, 06 Apr 2012 18:26:16 -0700
-Message-ID: <20120407012616.62D133E17B2@localhost>
-References: <1333669933-25267-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1333669933-25267-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-To: David Daney <ddaney.cavm@gmail.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+Subject: Re: Point-to-point bus in device tree
+Date: Fri, 06 Apr 2012 18:27:31 -0700
+Message-ID: <20120407012731.A61D23E1FF9@localhost>
+References: <20120405181509.GA28693@codeaurora.org> <4F7DF142.5050601@wwwdotorg.org> <20120405200829.GA29747@codeaurora.org> <20120406151610.GA12888@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120406151610.GA12888@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Brown <davidb@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  5 Apr 2012 16:52:13 -0700, David Daney <ddaney.cavm@gmail.com> wrote:
-> From: David Daney <david.daney@cavium.com>
+On Fri, 6 Apr 2012 08:16:10 -0700, David Brown <davidb@codeaurora.org> wrote:
+> On Thu, Apr 05, 2012 at 01:08:29PM -0700, David Brown wrote:
+> > On Thu, Apr 05, 2012 at 01:23:46PM -0600, Stephen Warren wrote:
+> > > On 04/05/2012 12:15 PM, David Brown wrote:
+> > > > Some MSM SoCs have a small serial-type "bus" that is used to
+> > > > communicate with the PMIC devices.  This interface is always
+> > > > point-to-point.  I'm doing a device-tree conversion of the driver that
+> > > > Ken Heitke posted last year <https://lkml.org/lkml/2011/2/17/503>.
+> > > > 
+> > > > A naive conversion to device tree, would result in something like
+> > > > this:
+> > > > 
+> > > > 	qcom,ssbi@500000 {
+> > > > 		compatible = "qcom,ssbi";
+> > > > 		reg = <0x500000 0x1000>;
+> > > > 		qcom,controller-type = "ssbi";
+> > > > 
+> > > > 		qcom,pmic8058@0 {
+> > > > 			reg = <0x0 0x01>;
+> > > > 			...
+> > > > 		}
+> > > > 	}
+> > > > 
+> > > > There would end up being an extraneous register for the device on the
+> > > > other end (there are no addresses), and there would need to be code in
+> > > > the ssbi driver to traverse this small tree to find these nodes.
+> > > 
+> > > Isn't that extra code simply:
+> > > 
+> > > of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> > > 
+> > > That seems like pretty low overhead.
+> > 
+> > True, but it still bothers me to have to have a bogus register.
 > 
-> In commit 4bbdd45a (irq_domain/powerpc: eliminate irq_map; use
-> irq_alloc_desc() instead) code was added that ignores error returns
-> from irq_alloc_desc_from() by (silently) casting the return value to
-> unsigned.  The negitive value error return now suddenly looks like a
-> valid irq number.
-> 
-> Commits cc79ca69 (irq_domain: Move irq_domain code from powerpc to
-> kernel/irq) and 1bc04f2c (irq_domain: Add support for base irq and
-> hwirq in legacy mappings) move this code to its current location in
-> irqdomain.c
-> 
-> The result of all of this is a null pointer dereference OOPS if one of
-> the error cases is hit.
-> 
-> The fix: Don't cast away the negativeness of the return value and then
-> check for errors.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
->  kernel/irq/irqdomain.c |   11 ++++++-----
->  1 files changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index af48e59..9d3e3ae 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -351,6 +351,7 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
->  				irq_hw_number_t hwirq)
->  {
->  	unsigned int virq, hint;
-> +	int irq;
+> Ok, not sure where I got that idea, but I don't appear to actually
+> need a register in the pmic8058 node for of_platform_populate to
+> create a platform device.  It only needs a compatible field.  So, it
+> look like that matches just what I need.
 
-Merged, but I've dropped the new variable in favour of making virq an
-int.  Makes for a smaller diffstat.
+Correct.  Don't use a reg and all will look good.
 
 g.
-
->  
->  	pr_debug("irq: irq_create_mapping(0x%p, 0x%lx)\n", domain, hwirq);
->  
-> @@ -380,14 +381,14 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
->  	hint = hwirq % irq_virq_count;
->  	if (hint == 0)
->  		hint++;
-> -	virq = irq_alloc_desc_from(hint, 0);
-> -	if (!virq)
-> -		virq = irq_alloc_desc_from(1, 0);
-> -	if (!virq) {
-> +	irq = irq_alloc_desc_from(hint, 0);
-> +	if (irq <= 0)
-> +		irq = irq_alloc_desc_from(1, 0);
-> +	if (irq <= 0) {
->  		pr_debug("irq: -> virq allocation failed\n");
->  		return 0;
->  	}
-> -
-> +	virq = irq;
->  	if (irq_setup_virq(domain, virq, hwirq)) {
->  		if (domain->revmap_type != IRQ_DOMAIN_MAP_LEGACY)
->  			irq_free_desc(virq);
-> -- 
-> 1.7.2.3
-> 
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
