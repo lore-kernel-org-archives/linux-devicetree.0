@@ -1,37 +1,31 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCHv3 3/3] misc: add support for bmp18x chips to the bmp085 driver
-Date: Fri, 06 Apr 2012 18:37:51 -0700
-Message-ID: <20120407013751.294C13E2187@localhost>
-References: <1333568759-13536-1-git-send-email-eric.andersson@unixphere.com> <1333568759-13536-4-git-send-email-eric.andersson@unixphere.com> <20120404195532.GB10787@opensource.wolfsonmicro.com> <201204042000.34160.arnd@arndb.de> <20120404201116.GC10787@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 13/13] ARM: at91: dt: remove unit-address part for memory nodes
+Date: Fri, 06 Apr 2012 18:43:30 -0700
+Message-ID: <20120407014330.B6D4E3E22DF@localhost>
+References: <cover.1333437885.git.nicolas.ferre@atmel.com> <1db62b280314855c35cb7a3188fc9d9cb8501948.1333437885.git.nicolas.ferre@atmel.com> <20120404191754.GE10603@quad.lixom.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120404201116.GC10787@opensource.wolfsonmicro.com>
+In-Reply-To: <20120404191754.GE10603@quad.lixom.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Andersson <eric.andersson@unixphere.com>, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, alan@lxorguk.ukuu.org.uk, zhengguang.guo@bosch-sensortec.com, peter.moeller@cn.bosch.com, stefan.nilsson@unixphere.com, devicetree-discuss@lists.ozlabs.org
+To: Olof Johansson <olof@lixom.net>, Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@atmel.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 4 Apr 2012 21:11:17 +0100, Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
-> On Wed, Apr 04, 2012 at 08:00:33PM +0000, Arnd Bergmann wrote:
-> > On Wednesday 04 April 2012, Mark Brown wrote:
-> > > > +static const struct of_device_id bmp085_of_match[] = {
-> > > > +     { .compatible = "bosch-sensortec,bmp085", },
+On Wed, 4 Apr 2012 12:17:54 -0700, Olof Johansson <olof@lixom.net> wrote:
+> On Tue, Apr 03, 2012 at 09:32:57AM +0200, Nicolas Ferre wrote:
+> > From: Ludovic Desroches <ludovic.desroches@atmel.com>
+> > 
+> > Having a unit-address different from 0 causes bad memory node detection
+> > during early_init_dt_scan_memory.
 > 
-> > > Traditionally the stock ticker symbol would be used.
-> 
-> > I though about commenting on that as well, but since Bosch is a foundation
-> > and not publically traded, that would be hard to accomplish. Is there
-> > an official fallback for companies that don't have a stock ticker symbol?
-> 
-> Guess we should ask the DT people...  I mostly just noticed that the
-> name appeared somewhat verbose - perhaps just plain "bosch" if there's
-> not a better abbrevation?
+> Sounds like a bug in the generic code to me? But specifying a unit
+> address on a non-ambiguous device node isn't necessary anyway, so this
+> patch is still a reasonable thing to do.
 
-*MY* official fallback is go with whatever is documented in
-Documentation/devicetree/bindings/vendor-prefixes.txt.  If the needed
-value isn't there, then add it!  :-)
+It's actually a 'feature' of the way we're including skeleton.dtsi.
+skeleton.dtsi has already set the node name, so if the next file
+doesn't use exactly the same node name then the .dtb ends up with two
+memory nodes, which is really bad.
+
+It real problem is the dtc tooling.
 
 g.
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
