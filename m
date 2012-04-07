@@ -1,55 +1,62 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Point-to-point bus in device tree
-Date: Fri, 06 Apr 2012 18:27:31 -0700
-Message-ID: <20120407012731.A61D23E1FF9@localhost>
-References: <20120405181509.GA28693@codeaurora.org> <4F7DF142.5050601@wwwdotorg.org> <20120405200829.GA29747@codeaurora.org> <20120406151610.GA12888@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120406151610.GA12888@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Brown <davidb@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map;
+ use irq_alloc_desc() instead
+Date: Fri, 06 Apr 2012 18:29:42 -0700
+Message-ID: <20120407012942.6EAD23E2083@localhost>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+ <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+ <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
+ <20120402202848.1EB833E02A7@localhost> <m2y5qdow0v.fsf@igel.home>
+ <20120404154020.40C513E09D5@localhost> <m2r4w1akz4.fsf@igel.home>
+ <alpine.LFD.2.02.1204061315040.2542@ionos>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <alpine.LFD.2.02.1204061315040.2542@ionos>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>, Andreas Schwab <schwab@linux-m68k.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 6 Apr 2012 08:16:10 -0700, David Brown <davidb@codeaurora.org> wrote:
-> On Thu, Apr 05, 2012 at 01:08:29PM -0700, David Brown wrote:
-> > On Thu, Apr 05, 2012 at 01:23:46PM -0600, Stephen Warren wrote:
-> > > On 04/05/2012 12:15 PM, David Brown wrote:
-> > > > Some MSM SoCs have a small serial-type "bus" that is used to
-> > > > communicate with the PMIC devices.  This interface is always
-> > > > point-to-point.  I'm doing a device-tree conversion of the driver that
-> > > > Ken Heitke posted last year <https://lkml.org/lkml/2011/2/17/503>.
-> > > > 
-> > > > A naive conversion to device tree, would result in something like
-> > > > this:
-> > > > 
-> > > > 	qcom,ssbi@500000 {
-> > > > 		compatible = "qcom,ssbi";
-> > > > 		reg = <0x500000 0x1000>;
-> > > > 		qcom,controller-type = "ssbi";
-> > > > 
-> > > > 		qcom,pmic8058@0 {
-> > > > 			reg = <0x0 0x01>;
-> > > > 			...
-> > > > 		}
-> > > > 	}
-> > > > 
-> > > > There would end up being an extraneous register for the device on the
-> > > > other end (there are no addresses), and there would need to be code in
-> > > > the ssbi driver to traverse this small tree to find these nodes.
-> > > 
-> > > Isn't that extra code simply:
-> > > 
-> > > of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> > > 
-> > > That seems like pretty low overhead.
-> > 
-> > True, but it still bothers me to have to have a bogus register.
+On Fri, 6 Apr 2012 13:17:04 +0200 (CEST), Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Fri, 6 Apr 2012, Andreas Schwab wrote:
 > 
-> Ok, not sure where I got that idea, but I don't appear to actually
-> need a register in the pmic8058 node for of_platform_populate to
-> create a platform device.  It only needs a compatible field.  So, it
-> look like that matches just what I need.
+> > Grant Likely <grant.likely@secretlab.ca> writes:
+> > 
+> > > Can you attach console output logs for each of configs above and also
+> > > with NR_IRQS=128?  That might give me some clues as to which specific
+> > > code is causing the issues.
+> > 
+> > It really looks like the issue starts when irq_expand_nr_irqs is called
+> > the first time to make nr_irqs bigger than NR_IRQS.
+> 
+> And it looks like the irqdomain code is the real culprit.
+> 
+> void irq_set_virq_count(unsigned int count)
+> {
+>         pr_debug("irq: Trying to set virq count to %d\n", count);
+> 
+>         BUG_ON(count < NUM_ISA_INTERRUPTS);
+>         if (count < NR_IRQS)
+>                 irq_virq_count = count;
+> }
+> 
+> That looks simply wrong.....
+> 
+> s/NR_IRQS/nr_irqs/ should do the trick.
 
-Correct.  Don't use a reg and all will look good.
+Yeah, that code is wrong and I'll fix it, but the only purpose of that
+code is to support the direct mapping on hardware that has limit on
+the largest irq number that it can handle.  That shouldn't be the
+problem here.
 
 g.
