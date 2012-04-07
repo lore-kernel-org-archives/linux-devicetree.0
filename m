@@ -1,41 +1,37 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] arm/dts: omap4-sdp: Add keypad data
-Date: Fri, 06 Apr 2012 18:39:27 -0700
-Message-ID: <20120407013927.AC7163E21DC@localhost>
-References: <1333546221-19700-1-git-send-email-sourav.poddar@ti.com>
- <1333546221-19700-2-git-send-email-sourav.poddar@ti.com>
- <4F7C51EA.1040902@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F7C51EA.1040902@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Cousson, Benoit" <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Rob Herring <rob.herring@calxeda.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCHv3 3/3] misc: add support for bmp18x chips to the bmp085 driver
+Date: Fri, 06 Apr 2012 18:37:51 -0700
+Message-ID: <20120407013751.294C13E2187@localhost>
+References: <1333568759-13536-1-git-send-email-eric.andersson@unixphere.com> <1333568759-13536-4-git-send-email-eric.andersson@unixphere.com> <20120404195532.GB10787@opensource.wolfsonmicro.com> <201204042000.34160.arnd@arndb.de> <20120404201116.GC10787@opensource.wolfsonmicro.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120404201116.GC10787@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Eric Andersson <eric.andersson@unixphere.com>, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, alan@lxorguk.ukuu.org.uk, zhengguang.guo@bosch-sensortec.com, peter.moeller@cn.bosch.com, stefan.nilsson@unixphere.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 4 Apr 2012 15:51:38 +0200, "Cousson, Benoit" <b-cousson@ti.com> wrote:
-> On 4/4/2012 3:30 PM, Sourav Poddar wrote:
-> > This patch add keypad data node in omap4 device tree
-> > file.
+On Wed, 4 Apr 2012 21:11:17 +0100, Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
+> On Wed, Apr 04, 2012 at 08:00:33PM +0000, Arnd Bergmann wrote:
+> > On Wednesday 04 April 2012, Mark Brown wrote:
+> > > > +static const struct of_device_id bmp085_of_match[] = {
+> > > > +     { .compatible = "bosch-sensortec,bmp085", },
 > 
-> Nit #2: Never write "this patch" in a patch changelog... Because at some 
-> point it will become a commit in a GIT tree.
+> > > Traditionally the stock ticker symbol would be used.
 > 
-> I think AKPM wrote something on that.
+> > I though about commenting on that as well, but since Bosch is a foundation
+> > and not publically traded, that would be hard to accomplish. Is there
+> > an official fallback for companies that don't have a stock ticker symbol?
+> 
+> Guess we should ask the DT people...  I mostly just noticed that the
+> name appeared somewhat verbose - perhaps just plain "bosch" if there's
+> not a better abbrevation?
 
-Whatever.  I'm won't *ever* get worked up about something like that if
-the changelog is otherwise well written.  What I do want to see is a
-description of what the patch does, why it is needed, and how it was
-tested.
+*MY* official fallback is go with whatever is documented in
+Documentation/devicetree/bindings/vendor-prefixes.txt.  If the needed
+value isn't there, then add it!  :-)
 
 g.
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
