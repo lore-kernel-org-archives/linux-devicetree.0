@@ -1,38 +1,74 @@
-From: Andreas Schwab <schwab@linux-m68k.org>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
-Date: Sat, 07 Apr 2012 14:27:19 +0200
-Message-ID: <m2aa2n7mmw.fsf@igel.home>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
-	<1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
-	<m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
-	<20120402202848.1EB833E02A7@localhost>
-	<20120402215524.GM24211@n2100.arm.linux.org.uk>
-	<1333406005.30734.61.camel@pasglop>
-	<20120402225223.GN24211@n2100.arm.linux.org.uk>
-	<1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home>
-	<1333755470.3040.38.camel@pasglop>
+From: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
+Subject: Re: [PATCH v2] gpio: Device tree support for LPC32xx
+Date: Sat, 7 Apr 2012 14:54:06 -0400
+Message-ID: <CAKON4OyQr+tTDPeb1+01SXbjPKOt3=Lxba5uVpELM9A7sQPVhw@mail.gmail.com>
+References: <1333497518-25838-1-git-send-email-stigge@antcom.de>
+	<20120407035327.9D7923E246E@localhost>
+	<4F80460E.50605@antcom.de>
+	<CAKON4OxuP6AytcJDtDvbTaho4vFvUTQ0VfJiBnN5QEbK1xo1XQ@mail.gmail.com>
+	<4F807D41.5000008@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1333755470.3040.38.camel@pasglop> (Benjamin Herrenschmidt's
-	message of "Sat, 07 Apr 2012 09:37:50 +1000")
+In-Reply-To: <4F807D41.5000008@antcom.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, devicetree-discuss <devicetree-discuss@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
+On Sat, Apr 7, 2012 at 1:45 PM, Roland Stigge <stigge@antcom.de> wrote:
+> On 07/04/12 19:17, jonsmirl@gmail.com wrote:
+>>> Please consider how the groups are specified in
+>>> drivers/gpio/gpio-lpc32xx.c. They each have different numbers of li=
+nes
+>>> and GPIO / GPI / GPO functionality. So they also have different cal=
+lback
+>>> sets, and we need to do separate gpiochip_add()s which leads to the
+>>> separate gpio-bank specifications in the dtsi file. Separate enabli=
+ng of
+>>> those banks via OF are a nice by-product.
+>>
+>> When you have six banks of 32b registers with sparse, active GPIOs i=
+n
+>> the banks, is there any advantage to saying bank one has 8 gpios, ba=
+nk
+>> 2 has 14, bank 3 has 2, etc in the gpiochip? =A0Or just just registe=
+r
+>> them as six banks of 32 GPIOs without indicating which are
+>> valid/invalid?
+>
+> I think it is a good idea to only register GPIOs that are real when w=
+e
+> already have many (~100) instead of registering hundreds of invalid
+> extra ones (that will _always_ be invalid for this very driver).
 
-> It's arguable that this irq_set_irq_type(,NONE) shouln't be there but
-> still ... it's been around for ever and things worked :-) So something
-> -else- is causing the problem and I'd like to understand what exactly.
+I only want to apply this to identical controller banks. For example
+the lpc31xx has 12 identical banks of 32 bits.  You can program all
+384 of these locations identically, but only about 100 locations are
+actually hooked to real hardware.
 
-AFAICS before a09b659cd68c10ec6a30cb91ebd2c327fcd5bfe5
-irq_set_irq_type(,NONE) was actually a no-op.
+We could add something like this to the device tree for gpio-controller=
+:
+gpios-valid =3D <0x1234 0x1234 0x1234 0x1234 0x1234 0x1234 0x1234 0x123=
+4 ...>
+12 groups of bits indicating which gpios are valid.
 
-Andreas.
+Or we could just ignore the invalid bits. On the lpc31xx they all
+work, just just don't do anything.
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
-"And now for something completely different."
+>
+> Also corresponds nicely to the hardware specs when there are banks of
+> odd sizes which can be found registered accordingly in the kernel.
+
+I agree that if the structure of the GPIO banks is irregular they
+should be different gpiochips.
+
+>
+> Roland
+
+
+
+--=20
+Jon Smirl
+jonsmirl@gmail.com
