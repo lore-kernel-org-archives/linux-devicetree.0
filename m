@@ -1,17 +1,16 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/7] of: add clock providers
-Date: Mon, 9 Apr 2012 22:13:50 +0800
-Message-ID: <20120409141347.GC18692@S2101-09.ap.freescale.net>
-References: <1331680947-29861-1-git-send-email-robherring2@gmail.com>
- <1331680947-29861-3-git-send-email-robherring2@gmail.com>
- <20120409115549.GB18692@S2101-09.ap.freescale.net>
- <4F82E9A3.1030606@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V3 1/5] ARM: kirkwood: Basic support for DNS-320 and
+ DNS-325
+Date: Mon, 9 Apr 2012 14:14:28 +0000
+Message-ID: <201204091414.28918.arnd@arndb.de>
+References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
+ <20120406234955.840F73E1323@localhost>
+ <alpine.DEB.2.00.1204091418400.23719@marmot.wormnet.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F82E9A3.1030606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.00.1204091418400.23719-5X291BYdrx55rAo4AelP/Ydd74u8MsAO@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,58 +20,34 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 09, 2012 at 08:52:35AM -0500, Rob Herring wrote:
-> On 04/09/2012 06:55 AM, Shawn Guo wrote:
-> > On Tue, Mar 13, 2012 at 06:22:22PM -0500, Rob Herring wrote:
-> > ...
-> >> +==Clock consumers==
-> >> +
-> >> +Required properties:
-> >> +clocks:		List of phandle and clock specifier pairs, one pair
-> >> +		for each clock input to the device.  Note: if the
-> >> +		clock provider specifies '0' for #clock-cells, then
-> >> +		only the phandle portion of the pair will appear.
-> > 
-> > Per discussion[1], the parent of the clock could be reasonably
-> > represented in C code instead of in device tree.  Then how can
-> > this "clocks" property be "Required"?  Or to put it another way,
-> > if this is "Required", the whole clock tree will have to be represented
-> > in device tree, no?
-> > 
+On Monday 09 April 2012, Jamie Lentin wrote:
+> On Fri, 6 Apr 2012, Grant Likely wrote:
+> > These two lines are dangerous.  It is not safe to 'select' Kconfig
+> > symbols that have 'depends' constraints.  Otherwise, the symbol will
+> > get forced on without it's dependencies.
+> >
+> > Typically other code handles this by creating blank "HAVE_*" symbols
+> > that the needed symbol can do something like "default y if HAVE_*"
+> >
 > 
-> I'm not sure I follow. All of this only applies if you are doing clock
-> setup from DT. Whether you represent all clocks or only the outputs to
-> devices in DT is up to you. So you could have a CCM node for imx with 50
-> clock outputs and all the intermediate clocks within the CCM are
-> represented with C code.
+> Okay I didn't realise this, thanks. The options in question aren't
+> hard dependencies per-se, but no serial or NAND support is probably a
+> mistake, so added them here to avoid a certain amount of shooting in foot.
 > 
-Ok, now I have uart clock being one of the 50 clocks represented in
-device tree, while the parent of uart clock ipg_per is represented in
-C code.  That said, I do not have a ipg_per clock node in device tree.
-My question is how I should give that required "clocks" property for
-the uart clock node.
+> What's the etiquette in this situation? Adding HAVE_* seems excessive,
+> would selecting them in kirkwood_defconfig make more sense? Or would it
+> simply be covered by having a reasonable config on my website or suchlike?
 
-	uart_serial_clk: uart-baud {
-		compatible = "fsl,imx6q-clock";
-		#clock-cells = <0>;
-		/* clocks = <&ipg_per_clk>; */
-		clocks = <???>;
-	};
+Either way works. We don't prevent people from shooting themselves in the
+foot in Kconfig, there are plenty of ways to do that already (e.g. disabling
+network support on a headless system). There should be a defconfig
+for each platform, so just make sure 'make kirkwood_defconfig' enables
+everything you need and works on your system, it should be the
+superset of all kirkwood based systems and users can disable the
+stuff they don't need.
 
-	uart: serial@02020000 {
-		compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
-		reg = <0x02020000 0x4000>;
-		interrupts = <0 26 0x04>;
-		clocks = <&uart_serial_clk>
-	}
-
-Regards,
-Shawn
-
-> In other words, at minimum you are just replacing the clkdev lookup with
-> a DT lookup.
-> 
+	Arnd
