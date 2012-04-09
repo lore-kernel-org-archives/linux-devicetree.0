@@ -1,59 +1,47 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: [V2 3/5] powerpc: dts: klondike: Add UART nodes
-Date: Mon,  9 Apr 2012 12:50:50 +0530
-Message-ID: <1333956052-25319-3-git-send-email-tinamdar@apm.com>
+From: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
+Subject: [V2 2/5] powerpc: 40x: Add AHB, APB of_device_ids
+Date: Mon,  9 Apr 2012 12:50:49 +0530
+Message-ID: <1333956052-25319-2-git-send-email-tinamdar@apm.com>
 References: <1333956052-25319-1-git-send-email-tinamdar@apm.com>
- <1333956052-25319-2-git-send-email-tinamdar@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1333956052-25319-2-git-send-email-tinamdar@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: benh@kernel.crashing.org, jwboyer@gmail.com, grant.likely@secretlab.ca, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Tanmay Inamdar <tinamdar@apm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1333956052-25319-1-git-send-email-tinamdar-qTEPVZfXA3Y@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, jwboyer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding UART nodes in Klondike device tree file.
+Adding of_device_id's for AHB and APB buses used in klondike (APM8018X) in
+platforms/40x/ppc40x_simple.c file
 
-Version 2:
-Removed unnecessary 'virtual-reg' property from UART node.
-
-Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
+Signed-off-by: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
 ---
-:100644 100644 4ff2852... b1e516e... M	arch/powerpc/boot/dts/klondike.dts
- arch/powerpc/boot/dts/klondike.dts |   22 ++++++++++++++++++++++
- 1 files changed, 22 insertions(+), 0 deletions(-)
+:100644 100644 9761206... 7b518ed... M	arch/powerpc/platforms/40x/ppc40x_simple.c
+ arch/powerpc/platforms/40x/ppc40x_simple.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/klondike.dts b/arch/powerpc/boot/dts/klondike.dts
-index 4ff2852..b1e516e 100644
---- a/arch/powerpc/boot/dts/klondike.dts
-+++ b/arch/powerpc/boot/dts/klondike.dts
-@@ -222,6 +222,28 @@
- 				#size-cells = <1>;
- 				ranges;
- 				clock-frequency = <0>;
-+
-+				UART0: serial@50001000 {
-+				       device_type = "serial";
-+				       compatible = "ns16550";
-+				       reg = <0x50001000 0x00000100>;
-+				       clock-frequency = <0>; /* Filled in by U-Boot */
-+				       current-speed = <115200>;
-+				       interrupt-parent = <&UIC0>;
-+				       interrupts = <0x0 0x4>;
-+				       reg-shift = <2>;
-+				};
-+
-+				UART1: serial@50002000 {
-+				       device_type = "serial";
-+				       compatible = "ns16550";
-+				       reg = <0x50002000 0x00000100>;
-+				       clock-frequency = <0>; /* Filled in by U-Boot */
-+				       current-speed = <115200>;
-+				       interrupt-parent = <&UIC0>;
-+				       interrupts = <0x1 0x4>;
-+				       reg-shift = <2>;
-+			       };
- 			};
- 		};
- 	};
+diff --git a/arch/powerpc/platforms/40x/ppc40x_simple.c b/arch/powerpc/platforms/40x/ppc40x_simple.c
+index 9761206..7b518ed 100644
+--- a/arch/powerpc/platforms/40x/ppc40x_simple.c
++++ b/arch/powerpc/platforms/40x/ppc40x_simple.c
+@@ -29,6 +29,8 @@ static __initdata struct of_device_id ppc40x_of_bus[] = {
+ 	{ .compatible = "ibm,plb4", },
+ 	{ .compatible = "ibm,opb", },
+ 	{ .compatible = "ibm,ebc", },
++	{ .compatible = "apm,ahb", },
++	{ .compatible = "apm,apb", },
+ 	{ .compatible = "simple-bus", },
+ 	{},
+ };
 -- 
 1.6.1.rc3
