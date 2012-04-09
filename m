@@ -1,13 +1,15 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DT support in i2c
-Date: Sun, 08 Apr 2012 20:17:23 -0500
-Message-ID: <4F8238A3.3010502@gmail.com>
-References: <CAKON4OwBxfstLGFxqR+R9BD6bwD28OD-fCOwLSSs7v_Q=1LOyQ@mail.gmail.com>
+From: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] ARM: mmp: append OF support on pxa168
+Date: Sun, 08 Apr 2012 21:36:35 -0400
+Message-ID: <87y5q5znx8.fsf@laptop.org>
+References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
+ <1330950111-30797-6-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKON4OwBxfstLGFxqR+R9BD6bwD28OD-fCOwLSSs7v_Q=1LOyQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1330950111-30797-6-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+ (Haojian Zhuang's message of "Mon, 5 Mar 2012 20:21:49 +0800")
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,17 +19,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/2012 06:26 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> Grant, moving  of_i2c.c into drivers/i2c would parallel your spi/gpio patches.
-> 
-> of_i2c_register_devices() needs to be moved up into i2c-core. Right
-> now the ten bus drivers are individually calling it.
+Hi,
 
-I posted patches to do just this a while back and the i2c maintainers
-didn't like the idea. Feel free to try again. :)
+On Mon, Mar 05 2012, Haojian Zhuang wrote:
+> Enable PXA168 and aspenite support.
+>
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/mach-mmp/Kconfig  |   10 ++++++
+>  arch/arm/mach-mmp/Makefile |    1 +
+>  arch/arm/mach-mmp/mmp-dt.c |   75 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 86 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/mach-mmp/mmp-dt.c
+>
+> diff --git a/arch/arm/mach-mmp/Kconfig b/arch/arm/mach-mmp/Kconfig
+> index 323d4c9..5a90b9a 100644
+> --- a/arch/arm/mach-mmp/Kconfig
+> +++ b/arch/arm/mach-mmp/Kconfig
+> @@ -2,6 +2,16 @@ if ARCH_MMP
+>  
+>  menu "Marvell PXA168/910/MMP2 Implmentations"
+>  
+> +config MACH_MMP_DT
+> +	bool "Support MMP2 platforms from device tree"
+> +	select CPU_PXA168
+> +	select CPU_PXA910
+> +	select USE_OF
+> +	help
+> +	  Include support for Marvell MMP2 based platforms using
+> +	  the device tree. Needn't select any other machine while
+> +	  MACH_MMP_DT is enabled.
+> +
 
-Rob
+This patch breaks the build with MACH_MMP_DT=y in 3.4-rc2 for me:
+
+MACH_MMP_DT selects CPU_PXA168 which selects CPU_32v5, which results in:
+
+  armv7-unknown-linux-gnueabi-gcc -Wp,-MD,arch/arm/mm/.dma-mapping.o.d  -nostdinc -isystem /opt/crosstool/gcc-4.6.0/lib/gcc/armv7-unknown-linux-gnueabi/4.6.0/include -I/home/cjb/git/olpc-kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -I/home/cjb/git/olpc-kernel/include -include /home/cjb/git/olpc-kernel/include/linux/kconfig.h  -I/home/cjb/git/olpc-kernel/arch/arm/mm -Iarch/arm/mm -D__KERNEL__ -mlittle-endian   -I/home/cjb/git/olpc-kernel/arch/arm/mach-mmp/include   -I/home/cjb/git/olpc-kernel/arch/arm/plat-pxa/include -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -Werror-implicit-function-declaration -Wno-format-security -fno-delete-null-pointer-checks -Os -marm -fno-dwarf2-cfi-asm -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables 
+ -D__LINUX_ARM_ARCH__=5 -march=armv5te -msoft-float -Uarm -Wframe-larger-than=1024 -fno-stack-protector -Wno-unused-but-set-variable -fomit-frame-pointer -g -Wdeclaration-after-statement -Wno-pointer
+ -sign -fno-strict-overflow -fconserve-stack    -D"KBUILD_STR(s)=#s" -D"KBUILD_BASENAME=KBUILD_STR(dma_mapping)"  -D"KBUILD_MODNAME=KBUILD_STR(dma_mapping)" -c -o arch/arm/mm/dma-mapping.o /home/cjb/git/olpc-kernel/arch/arm/mm/dma-mapping.c
+/home/cjb/git/olpc-kernel/arch/arm/kernel/entry-armv.S: Assembler messages:
+/home/cjb/git/olpc-kernel/arch/arm/kernel/entry-armv.S:207: Error: selected processor does not support ARM mode `clrex'
+
+CPU_32v5=y adds:
+
+arch/arm/Makefile:arch-$(CONFIG_CPU_32v5) :=-D__LINUX_ARM_ARCH__=5 $(call cc-option,-march=armv5te,-march=armv4t)
+
+- Chris.
+-- 
+Chris Ball   <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>   <http://printf.net/>
+One Laptop Per Child
