@@ -1,64 +1,37 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH] Rename _B to _XBYTE in libfdt_env.h.
-Date: Mon, 09 Apr 2012 10:28:31 -0500
-Message-ID: <E1SHGW7-0001qh-4w@jdl.com>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH] irq/irq_domain: Quit ignoring error returns from irq_alloc_desc_from().
+Date: Mon, 09 Apr 2012 09:52:27 -0700
+Message-ID: <4F8313CB.3020105@gmail.com>
+References: <1333669933-25267-1-git-send-email-ddaney.cavm@gmail.com> <4F7E64E4.3080509@gmail.com> <4F7F1BDD.4070205@gmail.com> <20120406235607.DCCD53E15E9@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120406235607.DCCD53E15E9@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[ Drat.  It's devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsieG/Ez6ZCGd0@public.gmane.org  Sorry. -- jdl]
+On 04/06/2012 04:56 PM, Grant Likely wrote:
+> On Fri, 06 Apr 2012 09:37:49 -0700, David Daney<ddaney.cavm@gmail.com>  wrote:
+>> On 04/05/2012 08:37 PM, Rob Herring wrote:
+>>> On 04/05/2012 06:52 PM, David Daney wrote:
+>>>> From: David Daney<david.daney@cavium.com>
+>>>> @@ -380,14 +381,14 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+>>>>    	hint = hwirq % irq_virq_count;
+>>>>    	if (hint == 0)
+>>>>    		hint++;
+>>>> -	virq = irq_alloc_desc_from(hint, 0);
+>>>
+>>> You are not looking at mainline. hint was removed in later versions, and
+>>> the referenced commit ids don't exist.
+>>
+>> Please look at Linus' tree before making incorrect statements about
+>> whether or not code exists on the 'mainline'
+>
+> Rob is indeed mistaken here, but please let's keep things civil.
 
-------- Forwarded Message
+Sorry about that.  You are correct that it is not acceptable.
 
-To: Andrej Krutak <andree-/tK0A0Qp8GRaa/9Udqfwiw@public.gmane.org>
-cc: devtree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>,
-    linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Subject: Re: [PATCH] Rename _B to _XBYTE in libfdt_env.h.
-In-reply-to: <1333434921-14153-1-git-send-email-andree-/tK0A0Qp8GRaa/9Udqfwiw@public.gmane.org>
-References: <E1SEpdZ-0000dW-8Z-CYoMK+44s/E@public.gmane.org> <1333434921-14153-1-git-send-email-andree-/tK0A0Qp8GRaa/9Udqfwiw@public.gmane.org>
-Comments: In-reply-to Andrej Krutak <andree-/tK0A0Qp8GRaa/9Udqfwiw@public.gmane.org>
-   message dated "Tue, 03 Apr 2012 08:35:21 +0200."
-Date: Mon, 09 Apr 2012 08:49:04 -0500
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-X-Spam-Score: -0.0
-
-> The _B macro is also defined by cygwin in ctype.h.
-> Rename _B to _XBYTE to better avoid name collisions.
-> 
-> Signed-off-by: Andrej Krutak <andree-/tK0A0Qp8GRaa/9Udqfwiw@public.gmane.org>
-> ---
->  scripts/dtc/libfdt/libfdt_env.h |   11 ++++++-----
->  1 files changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/scripts/dtc/libfdt/libfdt_env.h b/scripts/dtc/libfdt/libfdt_env.h
-> index 449bf60..4ec8565 100644
-> --- a/scripts/dtc/libfdt/libfdt_env.h
-> +++ b/scripts/dtc/libfdt/libfdt_env.h
-
-This patch is against the kernel _copy_ of the DTC sources.
-Technically, we'll need it against the upstream sources
-as found here:
-
-    git://git.jdl.com/software/dtc.git
-
-Later, the patch will appear in the kernel when it updates
-with a newer source drop.
-
-Thanks,
-jdl
-
-- --ED70BB7024.1333981658/ozlabs.org--
-
-------- End of Forwarded Message
+David Daney
