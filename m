@@ -1,94 +1,50 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/7] of: add clock providers
-Date: Mon, 09 Apr 2012 09:34:46 -0500
-Message-ID: <4F82F386.7080303@gmail.com>
-References: <1331680947-29861-1-git-send-email-robherring2@gmail.com>
- <1331680947-29861-3-git-send-email-robherring2@gmail.com>
- <20120409115549.GB18692@S2101-09.ap.freescale.net>
- <4F82E9A3.1030606@gmail.com>
- <20120409141347.GC18692@S2101-09.ap.freescale.net>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH v3 6/6] mmc: sdhci-s3c: Add device tree support
+Date: Mon, 09 Apr 2012 10:48:07 -0400
+Message-ID: <87pqbhx8pk.fsf@laptop.org>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
+	<201203271619.13320.arnd@arndb.de> <4F7553D1.4030008@st.com>
+	<201203301136.05038.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120409141347.GC18692-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201203301136.05038.arnd@arndb.de> (Arnd Bergmann's message of
+	"Fri, 30 Mar 2012 11:36:04 +0000")
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Viresh Kumar <viresh.kumar@st.com>, Thomas Abraham <thomas.abraham@linaro.org>, Lee Jones <lee.jones@linaro.org>, Rajendra Nayak <rnayak@ti.com>, Stephen Warren <swarren@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/09/2012 09:13 AM, Shawn Guo wrote:
-> On Mon, Apr 09, 2012 at 08:52:35AM -0500, Rob Herring wrote:
->> On 04/09/2012 06:55 AM, Shawn Guo wrote:
->>> On Tue, Mar 13, 2012 at 06:22:22PM -0500, Rob Herring wrote:
->>> ...
->>>> +==Clock consumers==
->>>> +
->>>> +Required properties:
->>>> +clocks:		List of phandle and clock specifier pairs, one pair
->>>> +		for each clock input to the device.  Note: if the
->>>> +		clock provider specifies '0' for #clock-cells, then
->>>> +		only the phandle portion of the pair will appear.
->>>
->>> Per discussion[1], the parent of the clock could be reasonably
->>> represented in C code instead of in device tree.  Then how can
->>> this "clocks" property be "Required"?  Or to put it another way,
->>> if this is "Required", the whole clock tree will have to be represented
->>> in device tree, no?
->>>
->>
->> I'm not sure I follow. All of this only applies if you are doing clock
->> setup from DT. Whether you represent all clocks or only the outputs to
->> devices in DT is up to you. So you could have a CCM node for imx with 50
->> clock outputs and all the intermediate clocks within the CCM are
->> represented with C code.
->>
-> Ok, now I have uart clock being one of the 50 clocks represented in
-> device tree, while the parent of uart clock ipg_per is represented in
-> C code.  That said, I do not have a ipg_per clock node in device tree.
-> My question is how I should give that required "clocks" property for
-> the uart clock node.
+Hi Arnd,
+
+On Fri, Mar 30 2012, Arnd Bergmann wrote:
+> On Friday 30 March 2012, Viresh Kumar wrote:
+>> On 3/27/2012 9:49 PM, Arnd Bergmann wrote:
+>> > These bindings came up in a discussion IRC today. I think it's rather bad that
+>> > we can't agree on a common way to name the properties for mmc. We have
+>> > bindings being proposed or already included from Anton, Stephen, Shawn,
+>> > Rajendra, Viresh, Lee and Thomas. Almost all of them define GPIO pins
+>> > for card detect and write protect, as well properties to define the bus
+>> > width and high-speed modes, but we seem to have almost as many different
+>> > definitions of these as we have drivers.
+>> > 
+>> > Can we please come up with a common binding for these?
+>> 
+>> Is there any progress on this? Sorry i wasn't following all mails.
+>> How should i progress for sdhci-spear?
 >
-> 	uart_serial_clk: uart-baud {
-> 		compatible = "fsl,imx6q-clock";
-> 		#clock-cells = <0>;
-> 		/* clocks = <&ipg_per_clk>; */
-> 		clocks = <???>;
+> No progress so far. I would suggest we apply the patch below to unify
+> the bindings we have. I tried to minimize the impact by picking the most
+> common version for each property, but if we know about devices that would
+> get broken by this, we may have to be more careful.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-This is a provider node not a consumer, so you don't have a clocks
-property. You could, but then you need the parent clock defined in the DT.
+Thanks very much for doing this -- I'll be happy to take the patch in
+mmc-next once you get time to post a v2 covering Stephen Warren's review
+comments (and adding "max-frequency" to the document, I guess).
 
-The compatible property here looks too generic. In the CCM code, how do
-you match it to the uart baud clock? You shouldn't be using the name.
-
-You need to first decide if you are going to define each clock in the DT
-or just the whole CCM as a node. You can't really do something in the
-middle or be evolving it over time. You could perhaps make the PLLs be
-separate nodes and inputs to the CCM. As they really are separate h/w
-blocks.
-
-Rob
-
-> 	};
-> 
-> 	uart: serial@02020000 {
-> 		compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
-> 		reg = <0x02020000 0x4000>;
-> 		interrupts = <0 26 0x04>;
-> 		clocks = <&uart_serial_clk>
-> 	}
-> 
-> Regards,
-> Shawn
-> 
->> In other words, at minimum you are just replacing the clkdev lookup with
->> a DT lookup.
->>
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
