@@ -1,50 +1,40 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH v3 6/6] mmc: sdhci-s3c: Add device tree support
-Date: Mon, 09 Apr 2012 10:48:07 -0400
-Message-ID: <87pqbhx8pk.fsf@laptop.org>
-References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
-	<201203271619.13320.arnd@arndb.de> <4F7553D1.4030008@st.com>
-	<201203301136.05038.arnd@arndb.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V3 1/5] ARM: kirkwood: Basic support for DNS-320 and
+ DNS-325
+Date: Mon, 9 Apr 2012 15:01:40 +0000
+Message-ID: <201204091501.40176.arnd@arndb.de>
+References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
+ <201204091409.04927.arnd@arndb.de>
+ <alpine.DEB.2.00.1204091513250.23719@marmot.wormnet.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201203301136.05038.arnd@arndb.de> (Arnd Bergmann's message of
-	"Fri, 30 Mar 2012 11:36:04 +0000")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Viresh Kumar <viresh.kumar@st.com>, Thomas Abraham <thomas.abraham@linaro.org>, Lee Jones <lee.jones@linaro.org>, Rajendra Nayak <rnayak@ti.com>, Stephen Warren <swarren@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "patches@linaro.org" <patches@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.00.1204091513250.23719-5X291BYdrx55rAo4AelP/Ydd74u8MsAO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Monday 09 April 2012, Jamie Lentin wrote:
+> Add support for the DNS-320 and DNS-325. Describe as much as currently 
+> possible in the devicetree files, create a board-dnskw.c for everything 
+> else.
+> 
+> Changes since last submission (V2):-
+> 
+> * Use IEEE-compliant "okay", rather than "ok" (adressing comments from 
+> Scott Wood)
+> 
 
-On Fri, Mar 30 2012, Arnd Bergmann wrote:
-> On Friday 30 March 2012, Viresh Kumar wrote:
->> On 3/27/2012 9:49 PM, Arnd Bergmann wrote:
->> > These bindings came up in a discussion IRC today. I think it's rather bad that
->> > we can't agree on a common way to name the properties for mmc. We have
->> > bindings being proposed or already included from Anton, Stephen, Shawn,
->> > Rajendra, Viresh, Lee and Thomas. Almost all of them define GPIO pins
->> > for card detect and write protect, as well properties to define the bus
->> > width and high-speed modes, but we seem to have almost as many different
->> > definitions of these as we have drivers.
->> > 
->> > Can we please come up with a common binding for these?
->> 
->> Is there any progress on this? Sorry i wasn't following all mails.
->> How should i progress for sdhci-spear?
->
-> No progress so far. I would suggest we apply the patch below to unify
-> the bindings we have. I tried to minimize the impact by picking the most
-> common version for each property, but if we know about devices that would
-> get broken by this, we may have to be more careful.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Looks great, yes.
 
-Thanks very much for doing this -- I'll be happy to take the patch in
-mmc-next once you get time to post a v2 covering Stephen Warren's review
-comments (and adding "max-frequency" to the document, I guess).
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+	Arnd
