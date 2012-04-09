@@ -1,45 +1,36 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH V3 1/5] ARM: kirkwood: Basic support for DNS-320 and
- DNS-325
-Date: Mon, 9 Apr 2012 22:27:48 +0100
-Message-ID: <20120409212748.GJ24211@n2100.arm.linux.org.uk>
-References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
- <1332885255-8304-2-git-send-email-jm@lentin.co.uk>
- <20120406234955.840F73E1323@localhost>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 22/23] tegra: fdt: Add EMC data for Tegra2
+	Seaboard
+Date: Mon, 09 Apr 2012 15:30:02 -0600
+Message-ID: <4F8354DA.7050408@wwwdotorg.org>
+References: <1333662916-17958-6-git-send-email-sjg@chromium.org>
+	<1333662916-17958-23-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120406234955.840F73E1323@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1333662916-17958-23-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 06, 2012 at 04:49:55PM -0700, Grant Likely wrote:
-> On Tue, 27 Mar 2012 22:54:11 +0100, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org> wrote:
-> > +config MACH_DNS320_DT
-> > +	bool "D-Link DNS-320 (Flattened Device Tree)"
-> > +	select ARCH_KIRKWOOD_DT
-> > +	select MACH_DNSKW_DT
-> > +	select CONFIG_MTD_OF_PARTS
-> > +	select CONFIG_SERIAL_OF_PLATFORM
+On 04/05/2012 03:55 PM, Simon Glass wrote:
+> This adds timings for T20 and T25 Seaboards, using the bindings found here:
 > 
-> These two lines are dangerous.
+> http://patchwork.ozlabs.org/patch/132928/
+> 
+> We supply both full speed options for normal running, and half speed options
+> for testing / development.
+> 
+> Signed-off-by: Simon Glass <sjg@chromium.org>
 
-No they aren't - at least not as the above patch is written.  There are
-no configuration variables called CONFIG_CONFIG_MTD_OF_PARTS nor
-CONFIG_CONFIG_SERIAL_OF_PLATFORM.
-
-Kconfig won't warn about that, and if we assume that this patch has been
-properly tested, it would appear that these two select statements just
-aren't required (because they're effective no-ops as they currently stand).
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
