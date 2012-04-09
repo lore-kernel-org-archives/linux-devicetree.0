@@ -1,73 +1,57 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/7] dt/clock: Add handling for fixed clocks and a clock
- node setup iterator
-Date: Mon, 9 Apr 2012 16:49:33 +0800
-Message-ID: <20120409084930.GA18692@S2101-09.ap.freescale.net>
-References: <1331680947-29861-1-git-send-email-robherring2@gmail.com>
- <1331680947-29861-5-git-send-email-robherring2@gmail.com>
- <20120314075930.GF21337@S2101-09.ap.freescale.net>
- <4F81A53B.7020804@gmail.com>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [PATCH 1/1] Add support 2 SATA ports for Maui and change filename
+ from sata_dwc_460ex.c to sata_dwc_4xx.c
+Date: Mon, 09 Apr 2012 14:12:45 +0400
+Message-ID: <4F82B61D.8010502@mvista.com>
+References: <1333447938-16461-1-git-send-email-tqnguyen@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F81A53B.7020804-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1333447938-16461-1-git-send-email-tqnguyen@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: "Thang Q. Nguyen" <tqnguyen@apm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jeff Garzik <jgarzik@pobox.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 08, 2012 at 09:48:27AM -0500, Rob Herring wrote:
-...
-> So I started implementing support for multiple outputs, but ran into a
-> complication. If you have multiple clocks on a node, then you have to
-> have a clk_src_get function to translate the clock cell value to a
-> struct clk.
+Hello.
 
-So this is how clk_src_get looks like.
+On 03-04-2012 14:12, Thang Q. Nguyen wrote:
 
-struct clk *clk_src_get(struct of_phandle_args *a, void *data)
-{
-        struct clk **clks = data;
-        return clks[a->args[0]];
-}
+> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
+[...]
 
-> This would also require allocating an array of struct clk's
-> to do the lookup.
+> diff --git a/arch/powerpc/boot/dts/bluestone.dts b/arch/powerpc/boot/dts/bluestone.dts
+> index cfa23bf..803fda6 100644
+> --- a/arch/powerpc/boot/dts/bluestone.dts
+> +++ b/arch/powerpc/boot/dts/bluestone.dts
+> @@ -155,6 +155,27 @@
+>   					/*RXDE*/  0x5 0x4>;
+>   		};
+>
+> +		/* SATA DWC devices */
+> +		SATA0: sata@bffd1000 {
+> +			compatible = "amcc,sata-apm821xx";
+> +			reg =<4 0xbffd1000 0x800   /* SATA0 */
+> +			       4 0xbffd0800 0x400>; /* AHBDMA */
+> +			dma-channel=<0>;
+> +			interrupt-parent =<&UIC0>;
+> +			interrupts =<26 4    /* SATA0 */
+> +			              25 4>;  /* AHBDMA */
+> +		};
+> +
+> +		SATA1: sata@bffd1800 {
+> +			compatible = "amcc,sata-apm821xx";
+> +			reg =<4 0xbffd1800 0x800   /* SATA1 */
+> +			       4 0xbffd0800 0x400>; /* AHBDMA */
+> +			dma-channel=<1>;
+> +			interrupt-parent =<&UIC0>;
+> +			interrupts =<27 4    /* SATA1 */
+> +			              25 4>;  /* AHBDMA */
+> +		};
+> +
 
-And this how allocating looks like.
+    So, this is dual SATA controller, not dual port SATA controller?
+BTW, it's wrong to have the same AHBDMA resource in two device nodes I think.
 
-        clks = kzalloc(sizeof(*clks)  * num, GFP_KERNEL);
-        if (!clks)
-                return -ENOMEM;
-
-Seriously, not a big complication, right?
-
-> This is all doable, but I don't see the benefit over
-> having a single node per fixed clock. We're not likely to have *lots* of
-> fixed clocks. I think we should leave fixed-clock defined as a single
-> output.
-
-The problem is there is nothing specific to fixed-clock.  If you have
-some reason to not support blob node for fixed-clock, the reason will
-apply on clk_gate, clk_divider and clk_mux too.  Then, which clocks
-will support the #clock-cells in the binding document?
-
-So to me, you need to either have it implemented or remove it from the
-binding document completely.
-
-Regards,
-Shawn
-
-> If you really see the benefit, you can add a new binding
-> "multiple-fixed-clocks" or something platform specific.
-> 
+MBR, Sergei
