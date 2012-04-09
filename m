@@ -1,78 +1,45 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 4/4] clk: add DT fixed-clock binding support
-Date: Mon,  9 Apr 2012 15:25:01 -0500
-Message-ID: <1334003101-17274-5-git-send-email-robherring2@gmail.com>
-References: <1334003101-17274-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334003101-17274-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Mike Turquette <mturquette@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, shawn.guo@linaro.org, Rob Herring <rob.herring@calxeda.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH V3 1/5] ARM: kirkwood: Basic support for DNS-320 and
+ DNS-325
+Date: Mon, 9 Apr 2012 22:27:48 +0100
+Message-ID: <20120409212748.GJ24211@n2100.arm.linux.org.uk>
+References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
+ <1332885255-8304-2-git-send-email-jm@lentin.co.uk>
+ <20120406234955.840F73E1323@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120406234955.840F73E1323@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely@secretlab.ca>
+On Fri, Apr 06, 2012 at 04:49:55PM -0700, Grant Likely wrote:
+> On Tue, 27 Mar 2012 22:54:11 +0100, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org> wrote:
+> > +config MACH_DNS320_DT
+> > +	bool "D-Link DNS-320 (Flattened Device Tree)"
+> > +	select ARCH_KIRKWOOD_DT
+> > +	select MACH_DNSKW_DT
+> > +	select CONFIG_MTD_OF_PARTS
+> > +	select CONFIG_SERIAL_OF_PLATFORM
+> 
+> These two lines are dangerous.
 
-Add support for DT "fixed-clock" binding to the common fixed rate clock
-support.
+No they aren't - at least not as the above patch is written.  There are
+no configuration variables called CONFIG_CONFIG_MTD_OF_PARTS nor
+CONFIG_CONFIG_SERIAL_OF_PLATFORM.
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-[Rob Herring] Rework and move into common clock infrastructure
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
----
- drivers/clk/clk-fixed-rate.c |   23 +++++++++++++++++++++++
- include/linux/clk-provider.h |    2 ++
- 2 files changed, 25 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-index 90c79fb..72bd083 100644
---- a/drivers/clk/clk-fixed-rate.c
-+++ b/drivers/clk/clk-fixed-rate.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/io.h>
- #include <linux/err.h>
-+#include <linux/of.h>
- 
- /*
-  * DOC: basic fixed-rate clock that cannot gate
-@@ -80,3 +81,25 @@ out:
- 			(parent_name ? 1 : 0),
- 			flags);
- }
-+
-+#ifdef CONFIG_OF
-+/**
-+ * of_fixed_clk_setup() - Setup function for simple fixed rate clock
-+ */
-+void __init of_fixed_clk_setup(struct device_node *node)
-+{
-+	struct clk *clk;
-+	const char *clk_name = node->name;
-+	u32 rate;
-+
-+	if (of_property_read_u32(node, "clock-frequency", &rate))
-+		return;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	clk = clk_register_fixed_rate(NULL, clk_name, NULL, CLK_IS_ROOT, rate);
-+	if (clk)
-+		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+EXPORT_SYMBOL_GPL(of_fixed_clk_setup);
-+#endif
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 0aab294..038d312 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -153,6 +153,8 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
- 		unsigned long fixed_rate);
- 
-+void of_fixed_clk_setup(struct device_node *np);
-+
- /**
-  * struct clk_gate - gating clock
-  *
--- 
-1.7.5.4
+Kconfig won't warn about that, and if we assume that this patch has been
+properly tested, it would appear that these two select statements just
+aren't required (because they're effective no-ops as they currently stand).
