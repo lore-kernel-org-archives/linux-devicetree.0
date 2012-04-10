@@ -1,13 +1,15 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [RFC] dt: export of_have_populated_dt
-Date: Tue, 10 Apr 2012 19:36:15 +0200
-Message-ID: <4F846F8F.6090307@linutronix.de>
-References: <1334070672-11252-1-git-send-email-balajitk@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v6 17/17] pwm: Take over maintainership of the PWM
+ subsystem
+Date: Tue, 10 Apr 2012 19:51:43 +0000
+Message-ID: <201204101951.44198.arnd@arndb.de>
+References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
+ <1334070400-25013-18-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1334070672-11252-1-git-send-email-balajitk-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1334070400-25013-18-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,17 +19,18 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2012 05:11 PM, Balaji T K wrote:
-> If of_have_populated_dt is called from module, build fails with "allnodes"
-> undefined error, so remove inline and export of_have_populated_dt.
+On Tuesday 10 April 2012, Thierry Reding wrote:
+> I'm taking over the maintainership of the PWM subsystem. This commit
+> also adds the URLs to the gitorious project and repository as well as
+> any missing files related to the PWM subsystem.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> ---
+> Note: I guess this patch in particular could use some Acked-by, maybe from
+> Arnd and Sascha so that people will know this happens with their blessing.
 
-Why do you need this function at all? You should not need it. *I*
-introduced it because I need it early x86 setup code to figure out if
-there a DT available or not. A driver should not care about it. You do 
-have your dev.of_node and this is it.
-
-Sebastian
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
