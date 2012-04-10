@@ -1,31 +1,57 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 4/5] staging: octeon_ethernet: Convert to use device tree.
-Date: Tue, 10 Apr 2012 09:43:16 -0700
-Message-ID: <20120410164316.GA15131@kroah.com>
-References: <1332808075-8333-1-git-send-email-ddaney.cavm@gmail.com>
- <1332808075-8333-5-git-send-email-ddaney.cavm@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC] dt: export of_have_populated_dt
+Date: Tue, 10 Apr 2012 12:20:27 -0500
+Message-ID: <4F846BDB.8020805@gmail.com>
+References: <1334070672-11252-1-git-send-email-balajitk@ti.com> <4F845D99.7020705@ti.com> <87y5q3v9pd.fsf@laptop.org> <4F845FF9.5080005@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1332808075-8333-5-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, netdev@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F845FF9.5080005@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Chris Ball <cjb@laptop.org>, Balaji T K <balajitk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, rnayak@ti.com, bigeasy@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 26, 2012 at 05:27:54PM -0700, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
+On 04/10/2012 11:29 AM, Cousson, Benoit wrote:
+> Hi Chris,
 > 
-> Get MAC address and PHY connection from the device tree.  The driver
-> is converted to a platform driver.
+> On 4/10/2012 6:21 PM, Chris Ball wrote:
+>> Hi,
+>>
+>> On Tue, Apr 10 2012, Cousson, Benoit wrote:
+>>> Hi Balaji,
+>>>
+>>> On 4/10/2012 5:11 PM, Balaji T K wrote:
+>>>> If of_have_populated_dt is called from module, build fails with
+>>>> "allnodes"
+>>>> undefined error, so remove inline and export of_have_populated_dt.
+>>>
+>>> Is this function really called from the MMC driver?
+>>
+>> ~/git/linux % git grep of_have_populated_dt drivers/
+>> drivers/gpio/gpio-samsung.c:    if (!of_have_populated_dt())
+>> drivers/mmc/host/omap_hsmmc.c:  if (of_have_populated_dt()&&  !vdd)
+>> drivers/mmc/host/omap_hsmmc.c:                  
+>> (!of_have_populated_dt())) {
 > 
-> Cc: netdev@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
+> Gosh, twice... I should be in a wrong branch :-(
 > 
-> Should probably go via Ralf's linux-mips.org tree.
+> Then the next question to Rob...
+> 
+> Rob,
+> Does it make sense to use that in the driver? So far I was using that
+> only in the arch code to make the difference between the DT boot and the
+> non-DT boot.
+> 
+> I guess that a driver should rely on of_match_device or non-NULL
+> device_node to figure out that?
+> 
 
-That's fine with me:
-	Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Agreed. of_match_device or device_node ptr check is the right approach.
+
+Rob
+
+> Thanks,
+> Benoit
+
