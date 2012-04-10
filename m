@@ -1,54 +1,71 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] dt: export of_have_populated_dt
-Date: Tue, 10 Apr 2012 14:33:57 -0600
-Message-ID: <20120410203357.D86323E0D65@localhost>
-References: <1334070672-11252-1-git-send-email-balajitk@ti.com> <4F845D99.7020705@ti.com> <87y5q3v9pd.fsf@laptop.org> <4F845FF9.5080005@ti.com> <4F846BDB.8020805@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F846BDB.8020805@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, "Cousson, Benoit" <b-cousson@ti.com>
-Cc: linux-omap@vger.kernel.org, Balaji T K <balajitk@ti.com>, devicetree-discuss@lists.ozlabs.org, Chris Ball <cjb@laptop.org>, bigeasy@linutronix.de
+Subject: Re: [PATCH] irq/irq_domain: Quit ignoring error returns from irq_alloc_desc_from().
+Date: Tue, 10 Apr 2012 14:41:53 -0600
+Message-ID: <20120410204153.4B1CC3E0D65@localhost>
+References: <1333669933-25267-1-git-send-email-ddaney.cavm@gmail.com> <20120407012616.62D133E17B2@localhost> <4F8314BE.9090708@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F8314BE.9090708@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: David Daney <ddaney.cavm@gmail.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Apr 2012 12:20:27 -0500, Rob Herring <robherring2@gmail.com> wrote:
-> On 04/10/2012 11:29 AM, Cousson, Benoit wrote:
-> > Hi Chris,
-> > 
-> > On 4/10/2012 6:21 PM, Chris Ball wrote:
-> >> Hi,
+On Mon, 09 Apr 2012 09:56:30 -0700, David Daney <ddaney.cavm@gmail.com> wrote:
+> On 04/06/2012 06:26 PM, Grant Likely wrote:
+> > On Thu,  5 Apr 2012 16:52:13 -0700, David Daney<ddaney.cavm@gmail.com>  wrote:
+> >> From: David Daney<david.daney@cavium.com>
 > >>
-> >> On Tue, Apr 10 2012, Cousson, Benoit wrote:
-> >>> Hi Balaji,
-> >>>
-> >>> On 4/10/2012 5:11 PM, Balaji T K wrote:
-> >>>> If of_have_populated_dt is called from module, build fails with
-> >>>> "allnodes"
-> >>>> undefined error, so remove inline and export of_have_populated_dt.
-> >>>
-> >>> Is this function really called from the MMC driver?
+> >> In commit 4bbdd45a (irq_domain/powerpc: eliminate irq_map; use
+> >> irq_alloc_desc() instead) code was added that ignores error returns
+> >> from irq_alloc_desc_from() by (silently) casting the return value to
+> >> unsigned.  The negitive value error return now suddenly looks like a
+> >> valid irq number.
 > >>
-> >> ~/git/linux % git grep of_have_populated_dt drivers/
-> >> drivers/gpio/gpio-samsung.c:    if (!of_have_populated_dt())
-> >> drivers/mmc/host/omap_hsmmc.c:  if (of_have_populated_dt()&&  !vdd)
-> >> drivers/mmc/host/omap_hsmmc.c:                  
-> >> (!of_have_populated_dt())) {
-> > 
-> > Gosh, twice... I should be in a wrong branch :-(
-> > 
-> > Then the next question to Rob...
-> > 
-> > Rob,
-> > Does it make sense to use that in the driver? So far I was using that
-> > only in the arch code to make the difference between the DT boot and the
-> > non-DT boot.
-> > 
-> > I guess that a driver should rely on of_match_device or non-NULL
-> > device_node to figure out that?
-> > 
+> >> Commits cc79ca69 (irq_domain: Move irq_domain code from powerpc to
+> >> kernel/irq) and 1bc04f2c (irq_domain: Add support for base irq and
+> >> hwirq in legacy mappings) move this code to its current location in
+> >> irqdomain.c
+> >>
+> >> The result of all of this is a null pointer dereference OOPS if one of
+> >> the error cases is hit.
+> >>
+> >> The fix: Don't cast away the negativeness of the return value and then
+> >> check for errors.
+> >>
+> >> Signed-off-by: David Daney<david.daney@cavium.com>
+> >> ---
+> >>   kernel/irq/irqdomain.c |   11 ++++++-----
+> >>   1 files changed, 6 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> >> index af48e59..9d3e3ae 100644
+> >> --- a/kernel/irq/irqdomain.c
+> >> +++ b/kernel/irq/irqdomain.c
+> >> @@ -351,6 +351,7 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+> >>   				irq_hw_number_t hwirq)
+> >>   {
+> >>   	unsigned int virq, hint;
+> >> +	int irq;
+> >
+> > Merged, but I've dropped the new variable in favour of making virq an
+> > int.  Makes for a smaller diffstat.
+> >
 > 
-> Agreed. of_match_device or device_node ptr check is the right approach.
+> Thanks Grant,
+> 
+> I had thought about that too, but since virq throughout all the rest of 
+> the code is unsigned, I didn't want to introduce an inconsistency.
+> 
+> After a little more thought, I think that the domain of virq and the irq 
+> used by the rest of the kernel are the same, so it might make sense to 
+> change virq to be int universally, and use the kernel convention that 
+> negative numbers indicate error conditions.  But that would be a much 
+> larger patch.
 
-Good; I can safely ignore this patch.  :-)
+... touching pretty much *every* driver in the kernel!  Blech!
+
+Yeah, that's not going to happen.  As a rule, irq numbers are always
+unsigned, but there are a few apis that can return either '0' meaning
+no irq, or a negative value indicating an error.  The irq_alloc_desc
+apis unfortunately are one such case.
 
 g.
-
