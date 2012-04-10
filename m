@@ -1,54 +1,110 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/1 v3] dt: add property iteration helpers
-Date: Tue, 10 Apr 2012 04:27:28 +0200
-Message-ID: <20120410022728.GD29577@game.jcrosoft.org>
-References: <1333968374-28451-1-git-send-email-plagnioj@jcrosoft.com>
- <4F82FF8E.8090407@wwwdotorg.org>
+From: Thang Nguyen <tqnguyen@apm.com>
+Subject: RE: [PATCH 1/1] Add support 2 SATA ports for Maui and change filename
+ from sata_dwc_460ex.c to sata_dwc_4xx.c
+Date: Tue, 10 Apr 2012 10:46:22 +0700
+Message-ID: <8a0ea5bd221ddeb9eded16e180aa8fbb@mail.gmail.com>
+References: <1333447938-16461-1-git-send-email-tqnguyen@apm.com>
+ <4F82B61D.8010502@mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F82FF8E.8090407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4F82B61D.8010502@mvista.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Jeff Garzik <jgarzik@pobox.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 09:26 Mon 09 Apr     , Stephen Warren wrote:
-> On 04/09/2012 04:46 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> > 
-> > This patch adds macros of_property_for_each_u32() and
-> > of_property_for_each_string(), which iterate over an array of values
-> > within a device-tree property. Usage is for example:
-> ...
-> > ---
-> > I need it for at91 for the interrupt controller
-> > and pinctrl
-> 
-> OK. But just reposting the patch isn't a good idea; we don't want it to
-> get applied directly to multiple places.
-> 
-> I'd included this patch in my series to add DT support into the pinctrl
-> subsystem, and hence I believe it was planned to merge it into that
-> tree. If it's needed elsewhere, I guess it should be put in a branch
-> that can be merged into both the pinctrl tree and elsewhere.
-> 
-> Linus, Grant, Rob, can you co-ordinate this? If you want, I can create
-> the branch and send a pull request to LinusW. I'm not sure which branch
-> Jean-Christophe needs this in for his IRQ work.
-today just this patch and the 3.4-rc2 for the irq
+Hi Sergei,
+Thanks for your review.
+On Maui, there are 2 separate SATA controllers but they share the same
+AHBDMA controller. Each SATA controller is assigned a fixed DMA channel on
+the AHBDMA (channel 0 is assigned to SATA controller 0 and channel 1 is
+assigned to SATA controller 1).
+For the 460EX, there is only 1 SATA controller and it uses channel 0 for
+transferring data.
 
-for pinctrl LinusW tree
+In my opinion, in the case of Maui, we can use the same DMA information in
+2 device nodes as they use the same DMA controller. And in another CPU, if
+they use different DMA controller, the corresponding information will also
+be different.
 
-Best Regards,
-J.
+Regards,
+Thang Nguyen -
+-----Original Message-----
+From: Sergei Shtylyov [mailto:sshtylyov@mvista.com]
+Sent: Monday, April 09, 2012 5:13 PM
+To: Thang Q. Nguyen
+Cc: Benjamin Herrenschmidt; Paul Mackerras; Jeff Garzik; Grant Likely; Rob
+Herring; linuxppc-dev@lists.ozlabs.org; linux-kernel@vger.kernel.org;
+linux-ide@vger.kernel.org; devicetree-discuss@lists.ozlabs.org
+Subject: Re: [PATCH 1/1] Add support 2 SATA ports for Maui and change
+filename from sata_dwc_460ex.c to sata_dwc_4xx.c
+
+Hello.
+
+On 03-04-2012 14:12, Thang Q. Nguyen wrote:
+
+> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
+[...]
+
+> diff --git a/arch/powerpc/boot/dts/bluestone.dts
+b/arch/powerpc/boot/dts/bluestone.dts
+> index cfa23bf..803fda6 100644
+> --- a/arch/powerpc/boot/dts/bluestone.dts
+> +++ b/arch/powerpc/boot/dts/bluestone.dts
+> @@ -155,6 +155,27 @@
+>   					/*RXDE*/  0x5 0x4>;
+>   		};
+>
+> +		/* SATA DWC devices */
+> +		SATA0: sata@bffd1000 {
+> +			compatible =3D "amcc,sata-apm821xx";
+> +			reg =3D<4 0xbffd1000 0x800   /* SATA0 */
+> +			       4 0xbffd0800 0x400>; /* AHBDMA */
+> +			dma-channel=3D<0>;
+> +			interrupt-parent =3D<&UIC0>;
+> +			interrupts =3D<26 4    /* SATA0 */
+> +			              25 4>;  /* AHBDMA */
+> +		};
+> +
+> +		SATA1: sata@bffd1800 {
+> +			compatible =3D "amcc,sata-apm821xx";
+> +			reg =3D<4 0xbffd1800 0x800   /* SATA1 */
+> +			       4 0xbffd0800 0x400>; /* AHBDMA */
+> +			dma-channel=3D<1>;
+> +			interrupt-parent =3D<&UIC0>;
+> +			interrupts =3D<27 4    /* SATA1 */
+> +			              25 4>;  /* AHBDMA */
+> +		};
+> +
+
+    So, this is dual SATA controller, not dual port SATA controller?
+BTW, it's wrong to have the same AHBDMA resource in two device nodes I
+think.
+
+MBR, Sergei
+CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, =
+
+is for the sole use of the intended recipient(s) and contains information=
+=A0
+that is confidential and proprietary to AppliedMicro Corporation or its sub=
+sidiaries. =
+
+It is to be used solely for the purpose of furthering the parties' business=
+ relationship. =
+
+All unauthorized review, use, disclosure or distribution is prohibited. =
+
+If you are not the intended recipient, please contact the sender by reply e=
+-mail =
+
+and destroy all copies of the original message.
