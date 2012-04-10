@@ -1,71 +1,35 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] irq/irq_domain: Quit ignoring error returns from irq_alloc_desc_from().
-Date: Tue, 10 Apr 2012 14:41:53 -0600
-Message-ID: <20120410204153.4B1CC3E0D65@localhost>
-References: <1333669933-25267-1-git-send-email-ddaney.cavm@gmail.com> <20120407012616.62D133E17B2@localhost> <4F8314BE.9090708@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F8314BE.9090708@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: David Daney <ddaney.cavm@gmail.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v6 17/17] pwm: Take over maintainership of the PWM
+ subsystem
+Date: Tue, 10 Apr 2012 22:58:40 +0200
+Message-ID: <20120410205840.GC20478@pengutronix.de>
+References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
+ <1334070400-25013-18-git-send-email-thierry.reding@avionic-design.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1334070400-25013-18-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 09 Apr 2012 09:56:30 -0700, David Daney <ddaney.cavm@gmail.com> wrote:
-> On 04/06/2012 06:26 PM, Grant Likely wrote:
-> > On Thu,  5 Apr 2012 16:52:13 -0700, David Daney<ddaney.cavm@gmail.com>  wrote:
-> >> From: David Daney<david.daney@cavium.com>
-> >>
-> >> In commit 4bbdd45a (irq_domain/powerpc: eliminate irq_map; use
-> >> irq_alloc_desc() instead) code was added that ignores error returns
-> >> from irq_alloc_desc_from() by (silently) casting the return value to
-> >> unsigned.  The negitive value error return now suddenly looks like a
-> >> valid irq number.
-> >>
-> >> Commits cc79ca69 (irq_domain: Move irq_domain code from powerpc to
-> >> kernel/irq) and 1bc04f2c (irq_domain: Add support for base irq and
-> >> hwirq in legacy mappings) move this code to its current location in
-> >> irqdomain.c
-> >>
-> >> The result of all of this is a null pointer dereference OOPS if one of
-> >> the error cases is hit.
-> >>
-> >> The fix: Don't cast away the negativeness of the return value and then
-> >> check for errors.
-> >>
-> >> Signed-off-by: David Daney<david.daney@cavium.com>
-> >> ---
-> >>   kernel/irq/irqdomain.c |   11 ++++++-----
-> >>   1 files changed, 6 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> >> index af48e59..9d3e3ae 100644
-> >> --- a/kernel/irq/irqdomain.c
-> >> +++ b/kernel/irq/irqdomain.c
-> >> @@ -351,6 +351,7 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
-> >>   				irq_hw_number_t hwirq)
-> >>   {
-> >>   	unsigned int virq, hint;
-> >> +	int irq;
-> >
-> > Merged, but I've dropped the new variable in favour of making virq an
-> > int.  Makes for a smaller diffstat.
-> >
+On Tue, Apr 10, 2012 at 05:06:40PM +0200, Thierry Reding wrote:
+> I'm taking over the maintainership of the PWM subsystem. This commit
+> also adds the URLs to the gitorious project and repository as well as
+> any missing files related to the PWM subsystem.
 > 
-> Thanks Grant,
-> 
-> I had thought about that too, but since virq throughout all the rest of 
-> the code is unsigned, I didn't want to introduce an inconsistency.
-> 
-> After a little more thought, I think that the domain of virq and the irq 
-> used by the rest of the kernel are the same, so it might make sense to 
-> change virq to be int universally, and use the kernel convention that 
-> negative numbers indicate error conditions.  But that would be a much 
-> larger patch.
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> ---
+> Note: I guess this patch in particular could use some Acked-by, maybe from
+> Arnd and Sascha so that people will know this happens with their blessing.
 
-... touching pretty much *every* driver in the kernel!  Blech!
+Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Yeah, that's not going to happen.  As a rule, irq numbers are always
-unsigned, but there are a few apis that can return either '0' meaning
-no irq, or a negative value indicating an error.  The irq_alloc_desc
-apis unfortunately are one such case.
 
-g.
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
