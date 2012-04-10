@@ -1,45 +1,48 @@
-From: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+From: "Cousson, Benoit" <b-cousson@ti.com>
 Subject: Re: [RFC] dt: export of_have_populated_dt
-Date: Tue, 10 Apr 2012 12:21:50 -0400
-Message-ID: <87y5q3v9pd.fsf@laptop.org>
-References: <1334070672-11252-1-git-send-email-balajitk@ti.com>
- <4F845D99.7020705@ti.com>
+Date: Tue, 10 Apr 2012 18:29:45 +0200
+Message-ID: <4F845FF9.5080005@ti.com>
+References: <1334070672-11252-1-git-send-email-balajitk@ti.com> <4F845D99.7020705@ti.com> <87y5q3v9pd.fsf@laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F845D99.7020705-l0cyMroinI0@public.gmane.org> (Benoit Cousson's message of "Tue, 10
- Apr 2012 18:19:37 +0200")
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <87y5q3v9pd.fsf@laptop.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>, robherring2@gmail.com
+Cc: Balaji T K <balajitk@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, rnayak@ti.com, bigeasy@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chris,
 
-On Tue, Apr 10 2012, Cousson, Benoit wrote:
-> Hi Balaji,
+On 4/10/2012 6:21 PM, Chris Ball wrote:
+> Hi,
 >
-> On 4/10/2012 5:11 PM, Balaji T K wrote:
->> If of_have_populated_dt is called from module, build fails with "allnodes"
->> undefined error, so remove inline and export of_have_populated_dt.
+> On Tue, Apr 10 2012, Cousson, Benoit wrote:
+>> Hi Balaji,
+>>
+>> On 4/10/2012 5:11 PM, Balaji T K wrote:
+>>> If of_have_populated_dt is called from module, build fails with "allnodes"
+>>> undefined error, so remove inline and export of_have_populated_dt.
+>>
+>> Is this function really called from the MMC driver?
 >
-> Is this function really called from the MMC driver?
+> ~/git/linux % git grep of_have_populated_dt drivers/
+> drivers/gpio/gpio-samsung.c:    if (!of_have_populated_dt())
+> drivers/mmc/host/omap_hsmmc.c:  if (of_have_populated_dt()&&  !vdd)
+> drivers/mmc/host/omap_hsmmc.c:                   (!of_have_populated_dt())) {
 
-~/git/linux % git grep of_have_populated_dt drivers/
-drivers/gpio/gpio-samsung.c:    if (!of_have_populated_dt())
-drivers/mmc/host/omap_hsmmc.c:  if (of_have_populated_dt() && !vdd)
-drivers/mmc/host/omap_hsmmc.c:                   (!of_have_populated_dt())) {
+Gosh, twice... I should be in a wrong branch :-(
 
-- Chris.
--- 
-Chris Ball   <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>   <http://printf.net/>
-One Laptop Per Child
+Then the next question to Rob...
+
+Rob,
+Does it make sense to use that in the driver? So far I was using that 
+only in the arch code to make the difference between the DT boot and the 
+non-DT boot.
+
+I guess that a driver should rely on of_match_device or non-NULL 
+device_node to figure out that?
+
+Thanks,
+Benoit
