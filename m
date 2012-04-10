@@ -1,14 +1,15 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] dtc: Basic integer expressions
-Date: Tue, 10 Apr 2012 04:38:07 +0200
-Message-ID: <20120410023807.GF29577@game.jcrosoft.org>
-References: <1333508160-7015-1-git-send-email-swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/1 v3] dt: add property iteration helpers
+Date: Tue, 10 Apr 2012 04:27:28 +0200
+Message-ID: <20120410022728.GD29577@game.jcrosoft.org>
+References: <1333968374-28451-1-git-send-email-plagnioj@jcrosoft.com>
+ <4F82FF8E.8090407@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1333508160-7015-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <4F82FF8E.8090407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,35 +20,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20:56 Tue 03 Apr     , Stephen Warren wrote:
-> Written by David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>. Additions by me:
-> * Ported to ToT dtc.
-> * Renamed cell to integer throughout.
-> * Implemented value range checks.
-> * Allow U/L/UL/LL/ULL suffix on literals.
-> * Enabled the commented test.
+On 09:26 Mon 09 Apr     , Stephen Warren wrote:
+> On 04/09/2012 04:46 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> > 
+> > This patch adds macros of_property_for_each_u32() and
+> > of_property_for_each_string(), which iterate over an array of values
+> > within a device-tree property. Usage is for example:
+> ...
+> > ---
+> > I need it for at91 for the interrupt controller
+> > and pinctrl
 > 
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> ---
-> v3:
-> * Fix printf warning by s/%ld/%zd/
-> * Support plain "U" as an integer literal suffix
-> * Fix misplaced semi-colons in grammar
-> * Support integer expressions for /memreserve/ and /incbin/ too
-> * Modify eval_literal to check U/L suffixes after strtoull call,
->   using strspn/strlen
-> * Remove mention of libfdt from comment in tests/integer-expressions.c
-> * Add comment to explain integer_prim range check
-> v2:
-> * s/cell/integer/ throughout.
-> * Allow signed-extended values to pass the overall cell range check.
-> * Allow L/UL/LL/ULL suffix on literals. This is purely for compatibility
->   with C, and has no effect on dtc's processing.
-> * Enabled the 3 disabled tests.
-Stephen what is the status of the define value?
+> OK. But just reposting the patch isn't a good idea; we don't want it to
+> get applied directly to multiple places.
+> 
+> I'd included this patch in my series to add DT support into the pinctrl
+> subsystem, and hence I believe it was planned to merge it into that
+> tree. If it's needed elsewhere, I guess it should be put in a branch
+> that can be merged into both the pinctrl tree and elsewhere.
+> 
+> Linus, Grant, Rob, can you co-ordinate this? If you want, I can create
+> the branch and send a pull request to LinusW. I'm not sure which branch
+> Jean-Christophe needs this in for his IRQ work.
+today just this patch and the 3.4-rc2 for the irq
+
+for pinctrl LinusW tree
 
 Best Regards,
 J.
