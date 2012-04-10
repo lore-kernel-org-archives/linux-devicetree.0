@@ -1,108 +1,44 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH 1/1] Add support 2 SATA ports for Maui and change filename
- from sata_dwc_460ex.c to sata_dwc_4xx.c
-Date: Tue, 10 Apr 2012 15:22:03 +0400
-Message-ID: <4F8417DB.3040502@mvista.com>
-References: <1333447938-16461-1-git-send-email-tqnguyen@apm.com> <4F82B61D.8010502@mvista.com> <8a0ea5bd221ddeb9eded16e180aa8fbb@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 3/4] clk: add DT clock binding support
+Date: Tue, 10 Apr 2012 07:57:12 -0500
+Message-ID: <4F842E28.8060609@gmail.com>
+References: <1334003101-17274-1-git-send-email-robherring2@gmail.com> <1334003101-17274-4-git-send-email-robherring2@gmail.com> <CAOMZO5AKmnQRo4_3GVDSMUc0fMZ5orwvZSxjXfn6m-5Boew04A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <8a0ea5bd221ddeb9eded16e180aa8fbb@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Thang Nguyen <tqnguyen@apm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jeff Garzik <jgarzik@pobox.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5AKmnQRo4_3GVDSMUc0fMZ5orwvZSxjXfn6m-5Boew04A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, shawn.guo@linaro.org, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 10-04-2012 7:46, Thang Nguyen wrote:
-
-> Hi Sergei,
-> Thanks for your review.
-
-> On Maui, there are 2 separate SATA controllers but they share the same
-> AHBDMA controller. Each SATA controller is assigned a fixed DMA channel on
-> the AHBDMA (channel 0 is assigned to SATA controller 0 and channel 1 is
-> assigned to SATA controller 1).
-> For the 460EX, there is only 1 SATA controller and it uses channel 0 for
-> transferring data.
-
-> In my opinion, in the case of Maui, we can use the same DMA information in
-> 2 device nodes as they use the same DMA controller. And in another CPU, if
-> they use different DMA controller, the corresponding information will also
-> be different.
-
-    No, either the DMA controller should be a separate device node, or both 
-ports and DMA controller should be packed into the single device node. The way 
-you're doing it is incorrect because it creates memory resource conflict 
-between devices when they are instantiated as platfrom devices.
-
-> Regards,
-> Thang Nguyen -
-> -----Original Message-----
-> From: Sergei Shtylyov [mailto:sshtylyov@mvista.com]
-> Sent: Monday, April 09, 2012 5:13 PM
-> To: Thang Q. Nguyen
-> Cc: Benjamin Herrenschmidt; Paul Mackerras; Jeff Garzik; Grant Likely; Rob
-> Herring; linuxppc-dev@lists.ozlabs.org; linux-kernel@vger.kernel.org;
-> linux-ide@vger.kernel.org; devicetree-discuss@lists.ozlabs.org
-> Subject: Re: [PATCH 1/1] Add support 2 SATA ports for Maui and change
-> filename from sata_dwc_460ex.c to sata_dwc_4xx.c
-
-> Hello.
-
-> On 03-04-2012 14:12, Thang Q. Nguyen wrote:
-
->> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
-> [...]
-
->> diff --git a/arch/powerpc/boot/dts/bluestone.dts
-> b/arch/powerpc/boot/dts/bluestone.dts
->> index cfa23bf..803fda6 100644
->> --- a/arch/powerpc/boot/dts/bluestone.dts
->> +++ b/arch/powerpc/boot/dts/bluestone.dts
->> @@ -155,6 +155,27 @@
->>    					/*RXDE*/  0x5 0x4>;
->>    		};
+On 04/09/2012 11:27 PM, Fabio Estevam wrote:
+> On Mon, Apr 9, 2012 at 5:25 PM, Rob Herring <robherring2@gmail.com> wrote:
+>> From: Grant Likely <grant.likely@secretlab.ca>
 >>
->> +		/* SATA DWC devices */
->> +		SATA0: sata@bffd1000 {
->> +			compatible = "amcc,sata-apm821xx";
->> +			reg =<4 0xbffd1000 0x800   /* SATA0 */
->> +			       4 0xbffd0800 0x400>; /* AHBDMA */
->> +			dma-channel=<0>;
->> +			interrupt-parent =<&UIC0>;
->> +			interrupts =<26 4    /* SATA0 */
->> +			              25 4>;  /* AHBDMA */
->> +		};
->> +
->> +		SATA1: sata@bffd1800 {
->> +			compatible = "amcc,sata-apm821xx";
->> +			reg =<4 0xbffd1800 0x800   /* SATA1 */
->> +			       4 0xbffd0800 0x400>; /* AHBDMA */
->> +			dma-channel=<1>;
->> +			interrupt-parent =<&UIC0>;
->> +			interrupts =<27 4    /* SATA1 */
->> +			              25 4>;  /* AHBDMA */
->> +		};
->> +
+>> Based on work 1st by Ben Herrenschmidt and Jeremy Kerr, then by Grant
+>> Likely, this patch adds support to clk_get to allow drivers to retrieve
+>> clock data from the device tree.
+>>
+>> Platforms scan for clocks in DT with of_clk_init and a match table, and
+>> the register a provider through of_clk_add_provider. The provider's
+>> clk_src_get function will be called when a device references the
+>> provider's OF node for a clock reference.
+>>
+>> v5 (Rob Herring):
+>>    - Move from drivers/of into common clock subsystem
+>>    - Squashed "dt/clock: add a simple provider get function" and
+>>      "dt/clock: add function to get parent clock name"
+>>    - Rebase to 3.4-rc1
+>>    - Drop CONFIG_OF_CLOCK and just use CONFIG_OF
+>>    - Add missing EXPORT_SYMBOL to various functions
+>>    - s/clock-output-name/clock-output-names/
+>>    - Define that fixed-clock binding is a single output
+> 
+> The patch history should go below the --- line,
 
->      So, this is dual SATA controller, not dual port SATA controller?
-> BTW, it's wrong to have the same AHBDMA resource in two device nodes I
-> think.
+No, depends who you ask, and Grant is very much in favor of retaining
+the history.
 
-> MBR, Sergei
-
-    Can you get rid of the following? It looks stupid when you post to the 
-maliing list.
-
-> CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,
-> is for the sole use of the intended recipient(s) and contains information
-> that is confidential and proprietary to AppliedMicro Corporation or its subsidiaries.
-> It is to be used solely for the purpose of furthering the parties' business relationship.
-> All unauthorized review, use, disclosure or distribution is prohibited.
-> If you are not the intended recipient, please contact the sender by reply e-mail
-> and destroy all copies of the original message.
-
-WBR, Sergei
+Rob
