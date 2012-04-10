@@ -1,44 +1,162 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 3/4] clk: add DT clock binding support
-Date: Tue, 10 Apr 2012 07:57:12 -0500
-Message-ID: <4F842E28.8060609@gmail.com>
-References: <1334003101-17274-1-git-send-email-robherring2@gmail.com> <1334003101-17274-4-git-send-email-robherring2@gmail.com> <CAOMZO5AKmnQRo4_3GVDSMUc0fMZ5orwvZSxjXfn6m-5Boew04A@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 7/7] clk: add highbank clock support
+Date: Tue, 10 Apr 2012 08:17:18 -0500
+Message-ID: <4F8432DE.9070308@gmail.com>
+References: <1331680947-29861-1-git-send-email-robherring2@gmail.com>
+ <1331680947-29861-8-git-send-email-robherring2@gmail.com>
+ <20120410020638.GG18692@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AKmnQRo4_3GVDSMUc0fMZ5orwvZSxjXfn6m-5Boew04A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, shawn.guo@linaro.org, Mike Turquette <mturquette@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120410020638.GG18692-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/09/2012 11:27 PM, Fabio Estevam wrote:
-> On Mon, Apr 9, 2012 at 5:25 PM, Rob Herring <robherring2@gmail.com> wrote:
->> From: Grant Likely <grant.likely@secretlab.ca>
+On 04/09/2012 09:06 PM, Shawn Guo wrote:
+> On Tue, Mar 13, 2012 at 06:22:27PM -0500, Rob Herring wrote:
+>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 >>
->> Based on work 1st by Ben Herrenschmidt and Jeremy Kerr, then by Grant
->> Likely, this patch adds support to clk_get to allow drivers to retrieve
->> clock data from the device tree.
+>> This adds real clock support to Calxeda Highbank SOC using the common
+>> clock infrastructure.
 >>
->> Platforms scan for clocks in DT with of_clk_init and a match table, and
->> the register a provider through of_clk_add_provider. The provider's
->> clk_src_get function will be called when a device references the
->> provider's OF node for a clock reference.
->>
->> v5 (Rob Herring):
->>    - Move from drivers/of into common clock subsystem
->>    - Squashed "dt/clock: add a simple provider get function" and
->>      "dt/clock: add function to get parent clock name"
->>    - Rebase to 3.4-rc1
->>    - Drop CONFIG_OF_CLOCK and just use CONFIG_OF
->>    - Add missing EXPORT_SYMBOL to various functions
->>    - s/clock-output-name/clock-output-names/
->>    - Define that fixed-clock binding is a single output
-> 
-> The patch history should go below the --- line,
+>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> ---
 
-No, depends who you ask, and Grant is very much in favor of retaining
-the history.
+[snip]
+
+>> +
+>> +				osc: oscillator {
+>> +					#clock-cells = <0>;
+>> +					compatible = "fixed-clock";
+>> +					clock-frequency = <33333000>;
+>> +				};
+>> +
+>> +				ddrpll: ddrpll {
+>> +					#clock-cells = <0>;
+>> +					compatible = "calxeda,hb-pll-clock";
+> 
+> Where are all these "calxeda,*-clock' compatible documented?
+
+Right. Need to add that.
+
+> 
+>> +					clocks = <&osc>;
+>> +					reg = <0x108>;
+>> +				};
+>> +
+>> +				a9pll: a9pll {
+>> +					#clock-cells = <0>;
+>> +					compatible = "calxeda,hb-pll-clock";
+>> +					clocks = <&osc>;
+>> +					reg = <0x100>;
+>> +				};
+>> +
+>> +				a9periphclk: a9periphclk {
+>> +					#clock-cells = <0>;
+>> +					compatible = "calxeda,hb-a9periph-clock";
+>> +					clocks = <&a9pll>;
+>> +					reg = <0x104>;
+>> +					clock-divider = <4>;
+> 
+> Where is this "clock-divider" binding documented?
+
+This should be deleted.
+
+
+
+>> +static unsigned long clk_cpu_periphclk_recalc_rate(struct clk_hw *clk,
+>> +						   unsigned long parent_rate)
+>> +{
+>> +	return parent_rate / 2;
+>> +}
+>> +
+>> +static const struct clk_ops a9periphclk_ops = {
+>> +	.recalc_rate = clk_cpu_periphclk_recalc_rate,
+>> +};
+>> +
+> 
+> This basically is a clk-fixed-factor added by Sascha.
+> 
+
+Well that didn't exist when I sent this out based on v6 of Mike's patches.
+
+Anyway, it is not really fixed divider either. I need to add reading the
+register value.
+
+>> +static unsigned long clk_cpu_a9bclk_recalc_rate(struct clk_hw *clk,
+>> +						unsigned long parent_rate)
+>> +{
+>> +	struct hb_clk *hbclk = to_hb_clk(clk);
+>> +	u32 div = (readl(hbclk->reg) & HB_A9_BCLK_DIV_MASK) >> HB_A9_BCLK_DIV_SHIFT;
+>> +
+>> +	return parent_rate / (div + 2);
+>> +}
+>> +
+>> +static const struct clk_ops a9bclk_ops = {
+>> +	.recalc_rate = clk_cpu_a9bclk_recalc_rate,
+> 
+> Since there is a divider for the clock, the ops should have .round_rate
+> and .set_rate, no?
+> 
+
+Except I have no need or desire to support changing it. When and if
+there is a need I will add that.
+
+>> +};
+>> +
+>> +static unsigned long clk_periclk_recalc_rate(struct clk_hw *clk,
+>> +					     unsigned long parent_rate)
+>> +{
+>> +	struct hb_clk *hbclk = to_hb_clk(clk);
+>> +	u32 div;
+>> +
+>> +	div = readl(hbclk->reg);
+>> +	div++;
+>> +	div *= 2;
+>> +
+>> +	return parent_rate / div;
+>> +}
+
+
+>> +
+>> +static const __initconst struct of_device_id clk_match[] = {
+>> +	{ .compatible = "fixed-clock", .data = of_fixed_clk_setup, },
+>> +	{ .compatible = "calxeda,hb-pll-clock", .data = hb_pll_init, },
+>> +	{ .compatible = "calxeda,hb-a9periph-clock", .data = hb_a9periph_init, },
+>> +	{ .compatible = "calxeda,hb-a9bus-clock", .data = hb_a9bus_init, },
+>> +	{ .compatible = "calxeda,hb-emmc-clock", .data = hb_emmc_init, },
+> 
+> So that's the difference between your clock and mine.  You do not reuse
+> any basic clk, except clk_fixed_rate, while my clocks are all about
+> basic clk except pll.  That's why you need a long list of SoC specific
+> binding, while I do not.  All I need is the binding for those basic
+> clks.
+
+Because there are not any I can use. I don't have any muxes or clk
+gates. The only one that exists in mainline is divider, but our divider
+is not n, n+1, or n^2. It is 2(n+1).
 
 Rob
+
+> 
+> Regards,
+> Shawn
+> 
+>> +	{}
+>> +};
+>> +
+>> +void __init highbank_clocks_init(void)
+>> +{
+>> +	of_clk_init(clk_match);
+>> +}
