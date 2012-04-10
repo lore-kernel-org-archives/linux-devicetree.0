@@ -1,35 +1,75 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v6 17/17] pwm: Take over maintainership of the PWM
- subsystem
-Date: Tue, 10 Apr 2012 22:58:40 +0200
-Message-ID: <20120410205840.GC20478@pengutronix.de>
-References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
- <1334070400-25013-18-git-send-email-thierry.reding@avionic-design.de>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH v3 6/6] mmc: sdhci-s3c: Add device tree support
+Date: Tue, 10 Apr 2012 17:37:41 -0400
+Message-ID: <87wr5ntgii.fsf@laptop.org>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
+	<201203271619.13320.arnd@arndb.de> <4F7553D1.4030008@st.com>
+	<201203301136.05038.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1334070400-25013-18-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201203301136.05038.arnd@arndb.de> (Arnd Bergmann's message of
+	"Fri, 30 Mar 2012 11:36:04 +0000")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Viresh Kumar <viresh.kumar@st.com>, Thomas Abraham <thomas.abraham@linaro.org>, Lee Jones <lee.jones@linaro.org>, Rajendra Nayak <rnayak@ti.com>, Stephen Warren <swarren@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2012 at 05:06:40PM +0200, Thierry Reding wrote:
-> I'm taking over the maintainership of the PWM subsystem. This commit
-> also adds the URLs to the gitorious project and repository as well as
-> any missing files related to the PWM subsystem.
-> 
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> ---
-> Note: I guess this patch in particular could use some Acked-by, maybe from
-> Arnd and Sascha so that people will know this happens with their blessing.
+Hi Arnd,
 
-Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+(Diff truncated to show relevant hunks.)
 
+On Fri, Mar 30 2012, Arnd Bergmann wrote:
+> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> index dbd4368..90b86e5 100644
+> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> @@ -15,10 +15,10 @@ Optional properties:
+>  ti,dual-volt: boolean, supports dual voltage cards
+>  <supply-name>-supply: phandle to the regulator device tree node
+>  "supply-name" examples are "vmmc", "vmmc_aux" etc
+> -ti,bus-width: Number of data lines, default assumed is 1 if the property is missing.
+> +bus-width: Number of data lines, default assumed is 1 if the property is missing.
+>  cd-gpios: GPIOs for card detection
+>  wp-gpios: GPIOs for write protection
+> -ti,non-removable: non-removable slot (like eMMC)
+> +non-removable: non-removable slot (like eMMC)
+>  ti,needs-special-reset: Requires a special softreset sequence
+>  
+>  Example:
+> @@ -27,7 +27,7 @@ Example:
+>  		reg = <0x4809c000 0x400>;
+>  		ti,hwmods = "mmc1";
+>  		ti,dual-volt;
+> -		ti,bus-width = <4>;
+> +		bus-width = <4>;
+>  		vmmc-supply = <&vmmc>; /* phandle to regulator node */
+>  		ti,non-removable;
+>  	};
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index 47adb16..ae48fc7 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -1766,7 +1766,7 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+>  		pdata->slots[0].nonremovable = true;
+>  		pdata->slots[0].no_regulator_off_init = true;
+>  	}
+> -	of_property_read_u32(np, "ti,bus-width", &bus_width);
+> +	of_property_read_u32(np, "bus-width", &bus_width);
+>  	if (bus_width == 4)
+>  		pdata->slots[0].caps |= MMC_CAP_4_BIT_DATA;
+>  	else if (bus_width == 8)
 
+Here you change "ti,non-removable" to "non-removable" in the properties
+section of ti-omap-hsmmc.txt without changing it in the example section
+of that document, or in the code or shipped .dts files.
+
+(Presumably you decided to preserve it for backwards compatibility, so
+the bindings documentation shouldn't be changed.)
+
+Thanks,
+
+- Chris.
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
