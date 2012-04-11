@@ -1,563 +1,84 @@
-From: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-Subject: Re: [PATCH] staging:iio:adc: Add SPEAr ADC driver
-Date: Wed, 11 Apr 2012 14:40:52 +0100
-Message-ID: <4F8589E4.7020809@cam.ac.uk>
-References: <1334150388-23296-1-git-send-email-sr@denx.de>
+From: "T Krishnamoorthy, Balaji" <balajitk@ti.com>
+Subject: Re: [PATCH] mmc: omap_hsmmc: Get rid of of_have_populated_dt() usage
+Date: Wed, 11 Apr 2012 19:35:02 +0530
+Message-ID: <CANrkHUb2qu-f-MtfPhedFib7fJ+NxNvdKwBxObfGRoypxh0pkA@mail.gmail.com>
+References: <1334138593-9692-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1334150388-23296-1-git-send-email-sr-ynQEQJNshbs@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1334138593-9692-1-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: cjb@laptop.org, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, Rob Herring <rob.herring@calxeda.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 4/11/2012 2:19 PM, Stefan Roese wrote:
-> This patch implements the basic single data conversion support for
-> the SPEAr600 SoC ADC. The register layout of SPEAr600 differs a bit
-> from other SPEAr SoC variants (e.g. SPEAr3xx). These differences are
-> handled via DT compatible testing. Resuling in a multi-arch binary.
-Resulting
+On Wed, Apr 11, 2012 at 3:33 PM, Rajendra Nayak <rnayak@ti.com> wrote:
+> of_have_populated_dt() is not expected to be used in drivers but
+> instead only in early platform init code.
+> Drivers on the other hand should rely on dev->of_node or of_match_dev=
+ice().
+> Besides usage of of_have_populated_dt() also throws up build error as=
+ below
+> which was reported by Balaji TK, when omap_hsmmc is built as a module=
+=2E
 >
-> This driver is currently tested only on SPEAr600. Futur patches may add
-> support for other SoC variants (SPEAr3xx) and features like software
-> buffer or DMA.
-Future
-
-Ironically that's about it wrt to comments. Couple of totally trivial 
-bits inline.
-Basically I'm happy, so if/when someone acks the device tree side of 
-things, please
-clean up the trivial bits and send on to GregKH.
-
-Nice short, clean driver.  The small line count lured me into reviewing 
-it ahead of
-some others in my review pile!
+> ERROR: "allnodes" [drivers/mmc/host/omap_hsmmc.ko] undefined!
+> make[1]: *** [__modpost] Error 1
+> make: *** [modules] Error 2
 >
-> Signed-off-by: Stefan Roese<sr-ynQEQJNshbs@public.gmane.org>
-Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Jonathan Cameron<jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-> Cc: Viresh Kumar<viresh.kumar-qxv4g6HH51o@public.gmane.org>
+> So get rid of all of_have_populated_dt() usage in omap_hsmmc driver a=
+nd
+> instead use dev->of_node to make the same dicisions as earlier.
+
+Looks good to me
+Reviewed-by: Balaji T K <balajitk@ti.com>
+
+>
+> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+> Reported-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Balaji TK <balajitk@ti.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
->   .../bindings/staging/iio/adc/spear-adc.txt         |   26 ++
->   drivers/staging/iio/adc/Kconfig                    |    7 +
->   drivers/staging/iio/adc/Makefile                   |    1 +
->   drivers/staging/iio/adc/spear_adc.c                |  439 ++++++++++++++++++++
->   4 files changed, 473 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
->   create mode 100644 drivers/staging/iio/adc/spear_adc.c
+> =A0drivers/mmc/host/omap_hsmmc.c | =A0 =A04 ++--
+> =A01 files changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-> new file mode 100644
-> index 0000000..02ea23a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-> @@ -0,0 +1,26 @@
-> +* ST SPEAr ADC device driver
-> +
-> +Required properties:
-> +- compatible: Should be "st,spear600-adc"
-> +- reg: Address and length of the register set for the device
-> +- interrupt-parent: Should be the phandle for the interrupt controller
-> +  that services interrupts for this device
-> +- interrupts: Should contain the ADC interrupt
-> +- sampling-frequency: Default sampling frequency
-> +
-> +Optional properties:
-> +- vref-external: External voltage reference in milli-volts. If omitted
-> +  the internal voltage reference will be used.
-> +- average-samples: Number of samples to generate an average value. If
-> +  omitted, single data conversion will be used.
-> +
-> +Examples:
-> +
-> +	adc: adc@d8200000 {
-> +		compatible = "st,spear600-adc";
-> +		reg =<0xd8200000 0x1000>;
-> +		interrupt-parent =<&vic1>;
-> +		interrupts =<6>;
-> +		sampling-frequency =<5000000>;
-> +		vref-external =<2500>;	/* 2.5V VRef */
-> +	};
-I'd like someone with dt experience to give an ack on this.  I really 
-have no idea!
-> diff --git a/drivers/staging/iio/adc/Kconfig b/drivers/staging/iio/adc/Kconfig
-> index 592eabd..ec006e7 100644
-> --- a/drivers/staging/iio/adc/Kconfig
-> +++ b/drivers/staging/iio/adc/Kconfig
-> @@ -202,4 +202,11 @@ config LPC32XX_ADC
->   	  touchscreen driver, so you can only select one of the two drivers
->   	  (lpc32xx_adc or lpc32xx_ts). Provides direct access via sysfs.
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hs=
+mmc.c
+> index ecc9521..4254b6f 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -252,7 +252,7 @@ static int omap_hsmmc_set_power(struct device *de=
+v, int slot, int power_on,
+> =A0 =A0 =A0 =A0 * the pbias cell programming support is still missing=
+ when
+> =A0 =A0 =A0 =A0 * booting with Device tree
+> =A0 =A0 =A0 =A0 */
+> - =A0 =A0 =A0 if (of_have_populated_dt() && !vdd)
+> + =A0 =A0 =A0 if (dev->of_node && !vdd)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return 0;
 >
-> +config SPEAR_ADC
-> +	tristate "ST SPEAr ADC"
-> +	depends on PLAT_SPEAR
-> +	help
-> +	  Say yes here to build support for the integrated ADC inside the
-> +	  ST SPEAr SoC. Provides direct access via sysfs.
-> +
->   endmenu
-> diff --git a/drivers/staging/iio/adc/Makefile b/drivers/staging/iio/adc/Makefile
-> index f83ab95..14e98b6 100644
-> --- a/drivers/staging/iio/adc/Makefile
-> +++ b/drivers/staging/iio/adc/Makefile
-> @@ -38,3 +38,4 @@ obj-$(CONFIG_ADT7310) += adt7310.o
->   obj-$(CONFIG_ADT7410) += adt7410.o
->   obj-$(CONFIG_AD7280) += ad7280a.o
->   obj-$(CONFIG_LPC32XX_ADC) += lpc32xx_adc.o
-> +obj-$(CONFIG_SPEAR_ADC) += spear_adc.o
-> diff --git a/drivers/staging/iio/adc/spear_adc.c b/drivers/staging/iio/adc/spear_adc.c
-> new file mode 100644
-> index 0000000..ce518bc
-> --- /dev/null
-> +++ b/drivers/staging/iio/adc/spear_adc.c
-> @@ -0,0 +1,439 @@
-> +/*
-> + * ST SPEAr ADC driver
-> + *
-> + * Copyright 2012 Stefan Roese<sr-ynQEQJNshbs@public.gmane.org>
-> + *
-> + * Licensed under the GPL-2.
-> + */
-> +
-> +#include<linux/module.h>
-> +#include<linux/platform_device.h>
-> +#include<linux/interrupt.h>
-> +#include<linux/device.h>
-> +#include<linux/kernel.h>
-> +#include<linux/slab.h>
-> +#include<linux/io.h>
-> +#include<linux/clk.h>
-> +#include<linux/err.h>
-> +#include<linux/completion.h>
-> +#include<linux/of.h>
-> +
-> +#include "../iio.h"
-> +#include "../sysfs.h"
-> +
-> +/*
-> + * SPEAR registers definitions
-> + */
-> +
-> +#define SCAN_RATE_LO(x)		((x)&  0xFFFF)
-> +#define SCAN_RATE_HI(x)		(((x)>>  0x10)&  0xFFFF)
-> +#define CLK_LOW(x)		(((x)&  0xf)<<  0)
-> +#define CLK_HIGH(x)		(((x)&  0xf)<<  4)
-> +
-> +/* Bit definitions for SPEAR_ADC_STATUS */
-> +#define START_CONVERSION	(1<<  0)
-> +#define CHANNEL_NUM(x)		((x)<<  1)
-> +#define ADC_ENABLE		(1<<  4)
-> +#define AVG_SAMPLE(x)		((x)<<  5)
-> +#define VREF_INTERNAL		(1<<  9)
-> +
-> +#define DATA_MASK		0x03ff
-> +#define DATA_BITS		10
-> +
-> +#define MOD_NAME "spear-adc"
-> +
-> +#define ADC_CHANNEL_NUM		8
-> +
-> +struct adc_regs_spear3xx {
-> +	u32 status;
-> +	u32 average;
-> +	u32 scan_rate;
-> +	u32 clk;	/* Not avail for 1340&  1310 */
-> +	u32 ch_ctrl[ADC_CHANNEL_NUM];
-> +	u32 ch_data[ADC_CHANNEL_NUM];
-> +};
-> +
-> +struct chan_data {
-> +	u32 lsb;
-> +	u32 msb;
-> +};
-> +
-> +struct adc_regs_spear6xx {
-> +	u32 status;
-> +	u32 pad[2];
-> +	u32 clk;
-> +	u32 ch_ctrl[ADC_CHANNEL_NUM];
-> +	struct chan_data ch_data[ADC_CHANNEL_NUM];
-> +	u32 scan_rate_lo;
-> +	u32 scan_rate_hi;
-> +	struct chan_data average;
-> +};
-> +
-> +struct spear_adc_info {
-> +	struct device_node *np;
-> +	struct adc_regs_spear3xx *adc_base_spear3xx;
-> +	struct adc_regs_spear6xx *adc_base_spear6xx;
-> +	struct clk *clk;
-> +	struct completion completion;
-> +	u32 current_clk;
-> +	u32 sampling_freq;
-> +	u32 avg_samples;
-> +	u32 vref_external;
-> +	u32 value;
-> +};
-> +
-> +/*
-> + * Functions to access some SPEAr ADC register. Abstracted into
-> + * static inline functions, because of different register offsets
-> + * on different SoC variants (SPEAr300 vs SPEAr600 etc).
-> + */
-> +static void spear_adc_set_status(struct spear_adc_info *info, u32 val)
-> +{
-> +	__raw_writel(val,&info->adc_base_spear6xx->status);
-> +}
-> +
-> +static void spear_adc_set_clk(struct spear_adc_info *info, u32 val)
-> +{
-> +	u32 clk_high, clk_low, count;
-> +	u32 apb_clk = clk_get_rate(info->clk);
-> +
-> +	count = (apb_clk + val - 1) / val;
-> +	clk_low = count / 2;
-> +	clk_high = count - clk_low;
-> +	info->current_clk = apb_clk / count;
-> +
-> +	__raw_writel(CLK_LOW(clk_low) | CLK_HIGH(clk_high),
-> +		&info->adc_base_spear6xx->clk);
-> +}
-> +
-> +static void spear_adc_set_ctrl(struct spear_adc_info *info, int n,
-> +			       u32 val)
-> +{
-> +	__raw_writel(val,&info->adc_base_spear6xx->ch_ctrl[n]);
-> +}
-> +
-> +static u32 spear_adc_get_average(struct spear_adc_info *info)
-> +{
-> +	if (of_device_is_compatible(info->np, "st,spear600-adc")) {
-> +		return __raw_readl(&info->adc_base_spear6xx->average.msb)&
-> +			DATA_MASK;
-> +	} else {
-> +		return __raw_readl(&info->adc_base_spear3xx->average)&
-> +			DATA_MASK;
-> +	}
-> +}
-> +
-> +static void spear_adc_set_scanrate(struct spear_adc_info *info, u32 rate)
-> +{
-> +	if (of_device_is_compatible(info->np, "st,spear600-adc")) {
-> +		__raw_writel(SCAN_RATE_LO(rate),
-> +			&info->adc_base_spear6xx->scan_rate_lo);
-> +		__raw_writel(SCAN_RATE_HI(rate),
-> +			&info->adc_base_spear6xx->scan_rate_hi);
-> +	} else {
-> +		__raw_writel(rate,&info->adc_base_spear3xx->scan_rate);
-> +	}
-> +}
-> +
-> +static int spear_read_raw(struct iio_dev *indio_dev,
-> +			  struct iio_chan_spec const *chan,
-> +			  int *val,
-> +			  int *val2,
-> +			  long mask)
-> +{
-> +	struct spear_adc_info *info = iio_priv(indio_dev);
-> +	u32 scale_uv;
-> +	u32 status;
-> +
-> +	switch (mask) {
-> +	case 0:
-> +		mutex_lock(&indio_dev->mlock);
-> +
-> +		status = CHANNEL_NUM(chan->channel) |
-> +			AVG_SAMPLE(info->avg_samples) |
-> +			START_CONVERSION | ADC_ENABLE;
-> +		if (info->vref_external == 0)
-> +			status |= VREF_INTERNAL;
-> +
-> +		spear_adc_set_status(info, status);
-> +		wait_for_completion(&info->completion); /* set by ISR */
-> +		*val = info->value;
-> +
-> +		mutex_unlock(&indio_dev->mlock);
-> +
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		scale_uv = (info->vref_external * 1000)>>  DATA_BITS;
-Given the div 1000's I'm guessing scale_mv would be more appropriate as 
-a variable name?
-> +		*val =  scale_uv / 1000;
-> +		*val2 = (scale_uv % 1000) * 1000;
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +#define SPEAR_ADC_CHAN(idx) {				\
-> +	.type = IIO_VOLTAGE,				\
-> +	.indexed = 1,					\
-> +	.info_mask = IIO_CHAN_INFO_SCALE_SHARED_BIT,	\
-Given this'll probably hit the tree before the series to make the value 
-reading optional, I'll
-add the relevant bits to the info mask in a new version of that series.
-> +	.channel = idx,					\
-> +	.scan_type = {					\
-> +		.sign = 'u',				\
-> +		.storagebits = 16,			\
-> +	},						\
-> +}
-> +
-> +static struct iio_chan_spec spear_adc_iio_channels[] = {
-> +	SPEAR_ADC_CHAN(0),
-> +	SPEAR_ADC_CHAN(1),
-> +	SPEAR_ADC_CHAN(2),
-> +	SPEAR_ADC_CHAN(3),
-> +	SPEAR_ADC_CHAN(4),
-> +	SPEAR_ADC_CHAN(5),
-> +	SPEAR_ADC_CHAN(6),
-> +	SPEAR_ADC_CHAN(7),
-> +};
-> +
-> +static irqreturn_t spear_adc_isr(int irq, void *dev_id)
-> +{
-> +	struct spear_adc_info *info = (struct spear_adc_info *)dev_id;
-> +
-> +	/* Read value to clear IRQ */
-> +	info->value = spear_adc_get_average(info);
-> +	complete(&info->completion);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int spear_adc_configure(struct spear_adc_info *info)
-> +{
-> +	int i;
-> +
-> +	/* Reset ADC core */
-> +	spear_adc_set_status(info, 0);
-> +	__raw_writel(0,&info->adc_base_spear6xx->clk);
-> +	for (i = 0; i<  8; i++)
-> +		spear_adc_set_ctrl(info, i, 0);
-> +	spear_adc_set_scanrate(info, 0);
-> +
-> +	spear_adc_set_clk(info, info->sampling_freq);
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t spear_adc_read_frequency(struct device *dev,
-> +					struct device_attribute *attr,
-> +					char *buf)
-> +{
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-> +	struct spear_adc_info *info = iio_priv(indio_dev);
-> +
-> +	return sprintf(buf, "%d\n", info->current_clk);
-> +}
-> +
-> +static ssize_t spear_adc_write_frequency(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 const char *buf,
-> +					 size_t len)
-> +{
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-> +	struct spear_adc_info *info = iio_priv(indio_dev);
-> +	u32 clk_high, clk_low, count, clk_min, clk_max;
-> +	u32 apb_clk = clk_get_rate(info->clk);
-> +	unsigned long lval;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 10,&lval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_lock(&indio_dev->mlock);
-> +
-> +	clk_min = 2500000;
-> +	clk_max = 20000000;
-These look like constants. I'd define them as such if they are.  Maybe even
-some #defines rather than locally.
-> +	if ((lval<  clk_min) || (lval>  clk_max)) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	count = (apb_clk + lval - 1) / lval;
-> +	clk_low = count / 2;
-> +	clk_high = count - clk_low;
-> +	info->current_clk = apb_clk / count;
-> +	spear_adc_set_clk(info, lval);
-> +
-> +out:
-> +	mutex_unlock(&indio_dev->mlock);
-> +
-> +	return ret ? ret : len;
-> +}
-> +
-> +static IIO_DEV_ATTR_SAMP_FREQ(S_IWUSR | S_IRUGO,
-> +			      spear_adc_read_frequency,
-> +			      spear_adc_write_frequency);
-> +
-> +static struct attribute *spear_attributes[] = {
-> +	&iio_dev_attr_sampling_frequency.dev_attr.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group spear_attribute_group = {
-> +	.attrs = spear_attributes,
-> +};
-> +
-> +static const struct iio_info spear_adc_iio_info = {
-> +	.read_raw =&spear_read_raw,
-> +	.attrs =&spear_attribute_group,
-> +	.driver_module = THIS_MODULE,
-> +};
-> +
-> +static int __devinit spear_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct spear_adc_info *info;
-> +	struct resource *res;
-> +	int retval = -ENODEV;
-> +	struct iio_dev *iodev = NULL;
-> +	int irq;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "failed to get platform I/O memory\n");
-> +		retval = -EBUSY;
-> +		goto errout1;
-> +	}
-> +
-> +	iodev = iio_allocate_device(sizeof(struct spear_adc_info));
-> +	if (!iodev) {
-> +		dev_err(&pdev->dev, "failed allocating iio device\n");
-> +		retval = -ENOMEM;
-> +		goto errout1;
-> +	}
-> +
-> +	info = iio_priv(iodev);
-> +	info->np = np;
-> +
-> +	/*
-> +	 * SPEAr600 has a different register layout than other SPEAr SoC's
-> +	 * (e.g. SPEAr3xx). Let's provide two register base addresses
-> +	 * to support multi-arch kernels.
-> +	 */
-> +	info->adc_base_spear6xx = ioremap(res->start, resource_size(res));
-> +	if (!info->adc_base_spear6xx) {
-> +		dev_err(&pdev->dev, "failed mapping memory\n");
-> +		retval = -EBUSY;
-> +		goto errout2;
-> +	}
-> +	info->adc_base_spear3xx =
-> +		(struct adc_regs_spear3xx *)info->adc_base_spear6xx;
-> +
-> +	info->clk = clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(info->clk)) {
-> +		dev_err(&pdev->dev, "failed getting clock\n");
-> +		goto errout3;
-> +	}
-> +	clk_enable(info->clk);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if ((irq<  0) || (irq>= NR_IRQS)) {
-> +		dev_err(&pdev->dev, "failed getting interrupt resource\n");
-> +		retval = -EINVAL;
-> +		goto errout4;
-> +	}
-> +
-> +	retval = request_irq(irq, spear_adc_isr, 0, MOD_NAME, info);
-Preference for threaded irqs...  Though as it's trivial, guess not worth 
-bothering...
-> +	if (retval<  0) {
-> +		dev_err(&pdev->dev, "failed requesting interrupt\n");
-> +		goto errout4;
-> +	}
-> +
-> +	if (of_property_read_u32(np, "sampling-frequency",
-> +				&info->sampling_freq)) {
-> +		dev_err(&pdev->dev, "sampling-frequency missing in DT\n");
-> +		retval = -EINVAL;
-> +		goto errout5;
-> +	}
-> +
-> +	/*
-> +	 * Optional avg_samples defaults to 0, resulting in single data
-> +	 * conversion
-> +	 */
-> +	of_property_read_u32(np, "average-samples",&info->avg_samples);
-> +
-> +	/*
-> +	 * Optional vref_external defaults to 0, resulting in internal vref
-> +	 * selection
-> +	 */
-> +	of_property_read_u32(np, "vref-external",&info->vref_external);
-> +
-> +	spear_adc_configure(info);
-> +
-> +	platform_set_drvdata(pdev, iodev);
-> +
-> +	init_completion(&info->completion);
-> +
-> +	iodev->name = MOD_NAME;
-> +	iodev->dev.parent =&pdev->dev;
-> +	iodev->info =&spear_adc_iio_info;
-> +	iodev->modes = INDIO_DIRECT_MODE;
-> +	iodev->channels = spear_adc_iio_channels;
-> +	iodev->num_channels = ARRAY_SIZE(spear_adc_iio_channels);
-> +
-> +	retval = iio_device_register(iodev);
-> +	if (retval)
-> +		goto errout5;
-> +
-> +	dev_info(&pdev->dev, "SPEAR ADC driver loaded, IRQ %d\n", irq);
-> +
-> +	return 0;
-> +
-> +errout5:
-> +	free_irq(irq, iodev);
-> +errout4:
-> +	clk_put(info->clk);
-> +errout3:
-> +	iounmap(info->adc_base_spear6xx);
-> +errout2:
-> +	iio_free_device(iodev);
-> +errout1:
-> +	return retval;
-> +}
-> +
-> +static int __devexit spear_adc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *iodev = platform_get_drvdata(pdev);
-> +	struct spear_adc_info *info = iio_priv(iodev);
-> +	int irq = platform_get_irq(pdev, 0);
-> +
-> +	iio_device_unregister(iodev);
-> +	free_irq(irq, iodev);
-> +	platform_set_drvdata(pdev, NULL);
-> +	clk_put(info->clk);
-> +	iounmap(info->adc_base_spear6xx);
-> +	iio_free_device(iodev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id spear_adc_dt_ids[] = {
-> +	{ .compatible = "st,spear600-adc", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, spear_adc_dt_ids);
-> +
-> +static struct platform_driver spear_adc_driver = {
-> +	.probe		= spear_adc_probe,
-> +	.remove		= __devexit_p(spear_adc_remove),
-> +	.driver		= {
-> +		.name	= MOD_NAME,
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(spear_adc_dt_ids),
-> +	},
-> +};
-> +
-> +module_platform_driver(spear_adc_driver);
-> +
-> +MODULE_AUTHOR("Stefan Roese<sr-ynQEQJNshbs@public.gmane.org>");
-> +MODULE_DESCRIPTION("SPEAr ADC driver");
-> +MODULE_LICENSE("GPL");
+> =A0 =A0 =A0 =A0if (mmc_slot(host).before_set_reg)
+> @@ -1564,7 +1564,7 @@ static void omap_hsmmc_set_ios(struct mmc_host =
+*mmc, struct mmc_ios *ios)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * can't be allowed wh=
+en booting with device
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * tree.
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 */
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 (!of_have_populated_dt(=
+))) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 !host->dev->of_node) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/*
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * The=
+ mmc_select_voltage fn of the core does
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * not=
+ seem to set the power_mode to
+> --
+> 1.7.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
