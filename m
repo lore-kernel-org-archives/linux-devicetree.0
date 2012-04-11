@@ -1,48 +1,87 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
- irq_alloc_desc() instead
-Date: Wed, 11 Apr 2012 23:47:25 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1204112347040.2542@ionos>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>  <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>  <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>  <20120402202848.1EB833E02A7@localhost>
- <20120402215524.GM24211@n2100.arm.linux.org.uk>  <1333406005.30734.61.camel@pasglop>  <20120402225223.GN24211@n2100.arm.linux.org.uk>  <1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home>  <1333755470.3040.38.camel@pasglop> <m2aa2n7mmw.fsf@igel.home>
-  <1334106834.2984.17.camel@pasglop> <1334107996.2984.20.camel@pasglop>  <1334122182.2984.33.camel@pasglop> <20120411205707.68AC13E08B6@localhost> <1334180248.2984.39.camel@pasglop>
+From: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: RE: standalone dtc compiler build from
+ git://git.jdl.com/software/dtc.git  gives error
+Date: Wed, 11 Apr 2012 22:26:20 +0000
+Message-ID: <3E54258959B69E4282D79E01AB1F32B7300A78@DFLE34.ent.ti.com>
+References: <3E54258959B69E4282D79E01AB1F32B7300643@DFLE34.ent.ti.com>
+ <4F85CB76.1010904@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334180248.2984.39.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Andreas Schwab <schwab@linux-m68k.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Milton Miller <miltonm@bga.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F85CB76.1010904-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+>> -----Original Message-----
+>> From: Stephen Warren [mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org]
+>> Sent: Wednesday, April 11, 2012 2:21 PM
+>> To: Karicheri, Muralidharan
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Subject: Re: standalone dtc compiler build from git://git.jdl.com/software/dtc.git gives
+>> error
+>> 
+>> On 04/11/2012 11:59 AM, Karicheri, Muralidharan wrote:
+>> > Hi, Jon Lolieger,
+>> >
+>> > I have tried using the standalone dtc compiler at git://git.jdl.com/software/dtc.git
+>> > to compile my dts file and got the following error:-
+>> >
+>> > a0868495@ares-ubuntu:~/dtc$ dtc -I dts -O dtb tci6614-evm.dts
+>> > DTC: dts->dtb  on file "tci6614-evm.dts"
+>> > tci6614-evm.dts:4 syntax error
+>> >
+>> ...
+>> > Why is the dtc not able to compile the dts file?
+>> 
+>> I think the only way to answer that is going to be to post your .dts
+>> file, or at least the first 4 or 5 lines of it.
 
-On Thu, 12 Apr 2012, Benjamin Herrenschmidt wrote:
+Stephen,
 
-> On Wed, 2012-04-11 at 14:57 -0600, Grant Likely wrote:
-> > 
-> > Yeah, I've got a different way to fix it though.  There is exactly one
-> > user of irq_virq_count in-tree right now: PS3.  Also, irq_virq_count
-> > is only useful for the NOMAP mapping.  So, instead of having a single
-> > global irq_virq_count values, I've dropped it entirely and added a
-> > max_irq argument to irq_domain_add_nomap().  That makes it a property
-> > of an individual nomap irq domain instead of a global system settting.
-> > 
-> > Hopefully I'll have a draft patch ready today. 
-> 
-> That works for me. I'll send patches for cleanup MPIC as well.
-> 
-> One thing tho (Thomas, Russell) is that I like using set_irq_trigger to
-> establish the "defaults" in mpic, ie, it does the descriptor locking
-> etc... for me, I'd rather avoid open coding all of that. What I need is
-> a "variant" that doesn't actually change the trigger but instead
-> initializes the irq_desc with whatever settings the HW currently has
-> (ie, I need to make sure things are properly in sync) though other
-> implementations may want to use that for defaults.
-> 
-> Any objection to defining something like IRQ_TYPE_DEFAULT ?
-> 
-> I was thinking about making it equal to IRQ_TYPE_SENSE_MASK since that
-> can obviously not be a valid trigger value and is distinct from
-> IRQ_TYPE_NONE.
+Thanks for responding.
 
-No objections.
+Here it is 
+
+/dts-v1/;
+/include/ "skeleton.dtsi"
+
+/ {
+        model = "Texas Instruments TCI6614 EVM";
+        compatible = "ti,tci6614-evm";
+        #address-cells = <1>;
+        #size-cells = <1>;
+
+And "skeleton.dtsi" has 
+
+/*
+ * Skeleton device tree; the bare minimum needed to boot; just include and
+ * add a compatible value.  The bootloader will typically populate the memory
+ * node.
+ */
+
+/ {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        chosen { };
+        aliases { };
+        memory { device_type = "memory"; reg = <0 0>; };
+};
+
+BTW, the dtc compiler in the Linux kernel tree runs fine. Also I get the same error when I run the
+dtc against other existing dts files in the Linux 3.2 kernel tree. Any clue?
+
+Thanks
+
+Murali
