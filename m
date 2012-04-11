@@ -1,78 +1,59 @@
-From: "Dennis.Yxun" <dennis.yxun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Question: Does devicetree capable of describing pinmux?
-Date: Wed, 11 Apr 2012 17:42:33 +0800
-Message-ID: <CAF1ZMEd+EA48oL_2BHqNEU29dzKzRE7D7GHSjakqvn4Yj9kzkQ@mail.gmail.com>
-References: <CAF1ZMEeRuF=VnRys9FbeWBmp-AAeZMfxpYhydNaJ4e9_ffjVrA@mail.gmail.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: [PATCH] mmc: omap_hsmmc: Get rid of of_have_populated_dt() usage
+Date: Wed, 11 Apr 2012 15:33:13 +0530
+Message-ID: <1334138593-9692-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6488250145927113809=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAF1ZMEeRuF=VnRys9FbeWBmp-AAeZMfxpYhydNaJ4e9_ffjVrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: cjb@laptop.org
+Cc: linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, Rajendra Nayak <rnayak@ti.com>, Balaji TK <balajitk@ti.com>, Rob Herring <rob.herring@calxeda.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
---===============6488250145927113809==
-Content-Type: multipart/alternative; boundary=e89a8fb2065e0d88e404bd640f77
+of_have_populated_dt() is not expected to be used in drivers but
+instead only in early platform init code.
+Drivers on the other hand should rely on dev->of_node or of_match_device().
+Besides usage of of_have_populated_dt() also throws up build error as below
+which was reported by Balaji TK, when omap_hsmmc is built as a module.
 
---e89a8fb2065e0d88e404bd640f77
-Content-Type: text/plain; charset=UTF-8
+ERROR: "allnodes" [drivers/mmc/host/omap_hsmmc.ko] undefined!
+make[1]: *** [__modpost] Error 1
+make: *** [modules] Error 2
 
-Possibly that can be connected to pinctrl subsystem, right?
+So get rid of all of_have_populated_dt() usage in omap_hsmmc driver and
+instead use dev->of_node to make the same dicisions as earlier.
 
-On Wed, Apr 11, 2012 at 5:35 PM, Dennis.Yxun <dennis.yxun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+Reported-by: Benoit Cousson <b-cousson@ti.com>
+Cc: Balaji TK <balajitk@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ drivers/mmc/host/omap_hsmmc.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-> Hi Fork:
->    I would like to know whether device tree capable of describing pinmux?
->    Say, one pin (PIN_10) which can be configured as I2C_SDL, SPI_CLK,
-> GPIO23,
-> How can I describe in device tree?
->    Or, the I2C controller 1 can be configured to use PIN(23, 24) or
-> PIN(45,46),
-> What should I should do with device tree?
->
->    Thanks
->
-> Dennis
->
+diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+index ecc9521..4254b6f 100644
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -252,7 +252,7 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+ 	 * the pbias cell programming support is still missing when
+ 	 * booting with Device tree
+ 	 */
+-	if (of_have_populated_dt() && !vdd)
++	if (dev->of_node && !vdd)
+ 		return 0;
+ 
+ 	if (mmc_slot(host).before_set_reg)
+@@ -1564,7 +1564,7 @@ static void omap_hsmmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+ 			 * can't be allowed when booting with device
+ 			 * tree.
+ 			 */
+-			(!of_have_populated_dt())) {
++			!host->dev->of_node) {
+ 				/*
+ 				 * The mmc_select_voltage fn of the core does
+ 				 * not seem to set the power_mode to
+-- 
+1.7.1
 
---e89a8fb2065e0d88e404bd640f77
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Possibly that can be connected to pinctrl subsystem, right?<br><br><div cla=
-ss=3D"gmail_quote">On Wed, Apr 11, 2012 at 5:35 PM, Dennis.Yxun <span dir=
-=3D"ltr">&lt;<a href=3D"mailto:dennis.yxun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">dennis.yxun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
-</a>&gt;</span> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">Hi Fork:<br>=C2=A0=C2=A0 I would like to kno=
-w whether device tree capable of describing pinmux?<br>=C2=A0=C2=A0 Say, on=
-e pin (PIN_10) which can be configured as I2C_SDL, SPI_CLK, GPIO23,<br>
-How can I describe in device tree?<br>=C2=A0=C2=A0 Or, the I2C controller 1=
- can be configured to use PIN(23, 24) or PIN(45,46),<br>
-
-What should I should do with device tree?<br><br>=C2=A0=C2=A0 Thanks<span c=
-lass=3D"HOEnZb"><font color=3D"#888888"><br><br>Dennis<br>
-</font></span></blockquote></div><br>
-
---e89a8fb2065e0d88e404bd640f77--
-
---===============6488250145927113809==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6488250145927113809==--
