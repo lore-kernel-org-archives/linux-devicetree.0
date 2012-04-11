@@ -1,16 +1,14 @@
-From: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: RE: standalone dtc compiler build from
- git://git.jdl.com/software/dtc.git  gives error
-Date: Wed, 11 Apr 2012 22:26:20 +0000
-Message-ID: <3E54258959B69E4282D79E01AB1F32B7300A78@DFLE34.ent.ti.com>
-References: <3E54258959B69E4282D79E01AB1F32B7300643@DFLE34.ent.ti.com>
- <4F85CB76.1010904@wwwdotorg.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] dtc: Remove spurious output on stderr
+Date: Thu, 12 Apr 2012 08:45:57 +1000
+Message-ID: <20120411224557.GA8024@truffala.fritz.box>
+References: <1334170516-23473-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F85CB76.1010904-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1334170516-23473-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,68 +18,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->> -----Original Message-----
->> From: Stephen Warren [mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org]
->> Sent: Wednesday, April 11, 2012 2:21 PM
->> To: Karicheri, Muralidharan
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Subject: Re: standalone dtc compiler build from git://git.jdl.com/software/dtc.git gives
->> error
->> 
->> On 04/11/2012 11:59 AM, Karicheri, Muralidharan wrote:
->> > Hi, Jon Lolieger,
->> >
->> > I have tried using the standalone dtc compiler at git://git.jdl.com/software/dtc.git
->> > to compile my dts file and got the following error:-
->> >
->> > a0868495@ares-ubuntu:~/dtc$ dtc -I dts -O dtb tci6614-evm.dts
->> > DTC: dts->dtb  on file "tci6614-evm.dts"
->> > tci6614-evm.dts:4 syntax error
->> >
->> ...
->> > Why is the dtc not able to compile the dts file?
->> 
->> I think the only way to answer that is going to be to post your .dts
->> file, or at least the first 4 or 5 lines of it.
+On Wed, Apr 11, 2012 at 11:55:16AM -0700, Simon Glass wrote:
+> Outputing to stderr is best avoided unless there is an error or warning to
+> display. At present dtc always displays the name of the file it is compiling
+> and the input/output formats. For example:
+> 
+> DTC: dts->dts  on file "-"
+> 
+> This can cause problems in some build systems. For example, U-Boot shows
+> build errors for any boards which use dtc at present. It is typically the
+> only message output during such a build. The C compiler does not output
+> anything in general. The current dtc behaviour makes it difficult to
+> provide a silent build in the normal case where nothing went wrong.
+> 
+> The -q flag is currently used to ignore warnings, and this message is not
+> really a warning. If we inserted another level of quietness that just
+> supresses non-warnings, then this would break the current behaviour of -q.
+> 
+> Therefore a new flag seems appropriate. Unfortunately both -v and -V are
+> already used, so I have come up with the random choice of -a: "announce
+> operation".
+> 
+> This also changes current behaviour, but hopefully in a good way. The main
+> problem is that people will wonder whether dtc actually ran at all, since
+> they are used to seeing the message. A quick check should confirm this, or
+> the -a flag can be added if desired.
+> 
+> I'm hoping someone has a better solution.
 
-Stephen,
+Ugh.  Don't bother with the option, just remove the message.  I've
+been half meaning to get rid of it for ages.
 
-Thanks for responding.
-
-Here it is 
-
-/dts-v1/;
-/include/ "skeleton.dtsi"
-
-/ {
-        model = "Texas Instruments TCI6614 EVM";
-        compatible = "ti,tci6614-evm";
-        #address-cells = <1>;
-        #size-cells = <1>;
-
-And "skeleton.dtsi" has 
-
-/*
- * Skeleton device tree; the bare minimum needed to boot; just include and
- * add a compatible value.  The bootloader will typically populate the memory
- * node.
- */
-
-/ {
-        #address-cells = <1>;
-        #size-cells = <1>;
-        chosen { };
-        aliases { };
-        memory { device_type = "memory"; reg = <0 0>; };
-};
-
-BTW, the dtc compiler in the Linux kernel tree runs fine. Also I get the same error when I run the
-dtc against other existing dts files in the Linux 3.2 kernel tree. Any clue?
-
-Thanks
-
-Murali
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
