@@ -1,84 +1,81 @@
-From: "T Krishnamoorthy, Balaji" <balajitk@ti.com>
-Subject: Re: [PATCH] mmc: omap_hsmmc: Get rid of of_have_populated_dt() usage
-Date: Wed, 11 Apr 2012 19:35:02 +0530
-Message-ID: <CANrkHUb2qu-f-MtfPhedFib7fJ+NxNvdKwBxObfGRoypxh0pkA@mail.gmail.com>
-References: <1334138593-9692-1-git-send-email-rnayak@ti.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Wed, 11 Apr 2012 16:11:08 +0200
+Message-ID: <20120411141108.GI27337@avionic-0098.adnet.avionic-design.de>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
+ <1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de>
+ <20120411124810.GK4296@phenom.ffwll.local>
+ <20120411132326.GD27337@avionic-0098.adnet.avionic-design.de>
+ <20120411133512.GL4296@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1334138593-9692-1-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: cjb@laptop.org, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, Rob Herring <rob.herring@calxeda.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3MMMIZFJzhAsRj/+"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120411133512.GL4296-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 11, 2012 at 3:33 PM, Rajendra Nayak <rnayak@ti.com> wrote:
-> of_have_populated_dt() is not expected to be used in drivers but
-> instead only in early platform init code.
-> Drivers on the other hand should rely on dev->of_node or of_match_dev=
-ice().
-> Besides usage of of_have_populated_dt() also throws up build error as=
- below
-> which was reported by Balaji TK, when omap_hsmmc is built as a module=
-=2E
->
-> ERROR: "allnodes" [drivers/mmc/host/omap_hsmmc.ko] undefined!
-> make[1]: *** [__modpost] Error 1
-> make: *** [modules] Error 2
->
-> So get rid of all of_have_populated_dt() usage in omap_hsmmc driver a=
+
+--3MMMIZFJzhAsRj/+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+* Daniel Vetter wrote:
+> On Wed, Apr 11, 2012 at 03:23:26PM +0200, Thierry Reding wrote:
+> > * Daniel Vetter wrote:
+> > > On Wed, Apr 11, 2012 at 02:10:30PM +0200, Thierry Reding wrote:
+> > > > This commit adds a very basic DRM driver for NVIDIA Tegra SoCs. It
+> > > > currently has rudimentary GEM support and can run a console on the
+> > > > framebuffer as well as X using the xf86-video-modesetting driver.
+> > > > Only the RGB output is supported. Quite a lot of things still need
+> > > > to be worked out and there is a lot of room for cleanup.
+> > >=20
+> > > Indeed, after a quick look there are tons of functions that are just =
+stubs
+> > > ;-) One thing I wonder though is why you directly use the iommu api a=
 nd
-> instead use dev->of_node to make the same dicisions as earlier.
+> > > not wrap it up into dma_map? Is arm infrastructure just not there yet=
+ or
+> > > do you plan to tightly integrate the tegra drm with the iommu (e.g. f=
+or
+> > > process space switching or similarly funky stuff)?
+> >=20
+> > I'm not sure I know what you are referring to. Looking for all users of
+> > iommu_map() doesn't turn up anything related to dma_map. Can you point =
+me in
+> > the right direction?
+>=20
+> Well, you use the iommu api to map/unmap memory into the iommu for tegra,
+> whereas usually device drivers just use the dma api to do that. The usual
+> interface is dma_map_sg/dma_unmap_sg, but there are quite a few variants
+> around. I'm just wondering why this you've choosen this.
 
-Looks good to me
-Reviewed-by: Balaji T K <balajitk@ti.com>
+I don't think this works on ARM. Maybe I'm not seeing the whole picture but
+judging by a quick look through the kernel tree there aren't any users that
+map DMA memory through an IOMMU.
 
->
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
-> Reported-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Balaji TK <balajitk@ti.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> =A0drivers/mmc/host/omap_hsmmc.c | =A0 =A04 ++--
-> =A01 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hs=
-mmc.c
-> index ecc9521..4254b6f 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -252,7 +252,7 @@ static int omap_hsmmc_set_power(struct device *de=
-v, int slot, int power_on,
-> =A0 =A0 =A0 =A0 * the pbias cell programming support is still missing=
- when
-> =A0 =A0 =A0 =A0 * booting with Device tree
-> =A0 =A0 =A0 =A0 */
-> - =A0 =A0 =A0 if (of_have_populated_dt() && !vdd)
-> + =A0 =A0 =A0 if (dev->of_node && !vdd)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return 0;
->
-> =A0 =A0 =A0 =A0if (mmc_slot(host).before_set_reg)
-> @@ -1564,7 +1564,7 @@ static void omap_hsmmc_set_ios(struct mmc_host =
-*mmc, struct mmc_ios *ios)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * can't be allowed wh=
-en booting with device
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * tree.
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 */
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 (!of_have_populated_dt(=
-))) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 !host->dev->of_node) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/*
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * The=
- mmc_select_voltage fn of the core does
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * not=
- seem to set the power_mode to
-> --
-> 1.7.1
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maybe your question is answered by my reply to Alan's comment. The mapping
+is actually done to get a linear view for the display controller which
+doesn't support SG transfers. The kernel and user-space already have virtual
+linear buffers.
+
+Perhaps I'm being dense?
+
+Thierry
+
+--3MMMIZFJzhAsRj/+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk+FkPwACgkQZ+BJyKLjJp9KywCgmFs4Z34KCFVIZcnNR/nlxPsL
+5+EAoJis2KzC3rybWPTo23x6mKHUn27I
+=jg53
+-----END PGP SIGNATURE-----
+
+--3MMMIZFJzhAsRj/+--
