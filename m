@@ -1,127 +1,54 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
- irq_alloc_desc() instead
-Date: Wed, 11 Apr 2012 15:29:42 +1000
-Message-ID: <1334122182.2984.33.camel@pasglop>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
- <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
- <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
- <20120402202848.1EB833E02A7@localhost>
- <20120402215524.GM24211@n2100.arm.linux.org.uk>
- <1333406005.30734.61.camel@pasglop>
- <20120402225223.GN24211@n2100.arm.linux.org.uk>
- <1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home>
- <1333755470.3040.38.camel@pasglop> <m2aa2n7mmw.fsf@igel.home>
- <1334106834.2984.17.camel@pasglop> <1334107996.2984.20.camel@pasglop>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1 v3] dt: add property iteration helpers
+Date: Wed, 11 Apr 2012 10:07:12 +0200
+Message-ID: <CACRpkdbW52MZzRnw8VLs7ZTwHapzr7vjmN3u3TnKijbVB3=zcg@mail.gmail.com>
+References: <1333968374-28451-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1334107996.2984.20.camel@pasglop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1333968374-28451-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-04-11 at 11:33 +1000, Benjamin Herrenschmidt wrote:
-> On Wed, 2012-04-11 at 11:13 +1000, Benjamin Herrenschmidt wrote:
-> > On Sat, 2012-04-07 at 14:27 +0200, Andreas Schwab wrote:
-> > > Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
-> > > 
-> > > > It's arguable that this irq_set_irq_type(,NONE) shouln't be there but
-> > > > still ... it's been around for ever and things worked :-) So something
-> > > > -else- is causing the problem and I'd like to understand what exactly.
-> > > 
-> > > AFAICS before a09b659cd68c10ec6a30cb91ebd2c327fcd5bfe5
-> > > irq_set_irq_type(,NONE) was actually a no-op.
-> > 
-> > So I'm still a bit baffled... ie, I understand some of what's happening
-> > but not why it breaks things, I haven't yet managed to reproduce but I
-> > haven't tried too hard just yet (was away from the HW) :
-> 
-> Allright, I have a repro-case, I'll dig.
+On Mon, Apr 9, 2012 at 12:46 PM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
 
-Ok, so it's Grant's fault :-)
+> This patch adds macros of_property_for_each_u32() and
+> of_property_for_each_string(), which iterate over an array of values
+> within a device-tree property. Usage is for example:
+>
+> struct property *prop;
+> const __be32 *p;
+> u32 u;
+> of_property_for_each_u32(np, "propname", prop, p, u)
+> =A0 =A0 =A0 =A0printk("U32 value: %x\n", u);
+>
+> struct property *prop;
+> const char *s;
+> of_property_for_each_string(np, "propname", prop, s)
+> =A0 =A0 =A0 =A0printk("String value: %s\n", s);
+>
+> Based on work by Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> ---
+> I need it for at91 for the interrupt controller
+> and pinctrl
 
-So basically, it's quite subtle and I'm only 99% sure of the details but
-I believe what happens is:
+This is merged into the pinctrl tree now anyway, can I add your
+Acked-by:?
 
- - The audio interrupts get virq 64 and 65 (so above NR_IRQS)
-
- - The reverse map isn't pre-filled at map time (we should probably do
-it nowadays), we do it lazily so ...
-
- - The audio interrupt happens, it tries to pre-fill the reverse map
-and ... fails (see below)
-
- - This cause irq_linear_revmap() to returns 0
-
- - This hits another bug in mpic where when that happens it doesn't EOI
-the interrupt, which means the priority remains stuck high and we don't
-get any other interrupt.
-
-There's thus two bugs here:
-
- - We don't properly establish the reverse mapping for 64 and 65 (well,
-not always, again see below)
-
- - We don't EOI an interrupt we can't reverse map (we should warn & EOI,
-I'll send a patch for that).
-
-The second problem is a bug we shouldn't hit if the first one didn't
-happen, the first one comes from way irq_find_mapping() works. Basically
-when the revmap entry is 0, we call it to find the mapping & populate
-the revmap... and that fails.
-
-That fails because it will only search up to irq_virq_count which is
-statically initialized to NR_IRQS, which in our case is 64 so it won't
-find our interrupts 64 and 65... 
-
-The reason it works if you don't do the set_type(NONE) is a fluke, it
-will crash as soon as you actually do audio:
-
-The set_type(NONE) has the effect in mpic to configure the interrupt to
-level low (default). This is also the idle state of the audio interrupt
-(which is positive edge), and the MPIC appears to be latching it (yeah
-odd, it does seem to latch level interrupts).
-
-So as soon as the audio driver enables it, it fires, triggering the bug.
-Without the set_type(NONE) the occurence of the bug is delayed to the
-fist time you get a real audio interrupt.
-
-Now what is the solution ? Well, there's several things I think we need
-to do:
-
- - MPIC should properly EOI interrupts it can't revmap (I'll fix that)
-
- - MPIC should probably not do the set_type(NONE) on map, it's not
-useful
-
- - However, we do have a risk of discrepency between the default trigger
-type in the irq_desc vs. the default HW value at startup/map time, so we
-do need to do something to reconcile them (that was the intend of NONE I
-think)... without that, we risk having irq_create_of_mapping() not
-setting the trigger because it thinks it thinks it's right... What do
-you think is best here ? We can probably read the HW config and sync the
-irq desc appropriately ...
-
- - The whole business with irq_virq_count needs fixing. Basically the
-default value shouldn't be NR_IRQ. I suggest making it 0 and have all
-the use sites do something like:
-
-	max = irq_virq_count ? irq_virq_count : nr_irqs;
-
-(Grant, can you take care of that ?)
-
- - We still need to clear up all the NR_IRQS occurences in arch/powerpc
-
-Cheers,
-Ben.
+Yours,
+Linus Walleij
