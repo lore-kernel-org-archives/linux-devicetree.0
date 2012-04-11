@@ -1,73 +1,127 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [RFC] dt: export of_have_populated_dt
-Date: Wed, 11 Apr 2012 09:48:30 +0530
-Message-ID: <4F850616.1000608@ti.com>
-References: <1334070672-11252-1-git-send-email-balajitk@ti.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
+ irq_alloc_desc() instead
+Date: Wed, 11 Apr 2012 15:29:42 +1000
+Message-ID: <1334122182.2984.33.camel@pasglop>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+ <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+ <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
+ <20120402202848.1EB833E02A7@localhost>
+ <20120402215524.GM24211@n2100.arm.linux.org.uk>
+ <1333406005.30734.61.camel@pasglop>
+ <20120402225223.GN24211@n2100.arm.linux.org.uk>
+ <1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home>
+ <1333755470.3040.38.camel@pasglop> <m2aa2n7mmw.fsf@igel.home>
+ <1334106834.2984.17.camel@pasglop> <1334107996.2984.20.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1334070672-11252-1-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: robherring2@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, cjb@laptop.org, bigeasy@linutronix.de
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1334107996.2984.20.camel@pasglop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andreas Schwab <schwab@linux-m68k.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 10 April 2012 08:41 PM, Balaji T K wrote:
-> If of_have_populated_dt is called from module, build fails with "allnodes"
-> undefined error, so remove inline and export of_have_populated_dt.
+On Wed, 2012-04-11 at 11:33 +1000, Benjamin Herrenschmidt wrote:
+> On Wed, 2012-04-11 at 11:13 +1000, Benjamin Herrenschmidt wrote:
+> > On Sat, 2012-04-07 at 14:27 +0200, Andreas Schwab wrote:
+> > > Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
+> > > 
+> > > > It's arguable that this irq_set_irq_type(,NONE) shouln't be there but
+> > > > still ... it's been around for ever and things worked :-) So something
+> > > > -else- is causing the problem and I'd like to understand what exactly.
+> > > 
+> > > AFAICS before a09b659cd68c10ec6a30cb91ebd2c327fcd5bfe5
+> > > irq_set_irq_type(,NONE) was actually a no-op.
+> > 
+> > So I'm still a bit baffled... ie, I understand some of what's happening
+> > but not why it breaks things, I haven't yet managed to reproduce but I
+> > haven't tried too hard just yet (was away from the HW) :
+> 
+> Allright, I have a repro-case, I'll dig.
 
-Thanks Balaji, for taking care of this while I was out.
-But like Rob and Sebastian mentioned, looks like the usage of
-of_have_populated_dt() itself is wrong in the first place.
-So I will fix that up with a patch shortly.
+Ok, so it's Grant's fault :-)
 
->
-> Signed-off-by: Balaji T K<balajitk@ti.com>
-> ---
->   drivers/of/base.c  |    6 ++++++
->   include/linux/of.h |    6 +-----
->   2 files changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 5806449..dc1af42 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -186,6 +186,12 @@ struct property *of_find_property(const struct device_node *np,
->   }
->   EXPORT_SYMBOL(of_find_property);
->
-> +bool of_have_populated_dt(void)
-> +{
-> +	return allnodes != NULL;
-> +}
-> +EXPORT_SYMBOL(of_have_populated_dt);
-> +
->   /**
->    * of_find_all_nodes - Get next node in global list
->    * @prev:	Previous node or NULL to start iteration
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index fa7fb1d..28e933e 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -92,11 +92,6 @@ extern struct device_node *of_chosen;
->   extern struct device_node *of_aliases;
->   extern rwlock_t devtree_lock;
->
-> -static inline bool of_have_populated_dt(void)
-> -{
-> -	return allnodes != NULL;
-> -}
-> -
->   static inline bool of_node_is_root(const struct device_node *node)
->   {
->   	return node&&  (node->parent == NULL);
-> @@ -112,6 +107,7 @@ static inline void of_node_set_flag(struct device_node *n, unsigned long flag)
->   	set_bit(flag,&n->_flags);
->   }
->
-> +extern bool of_have_populated_dt(void);
->   extern struct device_node *of_find_all_nodes(struct device_node *prev);
->
->   /*
+So basically, it's quite subtle and I'm only 99% sure of the details but
+I believe what happens is:
 
+ - The audio interrupts get virq 64 and 65 (so above NR_IRQS)
+
+ - The reverse map isn't pre-filled at map time (we should probably do
+it nowadays), we do it lazily so ...
+
+ - The audio interrupt happens, it tries to pre-fill the reverse map
+and ... fails (see below)
+
+ - This cause irq_linear_revmap() to returns 0
+
+ - This hits another bug in mpic where when that happens it doesn't EOI
+the interrupt, which means the priority remains stuck high and we don't
+get any other interrupt.
+
+There's thus two bugs here:
+
+ - We don't properly establish the reverse mapping for 64 and 65 (well,
+not always, again see below)
+
+ - We don't EOI an interrupt we can't reverse map (we should warn & EOI,
+I'll send a patch for that).
+
+The second problem is a bug we shouldn't hit if the first one didn't
+happen, the first one comes from way irq_find_mapping() works. Basically
+when the revmap entry is 0, we call it to find the mapping & populate
+the revmap... and that fails.
+
+That fails because it will only search up to irq_virq_count which is
+statically initialized to NR_IRQS, which in our case is 64 so it won't
+find our interrupts 64 and 65... 
+
+The reason it works if you don't do the set_type(NONE) is a fluke, it
+will crash as soon as you actually do audio:
+
+The set_type(NONE) has the effect in mpic to configure the interrupt to
+level low (default). This is also the idle state of the audio interrupt
+(which is positive edge), and the MPIC appears to be latching it (yeah
+odd, it does seem to latch level interrupts).
+
+So as soon as the audio driver enables it, it fires, triggering the bug.
+Without the set_type(NONE) the occurence of the bug is delayed to the
+fist time you get a real audio interrupt.
+
+Now what is the solution ? Well, there's several things I think we need
+to do:
+
+ - MPIC should properly EOI interrupts it can't revmap (I'll fix that)
+
+ - MPIC should probably not do the set_type(NONE) on map, it's not
+useful
+
+ - However, we do have a risk of discrepency between the default trigger
+type in the irq_desc vs. the default HW value at startup/map time, so we
+do need to do something to reconcile them (that was the intend of NONE I
+think)... without that, we risk having irq_create_of_mapping() not
+setting the trigger because it thinks it thinks it's right... What do
+you think is best here ? We can probably read the HW config and sync the
+irq desc appropriately ...
+
+ - The whole business with irq_virq_count needs fixing. Basically the
+default value shouldn't be NR_IRQ. I suggest making it 0 and have all
+the use sites do something like:
+
+	max = irq_virq_count ? irq_virq_count : nr_irqs;
+
+(Grant, can you take care of that ?)
+
+ - We still need to clear up all the NR_IRQS occurences in arch/powerpc
+
+Cheers,
+Ben.
