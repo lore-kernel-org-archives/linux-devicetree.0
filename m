@@ -1,46 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V3 1/5] ARM: kirkwood: Basic support for DNS-320 and
- DNS-325
-Date: Wed, 11 Apr 2012 15:08:45 +0000
-Message-ID: <201204111508.46143.arnd@arndb.de>
-References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
- <op.wclrwkqi4cuzmg@gonzo.lentin.co.uk>
- <20120411141118.GG14790@titan.lakedaemon.net>
+From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Wed, 11 Apr 2012 16:11:55 +0100
+Message-ID: <20120411161155.1f8693b3@pyramind.ukuu.org.uk>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
+	<1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de>
+	<20120411124810.GK4296@phenom.ffwll.local>
+	<20120411132326.GD27337@avionic-0098.adnet.avionic-design.de>
+	<20120411133512.GL4296@phenom.ffwll.local>
+	<20120411141108.GI27337@avionic-0098.adnet.avionic-design.de>
+	<20120411155237.24233afc@pyramind.ukuu.org.uk>
+	<20120411150603.GC20811@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120411141118.GG14790-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120411150603.GC20811-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 April 2012, Jason Cooper wrote:
-> > Thinking about it, MACH_DNSKW_DT would probably be best. Anything
-> > more general, e.g. MACH_DLINK_DNS_DT, would also cover the
-> > orion-based DNS-313/323/343. Presumably there will always be
-> > differences between kirkwood and orion5x?
-> 
-> Hmm, Well, I think I would prefer MACH_DLINK_KIRKWOOD_DT,
-> MACH_DLINK_ORION5X_DT.  This way, all the dtb's for a given manf/SoC are
-> built in one go, and the correct board-dt file is built as well.
-> 
-> So, in my case, I would do MACH_GLOBALSCALE_KIRKWOOD_DT, and
-> MACH_GLOBALSCALE_ARMADA_DT.
-> 
-> Grant, Arnd, sound sensible?
+> Heh, vmap() is exactly what I do. =) Would you mind explaining why exactly it
+> is hideous?
 
-I think it's fine, I just don't spend too much time on the naming
-when the goal is to eventually just have one config option for
-all manufacturers.
+On x86 we don't have a vast amount of address space available for virtual
+remappings and the framebuffer then eats over 8MB of it.
 
-	Arnd
+The ideal case is that the fb layer can be taught to do page/offset
+addressing nicely. At that point we'd be able to attach the text consoles
+to arbitary GEM objects.. which means we can do really cool stuff.
+
+Alan
