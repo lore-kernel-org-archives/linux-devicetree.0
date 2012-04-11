@@ -1,44 +1,38 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
- irq_alloc_desc() instead
-Date: Wed, 11 Apr 2012 11:33:16 +1000
-Message-ID: <1334107996.2984.20.camel@pasglop>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
-	 <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
-	 <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
-	 <20120402202848.1EB833E02A7@localhost>
-	 <20120402215524.GM24211@n2100.arm.linux.org.uk>
-	 <1333406005.30734.61.camel@pasglop>
-	 <20120402225223.GN24211@n2100.arm.linux.org.uk>
-	 <1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home>
-	 <1333755470.3040.38.camel@pasglop> <m2aa2n7mmw.fsf@igel.home>
-	 <1334106834.2984.17.camel@pasglop>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Remove invalid macro starting with _ from libfdt_env.h
+Date: Wed, 11 Apr 2012 11:13:12 +1000
+Message-ID: <20120411011312.GF6889@truffala.fritz.box>
+References: <89AE14E37D740B4796DC14566DF6325EF50AFFFAA9@SJEXCHCCR02.corp.ad.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334106834.2984.17.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <89AE14E37D740B4796DC14566DF6325EF50AFFFAA9-O8zWF298ijDMzT0UNPJNr71+IgudQmzARxWJa1zDYLQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Bert Kenward <bert.kenward-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-04-11 at 11:13 +1000, Benjamin Herrenschmidt wrote:
-> On Sat, 2012-04-07 at 14:27 +0200, Andreas Schwab wrote:
-> > Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
-> > 
-> > > It's arguable that this irq_set_irq_type(,NONE) shouln't be there but
-> > > still ... it's been around for ever and things worked :-) So something
-> > > -else- is causing the problem and I'd like to understand what exactly.
-> > 
-> > AFAICS before a09b659cd68c10ec6a30cb91ebd2c327fcd5bfe5
-> > irq_set_irq_type(,NONE) was actually a no-op.
+On Tue, Apr 10, 2012 at 08:00:15AM -0700, Bert Kenward wrote:
+> libfdt_env.h in the device tree compiler currently defines a _B() macro. This is in the
+> namespace reserved for the implementation, and Cygwin's ctype.h actually defines a macro
+> with this name. This renames _B to EXTRACT_BYTE.
 > 
-> So I'm still a bit baffled... ie, I understand some of what's happening
-> but not why it breaks things, I haven't yet managed to reproduce but I
-> haven't tried too hard just yet (was away from the HW) :
+> Signed-off-by: Bert Kenward <bert.kenward-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-Allright, I have a repro-case, I'll dig.
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Cheers,
-Ben.
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
