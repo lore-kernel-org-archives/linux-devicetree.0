@@ -1,89 +1,66 @@
-From: Felipe Balbi <balbi@ti.com>
+From: Rob Herring <robherring2@gmail.com>
 Subject: Re: [PATCH] mmc: omap_hsmmc: Get rid of of_have_populated_dt() usage
-Date: Wed, 11 Apr 2012 13:31:46 +0300
-Message-ID: <20120411103145.GA12064@arwen.pp.htv.fi>
+Date: Wed, 11 Apr 2012 07:10:21 -0500
+Message-ID: <4F8574AD.5040306@gmail.com>
 References: <1334138593-9692-1-git-send-email-rnayak@ti.com>
- <20120411100956.GT12064@arwen.pp.htv.fi>
- <4F855BDC.9070103@ti.com>
- <20120411102632.GY12064@arwen.pp.htv.fi>
- <4F855D23.2090803@ti.com>
-Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fKtH0JUtvN5p2ETH"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F855D23.2090803@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1334138593-9692-1-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
 To: Rajendra Nayak <rnayak@ti.com>
-Cc: balbi@ti.com, cjb@laptop.org, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, Balaji TK <balajitk@ti.com>, Rob Herring <rob.herring@calxeda.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: cjb@laptop.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Balaji TK <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On 04/11/2012 05:03 AM, Rajendra Nayak wrote:
+> of_have_populated_dt() is not expected to be used in drivers but
+> instead only in early platform init code.
+> Drivers on the other hand should rely on dev->of_node or of_match_device().
+> Besides usage of of_have_populated_dt() also throws up build error as below
+> which was reported by Balaji TK, when omap_hsmmc is built as a module.
+> 
+> ERROR: "allnodes" [drivers/mmc/host/omap_hsmmc.ko] undefined!
+> make[1]: *** [__modpost] Error 1
+> make: *** [modules] Error 2
+> 
+> So get rid of all of_have_populated_dt() usage in omap_hsmmc driver and
+> instead use dev->of_node to make the same dicisions as earlier.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+> Reported-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Balaji TK <balajitk@ti.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
 
---fKtH0JUtvN5p2ETH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ack
 
-On Wed, Apr 11, 2012 at 03:59:55PM +0530, Rajendra Nayak wrote:
-> On Wednesday 11 April 2012 03:56 PM, Felipe Balbi wrote:
-> >On Wed, Apr 11, 2012 at 03:54:28PM +0530, Rajendra Nayak wrote:
-> >>On Wednesday 11 April 2012 03:39 PM, Felipe Balbi wrote:
-> >>>On Wed, Apr 11, 2012 at 03:33:13PM +0530, Rajendra Nayak wrote:
-> >>>>@@ -1564,7 +1564,7 @@ static void omap_hsmmc_set_ios(struct mmc_host =
-*mmc, struct mmc_ios *ios)
-> >>>>  			 * can't be allowed when booting with device
-> >>>>  			 * tree.
-> >>>>  			 */
-> >>>>-			(!of_have_populated_dt())) {
-> >>>>+			!host->dev->of_node) {
-> >>>
-> >>>won't compile
-> >>>
-> >>why? compiles fine for me.
-> >
-> >aren't you missing the opening parenthesis ? Or is there a something not
-> >shown in the context ?
-> >
-> Its the missing context thats confusing :-)
->=20
-> This is how the code looks in the file after the patch.
->=20
->                if ((OMAP_HSMMC_READ(host->base, HCTL) & SDVSDET) &&
->                         (ios->vdd =3D=3D DUAL_VOLT_OCR_BIT) &&
->                         /*
->                          * With pbias cell programming missing, this
->                          * can't be allowed when booting with device
->                          * tree.
->                          */
->                         !host->dev->of_node) {
+Rob
 
-ok, my bad then. Should've looked at the source code. Sorry for the
-noise.
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  drivers/mmc/host/omap_hsmmc.c |    4 ++--
+>  1 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index ecc9521..4254b6f 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -252,7 +252,7 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+>  	 * the pbias cell programming support is still missing when
+>  	 * booting with Device tree
+>  	 */
+> -	if (of_have_populated_dt() && !vdd)
+> +	if (dev->of_node && !vdd)
+>  		return 0;
+>  
+>  	if (mmc_slot(host).before_set_reg)
+> @@ -1564,7 +1564,7 @@ static void omap_hsmmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>  			 * can't be allowed when booting with device
+>  			 * tree.
+>  			 */
+> -			(!of_have_populated_dt())) {
+> +			!host->dev->of_node) {
+>  				/*
+>  				 * The mmc_select_voltage fn of the core does
+>  				 * not seem to set the power_mode to
 
---=20
-balbi
-
---fKtH0JUtvN5p2ETH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPhV2RAAoJEIaOsuA1yqREDsQQAINS1PjgP4JSwNre03muMrF4
-NPEe+5EJa582ebc/1NVaevNMMaXgsi8++8UT2LV7PSzxh3zDQGlDNcg624nLs570
-dHAoLQAcnv/qwNSpR1CzxIFrpD0QvwilVGQdxftkJ5Ks/1KyNdFpRwpyopiCbZO5
-owe7ES4dVzLF843S25UcGhPoI1eFnRtRJrWCA03MVOXD0OJOOOJF7i8hWXyy9/U5
-4gl/SgvLFtHxyY9fQJwKoI/S6tkmEypDZu4S+IqdhuNhNjSvZeytZqBjeYbm04jc
-qYSi5qa/iRRMyHy/DOVq7Z7wWDh6AuxzGml7GkvFYpyZSR+gXkfWgpkgcw1J6u4H
-1hXKkLKT494XWf8/J/Vp88eYeUmR10Opakai+AvgqYUCUDo6cqKIG7wFUKhXF2bh
-G2Y9QyF1ap6Rt1iX30vDApup4yGUKofRH7n3iAh1TfD59gTugaHUybBRGEtEH59l
-PqMTNmL0IqTT+Rb37RFmFKcLii5mmcl1nghOapSfgo4ouVhU+J9mlZVdYWllQ54h
-eQtumm68QQdAS5OtNYYfKbPOkCfDzcvW+7/HpPzvIsmfHPUeTpHkoP+brILHVlG2
-8/3QVYyo8sV9cq6dzinXfvGGP+0d+8+40pF12CiHT1ME44YMTNStTphz9DzKlP2V
-aIrdbPEkL/MN8T/qhPKl
-=IWj0
------END PGP SIGNATURE-----
-
---fKtH0JUtvN5p2ETH--
