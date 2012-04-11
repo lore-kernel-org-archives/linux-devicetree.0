@@ -1,13 +1,14 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 1/1 v3] dt: add property iteration helpers
-Date: Wed, 11 Apr 2012 10:07:12 +0200
-Message-ID: <CACRpkdbW52MZzRnw8VLs7ZTwHapzr7vjmN3u3TnKijbVB3=zcg@mail.gmail.com>
+Date: Wed, 11 Apr 2012 10:09:00 +0200
+Message-ID: <CACRpkdbjdRqeYCfCe9kfHB6bqP7YgYKYGP3O_dR2pUwZ1CqznA@mail.gmail.com>
 References: <1333968374-28451-1-git-send-email-plagnioj@jcrosoft.com>
+ <4F82FF8E.8090407@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1333968374-28451-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <4F82FF8E.8090407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,38 +18,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 9, 2012 at 12:46 PM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+On Mon, Apr 9, 2012 at 5:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 
-> This patch adds macros of_property_for_each_u32() and
-> of_property_for_each_string(), which iterate over an array of values
-> within a device-tree property. Usage is for example:
->
-> struct property *prop;
-> const __be32 *p;
-> u32 u;
-> of_property_for_each_u32(np, "propname", prop, p, u)
-> =A0 =A0 =A0 =A0printk("U32 value: %x\n", u);
->
-> struct property *prop;
-> const char *s;
-> of_property_for_each_string(np, "propname", prop, s)
-> =A0 =A0 =A0 =A0printk("String value: %s\n", s);
->
-> Based on work by Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> ---
-> I need it for at91 for the interrupt controller
-> and pinctrl
+> Linus, Grant, Rob, can you co-ordinate this? If you want, I can create
+> the branch and send a pull request to LinusW. I'm not sure which branch
+> Jean-Christophe needs this in for his IRQ work.
 
-This is merged into the pinctrl tree now anyway, can I add your
-Acked-by:?
+If we don't change the patch at all I think git will survive if it gets merged
+into multiple trees...
 
-Yours,
+Else whatever branch needs this patch will need to merge the pinctrl
+baseline or something like that.
+
+I will stabilize the pinctrl tree as soon as I've pushed pending fixes
+for the -rc:s to Torvalds.
+
+Thanks,
 Linus Walleij
