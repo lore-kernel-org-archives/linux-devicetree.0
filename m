@@ -1,40 +1,33 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Question: Does devicetree capable of describing pinmux?
-Date: Wed, 11 Apr 2012 09:37:36 -0600
-Message-ID: <4F85A540.7050101@wwwdotorg.org>
-References: <CAF1ZMEeRuF=VnRys9FbeWBmp-AAeZMfxpYhydNaJ4e9_ffjVrA@mail.gmail.com>
- <CAF1ZMEd+EA48oL_2BHqNEU29dzKzRE7D7GHSjakqvn4Yj9kzkQ@mail.gmail.com>
+From: "Ramirez Luna, Omar" <omar.ramirez@ti.com>
+Subject: Re: [PATCH v3 4/4] ARM: omap: pass minimal SoC/board data for UART
+ from dt
+Date: Wed, 11 Apr 2012 10:57:18 -0500
+Message-ID: <CAB-zwWhFTysfm4-7rY+g8rCOdRK6CAQA0c=+QaOyTxQOvVdLiw@mail.gmail.com>
+References: <1323863746-18145-1-git-send-email-rnayak@ti.com>
+	<1323863746-18145-5-git-send-email-rnayak@ti.com>
+	<CAB-zwWjSSsR0XMrntkEmHDtgJ_zDxgJh6KX=TsSKggd9mCgsVQ@mail.gmail.com>
+	<4F85435C.1060305@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAF1ZMEd+EA48oL_2BHqNEU29dzKzRE7D7GHSjakqvn4Yj9kzkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Dennis.Yxun" <dennis.yxun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F85435C.1060305@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Rajendra Nayak <rnayak@ti.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, tony@atomide.com, govindraj.raja@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-> On Wed, Apr 11, 2012 at 5:35 PM, Dennis.Yxun <dennis.yxun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> <mailto:dennis.yxun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>> wrote:
-> 
->     Hi Fork:
->        I would like to know whether device tree capable of describing
->     pinmux?
-...
-On 04/11/2012 03:42 AM, Dennis.Yxun wrote:
-> Possibly that can be connected to pinctrl subsystem, right?
+On Wed, Apr 11, 2012 at 3:39 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
+> Yes, it is a known issue and the fix was unfortunately was not merged during
+> -rc phases but is fixed in 3.4 and should be fixed in 3.3 stable branch as
+> well. I received the notification from Greg KH 2 weeks ago about the stable:
+> Patch "tty: serial: OMAP: Fix oops due to NULL pdata in DT boot" has been
+> added to the 3.3-stable tree
+>
+> You should just switch to 3.4-rc2 or get the patch if you are stuck to 3.3.
 
-Yes, the pinctrl subsystem recently grew support for representing pinmux
-in the device tree. See for example:
+Thanks, switching to 3.4-rc kernels fixed the problem (for cramfs),
+and right now this works for me.
 
-repo git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-branch for-next
-path Documentation/devicetree/bindings/pinctrl/
+Regards,
+
+Omar
