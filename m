@@ -1,321 +1,37 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 8/9] ARM: at91: add at91sam9263 DT support
-Date: Wed, 11 Apr 2012 18:01:18 +0200
-Message-ID: <1334160079-30831-8-git-send-email-plagnioj@jcrosoft.com>
-References: <20120411153515.GK16641@game.jcrosoft.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC 2/4] iommu: tegra/gart: Add device tree support
+Date: Wed, 11 Apr 2012 11:21:33 -0600
+Message-ID: <4F85BD9D.7050409@wwwdotorg.org>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de> <1334146230-1795-3-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120411153515.GK16641@game.jcrosoft.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1334146230-1795-3-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
----
- arch/arm/boot/dts/at91sam9263.dtsi       |  221 ++++++++++++++++++++++++++++++
- arch/arm/mach-at91/at91sam9263.c         |   10 ++
- arch/arm/mach-at91/at91sam9263_devices.c |   20 +++
- 3 files changed, 251 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91sam9263.dtsi
+On 04/11/2012 06:10 AM, Thierry Reding wrote:
+> This commit adds device tree support for the GART hardware available on
+> NVIDIA Tegra 20 SoCs.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/tegra20.dtsi         |    6 ++++++
+>  arch/arm/mach-tegra/board-dt-tegra20.c |    1 +
+>  drivers/iommu/tegra-gart.c             |   10 ++++++++++
+>  3 files changed, 17 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-new file mode 100644
-index 0000000..baecf52
---- /dev/null
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -0,0 +1,221 @@
-+/*
-+ * at91sam9263.dtsi - Device Tree Include file for AT91SAM9263 family SoC
-+ *
-+ *  Copyright (C) 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-+ *
-+ * Licensed under GPLv2 only.
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "Atmel AT91SAM9263 family SoC";
-+	compatible = "atmel,at91sam9263";
-+	interrupt-parent = <&aic>;
-+
-+	aliases {
-+		serial0 = &dbgu;
-+		serial1 = &usart0;
-+		serial2 = &usart1;
-+		serial3 = &usart2;
-+		gpio0 = &pioA;
-+		gpio1 = &pioB;
-+		gpio2 = &pioC;
-+		gpio3 = &pioD;
-+		gpio4 = &pioE;
-+		tcb0 = &tcb0;
-+	};
-+	cpus {
-+		cpu@0 {
-+			compatible = "arm,arm926ejs";
-+		};
-+	};
-+
-+	memory {
-+		reg = <0x20000000 0x08000000>;
-+	};
-+
-+	ahb {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		apb {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			aic: interrupt-controller@fffff000 {
-+				#interrupt-cells = <2>;
-+				compatible = "atmel,at91rm9200-aic";
-+				interrupt-controller;
-+				interrupt-parent;
-+				reg = <0xfffff000 0x200>;
-+			};
-+
-+			pmc: pmc@fffffc00 {
-+				compatible = "atmel,at91rm9200-pmc";
-+				reg = <0xfffffc00 0x100>;
-+			};
-+
-+			ramc: ramc@ffffe200 {
-+				compatible = "atmel,at91sam9260-sdramc";
-+				reg = <0xffffe200 0x200
-+				       0xffffe800 0x200>;
-+			};
-+
-+			pit: timer@fffffd30 {
-+				compatible = "atmel,at91sam9260-pit";
-+				reg = <0xfffffd30 0xf>;
-+				interrupts = <1 4>;
-+			};
-+
-+			tcb0: timer@fff7c000 {
-+				compatible = "atmel,at91rm9200-tcb";
-+				reg = <0xfff7c000 0x100>;
-+				interrupts = <19 4>;
-+			};
-+
-+			rstc@fffffd00 {
-+				compatible = "atmel,at91sam9260-rstc";
-+				reg = <0xfffffd00 0x10>;
-+			};
-+
-+			shdwc@fffffd10 {
-+				compatible = "atmel,at91sam9260-shdwc";
-+				reg = <0xfffffd10 0x10>;
-+			};
-+
-+			pioA: gpio@fffff200 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffff200 0x100>;
-+				interrupts = <2 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+			};
-+
-+			pioB: gpio@fffff400 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffff400 0x100>;
-+				interrupts = <3 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+			};
-+
-+			pioC: gpio@fffff600 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffff600 0x100>;
-+				interrupts = <4 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+			};
-+
-+			pioD: gpio@fffff800 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffff800 0x100>;
-+				interrupts = <4 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+			};
-+
-+			pioE: gpio@fffffa00 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffffa00 0x100>;
-+				interrupts = <4 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+			};
-+
-+			dbgu: serial@ffffee00 {
-+				compatible = "atmel,at91sam9260-usart";
-+				reg = <0xffffee00 0x200>;
-+				interrupts = <1 4>;
-+				status = "disabled";
-+			};
-+
-+			usart0: serial@fff8c000 {
-+				compatible = "atmel,at91sam9260-usart";
-+				reg = <0xfff8c000 0x200>;
-+				interrupts = <7 4>;
-+				atmel,use-dma-rx;
-+				atmel,use-dma-tx;
-+				status = "disabled";
-+			};
-+
-+			usart1: serial@fff90000 {
-+				compatible = "atmel,at91sam9260-usart";
-+				reg = <0xfff90000 0x200>;
-+				interrupts = <8 4>;
-+				atmel,use-dma-rx;
-+				atmel,use-dma-tx;
-+				status = "disabled";
-+			};
-+
-+			usart2: serial@fff94000 {
-+				compatible = "atmel,at91sam9260-usart";
-+				reg = <0xfff94000 0x200>;
-+				interrupts = <9 4>;
-+				atmel,use-dma-rx;
-+				atmel,use-dma-tx;
-+				status = "disabled";
-+			};
-+
-+			macb0: ethernet@fffbc000 {
-+				compatible = "cdns,at32ap7000-macb", "cdns,macb";
-+				reg = <0xfffbc000 0x100>;
-+				interrupts = <21 4>;
-+				status = "disabled";
-+			};
-+
-+			usb1: gadget@fff78000 {
-+				compatible = "atmel,at91rm9200-udc";
-+				reg = <0xfff78000 0x4000>;
-+				interrupts = <24 4>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		nand0: nand@40000000 {
-+			compatible = "atmel,at91rm9200-nand";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x40000000 0x10000000
-+			       0xffffe000 0x200
-+			      >;
-+			atmel,nand-addr-offset = <21>;
-+			atmel,nand-cmd-offset = <22>;
-+			gpios = <&pioA 22 0
-+				 &pioD 15 0
-+				 0
-+				>;
-+			status = "disabled";
-+		};
-+
-+		usb0: ohci@00a00000 {
-+			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
-+			reg = <0x00a00000 0x100000>;
-+			interrupts = <29 4>;
-+			status = "disabled";
-+		};
-+	};
-+
-+	i2c@0 {
-+		compatible = "i2c-gpio";
-+		gpios = <&pioB 4 0 /* sda */
-+			 &pioB 5 0 /* scl */
-+			>;
-+		i2c-gpio,sda-open-drain;
-+		i2c-gpio,scl-open-drain;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+};
-diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
-index 7fae365..ed91c7e 100644
---- a/arch/arm/mach-at91/at91sam9263.c
-+++ b/arch/arm/mach-at91/at91sam9263.c
-@@ -199,6 +199,16 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_ID("pioC", &pioCDE_clk),
- 	CLKDEV_CON_ID("pioD", &pioCDE_clk),
- 	CLKDEV_CON_ID("pioE", &pioCDE_clk),
-+	/* more usart lookup table for DT entries */
-+	CLKDEV_CON_DEV_ID("usart", "ffffee00.serial", &mck),
-+	CLKDEV_CON_DEV_ID("usart", "fff8c000.serial", &usart0_clk),
-+	CLKDEV_CON_DEV_ID("usart", "fff90000.serial", &usart1_clk),
-+	CLKDEV_CON_DEV_ID("usart", "fff94000.serial", &usart2_clk),
-+	/* more tc lookup table for DT entries */
-+	CLKDEV_CON_DEV_ID("t0_clk", "fff7c000.timer", &tcb_clk),
-+	CLKDEV_CON_DEV_ID("hclk", "a00000.ohci", &ohci_clk),
-+	CLKDEV_CON_DEV_ID("spi_clk", "fffa4000.spi", &spi0_clk),
-+	CLKDEV_CON_DEV_ID("spi_clk", "fffa8000.spi", &spi1_clk),
- };
- 
- static struct clk_lookup usart_clocks_lookups[] = {
-diff --git a/arch/arm/mach-at91/at91sam9263_devices.c b/arch/arm/mach-at91/at91sam9263_devices.c
-index dfe5bc0..175e000 100644
---- a/arch/arm/mach-at91/at91sam9263_devices.c
-+++ b/arch/arm/mach-at91/at91sam9263_devices.c
-@@ -953,8 +953,25 @@ static struct platform_device at91sam9263_tcb_device = {
- 	.num_resources	= ARRAY_SIZE(tcb_resources),
- };
- 
-+#if defined(CONFIG_OF)
-+static struct of_device_id tcb_ids[] = {
-+	{ .compatible = "atmel,at91rm9200-tcb" },
-+	{ /*sentinel*/ }
-+};
-+#endif
-+
- static void __init at91_add_device_tc(void)
- {
-+#if defined(CONFIG_OF)
-+	struct device_node *np;
-+
-+	np = of_find_matching_node(NULL, tcb_ids);
-+	if (np) {
-+		of_node_put(np);
-+		return;
-+	}
-+#endif
-+
- 	platform_device_register(&at91sam9263_tcb_device);
- }
- #else
-@@ -1483,6 +1500,9 @@ void __init at91_add_device_serial(void) {}
-  */
- static int __init at91_add_standard_devices(void)
- {
-+	if (of_have_populated_dt())
-+		return 0;
-+
- 	at91_add_device_rtt();
- 	at91_add_device_watchdog();
- 	at91_add_device_tc();
--- 
-1.7.9.1
+I think I'd prefer at least the tegra20.dtsi change split out into a
+separate patch so I can queue it in a "dt" topic branch in the Tegra repo.
+
+It might be a good idea to split this into two on an arch/arm vs.
+drivers/iommu boundary. Looking at Olof's branches for 3.4, that split
+is what happened there.
+
+Finally, there should be a binding documentation file in
+Documentation/devicetree/bindings in order to specify the number of reg
+property entries needed, and their meaning, since there's more than 1
+(even though you did comment it nicely in the .dtsi file)
