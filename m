@@ -1,309 +1,67 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V3 1/5] ARM: kirkwood: Basic support for DNS-320 and
- DNS-325
-Date: Tue, 10 Apr 2012 20:43:24 -0400
-Message-ID: <20120411004324.GB14790@titan.lakedaemon.net>
-References: <1332885255-8304-1-git-send-email-jm@lentin.co.uk>
- <1332885255-8304-2-git-send-email-jm@lentin.co.uk>
- <20120406234955.840F73E1323@localhost>
- <alpine.DEB.2.00.1204091418400.23719@marmot.wormnet.eu>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use
+ irq_alloc_desc() instead
+Date: Wed, 11 Apr 2012 11:13:54 +1000
+Message-ID: <1334106834.2984.17.camel@pasglop>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+	 <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca>
+	 <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home>
+	 <20120402202848.1EB833E02A7@localhost>
+	 <20120402215524.GM24211@n2100.arm.linux.org.uk>
+	 <1333406005.30734.61.camel@pasglop>
+	 <20120402225223.GN24211@n2100.arm.linux.org.uk>
+	 <1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home>
+	 <1333755470.3040.38.camel@pasglop> <m2aa2n7mmw.fsf@igel.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.00.1204091418400.23719-5X291BYdrx55rAo4AelP/Ydd74u8MsAO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <m2aa2n7mmw.fsf@igel.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Schwab <schwab@linux-m68k.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 09, 2012 at 02:20:26PM +0100, Jamie Lentin wrote:
-> On Fri, 6 Apr 2012, Grant Likely wrote:
+On Sat, 2012-04-07 at 14:27 +0200, Andreas Schwab wrote:
+> Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
 > 
-> >On Tue, 27 Mar 2012 22:54:11 +0100, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org> wrote:
-> >>Add support for the DNS-320 and DNS-325. Describe as much as currently possible
-> >>in the devicetree files, create a board-dnskw.c for everything else.
-> >>
-> >>Use IEEE-compliant "okay", rather than "ok"
-> >>
-> >>Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> >>Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> >>Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-> >>---
-> >> arch/arm/boot/dts/kirkwood-dns320.dts |   29 +++
-> >> arch/arm/boot/dts/kirkwood-dns325.dts |   24 +++
-> >> arch/arm/mach-kirkwood/Kconfig        |   23 +++
-> >> arch/arm/mach-kirkwood/Makefile       |    1 +
-> >> arch/arm/mach-kirkwood/Makefile.boot  |    2 +
-> >> arch/arm/mach-kirkwood/board-dnskw.c  |  306 +++++++++++++++++++++++++++++++++
-> >> arch/arm/mach-kirkwood/board-dt.c     |    5 +
-> >> arch/arm/mach-kirkwood/common.h       |    6 +
-> >> 8 files changed, 396 insertions(+), 0 deletions(-)
-> >> create mode 100644 arch/arm/boot/dts/kirkwood-dns320.dts
-> >> create mode 100644 arch/arm/boot/dts/kirkwood-dns325.dts
-> >> create mode 100644 arch/arm/mach-kirkwood/board-dnskw.c
-> >>
-> >>diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
-> >>new file mode 100644
-> >>index 0000000..78c834f
-> >>--- /dev/null
-> >>+++ b/arch/arm/boot/dts/kirkwood-dns320.dts
-> >>@@ -0,0 +1,29 @@
-> >>+/dts-v1/;
-> >>+
-> >>+/include/ "kirkwood.dtsi"
-> >>+
-> >>+/ {
-> >>+	model = "D-Link DNS-320 NAS (Rev A1)";
-> >>+	compatible = "dlink,dns-320-a1", "dlink,dns-320", "dlink,dns-kirkwood", "mrvl,kirkwood-88f6281", "mrvl,kirkwood";
-> >>+
-> >>+	memory {
-> >>+		device_type = "memory";
-> >>+		reg = <0x00000000 0x8000000>;
-> >>+	};
-> >>+
-> >>+	chosen {
-> >>+		bootargs = "console=ttyS0,115200n8 earlyprintk";
-> >>+	};
-> >>+
-> >>+	ocp@f1000000 {
-> >>+		serial@12000 {
-> >>+			clock-frequency = <166666667>;
-> >>+			status = "okay";
-> >>+		};
-> >>+
-> >>+		serial@12100 {
-> >>+			clock-frequency = <166666667>;
-> >>+			status = "okay";
-> >>+		};
-> >>+	};
-> >>+};
-> >>diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts b/arch/arm/boot/dts/kirkwood-dns325.dts
-> >>new file mode 100644
-> >>index 0000000..23241ab
-> >>--- /dev/null
-> >>+++ b/arch/arm/boot/dts/kirkwood-dns325.dts
-> >>@@ -0,0 +1,24 @@
-> >>+/dts-v1/;
-> >>+
-> >>+/include/ "kirkwood.dtsi"
-> >>+
-> >>+/ {
-> >>+	model = "D-Link DNS-325 NAS (Rev A1)";
-> >>+	compatible = "dlink,dns-325-a1", "dlink,dns-325", "dlink,dns-kirkwood", "mrvl,kirkwood-88f6281", "mrvl,kirkwood";
-> >>+
-> >>+	memory {
-> >>+		device_type = "memory";
-> >>+		reg = <0x00000000 0x10000000>;
-> >>+	};
-> >>+
-> >>+	chosen {
-> >>+		bootargs = "console=ttyS0,115200n8 earlyprintk";
-> >>+	};
-> >>+
-> >>+	ocp@f1000000 {
-> >>+		serial@12000 {
-> >>+			clock-frequency = <200000000>;
-> >>+			status = "okay";
-> >>+		};
-> >>+	};
-> >>+};
-> >>diff --git a/arch/arm/mach-kirkwood/Kconfig b/arch/arm/mach-kirkwood/Kconfig
-> >>index 90ceab7..d594b6e 100644
-> >>--- a/arch/arm/mach-kirkwood/Kconfig
-> >>+++ b/arch/arm/mach-kirkwood/Kconfig
-> >>@@ -58,6 +58,29 @@ config MACH_DREAMPLUG_DT
-> >> 	  Say 'Y' here if you want your kernel to support the
-> >> 	  Marvell DreamPlug (Flattened Device Tree).
-> >>
-> >>+config MACH_DNSKW_DT
-> >>+        bool
-> >>+
-> >>+config MACH_DNS320_DT
-> >>+	bool "D-Link DNS-320 (Flattened Device Tree)"
-> >>+	select ARCH_KIRKWOOD_DT
-> >>+	select MACH_DNSKW_DT
-> >>+	select CONFIG_MTD_OF_PARTS
-> >>+	select CONFIG_SERIAL_OF_PLATFORM
-> >
-> >These two lines are dangerous.  It is not safe to 'select' Kconfig
-> >symbols that have 'depends' constraints.  Otherwise, the symbol will
-> >get forced on without it's dependencies.
-> >
-> >Typically other code handles this by creating blank "HAVE_*" symbols
-> >that the needed symbol can do something like "default y if HAVE_*"
-> >
+> > It's arguable that this irq_set_irq_type(,NONE) shouln't be there but
+> > still ... it's been around for ever and things worked :-) So something
+> > -else- is causing the problem and I'd like to understand what exactly.
 > 
-> Okay I didn't realise this, thanks. The options in question aren't
-> hard dependencies per-se, but no serial or NAND support is probably a
-> mistake, so added them here to avoid a certain amount of shooting in foot.
-> 
-> What's the etiquette in this situation? Adding HAVE_* seems excessive,
-> would selecting them in kirkwood_defconfig make more sense? Or would it
-> simply be covered by having a reasonable config on my website or suchlike?
+> AFAICS before a09b659cd68c10ec6a30cb91ebd2c327fcd5bfe5
+> irq_set_irq_type(,NONE) was actually a no-op.
 
-The latter sounds good.  kirkwood_defconfig is in need of some love, and
-I haven't had time to get to it.
+So I'm still a bit baffled... ie, I understand some of what's happening
+but not why it breaks things, I haven't yet managed to reproduce but I
+haven't tried too hard just yet (was away from the HW) :
 
-> Jason, given you've already applied this patch, would you rather me
-> submit something else to ditch these, or resumbit the entire series,
-> combining feedback?
+Basically, we end up setting the mpic to IRQ_TYPE_LEVEL_LOW as a result
+of a request to set it to IRQ_TYPE_NONE, ie, we apply a "default"
+setting instead of just setting it to "none" (in part because we don't
+have a way in HW to disable the trigger completely. We then write that
+into the irq_desc with irqd_set_trigger_type().
 
-I only applied it locally, I was waiting for comments like this before
-doing a pull request.  Go ahead and redo the series based on the input
-and repost.  I'll replace what I have.
+Then we return IRQ_SET_MASK_OK_NOCOPY, which means that the generic
+__irq_set_trigger() code will read back what we've set in the desc and
+adjust things accordingly, rather than writing the original value in,
+ie, our descriptor ends up being effectively set to IRQ_TYPE_LEVEL_LOW
+rather than IRQ_TYPE_NONE.
 
-> 
-> >>+	help
-> >>+	  Say 'Y' here if you want your kernel to support the
-> >>+	  D-Link DNS-320 NAS, using Flattened Device Tree.
-> >>+
-> >>+config MACH_DNS325_DT
-> >>+	bool "D-Link DNS-325 (Flattened Device Tree)"
-> >>+	select ARCH_KIRKWOOD_DT
-> >>+	select MACH_DNSKW_DT
-> >>+	select CONFIG_MTD_OF_PARTS
-> >>+	select CONFIG_SERIAL_OF_PLATFORM
-> >>+	help
-> >>+	  Say 'Y' here if you want your kernel to support the
-> >>+	  D-Link DNS-325 NAS, using Flattened Device Tree.
-> >>+
-> >
-> >The *only* difference between these two configs is the .dtb file that
-> >gets built.  Don't create a separate Kconfig entry for each dnskw
-> >board.  Just build all the dnskw dtb files when MACH_DNSKW_DT is
-> >selected.  Building .dtb files is cheap.
-> >
-> 
-> The rationale for this is the code in dnskw.c is (hopefully!) temporary,
-> and when it goes there isn't any need for MACH_DNSKW_DT either.
-> 
-> In a future land where everything has been converted to devicetree, what
-> would be best? An option to "Build all kirkwood-based .dtb's", an option
-> to build all D-link .dtb's, Q-QNAP .dtb's, etc. or an option for each
-> board? I've not got any strong opinion, so will reformat the above to
-> whatever is considered best.
+Later, when we actually try to set it to IRQ_TYPE_LEVEL_LOW as a result
+of parsing the device-tree, we then hit the code
+irq_create_of_mapping(), at the bottom, which will skip the call to
+irq_set_irq_type() if we are trying to set it to the same type that it's
+already set to....
 
-Based on Grant's comment, I'll probably be working towards a
-MACH_GLOBALSCALE_DT option to catch dreamplug,sheevaplug,guruplug, etc.
-Perhaps this should be MACH_BUFFALO_DT?
+But I don't see why that breaks anything, ie we -have- set things to
+LEVEL_LOW as a result of IRQ_TYPE_NONE, which is the right setting, so
+things should work despite the fact that we skip the second call.
 
-> >> config MACH_TS219
-> >> 	bool "QNAP TS-110, TS-119, TS-119P+, TS-210, TS-219, TS-219P and TS-219P+ Turbo NAS"
-> >> 	help
-> >>diff --git a/arch/arm/mach-kirkwood/Makefile b/arch/arm/mach-kirkwood/Makefile
-> >>index e299a95..b092af5 100644
-> >>--- a/arch/arm/mach-kirkwood/Makefile
-> >>+++ b/arch/arm/mach-kirkwood/Makefile
-> >>@@ -22,3 +22,4 @@ obj-$(CONFIG_MACH_T5325)		+= t5325-setup.o
-> >> obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
-> >> obj-$(CONFIG_ARCH_KIRKWOOD_DT)		+= board-dt.o
-> >> obj-$(CONFIG_MACH_DREAMPLUG_DT)		+= board-dreamplug.o
-> >>+obj-$(CONFIG_MACH_DNSKW_DT)		+= board-dnskw.o
-> >>diff --git a/arch/arm/mach-kirkwood/Makefile.boot b/arch/arm/mach-kirkwood/Makefile.boot
-> >>index 16f9385..9c5e45f 100644
-> >>--- a/arch/arm/mach-kirkwood/Makefile.boot
-> >>+++ b/arch/arm/mach-kirkwood/Makefile.boot
-> >>@@ -3,3 +3,5 @@ params_phys-y	:= 0x00000100
-> >> initrd_phys-y	:= 0x00800000
-> >>
-> >> dtb-$(CONFIG_MACH_DREAMPLUG_DT) += kirkwood-dreamplug.dtb
-> >>+dtb-$(CONFIG_MACH_DNS320_DT) += kirkwood-dns320.dtb
-> >>+dtb-$(CONFIG_MACH_DNS325_DT) += kirkwood-dns325.dtb
-> >>diff --git a/arch/arm/mach-kirkwood/board-dnskw.c b/arch/arm/mach-kirkwood/board-dnskw.c
-> >>new file mode 100644
-> >>index 0000000..7cb7f6a
-> >>--- /dev/null
-> >>+++ b/arch/arm/mach-kirkwood/board-dnskw.c
-> >>@@ -0,0 +1,306 @@
-> >>+/*
-> >>+ * Copyright 2012 (C), Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-> >>+ *
-> >>+ * arch/arm/mach-kirkwood/board-dnskw.c
-> >>+ *
-> >>+ * D-link DNS-320 & DNS-325 NAS Init for drivers not converted to
-> >>+ * flattened device tree yet.
-> >>+ *
-> >>+ * This file is licensed under the terms of the GNU General Public
-> >>+ * License version 2.  This program is licensed "as is" without any
-> >>+ * warranty of any kind, whether express or implied.
-> >>+ */
-> >>+
-> >>+#include <linux/kernel.h>
-> >>+#include <linux/init.h>
-> >>+#include <linux/platform_device.h>
-> >>+#include <linux/i2c.h>
-> >>+#include <linux/ata_platform.h>
-> >>+#include <linux/mv643xx_eth.h>
-> >>+#include <linux/of.h>
-> >>+#include <linux/gpio.h>
-> >>+#include <linux/input.h>
-> >>+#include <linux/gpio_keys.h>
-> >>+#include <linux/gpio-fan.h>
-> >>+#include <linux/leds.h>
-> >>+#include <linux/mtd/physmap.h>
-> >>+#include <asm/mach-types.h>
-> >>+#include <asm/mach/arch.h>
-> >>+#include <asm/mach/map.h>
-> >>+#include <mach/kirkwood.h>
-> >>+#include <mach/bridge-regs.h>
-> >>+#include "common.h"
-> >>+#include "mpp.h"
-> >>+
-> >>+static struct mtd_partition dnskw_nand_parts[] = {
-> >>+	{
-> >>+		.name		= "u-boot",
-> >>+		.offset		= 0,
-> >>+		.size		= SZ_1M,
-> >>+		.mask_flags	= MTD_WRITEABLE
-> >>+	}, {
-> >>+		.name		= "uImage",
-> >>+		.offset		= MTDPART_OFS_NXTBLK,
-> >>+		.size		= 5 * SZ_1M
-> >>+	}, {
-> >>+		.name		= "ramdisk",
-> >>+		.offset		= MTDPART_OFS_NXTBLK,
-> >>+		.size		= 5 * SZ_1M
-> >>+	}, {
-> >>+		.name		= "image",
-> >>+		.offset		= MTDPART_OFS_NXTBLK,
-> >>+		.size		= 102 * SZ_1M
-> >>+	}, {
-> >>+		.name		= "mini firmware",
-> >>+		.offset		= MTDPART_OFS_NXTBLK,
-> >>+		.size		= 10 * SZ_1M
-> >>+	}, {
-> >>+		.name		= "config",
-> >>+		.offset		= MTDPART_OFS_NXTBLK,
-> >>+		.size		= 5 * SZ_1M
-> >>+	},
-> >>+};
-> >
-> >This patch adds a static partition mapping, and then a later patch in
-> >this same series removes it again.  Please don't do that.  Just squash
-> >the patches together.  Or, if sqashing is not appropriate, then just
-> >omit the partitions.
-> >
-> >I also suggest omiting similar data when there are patches already in
-> >progess to do it properly.  It is okay for the inital support to go in
-> >to be incomplete when enhancements will be ready soon.
-> >
-> 
-> Noted. If the entire patchset needs resubmitting, I'll combine the patch
-> that moves this definition to the .dtb
+Out of curiosity, can you try removing the check in irqdomain and always
+apply the setting regardless of the previous value (ie, remove the check
+of type against irqd_get_trigger at the end of irq_create_of_mapping),
+see if that makes a difference ?
 
-See my comment in my other reply, just don't add nand/partition support
-in the beginning.
-
-thx,
-
-Jason.
+Cheers,
+Ben.
