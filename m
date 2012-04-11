@@ -1,37 +1,35 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V1 2/2] staging: Documentation: add proximity_sampling_period as sysfs details
-Date: Wed, 11 Apr 2012 22:58:04 +0530
-Message-ID: <1334165284-11326-3-git-send-email-ldewangan@nvidia.com>
-References: <1334165284-11326-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1334165284-11326-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, max-U9r9yeDMy7A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: standalone dtc compiler build from
+ git://git.jdl.com/software/dtc.git  gives error
+Date: Wed, 11 Apr 2012 17:59:07 +0000
+Message-ID: <3E54258959B69E4282D79E01AB1F32B7300643@DFLE34.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the sysfs proximity_sampling_period for sampling period of
-proximity sensing.
+Hi, Jon Lolieger,
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../staging/iio/Documentation/sysfs-bus-iio-light  |    7 +++++++
- 1 files changed, 7 insertions(+), 0 deletions(-)
+I have tried using the standalone dtc compiler at git://git.jdl.com/software/dtc.git to compile my dts file and got the following error:-
 
-diff --git a/drivers/staging/iio/Documentation/sysfs-bus-iio-light b/drivers/staging/iio/Documentation/sysfs-bus-iio-light
-index edbf470..9d6108b 100644
---- a/drivers/staging/iio/Documentation/sysfs-bus-iio-light
-+++ b/drivers/staging/iio/Documentation/sysfs-bus-iio-light
-@@ -83,3 +83,10 @@ Description:
- 		Hardware or software applied calibration scale factor assumed
- 		to account for attenuation due to industrial design (glass
- 		filters or aperture holes).
-+
-+What:		/sys/bus/iio/devices/device[n]/proximity_sampling_period
-+KernelVersion:	3.5
-+Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+Description:
-+		Hardware dependent mode for proximity sensor device to set/get
-+		the sampling rate of proximity sensing and conversion.
--- 
-1.7.1.1
+a0868495@ares-ubuntu:~/dtc$ dtc -I dts -O dtb tci6614-evm.dts
+DTC: dts->dtb  on file "tci6614-evm.dts"
+tci6614-evm.dts:4 syntax error
+
+The dtc in the linux tree (Linux version 3.2) is able to compile the dts file and I am able to boot kernel using the dtb. I am using v1.3.0 tag of the dtc git repo. Comparing the files with that under scripts/dtc in the kernel tree, I find they are different. Why is the dtc not able to compile the dts file? How is the dtc tree synced with the Linux kernel tree? As a user, how do I know what version of dtc I need to use for a given kernel release? Any help here?
+
+
+Murali Karicheri
+Software Design Engineer
