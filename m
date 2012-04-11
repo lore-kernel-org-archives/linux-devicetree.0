@@ -1,69 +1,37 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH] mmc: omap_hsmmc: Get rid of of_have_populated_dt() usage
-Date: Wed, 11 Apr 2012 10:36:35 -0400
-Message-ID: <87398atjws.fsf@laptop.org>
-References: <1334138593-9692-1-git-send-email-rnayak@ti.com>
+From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Wed, 11 Apr 2012 15:43:09 +0100
+Message-ID: <20120411154309.1f04fb80@pyramind.ukuu.org.uk>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
+	<1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de>
+	<20120411124810.GK4296@phenom.ffwll.local>
+	<20120411132326.GD27337@avionic-0098.adnet.avionic-design.de>
+	<20120411133512.GL4296@phenom.ffwll.local>
+	<20120411141108.GI27337@avionic-0098.adnet.avionic-design.de>
+	<20120411143456.GM4296@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1334138593-9692-1-git-send-email-rnayak@ti.com> (Rajendra
-	Nayak's message of "Wed, 11 Apr 2012 15:33:13 +0530")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, Balaji TK <balajitk@ti.com>, Rob Herring <rob.herring@calxeda.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120411143456.GM4296-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> Hm, in that case it looks like your iommu works more like the gtt on intel
+> chips 
 
-On Wed, Apr 11 2012, Rajendra Nayak wrote:
-> of_have_populated_dt() is not expected to be used in drivers but
-> instead only in early platform init code.
-> Drivers on the other hand should rely on dev->of_node or of_match_device().
-> Besides usage of of_have_populated_dt() also throws up build error as below
-> which was reported by Balaji TK, when omap_hsmmc is built as a module.
->
-> ERROR: "allnodes" [drivers/mmc/host/omap_hsmmc.ko] undefined!
-> make[1]: *** [__modpost] Error 1
-> make: *** [modules] Error 2
->
-> So get rid of all of_have_populated_dt() usage in omap_hsmmc driver and
-> instead use dev->of_node to make the same dicisions as earlier.
->
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
-> Reported-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Balaji TK <balajitk@ti.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  drivers/mmc/host/omap_hsmmc.c |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index ecc9521..4254b6f 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -252,7 +252,7 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
->  	 * the pbias cell programming support is still missing when
->  	 * booting with Device tree
->  	 */
-> -	if (of_have_populated_dt() && !vdd)
-> +	if (dev->of_node && !vdd)
->  		return 0;
->  
->  	if (mmc_slot(host).before_set_reg)
-> @@ -1564,7 +1564,7 @@ static void omap_hsmmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->  			 * can't be allowed when booting with device
->  			 * tree.
->  			 */
-> -			(!of_have_populated_dt())) {
-> +			!host->dev->of_node) {
->  				/*
->  				 * The mmc_select_voltage fn of the core does
->  				 * not seem to set the power_mode to
+Don't overgeneralize there - on the GMA500/600 the GTT doesn't allow CPU
+side access of the GTT map (ie you can't use it to linearise pages for
+CPU view) and the 3600 is even stranger....
 
-Thanks, pushed to mmc-next for 3.4.
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+Alan
