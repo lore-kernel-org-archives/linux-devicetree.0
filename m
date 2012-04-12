@@ -1,46 +1,64 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
-Date: Thu, 12 Apr 2012 16:23:27 +0200
-Message-ID: <20120412142327.GF3705@phenom.ffwll.local>
-References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
- <20120412071816.GA18252@avionic-0098.mockup.avionic-design.de>
- <025f01cd1887$da56b6e0$8f0424a0$%szyprowski@samsung.com>
- <201204121118.19685.arnd@arndb.de>
+From: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [PATCH V4 1/2] staging: iio: add channel info for sampling frequency
+Date: Thu, 12 Apr 2012 15:27:51 +0100
+Message-ID: <4F86E667.6060606@cam.ac.uk>
+References: <1334239266-29505-1-git-send-email-ldewangan@nvidia.com> <1334239266-29505-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201204121118.19685.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Thierry Reding' <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Daniel Vetter' <daniel-/w4YWyX8dFk@public.gmane.org>, 'Joerg Roedel' <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, 'Jon Mayo' <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, 'Colin Cross' <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Hiroshi Doyu' <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1334239266-29505-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, max-U9r9yeDMy7A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 12, 2012 at 11:18:19AM +0000, Arnd Bergmann wrote:
-> On Thursday 12 April 2012, Marek Szyprowski wrote:
-> > Scatter lists were initially designed for the disk based block io operations, 
-> > hence the presence of the in-page offsets and lengths for each chunk. For 
-> > multimedia use cases providing an array of struct pages and asking dma-mapping 
-> > to map them into contiguous memory is probably all we need. I wonder if 
-> > introducing such new calls is a good idea. Anrd, what do think? It will 
-> > definitely simplify the drivers and improve the code understanding. On the 
-> > other hand it requires a significant amount of work in the dma-mapping 
-> > framework for all architectures, but that's not a big issue for me.
-> 
-> My feeling is that it's too much like the existing _sg version, so I wouldn't
-> add yet another variant. While having a simple page array is definitely
-> simpler and potentially faster, I think the API is already too complex
-> and we need to be very careful with new additions.
-
-I concur here. For VT-d support we wrestle the pages through an sg list in
-drm/i915, too. It's not beautiful, and because our gpu internal pagetables
-need 2 loops to walk the sg lists, one for the sg segments, one to loop
-over all pages in a segment. And additional a WARN_ON if the segment
-dma address isn't page-aligned. It's ugly, but imo adding some helpers to
-easier deal with this common case (like the drm_prime_pages_to_sg)
-function is better than creating an entirely new interface.
--Daniel
--- 
-Daniel Vetter
-Mail: daniel-/w4YWyX8dFk@public.gmane.org
-Mobile: +41 (0)79 365 57 48
+On 4/12/2012 3:01 PM, Laxman Dewangan wrote:
+> Adding channel info IIO_CHAN_INFO_SAMP_FREQ to select
+> different sampling frequency per channel wise.
+>
+> Signed-off-by: Laxman Dewangan<ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> changes from V3:
+>   - Change the info name to "sampling_frequency"
+>
+>   drivers/staging/iio/iio.h               |    5 +++++
+>   drivers/staging/iio/industrialio-core.c |    1 +
+>   2 files changed, 6 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/staging/iio/iio.h b/drivers/staging/iio/iio.h
+> index b9cd454..9aa0dd5 100644
+> --- a/drivers/staging/iio/iio.h
+> +++ b/drivers/staging/iio/iio.h
+> @@ -36,6 +36,7 @@ enum iio_chan_info_enum {
+>   	IIO_CHAN_INFO_QUADRATURE_CORRECTION_RAW,
+>   	IIO_CHAN_INFO_AVERAGE_RAW,
+>   	IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY,
+> +	IIO_CHAN_INFO_SAMP_FREQ,
+>   };
+>
+>   #define IIO_CHAN_INFO_SHARED_BIT(type) BIT(type*2)
+> @@ -81,6 +82,10 @@ enum iio_chan_info_enum {
+>   #define IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY_SEPARATE_BIT \
+>   	IIO_CHAN_INFO_SEPARATE_BIT(			       \
+>   		IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY)
+> +#define IIO_CHAN_INFO_SAMP_FREQ_SEPARATE_BIT		\
+> +	IIO_CHAN_INFO_SEPARATE_BIT(IIO_CHAN_INFO_SAMP_FREQ)
+> +#define IIO_CHAN_INFO_SAMP_FREQ_SHARED_BIT			\
+> +	IIO_CHAN_INFO_SHARED_BIT(IIO_CHAN_INFO_SAMP_FREQ)
+>
+>   enum iio_endian {
+>   	IIO_CPU,
+> diff --git a/drivers/staging/iio/industrialio-core.c b/drivers/staging/iio/industrialio-core.c
+> index d303bfb..9e42713 100644
+> --- a/drivers/staging/iio/industrialio-core.c
+> +++ b/drivers/staging/iio/industrialio-core.c
+> @@ -90,6 +90,7 @@ static const char * const iio_chan_info_postfix[] = {
+>   	[IIO_CHAN_INFO_AVERAGE_RAW] = "mean_raw",
+>   	[IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY]
+>   	= "filter_low_pass_3db_frequency",
+> +	[IIO_CHAN_INFO_SAMP_FREQ] = "sampling_frequency",
+>   };
+>
+>   const struct iio_chan_spec
