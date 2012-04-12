@@ -1,88 +1,31 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [RFC 2/4] iommu: tegra/gart: Add device tree support
-Date: Thu, 12 Apr 2012 08:51:09 +0200
-Message-ID: <20120412065108.GC4162@avionic-0098.adnet.avionic-design.de>
-References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
-	<1334146230-1795-3-git-send-email-thierry.reding@avionic-design.de>
-	<4F85BD9D.7050409@wwwdotorg.org>
+From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] staging: iio: add driver for isl29028
+Date: Thu, 12 Apr 2012 10:35:54 +0300
+Message-ID: <20120412073554.GA6498@mwanda>
+References: <1334214492-23044-1-git-send-email-ldewangan@nvidia.com>
+ <1334214492-23044-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2201259864538729482=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <4F85BD9D.7050409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1334214492-23044-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, max-U9r9yeDMy7A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 12, 2012 at 12:38:11PM +0530, Laxman Dewangan wrote:
+> Intersil's ISL29028 is concurrent Ambient Light and
+> Proximity Sensor device.
+> Add driver to access the light and IR intensity and
+> proximity value via iio interface.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Taken care of all review comment from Dan.
 
---===============2201259864538729482==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aT9PWwzfKXlsBJM1"
-Content-Disposition: inline
+Looks nice.  You went above and beyond and cleaned up a couple
+things I didn't mention.  Thanks.
 
-
---aT9PWwzfKXlsBJM1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-* Stephen Warren wrote:
-> On 04/11/2012 06:10 AM, Thierry Reding wrote:
-> > This commit adds device tree support for the GART hardware available on
-> > NVIDIA Tegra 20 SoCs.
-> >=20
-> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/tegra20.dtsi         |    6 ++++++
-> >  arch/arm/mach-tegra/board-dt-tegra20.c |    1 +
-> >  drivers/iommu/tegra-gart.c             |   10 ++++++++++
-> >  3 files changed, 17 insertions(+)
->=20
-> I think I'd prefer at least the tegra20.dtsi change split out into a
-> separate patch so I can queue it in a "dt" topic branch in the Tegra repo.
->=20
-> It might be a good idea to split this into two on an arch/arm vs.
-> drivers/iommu boundary. Looking at Olof's branches for 3.4, that split
-> is what happened there.
->=20
-> Finally, there should be a binding documentation file in
-> Documentation/devicetree/bindings in order to specify the number of reg
-> property entries needed, and their meaning, since there's more than 1
-> (even though you did comment it nicely in the .dtsi file)
-
-Okay, I'll do that.
-
-Thierry
-
---aT9PWwzfKXlsBJM1
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk+Ge1wACgkQZ+BJyKLjJp/vYQCgmzAQyon0uJtVYVi1aTW1Ju9z
-4e8An3lnj6kmSzAELvSRO/7ryOIGuSQQ
-=5sDW
------END PGP SIGNATURE-----
-
---aT9PWwzfKXlsBJM1--
-
---===============2201259864538729482==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-iommu mailing list
-iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-https://lists.linuxfoundation.org/mailman/listinfo/iommu
---===============2201259864538729482==--
+regards,
+dan carpenter
