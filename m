@@ -1,49 +1,67 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/9] ARM: at91: add at91sam9g20ek boards dt support
-Date: Thu, 12 Apr 2012 14:47:36 +0200
-Message-ID: <20120412124736.GN16641@game.jcrosoft.org>
-References: <20120411153515.GK16641@game.jcrosoft.org>
- <1334160079-30831-3-git-send-email-plagnioj@jcrosoft.com>
- <C8443D0743D26F4388EA172BF4E2A7A9317C7B88@DBDE01.ent.ti.com>
- <20120412114559.GM16641@game.jcrosoft.org>
- <C8443D0743D26F4388EA172BF4E2A7A9317C7D68@DBDE01.ent.ti.com>
+From: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [PATCH V3 1/2] staging: iio: add channel info for sampling frequency
+Date: Thu, 12 Apr 2012 14:15:11 +0100
+Message-ID: <4F86D55F.2030808@cam.ac.uk>
+References: <1334234288-25037-1-git-send-email-ldewangan@nvidia.com> <1334234288-25037-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A9317C7D68-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org" <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1334234288-25037-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, max-U9r9yeDMy7A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12:14 Thu 12 Apr     , Mohammed, Afzal wrote:
-> Hi Jean,
-> 
-> On Thu, Apr 12, 2012 at 17:15:59, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > > If ATMEL is also going driver way, then probably our voice together may be
-> > > heard and hopefully it will expedite the matter.
-> > I'm going to add it too  my idea was to create something similiar as the
-> > pintrl
-> > you register the ddifferent bank supported buy the SoC and then the driver
-> > request the bank for the dev_name
-> > 
-> > at soc level you will set the default timings and then the drvier may
-> > manipulate them
-> > 
-> > I already update the API of sam9_smc to abstract the access to the register.
-> 
-> Is SMC code being converted to driver ?
-no I'm busy on pinctrl I just cereate an abstracted API
+On 4/12/2012 1:38 PM, Laxman Dewangan wrote:
+> Adding channel info IIO_CHAN_INFO_SAMP_FREQ to select
+> different sampling frequency per channel wise.
+>
+> Signed-off-by: Laxman Dewangan<ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> As per discussion on previous patch, adding channel info
+> for selecting sampling freqeuncy.
+To match with the existing devices can we not use the abrieviation
+for the attribute naming.
 
-Best Regards,
-J.
+Other than that, all good.
+>   drivers/staging/iio/iio.h               |    5 +++++
+>   drivers/staging/iio/industrialio-core.c |    1 +
+>   2 files changed, 6 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/staging/iio/iio.h b/drivers/staging/iio/iio.h
+> index b9cd454..9aa0dd5 100644
+> --- a/drivers/staging/iio/iio.h
+> +++ b/drivers/staging/iio/iio.h
+> @@ -36,6 +36,7 @@ enum iio_chan_info_enum {
+>   	IIO_CHAN_INFO_QUADRATURE_CORRECTION_RAW,
+>   	IIO_CHAN_INFO_AVERAGE_RAW,
+>   	IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY,
+> +	IIO_CHAN_INFO_SAMP_FREQ,
+>   };
+>
+>   #define IIO_CHAN_INFO_SHARED_BIT(type) BIT(type*2)
+> @@ -81,6 +82,10 @@ enum iio_chan_info_enum {
+>   #define IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY_SEPARATE_BIT \
+>   	IIO_CHAN_INFO_SEPARATE_BIT(			       \
+>   		IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY)
+> +#define IIO_CHAN_INFO_SAMP_FREQ_SEPARATE_BIT		\
+> +	IIO_CHAN_INFO_SEPARATE_BIT(IIO_CHAN_INFO_SAMP_FREQ)
+> +#define IIO_CHAN_INFO_SAMP_FREQ_SHARED_BIT			\
+> +	IIO_CHAN_INFO_SHARED_BIT(IIO_CHAN_INFO_SAMP_FREQ)
+>
+>   enum iio_endian {
+>   	IIO_CPU,
+> diff --git a/drivers/staging/iio/industrialio-core.c b/drivers/staging/iio/industrialio-core.c
+> index d303bfb..14ce6ce 100644
+> --- a/drivers/staging/iio/industrialio-core.c
+> +++ b/drivers/staging/iio/industrialio-core.c
+> @@ -90,6 +90,7 @@ static const char * const iio_chan_info_postfix[] = {
+>   	[IIO_CHAN_INFO_AVERAGE_RAW] = "mean_raw",
+>   	[IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY]
+>   	= "filter_low_pass_3db_frequency",
+> +	[IIO_CHAN_INFO_SAMP_FREQ] = "samp_freq",
+"sampling_frequency"
+>   };
+>
+>   const struct iio_chan_spec
