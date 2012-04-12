@@ -1,28 +1,37 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2 0/2] staging: iio: add isl29028 driver
-Date: Thu, 12 Apr 2012 12:38:10 +0530
-Message-ID: <1334214492-23044-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, max-U9r9yeDMy7A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 2/2] staging: Documentation: add proximity_sampling_period as sysfs details
+Date: Thu, 12 Apr 2012 12:38:12 +0530
+Message-ID: <1334214492-23044-3-git-send-email-ldewangan@nvidia.com>
+References: <1334214492-23044-1-git-send-email-ldewangan@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1334214492-23044-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@cam.ac.uk, gregkh@linuxfoundation.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, jbrenner@taosinc.com, rklein@nvidia.com, max@stro.at
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-ISL29028 is concurrent Ambient light and proximity sensor
-from intersil.
-Adding driver for supporting this device.
+Add the sysfs proximity_sampling_period for sampling period of
+proximity sensing.
 
-Also adding details of interface proximity_sampling_period
-in documentation.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+ .../staging/iio/Documentation/sysfs-bus-iio-light  |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-Laxman Dewangan (2):
-  staging: iio: add driver for isl29028
-  staging: Documentation: add proximity_sampling_period as sysfs
-    details
-
- .../staging/iio/Documentation/sysfs-bus-iio-light  |    7 +
- drivers/staging/iio/light/Kconfig                  |   10 +
- drivers/staging/iio/light/Makefile                 |    1 +
- drivers/staging/iio/light/isl29028.c               |  566 ++++++++++++++++++++
- 4 files changed, 584 insertions(+), 0 deletions(-)
- create mode 100644 drivers/staging/iio/light/isl29028.c
+diff --git a/drivers/staging/iio/Documentation/sysfs-bus-iio-light b/drivers/staging/iio/Documentation/sysfs-bus-iio-light
+index edbf470..9d6108b 100644
+--- a/drivers/staging/iio/Documentation/sysfs-bus-iio-light
++++ b/drivers/staging/iio/Documentation/sysfs-bus-iio-light
+@@ -83,3 +83,10 @@ Description:
+ 		Hardware or software applied calibration scale factor assumed
+ 		to account for attenuation due to industrial design (glass
+ 		filters or aperture holes).
++
++What:		/sys/bus/iio/devices/device[n]/proximity_sampling_period
++KernelVersion:	3.5
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Hardware dependent mode for proximity sensor device to set/get
++		the sampling rate of proximity sensing and conversion.
+-- 
+1.7.1.1
