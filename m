@@ -1,72 +1,84 @@
-From: Jonathan Cameron <jic23@cam.ac.uk>
-Subject: Re: [PATCH V2 2/2] staging: Documentation: add
-	proximity_sampling_period as sysfs details
-Date: Thu, 12 Apr 2012 11:01:02 +0100
-Message-ID: <4F86A7DE.5040203@cam.ac.uk>
-References: <1334214492-23044-1-git-send-email-ldewangan@nvidia.com>
-	<1334214492-23044-3-git-send-email-ldewangan@nvidia.com>
-	<4F86A26B.1090209@cam.ac.uk> <4F86A4EB.4040202@nvidia.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Thu, 12 Apr 2012 11:33:01 +0200
+Message-ID: <20120412093301.GB23336@avionic-0098.mockup.avionic-design.de>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
+	<1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de>
+	<4F85C97E.50203@wwwdotorg.org>
+	<20120412092106.GU3852@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devel-bounces@linuxdriverproject.org>
-In-Reply-To: <4F86A4EB.4040202@nvidia.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
-	<mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel>
-List-Post: <mailto:devel@linuxdriverproject.org>
-List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
-	<mailto:devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: devel-bounces@linuxdriverproject.org
-Sender: devel-bounces@linuxdriverproject.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "max@stro.at" <max@stro.at>, "jbrenner@taosinc.com" <jbrenner@taosinc.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Rhyland Klein <rklein@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: multipart/mixed; boundary="===============8054262657807754720=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120412092106.GU3852-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/12/2012 10:48 AM, Laxman Dewangan wrote:
-> On Thursday 12 April 2012 03:07 PM, Jonathan Cameron wrote:
->> On 4/12/2012 8:08 AM, Laxman Dewangan wrote:
->>> +What:        /sys/bus/iio/devices/device[n]/proximity_sampling_period
->>> +KernelVersion:    3.5
->>> +Contact:    linux-iio@vger.kernel.org
->>> +Description:
->>> +        Hardware dependent mode for proximity sensor device to set/get
->>> +        the sampling rate of proximity sensing and conversion.
->> Ah, that explains what it is.  Sorry, use
->> in_proximitiy0_sampling_frequency to provide equivalent
->> control please.  Might be a pain here, but this interface will just
->> provide the same info as the existing
->> one in a different form.  Note that sampling_frequency is documented as
->> a general one, but can
->> be extended to individual channels.
->>
->
-> Ooop, I did not realize that it is there as part of sysfs.h. I was 
-> looking for other header to get
-> support for this. I can use this for proximity only but I think I 
-> should go with you other
-> suggestion to implement this on channel basis. This will help also in 
-> future for other
-> drivers to have different sampling on different channel.
-Great!
->> Actually add it to the iio-core as an element in the info_mask as I
->> doubt this will be the last time
->> we see this control. This will need to be a precursor patch to the
->> driver obviously.
->>
->> IIO_CHAN_INFO_SAMP_FREQ and the relevant shared and separate macros need
->> to go in
->> iio.h + the text entry in industrialio-core.c
->>
->> If you like I can do this but it'll be quicker if you do :)
->
-> I will send the patch for implementing this first and then modified 
-> version of my driver which actually uses this one.
-Cool
->
->
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--===============8054262657807754720==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
+Content-Disposition: inline
+
+
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+* Sascha Hauer wrote:
+> You might want to have a look at the sdrm patches I recently posted to
+> dri-devel and arm Linux Kernel. Among other things they allow to
+> register crtcs/connectors/encoders seperately so that each of them can
+> have its own representation in the devicetree. I haven't looked into
+> devicetree support for DRM, but with or without devicetree the problem
+> that we do not have a single PCI card for registering all DRM components
+> is the same.
+
+I'll do that. One interesting use-case that's been on my mind for some time
+is if it would be possible to provide a CRTC via DRM that isn't part of the
+SoC or DRM "device" but which can display a framebuffer prepared by the DRM
+framework.
+
+In other words I would like to use the Tegra hardware to render content into
+a framebuffer (using potentially the 3D engine or HW accelerated video
+decoding blocks) but display that framebuffer with a CRTC registered by a
+different driver (perhaps provided by a PCIe or USB device).
+
+I think such a setup would be possible if the CRTC registration can be
+decoupled from the DRM driver. Perhaps sdrm even supports that already?
+
+Thierry
+
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk+GoUwACgkQZ+BJyKLjJp96wQCeOgh2gZUmQUL1oddfmrCLpejW
+nEUAn2upj9yAZjEmbirx6hhSnd3+6l9r
+=8elq
+-----END PGP SIGNATURE-----
+
+--NMuMz9nt05w80d4+--
+
+--===============8054262657807754720==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+iommu mailing list
+iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+https://lists.linuxfoundation.org/mailman/listinfo/iommu
+--===============8054262657807754720==--
