@@ -1,38 +1,61 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V4 0/2] staging: iio: add isl29028 driver
-Date: Thu, 12 Apr 2012 19:31:04 +0530
-Message-ID: <1334239266-29505-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, max-U9r9yeDMy7A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V4 1/2] staging: iio: add channel info for sampling frequency
+Date: Thu, 12 Apr 2012 19:31:05 +0530
+Message-ID: <1334239266-29505-2-git-send-email-ldewangan@nvidia.com>
+References: <1334239266-29505-1-git-send-email-ldewangan@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1334239266-29505-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@cam.ac.uk, gregkh@linuxfoundation.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, jbrenner@taosinc.com, rklein@nvidia.com, max@stro.at
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-ISL29028 is concurrent Ambient light and proximity sensor
-from intersil.
-Adding driver for supporting this device.
+Adding channel info IIO_CHAN_INFO_SAMP_FREQ to select
+different sampling frequency per channel wise.
 
-Changes from V1: 
-- Taken care of cleanups comments.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+changes from V3:
+ - Change the info name to "sampling_frequency"
 
-Changes from V2: 
-- Implement the sampling frequency selection per channel wise.
-- Remove documentation change as it is already there.
-- Use the channel info for selecting proximity sampling rather than
-  exposing new sysfs from driver.
-
-Changes from V3:
-- change samp_freq to sampling_frequency
-- Remove sysfs range  and add scale through channel info.
-
-Laxman Dewangan (2):
-  staging: iio: add channel info for sampling frequency
-  staging: iio: add driver for isl29028
-
- drivers/staging/iio/iio.h               |    5 +
+ drivers/staging/iio/iio.h               |    5 +++++
  drivers/staging/iio/industrialio-core.c |    1 +
- drivers/staging/iio/light/Kconfig       |   10 +
- drivers/staging/iio/light/Makefile      |    1 +
- drivers/staging/iio/light/isl29028.c    |  563 +++++++++++++++++++++++++++++++
- 5 files changed, 580 insertions(+), 0 deletions(-)
- create mode 100644 drivers/staging/iio/light/isl29028.c
+ 2 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/staging/iio/iio.h b/drivers/staging/iio/iio.h
+index b9cd454..9aa0dd5 100644
+--- a/drivers/staging/iio/iio.h
++++ b/drivers/staging/iio/iio.h
+@@ -36,6 +36,7 @@ enum iio_chan_info_enum {
+ 	IIO_CHAN_INFO_QUADRATURE_CORRECTION_RAW,
+ 	IIO_CHAN_INFO_AVERAGE_RAW,
+ 	IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY,
++	IIO_CHAN_INFO_SAMP_FREQ,
+ };
+ 
+ #define IIO_CHAN_INFO_SHARED_BIT(type) BIT(type*2)
+@@ -81,6 +82,10 @@ enum iio_chan_info_enum {
+ #define IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY_SEPARATE_BIT \
+ 	IIO_CHAN_INFO_SEPARATE_BIT(			       \
+ 		IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY)
++#define IIO_CHAN_INFO_SAMP_FREQ_SEPARATE_BIT		\
++	IIO_CHAN_INFO_SEPARATE_BIT(IIO_CHAN_INFO_SAMP_FREQ)
++#define IIO_CHAN_INFO_SAMP_FREQ_SHARED_BIT			\
++	IIO_CHAN_INFO_SHARED_BIT(IIO_CHAN_INFO_SAMP_FREQ)
+ 
+ enum iio_endian {
+ 	IIO_CPU,
+diff --git a/drivers/staging/iio/industrialio-core.c b/drivers/staging/iio/industrialio-core.c
+index d303bfb..9e42713 100644
+--- a/drivers/staging/iio/industrialio-core.c
++++ b/drivers/staging/iio/industrialio-core.c
+@@ -90,6 +90,7 @@ static const char * const iio_chan_info_postfix[] = {
+ 	[IIO_CHAN_INFO_AVERAGE_RAW] = "mean_raw",
+ 	[IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY]
+ 	= "filter_low_pass_3db_frequency",
++	[IIO_CHAN_INFO_SAMP_FREQ] = "sampling_frequency",
+ };
+ 
+ const struct iio_chan_spec
+-- 
+1.7.1.1
