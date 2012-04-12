@@ -1,14 +1,11 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Booting DT support without U-Boot supporting it
-Date: Thu, 12 Apr 2012 13:19:49 +0800
-Message-ID: <20120412051947.GG2445@S2101-09.ap.freescale.net>
-References: <4F865817.3000802@st.com>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH V3 0/4] pinctrl: Add SPEAr pinctrl support
+Date: Thu, 12 Apr 2012 10:54:33 +0530
+Message-ID: <cover.1334207964.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F865817.3000802-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,21 +15,78 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Cc: "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 12, 2012 at 09:50:39AM +0530, Viresh Kumar wrote:
-> Hi,
-> 
-> My U-boot is on an older version and that doesn't have DT support for ARM.
-> Now, is there any way of booting Linux with DT, without U-Boot supporting DT?
-> 
-This is how I responded to Fabio on the same query a few hours ago :)
+This patchset replaces existing pinmux framework for SPEAr family of SoC with
+generic pinctrl framework.
 
-- Turn on CONFIG_ARM_APPENDED_DTB and CONFIG_ARM_ATAG_DTB_COMPAT
-- cat zImage mx27pdk.dtb > zImage_dtb
-- Boot zImage_dtb as you do with zImage
+@Linus: I would need your Acks on it, after which i will take it through ARM-SoC
+tree, as it has dependency on that.
 
-Regards,
-Shawn
+V2->V3
+- Add DT bindings for pinmux mappings for SPEAr
+- Pass pin maps from dtb instead of mach-spear3xx/spear3*0.c files
+- use of_iomap() instead of devm_ioremap() and platform_get_resource()
+
+V1->V2
+- Earlier padmux support removed
+- single patch for spear pinctrl drivers broken into two: one for spear and
+  other for 3xx family
+- add pinctrl support in arch/arm/mach-spear3xx/ and dts files
+- pinctrl-spear.* made as library instead of platform driver
+- pinctrl-spear300, spear310, spear320 are now platform drivers
+- other minor fixes.
+
+Viresh Kumar (4):
+  SPEAr: Remove existing padmux support for SPEAr
+  pinctrl: Add SPEAr pinctrl drivers
+  pinctrl: Add SPEAr3xx pinctrl drivers
+  SPEAr3xx: Add pinctrl support for boards
+
+ .../devicetree/bindings/pinctrl/pinctrl_spear.txt  |   48 +
+ MAINTAINERS                                        |   23 +-
+ arch/arm/boot/dts/spear300-evb.dts                 |   38 +
+ arch/arm/boot/dts/spear300.dtsi                    |    5 +
+ arch/arm/boot/dts/spear310-evb.dts                 |   61 +
+ arch/arm/boot/dts/spear310.dtsi                    |    5 +
+ arch/arm/boot/dts/spear320-evb.dts                 |   61 +
+ arch/arm/boot/dts/spear320.dtsi                    |    7 +-
+ arch/arm/mach-spear3xx/Kconfig                     |    3 +
+ arch/arm/mach-spear3xx/include/mach/generic.h      |  128 -
+ arch/arm/mach-spear3xx/spear300.c                  |  389 +---
+ arch/arm/mach-spear3xx/spear310.c                  |  161 +-
+ arch/arm/mach-spear3xx/spear320.c                  |  403 +---
+ arch/arm/mach-spear3xx/spear3xx.c                  |  425 ---
+ arch/arm/plat-spear/Kconfig                        |    1 +
+ arch/arm/plat-spear/Makefile                       |    2 +-
+ arch/arm/plat-spear/include/plat/padmux.h          |   92 -
+ arch/arm/plat-spear/padmux.c                       |  164 -
+ drivers/pinctrl/Kconfig                            |    2 +
+ drivers/pinctrl/Makefile                           |    2 +
+ drivers/pinctrl/spear/Kconfig                      |   34 +
+ drivers/pinctrl/spear/Makefile                     |    7 +
+ drivers/pinctrl/spear/pinctrl-spear.c              |  349 ++
+ drivers/pinctrl/spear/pinctrl-spear.h              |  142 +
+ drivers/pinctrl/spear/pinctrl-spear300.c           |  708 ++++
+ drivers/pinctrl/spear/pinctrl-spear310.c           |  431 +++
+ drivers/pinctrl/spear/pinctrl-spear320.c           | 3468 ++++++++++++++++++++
+ drivers/pinctrl/spear/pinctrl-spear3xx.c           |  588 ++++
+ drivers/pinctrl/spear/pinctrl-spear3xx.h           |   92 +
+ 29 files changed, 6063 insertions(+), 1776 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl_spear.txt
+ delete mode 100644 arch/arm/plat-spear/include/plat/padmux.h
+ delete mode 100644 arch/arm/plat-spear/padmux.c
+ create mode 100644 drivers/pinctrl/spear/Kconfig
+ create mode 100644 drivers/pinctrl/spear/Makefile
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear.h
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear300.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear310.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear320.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear3xx.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear3xx.h
+
+-- 
+1.7.9
