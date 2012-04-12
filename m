@@ -1,52 +1,96 @@
-From: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-Subject: Re: [PATCH V3 1/2] staging: iio: add channel info for sampling frequency
-Date: Thu, 12 Apr 2012 14:21:35 +0100
-Message-ID: <4F86D6DF.40704@cam.ac.uk>
-References: <1334234288-25037-1-git-send-email-ldewangan@nvidia.com> <1334234288-25037-2-git-send-email-ldewangan@nvidia.com> <4F86D55F.2030808@cam.ac.uk> <4F86D3ED.4020301@nvidia.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Thu, 12 Apr 2012 15:25:31 +0200
+Message-ID: <20120412132531.GC5353@avionic-0098.adnet.avionic-design.de>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
+	<1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de>
+	<4F85C97E.50203@wwwdotorg.org>
+	<20120412092106.GU3852@pengutronix.de>
+	<20120412093301.GB23336@avionic-0098.mockup.avionic-design.de>
+	<CADnq5_Oiez8zAHqFw-_qXk=3PnnEqgm3ir9M3KsWaQr-dLS5pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4F86D3ED.4020301-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org" <jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "max-U9r9yeDMy7A@public.gmane.org" <max-U9r9yeDMy7A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org" <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============8544377842281880572=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CADnq5_Oiez8zAHqFw-_qXk=3PnnEqgm3ir9M3KsWaQr-dLS5pw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Alex Deucher <alexdeucher-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/12/2012 2:09 PM, Laxman Dewangan wrote:
-> On Thursday 12 April 2012 06:45 PM, Jonathan Cameron wrote:
->> On 4/12/2012 1:38 PM, Laxman Dewangan wrote:
->>> Adding channel info IIO_CHAN_INFO_SAMP_FREQ to select
->>> different sampling frequency per channel wise.
->>>
->>> Signed-off-by: Laxman Dewangan<ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>> As per discussion on previous patch, adding channel info
->>> for selecting sampling freqeuncy.
->> To match with the existing devices can we not use the abrieviation
->> for the attribute naming.
->>
->
-> Sorry..I did not get it completely.
-> Is it like we should have IIO_CHAN_INFO_SAMPLING_FREQUENCY in place 
-> of  IIO_CHAN_INFO_SAMP_FREQ?
-SAMP_FREQ is fine internally.
->
->
->>> @@ -90,6 +90,7 @@ static const char * const iio_chan_info_postfix[] = {
->>>        [IIO_CHAN_INFO_AVERAGE_RAW] = "mean_raw",
->>>        [IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY]
->>>        = "filter_low_pass_3db_frequency",
->>> +    [IIO_CHAN_INFO_SAMP_FREQ] = "samp_freq",
->> "sampling_frequency"
->
-> and then change here as "sampling_frequency"?
->
-Yup, that's the one that is (in the general all channels case) already 
-in the abi docs...
->
->
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--===============8544377842281880572==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ABTtc+pdwF7KHXCz"
+Content-Disposition: inline
+
+
+--ABTtc+pdwF7KHXCz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+* Alex Deucher wrote:
+> On Thu, Apr 12, 2012 at 5:33 AM, Thierry Reding
+> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> > In other words I would like to use the Tegra hardware to render content=
+ into
+> > a framebuffer (using potentially the 3D engine or HW accelerated video
+> > decoding blocks) but display that framebuffer with a CRTC registered by=
+ a
+> > different driver (perhaps provided by a PCIe or USB device).
+> >
+> > I think such a setup would be possible if the CRTC registration can be
+> > decoupled from the DRM driver. Perhaps sdrm even supports that already?
+>=20
+> You should be able to do something like that already with dma_buf and
+> the drm prime infrastructure.  There's even a drm driver for the udl
+> USB framebuffer devices.
+
+Using DRM PRIME requires user-space to be involved. I was thinking more alo=
+ng
+the lines of allowing a dumb DRM driver that only provides a CRTC to regist=
+er
+with another driver so that it shows up as an output for the latter DRM
+device.
+
+Then again, having user-space control this may be more flexible. Performanc=
+e-
+wise both should be about the same, right? What I don't quite understand yet
+is how the DMABUF would be synchronized on both ends. Is there some infra-
+structure to account for it or would I have to export two buffers and flip
+them during the vblank of the "consumer"?
+
+Thierry
+
+--ABTtc+pdwF7KHXCz
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk+G18sACgkQZ+BJyKLjJp9yUgCfedk1cyQsdy4+JdUG6HydNLZM
+oToAniSdeVK4+piE/ghRhSQNk5zgSSHP
+=zPOZ
+-----END PGP SIGNATURE-----
+
+--ABTtc+pdwF7KHXCz--
+
+--===============8544377842281880572==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+iommu mailing list
+iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+https://lists.linuxfoundation.org/mailman/listinfo/iommu
+--===============8544377842281880572==--
