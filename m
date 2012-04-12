@@ -1,98 +1,78 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCH 3/9] ARM: at91: add at91sam9g20ek boards dt support
-Date: Thu, 12 Apr 2012 07:06:47 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A9317C7B88@DBDE01.ent.ti.com>
-References: <20120411153515.GK16641@game.jcrosoft.org>
- <1334160079-30831-3-git-send-email-plagnioj@jcrosoft.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Thu, 12 Apr 2012 09:18:16 +0200
+Message-ID: <20120412071816.GA18252@avionic-0098.mockup.avionic-design.de>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
+ <20120411133512.GL4296@phenom.ffwll.local>
+ <20120411141108.GI27337@avionic-0098.adnet.avionic-design.de>
+ <201204111518.41968.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1334160079-30831-3-git-send-email-plagnioj@jcrosoft.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux@maxim.org.za" <linux@maxim.org.za>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201204111518.41968.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ omap ml
 
-Hi Jean, Andrew, Nicolas,
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 11, 2012 at 21:31:13, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> +	ahb {
-> +		apb {
-> +			dbgu: serial@fffff200 {
-> +				status = "okay";
-> +			};
-> +
-> +			usart0: serial@fffb0000 {
-> +				status = "okay";
-> +			};
-> +
-> +			usart1: serial@fffb4000 {
-> +				status = "okay";
-> +			};
-> +
-> +			macb0: ethernet@fffc4000 {
-> +				phy-mode = "rmii";
-> +				status = "okay";
-> +			};
-> +
-> +			usb1: gadget@fffa4000 {
-> +				atmel,vbus-gpio = <&pioC 5 0>;
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		nand0: nand@40000000 {
-> +			nand-bus-width = <8>;
-> +			nand-ecc-mode = "soft";
-> +			nand-on-flash-bbt;
-> +			status = "okay";
+* Arnd Bergmann wrote:
+> On Wednesday 11 April 2012, Thierry Reding wrote:
+> > Daniel Vetter wrote:
+> > > Well, you use the iommu api to map/unmap memory into the iommu for te=
+gra,
+> > > whereas usually device drivers just use the dma api to do that. The u=
+sual
+> > > interface is dma_map_sg/dma_unmap_sg, but there are quite a few varia=
+nts
+> > > around. I'm just wondering why this you've choosen this.
+> >=20
+> > I don't think this works on ARM. Maybe I'm not seeing the whole picture=
+ but
+> > judging by a quick look through the kernel tree there aren't any users =
+that
+> > map DMA memory through an IOMMU.
+>=20
+> dma_map_sg is certainly the right interface to use, and Marek Szyprowski =
+has
+> patches to make that work on ARM, hopefully going into v3.5, so you could
+> use those.
 
-I have a few queries about handling static memory controller (SMC) of ATMEL
+I've looked at Marek's patches but I don't think they'll work for Tegra 2 or
+Tegra 3. The corresponding iommu_map() functions only set one PTE, regardle=
+ss
+of the number of bytes passed to them. However, the Tegra TRM indicates that
+mapping needs to be done on a per-page basis so contiguous regions cannot be
+combined. I suppose the IOMMU driver would have to be fixed to program more
+than a single page in that case.
 
-1. How is SMC configured when DT is used ?
-2. With "d6a0166 atmel/nand: add DT support", ek_add_device_nand() is no more
-present (which was earlier configuring SMC), so is SMC configuration handled
-by Kernel on DT boot or is it done by bootloader when DT ?
-3. How ek_add_device_dm9000() is going to be achieved with DT ?
-4. Is there any plan to create a driver out of SMC code & use DT with it ?
+Also this doesn't yet solve the vmap() problem that is needed for the kernel
+virtual mapping. I did try using dma_alloc_writecombine(), but that only
+works for chunks of 2 MB or smaller, unless I use init_consistent_dma_size()
+during board setup, which isn't provided for in a DT setup. I couldn't find
+a better alternative, but I admit I'm not very familiar with all the VM API=
+s.
+Do you have any suggestions on how to solve this? Otherwise I'll try and dig
+in some more.
 
-Reason for bringing these queries is that TI OMAP chips have GPMC [1], SMC in ATMEL
-seems somewhat similar and currently GPMC is configured in platform code, &
-we are creating a driver out of that code [2]. There are different views on where
-GPMC driver should go, mfd, misc folders etc, but could not yet get concrete
-suggestions even with a loud cry.
+Thierry
 
-If ATMEL is also going driver way, then probably our voice together may be
-heard and hopefully it will expedite the matter.
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature
 
-Regards
-Afzal
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-[1]
-GPMC (General Purpose Memory Controller) in brief:
-GPMC is an unified memory controller dedicated to interfacing external
-memory devices like
- Asynchronous SRAM like memories and application specific integrated circuit devices.
- Asynchronous, synchronous, and page mode burst NOR flash devices NAND flash
- Pseudo-SRAM devices
+iEYEARECAAYFAk+GgbgACgkQZ+BJyKLjJp8bzgCghcjjm0gZyWbH01Tiamc317cM
+//4AnjcfTol8KZPD7iZ/G2VorcX+A1Az
+=Tjoh
+-----END PGP SIGNATURE-----
 
-GPMC has to be configured as required by timings of the connected
-peripheral. It needs to be configured only initially. Once it is
-configured it can be used to handle different protocols like NAND,
-NOR. Various kinds of devices like ethernet, uart, usb, fpga etc
-can work using GPMC interface. GPMC has a seperate additional
-functionality of NAND handling
-
-[2] https://lkml.org/lkml/2012/4/5/210
+--AhhlLboLdkugWU4S--
