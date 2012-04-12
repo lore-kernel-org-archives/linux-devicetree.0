@@ -1,45 +1,91 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
 Subject: Re: [PATCH] staging:iio:adc: Add SPEAr ADC driver
-Date: Thu, 12 Apr 2012 08:01:04 +0200
-Message-ID: <201204120801.05269.sr@denx.de>
-References: <1334150388-23296-1-git-send-email-sr@denx.de> <4F8589E4.7020809@cam.ac.uk>
+Date: Thu, 12 Apr 2012 11:42:02 +0530
+Message-ID: <4F867232.3070509@st.com>
+References: <1334150388-23296-1-git-send-email-sr@denx.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4F8589E4.7020809-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
+In-Reply-To: <1334150388-23296-1-git-send-email-sr-ynQEQJNshbs@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 April 2012 15:40:52 Jonathan Cameron wrote:
-> On 4/11/2012 2:19 PM, Stefan Roese wrote:
-> > This patch implements the basic single data conversion support for
-> > the SPEAr600 SoC ADC. The register layout of SPEAr600 differs a bit
-> > from other SPEAr SoC variants (e.g. SPEAr3xx). These differences are
-> > handled via DT compatible testing. Resuling in a multi-arch binary.
-> 
-> Resulting
-> 
-> > This driver is currently tested only on SPEAr600. Futur patches may add
-> > support for other SoC variants (SPEAr3xx) and features like software
-> > buffer or DMA.
-> 
-> Future
-> 
-> Ironically that's about it wrt to comments. Couple of totally trivial
-> bits inline.
-> Basically I'm happy, so if/when someone acks the device tree side of
-> things, please
-> clean up the trivial bits and send on to GregKH.
-> 
-> Nice short, clean driver.  The small line count lured me into reviewing
-> it ahead of
-> some others in my review pile!
+On 4/11/2012 6:49 PM, Stefan Roese wrote:
+> +static int __devinit spear_adc_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct spear_adc_info *info;
+> +       struct resource *res;
+> +       int retval = -ENODEV;
+> +       struct iio_dev *iodev = NULL;
+> +       int irq;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       if (!res) {
+> +               dev_err(&pdev->dev, "failed to get platform I/O memory\n");
+> +               retval = -EBUSY;
+> +               goto errout1;
+> +       }
+> +
+> +       iodev = iio_allocate_device(sizeof(struct spear_adc_info));
+> +       if (!iodev) {
+> +               dev_err(&pdev->dev, "failed allocating iio device\n");
+> +               retval = -ENOMEM;
+> +               goto errout1;
+> +       }
+> +
+> +       info = iio_priv(iodev);
+> +       info->np = np;
+> +
+> +       /*
+> +        * SPEAr600 has a different register layout than other SPEAr SoC's
+> +        * (e.g. SPEAr3xx). Let's provide two register base addresses
+> +        * to support multi-arch kernels.
+> +        */
+> +       info->adc_base_spear6xx = ioremap(res->start, resource_size(res));
+> +       if (!info->adc_base_spear6xx) {
+> +               dev_err(&pdev->dev, "failed mapping memory\n");
+> +               retval = -EBUSY;
+> +               goto errout2;
+> +       }
 
-Jonathan, thanks for the quick review. I'll address you comments and send an 
-updated patch shortly.
+This must be a DT only driver and so you can use of_iomap() instead of
+ioremap() and platform_get_resource()
 
-Stefan
+> +       info->adc_base_spear3xx =
+> +               (struct adc_regs_spear3xx *)info->adc_base_spear6xx;
+> +
+> +       info->clk = clk_get(&pdev->dev, NULL);
+> +       if (IS_ERR(info->clk)) {
+> +               dev_err(&pdev->dev, "failed getting clock\n");
+> +               goto errout3;
+> +       }
+
+patch for devm_* variant of clk is also there.
+
+> +       clk_enable(info->clk);
+
+clk_prepare() is required now, before enable.
+
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +       if ((irq < 0) || (irq >= NR_IRQS)) {
+> +               dev_err(&pdev->dev, "failed getting interrupt resource\n");
+> +               retval = -EINVAL;
+> +               goto errout4;
+> +       }
+> +
+> +       retval = request_irq(irq, spear_adc_isr, 0, MOD_NAME, info);
+> +       if (retval < 0) {
+> +               dev_err(&pdev->dev, "failed requesting interrupt\n");
+> +               goto errout4;
+> +       }
+> +
+
+can use devm_* variants wherever possible.
+
+-- 
+viresh
