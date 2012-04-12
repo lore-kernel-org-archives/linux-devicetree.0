@@ -1,38 +1,35 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCH 3/9] ARM: at91: add at91sam9g20ek boards dt support
-Date: Thu, 12 Apr 2012 12:14:24 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A9317C7D68@DBDE01.ent.ti.com>
-References: <20120411153515.GK16641@game.jcrosoft.org>
- <1334160079-30831-3-git-send-email-plagnioj@jcrosoft.com>
- <C8443D0743D26F4388EA172BF4E2A7A9317C7B88@DBDE01.ent.ti.com>
- <20120412114559.GM16641@game.jcrosoft.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120412114559.GM16641@game.jcrosoft.org>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux@maxim.org.za" <linux@maxim.org.za>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3 0/2] staging: iio: add isl29028 driver
+Date: Thu, 12 Apr 2012 18:08:06 +0530
+Message-ID: <1334234288-25037-1-git-send-email-ldewangan@nvidia.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, max-U9r9yeDMy7A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+ISL29028 is concurrent Ambient light and proximity sensor
+from intersil.
+Adding driver for supporting this device.
 
-On Thu, Apr 12, 2012 at 17:15:59, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > If ATMEL is also going driver way, then probably our voice together may be
-> > heard and hopefully it will expedite the matter.
-> I'm going to add it too  my idea was to create something similiar as the
-> pintrl
-> you register the ddifferent bank supported buy the SoC and then the driver
-> request the bank for the dev_name
-> 
-> at soc level you will set the default timings and then the drvier may
-> manipulate them
-> 
-> I already update the API of sam9_smc to abstract the access to the register.
+Changes from V1:
+- Taken care of cleanups comments.
 
-Is SMC code being converted to driver ?
+Changes from V2:
+- Implement the sampling frequency selection per channel wise.
+- Remove documentation change as it is already there.
+- Use the channel info for selecting proximity sampling rather than
+  exposing new sysfs from driver.
 
-Regards
-Afzal
+
+Laxman Dewangan (2):
+  staging: iio: add channel info for sampling frequency
+  staging: iio: add driver for isl29028
+
+ drivers/staging/iio/iio.h               |    5 +
+ drivers/staging/iio/industrialio-core.c |    1 +
+ drivers/staging/iio/light/Kconfig       |   10 +
+ drivers/staging/iio/light/Makefile      |    1 +
+ drivers/staging/iio/light/isl29028.c    |  574 +++++++++++++++++++++++++++++++
+ 5 files changed, 591 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/staging/iio/light/isl29028.c
