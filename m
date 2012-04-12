@@ -1,41 +1,42 @@
-From: Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
-Date: Thu, 12 Apr 2012 11:56:01 -0700
-Message-ID: <4F872541.3050200@nvidia.com>
-References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de> <1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de> <20120411124810.GK4296@phenom.ffwll.local>
+From: Jeff Garzik <jgarzik@pobox.com>
+Subject: Re: [PATCH 1/1] Add support 2 SATA ports for Maui and change filename
+ from sata_dwc_460ex.c to sata_dwc_4xx.c
+Date: Thu, 12 Apr 2012 16:05:07 -0400
+Message-ID: <4F873573.10406@pobox.com>
+References: <1333447938-16461-1-git-send-email-tqnguyen@apm.com> <4F7AE584.3050805@mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120411124810.GK4296-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <4F7AE584.3050805@mvista.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: "Thang Q. Nguyen" <tqnguyen@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 04/11/2012 05:48 AM, Daniel Vetter wrote:
-> On Wed, Apr 11, 2012 at 02:10:30PM +0200, Thierry Reding wrote:
->> This commit adds a very basic DRM driver for NVIDIA Tegra SoCs. It
->> currently has rudimentary GEM support and can run a console on the
->> framebuffer as well as X using the xf86-video-modesetting driver.
->> Only the RGB output is supported. Quite a lot of things still need
->> to be worked out and there is a lot of room for cleanup.
+On 04/03/2012 07:56 AM, Sergei Shtylyov wrote:
+> Hello.
 >
-> Indeed, after a quick look there are tons of functions that are just stubs
-> ;-) One thing I wonder though is why you directly use the iommu api and
-> not wrap it up into dma_map? Is arm infrastructure just not there yet or
-> do you plan to tightly integrate the tegra drm with the iommu (e.g. for
-> process space switching or similarly funky stuff)?
+> On 03-04-2012 14:12, Thang Q. Nguyen wrote:
 >
-> Yours, Daniel
+>> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
+>> ---
+>> Changes for v2:
+>> - Use git rename feature to change the driver to the newname and for
+>> easier review.
+>
+>> arch/powerpc/boot/dts/bluestone.dts | 21 +
+>> drivers/ata/Makefile | 2 +-
+>> drivers/ata/{sata_dwc_460ex.c => sata_dwc_4xx.c} | 1371
+>> ++++++++++++++--------
+>> 3 files changed, 904 insertions(+), 490 deletions(-)
+>> rename drivers/ata/{sata_dwc_460ex.c => sata_dwc_4xx.c} (56%)
+>
+> You submitted a magapatch doing several things at once (some even
+> needlessly) and even in two areas of the kernel. This needs proper
+> splitting/description.
 
-An abstraction to access iommu is preferable since Tegra2 and Tegra3 are 
-quite a bit different when it comes to iommu.
+Agreed...
 
-But so far I'm pretty pleased with the driver Thierry has done. I'm 
-hoping we can start using this as a base instead of the fb based driver 
-that never made it upstream. (even if I have had a bit of a debate about 
-GEM v. TTM v. ION v. ...)
 
-- Jon
+
