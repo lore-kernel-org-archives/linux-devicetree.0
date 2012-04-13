@@ -1,83 +1,69 @@
-From: Jonathan Cameron <jic23@cam.ac.uk>
-Subject: Re: [PATCH V4 2/2] staging: iio: add driver for isl29028
-Date: Fri, 13 Apr 2012 11:05:33 +0100
-Message-ID: <4F87FA6D.7080700@cam.ac.uk>
-References: <1334239266-29505-1-git-send-email-ldewangan@nvidia.com>
-	<1334239266-29505-3-git-send-email-ldewangan@nvidia.com>
-	<4F86E7F9.7000303@cam.ac.uk> <4F87F662.7040204@nvidia.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/1] arm/dts: Tegra30: Add device tree support for SMMU
+Date: Fri, 13 Apr 2012 12:22:05 +0200
+Message-ID: <20120413.132205.1766846402066131036.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devel-bounces@linuxdriverproject.org>
-In-Reply-To: <4F87F662.7040204@nvidia.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
-	<mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel>
-List-Post: <mailto:devel@linuxdriverproject.org>
-List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
-	<mailto:devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: devel-bounces@linuxdriverproject.org
-Sender: devel-bounces@linuxdriverproject.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "max@stro.at" <max@stro.at>, "jbrenner@taosinc.com" <jbrenner@taosinc.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Rhyland Klein <rklein@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/13/2012 10:48 AM, Laxman Dewangan wrote:
-> On Thursday 12 April 2012 08:04 PM, Jonathan Cameron wrote:
->> On 4/12/2012 3:01 PM, Laxman Dewangan wrote:
->>> Intersil's ISL29028 is concurrent Ambient Light and
->>> Proximity Sensor device.
->>> Add driver to access the light and IR intensity and
->>> proximity value via iio interface.
->> Very nearly there.  The available attributes need to match naming
->> of what they are providing values for. (we need a better way of handling
->> these but that's a job for another day).
->>
->> Otherwise, all good.
->
-> Fine, I will do change.
->
->>> +     mutex_unlock(&chip->lock);
->>> +     return ret;
->>> +}
->>> +
->>> +static IIO_CONST_ATTR(proximity_sampling_frequency_available,
->>> +                             "1, 3, 5, 10, 13, 20, 83, 100");
->>> +static IIO_CONST_ATTR(illuminance_scale_available, "125, 2000");
->>> +
->>> +#define ISL29028_DEV_ATTR(name) (&iio_dev_attr_##name.dev_attr.attr)
->>> +#define ISL29028_CONST_ATTR(name) 
->>> (&iio_const_attr_##name.dev_attr.attr)
->>> +static struct attribute *isl29028_attributes[] = {
->>> +     ISL29028_CONST_ATTR(proximity_sampling_frequency_available),
->> tiny disconnect now that you have in_proximity0_sampling frequency, this
->> should be in_proximity0_sampling_frequency_available
->>
->
-> I saw the attribute appear as
-> in_illuminance_input
-> in_illuminance_scale
-> in_intensity_raw
-> in_proximity_raw
-> in_proximity_sampling_frequency
->
->
-> As I have not set  the .indexed to non-zero,  I will go as non-indexd 
-> name like
-> in_proximity_sampling_frequency_available.
-Fair enough.
->
->>> +     ISL29028_CONST_ATTR(illuminance_scale_available),
->> snap here (sorry, missed that last time).
->>
->> in_illuminance0_scale_available
->>
->
-> I think should be in_illuminance_scale_available
-yup
->
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+Add device tree support for Tegra30 IOMMU(SMMU).
+
+Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/arm/tegra/tegra30-smmu.txt |   19 +++++++++++++++++++
+ arch/arm/boot/dts/tegra30.dtsi                     |   10 ++++++++++
+ 2 files changed, 29 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/tegra/tegra30-smmu.txt b/Documentation/devicetree/bindings/arm/tegra/tegra30-smmu.txt
+new file mode 100644
+index 0000000..4bd8cd0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/tegra/tegra30-smmu.txt
+@@ -0,0 +1,19 @@
++NVIDIA Tegra 30 IOMMU H/W, SMMU (System Memory Management Unit)
++
++Required properties:
++- compatible : "nvidia,tegra30-smmu"
++- reg : Should contain MC registers location and length
++- reg : Should contain AHB Arbitration registers and length
++- reg : Should contain virtual address space range
++- interrupts : Should contain MC General interrupt
++
++Example:
++	smmu: smmu@7000f000 {
++		compatible = "nvidia,tegra30-smmu";
++		reg = < 0x7000f000 0x400	/* controller registers */
++			0x6000c000 0x150	/* AHB Arbitration registers */
++			0x00001000 0x3ffff000 >;/* Virtual address space range
++						 * Exclude the 1st & last page
++						 */
++		interrupts = < 0 13 0x40 >;
++	};
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index 62a7b39..c640a5b 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -183,4 +183,14 @@
+ 		reg = < 0x70000868 0xd0     /* Pad control registers */
+ 			0x70003000 0x3e0 >; /* Mux registers */
+ 	};
++
++	smmu: smmu@7000f000 {
++		compatible = "nvidia,tegra30-smmu";
++		reg = < 0x7000f000 0x400	/* controller registers */
++			0x6000c000 0x150	/* AHB Arbitration registers */
++			0x00001000 0x3ffff000 >;/* Virtual address space range
++						 * Exclude the 1st & last page
++						 */
++		interrupts = < 0 13 0x40 >;
++	};
+ };
+-- 
+1.7.5.4
