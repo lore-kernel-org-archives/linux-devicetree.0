@@ -1,100 +1,172 @@
-From: Thang Nguyen <tqnguyen@apm.com>
-Subject: RE: [PATCH 1/1] Add support 2 SATA ports for Maui and change filename
- from sata_dwc_460ex.c to sata_dwc_4xx.c
-Date: Fri, 13 Apr 2012 14:18:29 +0700
-Message-ID: <3445364d6d28c2b6ae19817fe6851452@mail.gmail.com>
-References: <1333447938-16461-1-git-send-email-tqnguyen@apm.com>
- <4F7AE584.3050805@mvista.com> <4F873573.10406@pobox.com>
+From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+Subject: Re: [PATCH 10/13] s5p-tv: Add DT-support for HDMI driver
+Date: Fri, 13 Apr 2012 09:21:40 +0200
+Message-ID: <4F87D404.8060908@samsung.com>
+References: <1334256332-29867-1-git-send-email-k.lewandowsk@samsung.com>
+ <1334256332-29867-11-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4F873573.10406@pobox.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Jeff Garzik <jgarzik@pobox.com>, Sergei Shtylyov <sshtylyov@mvista.com>
-Cc: Phong Vo <pvo@apm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1334256332-29867-11-git-send-email-k.lewandowsk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, thomas.abraham@linaro.org, m.szyprowski@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, olof@lixom.net, kgene.kim@samsung.com, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Jeff and Sergei,
+Hi Karol,
+Thanks for the patch.
 
-As your suggestion, I will separate the patch into smaller patches and
-support more features on the SATA DWC driver. The patches I intend to do
-on the SATA DWC are as below:
- - Support hardreset: currently the hardreset is not supported. This
-causes sometime the SATA driver does cause kernel crash because of
-not-determined state.
- - Let device tree specified DMA channel: currently only channel 0 is
-supported (number of channel is set to 1). If device tree not specified
-DMA channel, channel 0 will be used as default.
- - Support ATAPI.
- - Remove dma_interrupt_count. for each DMA transfer, we need 2 interrupts
-for QC completion: transfer completion and DMA transfer completion
-interrupt. The current code wait for both 2 interrupts occur before
-calling qc_complete. This will make out-of-sync state when an interrupt
-lost or when errors occur. The change will process DMA register when DMA
-transfer complete interrupt occur and call qc_issue when command
-completion interrupt occur.
- - Fix NCQ issue and set .can_queue back to ATA_MAX_QUEUE.
- - Support Port Multiplier.
- - Support 2 SATA ports on Maui.
+Please refer to the comments below.
+
+On 04/12/2012 08:45 PM, Karol Lewandowski wrote:
+> Includes v4l2/dt helper function (hdmi_of_get_i2c_subdev() that probably
+> should be implemented in v4l2 core itself.
+> 
+> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+> Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>
+> ---
+>  drivers/media/video/s5p-tv/hdmi_drv.c |   68 ++++++++++++++++++++++++++++++++-
+>  1 files changed, 67 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/media/video/s5p-tv/hdmi_drv.c b/drivers/media/video/s5p-tv/hdmi_drv.c
+> index fff3cab..a402e8f 100644
+> --- a/drivers/media/video/s5p-tv/hdmi_drv.c
+> +++ b/drivers/media/video/s5p-tv/hdmi_drv.c
+> @@ -29,6 +29,8 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/clk.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/of.h>
+> +#include <linux/of_i2c.h>
+>  
+>  #include <media/s5p_hdmi.h>
+>  #include <media/v4l2-common.h>
+> @@ -712,6 +714,56 @@ static int hdmi_enum_dv_presets(struct v4l2_subdev *sd,
+>  	return v4l_fill_dv_preset_info(hdmi_conf[preset->index].preset, preset);
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +/* Heavily based[1] on v4l2_i2c_new_subdev_board()
+> + *
+> + * [1] Copy-pasted, that is
+> + */
+> +struct v4l2_subdev *hdmi_of_get_i2c_subdev(struct v4l2_device *v4l2_dev,
+> +	struct device_node *np, const char *propname)
+> +{
+> +	struct v4l2_subdev *sd = NULL;
+> +	struct i2c_client *client;
+> +	struct device_node *cnp;
+> +
+> +	BUG_ON(!v4l2_dev);
+
+Crashing a kernel is not a good idea in general. Especially when it is possible
+to handle a situation. I think that "if (WARN_ON(..)) return NULL" combo
+is a preferred way for handling such an error.
+
+> +
+> +	cnp = of_parse_phandle(np, propname, 0);
+> +	if (!cnp) {
+> +		dev_err(v4l2_dev->dev, "Can't find subdev %s\n", propname);
+> +		goto err;
+> +	}
+> +
+> +	client = of_find_i2c_device_by_node(cnp);
+> +	if (!client) {
+> +		dev_err(v4l2_dev->dev, "subdev %s doesn't reference correct node\n",
+> +			propname);
+> +		goto err;
+> +	}
+> +
+
+Maybe you should combine the check below with the check above.
+
+> +	if (client == NULL || client->driver == NULL)
+> +		goto err;
+> +
+> +	/* Lock the module so we can safely get the v4l2_subdev pointer */
+> +	if (!try_module_get(client->driver->driver.owner))
+> +		goto err;
+> +	sd = i2c_get_clientdata(client);
+> +
+> +	/* Register with the v4l2_device which increases the module's
+> +	   use count as well. */
+> +	if (v4l2_device_register_subdev(v4l2_dev, sd)) {
+> +		printk(KERN_ERR "%s: failed to register subdev\n", __func__);
+> +		sd = NULL;
+> +	}
+> +	/* Decrease the module use count to match the first try_module_get. */
+> +	module_put(client->driver->driver.owner);
+
+This label 'err' is not only used for error cleanups. Maybe you should rename it
+to 'cleanup' or 'done'.
+
+> +err:
+> +	of_node_put(cnp);
+> +
+> +	return sd;
+> +}
+> +#endif
+
+I think that you should strongly consider adding the function above to
+the V4L2 core to drivers/media/video/videobuf2-core.c file and post
+the patch to linux-media list.
+
+> +
+>  static const struct v4l2_subdev_core_ops hdmi_sd_core_ops = {
+>  	.s_power = hdmi_s_power,
+>  };
+> @@ -875,6 +927,12 @@ static struct v4l2_subdev *hdmi_get_subdev(
+>  	struct i2c_adapter *adapter;
+>  	struct device *dev = hdmi_dev->dev;
+> 
+
+Now I see why hdmi_get_subdev is called with NULL arguments in the
+previous patch :).
+
+However I think that you should introduce two explicit paths in probe
+function for handling non-DT and DT cases.
+
+> +#ifdef CONFIG_OF
+> +	if (dev->of_node)
+> +		return hdmi_of_get_i2c_subdev(&hdmi_dev->v4l2_dev,
+> +					   dev->of_node, propname);
+> +#endif
+> +
+>  	if (!bdinfo) {
+>  		dev_err(dev, "%s info is missing in platform data\n",
+>  			propname);
+> @@ -913,7 +971,7 @@ static int __devinit hdmi_probe(struct platform_device *pdev)
+>  
+>  	dev_dbg(dev, "probe start\n");
+>  
+> -	if (!pdata) {
+> +	if (!pdata && !dev->of_node) {
+>  		dev_err(dev, "platform data is missing\n");
+>  		ret = -ENODEV;
+>  		goto fail;
+> @@ -1037,6 +1095,13 @@ static int __devexit hdmi_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static struct of_device_id hdmi_dt_match[] = {
+> +	{ .compatible = "samsung,s5pv210-hdmi" },
+> +	{ },
+> +};
+> +#endif
+> +
+>  static struct platform_driver hdmi_driver __refdata = {
+>  	.probe = hdmi_probe,
+>  	.remove = __devexit_p(hdmi_remove),
+> @@ -1045,6 +1110,7 @@ static struct platform_driver hdmi_driver __refdata = {
+>  		.name = "s5p-hdmi",
+>  		.owner = THIS_MODULE,
+>  		.pm = &hdmi_pm_ops,
+> +		.of_match_table = of_match_ptr(hdmi_dt_match),
+>  	}
+>  };
+> 
 
 Regards,
-Thang Nguyen-
-
------Original Message-----
-From: Jeff Garzik [mailto:jgpobox@gmail.com] On Behalf Of Jeff Garzik
-Sent: Friday, April 13, 2012 3:05 AM
-To: Sergei Shtylyov
-Cc: Thang Q. Nguyen; Benjamin Herrenschmidt; Paul Mackerras; Grant Likely;
-Rob Herring; linuxppc-dev@lists.ozlabs.org; linux-kernel@vger.kernel.org;
-linux-ide@vger.kernel.org; devicetree-discuss@lists.ozlabs.org
-Subject: Re: [PATCH 1/1] Add support 2 SATA ports for Maui and change
-filename from sata_dwc_460ex.c to sata_dwc_4xx.c
-
-On 04/03/2012 07:56 AM, Sergei Shtylyov wrote:
-> Hello.
->
-> On 03-04-2012 14:12, Thang Q. Nguyen wrote:
->
->> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
->> ---
->> Changes for v2:
->> - Use git rename feature to change the driver to the newname and for
->> easier review.
->
->> arch/powerpc/boot/dts/bluestone.dts | 21 +
->> drivers/ata/Makefile | 2 +-
->> drivers/ata/{sata_dwc_460ex.c =3D> sata_dwc_4xx.c} | 1371
->> ++++++++++++++--------
->> 3 files changed, 904 insertions(+), 490 deletions(-)
->> rename drivers/ata/{sata_dwc_460ex.c =3D> sata_dwc_4xx.c} (56%)
->
-> You submitted a magapatch doing several things at once (some even
-> needlessly) and even in two areas of the kernel. This needs proper
-> splitting/description.
-
-Agreed...
-CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, =
-
-is for the sole use of the intended recipient(s) and contains information=
-=A0
-that is confidential and proprietary to AppliedMicro Corporation or its sub=
-sidiaries. =
-
-It is to be used solely for the purpose of furthering the parties' business=
- relationship. =
-
-All unauthorized review, use, disclosure or distribution is prohibited. =
-
-If you are not the intended recipient, please contact the sender by reply e=
--mail =
-
-and destroy all copies of the original message.
+Tomasz Stanislawski
