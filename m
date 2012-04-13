@@ -1,56 +1,58 @@
-From: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] i2c-s3c2410: Updates for exynos4210 and DT-based
- systems
-Date: Fri, 13 Apr 2012 11:30:50 +0200
-Message-ID: <4F87F24A.1040408@samsung.com>
-References: <1332357113-2973-1-git-send-email-k.lewandowsk@samsung.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v6 04/17] pwm: Add table-based lookup for static mappings
+Date: Fri, 13 Apr 2012 10:47:19 +0100
+Message-ID: <20120413094718.GL3168@opensource.wolfsonmicro.com>
+References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
+ <1334070400-25013-5-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1332357113-2973-1-git-send-email-k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XRwESHC7KXlqFpSs"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1334070400-25013-5-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21.03.2012 20:11, Karol Lewandowski wrote:
 
-> Changes since v2:
->  - Merge device type and flags into flat bitmask named quirks -
->    Consequently, treat s3c24xx as baseline hardware platform and
->    support all hw variations via quirks [Suggested by Mark Brown]
-> 
-> Changes since v1:
->  - Move unrelated code fragment to separate patch (of_match_ptr())
->    [Suggested by Thomas Abraham]
->  - Move device-type handling to separate function and rework its
->    internals a bit [likewise]
-> 
-> This patchset reworks i2c-s3c2410 driver a bit to better handle
-> device tree-enabled platforms and adds two quirks required by
-> exynos4210-specific I2C controller used by s5p-hdmi driver.
-> 
-> This patchset is based on "i2c-bjdooks/for-34/i2c/i2c-samsung" branch
-> taken from:
-> 
->   git://git.fluff.org/bjdooks/linux.git
-> 
-> Karol Lewandowski (3):
->   i2c-s3c2410: Drop unused define
->   i2c-s3c2410: Rework device type handling
->   i2c-s3c2410: Add HDMIPHY quirk for S3C2440
-> 
->  .../devicetree/bindings/i2c/samsung-i2c.txt        |   11 ++-
->  drivers/i2c/busses/i2c-s3c2410.c                   |   86 +++++++++++++------
->  2 files changed, 68 insertions(+), 29 deletions(-)
+--XRwESHC7KXlqFpSs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 10, 2012 at 05:06:27PM +0200, Thierry Reding wrote:
+> In order to get rid of the global namespace for PWM devices, this commit
+> provides an alternative method, similar to that of the regulator or
+> clock frameworks, for registering a static mapping for PWM devices. This
+> works by providing a table with a provider/consumer map in the board
+> setup code.
+>=20
+> With the new pwm_get() and pwm_put() functions available, usage of
+> pwm_request() and pwm_free() becomes deprecated.
 
-Wolfram,
+Reviwed-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 
-Is there anything I can do to have these patches in -next
-(and, consequently, in 3.5-rc1)?
+--XRwESHC7KXlqFpSs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Regards,
--- 
-Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPh/YRAAoJEBus8iNuMP3dDEQQAIzFRRk2eS8fwXWKr1Mtbzqn
+/cPHjEP7/6kWN7cBn4Qa6tDzwaE+OVpPXcC3zPqE2OG32wYdo+n93DGdaBootoyn
+pzper6fdCu8NTtWZXMpwW62+bnQhGG/44oN1S4AaA1WceV0QqzSFhcM5yTXq/s62
++bxLJO+xuU7/M0/sc9vWsNAmflXtyNz8IL572f+ZcTvAJGHFCfqGgnwkBPmxIZUE
+hWRbx/aj+H+lziO1aeCt+8XZVYWwr6Jj/BJezqDsNZo4kMmt0RP6hvOGKZRnjuOh
+6Cn5BAd8zVOtpyYYEyhgRFsQldeqPV59ZdQs8pgKncQJ/R/nOeQgMllWvRMF+xee
+jJqq3egS626kyMLtXfM/hatycMA684hL6MPt/kDzRkvE6Spo3OV0RrrV3Gu/re9y
+T7vtzhYZyJO7bHO2Ld6Jfpv3tGEYH4+xfXhRwgQVhNMix1zWqn+s4xaKbT1LgQKY
+H1JSsibXN12LqWhtqzLMlPc2QNDTJNxHqpXcsf0VWXFnEt1tlMznAVXuMQQv/+ih
+BZ10TZ+pDPTTuhP5efOmnBjVSNMVMRGx4M8wGOGxtwE58kV1BobPonruBt6QzjxL
+VJu82E2ir3sHgOP8QCdU9gY3RvDTTkitqCGmVCykI3OTVxKFZ44PNi7J6RF+Df4Q
+udgeCa5QRAHtGVUBDG42
+=72bn
+-----END PGP SIGNATURE-----
+
+--XRwESHC7KXlqFpSs--
