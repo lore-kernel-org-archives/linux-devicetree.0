@@ -1,172 +1,208 @@
-From: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Subject: Re: [PATCH 10/13] s5p-tv: Add DT-support for HDMI driver
-Date: Fri, 13 Apr 2012 09:21:40 +0200
-Message-ID: <4F87D404.8060908@samsung.com>
-References: <1334256332-29867-1-git-send-email-k.lewandowsk@samsung.com>
- <1334256332-29867-11-git-send-email-k.lewandowsk@samsung.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Fri, 13 Apr 2012 11:14:57 +0200
+Message-ID: <20120413091457.GB617@avionic-0098.mockup.avionic-design.de>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
+	<1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de>
+	<4F85C97E.50203@wwwdotorg.org>
+	<20120412065038.GB4162@avionic-0098.adnet.avionic-design.de>
+	<4F86F97C.8010508@wwwdotorg.org>
+	<20120412174429.GB10042@avionic-0098.adnet.avionic-design.de>
+	<4F8753A0.6040907@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1334256332-29867-11-git-send-email-k.lewandowsk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Karol Lewandowski <k.lewandowsk@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, thomas.abraham@linaro.org, m.szyprowski@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, olof@lixom.net, kgene.kim@samsung.com, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: multipart/mixed; boundary="===============2535987165988261582=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4F8753A0.6040907-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Karol,
-Thanks for the patch.
 
-Please refer to the comments below.
+--===============2535987165988261582==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DKU6Jbt7q3WqK7+M"
+Content-Disposition: inline
 
-On 04/12/2012 08:45 PM, Karol Lewandowski wrote:
-> Includes v4l2/dt helper function (hdmi_of_get_i2c_subdev() that probably
-> should be implemented in v4l2 core itself.
-> 
-> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
-> Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> ---
->  drivers/media/video/s5p-tv/hdmi_drv.c |   68 ++++++++++++++++++++++++++++++++-
->  1 files changed, 67 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/media/video/s5p-tv/hdmi_drv.c b/drivers/media/video/s5p-tv/hdmi_drv.c
-> index fff3cab..a402e8f 100644
-> --- a/drivers/media/video/s5p-tv/hdmi_drv.c
-> +++ b/drivers/media/video/s5p-tv/hdmi_drv.c
-> @@ -29,6 +29,8 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/clk.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/of.h>
-> +#include <linux/of_i2c.h>
->  
->  #include <media/s5p_hdmi.h>
->  #include <media/v4l2-common.h>
-> @@ -712,6 +714,56 @@ static int hdmi_enum_dv_presets(struct v4l2_subdev *sd,
->  	return v4l_fill_dv_preset_info(hdmi_conf[preset->index].preset, preset);
->  }
->  
-> +#ifdef CONFIG_OF
-> +/* Heavily based[1] on v4l2_i2c_new_subdev_board()
-> + *
-> + * [1] Copy-pasted, that is
-> + */
-> +struct v4l2_subdev *hdmi_of_get_i2c_subdev(struct v4l2_device *v4l2_dev,
-> +	struct device_node *np, const char *propname)
-> +{
-> +	struct v4l2_subdev *sd = NULL;
-> +	struct i2c_client *client;
-> +	struct device_node *cnp;
-> +
-> +	BUG_ON(!v4l2_dev);
 
-Crashing a kernel is not a good idea in general. Especially when it is possible
-to handle a situation. I think that "if (WARN_ON(..)) return NULL" combo
-is a preferred way for handling such an error.
+--DKU6Jbt7q3WqK7+M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +	cnp = of_parse_phandle(np, propname, 0);
-> +	if (!cnp) {
-> +		dev_err(v4l2_dev->dev, "Can't find subdev %s\n", propname);
-> +		goto err;
-> +	}
-> +
-> +	client = of_find_i2c_device_by_node(cnp);
-> +	if (!client) {
-> +		dev_err(v4l2_dev->dev, "subdev %s doesn't reference correct node\n",
-> +			propname);
-> +		goto err;
-> +	}
-> +
+* Stephen Warren wrote:
+> On 04/12/2012 11:44 AM, Thierry Reding wrote:
+[...]
+> And given that, I don't think we should name the node after some
+> OS-specific software concept. Device tree is intended to model hardware.
+[...]
+> > Maybe one solution would be to have a top-level DRM device with a regis=
+ter
+> > map from 0x54000000 to 0x547fffff, which the TRM designates as "host
+> > registers". Then subnodes could be used for the subdevices.
+>=20
+> Ah yes, just what I was thinking above:-)
 
-Maybe you should combine the check below with the check above.
+I came up with the following:
 
-> +	if (client == NULL || client->driver == NULL)
-> +		goto err;
-> +
-> +	/* Lock the module so we can safely get the v4l2_subdev pointer */
-> +	if (!try_module_get(client->driver->driver.owner))
-> +		goto err;
-> +	sd = i2c_get_clientdata(client);
-> +
-> +	/* Register with the v4l2_device which increases the module's
-> +	   use count as well. */
-> +	if (v4l2_device_register_subdev(v4l2_dev, sd)) {
-> +		printk(KERN_ERR "%s: failed to register subdev\n", __func__);
-> +		sd = NULL;
-> +	}
-> +	/* Decrease the module use count to match the first try_module_get. */
-> +	module_put(client->driver->driver.owner);
+	/* host1x */
+	host1x : host1x@50000000 {
+		reg =3D <0x50000000 0x00024000>;
+		interrupts =3D <0 64 0x04   /* cop syncpt */
+			      0 65 0x04   /* mpcore syncpt */
+			      0 66 0x04   /* cop general */
+			      0 67 0x04>; /* mpcore general */
+	};
 
-This label 'err' is not only used for error cleanups. Maybe you should rename it
-to 'cleanup' or 'done'.
+	/* graphics host */
+	graphics@54000000 {
+		compatible =3D "nvidia,tegra20-graphics";
 
-> +err:
-> +	of_node_put(cnp);
-> +
-> +	return sd;
-> +}
-> +#endif
+		#address-cells =3D <1>;
+		#size-cells =3D <1>;
+		ranges =3D <0 0x54000000 0x08000000>;
 
-I think that you should strongly consider adding the function above to
-the V4L2 core to drivers/media/video/videobuf2-core.c file and post
-the patch to linux-media list.
+		host1x =3D <&host1x>;
 
-> +
->  static const struct v4l2_subdev_core_ops hdmi_sd_core_ops = {
->  	.s_power = hdmi_s_power,
->  };
-> @@ -875,6 +927,12 @@ static struct v4l2_subdev *hdmi_get_subdev(
->  	struct i2c_adapter *adapter;
->  	struct device *dev = hdmi_dev->dev;
-> 
+		/* video-encoding/decoding */
+		mpe@54040000 {
+			reg =3D <0x54040000 0x00040000>;
+			interrupts =3D <0 68 0x04>;
+		};
 
-Now I see why hdmi_get_subdev is called with NULL arguments in the
-previous patch :).
+		/* video input */
+		vi@54080000 {
+			reg =3D <0x54080000 0x00040000>;
+			interrupts =3D <0 69 0x04>;
+		};
 
-However I think that you should introduce two explicit paths in probe
-function for handling non-DT and DT cases.
+		/* EPP */
+		epp@540c0000 {
+			reg =3D <0x540c0000 0x00040000>;
+			interrupts =3D <0 70 0x04>;
+		}
 
-> +#ifdef CONFIG_OF
-> +	if (dev->of_node)
-> +		return hdmi_of_get_i2c_subdev(&hdmi_dev->v4l2_dev,
-> +					   dev->of_node, propname);
-> +#endif
-> +
->  	if (!bdinfo) {
->  		dev_err(dev, "%s info is missing in platform data\n",
->  			propname);
-> @@ -913,7 +971,7 @@ static int __devinit hdmi_probe(struct platform_device *pdev)
->  
->  	dev_dbg(dev, "probe start\n");
->  
-> -	if (!pdata) {
-> +	if (!pdata && !dev->of_node) {
->  		dev_err(dev, "platform data is missing\n");
->  		ret = -ENODEV;
->  		goto fail;
-> @@ -1037,6 +1095,13 @@ static int __devexit hdmi_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OF
-> +static struct of_device_id hdmi_dt_match[] = {
-> +	{ .compatible = "samsung,s5pv210-hdmi" },
-> +	{ },
-> +};
-> +#endif
-> +
->  static struct platform_driver hdmi_driver __refdata = {
->  	.probe = hdmi_probe,
->  	.remove = __devexit_p(hdmi_remove),
-> @@ -1045,6 +1110,7 @@ static struct platform_driver hdmi_driver __refdata = {
->  		.name = "s5p-hdmi",
->  		.owner = THIS_MODULE,
->  		.pm = &hdmi_pm_ops,
-> +		.of_match_table = of_match_ptr(hdmi_dt_match),
->  	}
->  };
-> 
+		/* ISP */
+		isp@54100000 {
+			reg =3D <0x54100000 0x00040000>;
+			interrupts =3D <0 71 0x04>;
+		};
 
-Regards,
-Tomasz Stanislawski
+		/* 2D engine */
+		gr2d@54140000 {
+			reg =3D <0x54140000 0x00040000>;
+			interrupts =3D <0 72 0x04>;
+		};
+
+		/* 3D engine */
+		gr3d@54180000 {
+			reg =3D <0x54180000 0x00040000>;
+		};
+
+		/* display controllers */
+		disp1 : dc@54200000 {
+			compatible =3D "nvidia,tegra20-dc";
+			reg =3D <0x54200000 0x00040000>;
+			interrupts =3D <0 73 0x04>;
+		};
+
+		disp2 : dc@54240000 {
+			compatible =3D "nvidia,tegra20-dc";
+			reg =3D <0x54240000 0x00040000>;
+			interrupts =3D <0 74 0x04>;
+		};
+
+		/* outputs */
+		lvds : rgb {
+			compatible =3D "nvidia,tegra20-rgb";
+		};
+
+		hdmi : hdmi@54280000 {
+			compatible =3D "nvidia,tegra20-hdmi";
+			reg =3D <0x54280000 0x00040000>;
+			interrupts =3D <0 75 0x04>;
+		};
+
+		tvo : tvo@542c0000 {
+			compatible =3D "nvidia,tegra20-tvo";
+			reg =3D <0x542c0000 0x00040000>;
+			interrupts =3D <0 76 0x04>;
+		};
+
+		dsi : dsi@54300000 {
+			compatible =3D "nvidia,tegra20-dsi";
+			reg =3D <0x54300000 0x00040000>;
+		};
+
+		display-controllers =3D <&disp1 &disp2>;
+		outputs =3D <&lvds &hdmi &tvo &dsi>;
+
+		/* initial configuration */
+		configuration {
+			lvds {
+				display-controller =3D <&disp1>;
+				output =3D <&lvds>;
+			};
+
+			hdmi {
+				display-controller =3D <&disp2>;
+				output =3D <&hdmi>;
+			};
+		};
+	};
+
+I added an additional node for the initial configuration so that the driver
+knows which mapping to setup at boot. What I don't quite see yet is where to
+attach EDID data or pass the phandle to the I2C controller for DDC/EDID
+probing. The initial configuration is certainly not the right place. Perhaps
+the outputs property should be made a node instead:
+
+	outputs {
+		lvds_out {
+			output =3D <&lvds>;
+			edid =3D <&edid>;
+		};
+
+		hdmi_out {
+			output =3D <&hdmi>;
+			ddc =3D <&i2c2>;
+		};
+	};
+
+But then "outputs" should probably become something like "connectors"
+instead and the initial configuration refers to the "_out" phandles.
+
+Thierry
+
+--DKU6Jbt7q3WqK7+M
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk+H7pEACgkQZ+BJyKLjJp8OBQCcCD6trEVwkhaZKuM4dqATW0i/
+fkIAn3mcfAwt3BnyXdGROE9qzBjErDRS
+=M+wI
+-----END PGP SIGNATURE-----
+
+--DKU6Jbt7q3WqK7+M--
+
+--===============2535987165988261582==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+iommu mailing list
+iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+https://lists.linuxfoundation.org/mailman/listinfo/iommu
+--===============2535987165988261582==--
