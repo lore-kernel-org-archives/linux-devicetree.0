@@ -1,49 +1,48 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: [PATCH 1/3] iommu: tegra/gart: use correct gart_device
-Date: Fri, 13 Apr 2012 15:08:07 +0200
-Message-ID: <1334322489-837-1-git-send-email-thierry.reding@avionic-design.de>
+From: Jeff Garzik <jgarzik@pobox.com>
+Subject: Re: [PATCH 1/1] Add support 2 SATA ports for Maui and change filename
+ from sata_dwc_460ex.c to sata_dwc_4xx.c
+Date: Fri, 13 Apr 2012 10:20:48 -0400
+Message-ID: <4F883640.60103@pobox.com>
+References: <1333447938-16461-1-git-send-email-tqnguyen@apm.com> <4F7AE584.3050805@mvista.com> <4F873573.10406@pobox.com> <3445364d6d28c2b6ae19817fe6851452@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Vandana Salve <vsalve-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <3445364d6d28c2b6ae19817fe6851452@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Thang Nguyen <tqnguyen@apm.com>
+Cc: Sergei Shtylyov <sshtylyov@mvista.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Phong Vo <pvo@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Vandana Salve <vsalve-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 04/13/2012 03:18 AM, Thang Nguyen wrote:
+> Thanks Jeff and Sergei,
+>
+> As your suggestion, I will separate the patch into smaller patches and
+> support more features on the SATA DWC driver. The patches I intend to do
+> on the SATA DWC are as below:
+>   - Support hardreset: currently the hardreset is not supported. This
+> causes sometime the SATA driver does cause kernel crash because of
+> not-determined state.
+>   - Let device tree specified DMA channel: currently only channel 0 is
+> supported (number of channel is set to 1). If device tree not specified
+> DMA channel, channel 0 will be used as default.
+>   - Support ATAPI.
+>   - Remove dma_interrupt_count. for each DMA transfer, we need 2 interrupts
+> for QC completion: transfer completion and DMA transfer completion
+> interrupt. The current code wait for both 2 interrupts occur before
+> calling qc_complete. This will make out-of-sync state when an interrupt
+> lost or when errors occur. The change will process DMA register when DMA
+> transfer complete interrupt occur and call qc_issue when command
+> completion interrupt occur.
+>   - Fix NCQ issue and set .can_queue back to ATA_MAX_QUEUE.
+>   - Support Port Multiplier.
+>   - Support 2 SATA ports on Maui.
 
-Pass the correct gart device pointer.
+Sounds good, thanks for splitting up the patch into smaller pieces.  The 
+main goal is that separate logical changes should go into separate patches.
 
-Reviewed-by: Vandana Salve <vsalve-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Tested-by: Vandana Salve <vsalve-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Bharat Nihalani <bnihalani-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/iommu/tegra-gart.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	Jeff
 
-diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
-index 779306e..f6bc1e6 100644
---- a/drivers/iommu/tegra-gart.c
-+++ b/drivers/iommu/tegra-gart.c
-@@ -158,7 +158,7 @@ static int gart_iommu_attach_dev(struct iommu_domain *domain,
- 	struct gart_client *client, *c;
- 	int err = 0;
- 
--	gart = dev_get_drvdata(dev->parent);
-+	gart = gart_handle;
- 	if (!gart)
- 		return -EINVAL;
- 	domain->priv = gart;
--- 
-1.7.10
+
+
+
