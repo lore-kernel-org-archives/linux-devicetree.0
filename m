@@ -1,64 +1,44 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/1] iommu/tegra: Add device tree support for SMMU
-Date: Fri, 13 Apr 2012 12:23:31 +0200
-Message-ID: <20120413.132331.971155172093927884.hdoyu@nvidia.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V5 0/2] staging: iio: add isl29028 driver
+Date: Fri, 13 Apr 2012 16:03:30 +0530
+Message-ID: <1334313212-23618-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, max-U9r9yeDMy7A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+ISL29028 is concurrent Ambient light and proximity sensor
+from intersil.
+Adding driver for supporting this device.
 
-Add device tree support for Tegra30 IOMMU(SMMU).
+Changes from V1: 
+- Taken care of cleanups comments.
 
-Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/iommu/tegra-smmu.c |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+Changes from V2: 
+- Implement the sampling frequency selection per channel wise.
+- Remove documentation change as it is already there.
+- Use the channel info for selecting proximity sampling rather than
+  exposing new sysfs from driver.
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index eb93c82..d4c7963 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -30,6 +30,7 @@
- #include <linux/sched.h>
- #include <linux/iommu.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- 
- #include <asm/page.h>
- #include <asm/cacheflush.h>
-@@ -1005,6 +1006,13 @@ const struct dev_pm_ops tegra_smmu_pm_ops = {
- 	.resume		= tegra_smmu_resume,
- };
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id tegra_smmu_of_match[] __devinitdata = {
-+	{ .compatible = "nvidia,tegra30-smmu", },
-+	{ },
-+};
-+#endif
-+
- static struct platform_driver tegra_smmu_driver = {
- 	.probe		= tegra_smmu_probe,
- 	.remove		= tegra_smmu_remove,
-@@ -1012,6 +1020,7 @@ static struct platform_driver tegra_smmu_driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "tegra-smmu",
- 		.pm	= &tegra_smmu_pm_ops,
-+		.of_match_table = of_match_ptr(tegra_smmu_of_match),
- 	},
- };
- 
-@@ -1031,4 +1040,5 @@ module_exit(tegra_smmu_exit);
- 
- MODULE_DESCRIPTION("IOMMU API for SMMU in Tegra30");
- MODULE_AUTHOR("Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>");
-+MODULE_ALIAS("platform:tegra-smmu");
- MODULE_LICENSE("GPL v2");
--- 
-1.7.5.4
+Changes from V3:
+- change samp_freq to sampling_frequency
+- Remove sysfs range  and add scale through channel info.
+
+Changed from V4: 
+- Changed ISL29028_MAX_REGS  macro to ISL29028_NUM_REGS
+- Changed *_available attribute inline with their corresponding attr.
+
+Laxman Dewangan (2):
+  staging: iio: add channel info for sampling frequency
+  staging: iio: add driver for isl29028
+
+ drivers/staging/iio/iio.h               |    5 +
+ drivers/staging/iio/industrialio-core.c |    1 +
+ drivers/staging/iio/light/Kconfig       |   10 +
+ drivers/staging/iio/light/Makefile      |    1 +
+ drivers/staging/iio/light/isl29028.c    |  563 +++++++++++++++++++++++++++++++
+ 5 files changed, 580 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/staging/iio/light/isl29028.c
