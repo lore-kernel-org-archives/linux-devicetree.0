@@ -1,157 +1,100 @@
-From: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Subject: Re: [PATCH 09/13] s5p-tv: Move HDMIPHY and MHL subdev probing to
- dedicated function
-Date: Fri, 13 Apr 2012 08:42:44 +0200
-Message-ID: <4F87CAE4.80305@samsung.com>
-References: <1334256332-29867-1-git-send-email-k.lewandowsk@samsung.com>
- <1334256332-29867-10-git-send-email-k.lewandowsk@samsung.com>
+From: Thang Nguyen <tqnguyen@apm.com>
+Subject: RE: [PATCH 1/1] Add support 2 SATA ports for Maui and change filename
+ from sata_dwc_460ex.c to sata_dwc_4xx.c
+Date: Fri, 13 Apr 2012 14:18:29 +0700
+Message-ID: <3445364d6d28c2b6ae19817fe6851452@mail.gmail.com>
+References: <1333447938-16461-1-git-send-email-tqnguyen@apm.com>
+ <4F7AE584.3050805@mvista.com> <4F873573.10406@pobox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1334256332-29867-10-git-send-email-k.lewandowsk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Karol Lewandowski <k.lewandowsk@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, thomas.abraham@linaro.org, m.szyprowski@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, olof@lixom.net, kgene.kim@samsung.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4F873573.10406@pobox.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Jeff Garzik <jgarzik@pobox.com>, Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: Phong Vo <pvo@apm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Karol,
-Thank you for the patch.
+Thanks Jeff and Sergei,
 
-On 04/12/2012 08:45 PM, Karol Lewandowski wrote:
-> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
-> Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> ---
->  drivers/media/video/s5p-tv/hdmi_drv.c |   90 ++++++++++++++++++---------------
->  1 files changed, 49 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/media/video/s5p-tv/hdmi_drv.c b/drivers/media/video/s5p-tv/hdmi_drv.c
-> index 4865d25..fff3cab 100644
-> --- a/drivers/media/video/s5p-tv/hdmi_drv.c
-> +++ b/drivers/media/video/s5p-tv/hdmi_drv.c
-> @@ -865,11 +865,47 @@ fail:
->  	return -ENODEV;
->  }
->  
-> +static struct v4l2_subdev *hdmi_get_subdev(
-> +	struct hdmi_device *hdmi_dev,
-> +	struct i2c_board_info *bdinfo,
-> +	int bus,
-> +	const char *propname)
-> +{
-> +	struct v4l2_subdev *sd = NULL;
-> +	struct i2c_adapter *adapter;
-> +	struct device *dev = hdmi_dev->dev;
-> +
-> +	if (!bdinfo) {
-> +		dev_err(dev, "%s info is missing in platform data\n",
-> +			propname);
-> +		return ERR_PTR(-ENXIO);
-> +	}
-> +
-> +	adapter = i2c_get_adapter(bus);
-> +	if (adapter == NULL) {
-> +		dev_err(dev, "%s adapter request failed, name\n",
-> +			propname);
-> +		return ERR_PTR(-ENXIO);
-> +	}
-> +
-> +	sd = v4l2_i2c_new_subdev_board(&hdmi_dev->v4l2_dev,
-> +				       adapter, bdinfo, NULL);
-> +
-> +	/* on failure or not adapter is no longer useful */
-> +	i2c_put_adapter(adapter);
-> +
-> +	if (sd == NULL) {
-> +		dev_err(dev, "missing subdev for %s\n", propname);
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	return sd;
-> +}
-> +
->  static int __devinit hdmi_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct resource *res;
-> -	struct i2c_adapter *adapter;
->  	struct v4l2_subdev *sd;
->  	struct hdmi_device *hdmi_dev = NULL;
->  	struct s5p_hdmi_platform_data *pdata = dev->platform_data;
-> @@ -937,51 +973,23 @@ static int __devinit hdmi_probe(struct platform_device *pdev)
->  		goto fail_init;
->  	}
->  
-> -	/* testing if hdmiphy info is present */
-> -	if (!pdata->hdmiphy_info) {
-> -		dev_err(dev, "hdmiphy info is missing in platform data\n");
-> -		ret = -ENXIO;
-> +	hdmi_dev->phy_sd = hdmi_get_subdev(hdmi_dev,
-
-If we know that plat data is missing so what is the purpose of calling
-hdmi_get_subdev while we know that this function is going to fail?
-
-> +					   pdata ? pdata->hdmiphy_info : NULL,
-> +					   pdata ? pdata->hdmiphy_bus : -1,
-> +					   "phy");
-> +	if (IS_ERR_OR_NULL(hdmi_dev->phy_sd)) {
-> +		ret = PTR_ERR(hdmi_dev->phy_sd);
->  		goto fail_vdev;
->  	}
-> -
-> -	adapter = i2c_get_adapter(pdata->hdmiphy_bus);
-> -	if (adapter == NULL) {
-> -		dev_err(dev, "hdmiphy adapter request failed\n");
-> -		ret = -ENXIO;
-> +	hdmi_dev->mhl_sd = hdmi_get_subdev(hdmi_dev,
-> +					   pdata ? pdata->mhl_info : NULL ,
-> +					   pdata ? pdata->mhl_bus : -1,
-> +					   "mhl");
-> +	if (IS_ERR_OR_NULL(hdmi_dev->mhl_sd)) {
-> +		ret = PTR_ERR(hdmi_dev->mhl_sd)
-
-The MHL is an optional subdev. There are platforms that support HDMI but does
-not have MHL "on board" like Universal C210. Failing due to a lack of
-MHL plat data will break HDMI support on Universal.
-
-;
->  		goto fail_vdev;
->  	}
->  
-> -	hdmi_dev->phy_sd = v4l2_i2c_new_subdev_board(&hdmi_dev->v4l2_dev,
-> -		adapter, pdata->hdmiphy_info, NULL);
-> -	/* on failure or not adapter is no longer useful */
-> -	i2c_put_adapter(adapter);
-> -	if (hdmi_dev->phy_sd == NULL) {
-> -		dev_err(dev, "missing subdev for hdmiphy\n");
-> -		ret = -ENODEV;
-> -		goto fail_vdev;
-> -	}
-> -
-> -	/* initialization of MHL interface if present */
-> -	if (pdata->mhl_info) {
-> -		adapter = i2c_get_adapter(pdata->mhl_bus);
-> -		if (adapter == NULL) {
-> -			dev_err(dev, "MHL adapter request failed\n");
-> -			ret = -ENXIO;
-> -			goto fail_vdev;
-> -		}
-> -
-> -		hdmi_dev->mhl_sd = v4l2_i2c_new_subdev_board(
-> -			&hdmi_dev->v4l2_dev, adapter,
-> -			pdata->mhl_info, NULL);
-> -		/* on failure or not adapter is no longer useful */
-> -		i2c_put_adapter(adapter);
-> -		if (hdmi_dev->mhl_sd == NULL) {
-> -			dev_err(dev, "missing subdev for MHL\n");
-> -			ret = -ENODEV;
-> -			goto fail_vdev;
-> -		}
-> -	}
-> -
->  	clk_enable(hdmi_dev->res.hdmi);
->  
->  	pm_runtime_enable(dev);
+As your suggestion, I will separate the patch into smaller patches and
+support more features on the SATA DWC driver. The patches I intend to do
+on the SATA DWC are as below:
+ - Support hardreset: currently the hardreset is not supported. This
+causes sometime the SATA driver does cause kernel crash because of
+not-determined state.
+ - Let device tree specified DMA channel: currently only channel 0 is
+supported (number of channel is set to 1). If device tree not specified
+DMA channel, channel 0 will be used as default.
+ - Support ATAPI.
+ - Remove dma_interrupt_count. for each DMA transfer, we need 2 interrupts
+for QC completion: transfer completion and DMA transfer completion
+interrupt. The current code wait for both 2 interrupts occur before
+calling qc_complete. This will make out-of-sync state when an interrupt
+lost or when errors occur. The change will process DMA register when DMA
+transfer complete interrupt occur and call qc_issue when command
+completion interrupt occur.
+ - Fix NCQ issue and set .can_queue back to ATA_MAX_QUEUE.
+ - Support Port Multiplier.
+ - Support 2 SATA ports on Maui.
 
 Regards,
-Tomasz Stanislawski
+Thang Nguyen-
+
+-----Original Message-----
+From: Jeff Garzik [mailto:jgpobox@gmail.com] On Behalf Of Jeff Garzik
+Sent: Friday, April 13, 2012 3:05 AM
+To: Sergei Shtylyov
+Cc: Thang Q. Nguyen; Benjamin Herrenschmidt; Paul Mackerras; Grant Likely;
+Rob Herring; linuxppc-dev@lists.ozlabs.org; linux-kernel@vger.kernel.org;
+linux-ide@vger.kernel.org; devicetree-discuss@lists.ozlabs.org
+Subject: Re: [PATCH 1/1] Add support 2 SATA ports for Maui and change
+filename from sata_dwc_460ex.c to sata_dwc_4xx.c
+
+On 04/03/2012 07:56 AM, Sergei Shtylyov wrote:
+> Hello.
+>
+> On 03-04-2012 14:12, Thang Q. Nguyen wrote:
+>
+>> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
+>> ---
+>> Changes for v2:
+>> - Use git rename feature to change the driver to the newname and for
+>> easier review.
+>
+>> arch/powerpc/boot/dts/bluestone.dts | 21 +
+>> drivers/ata/Makefile | 2 +-
+>> drivers/ata/{sata_dwc_460ex.c =3D> sata_dwc_4xx.c} | 1371
+>> ++++++++++++++--------
+>> 3 files changed, 904 insertions(+), 490 deletions(-)
+>> rename drivers/ata/{sata_dwc_460ex.c =3D> sata_dwc_4xx.c} (56%)
+>
+> You submitted a magapatch doing several things at once (some even
+> needlessly) and even in two areas of the kernel. This needs proper
+> splitting/description.
+
+Agreed...
+CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, =
+
+is for the sole use of the intended recipient(s) and contains information=
+=A0
+that is confidential and proprietary to AppliedMicro Corporation or its sub=
+sidiaries. =
+
+It is to be used solely for the purpose of furthering the parties' business=
+ relationship. =
+
+All unauthorized review, use, disclosure or distribution is prohibited. =
+
+If you are not the intended recipient, please contact the sender by reply e=
+-mail =
+
+and destroy all copies of the original message.
