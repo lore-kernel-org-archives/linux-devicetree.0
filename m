@@ -1,46 +1,43 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: Re: [PATCH v2 0/3] netdev/of/phy: MDIO bus multiplexer support.
-Date: Fri, 13 Apr 2012 12:51:22 -0700
-Message-ID: <4F8883BA.1060507@gmail.com>
-References: <1317166015-20714-1-git-send-email-david.daney@cavium.com>	<20110929.163112.1523715692737597332.davem@davemloft.net>	<20110930003214.GB12606@ponder.secretlab.ca>	<C81814FF-4E56-4B28-8043-F874EE1D6B51@kernel.crashing.org>	<4E9C4CA5.8020407@cavium.com>  <CAKWjMd7uMgs1FJOP13quu3ksF7VEUr8kWmpXeBC+q9amY=sCPg@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 4/7] tegra: fdt: Add NAND controller binding
+	and definitions
+Date: Fri, 13 Apr 2012 14:58:37 -0600
+Message-ID: <4F88937D.3090809@wwwdotorg.org>
+References: <1334341777-2681-1-git-send-email-sjg@chromium.org>
+	<1334341777-2681-5-git-send-email-sjg@chromium.org>
+	<4F8873D1.2010701@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKWjMd7uMgs1FJOP13quu3ksF7VEUr8kWmpXeBC+q9amY=sCPg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Fleming <afleming@gmail.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>, Grant Likely <grant.likely@secretlab.ca>, David Miller <davem@davemloft.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <4F8873D1.2010701@freescale.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Scott Wood <scottwood@freescale.com>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/13/2012 12:08 PM, Andy Fleming wrote:
-> On Mon, Oct 17, 2011 at 10:41 AM, David Daney<david.daney@cavium.com>  wrote:
->> On 10/17/2011 07:48 AM, Kumar Gala wrote:
->>>
->>>
->>> On Sep 29, 2011, at 7:32 PM, Grant Likely wrote:
->>>
->>>> On Thu, Sep 29, 2011 at 04:31:12PM -0400, David Miller wrote:
->>>>>
->>>>> From: David Daney<david.daney@cavium.com>
->
->>>> Your tree or mine, I'm happy either way.  Even if there were
->>>> conflicts, they would be trivial.
->>>>
->>>> Sure, I'll take care of merging it when I see an ack from you.
->
->>> Any updates to these patches?
+On 04/13/2012 12:43 PM, Scott Wood wrote:
+> On 04/13/2012 01:29 PM, Simon Glass wrote:
+>> Add a NAND controller along with a bindings file for review.
 >>
->>
->> Not yet, so you didn't miss anything.
->>
->> They are on my to-do list though
->
-> Pinging on this, again, as we'd like to leverage it for current and
-> future boards. :)
->
+>> Signed-off-by: Simon Glass <sjg@chromium.org>
 
-Today I am working on it, so I will have new patches within a couple of 
-days.
+>> +++ b/doc/device-tree-bindings/nand/nvidia-nand.txt
 
-David Daney
+>> +wp-gpio : GPIO of write-protect line, three cells in the format:
+>> +		phandle, parameter, flags
+> 
+> nvidia,nand-wp-gpio
+
+I'm not convinced about this. For example many SDHCI bindings use just
+"wp-gpios" not "shdci-wp-gpios". Is there really a need to keep the
+property names unique across all bindings, even though a given node only
+relies on one binding?
