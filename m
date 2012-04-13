@@ -1,146 +1,150 @@
-From: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: RE: standalone dtc compiler build from
- git://git.jdl.com/software/dtc.git  gives error
-Date: Fri, 13 Apr 2012 15:31:40 +0000
-Message-ID: <3E54258959B69E4282D79E01AB1F32B7302893@DFLE34.ent.ti.com>
-References: <3E54258959B69E4282D79E01AB1F32B7300643@DFLE34.ent.ti.com>
- <4F85CB76.1010904@wwwdotorg.org>
- <3E54258959B69E4282D79E01AB1F32B7300A78@DFLE34.ent.ti.com>
- <4F861023.7080307@wwwdotorg.org>
- <3E54258959B69E4282D79E01AB1F32B7302875@DFLE34.ent.ti.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH 3/3] ARM: imx6q: switch to use pinctrl driver
+Date: Sat, 14 Apr 2012 00:18:35 +0800
+Message-ID: <1334333915-1174-3-git-send-email-b29396@freescale.com>
+References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <3E54258959B69E4282D79E01AB1F32B7302875-n31QHH/4pUCIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1334333915-1174-1-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
->> -----Original Message-----
->> From: devicetree-discuss-bounces+m-karicheri2=ti.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> [mailto:devicetree-discuss-bounces+m-karicheri2=ti.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of
->> Karicheri, Muralidharan
->> Sent: Friday, April 13, 2012 11:26 AM
->> To: Stephen Warren
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Subject: RE: standalone dtc compiler build from git://git.jdl.com/software/dtc.git gives
->> error
->> 
->> Stephen,
->> >> -----Original Message-----
->> >> From: Stephen Warren [mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org]
->> >> Sent: Wednesday, April 11, 2012 7:14 PM
->> >> To: Karicheri, Muralidharan
->> >> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> >> Subject: Re: standalone dtc compiler build from git://git.jdl.com/software/dtc.git
->> gives
->> >> error
->> >>
->> >> On 04/11/2012 04:26 PM, Karicheri, Muralidharan wrote:
->> >> >>> -----Original Message-----
->> >> >>> From: Stephen Warren [mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org]
->> >> >>> Sent: Wednesday, April 11, 2012 2:21 PM
->> >> >>> To: Karicheri, Muralidharan
->> >> >>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> >> >>> Subject: Re: standalone dtc compiler build from
->> git://git.jdl.com/software/dtc.git
->> >> gives
->> >> >>> error
->> >> >>>
->> >> >>> On 04/11/2012 11:59 AM, Karicheri, Muralidharan wrote:
->> >> >>>> Hi, Jon Lolieger,
->> >> >>>>
->> >> >>>> I have tried using the standalone dtc compiler at
->> git://git.jdl.com/software/dtc.git
->> >> >>>> to compile my dts file and got the following error:-
->> >> >>>>
->> >> >>>> a0868495@ares-ubuntu:~/dtc$ dtc -I dts -O dtb tci6614-evm.dts
->> >> >>>> DTC: dts->dtb  on file "tci6614-evm.dts"
->> >> >>>> tci6614-evm.dts:4 syntax error
->> >> >>>>
->> >> >>> ...
->> >> >>>> Why is the dtc not able to compile the dts file?
->> >> >>>
->> >> >>> I think the only way to answer that is going to be to post your .dts
->> >> >>> file, or at least the first 4 or 5 lines of it.
->> >> >
->> >> > Stephen,
->> >> >
->> >> > Thanks for responding.
->> >> >
->> >> > Here it is
->> >> > ...
->> >>
->> >> That's odd. I just tried both v1.3.0 and master dtc, and could compile
->> >> your example just fine. I also compiled
->> >> arch/arm/boot/dts/tegra-cardhu.dts from the kernel (next-20120411). Both
->> >> worked fine.
->> >>
->> >> Note that I get the error you're seeing if I run Ubuntu's packaged dtc,
->> >> which is 1.1.0.dfsg-1build1 on my system. Are you sure you're running
->> >> the dtc binary you think you are?
->> 
->> You are right. I never realized that I had a host version of dtc. The problem doesn't
->> happen when I used the git version and I could boot up Linux using the DTB. Now I see
->> the same error when run the command on an ARM
->> Target machine. I have cross compiled the dtc (using oe (actually Arago)). Not sure if
->> anyone tried this on an ARM target.
->> 
->> root@tci6614-evm:/# ./dtc -I dts -O dtb -o tci6614-evm.dtb tci6614-evm.dts -q
->> DTC: dts->dtb  on file "tci6614-evm.dts"
->> tci6614-evm.dts:4 syntax error
->> FATAL ERROR: Unable to parse input tree
->> root@tci6614-evm:/# ./dtc -v
->> Version: DTC 1.2.0
->> 
->> root@tci6614-evm:/# cat tci6614-evm.dts
->> /dts-v1/;
->> /include/ "skeleton.dtsi"
->> 
->> / {
->>         model = "Texas Instruments TCI6614 EVM";
->>         compatible = "ti,tci6614-evm";
->>         #address-cells = <1>;
->>         #size-cells = <1>;
->> 
->>         chosen {
->>                 bootargs = "console=ttyS0,115200n8 mem=512M rootwait=1 rw ubi.mt
->> d=2,2048 rootfstype=ubifs root=ubi0:rootfs";
->>         };
->> 
->> root@tci6614-evm:/# cat skeleton.dtsi
->> /*
->>  * Skeleton device tree; the bare minimum needed to boot; just include and
->>  * add a compatible value.  The bootloader will typically populate the memory
->>  * node.
->>  */
->> 
->> / {
->>         #address-cells = <1>;
->>         #size-cells = <1>;
->>         chosen { };
->>         aliases { };
->>         memory { device_type = "memory"; reg = <0 0>; };
->> };
->> 
+From: Dong Aisheng <dong.aisheng@linaro.org>
 
-The problem is with the oe build. I had done cross compiling outside oe and it seems to work fine. Anyways thanks for your help.
+---
+This patch is used for test the new pinctrl driver.
 
->> Murali
->> 
->> 
->> _______________________________________________
->> devicetree-discuss mailing list
->> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+---
+ arch/arm/boot/dts/imx6q-arm2.dts   |    4 +++
+ arch/arm/boot/dts/imx6q.dtsi       |   40 ++++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci-esdhc-imx.c |   12 ++++++++++
+ 3 files changed, 56 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
+index ce1c823..ee2ee98 100644
+--- a/arch/arm/boot/dts/imx6q-arm2.dts
++++ b/arch/arm/boot/dts/imx6q-arm2.dts
+@@ -44,10 +44,14 @@
+ 				fsl,card-wired;
+ 				vmmc-supply = <&reg_3p3v>;
+ 				status = "okay";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_usdhc4_1>;
+ 			};
+ 
+ 			uart4: uart@021f0000 {
+ 				status = "okay";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_uart4_1>;
+ 			};
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 4905f51..5f3505c 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -386,7 +386,47 @@
+ 			};
+ 
+ 			iomuxc@020e0000 {
++				compatible = "fsl,imx6q-iomuxc";
+ 				reg = <0x020e0000 0x4000>;
++
++				/* shared pinctrl settings */
++				uart4 {
++					pinctrl_uart4_1: uart4grp-1 {
++						fsl,pins =	"MX6Q_PAD_KEY_COL0",
++								"MX6Q_PAD_KEY_ROW0";
++						fsl,mux = <4 4>;
++						fsl,pull = <2>;
++						fsl,pue = <1>;
++						fsl,pke = <1>;
++						fsl,speed = <2>;
++						fsl,drive-strength = <6>;
++						fsl,slew-rate = <1>;
++						fsl,hysteresis = <1>;
++					};
++				};
++
++				usdhc4 {
++					pinctrl_usdhc4_1: usdhc4grp-1 {
++						fsl,pins =	"MX6Q_PAD_SD4_CMD",
++								"MX6Q_PAD_SD4_CLK",
++								"MX6Q_PAD_SD4_DAT0",
++								"MX6Q_PAD_SD4_DAT1",
++								"MX6Q_PAD_SD4_DAT2",
++								"MX6Q_PAD_SD4_DAT3",
++								"MX6Q_PAD_SD4_DAT4",
++								"MX6Q_PAD_SD4_DAT5",
++								"MX6Q_PAD_SD4_DAT6",
++								"MX6Q_PAD_SD4_DAT7";
++						fsl,mux = <0 0 1 1 1 1 1 1 1 1>;
++						fsl,pull = <1>;
++						fsl,pue = <1>;
++						fsl,pke = <1>;
++						fsl,speed = <1>;
++						fsl,drive-strength = <3>;
++						fsl,slew-rate = <1>;
++						fsl,hysteresis = <1>;
++					};
++				};
+ 			};
+ 
+ 			dcic@020e4000 { /* DCIC1 */
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+index 6193a0d..84ef749 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -24,6 +24,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/of_gpio.h>
++#include <linux/pinctrl/consumer.h>
+ #include <mach/esdhc.h>
+ #include "sdhci-pltfm.h"
+ #include "sdhci-esdhc.h"
+@@ -68,6 +69,7 @@ struct pltfm_imx_data {
+ 	int flags;
+ 	u32 scratchpad;
+ 	enum imx_esdhc_type devtype;
++	struct pinctrl *p;
+ 	struct esdhc_platform_data boarddata;
+ };
+ 
+@@ -467,6 +469,12 @@ static int __devinit sdhci_esdhc_imx_probe(struct platform_device *pdev)
+ 	clk_prepare_enable(clk);
+ 	pltfm_host->clk = clk;
+ 
++	imx_data->p = pinctrl_get_select_default(&pdev->dev);
++	if (IS_ERR(imx_data->p)) {
++		err = PTR_ERR(imx_data->p);
++		goto pin_err;
++	}
++
+ 	if (!is_imx25_esdhc(imx_data))
+ 		host->quirks |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+ 
+@@ -559,6 +567,8 @@ no_card_detect_irq:
+ 		gpio_free(boarddata->wp_gpio);
+ no_card_detect_pin:
+ no_board_data:
++	pinctrl_put(imx_data->p);
++pin_err:
+ 	clk_disable_unprepare(pltfm_host->clk);
+ 	clk_put(pltfm_host->clk);
+ err_clk_get:
+@@ -586,6 +596,8 @@ static int __devexit sdhci_esdhc_imx_remove(struct platform_device *pdev)
+ 		gpio_free(boarddata->cd_gpio);
+ 	}
+ 
++	pinctrl_put(imx_data->p);
++
+ 	clk_disable_unprepare(pltfm_host->clk);
+ 	clk_put(pltfm_host->clk);
+ 	kfree(imx_data);
+-- 
+1.7.0.4
