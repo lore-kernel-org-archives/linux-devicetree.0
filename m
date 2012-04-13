@@ -1,65 +1,193 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v2 4/7] tegra: fdt: Add NAND controller binding
-	and definitions
-Date: Fri, 13 Apr 2012 16:56:23 -0500
-Message-ID: <4F88A107.7080409@freescale.com>
-References: <1334341777-2681-1-git-send-email-sjg@chromium.org>
-	<1334341777-2681-5-git-send-email-sjg@chromium.org>
-	<4F8873D1.2010701@freescale.com> <4F88937D.3090809@wwwdotorg.org>
-	<4F8898E4.4000505@freescale.com> <4F88992D.102@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4F88992D.102@wwwdotorg.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Devicetree@theia.denx.de, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>, Discuss <devicetree-discuss@lists.ozlabs.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 5/5] ARM: tegra: add USB ULPI PHY reset GPIO to device tree
+Date: Fri, 13 Apr 2012 16:42:06 -0600
+Message-ID: <1334356926-4275-5-git-send-email-swarren@wwwdotorg.org>
+References: <1334356926-4275-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1334356926-4275-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/13/2012 04:22 PM, Stephen Warren wrote:
-> On 04/13/2012 03:21 PM, Scott Wood wrote:
->> On 04/13/2012 03:58 PM, Stephen Warren wrote:
->>> On 04/13/2012 12:43 PM, Scott Wood wrote:
->>>> On 04/13/2012 01:29 PM, Simon Glass wrote:
->>>>> Add a NAND controller along with a bindings file for review.
->>>>>
->>>>> Signed-off-by: Simon Glass<sjg@chromium.org>
->>>
->>>>> +++ b/doc/device-tree-bindings/nand/nvidia-nand.txt
->>>
->>>>> +wp-gpio : GPIO of write-protect line, three cells in the format:
->>>>> +        phandle, parameter, flags
->>>>
->>>> nvidia,nand-wp-gpio
->>>
->>> I'm not convinced about this. For example many SDHCI bindings use just
->>> "wp-gpios" not "shdci-wp-gpios". Is there really a need to keep the
->>> property names unique across all bindings, even though a given node only
->>> relies on one binding?
->>>
->>
->> Yeah, there's a lot of bad practice in the existing trees.  But the
->> general recommendation for a while now has been to namespace properties
->> that aren't defined in standardized, device-indpendent way.  That way we
->> don't get conflicts if we want to use that name for a standard property
->> in the future, and there's less confusion if multiple people use the
->> same name in different devices with different semantics.
->
-> I thought that's what the "nvidia," vendor prefix was for.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Yes, and it applies to non-standard properties too.
+ULPI PHYs have a reset signal, and different boards use a different GPIO
+for this task. Add a property to device tree to represent this.
 
-> Presumably standardized properties wouldn't have that?
+I'm not sure if adding this property to the EHCI controller node is
+entirely correct; perhaps eventually we should have explicit separate
+nodes for the various PHYs. However, we don't have that right now, so this
+binding seems like a reasonable choice.
 
-Right.
+Note: There is still some problem initializing the PHY on Harmony.
+However, Seaboard, Ventana, Paz00 and TrimSlice all work OK.
 
--Scott
+Cc: <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/usb/tegra-usb.txt          |    3 +++
+ arch/arm/boot/dts/tegra-harmony.dts                |    4 ++++
+ arch/arm/boot/dts/tegra-paz00.dts                  |    4 ++++
+ arch/arm/boot/dts/tegra-seaboard.dts               |    4 ++++
+ arch/arm/boot/dts/tegra-trimslice.dts              |    4 ++++
+ arch/arm/boot/dts/tegra-ventana.dts                |    4 ++++
+ arch/arm/mach-tegra/include/mach/usb_phy.h         |    4 ++--
+ arch/arm/mach-tegra/usb_phy.c                      |   15 +++++++++++++--
+ drivers/usb/host/ehci-tegra.c                      |    5 +++--
+ 9 files changed, 41 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/tegra-usb.txt b/Documentation/devicetree/bindings/usb/tegra-usb.txt
+index 007005d..e9b005d 100644
+--- a/Documentation/devicetree/bindings/usb/tegra-usb.txt
++++ b/Documentation/devicetree/bindings/usb/tegra-usb.txt
+@@ -12,6 +12,9 @@ Required properties :
+  - nvidia,vbus-gpio : If present, specifies a gpio that needs to be
+    activated for the bus to be powered.
+ 
++Required properties for phy_type == ulpi:
++  - nvidia,phy-reset-gpio : The GPIO used to reset the PHY.
++
+ Optional properties:
+   - dr_mode : dual role mode. Indicates the working mode for
+    nvidia,tegra20-ehci compatible controllers.  Can be "host", "peripheral",
+diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
+index 1a0b1f1..59bf1cf 100644
+--- a/arch/arm/boot/dts/tegra-harmony.dts
++++ b/arch/arm/boot/dts/tegra-harmony.dts
+@@ -336,4 +336,8 @@
+ 		power-gpios = <&gpio 70 0>; /* gpio PI6 */
+ 		support-8bit;
+ 	};
++
++	usb@c5004000 {
++		nvidia,phy-reset-gpio = <&gpio 169 0>; /* gpio PV1 */
++	};
+ };
+diff --git a/arch/arm/boot/dts/tegra-paz00.dts b/arch/arm/boot/dts/tegra-paz00.dts
+index 10943fb..fad92f2 100644
+--- a/arch/arm/boot/dts/tegra-paz00.dts
++++ b/arch/arm/boot/dts/tegra-paz00.dts
+@@ -351,4 +351,8 @@
+ 			linux,default-trigger = "rfkill0";
+ 		};
+ 	};
++
++	usb@c5004000 {
++		nvidia,phy-reset-gpio = <&gpio 168 0>; /* gpio PV0 */
++	};
+ };
+diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+index ec33116..ed0a2f5 100644
+--- a/arch/arm/boot/dts/tegra-seaboard.dts
++++ b/arch/arm/boot/dts/tegra-seaboard.dts
+@@ -415,4 +415,8 @@
+ 				0x00000000 0x00000000 0x00000000 0x00000000 >;
+ 		};
+ 	};
++
++	usb@c5004000 {
++		nvidia,phy-reset-gpio = <&gpio 169 0>; /* gpio PV1 */
++	};
+ };
+diff --git a/arch/arm/boot/dts/tegra-trimslice.dts b/arch/arm/boot/dts/tegra-trimslice.dts
+index 98efd5b..71b73aa 100644
+--- a/arch/arm/boot/dts/tegra-trimslice.dts
++++ b/arch/arm/boot/dts/tegra-trimslice.dts
+@@ -304,4 +304,8 @@
+ 		cd-gpios = <&gpio 121 0>;
+ 		wp-gpios = <&gpio 122 0>;
+ 	};
++
++	usb@c5004000 {
++		nvidia,phy-reset-gpio = <&gpio 168 0>; /* gpio PV0 */
++	};
+ };
+diff --git a/arch/arm/boot/dts/tegra-ventana.dts b/arch/arm/boot/dts/tegra-ventana.dts
+index 71eb2e5..bd074cf 100644
+--- a/arch/arm/boot/dts/tegra-ventana.dts
++++ b/arch/arm/boot/dts/tegra-ventana.dts
+@@ -335,4 +335,8 @@
+ 	sdhci@c8000600 {
+ 		support-8bit;
+ 	};
++
++	usb@c5004000 {
++		nvidia,phy-reset-gpio = <&gpio 169 0>; /* gpio PV1 */
++	};
+ };
+diff --git a/arch/arm/mach-tegra/include/mach/usb_phy.h b/arch/arm/mach-tegra/include/mach/usb_phy.h
+index de1a0f6..935ce9f 100644
+--- a/arch/arm/mach-tegra/include/mach/usb_phy.h
++++ b/arch/arm/mach-tegra/include/mach/usb_phy.h
+@@ -61,8 +61,8 @@ struct tegra_usb_phy {
+ 	struct usb_phy *ulpi;
+ };
+ 
+-struct tegra_usb_phy *tegra_usb_phy_open(int instance, void __iomem *regs,
+-			void *config, enum tegra_usb_phy_mode phy_mode);
++struct tegra_usb_phy *tegra_usb_phy_open(struct device *dev, int instance,
++	void __iomem *regs, void *config, enum tegra_usb_phy_mode phy_mode);
+ 
+ int tegra_usb_phy_power_on(struct tegra_usb_phy *phy);
+ 
+diff --git a/arch/arm/mach-tegra/usb_phy.c b/arch/arm/mach-tegra/usb_phy.c
+index d71d2fe..54e353c 100644
+--- a/arch/arm/mach-tegra/usb_phy.c
++++ b/arch/arm/mach-tegra/usb_phy.c
+@@ -26,6 +26,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
+ #include <linux/gpio.h>
++#include <linux/of_gpio.h>
+ #include <linux/usb/otg.h>
+ #include <linux/usb/ulpi.h>
+ #include <asm/mach-types.h>
+@@ -654,8 +655,8 @@ static void ulpi_phy_power_off(struct tegra_usb_phy *phy)
+ 	clk_disable(phy->clk);
+ }
+ 
+-struct tegra_usb_phy *tegra_usb_phy_open(int instance, void __iomem *regs,
+-			void *config, enum tegra_usb_phy_mode phy_mode)
++struct tegra_usb_phy *tegra_usb_phy_open(struct device *dev, int instance,
++	void __iomem *regs, void *config, enum tegra_usb_phy_mode phy_mode)
+ {
+ 	struct tegra_usb_phy *phy;
+ 	struct tegra_ulpi_config *ulpi_config;
+@@ -711,6 +712,16 @@ struct tegra_usb_phy *tegra_usb_phy_open(int instance, void __iomem *regs,
+ 			err = -ENXIO;
+ 			goto err1;
+ 		}
++		if (!gpio_is_valid(ulpi_config->reset_gpio))
++			ulpi_config->reset_gpio =
++				of_get_named_gpio(dev->of_node,
++						  "nvidia,phy-reset-gpio", 0);
++		if (!gpio_is_valid(ulpi_config->reset_gpio)) {
++			pr_err("%s: invalid reset gpio: %d\n", __func__,
++			       ulpi_config->reset_gpio);
++			err = -EINVAL;
++			goto err1;
++		}
+ 		gpio_request(ulpi_config->reset_gpio, "ulpi_phy_reset_b");
+ 		gpio_direction_output(ulpi_config->reset_gpio, 0);
+ 		phy->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, 0);
+diff --git a/drivers/usb/host/ehci-tegra.c b/drivers/usb/host/ehci-tegra.c
+index 9692bef..14532fe 100644
+--- a/drivers/usb/host/ehci-tegra.c
++++ b/drivers/usb/host/ehci-tegra.c
+@@ -708,8 +708,9 @@ static int tegra_ehci_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	tegra->phy = tegra_usb_phy_open(instance, hcd->regs, pdata->phy_config,
+-						TEGRA_USB_PHY_MODE_HOST);
++	tegra->phy = tegra_usb_phy_open(&pdev->dev, instance, hcd->regs,
++					pdata->phy_config,
++					TEGRA_USB_PHY_MODE_HOST);
+ 	if (IS_ERR(tegra->phy)) {
+ 		dev_err(&pdev->dev, "Failed to open USB phy\n");
+ 		err = -ENXIO;
+-- 
+1.7.0.4
