@@ -1,43 +1,77 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] USB: Add DT probing support to ehci-spear and ohci-spear
-Date: Fri, 13 Apr 2012 11:26:55 -0700
-Message-ID: <20120413182655.GA5444@kroah.com>
-References: <1332431402-20606-1-git-send-email-sr@denx.de>
- <4F87A48E.3090300@st.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v2 2/7] fdt: Add debugging to fdtdec_get_int/addr()
+Date: Fri, 13 Apr 2012 11:29:32 -0700
+Message-ID: <1334341777-2681-3-git-send-email-sjg@chromium.org>
+References: <1334341777-2681-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F87A48E.3090300-qxv4g6HH51o@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1334341777-2681-1-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>, Scott Wood <scottwood@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 13, 2012 at 09:29:10AM +0530, Viresh Kumar wrote:
-> On 3/22/2012 9:20 PM, Stefan Roese wrote:
-> > This patch adds support to configure the SPEAr EHCI & OHCI driver via
-> > device-tree instead of platform_data.
-> > 
-> > Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-> > Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/usb/spear-usb.txt          |   39 ++++++++++++++++++++
-> >  drivers/usb/host/ehci-spear.c                      |   32 +++++++++++++---
-> >  drivers/usb/host/ohci-spear.c                      |   32 +++++++++++++---
-> >  3 files changed, 91 insertions(+), 12 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/spear-usb.txt
-> 
-> Hi Greg,
-> 
-> Have you applied this patch?
+The new debugging shows the value of integers and addresses read
+from the device tree.
 
-No, should I?
+Signed-off-by: Simon Glass <sjg@chromium.org>
+---
 
-If so, please resend it, as it's not in any of my inboxes...
+ lib/fdtdec.c |   22 ++++++++++++++++------
+ 1 files changed, 16 insertions(+), 6 deletions(-)
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 42c3e89..3885634 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -79,11 +79,16 @@ fdt_addr_t fdtdec_get_addr(const void *blob, int node,
+ 	const fdt_addr_t *cell;
+ 	int len;
+ 
+-	debug("get_addr: %s\n", prop_name);
++	debug("%s: %s\n", __func__, prop_name);
+ 	cell = fdt_getprop(blob, node, prop_name, &len);
+ 	if (cell && (len == sizeof(fdt_addr_t) ||
+-			len == sizeof(fdt_addr_t) * 2))
+-		return fdt_addr_to_cpu(*cell);
++			len == sizeof(fdt_addr_t) * 2)) {
++		fdt_addr_t addr = fdt_addr_to_cpu(*cell);
++
++		debug("%p\n", (void *)addr);
++		return addr;
++	}
++	debug("(not found)\n");
+ 	return FDT_ADDR_T_NONE;
+ }
+ 
+@@ -93,10 +98,15 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+ 	const s32 *cell;
+ 	int len;
+ 
+-	debug("get_size: %s\n", prop_name);
++	debug("%s: %s: ", __func__, prop_name);
+ 	cell = fdt_getprop(blob, node, prop_name, &len);
+-	if (cell && len >= sizeof(s32))
+-		return fdt32_to_cpu(cell[0]);
++	if (cell && len >= sizeof(s32)) {
++		s32 val = fdt32_to_cpu(cell[0]);
++
++		debug("%#x (%d)\n", val, val);
++		return val;
++	}
++	debug("(not found)\n");
+ 	return default_val;
+ }
+ 
+-- 
+1.7.7.3
