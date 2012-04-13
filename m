@@ -1,88 +1,78 @@
-From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
-Date: Fri, 13 Apr 2012 01:10:18 +0200
-Message-ID: <1334272218.1619.11.camel@antimon>
-References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
-	<20120411133512.GL4296@phenom.ffwll.local>
-	<20120411141108.GI27337@avionic-0098.adnet.avionic-design.de>
-	<201204111518.41968.arnd@arndb.de>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] MIPS: OCTEON: Select ARCH_REQUIRE_GPIOLIB
+Date: Thu, 12 Apr 2012 17:10:19 -0700
+Message-ID: <1334275820-7791-2-git-send-email-ddaney.cavm@gmail.com>
+References: <1334275820-7791-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <201204111518.41968.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1334275820-7791-1-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 11.04.2012, 15:18 +0000 schrieb Arnd Bergmann:
-> On Wednesday 11 April 2012, Thierry Reding wrote:
-> >   * Daniel Vetter wrote:
-> > > On Wed, Apr 11, 2012 at 03:23:26PM +0200, Thierry Reding wrote:
-> > > > * Daniel Vetter wrote:
-> > > > > On Wed, Apr 11, 2012 at 02:10:30PM +0200, Thierry Reding wrote:
-> > > > > > This commit adds a very basic DRM driver for NVIDIA Tegra SoCs. It
-> > > > > > currently has rudimentary GEM support and can run a console on the
-> > > > > > framebuffer as well as X using the xf86-video-modesetting driver.
-> > > > > > Only the RGB output is supported. Quite a lot of things still need
-> > > > > > to be worked out and there is a lot of room for cleanup.
-> > > > > 
-> > > > > Indeed, after a quick look there are tons of functions that are just stubs
-> > > > > ;-) One thing I wonder though is why you directly use the iommu api and
-> > > > > not wrap it up into dma_map? Is arm infrastructure just not there yet or
-> > > > > do you plan to tightly integrate the tegra drm with the iommu (e.g. for
-> > > > > process space switching or similarly funky stuff)?
-> > > > 
-> > > > I'm not sure I know what you are referring to. Looking for all users of
-> > > > iommu_map() doesn't turn up anything related to dma_map. Can you point me in
-> > > > the right direction?
-> > > 
-> > > Well, you use the iommu api to map/unmap memory into the iommu for tegra,
-> > > whereas usually device drivers just use the dma api to do that. The usual
-> > > interface is dma_map_sg/dma_unmap_sg, but there are quite a few variants
-> > > around. I'm just wondering why this you've choosen this.
-> > 
-> > I don't think this works on ARM. Maybe I'm not seeing the whole picture but
-> > judging by a quick look through the kernel tree there aren't any users that
-> > map DMA memory through an IOMMU.
-> 
-> 
-> dma_map_sg is certainly the right interface to use, and Marek Szyprowski has
-> patches to make that work on ARM, hopefully going into v3.5, so you could
-> use those.
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Just jumping in here to make sure everyone understands the limitations
-of the Tegra 2 GART IOMMU we are talking about here. It has no isolation
-capabilities and a really small remapping window of 32MB. So it's
-impossible to remap every buffer used by the graphics engines. The only
-sane way to handle this is to set aside a chunk of stolen system memory
-as VRAM and let a memory manager like TTM handle the allocation of
-linear regions and GART mappings. This means a more tight integration of
-the DRM driver and the IOMMU, where I think that using the IOMMU API
-directly and completely controlling the GART from one driver is the
-right way to go for a number of reasons, where my biggest concern is
-that we can't implement a sane out-of-remapping space when we go through
-the dma_map API.
+... and create asm/mach-cavium-octeon/gpio.h so that things continue
+to build.
 
-It's too late for me to go into the details now, but I wanted to make it
-clear that I think that using the IOMMU only and exclusively from the
-DRM driver with a high level of tie in is the way to go. If you want to
-know more details I'm available to discuss this matter in the next days.
+This allows us to use the existing I2C connected GPIO expanders.
 
--- Lucas
-> 
-> 	Arnd
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+---
+ arch/mips/Kconfig                               |    1 +
+ arch/mips/include/asm/mach-cavium-octeon/gpio.h |   21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 0 deletions(-)
+ create mode 100644 arch/mips/include/asm/mach-cavium-octeon/gpio.h
+
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index d0011ef..3134457 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -744,6 +744,7 @@ config CAVIUM_OCTEON_REFERENCE_BOARD
+ 	select USB_ARCH_HAS_OHCI
+ 	select USB_ARCH_HAS_EHCI
+ 	select HOLES_IN_ZONE
++	select ARCH_REQUIRE_GPIOLIB
+ 	help
+ 	  This option supports all of the Octeon reference boards from Cavium
+ 	  Networks. It builds a kernel that dynamically determines the Octeon
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/gpio.h b/arch/mips/include/asm/mach-cavium-octeon/gpio.h
+new file mode 100644
+index 0000000..34e9f7a
+--- /dev/null
++++ b/arch/mips/include/asm/mach-cavium-octeon/gpio.h
+@@ -0,0 +1,21 @@
++#ifndef __ASM_MACH_CAVIUM_OCTEON_GPIO_H
++#define __ASM_MACH_CAVIUM_OCTEON_GPIO_H
++
++#ifdef CONFIG_GPIOLIB
++#define gpio_get_value	__gpio_get_value
++#define gpio_set_value	__gpio_set_value
++#define gpio_cansleep	__gpio_cansleep
++#else
++int gpio_request(unsigned gpio, const char *label);
++void gpio_free(unsigned gpio);
++int gpio_direction_input(unsigned gpio);
++int gpio_direction_output(unsigned gpio, int value);
++int gpio_get_value(unsigned gpio);
++void gpio_set_value(unsigned gpio, int value);
++#endif
++
++#include <asm-generic/gpio.h>
++
++#define gpio_to_irq	__gpio_to_irq
++
++#endif /* __ASM_MACH_GENERIC_GPIO_H */
+-- 
+1.7.2.3
