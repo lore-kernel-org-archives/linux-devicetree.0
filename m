@@ -1,104 +1,63 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 2/2] gpio/MIPS/OCTEON: Add a driver for OCTEON's on-chip
- GPIO pins.
-Date: Sun, 15 Apr 2012 17:21:05 +0200
-Message-ID: <4F8AE761.6000205@openwrt.org>
-References: <1334275820-7791-1-git-send-email-ddaney.cavm@gmail.com> <1334275820-7791-3-git-send-email-ddaney.cavm@gmail.com> <4F87F868.1080804@openwrt.org> <4F885185.3070005@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Sun, 15 Apr 2012 19:29:58 +0200
+Message-ID: <20120415172958.GG20478@pengutronix.de>
+References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
+ <20120414134814.GA3852@pengutronix.de>
+ <CAA+hA=T0FAfuGKcW0vAKO+OWyFdM-6vQqVo53xKf8y28m7gPOQ@mail.gmail.com>
+ <20120415141736.GG24997@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F885185.3070005@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20120415141736.GG24997@S2101-09.ap.freescale.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, ralf@linux-mips.org, linux-mips@linux-mips.org, Linus Walleij <linus.walleij@stericsson.com>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Dong Aisheng <dongas86@gmail.com>, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Le 13/04/2012 18:17, David Daney a =C3=A9crit :
-> On 04/13/2012 02:56 AM, Florian Fainelli wrote:
->> Hi David,
->>
-> [...]
->>> +/*
->>> + * The address offset of the GPIO configuration register for a giv=
-en
->>> + * line.
->>> + */
->>> +static unsigned int bit_cfg_reg(unsigned int gpio)
->>> +{
->>> + if (gpio< 16)
->>> + return 8 * gpio;
->>> + else
->>> + return 8 * (gpio - 16) + 0x100;
->>> +}
->>
->> You could explicitely inline this one, though the compiler will
->> certainly do it by itself.
->>
->
-> I always let the compiler decide.
->
->
-> [...]
->>> +
->>> + if (OCTEON_IS_MODEL(OCTEON_CN66XX) ||
->>> + OCTEON_IS_MODEL(OCTEON_CN61XX) ||
->>> + OCTEON_IS_MODEL(OCTEON_CNF71XX))
->>> + chip->ngpio =3D 20;
->>> + else
->>> + chip->ngpio =3D 16;
->>
->> What about getting the number of gpios from platform_data and/or dev=
-ice
->> tree?
->>
->
-> Actually I am thinking about just setting it to 20 unconditionally.
-> Anything requesting a non-present GPIO pin is buggy to begin with.
+On Sun, Apr 15, 2012 at 10:17:43PM +0800, Shawn Guo wrote:
+> On Sun, Apr 15, 2012 at 11:49:04AM +0800, Dong Aisheng wrote:
+> ...
+> I'm thinking about documenting the definition we used to have in
+> iomux-mx*.h in the binding document and assign id to each of them
+> in order.
+> 
+> pinmux						id
+> ------						--
+> MX6Q_PAD_SD2_DAT1__USDHC2_DAT1			0
+> MX6Q_PAD_SD2_DAT1__ECSPI5_SS0			1
+> MX6Q_PAD_SD2_DAT1__WEIM_WEIM_CS_2		2
+> ...
+> 
+> The ordering between the list and imx6q_pin_regs[] array need to match.
+> 
+> By looking at the binding document, we can just put pinmux-id into
+> property "fsl,pins" (maybe rename it to "fsl,pinmux-ids") to get the
+> desired pinmux settings.  With doing so, we can gain the following.
+> 
+> 1) The pinmux-id can be used as index to locate the entry in array
+>    imx6q_pin_regs[], so that the slow string lookup can be avoid.
+> 
+> 2) Property "fsl,mux" can be dropped, as it's been encoded in
+>    imx6q_pin_regs[] entry.
+> 
+> 3) Converting the existing board files to device tree will be much
+>    easier.  We only need to find the pinmux-id of those existing
+>    definitions and put them in "fsl, pinmux-ids".
+> 
+> 4) When DTC support macro, we can simply move the pinmux-id list from
+>    binding document into dts file.  No driver change is needed at all.
 
-Since it is exposed by the sysfs entry ngpio, you can consider it being=
-=20
-part of the ABI, and it can be used by an user to query the number of=20
-gpios available, and will also serve as the maximum number of gpios for=
-=20
-gpiolib internally, it is certainly best to make it match what the=20
-hardware can actually do.
+How far are we away from getting macro support? Do we already agree that we
+want to have such a feature? I remember I saw someone mentioning it,
+maybe even by piping the devicetree though CPP, but I didn't follow the
+further discussion.
 
->
->>> +
->>> + chip->direction_input =3D octeon_gpio_dir_in;
->>> + chip->get =3D octeon_gpio_get;
->>> + chip->direction_output =3D octeon_gpio_dir_out;
->>> + chip->set =3D octeon_gpio_set;
->>> + err =3D gpiochip_add(chip);
->>> + if (err)
->>> + goto out;
->>> +
->>> + dev_info(&pdev->dev, "version: " DRV_VERSION "\n");
->>> +out:
->>> + return err;
->>> +}
->>> +
->>> +static int __exit octeon_gpio_remove(struct platform_device *pdev)
->>> +{
->>> + struct gpio_chip *chip =3D pdev->dev.platform_data;
->>> + return gpiochip_remove(chip);
->>> +}
->>> +
->>> +static struct of_device_id octeon_gpio_match[] =3D {
->>> + {
->>> + .compatible =3D "cavium,octeon-3860-gpio",
->>> + },
->>> + {},
->>> +};
->>> +MODULE_DEVICE_TABLE(of, octeon_mgmt_match);
->>
->> You are using linux/of.h definitions here but you did not include it=
-=2E
->> Also, there is a typo, you want octeon_gpio_match instead.
->>
->
-> Good catch. I will fix that. There is also a section mismatch I need =
-to
-> fix.
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
