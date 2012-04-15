@@ -1,43 +1,38 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: imx6q: switch to use pinctrl driver
-Date: Sun, 15 Apr 2012 12:03:16 +0800
-Message-ID: <CAA+hA=QhSUZg0bWTss_4ROwZ--OOQfcP=mpt+MP7-ZKPkEwXyA@mail.gmail.com>
-References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
-	<1334333915-1174-3-git-send-email-b29396@freescale.com>
-	<20120414135331.GB3852@pengutronix.de>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Two different interrupt-parents
+Date: Sun, 15 Apr 2012 09:53:50 +0530
+Message-ID: <CAJuYYwQQsF05homxFQg1RA5xsDHQRd3KP-f49Zm6erxQsjmtLQ@mail.gmail.com>
+References: <CAKON4OwAix9D61kp9mDq0WVvthDKzm=FFz2AoFQWe1yqJJgf6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120414135331.GB3852@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKON4OwAix9D61kp9mDq0WVvthDKzm=FFz2AoFQWe1yqJJgf6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 14, 2012 at 9:53 PM, Sascha Hauer <s.hauer@pengutronix.de> =
-wrote:
-> On Sat, Apr 14, 2012 at 12:18:35AM +0800, Dong Aisheng wrote:
->> From: Dong Aisheng <dong.aisheng@linaro.org>
->>
->> ---
->> This patch is used for test the new pinctrl driver.
+On 15 April 2012 08:27, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> How do you define a device with two different interrupt parents?
 >
-> Then please test it with i.MX35, i.MX5...
->
->>
->> + =A0 =A0 imx_data->p =3D pinctrl_get_select_default(&pdev->dev);
->> + =A0 =A0 if (IS_ERR(imx_data->p)) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 err =3D PTR_ERR(imx_data->p);
->> + =A0 =A0 =A0 =A0 =A0 =A0 goto pin_err;
->> + =A0 =A0 }
->> +
->
-> ... which will fail here.
-Sorry, it will not work, it's not a formal patch.
-I just sent it quickly for users to try on imx6q.
-=46or MX3 and MX5, before their pinctrl driver are available, user may
-need to define a dummy in dt to avoid such an error.
+> I have a OTG USB controller where the main usb interrupt is on the
+> system interrupt controller and the OTG power interrupts are on a
+> cascaded PIC.
 
-Regards
-Dong Aisheng
+There was a discussion on this topic. The following is the link to
+this discussion.
+
+http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg10061.html
+http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg10112.html
+
+Thanks,
+Thomas.
