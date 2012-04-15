@@ -1,63 +1,44 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
-Date: Sun, 15 Apr 2012 19:29:58 +0200
-Message-ID: <20120415172958.GG20478@pengutronix.de>
-References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
- <20120414134814.GA3852@pengutronix.de>
- <CAA+hA=T0FAfuGKcW0vAKO+OWyFdM-6vQqVo53xKf8y28m7gPOQ@mail.gmail.com>
- <20120415141736.GG24997@S2101-09.ap.freescale.net>
+From: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
+Subject: Problem with of_irq_to_resource() and IRQ flags
+Date: Sun, 15 Apr 2012 14:38:57 -0400
+Message-ID: <CAKON4OwjBEsDb4=TvS_WkK-9dabHgLm0+Vgkprse9tSs6+bo8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120415141736.GG24997@S2101-09.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Dong Aisheng <dongas86@gmail.com>, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss <devicetree-discuss@ozlabs.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 15, 2012 at 10:17:43PM +0800, Shawn Guo wrote:
-> On Sun, Apr 15, 2012 at 11:49:04AM +0800, Dong Aisheng wrote:
-> ...
-> I'm thinking about documenting the definition we used to have in
-> iomux-mx*.h in the binding document and assign id to each of them
-> in order.
-> 
-> pinmux						id
-> ------						--
-> MX6Q_PAD_SD2_DAT1__USDHC2_DAT1			0
-> MX6Q_PAD_SD2_DAT1__ECSPI5_SS0			1
-> MX6Q_PAD_SD2_DAT1__WEIM_WEIM_CS_2		2
-> ...
-> 
-> The ordering between the list and imx6q_pin_regs[] array need to match.
-> 
-> By looking at the binding document, we can just put pinmux-id into
-> property "fsl,pins" (maybe rename it to "fsl,pinmux-ids") to get the
-> desired pinmux settings.  With doing so, we can gain the following.
-> 
-> 1) The pinmux-id can be used as index to locate the entry in array
->    imx6q_pin_regs[], so that the slow string lookup can be avoid.
-> 
-> 2) Property "fsl,mux" can be dropped, as it's been encoded in
->    imx6q_pin_regs[] entry.
-> 
-> 3) Converting the existing board files to device tree will be much
->    easier.  We only need to find the pinmux-id of those existing
->    definitions and put them in "fsl, pinmux-ids".
-> 
-> 4) When DTC support macro, we can simply move the pinmux-id list from
->    binding document into dts file.  No driver change is needed at all.
+I'm trying to enable the dm9000 driver for DT support.  I've run into
+a problem with the interrupt flags. The dm9000 driver is expecting to
+get them passed in on the resource flags:
 
-How far are we away from getting macro support? Do we already agree that we
-want to have such a feature? I remember I saw someone mentioning it,
-maybe even by piping the devicetree though CPP, but I didn't follow the
-further discussion.
+unsigned long irqflags = db->irq_res->flags & IRQF_TRIGGER_MASK;
 
-Sascha
+But of_irq_to_resource() is not adding them:
+
+		r->flags = IORESOURCE_IRQ;
+
+Now if I trace into of_irq_to_resource() it calls
+irq_of_parse_and_map() which calls irq_create_of_mapping() which then
+calls  domain->ops->dt_translate() to get the flags.  So we have the
+flags down the callstack but passing them back means adding a
+parameter to a public API.
+
+I can't see any API to ask an irq for its current flags. That would be
+another way to get them and add them to the resource.
+
+Any other options?
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Jon Smirl
+jonsmirl@gmail.com
