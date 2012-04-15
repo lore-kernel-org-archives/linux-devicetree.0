@@ -1,13 +1,22 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Two different interrupt-parents
-Date: Sun, 15 Apr 2012 09:53:50 +0530
-Message-ID: <CAJuYYwQQsF05homxFQg1RA5xsDHQRd3KP-f49Zm6erxQsjmtLQ@mail.gmail.com>
-References: <CAKON4OwAix9D61kp9mDq0WVvthDKzm=FFz2AoFQWe1yqJJgf6A@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/7] dt/clock: Add handling for fixed clocks and a clock
+ node setup iterator
+Date: Sun, 15 Apr 2012 15:01:35 +0800
+Message-ID: <20120415070132.GE24997@S2101-09.ap.freescale.net>
+References: <1331680947-29861-1-git-send-email-robherring2@gmail.com>
+ <1331680947-29861-5-git-send-email-robherring2@gmail.com>
+ <20120314075930.GF21337@S2101-09.ap.freescale.net>
+ <4F81A53B.7020804@gmail.com>
+ <20120409084930.GA18692@S2101-09.ap.freescale.net>
+ <4F82EFB3.80402@gmail.com>
+ <20120409232723.GD18692@S2101-09.ap.freescale.net>
+ <4F8A3ABA.2080201@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKON4OwAix9D61kp9mDq0WVvthDKzm=FFz2AoFQWe1yqJJgf6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F8A3ABA.2080201-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,22 +26,83 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 April 2012 08:27, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> How do you define a device with two different interrupt parents?
->
-> I have a OTG USB controller where the main usb interrupt is on the
-> system interrupt controller and the OTG power interrupts are on a
-> cascaded PIC.
+On Sat, Apr 14, 2012 at 10:04:26PM -0500, Rob Herring wrote:
+...
+> So you want to have generic bindings for every clock which implies a
+> bunch of nodes if not a node per clock anyway, but then object to 3
+> nodes for fixed clocks.
+> 
+I do not really care about that now, as long as you clearly document
+in fixed clock binding that there is no multiple outputs support for
+fixed-clock, and #clock-cells has to be 0.
 
-There was a discussion on this topic. The following is the link to
-this discussion.
+...
+> I'm talking about the bindings and you are pointing me to an
+> implementation with no bindings. It's 2 different things. The
+> implementation can fully be the generic clk implementations, but the
+> clock bindings can still be either a node per clock or a monolithic
+> clock module node. There is no fixed rule here and there should not be.
+> We can each chose what works best for us.
+> 
+It will be a pity if we can not have a generic binding for a generic
+implementation.
 
-http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg10061.html
-http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg10112.html
+> I see a couple of examples that your clocks are still SoC specific
+> despite your claims.
+> 
+> Your clock gates may reuse clk_gate struct, but they still have custom
+> ops to handle the 2-bit field. Obviously, you decided not to merge 2-bit
+> field support into the existing clk gate code (the correct decision
+> IMHO). I made a similar decision.
+> 
+Actually, Sascha decided.
 
-Thanks,
-Thomas.
+> For practically every clock, you need to set the spinlock to
+> imx_ccm_lock. How are you going to know which clocks to set this lock
+> for with a "generic" binding? You have to distinguish those from IPU
+> clocks for example.
+> 
+Something like this:
+
+void __init of_clk_divider_setup(struct device_node *node, spinlock_t *lock)
+{
+        [ parse clock-divider properties from node ]
+
+        clk = clk_register_divider(NULL, name, parent, CLK_SET_RATE_PARENT,
+                        reg, shift, width, 0, &lock);
+        if (clk)
+                of_clk_add_provider(node, NULL, clk);
+}
+
+void __init imx_clk_divider_init(struct device_node *node)
+{
+        return of_clk_divider_setup(node, &imx_ccm_lock);
+}
+
+static const struct of_device_id imx_clk_match[] __initconst = {
+        { .compatible = "fsl,clock-divider", .data = imx_clk_divider_init, },
+        {}
+};
+
+void __init imx_clocks_init(void)
+{
+        of_clk_init(imx_clk_match);
+}
+
+When I say generic binding, it does not necessarily mean the generic
+compatible string, but the property definition and generic DT setup
+code for them, something similar as generic regulator binding
+Documentation/devicetree/bindings/regulator/regulator.txt and the
+setup/parse function of_get_regulator_init_data.
+
+Honestly, I'm losing my interest on clock binding.  I will stay with
+clk_lookup before I see a solution to how we represent part of the
+clock tree in DT while their input/parent clocks in the clock code.
+
+-- 
+Regards,
+Shawn
