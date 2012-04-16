@@ -1,51 +1,52 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 1/5] of: Implement managed of_iomap()
-Date: Mon, 16 Apr 2012 21:33:31 +0400
-Message-ID: <4F8C57EB.4050907@mvista.com>
-References: <cover.1334548272.git.viresh.kumar@st.com>
- <6a0872f9d8959bc9d66d179e4911d6f09a219b42.1334548272.git.viresh.kumar@st.com>
- <201204161442.38725.arnd@arndb.de>
- <CACxGe6tec7y-9VNb9vNiPZhN6bt5MuMV0J18P_7Gk_pDwk-V=Q@mail.gmail.com>
- <CAOh2x=n0NfovyfCpcdoMo2a7yLtb=imm1U+R-1L-2ihZ52FUhw@mail.gmail.com>
- <CACxGe6tZhdvoJ60N8g5-P4UHWxB=699_bA2omEQa77u1hEEPrg@mail.gmail.com>
- <CAOh2x=mptNGkRB-+930Uim=Op9erOxreeTL=3+qfoFeVpWNEYQ@mail.gmail.com>
- <CACxGe6t9+M5jQKkRduup7_wk4SKYu1SuTz7wzf0MEvo0poojRw@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Mon, 16 Apr 2012 12:01:30 -0600
+Message-ID: <4F8C5E7A.9090705@wwwdotorg.org>
+References: <1334333915-1174-1-git-send-email-b29396@freescale.com> <20120414134814.GA3852@pengutronix.de> <CAA+hA=T0FAfuGKcW0vAKO+OWyFdM-6vQqVo53xKf8y28m7gPOQ@mail.gmail.com> <20120415141736.GG24997@S2101-09.ap.freescale.net> <20120415172958.GG20478@pengutronix.de> <20120416014720.GH24997@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6t9+M5jQKkRduup7_wk4SKYu1SuTz7wzf0MEvo0poojRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, viresh kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120416014720.GH24997@S2101-09.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Dong Aisheng <dongas86@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 04/15/2012 07:47 PM, Shawn Guo wrote:
+> On Sun, Apr 15, 2012 at 07:29:58PM +0200, Sascha Hauer wrote:
+> ...
+>> How far are we away from getting macro support? Do we already agree that we
+>> want to have such a feature? I remember I saw someone mentioning it,
+>> maybe even by piping the devicetree though CPP, but I didn't follow the
+>> further discussion.
+>>
+> My understanding is we agree that we want to have this feature, and
+> are approaching it slowly, but I do not have the exact status.
+> Stephen may want to give an update, please?
 
-On 04/16/2012 09:06 PM, Grant Likely wrote:
+The status is:
 
->>> It isn't recommended anymore. Use the bus_type specific helpers instead.
+* I proposed a "/define/ var 5" syntax to dtc.
 
->> Ok. So here is fixup for 3/5 of this patchset.
+* It was at least temporarily rejected because it wasn't clear whether
+that syntax would fit into whatever future expression/language/...
+support dtc might acquire in the future.
 
->> @Linus: I will merge this with PACH 3/5 and send pull request to Arnd.
+* However, there has been a long-standing impasse on defining what the
+future expression/language/... support in dtc will look like.
 
->> fixup! pinctrl: Add SPEAr pinctrl drivers
+* In an attempt to move that forward, I took one of David Gibson's old
+integer expressions patches (that allows math within cells in
+properties), updated that to ToT, and now it's checked in. This only
+allows match with literals, not variables/symbols/..., but is hopefully
+a step in the right direction.
 
-> Cool, thanks.
+* The next step is to revisit my /define/ patch on top of the integer
+expressions patch. Perhaps the presence of integer expressions is enough
+to know whether /define/ is a reasonable syntax, perhaps not. We'll have
+to see when I update and repost it.
 
-> Now what you *could* do is something like devm_platform_ioremap() that
-> gets the resource, does request_region() and ioremap().  That would
-> cut a lot of boilerplate out of drivers.  :-)
-
-    That is already done, called devm_request_and_ioremap().
-
-WRB, Sergei
+In summary: There is some progress, but it's slow. I wouldn't rely on
+seeing /define/ or similar support in dtc in any particular near-term
+timescale.
