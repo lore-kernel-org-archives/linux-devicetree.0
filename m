@@ -1,44 +1,42 @@
-From: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
-Subject: Problem with of_irq_to_resource() and IRQ flags
-Date: Sun, 15 Apr 2012 14:38:57 -0400
-Message-ID: <CAKON4OwjBEsDb4=TvS_WkK-9dabHgLm0+Vgkprse9tSs6+bo8g@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Mon, 16 Apr 2012 09:47:34 +0800
+Message-ID: <20120416014720.GH24997@S2101-09.ap.freescale.net>
+References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
+ <20120414134814.GA3852@pengutronix.de>
+ <CAA+hA=T0FAfuGKcW0vAKO+OWyFdM-6vQqVo53xKf8y28m7gPOQ@mail.gmail.com>
+ <20120415141736.GG24997@S2101-09.ap.freescale.net>
+ <20120415172958.GG20478@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss <devicetree-discuss@ozlabs.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120415172958.GG20478-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I'm trying to enable the dm9000 driver for DT support.  I've run into
-a problem with the interrupt flags. The dm9000 driver is expecting to
-get them passed in on the resource flags:
-
-unsigned long irqflags = db->irq_res->flags & IRQF_TRIGGER_MASK;
-
-But of_irq_to_resource() is not adding them:
-
-		r->flags = IORESOURCE_IRQ;
-
-Now if I trace into of_irq_to_resource() it calls
-irq_of_parse_and_map() which calls irq_create_of_mapping() which then
-calls  domain->ops->dt_translate() to get the flags.  So we have the
-flags down the callstack but passing them back means adding a
-parameter to a public API.
-
-I can't see any API to ask an irq for its current flags. That would be
-another way to get them and add them to the resource.
-
-Any other options?
+On Sun, Apr 15, 2012 at 07:29:58PM +0200, Sascha Hauer wrote:
+...
+> How far are we away from getting macro support? Do we already agree that we
+> want to have such a feature? I remember I saw someone mentioning it,
+> maybe even by piping the devicetree though CPP, but I didn't follow the
+> further discussion.
+> 
+My understanding is we agree that we want to have this feature, and
+are approaching it slowly, but I do not have the exact status.
+Stephen may want to give an update, please?
 
 -- 
-Jon Smirl
-jonsmirl@gmail.com
+Regards,
+Shawn
