@@ -1,16 +1,11 @@
-From: Sethi Varun-B16395 <B16395-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: Two different interrupt-parents
-Date: Mon, 16 Apr 2012 04:14:25 +0000
-Message-ID: <C5ECD7A89D1DC44195F34B25E172658D0CE0E6@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <CAKON4OwAix9D61kp9mDq0WVvthDKzm=FFz2AoFQWe1yqJJgf6A@mail.gmail.com>
- <C5ECD7A89D1DC44195F34B25E172658D0CE077@039-SN2MPN1-013.039d.mgd.msft.net>
- <CAKON4Ox9Bi=HYXU_eOjff0aaSuqPEbqbonm1VaKYOcSpx5-WfA@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH V4 0/5] pinctrl: Add SPEAr pinctrl support
+Date: Mon, 16 Apr 2012 09:43:56 +0530
+Message-ID: <cover.1334548272.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKON4Ox9Bi=HYXU_eOjff0aaSuqPEbqbonm1VaKYOcSpx5-WfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,71 +15,84 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-You can use a 4 cell interrupt specifier (we use that in case of embedded power architecture platforms)
-- First cell corresponds to one of the four cascade lines (coming from the cascaded pic)
-- Second cell provides the interrupt sense information
-- Third one tells the interrupt subtype (in your case should be the cascade power interrupt type)
-- Fourth cell communicates the interrupt number corresponding to the cascaded pic.
+This patchset replaces existing pinmux framework for SPEAr family of SoC with
+generic pinctrl framework.
 
-There would be a single interrupt parent, which is the system interrupt controller. You would have
-to translate the four cell interrupt specifier and also add cascaded interrupt handling
-for the shared interrupt line.
+V3->V4
+- Introduced devm_of_iomap()
+- placed spaces around = in dts files
+- Updated groups and function names in pinctrl bindings for SPEAr
 
--Varun
+V2->V3
+- Add DT bindings for pinmux mappings for SPEAr
+- Pass pin maps from dtb instead of mach-spear3xx/spear3*0.c files
+- use of_iomap() instead of devm_ioremap() and platform_get_resource()
 
-> -----Original Message-----
-> From: jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
-> Sent: Monday, April 16, 2012 9:32 AM
-> To: Sethi Varun-B16395
-> Cc: devicetree-discuss
-> Subject: Re: Two different interrupt-parents
-> 
-> On Sun, Apr 15, 2012 at 11:40 PM, Sethi Varun-B16395
-> <B16395-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > Hi Jon,
-> > Does the cascaded PIC have an interrupt line to the system interrupt
-> controller?
-> 
-> There are four cascade lines. The 128 inputs on the cascade controller
-> can be arbitrarily mapped onto these four lines.
-> 
-> >
-> > Regards
-> > Varun
-> >
-> >> -----Original Message-----
-> >> From: devicetree-discuss-
-> >> bounces+varun.sethi=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> >> bounces+[mailto:devicetree-
-> >> discuss-bounces+varun.sethi=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf
-> >> discuss-bounces+Of
-> >> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> >> Sent: Sunday, April 15, 2012 8:27 AM
-> >> To: devicetree-discuss
-> >> Subject: Two different interrupt-parents
-> >>
-> >> How do you define a device with two different interrupt parents?
-> >>
-> >> I have a OTG USB controller where the main usb interrupt is on the
-> >> system interrupt controller and the OTG power interrupts are on a
-> cascaded PIC.
-> >>
-> >> --
-> >> Jon Smirl
-> >> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> >> _______________________________________________
-> >> devicetree-discuss mailing list
-> >> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> >> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> >
-> >
-> 
-> 
-> 
-> --
-> Jon Smirl
-> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+V1->V2
+- Earlier padmux support removed
+- single patch for spear pinctrl drivers broken into two: one for spear
+  and other for 3xx family
+- add pinctrl support in arch/arm/mach-spear3xx/ and dts files
+- pinctrl-spear.* made as library instead of platform driver
+- pinctrl-spear300, spear310, spear320 are now platform drivers
+- other minor fixes.
+
+Viresh Kumar (5):
+  of: Implement managed of_iomap()
+  SPEAr: Remove existing padmux support for SPEAr
+  pinctrl: Add SPEAr pinctrl drivers
+  pinctrl: Add SPEAr3xx pinctrl drivers
+  SPEAr3xx: Add pinctrl support for boards
+
+ .../devicetree/bindings/pinctrl/pinctrl_spear.txt  |  108 +
+ Documentation/driver-model/devres.txt              |    1 +
+ MAINTAINERS                                        |   23 +-
+ arch/arm/boot/dts/spear300-evb.dts                 |   38 +
+ arch/arm/boot/dts/spear300.dtsi                    |    5 +
+ arch/arm/boot/dts/spear310-evb.dts                 |   61 +
+ arch/arm/boot/dts/spear310.dtsi                    |    5 +
+ arch/arm/boot/dts/spear320-evb.dts                 |   61 +
+ arch/arm/boot/dts/spear320.dtsi                    |    7 +-
+ arch/arm/mach-spear3xx/Kconfig                     |    3 +
+ arch/arm/mach-spear3xx/include/mach/generic.h      |  128 -
+ arch/arm/mach-spear3xx/spear300.c                  |  389 +---
+ arch/arm/mach-spear3xx/spear310.c                  |  161 +-
+ arch/arm/mach-spear3xx/spear320.c                  |  403 +---
+ arch/arm/mach-spear3xx/spear3xx.c                  |  425 ---
+ arch/arm/plat-spear/Kconfig                        |    1 +
+ arch/arm/plat-spear/Makefile                       |    2 +-
+ arch/arm/plat-spear/include/plat/padmux.h          |   92 -
+ arch/arm/plat-spear/padmux.c                       |  164 -
+ drivers/of/address.c                               |   22 +
+ drivers/pinctrl/Kconfig                            |    2 +
+ drivers/pinctrl/Makefile                           |    2 +
+ drivers/pinctrl/spear/Kconfig                      |   34 +
+ drivers/pinctrl/spear/Makefile                     |    7 +
+ drivers/pinctrl/spear/pinctrl-spear.c              |  349 ++
+ drivers/pinctrl/spear/pinctrl-spear.h              |  142 +
+ drivers/pinctrl/spear/pinctrl-spear300.c           |  708 ++++
+ drivers/pinctrl/spear/pinctrl-spear310.c           |  431 +++
+ drivers/pinctrl/spear/pinctrl-spear320.c           | 3468 ++++++++++++++++++++
+ drivers/pinctrl/spear/pinctrl-spear3xx.c           |  588 ++++
+ drivers/pinctrl/spear/pinctrl-spear3xx.h           |   92 +
+ include/linux/of_address.h                         |    5 +
+ 32 files changed, 6151 insertions(+), 1776 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl_spear.txt
+ delete mode 100644 arch/arm/plat-spear/include/plat/padmux.h
+ delete mode 100644 arch/arm/plat-spear/padmux.c
+ create mode 100644 drivers/pinctrl/spear/Kconfig
+ create mode 100644 drivers/pinctrl/spear/Makefile
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear.h
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear300.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear310.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear320.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear3xx.c
+ create mode 100644 drivers/pinctrl/spear/pinctrl-spear3xx.h
+
+-- 
+1.7.9
