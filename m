@@ -1,33 +1,47 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH] USB: Add DT probing support to ehci-spear and ohci-spear
-Date: Mon, 16 Apr 2012 09:14:30 +0530
-Message-ID: <4F8B959E.3060009@st.com>
-References: <1332431402-20606-1-git-send-email-sr@denx.de> <4F87A48E.3090300@st.com> <20120413182655.GA5444@kroah.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Mon, 16 Apr 2012 11:46:49 +0800
+Message-ID: <20120416034646.GI24997@S2101-09.ap.freescale.net>
+References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
+ <20120414134814.GA3852@pengutronix.de>
+ <CAA+hA=T0FAfuGKcW0vAKO+OWyFdM-6vQqVo53xKf8y28m7gPOQ@mail.gmail.com>
+ <20120415141736.GG24997@S2101-09.ap.freescale.net>
+ <20120416034713.GB17173@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120413182655.GA5444-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120416034713.GB17173@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@freescale.com>
+Cc: Dong Aisheng <dongas86@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/13/2012 11:56 PM, Greg KH wrote:
-> No, should I?
+On Mon, Apr 16, 2012 at 11:47:14AM +0800, Dong Aisheng wrote:
+...
+> Good suggestion.
+> I can do it and it's easy to change.
+> But as i said above, before the dtc macro support is available, the pinctrl
+> setting in dts file will be hard to read since it's all raw data.
+> It becomes
+> fsl,pins = <1 2 3 4 5 6 ....>;
+> People have to search the binding doc to see what the data means.
+> 
+It does not make the thing any worse.  You were asking people to search
+pinctrl-imx6q.c for the meaning of the following.
 
-Yes.
+  fsl,mux = <0 0 1 1 1 1 1 1 1 1>;
 
-> If so, please resend it, as it's not in any of my inboxes...
+IMO, it makes a bit more sense to look at binding doc than code to
+understand the dts file.
 
-I would do that. It was sent directly to linux-usb by Stefan, didn't
-kept you in cc or to.
+> The question is how long the dtc macro support will be available?
+> I'm very willing to do like as you said if it's just a short time.
+> But if it's long time, do we still want to lose the readability right now?
+> 
+The point is with my suggestion taken, we do not need to change code
+when the dtc macro support is available.
 
---
-viresh
 -- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Shawn
