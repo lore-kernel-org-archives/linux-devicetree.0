@@ -1,47 +1,237 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
-Date: Mon, 16 Apr 2012 11:46:49 +0800
-Message-ID: <20120416034646.GI24997@S2101-09.ap.freescale.net>
-References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
- <20120414134814.GA3852@pengutronix.de>
- <CAA+hA=T0FAfuGKcW0vAKO+OWyFdM-6vQqVo53xKf8y28m7gPOQ@mail.gmail.com>
- <20120415141736.GG24997@S2101-09.ap.freescale.net>
- <20120416034713.GB17173@shlinux2.ap.freescale.net>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH Resend] USB: Add DT probing support to ehci-spear and ohci-spear
+Date: Mon, 16 Apr 2012 09:08:08 +0530
+Message-ID: <bbffae6670ada67df6f47695e53c5faa6ee5d2f0.1334547383.git.viresh.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120416034713.GB17173@shlinux2.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: Dong Aisheng <dongas86@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2012 at 11:47:14AM +0800, Dong Aisheng wrote:
-...
-> Good suggestion.
-> I can do it and it's easy to change.
-> But as i said above, before the dtc macro support is available, the pinctrl
-> setting in dts file will be hard to read since it's all raw data.
-> It becomes
-> fsl,pins = <1 2 3 4 5 6 ....>;
-> People have to search the binding doc to see what the data means.
-> 
-It does not make the thing any worse.  You were asking people to search
-pinctrl-imx6q.c for the meaning of the following.
+From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
 
-  fsl,mux = <0 0 1 1 1 1 1 1 1 1>;
+This patch adds support to configure the SPEAr EHCI & OHCI driver via
+device-tree instead of platform_data.
 
-IMO, it makes a bit more sense to look at binding doc than code to
-understand the dts file.
+Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Acked-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+---
+ .../devicetree/bindings/usb/spear-usb.txt          |   39 ++++++++++++++++++++
+ drivers/usb/host/ehci-spear.c                      |   32 +++++++++++++---
+ drivers/usb/host/ohci-spear.c                      |   32 +++++++++++++---
+ 3 files changed, 91 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/spear-usb.txt
 
-> The question is how long the dtc macro support will be available?
-> I'm very willing to do like as you said if it's just a short time.
-> But if it's long time, do we still want to lose the readability right now?
-> 
-The point is with my suggestion taken, we do not need to change code
-when the dtc macro support is available.
-
+diff --git a/Documentation/devicetree/bindings/usb/spear-usb.txt b/Documentation/devicetree/bindings/usb/spear-usb.txt
+new file mode 100644
+index 0000000..f8a464a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/spear-usb.txt
+@@ -0,0 +1,39 @@
++ST SPEAr SoC USB controllers:
++-----------------------------
++
++EHCI:
++-----
++
++Required properties:
++- compatible: "st,spear600-ehci"
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- interrupts: Should contain the EHCI interrupt
++
++Example:
++
++	ehci@e1800000 {
++		compatible = "st,spear600-ehci", "usb-ehci";
++		reg = <0xe1800000 0x1000>;
++		interrupt-parent = <&vic1>;
++		interrupts = <27>;
++	};
++
++
++OHCI:
++-----
++
++Required properties:
++- compatible: "st,spear600-ohci"
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- interrupts: Should contain the OHCI interrupt
++
++Example:
++
++	ohci@e1900000 {
++		compatible = "st,spear600-ohci", "usb-ohci";
++		reg = <0xe1800000 0x1000>;
++		interrupt-parent = <&vic1>;
++		interrupts = <26>;
++	};
+diff --git a/drivers/usb/host/ehci-spear.c b/drivers/usb/host/ehci-spear.c
+index 6e92855..2e3c89a 100644
+--- a/drivers/usb/host/ehci-spear.c
++++ b/drivers/usb/host/ehci-spear.c
+@@ -13,6 +13,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/jiffies.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+ 
+@@ -168,6 +169,8 @@ static int ehci_spear_drv_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(ehci_spear_pm_ops, ehci_spear_drv_suspend,
+ 		ehci_spear_drv_resume);
+ 
++static u64 spear_ehci_dma_mask = DMA_BIT_MASK(32);
++
+ static int spear_ehci_hcd_drv_probe(struct platform_device *pdev)
+ {
+ 	struct usb_hcd *hcd ;
+@@ -175,12 +178,9 @@ static int spear_ehci_hcd_drv_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	struct clk *usbh_clk;
+ 	const struct hc_driver *driver = &ehci_spear_hc_driver;
+-	int *pdata = pdev->dev.platform_data;
+ 	int irq, retval;
+ 	char clk_name[20] = "usbh_clk";
+-
+-	if (pdata == NULL)
+-		return -EFAULT;
++	static int instance = -1;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+@@ -191,8 +191,22 @@ static int spear_ehci_hcd_drv_probe(struct platform_device *pdev)
+ 		goto fail_irq_get;
+ 	}
+ 
+-	if (*pdata >= 0)
+-		sprintf(clk_name, "usbh.%01d_clk", *pdata);
++	/*
++	 * Right now device-tree probed devices don't get dma_mask set.
++	 * Since shared usb code relies on it, set it here for now.
++	 * Once we have dma capability bindings this can go away.
++	 */
++	if (!pdev->dev.dma_mask)
++		pdev->dev.dma_mask = &spear_ehci_dma_mask;
++
++	/*
++	 * Increment the device instance, when probing via device-tree
++	 */
++	if (pdev->id < 0)
++		instance++;
++	else
++		instance = pdev->id;
++	sprintf(clk_name, "usbh.%01d_clk", instance);
+ 
+ 	usbh_clk = clk_get(NULL, clk_name);
+ 	if (IS_ERR(usbh_clk)) {
+@@ -277,6 +291,11 @@ static int spear_ehci_hcd_drv_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static struct of_device_id spear_ehci_id_table[] __devinitdata = {
++	{ .compatible = "st,spear600-ehci", },
++	{ },
++};
++
+ static struct platform_driver spear_ehci_hcd_driver = {
+ 	.probe		= spear_ehci_hcd_drv_probe,
+ 	.remove		= spear_ehci_hcd_drv_remove,
+@@ -285,6 +304,7 @@ static struct platform_driver spear_ehci_hcd_driver = {
+ 		.name = "spear-ehci",
+ 		.bus = &platform_bus_type,
+ 		.pm = &ehci_spear_pm_ops,
++		.of_match_table = of_match_ptr(spear_ehci_id_table),
+ 	}
+ };
+ 
+diff --git a/drivers/usb/host/ohci-spear.c b/drivers/usb/host/ohci-spear.c
+index 95c1648..eb4640b 100644
+--- a/drivers/usb/host/ohci-spear.c
++++ b/drivers/usb/host/ohci-spear.c
+@@ -14,6 +14,7 @@
+ #include <linux/signal.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
++#include <linux/of.h>
+ 
+ struct spear_ohci {
+ 	struct ohci_hcd ohci;
+@@ -90,6 +91,8 @@ static const struct hc_driver ohci_spear_hc_driver = {
+ 	.start_port_reset	= ohci_start_port_reset,
+ };
+ 
++static u64 spear_ohci_dma_mask = DMA_BIT_MASK(32);
++
+ static int spear_ohci_hcd_drv_probe(struct platform_device *pdev)
+ {
+ 	const struct hc_driver *driver = &ohci_spear_hc_driver;
+@@ -98,11 +101,8 @@ static int spear_ohci_hcd_drv_probe(struct platform_device *pdev)
+ 	struct spear_ohci *ohci_p;
+ 	struct resource *res;
+ 	int retval, irq;
+-	int *pdata = pdev->dev.platform_data;
+ 	char clk_name[20] = "usbh_clk";
+-
+-	if (pdata == NULL)
+-		return -EFAULT;
++	static int instance = -1;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+@@ -110,8 +110,22 @@ static int spear_ohci_hcd_drv_probe(struct platform_device *pdev)
+ 		goto fail_irq_get;
+ 	}
+ 
+-	if (*pdata >= 0)
+-		sprintf(clk_name, "usbh.%01d_clk", *pdata);
++	/*
++	 * Right now device-tree probed devices don't get dma_mask set.
++	 * Since shared usb code relies on it, set it here for now.
++	 * Once we have dma capability bindings this can go away.
++	 */
++	if (!pdev->dev.dma_mask)
++		pdev->dev.dma_mask = &spear_ohci_dma_mask;
++
++	/*
++	 * Increment the device instance, when probing via device-tree
++	 */
++	if (pdev->id < 0)
++		instance++;
++	else
++		instance = pdev->id;
++	sprintf(clk_name, "usbh.%01d_clk", instance);
+ 
+ 	usbh_clk = clk_get(NULL, clk_name);
+ 	if (IS_ERR(usbh_clk)) {
+@@ -222,6 +236,11 @@ static int spear_ohci_hcd_drv_resume(struct platform_device *dev)
+ }
+ #endif
+ 
++static struct of_device_id spear_ohci_id_table[] __devinitdata = {
++	{ .compatible = "st,spear600-ohci", },
++	{ },
++};
++
+ /* Driver definition to register with the platform bus */
+ static struct platform_driver spear_ohci_hcd_driver = {
+ 	.probe =	spear_ohci_hcd_drv_probe,
+@@ -233,6 +252,7 @@ static struct platform_driver spear_ohci_hcd_driver = {
+ 	.driver = {
+ 		.owner = THIS_MODULE,
+ 		.name = "spear-ohci",
++		.of_match_table = of_match_ptr(spear_ohci_id_table),
+ 	},
+ };
+ 
 -- 
-Regards,
-Shawn
+1.7.9
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
