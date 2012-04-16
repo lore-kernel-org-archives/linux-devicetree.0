@@ -1,45 +1,47 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V4 1/5] of: Implement managed of_iomap()
-Date: Mon, 16 Apr 2012 09:19:19 -0600
-Message-ID: <CACxGe6tZhdvoJ60N8g5-P4UHWxB=699_bA2omEQa77u1hEEPrg@mail.gmail.com>
-References: <cover.1334548272.git.viresh.kumar@st.com>
- <6a0872f9d8959bc9d66d179e4911d6f09a219b42.1334548272.git.viresh.kumar@st.com>
- <201204161442.38725.arnd@arndb.de>
- <CACxGe6tec7y-9VNb9vNiPZhN6bt5MuMV0J18P_7Gk_pDwk-V=Q@mail.gmail.com>
- <CAOh2x=n0NfovyfCpcdoMo2a7yLtb=imm1U+R-1L-2ihZ52FUhw@mail.gmail.com>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH v4 1/2] mfd: add irq domain support for max8997 interrupts
+Date: Mon, 16 Apr 2012 17:32:24 +0200
+Message-ID: <20120416153224.GF24130@sortiz-mobl>
+References: <1332582590-16382-1-git-send-email-thomas.abraham@linaro.org>
+ <1332582590-16382-2-git-send-email-thomas.abraham@linaro.org>
+ <20120404212257.GE10787@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOh2x=n0NfovyfCpcdoMo2a7yLtb=imm1U+R-1L-2ihZ52FUhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: viresh kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120404212257.GE10787@opensource.wolfsonmicro.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2012 at 9:12 AM, viresh kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
->
-> On Apr 16, 2012 8:37 PM, "Grant Likely" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>
->> Why is this function needed? =A0I'm directing drivers away from using
->> of_iomap now since the resource table is populated with the address
->> ranges at device registration time now. =A0New code should be using
->> platform_get_resource() if it is a platform device.
->>
->
-> I thought we must call of_iomap for
-> DT only drivers.
-> Isn't that the case?
+Hi Mark,
 
-It isn't recommended anymore. Use the bus_type specific helpers instead.
+On Wed, Apr 04, 2012 at 10:22:57PM +0100, Mark Brown wrote:
+> On Sat, Mar 24, 2012 at 03:19:49PM +0530, Thomas Abraham wrote:
+> > Add irq domain support for max8997 interrupts. The reverse mapping method
+> > used is linear mapping since the sub-drivers of max8997 such as regulator
+> > and charger drivers can use the max8997 irq_domain to get the linux irq
+> > number for max8997 interrupts. All uses of irq_base in platform data and
+> > max8997 driver private data are removed.
+> 
+> > Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> > Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> 
+> CCing in Samuel for the MFD review - review tends to be faster if you CC
+> maintainers!  Samuel, there's a followup patch for the regulator API
+> which is likely to collide with some API updates so is it OK to merge
+> via regulator if the patch is OK?
+Yes, the patch looks fine, you can merge it through the regulator tree with my
 
-g.
+Acked-by: Samuel Ortiz <sameo@linux.intel.com>
+
+if you think that's necessary.
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
