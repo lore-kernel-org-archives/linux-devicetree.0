@@ -1,54 +1,119 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 1/2] mfd: add irq domain support for max8997 interrupts
-Date: Mon, 16 Apr 2012 19:47:39 +0100
-Message-ID: <20120416184739.GG3219@opensource.wolfsonmicro.com>
-References: <1332582590-16382-1-git-send-email-thomas.abraham@linaro.org>
- <1332582590-16382-2-git-send-email-thomas.abraham@linaro.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Mon, 16 Apr 2012 20:48:19 +0200
+Message-ID: <20120416184819.GA21043@avionic-0098.mockup.avionic-design.de>
+References: <1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de>
+ <4F85C97E.50203@wwwdotorg.org>
+ <20120412065038.GB4162@avionic-0098.adnet.avionic-design.de>
+ <4F86F97C.8010508@wwwdotorg.org>
+ <20120412174429.GB10042@avionic-0098.adnet.avionic-design.de>
+ <4F8753A0.6040907@wwwdotorg.org>
+ <20120413091457.GB617@avionic-0098.mockup.avionic-design.de>
+ <4F887C54.6030306@wwwdotorg.org>
+ <20120415083905.GA15207@avionic-0098.mockup.avionic-design.de>
+ <4F8C423B.8050609@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1XWsVB21DFCvn2e8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1332582590-16382-2-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
+In-Reply-To: <4F8C423B.8050609-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---1XWsVB21DFCvn2e8
+--AhhlLboLdkugWU4S
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 24, 2012 at 03:19:49PM +0530, Thomas Abraham wrote:
-> Add irq domain support for max8997 interrupts. The reverse mapping method
-> used is linear mapping since the sub-drivers of max8997 such as regulator
-> and charger drivers can use the max8997 irq_domain to get the linux irq
-> number for max8997 interrupts. All uses of irq_base in platform data and
-> max8997 driver private data are removed.
+* Stephen Warren wrote:
+> On 04/15/2012 02:39 AM, Thierry Reding wrote:
+> > I think I like the former better. The way I understand it the children =
+of the
+> > graphics node will have to be registered explicitly by the DRM driver b=
+ecause
+> > of_platform_populate() doesn't work recursively. That would ensure that=
+ the
+> > DRM driver can setup the CRTC and output registries before the other de=
+vices
+> > call back into the DRM to register themselves.
+>=20
+> Yes, with the first way, the DRM driver will have to call
+> of_platform_populate() recursively to make this work.
+>=20
+> The thing here is that the device tree should model hardware, not be
+> designed purely to match the device registration needs of the DRM
+> driver. I'm not sure that it's correct to model all those devices as
+> children of the top-level graphics object; I /think/ all the devices are
+> flat on a single bus, and hence not children of each-other. That all
+> said, I guess having the nodes as children isn't too far off how the HW
+> is designed (even if the register accesses aren't on a child bus, the
+> modules at least logically are grouped together in an umbrella
+> situation), so I wouldn't push back on the first option above that you
+> prefer.
 
-Applied, thanks.
+After trying to implement this I'm not so sure anymore that this is the best
+approach. I think I'll have to play around with this some more to see what
+fits best.
 
---1XWsVB21DFCvn2e8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> > Boards should still be able to boot and display a console on the "stand=
+ard"
+> > output even if the user doesn't provide a video=3D option. Shouldn't th=
+ere be a
+> > way for a board DTS to specify what the default (or even allowed) conne=
+ctions
+> > are?
+>=20
+> Why wouldn't the default be to light up all outputs that have an
+> attached display, or an algorithm something like:
+>=20
+> * If internal LCD is present, use that
+> * Else, if HDMI display plugged in, use that
+> ...
+
+That sounds doable.
+
+> > Evaluation hardware like the Harmony might have LVDS, HDMI and VGA conn=
+ectors
+> > to provide for a wide range of use cases. The Plutux for instance has o=
+nly an
+> > HDMI connector and the Medcom has only LVDS. For the Medcom it would be=
+ quite
+> > confusing for people to suddenly see an HDMI-1 connector pop up f.e. in
+> > xrandr. It would be equally useless for the Plutux to show up as suppor=
+ting
+> > an LVDS or VGA connector.
+>=20
+> So the device tree for those devices would disable (or not include) the
+> connectors that were not present on the board.
+
+Okay, makes sense.
+
+> > Has there been any discussion as to how EDID data would best be represe=
+nted
+> > in DT? Should it just be a binary blob or rather some textual represent=
+ation?
+>=20
+> I think a binary blob makes sense - that's the exact same format it'd
+> have if read over the DDC I2C bus.
+
+DTC has /incbin/ for that. Is arch/arm/boot/dts still the correct place for
+EDID blobs? I could add tegra-medcom.edid if that's okay.
+
+Thierry
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJPjGlEAAoJEBus8iNuMP3dCfQP/2awbnbc3dYnm7DJ/TjQs3HM
-wPtJshUps7WW4FBfl8mHXDPheNhA277rjAPyuGfKPeKEH3CkmuXYHTvimNqkycsR
-FP77REVa5UQmHXPhokRhl7DfzBlXxNdqgOfa1L365cOobWXnGpuLBp1m6/AROKM2
-AVaf4juy1fT/LhisUSYmz1WMCvcNqLb4hfC+CkUSSYLWJmqayrcrnIllFEudMK+1
-ewxrWAkko8YN0NS2psxcN3ijfuffPMXESUV1P+ARek6u10tk+18AkLUJ6ZDKEnC1
-Ff2rgH4/XhGOimxfZUDsPPZNdeGxkw4VvaVtOK55S/e9zWKJ4lxARwYrzRMrx2pt
-QdrjFYZbIxxg5C2VC18fJuIfBA3/WGboeHc6EoeRd3bXMLDgNlaezcvCs4NOkrEF
-EysXY8pKT3VWMmAGabQOTHq20DqCBn5ICmeXpt7S4iJy3fc72xrcH8Vsu0LjSL9c
-sUGj3Gh7Z4ldRltT4bHPoDjdKJ2Vyk6Ki58tLz3e3oxDdUOK1xrc3GJbtYsqV7sM
-o+b42//qzdgT0L0emtLdw+9c1mIXjaWIy04r8qC9/ALDCb4WkeJAvMEmtHe4gcH2
-5sX2ifokwVJvJCvJkWHkRypCcaxkMBN/SKf1bKiXVyx4RdVVZ060FSi7o/Jdq2Ur
-Fpfn01sSvXHu53eDfog+
-=+gaP
+iEYEARECAAYFAk+MaXMACgkQZ+BJyKLjJp9k0wCgq32QdsTzWNh5jq8omXbMqH+J
+lQAAnA6oyCCIGHzWzp9Mt9o9xxSZQkjO
+=daNL
 -----END PGP SIGNATURE-----
 
---1XWsVB21DFCvn2e8--
+--AhhlLboLdkugWU4S--
