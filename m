@@ -1,98 +1,320 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH V4 0/5] pinctrl: Add SPEAr pinctrl support
-Date: Mon, 16 Apr 2012 09:43:56 +0530
-Message-ID: <cover.1334548272.git.viresh.kumar@st.com>
+From: Viresh Kumar <viresh.kumar@st.com>
+Subject: [PATCH V4 5/5] SPEAr3xx: Add pinctrl support for boards
+Date: Mon, 16 Apr 2012 09:44:01 +0530
+Message-ID: <286d971283b19252a837f75bad8a827486d57165.1334548272.git.viresh.kumar@st.com>
+References: <cover.1334548272.git.viresh.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1334548272.git.viresh.kumar@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linus.walleij@linaro.org
+Cc: devicetree-discuss@ozlabs.org, arnd@arndb.de, swarren@wwwdotorg.org, spear-devel@list.st.com, viresh.linux@gmail.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset replaces existing pinmux framework for SPEAr family of SoC with
-generic pinctrl framework.
+Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Stephen Warren <swarren@wwwdotorg.org>
+---
+ arch/arm/boot/dts/spear300-evb.dts |   38 ++++++++++++++++++++++
+ arch/arm/boot/dts/spear300.dtsi    |    5 +++
+ arch/arm/boot/dts/spear310-evb.dts |   61 ++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/spear310.dtsi    |    5 +++
+ arch/arm/boot/dts/spear320-evb.dts |   61 ++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/spear320.dtsi    |    7 +++-
+ arch/arm/mach-spear3xx/Kconfig     |    3 ++
+ arch/arm/plat-spear/Kconfig        |    1 +
+ 8 files changed, 180 insertions(+), 1 deletions(-)
 
-V3->V4
-- Introduced devm_of_iomap()
-- placed spaces around = in dts files
-- Updated groups and function names in pinctrl bindings for SPEAr
-
-V2->V3
-- Add DT bindings for pinmux mappings for SPEAr
-- Pass pin maps from dtb instead of mach-spear3xx/spear3*0.c files
-- use of_iomap() instead of devm_ioremap() and platform_get_resource()
-
-V1->V2
-- Earlier padmux support removed
-- single patch for spear pinctrl drivers broken into two: one for spear
-  and other for 3xx family
-- add pinctrl support in arch/arm/mach-spear3xx/ and dts files
-- pinctrl-spear.* made as library instead of platform driver
-- pinctrl-spear300, spear310, spear320 are now platform drivers
-- other minor fixes.
-
-Viresh Kumar (5):
-  of: Implement managed of_iomap()
-  SPEAr: Remove existing padmux support for SPEAr
-  pinctrl: Add SPEAr pinctrl drivers
-  pinctrl: Add SPEAr3xx pinctrl drivers
-  SPEAr3xx: Add pinctrl support for boards
-
- .../devicetree/bindings/pinctrl/pinctrl_spear.txt  |  108 +
- Documentation/driver-model/devres.txt              |    1 +
- MAINTAINERS                                        |   23 +-
- arch/arm/boot/dts/spear300-evb.dts                 |   38 +
- arch/arm/boot/dts/spear300.dtsi                    |    5 +
- arch/arm/boot/dts/spear310-evb.dts                 |   61 +
- arch/arm/boot/dts/spear310.dtsi                    |    5 +
- arch/arm/boot/dts/spear320-evb.dts                 |   61 +
- arch/arm/boot/dts/spear320.dtsi                    |    7 +-
- arch/arm/mach-spear3xx/Kconfig                     |    3 +
- arch/arm/mach-spear3xx/include/mach/generic.h      |  128 -
- arch/arm/mach-spear3xx/spear300.c                  |  389 +---
- arch/arm/mach-spear3xx/spear310.c                  |  161 +-
- arch/arm/mach-spear3xx/spear320.c                  |  403 +---
- arch/arm/mach-spear3xx/spear3xx.c                  |  425 ---
- arch/arm/plat-spear/Kconfig                        |    1 +
- arch/arm/plat-spear/Makefile                       |    2 +-
- arch/arm/plat-spear/include/plat/padmux.h          |   92 -
- arch/arm/plat-spear/padmux.c                       |  164 -
- drivers/of/address.c                               |   22 +
- drivers/pinctrl/Kconfig                            |    2 +
- drivers/pinctrl/Makefile                           |    2 +
- drivers/pinctrl/spear/Kconfig                      |   34 +
- drivers/pinctrl/spear/Makefile                     |    7 +
- drivers/pinctrl/spear/pinctrl-spear.c              |  349 ++
- drivers/pinctrl/spear/pinctrl-spear.h              |  142 +
- drivers/pinctrl/spear/pinctrl-spear300.c           |  708 ++++
- drivers/pinctrl/spear/pinctrl-spear310.c           |  431 +++
- drivers/pinctrl/spear/pinctrl-spear320.c           | 3468 ++++++++++++++++++++
- drivers/pinctrl/spear/pinctrl-spear3xx.c           |  588 ++++
- drivers/pinctrl/spear/pinctrl-spear3xx.h           |   92 +
- include/linux/of_address.h                         |    5 +
- 32 files changed, 6151 insertions(+), 1776 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl_spear.txt
- delete mode 100644 arch/arm/plat-spear/include/plat/padmux.h
- delete mode 100644 arch/arm/plat-spear/padmux.c
- create mode 100644 drivers/pinctrl/spear/Kconfig
- create mode 100644 drivers/pinctrl/spear/Makefile
- create mode 100644 drivers/pinctrl/spear/pinctrl-spear.c
- create mode 100644 drivers/pinctrl/spear/pinctrl-spear.h
- create mode 100644 drivers/pinctrl/spear/pinctrl-spear300.c
- create mode 100644 drivers/pinctrl/spear/pinctrl-spear310.c
- create mode 100644 drivers/pinctrl/spear/pinctrl-spear320.c
- create mode 100644 drivers/pinctrl/spear/pinctrl-spear3xx.c
- create mode 100644 drivers/pinctrl/spear/pinctrl-spear3xx.h
-
+diff --git a/arch/arm/boot/dts/spear300-evb.dts b/arch/arm/boot/dts/spear300-evb.dts
+index eaecc29..402ca0d 100644
+--- a/arch/arm/boot/dts/spear300-evb.dts
++++ b/arch/arm/boot/dts/spear300-evb.dts
+@@ -25,6 +25,44 @@
+ 	};
+ 
+ 	ahb {
++		pinmux@99000000 {
++			st,pinmux-mode = <2>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&state_default>;
++
++			state_default: pinmux {
++				i2c0 {
++					st,pins = "i2c0_grp";
++					st,function = "i2c0";
++				};
++				ssp0 {
++					st,pins = "ssp0_grp";
++					st,function = "ssp0";
++				};
++				mii0 {
++					st,pins = "mii0_grp";
++					st,function = "mii0";
++				};
++				uart0 {
++					st,pins = "uart0_grp";
++					st,function = "uart0";
++				};
++				clcd {
++					st,pins = "clcd_pfmode_grp";
++					st,function = "clcd";
++				};
++				sdhci {
++					st,pins = "sdhci_4bit_grp";
++					st,function = "sdhci";
++				};
++				gpio1 {
++					st,pins = "gpio1_4_to_7_grp",
++						"gpio1_0_to_3_grp";
++					st,function = "gpio1";
++				};
++			};
++		};
++
+ 		clcd@60000000 {
+ 			status = "okay";
+ 		};
+diff --git a/arch/arm/boot/dts/spear300.dtsi b/arch/arm/boot/dts/spear300.dtsi
+index f9fcbf4..01c5e35 100644
+--- a/arch/arm/boot/dts/spear300.dtsi
++++ b/arch/arm/boot/dts/spear300.dtsi
+@@ -21,6 +21,11 @@
+ 		ranges = <0x60000000 0x60000000 0x50000000
+ 			  0xd0000000 0xd0000000 0x30000000>;
+ 
++		pinmux@99000000 {
++			compatible = "st,spear300-pinmux";
++			reg = <0x99000000 0x1000>;
++		};
++
+ 		clcd@60000000 {
+ 			compatible = "arm,clcd-pl110", "arm,primecell";
+ 			reg = <0x60000000 0x1000>;
+diff --git a/arch/arm/boot/dts/spear310-evb.dts b/arch/arm/boot/dts/spear310-evb.dts
+index c86af33..6d95317 100644
+--- a/arch/arm/boot/dts/spear310-evb.dts
++++ b/arch/arm/boot/dts/spear310-evb.dts
+@@ -25,6 +25,67 @@
+ 	};
+ 
+ 	ahb {
++		pinmux@b4000000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&state_default>;
++
++			state_default: pinmux {
++				gpio0 {
++					st,pins = "gpio0_pin0_grp",
++						"gpio0_pin1_grp",
++						"gpio0_pin2_grp",
++						"gpio0_pin3_grp",
++						"gpio0_pin4_grp",
++						"gpio0_pin5_grp";
++					st,function = "gpio0";
++				};
++				i2c0 {
++					st,pins = "i2c0_grp";
++					st,function = "i2c0";
++				};
++				mii0 {
++					st,pins = "mii0_grp";
++					st,function = "mii0";
++				};
++				ssp0 {
++					st,pins = "ssp0_grp";
++					st,function = "ssp0";
++				};
++				uart0 {
++					st,pins = "uart0_grp";
++					st,function = "uart0";
++				};
++				emi {
++					st,pins = "emi_cs_0_to_5_grp";
++					st,function = "emi";
++				};
++				fsmc {
++					st,pins = "fsmc_grp";
++					st,function = "fsmc";
++				};
++				uart1 {
++					st,pins = "uart1_grp";
++					st,function = "uart1";
++				};
++				uart2 {
++					st,pins = "uart2_grp";
++					st,function = "uart2";
++				};
++				uart3 {
++					st,pins = "uart3_grp";
++					st,function = "uart3";
++				};
++				uart4 {
++					st,pins = "uart4_grp";
++					st,function = "uart4";
++				};
++				uart5 {
++					st,pins = "uart5_grp";
++					st,function = "uart5";
++				};
++			};
++		};
++
+ 		dma@fc400000 {
+ 			status = "okay";
+ 		};
+diff --git a/arch/arm/boot/dts/spear310.dtsi b/arch/arm/boot/dts/spear310.dtsi
+index dc7fa14..e47081c 100644
+--- a/arch/arm/boot/dts/spear310.dtsi
++++ b/arch/arm/boot/dts/spear310.dtsi
+@@ -22,6 +22,11 @@
+ 			  0xb0000000 0xb0000000 0x10000000
+ 			  0xd0000000 0xd0000000 0x30000000>;
+ 
++		pinmux@b4000000 {
++			compatible = "st,spear310-pinmux";
++			reg = <0xb4000000 0x1000>;
++		};
++
+ 		fsmc: flash@44000000 {
+ 			compatible = "st,spear600-fsmc-nand";
+ 			#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/spear320-evb.dts b/arch/arm/boot/dts/spear320-evb.dts
+index d43de71..0c6463b 100644
+--- a/arch/arm/boot/dts/spear320-evb.dts
++++ b/arch/arm/boot/dts/spear320-evb.dts
+@@ -25,6 +25,67 @@
+ 	};
+ 
+ 	ahb {
++		pinmux@b3000000 {
++			st,pinmux-mode = <3>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&state_default>;
++
++			state_default: pinmux {
++				i2c0 {
++					st,pins = "i2c0_grp";
++					st,function = "i2c0";
++				};
++				mii0 {
++					st,pins = "mii0_grp";
++					st,function = "mii0";
++				};
++				ssp0 {
++					st,pins = "ssp0_grp";
++					st,function = "ssp0";
++				};
++				uart0 {
++					st,pins = "uart0_grp";
++					st,function = "uart0";
++				};
++				sdhci {
++					st,pins = "sdhci_cd_51_grp";
++					st,function = "sdhci";
++				};
++				i2s {
++					st,pins = "i2s_grp";
++					st,function = "i2s";
++				};
++				uart1 {
++					st,pins = "uart1_grp";
++					st,function = "uart1";
++				};
++				uart2 {
++					st,pins = "uart2_grp";
++					st,function = "uart2";
++				};
++				can0 {
++					st,pins = "can0_grp";
++					st,function = "can0";
++				};
++				can1 {
++					st,pins = "can1_grp";
++					st,function = "can1";
++				};
++				mii2 {
++					st,pins = "mii2_grp";
++					st,function = "mii2";
++				};
++				pwm0_1 {
++					st,pins = "pwm0_1_pin_14_15_grp";
++					st,function = "pwm0_1";
++				};
++				pwm2 {
++					st,pins = "pwm2_pin_13_grp";
++					st,function = "pwm2";
++				};
++			};
++		};
++
+ 		clcd@90000000 {
+ 			status = "okay";
+ 		};
+diff --git a/arch/arm/boot/dts/spear320.dtsi b/arch/arm/boot/dts/spear320.dtsi
+index 9a0267a..5372ca3 100644
+--- a/arch/arm/boot/dts/spear320.dtsi
++++ b/arch/arm/boot/dts/spear320.dtsi
+@@ -18,9 +18,14 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "simple-bus";
+-		ranges = <0x40000000 0x40000000 0x70000000
++		ranges = <0x40000000 0x40000000 0x80000000
+ 			  0xd0000000 0xd0000000 0x30000000>;
+ 
++		pinmux@b3000000 {
++			compatible = "st,spear320-pinmux";
++			reg = <0xb3000000 0x1000>;
++		};
++
+ 		clcd@90000000 {
+ 			compatible = "arm,clcd-pl110", "arm,primecell";
+ 			reg = <0x90000000 0x1000>;
+diff --git a/arch/arm/mach-spear3xx/Kconfig b/arch/arm/mach-spear3xx/Kconfig
+index d9fe11c..8bd3729 100644
+--- a/arch/arm/mach-spear3xx/Kconfig
++++ b/arch/arm/mach-spear3xx/Kconfig
+@@ -7,16 +7,19 @@ if ARCH_SPEAR3XX
+ menu "SPEAr3xx Implementations"
+ config MACH_SPEAR300
+ 	bool "SPEAr300 Machine support with Device Tree"
++	select PINCTRL_SPEAR300
+ 	help
+ 	  Supports ST SPEAr300 machine configured via the device-tree
+ 
+ config MACH_SPEAR310
+ 	bool "SPEAr310 Machine support with Device Tree"
++	select PINCTRL_SPEAR310
+ 	help
+ 	  Supports ST SPEAr310 machine configured via the device-tree
+ 
+ config MACH_SPEAR320
+ 	bool "SPEAr320 Machine support with Device Tree"
++	select PINCTRL_SPEAR320
+ 	help
+ 	  Supports ST SPEAr320 machine configured via the device-tree
+ endmenu
+diff --git a/arch/arm/plat-spear/Kconfig b/arch/arm/plat-spear/Kconfig
+index 6c066fc..387655b 100644
+--- a/arch/arm/plat-spear/Kconfig
++++ b/arch/arm/plat-spear/Kconfig
+@@ -13,6 +13,7 @@ config ARCH_SPEAR3XX
+ 	select ARM_VIC
+ 	select CPU_ARM926T
+ 	select USE_OF
++	select PINCTRL
+ 	help
+ 	  Supports for ARM's SPEAR3XX family
+ 
 -- 
 1.7.9
