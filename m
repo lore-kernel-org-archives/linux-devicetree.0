@@ -1,52 +1,36 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
-Date: Mon, 16 Apr 2012 12:01:30 -0600
-Message-ID: <4F8C5E7A.9090705@wwwdotorg.org>
-References: <1334333915-1174-1-git-send-email-b29396@freescale.com> <20120414134814.GA3852@pengutronix.de> <CAA+hA=T0FAfuGKcW0vAKO+OWyFdM-6vQqVo53xKf8y28m7gPOQ@mail.gmail.com> <20120415141736.GG24997@S2101-09.ap.freescale.net> <20120415172958.GG20478@pengutronix.de> <20120416014720.GH24997@S2101-09.ap.freescale.net>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V3 4/4] SPEAr3xx: Add pinctrl support for boards
+Date: Mon, 16 Apr 2012 12:05:28 -0600
+Message-ID: <4F8C5F68.7070105@wwwdotorg.org>
+References: <cover.1334207964.git.viresh.kumar@st.com>
+ <81b04bd4fe751633802e539d724facce80e600a4.1334207964.git.viresh.kumar@st.com>
+ <4F8851E5.7050509@wwwdotorg.org> <4F8B940B.7030700@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120416014720.GH24997@S2101-09.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Dong Aisheng <dongas86@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F8B940B.7030700-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2012 07:47 PM, Shawn Guo wrote:
-> On Sun, Apr 15, 2012 at 07:29:58PM +0200, Sascha Hauer wrote:
-> ...
->> How far are we away from getting macro support? Do we already agree that we
->> want to have such a feature? I remember I saw someone mentioning it,
->> maybe even by piping the devicetree though CPP, but I didn't follow the
->> further discussion.
->>
-> My understanding is we agree that we want to have this feature, and
-> are approaching it slowly, but I do not have the exact status.
-> Stephen may want to give an update, please?
+On 04/15/2012 09:37 PM, Viresh Kumar wrote:
+> On 4/13/2012 9:48 PM, Stephen Warren wrote:
+...
+>> Just a couple of minor comments below.
+...
+> As you have spent a lot of time getting these reviewed, i would add your
+> Reviewed-by on all these patches. Hope that would be fine?
 
-The status is:
-
-* I proposed a "/define/ var 5" syntax to dtc.
-
-* It was at least temporarily rejected because it wasn't clear whether
-that syntax would fit into whatever future expression/language/...
-support dtc might acquire in the future.
-
-* However, there has been a long-standing impasse on defining what the
-future expression/language/... support in dtc will look like.
-
-* In an attempt to move that forward, I took one of David Gibson's old
-integer expressions patches (that allows math within cells in
-properties), updated that to ToT, and now it's checked in. This only
-allows match with literals, not variables/symbols/..., but is hopefully
-a step in the right direction.
-
-* The next step is to revisit my /define/ patch on top of the integer
-expressions patch. Perhaps the presence of integer expressions is enough
-to know whether /define/ is a reasonable syntax, perhaps not. We'll have
-to see when I update and repost it.
-
-In summary: There is some progress, but it's slow. I wouldn't rely on
-seeing /define/ or similar support in dtc in any particular near-term
-timescale.
+Sure. Note that I explicitly didn't review the pin/group/function data,
+but concentrated more on the general framework of the driver, but I
+think that's enough to add my Reviewed-by.
