@@ -1,14 +1,16 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Two different interrupt-parents
-Date: Mon, 16 Apr 2012 00:02:21 -0400
-Message-ID: <CAKON4Ox9Bi=HYXU_eOjff0aaSuqPEbqbonm1VaKYOcSpx5-WfA@mail.gmail.com>
+From: Sethi Varun-B16395 <B16395-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: Two different interrupt-parents
+Date: Mon, 16 Apr 2012 04:14:25 +0000
+Message-ID: <C5ECD7A89D1DC44195F34B25E172658D0CE0E6@039-SN2MPN1-013.039d.mgd.msft.net>
 References: <CAKON4OwAix9D61kp9mDq0WVvthDKzm=FFz2AoFQWe1yqJJgf6A@mail.gmail.com>
  <C5ECD7A89D1DC44195F34B25E172658D0CE077@039-SN2MPN1-013.039d.mgd.msft.net>
+ <CAKON4Ox9Bi=HYXU_eOjff0aaSuqPEbqbonm1VaKYOcSpx5-WfA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <C5ECD7A89D1DC44195F34B25E172658D0CE077-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <CAKON4Ox9Bi=HYXU_eOjff0aaSuqPEbqbonm1VaKYOcSpx5-WfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,48 +20,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sethi Varun-B16395 <B16395-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 15, 2012 at 11:40 PM, Sethi Varun-B16395
-<B16395-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Hi Jon,
-> Does the cascaded PIC have an interrupt line to the system interrupt controller?
+You can use a 4 cell interrupt specifier (we use that in case of embedded power architecture platforms)
+- First cell corresponds to one of the four cascade lines (coming from the cascaded pic)
+- Second cell provides the interrupt sense information
+- Third one tells the interrupt subtype (in your case should be the cascade power interrupt type)
+- Fourth cell communicates the interrupt number corresponding to the cascaded pic.
 
-There are four cascade lines. The 128 inputs on the cascade controller
-can be arbitrarily mapped onto these four lines.
+There would be a single interrupt parent, which is the system interrupt controller. You would have
+to translate the four cell interrupt specifier and also add cascaded interrupt handling
+for the shared interrupt line.
 
->
-> Regards
-> Varun
->
->> -----Original Message-----
->> From: devicetree-discuss-
->> bounces+varun.sethi=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org [mailto:devicetree-
->> discuss-bounces+varun.sethi=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of
->> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
->> Sent: Sunday, April 15, 2012 8:27 AM
->> To: devicetree-discuss
->> Subject: Two different interrupt-parents
->>
->> How do you define a device with two different interrupt parents?
->>
->> I have a OTG USB controller where the main usb interrupt is on the system
->> interrupt controller and the OTG power interrupts are on a cascaded PIC.
->>
->> --
->> Jon Smirl
->> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
->> _______________________________________________
->> devicetree-discuss mailing list
->> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
->
+-Varun
 
-
-
--- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> -----Original Message-----
+> From: jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+> Sent: Monday, April 16, 2012 9:32 AM
+> To: Sethi Varun-B16395
+> Cc: devicetree-discuss
+> Subject: Re: Two different interrupt-parents
+> 
+> On Sun, Apr 15, 2012 at 11:40 PM, Sethi Varun-B16395
+> <B16395-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > Hi Jon,
+> > Does the cascaded PIC have an interrupt line to the system interrupt
+> controller?
+> 
+> There are four cascade lines. The 128 inputs on the cascade controller
+> can be arbitrarily mapped onto these four lines.
+> 
+> >
+> > Regards
+> > Varun
+> >
+> >> -----Original Message-----
+> >> From: devicetree-discuss-
+> >> bounces+varun.sethi=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> >> bounces+[mailto:devicetree-
+> >> discuss-bounces+varun.sethi=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf
+> >> discuss-bounces+Of
+> >> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> >> Sent: Sunday, April 15, 2012 8:27 AM
+> >> To: devicetree-discuss
+> >> Subject: Two different interrupt-parents
+> >>
+> >> How do you define a device with two different interrupt parents?
+> >>
+> >> I have a OTG USB controller where the main usb interrupt is on the
+> >> system interrupt controller and the OTG power interrupts are on a
+> cascaded PIC.
+> >>
+> >> --
+> >> Jon Smirl
+> >> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> >> _______________________________________________
+> >> devicetree-discuss mailing list
+> >> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> >> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> >
+> >
+> 
+> 
+> 
+> --
+> Jon Smirl
+> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
