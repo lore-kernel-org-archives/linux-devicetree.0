@@ -1,30 +1,54 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dt: tegra20: Add GART device
-Date: Mon, 16 Apr 2012 12:47:16 -0600
-Message-ID: <4F8C6934.10607@wwwdotorg.org>
-References: <1334588670-15124-1-git-send-email-thierry.reding@avionic-design.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 1/2] mfd: add irq domain support for max8997 interrupts
+Date: Mon, 16 Apr 2012 19:47:39 +0100
+Message-ID: <20120416184739.GG3219@opensource.wolfsonmicro.com>
+References: <1332582590-16382-1-git-send-email-thomas.abraham@linaro.org>
+ <1332582590-16382-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1334588670-15124-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1XWsVB21DFCvn2e8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1332582590-16382-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/16/2012 09:04 AM, Thierry Reding wrote:
-> This commit adds the device node required to probe NVIDIA Tegra 20 GART
-> hardware from the device tree.
-> 
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+
+--1XWsVB21DFCvn2e8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Mar 24, 2012 at 03:19:49PM +0530, Thomas Abraham wrote:
+> Add irq domain support for max8997 interrupts. The reverse mapping method
+> used is linear mapping since the sub-drivers of max8997 such as regulator
+> and charger drivers can use the max8997 irq_domain to get the linux irq
+> number for max8997 interrupts. All uses of irq_base in platform data and
+> max8997 driver private data are removed.
 
 Applied, thanks.
+
+--1XWsVB21DFCvn2e8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPjGlEAAoJEBus8iNuMP3dCfQP/2awbnbc3dYnm7DJ/TjQs3HM
+wPtJshUps7WW4FBfl8mHXDPheNhA277rjAPyuGfKPeKEH3CkmuXYHTvimNqkycsR
+FP77REVa5UQmHXPhokRhl7DfzBlXxNdqgOfa1L365cOobWXnGpuLBp1m6/AROKM2
+AVaf4juy1fT/LhisUSYmz1WMCvcNqLb4hfC+CkUSSYLWJmqayrcrnIllFEudMK+1
+ewxrWAkko8YN0NS2psxcN3ijfuffPMXESUV1P+ARek6u10tk+18AkLUJ6ZDKEnC1
+Ff2rgH4/XhGOimxfZUDsPPZNdeGxkw4VvaVtOK55S/e9zWKJ4lxARwYrzRMrx2pt
+QdrjFYZbIxxg5C2VC18fJuIfBA3/WGboeHc6EoeRd3bXMLDgNlaezcvCs4NOkrEF
+EysXY8pKT3VWMmAGabQOTHq20DqCBn5ICmeXpt7S4iJy3fc72xrcH8Vsu0LjSL9c
+sUGj3Gh7Z4ldRltT4bHPoDjdKJ2Vyk6Ki58tLz3e3oxDdUOK1xrc3GJbtYsqV7sM
+o+b42//qzdgT0L0emtLdw+9c1mIXjaWIy04r8qC9/ALDCb4WkeJAvMEmtHe4gcH2
+5sX2ifokwVJvJCvJkWHkRypCcaxkMBN/SKf1bKiXVyx4RdVVZ060FSi7o/Jdq2Ur
+Fpfn01sSvXHu53eDfog+
+=+gaP
+-----END PGP SIGNATURE-----
+
+--1XWsVB21DFCvn2e8--
