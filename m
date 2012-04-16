@@ -1,36 +1,50 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v4 2/2] regulator: add device tree support for max8997
-Date: Tue, 17 Apr 2012 00:26:57 +0530
-Message-ID: <CAJuYYwSK=T3Fi=mOwjuBciEbG9dD5x8PvqGO3mfF-4qdL50QrA@mail.gmail.com>
-References: <1332582590-16382-3-git-send-email-thomas.abraham@linaro.org>
-	<20120416185153.GH3219@opensource.wolfsonmicro.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
+Date: Mon, 16 Apr 2012 12:57:04 -0600
+Message-ID: <4F8C6B80.4000001@wwwdotorg.org>
+References: <1334146230-1795-5-git-send-email-thierry.reding@avionic-design.de>
+	<4F85C97E.50203@wwwdotorg.org>
+	<20120412065038.GB4162@avionic-0098.adnet.avionic-design.de>
+	<4F86F97C.8010508@wwwdotorg.org>
+	<20120412174429.GB10042@avionic-0098.adnet.avionic-design.de>
+	<4F8753A0.6040907@wwwdotorg.org>
+	<20120413091457.GB617@avionic-0098.mockup.avionic-design.de>
+	<4F887C54.6030306@wwwdotorg.org>
+	<20120415083905.GA15207@avionic-0098.mockup.avionic-design.de>
+	<4F8C423B.8050609@wwwdotorg.org>
+	<20120416184819.GA21043@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20120416185153.GH3219@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, Rajendra Nayak <rnayak@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120416184819.GA21043-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 April 2012 00:21, Mark Brown <broonie@opensource.wolfsonmicro.com=
-> wrote:
-> On Sat, Mar 24, 2012 at 03:19:50PM +0530, Thomas Abraham wrote:
->> Add device tree based discovery support for max8997.
->
-> I tried to apply this but it's collided with some other changes in th=
-e
-> driver which have arrived in the meantime and the rejects were too la=
-rge
-> to fix up. =A0I suspect it's mostly just the change in parameters for
-> regulator_register(). =A0Can you please regenerate against my current
-> topic/drivers branch?
+On 04/16/2012 12:48 PM, Thierry Reding wrote:
+> * Stephen Warren wrote:
+...
+>>> Has there been any discussion as to how EDID data would best be represented
+>>> in DT? Should it just be a binary blob or rather some textual representation?
+>>
+>> I think a binary blob makes sense - that's the exact same format it'd
+>> have if read over the DDC I2C bus.
+> 
+> DTC has /incbin/ for that. Is arch/arm/boot/dts still the correct place for
+> EDID blobs? I could add tegra-medcom.edid if that's okay.
 
-Hi Mark,
+As far as I know, yes.
 
-Sure, I will do redo this patch based on your current 'topic/drivers' b=
-ranch.
-
-Thanks,
-Thomas.
+Perhaps we'll want to start putting stuff in SoC-specific
+sub-directories given the number of files we'll end up with here
+(irrespective of EDID etc.), but I haven't seen any move towards that yet.
