@@ -1,69 +1,40 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Two different interrupt-parents
-Date: Mon, 16 Apr 2012 09:55:09 -0400
-Message-ID: <CAKON4OyLsh2Us4wrx3Wh+Uw2sT2sMTvgkYahL5reztL906wtWA@mail.gmail.com>
-References: <CAKON4OwAix9D61kp9mDq0WVvthDKzm=FFz2AoFQWe1yqJJgf6A@mail.gmail.com>
- <C5ECD7A89D1DC44195F34B25E172658D0CE077@039-SN2MPN1-013.039d.mgd.msft.net>
- <CAKON4Ox9Bi=HYXU_eOjff0aaSuqPEbqbonm1VaKYOcSpx5-WfA@mail.gmail.com>
- <C5ECD7A89D1DC44195F34B25E172658D0CE0E6@039-SN2MPN1-013.039d.mgd.msft.net>
- <20120416045308.GH4625@truffala.fritz.box>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V4 1/5] of: Implement managed of_iomap()
+Date: Mon, 16 Apr 2012 14:42:38 +0000
+Message-ID: <201204161442.38725.arnd@arndb.de>
+References: <cover.1334548272.git.viresh.kumar@st.com>
+ <6a0872f9d8959bc9d66d179e4911d6f09a219b42.1334548272.git.viresh.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120416045308.GH4625-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sethi Varun-B16395 <B16395-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6a0872f9d8959bc9d66d179e4911d6f09a219b42.1334548272.git.viresh.kumar@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@st.com>
+Cc: devicetree-discuss@ozlabs.org, swarren@wwwdotorg.org, linus.walleij@linaro.org, spear-devel@list.st.com, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, viresh.linux@gmail.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2012 at 12:53 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Mon, Apr 16, 2012 at 04:14:25AM +0000, Sethi Varun-B16395 wrote:
->> You can use a 4 cell interrupt specifier (we use that in case of embedde=
-d power architecture platforms)
->> - First cell corresponds to one of the four cascade lines (coming from t=
-he cascaded pic)
->> - Second cell provides the interrupt sense information
->> - Third one tells the interrupt subtype (in your case should be the casc=
-ade power interrupt type)
->> - Fourth cell communicates the interrupt number corresponding to the cas=
-caded pic.
->>
->> There would be a single interrupt parent, which is the system interrupt =
-controller. You would have
->> to translate the four cell interrupt specifier and also add cascaded int=
-errupt handling
->> for the shared interrupt line.
->
-> No, don't do that.
->
-> Use the interrupt-map technique described in the thread that got
-> linked earlier.
-
-If interrupts had syntax like GPIOs this problem wouldn't exist.
+On Monday 16 April 2012, Viresh Kumar wrote:
+> This simplifies cleanup paths of user code by providing managed version of
+> of_iomap().
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
 
 
->
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
+This one looks good,
 
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
+but I wonder if we should also have a devm_of_request_and_ioremap
+(maybe with a shorter name) that combines this with request_resource.
 
--- =
-
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+	Arnd
