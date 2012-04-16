@@ -1,47 +1,56 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH v4 1/2] mfd: add irq domain support for max8997 interrupts
-Date: Mon, 16 Apr 2012 17:32:24 +0200
-Message-ID: <20120416153224.GF24130@sortiz-mobl>
-References: <1332582590-16382-1-git-send-email-thomas.abraham@linaro.org>
- <1332582590-16382-2-git-send-email-thomas.abraham@linaro.org>
- <20120404212257.GE10787@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/1] arm/dts: Tegra30: Add device tree support for SMMU
+Date: Mon, 16 Apr 2012 15:34:19 +0000
+Message-ID: <201204161534.20089.arnd@arndb.de>
+References: <20120413.143104.1310879848248152784.hdoyu@nvidia.com>
+	<4F887DA0.8030103@wwwdotorg.org>
+	<20120416.141238.381304581863200083.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120404212257.GE10787@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120416.141238.381304581863200083.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Wed, Apr 04, 2012 at 10:22:57PM +0100, Mark Brown wrote:
-> On Sat, Mar 24, 2012 at 03:19:49PM +0530, Thomas Abraham wrote:
-> > Add irq domain support for max8997 interrupts. The reverse mapping method
-> > used is linear mapping since the sub-drivers of max8997 such as regulator
-> > and charger drivers can use the max8997 irq_domain to get the linux irq
-> > number for max8997 interrupts. All uses of irq_base in platform data and
-> > max8997 driver private data are removed.
+On Monday 16 April 2012, Hiroshi Doyu wrote:
+> What about using "dma-window" property to specify IOVA range in dtsi as below?
 > 
-> > Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-> > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> > Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> arch/powerpc/platforms/cell/iommu.c:
 > 
-> CCing in Samuel for the MFD review - review tends to be faster if you CC
-> maintainers!  Samuel, there's a followup patch for the regulator API
-> which is likely to collide with some API updates so is it OK to merge
-> via regulator if the patch is OK?
-Yes, the patch looks fine, you can merge it through the regulator tree with my
+> 698 static int __init cell_iommu_get_window(struct device_node *np,
+> 699                                          unsigned long *base,
+> 700                                          unsigned long *size)
+> 701 {
+> 702         const void *dma_window;
+> 703         unsigned long index;
+> 704
+> 705         /* Use ibm,dma-window if available, else, hard code ! */
+> 706         dma_window = of_get_property(np, "ibm,dma-window", NULL);
+> 707         if (dma_window == NULL) {          ^^^^^^^^^^^^^^
+> 708                 *base = 0;
+> 709                 *size = 0x80000000u;
+> 710                 return -ENODEV;
+> 711         }
+> 712
+> 713         of_parse_dma_window(np, dma_window, &index, base, size);
+> 714         return 0;
+> 715 }
+> 
 
-Acked-by: Samuel Ortiz <sameo@linux.intel.com>
+Yes, that's the right way to do it, but I would use the more generic
+"dma-window" name rather than "ibm,dma-window", which was originally
+introduced for pseries and for some reason copied into the cell qs2x
+firmware.
 
-if you think that's necessary.
-
-Cheers,
-Samuel.
-
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+	Arnd
