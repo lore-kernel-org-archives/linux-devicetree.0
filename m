@@ -1,41 +1,24 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH 1/7] Add support hardreset
-Date: Tue, 17 Apr 2012 15:06:20 +0400
-Message-ID: <4F8D4EAC.1010301@mvista.com>
-References: <1334652193-10487-1-git-send-email-tqnguyen@apm.com>
+From: Viresh Kumar <viresh.kumar@st.com>
+Subject: Re: [PATCH] fixup! Input: of_keymap: Introduce matrix_keypad_of_build_keymap()
+Date: Tue, 17 Apr 2012 17:02:02 +0530
+Message-ID: <4F8D54B2.1060104@st.com>
+References: <406fb8092d6aca97a54add346a2528daefab9c8d.1333009670.git.viresh.kumar@st.com> <3d33526ed060e70cdd981f990e449d46a4566278.1333339090.git.viresh.kumar@st.com> <20120405004500.GA11757@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334652193-10487-1-git-send-email-tqnguyen@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Thang Q. Nguyen" <tqnguyen@apm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jeff Garzik <jgarzik@pobox.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Phong Vo <pvo@apm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20120405004500.GA11757@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "swarren@nvidia.com" <swarren@nvidia.com>, spear-devel <spear-devel@list.st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 4/5/2012 6:15 AM, Dmitry Torokhov wrote:
+> This is the full implementation and should stay __devinit. It's the stub
+> for !CONFIG_OF case that you want to mark "static inline". I'll fix it
+> up.
 
-On 17-04-2012 12:43, Thang Q. Nguyen wrote:
+Have you pushed these for v3.5?
 
->   The hardreset operation is currently not supported. This causes sometime the SATA driver does cause kernel crash because of none-determined state.a This patch will fix the issue.
-
-> Signed-off-by: Thang Q. Nguyen<tqnguyen@apm.com>
-> ---
->   drivers/ata/sata_dwc_460ex.c |   24 +++++++++++++++++++++++-
->   1 files changed, 23 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/ata/sata_dwc_460ex.c b/drivers/ata/sata_dwc_460ex.c
-> index 69f7cde..ae13ef1 100644
-> --- a/drivers/ata/sata_dwc_460ex.c
-> +++ b/drivers/ata/sata_dwc_460ex.c
-> @@ -1581,10 +1581,31 @@ static void sata_dwc_qc_prep(struct ata_queued_cmd *qc)
->
->   static void sata_dwc_error_handler(struct ata_port *ap)
->   {
-> -	ap->link.flags |= ATA_LFLAG_NO_HRST;
->   	ata_sff_error_handler(ap);
->   }
-
-    Could eliminate this, switching to the default implementation...
-
-MBR, Sergei
+-- 
+viresh
