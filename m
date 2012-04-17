@@ -1,109 +1,76 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/3] ARM: imx6q: switch to use pinctrl driver
-Date: Tue, 17 Apr 2012 14:23:36 -0600
-Message-ID: <4F8DD148.4000902@wwwdotorg.org>
-References: <1334333915-1174-1-git-send-email-b29396@freescale.com> <1334333915-1174-3-git-send-email-b29396@freescale.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v3 4/7] tegra: fdt: Add NAND controller binding
+	and definitions
+Date: Tue, 17 Apr 2012 15:31:25 -0500
+Message-ID: <4F8DD31D.3040304@freescale.com>
+References: <1334688614-4977-1-git-send-email-sjg@chromium.org>
+	<1334688614-4977-5-git-send-email-sjg@chromium.org>
+	<4F8DBF50.5060700@freescale.com>
+	<CAPnjgZ16bJJiq7qmTQ3br3kSmdTpZfcdtPDPNJ1=s1DPeDwE2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334333915-1174-3-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <CAPnjgZ16bJJiq7qmTQ3br3kSmdTpZfcdtPDPNJ1=s1DPeDwE2g@mail.gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: Devicetree@theia.denx.de, Discuss <devicetree-discuss@lists.ozlabs.org>, Jim Lin <jilin@nvidia.com>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/13/2012 10:18 AM, Dong Aisheng wrote:
-> From: Dong Aisheng <dong.aisheng@linaro.org>
+On 04/17/2012 03:18 PM, Simon Glass wrote:
+> +Jim, who wrote the driver originally
 > 
-> ---
-> This patch is used for test the new pinctrl driver.
+> Hi Scott,
+> 
+> On Tue, Apr 17, 2012 at 12:06 PM, Scott Wood <scottwood@freescale.com> wrote:
+>>> + - nvidia,page-data-bytes : Number of bytes in the data area
+>>> + - nvidia,page-spare-bytes : Number of bytes in spare area
+>>> +       spare area = skipped-spare-bytes + data-ecc-bytes + tag-bytes
+>>> +                     + tag-ecc-bytes
+>>
+>> Do you really need this stuff to be in the device tree?  You should be
+>> able to determine this information from the ID table.
+> 
+> I suspect so - the driver originally had a lot of CONFIGs for this.
+> Maybe someone who wants to take it further could do this as part of
+> supporting ONFI?
+> 
+> I will see if Jim Lin can take another look.
 
-> diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
+You don't need ONFI to get the page/spare size out of the ID table.
 
->                       usdhc@0219c000 { /* uSDHC4 */
->  				fsl,card-wired;
->  				vmmc-supply = <&reg_3p3v>;
->  				status = "okay";
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_usdhc4_1>;
->  			};
->  
->  			uart4: uart@021f0000 {
->  				status = "okay";
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_uart4_1>;
->  			};
+The generic NAND code should already be doing this for you (fills in
+mtd->writesize and mtd->oobsize).  If you need it during setup, we now
+have CONFIG_SYS_NAND_SELF_INIT that allows splitting up
+nand_scan_ident() from nand_scan_tail().
 
-That seems reasonable.
+>>> +Nvidia NAND Controller
+>>> +----------------------
+>>> +
+>>> +The device node for a NAND flash controller is as follows:
+>>> +
+>>> +Optional properties:
+>>> +
+>>> +nvidia,wp-gpios : GPIO of write-protect line, three cells in the format:
+>>> +             phandle, parameter, flags
+>>
+>> Doesn't the number of cells depend on the GPIO controller binding?
+> 
+> Yes, but this is the binding Tegra uses.
 
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+Still, it doesn't belong in the NAND binding.  Maybe a future chip wants
+to use this NAND binding but a different GPIO binding.  If nothing else,
+people tend to copy-and-paste such descriptions.  We've still got people
+adding bindings for Freescale devices saying interrupts are encoded as a
+pair of cells, even though the interrupt controller now uses four cells
+per interrupt.
 
-> +				usdhc4 {
-> +					pinctrl_usdhc4_1: usdhc4grp-1 {
-
-I'm slightly confused about how this part of the binding is structured.
-
-I'd expect the label "pinctrl_usdhc4_1:" to point at the node "usdhc4"
-here. As written, there's no possibility of using a different pin
-configuration values such as pull/drive-strength/... for some of the
-pins, which I'm pretty sure will be an issue.
-
-For example, see tegra-cardhu.dts - it has a pull up on the SDMMC data
-and clock lines, but no pull on the SDMMC command line. I assume it's
-this way because of some aspect of the SDMMC specification, rather than
-something odd about Tegra.
-
-I guess you've allowed a list of mux functions in the fsl,mux property.
-Perhaps you can also allow a list in the other properties.
-
-In that case though, what is the top-level usdhc4 node for? Perhaps it
-groups multiple different available pin configurations for the USDHC4
-controller together just as documentation? I don't think it's that
-useful to do that; it doesn't actually convey any extra information, and
-the fact the node is a configuration for the USDHC4 controller is
-readily apparent from the node's label and name.
-
-> +						fsl,pins =	"MX6Q_PAD_SD4_CMD",
-> +								"MX6Q_PAD_SD4_CLK",
-> +								"MX6Q_PAD_SD4_DAT0",
-> +								"MX6Q_PAD_SD4_DAT1",
-> +								"MX6Q_PAD_SD4_DAT2",
-> +								"MX6Q_PAD_SD4_DAT3",
-> +								"MX6Q_PAD_SD4_DAT4",
-> +								"MX6Q_PAD_SD4_DAT5",
-> +								"MX6Q_PAD_SD4_DAT6",
-> +								"MX6Q_PAD_SD4_DAT7";
-> +						fsl,mux = <0 0 1 1 1 1 1 1 1 1>;
-> +						fsl,pull = <1>;
-> +						fsl,pue = <1>;
-> +						fsl,pke = <1>;
-> +						fsl,speed = <1>;
-> +						fsl,drive-strength = <3>;
-> +						fsl,slew-rate = <1>;
-> +						fsl,hysteresis = <1>;
-> +					};
-
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-
-> @@ -467,6 +469,12 @@ static int __devinit sdhci_esdhc_imx_probe(struct platform_device *pdev)
->  	clk_prepare_enable(clk);
->  	pltfm_host->clk = clk;
->  
-> +	imx_data->p = pinctrl_get_select_default(&pdev->dev);
-
-If you use devm_pinctrl_get_select_default() here (once it's checked in) ...
-
->  no_card_detect_pin:
->  no_board_data:
-> +	pinctrl_put(imx_data->p);
-
-... you don't need that ...
-
-> @@ -586,6 +596,8 @@ static int __devexit sdhci_esdhc_imx_remove(struct platform_device *pdev)
->  		gpio_free(boarddata->cd_gpio);
->  	}
->  
-> +	pinctrl_put(imx_data->p);
-
-... or that.
+-Scott
