@@ -1,107 +1,174 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v2 4/7] tegra: fdt: Add NAND controller binding
-	and definitions
-Date: Tue, 17 Apr 2012 11:33:40 -0700
-Message-ID: <CAPnjgZ1uXbLUtMTXd5siZsKSF5m3BZGRtkGiEYhK+PQO1PbpNQ@mail.gmail.com>
-References: <1334341777-2681-1-git-send-email-sjg@chromium.org>
-	<1334341777-2681-5-git-send-email-sjg@chromium.org>
-	<4F8894FD.70307@wwwdotorg.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v4 2/2] regulator: add device tree support for max8997
+Date: Wed, 18 Apr 2012 00:05:59 +0530
+Message-ID: <CAJuYYwRsHynt6pBHUgk72Z-UjHj3DM=s4pV4dzbb2hTAZOUSAw@mail.gmail.com>
+References: <1332582590-16382-1-git-send-email-thomas.abraham@linaro.org>
+	<1332582590-16382-3-git-send-email-thomas.abraham@linaro.org>
+	<4F734460.4060605@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4F8894FD.70307@wwwdotorg.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>, Scott Wood <scottwood@freescale.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4F734460.4060605@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Fri, Apr 13, 2012 at 2:05 PM, Stephen Warren <swarren@wwwdotorg.org> wro=
-te:
-> On 04/13/2012 12:29 PM, Simon Glass wrote:
->> Add a NAND controller along with a bindings file for review.
->>
->> Signed-off-by: Simon Glass <sjg@chromium.org>
+On 28 March 2012 22:33, Karol Lewandowski <k.lewandowsk@samsung.com> wr=
+ote:
+> On 24.03.2012 10:49, Thomas Abraham wrote:
 >
->> +++ b/doc/device-tree-bindings/nand/nvidia-nand.txt
+> Hi Thomas!
 >
-> I'd prefer this be called nvidia,tegra20-nand.txt so filenames are named
-> according to compatible value. This makes it easier to look things up.
-
-OK, changed
-
->
->> +The device node for a NAND flash device is as described in the document
->> +"Open Firmware Recommended Practice : Universal Serial Bus" with the
->
-> This is really based on USB?
-
-Well just in that it follows the conventions. I will remove this since
-I'm not sure we use anything that isn't in the ePAPR.
-
->
->> +Required properties :
->> + - compatible : Should be "manufacture,device", "nand-flash"
->> + - nvidia,page-data-bytes : Number of bytes in the data area
->> + - nvidia,page-spare-bytes : * Number of bytes in spare area
->
-> Not sure what that "*" is?
-
-Removed
-
->
->> +Nvidia NAND Controller
->> +----------------------
+>> Add device tree based discovery support for max8997.
+> ...
+>> +Regulators: The regulators of max8997 that have to be instantiated =
+should be
+>> +included in a sub-node named 'regulators'. Regulator nodes included=
+ in this
+>> +sub-node should be of the format as below. Note: The 'n' in LDOn an=
+d BUCKn
+>> +represents the LDO or BUCK number as per the datasheet of max8997.
 >> +
->> +The device node for a NAND flash controller is as described in the docu=
-ment
->> +"Open Firmware Recommended Practice : Universal Serial Bus" with the
+>> + =A0 =A0For LDO's:
+>> + =A0 =A0 =A0 =A0 =A0 =A0 LDOn {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 standard regulator binding=
+s here
+>> + =A0 =A0 =A0 =A0 =A0 =A0 };
+>> +
+>> + =A0 =A0For BUCK's:
+>> + =A0 =A0 =A0 =A0 =A0 =A0 BUCKn {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 standard regulator binding=
+s here
+>> + =A0 =A0 =A0 =A0 =A0 =A0 };
+>> +
 >
-> USB again?
+>
+> Small note - driver supports[1] configuring following regulators by
+> using respective DT node names:
+>
+> =A0- EN32KHz_AP
+> =A0- EN32KHz_CP
+> =A0- ENVICHG
+> =A0- ESAFEOUT1
+> =A0- ESAFEOUT2
+> =A0- CHARGER
+> =A0- CHARGER_CV
+> =A0- CHARGER_TOPOFF
+>
+> I wonder if these should be mentioned in documentation too.
+>
+> [1] These are used in e.g. mach-nuri.c
 
-Removed
+Yes, I missed the above regulators in the documentation. I have
+included them now and will resubmit this patch.
 
 >
->> +nand-controller@0x70008000 {
->> + =A0 =A0 compatible =3D "nvidia,tegra20-nand";
->> + =A0 =A0 wp-gpios =3D <&gpio 59 0>; =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/* P=
-H3 */
->> + =A0 =A0 nvidia,width =3D <8>;
->> + =A0 =A0 nvidia,timing =3D <26 100 20 80 20 10 12 10 70>;
->> + =A0 =A0 nand@0 {
->> + =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "hynix,hy27uf4g2b", "nand-flash=
-";
+>> diff --git a/drivers/regulator/max8997.c b/drivers/regulator/max8997=
+=2Ec> index 9657929..dce8aaf 100644
 >
-> The TRM says there can be up to 8 chip selects. Don't the NAND device
-> sub-nodes need a reg property to indicate which chip-select they're on?
-
-We don't have driver support for this at present.
-
+>> --- a/drivers/regulator/max8997.c
+>> +++ b/drivers/regulator/max8997.c
+> ..
+>> +static int max8997_pmic_dt_parse_pdata(struct max8997_dev *iodev,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 struct max8997_platform_data *pdata)
+>> +{
+>> + =A0 =A0 struct device_node *pmic_np, *regulators_np, *reg_np;
+>> + =A0 =A0 struct max8997_regulator_data *rdata;
+>> + =A0 =A0 unsigned int i, dvs_voltage_nr =3D 1, ret;
+>> +
+>> + =A0 =A0 pmic_np =3D iodev->dev->of_node;
+>> + =A0 =A0 if (!pmic_np) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 dev_err(iodev->dev, "could not find pmic s=
+ub-node\n");
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+>> + =A0 =A0 }
+>> +
+>> + =A0 =A0 regulators_np =3D of_find_node_by_name(pmic_np, "regulator=
+s");
+>> + =A0 =A0 if (!regulators_np) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 dev_err(iodev->dev, "could not find regula=
+tors sub-node\n");
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+>> + =A0 =A0 }
+>> +
+>> + =A0 =A0 /* count the number of regulators to be supported in pmic =
+*/
+>> + =A0 =A0 pdata->num_regulators =3D 0;
+>> + =A0 =A0 for_each_child_of_node(regulators_np, reg_np)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 pdata->num_regulators++;
+>> +
+>> + =A0 =A0 rdata =3D devm_kzalloc(iodev->dev, sizeof(*rdata) *
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 pdata->num=
+_regulators, GFP_KERNEL);
+>> + =A0 =A0 if (!rdata) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 dev_err(iodev->dev, "could not allocate me=
+mory for "
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 "regulator data\n");
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+>> + =A0 =A0 }
 >
-> Also, the TRM mentions async vs. ONFI devices. Don't we need properties
-> somewhere to configure that kind of thing?
-
-We don't have driver support for this at present, either :-(
-
+>> + =A0 =A0 pdata->regulators =3D rdata;
 >
->> + =A0 =A0 =A0 =A0 =A0 =A0 nvidia,page-data-bytes =3D <2048>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 nvidia,tag-ecc-bytes =3D <4>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 nvidia,tag-bytes =3D <20>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 nvidia,data-ecc-bytes =3D <36>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 nvidia,skipped-spare-bytes =3D <4>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 nvidia,page-spare-bytes =3D <64>;
->> + =A0 =A0 };
->> +};
+>> + =A0 =A0 for_each_child_of_node(regulators_np, reg_np) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 for (i =3D 0; i < ARRAY_SIZE(regulators); =
+i++)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_node_cmp(reg_np->n=
+ame, regulators[i].name))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 rdata->id =3D i;
+>
+>
+> rdata->id will be equal to ARRAY_SIZE(regulators) when one adds DT no=
+de
+> name (below "regulators") which is different from what can be found i=
+n
+> regulators[] table.
+>
+> On my test machine this results in hard lockup - possibly because
+> something tries to access regulators[ARRAY_SIZE(regulators)]
+> later on.
+>
+> Following patch fixes this on my machine (using DTS with misspelled L=
+DO1 for LDx1):
+>
+> diff --git a/drivers/regulator/max8997.c b/drivers/regulator/max8997.=
+c
+> index dce8aaf..c20fd72 100644
+> --- a/drivers/regulator/max8997.c
+> +++ b/drivers/regulator/max8997.c
+> @@ -1011,6 +1011,13 @@ static int max8997_pmic_dt_parse_pdata(struct =
+max8997_dev *iodev,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0for (i =3D 0; i < ARRAY_SIZE(regulator=
+s); i++)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (!of_node_cmp(reg_n=
+p->name, regulators[i].name))
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0break;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (i =3D=3D ARRAY_SIZE(regulators)) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_warn(iodev->dev, "d=
+on't know how to configure regulator %s\n",
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg_=
+np->name);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> +
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0rdata->id =3D i;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0rdata->initdata =3D of_get_regulator_i=
+nit_data(
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0iodev->dev, reg_np);
+>
+
+Thanks for this fix. I have merged this change into this patch.
 
 Regards,
-Simon
+Thomas.
+
+>
+> Regards,
+> --
+> Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
