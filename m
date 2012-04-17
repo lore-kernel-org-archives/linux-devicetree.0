@@ -1,52 +1,113 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dt: tegra: seaboard: add eeprom nodes to the I2C bus mux
-Date: Tue, 17 Apr 2012 12:50:55 -0600
-Message-ID: <1334688655-8509-2-git-send-email-swarren@wwwdotorg.org>
-References: <1334688655-8509-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1334688655-8509-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v4 01/10] fdt: Add fdtdec functions to read byte
+	array
+Date: Tue, 17 Apr 2012 12:01:28 -0700
+Message-ID: <1334689297-13489-2-git-send-email-sjg@chromium.org>
+References: <1334689297-13489-1-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1334689297-13489-1-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Anton Staff <robotboy@chromium.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Anton Staff <robotboy@chromium.org>
 
-I don't intend this patch to be applied; it's just here as a more complete
-example of the bus mux binding. Putting an EEPROM on the DDC bus might make
-sense for the EDID EEPROM, but I'm not actually sure what's responding to
-that I2C address on the PTA bus right now!
+Sometimes we don't need a full cell for each value. This provides
+a simple function to read a byte array, both with and without
+copying it.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
- arch/arm/boot/dts/tegra-seaboard.dts |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+Changes in v2:
+- Use correct name for get_prop_check_min_len() function
 
-diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
-index e1025e2..202cb46 100644
---- a/arch/arm/boot/dts/tegra-seaboard.dts
-+++ b/arch/arm/boot/dts/tegra-seaboard.dts
-@@ -309,11 +309,21 @@
- 		i2c-bus-ddc {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ include/fdtdec.h |   32 ++++++++++++++++++++++++++++++++
+ lib/fdtdec.c     |   24 ++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 0 deletions(-)
+
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 7bae2f8..5140f4a 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -350,3 +350,35 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
+  * @return 0 if all ok or gpio was FDT_GPIO_NONE; -1 on error
+  */
+ int fdtdec_setup_gpio(struct fdt_gpio_state *gpio);
 +
-+			eeprom {
-+				compatible = "eeprom";
-+				reg = <0x50>;
-+			};
- 		};
- 
- 		i2c-bus-pta {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
++/*
++ * Look up a property in a node and return its contents in a byte
++ * array of given length. The property must have at least enough data for
++ * the array (count bytes). It may have more, but this will be ignored.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param array		array to fill with data
++ * @param count		number of array elements
++ * @return 0 if ok, or -FDT_ERR_MISSING if the property is not found,
++ *		or -FDT_ERR_BADLAYOUT if not enough data
++ */
++int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
++		u8 *array, int count);
 +
-+			eeprom {
-+				compatible = "eeprom";
-+				reg = <0x50>;
-+			};
- 		};
- 	};
- 
++/**
++ * Look up a property in a node and return a pointer to its contents as a
++ * byte array of given length. The property must have at least enough data
++ * for the array (count bytes). It may have more, but this will be ignored.
++ * The data is not copied.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param count		number of array elements
++ * @return pointer to byte array if found, or NULL if the property is not
++ *		found or there is not enough data
++ */
++const u8 *fdtdec_locate_byte_array(const void *blob, int node,
++			     const char *prop_name, int count);
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 2eb5b41..585dd6d 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -487,3 +487,27 @@ int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
+ 		return -1;
+ 	return 0;
+ }
++
++int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
++		u8 *array, int count)
++{
++	const u8 *cell;
++	int err;
++
++	cell = get_prop_check_min_len(blob, node, prop_name, count, &err);
++	if (!err)
++		memcpy(array, cell, count);
++	return err;
++}
++
++const u8 *fdtdec_locate_byte_array(const void *blob, int node,
++			     const char *prop_name, int count)
++{
++	const u8 *cell;
++	int err;
++
++	cell = get_prop_check_min_len(blob, node, prop_name, count, &err);
++	if (err)
++		return NULL;
++	return cell;
++}
 -- 
-1.7.0.4
+1.7.7.3
