@@ -1,133 +1,52 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v3 4/7] tegra: fdt: Add NAND controller binding and
-	definitions
-Date: Tue, 17 Apr 2012 11:50:11 -0700
-Message-ID: <1334688614-4977-5-git-send-email-sjg@chromium.org>
-References: <1334688614-4977-1-git-send-email-sjg@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1334688614-4977-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>, Scott Wood <scottwood@freescale.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dt: tegra: seaboard: add eeprom nodes to the I2C bus mux
+Date: Tue, 17 Apr 2012 12:50:55 -0600
+Message-ID: <1334688655-8509-2-git-send-email-swarren@wwwdotorg.org>
+References: <1334688655-8509-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1334688655-8509-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a NAND controller along with a bindings file for review.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
+I don't intend this patch to be applied; it's just here as a more complete
+example of the bus mux binding. Putting an EEPROM on the DDC bus might make
+sense for the EDID EEPROM, but I'm not actually sure what's responding to
+that I2C address on the PTA bus right now!
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
-Changes in v2:
-- Update NAND binding to add "nvidia," prefix
+ arch/arm/boot/dts/tegra-seaboard.dts |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-Changes in v3:
-- Add reg property for unit address (should be used for chip select)
-- Change note in fdt binding about the need for a hardware-specific binding
-- Fix up typos in fdt binding, and rename the file
-- Update fdt binding to make everything Nvidia-specific
-
- arch/arm/dts/tegra20.dtsi                          |    6 ++
- .../nand/nvidia,tegra20-nand.txt                   |   68 ++++++++++++++++++++
- 2 files changed, 74 insertions(+), 0 deletions(-)
- create mode 100644 doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-
-diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-index bc64f42..018a3c8 100644
---- a/arch/arm/dts/tegra20.dtsi
-+++ b/arch/arm/dts/tegra20.dtsi
-@@ -200,4 +200,10 @@
- 		reg = <0x7000f400 0x200>;
+diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+index e1025e2..202cb46 100644
+--- a/arch/arm/boot/dts/tegra-seaboard.dts
++++ b/arch/arm/boot/dts/tegra-seaboard.dts
+@@ -309,11 +309,21 @@
+ 		i2c-bus-ddc {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++
++			eeprom {
++				compatible = "eeprom";
++				reg = <0x50>;
++			};
+ 		};
+ 
+ 		i2c-bus-pta {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++
++			eeprom {
++				compatible = "eeprom";
++				reg = <0x50>;
++			};
+ 		};
  	};
  
-+	nand: nand-controller@70008000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-nand";
-+		reg = <0x70008000 0x100>;
-+	};
- };
-diff --git a/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt b/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-new file mode 100644
-index 0000000..2484556
---- /dev/null
-+++ b/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-@@ -0,0 +1,68 @@
-+NAND Flash
-+----------
-+
-+(there isn't yet a generic binding in Linux, so this describes what is in
-+U-Boot. There should not be Linux-specific or U-Boot specific binding, just
-+a binding that describes this hardware. But agreeing a binding in Linux in
-+the absence of a driver may be beyond my powers.)
-+
-+The device node for a NAND flash device is as follows:
-+
-+Required properties :
-+ - compatible : Should be "manufacturer,device", "nand-flash"
-+ - nvidia,page-data-bytes : Number of bytes in the data area
-+ - nvidia,page-spare-bytes : Number of bytes in spare area
-+       spare area = skipped-spare-bytes + data-ecc-bytes + tag-bytes
-+			+ tag-ecc-bytes
-+ - nvidia,skipped-spare-bytes : Number of bytes to skip at start of spare area
-+	(these are typically used for bad block maintenance)
-+ - nvidia,data-ecc-bytes : Number of ECC bytes for data area
-+ - nvidia,tag-bytes :Number of tag bytes in spare area
-+ - nvidia,tag-ecc-bytes : Number ECC bytes to be generated for tag bytes
-+
-+This node should sit inside its controller.
-+
-+
-+Nvidia NAND Controller
-+----------------------
-+
-+The device node for a NAND flash controller is as follows:
-+
-+Optional properties:
-+
-+nvidia,wp-gpios : GPIO of write-protect line, three cells in the format:
-+		phandle, parameter, flags
-+nvidia,nand-width : bus width of the NAND device in bits
-+
-+ - nvidia,nand-timing : Timing parameters for the NAND. Each is in ns.
-+	Order is: MAX_TRP_TREA, TWB, Max(tCS, tCH, tALS, tALH),
-+	TWHR, Max(tCS, tCH, tALS, tALH), TWH, TWP, TRH, TADL
-+
-+	MAX_TRP_TREA is:
-+		non-EDO mode: Max(tRP, tREA) + 6ns
-+		EDO mode: tRP timing
-+
-+The 'reg' property should provide the chip select used by the flash chip.
-+
-+
-+Example
-+-------
-+
-+nand-controller@0x70008000 {
-+	compatible = "nvidia,tegra20-nand";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	nvidia,wp-gpios = <&gpio 59 0>;		/* PH3 */
-+	nvidia,nand-width = <8>;
-+	nvidia,timing = <26 100 20 80 20 10 12 10 70>;
-+	nand@0 {
-+		reg = <0>;
-+		compatible = "hynix,hy27uf4g2b", "nand-flash";
-+		nvidia,page-data-bytes = <2048>;
-+		nvidia,tag-ecc-bytes = <4>;
-+		nvidia,tag-bytes = <20>;
-+		nvidia,data-ecc-bytes = <36>;
-+		nvidia,skipped-spare-bytes = <4>;
-+		nvidia,page-spare-bytes = <64>;
-+	};
-+};
 -- 
-1.7.7.3
+1.7.0.4
