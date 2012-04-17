@@ -1,74 +1,53 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 2/2] regulator: add device tree support for max8997
-Date: Tue, 17 Apr 2012 19:38:29 +0100
-Message-ID: <20120417183829.GW6652@opensource.wolfsonmicro.com>
-References: <1332582590-16382-1-git-send-email-thomas.abraham@linaro.org>
- <1332582590-16382-3-git-send-email-thomas.abraham@linaro.org>
- <4F734460.4060605@samsung.com>
- <CAJuYYwRsHynt6pBHUgk72Z-UjHj3DM=s4pV4dzbb2hTAZOUSAw@mail.gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v2 4/7] tegra: fdt: Add NAND controller binding
+	and definitions
+Date: Tue, 17 Apr 2012 13:38:33 -0500
+Message-ID: <4F8DB8A9.4060506@freescale.com>
+References: <1334341777-2681-1-git-send-email-sjg@chromium.org>
+	<1334341777-2681-5-git-send-email-sjg@chromium.org>
+	<4F8894FD.70307@wwwdotorg.org>
+	<CAPnjgZ1uXbLUtMTXd5siZsKSF5m3BZGRtkGiEYhK+PQO1PbpNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9+ohdFDUqiMJzwPo"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJuYYwRsHynt6pBHUgk72Z-UjHj3DM=s4pV4dzbb2hTAZOUSAw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Karol Lewandowski <k.lewandowsk@samsung.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, Rajendra Nayak <rnayak@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <CAPnjgZ1uXbLUtMTXd5siZsKSF5m3BZGRtkGiEYhK+PQO1PbpNQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: Devicetree@theia.denx.de, Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On 04/17/2012 01:33 PM, Simon Glass wrote:
+> Hi Stephen,
+> 
+> On Fri, Apr 13, 2012 at 2:05 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 04/13/2012 12:29 PM, Simon Glass wrote:
+>>> +nand-controller@0x70008000 {
+>>> +     compatible = "nvidia,tegra20-nand";
+>>> +     wp-gpios = <&gpio 59 0>;                /* PH3 */
+>>> +     nvidia,width = <8>;
+>>> +     nvidia,timing = <26 100 20 80 20 10 12 10 70>;
+>>> +     nand@0 {
+>>> +             compatible = "hynix,hy27uf4g2b", "nand-flash";
+>>
+>> The TRM says there can be up to 8 chip selects. Don't the NAND device
+>> sub-nodes need a reg property to indicate which chip-select they're on?
+> 
+> We don't have driver support for this at present.
 
---9+ohdFDUqiMJzwPo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That shouldn't matter.  The device tree is about describing the
+hardware.  Ideally the device tree shouldn't have to change if in the
+future you do get driver support for it.
 
-On Wed, Apr 18, 2012 at 12:05:59AM +0530, Thomas Abraham wrote:
-> On 28 March 2012 22:33, Karol Lewandowski <k.lewandowsk@samsung.com> wrot=
-e:
+Also, unit addresses should only be present if reg is present, and they
+should match.
 
-> >> + =A0 =A0For BUCK's:
-
-No 's here, BTW.
-
-> > =A0- EN32KHz_AP
-> > =A0- EN32KHz_CP
-> > =A0- ENVICHG
-> > =A0- ESAFEOUT1
-> > =A0- ESAFEOUT2
-> > =A0- CHARGER
-> > =A0- CHARGER_CV
-> > =A0- CHARGER_TOPOFF
-
-> > I wonder if these should be mentioned in documentation too.
-
-> Yes, I missed the above regulators in the documentation. I have
-> included them now and will resubmit this patch.
-
-Please omit the clocks; these are obviously a bodge due to the inability
-to support clocks off-SoC so we shouldn't be enshrining them in the
-device tree bindings.
-
---9+ohdFDUqiMJzwPo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPjbiZAAoJEBus8iNuMP3dlkMQAJTfRFimB6HTyLF2bnKYIlnl
-D1XFs5FaeT43PtPqvqgwc/yJhfPc92HtxnevuushNUydDN9RgAfbne2fM+3W1un3
-3jIYhAZm46eGZkYfAj95dYKtHGDO1r2+L5y477ew+fiJJVrO1R+TeMnt/33H9loe
-DyyvirAMVVuxKvmsOu6NqJ12pCI6IpSui4gX8QTj4c4gOtjUQzb3BsltZfMTLpTk
-ed5S6x6cdIF5F6LQ+yjd/2EvPasBT/UT29oSiJN7OUtAAqmuTAseaaSuTgzQQAC9
-Ixfg0vnndLU6Jzb3ag4iNikbU+9fffNZmhFU6lQb5Hq7kmsSK3+yO1occs+P5Bia
-2odgCGRhCKtNH5fCNw6XqVOC/QU5idGgfltigybdFpAOOqouGdCcPAMvO7qVlNQr
-Kt+JWRFJ2giEACgIr4ad2weY8z+kOYdVdN56JRTBN8+dmMzmxTMO+C3v/AZR83y7
-ubWvpeCxXDnpxxa22VB/Aq+LaCgJZyzKIYPsqnDFKMsXFHwG2QLskZ+rb87P0feP
-Ec00IgrbuV5hsuBeVHglzPmQ+aM+hjMgsj1CqbYbwMGbvv/+xzfGfkZ1i+lhKjuo
-TiORe80grOrIGWIhrELUUF6Omi7xDqBrs3mKrBUzE+ggomD5s3XECQ0PdClF7dFd
-yiwuI9YMsFnxcZpqnKg+
-=QzZj
------END PGP SIGNATURE-----
-
---9+ohdFDUqiMJzwPo--
+-Scott
