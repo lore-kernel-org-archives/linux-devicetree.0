@@ -1,92 +1,74 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v3 4/7] tegra: fdt: Add NAND controller binding
-	and definitions
-Date: Tue, 17 Apr 2012 14:06:56 -0500
-Message-ID: <4F8DBF50.5060700@freescale.com>
-References: <1334688614-4977-1-git-send-email-sjg@chromium.org>
-	<1334688614-4977-5-git-send-email-sjg@chromium.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] i2c: Add generic I2C multiplexer using pinctrl API
+Date: Tue, 17 Apr 2012 21:50:02 +0200
+Message-ID: <CACRpkdbqE7H7Q1xUeFQL3DmgoKF6HNbWp-DswYKqMVK12tVSVw@mail.gmail.com>
+References: <1334688545-8465-1-git-send-email-swarren@wwwdotorg.org>
+ <1334688545-8465-2-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1334688614-4977-5-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: Devicetree@theia.denx.de, Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1334688545-8465-2-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2012 01:50 PM, Simon Glass wrote:
-> diff --git a/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt b/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-> new file mode 100644
-> index 0000000..2484556
-> --- /dev/null
-> +++ b/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-> @@ -0,0 +1,68 @@
-> +NAND Flash
-> +----------
-> +
-> +(there isn't yet a generic binding in Linux, so this describes what is in
-> +U-Boot. There should not be Linux-specific or U-Boot specific binding, just
-> +a binding that describes this hardware. But agreeing a binding in Linux in
-> +the absence of a driver may be beyond my powers.)
-> +
-> +The device node for a NAND flash device is as follows:
-> +
-> +Required properties :
-> + - compatible : Should be "manufacturer,device", "nand-flash"
+On Tue, Apr 17, 2012 at 8:49 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wro=
+te:
 
-Again, "nand-flash" is not an appropriate compatible.  There is no
-generic nand-flash binding.
+> This is useful for SoCs whose I2C module's signals can be routed to
+> different sets of pins at run-time, using the pinctrl API.
+>
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 +-----+ =
+=A0+-----+
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | dev | =
+=A0| dev |
+> =A0 =A0+------------------------+ =A0 +-----+ =A0+-----+
+> =A0 =A0| SoC =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A0 =A0| =A0 =
+=A0 =A0 =A0|
+> =A0 =A0| =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /----|------+--------+
+> =A0 =A0| =A0 +---+ =A0 +------+ =A0 =A0 | child bus A, on first set of pi=
+ns
+> =A0 =A0| =A0 |I2C|---|Pinmux| =A0 =A0 |
+> =A0 =A0| =A0 +---+ =A0 +------+ =A0 =A0 | child bus B, on second set of p=
+ins
+> =A0 =A0| =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 \----|------+--------+------=
+--+
+> =A0 =A0| =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A0 =A0| =
+=A0 =A0 =A0 =A0| =A0 =A0 =A0 =A0|
+> =A0 =A0+------------------------+ =A0+-----+ =A0+-----+ =A0+-----+
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| dev | =
+=A0| dev | =A0| dev |
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0+-----+ =
+=A0+-----+ =A0+-----+
+>
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> + - nvidia,page-data-bytes : Number of bytes in the data area
-> + - nvidia,page-spare-bytes : Number of bytes in spare area
-> +       spare area = skipped-spare-bytes + data-ecc-bytes + tag-bytes
-> +			+ tag-ecc-bytes
+I remember you told me about this thing, it's really fascinating!
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Do you really need this stuff to be in the device tree?  You should be
-able to determine this information from the ID table.
+> Note: This patch depends on the latest pinctrl tree. In order to merge
+> this series into the I2C tree, you'll need to merge the pinctrl tree
+> into it first. However, the pinctrl tree doesn't yet have a stable tag/br=
+anch
+> that you can merge, so this patch can't actually be committed yet.
 
-> + - nvidia,skipped-spare-bytes : Number of bytes to skip at start of spare area
-> +	(these are typically used for bad block maintenance)
+I'll create a tag once I have the devm* stuff in place (it's so
+good we just have to have it).
 
-So this binding can't deal with the bad block marker being somewhere
-other than the beginning of the spare area (e.g. 8-bit small page NAND)?
+BTW another way is to have this ACK:ed by Jean/Dooks/Wolfram
+and I just put it in the pinctrl tree, unless there is something
+radical happening in the mux part of the I2C tree this merge
+window?
 
-> + - nvidia,data-ecc-bytes : Number of ECC bytes for data area
-
-Number of ECC bytes per page?  Number of ECC bytes per ECC block?
-Number of data bytes per ECC block?
-
-> + - nvidia,tag-bytes :Number of tag bytes in spare area
-
-What are tag bytes?
-
-> +Nvidia NAND Controller
-> +----------------------
-> +
-> +The device node for a NAND flash controller is as follows:
-> +
-> +Optional properties:
-> +
-> +nvidia,wp-gpios : GPIO of write-protect line, three cells in the format:
-> +		phandle, parameter, flags
-
-Doesn't the number of cells depend on the GPIO controller binding?
-
-> +nvidia,nand-width : bus width of the NAND device in bits
-> +
-> + - nvidia,nand-timing : Timing parameters for the NAND. Each is in ns.
-> +	Order is: MAX_TRP_TREA, TWB, Max(tCS, tCH, tALS, tALH),
-> +	TWHR, Max(tCS, tCH, tALS, tALH), TWH, TWP, TRH, TADL
-
-Might want to point out that there's one cell per timing parameter.
-
--Scott
+Yours,
+Linus Walleij
