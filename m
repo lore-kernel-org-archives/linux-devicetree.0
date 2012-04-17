@@ -1,40 +1,106 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC 4/4] drm: Add NVIDIA Tegra support
-Date: Mon, 16 Apr 2012 14:37:39 -0600
-Message-ID: <4F8C8313.9070003@wwwdotorg.org>
-References: <20120412065038.GB4162@avionic-0098.adnet.avionic-design.de>
-	<4F86F97C.8010508@wwwdotorg.org>
-	<20120412174429.GB10042@avionic-0098.adnet.avionic-design.de>
-	<4F8753A0.6040907@wwwdotorg.org>
-	<20120413091457.GB617@avionic-0098.mockup.avionic-design.de>
-	<4F887C54.6030306@wwwdotorg.org>
-	<20120415083905.GA15207@avionic-0098.mockup.avionic-design.de>
-	<4F8C423B.8050609@wwwdotorg.org>
-	<20120416184819.GA21043@avionic-0098.mockup.avionic-design.de>
-	<4F8C6B80.4000001@wwwdotorg.org>
-	<20120416190320.GA21233@avionic-0098.mockup.avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20120416190320.GA21233-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v3 1/3] netdev/of/phy: New function: of_mdio_find_bus().
+Date: Mon, 16 Apr 2012 18:03:26 -0700
+Message-ID: <1334624608-26667-2-git-send-email-ddaney.cavm@gmail.com>
+References: <1334624608-26667-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1334624608-26667-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, galak@kernel.crashing.org, David Daney <david.daney@cavium.com>, Grant Likely <grant.likely@secretlab.ca>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 04/16/2012 01:03 PM, Thierry Reding wrote:
-...
-> I've been looking about for tools to generate EDID data but didn't find
-> anything useful. Does anyone know of any tool that's more convenient than
-> manually filling a struct edid and writing that to a file?
+From: David Daney <david.daney@cavium.com>
 
-Sorry, no.
+Add of_mdio_find_bus() which allows an mii_bus to be located given its
+associated the device tree node.
+
+This is needed by the follow-on patch to add a driver for MDIO bus
+multiplexers.
+
+The of_mdiobus_register() function is modified so that the device tree
+node is recorded in the mii_bus.  Then we can find it again by
+iterating over all mdio_bus_class devices.
+
+Because the OF device tree has now become an integral part of the
+kernel, this can live in mdio_bus.c (which contains the needed
+mdio_bus_class structure) instead of of_mdio.c.
+
+Signed-off-by: David Daney <david.daney@cavium.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: "David S. Miller" <davem@davemloft.net>
+---
+ drivers/net/phy/mdio_bus.c |   32 ++++++++++++++++++++++++++++++++
+ drivers/of/of_mdio.c       |    2 ++
+ include/linux/of_mdio.h    |    2 ++
+ 3 files changed, 36 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 8985cc6..46e7dc5 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -88,6 +88,38 @@ static struct class mdio_bus_class = {
+ 	.dev_release	= mdiobus_release,
+ };
+ 
++#ifdef CONFIG_OF_MDIO
++/* Helper function for of_phy_find_device */
++static int of_mii_bus_match(struct device *dev, void *mii_bus_np)
++{
++	return dev->of_node == mii_bus_np;
++}
++/**
++ * of_mdio_find_bus - Given an mii_bus node, find the mii_bus.
++ * @mdio_np: Pointer to the mii_bus.
++ *
++ * Returns a pointer to the mii_bus, or NULL if none found.
++ *
++ * Because the association of a device_node and mii_bus is made via
++ * of_mdiobus_register(), the mii_bus cannot be found before it is
++ * registered with of_mdiobus_register().
++ *
++ */
++struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
++{
++	struct device *d;
++
++	if (!mdio_np)
++		return NULL;
++
++	d = class_find_device(&mdio_bus_class, NULL,  mdio_np,
++			      of_mii_bus_match);
++
++	return d ? to_mii_bus(d) : NULL;
++}
++EXPORT_SYMBOL(of_mdio_find_bus);
++#endif
++
+ /**
+  * mdiobus_register - bring up all the PHYs on a given bus and attach them to bus
+  * @bus: target mii_bus
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 483c0ad..2574abd 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -45,6 +45,8 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 		for (i=0; i<PHY_MAX_ADDR; i++)
+ 			mdio->irq[i] = PHY_POLL;
+ 
++	mdio->dev.of_node = np;
++
+ 	/* Register the MDIO bus */
+ 	rc = mdiobus_register(mdio);
+ 	if (rc)
+diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+index 53b94e0..912c27a 100644
+--- a/include/linux/of_mdio.h
++++ b/include/linux/of_mdio.h
+@@ -22,4 +22,6 @@ extern struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
+ 					 void (*hndlr)(struct net_device *),
+ 					 phy_interface_t iface);
+ 
++extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
++
+ #endif /* __LINUX_OF_MDIO_H */
+-- 
+1.7.2.3
