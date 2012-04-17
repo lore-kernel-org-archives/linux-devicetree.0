@@ -1,137 +1,77 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dt: tegra: seaboard: instantiate pinctrl-based I2C bus mux
-Date: Tue, 17 Apr 2012 12:50:54 -0600
-Message-ID: <1334688655-8509-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v3 2/7] fdt: Add debugging to fdtdec_get_int/addr()
+Date: Tue, 17 Apr 2012 11:50:09 -0700
+Message-ID: <1334688614-4977-3-git-send-email-sjg@chromium.org>
+References: <1334688614-4977-1-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1334688614-4977-1-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>, Scott Wood <scottwood@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+The new debugging shows the value of integers and addresses read
+from the device tree.
 
-Tegra's I2C2 controller can be routed to either the PTA or DDC pin group
-on Seaboard. Define the pinctrl state nodes required to allow runtime
-control of this routing. Instantiate a pinctrl-i2cmux I2C bus mux that
-uses these pinctrl states.
-
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
-Ben, Wolfram, I'll take this one patch through the Tegra tree at an
-appropriate time. I'm including it here to give a good example.
----
- arch/arm/boot/dts/tegra-seaboard.dts |   57 +++++++++++++++++++++++++++++-----
- 1 files changed, 49 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
-index ed0a2f5..e1025e2 100644
---- a/arch/arm/boot/dts/tegra-seaboard.dts
-+++ b/arch/arm/boot/dts/tegra-seaboard.dts
-@@ -65,11 +65,6 @@
- 				nvidia,pins = "dap4";
- 				nvidia,function = "dap4";
- 			};
--			ddc {
--				nvidia,pins = "ddc", "owc", "spdi", "spdo",
--					"uac";
--				nvidia,function = "rsvd2";
--			};
- 			dta {
- 				nvidia,pins = "dta", "dtb", "dtc", "dtd", "dte";
- 				nvidia,function = "vi";
-@@ -100,7 +95,7 @@
- 			};
- 			hdint {
- 				nvidia,pins = "hdint", "lpw0", "lpw2", "lsc1",
--					"lsck", "lsda", "pta";
-+					"lsck", "lsda";
- 				nvidia,function = "hdmi";
- 			};
- 			i2cp {
-@@ -130,6 +125,10 @@
- 					"lspi", "lvp1", "lvs";
- 				nvidia,function = "displaya";
- 			};
-+			owc {
-+				nvidia,pins = "owc", "spdi", "spdo", "uac";
-+				nvidia,function = "rsvd2";
-+			};
- 			pmc {
- 				nvidia,pins = "pmc";
- 				nvidia,function = "pwr_on";
-@@ -173,7 +172,7 @@
- 			conf_ata {
- 				nvidia,pins = "ata", "atb", "atc", "atd",
- 					"cdev1", "cdev2", "dap1", "dap2",
--					"dap4", "dtf", "gma", "gmc", "gmd",
-+					"dap4", "ddc", "dtf", "gma", "gmc", "gmd",
- 					"gme", "gpu", "gpu7", "i2cp", "irrx",
- 					"irtx", "pta", "rm", "sdc", "sdd",
- 					"slxd", "slxk", "spdi", "spdo", "uac",
-@@ -182,7 +181,7 @@
- 				nvidia,tristate = <0>;
- 			};
- 			conf_ate {
--				nvidia,pins = "ate", "csus", "dap3", "ddc",
-+				nvidia,pins = "ate", "csus", "dap3",
- 					"gpv", "owc", "slxc", "spib", "spid",
- 					"spie";
- 				nvidia,pull = <0>;
-@@ -252,6 +251,28 @@
- 				nvidia,slew-rate-falling = <3>;
- 			};
- 		};
-+
-+		state_i2cmux_ddc: pinmux_i2cmux_ddc {
-+			ddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "i2c2";
-+			};
-+			pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "rsvd4";
-+			};
-+		};
-+
-+		state_i2cmux_pta: pinmux_i2cmux_pta {
-+			ddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "rsvd4";
-+			};
-+			pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "i2c2";
-+			};
-+		};
- 	};
+ lib/fdtdec.c |   22 ++++++++++++++++------
+ 1 files changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 42c3e89..3885634 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -79,11 +79,16 @@ fdt_addr_t fdtdec_get_addr(const void *blob, int node,
+ 	const fdt_addr_t *cell;
+ 	int len;
  
- 	i2c@7000c000 {
-@@ -276,6 +297,26 @@
- 		clock-frequency = <400000>;
- 	};
+-	debug("get_addr: %s\n", prop_name);
++	debug("%s: %s\n", __func__, prop_name);
+ 	cell = fdt_getprop(blob, node, prop_name, &len);
+ 	if (cell && (len == sizeof(fdt_addr_t) ||
+-			len == sizeof(fdt_addr_t) * 2))
+-		return fdt_addr_to_cpu(*cell);
++			len == sizeof(fdt_addr_t) * 2)) {
++		fdt_addr_t addr = fdt_addr_to_cpu(*cell);
++
++		debug("%p\n", (void *)addr);
++		return addr;
++	}
++	debug("(not found)\n");
+ 	return FDT_ADDR_T_NONE;
+ }
  
-+	i2cmux {
-+		compatible = "pinctrl-i2cmux";
+@@ -93,10 +98,15 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+ 	const s32 *cell;
+ 	int len;
+ 
+-	debug("get_size: %s\n", prop_name);
++	debug("%s: %s: ", __func__, prop_name);
+ 	cell = fdt_getprop(blob, node, prop_name, &len);
+-	if (cell && len >= sizeof(s32))
+-		return fdt32_to_cpu(cell[0]);
++	if (cell && len >= sizeof(s32)) {
++		s32 val = fdt32_to_cpu(cell[0]);
 +
-+		i2c-parent = <&{/i2c@7000c400}>;
-+
-+		pinctrl-names = "ddc", "pta";
-+		pinctrl-0 = <&state_i2cmux_ddc>;
-+		pinctrl-1 = <&state_i2cmux_pta>;
-+
-+		i2c-bus-ddc {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c-bus-pta {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-+
- 	i2c@7000c500 {
- 		clock-frequency = <400000>;
- 	};
++		debug("%#x (%d)\n", val, val);
++		return val;
++	}
++	debug("(not found)\n");
+ 	return default_val;
+ }
+ 
 -- 
-1.7.0.4
+1.7.7.3
