@@ -1,72 +1,64 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] Add support for Atmel's AT91SAM9N12-EK (With DT)
-Date: Tue, 17 Apr 2012 10:41:49 +0200
-Message-ID: <4F8D2CCD.4080800@atmel.com>
-References: <1334643991-19148-1-git-send-email-hong.xu@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1334643991-19148-1-git-send-email-hong.xu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Hong Xu <hong.xu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: "Thang Q. Nguyen" <tqnguyen@apm.com>
+Subject: [PATCH 1/7] Add support hardreset
+Date: Tue, 17 Apr 2012 15:43:13 +0700
+Message-ID: <1334652193-10487-1-git-send-email-tqnguyen@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jeff Garzik <jgarzik@pobox.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: Phong Vo <pvo@apm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, "Thang Q. Nguyen" <tqnguyen@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2012 08:26 AM, Hong Xu :
-> This series adds support for Atmel's AT91SAM9N12-EK.
-> 
-> Patches are on top of v3.4-rc2 and target for v3.5
-> 
-> Changes since v2 (details are in patch files respectively)
-> * Removed blank lines
-> * Removed Nandflash partitioning info (AT91 will handle this later)
-> * Removed IRQ priority table (AT91 will handle this in an unified way)
-> 
-> Hong Xu (3):
->   AT91: Add DT description files for AT91SAM9N12-EK
->   AT91: Add machine header file for AT91SAM9N12 SoC
->   AT91: Add machine files for AT91SAM9N12 SoC
+ The hardreset operation is currently not supported. This causes sometime the SATA driver does cause kernel crash because of none-determined state.a This patch will fix the issue.
 
-Fine with me. I will queue this SoC support for 3.5 inclusion. Maybe
-some merge modifications will be needed against our "cleanup" branch but
-I will manage that easily.
+Signed-off-by: Thang Q. Nguyen <tqnguyen@apm.com>
+---
+ drivers/ata/sata_dwc_460ex.c |   24 +++++++++++++++++++++++-
+ 1 files changed, 23 insertions(+), 1 deletions(-)
 
-Thanks for adding this support Xu Hong.
-
-Best regards,
-
-
-> 
->  arch/arm/boot/dts/at91sam9n12.dtsi                 |  222 +++++++++++++++++++
->  arch/arm/boot/dts/at91sam9n12ek.dts                |   84 +++++++
->  arch/arm/mach-at91/Kconfig                         |    9 +
->  arch/arm/mach-at91/Makefile                        |    1 +
->  arch/arm/mach-at91/Makefile.boot                   |    2 +
->  arch/arm/mach-at91/at91sam9n12.c                   |  233 ++++++++++++++++++++
->  arch/arm/mach-at91/clock.c                         |   15 +-
->  arch/arm/mach-at91/include/mach/at91sam9n12.h      |   60 +++++
->  .../mach-at91/include/mach/at91sam9n12_matrix.h    |   53 +++++
->  arch/arm/mach-at91/include/mach/cpu.h              |   10 +
->  arch/arm/mach-at91/include/mach/hardware.h         |    2 +
->  arch/arm/mach-at91/setup.c                         |    6 +
->  arch/arm/mach-at91/soc.h                           |    5 +
->  13 files changed, 697 insertions(+), 5 deletions(-)
->  create mode 100644 arch/arm/boot/dts/at91sam9n12.dtsi
->  create mode 100644 arch/arm/boot/dts/at91sam9n12ek.dts
->  create mode 100644 arch/arm/mach-at91/at91sam9n12.c
->  create mode 100644 arch/arm/mach-at91/include/mach/at91sam9n12.h
->  create mode 100644 arch/arm/mach-at91/include/mach/at91sam9n12_matrix.h
-> 
-
-
+diff --git a/drivers/ata/sata_dwc_460ex.c b/drivers/ata/sata_dwc_460ex.c
+index 69f7cde..ae13ef1 100644
+--- a/drivers/ata/sata_dwc_460ex.c
++++ b/drivers/ata/sata_dwc_460ex.c
+@@ -1581,10 +1581,31 @@ static void sata_dwc_qc_prep(struct ata_queued_cmd *qc)
+ 
+ static void sata_dwc_error_handler(struct ata_port *ap)
+ {
+-	ap->link.flags |= ATA_LFLAG_NO_HRST;
+ 	ata_sff_error_handler(ap);
+ }
+ 
++int sata_dwc_hardreset(struct ata_link *link, unsigned int *class,
++			unsigned long deadline)
++{
++	struct sata_dwc_device *hsdev = HSDEV_FROM_AP(link->ap);
++	int ret;
++
++	ret = sata_sff_hardreset(link, class, deadline);
++
++	sata_dwc_enable_interrupts(hsdev);
++
++	/* Reconfigure the DMA control register */
++	out_le32(&hsdev->sata_dwc_regs->dmacr,
++		 SATA_DWC_DMACR_TXRXCH_CLEAR);
++
++	/* Reconfigure the DMA Burst Transaction Size register */
++	out_le32(&hsdev->sata_dwc_regs->dbtsr,
++		 SATA_DWC_DBTSR_MWR(AHB_DMA_BRST_DFLT) |
++		 SATA_DWC_DBTSR_MRD(AHB_DMA_BRST_DFLT));
++
++	return ret;
++}
++
+ /*
+  * scsi mid-layer and libata interface structures
+  */
+@@ -1604,6 +1625,7 @@ static struct ata_port_operations sata_dwc_ops = {
+ 	.inherits		= &ata_sff_port_ops,
+ 
+ 	.error_handler		= sata_dwc_error_handler,
++	.hardreset		= sata_dwc_hardreset,
+ 
+ 	.qc_prep		= sata_dwc_qc_prep,
+ 	.qc_issue		= sata_dwc_qc_issue,
 -- 
-Nicolas Ferre
+1.7.3.4
