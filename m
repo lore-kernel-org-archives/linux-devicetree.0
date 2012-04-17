@@ -1,53 +1,42 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v2 4/7] tegra: fdt: Add NAND controller binding
-	and definitions
-Date: Tue, 17 Apr 2012 13:38:33 -0500
-Message-ID: <4F8DB8A9.4060506@freescale.com>
-References: <1334341777-2681-1-git-send-email-sjg@chromium.org>
-	<1334341777-2681-5-git-send-email-sjg@chromium.org>
-	<4F8894FD.70307@wwwdotorg.org>
-	<CAPnjgZ1uXbLUtMTXd5siZsKSF5m3BZGRtkGiEYhK+PQO1PbpNQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CAPnjgZ1uXbLUtMTXd5siZsKSF5m3BZGRtkGiEYhK+PQO1PbpNQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: Devicetree@theia.denx.de, Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] of/i2c: call i2c_verify_client from of_find_i2c_device_by_node
+Date: Tue, 17 Apr 2012 12:42:15 -0600
+Message-ID: <1334688135-8355-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2012 01:33 PM, Simon Glass wrote:
-> Hi Stephen,
-> 
-> On Fri, Apr 13, 2012 at 2:05 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 04/13/2012 12:29 PM, Simon Glass wrote:
->>> +nand-controller@0x70008000 {
->>> +     compatible = "nvidia,tegra20-nand";
->>> +     wp-gpios = <&gpio 59 0>;                /* PH3 */
->>> +     nvidia,width = <8>;
->>> +     nvidia,timing = <26 100 20 80 20 10 12 10 70>;
->>> +     nand@0 {
->>> +             compatible = "hynix,hy27uf4g2b", "nand-flash";
->>
->> The TRM says there can be up to 8 chip selects. Don't the NAND device
->> sub-nodes need a reg property to indicate which chip-select they're on?
-> 
-> We don't have driver support for this at present.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-That shouldn't matter.  The device tree is about describing the
-hardware.  Ideally the device tree shouldn't have to change if in the
-future you do get driver support for it.
+i2c_bus_type may contain both I2C clients and I2C adapters. Fix
+of_find_i2c_device_by_node to call i2c_verify_client to ensure that it
+only returns non-NULL of I2C clients.
 
-Also, unit addresses should only be present if reg is present, and they
-should match.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Note: This is a dependency for the pinctrl I2C bus mux I will send in a
+minute. It'd probably be easiest to merge this through the I2C tree.
+It might also be useful to put this patch (and the others I'll send) in
+a separate tree so it can be merged into any SoC trees that wish to use
+this new feature.
 
--Scott
+ drivers/of/of_i2c.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
+index f37fbeb..0684887 100644
+--- a/drivers/of/of_i2c.c
++++ b/drivers/of/of_i2c.c
+@@ -90,7 +90,7 @@ struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
+ 	if (!dev)
+ 		return NULL;
+ 
+-	return to_i2c_client(dev);
++	return i2c_verify_client(dev);
+ }
+ EXPORT_SYMBOL(of_find_i2c_device_by_node);
+ 
+-- 
+1.7.0.4
