@@ -1,67 +1,51 @@
-From: "Jamie Lentin" <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: Re: [PATCH V5 0/4] ARM: Kirkwood: Add support for DNS-320 and DNS-325
- using devicetree
-Date: Wed, 18 Apr 2012 16:44:16 +0100
-Message-ID: <op.wcywn2et4cuzmg@gonzo.lentin.co.uk>
-References: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
- <20120418131635.GK15711@titan.lakedaemon.net> <20120418132445.GB25584@lunn.ch>
- <20120418140440.GL15711@titan.lakedaemon.net>
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/5] i2c: Convert i2c-octeon.c to use device tree.
+Date: Wed, 18 Apr 2012 09:20:28 -0700
+Message-ID: <4F8EE9CC.20000@cavium.com>
+References: <1332808075-8333-1-git-send-email-ddaney.cavm@gmail.com> <1332808075-8333-2-git-send-email-ddaney.cavm@gmail.com> <4F7115FA.6080507@gmail.com> <4F7117FD.7000700@cavium.com> <20120418151621.GF19802@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120418140440.GL15711-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120418151621.GF19802-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "Jean Delvare (PC drivers, core)" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Apr 2012 15:04:40 +0100, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>  
-wrote:
-
-> On Wed, Apr 18, 2012 at 03:24:45PM +0200, Andrew Lunn wrote:
->> > > dies at "Gating clock of unused units", presumably as CGC_RUNIT  
->> isn't set.
->> > > Is this something known or is it worth further investigation?
->> >
->> > That could potentially mess up a future bisect.  However, it would  
->> only
->> > crop up for dnskw boards.  I'll let Grant weigh in on this since he's
->> > the one who asked that the nand init be removed.
+On 04/18/2012 08:16 AM, Wolfram Sang wrote:
+>>>> -	if (i2c_data == NULL) {
+>>>> -		dev_err(i2c->dev, "no I2C frequency data\n");
+>>>> +	/*
+>>>> +	 * "clock-rate" is a legacy binding, the official binding is
+>>>> +	 * "clock-frequency".  Try the official one first and then
+>>>> +	 * fall back if it doesn't exist.
+>>>> +	 */
+>>>> +	data = of_get_property(pdev->dev.of_node, "clock-frequency",&len);
+>>>> +	if (!data || len != sizeof(*data))
+>>>> +		data = of_get_property(pdev->dev.of_node, "clock-rate",&len);
+>>>> +	if (data&&   len == sizeof(*data)) {
+>>>> +		i2c->twsi_freq = be32_to_cpup(data);
+>>>
+>>> Can't you use of_property_read_u32?
 >>
->> Turning off RUNIT is bad. Both the NAND and SPI controllers use this
->> clock. You can only safely turn it off if none of these are active.
-
-So would u-boot using the NAND count as the controller being active in  
-this case?
-
-> If we hear no objections, call kirkwood_nand_init() with no partition
-> entries, then put the partition entries in the commandline in the dts.
-> This is what Arnaud Patard is doing with the Iomega iConnect:
+>> I will investigate, and use it if possible.
 >
-> mtdparts=orion_nand:0xc0000@0x0(uboot),0x20000@0xa0000(env),0x300000@0x100000(zImage),0x300000@0x540000(initrd)...
->
-> Then, in the last patch remove the mtdparts from the commandline in the
-> dts and add the partition entries appropriately.
+> Any outcome?
 
-Certainly can do, although I'm not entirely convinced it addresses Grant's  
-comment. Another option would be to change the patch order and add DNS-320  
-support after all NAND support patches are merged, although that would go  
-against the initial advice of how to layout the patchset. Will do whatever  
-is considered best though.
+Yes, I have implemented Rob's suggestions.  A new patch set reflecting 
+this is coming soon.
 
 >
-> thx,
+> And shouldn't the bindings be documented? Or are they only standard and
+> we hide the legacy one?
 >
-> Jason.
 
+Yes, they are documented here:
 
--- 
-Jamie Lentin
+http://patchwork.linux-mips.org/patch/3536/
+
+look in the cavium-i2c.txt file.
+
+Thanks,
+David Daney
