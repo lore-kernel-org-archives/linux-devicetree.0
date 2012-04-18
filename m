@@ -1,60 +1,44 @@
-From: "Turquette, Mike" <mturquette@ti.com>
-Subject: Re: [PATCH 1/4] clk: select CLKDEV_LOOKUP for COMMON_CLK
-Date: Tue, 17 Apr 2012 15:13:49 -0700
-Message-ID: <CAJOA=zMPqiH2fQJ5JWJ=COnju7Cmur6J2ATYUTcx41C4WMjFQQ@mail.gmail.com>
-References: <1334003101-17274-1-git-send-email-robherring2@gmail.com> <1334003101-17274-2-git-send-email-robherring2@gmail.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/4] Update TPS65910 to boot using devicetree
+Date: Tue, 17 Apr 2012 18:00:25 -0700
+Message-ID: <1334710829-22777-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334003101-17274-2-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, shawn.guo@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 9, 2012 at 1:24 PM, Rob Herring <robherring2@gmail.com> wro=
-te:
-> From: Rob Herring <rob.herring@calxeda.com>
->
-> Using the common clock infrastructure without the common clkdev code =
-makes
-> little sense, so select CLKDEV_LOOKUP for COMMON_CLK.
->
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> ---
-> =A0drivers/clk/Kconfig | =A0 =A01 +
-> =A01 files changed, 1 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 165e1fe..f05a60d 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -12,6 +12,7 @@ config HAVE_MACH_CLKDEV
-> =A0config COMMON_CLK
-> =A0 =A0 =A0 =A0bool
-> =A0 =A0 =A0 =A0select HAVE_CLK_PREPARE
-> + =A0 =A0 =A0 select CLKDEV_LOOKUP
-> =A0 =A0 =A0 =A0---help---
-> =A0 =A0 =A0 =A0 =A0The common clock framework is a single definition =
-of struct
-> =A0 =A0 =A0 =A0 =A0clk, useful across many platforms, as well as an
+This patch set updates the tps65910 driver to boot using devicetree.
 
-Hi Rob,
+One thing that is unfavorable is the addition of the use_dt_for_init_data
+flag. I added this as I wanted to split the parsing of the of nodes between
+the tps65910-regulator code and the main tps65910 code. This split was to
+maintain the list of regulator names solely inside the tps65910-regulator
+code as it already was.
 
-I agree that the common clk framework is not particularly useful
-without clkdev.  However the core code has no dependency on clkdev.
-Why not just select it from an arch Kconfig, or even make it a
-dependency based on your own platform clock data/code?
+Rhyland Klein (4):
+  regulator: tps65910: update type for regmap
+  regulator: tps65910: Add device tree bindings
+  mfd: tps65910: Add device-tree support
+  ARM: Tegra: Add support for TPS65910 PMIC
 
-Regards,
-Mike
-
-> --
-> 1.7.5.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ Documentation/devicetree/bindings/mfd/tps65910.txt |  132 ++++++++++++++++++++
+ arch/arm/boot/dts/tegra-cardhu.dts                 |   92 ++++++++++++++
+ drivers/gpio/gpio-tps65910.c                       |   39 ++++++-
+ drivers/mfd/tps65910-irq.c                         |   21 +++-
+ drivers/mfd/tps65910.c                             |   78 ++++++++++++-
+ drivers/regulator/tps65910-regulator.c             |   86 +++++++++++++-
+ include/linux/mfd/tps65910.h                       |    3 +-
+ 7 files changed, 439 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65910.txt
