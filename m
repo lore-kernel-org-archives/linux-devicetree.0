@@ -1,7 +1,7 @@
 From: Jamie Lentin <jm@lentin.co.uk>
-Subject: [PATCH V5 2/4] mtd: Add orion_nand devicetree bindings
-Date: Wed, 18 Apr 2012 11:06:41 +0100
-Message-ID: <1334743603-8488-3-git-send-email-jm@lentin.co.uk>
+Subject: [PATCH V5 1/4] ARM: kirkwood: Basic support for DNS-320 and DNS-325
+Date: Wed, 18 Apr 2012 11:06:40 +0100
+Message-ID: <1334743603-8488-2-git-send-email-jm@lentin.co.uk>
 References: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,179 +21,456 @@ To: Arnd Bergmann <arnd@arndb.de>, Jason <jason@lakedaemon.net>, Grant Likely <g
 Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Allow a NAND chip using the orion_nand driver to be described using devicetree.
+Add support for the DNS-320 and DNS-325. Describe as much as currently possible
+in the devicetree files, create a board-dnskw.c for everything else.
 
-Changes since last submission (V4) [Addressing comments by]:-
-* WARN when bank-width is out of range [Andrew Lunn]
+Changes since last submission (V3) [Addressing comments by]:-
 
-Changes since last submission (V3):-
-* Document all parameters [Grant Likely]
-* Convert bank-width to be in bytes
-* Add explicit defaults for cle, ale and bank-width
+* One MACH_DLINK_KIRKWOOD_DT for all dtb files [Grant Likely, Jason Cooper]
+* Drop brain-dead select "select CONFIG_MTD_OF_PARTS" [Grant Likely]
+* Don't add NAND support then throw it away immediately after [Grant Likely]
+* Describe purpose of MPP 41, 42 & 49
+
+Changes since last submission (V2):-
+
+* Use IEEE-compliant "okay", rather than "ok" [Scott Wood]
 
 Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
 ---
- .../devicetree/bindings/mtd/orion-nand.txt         |   50 ++++++++++++++++++++
- drivers/mtd/nand/orion_nand.c                      |   45 +++++++++++++++++-
- 2 files changed, 93 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
+ arch/arm/boot/dts/kirkwood-dns320.dts |   29 ++++
+ arch/arm/boot/dts/kirkwood-dns325.dts |   24 +++
+ arch/arm/mach-kirkwood/Kconfig        |    8 +
+ arch/arm/mach-kirkwood/Makefile       |    1 +
+ arch/arm/mach-kirkwood/Makefile.boot  |    2 +
+ arch/arm/mach-kirkwood/board-dnskw.c  |  275 +++++++++++++++++++++++++++++++++
+ arch/arm/mach-kirkwood/board-dt.c     |    5 +
+ arch/arm/mach-kirkwood/common.h       |    6 +
+ 8 files changed, 350 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-dns320.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-dns325.dts
+ create mode 100644 arch/arm/mach-kirkwood/board-dnskw.c
 
-diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
+diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
 new file mode 100644
-index 0000000..b2356b7
+index 0000000..78c834f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-@@ -0,0 +1,50 @@
-+NAND support for Marvell Orion SoC platforms
++++ b/arch/arm/boot/dts/kirkwood-dns320.dts
+@@ -0,0 +1,29 @@
++/dts-v1/;
 +
-+Required properties:
-+- compatible : "mrvl,orion-nand".
-+- reg : Base physical address of the NAND and length of memory mapped
-+	region
++/include/ "kirkwood.dtsi"
 +
-+Optional properties:
-+- cle : Address line number connected to CLE. Default is 0
-+- ale : Address line number connected to ALE. Default is 1
-+- bank-width : Width in bytes of the device. Default is 1
-+- chip-delay : Chip dependent delay for transferring data from array to read
-+               registers in usecs
++/ {
++	model = "D-Link DNS-320 NAS (Rev A1)";
++	compatible = "dlink,dns-320-a1", "dlink,dns-320", "dlink,dns-kirkwood", "mrvl,kirkwood-88f6281", "mrvl,kirkwood";
 +
-+The device tree may optionally contain sub-nodes describing partitions of the
-+address space. See partition.txt for more detail.
-+
-+Example:
-+
-+nand@f4000000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	cle = <0>;
-+	ale = <1>;
-+	bank-width = <1>;
-+	chip-delay = <25>;
-+	compatible = "mrvl,orion-nand";
-+	reg = <0xf4000000 0x400>;
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0x100000>;
-+		read-only;
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x8000000>;
 +	};
 +
-+	partition@100000 {
-+		label = "uImage";
-+		reg = <0x0100000 0x200000>;
++	chosen {
++		bootargs = "console=ttyS0,115200n8 earlyprintk";
 +	};
 +
-+	partition@300000 {
-+		label = "dtb";
-+		reg = <0x0300000 0x100000>;
-+	};
++	ocp@f1000000 {
++		serial@12000 {
++			clock-frequency = <166666667>;
++			status = "okay";
++		};
 +
-+	partition@400000 {
-+		label = "root";
-+		reg = <0x0400000 0x7d00000>;
++		serial@12100 {
++			clock-frequency = <166666667>;
++			status = "okay";
++		};
 +	};
 +};
-diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-index 29f505a..0f50ef3 100644
---- a/drivers/mtd/nand/orion_nand.c
-+++ b/drivers/mtd/nand/orion_nand.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
-@@ -74,11 +75,13 @@ static void orion_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
- static int __init orion_nand_probe(struct platform_device *pdev)
- {
- 	struct mtd_info *mtd;
-+	struct mtd_part_parser_data ppdata = {};
- 	struct nand_chip *nc;
- 	struct orion_nand_data *board;
- 	struct resource *res;
- 	void __iomem *io_base;
- 	int ret = 0;
-+	u32 val = 0;
- 
- 	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
- 	if (!nc) {
-@@ -101,7 +104,32 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 		goto no_res;
- 	}
- 
--	board = pdev->dev.platform_data;
-+	if (pdev->dev.of_node) {
-+		board = devm_kzalloc(&pdev->dev, sizeof(struct orion_nand_data),
-+					GFP_KERNEL);
-+		if (!board) {
-+			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
-+			ret = -ENOMEM;
-+			goto no_res;
-+		}
-+		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
-+			board->cle = (u8)val;
-+		else
-+			board->cle = 0;
-+		if (!of_property_read_u32(pdev->dev.of_node, "ale", &val))
-+			board->ale = (u8)val;
-+		else
-+			board->ale = 1;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+						"bank-width", &val))
-+			board->width = (u8)val * 8;
-+		else
-+			board->width = 8;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+						"chip-delay", &val))
-+			board->chip_delay = (u8)val;
-+	} else
-+		board = pdev->dev.platform_data;
- 
- 	mtd->priv = nc;
- 	mtd->owner = THIS_MODULE;
-@@ -115,6 +143,10 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 	if (board->chip_delay)
- 		nc->chip_delay = board->chip_delay;
- 
-+	WARN(board->width > 16,
-+		"%d bit bus width out of range",
-+		board->width);
+diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts b/arch/arm/boot/dts/kirkwood-dns325.dts
+new file mode 100644
+index 0000000..23241ab
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-dns325.dts
+@@ -0,0 +1,24 @@
++/dts-v1/;
 +
- 	if (board->width == 16)
- 		nc->options |= NAND_BUSWIDTH_16;
++/include/ "kirkwood.dtsi"
++
++/ {
++	model = "D-Link DNS-325 NAS (Rev A1)";
++	compatible = "dlink,dns-325-a1", "dlink,dns-325", "dlink,dns-kirkwood", "mrvl,kirkwood-88f6281", "mrvl,kirkwood";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x10000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyS0,115200n8 earlyprintk";
++	};
++
++	ocp@f1000000 {
++		serial@12000 {
++			clock-frequency = <200000000>;
++			status = "okay";
++		};
++	};
++};
+diff --git a/arch/arm/mach-kirkwood/Kconfig b/arch/arm/mach-kirkwood/Kconfig
+index 90ceab7..636778e 100644
+--- a/arch/arm/mach-kirkwood/Kconfig
++++ b/arch/arm/mach-kirkwood/Kconfig
+@@ -58,6 +58,14 @@ config MACH_DREAMPLUG_DT
+ 	  Say 'Y' here if you want your kernel to support the
+ 	  Marvell DreamPlug (Flattened Device Tree).
  
-@@ -129,7 +161,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 	}
++config MACH_DLINK_KIRKWOOD_DT
++	bool "D-Link Kirkwood-based NAS (Flattened Device Tree)"
++	select ARCH_KIRKWOOD_DT
++	help
++	  Say 'Y' here if you want your kernel to support the
++	  Kirkwood-based D-Link NASes such as DNS-320 & DNS-325,
++	  using Flattened Device Tree.
++
+ config MACH_TS219
+ 	bool "QNAP TS-110, TS-119, TS-119P+, TS-210, TS-219, TS-219P and TS-219P+ Turbo NAS"
+ 	help
+diff --git a/arch/arm/mach-kirkwood/Makefile b/arch/arm/mach-kirkwood/Makefile
+index e299a95..36781b3 100644
+--- a/arch/arm/mach-kirkwood/Makefile
++++ b/arch/arm/mach-kirkwood/Makefile
+@@ -22,3 +22,4 @@ obj-$(CONFIG_MACH_T5325)		+= t5325-setup.o
+ obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
+ obj-$(CONFIG_ARCH_KIRKWOOD_DT)		+= board-dt.o
+ obj-$(CONFIG_MACH_DREAMPLUG_DT)		+= board-dreamplug.o
++obj-$(CONFIG_MACH_DLINK_KIRKWOOD_DT)	+= board-dnskw.o
+diff --git a/arch/arm/mach-kirkwood/Makefile.boot b/arch/arm/mach-kirkwood/Makefile.boot
+index 16f9385..8bbffbe 100644
+--- a/arch/arm/mach-kirkwood/Makefile.boot
++++ b/arch/arm/mach-kirkwood/Makefile.boot
+@@ -3,3 +3,5 @@ params_phys-y	:= 0x00000100
+ initrd_phys-y	:= 0x00800000
  
- 	mtd->name = "orion_nand";
--	ret = mtd_device_parse_register(mtd, NULL, 0,
-+	ppdata.of_node = pdev->dev.of_node;
-+	ret = mtd_device_parse_register(mtd, NULL, &ppdata,
- 			board->parts, board->nr_parts);
- 	if (ret) {
- 		nand_release(mtd);
-@@ -161,11 +194,19 @@ static int __devexit orion_nand_remove(struct platform_device *pdev)
- 	return 0;
+ dtb-$(CONFIG_MACH_DREAMPLUG_DT) += kirkwood-dreamplug.dtb
++dtb-$(CONFIG_MACH_DLINK_KIRKWOOD_DT) += kirkwood-dns320.dtb
++dtb-$(CONFIG_MACH_DLINK_KIRKWOOD_DT) += kirkwood-dns325.dtb
+diff --git a/arch/arm/mach-kirkwood/board-dnskw.c b/arch/arm/mach-kirkwood/board-dnskw.c
+new file mode 100644
+index 0000000..58c2d68
+--- /dev/null
++++ b/arch/arm/mach-kirkwood/board-dnskw.c
+@@ -0,0 +1,275 @@
++/*
++ * Copyright 2012 (C), Jamie Lentin <jm@lentin.co.uk>
++ *
++ * arch/arm/mach-kirkwood/board-dnskw.c
++ *
++ * D-link DNS-320 & DNS-325 NAS Init for drivers not converted to
++ * flattened device tree yet.
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++#include <linux/i2c.h>
++#include <linux/ata_platform.h>
++#include <linux/mv643xx_eth.h>
++#include <linux/of.h>
++#include <linux/gpio.h>
++#include <linux/input.h>
++#include <linux/gpio_keys.h>
++#include <linux/gpio-fan.h>
++#include <linux/leds.h>
++#include <asm/mach-types.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/map.h>
++#include <mach/kirkwood.h>
++#include <mach/bridge-regs.h>
++#include "common.h"
++#include "mpp.h"
++
++static struct mv643xx_eth_platform_data dnskw_ge00_data = {
++	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
++};
++
++static struct mv_sata_platform_data dnskw_sata_data = {
++	.n_ports	= 2,
++};
++
++static unsigned int dnskw_mpp_config[] __initdata = {
++	MPP13_UART1_TXD,	/* Custom ... */
++	MPP14_UART1_RXD,	/* ... Controller (DNS-320 only) */
++	MPP20_SATA1_ACTn,	/* LED: White Right HDD */
++	MPP21_SATA0_ACTn,	/* LED: White Left HDD */
++	MPP24_GPIO,
++	MPP25_GPIO,
++	MPP26_GPIO,	/* LED: Power */
++	MPP27_GPIO,	/* LED: Red Right HDD */
++	MPP28_GPIO,	/* LED: Red Left HDD */
++	MPP29_GPIO,	/* LED: Red USB (DNS-325 only) */
++	MPP30_GPIO,
++	MPP31_GPIO,
++	MPP32_GPIO,
++	MPP33_GPO,
++	MPP34_GPIO,	/* Button: Front power */
++	MPP35_GPIO,	/* LED: Red USB (DNS-320 only) */
++	MPP36_GPIO,	/* Power: Turn off board */
++	MPP37_GPIO,	/* Power: Turn back on after power failure */
++	MPP38_GPIO,
++	MPP39_GPIO,	/* Power: SATA0 */
++	MPP40_GPIO,	/* Power: SATA1 */
++	MPP41_GPIO,	/* SATA0 present */
++	MPP42_GPIO,	/* SATA1 present */
++	MPP43_GPIO,	/* LED: White USB */
++	MPP44_GPIO,	/* Fan: Tachometer Pin */
++	MPP45_GPIO,	/* Fan: high speed */
++	MPP46_GPIO,	/* Fan: low speed */
++	MPP47_GPIO,	/* Button: Back unmount */
++	MPP48_GPIO,	/* Button: Back reset */
++	MPP49_GPIO,	/* Temp Alarm (DNS-325) Pin of U5 (DNS-320) */
++	0
++};
++
++static struct gpio_led dns325_led_pins[] = {
++	{
++		.name	= "dns325:white:power",
++		.gpio	= 26,
++		.active_low = 1,
++		.default_trigger = "default-on",
++	},
++	{
++		.name	= "dns325:white:usb",
++		.gpio	= 43,
++		.active_low = 1,
++	},
++	{
++		.name	= "dns325:red:l_hdd",
++		.gpio	= 28,
++		.active_low = 1,
++	},
++	{
++		.name	= "dns325:red:r_hdd",
++		.gpio	= 27,
++		.active_low = 1,
++	},
++	{
++		.name	= "dns325:red:usb",
++		.gpio	= 29,
++		.active_low = 1,
++	},
++};
++
++static struct gpio_led_platform_data dns325_led_data = {
++	.num_leds	= ARRAY_SIZE(dns325_led_pins),
++	.leds		= dns325_led_pins,
++};
++
++static struct platform_device dns325_led_device = {
++	.name		= "leds-gpio",
++	.id		= -1,
++	.dev		= {
++		.platform_data	= &dns325_led_data,
++	},
++};
++
++static struct gpio_led dns320_led_pins[] = {
++	{
++		.name	= "dns320:blue:power",
++		.gpio	= 26,
++		.active_low = 1,
++		.default_trigger = "default-on",
++	},
++	{
++		.name	= "dns320:blue:usb",
++		.gpio	= 43,
++		.active_low = 1,
++	},
++	{
++		.name	= "dns320:orange:l_hdd",
++		.gpio	= 28,
++		.active_low = 1,
++	},
++	{
++		.name	= "dns320:orange:r_hdd",
++		.gpio	= 27,
++		.active_low = 1,
++	},
++	{
++		.name	= "dns320:orange:usb",
++		.gpio	= 35,
++		.active_low = 1,
++	},
++};
++
++static struct gpio_led_platform_data dns320_led_data = {
++	.num_leds	= ARRAY_SIZE(dns320_led_pins),
++	.leds		= dns320_led_pins,
++};
++
++static struct platform_device dns320_led_device = {
++	.name		= "leds-gpio",
++	.id		= -1,
++	.dev		= {
++		.platform_data	= &dns320_led_data,
++	},
++};
++
++static struct i2c_board_info dns325_i2c_board_info[] __initdata = {
++	{
++		I2C_BOARD_INFO("lm75", 0x48),
++	},
++	/* Something at 0x0c also */
++};
++
++static struct gpio_keys_button dnskw_button_pins[] = {
++	{
++		.code		= KEY_POWER,
++		.gpio		= 34,
++		.desc		= "Power button",
++		.active_low	= 1,
++	},
++	{
++		.code		= KEY_EJECTCD,
++		.gpio		= 47,
++		.desc		= "USB unmount button",
++		.active_low	= 1,
++	},
++	{
++		.code		= KEY_RESTART,
++		.gpio		= 48,
++		.desc		= "Reset button",
++		.active_low	= 1,
++	},
++};
++
++static struct gpio_keys_platform_data dnskw_button_data = {
++	.buttons	= dnskw_button_pins,
++	.nbuttons	= ARRAY_SIZE(dnskw_button_pins),
++};
++
++static struct platform_device dnskw_button_device = {
++	.name		= "gpio-keys",
++	.id		= -1,
++	.num_resources	= 0,
++	.dev		= {
++		.platform_data	= &dnskw_button_data,
++	}
++};
++
++/* Fan: ADDA AD045HB-G73 40mm 6000rpm@5v */
++static struct gpio_fan_speed dnskw_fan_speed[] = {
++	{    0,  0 },
++	{ 3000,	 1 },
++	{ 6000,	 2 },
++};
++static unsigned dnskw_fan_pins[] = {46, 45};
++
++static struct gpio_fan_platform_data dnskw_fan_data = {
++	.num_ctrl	= ARRAY_SIZE(dnskw_fan_pins),
++	.ctrl		= dnskw_fan_pins,
++	.num_speed	= ARRAY_SIZE(dnskw_fan_speed),
++	.speed		= dnskw_fan_speed,
++};
++
++static struct platform_device dnskw_fan_device = {
++	.name	= "gpio-fan",
++	.id	= -1,
++	.dev	= {
++		.platform_data	= &dnskw_fan_data,
++	},
++};
++
++static void dnskw_power_off(void)
++{
++	gpio_set_value(36, 1);
++}
++
++/* Register any GPIO for output and set the value */
++static void __init dnskw_gpio_register(unsigned gpio, char *name, int def)
++{
++	if (gpio_request(gpio, name) == 0 &&
++	    gpio_direction_output(gpio, 0) == 0) {
++		gpio_set_value(gpio, def);
++		if (gpio_export(gpio, 0) != 0)
++			pr_err("dnskw: Failed to export GPIO %s\n", name);
++	} else
++		pr_err("dnskw: Failed to register %s\n", name);
++}
++
++void __init dnskw_init(void)
++{
++	kirkwood_mpp_conf(dnskw_mpp_config);
++
++	kirkwood_ehci_init();
++	kirkwood_ge00_init(&dnskw_ge00_data);
++	kirkwood_sata_init(&dnskw_sata_data);
++	kirkwood_i2c_init();
++
++	platform_device_register(&dnskw_button_device);
++	platform_device_register(&dnskw_fan_device);
++
++	if (of_machine_is_compatible("dlink,dns-325")) {
++		i2c_register_board_info(0, dns325_i2c_board_info,
++					ARRAY_SIZE(dns325_i2c_board_info));
++		platform_device_register(&dns325_led_device);
++
++	} else if (of_machine_is_compatible("dlink,dns-320"))
++		platform_device_register(&dns320_led_device);
++
++	/* Register power-off GPIO. */
++	if (gpio_request(36, "dnskw:power:off") == 0
++	    && gpio_direction_output(36, 0) == 0)
++		pm_power_off = dnskw_power_off;
++	else
++		pr_err("dnskw: failed to configure power-off GPIO\n");
++
++	/* Ensure power is supplied to both HDDs */
++	dnskw_gpio_register(39, "dnskw:power:sata0", 1);
++	dnskw_gpio_register(40, "dnskw:power:sata1", 1);
++
++	/* Set NAS to turn back on after a power failure */
++	dnskw_gpio_register(37, "dnskw:power:recover", 1);
++}
+diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+index 1c672d9..eadc4d7 100644
+--- a/arch/arm/mach-kirkwood/board-dt.c
++++ b/arch/arm/mach-kirkwood/board-dt.c
+@@ -55,11 +55,16 @@ static void __init kirkwood_dt_init(void)
+ 	if (of_machine_is_compatible("globalscale,dreamplug"))
+ 		dreamplug_init();
+ 
++	if (of_machine_is_compatible("dlink,dns-kirkwood"))
++		dnskw_init();
++
+ 	of_platform_populate(NULL, kirkwood_dt_match_table, NULL, NULL);
  }
  
-+#ifdef CONFIG_OF
-+static struct of_device_id orion_nand_of_match_table[] = {
-+	{ .compatible = "mrvl,orion-nand", },
-+	{},
-+};
-+#endif
-+
- static struct platform_driver orion_nand_driver = {
- 	.remove		= __devexit_p(orion_nand_remove),
- 	.driver		= {
- 		.name	= "orion_nand",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(orion_nand_of_match_table),
- 	},
+ static const char *kirkwood_dt_board_compat[] = {
+ 	"globalscale,dreamplug",
++	"dlink,dns-320",
++	"dlink,dns-325",
+ 	NULL
  };
  
+diff --git a/arch/arm/mach-kirkwood/common.h b/arch/arm/mach-kirkwood/common.h
+index fa8e768..6195a37 100644
+--- a/arch/arm/mach-kirkwood/common.h
++++ b/arch/arm/mach-kirkwood/common.h
+@@ -58,6 +58,12 @@ void dreamplug_init(void);
+ static inline void dreamplug_init(void) {};
+ #endif
+ 
++#ifdef CONFIG_MACH_DLINK_KIRKWOOD_DT
++void dnskw_init(void);
++#else
++static inline void dnskw_init(void) {};
++#endif
++
+ /* early init functions not converted to fdt yet */
+ char *kirkwood_id(void);
+ void kirkwood_l2_init(void);
 -- 
 1.7.9.1
