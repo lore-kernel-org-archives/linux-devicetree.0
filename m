@@ -1,76 +1,48 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: [PATCH 5/5] ARM: mx28evk: add mxs-dma dt support
-Date: Wed, 18 Apr 2012 20:46:37 +0800
-Message-ID: <1334753197-12032-6-git-send-email-b29396@freescale.com>
-References: <1334753197-12032-1-git-send-email-b29396@freescale.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH V5 0/4] ARM: Kirkwood: Add support for DNS-320 and
+ DNS-325 using devicetree
+Date: Wed, 18 Apr 2012 09:16:35 -0400
+Message-ID: <20120418131635.GK15711@titan.lakedaemon.net>
+References: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1334753197-12032-1-git-send-email-b29396@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: b32955@freescale.com, vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, marek.vasut@gmail.com, kernel@pengutronix.de, dan.j.williams@intel.com, s.hauer@pengutronix.de, shawn.guo@freescale.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1334743603-8488-1-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dong Aisheng <dong.aisheng@linaro.org>
+On Wed, Apr 18, 2012 at 11:06:39AM +0100, Jamie Lentin wrote:
+> Reworked patch for latest feedback. I'm still basing this on Jason Cooper's
+> tree, given how much time has passed should I be rebasing against something
+> else or is this still fine?
 
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Huang Shijie <b32955@freescale.com>
-Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
----
- arch/arm/boot/dts/imx28.dtsi   |    4 ++--
- arch/arm/mach-mxs/clock-mx28.c |    2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Typically, work should be based against a stable tag.  In this case, the
+changes in my branch were merged in for 3.4-rc1, so you could base from
+there.
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index d1f4f8c..5f61777 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -52,8 +52,8 @@
- 			};
- 
- 			dma-apbh@80004000 {
-+				compatible = "fsl,imx28-dma-apbh";
- 				reg = <0x80004000 2000>;
--				status = "disabled";
- 			};
- 
- 			perfmon@80006000 {
-@@ -115,8 +115,8 @@
- 			};
- 
- 			dma-apbx@80024000 {
-+				compatible = "fsl,imx28-dma-apbx";
- 				reg = <0x80024000 2000>;
--				status = "disabled";
- 			};
- 
- 			dcp@80028000 {
-diff --git a/arch/arm/mach-mxs/clock-mx28.c b/arch/arm/mach-mxs/clock-mx28.c
-index cca2cf7..9c926b6 100644
---- a/arch/arm/mach-mxs/clock-mx28.c
-+++ b/arch/arm/mach-mxs/clock-mx28.c
-@@ -652,6 +652,8 @@ static struct clk_lookup lookups[] = {
- 	_REGISTER_CLOCK("80074000.serial", NULL, uart_clk)
- 	_REGISTER_CLOCK("800f0000.ethernet", NULL, fec_clk)
- 	_REGISTER_CLOCK("800f4000.ethernet", NULL, fec_clk)
-+	_REGISTER_CLOCK("80004000.dma-apbh", NULL, hbus_clk)
-+	_REGISTER_CLOCK("80024000.dma-apbx", NULL, xbus_clk)
- };
- 
- static int clk_misc_init(void)
--- 
-1.7.0.4
+It's fine the way it is, I'll let you know if I run into any problems.
+
+> One thing I noticed is that with only the first patch applied (which no
+> longer calls kirkwood_nand_init) the device either locks up or serial console
+> dies at "Gating clock of unused units", presumably as CGC_RUNIT isn't set.
+> Is this something known or is it worth further investigation?
+
+That could potentially mess up a future bisect.  However, it would only
+crop up for dnskw boards.  I'll let Grant weigh in on this since he's
+the one who asked that the nand init be removed.
+
+thx,
+
+Jason.
