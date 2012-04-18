@@ -1,12 +1,13 @@
 From: Jamie Lentin <jm@lentin.co.uk>
-Subject: [PATCH V5 0/4] ARM: Kirkwood: Add support for DNS-320 and DNS-325
- using devicetree
-Date: Wed, 18 Apr 2012 11:06:39 +0100
-Message-ID: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
+Subject: [PATCH V5 2/4] mtd: Add orion_nand devicetree bindings
+Date: Wed, 18 Apr 2012 11:06:41 +0100
+Message-ID: <1334743603-8488-3-git-send-email-jm@lentin.co.uk>
+References: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,70 +21,179 @@ To: Arnd Bergmann <arnd@arndb.de>, Jason <jason@lakedaemon.net>, Grant Likely <g
 Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reworked patch for latest feedback. I'm still basing this on Jason Cooper's
-tree, given how much time has passed should I be rebasing against something
-else or is this still fine?
+Allow a NAND chip using the orion_nand driver to be described using devicetree.
 
-One thing I noticed is that with only the first patch applied (which no
-longer calls kirkwood_nand_init) the device either locks up or serial console
-dies at "Gating clock of unused units", presumably as CGC_RUNIT isn't set.
-Is this something known or is it worth further investigation?
-
-Thanks again to everyone reviewing.
-
-Changes since v4: Convert DNS-325 & DNS-320 to access nand via devicetree
-* Add initial support patch back in to address following comments
-** One MACH_DLINK_KIRKWOOD_DT for all dtb files [Grant Likely, Jason Cooper]
-** Drop brain-dead select "select CONFIG_MTD_OF_PARTS" [Grant Likely]
-** Don't add NAND support then throw it away immediately after [Grant Likely]
+Changes since last submission (V4) [Addressing comments by]:-
 * WARN when bank-width is out of range [Andrew Lunn]
-* Describe purpose of MPP 41, 42 & 49
 
-Changes since v3: Add support for DNS-320 and DNS-325 using devicetree
-* Remove patches that are already merged
-* Add documentation on orion_nand devicetree bindings
-* Convert bank-width to be in bytes to match other properties
-* Make defaults more explicit
+Changes since last submission (V3):-
+* Document all parameters [Grant Likely]
+* Convert bank-width to be in bytes
+* Add explicit defaults for cle, ale and bank-width
 
-Changes since v2: Add support for DNS-320 and DNS-325 using devicetree
-* Split patches further, separating orion_nand and kirkwood changes
-* dts renames: "bank-width", not "width". "okay", not "ok"
-* Separate documentation out into separate patch, add references to
-  partition.txt to all mtd bindings.
-
-Changes since v1: Add support for DNS-320 and DNS-325 using devicetree
-* Rebase against kirkwood_dt_for_3.4, removing premature devicetree ports.
-* Move additions into a separate board-dnskw.c. It could be separated further
-  into a board-dns320.c and board-dns325.c but it probably isn't worth it.
-* s/marvell,/mrvl,/g
-* Include an example dtb partition in documentation
-* Copy structure of serial nodes to allow common options for NAND to be set
-  in kirkwood.dtsi
-* Simplifications in orion-nand.c
-
-Jamie Lentin (4):
-  ARM: kirkwood: Basic support for DNS-320 and DNS-325
-  mtd: Add orion_nand devicetree bindings
-  kirkwood: Allow nand to be configured via. devicetree
-  ARM: kirkwood: Define DNS-320/DNS-325 NAND in fdt
-
- .../devicetree/bindings/mtd/orion-nand.txt         |   50 ++++
- arch/arm/boot/dts/kirkwood-dns320.dts              |   64 +++++
- arch/arm/boot/dts/kirkwood-dns325.dts              |   59 +++++
- arch/arm/boot/dts/kirkwood.dtsi                    |   15 +-
- arch/arm/mach-kirkwood/Kconfig                     |    8 +
- arch/arm/mach-kirkwood/Makefile                    |    1 +
- arch/arm/mach-kirkwood/Makefile.boot               |    2 +
- arch/arm/mach-kirkwood/board-dnskw.c               |  275 ++++++++++++++++++++
- arch/arm/mach-kirkwood/board-dt.c                  |    5 +
- arch/arm/mach-kirkwood/common.c                    |   12 +
- arch/arm/mach-kirkwood/common.h                    |    6 +
- drivers/mtd/nand/orion_nand.c                      |   45 +++-
- 12 files changed, 539 insertions(+), 3 deletions(-)
+Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+---
+ .../devicetree/bindings/mtd/orion-nand.txt         |   50 ++++++++++++++++++++
+ drivers/mtd/nand/orion_nand.c                      |   45 +++++++++++++++++-
+ 2 files changed, 93 insertions(+), 2 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
- create mode 100644 arch/arm/boot/dts/kirkwood-dns320.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-dns325.dts
- create mode 100644 arch/arm/mach-kirkwood/board-dnskw.c
 
+diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
+new file mode 100644
+index 0000000..b2356b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
+@@ -0,0 +1,50 @@
++NAND support for Marvell Orion SoC platforms
++
++Required properties:
++- compatible : "mrvl,orion-nand".
++- reg : Base physical address of the NAND and length of memory mapped
++	region
++
++Optional properties:
++- cle : Address line number connected to CLE. Default is 0
++- ale : Address line number connected to ALE. Default is 1
++- bank-width : Width in bytes of the device. Default is 1
++- chip-delay : Chip dependent delay for transferring data from array to read
++               registers in usecs
++
++The device tree may optionally contain sub-nodes describing partitions of the
++address space. See partition.txt for more detail.
++
++Example:
++
++nand@f4000000 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	cle = <0>;
++	ale = <1>;
++	bank-width = <1>;
++	chip-delay = <25>;
++	compatible = "mrvl,orion-nand";
++	reg = <0xf4000000 0x400>;
++
++	partition@0 {
++		label = "u-boot";
++		reg = <0x0000000 0x100000>;
++		read-only;
++	};
++
++	partition@100000 {
++		label = "uImage";
++		reg = <0x0100000 0x200000>;
++	};
++
++	partition@300000 {
++		label = "dtb";
++		reg = <0x0300000 0x100000>;
++	};
++
++	partition@400000 {
++		label = "root";
++		reg = <0x0400000 0x7d00000>;
++	};
++};
+diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
+index 29f505a..0f50ef3 100644
+--- a/drivers/mtd/nand/orion_nand.c
++++ b/drivers/mtd/nand/orion_nand.c
+@@ -13,6 +13,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/nand.h>
+ #include <linux/mtd/partitions.h>
+@@ -74,11 +75,13 @@ static void orion_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
+ static int __init orion_nand_probe(struct platform_device *pdev)
+ {
+ 	struct mtd_info *mtd;
++	struct mtd_part_parser_data ppdata = {};
+ 	struct nand_chip *nc;
+ 	struct orion_nand_data *board;
+ 	struct resource *res;
+ 	void __iomem *io_base;
+ 	int ret = 0;
++	u32 val = 0;
+ 
+ 	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
+ 	if (!nc) {
+@@ -101,7 +104,32 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+ 		goto no_res;
+ 	}
+ 
+-	board = pdev->dev.platform_data;
++	if (pdev->dev.of_node) {
++		board = devm_kzalloc(&pdev->dev, sizeof(struct orion_nand_data),
++					GFP_KERNEL);
++		if (!board) {
++			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
++			ret = -ENOMEM;
++			goto no_res;
++		}
++		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
++			board->cle = (u8)val;
++		else
++			board->cle = 0;
++		if (!of_property_read_u32(pdev->dev.of_node, "ale", &val))
++			board->ale = (u8)val;
++		else
++			board->ale = 1;
++		if (!of_property_read_u32(pdev->dev.of_node,
++						"bank-width", &val))
++			board->width = (u8)val * 8;
++		else
++			board->width = 8;
++		if (!of_property_read_u32(pdev->dev.of_node,
++						"chip-delay", &val))
++			board->chip_delay = (u8)val;
++	} else
++		board = pdev->dev.platform_data;
+ 
+ 	mtd->priv = nc;
+ 	mtd->owner = THIS_MODULE;
+@@ -115,6 +143,10 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+ 	if (board->chip_delay)
+ 		nc->chip_delay = board->chip_delay;
+ 
++	WARN(board->width > 16,
++		"%d bit bus width out of range",
++		board->width);
++
+ 	if (board->width == 16)
+ 		nc->options |= NAND_BUSWIDTH_16;
+ 
+@@ -129,7 +161,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	mtd->name = "orion_nand";
+-	ret = mtd_device_parse_register(mtd, NULL, 0,
++	ppdata.of_node = pdev->dev.of_node;
++	ret = mtd_device_parse_register(mtd, NULL, &ppdata,
+ 			board->parts, board->nr_parts);
+ 	if (ret) {
+ 		nand_release(mtd);
+@@ -161,11 +194,19 @@ static int __devexit orion_nand_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id orion_nand_of_match_table[] = {
++	{ .compatible = "mrvl,orion-nand", },
++	{},
++};
++#endif
++
+ static struct platform_driver orion_nand_driver = {
+ 	.remove		= __devexit_p(orion_nand_remove),
+ 	.driver		= {
+ 		.name	= "orion_nand",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(orion_nand_of_match_table),
+ 	},
+ };
+ 
 -- 
 1.7.9.1
