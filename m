@@ -1,98 +1,50 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 1/1] dt: Add general DMA window parser
-Date: Wed, 18 Apr 2012 12:54:23 +0200
-Message-ID: <20120418105423.GA5667@avionic-0098.mockup.avionic-design.de>
-References: <20120418092613.GA8632@avionic-0098.mockup.avionic-design.de>
- <20120418.131907.2172387798112620167.hdoyu@nvidia.com>
- <20120418102629.GA14533@avionic-0098.mockup.avionic-design.de>
- <20120418.133629.1664781135413277375.hdoyu@nvidia.com>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] i2c-s3c2410: Drop unused define
+Date: Wed, 18 Apr 2012 12:56:02 +0200
+Message-ID: <20120418105602.GB21955@pengutronix.de>
+References: <1332357113-2973-1-git-send-email-k.lewandowsk@samsung.com>
+ <1332357113-2973-2-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120418.133629.1664781135413277375.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1332357113-2973-2-git-send-email-k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---4Ckj6UjgE2iN1+kY
+--dTy3Mrz/UPE2dbVg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-* Hiroshi Doyu wrote:
-> diff --git a/drivers/of/of_dma.c b/drivers/of/of_dma.c
-> new file mode 100644
-> index 0000000..45c9e88
-> --- /dev/null
-> +++ b/drivers/of/of_dma.c
-> @@ -0,0 +1,35 @@
-> +/*
-> + * Stolen from:
-> + *	"arch/microblaze/kernel/prom_parse.c"
-> + *	"arch/powerpc/kernel/prom_parse.c"
-> + */
-> +
-> +#include <linux/of_address.h>
-> +
-> +void of_parse_dma_window(struct device_node *dn, const void *dma_window_prop,
-> +		unsigned long *busno, unsigned long *phys, unsigned long *size)
-> +{
-> +	const __be32 *dma_window;
-> +	u32 cells;
-> +	const unsigned char *prop;
+On Wed, Mar 21, 2012 at 08:11:51PM +0100, Karol Lewandowski wrote:
+> Use standard of_match_ptr() to avoid defining variable unused
+> in non device tree builds.
+>=20
+> Signed-off-by: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-There's no need for this to be const unsigned char *, const void * will do
-just as well.
+I applied this one already.
 
-> +
-> +	dma_window = dma_window_prop;
-> +
-> +	/* busno is always one cell */
-> +	if (busno)
-> +		*busno = be32_to_cpup(dma_window++);
-> +
-> +	prop = of_get_property(dn, "#dma-address-cells", NULL);
-> +	if (!prop)
-> +		prop = of_get_property(dn, "#address-cells", NULL);
-> +
-> +	cells = prop ? be32_to_cpup(prop) : of_n_addr_cells(dn);
-> +	*phys = of_read_number(dma_window, cells);
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
-This should probably fail gracefully if phys == NULL, similar to what you do
-for busno.
-
-> +
-> +	dma_window += cells;
-> +
-> +	prop = of_get_property(dn, "#dma-size-cells", NULL);
-> +	cells = prop ? be32_to_cpup(prop) : of_n_size_cells(dn);
-> +	*size = of_read_number(dma_window, cells);
-
-Same here.
-
-> +}
-> +
-
-And you might want to add a EXPORT_SYMBOL(of_parse_dma_window) here so the
-function can be used from modules.
-
-Sorry for having you go through another round. I should have looked more
-closely before.
-
-Thierry
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature
+--dTy3Mrz/UPE2dbVg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-iEYEARECAAYFAk+OnV8ACgkQZ+BJyKLjJp9OowCdGpiSxBD48iB81B548m42wo5t
-bTwAoI7bcbxC1rMs0xTkj8n4hFzA2hp4
-=ep+l
+iEYEARECAAYFAk+OncIACgkQD27XaX1/VRsZowCfdPzc8izNYMoA/3QsfHlPQxLV
++qcAn0MnVpNS8u7w6SBHGRqwLBVMCsQe
+=wj7B
 -----END PGP SIGNATURE-----
 
---4Ckj6UjgE2iN1+kY--
+--dTy3Mrz/UPE2dbVg--
