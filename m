@@ -1,68 +1,67 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH 1/5] i2c: Convert i2c-octeon.c to use device tree.
-Date: Wed, 18 Apr 2012 17:16:21 +0200
-Message-ID: <20120418151621.GF19802@pengutronix.de>
-References: <1332808075-8333-1-git-send-email-ddaney.cavm@gmail.com>
- <1332808075-8333-2-git-send-email-ddaney.cavm@gmail.com>
- <4F7115FA.6080507@gmail.com>
- <4F7117FD.7000700@cavium.com>
+From: "Jamie Lentin" <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Subject: Re: [PATCH V5 0/4] ARM: Kirkwood: Add support for DNS-320 and DNS-325
+ using devicetree
+Date: Wed, 18 Apr 2012 16:44:16 +0100
+Message-ID: <op.wcywn2et4cuzmg@gonzo.lentin.co.uk>
+References: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
+ <20120418131635.GK15711@titan.lakedaemon.net> <20120418132445.GB25584@lunn.ch>
+ <20120418140440.GL15711@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="i3lJ51RuaGWuFYNw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F7117FD.7000700@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, "Jean Delvare (PC drivers, core)" <khali@linux-fr.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120418140440.GL15711-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 18 Apr 2012 15:04:40 +0100, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>  
+wrote:
 
---i3lJ51RuaGWuFYNw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Apr 18, 2012 at 03:24:45PM +0200, Andrew Lunn wrote:
+>> > > dies at "Gating clock of unused units", presumably as CGC_RUNIT  
+>> isn't set.
+>> > > Is this something known or is it worth further investigation?
+>> >
+>> > That could potentially mess up a future bisect.  However, it would  
+>> only
+>> > crop up for dnskw boards.  I'll let Grant weigh in on this since he's
+>> > the one who asked that the nand init be removed.
+>>
+>> Turning off RUNIT is bad. Both the NAND and SPI controllers use this
+>> clock. You can only safely turn it off if none of these are active.
 
-> >>-	if (i2c_data =3D=3D NULL) {
-> >>-		dev_err(i2c->dev, "no I2C frequency data\n");
-> >>+	/*
-> >>+	 * "clock-rate" is a legacy binding, the official binding is
-> >>+	 * "clock-frequency".  Try the official one first and then
-> >>+	 * fall back if it doesn't exist.
-> >>+	 */
-> >>+	data =3D of_get_property(pdev->dev.of_node, "clock-frequency",&len);
-> >>+	if (!data || len !=3D sizeof(*data))
-> >>+		data =3D of_get_property(pdev->dev.of_node, "clock-rate",&len);
-> >>+	if (data&&  len =3D=3D sizeof(*data)) {
-> >>+		i2c->twsi_freq =3D be32_to_cpup(data);
-> >
-> >Can't you use of_property_read_u32?
->=20
-> I will investigate, and use it if possible.
+So would u-boot using the NAND count as the controller being active in  
+this case?
 
-Any outcome?
+> If we hear no objections, call kirkwood_nand_init() with no partition
+> entries, then put the partition entries in the commandline in the dts.
+> This is what Arnaud Patard is doing with the Iomega iConnect:
+>
+> mtdparts=orion_nand:0xc0000@0x0(uboot),0x20000@0xa0000(env),0x300000@0x100000(zImage),0x300000@0x540000(initrd)...
+>
+> Then, in the last patch remove the mtdparts from the commandline in the
+> dts and add the partition entries appropriately.
 
-And shouldn't the bindings be documented? Or are they only standard and
-we hide the legacy one?
+Certainly can do, although I'm not entirely convinced it addresses Grant's  
+comment. Another option would be to change the patch order and add DNS-320  
+support after all NAND support patches are merged, although that would go  
+against the initial advice of how to layout the patchset. Will do whatever  
+is considered best though.
 
-Regards,
+>
+> thx,
+>
+> Jason.
 
-   Wolfram
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---i3lJ51RuaGWuFYNw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk+O2sUACgkQD27XaX1/VRv/CQCgl1wkMkth8GAy711B8Qinp3Ke
-rfsAoL2TfKfwpc5sEuiwNqyAxNWDIiS2
-=Qn9J
------END PGP SIGNATURE-----
-
---i3lJ51RuaGWuFYNw--
+-- 
+Jamie Lentin
