@@ -1,145 +1,163 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 3/5] dma: mxs-dma: add device tree probe support
-Date: Wed, 18 Apr 2012 20:02:39 +0200
-Message-ID: <201204182002.40210.marex@denx.de>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: mxs: do not add dma device by default
+Date: Wed, 18 Apr 2012 20:03:26 +0200
+Message-ID: <201204182003.26359.marex@denx.de>
 References: <1334753197-12032-1-git-send-email-b29396@freescale.com>
- <1334753197-12032-4-git-send-email-b29396@freescale.com>
+ <1334753197-12032-5-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1334753197-12032-4-git-send-email-b29396@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, b32955@freescale.com, shawn.guo@freescale.com, kernel@pengutronix.de, dan.j.williams@intel.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1334753197-12032-5-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Dear Dong Aisheng,
 
-> From: Dong Aisheng <dong.aisheng@linaro.org>
+> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: Vinod Koul <vinod.koul@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Huang Shijie <b32955@freescale.com>
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> This will cause conflict when dt is enabled.
+> So let each platform add dma devices respectively.
+> 
+> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Reviewed-by: Marek Vasut <marex@denx.de>
+Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
 > ---
->  .../devicetree/bindings/dma/fsl-mxs-dma.txt        |   19 +++++++++++++
->  drivers/dma/mxs-dma.c                              |   29
-> +++++++++++++++++--- 2 files changed, 44 insertions(+), 4 deletions(-)
+>  arch/arm/mach-mxs/devices-mx23.h                |    2 ++
+>  arch/arm/mach-mxs/devices-mx28.h                |    2 ++
+>  arch/arm/mach-mxs/devices/platform-dma.c        |    3 +--
+>  arch/arm/mach-mxs/include/mach/devices-common.h |    3 +++
+>  arch/arm/mach-mxs/mach-apx4devkit.c             |    1 +
+>  arch/arm/mach-mxs/mach-m28evk.c                 |    1 +
+>  arch/arm/mach-mxs/mach-mx23evk.c                |    1 +
+>  arch/arm/mach-mxs/mach-stmp378x_devb.c          |    1 +
+>  arch/arm/mach-mxs/mach-tx28.c                   |    1 +
+>  9 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
-> b/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt new file mode
+> diff --git a/arch/arm/mach-mxs/devices-mx23.h
+> b/arch/arm/mach-mxs/devices-mx23.h index 4d1329d..5fc6b50 100644
+> --- a/arch/arm/mach-mxs/devices-mx23.h
+> +++ b/arch/arm/mach-mxs/devices-mx23.h
+> @@ -35,3 +35,5 @@ struct platform_device *__init mx23_add_mxsfb(
+>  		const struct mxsfb_platform_data *pdata);
+> 
+>  struct platform_device *__init mx23_add_rtc_stmp3xxx(void);
+> +
+> +#define mx23_add_dma()	mxs_add_mxs_dma()
+> diff --git a/arch/arm/mach-mxs/devices-mx28.h
+> b/arch/arm/mach-mxs/devices-mx28.h index 9dbeae1..0b3a62d 100644
+> --- a/arch/arm/mach-mxs/devices-mx28.h
+> +++ b/arch/arm/mach-mxs/devices-mx28.h
+> @@ -55,3 +55,5 @@ extern const struct mxs_saif_data mx28_saif_data[]
+> __initconst; mxs_add_saif(&mx28_saif_data[id], pdata)
+> 
+>  struct platform_device *__init mx28_add_rtc_stmp3xxx(void);
+> +
+> +#define mx28_add_dma()	mxs_add_mxs_dma()
+> diff --git a/arch/arm/mach-mxs/devices/platform-dma.c
+> b/arch/arm/mach-mxs/devices/platform-dma.c index aff4813..d0126ea 100644
+> --- a/arch/arm/mach-mxs/devices/platform-dma.c
+> +++ b/arch/arm/mach-mxs/devices/platform-dma.c
+> @@ -30,7 +30,7 @@ static struct platform_device *__init mxs_add_dma(const
+> char *devid, DMA_BIT_MASK(32));
+>  }
+> 
+> -static int __init mxs_add_mxs_dma(void)
+> +int __init mxs_add_mxs_dma(void)
+>  {
+>  	char *mx23_apbh = "imx23-dma-apbh";
+>  	char *mx23_apbx = "imx23-dma-apbx";
+> @@ -49,4 +49,3 @@ static int __init mxs_add_mxs_dma(void)
+> 
+>  	return 0;
+>  }
+> -arch_initcall(mxs_add_mxs_dma);
+> diff --git a/arch/arm/mach-mxs/include/mach/devices-common.h
+> b/arch/arm/mach-mxs/include/mach/devices-common.h index f2e3839..544b38d
 > 100644
-> index 0000000..ded0398
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
-> @@ -0,0 +1,19 @@
-> +* Freescale MXS DMA
+> --- a/arch/arm/mach-mxs/include/mach/devices-common.h
+> +++ b/arch/arm/mach-mxs/include/mach/devices-common.h
+> @@ -116,3 +116,6 @@ struct mxs_saif_data {
+>  struct platform_device *__init mxs_add_saif(
+>  		const struct mxs_saif_data *data,
+>  		const struct mxs_saif_platform_data *pdata);
 > +
-> +Required properties:
-> +- compatible : Should be "fsl,<chip>-dma-apbh" or "fsl,<chip>-dma-apbx"
-> +- reg : Should contain registers location and length
-> +
-> +Supported chips:
-> +imx23, imx28.
-> +
-> +Examples:
-> +dma-apbh@80004000 {
-> +	compatible = "fsl,imx28-dma-apbh";
-> +	reg = <0x80004000 2000>;
-> +};
-> +
-> +dma-apbx@80024000 {
-> +	compatible = "fsl,imx28-dma-apbx";
-> +	reg = <0x80024000 2000>;
-> +};
-> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-> index 51a29f9..74c3275 100644
-> --- a/drivers/dma/mxs-dma.c
-> +++ b/drivers/dma/mxs-dma.c
-> @@ -22,8 +22,11 @@
->  #include <linux/platform_device.h>
->  #include <linux/dmaengine.h>
->  #include <linux/delay.h>
-> +#include <linux/module.h>
->  #include <linux/fsl/mxs-dma.h>
->  #include <linux/stmp_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
+> +/* dma */
+> +int __init mxs_add_mxs_dma(void);
+> diff --git a/arch/arm/mach-mxs/mach-apx4devkit.c
+> b/arch/arm/mach-mxs/mach-apx4devkit.c index 48a7fab..92f47e9 100644
+> --- a/arch/arm/mach-mxs/mach-apx4devkit.c
+> +++ b/arch/arm/mach-mxs/mach-apx4devkit.c
+> @@ -210,6 +210,7 @@ static void __init apx4devkit_init(void)
+>  	mxs_iomux_setup_multiple_pads(apx4devkit_pads,
+>  			ARRAY_SIZE(apx4devkit_pads));
 > 
->  #include <asm/irq.h>
-> 
-> @@ -178,6 +181,17 @@ static struct platform_device_id mxs_dma_idt[] = {
->  	}
->  };
-> 
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id mxs_dma_dt_ids[] = {
-> +	{ .compatible = "fsl,imx23-dma-apbh", .data = &mxs_dma_idt[0], },
-> +	{ .compatible = "fsl,imx23-dma-apbx", .data = &mxs_dma_idt[1], },
-> +	{ .compatible = "fsl,imx28-dma-apbh", .data = &mxs_dma_idt[2], },
-> +	{ .compatible = "fsl,imx28-dma-apbx", .data = &mxs_dma_idt[3], },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mxs_dma_dt_ids);
-> +#endif
-> +
->  static struct mxs_dma_chan *to_mxs_dma_chan(struct dma_chan *chan)
+> +	mx28_add_dma();
+>  	mx28_add_duart();
+>  	mx28_add_auart0();
+>  	mx28_add_auart1();
+> diff --git a/arch/arm/mach-mxs/mach-m28evk.c
+> b/arch/arm/mach-mxs/mach-m28evk.c index 06d7996..9a74ce6 100644
+> --- a/arch/arm/mach-mxs/mach-m28evk.c
+> +++ b/arch/arm/mach-mxs/mach-m28evk.c
+> @@ -321,6 +321,7 @@ static void __init m28evk_init(void)
 >  {
->  	return container_of(chan, struct mxs_dma_chan, chan);
-> @@ -671,10 +685,9 @@ err_out:
+>  	mxs_iomux_setup_multiple_pads(m28evk_pads, ARRAY_SIZE(m28evk_pads));
 > 
->  static int __init mxs_dma_probe(struct platform_device *pdev)
->  {
-> -	const struct platform_device_id *id_entry =
-> -				platform_get_device_id(pdev);
-> -	const struct mxs_dma_type *mtype =
-> -			(struct mxs_dma_type *)id_entry->driver_data;
-> +	const struct platform_device_id *id_entry;
-> +	const struct of_device_id *of_id;
-> +	const struct mxs_dma_type *mtype;
->  	struct mxs_dma_engine *mxs_dma;
->  	struct resource *iores;
->  	int ret, i;
-> @@ -683,6 +696,13 @@ static int __init mxs_dma_probe(struct platform_device
-> *pdev) if (!mxs_dma)
->  		return -ENOMEM;
+> +	mx28_add_dma();
+>  	mx28_add_duart();
+>  	mx28_add_auart0();
+>  	mx28_add_auart3();
+> diff --git a/arch/arm/mach-mxs/mach-mx23evk.c
+> b/arch/arm/mach-mxs/mach-mx23evk.c index 5ea1c57..cabc884 100644
+> --- a/arch/arm/mach-mxs/mach-mx23evk.c
+> +++ b/arch/arm/mach-mxs/mach-mx23evk.c
+> @@ -143,6 +143,7 @@ static void __init mx23evk_init(void)
 > 
-> +	of_id = of_match_device(mxs_dma_dt_ids, &pdev->dev);
-> +	if (of_id)
-> +		id_entry = of_id->data;
-> +	else
-> +		id_entry = platform_get_device_id(pdev);
-> +
-> +	mtype = (struct mxs_dma_type *)id_entry->driver_data;
->  	mxs_dma->type = mtype->type;
->  	mxs_dma->dev_id = mtype->id;
+>  	mxs_iomux_setup_multiple_pads(mx23evk_pads, ARRAY_SIZE(mx23evk_pads));
 > 
-> @@ -770,6 +790,7 @@ err_request_region:
->  static struct platform_driver mxs_dma_driver = {
->  	.driver		= {
->  		.name	= "mxs-dma",
-> +		.of_match_table = of_match_ptr(mxs_dma_dt_ids),
->  	},
->  	.id_table	= mxs_dma_idt,
->  };
+> +	mx23_add_dma();
+>  	mx23_add_duart();
+>  	mx23_add_auart0();
+> 
+> diff --git a/arch/arm/mach-mxs/mach-stmp378x_devb.c
+> b/arch/arm/mach-mxs/mach-stmp378x_devb.c index a626c07..a391b9e 100644
+> --- a/arch/arm/mach-mxs/mach-stmp378x_devb.c
+> +++ b/arch/arm/mach-mxs/mach-stmp378x_devb.c
+> @@ -88,6 +88,7 @@ static void __init stmp378x_dvb_init(void)
+>  	mxs_iomux_setup_multiple_pads(stmp378x_dvb_pads,
+>  			ARRAY_SIZE(stmp378x_dvb_pads));
+> 
+> +	mx23_add_dma();
+>  	mx23_add_duart();
+>  	mx23_add_auart0();
+>  	mx23_add_rtc_stmp3xxx();
+> diff --git a/arch/arm/mach-mxs/mach-tx28.c b/arch/arm/mach-mxs/mach-tx28.c
+> index 2c0862e..e17e262 100644
+> --- a/arch/arm/mach-mxs/mach-tx28.c
+> +++ b/arch/arm/mach-mxs/mach-tx28.c
+> @@ -149,6 +149,7 @@ static void __init tx28_stk5v3_init(void)
+>  	mxs_iomux_setup_multiple_pads(tx28_stk5v3_pads,
+>  			ARRAY_SIZE(tx28_stk5v3_pads));
+> 
+> +	mx28_add_dma();
+>  	mx28_add_duart(); /* UART1 */
+>  	mx28_add_auart(1); /* UART2 */
 
 Best regards,
 Marek Vasut
