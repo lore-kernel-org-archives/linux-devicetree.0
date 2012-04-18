@@ -1,110 +1,128 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] i2c: Add device tree support to i2c-pnx.c
-Date: Wed, 18 Apr 2012 20:09:17 +0200
-Message-ID: <20120418180917.GD2548@pengutronix.de>
-References: <1333528480-17134-1-git-send-email-stigge@antcom.de>
- <1333528480-17134-9-git-send-email-stigge@antcom.de>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/4] mfd: tps65910: Add device-tree support
+Date: Wed, 18 Apr 2012 12:35:58 -0700
+Message-ID: <1334777758.32315.37.camel@rklein-linux>
+References: <1334710829-22777-1-git-send-email-rklein@nvidia.com>
+	 <1334710829-22777-4-git-send-email-rklein@nvidia.com>
+	 <20120418090133.GC3021@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WChQLJJJfbwij+9x"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1333528480-17134-9-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120418090133.GC3021-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2012-04-18 at 02:01 -0700, Mark Brown wrote:
+> * PGP Signed by an unknown key
+> 
+> On Tue, Apr 17, 2012 at 06:00:28PM -0700, Rhyland Klein wrote:
+> > Add device tree based initialization support for TI's tps65910 pmic.
+> 
+> Actually, now I look at the larger patch this probably wants to be split
+> up by driver and possibly split further within that.
+> 
+> > +	board_data = tps65910->board_data;
+> > +	if (board_data->use_dt_for_init_data && tps65910->dev->of_node)
+> > +		ret = tps65910_gpio_parse_dt(tps65910->dev, board_data);
+> > +
+> 
+> This is a really odd idiom - normally the pattern for device tree
+> support is to just go and try to use the device tree data if it's there
+> and there's no need for any flag to say if it should be used.
+> 
 
---WChQLJJJfbwij+9x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I agree its odd. My concern was that the idiom is that is pdata assigned
+from board files should override dt data. At this point, we don't know
+where the tps65910->board_data is coming from, dt or board files.
+Arbitrarily using dt breaks that idiom. We could do a check like this if
+you prefer:
 
-On Wed, Apr 04, 2012 at 10:34:40AM +0200, Roland Stigge wrote:
-> This patch adds device tree support to the pnx-i2c driver by using platfo=
-rm
-> resources for memory region and irq and removing dependency on mach inclu=
-des.
->=20
-> The following platforms are affected:
->=20
-> * PNX
-> * LPC31xx (WIP)
-> * LPC32xx
->=20
-> The patch is based on a patch by Jon Smirl, working on lpc31xx integration
->=20
-> Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-> Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+if (!(dev_get_platdata(tps65910->dev) && tps65910->dev->of_node)
 
-I added devicetree-discuss to the (quite long) CC list. I am not sure
-about all of the bindings.
+i.e. if doesn't have pdata supplied from board files, but does have dt
+node. 
 
->=20
-> ---
->=20
->  Applies to v3.4-rc1
->=20
->  Documentation/devicetree/bindings/i2c/pnx.txt |   40 ++++++++++++++++
->  drivers/i2c/busses/i2c-pnx.c                  |   65 +++++++++++++++++++=
--------
->  include/linux/i2c-pnx.h                       |    1=20
->  3 files changed, 89 insertions(+), 17 deletions(-)
->=20
-> --- /dev/null
-> +++ linux-2.6/Documentation/devicetree/bindings/i2c/pnx.txt
-> @@ -0,0 +1,40 @@
-> +* NXP PNX I2C Controller
-> +
-> +Required properties:
-> +
-> + - reg: Offset and length of the register set for the device
-> + - compatible: should be "nxp,pnx-i2c"
-> + - interrupts: configure one interrupt line
-> + - #address-cells: always 1 (for i2c addresses)
-> + - #size-cells: always 0
-> +
-> +Optional properties:
-> +
-> + - interrupt-parent: the phandle for the interrupt controller that
-> +   services interrupts for this device.
 
-That one is not optional, or? You always need it but in most cases it
-gets inherited as I understand.
+> > +	if (pdata->irq_base <= 0)
+> > +		pdata->irq_base = irq_alloc_descs(-1, 0, tps65910->irq_num, -1);
+> > +
+> > +	if (pdata->irq_base <= 0) {
+> > +		dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
+> > +			pdata->irq_base);
+> > +		return pdata->irq_base;
+> > +	}
+> > +
+> > +	tps65910->irq_mask = 0xFFFFFF;
+> > +
+> > +	mutex_init(&tps65910->irq_lock);
+> > +	tps65910->chip_irq = irq;
+> > +	tps65910->irq_base = pdata->irq_base;
+> 
+> While this is needed for DT support it can be done separately and would
+> probably be better split out into a separate patch.
+> 
 
-> + - clock-frequency: desired I2C bus clock frequency in Hz, Default: 1000=
-00 Hz
-> + - pnx,timeout: I2C bus timeout in milliseconds, Default: 10 ms
+ok.
 
-To devicetree-folks: Can we argue this is a hardware property of the
-bus? Then we could introduce a generic "timeout" property? I see, there
-is already "fsl,timeout", and it won't make sense to have that per
-vendor?
+> > +	/* Pass of data to child devices */
+> > +	for (idx = 0; idx < ARRAY_SIZE(tps65910s); idx++) {
+> > +		tps65910s[idx].platform_data = pmic_plat_data;
+> > +		tps65910s[idx].pdata_size = sizeof(*pmic_plat_data);
+> > +	}
+> 
+> Why is this needed - can't the DT parsing just be moved where it's used?
 
-> + - slave-addr: Address used by the controller, Hardware default: 110
+> 
+> > +	for_each_child_of_node(regulators, child) {
+> > +		struct regulator_init_data *init_data;
+> > +
+> > +		init_data = of_get_regulator_init_data(&pdev->dev, child);
+> > +		if (!init_data) {
+> > +			dev_err(&pdev->dev,
+> > +				"failed to parse DT for regulator %s\n",
+> > +				child->name);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		for (idx = 0; idx < pmic->num_regulators; idx++) {
+> 
+> Hrm, this iteration over a group of regulators to find the relevant
+> node by name is going to be a fairly common pattern (there's already
+> at least one driver doing this IIRC) - we should really factor it out
+> into common code.  Please consider doing this when you resubmit.
 
-I'd prefer the hex value here, I2C addresses are mostly specified in
-hex.
+Ok.
 
-Regards,
+> 
+> > +			if (!strcasecmp(info[idx].name, child->name)) {
+> > +				if (all_data[idx]) {
+> > +					dev_err(&pdev->dev,
+> > +						"Duplicate Regulator Node %s\n",
+> 
+> Please fix the capitalisation in the error message.
+> 
+> > +		/* Check to see if we iterated without finding its name */
+> > +		if (idx == pmic->num_regulators) {
+> > +			dev_err(&pdev->dev,
+> > +				"Unknown regulator node found [%s]\n",
+> > +				child->name);
+> > +			return -EINVAL;
+> > +		}
+> 
+> It'd seem more robust to only print the warning and not return the
+> error, that way we don't completely fail the device initialisation if
+> there's data we don't understand.
+> 
+> I'm also not seeing a change here that passes the DT node to
+> regulator_register() - you should be doing that, it's needed so
+> consumers can bind to the regulator.
 
-   Wolfram
+> * Unknown Key
+> * 0x6E30FDDD
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks,
 
---WChQLJJJfbwij+9x
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk+PA00ACgkQD27XaX1/VRt/8QCgjlrbuHKQdptRbdHsIJm58tb8
-GwUAnjN9z15pvmRNOqQFiJh9BRuaGGCm
-=CaWN
------END PGP SIGNATURE-----
-
---WChQLJJJfbwij+9x--
+rhyland
