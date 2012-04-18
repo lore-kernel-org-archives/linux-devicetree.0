@@ -1,69 +1,66 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 1/1] dt: Add general DMA window parser
-Date: Wed, 18 Apr 2012 21:39:45 +0200
-Message-ID: <20120418193945.GA17960@avionic-0098.mockup.avionic-design.de>
-References: <201204180731.54064.arnd@arndb.de>
- <20120418.121824.1894043789811063795.hdoyu@nvidia.com>
- <20120418092613.GA8632@avionic-0098.mockup.avionic-design.de>
- <20120418.131907.2172387798112620167.hdoyu@nvidia.com>
- <4F8EF99E.3050709@wwwdotorg.org>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/4] regulator: tps65910: update type for regmap
+Date: Wed, 18 Apr 2012 13:03:22 -0700
+Message-ID: <1334779402.32315.63.camel@rklein-linux>
+References: <1334710829-22777-1-git-send-email-rklein@nvidia.com>
+	 <1334710829-22777-2-git-send-email-rklein@nvidia.com>
+	 <20120418092547.GE3021@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F8EF99E.3050709-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20120418092547.GE3021-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2012-04-18 at 02:25 -0700, Mark Brown wrote:
+> * PGP Signed by an unknown key
+> 
+> On Tue, Apr 17, 2012 at 06:00:26PM -0700, Rhyland Klein wrote:
+> > When accessing the regmap via the read/write functions, we need to use a
+> > unsigned int * instead of a u8 * otherwise corruption will occur.
+> > 
+> > Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> >  static inline int tps65910_read(struct tps65910_reg *pmic, u8 reg)
+> >  {
+> > -	u8 val;
+> > +	unsigned int val;
+> >  	int err;
+> >  
+> >  	err = pmic->mfd->read(pmic->mfd, reg, 1, &val);
+> 
+> Ugh, this interface is just broken all round - there's absolutely no
+> type safety here and all users of these functions will be broken (a
+> similar issue applies on write).  It's much better to fix this for 3.4
+> by converting the core code to use regmap_raw_ functions which take
+> native formatted data for the device like the function driver API
+> actually expects.
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Which interface are you saying is broken? The regmap interface or the
+one internal to the tps65910 code? 
 
-* Stephen Warren wrote:
-> On 04/18/2012 04:19 AM, Hiroshi Doyu wrote:
->=20
-> > Subject: [PATCH 1/1] dt: Add general DMA window parser
-> >=20
-> > This code was stolen from:
-> > 	"arch/microblaze/kernel/prom_parse.c"
-> > 	"arch/powerpc/kernel/prom_parse.c"
-> >=20
-> > Once "ibm," prefix is removed from dts file. This generic one could
-> > replace the originals.
->=20
-> > +extern void of_parse_dma_window(struct device_node *dn,
-> > +		       const void *dma_window_prop, unsigned long *busno,
-> > +			       unsigned long *phys, unsigned long *size);
->=20
-> At least some other of_*() parsing functions take the property name
-> rather than the property pointer, and also take an index into the
-> property in order to support multiple entries in it. See for example
-> of_parse_phandle and of_get_named_gpio_flags. Should this new API be
-> similar? E.g.:
->=20
-> extern void of_parse_dma_window(struct device_node *np,
-> 			const char *propname, int index,
-> 			unsigned long *busno,
-> 			unsigned long *phys, unsigned long *size);
+> 
+> Looking at the MFD code the fix for 3.5 should at the very least involve
+> making the functions take typed pointers, though given the way they're
+> implemented right now with direct references in the subdevices I'd also
+> consider just having the subdevices uses regmap directly as the wrappers
+> are just adding an opportunity for error (the bit operations could be
+> converted into static inlines in the header too).
+> 
 
-In that case the function should return int for proper error handling.
+So to be clear... Your recommendation is to change the tps65910 code to
+remove the common read/write callbacks and to use regmap directly in
+each component, and then when using regmap, do use the regmap raw
+functions instead of the bulkread/write?
 
-Thierry
+> * Unknown Key
+> * 0x6E30FDDD
 
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature
+Thanks,
+rhyland
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk+PGIEACgkQZ+BJyKLjJp/TmwCgqmaeyIo2ApmynI2aLd0x4v6I
-DnMAn0zVjr/IijFS1PwjM5ltCt0z46/I
-=UQOh
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
+---
+nvpublic
