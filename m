@@ -1,150 +1,67 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm/dts: Tegra30: Add device tree support for SMMU
-Date: Wed, 18 Apr 2012 11:18:24 +0200
-Message-ID: <20120418.121824.1894043789811063795.hdoyu@nvidia.com>
-References: <20120418054140.GA17506@avionic-0098.adnet.avionic-design.de><20120418.094448.2234414220947028341.hdoyu@nvidia.com><201204180731.54064.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201204180731.54064.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v5 0/2] regulator: add irq domain and device tree support for
+ MAX8997
+Date: Wed, 18 Apr 2012 15:01:01 +0530
+Message-ID: <1334741463-25058-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm/dts: Tegra30: Add device tree support for SMMU
-Date: Wed, 18 Apr 2012 09:31:53 +0200
-Message-ID: <201204180731.54064.arnd-r2nGTMty4D4@public.gmane.org>
+Changes since v4:
+- Removed redundant irq_to_max8997_irq function.
+- Fixed the bug in lookup of regulator names
+- Inculded documentation of additional regulators supported.
+- Rebased to Mark's latest 'for-next' branch
 
-> On Wednesday 18 April 2012, Hiroshi Doyu wrote:
-> > If we can consider IOMMU as one of the implementation of DMA(Direct
-> > Memory Access), the prefix "dma-(window)" may make sense here. Then,
-> > we don't have to introduce a new concept "IO virtual address(iova)" in
-> > addition to the existing "bus address"(?)
-> > 
-> > Anyway, either name would be ok for me;)
-> 
-> I would just use dma-window, without the "ibm," prefix but following the
-> same conventions. Note that the of_parse_dma_window function is currently
-> only defined in powerpc specific code, and should get moved to
-> drivers/of from arch/powerpc/kernel/prom_parse.c.
+Changes since v3:
+- Fixed all comments from Grant Likely.
+  - In patch 1/2, since linear mapping is used, the handle_nested_irq() is
+    called only for allocated irq's.
+  - In patch 2/2, the incorrect assignment of platform data pointer to
+    dev->platform_data is reworked and fixed.
 
-Something like below?
+Changes since v2:
+- Atleast one voltage level has to be specfied for Buck 1/2/5 even if GPIO
+  DVS option is not used (suggested by MyungJoo Ham).
+- Reworked the irq_domain support based the v5 of irq_domain generalization
+  patches.
 
-At least, I verified that this works with "tegra-smmu".
+MAX8997 is a multi-function device which includes support for regulators, rtc,
+battery charger and other sub-blocks. This patchset adds device tree support
+for the pmic (regulators) sub-block.
 
->From 67c1dd493637c9e972d04e061a8e67049687021a Mon Sep 17 00:00:00 2001
-From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Date: Wed, 18 Apr 2012 12:09:03 +0300
-Subject: [PATCH 1/1] dt: Add general DMA window parser
+The first patch adds irq domain support for the interrupts supported by max8997
+mainly for removing the need to pass a irq_base from the platform code. The
+irq_base could not anyway be passed in case of device tree based instantiation.
+The reverse mapping method used is linear since the sub-drivers of max8997 has
+access to the max8997 irq_domain from which the linux irq number can be
+obtained.
 
-This code was stolen from:
-	"arch/microblaze/kernel/prom_parse.c"
-	"arch/powerpc/kernel/prom_parse.c"
+The second patch adds device tree support for max8997. This patch modifies both
+mfd and regulator portions of the max8997 code.
 
-Once "ibm," prefix is removed from dts file. This generic one could
-replace the originals.
+This patchset is based on the following tree.
+http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git [for-next]
 
-Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/Kconfig         |    4 ++++
- drivers/of/Makefile        |    1 +
- drivers/of/of_dma.c        |   35 +++++++++++++++++++++++++++++++++++
- include/linux/of_address.h |   10 ++++++++++
- 4 files changed, 50 insertions(+), 0 deletions(-)
+with all patches merged from
+http://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git [for-next]
+http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index dfba3e6..3b0298b 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -83,4 +83,8 @@ config OF_MTD
- 	depends on MTD
- 	def_bool y
- 
-+config OF_DMA
-+	depends on HAS_DMA
-+	def_bool y
-+
- endmenu # OF
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index e027f44..711ff5b 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
- obj-$(CONFIG_OF_PCI)	+= of_pci.o
- obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
- obj-$(CONFIG_OF_MTD)	+= of_mtd.o
-+obj-$(CONFIG_OF_DMA)	+= of_dma.o
-diff --git a/drivers/of/of_dma.c b/drivers/of/of_dma.c
-new file mode 100644
-index 0000000..1db1ccd
---- /dev/null
-+++ b/drivers/of/of_dma.c
-@@ -0,0 +1,35 @@
-+/*
-+ * Stealed from:
-+ *	"arch/microblaze/kernel/prom_parse.c"
-+ *	"arch/powerpc/kernel/prom_parse.c"
-+ */
-+
-+#include <linux/of_address.h>
-+
-+void of_parse_dma_window(struct device_node *dn, const void *dma_window_prop,
-+		unsigned long *busno, unsigned long *phys, unsigned long *size)
-+{
-+	const u32 *dma_window;
-+	u32 cells;
-+	const unsigned char *prop;
-+
-+	dma_window = dma_window_prop;
-+
-+	/* busno is always one cell */
-+	if (busno)
-+		*busno = *(dma_window++);
-+
-+	prop = of_get_property(dn, "#dma-address-cells", NULL);
-+	if (!prop)
-+		prop = of_get_property(dn, "#address-cells", NULL);
-+
-+	cells = prop ? *(u32 *)prop : of_n_addr_cells(dn);
-+	*phys = of_read_number(dma_window, cells);
-+
-+	dma_window += cells;
-+
-+	prop = of_get_property(dn, "#dma-size-cells", NULL);
-+	cells = prop ? *(u32 *)prop : of_n_size_cells(dn);
-+	*size = of_read_number(dma_window, cells);
-+}
-+
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 01b925a..2a0f7c6 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -21,6 +21,10 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
- extern const u32 *of_get_address(struct device_node *dev, int index,
- 			   u64 *size, unsigned int *flags);
- 
-+extern void of_parse_dma_window(struct device_node *dn,
-+		       const void *dma_window_prop, unsigned long *busno,
-+			       unsigned long *phys, unsigned long *size);
-+
- #ifndef pci_address_to_pio
- static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
- #define pci_address_to_pio pci_address_to_pio
-@@ -48,6 +52,12 @@ static inline const u32 *of_get_address(struct device_node *dev, int index,
- {
- 	return NULL;
- }
-+
-+static inline void of_parse_dma_window(struct device_node *dn,
-+		       const void *dma_window_prop, unsigned long *busno,
-+			       unsigned long *phys, unsigned long *size)
-+{
-+}
- #endif /* CONFIG_OF_ADDRESS */
- 
- 
--- 
-1.7.5.4
+This patchset has been tested on Origen board.
+
+Thomas Abraham (2):
+  mfd: add irq domain support for max8997 interrupts
+  regulator: add device tree support for max8997
+
+ .../devicetree/bindings/regulator/max8997-pmic.txt |  147 +++++++++++++++++++
+ arch/arm/mach-exynos/mach-nuri.c                   |    4 -
+ arch/arm/mach-exynos/mach-origen.c                 |    1 -
+ drivers/mfd/max8997-irq.c                          |   70 +++++-----
+ drivers/mfd/max8997.c                              |   74 ++++++++++-
+ drivers/regulator/max8997.c                        |  148 +++++++++++++++++++-
+ include/linux/mfd/max8997-private.h                |    5 +-
+ include/linux/mfd/max8997.h                        |    2 +-
+ 8 files changed, 406 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/max8997-pmic.txt
