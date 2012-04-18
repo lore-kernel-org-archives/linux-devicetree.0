@@ -1,45 +1,26 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm/dts: Tegra30: Add device tree support for SMMU
-Date: Wed, 18 Apr 2012 11:31:12 -0600
-Message-ID: <4F8EFA60.2040400@wwwdotorg.org>
-References: <20120413.132205.1766846402066131036.hdoyu@nvidia.com>	<4F887F9B.700@wwwdotorg.org>	<20120416.131059.331282986467061278.hdoyu@nvidia.com>	<4F8C43AA.7090107@wwwdotorg.org> <20120418081017.d3c630c6f7d09cd4ed039854@nvidia.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v4 3/3] netdev/of/phy: Add MDIO bus multiplexer driven
+ by GPIO lines.
+Date: Wed, 18 Apr 2012 13:45:18 -0400 (EDT)
+Message-ID: <20120418.134518.381699921667230604.davem@davemloft.net>
+References: <1334683966-12112-4-git-send-email-ddaney.cavm@gmail.com>
+        <20120417.225308.1588669089502246200.davem@davemloft.net>
+        <4F8EEAD8.8050205@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120418081017.d3c630c6f7d09cd4ed039854-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <4F8EEAD8.8050205@cavium.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+To: david.daney@cavium.com
+Cc: ddaney.cavm@gmail.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, galak@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2012 11:10 PM, Hiroshi Doyu wrote:
-> On Mon, 16 Apr 2012 18:07:06 +0200
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> 
->> On 04/16/2012 04:10 AM, Hiroshi Doyu wrote:
->>> Stephen Warren wrote at Fri, 13 Apr 2012 21:33:47 +0200:
->>>> On 04/13/2012 04:22 AM, Hiroshi Doyu wrote:
->>>>> Add device tree support for Tegra30 IOMMU(SMMU).
->> ...
->>>> But why does the SMMU driver expect to control the AHB arbitration
->>>> registers? They seem unrelated to the SMMU.
->>>
->>> It's necessary to inform AHB that SMMU is ready to use. There's a
->>> dedicated bit for SMMU in this AHB arbitration register.
->>
->> Shouldn't there be a dedicated driver for the AHB arbitration registers
->> that the SMMU driver calls into to achieve this? IIRC, the AHB
->> arbitration registers support much more than the SMMU enable, and if we
->> ever need to touch those other features, going to the SMMU driver to do
->> so probably wouldn't make sense.
-> 
-> Agree. Sounds like the way to go.
-> 
-> We haven't upstreamed AHB driver yet. So is it ok to remove AHB entry
-> from SMMU dt and add AHB function call when upstreaming AHB driver?
-> I'll work on that.
+From: David Daney <david.daney@cavium.com>
+Date: Wed, 18 Apr 2012 09:24:56 -0700
 
-I think that seems reasonable for now, yes. I assume you mean
-implementing e.g. arch/arm/mach-tegra/tegra30-ahb.c, similar to how,
-say, the fuse APIs work.
+> B) Regenerate the entire set with said patch rolled in?
+
+Already regenerate patch sets with fixes incorporated into the
+original patches.
