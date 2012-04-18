@@ -1,93 +1,51 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH 3/3] i2c-s3c2410: Add HDMIPHY quirk for S3C2440
-Date: Wed, 18 Apr 2012 15:46:44 +0200
-Message-ID: <20120418134644.GB19220@pengutronix.de>
-References: <1332357113-2973-1-git-send-email-k.lewandowsk@samsung.com>
- <1332357113-2973-4-git-send-email-k.lewandowsk@samsung.com>
- <20120417174029.GC22406@pengutronix.de>
- <00dd01cd1d5c$57ce7f80$076b7e80$%szyprowski@samsung.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH V5 0/4] ARM: Kirkwood: Add support for DNS-320 and
+ DNS-325 using devicetree
+Date: Wed, 18 Apr 2012 10:04:40 -0400
+Message-ID: <20120418140440.GL15711@titan.lakedaemon.net>
+References: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
+ <20120418131635.GK15711@titan.lakedaemon.net>
+ <20120418132445.GB25584@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <00dd01cd1d5c$57ce7f80$076b7e80$%szyprowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Karol Lewandowski <k.lewandowsk@samsung.com>, ben-linux@fluff.org, thomas.abraham@linaro.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Tomasz Stanislawski <t.stanislaws@samsung.com>, kyungmin.park@samsung.com, broonie@opensource.wolfsonmicro.com
+In-Reply-To: <20120418132445.GB25584-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 18, 2012 at 03:24:45PM +0200, Andrew Lunn wrote:
+> > > dies at "Gating clock of unused units", presumably as CGC_RUNIT isn't set.
+> > > Is this something known or is it worth further investigation?
+> > 
+> > That could potentially mess up a future bisect.  However, it would only
+> > crop up for dnskw boards.  I'll let Grant weigh in on this since he's
+> > the one who asked that the nand init be removed.
+> 
+> Turning off RUNIT is bad. Both the NAND and SPI controllers use this
+> clock. You can only safely turn it off if none of these are active.
 
---b5gNqxB1S1yM7hjW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Jamie,
 
+If we hear no objections, call kirkwood_nand_init() with no partition
+entries, then put the partition entries in the commandline in the dts.
+This is what Arnaud Patard is doing with the Iomega iConnect:
 
-> > >  Optional properties:
-> > > +  - gpios: The order of the gpios should be the following: <SDA, SCL=
->.
-> > > +    The gpio specifier depends on the gpio controller. Required in a=
-ll cases
-> > > +    except when "samsung,i2c-no-gpio" is also specified.
-> > > +  - samsung,i2c-no-gpio: input/output lines of the controller are
-> > > +    permanently wired to the respective client, there are no gpio
-> > > +    lines that need to be configured to enable this controller
-> >=20
-> > Can't we just skip this property...
->=20
-> All standard s3c-24x0 i2c controllers require gpio lines for proper opera=
-tion,
-> so lack of the gpios property should be considered as an error. However t=
-here
-> is a special case of internal, embedded i2c controller which has no such =
-gpio=20
-> lines at all.
->=20
-> > >    - samsung,i2c-slave-addr: Slave address in multi-master enviroment=
-=2E If not
-> > >      specified, default value is 0.
-> > >    - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. If=
- not
-> > >      specified, the default value in Hz is 100000.
-> > > +  - samsung,i2c-quirk-hdmiphy: Quirk for HDMI PHY block found on
-> > > +    Exynos4 platform - reduce timeout and reset controller after each
-> > > +    transfer
-> >=20
-> > ... and this one, if we declare a new compatible-entry for exynos4?
->=20
-> It is not strictly related to Exynos4 SoCs. Exynos4 SoC has 8 standard s3=
-c2440 style
-> i2c controllers and one additional, internal controller for HDMIPHY, whic=
-h needs=20
-> some workarounds in the driver. Maybe the quirk should be named 'broken t=
-imeout=20
-> detection'
+mtdparts=orion_nand:0xc0000@0x0(uboot),0x20000@0xa0000(env),0x300000@0x100000(zImage),0x300000@0x540000(initrd)...
 
-I was wondering since you do what I suggested for platform devices already:
+Then, in the last patch remove the mtdparts from the commandline in the
+dts and add the partition entries appropriately.
 
-+               .name           =3D "s3c2440-hdmiphy-i2c",
-+               .driver_data    =3D QUIRK_S3C2440 | QUIRK_HDMIPHY | QUIRK_N=
-O_GPIO,
+thx,
 
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---b5gNqxB1S1yM7hjW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk+OxcQACgkQD27XaX1/VRu4KwCgu1vgcMKKuwN5f0KINk3bpier
-OPUAn3bMe8SobLi5a+rxq/07bMC0WSA3
-=dA0t
------END PGP SIGNATURE-----
-
---b5gNqxB1S1yM7hjW--
+Jason.
