@@ -1,89 +1,45 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 3/3] i2c-s3c2410: Add HDMIPHY quirk for S3C2440
-Date: Wed, 18 Apr 2012 14:11:10 +0200
-Message-ID: <00dd01cd1d5c$57ce7f80$076b7e80$%szyprowski@samsung.com>
-References: <1332357113-2973-1-git-send-email-k.lewandowsk@samsung.com>
- <1332357113-2973-4-git-send-email-k.lewandowsk@samsung.com>
- <20120417174029.GC22406@pengutronix.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: versatile-pb/ab fix MMC IRQs
+Date: Wed, 18 Apr 2012 14:23:12 +0200
+Message-ID: <CACRpkdamvjCXUx3851dzyeC6h84ORtRj0C-xPND80M6S=Bd+zg@mail.gmail.com>
+References: <1330682843-21163-1-git-send-email-linus.walleij@linaro.org>
+ <CACRpkdYu-kSW0SEkMWXiuuu+sy5h2qLSBCYn+vo-NpdohzaM6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20120417174029.GC22406-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-language: pl
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Wolfram Sang' <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdYu-kSW0SEkMWXiuuu+sy5h2qLSBCYn+vo-NpdohzaM6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Mon, Mar 19, 2012 at 12:57 AM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Mar 2, 2012 at 11:07 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> The MMCI driver will not work without two IRQs since this is not
+>> flagged as a single-irq variant. Looking through the complex IRQ
+>> definition for the MMCI on the versatile (including an #if 1
+>> statement forcing MMCI IRQ0 to the VIC) this appears to the the
+>> correct IRQ number for both models.
+>>
+>> Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Cc: Niklas Hernaeus <niklas.hernaeus-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Ping on this and 2/2, could go in as fixes as well.
 
-On Tuesday, April 17, 2012 7:40 PM Wolfram Sang wrote:
+Ping on these two, I'll happily put them in Russell's patch tracker if
+not suitable for DT git.
 
-> On Wed, Mar 21, 2012 at 08:11:53PM +0100, Karol Lewandowski wrote:
-> > This patch adds support for s3c2440 I2C bus controller dedicated HDMIPHY device on
-> > Exynos4 platform. Some quirks are introduced due to differences between HDMIPHY
-> > and other I2C controllers on Exynos4.  These differences are:
-> > - no GPIOs, HDMIPHY is inside the SoC and the controller is connected
-> >   internally
-> > - due to unknown reason (probably HW bug in HDMIPHY and/or the controller) a
-> >   transfer fails to finish. The controller hangs after sending the last byte,
-> >   the workaround for this bug is resetting the controller after each transfer
-> >
-> > Signed-off-by: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Tested-by: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/i2c/samsung-i2c.txt        |   11 +++++-
-> >  drivers/i2c/busses/i2c-s3c2410.c                   |   35 ++++++++++++++++++++
-> >  2 files changed, 44 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-> b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-> > index 38832c7..c6670f9 100644
-> > --- a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-> > @@ -10,14 +10,21 @@ Required properties:
-> >      region.
-> >    - interrupts: interrupt number to the cpu.
-> >    - samsung,i2c-sda-delay: Delay (in ns) applied to data line (SDA) edges.
-> > -  - gpios: The order of the gpios should be the following: <SDA, SCL>.
-> > -    The gpio specifier depends on the gpio controller.
-> >
-> >  Optional properties:
-> > +  - gpios: The order of the gpios should be the following: <SDA, SCL>.
-> > +    The gpio specifier depends on the gpio controller. Required in all cases
-> > +    except when "samsung,i2c-no-gpio" is also specified.
-> > +  - samsung,i2c-no-gpio: input/output lines of the controller are
-> > +    permanently wired to the respective client, there are no gpio
-> > +    lines that need to be configured to enable this controller
-> 
-> Can't we just skip this property...
-
-All standard s3c-24x0 i2c controllers require gpio lines for proper operation,
-so lack of the gpios property should be considered as an error. However there
-is a special case of internal, embedded i2c controller which has no such gpio 
-lines at all.
-
-> >    - samsung,i2c-slave-addr: Slave address in multi-master enviroment. If not
-> >      specified, default value is 0.
-> >    - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. If not
-> >      specified, the default value in Hz is 100000.
-> > +  - samsung,i2c-quirk-hdmiphy: Quirk for HDMI PHY block found on
-> > +    Exynos4 platform - reduce timeout and reset controller after each
-> > +    transfer
-> 
-> ... and this one, if we declare a new compatible-entry for exynos4?
-
-It is not strictly related to Exynos4 SoCs. Exynos4 SoC has 8 standard s3c2440 style
-i2c controllers and one additional, internal controller for HDMIPHY, which needs 
-some workarounds in the driver. Maybe the quirk should be named 'broken timeout 
-detection'
-
-(snipped)
-
-Best regards
--- 
-Marek Szyprowski
-Samsung Poland R&D Center
+Yours,
+Linus Walleij
