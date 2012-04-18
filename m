@@ -1,55 +1,40 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v5 1/2] mfd: add irq domain support for max8997 interrupts
-Date: Wed, 18 Apr 2012 17:45:01 +0100
-Message-ID: <20120418164501.GC3099@opensource.wolfsonmicro.com>
-References: <1334741463-25058-1-git-send-email-thomas.abraham@linaro.org>
- <1334741463-25058-2-git-send-email-thomas.abraham@linaro.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/1] dt: Add general DMA window parser
+Date: Wed, 18 Apr 2012 11:27:58 -0600
+Message-ID: <4F8EF99E.3050709@wwwdotorg.org>
+References: <201204180731.54064.arnd@arndb.de><20120418.121824.1894043789811063795.hdoyu@nvidia.com><20120418092613.GA8632@avionic-0098.mockup.avionic-design.de> <20120418.131907.2172387798112620167.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oJ71EGRlYNjSvfq7"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1334741463-25058-2-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120418.131907.2172387798112620167.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 04/18/2012 04:19 AM, Hiroshi Doyu wrote:
 
---oJ71EGRlYNjSvfq7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Subject: [PATCH 1/1] dt: Add general DMA window parser
+> 
+> This code was stolen from:
+> 	"arch/microblaze/kernel/prom_parse.c"
+> 	"arch/powerpc/kernel/prom_parse.c"
+> 
+> Once "ibm," prefix is removed from dts file. This generic one could
+> replace the originals.
 
-On Wed, Apr 18, 2012 at 03:01:02PM +0530, Thomas Abraham wrote:
+> +extern void of_parse_dma_window(struct device_node *dn,
+> +		       const void *dma_window_prop, unsigned long *busno,
+> +			       unsigned long *phys, unsigned long *size);
 
->  struct max8997_platform_data {
->  	/* IRQ */
-> -	int irq_base;
->  	int ono;
->  	int wakeup;
+At least some other of_*() parsing functions take the property name
+rather than the property pointer, and also take an index into the
+property in order to support multiple entries in it. See for example
+of_parse_phandle and of_get_named_gpio_flags. Should this new API be
+similar? E.g.:
 
-This will *still* break the build.
-
---oJ71EGRlYNjSvfq7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPju+FAAoJEBus8iNuMP3dySMP/06ZJIzfNHhd83iByW912sKr
-lXAFiCQHcXUs3ARp+zdpqGeFGUgBaMJlNB4qBvfCeHL0tlfGLU8xetrbSZANXx+Y
-aarluTnIZM1vuHtoPDbCxC5x3M+zRRVfVJPpMHPuGjStrrJ0M5skzVTpIo9/rPpM
-qSuDRI1pACDM7KCO7x/UVVfW9cOQf8BpasME23rhS4isKOMvrbNkOxdMRTi3aeP5
-IuYma3wszawRisbrA9Rh5tb835Momljic5EsWGh5XE420Z34xwVXuJSQlS+apuGq
-cFc/NBYd/8C195w7O6WqTEEmLojWGD2EtabkuIF1bPPljqeJkG9WwiSbrl4y+/08
-+vGly04TTKt9k6HLSkXDLrmprNMd90X7Msmf353cCoyPSkrck4tbJdEcsajhsglL
-K9CUG9Or4dLo8Aid8CnxBcrQF8j14Y4Wv29aEqIK0H+/1DgB3Z+lcIq/5153utGL
-4KJI9SKBw1PP8WOiFY9ZEqKKTrwo0jVsEOHBDViYija27Ecpnsil+4TSKFi4sETM
-w6bnsSSdV63WHyvYw/kGpZGX3pp4uIK+jCczJ2KpcroOfZ+Y9GoAPd0v9qqRfN1B
-rMlfw/ecNVOQLEkUi2/YshWqwLhMJZh8YbcIDgF1t9bVVnAbjgQ79oX/fhuWtQ/j
-YT+zXAFP3hx8YbRldN8U
-=VgHj
------END PGP SIGNATURE-----
-
---oJ71EGRlYNjSvfq7--
+extern void of_parse_dma_window(struct device_node *np,
+			const char *propname, int index,
+			unsigned long *busno,
+			unsigned long *phys, unsigned long *size);
