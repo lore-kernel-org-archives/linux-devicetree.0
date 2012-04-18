@@ -1,83 +1,92 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: mx28evk: add mxs-dma dt support
-Date: Wed, 18 Apr 2012 20:03:42 +0200
-Message-ID: <201204182003.43051.marex@denx.de>
-References: <1334753197-12032-1-git-send-email-b29396@freescale.com>
- <1334753197-12032-6-git-send-email-b29396@freescale.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Wed, 18 Apr 2012 12:06:30 -0600
+Message-ID: <4F8F02A6.6030106@wwwdotorg.org>
+References: <1334333915-1174-1-git-send-email-b29396@freescale.com> <4F8DD986.9080702@wwwdotorg.org> <20120418071920.GC18021@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1334753197-12032-6-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120418071920.GC18021@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@freescale.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Guo Shawn-R65073 <r65073@freescale.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Dong Aisheng,
+On 04/18/2012 01:19 AM, Dong Aisheng wrote:
+> On Wed, Apr 18, 2012 at 04:58:46AM +0800, Stephen Warren wrote:
+>> On 04/13/2012 10:18 AM, Dong Aisheng wrote:
+>>> From: Dong Aisheng <dong.aisheng@linaro.org>
+>>>
+>>> The driver has mux and config support while the gpio is still
+>>> not supported.
+>>> For select input setting, the driver will handle it internally
+>>> and do not need user to take care of it.
+>>>
+>>> The pinctrl-imx core driver will parse the dts file and dynamically
+>>> create the pinmux functions and groups.
+>>>
+>>> Each IMX SoC pinctrl driver should register pins with a pin register map
+>>> including mux register and config register and select input map to core
+>>> for proper operations.
 
-> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> +static int __devinit imx_pmx_parse_functions(struct device_node *np,
+>>> +			struct imx_pinctrl_info *info, u32 index)
+>>
+>> Oh, I see.
+>>
+>> You're defining the set of functions exported from the driver based on
+>> the content of the pin configuration nodes in device tree. I must admit,
+>> I don't like that much, and I didn't get that impression at all from
+>> reading the binding document.
+>
+> I will rich the document but i'm not sure i should talk too much about the
+> driver specific things in binding doc.
+> It seems the binding doc should represents more hw things, right?
 
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Yes, the binding documentation should be basically a hardware
+description, although I think it's reasonable for the documentation to
+describe how a driver should use the data in the binding; that's more to
+do with the binding that driver implementation details.
 
-> ---
->  arch/arm/boot/dts/imx28.dtsi   |    4 ++--
->  arch/arm/mach-mxs/clock-mx28.c |    2 ++
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index d1f4f8c..5f61777 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -52,8 +52,8 @@
->  			};
-> 
->  			dma-apbh@80004000 {
-> +				compatible = "fsl,imx28-dma-apbh";
->  				reg = <0x80004000 2000>;
-> -				status = "disabled";
->  			};
-> 
->  			perfmon@80006000 {
-> @@ -115,8 +115,8 @@
->  			};
-> 
->  			dma-apbx@80024000 {
-> +				compatible = "fsl,imx28-dma-apbx";
->  				reg = <0x80024000 2000>;
-> -				status = "disabled";
->  			};
-> 
->  			dcp@80028000 {
-> diff --git a/arch/arm/mach-mxs/clock-mx28.c
-> b/arch/arm/mach-mxs/clock-mx28.c index cca2cf7..9c926b6 100644
-> --- a/arch/arm/mach-mxs/clock-mx28.c
-> +++ b/arch/arm/mach-mxs/clock-mx28.c
-> @@ -652,6 +652,8 @@ static struct clk_lookup lookups[] = {
->  	_REGISTER_CLOCK("80074000.serial", NULL, uart_clk)
->  	_REGISTER_CLOCK("800f0000.ethernet", NULL, fec_clk)
->  	_REGISTER_CLOCK("800f4000.ethernet", NULL, fec_clk)
-> +	_REGISTER_CLOCK("80004000.dma-apbh", NULL, hbus_clk)
-> +	_REGISTER_CLOCK("80024000.dma-apbx", NULL, xbus_clk)
->  };
-> 
->  static int clk_misc_init(void)
+I think that once you've enhanced the documentation to describe what the
+func-a/group-a nodes are, that will probably be enough to resolve this
+issue for me.
 
-Best regards,
-Marek Vasut
+>> I know that there's some disagreement over whether the groups that a pin
+>> controller driver exposes should be limited to groups that actually
+>> exist in HW registers or not, but surely at least the functions that the
+>> driver exposes should actually correspond directly to the function in
+>> the HW registers?
+>
+> I have slightly different opinions, they're related.
+> As GROUP, FUNCTION is also an abstract idea.
+> (some SoCs may not have hw pin GROUP like IMX)
+> People use GROUP since we can group a set of pins for one device/FUNCTION to use.
+> If we exposes functions per pin based on hw registers, then the GROUP idea may not
+> suitable for pin based SoC.
+> (Thinking current pinctrl subsystem only enables functions per GROUP)
+> The only way is as you did for tegra3, one pin is a group.
+> This is option and it works. But i think, in the future, we may be better
+> make the pinctrl subsystem also supports mux per pin since the idea of one
+> pin GROUP is a little not very suitable for the GROUP idea from literal meaning.
+> 
+> For IMX, we may not choose one pin based group since it's not easy to use
+> and will make the driver much bigger.
+> 
+> As we already agree that we do not limit people to define GROUP which
+> should only exist in HW register(hw GROUP), IOW we allow to use 'virtual' group,
+> then we should not force people to define FUNCTION per hw GROUP too, right?
+> 
+> So IMX defines FUNCTION per device or 'virtual' group(a set of pins for that device)
+> since IMX does not have hw pin GROUP.
+
+Yes, I see your point. I still dislike virtual groups (I think it makes
+more sense to represent the same thing as multiple mapping table
+entries), but I guess if we allow virtual groups, then maybe allowing
+virtual functions is roughly the same thing.
+
+It would be nice to enhance pinctrl to allow muxing directly on pins
+too, instead of only groups. That would be a nice cleanup, and a better
+fit for many SoCs. It'd probably reduce the size of pinctrl-tegra30.c a
+bit too.
