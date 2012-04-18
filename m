@@ -1,104 +1,89 @@
-From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: [PATCH V5 3/4] kirkwood: Allow nand to be configured via. devicetree
-Date: Wed, 18 Apr 2012 11:06:42 +0100
-Message-ID: <1334743603-8488-4-git-send-email-jm@lentin.co.uk>
-References: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
+From: Jamie Lentin <jm@lentin.co.uk>
+Subject: [PATCH V5 0/4] ARM: Kirkwood: Add support for DNS-320 and DNS-325
+ using devicetree
+Date: Wed, 18 Apr 2012 11:06:39 +0100
+Message-ID: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1334743603-8488-1-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Jason <jason@lakedaemon.net>, Grant Likely <grant.likely@secretlab.ca>, Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add default configuration for NAND, to be enabled in your board config. Ensure
-clock gating is set appropriately when the NAND is enabled.
+Reworked patch for latest feedback. I'm still basing this on Jason Cooper's
+tree, given how much time has passed should I be rebasing against something
+else or is this still fine?
 
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
----
- arch/arm/boot/dts/kirkwood.dtsi |   15 ++++++++++++++-
- arch/arm/mach-kirkwood/common.c |   12 ++++++++++++
- 2 files changed, 26 insertions(+), 1 deletions(-)
+One thing I noticed is that with only the first patch applied (which no
+longer calls kirkwood_nand_init) the device either locks up or serial console
+dies at "Gating clock of unused units", presumably as CGC_RUNIT isn't set.
+Is this something known or is it worth further investigation?
 
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index 3474ef8..926528b 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -5,7 +5,7 @@
- 
- 	ocp@f1000000 {
- 		compatible = "simple-bus";
--		ranges = <0 0xf1000000 0x1000000>;
-+		ranges = <0 0xf1000000 0x4000000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-@@ -32,5 +32,18 @@
- 			reg = <0x10300 0x20>;
- 			interrupts = <53>;
- 		};
-+
-+		nand@3000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			cle = <0>;
-+			ale = <1>;
-+			bank-width = <1>;
-+			compatible = "mrvl,orion-nand";
-+			reg = <0x3000000 0x400>;
-+			chip-delay = <25>;
-+			/* set partition map and/or chip-delay in board dts */
-+			status = "disabled";
-+		};
- 	};
- };
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index a02cae8..3ad0373 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -15,6 +15,7 @@
- #include <linux/ata_platform.h>
- #include <linux/mtd/nand.h>
- #include <linux/dma-mapping.h>
-+#include <linux/of.h>
- #include <net/dsa.h>
- #include <asm/page.h>
- #include <asm/timex.h>
-@@ -482,6 +483,9 @@ static int __init kirkwood_clock_gate(void)
- 	unsigned int curr = readl(CLOCK_GATING_CTRL);
- 	u32 dev, rev;
- 
-+#ifdef CONFIG_OF
-+	struct device_node *np;
-+#endif
- 	kirkwood_pcie_id(&dev, &rev);
- 	printk(KERN_DEBUG "Gating clock of unused units\n");
- 	printk(KERN_DEBUG "before: 0x%08x\n", curr);
-@@ -489,6 +493,14 @@ static int __init kirkwood_clock_gate(void)
- 	/* Make sure those units are accessible */
- 	writel(curr | CGC_SATA0 | CGC_SATA1 | CGC_PEX0 | CGC_PEX1, CLOCK_GATING_CTRL);
- 
-+#ifdef CONFIG_OF
-+	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-nand");
-+	if (np && of_device_is_available(np)) {
-+		kirkwood_clk_ctrl |= CGC_RUNIT;
-+		of_node_put(np);
-+	}
-+#endif
-+
- 	/* For SATA: first shutdown the phy */
- 	if (!(kirkwood_clk_ctrl & CGC_SATA0)) {
- 		/* Disable PLL and IVREF */
+Thanks again to everyone reviewing.
+
+Changes since v4: Convert DNS-325 & DNS-320 to access nand via devicetree
+* Add initial support patch back in to address following comments
+** One MACH_DLINK_KIRKWOOD_DT for all dtb files [Grant Likely, Jason Cooper]
+** Drop brain-dead select "select CONFIG_MTD_OF_PARTS" [Grant Likely]
+** Don't add NAND support then throw it away immediately after [Grant Likely]
+* WARN when bank-width is out of range [Andrew Lunn]
+* Describe purpose of MPP 41, 42 & 49
+
+Changes since v3: Add support for DNS-320 and DNS-325 using devicetree
+* Remove patches that are already merged
+* Add documentation on orion_nand devicetree bindings
+* Convert bank-width to be in bytes to match other properties
+* Make defaults more explicit
+
+Changes since v2: Add support for DNS-320 and DNS-325 using devicetree
+* Split patches further, separating orion_nand and kirkwood changes
+* dts renames: "bank-width", not "width". "okay", not "ok"
+* Separate documentation out into separate patch, add references to
+  partition.txt to all mtd bindings.
+
+Changes since v1: Add support for DNS-320 and DNS-325 using devicetree
+* Rebase against kirkwood_dt_for_3.4, removing premature devicetree ports.
+* Move additions into a separate board-dnskw.c. It could be separated further
+  into a board-dns320.c and board-dns325.c but it probably isn't worth it.
+* s/marvell,/mrvl,/g
+* Include an example dtb partition in documentation
+* Copy structure of serial nodes to allow common options for NAND to be set
+  in kirkwood.dtsi
+* Simplifications in orion-nand.c
+
+Jamie Lentin (4):
+  ARM: kirkwood: Basic support for DNS-320 and DNS-325
+  mtd: Add orion_nand devicetree bindings
+  kirkwood: Allow nand to be configured via. devicetree
+  ARM: kirkwood: Define DNS-320/DNS-325 NAND in fdt
+
+ .../devicetree/bindings/mtd/orion-nand.txt         |   50 ++++
+ arch/arm/boot/dts/kirkwood-dns320.dts              |   64 +++++
+ arch/arm/boot/dts/kirkwood-dns325.dts              |   59 +++++
+ arch/arm/boot/dts/kirkwood.dtsi                    |   15 +-
+ arch/arm/mach-kirkwood/Kconfig                     |    8 +
+ arch/arm/mach-kirkwood/Makefile                    |    1 +
+ arch/arm/mach-kirkwood/Makefile.boot               |    2 +
+ arch/arm/mach-kirkwood/board-dnskw.c               |  275 ++++++++++++++++++++
+ arch/arm/mach-kirkwood/board-dt.c                  |    5 +
+ arch/arm/mach-kirkwood/common.c                    |   12 +
+ arch/arm/mach-kirkwood/common.h                    |    6 +
+ drivers/mtd/nand/orion_nand.c                      |   45 +++-
+ 12 files changed, 539 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
+ create mode 100644 arch/arm/boot/dts/kirkwood-dns320.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-dns325.dts
+ create mode 100644 arch/arm/mach-kirkwood/board-dnskw.c
+
 -- 
 1.7.9.1
