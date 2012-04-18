@@ -1,162 +1,129 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: [PATCH 2/4] regulator: tps65910: Add device tree bindings
-Date: Tue, 17 Apr 2012 18:00:27 -0700
-Message-ID: <1334710829-22777-3-git-send-email-rklein@nvidia.com>
-References: <1334710829-22777-1-git-send-email-rklein@nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: dtc symbolic constants - not in the preprocessor?
+Date: Tue, 17 Apr 2012 20:44:23 -0600
+Message-ID: <4F8E2A87.6000805@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334710829-22777-1-git-send-email-rklein@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lrg@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for TI's tps65910 pmic.
+So, David has been leaning towards a simple text-based preprocessor as
+the means to add symbolic constants to dtc. Depending on exactly how
+much advanced expression support the dtc language ends up gaining, I'm
+not so sure a text-based preprocessor is the right approach.
 
-Signed-off-by: Rhyland Klein <rklein@nvidia.com>
----
- Documentation/devicetree/bindings/mfd/tps65910.txt |  132 ++++++++++++++++++++
- 1 files changed, 132 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/tps65910.txt
+So, a text-based preprocessor is fine for basic stuff like:
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-new file mode 100644
-index 0000000..4a9f1aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -0,0 +1,132 @@
-+TPS65910 Power Management Integrated Circuit
-+
-+Required properties:
-+- compatible: "ti,tps65910" or "ti,tps65911"
-+- reg: I2C slave address
-+- interrupts: the interrupt outputs of the controller
-+- #gpio-cells: number of cells to describe a GPIO, this should be 2.
-+  The first cell is the GPIO number.
-+  The second cell is used to specify additional options <unused>.
-+- gpio-controller: mark the device as a GPIO controller
-+- #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
-+  The first cell is the IRQ number.
-+  The second cell is the flags, encoded as the trigger masks from
-+  Documentation/devicetree/bindings/interrupts.txt
-+- regulators: This is the list of child nodes that specify the regulator
-+  initialization data for defined regulators. Not all regulators for the given
-+  device need to be present. The definition for each of these nodes is defined
-+  using the standard binding for regulators found at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+  The valid names for regulators are:
-+  tps65910: vrtc, vio, vdd1, vdd2, vdd3, vdig1, vdig2, vpll, vdac, vaux1,
-+            vaux2, vaux33, vmmc
-+  tps65911: vrtc, vio, vdd1, vdd3, vddctrl, ldo1, ldo2, ldo3, ldo4, ldo5,
-+            ldo6, ldo7, ldo8
-+
-+Optional properties:
-+- ti,vmbch-threshold: (tps65911) main battery charged threshold
-+  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
-+- ti,vmbch2-threshold: (tps65911) main battery discharged threshold
-+  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
-+- ti,regulator-ext-sleep-control: enable external sleep
-+  control through external inputs [0 (not enabled), 1 (EN1), 2 (EN2) or 4(EN3)]
-+  There should be 13 entries here, one for each regulators for the chip.
-+- ti,en-gpio-sleep: enable sleep control for gpios
-+  There should be 9 entries here, one for each gpio.
-+
-+Example:
-+
-+	pmu: tps65910@d2 {
-+		compatible = "ti,tps65910";
-+		reg = <0xd2>;
-+		interrupt-parent = <&intc>;
-+		interrupts = < 0 118 0x04 >;
-+
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+
-+		ti,vmbch-threshold = 0;
-+		ti,vmbch2-threshold = 0;
-+		ti,regulator-ext-sleep-control = <0
-+						0
-+						0x4   /* input EN3 */
-+						0
-+						0x1   /* input EN1 */
-+						0
-+						0
-+						0
-+						0
-+						0
-+						0
-+						0x1   /* input EN1 */
-+						0x1>; /* input EN1 */
-+
-+		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
-+
-+		regulators {
-+			vdd1_reg: vdd1 {
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			vdd2_reg: vdd2 {
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			vddctrl_reg: vddctrl {
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1400000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			vio_reg: vio {
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo1_reg: ldo1 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+			ldo2_reg: ldo2 {
-+				regulator-min-microvolt = <1050000>;
-+				regulator-max-microvolt = <1050000>;
-+			};
-+			ldo3_reg: ldo3 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+			ldo4_reg: ldo4 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+			ldo5_reg: ldo5 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+			ldo6_reg: ldo6 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+			};
-+			ldo7_reg: ldo7 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo8_reg: ldo8 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
--- 
-1.7.0.4
+#define FOO 5
+
+/ {
+    prop = <(FOO)>;
+};
+
+However, if the dtc language itself gains functions, iteration, etc., I
+think this breaks down.
+
+Using cpp, we could do something like:
+
+#define TEGRA_USB1_INT_STATUS 0x7000000
+#define POS(chip, reg, field) chip##_##reg##_##field##_POS
+
+/ {
+    prop1 = <(POS(TEGRA, USB1, INT_STATUS))>;
+};
+
+where you can imagine that the POS macro is calculating the name of a
+symbolic constant, then reading the value of the name.
+
+However, what if instead of hard-coding USB1 in the above example, we
+want to iterate over 1, 2, 3? Expressing this iteration as a set of
+functions in the dtc grammar (as in functional programming) has been
+floated as an idea. In other words generate a result like:
+
+/ {
+    prop1 = <(POS(TEGRA, USB, 1, INT_STATUS))>;
+    prop2 = <(POS(TEGRA, USB, 2, INT_STATUS))>;
+    prop3 = <(POS(TEGRA, USB, 3, INT_STATUS))>;
+};
+
+... but using iteration in the dtc language instead of cut/paste.
+
+If this iteration happens in the dtc language phase rather than the
+preprocessing phase, then all the named constants known to the
+preprocessing phase have been thrown away, and hence could never be
+accessed by any functions/macros/... executing in the dtc language phase.
+
+For this reason, I think that symbolic constants should probably be
+something at the dtc language level rather than there being a separate
+preprocessing phase, if we envisage dtc ever gaining anything more
+complex than simple expression and symbolic constant support.
+
+Do people agree with this?
+
+
+
+If so, the simplest symbolic constant syntax might be:
+
+/define/ FOO 5;
+
+/ {
+    prop = <(FOO)>;
+};
+
+(this is roughly what was in my somewhat recent /define/ patch proposal).
+
+
+
+As an equivalent of the cpp ## operator, we could imagine something like:
+
+/define/ TEGRA_USB1_INT_STATUS 0x7000000;
+/function/ POS(chip, reg, field)
+    readvar(chip + "_" + reg + "_" + field + "_POS");
+
+/ {
+    prop = <(POS("TEGRA", "USB1", "INT_STATUS"))>;
+};
+
+where readvar() is a built-in function that reads from the symbol table.
+
+
+
+Following on from this, I've been envisaging symbolic constants holding
+single integer values (perhaps strings too), as in the "FOO" example a
+little above.
+
+Simon Glass was thinking (admittedly I believe more in the context of
+plain text-expansion) of allowing symbolic constants to be more than
+just single integers, perhaps:
+
+/define/ GDB_BASE 0x00e08000;
+/define/ CHROME_OS_BOOT_DEVICES "emmc", "spi";
+/define/ UART_BAUD_OPTIONS <115200 57600 19200>;
+
+/ {
+    prop1 = <GDB_BASE>;
+    prop2 = <CHROME_OS_BOOT_DEVICES>;
+    prop3 = <UART_BAUD_OPTIONS>;
+};
+
+(The syntax re: where <> appear might need some development in this
+example.)
+
+The idea here was that (some) variables might contain a sequence of
+bytes just would just be dumped directly into the property data without
+much interpretation.
+
+This would presumably require symbolic constants to be typed somehow, so
+that dtc would know that (GDB_BASE + 0x100) made sense, whereas
+(UART_BAUD_OPTIONS + 0x100) didn't.
