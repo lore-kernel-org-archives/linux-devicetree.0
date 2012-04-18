@@ -1,51 +1,37 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V5 0/4] ARM: Kirkwood: Add support for DNS-320 and
- DNS-325 using devicetree
-Date: Wed, 18 Apr 2012 10:04:40 -0400
-Message-ID: <20120418140440.GL15711@titan.lakedaemon.net>
-References: <1334743603-8488-1-git-send-email-jm@lentin.co.uk>
- <20120418131635.GK15711@titan.lakedaemon.net>
- <20120418132445.GB25584@lunn.ch>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 7/9] usb: add Atmel USBA UDC DT support
+Date: Wed, 18 Apr 2012 15:48:07 +0200
+Message-ID: <20120418134807.GQ16641@game.jcrosoft.org>
+References: <20120307084924.GK21255@game.jcrosoft.org>
+ <1331111746-21393-7-git-send-email-plagnioj@jcrosoft.com>
+ <20120314092707.GM18320@game.jcrosoft.org>
+ <20120408154246.GI16641@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20120418132445.GB25584-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <20120408154246.GI16641@game.jcrosoft.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 18, 2012 at 03:24:45PM +0200, Andrew Lunn wrote:
-> > > dies at "Gating clock of unused units", presumably as CGC_RUNIT isn't set.
-> > > Is this something known or is it worth further investigation?
+On 17:42 Sun 08 Apr     , Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 10:27 Wed 14 Mar     , Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > Hi,
 > > 
-> > That could potentially mess up a future bisect.  However, it would only
-> > crop up for dnskw boards.  I'll let Grant weigh in on this since he's
-> > the one who asked that the nand init be removed.
-> 
-> Turning off RUNIT is bad. Both the NAND and SPI controllers use this
-> clock. You can only safely turn it off if none of these are active.
+> > 	except the boolean that I need to update is it ok?
+> Grant is it ok?
+Grant re-ping
 
-Jamie,
-
-If we hear no objections, call kirkwood_nand_init() with no partition
-entries, then put the partition entries in the commandline in the dts.
-This is what Arnaud Patard is doing with the Iomega iConnect:
-
-mtdparts=orion_nand:0xc0000@0x0(uboot),0x20000@0xa0000(env),0x300000@0x100000(zImage),0x300000@0x540000(initrd)...
-
-Then, in the last patch remove the mtdparts from the commandline in the
-dts and add the partition entries appropriately.
-
-thx,
-
-Jason.
+Best Regards,
+J.
