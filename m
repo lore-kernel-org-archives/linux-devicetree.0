@@ -1,71 +1,73 @@
-From: Roland Stigge <stigge@antcom.de>
-Subject: Re: [PATCH v4] i2c: Add device tree support to i2c-pnx.c
-Date: Thu, 19 Apr 2012 23:18:39 +0200
-Message-ID: <4F90812F.5090106@antcom.de>
-References: <1334850612-24151-1-git-send-email-stigge@antcom.de>
- <20120419160715.GD24987@pengutronix.de> <4F903E0C.6010604@antcom.de>
- <20120419203915.GB28005@pengutronix.de>
+From: Jerome Glisse <j.glisse-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 0/4] Add NVIDIA Tegra DRM support
+Date: Thu, 19 Apr 2012 18:21:26 -0400
+Message-ID: <CAH3drwZhTzuOVfybB_KBgk22csK47xXv5G4aMOuqPy+ibKd21A@mail.gmail.com>
+References: <1334146230-1795-1-git-send-email-thierry.reding@avionic-design.de>
+	<20120419173537.GA7692@avionic-0098.adnet.avionic-design.de>
+	<CAPM=9tzK83yYS33eNruvFDwb62ycZxJMC31davVRN=yaZD53YA@mail.gmail.com>
+	<20120419204016.GA8954@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120419203915.GB28005@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: srinivas.bakki@nxp.com, vitalywool@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, Grant Likely <grant.likely@secretlab.ca>, arm@kernel.org, linux-i2c@vger.kernel.org, ben-linux@fluff.org, khali@linux-fr.org, kevin.wells@nxp.com, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120419204016.GA8954-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Thu, Apr 19, 2012 at 4:40 PM, Thierry Reding
+<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> * Dave Airlie wrote:
+>> On Thu, Apr 19, 2012 at 6:35 PM, Thierry Reding
+>> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+>> > Before posting the next round of patches I wanted to clarify whether we need
+>> > to take the Tegra driver through staging. Lucas brought this up referring to
+>> > previous experience with Nouveau where Linus used to complain that userspace
+>> > ABI was broken for non-staging drivers. I don't know how relevant that is
+>> > for Tegra. We could also keep it in drivers/gpu/drm and only add userspace
+>> > interfaces that we are sure are not going to change. Currently there isn't
+>> > isn't anything that could be easily broken as only some of the standard DRM
+>> > interfaces are supported anyway.
+>> >
+>> > Alternatively we could keep the driver in a separate tree until it becomes
+>> > mature enough.
+>> >
+>> > Any thoughts?
+>>
+>> It's probably okay to avoid staging if it doesn't add any userspace ioctls.
+>>
+>> A KMS driver that just supports the dumb ioctls so -modesetting works,
+>> would be the first thing to aim for I suppose, like how the exynos
+>> guys did it.
+>>
+>> Adding userspace interfaces is where you'll get into ABI guarantees
+>> etc, and these are normally required only for the accel engines.
+>
+> I think this is what Lucas was concerned about. The plan is to look at how
+> much can be used from the Nouveau code and make it work on the Tegra. So
+> would it be possible to get a basic dumb KMS driver into mainline
+> (non-staging) and phase in acceleration later on, with ABI guarantees? I
+> guess development can go on in separate trees until the ABI is stable and can
+> subsequently be ported to the mainline driver.
+>
+> Is that an acceptable approach?
+>
+> Thierry
+>
 
-On 19/04/12 22:39, Wolfram Sang wrote:
->> If we have a solution soon, I will prepare a new version of the 
->> patch, of course, in the next days.
-> 
-> Thanks. One question, though: Will it really block dt-conversion? 
-> The whole conversion should not be depending on the i2c-driver?
+Or you can hide the accel ioctl behing a staging/experimental kernel
+option that give you right to change the ABI and do everything upstream.
+Once you like your abi you just remove the option and enable the
+ioctl for the default case.
 
-Technically, it would certainly be possible to convert some drivers
-and leave others. But I would highly prefer to convert i2c also. With
-LPC32xx, there are typically many I2C clients depending on DT on a
-reasonable DT enabled mach.
-
-I'm fine with "timeout" also, when you accept it into pnx-i2c.c and
-will certainly provide a "timeout" patch update so you can pick the
-version which suits best.
-
-Another solution would be to not use timeout with the dt enabled
-i2c-pnx for now (using the hard coded default timeout as the current
-i2c-pnx.c does) and possibly introduce the (anyway optional) "timeout"
-later.
-
-Actually, that would be my favour.
-
-What do you think?
-
->>> Did you change this, too? Timeouts are better readable in dec
->>> :)
->> 
->> Right. But even when removing the "0x" in the timeout line
->> above, it's still hex, see 
->> Documentation/devicetree/booting-without-of.txt
->> 
->> Or did I get sth. wrong?
-> 
-> I think the document is probably outdated :( "clock-frequency" is 
-> also without 0x and dec.
-
-Interesting! When the documentation is outdated - how does the parser
-actually decide between hex (e.g. regs/addresses) and dec (e.g.
-clock-frequency) in the absence of "0x"?
-
-Thanks in advance,
-
-Roland
+Cheers,
+Jerome
