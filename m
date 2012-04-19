@@ -1,76 +1,69 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH] fdt: Adjust Makefile to find .dtsi include files
-Date: Thu, 19 Apr 2012 07:29:37 -0700
-Message-ID: <1334845777-30913-1-git-send-email-sjg@chromium.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] clk: select CLKDEV_LOOKUP for COMMON_CLK
+Date: Thu, 19 Apr 2012 09:59:36 -0500
+Message-ID: <4F902858.9040905@gmail.com>
+References: <1334003101-17274-1-git-send-email-robherring2@gmail.com>
+ <1334003101-17274-2-git-send-email-robherring2@gmail.com>
+ <CAJOA=zMPqiH2fQJ5JWJ=COnju7Cmur6J2ATYUTcx41C4WMjFQQ@mail.gmail.com>
+ <20120418070721.GL3852@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120418070721.GL3852-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Turquette, Mike" <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The device tree compiler now has an option to specify the search path
-for its files. Use this option when compiling in preference to
-pre-processing the file.
+On 04/18/2012 02:07 AM, Sascha Hauer wrote:
+> On Tue, Apr 17, 2012 at 03:13:49PM -0700, Turquette, Mike wrote:
+>> On Mon, Apr 9, 2012 at 1:24 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>>
+>>> Using the common clock infrastructure without the common clkdev code makes
+>>> little sense, so select CLKDEV_LOOKUP for COMMON_CLK.
+>>>
+>>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>  drivers/clk/Kconfig |    1 +
+>>>  1 files changed, 1 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+>>> index 165e1fe..f05a60d 100644
+>>> --- a/drivers/clk/Kconfig
+>>> +++ b/drivers/clk/Kconfig
+>>> @@ -12,6 +12,7 @@ config HAVE_MACH_CLKDEV
+>>>  config COMMON_CLK
+>>>        bool
+>>>        select HAVE_CLK_PREPARE
+>>> +       select CLKDEV_LOOKUP
+>>>        ---help---
+>>>          The common clock framework is a single definition of struct
+>>>          clk, useful across many platforms, as well as an
+>>
+>> Hi Rob,
+>>
+>> I agree that the common clk framework is not particularly useful
+>> without clkdev.  However the core code has no dependency on clkdev.
+>> Why not just select it from an arch Kconfig, or even make it a
+>> dependency based on your own platform clock data/code?
+> 
+> Selecting it from COMMON_CLK means that the compiler/linker will point
+> everybody trying to implement it without CLKDEV into the right
+> direction.
 
-Update Tegra here also to prevent build breakage.
+Right. That was part of my rationale as well.
 
-This requires a recent dtc (commit de6b762 in git://jdl.com/software/dtc.git).
+The DT clock support is dependent on both options, so without this patch
+we'll have to add an otherwise unneeded OF_CLOCK option to select both.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
- board/nvidia/dts/tegra2-seaboard.dts |    2 +-
- dts/Makefile                         |    8 +++-----
- 2 files changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
-index 6ba3ec4..70df567 100644
---- a/board/nvidia/dts/tegra2-seaboard.dts
-+++ b/board/nvidia/dts/tegra2-seaboard.dts
-@@ -1,7 +1,7 @@
- /dts-v1/;
- 
- /memreserve/ 0x1c000000 0x04000000;
--/include/ ARCH_CPU_DTS
-+/include/ "tegra20.dtsi"
- 
- / {
- 	model = "NVIDIA Seaboard";
-diff --git a/dts/Makefile b/dts/Makefile
-index 5792afd..e771498 100644
---- a/dts/Makefile
-+++ b/dts/Makefile
-@@ -35,8 +35,8 @@ $(if $(CONFIG_ARCH_DEVICE_TREE),,\
- $(error Your architecture does not have device tree support enabled. \
- Please define CONFIG_ARCH_DEVICE_TREE))
- 
--# We preprocess the device tree file provide a useful define
--DTS_CPPFLAGS := -DARCH_CPU_DTS=\"../arch/$(ARCH)/dts/$(CONFIG_ARCH_DEVICE_TREE).dtsi\"
-+# Provide a list of include directories for dtc
-+DTS_FLAGS := -i $(SRCTREE)/arch/$(ARCH)/dts
- 
- all:	$(obj).depend $(LIB)
- 
-@@ -46,9 +46,7 @@ all:	$(obj).depend $(LIB)
- DT_BIN	:= $(obj)dt.dtb
- 
- $(DT_BIN): $(TOPDIR)/board/$(VENDOR)/dts/$(DEVICE_TREE).dts
--	cat $< | $(CPP) -P $(DTS_CPPFLAGS) - >$@.tmp
--	$(DTC) -R 4 -p 0x1000 -O dtb -o ${DT_BIN} $@.tmp
--	rm $@.tmp
-+	$(DTC) -R 4 -p 0x1000 -O dtb -o ${DT_BIN} $(DTS_FLAGS) $<
- 
- process_lds = \
- 	$(1) | sed -r -n 's/^OUTPUT_$(2)[ ("]*([^")]*).*/\1/p'
--- 
-1.7.7.3
+Rob
