@@ -1,79 +1,66 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 0/3] netdev/of/phy: MDIO bus multiplexer support.
-Date: Wed, 18 Apr 2012 16:20:51 -0700
-Message-ID: <1334791254-15987-1-git-send-email-ddaney.cavm@gmail.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/1] dt: Add general DMA window parser
+Date: Thu, 19 Apr 2012 15:19:20 +0300
+Message-ID: <20120419151920.68ab735a5b9eb8fb938b4d11@nvidia.com>
+References: <201204180731.54064.arnd@arndb.de>
+	<20120418.121824.1894043789811063795.hdoyu@nvidia.com>
+	<20120418092613.GA8632@avionic-0098.mockup.avionic-design.de>
+	<20120418.131907.2172387798112620167.hdoyu@nvidia.com>
+	<4F8EF99E.3050709@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4F8EF99E.3050709-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On Wed, 18 Apr 2012 19:27:58 +0200
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 
-This code has been working well for about six months on a couple of
-different configurations (boards), so I thought it would be a good
-time to send it out again, and I hope get it on the path towards
-merging.
+> On 04/18/2012 04:19 AM, Hiroshi Doyu wrote:
+> 
+> > Subject: [PATCH 1/1] dt: Add general DMA window parser
+> > 
+> > This code was stolen from:
+> > 	"arch/microblaze/kernel/prom_parse.c"
+> > 	"arch/powerpc/kernel/prom_parse.c"
+> > 
+> > Once "ibm," prefix is removed from dts file. This generic one could
+> > replace the originals.
 
-v5: Correct Kconfig depends in 3/3 as noticed by David Miller.
+It seems that the "ibm," prefix is not used in .dts files, but it
+comes from the PAPR compliant firmware and cannot be changed.
 
-v4: Correct some comment text and rename a couple of variables to
-    better reflect their purpose.
+The easiest solution would be to make the function understand both
+variants.
 
-v3: Update binding to use "mdio-mux-gpio" compatible property.
-    Cleanups suggested by Grant Likely.  Now uses the driver probe
-    deferral mechanism if GPIOs or parent bus not available.
+> > +extern void of_parse_dma_window(struct device_node *dn,
+> > +		       const void *dma_window_prop, unsigned long *busno,
+> > +			       unsigned long *phys, unsigned long *size);
+> 
+> At least some other of_*() parsing functions take the property name
+> rather than the property pointer, and also take an index into the
+> property in order to support multiple entries in it. See for example
+> of_parse_phandle and of_get_named_gpio_flags. Should this new API be
+> similar? E.g.:
+> 
+> extern void of_parse_dma_window(struct device_node *np,
+> 			const char *propname, int index,
+> 			unsigned long *busno,
+> 			unsigned long *phys, unsigned long *size);
 
-v2: Update bindings to use "reg" and "mdio-parent-bus" instead of
-    "cell-index" and "parent-bus"
+At least, I can add the code checking the return value of this
+function, which won't change the existing code.
 
-v1:
-
-We have several different boards with a multiplexer in the MDIO bus.
-There is an MDIO bus controller connected to a switching device with
-several child MDIO busses.
-
-Everything is wired up using device tree bindings.
-
- 1/3 - New of_mdio_find_bus() function used to help configuring the
-       driver topology.
-
- 2/3 - MDIO bus multiplexer framework.
-
- 3/3 - A driver for a GPIO controlled multiplexer.
-
-David Daney (3):
-  netdev/of/phy: New function: of_mdio_find_bus().
-  netdev/of/phy: Add MDIO bus multiplexer support.
-  netdev/of/phy: Add MDIO bus multiplexer driven by GPIO lines.
-
- .../devicetree/bindings/net/mdio-mux-gpio.txt      |  127 +++++++++++++
- Documentation/devicetree/bindings/net/mdio-mux.txt |  136 ++++++++++++++
- drivers/net/phy/Kconfig                            |   18 ++
- drivers/net/phy/Makefile                           |    2 +
- drivers/net/phy/mdio-mux-gpio.c                    |  142 +++++++++++++++
- drivers/net/phy/mdio-mux.c                         |  192 ++++++++++++++++++++
- drivers/net/phy/mdio_bus.c                         |   32 ++++
- drivers/of/of_mdio.c                               |    2 +
- include/linux/mdio-mux.h                           |   21 ++
- include/linux/of_mdio.h                            |    2 +
- 10 files changed, 674 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/mdio-mux-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/net/mdio-mux.txt
- create mode 100644 drivers/net/phy/mdio-mux-gpio.c
- create mode 100644 drivers/net/phy/mdio-mux.c
- create mode 100644 include/linux/mdio-mux.h
-
--- 
-1.7.2.3
+Does anyone know the format of "ibm,dma-window"?
