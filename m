@@ -1,31 +1,33 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
-Date: Thu, 19 Apr 2012 12:42:38 -0600
-Message-ID: <20120419184238.4A6973E0700@localhost>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca> <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home> <20120402202848.1EB833E02A7@localhost> <20120402215524.GM24211@n2100.arm.linux.org.uk> <1333406005.30734.61.camel@pasglop> <20120402225223.GN24211@n2100.arm.linux.org.uk> <1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home> <1333755470.3040.38.camel@pasglop> <m2aa2n7mmw.fsf@igel.home> <1334106834.2984.17.camel@pasglop> <1334107996.2984.20.camel@pasglop> <1334122182.2984.33.camel@pasglop> <20120411205707.68AC13E08B6@localhost> <1334180248.2984.39.camel@pasglop>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334180248.2984.39.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Andreas Schwab <schwab@linux-m68k.org>, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dtc: Adjust .gitignore to be in alphabetical order
+Date: Thu, 19 Apr 2012 13:46:02 -0500
+Message-ID: <E1SKwMk-0003UQ-Mr@jdl.com>
+References: <1334853216-16337-1-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1334853216-16337-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Apr 2012 07:37:28 +1000, Benjamin Herrenschmidt <benh@kernel.crashing.org> wrote:
-> On Wed, 2012-04-11 at 14:57 -0600, Grant Likely wrote:
-> > 
-> > Yeah, I've got a different way to fix it though.  There is exactly one
-> > user of irq_virq_count in-tree right now: PS3.  Also, irq_virq_count
-> > is only useful for the NOMAP mapping.  So, instead of having a single
-> > global irq_virq_count values, I've dropped it entirely and added a
-> > max_irq argument to irq_domain_add_nomap().  That makes it a property
-> > of an individual nomap irq domain instead of a global system settting.
-> > 
-> > Hopefully I'll have a draft patch ready today. 
+> This is the intent, so correct it.
 > 
-> That works for me. I'll send patches for cleanup MPIC as well.
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> Changes in v2:
+> - Split ordering change into a separate patch
 
-Okay, I'll wait on these.  The MPIC fixes will need to be applied
-before I can apply the automatic revmapping and hint removal patches.
-Those patches will also need testing before I apply to linux-next.
+Applied.
 
-g.
+jdl
