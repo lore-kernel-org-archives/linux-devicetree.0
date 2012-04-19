@@ -1,34 +1,127 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCHv2 1/2] drivers: input: keypad: Add device tree support
-Date: Thu, 19 Apr 2012 09:23:49 -0600
-Message-ID: <4F902E05.30503@wwwdotorg.org>
-References: <1334848537-823-1-git-send-email-sourav.poddar@ti.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Thu, 19 Apr 2012 23:28:59 +0800
+Message-ID: <20120419152857.GE22219@S2101-09.ap.freescale.net>
+References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1334848537-823-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1334333915-1174-1-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2012 09:15 AM, Sourav Poddar wrote:
-> Update the Documentation with omap4 keypad device tree
-> binding information.
-> Add device tree support for omap4 keypad driver.
-> 
-> Tested on omap4430 sdp with 3.4-rc3.
+On Sat, Apr 14, 2012 at 12:18:33AM +0800, Dong Aisheng wrote:
+> +config PINCTRL_IMX
+> +	bool "Freescale IMX core pinctrl driver"
+> +	depends on ARCH_MXC
+> +
+I would expect it just be:
 
-> diff --git a/Documentation/devicetree/bindings/input/omap-keypad.txt b/Documentation/devicetree/bindings/input/omap-keypad.txt
+config PINCTRL_IMX
+        bool
 
-> +- Keys represented as child nodes: Each key connected to the keypad
-> +  controller is represented as a child node to the keypad controller
-> +  device node and should include the following properties.
-> +  - keypad,row: the row number to which the key is connected.
-> +  - keypad,column: the column number to which the key is connected.
-> +  - linux,code: the key-code to be reported when the key is pressed
-> +    and released.
+It should be selected by PINCTRL_IMX6Q, which should in turn be
+selected by arch/soc config.  Neither PINCTRL_IMX nor PINCTRL_IMX6Q
+should be user visible option.
 
-Shouldn't this use the common matrix keymap bindings;
-Documentation/devicetree/bindings/input/matrix-keymap.txt
+> +	/* generate mux map */
+> +	parent = of_get_parent(np);
+> +	if (!parent)
+> +		return -EINVAL;
+> +
+
+You need to call of_node_put(parent), when you are done with the node.
+
+> +	info->ngroups = 0;
+> +	for_each_child_of_node(np, child)
+> +		info->ngroups += of_get_child_count(child);
+> +	info->groups = devm_kzalloc(&pdev->dev, nfuncs * sizeof(struct imx_pin_group),
+
+s/nfuncs/info->ngroups?
+
+> +static inline void imx_pmx_desc_init(struct pinctrl_desc *pmx_desc,
+> +				const struct imx_pinctrl_info *info)
+> +{
+> +	pmx_desc->pins = info->pins;
+> +	pmx_desc->npins = info->npins;
+> +}
+> +
+I do not see much point with this inline function.
+
+> +/**
+> + * struct imx_pmx_func - describes IMX pinmux functions
+> + * @name: the name of this specific function
+> + * @groups: corresponding pin groups
+> + */
+> +struct imx_pmx_func {
+> +	const char *name;
+> +	const char **groups;
+> +	unsigned num_groups;
+
+Missed from kernel doc above.
+
+If you make kernel doc, you need to make it perfectly right :)
+
+> +};
+> +
+> +/**
+> + * struct imx_pin_reg - describe a pin reg map
+> + * The last 3 members are used for select input setting
+> + * @pid: pin id
+> + * @mux_reg: mux register offset
+> + * @conf_reg: config register offset
+> + * @mux: mux mode
+> + * @input_reg: select input register offset for this mux if any
+> + *  0 if no select input setting needed.
+> + * @input_val: the value set to select input register
+> + */
+> +struct imx_pin_reg {
+> +	unsigned int pid;
+> +	unsigned int mux_reg;
+> +	unsigned int conf_reg;
+> +	unsigned int mux_mode;
+
+Name mismatch with kernel doc.
+
+> +	unsigned int input_reg;
+> +	unsigned int input_val;
+> +};
+> +
+> +/*
+> + * struct imx_config_properties - describes the available dt pin config properties
+> + * @property: the property name of a config
+> + * @off: the bit offset of this config in pin config register
+> + */
+> +struct imx_config_properties {
+> +	const char *property;
+> +	const unsigned int off;
+> +	const unsigned int mask;
+
+Missed from kernel doc above.
+
+> +};
+> +
+> +struct imx_pinctrl_info {
+> +	struct device *dev;
+> +	u32 type;
+
+Since you have "enum imx_pinctrl_type", shouldn't it be used here?
+
+Regards,
+Shawn
+
+> +	const struct pinctrl_pin_desc *pins;
+> +	unsigned int npins;
+> +	const struct imx_pin_reg *pin_regs;
+> +	unsigned int npin_regs;
+> +	const struct imx_config_properties *conf_properties;
+> +	unsigned int nconf_properties;
+> +	struct imx_pin_group *groups;
+> +	unsigned int ngroups;
+> +	struct imx_pmx_func *functions;
+> +	unsigned int nfunctions;
+> +};
+> +
