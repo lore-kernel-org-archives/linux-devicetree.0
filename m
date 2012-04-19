@@ -1,56 +1,31 @@
-From: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] fdt: Adjust Makefile to find .dtsi include files
-Date: Thu, 19 Apr 2012 20:29:33 +0200
-Message-ID: <20120419182933.CDE17202B35@gemini.denx.de>
-References: <1334845777-30913-1-git-send-email-sjg@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1334845777-30913-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v5 06/27] irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
+Date: Thu, 19 Apr 2012 12:42:38 -0600
+Message-ID: <20120419184238.4A6973E0700@localhost>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-7-git-send-email-grant.likely@secretlab.ca> <m2iphj3zxr.fsf@igel.home> <m2hax2qeqs.fsf@igel.home> <20120402202848.1EB833E02A7@localhost> <20120402215524.GM24211@n2100.arm.linux.org.uk> <1333406005.30734.61.camel@pasglop> <20120402225223.GN24211@n2100.arm.linux.org.uk> <1333409927.30734.62.camel@pasglop> <m24nsx9iz1.fsf@igel.home> <1333755470.3040.38.camel@pasglop> <m2aa2n7mmw.fsf@igel.home> <1334106834.2984.17.camel@pasglop> <1334107996.2984.20.camel@pasglop> <1334122182.2984.33.camel@pasglop> <20120411205707.68AC13E08B6@localhost> <1334180248.2984.39.camel@pasglop>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1334180248.2984.39.camel@pasglop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Andreas Schwab <schwab@linux-m68k.org>, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Simon Glass,
-
-In message <1334845777-30913-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> you wrote:
-> The device tree compiler now has an option to specify the search path
-> for its files. Use this option when compiling in preference to
-> pre-processing the file.
+On Thu, 12 Apr 2012 07:37:28 +1000, Benjamin Herrenschmidt <benh@kernel.crashing.org> wrote:
+> On Wed, 2012-04-11 at 14:57 -0600, Grant Likely wrote:
+> > 
+> > Yeah, I've got a different way to fix it though.  There is exactly one
+> > user of irq_virq_count in-tree right now: PS3.  Also, irq_virq_count
+> > is only useful for the NOMAP mapping.  So, instead of having a single
+> > global irq_virq_count values, I've dropped it entirely and added a
+> > max_irq argument to irq_domain_add_nomap().  That makes it a property
+> > of an individual nomap irq domain instead of a global system settting.
+> > 
+> > Hopefully I'll have a draft patch ready today. 
 > 
-> Update Tegra here also to prevent build breakage.
-> 
-> This requires a recent dtc (commit de6b762 in git://jdl.com/software/dtc.git).
-> 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  board/nvidia/dts/tegra2-seaboard.dts |    2 +-
->  dts/Makefile                         |    8 +++-----
->  2 files changed, 4 insertions(+), 6 deletions(-)
+> That works for me. I'll send patches for cleanup MPIC as well.
 
-NAK.  THis breaks building on all systems that use the
-distribution-provided DTC with this error:
+Okay, I'll wait on these.  The MPIC fixes will need to be applied
+before I can apply the automatic revmapping and hint removal patches.
+Those patches will also need testing before I apply to linux-next.
 
-	dtc: invalid option -- 'i'
-
-
-Best regards,
-
-Wolfgang Denk
-
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
-"What if" is a trademark of Hewlett Packard, so stop using it in your
-sentences without permission, or risk being sued.
+g.
