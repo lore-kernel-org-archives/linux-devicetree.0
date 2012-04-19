@@ -1,127 +1,42 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/3] pinctrl: pinctrl-imx: add imx pinctrl core driver
-Date: Thu, 19 Apr 2012 23:28:59 +0800
-Message-ID: <20120419152857.GE22219@S2101-09.ap.freescale.net>
-References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/4] mfd: tps65910: Add device-tree support
+Date: Thu, 19 Apr 2012 09:35:49 -0600
+Message-ID: <4F9030D5.2050601@wwwdotorg.org>
+References: <1334710829-22777-1-git-send-email-rklein@nvidia.com> <1334710829-22777-4-git-send-email-rklein@nvidia.com> <20120418090133.GC3021@opensource.wolfsonmicro.com> <1334777758.32315.37.camel@rklein-linux> <20120419125041.GH3046@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1334333915-1174-1-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120419125041.GH3046-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 14, 2012 at 12:18:33AM +0800, Dong Aisheng wrote:
-> +config PINCTRL_IMX
-> +	bool "Freescale IMX core pinctrl driver"
-> +	depends on ARCH_MXC
-> +
-I would expect it just be:
+On 04/19/2012 06:50 AM, Mark Brown wrote:
+> On Wed, Apr 18, 2012 at 12:35:58PM -0700, Rhyland Klein wrote:
+>> On Wed, 2012-04-18 at 02:01 -0700, Mark Brown wrote:
+> 
+>>> This is a really odd idiom - normally the pattern for device tree
+>>> support is to just go and try to use the device tree data if it's there
+>>> and there's no need for any flag to say if it should be used.
+> 
+>> I agree its odd. My concern was that the idiom is that is pdata assigned
+>> from board files should override dt data. At this point, we don't know
+>> where the tps65910->board_data is coming from, dt or board files.
+>> Arbitrarily using dt breaks that idiom. We could do a check like this if
+>> you prefer:
+> 
+> No, just prefer the DT - what you're proposing is exactly the opposite
+> idiom to what all the other DT drivers do so we'd need to go round
+> changing the policy globally at which point we probably want to start
+> having helpers for this.
 
-config PINCTRL_IMX
-        bool
+That's not right - the idea is that pdata should override device tree so
+that if there's a platform where the DT is known to contain incorrect
+data, then some early platform code can add pdata to the device to fix
+the problem, and that will be used in preference to the DT data.
 
-It should be selected by PINCTRL_IMX6Q, which should in turn be
-selected by arch/soc config.  Neither PINCTRL_IMX nor PINCTRL_IMX6Q
-should be user visible option.
-
-> +	/* generate mux map */
-> +	parent = of_get_parent(np);
-> +	if (!parent)
-> +		return -EINVAL;
-> +
-
-You need to call of_node_put(parent), when you are done with the node.
-
-> +	info->ngroups = 0;
-> +	for_each_child_of_node(np, child)
-> +		info->ngroups += of_get_child_count(child);
-> +	info->groups = devm_kzalloc(&pdev->dev, nfuncs * sizeof(struct imx_pin_group),
-
-s/nfuncs/info->ngroups?
-
-> +static inline void imx_pmx_desc_init(struct pinctrl_desc *pmx_desc,
-> +				const struct imx_pinctrl_info *info)
-> +{
-> +	pmx_desc->pins = info->pins;
-> +	pmx_desc->npins = info->npins;
-> +}
-> +
-I do not see much point with this inline function.
-
-> +/**
-> + * struct imx_pmx_func - describes IMX pinmux functions
-> + * @name: the name of this specific function
-> + * @groups: corresponding pin groups
-> + */
-> +struct imx_pmx_func {
-> +	const char *name;
-> +	const char **groups;
-> +	unsigned num_groups;
-
-Missed from kernel doc above.
-
-If you make kernel doc, you need to make it perfectly right :)
-
-> +};
-> +
-> +/**
-> + * struct imx_pin_reg - describe a pin reg map
-> + * The last 3 members are used for select input setting
-> + * @pid: pin id
-> + * @mux_reg: mux register offset
-> + * @conf_reg: config register offset
-> + * @mux: mux mode
-> + * @input_reg: select input register offset for this mux if any
-> + *  0 if no select input setting needed.
-> + * @input_val: the value set to select input register
-> + */
-> +struct imx_pin_reg {
-> +	unsigned int pid;
-> +	unsigned int mux_reg;
-> +	unsigned int conf_reg;
-> +	unsigned int mux_mode;
-
-Name mismatch with kernel doc.
-
-> +	unsigned int input_reg;
-> +	unsigned int input_val;
-> +};
-> +
-> +/*
-> + * struct imx_config_properties - describes the available dt pin config properties
-> + * @property: the property name of a config
-> + * @off: the bit offset of this config in pin config register
-> + */
-> +struct imx_config_properties {
-> +	const char *property;
-> +	const unsigned int off;
-> +	const unsigned int mask;
-
-Missed from kernel doc above.
-
-> +};
-> +
-> +struct imx_pinctrl_info {
-> +	struct device *dev;
-> +	u32 type;
-
-Since you have "enum imx_pinctrl_type", shouldn't it be used here?
-
-Regards,
-Shawn
-
-> +	const struct pinctrl_pin_desc *pins;
-> +	unsigned int npins;
-> +	const struct imx_pin_reg *pin_regs;
-> +	unsigned int npin_regs;
-> +	const struct imx_config_properties *conf_properties;
-> +	unsigned int nconf_properties;
-> +	struct imx_pin_group *groups;
-> +	unsigned int ngroups;
-> +	struct imx_pmx_func *functions;
-> +	unsigned int nfunctions;
-> +};
-> +
+At least, that's the last I heard Grant say on the subject, and that's
+how I've been writing all the Tegra-related drivers, and I've seen
+others do the same for other platforms.
