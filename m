@@ -1,123 +1,47 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: match by compatible property first
-Date: Fri, 20 Apr 2012 08:13:03 -0500
-Message-ID: <4F9160DF.70308@gmail.com>
-References: <1334917312-21192-1-git-send-email-thierry.reding@avionic-design.de>
+From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v5] i2c: Add device tree support to i2c-pnx.c
+Date: Fri, 20 Apr 2012 15:14:46 +0200
+Message-ID: <4F916146.1080904@antcom.de>
+References: <1334913755-10466-1-git-send-email-stigge@antcom.de> <20120420120950.GA15613@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1334917312-21192-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120420120950.GA15613-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vitalywool-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, Srinivas Bakki <srinivas.bakki-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2012 05:21 AM, Thierry Reding wrote:
-> When matching devices against an OF device ID table, the first string of
-> the compatible property that is listed in the table should match,
-> regardless of its position in the table.
+Hi,
+
+On 04/20/2012 02:09 PM, Wolfram Sang wrote:
+>> Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org> Reviewed-by: Arnd
+>> Bergmann <arnd-r2nGTMty4D4@public.gmane.org> Acked-by: Wolfram Sang
+>> <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> ---
->  drivers/of/base.c  |   31 +++++++++++++++++++++++++++----
->  include/linux/of.h |    3 +++
->  2 files changed, 30 insertions(+), 4 deletions(-)
+> NACK! I said the approach of dropping "timeout" is OK, but unless I
+> say "you may add my ack after changing this and that", please do
+> not automatically add my ack. Doesn't hurt here, since I have to
+> pick it up anyway.
+
+Sorry - my apologies! Removing for next re-post.
+
+>> Changes since v4: * Removed OF timeout property (to be added
+>> later when there is consensus about how to call and handle it) *
+>> Changed clock-frequency example to decimal
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d9bfd49..db355b7 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -511,6 +511,23 @@ out:
->  }
->  EXPORT_SYMBOL(of_find_node_with_property);
->  
-> +const struct of_device_id *of_match_compat(const struct of_device_id *matches,
-> +					   const char *compat)
-> +{
-> +	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+> Thanks, I just noticed. Please drop (more precise: remove) the 
+> "slave-addr" for the same reasons as "timeout".
 
-You are not using name or type here, so you can remove.
+OK, will do.
 
-> +		const char *cp = matches->compatible;
-> +		int len = strlen(cp);
-> +
-> +		if (len > 0 && of_compat_cmp(compat, cp, len) == 0)
-> +			return matches;
-> +
-> +		matches++;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL(of_match_compat);
-> +
->  /**
->   * of_match_node - Tell if an device_node has a matching of_match structure
->   *	@matches:	array of of device match structures to search in
-> @@ -521,9 +538,18 @@ EXPORT_SYMBOL(of_find_node_with_property);
->  const struct of_device_id *of_match_node(const struct of_device_id *matches,
->  					 const struct device_node *node)
->  {
-> +	struct property *prop;
-> +	const char *cp;
-> +
->  	if (!matches)
->  		return NULL;
->  
-> +	of_property_for_each_string(node, "compatible", prop, cp) {
-> +		const struct of_device_id *match = of_match_compat(matches, cp);
-> +		if (match)
-> +			return match;
-> +	}
-> +
->  	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+>> ret = request_irq(alg_data->irq, i2c_pnx_interrupt, -			0,
+>> pdev->name, alg_data); +			  0, pdev->name, alg_data);
+> 
+> I know that checkpatch complains about this, but I'd prefer to
+> avoid such changes unless the code before was really unreadable.
 
-You don't need to check compatible ptr here.
+OK!
 
->  		int match = 1;
->  		if (matches->name[0])
-> @@ -532,10 +558,7 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
->  		if (matches->type[0])
->  			match &= node->type
->  				&& !strcmp(matches->type, node->type);
-> -		if (matches->compatible[0])
-> -			match &= of_device_is_compatible(node,
-> -						matches->compatible);
-> -		if (match)
-> +		if (match && !matches->compatible[0])
->  			return matches;
->  		matches++;
->  	}
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index bd52d83..23b5061 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -231,6 +231,8 @@ extern const void *of_get_property(const struct device_node *node,
->  
->  extern int of_n_addr_cells(struct device_node *np);
->  extern int of_n_size_cells(struct device_node *np);
-> +extern const struct of_device_id *of_match_compat(
-> +	const struct of_device_id *matches, const char *compat);
-
-Why does this need to be a public function?
-
->  extern const struct of_device_id *of_match_node(
->  	const struct of_device_id *matches, const struct device_node *node);
->  extern int of_modalias_node(struct device_node *node, char *modalias, int len);
-> @@ -395,6 +397,7 @@ static inline int of_machine_is_compatible(const char *compat)
->  }
->  
->  #define of_match_ptr(_ptr)	NULL
-> +#define of_match_compat(_matches, _compat)	NULL
->  #define of_match_node(_matches, _node)	NULL
->  #define of_property_for_each_u32(np, propname, prop, p, u) \
->  	while (0)
+Roland
