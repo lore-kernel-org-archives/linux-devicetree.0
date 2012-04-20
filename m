@@ -1,47 +1,121 @@
-From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v5] i2c: Add device tree support to i2c-pnx.c
-Date: Fri, 20 Apr 2012 15:14:46 +0200
-Message-ID: <4F916146.1080904@antcom.de>
-References: <1334913755-10466-1-git-send-email-stigge@antcom.de> <20120420120950.GA15613@pengutronix.de>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH] of: match by compatible property first
+Date: Fri, 20 Apr 2012 15:28:40 +0200
+Message-ID: <20120420132839.GB25662@avionic-0098.adnet.avionic-design.de>
+References: <1334917312-21192-1-git-send-email-thierry.reding@avionic-design.de>
+ <4F9160DF.70308@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120420120950.GA15613-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vitalywool-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, Srinivas Bakki <srinivas.bakki-3arQi8VN3Tc@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============5834208661241021304=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F9160DF.70308-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 04/20/2012 02:09 PM, Wolfram Sang wrote:
->> Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org> Reviewed-by: Arnd
->> Bergmann <arnd-r2nGTMty4D4@public.gmane.org> Acked-by: Wolfram Sang
->> <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> NACK! I said the approach of dropping "timeout" is OK, but unless I
-> say "you may add my ack after changing this and that", please do
-> not automatically add my ack. Doesn't hurt here, since I have to
-> pick it up anyway.
+--===============5834208661241021304==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
+Content-Disposition: inline
 
-Sorry - my apologies! Removing for next re-post.
 
->> Changes since v4: * Removed OF timeout property (to be added
->> later when there is consensus about how to call and handle it) *
->> Changed clock-frequency example to decimal
-> 
-> Thanks, I just noticed. Please drop (more precise: remove) the 
-> "slave-addr" for the same reasons as "timeout".
+--l76fUT7nc3MelDdI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK, will do.
+* Rob Herring wrote:
+> On 04/20/2012 05:21 AM, Thierry Reding wrote:
+[...]
+> > +const struct of_device_id *of_match_compat(const struct of_device_id *=
+matches,
+> > +					   const char *compat)
+> > +{
+> > +	while (matches->name[0] || matches->type[0] || matches->compatible[0]=
+) {
+>=20
+> You are not using name or type here, so you can remove.
 
->> ret = request_irq(alg_data->irq, i2c_pnx_interrupt, -			0,
->> pdev->name, alg_data); +			  0, pdev->name, alg_data);
-> 
-> I know that checkpatch complains about this, but I'd prefer to
-> avoid such changes unless the code before was really unreadable.
+They are still required so we don't stop early. A match table could well ha=
+ve
+a first entry that has name and/or type set but not compatible, followed by=
+ a
+second entry with only compatible set.
 
-OK!
+> >  	while (matches->name[0] || matches->type[0] || matches->compatible[0]=
+) {
+>=20
+> You don't need to check compatible ptr here.
 
-Roland
+For similar reasons as above this check needs to stay in.
+
+>=20
+> >  		int match =3D 1;
+> >  		if (matches->name[0])
+> > @@ -532,10 +558,7 @@ const struct of_device_id *of_match_node(const str=
+uct of_device_id *matches,
+> >  		if (matches->type[0])
+> >  			match &=3D node->type
+> >  				&& !strcmp(matches->type, node->type);
+> > -		if (matches->compatible[0])
+> > -			match &=3D of_device_is_compatible(node,
+> > -						matches->compatible);
+> > -		if (match)
+> > +		if (match && !matches->compatible[0])
+> >  			return matches;
+> >  		matches++;
+> >  	}
+> > diff --git a/include/linux/of.h b/include/linux/of.h
+> > index bd52d83..23b5061 100644
+> > --- a/include/linux/of.h
+> > +++ b/include/linux/of.h
+> > @@ -231,6 +231,8 @@ extern const void *of_get_property(const struct dev=
+ice_node *node,
+> > =20
+> >  extern int of_n_addr_cells(struct device_node *np);
+> >  extern int of_n_size_cells(struct device_node *np);
+> > +extern const struct of_device_id *of_match_compat(
+> > +	const struct of_device_id *matches, const char *compat);
+>=20
+> Why does this need to be a public function?
+
+It doesn't. I just thought it might be handy to have. I can make it static =
+if
+you don't think it's useful generally.
+
+Thierry
+
+--l76fUT7nc3MelDdI
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk+RZIcACgkQZ+BJyKLjJp9MxQCgm0rGaEVuJqJA7OVJw/PikwVM
+oa8An3DWjn+JO+uw15m1CV0b3j5WOtRr
+=mVvW
+-----END PGP SIGNATURE-----
+
+--l76fUT7nc3MelDdI--
+
+--===============5834208661241021304==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5834208661241021304==--
