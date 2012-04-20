@@ -1,61 +1,92 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 3/3] ARM: imx6q: switch to use pinctrl driver
-Date: Fri, 20 Apr 2012 03:08:45 +0200
-Message-ID: <20120420010845.GV16641@game.jcrosoft.org>
-References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
- <1334333915-1174-3-git-send-email-b29396@freescale.com>
- <20120414135331.GB3852@pengutronix.de>
- <CAA+hA=QhSUZg0bWTss_4ROwZ--OOQfcP=mpt+MP7-ZKPkEwXyA@mail.gmail.com>
- <20120415073751.GF24997@S2101-09.ap.freescale.net>
- <20120416033519.GA17173@shlinux2.ap.freescale.net>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Reparenting a platform device
+Date: Thu, 19 Apr 2012 20:26:30 -0600
+Message-ID: <20120420022630.B9BF23E08B0@localhost>
+References: <20120405084258.GA19798@avionic-0098.adnet.avionic-design.de>
+ <20120407022423.EFB053E1858@localhost>
+ <20120407113510.GA22116@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20120416033519.GA17173@shlinux2.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: Dong Aisheng <dongas86@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120407113510.GA22116-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11:35 Mon 16 Apr     , Dong Aisheng wrote:
-> On Sun, Apr 15, 2012 at 03:37:54PM +0800, Shawn Guo wrote:
-> > On Sun, Apr 15, 2012 at 12:03:16PM +0800, Dong Aisheng wrote:
-> > ...
-> > > For MX3 and MX5, before their pinctrl driver are available, user may
-> > > need to define a dummy in dt to avoid such an error.
+On Sat, 7 Apr 2012 13:35:10 +0200, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> * Grant Likely wrote:
+> > On Thu, 5 Apr 2012 10:42:58 +0200, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> > > Hi,
 > > > 
-> > That is insane, and will not work.
+> > > I have a device tree where I have a GART device and a DRM device which uses
+> > > the GART. The GART is implemented by an IOMMU driver (tegra-gart) and
+> > > requires the user device to be a child of the GART device (it explicitly
+> > > checks for this when the user device is attached).
+> > > 
+> > > I've tried two alternatives to achieve this: create the GART device in the
+> > > user driver's .probe() function and explicitly set the DRM device's parent
+> > > to the resulting platform device like so:
+> > > 
+> > > 	gart = platform_device_alloc(...);
+> > > 	...
+> > > 	pdev->dev.parent = &gart->dev;
 > > 
-> > 1) We do not have device tree support for MX3 yet.
-> > 2) It's not practical to add dummy entries in dt to avoid the error.
-> > 3) There are still so many non-dt board files support in the tree.
-> > How will they work with that?
+> > Yeah, don't *ever* try to do this.  The device hierarchy is a complex
+> > data structure which must never be directly manipulated.
 > > 
-> > My suggestion is to not make it an error but a dev_dbg, assuming that
-> > the pins are already set up by platform code if we do not find the
-> > entry from pinctrl system.  We can take it as a transition solution,
-> > and turn the dev_dbg back to error when all the users of the device
-> > driver are converted to device tree.
+> > > 
+> > > The alternative is to use the device tree to look up the GART device node and
+> > > resolve it to the corresponding struct device:
+> > > 
+> > > 	gart_node = of_parse_phandle(drm->dev->of_node, "gart-parent", 0);
+> > > 	gart = bus_find_device(drm->dev->bus, NULL, gart_node, match_of_node);
+> > > 
+> > > Where match_of_node matches each struct device's .of_node field to the
+> > > gart_node.
+> > > 
+> > > Both of these variants seem to work, and the DRM device can be properly
+> > > attached to the GART device. However, after the DRM driver's .probe() exits,
+> > > I get the following error:
 > > 
-> My thinking is let pinctrl core handle dummy state as regulator subsystem
-> and does not depend on dt.
-> Linus, Stephen, any comment?
-agreed with Shawn
+> > I don't understand what you're trying to describe here as the 2nd
+> > option.
+> > 
+> > Regardless, reparenting should not ben the solution at all.  What does
+> > the device tree that you envision look like for this?  What devices
+> > are created, and what drivers bind to them?
+> 
+> The reason why I need to reparent at all is because the IOMMU driver requires
+> the user to be a child of the IOMMU device. If you look at the driver in
+> drivers/iommu/tegra-gart.c you'll see that it references dev->parent in
+> several places, most notably in the gart_iommu_attach_dev() function. So
+> there's really only two options that I can see: 1) create a virtual device
+> that is a child of the GART and is in charge of the actual allocations from
+> the GART and have the DRM driver use that interface or 2) change the GART
+> driver's behaviour in a way that the parent/child relationship is no longer a
+> requirement.
 
-this is insane if you can an error you do need to report it
+Either is fine by me.
 
-I get the same issue on at91 and I'm going to make the pinctrl mandatory for DT
-only
+> 1) has the advantage of providing a central allocation manager for the GART
+> and will allow to register multiple clients with the GART. 2) does not have
+> that advantage.
+> 
+> Another alternative may be to allow only a single device to attach to the
+> GART that doesn't have to be a child of the GART. That way the DRM could take
+> care of GART aperture allocations, which seems to be the most logical place
+> to do that anyway.
 
-Best Regards,
-J.
+That also works.  As long as nothing messes about with odd reparenting
+then I'm happy.
+
+g.
