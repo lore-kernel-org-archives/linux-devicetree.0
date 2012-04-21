@@ -1,46 +1,32 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt: fsl-imx-cspi.txt: Fix comment about GPIOs used for chip
- selects
-Date: Sat, 21 Apr 2012 14:21:13 -0300
-Message-ID: <1335028873-3395-1-git-send-email-festevam@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v5 2/3] netdev/of/phy: Add MDIO bus multiplexer support.
+Date: Sat, 21 Apr 2012 15:32:01 -0400 (EDT)
+Message-ID: <20120421.153201.2103447307695063734.davem@davemloft.net>
+References: <1334791254-15987-1-git-send-email-ddaney.cavm@gmail.com>
+        <1334791254-15987-3-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1334791254-15987-3-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+To: ddaney.cavm@gmail.com
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, galak@kernel.crashing.org, david.daney@cavium.com
 List-Id: devicetree@vger.kernel.org
 
-The gpio numbers does not match the comment. 
+From: David Daney <ddaney.cavm@gmail.com>
+Date: Wed, 18 Apr 2012 16:20:53 -0700
 
-Fix the comments for GPIOs used for chip selects.
+> +config MDIO_BUS_MUX
+> +	tristate
+> +	help
+> +	  This module provides a driver framework for MDIO bus
+> +	  multiplexers which connect one of several child MDIO busses
+> +	  to a parent bus.  Switching between child busses is done by
+> +	  device specific drivers.
+> +
 
-Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../devicetree/bindings/spi/fsl-imx-cspi.txt       |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 9841057..4256a6d 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -17,6 +17,6 @@ ecspi@70010000 {
- 	reg = <0x70010000 0x4000>;
- 	interrupts = <36>;
- 	fsl,spi-num-chipselects = <2>;
--	cs-gpios = <&gpio3 24 0>, /* GPIO4_24 */
--		   <&gpio3 25 0>; /* GPIO4_25 */
-+	cs-gpios = <&gpio3 24 0>, /* GPIO3_24 */
-+		   <&gpio3 25 0>; /* GPIO3_25 */
- };
--- 
-1.7.1
+This driver uses OF and OF_MDIO, and therefore need dependencies upon
+them.  Otherwise it can be enabled in configurations which will result
+in build failures.
