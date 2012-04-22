@@ -1,26 +1,79 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v5 2/3] netdev/of/phy: Add MDIO bus multiplexer support.
-Date: Sat, 21 Apr 2012 19:03:35 -0400 (EDT)
-Message-ID: <20120421.190335.1197591560590885057.davem@davemloft.net>
-References: <1334791254-15987-3-git-send-email-ddaney.cavm@gmail.com>
-        <20120421.153201.2103447307695063734.davem@davemloft.net>
-        <4F9325DF.7020003@gmail.com>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c/of: Automatically populate i2c mux busses
+ from device tree data.
+Date: Sun, 22 Apr 2012 18:20:08 +0200
+Message-ID: <20120422162008.GA4201@pengutronix.de>
+References: <1334265263-13549-1-git-send-email-ddaney.cavm@gmail.com>
+ <1334265263-13549-3-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <4F9325DF.7020003@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-To: david.s.daney@gmail.com
-Cc: ddaney.cavm@gmail.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, galak@kernel.crashing.org, david.daney@cavium.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1334265263-13549-3-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Jean Delvare (PC drivers core)" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.s.daney@gmail.com>
-Date: Sat, 21 Apr 2012 14:25:51 -0700
 
-> If we were to specify the dependencies in both places, we gain nothing
-> other than duplication of information.
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Each Kconfig option enabling a module has to have appropriate
-dependencies.
+On Thu, Apr 12, 2012 at 02:14:23PM -0700, David Daney wrote:
+> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>=20
+> For 'normal' i2c bus drivers, we can call of_i2c_register_devices()
+> and have the device tree framework automatically populate the bus with
+> the devices specified in the device tree.
+>=20
+> This patch adds a common code to the i2c mux framework to have the mux
+> sub-busses be populated by the of_i2c_register_devices() too.  If the
+> mux device has an of_node, we populate the sub-bus' of_node so that
+> the subsequent call to of_i2c_register_devices() will find the
+> corresponding devices.
+>=20
+> It seemed better to put this logic in i2c_add_mux_adapter() rather
+> than the individual mux drivers, as they will all probably want to do
+> the same thing.
+
+Both patches looking mostly good, two things here:
+
+> +	/*
+> +	 * Try to get populate the mux adapter's of_node, expands to
+
+"get populate"? I'd think you mean "populate" only, but am not sure
+enough to fix it myself.
+
+> +	 * nothing if !CONFIG_OF.
+> +	 */
+> +	if (mux_dev->of_node) {
+> +		struct device_node *child;
+> +		u32 reg;
+> +		int ret;
+
+We have a "ret" already in this function.
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk+UL7gACgkQD27XaX1/VRvdWgCgrlnDJ86GWtEaT3obbXaiJfuW
+q/YAoIzUvdOyNTDegA/3UfckWimXYdZv
+=nwnH
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
