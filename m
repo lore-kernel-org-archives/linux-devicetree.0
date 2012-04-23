@@ -1,160 +1,110 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 08/10] mtd: mxc_nand: put several more fields into devtype_data
-Date: Mon, 23 Apr 2012 11:23:40 +0200
-Message-ID: <1335173022-22371-8-git-send-email-u.kleine-koenig@pengutronix.de>
-References: <20120423092240.GA18013@pengutronix.de>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH 3/3] i2c-s3c2410: Add HDMIPHY quirk for S3C2440
+Date: Mon, 23 Apr 2012 12:01:06 +0200
+Message-ID: <20120423100106.GB19192@pengutronix.de>
+References: <1332357113-2973-1-git-send-email-k.lewandowsk@samsung.com>
+ <1332357113-2973-4-git-send-email-k.lewandowsk@samsung.com>
+ <20120417174029.GC22406@pengutronix.de>
+ <00dd01cd1d5c$57ce7f80$076b7e80$%szyprowski@samsung.com>
+ <20120418134644.GB19220@pengutronix.de>
+ <4F8EEC60.2080603@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120423092240.GA18013-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F8EEC60.2080603@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, ben-linux@fluff.org, thomas.abraham@linaro.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Tomasz Stanislawski <t.stanislaws@samsung.com>, kyungmin.park@samsung.com, broonie@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRy
-b25peC5kZT4KLS0tCiBkcml2ZXJzL210ZC9uYW5kL214Y19uYW5kLmMgfCAgMTI4ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA5MyBp
-bnNlcnRpb25zKCspLCAzNSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9u
-YW5kL214Y19uYW5kLmMgYi9kcml2ZXJzL210ZC9uYW5kL214Y19uYW5kLmMKaW5kZXggYWM0YjJl
-OS4uODFmZmI5YiAxMDA2NDQKLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9teGNfbmFuZC5jCisrKyBi
-L2RyaXZlcnMvbXRkL25hbmQvbXhjX25hbmQuYwpAQCAtMTU2LDYgKzE1NiwyMiBAQCBzdHJ1Y3Qg
-bXhjX25hbmRfZGV2dHlwZV9kYXRhIHsKIAl2b2lkICgqc2VsZWN0X2NoaXApKHN0cnVjdCBtdGRf
-aW5mbyAqbXRkLCBpbnQgY2hpcCk7CiAJaW50ICgqY29ycmVjdF9kYXRhKShzdHJ1Y3QgbXRkX2lu
-Zm8gKm10ZCwgdV9jaGFyICpkYXQsCiAJCQl1X2NoYXIgKnJlYWRfZWNjLCB1X2NoYXIgKmNhbGNf
-ZWNjKTsKKworCS8qCisJICogT24gaS5NWDIxIHRoZSBDT05GSUcyOklOVCBiaXQgY2Fubm90IGJl
-IHJlYWQgaWYgaW50ZXJydXB0cyBhcmUgbWFza2VkCisJICogKENPTkZJRzE6SU5UX01TSyBpcyBz
-ZXQpLiBUbyBoYW5kbGUgdGhpcyB0aGUgZHJpdmVyIHVzZXMKKwkgKiBlbmFibGVfaXJxL2Rpc2Fi
-bGVfaXJxX25vc3luYyBpbnN0ZWFkIG9mIENPTkZJRzE6SU5UX01TSworCSAqLworCWludCBpcnFw
-ZW5kaW5nX3F1aXJrOworCWludCBuZWVkc19pcDsKKworCXNpemVfdCByZWdzX29mZnNldDsKKwlz
-aXplX3Qgc3BhcmUwX29mZnNldDsKKwlzaXplX3QgYXhpX29mZnNldDsKKworCWludCBzcGFyZV9s
-ZW47CisJaW50IGVjY2J5dGVzOworCWludCBlY2NzaXplOwogfTsKIAogc3RydWN0IG14Y19uYW5k
-X2hvc3QgewpAQCAtMTgxLDE2ICsxOTcsOCBAQCBzdHJ1Y3QgbXhjX25hbmRfaG9zdCB7CiAKIAl1
-aW50OF90CQkJKmRhdGFfYnVmOwogCXVuc2lnbmVkIGludAkJYnVmX3N0YXJ0OwotCWludAkJCXNw
-YXJlX2xlbjsKIAogCWNvbnN0IHN0cnVjdCBteGNfbmFuZF9kZXZ0eXBlX2RhdGEgKmRldnR5cGVf
-ZGF0YTsKLQotCS8qCi0JICogT24gaS5NWDIxIHRoZSBDT05GSUcyOklOVCBiaXQgY2Fubm90IGJl
-IHJlYWQgaWYgaW50ZXJydXB0cyBhcmUgbWFza2VkCi0JICogKENPTkZJRzE6SU5UX01TSyBpcyBz
-ZXQpLiBUbyBoYW5kbGUgdGhpcyB0aGUgZHJpdmVyIHVzZXMKLQkgKiBlbmFibGVfaXJxL2Rpc2Fi
-bGVfaXJxX25vc3luYyBpbnN0ZWFkIG9mIENPTkZJRzE6SU5UX01TSwotCSAqLwotCWludCBpcnFw
-ZW5kaW5nX3F1aXJrOwogfTsKIAogLyogT09CIHBsYWNlbWVudCBibG9jayBmb3IgdXNlIHdpdGgg
-aGFyZHdhcmUgZWNjIGdlbmVyYXRpb24gKi8KQEAgLTI4NCw3ICsyOTIsNyBAQCBzdGF0aWMgaW50
-IGNoZWNrX2ludF92MV92MihzdHJ1Y3QgbXhjX25hbmRfaG9zdCAqaG9zdCkKIAlpZiAoISh0bXAg
-JiBORkNfVjFfVjJfQ09ORklHMl9JTlQpKQogCQlyZXR1cm4gMDsKIAotCWlmICghaG9zdC0+aXJx
-cGVuZGluZ19xdWlyaykKKwlpZiAoIWhvc3QtPmRldnR5cGVfZGF0YS0+aXJxcGVuZGluZ19xdWly
-aykKIAkJd3JpdGV3KHRtcCAmIH5ORkNfVjFfVjJfQ09ORklHMl9JTlQsIE5GQ19WMV9WMl9DT05G
-SUcyKTsKIAogCXJldHVybiAxOwpAQCAtMzIwLDcgKzMyOCw3IEBAIHN0YXRpYyB2b2lkIGlycV9j
-b250cm9sX3YzKHN0cnVjdCBteGNfbmFuZF9ob3N0ICpob3N0LCBpbnQgYWN0aXZhdGUpCiAKIHN0
-YXRpYyB2b2lkIGlycV9jb250cm9sKHN0cnVjdCBteGNfbmFuZF9ob3N0ICpob3N0LCBpbnQgYWN0
-aXZhdGUpCiB7Ci0JaWYgKGhvc3QtPmlycXBlbmRpbmdfcXVpcmspIHsKKwlpZiAoaG9zdC0+ZGV2
-dHlwZV9kYXRhLT5pcnFwZW5kaW5nX3F1aXJrKSB7CiAJCWlmIChhY3RpdmF0ZSkKIAkJCWVuYWJs
-ZV9pcnEoaG9zdC0+aXJxKTsKIAkJZWxzZQpAQCAtNDA2LDcgKzQxNCw3IEBAIHN0YXRpYyB2b2lk
-IHNlbmRfY21kX3YxX3YyKHN0cnVjdCBteGNfbmFuZF9ob3N0ICpob3N0LCB1aW50MTZfdCBjbWQs
-IGludCB1c2VpcnEpCiAJd3JpdGV3KGNtZCwgTkZDX1YxX1YyX0ZMQVNIX0NNRCk7CiAJd3JpdGV3
-KE5GQ19DTUQsIE5GQ19WMV9WMl9DT05GSUcyKTsKIAotCWlmIChob3N0LT5pcnFwZW5kaW5nX3F1
-aXJrICYmIChjbWQgPT0gTkFORF9DTURfUkVTRVQpKSB7CisJaWYgKGhvc3QtPmRldnR5cGVfZGF0
-YS0+aXJxcGVuZGluZ19xdWlyayAmJiAoY21kID09IE5BTkRfQ01EX1JFU0VUKSkgewogCQlpbnQg
-bWF4X3JldHJpZXMgPSAxMDA7CiAJCS8qIFJlc2V0IGNvbXBsZXRpb24gaXMgaW5kaWNhdGVkIGJ5
-IE5GQ19DT05GSUcyICovCiAJCS8qIGJlaW5nIHNldCB0byAwICovCkBAIC03ODEsNyArNzg5LDcg
-QEAgc3RhdGljIHZvaWQgY29weV9zcGFyZShzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgYm9vbCBiZnJv
-bSkKIAl1MTYgbiA9IG10ZC0+d3JpdGVzaXplID4+IDk7CiAJdTggKmQgPSBob3N0LT5kYXRhX2J1
-ZiArIG10ZC0+d3JpdGVzaXplOwogCXU4ICpzID0gaG9zdC0+c3BhcmUwOwotCXUxNiB0ID0gaG9z
-dC0+c3BhcmVfbGVuOworCXUxNiB0ID0gaG9zdC0+ZGV2dHlwZV9kYXRhLT5zcGFyZV9sZW47CiAK
-IAlqID0gKG10ZC0+b29ic2l6ZSAvIG4gPj4gMSkgPDwgMTsKIApAQCAtODgxLDcgKzg4OSw3IEBA
-IHN0YXRpYyB2b2lkIHByZXNldF92MShzdHJ1Y3QgbXRkX2luZm8gKm10ZCkKIAlpZiAobmFuZF9j
-aGlwLT5lY2MubW9kZSA9PSBOQU5EX0VDQ19IVykKIAkJY29uZmlnMSB8PSBORkNfVjFfVjJfQ09O
-RklHMV9FQ0NfRU47CiAKLQlpZiAoIWhvc3QtPmlycXBlbmRpbmdfcXVpcmspCisJaWYgKCFob3N0
-LT5kZXZ0eXBlX2RhdGEtPmlycXBlbmRpbmdfcXVpcmspCiAJCWNvbmZpZzEgfD0gTkZDX1YxX1Yy
-X0NPTkZJRzFfSU5UX01TSzsKIAogCWhvc3QtPmVjY3NpemUgPSAxOwpAQCAtOTExLDcgKzkxOSw3
-IEBAIHN0YXRpYyB2b2lkIHByZXNldF92MihzdHJ1Y3QgbXRkX2luZm8gKm10ZCkKIAogCWNvbmZp
-ZzEgfD0gTkZDX1YyX0NPTkZJRzFfRlBfSU5UOwogCi0JaWYgKCFob3N0LT5pcnFwZW5kaW5nX3F1
-aXJrKQorCWlmICghaG9zdC0+ZGV2dHlwZV9kYXRhLT5pcnFwZW5kaW5nX3F1aXJrKQogCQljb25m
-aWcxIHw9IE5GQ19WMV9WMl9DT05GSUcxX0lOVF9NU0s7CiAKIAlpZiAobXRkLT53cml0ZXNpemUp
-IHsKQEAgLTExMjYsNyArMTEzNCw3IEBAIHN0YXRpYyBzdHJ1Y3QgbmFuZF9iYnRfZGVzY3IgYmJ0
-X21pcnJvcl9kZXNjciA9IHsKIAkucGF0dGVybiA9IG1pcnJvcl9wYXR0ZXJuLAogfTsKIAotLyog
-djE6IDIxLCAyNywgMzEgKi8KKy8qIHYxICsgaXJxcGVuZGluZ19xdWlyazogMjEgKi8KIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgbXhjX25hbmRfZGV2dHlwZV9kYXRhIGlteDIxX25hbmRfZGV2dHlwZV9k
-YXRhID0gewogCS5wcmVzZXQgPSBwcmVzZXRfdjEsCiAJLnNlbmRfY21kID0gc2VuZF9jbWRfdjFf
-djIsCkBAIC0xMTQyLDYgKzExNTAsMzkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBteGNfbmFuZF9k
-ZXZ0eXBlX2RhdGEgaW14MjFfbmFuZF9kZXZ0eXBlX2RhdGEgPSB7CiAJLmVjY2xheW91dF80ayA9
-ICZuYW5kdjFfaHdfZWNjb29iX3NtYWxscGFnZSwgLyogWFhYOiBuZWVkcyBmaXggKi8KIAkuc2Vs
-ZWN0X2NoaXAgPSBteGNfbmFuZF9zZWxlY3RfY2hpcF92MV92MywKIAkuY29ycmVjdF9kYXRhID0g
-bXhjX25hbmRfY29ycmVjdF9kYXRhX3YxLAorCS5pcnFwZW5kaW5nX3F1aXJrID0gMSwKKwkubmVl
-ZHNfaXAgPSAwLAorCS5yZWdzX29mZnNldCA9IDB4ZTAwLAorCS5zcGFyZTBfb2Zmc2V0ID0gMHg4
-MDAsCisJLnNwYXJlX2xlbiA9IDE2LAorCS5lY2NieXRlcyA9IDMsCisJLmVjY3NpemUgPSAxLAor
-fTsKKworLyogdjEgKyAhaXJxcGVuZGluZ19xdWlyazogMjcsIDMxICovCitzdGF0aWMgY29uc3Qg
-c3RydWN0IG14Y19uYW5kX2RldnR5cGVfZGF0YSBpbXgyN19uYW5kX2RldnR5cGVfZGF0YSA9IHsK
-KwkucHJlc2V0ID0gcHJlc2V0X3YxLAorCS5zZW5kX2NtZCA9IHNlbmRfY21kX3YxX3YyLAorCS5z
-ZW5kX2FkZHIgPSBzZW5kX2FkZHJfdjFfdjIsCisJLnNlbmRfcGFnZSA9IHNlbmRfcGFnZV92MSwK
-Kwkuc2VuZF9yZWFkX2lkID0gc2VuZF9yZWFkX2lkX3YxX3YyLAorCS5nZXRfZGV2X3N0YXR1cyA9
-IGdldF9kZXZfc3RhdHVzX3YxX3YyLAorCS5jaGVja19pbnQgPSBjaGVja19pbnRfdjFfdjIsCisJ
-LmlycV9jb250cm9sID0gaXJxX2NvbnRyb2xfdjFfdjIsCisJLmdldF9lY2Nfc3RhdHVzID0gZ2V0
-X2VjY19zdGF0dXNfdjEsCisJLmVjY2xheW91dF81MTIgPSAmbmFuZHYxX2h3X2VjY29vYl9zbWFs
-bHBhZ2UsCisJLmVjY2xheW91dF8yayA9ICZuYW5kdjFfaHdfZWNjb29iX2xhcmdlcGFnZSwKKwku
-ZWNjbGF5b3V0XzRrID0gJm5hbmR2MV9od19lY2Nvb2Jfc21hbGxwYWdlLCAvKiBYWFg6IG5lZWRz
-IGZpeCAqLworCS5zZWxlY3RfY2hpcCA9IG14Y19uYW5kX3NlbGVjdF9jaGlwX3YxX3YzLAorCS5j
-b3JyZWN0X2RhdGEgPSBteGNfbmFuZF9jb3JyZWN0X2RhdGFfdjEsCisJLmlycXBlbmRpbmdfcXVp
-cmsgPSAwLAorCS5uZWVkc19pcCA9IDAsCisJLnJlZ3Nfb2Zmc2V0ID0gMHhlMDAsCisJLnNwYXJl
-MF9vZmZzZXQgPSAweDgwMCwKKwkuYXhpX29mZnNldCA9IDAsCisJLnNwYXJlX2xlbiA9IDE2LAor
-CS5lY2NieXRlcyA9IDMsCisJLmVjY3NpemUgPSAxLAogfTsKIAogLyogdjIxOiAyNSwgMzUgKi8K
-QEAgLTExNjAsNiArMTIwMSwxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG14Y19uYW5kX2RldnR5
-cGVfZGF0YSBpbXgyNV9uYW5kX2RldnR5cGVfZGF0YSA9IHsKIAkuZWNjbGF5b3V0XzRrID0gJm5h
-bmR2Ml9od19lY2Nvb2JfNGssCiAJLnNlbGVjdF9jaGlwID0gbXhjX25hbmRfc2VsZWN0X2NoaXBf
-djIsCiAJLmNvcnJlY3RfZGF0YSA9IG14Y19uYW5kX2NvcnJlY3RfZGF0YV92Ml92MywKKwkuaXJx
-cGVuZGluZ19xdWlyayA9IDAsCisJLm5lZWRzX2lwID0gMCwKKwkucmVnc19vZmZzZXQgPSAweDFl
-MDAsCisJLnNwYXJlMF9vZmZzZXQgPSAweDEwMDAsCisJLmF4aV9vZmZzZXQgPSAwLAorCS5zcGFy
-ZV9sZW4gPSA2NCwKKwkuZWNjYnl0ZXMgPSA5LAorCS5lY2NzaXplID0gMCwKIH07CiAKIC8qIHYz
-OiA1MSwgNTMgKi8KQEAgLTExNzgsNiArMTIyNywxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG14
-Y19uYW5kX2RldnR5cGVfZGF0YSBpbXg1MV9uYW5kX2RldnR5cGVfZGF0YSA9IHsKIAkuZWNjbGF5
-b3V0XzRrID0gJm5hbmR2Ml9od19lY2Nvb2Jfc21hbGxwYWdlLCAvKiBYWFg6IG5lZWRzIGZpeCAq
-LwogCS5zZWxlY3RfY2hpcCA9IG14Y19uYW5kX3NlbGVjdF9jaGlwX3YxX3YzLAogCS5jb3JyZWN0
-X2RhdGEgPSBteGNfbmFuZF9jb3JyZWN0X2RhdGFfdjJfdjMsCisJLmlycXBlbmRpbmdfcXVpcmsg
-PSAwLAorCS5uZWVkc19pcCA9IDEsCisJLnJlZ3Nfb2Zmc2V0ID0gMCwKKwkuc3BhcmUwX29mZnNl
-dCA9IDB4MTAwMCwKKwkuYXhpX29mZnNldCA9IDB4MWUwMCwKKwkuc3BhcmVfbGVuID0gNjQsCisJ
-LmVjY2J5dGVzID0gMCwKKwkuZWNjc2l6ZSA9IDAsCiB9OwogCiBzdGF0aWMgaW50IF9faW5pdCBt
-eGNuZF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQpAQCAtMTI0MiwyMiArMTI5
-OSwzMSBAQCBzdGF0aWMgaW50IF9faW5pdCBteGNuZF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQogCWhvc3QtPm1haW5fYXJlYTAgPSBob3N0LT5iYXNlOwogCiAJaWYgKG5mY19p
-c192MSgpKSB7Ci0JCWhvc3QtPmRldnR5cGVfZGF0YSA9ICZpbXgyMV9uYW5kX2RldnR5cGVfZGF0
-YTsKIAkJaWYgKGNwdV9pc19teDIxKCkpCi0JCQlob3N0LT5pcnFwZW5kaW5nX3F1aXJrID0gMTsK
-LQkJaG9zdC0+cmVncyA9IGhvc3QtPmJhc2UgKyAweGUwMDsKLQkJaG9zdC0+c3BhcmUwID0gaG9z
-dC0+YmFzZSArIDB4ODAwOwotCQlob3N0LT5zcGFyZV9sZW4gPSAxNjsKLQkJdGhpcy0+ZWNjLmJ5
-dGVzID0gMzsKLQkJaG9zdC0+ZWNjc2l6ZSA9IDE7CisJCQlob3N0LT5kZXZ0eXBlX2RhdGEgPSAm
-aW14MjFfbmFuZF9kZXZ0eXBlX2RhdGE7CisJCWVsc2UKKwkJCWhvc3QtPmRldnR5cGVfZGF0YSA9
-ICZpbXgyN19uYW5kX2RldnR5cGVfZGF0YTsKIAl9IGVsc2UgaWYgKG5mY19pc192MjEoKSkgewog
-CQlob3N0LT5kZXZ0eXBlX2RhdGEgPSAmaW14MjVfbmFuZF9kZXZ0eXBlX2RhdGE7Ci0JCWhvc3Qt
-PnJlZ3MgPSBob3N0LT5iYXNlICsgMHgxZTAwOwotCQlob3N0LT5zcGFyZTAgPSBob3N0LT5iYXNl
-ICsgMHgxMDAwOwotCQlob3N0LT5zcGFyZV9sZW4gPSA2NDsKLQkJdGhpcy0+ZWNjLmJ5dGVzID0g
-OTsKIAl9IGVsc2UgaWYgKG5mY19pc192M18yKCkpIHsKIAkJaG9zdC0+ZGV2dHlwZV9kYXRhID0g
-JmlteDUxX25hbmRfZGV2dHlwZV9kYXRhOworCX0gZWxzZQorCQlCVUcoKTsKKworCWlmIChob3N0
-LT5kZXZ0eXBlX2RhdGEtPnJlZ3Nfb2Zmc2V0KQorCQlob3N0LT5yZWdzID0gaG9zdC0+YmFzZSAr
-IGhvc3QtPmRldnR5cGVfZGF0YS0+cmVnc19vZmZzZXQ7CisJaG9zdC0+c3BhcmUwID0gaG9zdC0+
-YmFzZSArIGhvc3QtPmRldnR5cGVfZGF0YS0+c3BhcmUwX29mZnNldDsKKwlpZiAoaG9zdC0+ZGV2
-dHlwZV9kYXRhLT5heGlfb2Zmc2V0KQorCQlob3N0LT5yZWdzX2F4aSA9IGhvc3QtPmJhc2UgKyBo
-b3N0LT5kZXZ0eXBlX2RhdGEtPmF4aV9vZmZzZXQ7CisKKwl0aGlzLT5lY2MuYnl0ZXMgPSBob3N0
-LT5kZXZ0eXBlX2RhdGEtPmVjY2J5dGVzOworCWhvc3QtPmVjY3NpemUgPSBob3N0LT5kZXZ0eXBl
-X2RhdGEtPmVjY3NpemU7CisKKwl0aGlzLT5zZWxlY3RfY2hpcCA9IGhvc3QtPmRldnR5cGVfZGF0
-YS0+c2VsZWN0X2NoaXA7CisJdGhpcy0+ZWNjLnNpemUgPSA1MTI7CisJdGhpcy0+ZWNjLmxheW91
-dCA9IGhvc3QtPmRldnR5cGVfZGF0YS0+ZWNjbGF5b3V0XzUxMjsKKworCWlmIChob3N0LT5kZXZ0
-eXBlX2RhdGEtPm5lZWRzX2lwKSB7CiAJCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2
-LCBJT1JFU09VUkNFX01FTSwgMSk7CiAJCWlmICghcmVzKSB7CiAJCQllcnIgPSAtRU5PREVWOwpA
-QCAtMTI2OCwxNSArMTMzNCw3IEBAIHN0YXRpYyBpbnQgX19pbml0IG14Y25kX3Byb2JlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJCQllcnIgPSAtRU5PTUVNOwogCQkJZ290byBlaXJx
-OwogCQl9Ci0JCWhvc3QtPnJlZ3NfYXhpID0gaG9zdC0+YmFzZSArIDB4MWUwMDsKLQkJaG9zdC0+
-c3BhcmUwID0gaG9zdC0+YmFzZSArIDB4MTAwMDsKLQkJaG9zdC0+c3BhcmVfbGVuID0gNjQ7Ci0J
-fSBlbHNlCi0JCUJVRygpOwotCi0JdGhpcy0+c2VsZWN0X2NoaXAgPSBob3N0LT5kZXZ0eXBlX2Rh
-dGEtPnNlbGVjdF9jaGlwOwotCXRoaXMtPmVjYy5zaXplID0gNTEyOwotCXRoaXMtPmVjYy5sYXlv
-dXQgPSBob3N0LT5kZXZ0eXBlX2RhdGEtPmVjY2xheW91dF81MTI7CisJfQogCiAJaWYgKHBkYXRh
-LT5od19lY2MpIHsKIAkJdGhpcy0+ZWNjLmNhbGN1bGF0ZSA9IG14Y19uYW5kX2NhbGN1bGF0ZV9l
-Y2M7Ci0tIAoxLjcuMTAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNz
-QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rldmlj
-ZXRyZWUtZGlzY3Vzcwo=
+
+--i0/AhcQY5QxfSsSZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Karol,
+
+> >>> ... and this one, if we declare a new compatible-entry for exynos4?
+> >>
+> >> It is not strictly related to Exynos4 SoCs. Exynos4 SoC has 8 standard=
+ s3c2440 style
+> >> i2c controllers and one additional, internal controller for HDMIPHY, w=
+hich needs=20
+> >> some workarounds in the driver. Maybe the quirk should be named 'broke=
+n timeout=20
+> >> detection'
+> >=20
+> > I was wondering since you do what I suggested for platform devices alre=
+ady:
+> >=20
+> > +               .name           =3D "s3c2440-hdmiphy-i2c",
+> > +               .driver_data    =3D QUIRK_S3C2440 | QUIRK_HDMIPHY | QUI=
+RK_NO_GPIO,
+>=20
+>=20
+> Here I've done it this way for compatibility with legacy driver and
+> board(s).
+
+Understood.
+
+> Device tree is new interface, and I thought that it would be better
+> to describe things explicitly and separately from device type.
+>=20
+> Right now these properties are used only on S3C2440, but I don't
+> consider it highly unlikely to see these on S3C**** in future.
+
+My experience also says that it easily can get even worse :(
+
+> Tomasz had similar doubts when I've posted patch that checked these
+> quirks only for S3C2440:
+>=20
+>   http://permalink.gmane.org/gmane.linux.drivers.i2c/10305
+>=20
+> Thus, I've chosen properties and not separate type.
+
+I understand this reasoning. I still differ, though. Think about my
+above example about things getting worse. Then, you'd need another
+quirk-property for $FLAW. Later, $FLAW is still there, but the timeout
+issue was fixed. That would mean, the poor device-tree making person has
+to know which quirks to select for this version of the controller. Just
+specifying that it is the HDMI-phy and not a regular I2C controller is
+much more convenient, and the driver will figure the rest.
+
+> It's easy to introduce compat string (see below), but given above
+> I'm afraid that we might end up adding -hdmiphy- variant for every
+> new version of i2c controller.
+
+I'd be fine with that, given that the upcoming hdmiphy versions will not
+need all the same set of quirk-flags. I think we want that "quirk lookup
+table" fixed in the driver and not encoded in the device tree where
+people could get it wrong. Also, the quirks are nothing a board maker
+can select from; it is implicit as soons as you want the HDMIPHY on that
+SoC, thus the compatible-entry should be enough of a description.
+
+I am not the ultimate expert about bindings, though, and am open for
+corrections (I feel kinda confident on this issue, though ;))
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--i0/AhcQY5QxfSsSZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk+VKGIACgkQD27XaX1/VRs/3gCfaJYb7/C+CZeqJPVdH2tbSFk2
+POQAoL60oVexMDsHMPZY/04TUAk4p9nU
+=DI+t
+-----END PGP SIGNATURE-----
+
+--i0/AhcQY5QxfSsSZ--
