@@ -1,66 +1,350 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V1] dmaengine: tegra: add dma driver
-Date: Mon, 23 Apr 2012 18:47:50 +0530
-Message-ID: <4F95567E.3090605@nvidia.com>
-References: <1334912896-4614-1-git-send-email-ldewangan@nvidia.com> <1334920487.31825.98.camel@vkoul-udesk3> <4F9153AF.7020901@nvidia.com> <1335170491.31825.104.camel@vkoul-udesk3> <4F95483F.5020005@nvidia.com> <20120423130659.GA22186@n2100.arm.linux.org.uk>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCHv3 2/2] arm/dts: omap4-sdp: Add keypad data
+Date: Mon, 23 Apr 2012 20:57:19 +0530
+Message-ID: <1335194839-30193-2-git-send-email-sourav.poddar@ti.com>
+References: <1335194839-30193-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120423130659.GA22186-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1335194839-30193-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 April 2012 06:36 PM, Russell King - ARM Linux wrote:
-> On Mon, Apr 23, 2012 at 05:47:03PM +0530, Laxman Dewangan wrote:
->> Hi Russell,
->> On Monday 23 April 2012 02:11 PM, Vinod Koul wrote:
->>> On Fri, 2012-04-20 at 17:46 +0530, Laxman Dewangan wrote:
->>>> Thanks Vinod for quick review.
->>> Since I was on vacation, I hadn't noticed Russell has already sent the
->>> patches for omap dma support.
->>> http://permalink.gmane.org/gmane.linux.ports.arm.omap/75034
->>>
->>> It would be nice if both the efforts are coordinated.
->>>
->>> Btw I like the virtual channel support introduced by Russell
->>>
->> Can you please point me the virtual channel related change? I am not
->> able to locate this like search for function vchan_* ().
->> My driver is also on same line but not used vchan_* and also having
->> support for cyclic transfer.
-> It's only been posted in RFC form on linux-arm-kernel and linux-omap
-> lists.  The specific patch is:
->
-> http://lists.arm.linux.org.uk/lurker/message/20120418.101116.082b350f.en.html
->
-> I wouldn't call it perfected yet, but usable.  It doesn't have any
-> knowledge about cyclic transfers either.
+Add keypad data node in omap4 device tree file.
+Also fill the device tree binding parameters
+with the required value in "omap4-sdp" dts file.
 
-For simple dma, it is straight to use the virt_chan and it reduce lots 
-of code from tegra_dma as most of it moved to the virt_dma.
+Tested on omap44330 sdp with 3.4-rc3 kernel.
 
-Some points which I am looking are:
-1. Extending this for cyclic support:
-In cyclic mode, we need to call callback after period_len but do not 
-want to free descriptors. So either I need to add flag on the desctiptor 
-to no delet and so when vc->desc_free(vd); is called from callback, it 
-will not delete the descriptor.
+Cc: Benoit Cousson <b-cousson@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+---
+Changes since v2:
+ -Includes no-autorepeat device tree binding.
+ arch/arm/boot/dts/omap4-sdp.dts |  292 +++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap4.dtsi    |    5 +
+ 2 files changed, 297 insertions(+), 0 deletions(-)
 
-2. With very prep call, we are allocating descriptor. Is it is possible 
-to allocate some desc in advance and then keep using them. The 
-complexity is that if we allocate the desc in advance, we need to 
-allocate the desc and sq_req list and maintain the two different lists 
-as we dont know the sg_len in advance.
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index 63c6b2b..1d2d6cd 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -17,4 +17,296 @@
+ 		device_type = "memory";
+ 		reg = <0x80000000 0x40000000>; /* 1 GB */
+ 	};
++
++	keypad@4ae1c000 {
++		keypad,num-rows = <8>;
++		keypad,num-columns = <8>;
++		linux,input-no-autorepeat;
++
++		key_E {
++			keypad,row = <0>;
++			keypad,column = <0>;
++			linux,code = <18>;
++		};
++		key_R {
++			keypad,row = <0>;
++			keypad,column = <1>;
++			linux,code = <19>;
++		};
++		key_T {
++			keypad,row = <0>;
++			keypad,column = <2>;
++			linux,code = <20>;
++		};
++		key_HOME {
++			keypad,row = <0>;
++			keypad,column = <3>;
++			linux,code = <102>;
++		};
++		key_F5 {
++			keypad,row = <0>;
++			keypad,column = <4>;
++			linux,code = <63>;
++		};
++		key_I {
++			keypad,row = <0>;
++			keypad,column = <6>;
++			linux,code = <23>;
++		};
++		key_LEFTSHIFT {
++			keypad,row = <0>;
++			keypad,column = <7>;
++			linux,code = <42>;
++		};
++		key_D {
++			keypad,row = <1>;
++			keypad,column = <0>;
++			linux,code = <32>;
++		};
++		key_F {
++			keypad,row = <1>;
++			keypad,column = <1>;
++			linux,code = <33>;
++		};
++		key_G {
++			keypad,row = <1>;
++			keypad,column = <2>;
++			linux,code = <34>;
++		};
++		key_SEND {
++			keypad,row = <1>;
++			keypad,column = <3>;
++			linux,code = <84>;
++		};
++		key_F6 {
++			keypad,row = <1>;
++			keypad,column = <4>;
++			linux,code = <64>;
++		};
++		key_K {
++			keypad,row = <1>;
++			keypad,column = <6>;
++			linux,code = <37>;
++		};
++		key_ENTER {
++			keypad,row = <1>;
++			keypad,column = <7>;
++			linux,code = <28>;
++		};
++		key_X {
++			keypad,row = <2>;
++			keypad,column = <0>;
++			linux,code = <45>;
++		};
++		key_C {
++			keypad,row = <2>;
++			keypad,column = <1>;
++			linux,code = <46>;
++		};
++		key_V {
++			keypad,row = <2>;
++			keypad,column = <2>;
++			linux,code = <47>;
++		};
++		key_END {
++			keypad,row = <2>;
++			keypad,column = <3>;
++			linux,code = <107>;
++		};
++		key_F7 {
++			keypad,row = <2>;
++			keypad,column = <4>;
++			linux,code = <65>;
++		};
++		key_DOT {
++			keypad,row = <2>;
++			keypad,column = <6>;
++			linux,code = <52>;
++		};
++		key_CAPSLOCK {
++                        keypad,row = <2>;
++                        keypad,column = <7>;
++                        linux,code = <58>;
++                };
++		key_Z {
++			keypad,row = <3>;
++			keypad,column = <0>;
++			linux,code = <44>;
++		};
++		key_KPLUS {
++			keypad,row = <3>;
++			keypad,column = <1>;
++			linux,code = <78>;
++		};
++		key_B {
++			keypad,row = <3>;
++			keypad,column = <2>;
++			linux,code = <48>;
++		};
++		key_F1 {
++			keypad,row = <3>;
++			keypad,column = <3>;
++			linux,code = <59>;
++		};
++		key_F8 {
++			keypad,row = <3>;
++			keypad,column = <4>;
++			linux,code = <66>;
++		};
++		key_O {
++			keypad,row = <3>;
++			keypad,column = <6>;
++			linux,code = <24>;
++                };
++		key_SPACE {
++			keypad,row = <3>;
++			keypad,column = <7>;
++			linux,code = <57>;
++                };
++		key_W {
++			keypad,row = <4>;
++			keypad,column = <0>;
++			linux,code = <17>;
++                };
++		key_Y {
++			keypad,row = <4>;
++			keypad,column = <1>;
++			linux,code = <21>;
++		};
++		key_U {
++			keypad,row = <4>;
++			keypad,column = <2>;
++			linux,code = <22>;
++		};
++		key_F2 {
++			keypad,row = <4>;
++			keypad,column = <3>;
++			linux,code = <60>;
++		};
++		key_VOLUMEUP {
++			keypad,row = <4>;
++			keypad,column = <4>;
++			linux,code = <115>;
++		};
++		key_L {
++			keypad,row = <4>;
++			keypad,column = <6>;
++			linux,code = <38>;
++		};
++		key_LEFT {
++			keypad,row = <4>;
++			keypad,column = <7>;
++			linux,code = <105>;
++		};
++		key_S {
++			keypad,row = <5>;
++			keypad,column = <0>;
++			linux,code = <31>;
++		};
++		key_H {
++			keypad,row = <5>;
++			keypad,column = <1>;
++			linux,code = <35>;
++		};
++		key_J {
++			keypad,row = <5>;
++			keypad,column = <2>;
++			linux,code = <36>;
++		};
++		key_F3 {
++			keypad,row = <5>;
++			keypad,column = <3>;
++			linux,code = <61>;
++		};
++		key_F9 {
++			keypad,row = <5>;
++			keypad,column = <4>;
++			linux,code = <67>;
++		};
++		key_VOLUMEDOWN {
++			keypad,row = <5>;
++			keypad,column = <5>;
++			linux,code = <114>;
++		};
++		key_M {
++			keypad,row = <5>;
++			keypad,column = <6>;
++			linux,code = <50>;
++		};
++		key_RIGHT {
++			keypad,row = <5>;
++			keypad,column = <7>;
++			linux,code = <106>;
++		};
++		key_Q {
++			keypad,row = <6>;
++			keypad,column = <0>;
++			linux,code = <16>;
++		};
++		key_A {
++			keypad,row = <6>;
++			keypad,column = <1>;
++			linux,code = <30>;
++                };
++		key_N {
++			keypad,row = <6>;
++			keypad,column = <2>;
++			linux,code = <49>;
++                };
++		key_BACK {
++			keypad,row = <6>;
++			keypad,column = <3>;
++			linux,code = <92>;
++                };
++		key_BACKSPACE {
++			keypad,row = <6>;
++			keypad,column = <4>;
++			linux,code = <14>;
++		};
++		key_P {
++			keypad,row = <6>;
++			keypad,column = <6>;
++			linux,code = <25>;
++		};
++		key_UP {
++			keypad,row = <6>;
++			keypad,column = <7>;
++			linux,code = <103>;
++		};
++		key_PROG1 {
++			keypad,row = <7>;
++			keypad,column = <0>;
++			linux,code = <148>;
++		};
++		key_PROG2 {
++			keypad,row = <7>;
++			keypad,column = <1>;
++			linux,code = <149>;
++		};
++		key_PROG3 {
++			keypad,row = <7>;
++			keypad,column = <2>;
++			linux,code = <202>;
++                };
++		key_PROG4 {
++			keypad,row = <7>;
++			keypad,column = <3>;
++			linux,code = <203>;
++		};
++		key_F4 {
++			keypad,row = <7>;
++			keypad,column = <4>;
++			linux,code = <62>;
++		};
++		key_Ok {
++			keypad,row = <7>;
++			keypad,column = <6>;
++			linux,code = <352>;
++		};
++		key_DOWN {
++			keypad,row = <7>;
++			keypad,column = <7>;
++			linux,code = <108>;
++		};
++	};
+ };
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 3d35559..e0f678a 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -156,4 +156,9 @@
+ 			ti,hwmods = "i2c4";
+ 		};
+ 	};
++
++	keypad@4ae1c000 {
++		compatible = "ti,omap4-keypad";
++		ti,hwmods = "kbd";
++	};
+ };
+-- 
+1.7.1
 
-3. vchan_cookie_complete()  is not possible in the cyclic mode as we 
-dont want to call dma_cookie_complete() but just want to do following 
-two thing:
-
-list_add_tail(&vd->node, &vc->desc_completed);
-tasklet_schedule(&vc->task);
-
-if we extend this function to bypass dma_cookie_complete(&vd->tx); or 
-rather than calling this api, directly call the above apis.
