@@ -1,41 +1,105 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v4 07/10] tegra: fdt: Add keyboard definitions
-	for Seaboard
-Date: Mon, 23 Apr 2012 14:59:31 -0600
-Message-ID: <4F95C2B3.6020509@wwwdotorg.org>
-References: <1334689297-13489-1-git-send-email-sjg@chromium.org>
-	<1334689297-13489-8-git-send-email-sjg@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1334689297-13489-8-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: Anton Staff <robotboy@chromium.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+From: David Brown <davidb@codeaurora.org>
+Subject: [PATCH] ARM: msm: Fix gic irqdomain support
+Date: Mon, 23 Apr 2012 15:47:02 -0700
+Message-ID: <1335221222-30879-1-git-send-email-davidb@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2012 01:01 PM, Simon Glass wrote:
-> From: Anton Staff <robotboy@chromium.org>
-> 
-> Seaboard uses a QUERTY keyboard. We add key codes for this to
+As of
 
-Q*W*ERTY?
+    commit 75294957be1dee7d22dd7d90bd31334ba410e836
+    Author: Grant Likely <grant.likely@secretlab.ca>
+    Date:   Tue Feb 14 14:06:57 2012 -0700
 
-Do you want to add the nvidia,ghost-filter property so that ghost
-filtering is enabled? See the Tegra KBC binding documentation in the
-kernel (which I don't see included in these patches for reference)
-Documentation/devicetree/bindings/input/tegra-kbc.txt.
+        irq_domain: Remove 'new' irq_domain in favour of the ppc one
 
-Otherwise,
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+the ARM gic controller uses proper irq domains.  Fix the MSM gic
+initialization and DT so that it works again.
 
-(note: I didn't actually validate any of the content of the keymap)
+Signed-off-by: David Brown <davidb@codeaurora.org>
+---
+ arch/arm/boot/dts/msm8660-surf.dts |    4 ++--
+ arch/arm/mach-msm/board-msm8x60.c  |   25 +++++++++++++++----------
+ 2 files changed, 17 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/msm8660-surf.dts b/arch/arm/boot/dts/msm8660-surf.dts
+index 15ded0d..45bc4bb 100644
+--- a/arch/arm/boot/dts/msm8660-surf.dts
++++ b/arch/arm/boot/dts/msm8660-surf.dts
+@@ -10,7 +10,7 @@
+ 	intc: interrupt-controller@02080000 {
+ 		compatible = "qcom,msm-8660-qgic";
+ 		interrupt-controller;
+-		#interrupt-cells = <1>;
++		#interrupt-cells = <3>;
+ 		reg = < 0x02080000 0x1000 >,
+ 		      < 0x02081000 0x1000 >;
+ 	};
+@@ -19,6 +19,6 @@
+ 		compatible = "qcom,msm-hsuart", "qcom,msm-uart";
+ 		reg = <0x19c40000 0x1000>,
+ 		      <0x19c00000 0x1000>;
+-		interrupts = <195>;
++		interrupts = <0 195 0x0>;
+ 	};
+ };
+diff --git a/arch/arm/mach-msm/board-msm8x60.c b/arch/arm/mach-msm/board-msm8x60.c
+index 962e711..fb3496a 100644
+--- a/arch/arm/mach-msm/board-msm8x60.c
++++ b/arch/arm/mach-msm/board-msm8x60.c
+@@ -17,6 +17,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/memblock.h>
+ 
+@@ -49,10 +50,22 @@ static void __init msm8x60_map_io(void)
+ 	msm_map_msm8x60_io();
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id msm_dt_gic_match[] __initdata = {
++	{ .compatible = "qcom,msm-8660-qgic", .data = gic_of_init },
++	{}
++};
++#endif
++
+ static void __init msm8x60_init_irq(void)
+ {
+-	gic_init(0, GIC_PPI_START, MSM_QGIC_DIST_BASE,
+-		 (void *)MSM_QGIC_CPU_BASE);
++	if (!of_have_populated_dt())
++		gic_init(0, GIC_PPI_START, MSM_QGIC_DIST_BASE,
++			 (void *)MSM_QGIC_CPU_BASE);
++#ifdef CONFIG_OF
++	else
++		of_irq_init(msm_dt_gic_match);
++#endif
+ 
+ 	/* Edge trigger PPIs except AVS_SVICINT and AVS_SVICINTSWDONE */
+ 	writel(0xFFFFD7FF, MSM_QGIC_DIST_BASE + GIC_DIST_CONFIG + 4);
+@@ -73,16 +86,8 @@ static struct of_dev_auxdata msm_auxdata_lookup[] __initdata = {
+ 	{}
+ };
+ 
+-static struct of_device_id msm_dt_gic_match[] __initdata = {
+-	{ .compatible = "qcom,msm-8660-qgic", },
+-	{}
+-};
+-
+ static void __init msm8x60_dt_init(void)
+ {
+-	irq_domain_generate_simple(msm_dt_gic_match, MSM8X60_QGIC_DIST_PHYS,
+-				GIC_SPI_START);
+-
+ 	if (of_machine_is_compatible("qcom,msm8660-surf")) {
+ 		printk(KERN_INFO "Init surf UART registers\n");
+ 		msm8x60_init_uart12dm();
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
