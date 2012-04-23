@@ -1,50 +1,41 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/i2c: call i2c_verify_client from of_find_i2c_device_by_node
-Date: Mon, 23 Apr 2012 08:00:12 -0500
-Message-ID: <4F95525C.9020600@gmail.com>
-References: <1334688135-8355-1-git-send-email-swarren@wwwdotorg.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH V1] dmaengine: tegra: add dma driver
+Date: Mon, 23 Apr 2012 14:06:59 +0100
+Message-ID: <20120423130659.GA22186@n2100.arm.linux.org.uk>
+References: <1334912896-4614-1-git-send-email-ldewangan@nvidia.com> <1334920487.31825.98.camel@vkoul-udesk3> <4F9153AF.7020901@nvidia.com> <1335170491.31825.104.camel@vkoul-udesk3> <4F95483F.5020005@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1334688135-8355-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F95483F.5020005@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Vinod Koul <vinod.koul@linux.intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2012 01:42 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> i2c_bus_type may contain both I2C clients and I2C adapters. Fix
-> of_find_i2c_device_by_node to call i2c_verify_client to ensure that it
-> only returns non-NULL of I2C clients.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Mon, Apr 23, 2012 at 05:47:03PM +0530, Laxman Dewangan wrote:
+> Hi Russell,
+> On Monday 23 April 2012 02:11 PM, Vinod Koul wrote:
+>> On Fri, 2012-04-20 at 17:46 +0530, Laxman Dewangan wrote:
+>>> Thanks Vinod for quick review.
+>> Since I was on vacation, I hadn't noticed Russell has already sent the
+>> patches for omap dma support.
+>> http://permalink.gmane.org/gmane.linux.ports.arm.omap/75034
+>>
+>> It would be nice if both the efforts are coordinated.
+>>
+>> Btw I like the virtual channel support introduced by Russell
+>>
+>
+> Can you please point me the virtual channel related change? I am not  
+> able to locate this like search for function vchan_* ().
+> My driver is also on same line but not used vchan_* and also having  
+> support for cyclic transfer.
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+It's only been posted in RFC form on linux-arm-kernel and linux-omap
+lists.  The specific patch is:
 
+http://lists.arm.linux.org.uk/lurker/message/20120418.101116.082b350f.en.html
 
-> ---
-> Note: This is a dependency for the pinctrl I2C bus mux I will send in a
-> minute. It'd probably be easiest to merge this through the I2C tree.
-> It might also be useful to put this patch (and the others I'll send) in
-> a separate tree so it can be merged into any SoC trees that wish to use
-> this new feature.
-> 
->  drivers/of/of_i2c.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-> index f37fbeb..0684887 100644
-> --- a/drivers/of/of_i2c.c
-> +++ b/drivers/of/of_i2c.c
-> @@ -90,7 +90,7 @@ struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
->  	if (!dev)
->  		return NULL;
->  
-> -	return to_i2c_client(dev);
-> +	return i2c_verify_client(dev);
->  }
->  EXPORT_SYMBOL(of_find_i2c_device_by_node);
->  
+I wouldn't call it perfected yet, but usable.  It doesn't have any
+knowledge about cyclic transfers either.
