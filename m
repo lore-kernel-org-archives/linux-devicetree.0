@@ -1,11 +1,12 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] of: fix a few typos in the binding documentation
-Date: Mon, 23 Apr 2012 10:57:23 +0200
-Message-ID: <1335171443-15371-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 00/10] allow mxc_nand to be probed via device tree
+Date: Mon, 23 Apr 2012 11:22:40 +0200
+Message-ID: <20120423092240.GA18013@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,33 +16,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRy
-b25peC5kZT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVs
-LW5hbmQudHh0IHwgICAgMiArLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210
-ZC9wYXJ0aXRpb24udHh0ICB8ICAgIDIgKy0KIDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25z
-KCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0CmluZGV4IGEyMDA2OTUuLjBjMWJjY2QgMTAwNjQ0
-Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50
-eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9hdG1lbC1uYW5k
-LnR4dApAQCAtMyw3ICszLDcgQEAgQXRtZWwgTkFORCBmbGFzaAogUmVxdWlyZWQgcHJvcGVydGll
-czoKIC0gY29tcGF0aWJsZSA6ICJhdG1lbCxhdDkxcm05MjAwLW5hbmQiLgogLSByZWcgOiBzaG91
-bGQgc3BlY2lmeSBsb2NhbGJ1cyBhZGRyZXNzIGFuZCBzaXplIHVzZWQgZm9yIHRoZSBjaGlwLAot
-CWFuZCBpZiBhdmFpbGxhYmxlIHRoZSBFQ0MuCisJYW5kIGlmIGF2YWlsYWJsZSB0aGUgRUNDLgog
-LSBhdG1lbCxuYW5kLWFkZHItb2Zmc2V0IDogb2Zmc2V0IGZvciB0aGUgYWRkcmVzcyBsYXRjaC4K
-IC0gYXRtZWwsbmFuZC1jbWQtb2Zmc2V0IDogb2Zmc2V0IGZvciB0aGUgY29tbWFuZCBsYXRjaC4K
-IC0gI2FkZHJlc3MtY2VsbHMsICNzaXplLWNlbGxzIDogTXVzdCBiZSBwcmVzZW50IGlmIHRoZSBk
-ZXZpY2UgaGFzIHN1Yi1ub2RlcwpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL210ZC9wYXJ0aXRpb24udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL210ZC9wYXJ0aXRpb24udHh0CmluZGV4IGYxMTRjZTEuLjZlMWY2MWYgMTAwNjQ0Ci0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dAor
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQK
-QEAgLTM1LDQgKzM1LDQgQEAgZmxhc2hAMCB7CiAJdWltYWdlQDEwMDAwMCB7CiAJCXJlZyA9IDww
-eDAxMDAwMDAgMHgyMDAwMDA+OwogCX07Ci1dOworfTsKLS0gCjEuNy4xMAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1h
-aWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xp
-c3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+Hello,
+
+this series aims to be able to probe mxc_nand devices via device tree.
+Most of its patches reorganize the driver to only use cpu_is_mxYZ for
+the case that the device is not probed via device tree.
+
+I split this conversion in several patches to allow easier review. IMHO
+it makes sense to keep this splitting for an eventual bisection.
+
+This is tested on an i.MX27 based machine and works fine including
+passing of partition data.
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
