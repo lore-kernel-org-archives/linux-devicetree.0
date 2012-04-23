@@ -1,38 +1,35 @@
-From: "Poddar, Sourav" <sourav.poddar@ti.com>
-Subject: Re: [PATCHv3 1/2] drivers: input: keypad: Add device tree support
-Date: Mon, 23 Apr 2012 21:10:45 +0530
-Message-ID: <CAKdam541af1bU8_64gTZva9VS0R3dTR=3L3J50o9HgHH+WaPYQ@mail.gmail.com>
-References: <1335194839-30193-1-git-send-email-sourav.poddar@ti.com>
-	<4F95749E.40708@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: fix signed vs unsigned conditional inside
+ pinmux_map_to_setting
+Date: Mon, 23 Apr 2012 09:52:58 -0600
+Message-ID: <4F957ADA.9000203@wwwdotorg.org>
+References: <1335168743-3868-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <4F95749E.40708@wwwdotorg.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Randy Dunlap <rdunlap@xenotime.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1335168743-3868-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On 04/23/2012 02:12 AM, John Crispin wrote:
+> pinmux_map_to_settingi() uses setting->data.mux.func to store the return code of
+> pinmux_func_name_to_selector(). However, struct pinctrl_setting_mux defines the
+> func element as unsigned, resulting in all error codes getting lost. The
+> conditional following the assignment will always evaluate to false thus breaking
+> the error path.
 
-On Mon, Apr 23, 2012 at 8:56 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 04/23/2012 09:27 AM, Sourav Poddar wrote:
->> Update the Documentation with omap4 keypad device tree
->> binding information.
->> Add device tree support for omap4 keypad driver.
->
-> Shouldn't this use the already-defined matrix keyboard bindings at
-> Documentation/devicetree/bindings/input/matrix-keymap.txt?
->
-True, that is one way of describing the linux-keymap, but i think it can be
-done  either ways.
+This makes sense.
 
-Are you hinting at getting rid of Documentation for each seperate modules and
-just use a single  Documentation/devicetree/bindings/input/matrix-keymap.txt?
-
-
-> (I asked this before, but don't recall seeing any response explaining
-> why a new binding was needed. Sorry if I missed it.)
-Sorry, It was  I  who missed it.
-
-~Sourav
+The exact same issue applies to the assignment to
+setting->data.mux.group just a little below. Can you fix that up too please?
