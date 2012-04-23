@@ -1,267 +1,165 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c: mux: add device tree support
-Date: Mon, 23 Apr 2012 13:15:07 +0200
-Message-ID: <20120423111507.GF19192@pengutronix.de>
-References: <1334688545-8465-1-git-send-email-swarren@wwwdotorg.org>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/1] dt: Add general DMA window parser
+Date: Mon, 23 Apr 2012 13:53:52 +0200
+Message-ID: <20120423.145352.1868450546332033138.hdoyu@nvidia.com>
+References: <20120418.131907.2172387798112620167.hdoyu@nvidia.com><4F8EF99E.3050709@wwwdotorg.org><20120419151920.68ab735a5b9eb8fb938b4d11@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s5/bjXLgkIwAv6Hi"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1334688545-8465-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120419151920.68ab735a5b9eb8fb938b4d11-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---s5/bjXLgkIwAv6Hi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This code was based on:
+	"arch/microblaze/kernel/prom_parse.c"
+	"arch/powerpc/kernel/prom_parse.c"
 
-On Tue, Apr 17, 2012 at 12:49:04PM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> * Define core portions of the DT binding for I2C bus muxes.
-> * Enhance i2c_add_mux_adapter():
-> ** Add parameters required for DT support. Update all callers.
-> ** Set the appropriate adap->dev.of_node for the child bus.
-> ** Call of_i2c_register_devices() for the child bus.
->=20
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+"ibm," prefix could be supported with some modification.
 
-David Daney (CCed) posted another variant [1]. Just looking at the
-patches (and not really using them), I tend to like the approach using
-<reg> better. But I am open for discussion, so I'd appreciate your
-feedback.
+Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v2:
+- Add several error checks. (Thierry Reding)
+- Use property name given to func. (Stephen Warren)
+- Support multiple entries. (Stephen Warren)
 
-Regards,
+---
+ drivers/of/Kconfig         |    4 ++
+ drivers/of/Makefile        |    1 +
+ drivers/of/of_dma.c        |   67 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_address.h |   13 ++++++++
+ 4 files changed, 85 insertions(+), 0 deletions(-)
 
-   Wolfram
-
-[1] http://lkml.org/lkml/2012/4/12/423
-
-> ---
-> Note: This series depends on the 3 patches I just sent that affect
-> of_find_i2c_device_by_node and implement of_find_i2c_adapter_by_node.
-> It might be useful to put this patch (and the others I sent) in
-> a separate tree so it can be merged into any SoC trees that wish to use
-> this new feature.
->=20
->  Documentation/devicetree/bindings/i2c/i2cmux.txt |   45 ++++++++++++++++=
-++++++
->  drivers/i2c/i2c-mux.c                            |   23 +++++++++++-
->  drivers/i2c/muxes/gpio-i2cmux.c                  |    5 +-
->  drivers/i2c/muxes/pca9541.c                      |    4 +-
->  drivers/i2c/muxes/pca954x.c                      |    4 +-
->  include/linux/i2c-mux.h                          |    4 +-
->  6 files changed, 77 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2cmux.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/i2cmux.txt b/Documenta=
-tion/devicetree/bindings/i2c/i2cmux.txt
-> new file mode 100644
-> index 0000000..1e4e2bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2cmux.txt
-> @@ -0,0 +1,45 @@
-> +Common I2C mux bindings
-> +
-> +An I2C mux is a device that connects a master I2C bus to one of a number=
- of
-> +child I2C busses, under programmatic control.
-> +
-> +Each I2C mux may define the set of child busses it supports in a differe=
-nt
-> +way. Some devices may have a hard-coded set of child ports, whereas othe=
-rs may
-> +support a varying set of child busses (especially when the bus mux is
-> +implemented using GPIOs or pin muxing). Any bindings required to represe=
-nt
-> +this are the domain of the individual mux device.
-> +
-> +For each child bus, there shall be a node within the I2C mux's own node =
-for
-> +that bus. This node will contain all the I2C devices on that bus, just l=
-ike
-> +any other I2C bus. Each child bus shall be identified by some name. The =
-set
-> +of child bus names is defined by the individual I2C mux's bindings. Bus =
-names
-> +are used to construct the name of the bus's child node using the format
-> +i2c-bus-%s. Each child bus node needs the usual #address-cells and #size=
--cells
-> +properties.
-> +
-> +Example:
-> +
-> +	i2cmux {
-> +		// properties here omitted from the example.
-> +
-> +		i2c-bus-0 {
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			eeprom {
-> +				compatible =3D "eeprom";
-> +				reg =3D <0x50>;
-> +			};
-> +		};
-> +
-> +		i2c-bus-1 {
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			eeprom {
-> +				compatible =3D "eeprom";
-> +				reg =3D <0x50>;
-> +			};
-> +		};
-> +	};
-> +
-> diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
-> index d7a4833..8adeeec 100644
-> --- a/drivers/i2c/i2c-mux.c
-> +++ b/drivers/i2c/i2c-mux.c
-> @@ -24,6 +24,7 @@
->  #include <linux/slab.h>
->  #include <linux/i2c.h>
->  #include <linux/i2c-mux.h>
-> +#include <linux/of_i2c.h>
-> =20
->  /* multiplexer per channel data */
->  struct i2c_mux_priv {
-> @@ -86,8 +87,10 @@ static u32 i2c_mux_functionality(struct i2c_adapter *a=
-dap)
->  	return parent->algo->functionality(parent);
->  }
-> =20
-> -struct i2c_adapter *i2c_add_mux_adapter(struct i2c_adapter *parent,
-> +struct i2c_adapter *i2c_add_mux_adapter(struct device *dev,
-> +				struct i2c_adapter *parent,
->  				void *mux_dev, u32 force_nr, u32 chan_id,
-> +				const char *chan_name,
->  				int (*select) (struct i2c_adapter *,
->  					       void *, u32),
->  				int (*deselect) (struct i2c_adapter *,
-> @@ -124,6 +127,22 @@ struct i2c_adapter *i2c_add_mux_adapter(struct i2c_a=
-dapter *parent,
->  	priv->adap.algo_data =3D priv;
->  	priv->adap.dev.parent =3D &parent->dev;
-> =20
-> +	if (dev->of_node) {
-> +		const char *name;
-> +
-> +		if (chan_name)
-> +			name =3D kasprintf(GFP_KERNEL, "i2c-bus-%s",
-> +					     chan_name);
-> +		else
-> +			name =3D kasprintf(GFP_KERNEL, "i2c-bus-%d",
-> +					     chan_id);
-> +
-> +		priv->adap.dev.of_node =3D of_find_node_by_name(dev->of_node,
-> +							      name);
-> +
-> +		kfree(name);
-> +	}
-> +
->  	if (force_nr) {
->  		priv->adap.nr =3D force_nr;
->  		ret =3D i2c_add_numbered_adapter(&priv->adap);
-> @@ -141,6 +160,8 @@ struct i2c_adapter *i2c_add_mux_adapter(struct i2c_ad=
-apter *parent,
->  	dev_info(&parent->dev, "Added multiplexed i2c bus %d\n",
->  		 i2c_adapter_id(&priv->adap));
-> =20
-> +	of_i2c_register_devices(&priv->adap);
-> +
->  	return &priv->adap;
->  }
->  EXPORT_SYMBOL_GPL(i2c_add_mux_adapter);
-> diff --git a/drivers/i2c/muxes/gpio-i2cmux.c b/drivers/i2c/muxes/gpio-i2c=
-mux.c
-> index e5fa695..7284c70 100644
-> --- a/drivers/i2c/muxes/gpio-i2cmux.c
-> +++ b/drivers/i2c/muxes/gpio-i2cmux.c
-> @@ -105,8 +105,9 @@ static int __devinit gpiomux_probe(struct platform_de=
-vice *pdev)
->  	for (i =3D 0; i < pdata->n_values; i++) {
->  		u32 nr =3D pdata->base_nr ? (pdata->base_nr + i) : 0;
-> =20
-> -		mux->adap[i] =3D i2c_add_mux_adapter(parent, mux, nr, i,
-> -						   gpiomux_select, deselect);
-> +		mux->adap[i] =3D i2c_add_mux_adapter(&pdev->dev, parent, mux, nr,
-> +						   i, NULL, gpiomux_select,
-> +						   deselect);
->  		if (!mux->adap[i]) {
->  			ret =3D -ENODEV;
->  			dev_err(&pdev->dev, "Failed to add adapter %d\n", i);
-> diff --git a/drivers/i2c/muxes/pca9541.c b/drivers/i2c/muxes/pca9541.c
-> index e0df9b6..e1777fb 100644
-> --- a/drivers/i2c/muxes/pca9541.c
-> +++ b/drivers/i2c/muxes/pca9541.c
-> @@ -353,8 +353,8 @@ static int pca9541_probe(struct i2c_client *client,
->  	force =3D 0;
->  	if (pdata)
->  		force =3D pdata->modes[0].adap_id;
-> -	data->mux_adap =3D i2c_add_mux_adapter(adap, client, force, 0,
-> -					     pca9541_select_chan,
-> +	data->mux_adap =3D i2c_add_mux_adapter(&client->dev, adap, client, forc=
-e,
-> +					     0, NULL, pca9541_select_chan,
->  					     pca9541_release_chan);
-> =20
->  	if (data->mux_adap =3D=3D NULL) {
-> diff --git a/drivers/i2c/muxes/pca954x.c b/drivers/i2c/muxes/pca954x.c
-> index 0e37ef2..736a803 100644
-> --- a/drivers/i2c/muxes/pca954x.c
-> +++ b/drivers/i2c/muxes/pca954x.c
-> @@ -226,8 +226,8 @@ static int pca954x_probe(struct i2c_client *client,
->  		}
-> =20
->  		data->virt_adaps[num] =3D
-> -			i2c_add_mux_adapter(adap, client,
-> -				force, num, pca954x_select_chan,
-> +			i2c_add_mux_adapter(&client->dev, adap, client,
-> +				force, num, NULL, pca954x_select_chan,
->  				(pdata && pdata->modes[num].deselect_on_exit)
->  					? pca954x_deselect_mux : NULL);
-> =20
-> diff --git a/include/linux/i2c-mux.h b/include/linux/i2c-mux.h
-> index 747f0cd..43fb11a 100644
-> --- a/include/linux/i2c-mux.h
-> +++ b/include/linux/i2c-mux.h
-> @@ -33,8 +33,10 @@
->   * and deselect callback functions to perform hardware-specific
->   * mux control.
->   */
-> -struct i2c_adapter *i2c_add_mux_adapter(struct i2c_adapter *parent,
-> +struct i2c_adapter *i2c_add_mux_adapter(struct device *dev,
-> +				struct i2c_adapter *parent,
->  				void *mux_dev, u32 force_nr, u32 chan_id,
-> +				const char *chan_name,
->  				int (*select) (struct i2c_adapter *,
->  					       void *mux_dev, u32 chan_id),
->  				int (*deselect) (struct i2c_adapter *,
-> --=20
-> 1.7.0.4
->=20
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---s5/bjXLgkIwAv6Hi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk+VObsACgkQD27XaX1/VRtwSQCglpSAAWKWcBAtcn+Tof/A900h
-TjoAn255CABYfYWDHoMEdiZ3eMgSpYkz
-=on/Y
------END PGP SIGNATURE-----
-
---s5/bjXLgkIwAv6Hi--
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index dfba3e6..3b0298b 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -83,4 +83,8 @@ config OF_MTD
+ 	depends on MTD
+ 	def_bool y
+ 
++config OF_DMA
++	depends on HAS_DMA
++	def_bool y
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index e027f44..711ff5b 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -11,3 +11,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
++obj-$(CONFIG_OF_DMA)	+= of_dma.o
+diff --git a/drivers/of/of_dma.c b/drivers/of/of_dma.c
+new file mode 100644
+index 0000000..80bd7aa
+--- /dev/null
++++ b/drivers/of/of_dma.c
+@@ -0,0 +1,67 @@
++/*
++ * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Based on:
++ *	"arch/microblaze/kernel/prom_parse.c"
++ *	"arch/powerpc/kernel/prom_parse.c"
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/export.h>
++#include <linux/of_address.h>
++
++int of_parse_dma_window(struct device_node *dn,
++			const char *propname, int index,
++			unsigned long *busno,
++			dma_addr_t *addr, size_t *size)
++{
++	const __be32 *dma_window, *end;
++	int bytes, cur_index = 0;
++
++	if (!dn || !propname || !addr || !size)
++		return -EINVAL;
++
++	dma_window = of_get_property(dn, propname, &bytes);
++	if (!dma_window)
++		return -ENODEV;
++	end = dma_window + bytes / sizeof(*dma_window);
++
++	while (dma_window < end) {
++		u32 cells;
++		const void *prop;
++
++		/* busno is always one cell */
++		if (busno)
++			*busno = be32_to_cpup(dma_window++);
++
++		prop = of_get_property(dn, "#dma-address-cells", NULL);
++		if (!prop)
++			prop = of_get_property(dn, "#address-cells", NULL);
++
++		cells = prop ? be32_to_cpup(prop) : of_n_addr_cells(dn);
++		if (!cells)
++			return -EINVAL;
++		*addr = of_read_number(dma_window, cells);
++		dma_window += cells;
++
++		prop = of_get_property(dn, "#dma-size-cells", NULL);
++		cells = prop ? be32_to_cpup(prop) : of_n_size_cells(dn);
++		if (!cells)
++			return -EINVAL;
++		*size = of_read_number(dma_window, cells);
++		dma_window += cells;
++
++		if (cur_index++ == index)
++			break;
++	}
++	return 0;
++}
++EXPORT_SYMBOL(of_parse_dma_window);
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 01b925a..1138cd3 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -21,6 +21,11 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
+ extern const u32 *of_get_address(struct device_node *dev, int index,
+ 			   u64 *size, unsigned int *flags);
+ 
++extern int of_parse_dma_window(struct device_node *dev,
++			       const char *propname, int index,
++			       unsigned long *busno,
++			       dma_addr_t *phys, size_t *size);
++
+ #ifndef pci_address_to_pio
+ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+ #define pci_address_to_pio pci_address_to_pio
+@@ -48,6 +53,14 @@ static inline const u32 *of_get_address(struct device_node *dev, int index,
+ {
+ 	return NULL;
+ }
++
++extern int of_parse_dma_window(struct device_node *dev,
++			       const char *propname, int index,
++			       unsigned long *busno,
++			       dma_addr_t *phys, size_t *size)
++{
++	return 0;
++}
+ #endif /* CONFIG_OF_ADDRESS */
+ 
+ 
+-- 
+1.7.5.4
