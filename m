@@ -1,48 +1,72 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH V2 2/4] staging: iio: light: of: Fix vendor prefix of
- isl29018/isl29028
-Date: Mon, 23 Apr 2012 10:49:12 -0700
-Message-ID: <20120423174912.GA3214@kroah.com>
-References: <1335183097-21104-1-git-send-email-ldewangan@nvidia.com>
- <1335183097-21104-4-git-send-email-ldewangan@nvidia.com>
- <4F958E9F.8070402@wwwdotorg.org>
- <20120423172829.GA2666@kroah.com>
- <4F9594DB.5070308@wwwdotorg.org>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] i2c/of: Populate multiplexed i2c busses from the
+ device tree.
+Date: Mon, 23 Apr 2012 19:58:29 +0200
+Message-ID: <20120423175829.GA2767@pengutronix.de>
+References: <1334265263-13549-1-git-send-email-ddaney.cavm@gmail.com>
+ <4F880960.8010803@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F9594DB.5070308-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <4F880960.8010803-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Jean Delvare (PC drivers core)" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2012 at 11:43:55AM -0600, Stephen Warren wrote:
-> On 04/23/2012 11:28 AM, Greg KH wrote:
-> > On Mon, Apr 23, 2012 at 11:17:19AM -0600, Stephen Warren wrote:
-> >> On 04/23/2012 06:11 AM, Laxman Dewangan wrote:
-> >>> ISL29018/ISL29028 is from Intersil Corporation and making the
-> >>> vendor prefix for this part as "isil" for OF compatibity.
-> >>>
-> >>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> I assume this patch will go through the staging tree. Let me know if you
-> >> want me to take it through the Tegra tree.
-> > 
-> > Please take it through the Tegra tree, it is probably easier overall
-> > that way:
-> > 	Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> 
-> Sorry, looking harder, this patch touches a file that's added in the
-> current staging tree, so I can't take this patch.
-> 
-> There aren't any dependencies between this patch and the others due to
-> the way I2C probing works (the OF vendor prefix ends up getting
-> ignored), so I think merging it into staging should be simple.
 
-Ok, I'll do that, Laxman, can you resend it to me?
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
+On Fri, Apr 13, 2012 at 01:09:20PM +0200, Lars-Peter Clausen wrote:
+> On 04/12/2012 11:14 PM, David Daney wrote:
+> > From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> >=20
+> > v3: Integrate changes from Lars-Peter Clausen to make better use of
+> >     the of_*() infrastructure.  Get rid of ugly #ifdefs.
+> >=20
+> > v2: Update bindings to use "reg" insutead of "cell-index"
+> >=20
+> > v1: Unchanged from the original RFC where I said:
+> >=20
+> >   We need to populate our I2C devices from the device tree, but some
+> >   of our systems have multiplexers which currently break this process.
+> >=20
+> >   The basic idea is to have the generic i2c-mux framework propagate
+> >   the device_node for the child bus into the corresponding
+> >   i2c_adapter, and then call of_i2c_register_devices().  This means
+> >   that the device tree bindings for *all* i2c muxes must have some
+> >   common properties.  I try to document these in mux.txt.
+> >=20
+> > This is now tested against 3.4-rc2 and is still working well.
+> >=20
+>=20
+> I've been using these patches with a pca9548 and a pca9546 for a while no=
+w.
+> Both:
+>=20
+> Tested-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 
-greg k-h
+Both applied to next, thanks to all involved.
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk+VmEUACgkQD27XaX1/VRveAACgzATmTRrdC81RV4mAaV37qp/R
+bwwAnRlRY27ZXHk2qWeVgF9GfVmesKs3
+=jCHJ
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
