@@ -1,40 +1,50 @@
-From: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH V1] dmaengine: tegra: add dma driver
-Date: Mon, 23 Apr 2012 17:53:39 +0530
-Message-ID: <1335183819.31825.110.camel@vkoul-udesk3>
-References: <1334912896-4614-1-git-send-email-ldewangan@nvidia.com>
-	 <1334920487.31825.98.camel@vkoul-udesk3>  <4F9153AF.7020901@nvidia.com>
-	 <1335170491.31825.104.camel@vkoul-udesk3>  <4F95483F.5020005@nvidia.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of/i2c: call i2c_verify_client from of_find_i2c_device_by_node
+Date: Mon, 23 Apr 2012 08:00:12 -0500
+Message-ID: <4F95525C.9020600@gmail.com>
+References: <1334688135-8355-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4F95483F.5020005-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: rmk <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1334688135-8355-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2012-04-23 at 17:47 +0530, Laxman Dewangan wrote:
-> Hi Russell,
-> On Monday 23 April 2012 02:11 PM, Vinod Koul wrote:
-> > On Fri, 2012-04-20 at 17:46 +0530, Laxman Dewangan wrote:
-> >> Thanks Vinod for quick review.
-> > Since I was on vacation, I hadn't noticed Russell has already sent the
-> > patches for omap dma support.
-> > http://permalink.gmane.org/gmane.linux.ports.arm.omap/75034
-> >
-> > It would be nice if both the efforts are coordinated.
-> >
-> > Btw I like the virtual channel support introduced by Russell
-> >
+On 04/17/2012 01:42 PM, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> Can you please point me the virtual channel related change? I am not 
-> able to locate this like search for function vchan_* ().
-> My driver is also on same line but not used vchan_* and also having 
-> support for cyclic transfer.
-See the patch 3/8 in this series
+> i2c_bus_type may contain both I2C clients and I2C adapters. Fix
+> of_find_i2c_device_by_node to call i2c_verify_client to ensure that it
+> only returns non-NULL of I2C clients.
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
 
--- 
-~Vinod
+> ---
+> Note: This is a dependency for the pinctrl I2C bus mux I will send in a
+> minute. It'd probably be easiest to merge this through the I2C tree.
+> It might also be useful to put this patch (and the others I'll send) in
+> a separate tree so it can be merged into any SoC trees that wish to use
+> this new feature.
+> 
+>  drivers/of/of_i2c.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
+> index f37fbeb..0684887 100644
+> --- a/drivers/of/of_i2c.c
+> +++ b/drivers/of/of_i2c.c
+> @@ -90,7 +90,7 @@ struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
+>  	if (!dev)
+>  		return NULL;
+>  
+> -	return to_i2c_client(dev);
+> +	return i2c_verify_client(dev);
+>  }
+>  EXPORT_SYMBOL(of_find_i2c_device_by_node);
+>  
