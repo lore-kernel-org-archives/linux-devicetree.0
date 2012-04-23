@@ -1,36 +1,47 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/3] iommu/tegra: smmu: Add device tree support for SMMU
-Date: Mon, 23 Apr 2012 12:27:28 -0600
-Message-ID: <4F959F10.9010908@wwwdotorg.org>
-References: <1335182340-17237-1-git-send-email-hdoyu@nvidia.com> <1335182340-17237-2-git-send-email-hdoyu@nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: add error message to pinmux_map_to_setting's
+ error path
+Date: Mon, 23 Apr 2012 12:37:22 -0600
+Message-ID: <4F95A162.3080200@wwwdotorg.org>
+References: <1335202806-19520-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1335182340-17237-2-git-send-email-hdoyu@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Hiroshi DOYU <hdoyu@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Joerg Roedel <joerg.roedel@amd.com>, Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1335202806-19520-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2012 05:58 AM, Hiroshi DOYU wrote:
-> Add device tree support for Tegra30 IOMMU(SMMU).
+On 04/23/2012 11:40 AM, John Crispin wrote:
+> If a non existent mux group is referenced inside a devicetree, we see no error.
+> 
+> This patch adds the same type of error message that pinconf_map_to_setting()
+> gives when the pin/group is unknown.
+> 
+> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+There are some other cases where more error messages would be useful,
+such as invalid function name, invalid config options etc. I was
+planning on going through the code and adding these since some of these
+are hitting me on a new board I'm adding to mainline. Are you planning
+to add more of these messages, or should I go ahead with that?
 
-> +	err = of_parse_dma_window(dev->of_node, "dma-window", 0, NULL,
-> +				  &base, &size);
+I wonder if the message would be more useful if it said something like
+"invalid group %s for function %s" - that would give a little more
+information for the user to track down the incorrect entry, since that
+group name may be valid in general, just not for the function being
+converted.
 
-This patch also depends on "dt: Add general DMA window parser" that you
-sent earlier.
-
-> +	asids = be32_to_cpup(of_get_property(dev->of_node, "asids", NULL));
-> +	if (!asids)
-> +		return -ENODEV;
-
-What if of_get_property() fails?
-
-BTW, does the # ASIDs vary? I wonder if it's worth representing it in
-the device tree or not. If this driver has a chance of working
-unmodified on some future chip just by updating this DT property without
-any code changes, then it seems reasonable to have it in DT.
+BTW, the "Cc" you added to the commit description doesn't appear to be
+happening; I'm only receiving this message through the list.
