@@ -1,72 +1,56 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] i2c/of: Populate multiplexed i2c busses from the
- device tree.
-Date: Mon, 23 Apr 2012 19:58:29 +0200
-Message-ID: <20120423175829.GA2767@pengutronix.de>
-References: <1334265263-13549-1-git-send-email-ddaney.cavm@gmail.com>
- <4F880960.8010803@metafoo.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] dt: Add general DMA window parser
+Date: Mon, 23 Apr 2012 12:16:40 -0600
+Message-ID: <4F959C88.3090805@wwwdotorg.org>
+References: <20120418.131907.2172387798112620167.hdoyu@nvidia.com><4F8EF99E.3050709@wwwdotorg.org><20120419151920.68ab735a5b9eb8fb938b4d11@nvidia.com> <20120423.145352.1868450546332033138.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F880960.8010803-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Jean Delvare (PC drivers core)" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120423.145352.1868450546332033138.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 04/23/2012 05:53 AM, Hiroshi Doyu wrote:
+> From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> This code was based on:
+> 	"arch/microblaze/kernel/prom_parse.c"
+> 	"arch/powerpc/kernel/prom_parse.c"
+> 
+> "ibm," prefix could be supported with some modification.
 
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That'd probably be a good idea. If it isn't supported, then this code
+can't be used as a replacement for the PPC and Microblaze code.
 
-On Fri, Apr 13, 2012 at 01:09:20PM +0200, Lars-Peter Clausen wrote:
-> On 04/12/2012 11:14 PM, David Daney wrote:
-> > From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >=20
-> > v3: Integrate changes from Lars-Peter Clausen to make better use of
-> >     the of_*() infrastructure.  Get rid of ugly #ifdefs.
-> >=20
-> > v2: Update bindings to use "reg" insutead of "cell-index"
-> >=20
-> > v1: Unchanged from the original RFC where I said:
-> >=20
-> >   We need to populate our I2C devices from the device tree, but some
-> >   of our systems have multiplexers which currently break this process.
-> >=20
-> >   The basic idea is to have the generic i2c-mux framework propagate
-> >   the device_node for the child bus into the corresponding
-> >   i2c_adapter, and then call of_i2c_register_devices().  This means
-> >   that the device tree bindings for *all* i2c muxes must have some
-> >   common properties.  I try to document these in mux.txt.
-> >=20
-> > This is now tested against 3.4-rc2 and is still working well.
-> >=20
->=20
-> I've been using these patches with a pca9548 and a pca9546 for a while no=
-w.
-> Both:
->=20
-> Tested-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> +int of_parse_dma_window(struct device_node *dn,
+> +			const char *propname, int index,
+> +			unsigned long *busno,
+> +			dma_addr_t *addr, size_t *size)
+> +{
+> +	const __be32 *dma_window, *end;
+> +	int bytes, cur_index = 0;
+> +
+> +	if (!dn || !propname || !addr || !size)
+> +		return -EINVAL;
 
-Both applied to next, thanks to all involved.
+Instead of erroring out if (!propname), perhaps:
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+if (!propname)
+    propname = "dma-window";
 
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+so that only drivers using bindings before this common binding was
+defined actually need to write out the property name?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+...
+> +extern int of_parse_dma_window(struct device_node *dev,
+> +			       const char *propname, int index,
+> +			       unsigned long *busno,
+> +			       dma_addr_t *phys, size_t *size);
 
-iEYEARECAAYFAk+VmEUACgkQD27XaX1/VRveAACgzATmTRrdC81RV4mAaV37qp/R
-bwwAnRlRY27ZXHk2qWeVgF9GfVmesKs3
-=jCHJ
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
+This function has the same name as the PPC and Microblaze code it's
+based on. Is that going to cause compile and link errors due to
+duplicate symbol definitions?
