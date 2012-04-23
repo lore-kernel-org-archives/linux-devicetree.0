@@ -1,51 +1,65 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c: mux: add device tree support
-Date: Mon, 23 Apr 2012 10:13:19 -0600
-Message-ID: <4F957F9F.7000309@wwwdotorg.org>
-References: <1334688545-8465-1-git-send-email-swarren@wwwdotorg.org> <20120423111507.GF19192@pengutronix.de>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: Re: [PATCH 3/3] i2c-s3c2410: Add HDMIPHY quirk for S3C2440
+Date: Mon, 23 Apr 2012 18:22:25 +0200
+Message-ID: <4F9581C1.8030603@samsung.com>
+References: <1332357113-2973-1-git-send-email-k.lewandowsk@samsung.com>
+ <1332357113-2973-4-git-send-email-k.lewandowsk@samsung.com>
+ <20120417174029.GC22406@pengutronix.de>
+ <00dd01cd1d5c$57ce7f80$076b7e80$%szyprowski@samsung.com>
+ <20120418134644.GB19220@pengutronix.de> <4F8EEC60.2080603@samsung.com>
+ <20120423100106.GB19192@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120423111507.GF19192-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20120423100106.GB19192@pengutronix.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Wolfram Sang <w.sang@pengutronix.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, ben-linux@fluff.org, thomas.abraham@linaro.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Tomasz Stanislawski <t.stanislaws@samsung.com>, kyungmin.park@samsung.com, broonie@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2012 05:15 AM, Wolfram Sang wrote:
-> On Tue, Apr 17, 2012 at 12:49:04PM -0600, Stephen Warren wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 23.04.2012 12:01, Wolfram Sang wrote:
+
+> Hi Karol,
+>> Tomasz had similar doubts when I've posted patch that checked these
+>> quirks only for S3C2440:
 >>
->> * Define core portions of the DT binding for I2C bus muxes.
->> * Enhance i2c_add_mux_adapter():
->> ** Add parameters required for DT support. Update all callers.
->> ** Set the appropriate adap->dev.of_node for the child bus.
->> ** Call of_i2c_register_devices() for the child bus.
+>>   http://permalink.gmane.org/gmane.linux.drivers.i2c/10305
 >>
->> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> Thus, I've chosen properties and not separate type.
 > 
-> David Daney (CCed) posted another variant [1]. Just looking at the
-> patches (and not really using them), I tend to like the approach using
-> <reg> better. But I am open for discussion, so I'd appreciate your
-> feedback.
-> 
-> Regards,
-> 
->    Wolfram
-> 
-> [1] http://lkml.org/lkml/2012/4/12/423
+> I understand this reasoning. I still differ, though. Think about my
+> above example about things getting worse. Then, you'd need another
+> quirk-property for $FLAW. Later, $FLAW is still there, but the timeout
+> issue was fixed. That would mean, the poor device-tree making person has
+> to know which quirks to select for this version of the controller. Just
+> specifying that it is the HDMI-phy and not a regular I2C controller is
+> much more convenient, and the driver will figure the rest.
 
-Ah, that does look like a reasonable binding.
+>
 
-I had meant to call out to reviewers the potentially unusual use of
-explicitly named sub-nodes, rather than using the usual reg-based matching.
+>> It's easy to introduce compat string (see below), but given above
+>> I'm afraid that we might end up adding -hdmiphy- variant for every
+>> new version of i2c controller.
+> 
+> I'd be fine with that, given that the upcoming hdmiphy versions will not
+> need all the same set of quirk-flags. I think we want that "quirk lookup
+> table" fixed in the driver and not encoded in the device tree where
+> people could get it wrong. Also, the quirks are nothing a board maker
+> can select from; it is implicit as soons as you want the HDMIPHY on that
+> SoC, thus the compatible-entry should be enough of a description.
 
-The main reason I chose named sub-nodes for the busses was so the
-sub-nodes would match the pinctrl named states. However, I think we can
-make the pinctrl numbering match rather than the pinctrl naming instead.
-The only issue is the "idle" state; if we allow it to exist anywhere in
-the pinctrl-names list, it'll make the pinctrl numbering mismatch the
-sub-node numbering. I think we can solve this by forcing the idle state
-to be listed last in pinctrl-names (if it's listed at all). I'll update
-my patches based on that David's patch.
+
+Fair point, from integrator/board maker POV this makes much more sense.
+
+> I am not the ultimate expert about bindings, though, and am open for
+> corrections (I feel kinda confident on this issue, though ;))
+
+
+I'm quite happy with doing it the way you just described.
+
+I'll resend whole patchset in a minute.
+
+Thanks!
+-- 
+Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
