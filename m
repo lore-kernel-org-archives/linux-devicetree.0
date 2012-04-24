@@ -1,61 +1,83 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt: fsl-fec.txt: Fix GPIO number comment
-Date: Tue, 24 Apr 2012 21:54:55 +0800
-Message-ID: <CAAQ0ZWScD=0S0oQJszhqv5sO5q4ETe2d8ON5F_5YZCau-ykKLQ@mail.gmail.com>
-References: <1335273879-2281-1-git-send-email-fabio.estevam@freescale.com>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH 1/2] i2c-s3c2410: Rework device type handling
+Date: Tue, 24 Apr 2012 16:44:07 +0200
+Message-ID: <20120424144407.GA9007@pengutronix.de>
+References: <1335198241-19344-1-git-send-email-k.lewandowsk@samsung.com>
+ <1335198241-19344-2-git-send-email-k.lewandowsk@samsung.com>
+ <20120423182033.GB2767@pengutronix.de>
+ <4F966711.7080608@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1335273879-2281-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F966711.7080608@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: m.szyprowski@samsung.com, ben-linux@fluff.org, thomas.abraham@linaro.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, t.stanislaws@samsung.com, kyungmin.park@samsung.com, broonie@opensource.wolfsonmicro.com, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 24 April 2012 21:24, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Fix the comment for the GPIO number used for PHY reset.
->
-> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-David, Rob,
+On Tue, Apr 24, 2012 at 10:40:49AM +0200, Karol Lewandowski wrote:
+> On 23.04.2012 20:20, Wolfram Sang wrote:
+>=20
+> Hi!
+>=20
+> >> -static inline int s3c24xx_i2c_is2440(struct s3c24xx_i2c *i2c)
+> >> +static inline unsigned int s3c24xx_get_device_quirks(struct platform_=
+device *pdev)
+> >>  {
+> >> -	struct platform_device *pdev =3D to_platform_device(i2c->dev);
+> >> -	enum s3c24xx_i2c_type type;
+> >> -
+> >> -#ifdef CONFIG_OF
+> >> -	if (i2c->dev->of_node)
+> >> -		return of_device_is_compatible(i2c->dev->of_node,
+> >> -				"samsung,s3c2440-i2c");
+> >> -#endif
+> >> +	if (pdev->dev.of_node) {
+> >> +		const struct of_device_id *match;
+> >> +		match =3D of_match_node(&s3c24xx_i2c_match, pdev->dev.of_node);
+> >=20
+> > I'd appreciate a comment explaining why match can't be NULL here (as to
+> > my understanding, it can't). Or just check for it, but this way it looks
+> > a bit fishy and people (hopefully ;)) will ask about it.
+>=20
+>=20
+> My understanding is that it can't be null for exactly same reason why
+> platform_get_device_id(pdev) can't be null either (see below).
+>=20
+> I.e. prerequisite for this code to be run at all (as it's called from
+> driver's .probe()) is to be already matched against very same match
+> table.
 
-Let me know if you want the patch to go through arm-soc tree.
+Yes, I agree. Yet, this is not obvious and people might try to fix it
+(especially since programs like smatch report it as potentially
+dangerous). Ah, whatever, I could simply apply the fix then :) OK.
 
 Regards,
-Shawn
 
-> ---
-> Changes since v1:
-> - Keep 'local-mac-address' information
->
-> =A0Documentation/devicetree/bindings/net/fsl-fec.txt | =A0 =A02 +-
-> =A01 files changed, 1 insertions(+), 1 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Document=
-ation/devicetree/bindings/net/fsl-fec.txt
-> index de43951..96ba770 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -19,6 +19,6 @@ fec@83fec000 {
-> =A0 =A0 =A0 =A0reg =3D <0x83fec000 0x4000>;
-> =A0 =A0 =A0 =A0interrupts =3D <87>;
-> =A0 =A0 =A0 =A0phy-mode =3D "mii";
-> - =A0 =A0 =A0 phy-reset-gpios =3D <&gpio1 14 0>; /* GPIO2_14 */
-> + =A0 =A0 =A0 phy-reset-gpios =3D <&gpio1 14 0>; /* GPIO1_14 */
-> =A0 =A0 =A0 =A0local-mac-address =3D [00 04 9F 01 1B B9];
-> =A0};
-> --
-> 1.7.1
->
->
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk+WvDcACgkQD27XaX1/VRtfRwCfWhhvxIvD1njgpI9TcTD9rkO6
+u9YAoKTCSavc1yBC7fSYosfqcBM3L/DE
+=sVaK
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
