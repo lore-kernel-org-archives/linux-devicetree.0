@@ -1,76 +1,57 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] mtd: mxc_nand: fix several sparse warnings about incorrect
- address space
-Date: Tue, 24 Apr 2012 10:12:17 +0200
-Message-ID: <1335255137-13714-1-git-send-email-u.kleine-koenig@pengutronix.de>
-References: <20120424081052.GG20039@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] ARM: imx6q: switch to use pinctrl driver
+Date: Tue, 24 Apr 2012 10:23:34 +0200
+Message-ID: <CACRpkdZWNNz3+LbPtkV4rS4BJpqQdZio0qLkedLamSisgDkm6Q@mail.gmail.com>
+References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
+	<1334333915-1174-3-git-send-email-b29396@freescale.com>
+	<20120414135331.GB3852@pengutronix.de>
+	<CAA+hA=QhSUZg0bWTss_4ROwZ--OOQfcP=mpt+MP7-ZKPkEwXyA@mail.gmail.com>
+	<20120415073751.GF24997@S2101-09.ap.freescale.net>
+	<20120416033519.GA17173@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120424081052.GG20039@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120416033519.GA17173@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <dongas86@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRy
-b25peC5kZT4KLS0tCiBkcml2ZXJzL210ZC9uYW5kL214Y19uYW5kLmMgfCAgIDIyICsrKysrKysr
-KysrLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAxMSBkZWxl
-dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9uYW5kL214Y19uYW5kLmMgYi9kcml2
-ZXJzL210ZC9uYW5kL214Y19uYW5kLmMKaW5kZXggMTA0MWJiMS4uZWM1YmE4YiAxMDA2NDQKLS0t
-IGEvZHJpdmVycy9tdGQvbmFuZC9teGNfbmFuZC5jCisrKyBiL2RyaXZlcnMvbXRkL25hbmQvbXhj
-X25hbmQuYwpAQCAtMTgxLDggKzE4MSw4IEBAIHN0cnVjdCBteGNfbmFuZF9ob3N0IHsKIAlzdHJ1
-Y3QgbmFuZF9jaGlwCW5hbmQ7CiAJc3RydWN0IGRldmljZQkJKmRldjsKIAotCXZvaWQJCQkqc3Bh
-cmUwOwotCXZvaWQJCQkqbWFpbl9hcmVhMDsKKwl2b2lkIF9faW9tZW0JCSpzcGFyZTA7CisJdm9p
-ZCBfX2lvbWVtCQkqbWFpbl9hcmVhMDsKIAogCXZvaWQgX19pb21lbQkJKmJhc2U7CiAJdm9pZCBf
-X2lvbWVtCQkqcmVnczsKQEAgLTUxOSw3ICs1MTksNyBAQCBzdGF0aWMgdm9pZCBzZW5kX3JlYWRf
-aWRfdjMoc3RydWN0IG14Y19uYW5kX2hvc3QgKmhvc3QpCiAKIAl3YWl0X29wX2RvbmUoaG9zdCwg
-dHJ1ZSk7CiAKLQltZW1jcHkoaG9zdC0+ZGF0YV9idWYsIGhvc3QtPm1haW5fYXJlYTAsIDE2KTsK
-KwltZW1jcHlfZnJvbWlvKGhvc3QtPmRhdGFfYnVmLCBob3N0LT5tYWluX2FyZWEwLCAxNik7CiB9
-CiAKIC8qIFJlcXVlc3QgdGhlIE5BTkRGQyB0byBwZXJmb3JtIGEgcmVhZCBvZiB0aGUgTkFORCBk
-ZXZpY2UgSUQuICovCkBAIC01MzUsNyArNTM1LDcgQEAgc3RhdGljIHZvaWQgc2VuZF9yZWFkX2lk
-X3YxX3YyKHN0cnVjdCBteGNfbmFuZF9ob3N0ICpob3N0KQogCS8qIFdhaXQgZm9yIG9wZXJhdGlv
-biB0byBjb21wbGV0ZSAqLwogCXdhaXRfb3BfZG9uZShob3N0LCB0cnVlKTsKIAotCW1lbWNweSho
-b3N0LT5kYXRhX2J1ZiwgaG9zdC0+bWFpbl9hcmVhMCwgMTYpOworCW1lbWNweV9mcm9taW8oaG9z
-dC0+ZGF0YV9idWYsIGhvc3QtPm1haW5fYXJlYTAsIDE2KTsKIAogCWlmICh0aGlzLT5vcHRpb25z
-ICYgTkFORF9CVVNXSURUSF8xNikgewogCQkvKiBjb21wcmVzcyB0aGUgSUQgaW5mbyAqLwpAQCAt
-NzkwLDIzICs3OTAsMjMgQEAgc3RhdGljIHZvaWQgY29weV9zcGFyZShzdHJ1Y3QgbXRkX2luZm8g
-Km10ZCwgYm9vbCBiZnJvbSkKIAl1MTYgaSwgajsKIAl1MTYgbiA9IG10ZC0+d3JpdGVzaXplID4+
-IDk7CiAJdTggKmQgPSBob3N0LT5kYXRhX2J1ZiArIG10ZC0+d3JpdGVzaXplOwotCXU4ICpzID0g
-aG9zdC0+c3BhcmUwOworCXU4IF9faW9tZW0gKnMgPSBob3N0LT5zcGFyZTA7CiAJdTE2IHQgPSBo
-b3N0LT5kZXZ0eXBlX2RhdGEtPnNwYXJlX2xlbjsKIAogCWogPSAobXRkLT5vb2JzaXplIC8gbiA+
-PiAxKSA8PCAxOwogCiAJaWYgKGJmcm9tKSB7CiAJCWZvciAoaSA9IDA7IGkgPCBuIC0gMTsgaSsr
-KQotCQkJbWVtY3B5KGQgKyBpICogaiwgcyArIGkgKiB0LCBqKTsKKwkJCW1lbWNweV9mcm9taW8o
-ZCArIGkgKiBqLCBzICsgaSAqIHQsIGopOwogCiAJCS8qIHRoZSBsYXN0IHNlY3Rpb24gKi8KLQkJ
-bWVtY3B5KGQgKyBpICogaiwgcyArIGkgKiB0LCBtdGQtPm9vYnNpemUgLSBpICogaik7CisJCW1l
-bWNweV9mcm9taW8oZCArIGkgKiBqLCBzICsgaSAqIHQsIG10ZC0+b29ic2l6ZSAtIGkgKiBqKTsK
-IAl9IGVsc2UgewogCQlmb3IgKGkgPSAwOyBpIDwgbiAtIDE7IGkrKykKLQkJCW1lbWNweSgmc1tp
-ICogdF0sICZkW2kgKiBqXSwgaik7CisJCQltZW1jcHlfdG9pbygmc1tpICogdF0sICZkW2kgKiBq
-XSwgaik7CiAKIAkJLyogdGhlIGxhc3Qgc2VjdGlvbiAqLwotCQltZW1jcHkoJnNbaSAqIHRdLCAm
-ZFtpICogal0sIG10ZC0+b29ic2l6ZSAtIGkgKiBqKTsKKwkJbWVtY3B5X3RvaW8oJnNbaSAqIHRd
-LCAmZFtpICogal0sIG10ZC0+b29ic2l6ZSAtIGkgKiBqKTsKIAl9CiB9CiAKQEAgLTEwNzAsNyAr
-MTA3MCw3IEBAIHN0YXRpYyB2b2lkIG14Y19uYW5kX2NvbW1hbmQoc3RydWN0IG10ZF9pbmZvICpt
-dGQsIHVuc2lnbmVkIGNvbW1hbmQsCiAKIAkJaG9zdC0+ZGV2dHlwZV9kYXRhLT5zZW5kX3BhZ2Uo
-bXRkLCBORkNfT1VUUFVUKTsKIAotCQltZW1jcHkoaG9zdC0+ZGF0YV9idWYsIGhvc3QtPm1haW5f
-YXJlYTAsIG10ZC0+d3JpdGVzaXplKTsKKwkJbWVtY3B5X2Zyb21pbyhob3N0LT5kYXRhX2J1Ziwg
-aG9zdC0+bWFpbl9hcmVhMCwgbXRkLT53cml0ZXNpemUpOwogCQljb3B5X3NwYXJlKG10ZCwgdHJ1
-ZSk7CiAJCWJyZWFrOwogCkBAIC0xMDg2LDcgKzEwODYsNyBAQCBzdGF0aWMgdm9pZCBteGNfbmFu
-ZF9jb21tYW5kKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCB1bnNpZ25lZCBjb21tYW5kLAogCQlicmVh
-azsKIAogCWNhc2UgTkFORF9DTURfUEFHRVBST0c6Ci0JCW1lbWNweShob3N0LT5tYWluX2FyZWEw
-LCBob3N0LT5kYXRhX2J1ZiwgbXRkLT53cml0ZXNpemUpOworCQltZW1jcHlfdG9pbyhob3N0LT5t
-YWluX2FyZWEwLCBob3N0LT5kYXRhX2J1ZiwgbXRkLT53cml0ZXNpemUpOwogCQljb3B5X3NwYXJl
-KG10ZCwgZmFsc2UpOwogCQlob3N0LT5kZXZ0eXBlX2RhdGEtPnNlbmRfcGFnZShtdGQsIE5GQ19J
-TlBVVCk7CiAJCWhvc3QtPmRldnR5cGVfZGF0YS0+c2VuZF9jbWQoaG9zdCwgY29tbWFuZCwgdHJ1
-ZSk7Ci0tIAoxLjcuMTAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Mon, Apr 16, 2012 at 5:35 AM, Dong Aisheng
+<aisheng.dong@freescale.com> wrote:
+> On Sun, Apr 15, 2012 at 03:37:54PM +0800, Shawn Guo wrote:
+>> On Sun, Apr 15, 2012 at 12:03:16PM +0800, Dong Aisheng wrote:
+>> ...
+>> > For MX3 and MX5, before their pinctrl driver are available, user m=
+ay
+>> > need to define a dummy in dt to avoid such an error.
+>> >
+>> That is insane, and will not work.
+>>
+>> 1) We do not have device tree support for MX3 yet.
+>> 2) It's not practical to add dummy entries in dt to avoid the error.
+>> 3) There are still so many non-dt board files support in the tree.
+>> How will they work with that?
+>>
+>> My suggestion is to not make it an error but a dev_dbg, assuming tha=
+t
+>> the pins are already set up by platform code if we do not find the
+>> entry from pinctrl system. =A0We can take it as a transition solutio=
+n,
+>> and turn the dev_dbg back to error when all the users of the device
+>> driver are converted to device tree.
+>>
+> My thinking is let pinctrl core handle dummy state as regulator subsy=
+stem
+> and does not depend on dt.
+> Linus, Stephen, any comment?
+
+I think this was discussed in another thread and Sascha agreed that
+wee need dummy pinctrl to copy with a smooth transition in i.MX.
+
+So I'm happy with that, we just need to finalize a patch, poke
+me if I missed some patch...
+
+Yours,
+Linus Walleij
