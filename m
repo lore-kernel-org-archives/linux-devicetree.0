@@ -1,34 +1,40 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 01/13] regulator: Fix DT node name checking in max8997-pmic
-Date: Tue, 24 Apr 2012 15:57:58 -0700
-Message-ID: <CAOesGMj9AT9MUdC+Dg_qFSgztZpqrxnM3TJb=8wby2PFa6+jzw@mail.gmail.com>
-References: <1334256332-29867-1-git-send-email-k.lewandowsk@samsung.com>
-	<1334256332-29867-2-git-send-email-k.lewandowsk@samsung.com>
-	<20120424225614.GA14008@quad.lixom.net>
+From: Rhyland Klein <rklein@nvidia.com>
+Subject: [PATCH 0/8 v2] Update TPS65910 to boot using devicetree
+Date: Tue, 24 Apr 2012 16:36:02 -0700
+Message-ID: <1335310570-12455-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120424225614.GA14008@quad.lixom.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Karol Lewandowski <k.lewandowsk@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, thomas.abraham@linaro.org, m.szyprowski@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, kgene.kim@samsung.com
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rhyland Klein <rklein@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2012 at 3:56 PM, Olof Johansson <olof@lixom.net> wrote:
-> Hi,
->
->
-> On Thu, Apr 12, 2012 at 08:45:20PM +0200, Karol Lewandowski wrote:
->> Avoid hard lockup when someone provides non-supported regulator
->> name.
->>
->> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
->> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Thomas Abraham <thomas.abraham@linaro.org>
->
-> What is this supposed to apply against?
+This patch set updates the tps65910 driver to boot using devicetree.
 
-D'oh, I didn't see the dependency in 0/13, nevermind.
+This patch set now includes an addition to the of_regulator code which will
+parse out all the regulator init data for a device given a list of the
+regulator names it is expecting and a pointer to the array of where to store
+the pointers to the regulator_init_data structures.
 
+Rhyland Klein (8):
+  regulator: add generic of node parsing for regulators
+  regulator: add node validation checks
+  mfd: tps65910: Commonize regmap access through header
+  regulator: tps65910: Add device tree bindings
+  mfd: tps65910: Add device-tree support
+  regulator: tps65910 regulator: add device tree support
+  mfd: tps65910-irq: Add devicetree init support
+  ARM: Tegra: Add support for TPS65910 PMIC
 
--Olof
+ Documentation/devicetree/bindings/mfd/tps65910.txt |  133 +++++++++++++
+ arch/arm/boot/dts/tegra-cardhu.dts                 |   91 +++++++++
+ drivers/gpio/gpio-tps65910.c                       |   14 +-
+ drivers/mfd/tps65910-irq.c                         |   55 ++++---
+ drivers/mfd/tps65910.c                             |  107 ++++++++---
+ drivers/regulator/of_regulator.c                   |   80 ++++++++
+ drivers/regulator/tps65910-regulator.c             |  195 +++++++++++++++-----
+ include/linux/mfd/tps65910.h                       |   29 +++-
+ include/linux/regulator/of_regulator.h             |    9 +
+ 9 files changed, 606 insertions(+), 107 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65910.txt
