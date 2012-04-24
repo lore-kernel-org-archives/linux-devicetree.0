@@ -1,43 +1,42 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2] i2c: Add generic I2C multiplexer using pinctrl API
-Date: Tue, 24 Apr 2012 15:02:44 -0600
-Message-ID: <4F9714F4.2060400@wwwdotorg.org>
-References: <1335289664-21383-1-git-send-email-swarren@wwwdotorg.org> <20120424200929.GC30172@pengutronix.de>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 01/13] regulator: Fix DT node name checking in max8997-pmic
+Date: Tue, 24 Apr 2012 15:56:14 -0700
+Message-ID: <20120424225614.GA14008@quad.lixom.net>
+References: <1334256332-29867-1-git-send-email-k.lewandowsk@samsung.com>
+ <1334256332-29867-2-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120424200929.GC30172-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1334256332-29867-2-git-send-email-k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2012 02:09 PM, Wolfram Sang wrote:
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/pinctrl-i2cmux.txt
->> @@ -0,0 +1,79 @@
->> +Pinctrl-based I2C Bus Mux
->> +
->> +This binding describes an I2C bus multiplexer that uses pin multiplexing to
->> +route the I2C signals, and represents the pin multiplexing configuration
->> +using the pinctrl device tree bindings.
->> +
->> +Required properties:
->> +- compatible: pinctrl-i2cmux
-> 
-> From what I know, compatible-properties should not be linux-specific
-> since devicetrees are OS independent. pinctrl-i2cmux sounds
-> linux-specific to me.
-> 
-> So, is such a binding acceptable meanwhile?
+Hi,
 
-To my mind, "pinctrl" has two meanings: (1) is the Linux internal API
-(2) is the pinctrl bindings in
-Documentation/devicetree/bindings/pinctrl, which were admittedly
-developed strongly based on Linux's pinctrl API needs, but I believe
-should be completely agnostic to the pinctrl API, SW, OS, etc., and
-hence can be considered a pure representation of hardware.
 
-As such, the "pinctrl" in "pinctrl-i2cmux" above refers to (2) above,
-and can be considered a pure HW/binding term.
+On Thu, Apr 12, 2012 at 08:45:20PM +0200, Karol Lewandowski wrote:
+> Avoid hard lockup when someone provides non-supported regulator
+> name.
+> 
+> Signed-off-by: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+What is this supposed to apply against? It doesn't match any contents in
+linux-next. Also, fixes like these should just go straight to Mark Brown (and
+cc LAKML and others).
+
+
+-Olof
