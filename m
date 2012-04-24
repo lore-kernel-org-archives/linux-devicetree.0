@@ -1,7 +1,7 @@
 From: Rhyland Klein <rklein@nvidia.com>
-Subject: [PATCH 1/8 v2] regulator: add generic of node parsing for regulators
-Date: Tue, 24 Apr 2012 16:36:03 -0700
-Message-ID: <1335310570-12455-2-git-send-email-rklein@nvidia.com>
+Subject: [PATCH 8/8 v2] ARM: Tegra: Add support for TPS65910 PMIC
+Date: Tue, 24 Apr 2012 16:36:10 -0700
+Message-ID: <1335310570-12455-9-git-send-email-rklein@nvidia.com>
 References: <1335310570-12455-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,96 +12,116 @@ To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Samuel Ortiz <sameo@linux.
 Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rhyland Klein <rklein@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-As more regulators are moved to support dt, more drivers are going to need
-to do lookups to find nodes associated with specific regulators. Add this
-helper function which will find all the regulator_init_data for a series of
-regulators and do some minimal dt validation checks.
+Add support for the tps65910 pmic on cardhu.
 
 Signed-off-by: Rhyland Klein <rklein@nvidia.com>
 ---
- v2: split off from tps65910 particular code to a more generic form based
-     on initial reviews.
+ v2: updated to move the ext-sleep-control into the regulator nodes
 
- drivers/regulator/of_regulator.c       |   42 ++++++++++++++++++++++++++++++++
- include/linux/regulator/of_regulator.h |    9 +++++++
- 2 files changed, 51 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/tegra-cardhu.dts |   91 ++++++++++++++++++++++++++++++++++++
+ 1 files changed, 91 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 679734d..45a5f85 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -85,3 +85,45 @@ struct regulator_init_data *of_get_regulator_init_data(struct device *dev,
- 	return init_data;
- }
- EXPORT_SYMBOL_GPL(of_get_regulator_init_data);
+diff --git a/arch/arm/boot/dts/tegra-cardhu.dts b/arch/arm/boot/dts/tegra-cardhu.dts
+index ab8d901..ed02abb 100644
+--- a/arch/arm/boot/dts/tegra-cardhu.dts
++++ b/arch/arm/boot/dts/tegra-cardhu.dts
+@@ -115,6 +115,97 @@
+ 			micdet-delay = <100>;
+ 			gpio-cfg = <0xffffffff 0xffffffff 0 0xffffffff 0xffffffff>;
+ 		};
 +
-+/**
-+ * of_find_regulator_init_data_from_device - extract all regulator_init_data
-+ * @dev: device requesting for regulator_init_data
-+ * @node: device node from which to look for the regulators
-+ * @names: array of the names of the regulators for which to look for nodes
-+ * @init_data: array of regulator_init_data structure pointers to populate
-+ * @num_regulators: the max number of regulators expected
-+ *
-+ * This function populates the array of regulator_init_data structures by
-+ * finding the device_nodes which respresent each regulator and extracting
-+ * data. Returns 0 on success.
-+ */
-+int of_find_regulator_init_data_from_device(struct device *dev,
-+	struct device_node *node, const char * const names[],
-+	struct regulator_init_data **init_data, int num_regulators)
-+{
-+	struct device_node *child = NULL;
-+	int idx = 0;
++		pmic: tps65911@2d {
++			compatible = "ti,tps65911";
++			reg = <0x2d>;
++			interrupts = < 0 118 0x04 >;
 +
-+	if (!dev || !node)
-+		return -EINVAL;
++			#gpio-cells = <2>;
++			gpio-controller;
 +
-+	for (idx = 0; idx < num_regulators; idx++) {
-+		struct device_node *np = of_find_node_by_name(node, names[idx]);
++			#interrupt-cells = <2>;
++			interrupt-controller;
 +
-+		/* didn't find a match, thats fine */
-+		if (!np)
-+			continue;
++			ti,vmbch-threshold = <0>;
++			ti,vmbch2-threshold = <0>;
++			ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
 +
-+		/* parse regulator init data from node */
-+		init_data[idx] = of_get_regulator_init_data(dev, np);
-+		if (!init_data[idx]) {
-+			dev_err(dev, "failed to parse dt for regulator %s\n",
-+				child->name);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_find_regulator_init_data_from_device);
-diff --git a/include/linux/regulator/of_regulator.h b/include/linux/regulator/of_regulator.h
-index 769704f..0c65dcb 100644
---- a/include/linux/regulator/of_regulator.h
-+++ b/include/linux/regulator/of_regulator.h
-@@ -10,6 +10,9 @@
- extern struct regulator_init_data
- 	*of_get_regulator_init_data(struct device *dev,
- 				    struct device_node *node);
-+extern int of_find_regulator_init_data_from_device(struct device *dev,
-+	struct device_node *node, const char * const names[],
-+	struct regulator_init_data **init_data, int num_regulators);
- #else
- static inline struct regulator_init_data
- 	*of_get_regulator_init_data(struct device *dev,
-@@ -17,6 +20,12 @@ static inline struct regulator_init_data
- {
- 	return NULL;
- }
-+static inline int of_find_regulator_init_data_from_device(struct device *dev,
-+	struct device_node *node, const char * const names[],
-+	struct regulator_init_data **init_data, int num_regulators)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_OF */
++			regulators {
++				vdd1_reg: vdd1 {
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,regulator-ext-sleep-control = <4>;
++				};
++				vdd2_reg: vdd2 {
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,regulator-ext-sleep-control = <0>;
++				};
++				vddctrl_reg: vddctrl {
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,regulator-ext-sleep-control = <1>;
++				};
++				vio_reg: vio {
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,regulator-ext-sleep-control = <0>;
++				};
++				ldo1_reg: ldo1 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <3300000>;
++					ti,regulator-ext-sleep-control = <0>;
++				};
++				ldo2_reg: ldo2 {
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1050000>;
++					ti,regulator-ext-sleep-control = <0>;
++				};
++				ldo3_reg: ldo3 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <3300000>;
++					ti,regulator-ext-sleep-control = <0>;
++				};
++				ldo4_reg: ldo4 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-always-on;
++					ti,regulator-ext-sleep-control = <0>;
++				};
++				ldo5_reg: ldo5 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <3300000>;
++					ti,regulator-ext-sleep-control = <0>;
++				};
++				ldo6_reg: ldo6 {
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					ti,regulator-ext-sleep-control = <0>;
++				};
++				ldo7_reg: ldo7 {
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,regulator-ext-sleep-control = <1>;
++				};
++				ldo8_reg: ldo8 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-always-on;
++					ti,regulator-ext-sleep-control = <1>;
++				};
++			};
++		};
+ 	};
  
- #endif /* __LINUX_OF_REG_H */
+ 	sdhci@78000000 {
 -- 
 1.7.0.4
