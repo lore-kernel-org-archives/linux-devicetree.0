@@ -1,156 +1,86 @@
-From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/1] dt: Add general DMA window parser
-Date: Tue, 24 Apr 2012 15:20:04 +0300
-Message-ID: <1335270004-15652-1-git-send-email-hdoyu@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v2 3/3] ARM: imx6q: switch to use pinctrl driver
+Date: Tue, 24 Apr 2012 14:46:34 +0200
+Message-ID: <20120424124634.GH9142@game.jcrosoft.org>
+References: <1334933916-12971-1-git-send-email-b29396@freescale.com>
+ <1334933916-12971-3-git-send-email-b29396@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1334933916-12971-3-git-send-email-b29396@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This code was based on:
-	"arch/microblaze/kernel/prom_parse.c"
-	"arch/powerpc/kernel/prom_parse.c"
+On 22:58 Fri 20 Apr     , Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> ---
+> This is not a formal patch and is only used for test
+> since before the pinctrl core handle dummy state is in,
+> enable pinctrl in driver will break other platforms.
+> 
+> ChangeLog v1->v2:
+> * using updated binding
+> ---
+>  arch/arm/boot/dts/imx6q-arm2.dts   |    2 ++
+>  arch/arm/boot/dts/imx6q.dtsi       |   17 +++++++++++++++++
+>  arch/arm/mach-imx/Kconfig          |    2 ++
+>  drivers/mmc/host/sdhci-esdhc-imx.c |   12 ++++++++++++
+>  4 files changed, 33 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
+> index ce1c823..68b1d8d 100644
+> --- a/arch/arm/boot/dts/imx6q-arm2.dts
+> +++ b/arch/arm/boot/dts/imx6q-arm2.dts
+> @@ -44,6 +44,8 @@
+>  				fsl,card-wired;
+>  				vmmc-supply = <&reg_3p3v>;
+>  				status = "okay";
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_usdhc4_1>;
+>  			};
+>  
+>  			uart4: uart@021f0000 {
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index 4905f51..8cbd88b 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -386,7 +386,24 @@
+>  			};
+>  
+>  			iomuxc@020e0000 {
+> +				compatible = "fsl,imx6q-iomuxc";
+>  				reg = <0x020e0000 0x4000>;
+> +
+> +				/* shared pinctrl settings */
+> +				usdhc4 {
+> +					pinctrl_usdhc4_1: usdhc4grp-1 {
+> +						fsl,pins = <1386 0x17059	/* MX6Q_PAD_SD4_CMD__USDHC4_CMD */
+> +							    1392 0x17059	/* MX6Q_PAD_SD4_CLK__USDHC4_CLK	*/
+> +							    1462 0x17059	/* MX6Q_PAD_SD4_DAT0__USDHC4_DAT0 */
+> +							    1470 0x17059	/* MX6Q_PAD_SD4_DAT1__USDHC4_DAT1 */
+> +							    1478 0x17059	/* MX6Q_PAD_SD4_DAT2__USDHC4_DAT2 */
+> +							    1486 0x17059	/* MX6Q_PAD_SD4_DAT3__USDHC4_DAT3 */
+> +							    1493 0x17059	/* MX6Q_PAD_SD4_DAT4__USDHC4_DAT4 */
+> +							    1501 0x17059	/* MX6Q_PAD_SD4_DAT5__USDHC4_DAT5 */
+> +							    1509 0x17059	/* MX6Q_PAD_SD4_DAT6__USDHC4_DAT6 */
+> +							    1517 0x17059>;	/* MX6Q_PAD_SD4_DAT7__USDHC4_DAT7 */
+Can you on IMX have alternative onfiguration where you use as example just one
+pin on a different pad?
 
-"ibm," prefix could be supported with some modification.
-
-Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
----
- drivers/of/Kconfig         |    4 ++
- drivers/of/Makefile        |    1 +
- drivers/of/of_dma.c        |   70 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_address.h |   13 ++++++++
- 4 files changed, 88 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index dfba3e6..3b0298b 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -83,4 +83,8 @@ config OF_MTD
- 	depends on MTD
- 	def_bool y
- 
-+config OF_DMA
-+	depends on HAS_DMA
-+	def_bool y
-+
- endmenu # OF
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index e027f44..711ff5b 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
- obj-$(CONFIG_OF_PCI)	+= of_pci.o
- obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
- obj-$(CONFIG_OF_MTD)	+= of_mtd.o
-+obj-$(CONFIG_OF_DMA)	+= of_dma.o
-diff --git a/drivers/of/of_dma.c b/drivers/of/of_dma.c
-new file mode 100644
-index 0000000..4869e29
---- /dev/null
-+++ b/drivers/of/of_dma.c
-@@ -0,0 +1,70 @@
-+/*
-+ * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
-+ *
-+ * Based on:
-+ *	"arch/microblaze/kernel/prom_parse.c"
-+ *	"arch/powerpc/kernel/prom_parse.c"
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#include <linux/export.h>
-+#include <linux/of_address.h>
-+
-+int of_get_dma_window(struct device_node *dn,
-+			const char *propname, int index,
-+			unsigned long *busno,
-+			dma_addr_t *addr, size_t *size)
-+{
-+	const __be32 *dma_window, *end;
-+	int bytes, cur_index = 0;
-+
-+	if (!dn || !addr || !size)
-+		return -EINVAL;
-+
-+	if (!propname)
-+		propname = "dma-window";
-+
-+	dma_window = of_get_property(dn, propname, &bytes);
-+	if (!dma_window)
-+		return -ENODEV;
-+	end = dma_window + bytes / sizeof(*dma_window);
-+
-+	while (dma_window < end) {
-+		u32 cells;
-+		const void *prop;
-+
-+		/* busno is always one cell */
-+		if (busno)
-+			*busno = be32_to_cpup(dma_window++);
-+
-+		prop = of_get_property(dn, "#dma-address-cells", NULL);
-+		if (!prop)
-+			prop = of_get_property(dn, "#address-cells", NULL);
-+
-+		cells = prop ? be32_to_cpup(prop) : of_n_addr_cells(dn);
-+		if (!cells)
-+			return -EINVAL;
-+		*addr = of_read_number(dma_window, cells);
-+		dma_window += cells;
-+
-+		prop = of_get_property(dn, "#dma-size-cells", NULL);
-+		cells = prop ? be32_to_cpup(prop) : of_n_size_cells(dn);
-+		if (!cells)
-+			return -EINVAL;
-+		*size = of_read_number(dma_window, cells);
-+		dma_window += cells;
-+
-+		if (cur_index++ == index)
-+			break;
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_parse_dma_window);
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 01b925a..9d9da9d 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -21,6 +21,11 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
- extern const u32 *of_get_address(struct device_node *dev, int index,
- 			   u64 *size, unsigned int *flags);
- 
-+extern int of_get_dma_window(struct device_node *dev,
-+			       const char *propname, int index,
-+			       unsigned long *busno,
-+			       dma_addr_t *phys, size_t *size);
-+
- #ifndef pci_address_to_pio
- static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
- #define pci_address_to_pio pci_address_to_pio
-@@ -48,6 +53,14 @@ static inline const u32 *of_get_address(struct device_node *dev, int index,
- {
- 	return NULL;
- }
-+
-+extern int of_get_dma_window(struct device_node *dev,
-+			       const char *propname, int index,
-+			       unsigned long *busno,
-+			       dma_addr_t *phys, size_t *size)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_OF_ADDRESS */
- 
- 
--- 
-1.7.5.4
+Best Regards,
+J.
