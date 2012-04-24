@@ -1,44 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/3] ARM: imx6q: switch to use pinctrl driver
-Date: Tue, 24 Apr 2012 10:56:43 +0200
-Message-ID: <CACRpkdbbdkhN-hVF6vP4j6bP-Nsdft5UjjpAVhcKn6KSpEbcuQ@mail.gmail.com>
-References: <1334933916-12971-1-git-send-email-b29396@freescale.com>
-	<1334933916-12971-3-git-send-email-b29396@freescale.com>
+From: Hiroshi Doyu <hdoyu@nvidia.com>
+Subject: Re: [PATCH 2/3] iommu/tegra: smmu: Add device tree support for SMMU
+Date: Tue, 24 Apr 2012 10:59:48 +0200
+Message-ID: <20120424.115948.399395507020458456.hdoyu@nvidia.com>
+References: <1335182340-17237-1-git-send-email-hdoyu@nvidia.com><1335182340-17237-2-git-send-email-hdoyu@nvidia.com><4F959F10.9010908@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334933916-12971-3-git-send-email-b29396@freescale.com>
+In-Reply-To: <4F959F10.9010908@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>, Wolfram Sang <w.sang@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Chris Ball <cjb@laptop.org>
+To: "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "joerg.roedel@amd.com" <joerg.roedel@amd.com>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2012 at 4:58 PM, Dong Aisheng <b29396@freescale.com> wr=
-ote:
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/3] iommu/tegra: smmu: Add device tree support for SMMU
+Date: Mon, 23 Apr 2012 20:27:28 +0200
+Message-ID: <4F959F10.9010908@wwwdotorg.org>
 
-> From: Dong Aisheng <dong.aisheng@linaro.org>
->
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
->
-> ---
-> This is not a formal patch and is only used for test
-> since before the pinctrl core handle dummy state is in,
-> enable pinctrl in driver will break other platforms.
->
-> ChangeLog v1->v2:
-> * using updated binding
-> ---
-> =A0arch/arm/boot/dts/imx6q-arm2.dts =A0 | =A0 =A02 ++
-> =A0arch/arm/boot/dts/imx6q.dtsi =A0 =A0 =A0 | =A0 17 ++++++++++++++++=
-+
-> =A0arch/arm/mach-imx/Kconfig =A0 =A0 =A0 =A0 =A0| =A0 =A02 ++
-> =A0drivers/mmc/host/sdhci-esdhc-imx.c | =A0 12 ++++++++++++
-> =A04 files changed, 33 insertions(+), 0 deletions(-)
+> On 04/23/2012 05:58 AM, Hiroshi DOYU wrote:
+> > Add device tree support for Tegra30 IOMMU(SMMU).
+> 
+> > diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+> 
+> > +	err = of_parse_dma_window(dev->of_node, "dma-window", 0, NULL,
+> > +				  &base, &size);
+> 
+> This patch also depends on "dt: Add general DMA window parser" that you
+> sent earlier.
+> 
+> > +	asids = be32_to_cpup(of_get_property(dev->of_node, "asids", NULL));
+> > +	if (!asids)
+> > +		return -ENODEV;
+> 
+> What if of_get_property() fails?
 
-Since this touches the MMC driver I'd like an ACK from the
-maintainer, but no maintainer is set for this subdriver, still
-it feels like Sascha and/or Wolfram should be involved.
+Ok, need to be checked. I'll fix.
 
-Yours,
-Linus Walleij
+> BTW, does the # ASIDs vary? I wonder if it's worth representing it in
+> the device tree or not. If this driver has a chance of working
+> unmodified on some future chip just by updating this DT property without
+> any code changes, then it seems reasonable to have it in DT.
+
+Yes, ASID should be passed from DT.
