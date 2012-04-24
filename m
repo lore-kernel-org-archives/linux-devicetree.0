@@ -1,46 +1,54 @@
-From: David Brown <davidb@codeaurora.org>
-Subject: Re: [PATCH] ARM: msm: Fix gic irqdomain support
-Date: Mon, 23 Apr 2012 16:09:49 -0700
-Message-ID: <20120423230949.GA31173@codeaurora.org>
-References: <1335221222-30879-1-git-send-email-davidb@codeaurora.org>
- <CACxGe6sPkW8WviMX=oJEj+-G7XMeaWaQYfe_hg2quB-Sh2gEDA@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] dt: fsl-fec.txt: Fix GPIO comment and remove hardcoded MAC
+ address
+Date: Tue, 24 Apr 2012 00:58:35 -0300
+Message-ID: <1335239915-2563-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6sPkW8WviMX=oJEj+-G7XMeaWaQYfe_hg2quB-Sh2gEDA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2012 at 04:55:11PM -0600, Grant Likely wrote:
-> On Mon, Apr 23, 2012 at 4:47 PM, David Brown <davidb@codeaurora.org> =
-wrote:
-> > As of
-> >
-> > =A0 =A0commit 75294957be1dee7d22dd7d90bd31334ba410e836
-> > =A0 =A0Author: Grant Likely <grant.likely@secretlab.ca>
-> > =A0 =A0Date: =A0 Tue Feb 14 14:06:57 2012 -0700
-> >
-> > =A0 =A0 =A0 =A0irq_domain: Remove 'new' irq_domain in favour of the=
- ppc one
-> >
-> > the ARM gic controller uses proper irq domains. =A0Fix the MSM gic
-> > initialization and DT so that it works again.
-> >
-> > Signed-off-by: David Brown <davidb@codeaurora.org>
->=20
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->=20
-> This should go via the arm-soc tree I think
+Fix the comment for the GPIO number used for PHY reset and also avoid passing a 
+hardcoded MAC address.
 
-I was planning on going that route.
+Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/fsl-fec.txt |    6 +-----
+ 1 files changed, 1 insertions(+), 5 deletions(-)
 
-Thanks
-
---=20
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um.
+diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+index de43951..3261203 100644
+--- a/Documentation/devicetree/bindings/net/fsl-fec.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+@@ -9,9 +9,6 @@ Required properties:
+   "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
+ - phy-reset-gpios : Should specify the gpio for phy reset
+ 
+-Optional properties:
+-- local-mac-address : 6 bytes, mac address
+-
+ Example:
+ 
+ fec@83fec000 {
+@@ -19,6 +16,5 @@ fec@83fec000 {
+ 	reg = <0x83fec000 0x4000>;
+ 	interrupts = <87>;
+ 	phy-mode = "mii";
+-	phy-reset-gpios = <&gpio1 14 0>; /* GPIO2_14 */
+-	local-mac-address = [00 04 9F 01 1B B9];
++	phy-reset-gpios = <&gpio1 14 0>; /* GPIO1_14 */
+ };
+-- 
+1.7.1
