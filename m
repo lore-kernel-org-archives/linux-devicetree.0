@@ -1,93 +1,61 @@
-From: Dong Aisheng <aisheng.dong@freescale.com>
-Subject: Re: [PATCH v2 3/3] ARM: imx6q: switch to use pinctrl driver
-Date: Tue, 24 Apr 2012 22:04:25 +0800
-Message-ID: <20120424140425.GB24122@shlinux2.ap.freescale.net>
-References: <1334933916-12971-1-git-send-email-b29396@freescale.com>
- <1334933916-12971-3-git-send-email-b29396@freescale.com>
- <20120424124634.GH9142@game.jcrosoft.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] dt: fsl-fec.txt: Fix GPIO number comment
+Date: Tue, 24 Apr 2012 21:54:55 +0800
+Message-ID: <CAAQ0ZWScD=0S0oQJszhqv5sO5q4ETe2d8ON5F_5YZCau-ykKLQ@mail.gmail.com>
+References: <1335273879-2281-1-git-send-email-fabio.estevam@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120424124634.GH9142@game.jcrosoft.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1335273879-2281-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2012 at 08:46:34PM +0800, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 22:58 Fri 20 Apr     , Dong Aisheng wrote:
-> > From: Dong Aisheng <dong.aisheng@linaro.org>
-> > 
-> > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> > 
-> > ---
-> > This is not a formal patch and is only used for test
-> > since before the pinctrl core handle dummy state is in,
-> > enable pinctrl in driver will break other platforms.
-> > 
-> > ChangeLog v1->v2:
-> > * using updated binding
-> > ---
-> >  arch/arm/boot/dts/imx6q-arm2.dts   |    2 ++
-> >  arch/arm/boot/dts/imx6q.dtsi       |   17 +++++++++++++++++
-> >  arch/arm/mach-imx/Kconfig          |    2 ++
-> >  drivers/mmc/host/sdhci-esdhc-imx.c |   12 ++++++++++++
-> >  4 files changed, 33 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
-> > index ce1c823..68b1d8d 100644
-> > --- a/arch/arm/boot/dts/imx6q-arm2.dts
-> > +++ b/arch/arm/boot/dts/imx6q-arm2.dts
-> > @@ -44,6 +44,8 @@
-> >  				fsl,card-wired;
-> >  				vmmc-supply = <&reg_3p3v>;
-> >  				status = "okay";
-> > +				pinctrl-names = "default";
-> > +				pinctrl-0 = <&pinctrl_usdhc4_1>;
-> >  			};
-> >  
-> >  			uart4: uart@021f0000 {
-> > diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> > index 4905f51..8cbd88b 100644
-> > --- a/arch/arm/boot/dts/imx6q.dtsi
-> > +++ b/arch/arm/boot/dts/imx6q.dtsi
-> > @@ -386,7 +386,24 @@
-> >  			};
-> >  
-> >  			iomuxc@020e0000 {
-> > +				compatible = "fsl,imx6q-iomuxc";
-> >  				reg = <0x020e0000 0x4000>;
-> > +
-> > +				/* shared pinctrl settings */
-> > +				usdhc4 {
-> > +					pinctrl_usdhc4_1: usdhc4grp-1 {
-> > +						fsl,pins = <1386 0x17059	/* MX6Q_PAD_SD4_CMD__USDHC4_CMD */
-> > +							    1392 0x17059	/* MX6Q_PAD_SD4_CLK__USDHC4_CLK	*/
-> > +							    1462 0x17059	/* MX6Q_PAD_SD4_DAT0__USDHC4_DAT0 */
-> > +							    1470 0x17059	/* MX6Q_PAD_SD4_DAT1__USDHC4_DAT1 */
-> > +							    1478 0x17059	/* MX6Q_PAD_SD4_DAT2__USDHC4_DAT2 */
-> > +							    1486 0x17059	/* MX6Q_PAD_SD4_DAT3__USDHC4_DAT3 */
-> > +							    1493 0x17059	/* MX6Q_PAD_SD4_DAT4__USDHC4_DAT4 */
-> > +							    1501 0x17059	/* MX6Q_PAD_SD4_DAT5__USDHC4_DAT5 */
-> > +							    1509 0x17059	/* MX6Q_PAD_SD4_DAT6__USDHC4_DAT6 */
-> > +							    1517 0x17059>;	/* MX6Q_PAD_SD4_DAT7__USDHC4_DAT7 */
-> Can you on IMX have alternative onfiguration where you use as example just one
-> pin on a different pad?
-> 
-Well, it's a good question.
-If user wants to set a different pad configuration for one pin in a exist group,
-he may need to create a new group node to hold that pin settings.
-This is the limitation since we can not enumerate all available pin
-configurations.
+On 24 April 2012 21:24, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> Fix the comment for the GPIO number used for PHY reset.
+>
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-I think what we can do may be:
-For those easy changed pins, user could define the pin configuration node in
-board dts file where devices can use one more phandle to reference it to do
-minor fixup. Then we do not need to frequently change the SoC dtsi file.
+Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-For not easy changed pins, we can just add the new group in soc dtsi file
-for people to use.
+David, Rob,
 
-Regards
-Dong Aisheng
+Let me know if you want the patch to go through arm-soc tree.
+
+Regards,
+Shawn
+
+> ---
+> Changes since v1:
+> - Keep 'local-mac-address' information
+>
+> =A0Documentation/devicetree/bindings/net/fsl-fec.txt | =A0 =A02 +-
+> =A01 files changed, 1 insertions(+), 1 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Document=
+ation/devicetree/bindings/net/fsl-fec.txt
+> index de43951..96ba770 100644
+> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
+> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> @@ -19,6 +19,6 @@ fec@83fec000 {
+> =A0 =A0 =A0 =A0reg =3D <0x83fec000 0x4000>;
+> =A0 =A0 =A0 =A0interrupts =3D <87>;
+> =A0 =A0 =A0 =A0phy-mode =3D "mii";
+> - =A0 =A0 =A0 phy-reset-gpios =3D <&gpio1 14 0>; /* GPIO2_14 */
+> + =A0 =A0 =A0 phy-reset-gpios =3D <&gpio1 14 0>; /* GPIO1_14 */
+> =A0 =A0 =A0 =A0local-mac-address =3D [00 04 9F 01 1B B9];
+> =A0};
+> --
+> 1.7.1
+>
+>
