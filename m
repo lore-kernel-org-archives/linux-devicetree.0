@@ -1,7 +1,7 @@
 From: Rhyland Klein <rklein@nvidia.com>
-Subject: [PATCH 4/8 v2] regulator: tps65910: Add device tree bindings
-Date: Tue, 24 Apr 2012 16:36:06 -0700
-Message-ID: <1335310570-12455-5-git-send-email-rklein@nvidia.com>
+Subject: [PATCH 1/8 v2] regulator: add generic of node parsing for regulators
+Date: Tue, 24 Apr 2012 16:36:03 -0700
+Message-ID: <1335310570-12455-2-git-send-email-rklein@nvidia.com>
 References: <1335310570-12455-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,154 +12,96 @@ To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Samuel Ortiz <sameo@linux.
 Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rhyland Klein <rklein@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for TI's tps65910 pmic.
+As more regulators are moved to support dt, more drivers are going to need
+to do lookups to find nodes associated with specific regulators. Add this
+helper function which will find all the regulator_init_data for a series of
+regulators and do some minimal dt validation checks.
 
 Signed-off-by: Rhyland Klein <rklein@nvidia.com>
 ---
- v2: Moved ext-sleep-control into regulator nodes
+ v2: split off from tps65910 particular code to a more generic form based
+     on initial reviews.
 
- Documentation/devicetree/bindings/mfd/tps65910.txt |  133 ++++++++++++++++++++
- 1 files changed, 133 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/tps65910.txt
+ drivers/regulator/of_regulator.c       |   42 ++++++++++++++++++++++++++++++++
+ include/linux/regulator/of_regulator.h |    9 +++++++
+ 2 files changed, 51 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-new file mode 100644
-index 0000000..645f5ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -0,0 +1,133 @@
-+TPS65910 Power Management Integrated Circuit
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 679734d..45a5f85 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -85,3 +85,45 @@ struct regulator_init_data *of_get_regulator_init_data(struct device *dev,
+ 	return init_data;
+ }
+ EXPORT_SYMBOL_GPL(of_get_regulator_init_data);
 +
-+Required properties:
-+- compatible: "ti,tps65910" or "ti,tps65911"
-+- reg: I2C slave address
-+- interrupts: the interrupt outputs of the controller
-+- #gpio-cells: number of cells to describe a GPIO, this should be 2.
-+  The first cell is the GPIO number.
-+  The second cell is used to specify additional options <unused>.
-+- gpio-controller: mark the device as a GPIO controller
-+- #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
-+  The first cell is the IRQ number.
-+  The second cell is the flags, encoded as the trigger masks from
-+  Documentation/devicetree/bindings/interrupts.txt
-+- regulators: This is the list of child nodes that specify the regulator
-+  initialization data for defined regulators. Not all regulators for the given
-+  device need to be present. The definition for each of these nodes is defined
-+  using the standard binding for regulators found at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
++/**
++ * of_find_regulator_init_data_from_device - extract all regulator_init_data
++ * @dev: device requesting for regulator_init_data
++ * @node: device node from which to look for the regulators
++ * @names: array of the names of the regulators for which to look for nodes
++ * @init_data: array of regulator_init_data structure pointers to populate
++ * @num_regulators: the max number of regulators expected
++ *
++ * This function populates the array of regulator_init_data structures by
++ * finding the device_nodes which respresent each regulator and extracting
++ * data. Returns 0 on success.
++ */
++int of_find_regulator_init_data_from_device(struct device *dev,
++	struct device_node *node, const char * const names[],
++	struct regulator_init_data **init_data, int num_regulators)
++{
++	struct device_node *child = NULL;
++	int idx = 0;
 +
-+  The valid names for regulators are:
-+  tps65910: vrtc, vio, vdd1, vdd2, vdd3, vdig1, vdig2, vpll, vdac, vaux1,
-+            vaux2, vaux33, vmmc
-+  tps65911: vrtc, vio, vdd1, vdd3, vddctrl, ldo1, ldo2, ldo3, ldo4, ldo5,
-+            ldo6, ldo7, ldo8
++	if (!dev || !node)
++		return -EINVAL;
 +
-+Optional properties:
-+- ti,vmbch-threshold: (tps65911) main battery charged threshold
-+  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
-+- ti,vmbch2-threshold: (tps65911) main battery discharged threshold
-+  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
-+- ti,en-gpio-sleep: enable sleep control for gpios
-+  There should be 9 entries here, one for each gpio.
++	for (idx = 0; idx < num_regulators; idx++) {
++		struct device_node *np = of_find_node_by_name(node, names[idx]);
 +
-+Regulator Optional properties:
-+- ti,regulator-ext-sleep-control: enable external sleep
-+  control through external inputs [0 (not enabled), 1 (EN1), 2 (EN2) or 4(EN3)]
-+  If this property is not defined, it defaults to 0 (not enabled).
++		/* didn't find a match, thats fine */
++		if (!np)
++			continue;
 +
-+Example:
++		/* parse regulator init data from node */
++		init_data[idx] = of_get_regulator_init_data(dev, np);
++		if (!init_data[idx]) {
++			dev_err(dev, "failed to parse dt for regulator %s\n",
++				child->name);
++			return -EINVAL;
++		}
++	}
 +
-+	pmu: tps65910@d2 {
-+		compatible = "ti,tps65910";
-+		reg = <0xd2>;
-+		interrupt-parent = <&intc>;
-+		interrupts = < 0 118 0x04 >;
-+
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+
-+		ti,vmbch-threshold = 0;
-+		ti,vmbch2-threshold = 0;
-+
-+		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
-+
-+		regulators {
-+			vdd1_reg: vdd1 {
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				ti,regulator-ext-sleep-control = <0>;
-+			};
-+			vdd2_reg: vdd2 {
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				ti,regulator-ext-sleep-control = <4>;
-+			};
-+			vddctrl_reg: vddctrl {
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1400000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				ti,regulator-ext-sleep-control = <0>;
-+			};
-+			vio_reg: vio {
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				ti,regulator-ext-sleep-control = <1>;
-+			};
-+			ldo1_reg: ldo1 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+				ti,regulator-ext-sleep-control = <0>;
-+			};
-+			ldo2_reg: ldo2 {
-+				regulator-min-microvolt = <1050000>;
-+				regulator-max-microvolt = <1050000>;
-+				ti,regulator-ext-sleep-control = <0>;
-+			};
-+			ldo3_reg: ldo3 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+				ti,regulator-ext-sleep-control = <0>;
-+			};
-+			ldo4_reg: ldo4 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				ti,regulator-ext-sleep-control = <0>;
-+			};
-+			ldo5_reg: ldo5 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+				ti,regulator-ext-sleep-control = <0>;
-+			};
-+			ldo6_reg: ldo6 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				ti,regulator-ext-sleep-control = <0>;
-+			};
-+			ldo7_reg: ldo7 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				ti,regulator-ext-sleep-control = <1>;
-+			};
-+			ldo8_reg: ldo8 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				ti,regulator-ext-sleep-control = <1>;
-+			};
-+		};
-+	};
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_find_regulator_init_data_from_device);
+diff --git a/include/linux/regulator/of_regulator.h b/include/linux/regulator/of_regulator.h
+index 769704f..0c65dcb 100644
+--- a/include/linux/regulator/of_regulator.h
++++ b/include/linux/regulator/of_regulator.h
+@@ -10,6 +10,9 @@
+ extern struct regulator_init_data
+ 	*of_get_regulator_init_data(struct device *dev,
+ 				    struct device_node *node);
++extern int of_find_regulator_init_data_from_device(struct device *dev,
++	struct device_node *node, const char * const names[],
++	struct regulator_init_data **init_data, int num_regulators);
+ #else
+ static inline struct regulator_init_data
+ 	*of_get_regulator_init_data(struct device *dev,
+@@ -17,6 +20,12 @@ static inline struct regulator_init_data
+ {
+ 	return NULL;
+ }
++static inline int of_find_regulator_init_data_from_device(struct device *dev,
++	struct device_node *node, const char * const names[],
++	struct regulator_init_data **init_data, int num_regulators)
++{
++	return 0;
++}
+ #endif /* CONFIG_OF */
+ 
+ #endif /* __LINUX_OF_REG_H */
 -- 
 1.7.0.4
