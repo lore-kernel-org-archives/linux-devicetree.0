@@ -1,8 +1,7 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt: fsl-fec.txt: Fix GPIO comment and remove hardcoded MAC
- address
-Date: Tue, 24 Apr 2012 00:58:35 -0300
-Message-ID: <1335239915-2563-1-git-send-email-festevam@gmail.com>
+Subject: [PATCH] dt: sgtl5000.txt: Add description for 'reg' field
+Date: Tue, 24 Apr 2012 01:11:09 -0300
+Message-ID: <1335240669-2736-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,38 +16,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fix the comment for the GPIO number used for PHY reset and also avoid passing a 
-hardcoded MAC address.
+Add description for 'reg' field.
 
 Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- Documentation/devicetree/bindings/net/fsl-fec.txt |    6 +-----
- 1 files changed, 1 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/sound/sgtl5000.txt         |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-index de43951..3261203 100644
---- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-@@ -9,9 +9,6 @@ Required properties:
-   "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
- - phy-reset-gpios : Should specify the gpio for phy reset
+diff --git a/Documentation/devicetree/bindings/sound/sgtl5000.txt b/Documentation/devicetree/bindings/sound/sgtl5000.txt
+index 2c3cd41..9cc4444 100644
+--- a/Documentation/devicetree/bindings/sound/sgtl5000.txt
++++ b/Documentation/devicetree/bindings/sound/sgtl5000.txt
+@@ -3,6 +3,8 @@
+ Required properties:
+ - compatible : "fsl,sgtl5000".
  
--Optional properties:
--- local-mac-address : 6 bytes, mac address
--
++- reg : the I2C address of the device
++
  Example:
  
- fec@83fec000 {
-@@ -19,6 +16,5 @@ fec@83fec000 {
- 	reg = <0x83fec000 0x4000>;
- 	interrupts = <87>;
- 	phy-mode = "mii";
--	phy-reset-gpios = <&gpio1 14 0>; /* GPIO2_14 */
--	local-mac-address = [00 04 9F 01 1B B9];
-+	phy-reset-gpios = <&gpio1 14 0>; /* GPIO1_14 */
- };
+ codec: sgtl5000@0a {
 -- 
 1.7.1
