@@ -1,45 +1,93 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2] pinctrl: fix signed vs unsigned conditionals inside
- pinmux_map_to_setting
-Date: Tue, 24 Apr 2012 15:16:44 +0200
-Message-ID: <CACRpkdYsK44WfvHy_N43ExkX4hHAK8QnbsfdKYAMJehh1+wk8g@mail.gmail.com>
-References: <1335200518-3640-1-git-send-email-blogic@openwrt.org>
+From: Dong Aisheng <aisheng.dong@freescale.com>
+Subject: Re: [PATCH v2 3/3] ARM: imx6q: switch to use pinctrl driver
+Date: Tue, 24 Apr 2012 22:04:25 +0800
+Message-ID: <20120424140425.GB24122@shlinux2.ap.freescale.net>
+References: <1334933916-12971-1-git-send-email-b29396@freescale.com>
+ <1334933916-12971-3-git-send-email-b29396@freescale.com>
+ <20120424124634.GH9142@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1335200518-3640-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120424124634.GH9142@game.jcrosoft.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2012 at 7:01 PM, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+On Tue, Apr 24, 2012 at 08:46:34PM +0800, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 22:58 Fri 20 Apr     , Dong Aisheng wrote:
+> > From: Dong Aisheng <dong.aisheng@linaro.org>
+> > 
+> > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> > 
+> > ---
+> > This is not a formal patch and is only used for test
+> > since before the pinctrl core handle dummy state is in,
+> > enable pinctrl in driver will break other platforms.
+> > 
+> > ChangeLog v1->v2:
+> > * using updated binding
+> > ---
+> >  arch/arm/boot/dts/imx6q-arm2.dts   |    2 ++
+> >  arch/arm/boot/dts/imx6q.dtsi       |   17 +++++++++++++++++
+> >  arch/arm/mach-imx/Kconfig          |    2 ++
+> >  drivers/mmc/host/sdhci-esdhc-imx.c |   12 ++++++++++++
+> >  4 files changed, 33 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
+> > index ce1c823..68b1d8d 100644
+> > --- a/arch/arm/boot/dts/imx6q-arm2.dts
+> > +++ b/arch/arm/boot/dts/imx6q-arm2.dts
+> > @@ -44,6 +44,8 @@
+> >  				fsl,card-wired;
+> >  				vmmc-supply = <&reg_3p3v>;
+> >  				status = "okay";
+> > +				pinctrl-names = "default";
+> > +				pinctrl-0 = <&pinctrl_usdhc4_1>;
+> >  			};
+> >  
+> >  			uart4: uart@021f0000 {
+> > diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> > index 4905f51..8cbd88b 100644
+> > --- a/arch/arm/boot/dts/imx6q.dtsi
+> > +++ b/arch/arm/boot/dts/imx6q.dtsi
+> > @@ -386,7 +386,24 @@
+> >  			};
+> >  
+> >  			iomuxc@020e0000 {
+> > +				compatible = "fsl,imx6q-iomuxc";
+> >  				reg = <0x020e0000 0x4000>;
+> > +
+> > +				/* shared pinctrl settings */
+> > +				usdhc4 {
+> > +					pinctrl_usdhc4_1: usdhc4grp-1 {
+> > +						fsl,pins = <1386 0x17059	/* MX6Q_PAD_SD4_CMD__USDHC4_CMD */
+> > +							    1392 0x17059	/* MX6Q_PAD_SD4_CLK__USDHC4_CLK	*/
+> > +							    1462 0x17059	/* MX6Q_PAD_SD4_DAT0__USDHC4_DAT0 */
+> > +							    1470 0x17059	/* MX6Q_PAD_SD4_DAT1__USDHC4_DAT1 */
+> > +							    1478 0x17059	/* MX6Q_PAD_SD4_DAT2__USDHC4_DAT2 */
+> > +							    1486 0x17059	/* MX6Q_PAD_SD4_DAT3__USDHC4_DAT3 */
+> > +							    1493 0x17059	/* MX6Q_PAD_SD4_DAT4__USDHC4_DAT4 */
+> > +							    1501 0x17059	/* MX6Q_PAD_SD4_DAT5__USDHC4_DAT5 */
+> > +							    1509 0x17059	/* MX6Q_PAD_SD4_DAT6__USDHC4_DAT6 */
+> > +							    1517 0x17059>;	/* MX6Q_PAD_SD4_DAT7__USDHC4_DAT7 */
+> Can you on IMX have alternative onfiguration where you use as example just one
+> pin on a different pad?
+> 
+Well, it's a good question.
+If user wants to set a different pad configuration for one pin in a exist group,
+he may need to create a new group node to hold that pin settings.
+This is the limitation since we can not enumerate all available pin
+configurations.
 
-> pinmux_map_to_setting() uses setting->data.mux.func/group to store the return
-> code of pinmux_func_name_to_selector/pinctrl_get_group_selector(). However,
-> struct pinctrl_setting_mux defines these elements as unsigned, resulting in all
-> error codes getting lost. The conditionals following the assignments will always
-> evaluate to false thus breaking the error paths.
->
-> This bug can be triggered by loading a pinmux group map from the devicetree
-> with an invalid function/group string.
->
-> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I think what we can do may be:
+For those easy changed pins, user could define the pin configuration node in
+board dts file where devices can use one more phandle to reference it to do
+minor fixup. Then we do not need to frequently change the SoC dtsi file.
 
-Applied with Stephen and Dong's ACKs, thanks!
+For not easy changed pins, we can just add the new group in soc dtsi file
+for people to use.
 
-New contributors to pinctrl, I love this :-)
-
-Yours,
-Linus Walleij
+Regards
+Dong Aisheng
