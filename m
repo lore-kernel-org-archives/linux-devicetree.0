@@ -1,71 +1,66 @@
-From: Dong Aisheng <aisheng.dong@freescale.com>
-Subject: Re: [PATCH 3/3] ARM: imx6q: switch to use pinctrl driver
-Date: Tue, 24 Apr 2012 16:46:17 +0800
-Message-ID: <20120424084616.GA24122@shlinux2.ap.freescale.net>
-References: <1334333915-1174-1-git-send-email-b29396@freescale.com>
- <1334333915-1174-3-git-send-email-b29396@freescale.com>
- <20120414135331.GB3852@pengutronix.de>
- <CAA+hA=QhSUZg0bWTss_4ROwZ--OOQfcP=mpt+MP7-ZKPkEwXyA@mail.gmail.com>
- <20120415073751.GF24997@S2101-09.ap.freescale.net>
- <20120416033519.GA17173@shlinux2.ap.freescale.net>
- <CACRpkdZWNNz3+LbPtkV4rS4BJpqQdZio0qLkedLamSisgDkm6Q@mail.gmail.com>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: Re: [PATCH 1/2] i2c-s3c2410: Rework device type handling
+Date: Tue, 24 Apr 2012 10:40:49 +0200
+Message-ID: <4F966711.7080608@samsung.com>
+References: <1335198241-19344-1-git-send-email-k.lewandowsk@samsung.com>
+ <1335198241-19344-2-git-send-email-k.lewandowsk@samsung.com>
+ <20120423182033.GB2767@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZWNNz3+LbPtkV4rS4BJpqQdZio0qLkedLamSisgDkm6Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Dong Aisheng <dongas86@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng-B29396 <B29396@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20120423182033.GB2767@pengutronix.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Wolfram Sang <w.sang@pengutronix.de>
+Cc: m.szyprowski@samsung.com, ben-linux@fluff.org, thomas.abraham@linaro.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, t.stanislaws@samsung.com, kyungmin.park@samsung.com, broonie@opensource.wolfsonmicro.com, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2012 at 04:23:34PM +0800, Linus Walleij wrote:
-> On Mon, Apr 16, 2012 at 5:35 AM, Dong Aisheng
-> <aisheng.dong@freescale.com> wrote:
-> > On Sun, Apr 15, 2012 at 03:37:54PM +0800, Shawn Guo wrote:
-> >> On Sun, Apr 15, 2012 at 12:03:16PM +0800, Dong Aisheng wrote:
-> >> ...
-> >> > For MX3 and MX5, before their pinctrl driver are available, user may
-> >> > need to define a dummy in dt to avoid such an error.
-> >> >
-> >> That is insane, and will not work.
-> >>
-> >> 1) We do not have device tree support for MX3 yet.
-> >> 2) It's not practical to add dummy entries in dt to avoid the error.
-> >> 3) There are still so many non-dt board files support in the tree.
-> >> How will they work with that?
-> >>
-> >> My suggestion is to not make it an error but a dev_dbg, assuming that
-> >> the pins are already set up by platform code if we do not find the
-> >> entry from pinctrl system. =A0We can take it as a transition solution,
-> >> and turn the dev_dbg back to error when all the users of the device
-> >> driver are converted to device tree.
-> >>
-> > My thinking is let pinctrl core handle dummy state as regulator subsyst=
-em
-> > and does not depend on dt.
-> > Linus, Stephen, any comment?
-> =
+On 23.04.2012 20:20, Wolfram Sang wrote:
 
-> I think this was discussed in another thread and Sascha agreed that
-> wee need dummy pinctrl to copy with a smooth transition in i.MX.
-> =
+Hi!
 
-> So I'm happy with that, we just need to finalize a patch, poke
-> me if I missed some patch...
-> =
+>> -static inline int s3c24xx_i2c_is2440(struct s3c24xx_i2c *i2c)
+>> +static inline unsigned int s3c24xx_get_device_quirks(struct platform_device *pdev)
+>>  {
+>> -	struct platform_device *pdev = to_platform_device(i2c->dev);
+>> -	enum s3c24xx_i2c_type type;
+>> -
+>> -#ifdef CONFIG_OF
+>> -	if (i2c->dev->of_node)
+>> -		return of_device_is_compatible(i2c->dev->of_node,
+>> -				"samsung,s3c2440-i2c");
+>> -#endif
+>> +	if (pdev->dev.of_node) {
+>> +		const struct of_device_id *match;
+>> +		match = of_match_node(&s3c24xx_i2c_match, pdev->dev.of_node);
+> 
+> I'd appreciate a comment explaining why match can't be NULL here (as to
+> my understanding, it can't). Or just check for it, but this way it looks
+> a bit fishy and people (hopefully ;)) will ask about it.
 
-I'm revising that patch based on your suggestion,
-will send out soon. :-)
 
-Regards
-Dong Aisheng
+My understanding is that it can't be null for exactly same reason why
+platform_get_device_id(pdev) can't be null either (see below).
+
+I.e. prerequisite for this code to be run at all (as it's called from
+driver's .probe()) is to be already matched against very same match
+table.
+
+As far I can see the only possibility for it to fail is to have
+dev.of_node pointing to device tree node and NOT being instantiated
+from DT description...
+
+>> +		return (unsigned int)match->data;
+>> +	}
+>>  
+>> -	type = platform_get_device_id(pdev)->driver_data;
+>> -	return type == TYPE_S3C2440;
+>> +	return platform_get_device_id(pdev)->driver_data;
+>>  }
+
+
+Regards,
+
+-- 
+
+Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
