@@ -1,14 +1,14 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC] pinctrl: enhance reporting of errors when loading from
- DT
-Date: Tue, 24 Apr 2012 20:45:40 -0600
-Message-ID: <4F976554.3090708@wwwdotorg.org>
-References: <1335286387-18520-1-git-send-email-blogic@openwrt.org>
+Subject: Re: dtc symbolic constants - not in the preprocessor?
+Date: Tue, 24 Apr 2012 21:22:34 -0600
+Message-ID: <4F976DFA.6050406@wwwdotorg.org>
+References: <4F8E2A87.6000805@wwwdotorg.org>
+ <20120419121151.GF5387@truffala.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1335286387-18520-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <20120419121151.GF5387-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,125 +18,107 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2012 10:53 AM, John Crispin wrote:
-> There are a few places in the api where the code simply returns -EINVAL when
-> it finds an error. An example is pinmux_map_to_setting() which now reports an
-> error if we try to match a group with a function that it does not support.
+On 04/19/2012 06:11 AM, David Gibson wrote:
+> On Tue, Apr 17, 2012 at 08:44:23PM -0600, Stephen Warren wrote:
+>> So, David has been leaning towards a simple text-based preprocessor as
+>> the means to add symbolic constants to dtc. Depending on exactly how
+>> much advanced expression support the dtc language ends up gaining, I'm
+>> not so sure a text-based preprocessor is the right approach.
+>>
+>> So, a text-based preprocessor is fine for basic stuff like:
+>>
+>> #define FOO 5
+>>
+>> / {
+>>     prop = <(FOO)>;
+>> };
 > 
-> The reporting of errors in pinconf_check_ops and pinmux_check_ops now has the
-> same style and is located inside the according functions and not the calling
-> code.
+> Note also that this will work nicely:
 > 
-> When the map is loaded from DT but the default state can not be found we get
-> an error to know that the code at least tried.
+> #define FOO(x)	(/* something */)
 > 
-> The patch also removes a stray word from one comment and a "->" from another
-> for the sake of consistency.
+> 	prop = <FOO(1)  FOO(2)  FOO(17)>;
 
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+I don't think that can be legal; there's no () around the FOO(1), so how
+do you know whether it's meant to be two cells; the result of expanding
+"FOO" and plain "(1)", or a call of a macro named FOO with parameter
+"1"? In other words, shouldn't that be:
 
->  	/* If we're implementing pinmuxing, check the ops for sanity */
->  	if (pctldesc->pmxops) {
->  		ret = pinmux_check_ops(pctldev);
-> -		if (ret) {
-> -			pr_err("%s pinmux ops lacks necessary functions\n",
-> -			       pctldesc->name);
-> +		if (ret)
-> +			//FIXME: moved to pinmux_check_ops so we se a difference
-> +			//between missing function name and missing callback
+    prop = <(FOO(1)) (FOO(2)) (FOO(17))>;
 
-The changes at this and the next FIXME look OK to me. In order to
-actually apply the patch, I think you'd need to repost without the FIXME
-comments though.
+Admittedly, the C pre-processor does appear to know whether FOO was
+defined to accept arguments or not, and will differentiate between the
+two cases based on that, but that seems pretty nasty to me. And this
+relies on the body of FOO having () around it, which seems somewhat
+implicit.
 
-> @@ -1356,8 +1353,14 @@ struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
->  		struct pinctrl_state *s =
->  			pinctrl_lookup_state_locked(pctldev->p,
->  						    PINCTRL_STATE_DEFAULT);
-> +
-> +		/* if it is not 0 we should not get here, clear it anyhow */
-> +		ret = 0;
->  		if (!IS_ERR(s))
-> -			pinctrl_select_state_locked(pctldev->p, s);
-> +			ret = pinctrl_select_state_locked(pctldev->p, s);
-> +		if (IS_ERR(s) || ret)
-> +			pr_err("%s: failed to lookup/select default state\n",
-> +				pctldesc->name);
+>> However, if the dtc language itself gains functions, iteration, etc., I
+>> think this breaks down.
+> 
+> Well, for starters I think gaining functions and gaining iteration are
+> quite different cases.  I see using a preprocessor as a way of
+> avoiding gaining functions in the core language (and particularly
+> avoiding the necessity of storing expression trees that that would
+> require).
+> 
+>> Using cpp, we could do something like:
+>>
+>> #define TEGRA_USB1_INT_STATUS 0x7000000
+>> #define POS(chip, reg, field) chip##_##reg##_##field##_POS
+>>
+>> / {
+>>     prop1 = <(POS(TEGRA, USB1, INT_STATUS))>;
+>> };
+>>
+>> where you can imagine that the POS macro is calculating the name of a
+>> symbolic constant, then reading the value of the name.
+>>
+>> However, what if instead of hard-coding USB1 in the above example, we
+>> want to iterate over 1, 2, 3? Expressing this iteration as a set of
+>> functions in the dtc grammar (as in functional programming) has been
+>> floated as an idea. In other words generate a result like:
+>>
+>> / {
+>>     prop1 = <(POS(TEGRA, USB, 1, INT_STATUS))>;
+>>     prop2 = <(POS(TEGRA, USB, 2, INT_STATUS))>;
+>>     prop3 = <(POS(TEGRA, USB, 3, INT_STATUS))>;
+>> };
+>>
+>> ... but using iteration in the dtc language instead of cut/paste.
+> 
+> Um.. this seems a contrived example - combining iteration with
+> construction of property names and symbol names.  The sorts of
+> iteration I had in mind were more things like generating:
+> 	prop = <0 0x1000 0x2000 0x3000>;
+> programmatically.  That example could be built using an iterator
+> built-in "function", which could in turn be generated from a macro.
+> 
+> Do you have a real use case for something more like the example above?
 
-This seems a little muddled. Why not:
+I don't immediately foresee the need for any kind of iteration in the
+device trees I'm building at the moment. Plain #define of simple
+constants (integers or strings) would probably satisfy all the needs I'm
+currently aware of.
 
-s = pinctrl_lookup_state_locked(...);
-if (IS_ERR(s))
-    dev_dbg(...);
-} else {
-    ret = pinctrl_select_state_locked(...);
-    if (ret) {
-        dev_err(...);
-    }
-}
+But Jon's IIRC expressions patch included iteration, and you've posited
+iteration functions, and I think in any case where iteration is allowed,
+you will want the feature where you can define e.g. the base address of
+two HW modules, and have the iteration "body" read from one of those
+variables programatically rather than have the list of base addresses
+passed in.
 
-Note that pinctrl_lookup_state_locked() failing isn't necessarily an
-error; it's quite legitimate for a pin controller to not have any states
-defined for itself, if all pinctrl states are represented in other drivers.
+> And in fact, because of this I really only want to implement either
+> *both* functions and constants in dtc, or neither - not one without
+> the other.  So far, I'm still hoping to avoid it.
 
-That said, perhaps we should require all pin controllers to have dummy
-states defined?
-
-pinctrl_select_state_locked() failing means that a state was defined,
-but could not be selected - that's definitely an error.
-
-Also, dev_err() should be used in preference to pr_err().
-
-> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-
-> @@ -144,9 +144,11 @@ static int dt_to_map_one_config(struct pinctrl *p, const char *statename,
->  		return -ENODEV;
->  	}
->  	ret = ops->dt_node_to_map(pctldev, np_config, &map, &num_maps);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		dev_err(p->dev, "failed to load mapping from DT for %s\n",
-> +			dev_name(pctldev->dev));
-
-Perhaps we should rely on the individual pin controller's dt_node_to_map
-function reporting the specific error - it can provide more information.
-
-> @@ -304,7 +305,7 @@ static int pinmux_func_name_to_selector(struct pinctrl_dev *pctldev,
->  		selector++;
->  	}
->  
-> -	pr_err("%s does not support function %s\n",
-> +	pr_err("%s: function \"%s\" not supported\n",
->  	       pinctrl_dev_get_name(pctldev), function);
-
-That change seems to be a no-op really.
-
-> @@ -330,16 +331,21 @@ int pinmux_map_to_setting(struct pinctrl_map const *map,
->  
->  	ret = pinmux_func_name_to_selector(pctldev, map->data.mux.function);
->  	if (ret < 0)
-> +		//FIXME: pinmux_func_name_to_selector is verbose
->  		return ret;
->  	setting->data.mux.func = ret;
->  
->  	ret = pmxops->get_function_groups(pctldev, setting->data.mux.func,
->  					  &groups, &num_groups);
->  	if (ret < 0)
-> +		//FIXME: safe to assume that get_function_groups() is verbose ?
->  		return ret;
-> -	if (!num_groups)
-> +	if (!num_groups) {
-> +		//FIXME: we still need to check if returned data is valid
-> +		dev_err(pctldev->dev, "could not get mux groups \"%s\"",
-> +		                                map->data.mux.function);
-
-That's not accurate. The retrieval succeeded, but the number of groups
-the function can be selected on was zero.
-
-I think I added a bunch more error prints locally when I was debugging a
-new board. I guess I should remove the cruft from the patch and rebase
-it on top of the final version of this once you post it.
+I don't understand the rationale behind this position. What's the root
+of the problem that disallows us supporting named constants without
+supporting full macros? I think plain named constants would cover the
+majority of current use-cases, and I'm quite happy to stop thinking
+about anything more advanced. The only reason I'm trying to drive other
+stuff is because of your desire not to support constants without full
+macros.
