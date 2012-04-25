@@ -1,67 +1,152 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [RFC v2 0/5] Add NVIDIA Tegra DRM support
-Date: Wed, 25 Apr 2012 14:27:22 +0200
-Message-ID: <20120425122722.GA24502@avionic-0098.adnet.avionic-design.de>
-References: <1335347102-14905-1-git-send-email-thierry.reding@avionic-design.de>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: dtc symbolic constants - not in the preprocessor?
+Date: Wed, 25 Apr 2012 22:27:45 +1000
+Message-ID: <20120425122745.GL6305@truffala.fritz.box>
+References: <4F8E2A87.6000805@wwwdotorg.org>
+ <20120419121151.GF5387@truffala.fritz.box>
+ <4F976DFA.6050406@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1335347102-14905-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <4F976DFA.6050406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 24, 2012 at 09:22:34PM -0600, Stephen Warren wrote:
+> On 04/19/2012 06:11 AM, David Gibson wrote:
+> > On Tue, Apr 17, 2012 at 08:44:23PM -0600, Stephen Warren wrote:
+> >> So, David has been leaning towards a simple text-based preprocessor as
+> >> the means to add symbolic constants to dtc. Depending on exactly how
+> >> much advanced expression support the dtc language ends up gaining, I'm
+> >> not so sure a text-based preprocessor is the right approach.
+> >>
+> >> So, a text-based preprocessor is fine for basic stuff like:
+> >>
+> >> #define FOO 5
+> >>
+> >> / {
+> >>     prop = <(FOO)>;
+> >> };
+> > 
+> > Note also that this will work nicely:
+> > 
+> > #define FOO(x)	(/* something */)
+> > 
+> > 	prop = <FOO(1)  FOO(2)  FOO(17)>;
+> 
+> I don't think that can be legal; there's no () around the FOO(1), so how
+> do you know whether it's meant to be two cells; the result of expanding
+> "FOO" and plain "(1)", or a call of a macro named FOO with parameter
+> "1"? In other words, shouldn't that be:
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's a preprocessor.  By definition it knows nothing about the
+surrounding syntax.  FOO(x) will just expand to what it expands to,
+which may or may not be legal in context.  I this case it will be
+because the definition has parens around it.
 
-* Thierry Reding wrote:
-> This series adds a basic DRM driver for NVIDIA Tegra 2 processors. It
-> currently only supports the RGB output and I've successfully tested it
-> against the fbcon kernel module and the xf86-video-modesetting driver.
-> The code uses the Tegra's IOMMU/GART to remap non-contiguous memory.
-> This means that currently video memory is limited to 32 MB, the size of
-> the GART aperture.
->=20
-> Changes in v2:
-> - split into several smaller source files
-> - represent individual devices in DT
-> - add drivers for individual devices
-> - EDID probing support via "ddc" property
-> - EDID support in DT using binary blobs
-> - basic (non-working) HDMI support
-> - support for carveout memory in DT
->=20
-> A lot of the above are really just stub implementations. Most notably
-> HDMI support is pretty much a copy of what NVIDIA has in their
-> downstream kernels, though I wasn't able to make it work except for the
-> EDID probing (I probably missed some pieces). Carveout memory also isn't
-> used right now.
->=20
-> Still this should now be in a state where other people (like Jon and
-> Terje from NVIDIA) and Lucas can start contributing. This series is
-> based on next-20120424.
+>     prop = <(FOO(1)) (FOO(2)) (FOO(17))>;
 
-I also just finished uploading this series to gitorious:
+That might be a wiser way to structure it, but it's no more or less
+valid from a preproc point of view.
 
-	https://gitorious.org/thierryreding/linux/commits/tegra/drm/next
+> Admittedly, the C pre-processor does appear to know whether FOO was
+> defined to accept arguments or not, and will differentiate between the
+> two cases based on that, but that seems pretty nasty to me. And this
+> relies on the body of FOO having () around it, which seems somewhat
+> implicit.
 
-Thierry
+Yes.  But that's all stuff you have to deal with for cpp already.
+Remember the main target audience for dtc is C programmers, so the
+least surprise principle should be interpreted in that context.
 
---pf9I7BMVVzbSWLtt
-Content-Type: application/pgp-signature
+> >> However, if the dtc language itself gains functions, iteration, etc., I
+> >> think this breaks down.
+> > 
+> > Well, for starters I think gaining functions and gaining iteration are
+> > quite different cases.  I see using a preprocessor as a way of
+> > avoiding gaining functions in the core language (and particularly
+> > avoiding the necessity of storing expression trees that that would
+> > require).
+> > 
+> >> Using cpp, we could do something like:
+> >>
+> >> #define TEGRA_USB1_INT_STATUS 0x7000000
+> >> #define POS(chip, reg, field) chip##_##reg##_##field##_POS
+> >>
+> >> / {
+> >>     prop1 = <(POS(TEGRA, USB1, INT_STATUS))>;
+> >> };
+> >>
+> >> where you can imagine that the POS macro is calculating the name of a
+> >> symbolic constant, then reading the value of the name.
+> >>
+> >> However, what if instead of hard-coding USB1 in the above example, we
+> >> want to iterate over 1, 2, 3? Expressing this iteration as a set of
+> >> functions in the dtc grammar (as in functional programming) has been
+> >> floated as an idea. In other words generate a result like:
+> >>
+> >> / {
+> >>     prop1 = <(POS(TEGRA, USB, 1, INT_STATUS))>;
+> >>     prop2 = <(POS(TEGRA, USB, 2, INT_STATUS))>;
+> >>     prop3 = <(POS(TEGRA, USB, 3, INT_STATUS))>;
+> >> };
+> >>
+> >> ... but using iteration in the dtc language instead of cut/paste.
+> > 
+> > Um.. this seems a contrived example - combining iteration with
+> > construction of property names and symbol names.  The sorts of
+> > iteration I had in mind were more things like generating:
+> > 	prop = <0 0x1000 0x2000 0x3000>;
+> > programmatically.  That example could be built using an iterator
+> > built-in "function", which could in turn be generated from a macro.
+> > 
+> > Do you have a real use case for something more like the example above?
+> 
+> I don't immediately foresee the need for any kind of iteration in the
+> device trees I'm building at the moment. Plain #define of simple
+> constants (integers or strings) would probably satisfy all the needs I'm
+> currently aware of.
+> 
+> But Jon's IIRC expressions patch included iteration, and you've posited
+> iteration functions, and I think in any case where iteration is allowed,
+> you will want the feature where you can define e.g. the base address of
+> two HW modules, and have the iteration "body" read from one of those
+> variables programatically rather than have the list of base addresses
+> passed in.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Hrm.  I think I'd need some more concrete examples to make sense of
+that.
 
-iEYEARECAAYFAk+X7aoACgkQZ+BJyKLjJp9ZkACggwHSSACQpOGKMLpMrBhbdhlD
-lN8AoIWdzcPrUZA8nBHqCsgeUB+vpkna
-=bbbA
------END PGP SIGNATURE-----
+> > And in fact, because of this I really only want to implement either
+> > *both* functions and constants in dtc, or neither - not one without
+> > the other.  So far, I'm still hoping to avoid it.
+> 
+> I don't understand the rationale behind this position. What's the root
+> of the problem that disallows us supporting named constants without
+> supporting full macros? I think plain named constants would cover the
+> majority of current use-cases, and I'm quite happy to stop thinking
+> about anything more advanced. The only reason I'm trying to drive other
+> stuff is because of your desire not to support constants without full
+> macros.
 
---pf9I7BMVVzbSWLtt--
+Both functions and macros would - clearly - have constants as an
+obvious special case (a zero argument macro/function).  I don't want
+to end up with two different syntaxes for constants.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
