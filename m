@@ -1,89 +1,123 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V1] dmaengine: tegra: add dma driver
-Date: Wed, 25 Apr 2012 14:31:27 +0530
-Message-ID: <4F97BD67.1050300@nvidia.com>
-References: <1334912896-4614-1-git-send-email-ldewangan@nvidia.com> <1334920487.31825.98.camel@vkoul-udesk3> <4F9153AF.7020901@nvidia.com> <1335170491.31825.104.camel@vkoul-udesk3> <4F95483F.5020005@nvidia.com> <20120423130659.GA22186@n2100.arm.linux.org.uk> <4F95567E.3090605@nvidia.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCHv4 2/2] arm/dts: omap4-sdp: Add keypad data
+Date: Wed, 25 Apr 2012 14:56:44 +0530
+Message-ID: <1335346004-18108-2-git-send-email-sourav.poddar@ti.com>
+References: <1335346004-18108-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4F95567E.3090605-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1335346004-18108-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Add keypad data node in omap4 device tree file.
+Also fill the device tree binding parameters
+with the required value in "omap4-sdp" dts file.
 
-On Monday 23 April 2012 06:47 PM, Laxman Dewangan wrote:
-> On Monday 23 April 2012 06:36 PM, Russell King - ARM Linux wrote:
->> On Mon, Apr 23, 2012 at 05:47:03PM +0530, Laxman Dewangan wrote:
->>> Hi Russell,
->>> On Monday 23 April 2012 02:11 PM, Vinod Koul wrote:
->>>> On Fri, 2012-04-20 at 17:46 +0530, Laxman Dewangan wrote:
->>>>> Thanks Vinod for quick review.
->>>> Since I was on vacation, I hadn't noticed Russell has already sent the
->>>> patches for omap dma support.
->>>> http://permalink.gmane.org/gmane.linux.ports.arm.omap/75034
->>>>
->>>> It would be nice if both the efforts are coordinated.
->>>>
->>>> Btw I like the virtual channel support introduced by Russell
->>>>
->>> Can you please point me the virtual channel related change? I am not
->>> able to locate this like search for function vchan_* ().
->>> My driver is also on same line but not used vchan_* and also having
->>> support for cyclic transfer.
->> It's only been posted in RFC form on linux-arm-kernel and linux-omap
->> lists.  The specific patch is:
->>
->> http://lists.arm.linux.org.uk/lurker/message/20120418.101116.082b350f.en.html
->>
->> I wouldn't call it perfected yet, but usable.  It doesn't have any
->> knowledge about cyclic transfers either.
-> For simple dma, it is straight to use the virt_chan and it reduce lots
-> of code from tegra_dma as most of it moved to the virt_dma.
->
-> Some points which I am looking are:
-> 1. Extending this for cyclic support:
-> In cyclic mode, we need to call callback after period_len but do not
-> want to free descriptors. So either I need to add flag on the desctiptor
-> to no delet and so when vc->desc_free(vd); is called from callback, it
-> will not delete the descriptor.
->
-> 2. With very prep call, we are allocating descriptor. Is it is possible
-> to allocate some desc in advance and then keep using them. The
-> complexity is that if we allocate the desc in advance, we need to
-> allocate the desc and sq_req list and maintain the two different lists
-> as we dont know the sg_len in advance.
->
-> 3. vchan_cookie_complete()  is not possible in the cyclic mode as we
-> dont want to call dma_cookie_complete() but just want to do following
-> two thing:
->
-> list_add_tail(&vd->node,&vc->desc_completed);
-> tasklet_schedule(&vc->task);
->
-> if we extend this function to bypass dma_cookie_complete(&vd->tx); or
-> rather than calling this api, directly call the above apis.
->
+Tested on omap44330 sdp with 3.4-rc3 kernel.
 
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Benoit Cousson <b-cousson@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+---
+v3->v4:
+Express keymap binding as (linux,keymap) in the format described in 
+Documentation/devicetree/bindings/input/matrix-keymap.txt
+ arch/arm/boot/dts/omap4-sdp.dts |   63 +++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap4.dtsi    |    5 +++
+ 2 files changed, 68 insertions(+), 0 deletions(-)
 
-I had a  communication with Russell on another change thread and 
-understand that some more work need to be done in virt_chan to support 
-cyclic one.
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index 63c6b2b..0c9b3bf 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -17,4 +17,67 @@
+ 		device_type = "memory";
+ 		reg = <0x80000000 0x40000000>; /* 1 GB */
+ 	};
++
++	keypad@4ae1c000 {
++		keypad,num-rows = <8>;
++		keypad,num-columns = <8>;
++		linux,keymap = < 0x00000012
++			0x00010013
++			0x00020014
++			0x00030066
++			0x0004003f
++			0x00060017
++			0x0007002a
++			0x01000020
++			0x01010021
++			0x01020022
++			0x01030054
++			0x01040040
++			0x01060025
++			0x0107001c
++			0x0200002d
++			0x0201002e
++			0x0202002f
++			0x0203006b
++			0x02040041
++			0x02060034
++			0x0207003a
++			0x0300002c
++			0x0301004e
++			0x03020030
++			0x0303003b
++			0x03040042
++			0x03060018
++			0x03070039
++			0x04000011
++			0x04010015
++			0x04020016
++			0x0403003c
++			0x04040073
++			0x04060026
++			0x04070069
++			0x0500001f
++			0x05010023
++			0x05020024
++			0x0503003d
++			0x05040043
++			0x05050072
++			0x05060032
++			0x0507006a
++			0x06000010
++			0x0601001e
++			0x06020031
++			0x0603005c
++			0x0604000e
++			0x06060019
++			0x06070067
++			0x07000094
++			0x07010095
++			0x070200ca
++			0x070300cb
++			0x0704003e
++			0x07060160
++			0x0707006c >;
++		linux,input-no-autorepeat;
++	};
+ };
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 3d35559..e0f678a 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -156,4 +156,9 @@
+ 			ti,hwmods = "i2c4";
+ 		};
+ 	};
++
++	keypad@4ae1c000 {
++		compatible = "ti,omap4-keypad";
++		ti,hwmods = "kbd";
++	};
+ };
+-- 
+1.7.1
 
-I want to have the cyclic dma support in my driver so I want to go on 
-following steps:
-1. I will post the patch for tegra dma which will not use the virt_dma 
-so that my driver will be independent of Russel's change.
-2. Once the tegra dma is part of tree, I can move all my dma client to 
-use the dmaengine based driver and remove old style dma.
-3. Till that time Russell's will have already virt_dma support for 
-cyclic one and so I will change tegra_dma.c to use virt_dma.
-
-
-Let me know your opinion so that I can plan my patch/change accordingly.
-
-Thanks,
-Laxman
