@@ -1,62 +1,312 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [RFC v2 2/5] tps6586x: Add device tree support
-Date: Wed, 25 Apr 2012 11:47:42 +0100
-Message-ID: <20120425104742.GA20492@opensource.wolfsonmicro.com>
-References: <1335347102-14905-1-git-send-email-thierry.reding@avionic-design.de>
- <1335347102-14905-3-git-send-email-thierry.reding@avionic-design.de>
- <20120425101031.GH3195@opensource.wolfsonmicro.com>
- <20120425101429.GA5085@avionic-0098.mockup.avionic-design.de>
- <20120425104147.GB5085@avionic-0098.mockup.avionic-design.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCHv4 1/2] drivers: input: keypad: Add device tree support
+Date: Wed, 25 Apr 2012 11:52:35 +0100
+Message-ID: <20120425105235.GV24211@n2100.arm.linux.org.uk>
+References: <1335346004-18108-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120425104147.GB5085-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1335346004-18108-1-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+I think you and Roland Stigge need to put your heads together and come
+up with a common DT binding for matrix keypad devices, rather than
+inventing N different platform specific bindings.
 
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 25, 2012 at 12:41:47PM +0200, Thierry Reding wrote:
-
-> After taking a closer look I don't think Rhyland's patch is very useful for
-> this driver. I need to lookup the platform ID by regulator name anyway so
-> using the new code is actually more work and requires a second table that
-> lists the regulator names only.
-
-Why do you need the plaform ID, and if it is needed could we work out a
-way to make the generic code do that lookup for you (since presumably
-other drivers will have the same requirement)?  If you can't use the
-generic code it seems like the fix is to enhance the generic code and
-I'd expect that something not requiring the platform ID would just be
-able to igore that information if the generic code could look it up.
-
---AqsLC8rIMeq19msA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPl9ZIAAoJEBus8iNuMP3doOUP+gM4UU/3vhsy3T0bttkbBLEJ
-QPwTuy155eJfsC8nDE/ojfZCjUfzfm0SspCeHvd5CzT9AEenEbxsTu3U1n9nnSjr
-UwU7vQZj6PhS3tP5SSLXv6hVvIDjkLq61IYYZn6ZPyD1U/+uHzfX7OIwLjoFMMnm
-drBcJKJpFTvZD1B1ifWJw8L707BLBsaIdj91EDXCODnx7ztpnTQ1TL5qxQokntgU
-OHcrkPXlDYWgisk1hyQEhJaRAZVA8B+w/o3geLt13ClONY7zYXQszchlokZ5horw
-nv2deAVhu4w5AbRJzKdMFqL1QRuiKuQfGtWpFgK/yHrdHf+8pEnNlBn5d1gLU6LI
-slXrHUACRn8V94UcwwID2KE7ne3UrO53Bzn893G78UrhE7IJzumAKj0iMQ2gYB4q
-qN6svCZ2CuvpeS+zroxDHTB4E/v2KL/xl3q14L+nUp4SfPjBIx2sxRr0Wmg61cs7
-IkHKvDg1p5fgQ8/OLczE6T46ZoUOS4JHM6wt5Aj0Ud1tSYFbqk4hS8e079k1OP1m
-ZBL/iQsbbwRdmptrNYQzrPxDO0fygVn7kBwO3TRcfKWH2tS0v9fK8QykajEYpQDE
-UN7g2jbf9lbIyVfFRVWNgy7P2jEmOuIUVpbWJmaESDT+IY6Kt9fKbztlA7JMoN5U
-Ch0YhA8ce08B97h4lniE
-=i4oW
------END PGP SIGNATURE-----
-
---AqsLC8rIMeq19msA--
+On Wed, Apr 25, 2012 at 02:56:43PM +0530, Sourav Poddar wrote:
+> Update the Documentation with omap4 keypad device tree
+> binding information.
+> Add device tree support for omap4 keypad driver.
+> 
+> Tested on omap4430 sdp with 3.4-rc3.
+> 
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
+> Signed-off-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+> ---
+> v3->v4: Fix stephen warren's comment
+>  - Made use of the (linux, keymap) bindings as 
+>   described in matrix-keyboard binding documentation.
+>  
+>  .../devicetree/bindings/input/omap-keypad.txt      |   31 +++++
+>  drivers/input/keyboard/omap4-keypad.c              |  118 ++++++++++++++++----
+>  2 files changed, 126 insertions(+), 23 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/omap-keypad.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/omap-keypad.txt b/Documentation/devicetree/bindings/input/omap-keypad.txt
+> new file mode 100644
+> index 0000000..722425b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/omap-keypad.txt
+> @@ -0,0 +1,31 @@
+> +* TI's Keypad Controller device tree bindings
+> +
+> +TI's Keypad controller is used to interface a SoC with a matrix-type
+> +keypad device. The keypad controller supports multiple row and column lines.
+> +A key can be placed at each intersection of a unique row and a unique column.
+> +The keypad controller can sense a key-press and key-release and report the
+> +event using a interrupt to the cpu.
+> +
+> +Required SoC Specific Properties:
+> +- compatible: should be one of the following
+> +   - "ti,omap4-keypad": For controllers compatible with omap4 keypad
+> +      controller.
+> +
+> +Required Board Specific Properties, in addition to those specified by
+> +the shared matrix-keyboard bindings:
+> +- keypad,num-rows: Number of row lines connected to the keypad
+> +  controller.
+> +
+> +- keypad,num-columns: Number of column lines connected to the
+> +  keypad controller.
+> +
+> +Optional Properties specific to linux:
+> +- linux,keypad-no-autorepeat: do no enable autorepeat feature.
+> +
+> +Example:
+> +        keypad@4ae1c000{
+> +                compatible = "ti,omap4-keypad";
+> +                keypad,num-rows = <2>;
+> +                keypad,num-columns = <8>;
+> +		linux,keypad-no-autorepeat;
+> +	};
+> diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
+> index e809ac0..bce300e 100644
+> --- a/drivers/input/keyboard/omap4-keypad.c
+> +++ b/drivers/input/keyboard/omap4-keypad.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/errno.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+>  #include <linux/input.h>
+>  #include <linux/slab.h>
+>  #include <linux/pm_runtime.h>
+> @@ -70,6 +71,7 @@
+>  
+>  struct omap4_keypad {
+>  	struct input_dev *input;
+> +	struct matrix_keymap_data *keymap_data;
+>  
+>  	void __iomem *base;
+>  	int irq;
+> @@ -77,6 +79,7 @@ struct omap4_keypad {
+>  	unsigned int rows;
+>  	unsigned int cols;
+>  	unsigned int row_shift;
+> +	bool no_autorepeat;
+>  	unsigned char key_state[8];
+>  	unsigned short keymap[];
+>  };
+> @@ -174,24 +177,101 @@ static void omap4_keypad_close(struct input_dev *input)
+>  	pm_runtime_put_sync(input->dev.parent);
+>  }
+>  
+> +static struct omap4_keypad *omap_keypad_parse_dt(struct device *dev)
+> +{
+> +	struct matrix_keymap_data *keymap_data;
+> +	struct device_node *np = dev->of_node;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct omap4_keypad *keypad_data = platform_get_drvdata(pdev);
+> +	uint32_t *keymap;
+> +	int proplen = 0, i;
+> +	const __be32 *prop = of_get_property(np, "linux,keymap", &proplen);
+> +
+> +	keymap_data = devm_kzalloc(dev, sizeof(*keymap_data), GFP_KERNEL);
+> +	if (!keymap_data) {
+> +		dev_err(dev, "could not allocate memory for keymap data\n");
+> +		return NULL;
+> +	}
+> +	keypad_data->keymap_data = keymap_data;
+> +
+> +	keymap_data->keymap_size = proplen / sizeof(u32);
+> +
+> +	keymap = devm_kzalloc(dev,
+> +		sizeof(uint32_t) * keymap_data->keymap_size, GFP_KERNEL);
+> +	if (!keymap) {
+> +		dev_err(dev, "could not allocate memory for keymap\n");
+> +		return NULL;
+> +	}
+> +	keypad_data->keymap_data->keymap = keymap;
+> +
+> +	for (i = 0; i < keymap_data->keymap_size; i++) {
+> +		u32 tmp = be32_to_cpup(prop+i);
+> +		int key_code, row, col;
+> +
+> +		row = (tmp >> 24) & 0xff;
+> +		col = (tmp >> 16) & 0xff;
+> +		key_code = tmp & 0xffff;
+> +		*keymap++ = KEY(row, col, key_code);
+> +	}
+> +
+> +	if (of_get_property(np, "linux,input-no-autorepeat", NULL))
+> +		keypad_data->no_autorepeat = true;
+> +
+> +	return keypad_data;
+> +}
+> +
+>  static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>  {
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+>  	const struct omap4_keypad_platform_data *pdata;
+>  	struct omap4_keypad *keypad_data;
+>  	struct input_dev *input_dev;
+>  	struct resource *res;
+>  	resource_size_t size;
+> -	unsigned int row_shift, max_keys;
+> +	unsigned int row_shift = 0, max_keys = 0;
+> +	uint32_t num_rows = 0, num_cols = 0;
+>  	int irq;
+>  	int error;
+>  
+>  	/* platform data */
+>  	pdata = pdev->dev.platform_data;
+> -	if (!pdata) {
+> +	if (np) {
+> +		of_property_read_u32(np, "keypad,num-rows", &num_rows);
+> +		of_property_read_u32(np, "keypad,num-columns", &num_cols);
+> +		if (!num_rows || !num_cols) {
+> +			dev_err(&pdev->dev, "number of keypad rows/columns not specified\n");
+> +			return -EINVAL;
+> +		}
+> +	} else if (pdata) {
+> +		num_rows = pdata->rows;
+> +		num_cols = pdata->cols;
+> +	} else {
+>  		dev_err(&pdev->dev, "no platform data defined\n");
+>  		return -EINVAL;
+>  	}
+>  
+> +	row_shift = get_count_order(num_cols);
+> +	max_keys = num_rows << row_shift;
+> +
+> +	keypad_data = devm_kzalloc(dev, sizeof(struct omap4_keypad) +
+> +			max_keys * sizeof(keypad_data->keymap[0]),
+> +				GFP_KERNEL);
+> +
+> +	if (!keypad_data) {
+> +		dev_err(&pdev->dev, "keypad_data memory allocation failed\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, keypad_data);
+> +
+> +	if (np) {
+> +		keypad_data = omap_keypad_parse_dt(&pdev->dev);
+> +	} else {
+> +		keypad_data->keymap_data =
+> +				(struct matrix_keymap_data *)pdata->keymap_data;
+> +	}
+> +
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	if (!res) {
+>  		dev_err(&pdev->dev, "no base address specified\n");
+> @@ -204,22 +284,6 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (!pdata->keymap_data) {
+> -		dev_err(&pdev->dev, "no keymap data defined\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	row_shift = get_count_order(pdata->cols);
+> -	max_keys = pdata->rows << row_shift;
+> -
+> -	keypad_data = kzalloc(sizeof(struct omap4_keypad) +
+> -				max_keys * sizeof(keypad_data->keymap[0]),
+> -			      GFP_KERNEL);
+> -	if (!keypad_data) {
+> -		dev_err(&pdev->dev, "keypad_data memory allocation failed\n");
+> -		return -ENOMEM;
+> -	}
+> -
+>  	size = resource_size(res);
+>  
+>  	res = request_mem_region(res->start, size, pdev->name);
+> @@ -236,10 +300,10 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>  		goto err_release_mem;
+>  	}
+>  
+> +	keypad_data->rows = num_rows;
+> +	keypad_data->cols = num_cols;
+>  	keypad_data->irq = irq;
+>  	keypad_data->row_shift = row_shift;
+> -	keypad_data->rows = pdata->rows;
+> -	keypad_data->cols = pdata->cols;
+>  
+>  	/* input device allocation */
+>  	keypad_data->input = input_dev = input_allocate_device();
+> @@ -263,13 +327,15 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>  	input_dev->keycodemax	= max_keys;
+>  
+>  	__set_bit(EV_KEY, input_dev->evbit);
+> -	__set_bit(EV_REP, input_dev->evbit);
+> +
+> +	if (!keypad_data->no_autorepeat)
+> +		__set_bit(EV_REP, input_dev->evbit);
+>  
+>  	input_set_capability(input_dev, EV_MSC, MSC_SCAN);
+>  
+>  	input_set_drvdata(input_dev, keypad_data);
+>  
+> -	matrix_keypad_build_keymap(pdata->keymap_data, row_shift,
+> +	matrix_keypad_build_keymap(keypad_data->keymap_data, row_shift,
+>  			input_dev->keycode, input_dev->keybit);
+>  
+>  	error = request_irq(keypad_data->irq, omap4_keypad_interrupt,
+> @@ -288,7 +354,6 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>  		goto err_pm_disable;
+>  	}
+>  
+> -	platform_set_drvdata(pdev, keypad_data);
+>  	return 0;
+>  
+>  err_pm_disable:
+> @@ -327,12 +392,19 @@ static int __devexit omap4_keypad_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id omap_keypad_dt_match[] = {
+> +	{ .compatible = "ti,omap4-keypad" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, omap_keypad_dt_match);
+> +
+>  static struct platform_driver omap4_keypad_driver = {
+>  	.probe		= omap4_keypad_probe,
+>  	.remove		= __devexit_p(omap4_keypad_remove),
+>  	.driver		= {
+>  		.name	= "omap4-keypad",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(omap_keypad_dt_match),
+>  	},
+>  };
+>  module_platform_driver(omap4_keypad_driver);
+> -- 
+> 1.7.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
