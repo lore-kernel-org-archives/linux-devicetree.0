@@ -1,58 +1,115 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 1/4] ARM: tegra: Add AHB driver
-Date: Wed, 25 Apr 2012 15:01:28 +0200
-Message-ID: <20120425.160128.1314575000242024123.hdoyu@nvidia.com>
-References: <1335352072-4001-1-git-send-email-hdoyu@nvidia.com><20120425112519.GB3564@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120425112519.GB3564-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: [PATCH] I2C: xiic: Add OF binding support
+Date: Wed, 25 Apr 2012 15:48:53 +0200
+Message-ID: <1335361733-24441-1-git-send-email-lars@metafoo.de>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv3 1/4] ARM: tegra: Add AHB driver
-Date: Wed, 25 Apr 2012 13:25:20 +0200
-Message-ID: <20120425112519.GB3564-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/i2c/xiic.txt |   22 ++++++++++++++++++++++
+ drivers/i2c/busses/i2c-xiic.c                  |   23 ++++++++++++++++++-----
+ 2 files changed, 40 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/xiic.txt
 
-> * PGP Signed by an unknown key
-> 
-> On Wed, Apr 25, 2012 at 02:07:36PM +0300, Hiroshi DOYU wrote:
-> > The AHB Bus conforms to the AMBA Specification (Rev 2.0) Advanced
-> > High-performance Bus (AHB) architecture.
-> >
-> > The AHB Arbiter controls AHB bus master arbitration. This effectively
-> > forms a second level of arbitration for access to the memory
-> > controller through the AHB Slave Memory device. The AHB pre-fetch
-> > logic can be configured to enhance performance for devices doing
-> > sequential access. Each AHB master is assigned to either the high or
-> > low priority bin. Both Tegra20/30 have this AHB bus.
-> >
-> > Some of configuration param could be passed from DT too.
-> >
-> > Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > ---
-> > v4:
-> > Fixed the comments from Felipe/Russell.
-> > This is now located under drivers/platform/arm.
-> > v3:
-> > Use platform_device to get info from dt dynamically.(Felipe/Arnd)
-> >
-> > Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Just one thing, you seem to have missed Russell's comment about this
-> driver being generic. You still add a TEGRA_AHB driver,
-
-For generalization, there seems to be many parts in this driver
-depending on SoC implementation, and I'm not so sure how much S/W
-compatibility can be kept from H/W spec. Is there any other similar
-SoC AHB driver in kernel?
-
-> also, you don't need <mach/iomap.h>. Apart from those, you can add:
-
-Ok, I'll fix and add your Reviewed-by:. Thank you for your review.
+diff --git a/Documentation/devicetree/bindings/i2c/xiic.txt b/Documentation/devicetree/bindings/i2c/xiic.txt
+new file mode 100644
+index 0000000..ceabbe9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/xiic.txt
+@@ -0,0 +1,22 @@
++Xilinx IIC controller:
++
++Required properties:
++- compatible : Must be "xlnx,xps-iic-2.00.a"
++- reg : IIC register location and length
++- interrupts : IIC controller unterrupt
++- #address-cells = <1>
++- #size-cells = <0>
++
++Optional properties:
++- Child nodes conforming to i2c bus binding
++
++Example:
++
++	axi_iic_0: i2c@40800000 {
++		compatible = "xlnx,xps-iic-2.00.a";
++		interrupts = < 1 2 >;
++		reg = < 0x40800000 0x10000 >;
++
++		#size-cells = <0>;
++		#address-cells = <1>;
++	};
+diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
+index 2bded76..641d0e5 100644
+--- a/drivers/i2c/busses/i2c-xiic.c
++++ b/drivers/i2c/busses/i2c-xiic.c
+@@ -40,6 +40,7 @@
+ #include <linux/i2c-xiic.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
++#include <linux/of_i2c.h>
+ 
+ #define DRIVER_NAME "xiic-i2c"
+ 
+@@ -705,8 +706,6 @@ static int __devinit xiic_i2c_probe(struct platform_device *pdev)
+ 		goto resource_missing;
+ 
+ 	pdata = (struct xiic_i2c_platform_data *) pdev->dev.platform_data;
+-	if (!pdata)
+-		return -EINVAL;
+ 
+ 	i2c = kzalloc(sizeof(*i2c), GFP_KERNEL);
+ 	if (!i2c)
+@@ -730,6 +729,7 @@ static int __devinit xiic_i2c_probe(struct platform_device *pdev)
+ 	i2c->adap = xiic_adapter;
+ 	i2c_set_adapdata(&i2c->adap, i2c);
+ 	i2c->adap.dev.parent = &pdev->dev;
++	i2c->adap.dev.of_node = pdev->dev.of_node;
+ 
+ 	xiic_reinit(i2c);
+ 
+@@ -748,9 +748,13 @@ static int __devinit xiic_i2c_probe(struct platform_device *pdev)
+ 		goto add_adapter_failed;
+ 	}
+ 
+-	/* add in known devices to the bus */
+-	for (i = 0; i < pdata->num_devices; i++)
+-		i2c_new_device(&i2c->adap, pdata->devices + i);
++	if (pdata) {
++		/* add in known devices to the bus */
++		for (i = 0; i < pdata->num_devices; i++)
++			i2c_new_device(&i2c->adap, pdata->devices + i);
++	}
++
++	of_i2c_register_devices(&i2c->adap);
+ 
+ 	return 0;
+ 
+@@ -795,12 +799,21 @@ static int __devexit xiic_i2c_remove(struct platform_device* pdev)
+ 	return 0;
+ }
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id xiic_of_match[] __devinitconst = {
++	{ .compatible = "xlnx,xps-iic-2.00.a", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, xiic_of_match);
++#endif
++
+ static struct platform_driver xiic_i2c_driver = {
+ 	.probe   = xiic_i2c_probe,
+ 	.remove  = __devexit_p(xiic_i2c_remove),
+ 	.driver  = {
+ 		.owner = THIS_MODULE,
+ 		.name = DRIVER_NAME,
++		.of_match_table = of_match_ptr(xiic_of_match),
+ 	},
+ };
+ 
+-- 
+1.7.9.5
