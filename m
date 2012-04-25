@@ -1,152 +1,61 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: dtc symbolic constants - not in the preprocessor?
-Date: Wed, 25 Apr 2012 22:27:45 +1000
-Message-ID: <20120425122745.GL6305@truffala.fritz.box>
-References: <4F8E2A87.6000805@wwwdotorg.org>
- <20120419121151.GF5387@truffala.fritz.box>
- <4F976DFA.6050406@wwwdotorg.org>
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [PATCHv4 1/2] drivers: input: keypad: Add device tree support
+Date: Wed, 25 Apr 2012 18:30:39 +0530
+Message-ID: <CAKdam56PrS_UT-owMq9xAQkoYxQHeenErT-vwJazqoNuECCbBw@mail.gmail.com>
+References: <1335346004-18108-1-git-send-email-sourav.poddar@ti.com>
+	<20120425105235.GV24211@n2100.arm.linux.org.uk>
+	<4F97E243.1040707@antcom.de>
+	<CAKdam57H-JH_vgohMo6Mp3jF46irBJJphj-bHc8SBZUXv564Ug@mail.gmail.com>
+	<4F97EACA.9070603@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F976DFA.6050406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F97EACA.9070603@antcom.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@xenotime.net>, Felipe Balbi <balbi@ti.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2012 at 09:22:34PM -0600, Stephen Warren wrote:
-> On 04/19/2012 06:11 AM, David Gibson wrote:
-> > On Tue, Apr 17, 2012 at 08:44:23PM -0600, Stephen Warren wrote:
-> >> So, David has been leaning towards a simple text-based preprocessor as
-> >> the means to add symbolic constants to dtc. Depending on exactly how
-> >> much advanced expression support the dtc language ends up gaining, I'm
-> >> not so sure a text-based preprocessor is the right approach.
-> >>
-> >> So, a text-based preprocessor is fine for basic stuff like:
-> >>
-> >> #define FOO 5
-> >>
-> >> / {
-> >>     prop = <(FOO)>;
-> >> };
-> > 
-> > Note also that this will work nicely:
-> > 
-> > #define FOO(x)	(/* something */)
-> > 
-> > 	prop = <FOO(1)  FOO(2)  FOO(17)>;
-> 
-> I don't think that can be legal; there's no () around the FOO(1), so how
-> do you know whether it's meant to be two cells; the result of expanding
-> "FOO" and plain "(1)", or a call of a macro named FOO with parameter
-> "1"? In other words, shouldn't that be:
+Hi Roland,
 
-It's a preprocessor.  By definition it knows nothing about the
-surrounding syntax.  FOO(x) will just expand to what it expands to,
-which may or may not be legal in context.  I this case it will be
-because the definition has parens around it.
+On Wed, Apr 25, 2012 at 5:45 PM, Roland Stigge <stigge@antcom.de> wrote:
+> Hi!
+>
+> On 04/25/2012 01:56 PM, Poddar, Sourav wrote:
+>> Even I was using the bindings as used by samsung-keypad driver. But according
+>> to the comments and logically too, we should use the common matrix keyboard
+>> bindings already descibed in
+>> Documentation/devicetree/bindings/input/matrix-keymap.txt.
+>
+> Fine with me. Can switch over to
+> Documentation/devicetree/bindings/input/matrix-keymap.txt
+>
+> Maybe samsung-keypad should also be converted because it's subnodes
+> structure duplicates exactly the same thing (row,col,code) in a
+> different way, and we both were distracted by it, ignoring
+> matrix-keymap.txt? Or is it already too late (both samsung-keypad and
 
->     prop = <(FOO(1)) (FOO(2)) (FOO(17))>;
+Not sure about the standards, but surely have seen few others like tegra
+keyboards using common matrix-keyboard bindings.
 
-That might be a wiser way to structure it, but it's no more or less
-valid from a preproc point of view.
+One more comment which I saw in some other mail thread about
+using the following
+              key_1 {
+                        keypad,row = <0>;
+                        keypad,column = <3>;
+                        linux,code = <2>;
+                };
+is that when there are too many keys, the whole data become quilte huge.
+These problem get sorted out on using matrix-keymap bindings, since there
+is a single value computed in order to describe a particular key.
 
-> Admittedly, the C pre-processor does appear to know whether FOO was
-> defined to accept arguments or not, and will differentiate between the
-> two cases based on that, but that seems pretty nasty to me. And this
-> relies on the body of FOO having () around it, which seems somewhat
-> implicit.
+~Sourav
 
-Yes.  But that's all stuff you have to deal with for cpp already.
-Remember the main target audience for dtc is C programmers, so the
-least surprise principle should be interpreted in that context.
+> matrix-keypad both being standards in use) and we should put a
+> recommendation into one of them to use the other one for new designs?
+>
 
-> >> However, if the dtc language itself gains functions, iteration, etc., I
-> >> think this breaks down.
-> > 
-> > Well, for starters I think gaining functions and gaining iteration are
-> > quite different cases.  I see using a preprocessor as a way of
-> > avoiding gaining functions in the core language (and particularly
-> > avoiding the necessity of storing expression trees that that would
-> > require).
-> > 
-> >> Using cpp, we could do something like:
-> >>
-> >> #define TEGRA_USB1_INT_STATUS 0x7000000
-> >> #define POS(chip, reg, field) chip##_##reg##_##field##_POS
-> >>
-> >> / {
-> >>     prop1 = <(POS(TEGRA, USB1, INT_STATUS))>;
-> >> };
-> >>
-> >> where you can imagine that the POS macro is calculating the name of a
-> >> symbolic constant, then reading the value of the name.
-> >>
-> >> However, what if instead of hard-coding USB1 in the above example, we
-> >> want to iterate over 1, 2, 3? Expressing this iteration as a set of
-> >> functions in the dtc grammar (as in functional programming) has been
-> >> floated as an idea. In other words generate a result like:
-> >>
-> >> / {
-> >>     prop1 = <(POS(TEGRA, USB, 1, INT_STATUS))>;
-> >>     prop2 = <(POS(TEGRA, USB, 2, INT_STATUS))>;
-> >>     prop3 = <(POS(TEGRA, USB, 3, INT_STATUS))>;
-> >> };
-> >>
-> >> ... but using iteration in the dtc language instead of cut/paste.
-> > 
-> > Um.. this seems a contrived example - combining iteration with
-> > construction of property names and symbol names.  The sorts of
-> > iteration I had in mind were more things like generating:
-> > 	prop = <0 0x1000 0x2000 0x3000>;
-> > programmatically.  That example could be built using an iterator
-> > built-in "function", which could in turn be generated from a macro.
-> > 
-> > Do you have a real use case for something more like the example above?
-> 
-> I don't immediately foresee the need for any kind of iteration in the
-> device trees I'm building at the moment. Plain #define of simple
-> constants (integers or strings) would probably satisfy all the needs I'm
-> currently aware of.
-> 
-> But Jon's IIRC expressions patch included iteration, and you've posited
-> iteration functions, and I think in any case where iteration is allowed,
-> you will want the feature where you can define e.g. the base address of
-> two HW modules, and have the iteration "body" read from one of those
-> variables programatically rather than have the list of base addresses
-> passed in.
-
-Hrm.  I think I'd need some more concrete examples to make sense of
-that.
-
-> > And in fact, because of this I really only want to implement either
-> > *both* functions and constants in dtc, or neither - not one without
-> > the other.  So far, I'm still hoping to avoid it.
-> 
-> I don't understand the rationale behind this position. What's the root
-> of the problem that disallows us supporting named constants without
-> supporting full macros? I think plain named constants would cover the
-> majority of current use-cases, and I'm quite happy to stop thinking
-> about anything more advanced. The only reason I'm trying to drive other
-> stuff is because of your desire not to support constants without full
-> macros.
-
-Both functions and macros would - clearly - have constants as an
-obvious special case (a zero argument macro/function).  I don't want
-to end up with two different syntaxes for constants.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+> Thanks,
+>
+> Roland
+>
