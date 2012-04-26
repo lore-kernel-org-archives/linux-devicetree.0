@@ -1,88 +1,52 @@
-From: Roland Stigge <stigge@antcom.de>
-Subject: [PATCH RESEND v5 2/2] ohci-nxp: Device tree support
-Date: Thu, 26 Apr 2012 21:58:10 +0200
-Message-ID: <1335470290-3436-2-git-send-email-stigge@antcom.de>
-References: <1335470290-3436-1-git-send-email-stigge@antcom.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCHv3 1/4] ARM: tegra: Add AHB driver
+Date: Thu, 26 Apr 2012 22:59:03 +0100
+Message-ID: <20120426215903.GH24211@n2100.arm.linux.org.uk>
+References: <1335352072-4001-1-git-send-email-hdoyu@nvidia.com>
+ <4F99A740.3080407@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1335470290-3436-1-git-send-email-stigge@antcom.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Cc: Roland Stigge <stigge@antcom.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F99A740.3080407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support to ohci-nxp.c
+On Thu, Apr 26, 2012 at 01:51:28PM -0600, Stephen Warren wrote:
+> On 04/25/2012 05:07 AM, Hiroshi DOYU wrote:
+> > The AHB Bus conforms to the AMBA Specification (Rev 2.0) Advanced
+> > High-performance Bus (AHB) architecture.
+> > 
+> > The AHB Arbiter controls AHB bus master arbitration. This effectively
+> > forms a second level of arbitration for access to the memory
+> > controller through the AHB Slave Memory device. The AHB pre-fetch
+> > logic can be configured to enhance performance for devices doing
+> > sequential access. Each AHB master is assigned to either the high or
+> > low priority bin. Both Tegra20/30 have this AHB bus.
+> > 
+> > Some of configuration param could be passed from DT too.
+> 
+> I think this code looks reasonable. I'd like to see an ack from Russell,
+> Arnd, and Olof on the final location of the files though.
 
-Signed-off-by: Roland Stigge <stigge@antcom.de>
+Well, the big question which needs answering is whether this AHB software
+interface is something specific to Tegra or whether it really is something
+generic.  There's been some hints in the previous thread that it's
+specific to Tegra, so it may not after all make sense for it to be a
+generic driver.
 
----
-
-Applies to v3.4-rc4
-
-I separated these two patches out from the series of LPC32xx conversion since
-most of the other patches are already integrated into the respective
-subsystem's -next branches.
-
- Documentation/devicetree/bindings/usb/ohci-nxp.txt |   16 ++++++++++++++++
- drivers/usb/host/ohci-nxp.c                        |   10 ++++++++++
- 2 files changed, 26 insertions(+)
-
---- /dev/null
-+++ linux-2.6/Documentation/devicetree/bindings/usb/ohci-nxp.txt
-@@ -0,0 +1,16 @@
-+* OHCI controller, NXP ohci-nxp variant
-+
-+Required properties:
-+- compatible: must be "nxp,ohci-nxp"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: The OHCI interrupt
-+
-+Example (LPC32xx):
-+
-+	ohci@31020000 {
-+		compatible = "nxp,ohci-nxp";
-+		reg = <0x31020000 0x300>;
-+		interrupt-parent = <&mic>;
-+		interrupts = <0x3b 0>;
-+	};
---- linux-2.6.orig/drivers/usb/host/ohci-nxp.c
-+++ linux-2.6/drivers/usb/host/ohci-nxp.c
-@@ -22,6 +22,7 @@
- #include <linux/clk.h>
- #include <linux/platform_device.h>
- #include <linux/i2c.h>
-+#include <linux/of.h>
- 
- #include <mach/hardware.h>
- #include <asm/mach-types.h>
-@@ -525,10 +526,19 @@ static int usb_hcd_nxp_remove(struct pla
- /* work with hotplug and coldplug */
- MODULE_ALIAS("platform:usb-ohci");
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id usb_hcd_nxp_match[] = {
-+	{ .compatible = "nxp,ohci-nxp" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, usb_hcd_nxp_match);
-+#endif
-+
- static struct platform_driver usb_hcd_nxp_driver = {
- 	.driver = {
- 		.name = "usb-ohci",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(usb_hcd_nxp_match),
- 	},
- 	.probe = usb_hcd_nxp_probe,
- 	.remove = usb_hcd_nxp_remove,
+However, we _have_ decided "no more drivers under arch/arm".  So I really
+don't want to see "struct xxx_driver" appearing in any code under that
+subdirectory or one of its decendents.  I don't have much more to say
+about location than that.
