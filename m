@@ -1,141 +1,38 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v3 2/4] pinctrl: pinctrl-imx: add imx pinctrl core driver
-Date: Thu, 26 Apr 2012 17:15:36 +0200
-Message-ID: <20120426151536.GO9142@game.jcrosoft.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] dt: add of_get_child_count helper function
+Date: Thu, 26 Apr 2012 10:24:11 -0600
+Message-ID: <4F9976AB.1020502@wwwdotorg.org>
 References: <1335451227-27709-1-git-send-email-b29396@freescale.com>
- <1335451227-27709-2-git-send-email-b29396@freescale.com>
- <20120426144446.GN9142@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20120426144446.GN9142@game.jcrosoft.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: b20223@freescale.com, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, cjb@laptop.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1335451227-27709-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > +Examples:
-> > +usdhc@0219c000 { /* uSDHC4 */
-> > +	fsl,card-wired;
-> > +	vmmc-supply = <&reg_3p3v>;
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_usdhc4_1>;
-> > +};
-> > +
-> > +iomuxc@020e0000 {
-> > +	compatible = "fsl,imx6q-iomuxc";
-> > +	reg = <0x020e0000 0x4000>;
-> > +
-> > +	/* shared pinctrl settings */
-> > +	usdhc4 {
-> > +		pinctrl_usdhc4_1: usdhc4grp-1 {
-> > +			fsl,pins = <1386 0x17059	/* MX6Q_PAD_SD4_CMD__USDHC4_CMD */
-> > +				    1392 0x17059	/* MX6Q_PAD_SD4_CLK__USDHC4_CLK	*/
-> > +				    1462 0x17059	/* MX6Q_PAD_SD4_DAT0__USDHC4_DAT0 */
-> > +				    1470 0x17059	/* MX6Q_PAD_SD4_DAT1__USDHC4_DAT1 */
-> > +				    1478 0x17059	/* MX6Q_PAD_SD4_DAT2__USDHC4_DAT2 */
-> > +				    1486 0x17059	/* MX6Q_PAD_SD4_DAT3__USDHC4_DAT3 */
-> > +				    1493 0x17059	/* MX6Q_PAD_SD4_DAT4__USDHC4_DAT4 */
-> > +				    1501 0x17059	/* MX6Q_PAD_SD4_DAT5__USDHC4_DAT5 */
-> > +				    1509 0x17059	/* MX6Q_PAD_SD4_DAT6__USDHC4_DAT6 */
-> > +				    1517 0x17059>;	/* MX6Q_PAD_SD4_DAT7__USDHC4_DAT7 */
-> honestly I don't like this it's obscure need to decode manually
+On 04/26/2012 08:40 AM, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> I propose to use phandle
-> 
-> as example on uart you will want or not the rst/cts so you will have quite a
-> lot of bindings
-> 
-> so you can describe the pin configuration (function) and refer it by phandle
-> in the group
-We have on Imx mxc at91 and other SoC controler hich you configure per pin
+> Currently most code to get child count in kernel are almost same,
+> add a helper to implement this function for dt to use.
 
-which means one pin have multiple function and the same function is on
-multiple pins
+> diff --git a/include/linux/of.h b/include/linux/of.h
 
-so the groups are just a list of possible pins
+> +static inline int of_get_child_count(const struct device_node *np)
+> +{
+> +	struct device_node *child = NULL;
 
-Instead of re-inventing bindings we do need to come with a common binding whre
-it's possible
-
-So instead I proppose (send in the v2) to use common way to describe the group
-
-1) we describe one function per pin
-
-	functions {
-		rxd_pb12 {
-			atmel,pin-id = <44>;
-			atmel,mux = <0>;
-		};
-
-		txd_pb13 {
-			atmel,pin-id = <45>;
-			atmel,pull = <2>;
-			atmel,mux = <0>;
-		};
-
-		txd0_pb19 {
-			atmel,pin-id = <51>;
-			atmel,pull = <2>;
-			atmel,mux = <0>;
-		};
-
-		rxd0_pb18 {
-			atmel,pin-id = <50>;
-			atmel,mux = <0>;
-		};
-
-		rts0_pb17 {
-			atmel,pin-id = <49>;
-			atmel,mux = <1>;
-		};
-
-		cts0_pb15 {
-			atmel,pin-id = <47>;
-			atmel,mux = <1>;
-		};
-	};
-
-
-advantage if you need to set a pull-up or any pin parameter different on your board
-you can overwrite it without re-creating a group
-
-This is controller specific
-
-and then we have the common bindings to describe the group
-by using phandle of the functions to describe the group
-
-	groups {
-		dbgu {
-			pinctrl,functions = < &rxd_pb12
-					      &txd_pb13 >;
-		};
-
-		uart0_rxd_txd {
-			pinctrl,functions = < &rxd0_pb18
-					      &txd0_pb19 >;
-		};
-
-		uart0_rts_cts {
-			pinctrl,functions = < &rxd0_pb18
-					      &txd0_pb19
-					      &rts0_pb17
-					      &cts0_pb15 >;
-		};
-	};
-
-this will be handle by a generic code in c
-
-Best Regards,
-J.
+You don't actually need to initialize child here. It doesn't really
+matter here, but in a more complex function, it might hide a
+used-before-initialized error.
