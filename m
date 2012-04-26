@@ -1,11 +1,13 @@
 From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: [PATCH v2 1/2] regulator: Add generic DT parsing for regulators
-Date: Thu, 26 Apr 2012 16:52:20 +0200
-Message-ID: <1335451941-26333-1-git-send-email-thierry.reding@avionic-design.de>
+Subject: [PATCH v2 2/2] tps6586x: Add device tree support
+Date: Thu, 26 Apr 2012 16:52:21 +0200
+Message-ID: <1335451941-26333-2-git-send-email-thierry.reding@avionic-design.de>
+References: <1335451941-26333-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1335451941-26333-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,121 +21,268 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Looking up init data for regulators found on chips is a common operation
-that can be handled in a generic way. The new helper function introduced
-by this patch looks up the children of a given node by names specified
-in a match table and fills that match table with information parsed from
-the DT.
-
-This is based on work by Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
+This commit adds device tree support for the TPS6586x regulator.
 
 Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 ---
- drivers/regulator/of_regulator.c       |   47 ++++++++++++++++++++++++++++++++
- include/linux/regulator/of_regulator.h |   18 ++++++++++++
- 2 files changed, 65 insertions(+)
+ .../devicetree/bindings/regulator/tps6586x.txt     |   97 ++++++++++++++++++++
+ drivers/mfd/tps6586x.c                             |   86 +++++++++++++++++
+ drivers/regulator/tps6586x-regulator.c             |    1 +
+ include/linux/mfd/tps6586x.h                       |    1 +
+ 4 files changed, 185 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps6586x.txt
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 679734d..56593b7 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -14,6 +14,7 @@
+diff --git a/Documentation/devicetree/bindings/regulator/tps6586x.txt b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+new file mode 100644
+index 0000000..0fcabaa3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+@@ -0,0 +1,97 @@
++TPS6586x family of regulators
++
++Required properties:
++- compatible: "ti,tps6586x"
++- reg: I2C slave address
++- interrupts: the interrupt outputs of the controller
++- #gpio-cells: number of cells to describe a GPIO
++- gpio-controller: mark the device as a GPIO controller
++- regulators: list of regulators provided by this controller, must be named
++  after their hardware counterparts: sm[0-2], ldo[0-9] and ldo_rtc
++
++Each regulator is defined using the standard binding for regulators.
++
++Example:
++
++	pmu: tps6586x@34 {
++		compatible = "ti,tps6586x";
++		reg = <0x34>;
++		interrupts = <0 88 0x4>;
++
++		#gpio-cells = <2>;
++		gpio-controller;
++
++		regulators {
++			sm0_reg: sm0 {
++				regulator-min-microvolt = < 725000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sm1_reg: sm1 {
++				regulator-min-microvolt = < 725000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sm2_reg: sm2 {
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <4550000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo0_reg: ldo0 {
++				regulator-name = "PCIE CLK";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			ldo1_reg: ldo1 {
++				regulator-min-microvolt = < 725000>;
++				regulator-max-microvolt = <1500000>;
++			};
++
++			ldo2_reg: ldo2 {
++				regulator-min-microvolt = < 725000>;
++				regulator-max-microvolt = <1500000>;
++			};
++
++			ldo3_reg: ldo3 {
++				regulator-min-microvolt = <1250000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			ldo4_reg: ldo4 {
++				regulator-min-microvolt = <1700000>;
++				regulator-max-microvolt = <2475000>;
++			};
++
++			ldo5_reg: ldo5 {
++				regulator-min-microvolt = <1250000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			ldo6_reg: ldo6 {
++				regulator-min-microvolt = <1250000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			ldo7_reg: ldo7 {
++				regulator-min-microvolt = <1250000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			ldo8_reg: ldo8 {
++				regulator-min-microvolt = <1250000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			ldo9_reg: ldo9 {
++				regulator-min-microvolt = <1250000>;
++				regulator-max-microvolt = <3300000>;
++			};
++		};
++	};
+diff --git a/drivers/mfd/tps6586x.c b/drivers/mfd/tps6586x.c
+index a5ddf31..c84b550 100644
+--- a/drivers/mfd/tps6586x.c
++++ b/drivers/mfd/tps6586x.c
+@@ -23,6 +23,7 @@
  #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/regulator/machine.h>
+ #include <linux/gpio.h>
+ #include <linux/i2c.h>
 +#include <linux/regulator/of_regulator.h>
  
- static void of_get_regulation_constraints(struct device_node *np,
- 					struct regulator_init_data **init_data)
-@@ -85,3 +86,49 @@ struct regulator_init_data *of_get_regulator_init_data(struct device *dev,
- 	return init_data;
- }
- EXPORT_SYMBOL_GPL(of_get_regulator_init_data);
-+
-+/**
-+ * of_regulator_match - extract regulator init data
-+ * @dev: device requesting the data
-+ * @node: parent device node of the regulators
-+ * @matches: match table for the regulators
-+ * @num_matches: number of entries in match table
-+ *
-+ * This function uses a match table specified by the regulator driver and
-+ * looks up the corresponding init data in the device tree. Note that the
-+ * match table is modified in place.
-+ *
-+ * Returns the number of matches found or a negative error code on failure.
-+ */
-+int of_regulator_match(struct device *dev, struct device_node *node,
-+		       struct of_regulator_match *matches,
-+		       unsigned int num_matches)
-+{
-+	unsigned int count = 0;
-+	unsigned int i;
-+
-+	if (!dev || !node)
-+		return -EINVAL;
-+
-+	for (i = 0; i < num_matches; i++) {
-+		struct of_regulator_match *match = &matches[i];
-+		struct device_node *child;
-+
-+		child = of_find_node_by_name(node, match->name);
-+		if (!child)
-+			continue;
-+
-+		match->init_data = of_get_regulator_init_data(dev, child);
-+		if (!match->init_data) {
-+			dev_err(dev, "failed to parse DT for regulator %s\n",
-+				child->name);
-+			return -EINVAL;
-+		}
-+
-+		match->of_node = child;
-+		count++;
-+	}
-+
-+	return count;
-+}
-+EXPORT_SYMBOL_GPL(of_regulator_match);
-diff --git a/include/linux/regulator/of_regulator.h b/include/linux/regulator/of_regulator.h
-index 769704f..f921796 100644
---- a/include/linux/regulator/of_regulator.h
-+++ b/include/linux/regulator/of_regulator.h
-@@ -6,10 +6,20 @@
- #ifndef __LINUX_OF_REG_H
- #define __LINUX_OF_REG_H
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/tps6586x.h>
+@@ -460,6 +461,7 @@ static int __devinit tps6586x_add_subdevs(struct tps6586x *tps6586x,
  
-+struct of_regulator_match {
-+	const char *name;
-+	void *driver_data;
-+	struct regulator_init_data *init_data;
-+	struct device_node *of_node;
+ 		pdev->dev.parent = tps6586x->dev;
+ 		pdev->dev.platform_data = subdev->platform_data;
++		pdev->dev.of_node = subdev->of_node;
+ 
+ 		ret = platform_device_add(pdev);
+ 		if (ret) {
+@@ -474,6 +476,86 @@ failed:
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_regulator_match tps6586x_matches[] = {
++	{ .name = "sm0",     .driver_data = (void *)TPS6586X_ID_SM_0    },
++	{ .name = "sm1",     .driver_data = (void *)TPS6586X_ID_SM_1    },
++	{ .name = "sm2",     .driver_data = (void *)TPS6586X_ID_SM_2    },
++	{ .name = "ldo0",    .driver_data = (void *)TPS6586X_ID_LDO_0   },
++	{ .name = "ldo1",    .driver_data = (void *)TPS6586X_ID_LDO_1   },
++	{ .name = "ldo2",    .driver_data = (void *)TPS6586X_ID_LDO_2   },
++	{ .name = "ldo3",    .driver_data = (void *)TPS6586X_ID_LDO_3   },
++	{ .name = "ldo4",    .driver_data = (void *)TPS6586X_ID_LDO_4   },
++	{ .name = "ldo5",    .driver_data = (void *)TPS6586X_ID_LDO_5   },
++	{ .name = "ldo6",    .driver_data = (void *)TPS6586X_ID_LDO_6   },
++	{ .name = "ldo7",    .driver_data = (void *)TPS6586X_ID_LDO_7   },
++	{ .name = "ldo8",    .driver_data = (void *)TPS6586X_ID_LDO_8   },
++	{ .name = "ldo9",    .driver_data = (void *)TPS6586X_ID_LDO_9   },
++	{ .name = "ldo_rtc", .driver_data = (void *)TPS6586X_ID_LDO_RTC },
 +};
 +
- #if defined(CONFIG_OF)
- extern struct regulator_init_data
- 	*of_get_regulator_init_data(struct device *dev,
- 				    struct device_node *node);
-+extern int of_regulator_match(struct device *dev, struct device_node *node,
-+			      struct of_regulator_match *matches,
-+			      unsigned int num_matches);
- #else
- static inline struct regulator_init_data
- 	*of_get_regulator_init_data(struct device *dev,
-@@ -17,6 +27,14 @@ static inline struct regulator_init_data
- {
- 	return NULL;
- }
-+
-+static inline int of_regulator_match(struct device *dev,
-+				     struct device_node *node,
-+				     struct of_regulator_match *matches,
-+				     unsigned int num_matches)
++static struct tps6586x_platform_data *tps6586x_parse_dt(struct i2c_client *client)
 +{
-+	return 0;
++	const unsigned int num = ARRAY_SIZE(tps6586x_matches);
++	struct device_node *np = client->dev.of_node;
++	struct tps6586x_platform_data *pdata;
++	struct tps6586x_subdev_info *devs;
++	struct device_node *regs;
++	unsigned int count;
++	unsigned int i, j;
++	int err;
++
++	regs = of_find_node_by_name(np, "regulators");
++	if (!regs)
++		return NULL;
++
++	err = of_regulator_match(&client->dev, regs, tps6586x_matches, num);
++	if (err < 0) {
++		of_node_put(regs);
++		return NULL;
++	}
++
++	of_node_put(regs);
++	count = err;
++
++	devs = devm_kzalloc(&client->dev, count * sizeof(*devs), GFP_KERNEL);
++	if (!devs)
++		return NULL;
++
++	for (i = 0, j = 0; i < num && j < count; i++) {
++		if (!tps6586x_matches[i].init_data)
++			continue;
++
++		devs[j].name = "tps6586x-regulator";
++		devs[j].platform_data = tps6586x_matches[i].init_data;
++		devs[j].id = (int)tps6586x_matches[i].driver_data;
++		devs[j].of_node = tps6586x_matches[i].of_node;
++		j++;
++	}
++
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	pdata->num_subdevs = count;
++	pdata->subdevs = devs;
++	pdata->gpio_base = -1;
++	pdata->irq_base = -1;
++
++	return pdata;
 +}
- #endif /* CONFIG_OF */
++
++static struct of_device_id tps6586x_of_match[] = {
++	{ .compatible = "ti,tps6586x", },
++	{ },
++};
++#else
++static struct tps6586x_platform_data *tps6586x_parse_dt(struct i2c_client *client)
++{
++	return NULL;
++}
++#endif
++
+ static int __devinit tps6586x_i2c_probe(struct i2c_client *client,
+ 					const struct i2c_device_id *id)
+ {
+@@ -481,6 +563,9 @@ static int __devinit tps6586x_i2c_probe(struct i2c_client *client,
+ 	struct tps6586x *tps6586x;
+ 	int ret;
  
- #endif /* __LINUX_OF_REG_H */
++	if (!pdata && client->dev.of_node)
++		pdata = tps6586x_parse_dt(client);
++
+ 	if (!pdata) {
+ 		dev_err(&client->dev, "tps6586x requires platform data\n");
+ 		return -ENOTSUPP;
+@@ -573,6 +658,7 @@ static struct i2c_driver tps6586x_driver = {
+ 	.driver	= {
+ 		.name	= "tps6586x",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(tps6586x_of_match),
+ 	},
+ 	.probe		= tps6586x_i2c_probe,
+ 	.remove		= __devexit_p(tps6586x_i2c_remove),
+diff --git a/drivers/regulator/tps6586x-regulator.c b/drivers/regulator/tps6586x-regulator.c
+index 9a4029a..c0a2145 100644
+--- a/drivers/regulator/tps6586x-regulator.c
++++ b/drivers/regulator/tps6586x-regulator.c
+@@ -363,6 +363,7 @@ static int __devinit tps6586x_regulator_probe(struct platform_device *pdev)
+ 		return err;
+ 
+ 	config.dev = &pdev->dev;
++	config.of_node = pdev->dev.of_node;
+ 	config.init_data = pdev->dev.platform_data;
+ 	config.driver_data = ri;
+ 
+diff --git a/include/linux/mfd/tps6586x.h b/include/linux/mfd/tps6586x.h
+index b19176e..f350fd0 100644
+--- a/include/linux/mfd/tps6586x.h
++++ b/include/linux/mfd/tps6586x.h
+@@ -68,6 +68,7 @@ struct tps6586x_subdev_info {
+ 	int		id;
+ 	const char	*name;
+ 	void		*platform_data;
++	struct device_node *of_node;
+ };
+ 
+ struct tps6586x_platform_data {
 -- 
 1.7.10
