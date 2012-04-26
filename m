@@ -1,63 +1,74 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: tegra: Add AHB driver
-Date: Thu, 26 Apr 2012 08:49:44 +0300
-Message-ID: <20120426084944.21e7aa1c3944c906742967a2@nvidia.com>
-References: <1335269116-9578-1-git-send-email-hdoyu@nvidia.com>
-	<20120425083747.466f5c98330af8964d980b8c@nvidia.com>
-	<20120425074639.GB3423@arwen.pp.htv.fi>
-	<201204251215.22889.arnd@arndb.de>
-	<4F981F6C.2050807@wwwdotorg.org>
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [PATCHv4 1/2] drivers: input: keypad: Add device tree support
+Date: Thu, 26 Apr 2012 12:03:23 +0530
+Message-ID: <CAKdam56ONhS_drgfHCeY6aKWp3nT0PtDEO5SMCKxG+dGVPS66A@mail.gmail.com>
+References: <1335346004-18108-1-git-send-email-sourav.poddar@ti.com>
+	<4F981CD1.2050007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4F981F6C.2050807-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F981CD1.2050007@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Randy Dunlap <rdunlap@xenotime.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Apr 2012 17:59:40 +0200
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+Hi Stephen,
 
-> On 04/25/2012 06:15 AM, Arnd Bergmann wrote:
-> > On Wednesday 25 April 2012, Felipe Balbi wrote:
-> ...
-> >>> Can this driver be located under "drivers/misc"? Or is there any better place?
-> >>
-> >> maybe drivers/platform/arm/ ??
-> > 
-> > I really wouldn't want to add that directory: It has the risk of letting
-> > people add random crap there that may or may not be related to ARM (the
-> > company) and/or ARM (the architecture).
-> > 
-> > I think it could go into drivers/amba/ along with the primecell bus driver.
-> > The two drivers are for two different aspects of the AMBA spec and don't
-> > actually depend on one another as far as I can tell, but it's at least
-> > a fitting name, and it doesn't depend on the ARM architecture, which is
-> > important because the driver could be used on other architectures that
-> > are connected to an AHB bus.
-> 
-> Hiroshi, is this driver for something (registers/features) that AMBA
-> actually specifies? AHB might be part of AMBA (I'm not familiar enough
-> to know), but I don't think this aspect of Tegra's AHB bus is part of
-> any core AHB/AMBA specification, rather than being some Tegra-specific
-> control over the bus (given that the registers and bits correspond to
-> Tegra-specific devices on the bus).
+On Wed, Apr 25, 2012 at 9:18 PM, Stephen Warren <swarren@wwwdotorg.org>=
+ wrote:
+> On 04/25/2012 03:26 AM, Sourav Poddar wrote:
+>> Update the Documentation with omap4 keypad device tree
+>> binding information.
+>> Add device tree support for omap4 keypad driver.
+>
+>> diff --git a/Documentation/devicetree/bindings/input/omap-keypad.txt=
+ b/Documentation/devicetree/bindings/input/omap-keypad.txt
+>
+>> +Required Board Specific Properties, in addition to those specified =
+by
+>> +the shared matrix-keyboard bindings:
+>> +- keypad,num-rows: Number of row lines connected to the keypad
+>> + =A0controller.
+>> +
+>> +- keypad,num-columns: Number of column lines connected to the
+>> + =A0keypad controller.
+>
+> I'm not sure if "keypad," is the appropriate prefix here. If the
+> properties are specific to this one TI/OMAP binding, "ti," might be a
+> better prefix. However, if they're more generally applicable, maybe
+> "linux," to match "linux,keymap"?
+>
+Yes, the idea was to make this binding more generic. Hence no "ti/omap"
+prefix were used.
+'linux' prefix denotes bindings specific to linux, keymap has
+keycodes which is linux specific. Hence, linux,keymap looks
+appropriate. But num rows/ cols are keyboard specific, so I am not
+sure if linux prefix goes well here ??
+>> +Optional Properties specific to linux:
+>> +- linux,keypad-no-autorepeat: do no enable autorepeat feature.
+>
+> It's probably worth considering whether num-rows/columns should be pa=
+rt
+> of matrix-keyboard.txt, and whether linux,keypad-no-autorepeat should=
+ be
+> part of some core keyboard binding. Some of the properties in
+> tegra-kbc.txt might be worth generalizing too (debounce/repeat delay,
+> ghost filter)?
+>
+Yes, I also think that its a good idea to make some of the above
+binding more generic. Though, I think "linux,keypad-no-autorepeat"
+will still be a custom binding, since its totally on the platform
+whether to use
+autorepeat feature or not?
+>> +Example:
+>> + =A0 =A0 =A0 =A0keypad@4ae1c000{
 
-Agree.
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "ti,omap4-keypad";
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0keypad,num-rows =3D <2>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0keypad,num-columns =3D <8>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 linux,keypad-no-autorepeat;
+>> + =A0 =A0 };
 
-Taking a look at AHB spec, this tegra-ahb part is a bit beyond that
-spec from S/W POV. If there's other similiar AHB drivers from othere
-SoC, we may be able to generalize them, but at the moment, it's hard
-to imagine how much/little part is common for similar AHB drivers,
-like registers/bit definitions. Most of the part may depends on
-SoC/Tegra.
-
-> I'm not really convinced that low-level platform-specific drivers like
-> this shouldn't be in the arch/arm/mach-* directories.
-
-So I think that keeping this kind of drivers under
-"arch/arm/mach-*" or "drivers/amba" as 'tegra'-ahb.c name. If similier
-drivers comes, then, what about thinking the generalization again?
-Either way would be ok for me.
+~Sourav
