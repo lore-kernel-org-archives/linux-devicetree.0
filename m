@@ -1,14 +1,14 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/9] ARM: mmp: fix build issue on mmp with device tree
-Date: Fri, 27 Apr 2012 20:15:49 +0000
-Message-ID: <201204272015.49611.arnd@arndb.de>
-References: <1335515957-1798-1-git-send-email-haojian.zhuang@gmail.com>
- <1335515957-1798-2-git-send-email-haojian.zhuang@gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: Add empty of_property_match_string() function
+Date: Fri, 27 Apr 2012 22:41:54 +0200
+Message-ID: <20120427204154.GA12617@avionic-0098.mockup.avionic-design.de>
+References: <1334327016-8949-1-git-send-email-thierry.reding@avionic-design.de>
+ <20120426190112.GA28018@avionic-0098.mockup.avionic-design.de>
+ <20120427164554.2F7E33E0B4D@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0359234801351774399=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1335515957-1798-2-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20120427164554.2F7E33E0B4D@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,55 +18,77 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 27 April 2012, Haojian Zhuang wrote:
-> Since irq_domain_add_simple() is removed, remove it in mmp-dt.c also.
-> 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This should also be fixed for v3.4, right?
+--===============0359234801351774399==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Content-Disposition: inline
 
 
-> diff --git a/arch/arm/mach-mmp/mmp-dt.c b/arch/arm/mach-mmp/mmp-dt.c
-> index 6707539..ca22e3c0 100644
-> --- a/arch/arm/mach-mmp/mmp-dt.c
-> +++ b/arch/arm/mach-mmp/mmp-dt.c
-> @@ -32,31 +32,9 @@ static const struct of_dev_auxdata mmp_auxdata_lookup[] __initconst = {
->         {}
->  };
->  
-> -static int __init mmp_intc_add_irq_domain(struct device_node *np,
-> -                                          struct device_node *parent)
-> -{
-> -       irq_domain_add_simple(np, 0);
-> -       return 0;
-> -}
-> -
-> -static int __init mmp_gpio_add_irq_domain(struct device_node *np,
-> -                                          struct device_node *parent)
-> -{
-> -       irq_domain_add_simple(np, IRQ_GPIO_START);
-> -       return 0;
-> -}
-> -
-> -static const struct of_device_id mmp_irq_match[] __initconst = {
-> -       { .compatible = "mrvl,mmp-intc", .data = mmp_intc_add_irq_domain, },
-> -       { .compatible = "mrvl,mmp-gpio", .data = mmp_gpio_add_irq_domain, },
-> -       {}
-> -};
-> -
->  static void __init mmp_dt_init(void)
->  {
->  
-> -       of_irq_init(mmp_irq_match);
-> -
->         of_platform_populate(NULL, of_default_bus_match_table,
->                              mmp_auxdata_lookup, NULL);
->  }
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shouldn't you be calling irq_domain_add_legacy now?
+* Grant Likely wrote:
+> On Thu, 26 Apr 2012 21:01:12 +0200, Thierry Reding <thierry.reding@avioni=
+c-design.de> wrote:
+> > * Thierry Reding wrote:
+> > > This commit adds an empty of_property_match_string() function for
+> > > !CONFIG_OF builds.
+> >=20
+> > Grant, Rob,
+> >=20
+> > can these two patches be queued for 3.5? I need them to build the PWM
+> > subsystem for !OF builds.
+>=20
+> I could merge them, but can you point me at the code that needs them?
+> I get a little nervous when OF-specific stretches of code get compiled
+> when !CONFIG_OF.  In a lot of cases the OF data decoding should be in
+> a separate function that gets completely selected out.  That isn't
+> always the case of course, but I do like to put a bit of back-pressure
+> on this issue.
 
-	Arnd
+The latest series for the PWM subsystem is here[0]. However that version
+doesn't contain the latest changes that require this. I haven't pushed those
+changes yet because they cause the build to fail (because of these two
+missing patches).
+
+Arnd Bergmann recommended to not #ifdef the CONFIG_OF code out but instead
+use the IS_ENABLED(CONFIG_OF) construct and let the compiler's DCE handle
+this so that we get full compile coverage for the code, even in !OF
+configurations.
+
+Thierry
+
+[0]: http://gitorious.org/linux-pwm/linux-pwm
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk+bBJIACgkQZ+BJyKLjJp8l7ACgmL2YJU1o17FwIlUAf1MioI1M
+IMAAoKBUTNQBpv2ZFwGD13osm2IPASoV
+=yixF
+-----END PGP SIGNATURE-----
+
+--AhhlLboLdkugWU4S--
+
+--===============0359234801351774399==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0359234801351774399==--
