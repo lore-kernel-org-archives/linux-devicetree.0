@@ -1,72 +1,41 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v3 4/4] mmc: sdhci-imx-esdhc: convert to use pinctrl
- subsystem
-Date: Fri, 27 Apr 2012 09:35:04 +0200
-Message-ID: <20120427073504.GS17184@pengutronix.de>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v3 2/4] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Fri, 27 Apr 2012 16:11:22 +0800
+Message-ID: <20120427081120.GT2234@S2101-09.ap.freescale.net>
 References: <1335451227-27709-1-git-send-email-b29396@freescale.com>
- <1335451227-27709-4-git-send-email-b29396@freescale.com>
+ <1335451227-27709-2-git-send-email-b29396@freescale.com>
+ <20120426144446.GN9142@game.jcrosoft.org>
+ <20120426151536.GO9142@game.jcrosoft.org>
+ <20120427054842.GJ2234@S2101-09.ap.freescale.net>
+ <20120427062816.GQ9142@game.jcrosoft.org>
+ <20120427072503.GP2234@S2101-09.ap.freescale.net>
+ <20120427071104.GS9142@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1335451227-27709-4-git-send-email-b29396@freescale.com>
+In-Reply-To: <20120427071104.GS9142@game.jcrosoft.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, cjb@laptop.org, b20223@freescale.com
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Dong Aisheng <b29396@freescale.com>, b20223@freescale.com, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, cjb@laptop.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2012 at 10:40:27PM +0800, Dong Aisheng wrote:
-> From: Dong Aisheng <dong.aisheng@linaro.org>
+On Fri, Apr 27, 2012 at 09:11:04AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> except duplicate bindings instead having common one make no sense either
 > 
-> This driver is shared between many platforms. Currently only imx6q has
-> pinctrl support, to avoid breaking other platforms that do not have pinctrl
-> support to run this driver, enable pinctrl dummy state for them before
-> they also convert to pinctrl subsystem.
+> so imx, at91 and ST (STB SoC and other does have the same type of pin IP
 > 
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> ---
-> This patch depends on:
-> pinctrl: add pinctrl_provide_dummies interface for platforms to use
-> http://www.spinics.net/lists/arm-kernel/msg171538.html
+> to not come with a common bindig means we are doint the same crap as before
 > 
-> ChangeLog v2->v3:
->  * patch name updated.
->    v1 name is ARM: imx6q: switch to use pinctrl driver
->  * using pinctrl dummy state to avoid breaking other platforms to use this
->    driver.
+> with switch to DT
 > 
-> ChangeLog v1->v2:
->  * using updated binding
-> ---
->  arch/arm/boot/dts/imx6q-arm2.dts               |    4 +++
->  arch/arm/boot/dts/imx6q.dtsi                   |   32 ++++++++++++++++++++++++
->  arch/arm/mach-imx/Kconfig                      |    2 +
->  arch/arm/mach-imx/eukrea_mbimxsd35-baseboard.c |    2 +
->  arch/arm/mach-imx/mach-cpuimx51.c              |    2 +
->  arch/arm/mach-imx/mach-cpuimx51sd.c            |    2 +
->  arch/arm/mach-imx/mach-eukrea_cpuimx25.c       |    2 +
->  arch/arm/mach-imx/mach-mx25_3ds.c              |    2 +
->  arch/arm/mach-imx/mach-mx35_3ds.c              |    2 +
->  arch/arm/mach-imx/mach-mx51_3ds.c              |    2 +
->  arch/arm/mach-imx/mach-mx51_babbage.c          |    2 +
->  arch/arm/mach-imx/mach-mx51_efikamx.c          |    2 +
->  arch/arm/mach-imx/mach-mx51_efikasb.c          |    2 +
->  arch/arm/mach-imx/mach-mx53_ard.c              |    2 +
->  arch/arm/mach-imx/mach-mx53_evk.c              |    2 +
->  arch/arm/mach-imx/mach-mx53_loco.c             |    2 +
->  arch/arm/mach-imx/mach-mx53_smd.c              |    2 +
->  arch/arm/mach-imx/mach-pcm043.c                |    2 +
->  arch/arm/mach-imx/mach-vpr200.c                |    2 +
-
-Here you are patching only the boards which happen to use the esdhc
-controller, so we need to patch other boards when another driver gains
-pinctrl. Let's add the provide_dummies call to the SoCs instead which
-do not have pinctrl yet.
-
-Sascha
+It can be every different in hardware details from one pin based
+controller to another.  mxs pinctrl is another pin based IP, and Dong
+tried to approach a binding working good for both imx and mxs, but in
+the end we agree imx binding does not work so good for mxs, and vice
+versa.  And that's why pinctrl core binding design leaves out the
+platform specific binding.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards,
+Shawn
