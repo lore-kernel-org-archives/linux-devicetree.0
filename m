@@ -1,54 +1,116 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 1/4] ARM: tegra: Add AHB driver
-Date: Fri, 27 Apr 2012 08:40:15 +0300
-Message-ID: <20120427084015.cb7c8e00c7d9a4cd01faa5ae@nvidia.com>
-References: <1335352072-4001-1-git-send-email-hdoyu@nvidia.com>
-	<4F99A740.3080407@wwwdotorg.org>
-	<20120426215903.GH24211@n2100.arm.linux.org.uk>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Fri, 27 Apr 2012 13:48:44 +0800
+Message-ID: <20120427054842.GJ2234@S2101-09.ap.freescale.net>
+References: <1335451227-27709-1-git-send-email-b29396@freescale.com>
+ <1335451227-27709-2-git-send-email-b29396@freescale.com>
+ <20120426144446.GN9142@game.jcrosoft.org>
+ <20120426151536.GO9142@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120426215903.GH24211-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120426151536.GO9142-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Apr 2012 23:59:03 +0200
-Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-
-> On Thu, Apr 26, 2012 at 01:51:28PM -0600, Stephen Warren wrote:
-> > On 04/25/2012 05:07 AM, Hiroshi DOYU wrote:
-> > > The AHB Bus conforms to the AMBA Specification (Rev 2.0) Advanced
-> > > High-performance Bus (AHB) architecture.
-> > > 
-> > > The AHB Arbiter controls AHB bus master arbitration. This effectively
-> > > forms a second level of arbitration for access to the memory
-> > > controller through the AHB Slave Memory device. The AHB pre-fetch
-> > > logic can be configured to enhance performance for devices doing
-> > > sequential access. Each AHB master is assigned to either the high or
-> > > low priority bin. Both Tegra20/30 have this AHB bus.
-> > > 
-> > > Some of configuration param could be passed from DT too.
-> > 
-> > I think this code looks reasonable. I'd like to see an ack from Russell,
-> > Arnd, and Olof on the final location of the files though.
+On Thu, Apr 26, 2012 at 05:15:36PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> We have on Imx mxc at91 and other SoC controler hich you configure per pin
 > 
-> Well, the big question which needs answering is whether this AHB software
-> interface is something specific to Tegra or whether it really is something
-> generic.  There's been some hints in the previous thread that it's
-> specific to Tegra, so it may not after all make sense for it to be a
-> generic driver.
+> which means one pin have multiple function and the same function is on
+> multiple pins
 > 
-> However, we _have_ decided "no more drivers under arch/arm".  So I really
-> don't want to see "struct xxx_driver" appearing in any code under that
-> subdirectory or one of its decendents.  I don't have much more to say
-> about location than that.
+> so the groups are just a list of possible pins
+> 
+> Instead of re-inventing bindings we do need to come with a common binding whre
+> it's possible
+> 
+> So instead I proppose (send in the v2) to use common way to describe the group
+> 
+Let's see how many nodes we will have in device tree.  For imx6q
+example, there are 332 pins and each pin has up to 8 function selects.
+We will end up with having 332 x 8 = 2656 sub nodes under node
+"functions".  Device tree simply cannot afford such a bloating.
 
-What about having this driver under "drivers/amba"?
+Regards,
+Shawn
 
-If other similiar drivers are coming up, it's easy to find rather than
-having this arch/arm/mach-*. There may be some possibility of
-generalization later, then. Also it meets the requirement of no
-"struct xxxx_driver" under arch/arm. Arnd?
+> 1) we describe one function per pin
+> 
+> 	functions {
+> 		rxd_pb12 {
+> 			atmel,pin-id = <44>;
+> 			atmel,mux = <0>;
+> 		};
+> 
+> 		txd_pb13 {
+> 			atmel,pin-id = <45>;
+> 			atmel,pull = <2>;
+> 			atmel,mux = <0>;
+> 		};
+> 
+> 		txd0_pb19 {
+> 			atmel,pin-id = <51>;
+> 			atmel,pull = <2>;
+> 			atmel,mux = <0>;
+> 		};
+> 
+> 		rxd0_pb18 {
+> 			atmel,pin-id = <50>;
+> 			atmel,mux = <0>;
+> 		};
+> 
+> 		rts0_pb17 {
+> 			atmel,pin-id = <49>;
+> 			atmel,mux = <1>;
+> 		};
+> 
+> 		cts0_pb15 {
+> 			atmel,pin-id = <47>;
+> 			atmel,mux = <1>;
+> 		};
+> 	};
+> 
+> 
+> advantage if you need to set a pull-up or any pin parameter different on your board
+> you can overwrite it without re-creating a group
+> 
+> This is controller specific
+> 
+> and then we have the common bindings to describe the group
+> by using phandle of the functions to describe the group
+> 
+> 	groups {
+> 		dbgu {
+> 			pinctrl,functions = < &rxd_pb12
+> 					      &txd_pb13 >;
+> 		};
+> 
+> 		uart0_rxd_txd {
+> 			pinctrl,functions = < &rxd0_pb18
+> 					      &txd0_pb19 >;
+> 		};
+> 
+> 		uart0_rts_cts {
+> 			pinctrl,functions = < &rxd0_pb18
+> 					      &txd0_pb19
+> 					      &rts0_pb17
+> 					      &cts0_pb15 >;
+> 		};
+> 	};
+> 
+> this will be handle by a generic code in c
+> 
+> Best Regards,
+> J.
