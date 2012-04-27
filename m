@@ -1,56 +1,70 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 Subject: Re: [PATCH v3 2/4] pinctrl: pinctrl-imx: add imx pinctrl core driver
-Date: Fri, 27 Apr 2012 09:30:48 +0200
-Message-ID: <20120427073048.GR17184@pengutronix.de>
+Date: Fri, 27 Apr 2012 09:11:04 +0200
+Message-ID: <20120427071104.GS9142@game.jcrosoft.org>
 References: <1335451227-27709-1-git-send-email-b29396@freescale.com>
  <1335451227-27709-2-git-send-email-b29396@freescale.com>
  <20120426144446.GN9142@game.jcrosoft.org>
+ <20120426151536.GO9142@game.jcrosoft.org>
+ <20120427054842.GJ2234@S2101-09.ap.freescale.net>
+ <20120427062816.GQ9142@game.jcrosoft.org>
+ <20120427072503.GP2234@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20120426144446.GN9142@game.jcrosoft.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, b20223@freescale.com, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, cjb@laptop.org
+In-Reply-To: <20120427072503.GP2234@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: b20223@freescale.com, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, cjb@laptop.org, Dong Aisheng <b29396@freescale.com>, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2012 at 04:44:46PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > +			fsl,pins = <1386 0x17059	/* MX6Q_PAD_SD4_CMD__USDHC4_CMD */
-> > +				    1392 0x17059	/* MX6Q_PAD_SD4_CLK__USDHC4_CLK	*/
-> > +				    1462 0x17059	/* MX6Q_PAD_SD4_DAT0__USDHC4_DAT0 */
-> > +				    1470 0x17059	/* MX6Q_PAD_SD4_DAT1__USDHC4_DAT1 */
-> > +				    1478 0x17059	/* MX6Q_PAD_SD4_DAT2__USDHC4_DAT2 */
-> > +				    1486 0x17059	/* MX6Q_PAD_SD4_DAT3__USDHC4_DAT3 */
-> > +				    1493 0x17059	/* MX6Q_PAD_SD4_DAT4__USDHC4_DAT4 */
-> > +				    1501 0x17059	/* MX6Q_PAD_SD4_DAT5__USDHC4_DAT5 */
-> > +				    1509 0x17059	/* MX6Q_PAD_SD4_DAT6__USDHC4_DAT6 */
-> > +				    1517 0x17059>;	/* MX6Q_PAD_SD4_DAT7__USDHC4_DAT7 */
-> honestly I don't like this it's obscure need to decode manually
+On 15:25 Fri 27 Apr     , Shawn Guo wrote:
+> On Fri, Apr 27, 2012 at 08:28:16AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 13:48 Fri 27 Apr     , Shawn Guo wrote:
+> > > On Thu, Apr 26, 2012 at 05:15:36PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > > > We have on Imx mxc at91 and other SoC controler hich you configure per pin
+> > > > 
+> > > > which means one pin have multiple function and the same function is on
+> > > > multiple pins
+> > > > 
+> > > > so the groups are just a list of possible pins
+> > > > 
+> > > > Instead of re-inventing bindings we do need to come with a common binding whre
+> > > > it's possible
+> > > > 
+> > > > So instead I proppose (send in the v2) to use common way to describe the group
+> > > > 
+> > > Let's see how many nodes we will have in device tree.  For imx6q
+> > > example, there are 332 pins and each pin has up to 8 function selects.
+> > > We will end up with having 332 x 8 = 2656 sub nodes under node
+> > > "functions".  Device tree simply cannot afford such a bloating.
+> > device tree can offord it
+> > 
+> No.  Device tree maintainers has told that.  Looking into the clock DT
+> binding discussion, you will find that Grant does not like to have
+> even 100~200 nodes to represent an entire clock tree in the DT.
 > 
-> I propose to use phandle
-> 
-> as example on uart you will want or not the rst/cts so you will have quite a
-> lot of bindings
-> 
-> so you can describe the pin configuration (function) and refer it by phandle
-> in the group
+> With your proposal (actually this has been proposed long time before),
+> to represent the pins for a 24bit display, it easily consumes 28 nodes
+> on mach-mxs, while my binding only needs one node.  So in short, the
+> proposal has been discussed and it's not a sensible one.
+except duplicate bindings instead having common one make no sense either
 
-I don't exactly know where are you aiming at. I think that you want a
-collection of pin groups somewhere and want to refer to it in the device
-nodes. No, please don't. There's no way to come up with a common group
-needed for example for the IPU (image processing unit). What pins you
-want to use here depends on the number of data lines you have on your
-panel and what type of panel you have. You can always use the remaining
-pins for somethin else. SPI is another example. The SPI unit has some
-dedicated chip select lines. The exact number of used chip selects is
-board specific.
+so imx, at91 and ST (STB SoC and other does have the same type of pin IP
 
-Sascha
+to not come with a common bindig means we are doint the same crap as before
 
+with switch to DT
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best Regards,
+J.
