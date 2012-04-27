@@ -1,217 +1,63 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 9/9] Documentation: update docs for mmp dt
-Date: Fri, 27 Apr 2012 16:39:17 +0800
-Message-ID: <1335515957-1798-10-git-send-email-haojian.zhuang@gmail.com>
-References: <1335515957-1798-1-git-send-email-haojian.zhuang@gmail.com>
+From: Dong Aisheng <aisheng.dong@freescale.com>
+Subject: Re: [PATCH v3 4/4] mmc: sdhci-imx-esdhc: convert to use pinctrl
+ subsystem
+Date: Fri, 27 Apr 2012 16:54:46 +0800
+Message-ID: <20120427085445.GE826@shlinux2.ap.freescale.net>
+References: <1335451227-27709-1-git-send-email-b29396@freescale.com>
+ <1335451227-27709-4-git-send-email-b29396@freescale.com>
+ <20120427073504.GS17184@pengutronix.de>
+ <20120427082930.GC826@shlinux2.ap.freescale.net>
+ <20120427083142.GY17184@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1335515957-1798-1-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120427083142.GY17184@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Guo Shawn-R65073 <r65073@freescale.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "cjb@laptop.org" <cjb@laptop.org>, Zhao Richard-B20223 <B20223@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Append interrupt controller and timer document for mmp. Updates
-documents for gpio and i2c.
+On Fri, Apr 27, 2012 at 04:31:42PM +0800, Sascha Hauer wrote:
+> On Fri, Apr 27, 2012 at 04:29:31PM +0800, Dong Aisheng wrote:
+> > mach-imx27ipcam.c          mach-mx31ads.c             mach-mx51_babbage.o        mach-pca100.c
+> > mach-imx27lite.c           mach-mx31ads.o             mach-mx51_efikamx.c        mach-pcm037.c
+> > 
+> > Some of them i'm not familiar and i don't know whether they may use pinctrl
+> > so i just patched the affected ones.
+> > 
+> > One lazy method may be just patch all board files without pinctrl support
+> > and it will not cause any error.
+> > 
+> > What's your suggestion?
+> > 
+> > > pinctrl. Let's add the provide_dummies call to the SoCs instead which
+> > > do not have pinctrl yet.
+> > > 
+> > You meant add provide_dummies call in imx*_soc_init call?
+> > We could do it but there might be a case that some boards are converted
+> > to use pinctrl while others still not but they're based on the same soc.
+> > For examples, 4 mx53 boards and we may not be able to convert them all at
+> > the same time.
+> 
+> My point is that none of the mx5 boards have pinctrl since there is no
+> SoC driver for it.
+> For DT based boards pinctrl should be mandatory once the SoC has pinctrl
+> support. All non DT boards probably won't get pinctrl anyway.
+> 
+Ok, so i would be fine for me to change it in imx*_soc_init.
+BTW, there're:
+imx1_soc_init()
+imx25_soc_init()
+imx27_soc_init()
+imx31_soc_init()
+imx35_soc_init()
+imx50_soc_init()
+imx51_soc_init()
+imx53_soc_init()
 
-Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/mrvl.txt     |    6 ---
- .../devicetree/bindings/arm/mrvl/intc.txt          |   38 ++++++++++++++++++++
- .../devicetree/bindings/arm/mrvl/mrvl.txt          |   14 +++++++
- .../devicetree/bindings/arm/mrvl/timer.txt         |   13 +++++++
- .../devicetree/bindings/gpio/mrvl-gpio.txt         |   18 ++++++---
- Documentation/devicetree/bindings/i2c/mrvl-i2c.txt |   15 +++-----
- 6 files changed, 83 insertions(+), 21 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/mrvl.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mrvl/intc.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mrvl/timer.txt
+I'm not sure about mx1, mx27, mx31
+Do you think if i could add them all?
 
-diff --git a/Documentation/devicetree/bindings/arm/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl.txt
-deleted file mode 100644
-index d8de933..0000000
---- a/Documentation/devicetree/bindings/arm/mrvl.txt
-+++ /dev/null
-@@ -1,6 +0,0 @@
--Marvell Platforms Device Tree Bindings
------------------------------------------------------
--
--PXA168 Aspenite Board
--Required root node properties:
--	- compatible = "mrvl,pxa168-aspenite", "mrvl,pxa168";
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-new file mode 100644
-index 0000000..b81e396
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-@@ -0,0 +1,38 @@
-+* Marvell MMP Interrupt controller
-+
-+Required properties:
-+- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
-+  "mrvl,mmp2-mux-intc"
-+- reg : Address and length of the register set of the interrupt controller.
-+  If the interrupt controller is intc, address and length means the range
-+  of the whold interrupt controller. If the interrupt controller is mux-intc,
-+  address and length means one register. Since address of mux-intc is in the
-+  range of intc. mux-intc is secondary interrupt controller.
-+- reg-names : Name of the register set of the interrupt controller. It's
-+  only required in mux-intc interrupt controller.
-+- interrupts : Should be the port interrupt shared by mux interrupts. It's
-+  only required in mux-intc interrupt controller.
-+- interrupt-controller : Identifies the node as an interrupt controller.
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source.
-+- mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
-+  controller.
-+
-+Example:
-+	intc: interrupt-controller@d4282000 {
-+		compatible = "mrvl,mmp2-intc";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0xd4282000 0x1000>;
-+		mrvl,intc-nr-irqs = <64>;
-+	};
-+
-+	intcmux4@d4282150 {
-+		compatible = "mrvl,mmp2-mux-intc";
-+		interrupts = <4>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0x150 0x4>, <0x168 0x4>;
-+		reg-names = "mux status", "mux mask";
-+		mrvl,intc-nr-irqs = <2>;
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-new file mode 100644
-index 0000000..117d741
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-@@ -0,0 +1,14 @@
-+Marvell Platforms Device Tree Bindings
-+----------------------------------------------------
-+
-+PXA168 Aspenite Board
-+Required root node properties:
-+	- compatible = "mrvl,pxa168-aspenite", "mrvl,pxa168";
-+
-+PXA910 DKB Board
-+Required root node properties:
-+	- compatible = "mrvl,pxa910-dkb";
-+
-+MMP2 Brownstone Board
-+Required root node properties:
-+	- compatible = "mrvl,mmp2-brownstone";
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/timer.txt b/Documentation/devicetree/bindings/arm/mrvl/timer.txt
-new file mode 100644
-index 0000000..9a6e251
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mrvl/timer.txt
-@@ -0,0 +1,13 @@
-+* Marvell MMP Timer controller
-+
-+Required properties:
-+- compatible : Should be "mrvl,mmp-timer".
-+- reg : Address and length of the register set of timer controller.
-+- interrupts : Should be the interrupt number.
-+
-+Example:
-+	timer0: timer@d4014000 {
-+		compatible = "mrvl,mmp-timer";
-+		reg = <0xd4014000 0x100>;
-+		interrupts = <13>;
-+	};
-diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-index 1e34cfe..05428f3 100644
---- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-@@ -3,19 +3,25 @@
- Required properties:
- - compatible : Should be "mrvl,pxa-gpio" or "mrvl,mmp-gpio"
- - reg : Address and length of the register set for the device
--- interrupts : Should be the port interrupt shared by all gpio pins, if
--- interrupt-name : Should be the name of irq resource.
--  one number.
-+- interrupts : Should be the port interrupt shared by all gpio pins.
-+  There're three gpio interrupts in arch-pxa, and they're gpio0,
-+  gpio1 and gpio_mux. There're only one gpio interrupt in arch-mmp,
-+  gpio_mux.
-+- interrupt-name : Should be the name of irq resource. Each interrupt
-+  binds its interrupt-name.
-+- interrupt-controller : Identifies the node as an interrupt controller.
-+- #interrupt-cells: Specifies the number of cells needed to encode an
-+  interrupt source.
- - gpio-controller : Marks the device node as a gpio controller.
- - #gpio-cells : Should be one.  It is the pin number.
- 
- Example:
- 
- 	gpio: gpio@d4019000 {
--		compatible = "mrvl,mmp-gpio", "mrvl,pxa-gpio";
-+		compatible = "mrvl,mmp-gpio";
- 		reg = <0xd4019000 0x1000>;
--		interrupts = <49>, <17>, <18>;
--		interrupt-name = "gpio_mux", "gpio0", "gpio1";
-+		interrupts = <49>;
-+		interrupt-name = "gpio_mux";
- 		gpio-controller;
- 		#gpio-cells = <1>;
- 		interrupt-controller;
-diff --git a/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt b/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
-index 071eb3c..b891ee2 100644
---- a/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
-@@ -3,34 +3,31 @@
- Required properties :
- 
-  - reg : Offset and length of the register set for the device
-- - compatible : should be "mrvl,mmp-twsi" where CHIP is the name of a
-+ - compatible : should be "mrvl,mmp-twsi" where mmp is the name of a
-    compatible processor, e.g. pxa168, pxa910, mmp2, mmp3.
-    For the pxa2xx/pxa3xx, an additional node "mrvl,pxa-i2c" is required
-    as shown in the example below.
- 
- Recommended properties :
- 
-- - interrupts : <a b> where a is the interrupt number and b is a
--   field that represents an encoding of the sense and level
--   information for the interrupt.  This should be encoded based on
--   the information in section 2) depending on the type of interrupt
--   controller you have.
-+ - interrupts : the interrupt number
-  - interrupt-parent : the phandle for the interrupt controller that
--   services interrupts for this device.
-+   services interrupts for this device. If the parent is the default
-+   interrupt controller in device tree, it could be ignored.
-  - mrvl,i2c-polling : Disable interrupt of i2c controller. Polling
-    status register of i2c controller instead.
-  - mrvl,i2c-fast-mode : Enable fast mode of i2c controller.
- 
- Examples:
- 	twsi1: i2c@d4011000 {
--		compatible = "mrvl,mmp-twsi", "mrvl,pxa-i2c";
-+		compatible = "mrvl,mmp-twsi";
- 		reg = <0xd4011000 0x1000>;
- 		interrupts = <7>;
- 		mrvl,i2c-fast-mode;
- 	};
- 	
- 	twsi2: i2c@d4025000 {
--		compatible = "mrvl,mmp-twsi", "mrvl,pxa-i2c";
-+		compatible = "mrvl,mmp-twsi";
- 		reg = <0xd4025000 0x1000>;
- 		interrupts = <58>;
- 	};
--- 
-1.7.5.4
+Regards
+Dong Aisheng
