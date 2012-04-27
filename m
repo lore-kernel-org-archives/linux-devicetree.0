@@ -1,57 +1,81 @@
-From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] pinctrl: pinctrl-imx: add imx pinctrl core driver
-Date: Fri, 27 Apr 2012 19:24:57 +0800
-Message-ID: <20120427112457.GG826@shlinux2.ap.freescale.net>
-References: <1335451227-27709-1-git-send-email-b29396@freescale.com>
- <1335451227-27709-2-git-send-email-b29396@freescale.com>
- <20120427085402.GV2234@S2101-09.ap.freescale.net>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH v5 1/4] dt: add of_get_child_count helper function
+Date: Fri, 27 Apr 2012 20:26:15 +0800
+Message-ID: <1335529578-14507-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120427085402.GV2234-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2012 at 04:54:05PM +0800, Shawn Guo wrote:
-> On Thu, Apr 26, 2012 at 10:40:25PM +0800, Dong Aisheng wrote:
-> > +/**
-> > + * struct imx_pin_reg - describe a pin reg map
-> > + * The last 3 members are used for select input setting
-> > + * @pid: pin id
-> > + * @mux_reg: mux register offset
-> > + * @conf_reg: config register offset
-> > + * @mux_mode: mux mode
-> > + * @input_reg: select input register offset for this mux if any
-> > + *  0 if no select input setting needed.
-> > + * @input_val: the value set to select input register
-> > + */
-> > +struct imx_pin_reg {
-> > +	unsigned int pid;
-> > +	unsigned int mux_reg;
-> > +	unsigned int conf_reg;
-> > +	unsigned int mux_mode;
-> > +	unsigned int input_reg;
-> > +	unsigned int input_val;
-> > +};
-> 
-> Since the array of this struct is big, I would suggest define the type
-> of the members as size-efficient as possible, for example, u16 is enough
-> for pid, and reg offset, while u8 is enough for mux_mode?
-> 
-Yes, reasonable.
-Will change to that in v4.
+From: Dong Aisheng <dong.aisheng@linaro.org>
 
-Regards
-Dong Aisheng
+Currently most code to get child count in kernel are almost same,
+add a helper to implement this function for dt to use.
+
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Acked-by: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+
+---
+Rob missed this patch for 3.4 kernel.
+Based on Rob's suggestion, we can get it go in with pinctrl driver.
+Since Rob once had applied it, i added Rob's ack.
+See:
+https://lkml.org/lkml/2012/4/14/239
+
+changes v4->v5:
+ * do not initialize child node pointer based on Stephen's suggestion.
+
+changes v3->v4:
+ * addressed Grant's suggestion to use for_each_child_of_node.
+
+changes v2->v3:
+ Addressed some people's comments:
+ * do not use assignment as expression
+ * return 0 for non-dt case
+
+Changes v1->v2:
+ * change the name from of_get_child_number to of_get_child_count
+---
+ include/linux/of.h |   16 ++++++++++++++++
+ 1 files changed, 16 insertions(+), 0 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index e3f942d..2ec1083 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -193,6 +193,17 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+ 	for (child = of_get_next_child(parent, NULL); child != NULL; \
+ 	     child = of_get_next_child(parent, child))
+ 
++static inline int of_get_child_count(const struct device_node *np)
++{
++	struct device_node *child;
++	int num = 0;
++
++	for_each_child_of_node(np, child)
++		num++;
++
++	return num;
++}
++
+ extern struct device_node *of_find_node_with_property(
+ 	struct device_node *from, const char *prop_name);
+ #define for_each_node_with_property(dn, prop_name) \
+@@ -300,6 +311,11 @@ static inline bool of_have_populated_dt(void)
+ #define for_each_child_of_node(parent, child) \
+ 	while (0)
+ 
++static inline int of_get_child_count(const struct device_node *np)
++{
++	return 0;
++}
++
+ static inline int of_device_is_compatible(const struct device_node *device,
+ 					  const char *name)
+ {
+-- 
+1.7.0.4
