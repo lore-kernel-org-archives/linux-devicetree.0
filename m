@@ -1,57 +1,80 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] pinctrl: pinctrl-imx: add imx pinctrl core driver
-Date: Fri, 27 Apr 2012 08:28:16 +0200
-Message-ID: <20120427062816.GQ9142@game.jcrosoft.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v3 2/4] pinctrl: pinctrl-imx: add imx pinctrl core
+ driver
+Date: Fri, 27 Apr 2012 08:31:09 +0200
+Message-ID: <20120427063109.GR9142@game.jcrosoft.org>
 References: <1335451227-27709-1-git-send-email-b29396@freescale.com>
  <1335451227-27709-2-git-send-email-b29396@freescale.com>
  <20120426144446.GN9142@game.jcrosoft.org>
- <20120426151536.GO9142@game.jcrosoft.org>
- <20120427054842.GJ2234@S2101-09.ap.freescale.net>
+ <20120427034825.GA826@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120427054842.GJ2234-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20120427034825.GA826@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@freescale.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Zhao Richard-B20223 <B20223@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 13:48 Fri 27 Apr     , Shawn Guo wrote:
-> On Thu, Apr 26, 2012 at 05:15:36PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > We have on Imx mxc at91 and other SoC controler hich you configure per pin
+> > > +   this group of pins in this pin configuration node are working on.
+> > > +3. The driver can use the function node's name and pin configuration node's
+> > > +   name describe the pin function and group hierarchy.
+> > > +   For example, Linux IMX pinctrl driver takes the function node's name
+> > > +   as the function name and pin configuration node's name as group name to
+> > > +   create the map table.
+> > > +4. Each pin configuration node should have a phandle, devices can set pins
+> > > +   configurations by referring to the phandle of that pin configuration node.
+> > > +
+> > > +Examples:
+> > > +usdhc@0219c000 { /* uSDHC4 */
+> > > +	fsl,card-wired;
+> > > +	vmmc-supply = <&reg_3p3v>;
+> > > +	status = "okay";
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_usdhc4_1>;
+> > > +};
+> > > +
+> > > +iomuxc@020e0000 {
+> > > +	compatible = "fsl,imx6q-iomuxc";
+> > > +	reg = <0x020e0000 0x4000>;
+> > > +
+> > > +	/* shared pinctrl settings */
+> > > +	usdhc4 {
+> > > +		pinctrl_usdhc4_1: usdhc4grp-1 {
+> > > +			fsl,pins = <1386 0x17059	/* MX6Q_PAD_SD4_CMD__USDHC4_CMD */
+> > > +				    1392 0x17059	/* MX6Q_PAD_SD4_CLK__USDHC4_CLK	*/
+> > > +				    1462 0x17059	/* MX6Q_PAD_SD4_DAT0__USDHC4_DAT0 */
+> > > +				    1470 0x17059	/* MX6Q_PAD_SD4_DAT1__USDHC4_DAT1 */
+> > > +				    1478 0x17059	/* MX6Q_PAD_SD4_DAT2__USDHC4_DAT2 */
+> > > +				    1486 0x17059	/* MX6Q_PAD_SD4_DAT3__USDHC4_DAT3 */
+> > > +				    1493 0x17059	/* MX6Q_PAD_SD4_DAT4__USDHC4_DAT4 */
+> > > +				    1501 0x17059	/* MX6Q_PAD_SD4_DAT5__USDHC4_DAT5 */
+> > > +				    1509 0x17059	/* MX6Q_PAD_SD4_DAT6__USDHC4_DAT6 */
+> > > +				    1517 0x17059>;	/* MX6Q_PAD_SD4_DAT7__USDHC4_DAT7 */
+> > honestly I don't like this it's obscure need to decode manually
 > > 
-> > which means one pin have multiple function and the same function is on
-> > multiple pins
+> > I propose to use phandle
 > > 
-> > so the groups are just a list of possible pins
+> > as example on uart you will want or not the rst/cts so you will have quite a
+> > lot of bindings
 > > 
-> > Instead of re-inventing bindings we do need to come with a common binding whre
-> > it's possible
+> > so you can describe the pin configuration (function) and refer it by phandle
+> > in the group
 > > 
-> > So instead I proppose (send in the v2) to use common way to describe the group
-> > 
-> Let's see how many nodes we will have in device tree.  For imx6q
-> example, there are 332 pins and each pin has up to 8 function selects.
-> We will end up with having 332 x 8 = 2656 sub nodes under node
-> "functions".  Device tree simply cannot afford such a bloating.
-device tree can offord it
-
-except you are going to have hundereds of duplicated pinctrl configuration
-as different board will have different mux which is impossbile to maintain
-either
-
-and I do not expect we add all the configuration possible but just the common
-one
+> Hmm, i can't say you're wrong.
+> What you suggested may be suitable for your SoCs, before i know more about your SoC
+> details, i may not comment too much.
+> 
+> The binding i used here basically follows the exist iomux v3 convention which we're
+> using for non dt platforms, i think most people working on fsl platform may would
+> want a similar using as before since iomux v3 is very easy to use for imx soc.
+> You can refer to: iomux-mx51.h.
+> 
+> After dt macro support is available(which is still in progress), we may
+> convert the raw data above to raw data then user do not need to decode
+> the setting anymore.
+this is not an excuse to duplicate bindings
 
 Best Regards,
 J.
