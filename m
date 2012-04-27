@@ -1,78 +1,118 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3/9] ARM: mmp: support DT in irq
-Date: Fri, 27 Apr 2012 13:06:20 -0600
-Message-ID: <20120427190620.D3C313E0B4D@localhost>
-References: <1335515957-1798-1-git-send-email-haojian.zhuang@gmail.com>
- <1335515957-1798-4-git-send-email-haojian.zhuang@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1335515957-1798-4-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] ASoC: tegra: add device tree support for TrimSlice
+Date: Fri, 27 Apr 2012 13:34:19 -0600
+Message-ID: <1335555259-9263-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Apr 2012 16:39:11 +0800, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Append new interrupt driver that could support both pxa168 and mmp2
-> silicon. And this driver supports device tree.
-> 
-> Since CONFIG_SPARSE_IRQ is enabled in arch-mmp, irq driver should
-> handle reserved NR_IRQS_LEGACY in irq domain.
-> 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/mach-mmp/Makefile                   |    2 +-
->  arch/arm/mach-mmp/include/mach/entry-macro.S |    9 +
->  arch/arm/mach-mmp/irq.c                      |  287 ++++++++++++++++++++++++++
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-It shouldn't be necessary to create an entirely new irq controller
-driver that duplicates the functionality of irq-mmp2.c and
-irq-pxa168.c.  Instead, the existing drivers should be refactored to
-work with both DT and non-DT user.
+This binding doesn't include the nvidia,model or nvidia,audio-routing
+properties the other Tegra audio DT bindings have, because this binding
+is targetted at a single machine, rather than for any machine using the
+tlv320aic23 codec.
 
-> diff --git a/arch/arm/mach-mmp/include/mach/entry-macro.S b/arch/arm/mach-mmp/include/mach/entry-macro.S
-> index 9cff9e7..6b9d925 100644
-> --- a/arch/arm/mach-mmp/include/mach/entry-macro.S
-> +++ b/arch/arm/mach-mmp/include/mach/entry-macro.S
-> @@ -6,13 +6,19 @@
->   * published by the Free Software Foundation.
->   */
->  
-> +#include <asm/irq.h>
->  #include <mach/regs-icu.h>
->  
->  	.macro	get_irqnr_preamble, base, tmp
->  	mrc	p15, 0, \tmp, c0, c0, 0		@ CPUID
->  	and	\tmp, \tmp, #0xff00
->  	cmp	\tmp, #0x5800
-> +#ifdef CONFIG_OF
-> +	ldr	\base, =mmp_icu_base
-> +	ldr	\base, [\base, #0]
-> +#else
->  	ldr	\base, =ICU_VIRT_BASE
-> +#endif
->  	addne	\base, \base, #0x10c		@ PJ1 AP INT SEL register
->  	addeq	\base, \base, #0x104		@ PJ4 IRQ SEL register
->  	.endm
-> @@ -20,5 +26,8 @@
->  	.macro	get_irqnr_and_base, irqnr, irqstat, base, tmp
->  	ldr	\tmp, [\base, #0]
->  	and	\irqnr, \tmp, #0x3f
-> +#ifdef CONFIG_OF
-> +	add	\irqnr, \irqnr, #NR_IRQS_LEGACY
-> +#endif
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Ideally, the binding would be more generic, but that would require
+representing the board's jacks in the binding, and there's no way to do
+that yet. That problem actually affects the other two Tegra audio
+bindings too:-(
 
-What do these do?  Does turning on CONFIG_OF break booting with atags?
-If so then this will need to be reworked.  CONFIG_OF must not disable
-non-devicetree usage.
+The next step would be to define a binding for the board jacks, and
+unify the 3 Tegra bindings/machin-drivers into e.g. tegra_of_simple.
+However, I can't promise when that will happen right now.
+---
+ .../bindings/sound/tegra-audio-trimslice.txt       |   14 ++++++++
+ sound/soc/tegra/trimslice.c                        |   34 ++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/tegra-audio-trimslice.txt
 
-g.
+diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-trimslice.txt b/Documentation/devicetree/bindings/sound/tegra-audio-trimslice.txt
+new file mode 100644
+index 0000000..04b14cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tegra-audio-trimslice.txt
+@@ -0,0 +1,14 @@
++NVIDIA Tegra audio complex for TrimSlice
++
++Required properties:
++- compatible : "nvidia,tegra-audio-trimslice"
++- nvidia,i2s-controller : The phandle of the Tegra I2S1 controller
++- nvidia,audio-codec : The phandle of the WM8903 audio codec
++
++Example:
++
++sound {
++	compatible = "nvidia,tegra-audio-trimslice";
++	nvidia,i2s-controller = <&tegra_i2s1>;
++	nvidia,audio-codec = <&codec>;
++};
+diff --git a/sound/soc/tegra/trimslice.c b/sound/soc/tegra/trimslice.c
+index 0fd115e..4a8d5b6 100644
+--- a/sound/soc/tegra/trimslice.c
++++ b/sound/soc/tegra/trimslice.c
+@@ -27,6 +27,7 @@
+ #include <asm/mach-types.h>
+ 
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ 
+@@ -149,6 +150,32 @@ static __devinit int tegra_snd_trimslice_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
++	if (pdev->dev.of_node) {
++		trimslice_tlv320aic23_dai.codec_name = NULL;
++		trimslice_tlv320aic23_dai.codec_of_node = of_parse_phandle(
++				pdev->dev.of_node, "nvidia,audio-codec", 0);
++		if (!trimslice_tlv320aic23_dai.codec_of_node) {
++			dev_err(&pdev->dev,
++				"Property 'nvidia,audio-codec' missing or invalid\n");
++			ret = -EINVAL;
++			goto err;
++		}
++
++		trimslice_tlv320aic23_dai.cpu_dai_name = NULL;
++		trimslice_tlv320aic23_dai.cpu_dai_of_node = of_parse_phandle(
++				pdev->dev.of_node, "nvidia,i2s-controller", 0);
++		if (!trimslice_tlv320aic23_dai.cpu_dai_of_node) {
++			dev_err(&pdev->dev,
++				"Property 'nvidia,i2s-controller' missing or invalid\n");
++			ret = -EINVAL;
++			goto err;
++		}
++
++		trimslice_tlv320aic23_dai.platform_name = NULL;
++		trimslice_tlv320aic23_dai.platform_of_node =
++				trimslice_tlv320aic23_dai.cpu_dai_of_node;
++	}
++
+ 	ret = tegra_asoc_utils_init(&trimslice->util_data, &pdev->dev);
+ 	if (ret)
+ 		goto err;
+@@ -184,10 +211,17 @@ static int __devexit tegra_snd_trimslice_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id trimslice_of_match[] __devinitconst = {
++	{ .compatible = "nvidia,tegra-audio-trimslice", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, trimslice_of_match);
++
+ static struct platform_driver tegra_snd_trimslice_driver = {
+ 	.driver = {
+ 		.name = DRV_NAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table = trimslice_of_match,
+ 	},
+ 	.probe = tegra_snd_trimslice_probe,
+ 	.remove = __devexit_p(tegra_snd_trimslice_remove),
+-- 
+1.7.0.4
