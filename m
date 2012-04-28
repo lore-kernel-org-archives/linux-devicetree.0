@@ -1,44 +1,83 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2] i2c: Add generic I2C multiplexer using pinctrl API
-Date: Fri, 27 Apr 2012 15:39:45 -0600
-Message-ID: <4F9B1221.8090002@wwwdotorg.org>
-References: <1335289664-21383-1-git-send-email-swarren@wwwdotorg.org>	<20120424200929.GC30172@pengutronix.de>	<4F9714F4.2060400@wwwdotorg.org> <CACRpkdYaVT+tSUT8LPxMzrvncdxjqfg60m5__6cb2OC+MCw_Ng@mail.gmail.com>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: mmp: fix build issue on mmp with device tree
+Date: Sat, 28 Apr 2012 11:11:56 +0800
+Message-ID: <CAN1soZzETeCa7zVVpXC3y6Pa+nUMJLgbPAYpCBEfNsTTPF=XTg@mail.gmail.com>
+References: <1335515957-1798-1-git-send-email-haojian.zhuang@gmail.com>
+ <1335515957-1798-2-git-send-email-haojian.zhuang@gmail.com>
+ <201204272015.49611.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYaVT+tSUT8LPxMzrvncdxjqfg60m5__6cb2OC+MCw_Ng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201204272015.49611.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/2012 05:09 AM, Linus Walleij wrote:
-> On Tue, Apr 24, 2012 at 11:02 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 04/24/2012 02:09 PM, Wolfram Sang wrote:
->>>
->>> From what I know, compatible-properties should not be linux-specific
->>> since devicetrees are OS independent. pinctrl-i2cmux sounds
->>> linux-specific to me.
->>>
->>> So, is such a binding acceptable meanwhile?
+On Sat, Apr 28, 2012 at 4:15 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 27 April 2012, Haojian Zhuang wrote:
+>> Since irq_domain_add_simple() is removed, remove it in mmp-dt.c also.
 >>
->> To my mind, "pinctrl" has two meanings: (1) is the Linux internal API
->> (2) is the pinctrl bindings in
->> Documentation/devicetree/bindings/pinctrl, which were admittedly
->> developed strongly based on Linux's pinctrl API needs, but I believe
->> should be completely agnostic to the pinctrl API, SW, OS, etc., and
->> hence can be considered a pure representation of hardware.
+>> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> This should also be fixed for v3.4, right?
+>
+Since I have more code updated in irq, I update them together to avoid
+dependency issue.
+>
+>> diff --git a/arch/arm/mach-mmp/mmp-dt.c b/arch/arm/mach-mmp/mmp-dt.c
+>> index 6707539..ca22e3c0 100644
+>> --- a/arch/arm/mach-mmp/mmp-dt.c
+>> +++ b/arch/arm/mach-mmp/mmp-dt.c
+>> @@ -32,31 +32,9 @@ static const struct of_dev_auxdata mmp_auxdata_lookup=
+[] __initconst =3D {
+>> =A0 =A0 =A0 =A0 {}
+>> =A0};
 >>
->> As such, the "pinctrl" in "pinctrl-i2cmux" above refers to (2) above,
->> and can be considered a pure HW/binding term.
-> 
-> I second Stephens statement.
-> 
-> Now every OS in the world must start to think about these things
-> as pin controllers. But tt's not like there is competing terminology
-> anyway, so let's define this before we get into committee meetings...
-
-Rob, Grant, could you please take a look at the binding at the start of
-this thread and say if you're OK with the compatible naming, and the
-binding in general? Thanks.
+>> -static int __init mmp_intc_add_irq_domain(struct device_node *np,
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0struct device_node *parent)
+>> -{
+>> - =A0 =A0 =A0 irq_domain_add_simple(np, 0);
+>> - =A0 =A0 =A0 return 0;
+>> -}
+>> -
+>> -static int __init mmp_gpio_add_irq_domain(struct device_node *np,
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0struct device_node *parent)
+>> -{
+>> - =A0 =A0 =A0 irq_domain_add_simple(np, IRQ_GPIO_START);
+>> - =A0 =A0 =A0 return 0;
+>> -}
+>> -
+>> -static const struct of_device_id mmp_irq_match[] __initconst =3D {
+>> - =A0 =A0 =A0 { .compatible =3D "mrvl,mmp-intc", .data =3D mmp_intc_add_=
+irq_domain, },
+>> - =A0 =A0 =A0 { .compatible =3D "mrvl,mmp-gpio", .data =3D mmp_gpio_add_=
+irq_domain, },
+>> - =A0 =A0 =A0 {}
+>> -};
+>> -
+>> =A0static void __init mmp_dt_init(void)
+>> =A0{
+>>
+>> - =A0 =A0 =A0 of_irq_init(mmp_irq_match);
+>> -
+>> =A0 =A0 =A0 =A0 of_platform_populate(NULL, of_default_bus_match_table,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0mmp_auxdata_l=
+ookup, NULL);
+>> =A0}
+>
+> Shouldn't you be calling irq_domain_add_legacy now?
+>
+irq_domain_add_legacy() is used in irq.c. It's in another patch in this ser=
+ies.
