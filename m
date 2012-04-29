@@ -1,145 +1,83 @@
-From: Eric =?ISO-8859-1?B?QuluYXJk?= <eric@eukrea.com>
-Subject: Re: [PATCH v6 00/17] Add PWM framework and device tree support
-Date: Sun, 29 Apr 2012 17:40:37 +0200
-Message-ID: <20120429174037.59c0de8d@eb-e6520>
-References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
+From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v3 2/2] ARM: LPC32xx: Make platform use key driver
+Date: Sun, 29 Apr 2012 21:28:01 +0200
+Message-ID: <1335727681-17656-2-git-send-email-stigge@antcom.de>
+References: <1335727681-17656-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Mike Frysinger <vapier@gentoo.org>, Ryan Mallon <rmallon@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, linux-tegra@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Matthias Kaehlcke <matthias@kaehlcke.net>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Bernhard Walle <walle@corscience.de>, Richard Purdie <rpurdie@rpsys.net>, Colin Cross <ccross@android.com>, Mitch Bradley <wmb@firmworks.com>, Eric Miao <eric.y.miao@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Kurt Van Dijck <kurt.van.dijck@eia.be>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1335727681-17656-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+This patch connects the lpc32xx-key driver to the LPC32xx platform (via
+lpc32xx.dtsi), and more specifically to the reference board via its dts file.
+The clock.c file needs to be changed to match the automatic device name to its
+clock.
 
-Le Tue, 10 Apr 2012 17:06:23 +0200,
-Thierry Reding <thierry.reding@avionic-design.de> a =E9crit :
+Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 
-> This patch series adds very rudimentary device-tree support for PWM
-> devices. With all of these patches applied (plus one board-specific
-> patch that is not included), I'm able to control the backlight on the
-> device I'm working on using the sysfs interface provided by the pwm-bl
-> driver and the backlight class.
-> =
+---
+Applies to v3.4-rc4 + LPC32xx DT patches
 
-> This series is based on Sascha Hauer's series of patches[0] to add a
-> generic PWM framework. The first patch in this series is taken from
-> Sascha's branch, while the second patch enables each PWM chip to provide
-> multiple PWM devices (the Blackfin and PXA drivers have been ported to
-> the framework for reference). Currently a global namespace is still
-> provided to keep backwards-compatibility with the legacy PWM API. In
-> order to achieve this, the number of global PWM devices is limited to
-> 1024. However, patch 2 introduces per-chip indexing of PWM devices in
-> the core and patch 4 adds an API to request a PWM device using a lookup
-> table registered by board setup code. They are supposed to eventually
-> replace pwm_request() and allow to get rid of the global namespace. The
-> device tree support code does not use the global namespace.
-> =
+Please pick this patch for the arm-soc subsystem.
 
-> Patch 3 adds a debugfs interface.
-> =
+Changes since v2:
+* DT: Use "keypad,num-rows", "keypad,num-columns" and "linux,keymap" properties
 
-> Patch 5 adds some code to lookup a PWM chip given its device-tree
-> handle. This code will be used later on by the pwm-bl driver to find the
-> PWM device that it should be using. If the no corresponding PWM chip is
-> available yet, the code returns EPROBE_DEFER to have users automatically
-> probed again later when the PWM provider may have become available.
-> Device tree binding documentation is also provided.
-> =
+ arch/arm/boot/dts/lpc32xx.dtsi |    2 ++
+ arch/arm/boot/dts/phy3250.dts  |    9 +++++++++
+ arch/arm/mach-lpc32xx/clock.c  |    2 +-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-> Patch 6 was taken from the Chromium tree and is required to provide
-> proper clocking of the Tegra2 PWFM controller. All Chromium-specific
-> tags have been removed from the commit message. Some cleanup of the
-> clock registration for Tegra is done in patch 7 because a subsequent
-> patch will instantiate one PWFM controller device instead of four.
-> =
-
-> Patch 8 adds a generic PWM framework driver for the Tegra2 PWFM
-> controller. The code is taken from the Chromium tree with some
-> adjustments to integrate it with the PWM framework. Device tree based
-> probing of the driver is implemented in patch 9.
-> =
-
-> Patches 10 and 11 are ports of the Blackfin PWM and the PXA PWM drivers
-> to the PWM framework. These are only compile-tested as I do not have any
-> hardware to test them on.
-> =
-
-> Patches 12, 13 and 14 move the i.MX, Samsung and VT8500 drivers over to
-> the framework. These are originally by Sascha Hauer and were updated to
-> take advantage of the multiple PWM devices per chip feature. Patch 15
-> adds support for Freescale MXS by Shawn Guo.
-> =
-
-> Patch 16 implements DT-based probing in the pwm-backlight driver. Note
-> that this code only handles the "pwms" property (by looking up the PWM
-> device via the new PWM DT binding). Switching power to the backlight via
-> GPIOs is not supported yet. The DT binding also deviates from the
-> platform data in that it requires a list of brightness levels to be
-> specified instead of assuming a linearily spaced range from 0 to a given
-> maximum brightness.
-> =
-
-> Finally, patch 17 makes me the new maintainer of the PWM subsystem.
-> =
-
-> The whole series is based on the linux-next tree from 20120405. I think
-> I've addressed all of the concerns raised in the first five versions. I
-> have also pushed this version of the series to the PWM subsystem
-> repository[1].
-> =
-
-> Thierry
-> =
-
-> [0]: http://git.pengutronix.de/?p=3Dimx/linux-2.6.git;a=3Dshortlog;h=3Dre=
-fs/heads/pwmlib
-> [1]: http://gitorious.org/linux-pwm/linux-pwm/trees/pwm-v6
-> =
-
-> Sascha Hauer (4):
->   pwm: Add PWM framework support
->   ARM i.MX: Move i.MX pwm driver to pwm framework
->   ARM Samsung: Move s3c pwm driver to pwm framework
->   ARM vt8500: Move vt8500 pwm driver to pwm framework
-> =
-
-> Shawn Guo (1):
->   pwm: add pwm-mxs support
-> =
-
-> Simon Que (1):
->   ARM: tegra: Fix PWM clock programming
-> =
-
-> Thierry Reding (11):
->   pwm: Allow chips to support multiple PWMs
->   pwm: Add debugfs interface
->   pwm: Add table-based lookup for static mappings
->   pwm: Add device tree support
->   ARM: tegra: Provide clock for only one PWM controller
->   pwm: Add NVIDIA Tegra SoC support
->   pwm: tegra: Add device tree support
->   pwm: Move Blackfin PWM driver to PWM framework
->   pwm: Move PXA PWM driver to PWM framework
->   pwm-backlight: Add rudimentary device tree support
->   pwm: Take over maintainership of the PWM subsystem
-> =
-
-for pwm-core & pwm-imx (with the 3 patches I sent a few minutes ago) :
-Tested-by: Eric B=E9nard <eric@eukrea.com>
-
-Thanks !
-
-Eric
+--- linux-2.6.orig/arch/arm/boot/dts/lpc32xx.dtsi
++++ linux-2.6/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -285,6 +285,8 @@
+ 			key@40050000 {
+ 				compatible = "nxp,lpc3220-key";
+ 				reg = <0x40050000 0x1000>;
++				interrupts = <54 0>;
++				status = "disable";
+ 			};
+ 
+ 		};
+--- linux-2.6.orig/arch/arm/boot/dts/phy3250.dts
++++ linux-2.6/arch/arm/boot/dts/phy3250.dts
+@@ -124,6 +124,15 @@
+ 			tsc@40048000 {
+ 				status = "okay";
+ 			};
++
++			key@40050000 {
++				status = "okay";
++				keypad,num-rows = <1>;
++				keypad,num-columns = <1>;
++				nxp,debounce-delay-ms = <3>;
++				nxp,scan-delay-ms = <34>;
++				linux,keymap = <0x00000002>;
++			};
+ 		};
+ 	};
+ 
+--- linux-2.6.orig/arch/arm/mach-lpc32xx/clock.c
++++ linux-2.6/arch/arm/mach-lpc32xx/clock.c
+@@ -1131,7 +1131,7 @@ static struct clk_lookup lookups[] = {
+ 	CLKDEV_INIT("31020300.i2c", NULL, &clk_i2c2),
+ 	CLKDEV_INIT("dev:ssp0", NULL, &clk_ssp0),
+ 	CLKDEV_INIT("dev:ssp1", NULL, &clk_ssp1),
+-	CLKDEV_INIT("lpc32xx_keys.0", NULL, &clk_kscan),
++	CLKDEV_INIT("40050000.key", NULL, &clk_kscan),
+ 	CLKDEV_INIT("lpc32xx-nand.0", "nand_ck", &clk_nand),
+ 	CLKDEV_INIT("200b0000.flash", "nand_ck_mlc", &clk_nand_mlc),
+ 	CLKDEV_INIT("40048000.adc", NULL, &clk_adc),
