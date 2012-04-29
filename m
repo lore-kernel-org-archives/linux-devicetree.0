@@ -1,74 +1,145 @@
-From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Subject: [GIT PULL] USB: LPC32xx device tree related OHCI and UDC patch series
-Date: Sun, 29 Apr 2012 16:57:06 +0200
-Message-ID: <4F9D56C2.2050307@antcom.de>
+From: Eric =?ISO-8859-1?B?QuluYXJk?= <eric@eukrea.com>
+Subject: Re: [PATCH v6 00/17] Add PWM framework and device tree support
+Date: Sun, 29 Apr 2012 17:40:37 +0200
+Message-ID: <20120429174037.59c0de8d@eb-e6520>
+References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Mike Frysinger <vapier@gentoo.org>, Ryan Mallon <rmallon@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, linux-tegra@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Matthias Kaehlcke <matthias@kaehlcke.net>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Bernhard Walle <walle@corscience.de>, Richard Purdie <rpurdie@rpsys.net>, Colin Cross <ccross@android.com>, Mitch Bradley <wmb@firmworks.com>, Eric Miao <eric.y.miao@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Kurt Van Dijck <kurt.van.dijck@eia.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Thierry,
 
-this is the pull request for the just re-posted series of LPC32xx related
-USB patches (just ported onto current usb.git's usb-next).
+Le Tue, 10 Apr 2012 17:06:23 +0200,
+Thierry Reding <thierry.reding@avionic-design.de> a =E9crit :
 
-Thanks in advance,
+> This patch series adds very rudimentary device-tree support for PWM
+> devices. With all of these patches applied (plus one board-specific
+> patch that is not included), I'm able to control the backlight on the
+> device I'm working on using the sysfs interface provided by the pwm-bl
+> driver and the backlight class.
+> =
 
-Roland
+> This series is based on Sascha Hauer's series of patches[0] to add a
+> generic PWM framework. The first patch in this series is taken from
+> Sascha's branch, while the second patch enables each PWM chip to provide
+> multiple PWM devices (the Blackfin and PXA drivers have been ported to
+> the framework for reference). Currently a global namespace is still
+> provided to keep backwards-compatibility with the legacy PWM API. In
+> order to achieve this, the number of global PWM devices is limited to
+> 1024. However, patch 2 introduces per-chip indexing of PWM devices in
+> the core and patch 4 adds an API to request a PWM device using a lookup
+> table registered by board setup code. They are supposed to eventually
+> replace pwm_request() and allow to get rid of the global namespace. The
+> device tree support code does not use the global namespace.
+> =
 
+> Patch 3 adds a debugfs interface.
+> =
 
-The following changes since commit 4212cd74ca6f0c42f5a0065797dd1c310a485ad8:
+> Patch 5 adds some code to lookup a PWM chip given its device-tree
+> handle. This code will be used later on by the pwm-bl driver to find the
+> PWM device that it should be using. If the no corresponding PWM chip is
+> available yet, the code returns EPROBE_DEFER to have users automatically
+> probed again later when the PWM provider may have become available.
+> Device tree binding documentation is also provided.
+> =
 
-  USB: usb-skeleton.c: remove err() usage (2012-04-27 11:24:45 -0700)
+> Patch 6 was taken from the Chromium tree and is required to provide
+> proper clocking of the Tegra2 PWFM controller. All Chromium-specific
+> tags have been removed from the commit message. Some cleanup of the
+> clock registration for Tegra is done in patch 7 because a subsequent
+> patch will instantiate one PWFM controller device instead of four.
+> =
 
-are available in the git repository at:
+> Patch 8 adds a generic PWM framework driver for the Tegra2 PWFM
+> controller. The code is taken from the Chromium tree with some
+> adjustments to integrate it with the PWM framework. Device tree based
+> probing of the driver is implemented in patch 9.
+> =
 
-  git://git.antcom.de/linux-2.6.git ohci-nxp
+> Patches 10 and 11 are ports of the Blackfin PWM and the PXA PWM drivers
+> to the PWM framework. These are only compile-tested as I do not have any
+> hardware to test them on.
+> =
 
-for you to fetch changes up to 5fc7346be73e695bb976d7bea2a421f1c443fa6c:
+> Patches 12, 13 and 14 move the i.MX, Samsung and VT8500 drivers over to
+> the framework. These are originally by Sascha Hauer and were updated to
+> take advantage of the multiple PWM devices per chip feature. Patch 15
+> adds support for Freescale MXS by Shawn Guo.
+> =
 
-  USB: ohci-nxp: Use isp1301 driver (2012-04-29 15:27:20 +0200)
+> Patch 16 implements DT-based probing in the pwm-backlight driver. Note
+> that this code only handles the "pwms" property (by looking up the PWM
+> device via the new PWM DT binding). Switching power to the backlight via
+> GPIOs is not supported yet. The DT binding also deviates from the
+> platform data in that it requires a list of brightness levels to be
+> specified instead of assuming a linearily spaced range from 0 to a given
+> maximum brightness.
+> =
 
-----------------------------------------------------------------
-Roland Stigge (5):
-      ohci-nxp: Driver cleanup
-      ohci-nxp: Device tree support
-      USB: Add driver for NXP ISP1301 USB transceiver
-      USB: gadget driver for LPC32xx
-      USB: ohci-nxp: Use isp1301 driver
+> Finally, patch 17 makes me the new maintainer of the PWM subsystem.
+> =
 
- Documentation/devicetree/bindings/usb/isp1301.txt  |   25 +
- .../devicetree/bindings/usb/lpc32xx-udc.txt        |   28 +
- Documentation/devicetree/bindings/usb/ohci-nxp.txt |   24 +
- drivers/usb/Kconfig                                |    2 +
- drivers/usb/Makefile                               |    1 +
- drivers/usb/gadget/Kconfig                         |   11 +
- drivers/usb/gadget/Makefile                        |    1 +
- drivers/usb/gadget/gadget_chips.h                  |    3 +
- drivers/usb/gadget/lpc32xx_udc.c                   | 3538 ++++++++++++++++++++
- drivers/usb/host/Kconfig                           |    1 +
- drivers/usb/host/ohci-nxp.c                        |  165 +-
- drivers/usb/phy/Kconfig                            |   17 +
- drivers/usb/phy/Makefile                           |    7 +
- drivers/usb/phy/isp1301.c                          |   77 +
- include/linux/usb/isp1301.h                        |   80 +
- 15 files changed, 3861 insertions(+), 119 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/isp1301.txt
- create mode 100644 Documentation/devicetree/bindings/usb/lpc32xx-udc.txt
- create mode 100644 Documentation/devicetree/bindings/usb/ohci-nxp.txt
- create mode 100644 drivers/usb/gadget/lpc32xx_udc.c
- create mode 100644 drivers/usb/phy/Kconfig
- create mode 100644 drivers/usb/phy/Makefile
- create mode 100644 drivers/usb/phy/isp1301.c
- create mode 100644 include/linux/usb/isp1301.h
+> The whole series is based on the linux-next tree from 20120405. I think
+> I've addressed all of the concerns raised in the first five versions. I
+> have also pushed this version of the series to the PWM subsystem
+> repository[1].
+> =
+
+> Thierry
+> =
+
+> [0]: http://git.pengutronix.de/?p=3Dimx/linux-2.6.git;a=3Dshortlog;h=3Dre=
+fs/heads/pwmlib
+> [1]: http://gitorious.org/linux-pwm/linux-pwm/trees/pwm-v6
+> =
+
+> Sascha Hauer (4):
+>   pwm: Add PWM framework support
+>   ARM i.MX: Move i.MX pwm driver to pwm framework
+>   ARM Samsung: Move s3c pwm driver to pwm framework
+>   ARM vt8500: Move vt8500 pwm driver to pwm framework
+> =
+
+> Shawn Guo (1):
+>   pwm: add pwm-mxs support
+> =
+
+> Simon Que (1):
+>   ARM: tegra: Fix PWM clock programming
+> =
+
+> Thierry Reding (11):
+>   pwm: Allow chips to support multiple PWMs
+>   pwm: Add debugfs interface
+>   pwm: Add table-based lookup for static mappings
+>   pwm: Add device tree support
+>   ARM: tegra: Provide clock for only one PWM controller
+>   pwm: Add NVIDIA Tegra SoC support
+>   pwm: tegra: Add device tree support
+>   pwm: Move Blackfin PWM driver to PWM framework
+>   pwm: Move PXA PWM driver to PWM framework
+>   pwm-backlight: Add rudimentary device tree support
+>   pwm: Take over maintainership of the PWM subsystem
+> =
+
+for pwm-core & pwm-imx (with the 3 patches I sent a few minutes ago) :
+Tested-by: Eric B=E9nard <eric@eukrea.com>
+
+Thanks !
+
+Eric
