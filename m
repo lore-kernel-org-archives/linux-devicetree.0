@@ -1,13 +1,13 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/10] allow mxc_nand to be probed via device tree
-Date: Sun, 29 Apr 2012 14:10:20 +0300
-Message-ID: <1335697820.1942.2.camel@koala>
-References: <20120423092240.GA18013@pengutronix.de>
- <1335615654.1937.20.camel@koala> <20120429092701.GS20039@pengutronix.de>
+From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v8 1/5] ohci-nxp: Driver cleanup
+Date: Sun, 29 Apr 2012 16:47:02 +0200
+Message-ID: <1335710826-6684-2-git-send-email-stigge@antcom.de>
+References: <1335710826-6684-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6753891817352309752=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120429092701.GS20039-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1335710826-6684-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,113 +17,144 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Cleanup for ohci-nxp.c:
 
---===============6753891817352309752==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-+kU6RklVPYNQrjavZbA6"
+* Cleanup of resource handling (mem and irq), use devm_request_and_ioremap()
+* Use DMA_BIT_MASK()
+* Don't remove __devinit
+* Removed obsolete gpio.h include
+* More consistent bit access symbols
+* Removed unused extern declaration ocpi_enable()
+* Added error handling on i2c_get_adapter()
+* Whitespace cleanup
 
+Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+---
+ drivers/usb/host/ohci-nxp.c |   44 +++++++++++++++++++++++++-----------------
+ 1 files changed, 26 insertions(+), 18 deletions(-)
 
---=-+kU6RklVPYNQrjavZbA6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, 2012-04-29 at 11:27 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Artem,
->=20
-> On Sat, Apr 28, 2012 at 03:20:54PM +0300, Artem Bityutskiy wrote:
-> > On Mon, 2012-04-23 at 11:22 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > Hello,
-> > >=20
-> > > this series aims to be able to probe mxc_nand devices via device tree=
-.
-> > > Most of its patches reorganize the driver to only use cpu_is_mxYZ for
-> > > the case that the device is not probed via device tree.
-> > >=20
-> > > I split this conversion in several patches to allow easier review. IM=
-HO
-> > > it makes sense to keep this splitting for an eventual bisection.
-> > >=20
-> > > This is tested on an i.MX27 based machine and works fine including
-> > > passing of partition data.
-> >=20
-> > Applied all 11 patches from your git tree to l2-mtd.git. Note, you have
-> > one checkpatch.pl warning:
-> >=20
-> > WARNING:STATIC_CONST_CHAR_ARRAY: static const char * array should proba=
-bly be static const char * const
-> > #69: FILE: drivers/mtd/nand/mxc_nand.c:274:
-> > +static const char *part_probes[] =3D { "RedBoot", "cmdlinepart", "ofpa=
-rt", NULL };
-> I noticed that, too. This is not new though and as
-> mtd_device_parse_register takes a const char **types applying
-> checkpatch's advice would yield another warning. But probably fixing
-> both would work. I wouldn't address this as part of this series.
->=20
-> > Also there are still several sparse warnings, e.g.
-> >=20
-> > +drivers/mtd/nand/mxc_nand.c:1249:26: warning: incorrect type in initia=
-lizer (different modifiers) [sparse]
-> > +drivers/mtd/nand/mxc_nand.c:1249:26:    expected void *data [sparse]
-> > +drivers/mtd/nand/mxc_nand.c:1249:26:    got struct mxc_nand_devtype_da=
-ta static const [toplevel] *<noident> [sparse]
-> >=20
-> > And you added few gcc warnings, e.g.:
-> >=20
-> > +drivers/mtd/nand/mxc_nand.c:1252:3: warning: initialization discards '=
-const' qualifier from pointer target type [enabled by default]
-> This is the same problem, i.e. casting away several consts. Hmm, and for
-> me neither gcc nor sparse provide that warning but I wonder why. At some
-> point I saw this warning, so I sent a patch:
-
-Try to compile with gcc 4.6 - you can download it from here:
-ftp://ftp.kernel.org/pub/tools/crosstool/files/bin/
-
-I do not know whether it produces good binaries or not, but for
-compile-testing it is much better than ancient gcc 4.3.
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-+kU6RklVPYNQrjavZbA6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJPnSGcAAoJECmIfjd9wqK0inIQAMy4w+/MGb3BpXJl2E4n1RIP
-0JWSHZ3QIQIPDpoBZuqVOC85o5BkzGo6B9ua5KLFL4iWPg9h+Gc70Pob5hdw0+4k
-Eazq0ofpWq0jpHsr52/EpPEa3jNXtplOgoDfzwuikv57LU33M1ec51ZQvwyAAqsg
-jvexjJCTKkePidgrdMV6iuivvsr1yUAABLRF4DMYefQLa6guYOHuW1HdQBhVNsT5
-uwaVKfyiSdhegm7SZlSN6oNCD9mrqYs5fVfU8WM5IV+YZQsm9SPMVSQfHQwfU+oS
-bWOvZ8HvLHA9mSU3l3SfTcjUugxGWYdClyLjtIUnWQ4FVZlupB895Dc9H/yCiGca
-724wpEtfVJ7v/Aduy1srOpV8JbjJwktuOduf5xP6XsrDtRejxzfDT4G3pQ+4Iiyc
-pPPF+b62suctwksK20hjAphs+7mZ/Syqne6GSf/xOj5ovwzj9Ta49xOoKOg0rNd2
-34WrnyNCPk2K1/eEtsoygOQl++lXhDbuZXp9vYK7r+cyjD3abEIKVv1kThkHYk/s
-S1FNbcxR/zDNUU1Hnd8RrWhF6RQIHmdF8ygfni5vXBs0sESrAP+/TcgEO6wUdfRa
-xEOMC5dwAGzvE53wS5FfNFaZ4SdRmx1WvIcfQXzOL7XcZkgfloXFoWkO27D8AGK+
-hCBlB06UGCLZ0wsA7t3C
-=r8cd
------END PGP SIGNATURE-----
-
---=-+kU6RklVPYNQrjavZbA6--
-
-
---===============6753891817352309752==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6753891817352309752==--
+diff --git a/drivers/usb/host/ohci-nxp.c b/drivers/usb/host/ohci-nxp.c
+index d02abc3..63261f7 100644
+--- a/drivers/usb/host/ohci-nxp.c
++++ b/drivers/usb/host/ohci-nxp.c
+@@ -29,7 +29,6 @@
+ 
+ #include <mach/platform.h>
+ #include <mach/irqs.h>
+-#include <asm/gpio.h>
+ 
+ #define USB_CONFIG_BASE		0x31020000
+ #define PWRMAN_BASE		0x40004000
+@@ -38,7 +37,9 @@
+ 
+ /* USB_CTRL bit defines */
+ #define USB_SLAVE_HCLK_EN	(1 << 24)
++#define USB_DEV_NEED_CLK_EN	(1 << 22)
+ #define USB_HOST_NEED_CLK_EN	(1 << 21)
++#define PAD_CONTROL_LAST_DRIVEN	(1 << 19)
+ 
+ #define USB_OTG_CLK_CTRL	IO_ADDRESS(USB_CONFIG_BASE + 0xFF4)
+ #define USB_OTG_CLK_STAT	IO_ADDRESS(USB_CONFIG_BASE + 0xFF8)
+@@ -117,7 +118,6 @@ static struct i2c_driver isp1301_driver;
+ static struct i2c_client *isp1301_i2c_client;
+ 
+ extern int usb_disabled(void);
+-extern int ocpi_enable(void);
+ 
+ static struct clk *usb_clk;
+ 
+@@ -220,7 +220,7 @@ static void isp1301_configure_lpc32xx(void)
+ 		ISP1301_I2C_INTERRUPT_RISING | ISP1301_I2C_REG_CLEAR_ADDR, ~0);
+ 
+ 	/* Enable usb_need_clk clock after transceiver is initialized */
+-	__raw_writel((__raw_readl(USB_CTRL) | (1 << 22)), USB_CTRL);
++	__raw_writel(__raw_readl(USB_CTRL) | USB_HOST_NEED_CLK_EN, USB_CTRL);
+ 
+ 	printk(KERN_INFO "ISP1301 Vendor ID  : 0x%04x\n",
+ 	      i2c_smbus_read_word_data(isp1301_i2c_client, 0x00));
+@@ -374,9 +374,13 @@ static int __devinit usb_hcd_nxp_probe(struct platform_device *pdev)
+ 	const struct hc_driver *driver = &ohci_nxp_hc_driver;
+ 	struct i2c_adapter *i2c_adap;
+ 	struct i2c_board_info i2c_info;
++	struct resource *res;
+ 
+ 	int ret = 0, irq;
+ 
++	pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
++	pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
++
+ 	dev_dbg(&pdev->dev, "%s: " DRIVER_DESC " (nxp)\n", hcd_name);
+ 	if (usb_disabled()) {
+ 		dev_err(&pdev->dev, "USB is disabled\n");
+@@ -384,16 +388,8 @@ static int __devinit usb_hcd_nxp_probe(struct platform_device *pdev)
+ 		goto out;
+ 	}
+ 
+-	if (pdev->num_resources != 2
+-	    || pdev->resource[0].flags != IORESOURCE_MEM
+-	    || pdev->resource[1].flags != IORESOURCE_IRQ) {
+-		dev_err(&pdev->dev, "Invalid resource configuration\\nn");
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+ 	/* Enable AHB slave USB clock, needed for further USB clock control */
+-	__raw_writel(USB_SLAVE_HCLK_EN | (1 << 19), USB_CTRL);
++	__raw_writel(USB_SLAVE_HCLK_EN | PAD_CONTROL_LAST_DRIVEN, USB_CTRL);
+ 
+ 	ret = i2c_add_driver(&isp1301_driver);
+ 	if (ret < 0) {
+@@ -401,6 +397,11 @@ static int __devinit usb_hcd_nxp_probe(struct platform_device *pdev)
+ 		goto out;
+ 	}
+ 	i2c_adap = i2c_get_adapter(2);
++	if (!i2c_adap) {
++		dev_err(&pdev->dev, "failed on i2c_get_adapter");
++		goto out_i2c_driver;
++	}
++
+ 	memset(&i2c_info, 0, sizeof(struct i2c_board_info));
+ 	strlcpy(i2c_info.type, "isp1301_nxp", I2C_NAME_SIZE);
+ 	isp1301_i2c_client = i2c_new_probed_device(i2c_adap, &i2c_info,
+@@ -442,7 +443,7 @@ static int __devinit usb_hcd_nxp_probe(struct platform_device *pdev)
+ 	while ((__raw_readl(USB_OTG_CLK_STAT) & USB_CLOCK_MASK) !=
+ 	       USB_CLOCK_MASK) ;
+ 
+-	hcd = usb_create_hcd (driver, &pdev->dev, dev_name(&pdev->dev));
++	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
+ 	if (!hcd) {
+ 		dev_err(&pdev->dev, "Failed to allocate HC buffer\n");
+ 		ret = -ENOMEM;
+@@ -452,14 +453,21 @@ static int __devinit usb_hcd_nxp_probe(struct platform_device *pdev)
+ 	/* Set all USB bits in the Start Enable register */
+ 	nxp_set_usb_bits();
+ 
+-	hcd->rsrc_start = pdev->resource[0].start;
+-	hcd->rsrc_len = pdev->resource[0].end - pdev->resource[0].start + 1;
+-	if (!request_mem_region(hcd->rsrc_start, hcd->rsrc_len, hcd_name)) {
+-		dev_dbg(&pdev->dev, "request_mem_region failed\n");
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "Failed to get MEM resource\n");
++		ret =  -ENOMEM;
++		goto out4;
++	}
++
++	hcd->regs = devm_request_and_ioremap(&pdev->dev, res);
++	if (!hcd->regs) {
++		dev_err(&pdev->dev, "Failed to devm_request_and_ioremap\n");
+ 		ret =  -ENOMEM;
+ 		goto out4;
+ 	}
+-	hcd->regs = (void __iomem *)pdev->resource[0].start;
++	hcd->rsrc_start = res->start;
++	hcd->rsrc_len = resource_size(res);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+-- 
+1.7.9
