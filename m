@@ -1,88 +1,94 @@
-From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 2/4] OF: MTD: make plat_nand loadable from DT
-Date: Mon, 30 Apr 2012 19:30:46 +0200
-Message-ID: <1335807048-24032-2-git-send-email-blogic@openwrt.org>
-References: <1335807048-24032-1-git-send-email-blogic@openwrt.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1335807048-24032-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: John Crispin <blogic@openwrt.org>
+Subject: [PATCH] OF: PCI: const usage needed by MIPS
+Date: Mon, 30 Apr 2012 19:46:59 +0200
+Message-ID: <1335808019-24502-1-git-send-email-blogic@openwrt.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: John Crispin <blogic@openwrt.org>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This patch sets the of_match_table field inside plat_nand's platform_driver.
-We also add a struct mtd_part_parser_data pointer to make sure of_part parsing
-works.
+On MIPS we want to call of_irq_map_pci from inside
 
-If an arch wants to support plat_nand via DT it needs to setup the
-platform_nand_data and hook it into the platform_device.
+arch/mips/include/asm/pci.h:extern int pcibios_map_irq(
+				const struct pci_dev *dev, u8 slot, u8 pin);
 
-Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+For this to work we need to change several functions to const usage.
+
+Signed-off-by: John Crispin <blogic@openwrt.org>
+Cc: linux-pci@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-mips@linux-mips.org
 ---
-This patch should go upstream via MTD with the other 3 patches.
+I am not sure which tree this should go via. Grant, can you take it ?
 
- drivers/mtd/nand/plat_nand.c |   21 +++++++++++++++------
- 1 files changed, 15 insertions(+), 6 deletions(-)
+ drivers/of/of_pci_irq.c |    2 +-
+ drivers/pci/pci.c       |    2 +-
+ include/linux/of_pci.h  |    2 +-
+ include/linux/pci.h     |    5 +++--
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mtd/nand/plat_nand.c b/drivers/mtd/nand/plat_nand.c
-index 5856399..fd2d2a1 100644
---- a/drivers/mtd/nand/plat_nand.c
-+++ b/drivers/mtd/nand/plat_nand.c
-@@ -31,6 +31,7 @@ static const char *part_probe_types[] = { "cmdlinepart", NULL };
- static int __devinit plat_nand_probe(struct platform_device *pdev)
+diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+index 9312516..6770538 100644
+--- a/drivers/of/of_pci_irq.c
++++ b/drivers/of/of_pci_irq.c
+@@ -15,7 +15,7 @@
+  * PCI tree until an device-node is found, at which point it will finish
+  * resolving using the OF tree walking.
+  */
+-int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq)
++int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq)
  {
- 	struct platform_nand_data *pdata = pdev->dev.platform_data;
-+	struct mtd_part_parser_data ppdata;
- 	struct plat_nand_data *data;
- 	struct resource *res;
- 	const char **part_types;
-@@ -103,7 +104,8 @@ static int __devinit plat_nand_probe(struct platform_device *pdev)
+ 	struct device_node *dn, *ppnode;
+ 	struct pci_dev *ppdev;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d20f133..4c79586 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2363,7 +2363,7 @@ void pci_enable_acs(struct pci_dev *dev)
+  * number is always 0 (see the Implementation Note in section 2.2.8.1 of
+  * the PCI Express Base Specification, Revision 2.1)
+  */
+-u8 pci_swizzle_interrupt_pin(struct pci_dev *dev, u8 pin)
++u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin)
+ {
+ 	int slot;
  
- 	part_types = pdata->chip.part_probe_types ? : part_probe_types;
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index f93e217..bb115de 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -5,7 +5,7 @@
  
--	err = mtd_device_parse_register(&data->mtd, part_types, NULL,
-+	ppdata.of_node = pdev->dev.of_node;
-+	err = mtd_device_parse_register(&data->mtd, part_types, &ppdata,
- 					pdata->chip.partitions,
- 					pdata->chip.nr_partitions);
+ struct pci_dev;
+ struct of_irq;
+-int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
++int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
  
-@@ -144,12 +146,19 @@ static int __devexit plat_nand_remove(struct platform_device *pdev)
- 	return 0;
+ struct device_node;
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index e444f5b..3bbc77e 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -680,7 +680,7 @@ int __must_check pci_bus_add_device(struct pci_dev *dev);
+ void pci_read_bridge_bases(struct pci_bus *child);
+ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
+ 					  struct resource *res);
+-u8 pci_swizzle_interrupt_pin(struct pci_dev *dev, u8 pin);
++u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin);
+ int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
+ u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
+ extern struct pci_dev *pci_dev_get(struct pci_dev *dev);
+@@ -1685,7 +1685,8 @@ extern void pci_release_bus_of_node(struct pci_bus *bus);
+ /* Arch may override this (weak) */
+ extern struct device_node * __weak pcibios_get_phb_of_node(struct pci_bus *bus);
+ 
+-static inline struct device_node *pci_device_to_OF_node(struct pci_dev *pdev)
++static inline struct device_node *
++pci_device_to_OF_node(const struct pci_dev *pdev)
+ {
+ 	return pdev ? pdev->dev.of_node : NULL;
  }
- 
-+static const struct of_device_id plat_nand_match[] = {
-+	{ .compatible = "gen_nand" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, plat_nand_match);
-+
- static struct platform_driver plat_nand_driver = {
--	.probe		= plat_nand_probe,
--	.remove		= __devexit_p(plat_nand_remove),
--	.driver		= {
--		.name	= "gen_nand",
--		.owner	= THIS_MODULE,
-+	.probe	= plat_nand_probe,
-+	.remove	= __devexit_p(plat_nand_remove),
-+	.driver	= {
-+		.name		= "gen_nand",
-+		.owner		= THIS_MODULE,
-+		.of_match_table = plat_nand_match,
- 	},
- };
- 
 -- 
 1.7.9.1
