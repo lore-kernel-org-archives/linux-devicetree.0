@@ -1,253 +1,55 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH V3 2/2] of: selftest/dma: Add selftest for new DT DMA
-Date: Mon, 30 Apr 2012 16:20:08 -0500
-Message-ID: <1335820808-28806-1-git-send-email-jon-hunter@ti.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH] ASoC: tegra: add device tree support for TrimSlice
+Date: Mon, 30 Apr 2012 23:48:21 +0100
+Message-ID: <20120430224821.GB27450@opensource.wolfsonmicro.com>
+References: <1335555259-9263-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: device-tree <devicetree-discuss@lists.ozlabs.org>
-Cc: linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1335555259-9263-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Hunter <jon-hunter@ti.com>
 
-These selftests are covering the new DT DMA helpers for both legacy controllers
-(not supporting DMA Engine) and controllers supporting DMA Engine. They will
-test both error and normal cases.
+--V0207lvV8h4k8FAm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A dummy DMA engine filter function is also provided to show how this is used
-when registering a new DMA controller if the driver uses DMA engine.
+On Fri, Apr 27, 2012 at 01:34:19PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> This binding doesn't include the nvidia,model or nvidia,audio-routing
+> properties the other Tegra audio DT bindings have, because this binding
+> is targetted at a single machine, rather than for any machine using the
+> tlv320aic23 codec.
 
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Benoit Cousson <b-cousson@ti.com>
-Cc: Stephen Warren <swarren@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
- arch/arm/boot/dts/at91sam9m10g45ek.dts     |    2 +
- arch/arm/boot/dts/omap4-panda.dts          |    2 +
- arch/arm/boot/dts/testcases/tests-dma.dtsi |   32 ++++++++
- arch/arm/boot/dts/testcases/tests.dtsi     |    1 +
- drivers/of/selftest.c                      |  118 ++++++++++++++++++++++++++++
- 5 files changed, 155 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/testcases/tests-dma.dtsi
+Applied, thanks.
 
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index a3633bd..4b3c942 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -154,3 +154,5 @@
- 		};
- 	};
- };
-+
-+/include/ "testcases/tests.dtsi"
-diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index ea6f5bb..a79d637 100644
---- a/arch/arm/boot/dts/omap4-panda.dts
-+++ b/arch/arm/boot/dts/omap4-panda.dts
-@@ -74,3 +74,5 @@
- 	ti,non-removable;
- 	ti,bus-width = <4>;
- };
-+
-+/include/ "testcases/tests.dtsi"
-diff --git a/arch/arm/boot/dts/testcases/tests-dma.dtsi b/arch/arm/boot/dts/testcases/tests-dma.dtsi
-new file mode 100644
-index 0000000..a75d155
---- /dev/null
-+++ b/arch/arm/boot/dts/testcases/tests-dma.dtsi
-@@ -0,0 +1,32 @@
-+
-+/ {
-+	testcase-data {
-+		dma-tests {
-+			testdmac0: test-dma-controller0 {
-+				#dma-cells = <2>;
-+			};
-+
-+			testdmac1: test-dma-controller1 {
-+				#dma-cells = <2>;
-+			};
-+
-+			/* wrong number of cells */
-+			testdmac2: test-dma-controller2 {
-+				#dma-cells = <1>;
-+			};
-+
-+			dma-slave-a {
-+				dma = <&testdmac0 42 1>;
-+			};
-+
-+			/* wrong number of values */
-+			dma-slave-b {
-+				dma = <&testdmac1 24>;
-+			};
-+
-+			dma-slave-c {
-+				dma = <&testdmac1 24 2>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/testcases/tests.dtsi b/arch/arm/boot/dts/testcases/tests.dtsi
-index a7c5067..e3afb2b 100644
---- a/arch/arm/boot/dts/testcases/tests.dtsi
-+++ b/arch/arm/boot/dts/testcases/tests.dtsi
-@@ -1 +1,2 @@
- /include/ "tests-phandle.dtsi"
-+/include/ "tests-dma.dtsi"
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index f24ffd7..65789691 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -9,10 +9,12 @@
- #include <linux/errno.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_dma.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/device.h>
-+#include <linux/dmaengine.h>
- 
- static bool selftest_passed = true;
- #define selftest(result, fmt, ...) { \
-@@ -148,6 +150,121 @@ static void __init of_selftest_property_match_string(void)
- 	selftest(rc == -EILSEQ, "unterminated string; rc=%i", rc);
- }
- 
-+
-+static bool selftest_dma_filter_fn(struct dma_chan *chan, void *param)
-+{
-+	return true;
-+}
-+
-+static void __init of_selftest_dma(void)
-+{
-+	struct device_node *dma_controller_np;
-+	struct device_node *dma_slave_np;
-+	struct of_dma_channel_info info;
-+	dma_cap_mask_t mask;
-+	int rc;
-+
-+	pr_info("start\n");
-+	dma_controller_np = of_find_node_by_path(
-+		"/testcase-data/dma-tests/test-dma-controller0");
-+	dma_slave_np = of_find_node_by_path(
-+		"/testcase-data/dma-tests/dma-slave-a");
-+	if (!dma_controller_np || !dma_slave_np) {
-+		pr_err("No testcase data in device tree\n");
-+		return;
-+	}
-+
-+	/* wrong usage: DMA controller not registered yet! */
-+	rc = of_get_dma_channel_info(dma_slave_np, DMA_MEM_TO_DEV, &info);
-+	selftest(rc == -ENODEV,
-+		"selftest DMA slave request expected:-ENODEV got:%i\n", rc);
-+
-+	/* test legacy DMA controller registration with no filter function */
-+	rc = of_dma_controller_register(dma_controller_np, NULL, NULL);
-+	selftest(rc == 0, "selftest DMA controller not found: got:%i\n", rc);
-+
-+	/* wrong usage and error code tests */
-+	rc = of_get_dma_channel_info(dma_slave_np, DMA_MEM_TO_MEM, &info);
-+	selftest(rc == -EINVAL,
-+		"selftest DMA slave request expected:-EINVAL got:%i\n", rc);
-+
-+	rc = of_get_dma_channel_info(dma_slave_np, DMA_MEM_TO_DEV, NULL);
-+	selftest(rc == -EINVAL,
-+		"selftest DMA slave request expected:-EINVAL got:%i\n", rc);
-+
-+	/* proper use of the API */
-+	rc = of_get_dma_channel_info(dma_slave_np, DMA_MEM_TO_DEV, &info);
-+	selftest(rc == 0, "selftest DMA slave request error: got:%i\n", rc);
-+	selftest(info.dma_channel == 42,
-+		"selftest DMA slave request line expected:42 got:%i\n",
-+		info.dma_channel);
-+
-+	of_dma_controller_free(dma_controller_np);
-+
-+	/* wrong usage: DMA controller not registered anymore! */
-+	rc = of_get_dma_channel_info(dma_slave_np, DMA_MEM_TO_DEV, &info);
-+	selftest(rc == -ENODEV,
-+		"selftest DMA slave request expected:-ENODEV got:%i\n", rc);
-+
-+	/* use with a two values DMA request specification */
-+	dma_controller_np = of_find_node_by_path(
-+		"/testcase-data/dma-tests/test-dma-controller1");
-+	dma_slave_np = of_find_node_by_path(
-+		"/testcase-data/dma-tests/dma-slave-b");
-+	if (!dma_controller_np || !dma_slave_np) {
-+		pr_err("No testcase data in device tree\n");
-+		return;
-+	}
-+
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+
-+	/* DMA controller registration using DMA Engine filter function */
-+	rc = of_dma_controller_register(dma_controller_np, &mask,
-+		selftest_dma_filter_fn);
-+	selftest(rc == 0, "selftest DMA controller not found: got:%i\n", rc);
-+
-+	/* wrong number of cells */
-+	rc = of_get_dma_channel_info(dma_slave_np, DMA_MEM_TO_MEM, &info);
-+	selftest(rc == -EINVAL,
-+		"selftest DMA slave request expected:-EINVAL got:%i\n", rc);
-+
-+	dma_slave_np = of_find_node_by_path(
-+		"/testcase-data/dma-tests/dma-slave-c");
-+	if (!dma_slave_np) {
-+		pr_err("No dma-slave-c data in device tree\n");
-+		return;
-+	}
-+
-+	/* proper use of the API */
-+	rc = of_get_dma_channel_info(dma_slave_np, DMA_DEV_TO_MEM, &info);
-+	selftest(rc == 0, "selftest DMA slave request error: got:%i\n", rc);
-+	selftest(info.dma_channel == 24,
-+		"selftest DMA slave request line expected:24 got:%i\n",
-+		info.dma_channel);
-+	selftest(info.dma_filter_func == selftest_dma_filter_fn,
-+		"selftest DMA slave filter function expected:0x%x got:0x%x\n",
-+		(u32)selftest_dma_filter_fn, (u32)info.dma_filter_func);
-+
-+	of_dma_controller_free(dma_controller_np);
-+
-+	/* use with a two values DMA request specification */
-+	dma_controller_np = of_find_node_by_path(
-+		"/testcase-data/dma-tests/test-dma-controller2");
-+	if (!dma_controller_np) {
-+		pr_err("No testcase data in device tree\n");
-+		return;
-+	}
-+
-+	/* wrong number of cells */
-+	rc = of_dma_controller_register(dma_controller_np, NULL,
-+		selftest_dma_filter_fn);
-+	selftest(rc == -EINVAL, "selftest DMA controller not found: got:%i\n",
-+		rc);
-+
-+	pr_info("end - %s\n", selftest_passed ? "PASS" : "FAIL");
-+}
-+
- static int __init of_selftest(void)
- {
- 	struct device_node *np;
-@@ -162,6 +279,7 @@ static int __init of_selftest(void)
- 	pr_info("start of selftest - you will see error messages\n");
- 	of_selftest_parse_phandle_with_args();
- 	of_selftest_property_match_string();
-+	of_selftest_dma();
- 	pr_info("end of selftest - %s\n", selftest_passed ? "PASS" : "FAIL");
- 	return 0;
- }
--- 
-1.7.5.4
+--V0207lvV8h4k8FAm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPnxauAAoJEBus8iNuMP3drg4P/Awh74ZwrF7CTalTNOvomVV0
+MXJeI/OaQLLfuvwgwBgxwXmlDcx2IMfdJHqEG0WVFN+oDjcE/OtBqylQc7RwhJCL
+NoSw9bgmfEqRiDfF8AOG3m4cSzZ5GseyLO4M3l72ipKFym0/n8CbJN0zRM3VdfOE
+b2GZZnNxg/d/L7zU0+qKPSysptc9FFZ36gqdnQQMnRUuPfOUKMLDDczR41WSxXls
+jGD4U8wpN+5gH0MOV6d3DZiUfNqYzpSMlbuRoRdlvULSpGtLH2OEIaw4juygBLXq
+iDQ9aVI9VTGuJJbyRZBbdZRmk3Qrweork0q1WnNyXZydAhqR9MU9e0MYlVeZC7/j
+MXuIroh7plkf7fJg93AczvgSBj4IgtQOBPzfpNYRUuSUXjrX8F5MsWI9yZKRGZi2
+cVgk8oq4QQmrOZwyOcsC6mcNs+WkQAp8xe67FHNo/EwkkZiLxAeErbHl/chIAQTS
+ve8rcX40IZZa4p6ngKY2gp/0Agtdw4kqZRgVMqjT/CTVOpaD5OAxl9ZUOI9IP3fL
+jjUI0QEM84iGEobigaCVT2tzAnpKm1+8LwfBHdLelc7arVWfstzYYJ2U7DPZfRED
+fEtWWGWPe4RpmoEmzWbjEP8zNKlGy+WjI/ZV9w9sn1dY+HqFYoKnBS1A4NDM1aSE
+Rfx4At0DAzeBl3fKfSsx
+=vJsE
+-----END PGP SIGNATURE-----
+
+--V0207lvV8h4k8FAm--
