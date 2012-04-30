@@ -1,31 +1,49 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv3 1/4] ARM: tegra: Add AHB driver
-Date: Mon, 30 Apr 2012 14:47:36 +0000
-Message-ID: <201204301447.36246.arnd@arndb.de>
-References: <1335352072-4001-1-git-send-email-hdoyu@nvidia.com> <20120426215903.GH24211@n2100.arm.linux.org.uk> <20120427084015.cb7c8e00c7d9a4cd01faa5ae@nvidia.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/2] Input: matrix_keymap - wire up device tree support
+Date: Mon, 30 Apr 2012 10:00:42 -0600
+Message-ID: <4F9EB72A.10403@wwwdotorg.org>
+References: <20120426081909.GA2726@core.coreip.homeip.net> <4F99642E.1010305@wwwdotorg.org> <20120430041955.GC1055@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120427084015.cb7c8e00c7d9a4cd01faa5ae-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20120430041955.GC1055@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rakesh Iyer <riyer@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 27 April 2012, Hiroshi Doyu wrote:
-> What about having this driver under "drivers/amba"?
+On 04/29/2012 10:19 PM, Dmitry Torokhov wrote:
+> On Thu, Apr 26, 2012 at 09:05:18AM -0600, Stephen Warren wrote:
+>> On 04/26/2012 02:19 AM, Dmitry Torokhov wrote:
+>>> When platform keymap is not supplied to matrix_keypad_build_keymap()
+>>> and device tree support is enabled, try locating specified property
+>>> and load keymap from it. If property name is not defined, try using
+>>> "linux,keymap".
+>>>
+>>> Based on earlier patch by Viresh Kumar <viresh.kumar@st.com>
+>>
+>> I think this series looks mostly OK. A few comments below.
+>>
+>> We don't actually have the KBC driver hooked up on any boards yet, so I
+>> can't actually test this yet.
+>>
+>> How will the linux,fn-keymap handling work? It looks like this code is
+>> allocating a keymap data structure with one additional row to represent
+>> fn-not-pressed vs. fn-pressed.
 > 
-> If other similiar drivers are coming up, it's easy to find rather than
-> having this arch/arm/mach-*. There may be some possibility of
-> generalization later, then. Also it meets the requirement of no
-> "struct xxxx_driver" under arch/arm. Arnd?
+> No, it loads 2x rows (therefore giving you twice original keymap size).
 
-I'm fine with either drivers/amba (arguing that it's for a specific
-amba bus even if it's highly platform specific) or arch/arm/mach-tegra
-(arguing that it's platform code and not actually a device driver even
-if it appears like one). If Russell doesn't mind having it in
-drivers/amba, I'd say we should go for that.
+Yes, I mean an extra row signal, so therefore twice as many rows.
 
-	Arnd
+>> I assume this will work without issue
+>> even though the second half is not filled in. Won't this allow the
+>> linux,keymap property entries to pass validation "if (row >= rows)" for
+>> one more row than it should?
+> 
+> Maybe... I think we should revisit this when you actually have
+> linux,fn-keymap. Probably will need to export matrix_keypad_parse_
+
+Would it be better to just drop the support for the linux,fn-keymap
+property, until the full support is there? That wouldn't lose any
+functionality, but would avoid this potential error-checking issue.
