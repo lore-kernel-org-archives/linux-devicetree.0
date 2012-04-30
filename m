@@ -1,110 +1,51 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: Re: [PATCH] OF: PCI: const usage needed by MIPS
-Date: Mon, 30 Apr 2012 10:54:36 -0700
-Message-ID: <4F9ED1DC.3050007@gmail.com>
-References: <1335808019-24502-1-git-send-email-blogic@openwrt.org>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [PATCH V3 0/2] of: Add generic device tree DMA helpers
+Date: Mon, 30 Apr 2012 16:16:27 -0500
+Message-ID: <1335820587-28679-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1335808019-24502-1-git-send-email-blogic@openwrt.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: John Crispin <blogic@openwrt.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: device-tree <devicetree-discuss@lists.ozlabs.org>
+Cc: linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 04/30/2012 10:46 AM, John Crispin wrote:
-> On MIPS we want to call of_irq_map_pci from inside
->
-> arch/mips/include/asm/pci.h:extern int pcibios_map_irq(
-> 				const struct pci_dev *dev, u8 slot, u8 pin);
->
-> For this to work we need to change several functions to const usage.
+From: Jon Hunter <jon-hunter@ti.com>
 
-I think there is a mismatch on this throughout the kernel.
+This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [2]
+to add some basic helpers to retrieve a DMA controller device_node and the
+DMA request/channel information.
 
-Properly fixing it requires touching many more places than these. 
-Although I haven't tried it, I wouldn't be surprised if doing this 
-caused warnings to appear in non-MIPS code.
+[1] http://article.gmane.org/gmane.linux.drivers.devicetree/12022
+[2] http://article.gmane.org/gmane.linux.ports.arm.omap/73622
 
-Ralf had a patch at one point that tried to make this consistent 
-tree-wide, but it is not yet applied.
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Benoit Cousson <b-cousson@ti.com>
+Cc: Stephen Warren <swarren@nvidia.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 
-David Daney
+Jon Hunter (2):
+  of: Add generic device tree DMA helpers
+  of: selftest/dma: Add selftest for new DT DMA
 
->
-> Signed-off-by: John Crispin<blogic@openwrt.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-mips@linux-mips.org
-> ---
-> I am not sure which tree this should go via. Grant, can you take it ?
->
->   drivers/of/of_pci_irq.c |    2 +-
->   drivers/pci/pci.c       |    2 +-
->   include/linux/of_pci.h  |    2 +-
->   include/linux/pci.h     |    5 +++--
->   4 files changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
-> index 9312516..6770538 100644
-> --- a/drivers/of/of_pci_irq.c
-> +++ b/drivers/of/of_pci_irq.c
-> @@ -15,7 +15,7 @@
->    * PCI tree until an device-node is found, at which point it will finish
->    * resolving using the OF tree walking.
->    */
-> -int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq)
-> +int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq)
->   {
->   	struct device_node *dn, *ppnode;
->   	struct pci_dev *ppdev;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d20f133..4c79586 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2363,7 +2363,7 @@ void pci_enable_acs(struct pci_dev *dev)
->    * number is always 0 (see the Implementation Note in section 2.2.8.1 of
->    * the PCI Express Base Specification, Revision 2.1)
->    */
-> -u8 pci_swizzle_interrupt_pin(struct pci_dev *dev, u8 pin)
-> +u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin)
->   {
->   	int slot;
->
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index f93e217..bb115de 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -5,7 +5,7 @@
->
->   struct pci_dev;
->   struct of_irq;
-> -int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
-> +int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
->
->   struct device_node;
->   struct device_node *of_pci_find_child_device(struct device_node *parent,
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index e444f5b..3bbc77e 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -680,7 +680,7 @@ int __must_check pci_bus_add_device(struct pci_dev *dev);
->   void pci_read_bridge_bases(struct pci_bus *child);
->   struct resource *pci_find_parent_resource(const struct pci_dev *dev,
->   					  struct resource *res);
-> -u8 pci_swizzle_interrupt_pin(struct pci_dev *dev, u8 pin);
-> +u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin);
->   int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
->   u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
->   extern struct pci_dev *pci_dev_get(struct pci_dev *dev);
-> @@ -1685,7 +1685,8 @@ extern void pci_release_bus_of_node(struct pci_bus *bus);
->   /* Arch may override this (weak) */
->   extern struct device_node * __weak pcibios_get_phb_of_node(struct pci_bus *bus);
->
-> -static inline struct device_node *pci_device_to_OF_node(struct pci_dev *pdev)
-> +static inline struct device_node *
-> +pci_device_to_OF_node(const struct pci_dev *pdev)
->   {
->   	return pdev ? pdev->dev.of_node : NULL;
->   }
+ Documentation/devicetree/bindings/dma/dma.txt |   47 ++++++
+ arch/arm/boot/dts/at91sam9m10g45ek.dts        |    2 +
+ arch/arm/boot/dts/omap4-panda.dts             |    2 +
+ arch/arm/boot/dts/testcases/tests-dma.dtsi    |   32 ++++
+ arch/arm/boot/dts/testcases/tests.dtsi        |    1 +
+ drivers/of/Makefile                           |    2 +-
+ drivers/of/dma.c                              |  203 +++++++++++++++++++++++++
+ drivers/of/selftest.c                         |  118 ++++++++++++++
+ include/linux/of_dma.h                        |   35 +++++
+ 9 files changed, 441 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/dma.txt
+ create mode 100644 arch/arm/boot/dts/testcases/tests-dma.dtsi
+ create mode 100644 drivers/of/dma.c
+ create mode 100644 include/linux/of_dma.h
+
+-- 
+1.7.5.4
+
