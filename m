@@ -1,31 +1,72 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v8 0/5] USB: LPC32xx device tree related OHCI and UDC
- patch series
-Date: Tue, 1 May 2012 13:37:11 -0400
-Message-ID: <20120501173711.GA11231@kroah.com>
-References: <1335710826-6684-1-git-send-email-stigge@antcom.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1335710826-6684-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Omar Ramirez Luna <omar.luna@linaro.org>
+Subject: [PATCH 2/2] arm/dts: OMAP2+: Add mailbox nodes
+Date: Tue,  1 May 2012 12:47:40 -0500
+Message-ID: <1335894460-19941-3-git-send-email-omar.luna@linaro.org>
+References: <1335894460-19941-1-git-send-email-omar.luna@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1335894460-19941-1-git-send-email-omar.luna@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Omar Ramirez Luna <omar.luna@linaro.org>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, patches@linaro.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 29, 2012 at 04:47:01PM +0200, Roland Stigge wrote:
-> This series collects the pending LPC32xx patches in one series and forward
-> ports it onto
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-next
-> 
-> There are no other changes since last post.
+Add nodes for mailbox DT, to interface with hwmods.
 
-All applied, thanks for your persistance.
+Signed-off-by: Omar Ramirez Luna <omar.luna@linaro.org>
+---
+ arch/arm/boot/dts/omap2.dtsi |    5 +++++
+ arch/arm/boot/dts/omap3.dtsi |    5 +++++
+ arch/arm/boot/dts/omap4.dtsi |    5 +++++
+ 3 files changed, 15 insertions(+), 0 deletions(-)
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
+index f2ab4ea..2175cc3 100644
+--- a/arch/arm/boot/dts/omap2.dtsi
++++ b/arch/arm/boot/dts/omap2.dtsi
+@@ -46,6 +46,11 @@
+ 			#interrupt-cells = <1>;
+ 		};
+ 
++		mailbox: mailbox@48094000 {
++			compatible = "ti,omap2-mailbox";
++			ti,hwmods = "mailbox";
++		};
++
+ 		uart1: serial@4806a000 {
+ 			compatible = "ti,omap2-uart";
+ 			ti,hwmods = "uart1";
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index c612135..540f6d6 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -69,6 +69,11 @@
+ 			reg = <0x48200000 0x1000>;
+ 		};
+ 
++		mailbox: mailbox@48094000 {
++			compatible = "ti,omap3-mailbox";
++			ti,hwmods = "mailbox";
++		};
++
+ 		uart1: serial@4806a000 {
+ 			compatible = "ti,omap3-uart";
+ 			ti,hwmods = "uart1";
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 3d35559..84f27dd 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -104,6 +104,11 @@
+ 			      <0x48240100 0x0100>;
+ 		};
+ 
++		mailbox: mailbox@4a0f4000 {
++			compatible = "ti,omap4-mailbox";
++			ti,hwmods = "mailbox";
++		};
++
+ 		uart1: serial@4806a000 {
+ 			compatible = "ti,omap4-uart";
+ 			ti,hwmods = "uart1";
+-- 
+1.7.4.1
+
