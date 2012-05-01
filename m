@@ -1,30 +1,41 @@
-From: Omar Ramirez Luna <omar.luna@linaro.org>
-Subject: [PATCH 0/2] OMAP: mailbox initial device tree support
-Date: Tue,  1 May 2012 12:47:38 -0500
-Message-ID: <1335894460-19941-1-git-send-email-omar.luna@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Omar Ramirez Luna <omar.luna@linaro.org>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, patches@linaro.org, linaro-dev@lists.linaro.org
+From: Mike Turquette <mturquette@ti.com>
+Subject: Re: [PATCH 3/4] clk: add DT clock binding support
+Date: Tue, 1 May 2012 15:59:00 -0700
+Message-ID: <20120501225900.GC17311@gmail.com>
+References: <1334003101-17274-1-git-send-email-robherring2@gmail.com>
+ <1334003101-17274-4-git-send-email-robherring2@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1334003101-17274-4-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Mike Turquette <mturquette@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, shawn.guo@linaro.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-To allow mailbox driver to function with device tree.
+On 20120409-15:25, Rob Herring wrote:
+> From: Grant Likely <grant.likely@secretlab.ca>
+snip
+> ---
+>  .../devicetree/bindings/clock/clock-bindings.txt   |  117 ++++++++++++++++
+>  .../devicetree/bindings/clock/fixed-clock.txt      |   22 +++
+>  drivers/clk/clk.c                                  |  140 ++++++++++++++++++++
+>  drivers/clk/clkdev.c                               |   77 +++++++++++
+>  include/linux/clk-provider.h                       |   14 ++
+>  include/linux/clk.h                                |   19 +++
+>  6 files changed, 389 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/clock-bindings.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/fixed-clock.txt
 
-Tested in OMAP4 and OMAP3. OMAP2 untested.
+Hi Rob,
 
-Omar Ramirez Luna (2):
-  OMAP: mailbox: add device tree support
-  arm/dts: OMAP2+: Add mailbox nodes
+Patches 1 & 2 are trivial and certainly aimed at clk-next, so I've taken
+them in.  This patch is a bit more difficult as it touches the common
+clk code, clkdev/clk.h and some DT docs.
 
- .../devicetree/bindings/arm/omap/mailbox.txt       |    9 +++++++++
- arch/arm/boot/dts/omap2.dtsi                       |    5 +++++
- arch/arm/boot/dts/omap3.dtsi                       |    5 +++++
- arch/arm/boot/dts/omap4.dtsi                       |    5 +++++
- arch/arm/mach-omap2/devices.c                      |    3 +++
- arch/arm/mach-omap2/mailbox.c                      |   12 ++++++++++++
- 6 files changed, 39 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/omap/mailbox.txt
+Are you looking for me to take this patch into clk-next?  I'm just
+trying to avoid any more clk dependency issues than we already have...
 
--- 
-1.7.4.1
-
+Thanks,
+Mike
