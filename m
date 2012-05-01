@@ -1,37 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 1/1] dt: add of_get_child_count helper function
-Date: Wed, 2 May 2012 01:05:16 +0200
-Message-ID: <CACRpkdbgZA5p0YWZDjDxGfX-TQS+NHa1WcwCL0jnjDp-QW_hdg@mail.gmail.com>
-References: <20120427032831.GE26070@shlinux2.ap.freescale.net>
-	<1335497780-1164-1-git-send-email-b29396@freescale.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] pinctrl: pinctrl-imx: add imx pinctrl core driver
+Date: Wed, 2 May 2012 01:07:20 +0200
+Message-ID: <CACRpkdZce7fZ=3cWLwWXzJ30P_LoLYKXdU411zr38RNkQs0+wA@mail.gmail.com>
+References: <1335529578-14507-1-git-send-email-b29396@freescale.com>
+ <1335529578-14507-2-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1335497780-1164-1-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, cjb@laptop.org, b20223@freescale.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1335529578-14507-2-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2012 at 5:36 AM, Dong Aisheng <b29396@freescale.com> wrote:
+On Fri, Apr 27, 2012 at 2:26 PM, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-> From: Dong Aisheng <dong.aisheng@linaro.org>
+> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >
-> Currently most code to get child count in kernel are almost same,
-> add a helper to implement this function for dt to use.
+> The driver has mux and config support while the gpio is still
+> not supported.
+> For select input setting, the driver will handle it internally
+> and do not need user to take care of it.
 >
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Acked-by: Rob Herring <rob.herring@calxeda.com>
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> The pinctrl-imx core driver will parse the dts file and dynamically
+> create the pinmux functions and groups.
 >
-> ---
-> Rob missed this patch for 3.4 kernel.
-> Based on Rob's suggestion, we can get it go in with pinctrl driver.
-> Since Rob once had applied it, i added Rob's ack.
-> See:
-> https://lkml.org/lkml/2012/4/14/239
+> Each IMX SoC pinctrl driver should register pins with a pin register map
+> including mux register and config register and select input map to core
+> for proper operations.
+>
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-OK I've applied this to the pinctrl tree with Stephens ACK.
+Thanks, applied.
 
 Yours,
 Linus Walleij
