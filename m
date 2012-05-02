@@ -1,52 +1,131 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] maintainership update for the Marvell Orion family of SOCs
-Date: Wed, 2 May 2012 13:05:17 +0000
-Message-ID: <201205021305.18248.arnd@arndb.de>
-References: <alpine.LFD.2.02.1204301330111.21030@xanadu.home>
- <201204302217.35958.arnd@arndb.de> <20120501084829.GF15541@lunn.ch>
+From: Josh Boyer <jwboyer@gmail.com>
+Subject: Re: [V2 5/5] powerpc: kernel: 16650 UART reg-shift support
+Date: Wed, 2 May 2012 09:38:14 -0400
+Message-ID: <CA+5PVA4sjX_Dk6ecySG4ZZoM=xhaWu2jGrQ=LtFgxGL88G=-Nw@mail.gmail.com>
+References: <1333956052-25319-1-git-send-email-tinamdar@apm.com>
+	<1333956052-25319-2-git-send-email-tinamdar@apm.com>
+	<1333956052-25319-3-git-send-email-tinamdar@apm.com>
+	<1333956052-25319-4-git-send-email-tinamdar@apm.com>
+	<1333956052-25319-5-git-send-email-tinamdar@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120501084829.GF15541-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Arnaud Patard <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1333956052-25319-5-git-send-email-tinamdar@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: benh@kernel.crashing.org, grant.likely@secretlab.ca, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 01 May 2012, Andrew Lunn wrote:
-> > Well, there is no reason to rush this at all, it could live in parallel
-> > for a couple of years. But at one point we can decide that if nobody has
-> > bothered to write the .dts file for one board and tested it that nobody
-> > cares about that board any more and it can just get removed and possibly
-> > added back in dts form when someone does complain.
-> 
-> Probably a FAQ, but maybe somebody can point me in the right
-> direction. How will Debian, Ubuntu, etc, deal with old machines who's
-> u-boot does not support DT, yet the kernel has moved on and only has
-> DT support for a board? Will the kernel install process need to
-> determine what board the machine is and append the DT to the end of
-> the kernel?
+On Mon, Apr 9, 2012 at 3:20 AM, Tanmay Inamdar <tinamdar@apm.com> wrote=
+:
+> In APM8018X SOC, UART register address space has been relocated to 32=
+-bit
+> data boundaries for APB bus implementation.
+> Current legacy_serial driver ignores the reg-shift property. This pat=
+ch
+> modifies legacy_serial.c and udbg_16550.c to work with above mentione=
+d UARTs.
+>
+> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
+> ---
+> :100644 100644 8338aef... f5fc106... M =A0arch/powerpc/include/asm/ud=
+bg.h
+> :100644 100644 bedd12e... d523b7d... M =A0arch/powerpc/kernel/legacy_=
+serial.c
+> :100644 100644 6837f83... e0cb7dc... M =A0arch/powerpc/kernel/udbg_16=
+550.c
+> =A0arch/powerpc/include/asm/udbg.h =A0 =A0 | =A0 =A02 +-
+> =A0arch/powerpc/kernel/legacy_serial.c | =A0 16 +++++---
+> =A0arch/powerpc/kernel/udbg_16550.c =A0 =A0| =A0 64 +++++++++++++++++=
++++++------------
+> =A03 files changed, 52 insertions(+), 30 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/udbg.h b/arch/powerpc/include/a=
+sm/udbg.h
+> index 8338aef..f5fc106 100644
+> --- a/arch/powerpc/include/asm/udbg.h
+> +++ b/arch/powerpc/include/asm/udbg.h
+> @@ -29,7 +29,7 @@ extern void udbg_printf(const char *fmt, ...)
+> =A0extern void udbg_progress(char *s, unsigned short hex);
+>
+> =A0extern void udbg_init_uart(void __iomem *comport, unsigned int spe=
+ed,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned int clo=
+ck);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned int clo=
+ck, =A0unsigned int regshift);
+> =A0extern unsigned int udbg_probe_uart_speed(void __iomem *comport,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0unsigned int clock);
+>
+> diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kerne=
+l/legacy_serial.c
+> index bedd12e..d523b7d 100644
+> --- a/arch/powerpc/kernel/legacy_serial.c
+> +++ b/arch/powerpc/kernel/legacy_serial.c
+> @@ -33,6 +33,7 @@ static struct legacy_serial_info {
+> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0cl=
+ock;
+> =A0 =A0 =A0 =A0int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 irq_check_parent;
+> =A0 =A0 =A0 =A0phys_addr_t =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ta=
+ddr;
+> + =A0 =A0 =A0 unsigned int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg=
+shift;
+> =A0} legacy_serial_infos[MAX_LEGACY_SERIAL_PORTS];
+>
+> =A0static struct __initdata of_device_id legacy_serial_parents[] =3D =
+{
+> @@ -42,6 +43,7 @@ static struct __initdata of_device_id legacy_serial=
+_parents[] =3D {
+> =A0 =A0 =A0 =A0{.compatible =3D "ibm,opb",},
+> =A0 =A0 =A0 =A0{.compatible =3D "simple-bus",},
+> =A0 =A0 =A0 =A0{.compatible =3D "wrs,epld-localbus",},
+> + =A0 =A0 =A0 {.compatible =3D "apm,apb",},
+> =A0 =A0 =A0 =A0{},
+> =A0};
+>
+> @@ -163,11 +165,6 @@ static int __init add_legacy_soc_port(struct dev=
+ice_node *np,
+> =A0 =A0 =A0 =A0if (of_get_property(np, "clock-frequency", NULL) =3D=3D=
+ NULL)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -1;
+>
+> - =A0 =A0 =A0 /* if reg-shift or offset, don't try to use it */
+> - =A0 =A0 =A0 if ((of_get_property(np, "reg-shift", NULL) !=3D NULL) =
+||
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 (of_get_property(np, "reg-offset", NULL=
+) !=3D NULL))
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+> -
 
-I think that is the most likely scenario. Another option would be
-to provide a replacement or second-stage boot loader that actually
-understands DT and that gets loaded instead of the kernel by the
-first-stage boot loader.
+So we explicitly didn't support reg-shift before.  I'm guessing there i=
+s
+a reason for that, but I don't recall what.  Ben?
 
-> Or do we envisage a process where all DT are appended to
-> the kernel, and the machine ID, as passed by the old uboot, is used to
-> pick the correct DT?
+Also, why do you need to use the legacy serial driver at all for this
+SOC?  As far as I remember, the OF serial driver should be sufficient.
 
-This has been discussed in the past, but IIRC we decided against putting
-that logic into the kernel. Folks on devicetree-discuss@l.o.o might remember
-the details better than me.
+> +static unsigned int reg_shift;
+> +#define ns16550_offset(addr) (addr - (unsigned char *)udbg_comport)
+> +
+> =A0static struct NS16550 __iomem *udbg_comport;
+>
+> +static inline u8 serial_read(unsigned char *addr)
+> +{
+> + =A0 =A0 =A0 u32 offset =3D ns16550_offset(addr) << reg_shift;
+> + =A0 =A0 =A0 return readb(udbg_comport + offset);
+> +}
+> +
+> +static inline void serial_write(unsigned char *addr, char val)
+> +{
+> + =A0 =A0 =A0 u32 offset =3D ns16550_offset(addr) << reg_shift;
+> + =A0 =A0 =A0 writeb(val, udbg_comport + offset);
+> +}
+> +
 
-	Arnd
+I don't think readb/writeb are correct here.  Why did you switch to
+using those instead of sticking with in_8/out_8?
+
+josh
