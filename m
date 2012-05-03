@@ -1,83 +1,49 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 2/3] MFD: twl6040: Allocate IRQ numbers dynamically
-Date: Thu,  3 May 2012 15:54:24 +0300
-Message-ID: <1336049665-27777-3-git-send-email-peter.ujfalusi@ti.com>
-References: <1336049665-27777-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1336049665-27777-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/3] MFD: twl6040: Device tree support
+Date: Thu,  3 May 2012 15:54:22 +0300
+Message-ID: <1336049665-27777-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Misael Lopez Cruz <misael.lopez-l0cyMroinI0@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use irq_alloc_descs() to get the IRQ number range dynamically instead of
-the hardwired use if pdata->irq_base.
+Hello,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+The following series adds device tree support for the twl6040 MFD core driver.
+Support for the child drivers (vibra, ASoC codec) will be submitted via the
+corresponding subsystem since there is no compile time dependency between them.
+
+The first patch is a minor clean up patch to remove wrapped lines in the
+twl6040-irq.c. The resulting code is more natural to read to me.
+
+The series depends on the regulator support patch for the twl6040:
+http://marc.info/?l=linux-kernel&m=133596703610515&w=2
+
+Regards,
+Peter
 ---
- drivers/mfd/twl6040-core.c |    3 +--
- drivers/mfd/twl6040-irq.c  |   13 +++++++++++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
+Peter Ujfalusi (3):
+  MFD: twl6040: Code cleanup in interrupt initialization part
+  MFD: twl6040: Allocate IRQ numbers dynamically
+  MFD: twl6040: Support for DT
 
-diff --git a/drivers/mfd/twl6040-core.c b/drivers/mfd/twl6040-core.c
-index 7a92d95..c50fba7 100644
---- a/drivers/mfd/twl6040-core.c
-+++ b/drivers/mfd/twl6040-core.c
-@@ -515,7 +515,7 @@ static int __devinit twl6040_probe(struct i2c_client *client,
- 	}
- 
- 	/* In order to operate correctly we need valid interrupt config */
--	if (!client->irq || !pdata->irq_base) {
-+	if (!client->irq) {
- 		dev_err(&client->dev, "Invalid IRQ configuration\n");
- 		return -EINVAL;
- 	}
-@@ -552,7 +552,6 @@ static int __devinit twl6040_probe(struct i2c_client *client,
- 
- 	twl6040->dev = &client->dev;
- 	twl6040->irq = client->irq;
--	twl6040->irq_base = pdata->irq_base;
- 
- 	mutex_init(&twl6040->mutex);
- 	mutex_init(&twl6040->io_mutex);
-diff --git a/drivers/mfd/twl6040-irq.c b/drivers/mfd/twl6040-irq.c
-index 008022c..914978e 100644
---- a/drivers/mfd/twl6040-irq.c
-+++ b/drivers/mfd/twl6040-irq.c
-@@ -23,6 +23,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/err.h>
- #include <linux/irq.h>
- #include <linux/interrupt.h>
- #include <linux/mfd/core.h>
-@@ -138,7 +139,7 @@ static irqreturn_t twl6040_irq_thread(int irq, void *data)
- 
- int twl6040_irq_init(struct twl6040 *twl6040)
- {
--	int i, nr_irqs, ret;
-+	int i, nr_irqs, irq_base, ret;
- 	u8 val;
- 
- 	mutex_init(&twl6040->irq_mutex);
-@@ -149,8 +150,16 @@ int twl6040_irq_init(struct twl6040 *twl6040)
- 	twl6040_reg_write(twl6040, TWL6040_REG_INTMR, TWL6040_ALLINT_MSK);
- 
- 	nr_irqs = ARRAY_SIZE(twl6040_irqs);
-+
-+	irq_base = irq_alloc_descs(-1, 0, nr_irqs, 0);
-+	if (IS_ERR_VALUE(irq_base)) {
-+		dev_err(twl6040->dev, "Fail to allocate IRQ descs\n");
-+		return irq_base;
-+	}
-+	twl6040->irq_base = irq_base;
-+
- 	/* Register them with genirq */
--	for (i = twl6040->irq_base; i < twl6040->irq_base + nr_irqs; i++) {
-+	for (i = irq_base; i < irq_base + nr_irqs; i++) {
- 		irq_set_chip_data(i, twl6040);
- 		irq_set_chip_and_handler(i, &twl6040_irq_chip,
- 					 handle_level_irq);
+ Documentation/devicetree/bindings/mfd/twl6040.txt |   51 +++++++++++++++++++++
+ drivers/mfd/twl6040-core.c                        |   26 +++++++---
+ drivers/mfd/twl6040-irq.c                         |   32 +++++++++----
+ 3 files changed, 92 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/twl6040.txt
+
 -- 
 1.7.8.6
