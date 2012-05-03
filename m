@@ -1,7 +1,7 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [PATCHv3 1/4] ARM: tegra: Add Tegra AHB driver
-Date: Thu, 03 May 2012 11:41:35 -0600
-Message-ID: <4FA2C34F.5060406@wwwdotorg.org>
+Date: Thu, 03 May 2012 11:59:33 -0600
+Message-ID: <4FA2C785.2080703@wwwdotorg.org>
 References: <1336061147-10245-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
@@ -26,26 +26,6 @@ On 05/03/2012 10:05 AM, Hiroshi DOYU wrote:
 > 
 > Some of configuration param could be passed from DT too.
 
-> diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
-> +static u32 tegra_ahb_gizmo[] = {
-
-const?
-
-> +static int __init tegra_ahb_module_init(void)
-> +{
-> +	return platform_driver_register(&tegra_ahb_driver);
-> +}
-> +postcore_initcall(tegra_ahb_module_init);
-
-Can this be a module_init() instead of postcore_initcall()?
-
-> +
-> +static void __exit tegra_ahb_module_exit(void)
-> +{
-> +	platform_driver_unregister(&tegra_ahb_driver);
-> +}
-> +module_exit(tegra_ahb_module_exit);
-
-If so, all of the previous two quoted chunks can be replaced with just:
-
-module_platform_driver(tegra_ahb_module_init);
+This patch should add
+Documentation/devicetree/bindings/arm/tegra/tegra20-ahb.txt to describe
+the DT binding.
