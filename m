@@ -1,68 +1,74 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH v2 1/5] i2c: Convert i2c-octeon.c to use device tree.
-Date: Thu, 3 May 2012 13:26:23 +0200
-Message-ID: <20120503112623.GF9574@pengutronix.de>
-References: <1335489630-27017-1-git-send-email-ddaney.cavm@gmail.com>
- <1335489630-27017-2-git-send-email-ddaney.cavm@gmail.com>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V3] i2c: Add generic I2C multiplexer using pinctrl API
+Date: Thu, 3 May 2012 14:24:17 +0200
+Message-ID: <20120503122417.GH9574@pengutronix.de>
+References: <1335893011-24231-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p8PhoBjPxaQXD0vg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="rCwQ2Y43eQY6RBgR"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1335489630-27017-2-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, "Jean Delvare (PC drivers, core)" <khali@linux-fr.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, linux-i2c@vger.kernel.org
+In-Reply-To: <1335893011-24231-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---p8PhoBjPxaQXD0vg
+--rCwQ2Y43eQY6RBgR
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 26, 2012 at 06:20:26PM -0700, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
+On Tue, May 01, 2012 at 11:23:31AM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >=20
-> There are three parts to this:
+> This is useful for SoCs whose I2C module's signals can be routed to
+> different sets of pins at run-time, using the pinctrl API.
 >=20
-> 1) Remove the definitions of OCTEON_IRQ_TWSI and OCTEON_IRQ_TWSI2.
->    The interrupts are specified by the device tree and these hard
->    coded irq numbers block the used of the irq lines by the irq_domain
->    code.
+>                                  +-----+  +-----+
+>                                  | dev |  | dev |
+>     +------------------------+   +-----+  +-----+
+>     | SoC                    |      |        |
+>     |                   /----|------+--------+
+>     |   +---+   +------+     | child bus A, on first set of pins
+>     |   |I2C|---|Pinmux|     |
+>     |   +---+   +------+     | child bus B, on second set of pins
+>     |                   \----|------+--------+--------+
+>     |                        |      |        |        |
+>     +------------------------+  +-----+  +-----+  +-----+
+>                                 | dev |  | dev |  | dev |
+>                                 +-----+  +-----+  +-----+
 >=20
-> 2) Remove platform device setup code from octeon-platform.c, it is
->    now unused.
->=20
-> 3) Convert i2c-octeon.c to use device tree.  Part of this includes
->    using the devm_* functions instead of the raw counterparts, thus
->    simplifying error handling.  No functionality is changed.
->=20
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> Acked-by: Rob Herring <rob.herring@calxeda.com>
-> Cc: "Jean Delvare (PC drivers, core)" <khali@linux-fr.org>
-> Cc: "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>
-> Cc: "Wolfram Sang (embedded platforms)" <w.sang@pengutronix.de>
-> Cc: linux-i2c@vger.kernel.org
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> v3: Renamed pinctrl-i2cmux.c to i2c-mux-pinctrl.c to match recent changes
+>     to other I2C mux files.
 
-I2C changes look okay. I'd think this goes in via MIPS-tree?
+Thanks for doing the rename already. While I think I could follow your
+argument regarding the compatible-binding, I'd still like to have an ack
+=66rom one of the device tree maintainers. The bindings are non-trivial
+and I am missing the insight to judge them.
 
-Acked-by: Wolfram Sang <w.sang@pengutronix.de>
+Thanks,
+
+   Wolfram
 
 --=20
 Pengutronix e.K.                           | Wolfram Sang                |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
---p8PhoBjPxaQXD0vg
+--rCwQ2Y43eQY6RBgR
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iEYEARECAAYFAk+ia18ACgkQD27XaX1/VRvy0QCgw45MhoPCDZwSKlGvSSUYtFT4
-KqgAn0dIv9IJZIyeWi2K8dXNg2coKDbO
-=pvhr
+iEYEARECAAYFAk+iePEACgkQD27XaX1/VRsAnACggpomVUolsSLM78Htvfr0GK8N
+1ncAmgMdj0GCjXoGIoaiUmGMdz5BCRfX
+=7eDD
 -----END PGP SIGNATURE-----
 
---p8PhoBjPxaQXD0vg--
+--rCwQ2Y43eQY6RBgR--
