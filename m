@@ -1,47 +1,68 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] I2C: xiic: Add OF binding support
-Date: Thu, 3 May 2012 13:10:27 +0200
-Message-ID: <20120503111027.GD9574@pengutronix.de>
-References: <1335361733-24441-1-git-send-email-lars@metafoo.de>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH v2 1/5] i2c: Convert i2c-octeon.c to use device tree.
+Date: Thu, 3 May 2012 13:26:23 +0200
+Message-ID: <20120503112623.GF9574@pengutronix.de>
+References: <1335489630-27017-1-git-send-email-ddaney.cavm@gmail.com>
+ <1335489630-27017-2-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2Z2K0IlrPCVsbNpk"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="p8PhoBjPxaQXD0vg"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1335361733-24441-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <1335489630-27017-2-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, "Jean Delvare (PC drivers, core)" <khali@linux-fr.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---2Z2K0IlrPCVsbNpk
+--p8PhoBjPxaQXD0vg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 25, 2012 at 03:48:53PM +0200, Lars-Peter Clausen wrote:
-> Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+On Thu, Apr 26, 2012 at 06:20:26PM -0700, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+>=20
+> There are three parts to this:
+>=20
+> 1) Remove the definitions of OCTEON_IRQ_TWSI and OCTEON_IRQ_TWSI2.
+>    The interrupts are specified by the device tree and these hard
+>    coded irq numbers block the used of the irq lines by the irq_domain
+>    code.
+>=20
+> 2) Remove platform device setup code from octeon-platform.c, it is
+>    now unused.
+>=20
+> 3) Convert i2c-octeon.c to use device tree.  Part of this includes
+>    using the devm_* functions instead of the raw counterparts, thus
+>    simplifying error handling.  No functionality is changed.
+>=20
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
+> Cc: "Jean Delvare (PC drivers, core)" <khali@linux-fr.org>
+> Cc: "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>
+> Cc: "Wolfram Sang (embedded platforms)" <w.sang@pengutronix.de>
+> Cc: linux-i2c@vger.kernel.org
 
-Applied to next, thanks.
+I2C changes look okay. I'd think this goes in via MIPS-tree?
 
-How are your experiences with the driver? Does it still need
-EXPERIMENTAL?
+Acked-by: Wolfram Sang <w.sang@pengutronix.de>
 
 --=20
 Pengutronix e.K.                           | Wolfram Sang                |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
---2Z2K0IlrPCVsbNpk
+--p8PhoBjPxaQXD0vg
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iEYEARECAAYFAk+iZ6MACgkQD27XaX1/VRtTbgCfVHxKgi4FzHLzPNnxvrJ1y6yG
-IGgAoKiVHaLmvppz0D3MkV4qsxilN2S5
-=/is/
+iEYEARECAAYFAk+ia18ACgkQD27XaX1/VRvy0QCgw45MhoPCDZwSKlGvSSUYtFT4
+KqgAn0dIv9IJZIyeWi2K8dXNg2coKDbO
+=pvhr
 -----END PGP SIGNATURE-----
 
---2Z2K0IlrPCVsbNpk--
+--p8PhoBjPxaQXD0vg--
