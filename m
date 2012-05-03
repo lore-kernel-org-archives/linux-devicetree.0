@@ -1,15 +1,16 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 4 May 2012 00:25:06 +0100
-Message-ID: <20120503232506.GA4181@n2100.arm.linux.org.uk>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
- <4FA30604.1030401@wwwdotorg.org>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 1/2] regulator: Add generic DT parsing for regulators
+Date: Thu, 3 May 2012 16:29:42 -0700
+Message-ID: <2C89F4165782854891CDE0F3198B753C14F5473BA2@HQMAIL01.nvidia.com>
+References: <1335451941-26333-1-git-send-email-thierry.reding@avionic-design.de>
+ <20120427180124.GQ18260@opensource.wolfsonmicro.com>,
+ <4F9AE7C2.6010306@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4FA30604.1030401-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <4F9AE7C2.6010306-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,62 +20,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 03, 2012 at 04:26:12PM -0600, Stephen Warren wrote:
-> On 04/30/2012 03:17 PM, Jon Hunter wrote:
-> > +Example:
-> > +
-> > +	sdma: dmaengine@48000000 {
-> > +		compatible = "ti,omap4-sdma"
-> > +		reg = <0x48000000 0x1000>;
-> > +		interrupts = <4>;
-> > +		#dma-cells = <2>;
-> > +		#dma-channels = <32>;
-> > +		#dma-requests = <127>;
-> > +	};
-> > +
-> > +
-> > +* DMA client
-> > +
-> > +Client drivers should specify the DMA property using a phandle to the controller
-> > +followed by the number of DMA request/channel and the transfer type of the
-> 
-> What exactly is "request/channel"? Is it a request ID, a channel ID,
-> both packed into a single integer (which bits are used for each field),
-> etc.?
+On 04/27/2012 11:38 AM, Stephen Warren wrote:
+>On 04/27/2012 12:01 PM, Mark Brown wrote:
+>> On Thu, Apr 26, 2012 at 04:52:20PM +0200, Thierry Reding wrote:
+>>> Looking up init data for regulators found on chips is a common operation
+>>> that can be handled in a generic way. The new helper function introduced
+>>> by this patch looks up the children of a given node by names specified
+>>> in a match table and fills that match table with information parsed from
+>>> the DT.
+>>>
+>>> This is based on work by Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
+>>
+>> Rhyland, does this new interface work for you?
+>
+>I believe Rhyland is OOTO for the latter part of this week and perhaps
+>some of next week too. (and he wasn't CC'd; I just added him)
 
-Agreed - because with this definition, applied to the PL08x found on
-Versatile platforms, it will be impossible to describe the DMA bindings
-due to intervening MUX hardware.
+Sorry for the delay.... Yes I think this patch looks like it will work for my purposes 
+as well. 
 
-> > +channel (eg. device-to-memory, memory-to-device, memory-to-memory, etc). Drivers
-> > +should use the DMA Engine enum dma_transfer_direction (eg. DMA_DEV_TO_MEM,
-> > +DMA_MEM_TO_DEV, etc) for specifying the transfer type.
-> 
-> The binding document should stand alone; you shouldn't need to go look
-> up values in any particular OS/driver's source code. In other words,
-> this should explicitly enumerate the values for DMA_DEV_TO_MEM etc.
-> here. That said, I'm not sure it's appropriate to mandate that every DMA
-> controller's DMA specifier actually include this information in DT (a
-> controller might only support DEV_TO_MEM for example, and hence not need
-> this information in DT at all).
-> 
-> The DMA client's binding should specify how many entries it needs in the
-> dma property and what they mean, e.g. it should know that dma property
-> index 0 is the TX DMA specifier, and index 1 is the RX specifier.
-
-(Mostly to Jon)
-
-Also bear in mind that as far as DMA engine is concerned, every channel
-is _potentially_ bidirectional without it having to be released and
-reacquired.  We have some drivers setup to behave like that too.  So
-stuffing stuff like the transfer type into the selection adds
-restrictions.
-
-On platforms where the DMA transfer type does matter (such as OMAP),
-that's normally because one DMA request signal is associated with a
-particular DMA direction.  That makes it a property of the DMA request
-signal, not of the requested channel.
+-Rhyland
+-----------------------------------------------------------------------------------
+This email message is for the sole use of the intended recipient(s) and may contain
+confidential information.  Any unauthorized review, use, disclosure or distribution
+is prohibited.  If you are not the intended recipient, please contact the sender by
+reply email and destroy all copies of the original message.
+-----------------------------------------------------------------------------------
