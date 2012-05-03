@@ -1,171 +1,178 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC v2 5/5] drm: Add NVIDIA Tegra support
-Date: Thu, 03 May 2012 15:22:10 -0600
-Message-ID: <4FA2F702.6040701@wwwdotorg.org>
-References: <1335347102-14905-1-git-send-email-thierry.reding@avionic-design.de> <1335347102-14905-6-git-send-email-thierry.reding@avionic-design.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Thu, 03 May 2012 16:26:12 -0600
+Message-ID: <4FA30604.1030401@wwwdotorg.org>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1335347102-14905-6-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/2012 03:45 AM, Thierry Reding wrote:
-> This commit adds a very basic DRM driver for NVIDIA Tegra SoCs. It
-> currently has rudimentary GEM support and can run a console on the
-> framebuffer as well as X using the xf86-video-modesetting driver. Only
-> the RGB output is supported.
+On 04/30/2012 03:17 PM, Jon Hunter wrote:
+> From: Jon Hunter <jon-hunter@ti.com>
 > 
-> HDMI support was taken from NVIDIA's Linux kernel tree but it doesn't
-> quite work. EDID data can be retrieved but the output doesn't properly
-> activate the connected TV.
-> 
-> The DSI and TVO outputs and the HOST1X driver are just stubs that setup
-> the corresponding resources but don't do anything useful yet.
+> This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [2]
+> to add some basic helpers to retrieve a DMA controller device_node and the
+> DMA request/channel information.
 
-I'm mainly going to comment on the device tree bindings here; hopefully
-Jon and Terje can chime in on the code itself.
+I'll reply to the binding documentation first; perhaps that'll set the
+scene for my questions better.
 
-> diff --git a/Documentation/devicetree/bindings/gpu/drm/tegra.txt b/Documentation/devicetree/bindings/gpu/drm/tegra.txt
+> +++ b/Documentation/devicetree/bindings/dma/dma.txt
+> +* Generic DMA Controller and DMA request bindings
+> +
+> +Generic binding to provide a way for a driver using DMA Engine to retrieve the
+> +DMA request or channel information that goes from a hardware device to a DMA
+> +controller.
+> +
+> +
+> +* DMA controller
+> +
+> +Required property:
+> +    - #dma-cells: Number elements to describe DMA channel information. Must be
+> +                  2 with current implementation but in future we could allow
+> +		  more than 2 to describe interrupt mapping as well.
+
+That makes sense.
+
+> +    - #dma-channels: Number of DMA channels supported by the controller.
+> +    - #dma-requests: Number of DMA requests signals supported by the controller.
+
+I don't see why those properties would be mandatory in device tree. They
+don't appear to be involved in parsing a DMA client's DMA specifier.
+Shouldn't this information be provided at run-time by the DMA controller
+driver. If it supports different HW models with different capabilities,
+then it certainly could represent those values in DT, but I don't think
+this should be required.
 
 > +Example:
 > +
-> +/memreserve/ 0x0e000000 0x02000000;
-> +
-> +...
-> +
-> +/ {
-> +	...
-> +
-> +	/* host1x */
-> +	host1x: host1x@50000000 {
-> +		compatible = "nvidia,tegra20-host1x";
-> +		reg = <0x50000000 0x00024000>;
-> +		interrupts = <0 64 0x04   /* cop syncpt */
-> +			      0 65 0x04   /* mpcore syncpt */
-> +			      0 66 0x04   /* cop general */
-> +			      0 67 0x04>; /* mpcore general */
+> +	sdma: dmaengine@48000000 {
+> +		compatible = "ti,omap4-sdma"
+> +		reg = <0x48000000 0x1000>;
+> +		interrupts = <4>;
+> +		#dma-cells = <2>;
+> +		#dma-channels = <32>;
+> +		#dma-requests = <127>;
 > +	};
-
-The host1x module is apparently a register bus, behind which all the
-other modules sit. According to the address map in the TRM, "all the
-other modules" appears to include all of MPE, VI, CSI, EPP, ISP, GR2D,
-GR3D, DISPLAY A/B, HDMI, TVO, DSI, plus VG, VS, VCI, DSIB on Tegra30.
-
-That said, I believe Terje wasn't convinced that all those modules are
-really host1x children, just some. Can you check please, Terje?
-
-Also, I wonder if host1x is really the parent of these modules,
-register-bus-access-wise, or whether the bus covers the "graphic host
-registers" at 0x50000000-0x50023fff?
-
-As such, I think the DT nodes for all those modules should be within the
-host1x node (or perhaps graphics host node, pending above discussion):
-
-    host1x: host1x@50000000 {
-        mpe@54040000 { ... };
-        vi@54080000 { ... };
-        ...
-    };
-
-host1x can easily instantiate all the child nodes simply by calling
-of_platform_populate() at the end of its probe; see
-sound/soc/tegra/tegra30_ahub.c for an example.
-
-> +	/* video-encoding/decoding */
-> +	mpe@54040000 {
-> +		reg = <0x54040000 0x00040000>;
-> +		interrupts = <0 68 0x04>;
-> +	};
-
-We'll probably end up needing a phandle from each of these nodes to
-host1x, and a channel ID, so the drivers for these nodes can register
-themselves with host1x. However, I it's probably OK to defer the DT
-binding for this until we actually start working on command-channels.
-
-> +	/* graphics host */
-> +	graphics@54000000 {
-> +		compatible = "nvidia,tegra20-graphics";
 > +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-
-I don't think those 3 properties are needed, unless there are child
-nodes with registers.
-
-> +		display-controllers = <&disp1 &disp2>;
-> +		carveout = <0x0e000000 0x02000000>;
-> +		host1x = <&host1x>;
-> +		gart = <&gart>;
 > +
-> +		connectors {
-
-I'm not sure that it makes sense to put the connectors nodes underneath
-the graphics host node; the connectors aren't objects with registers
-that are accessed through a bus managed by the graphics node. Equally,
-the connectors could be useful outside of the graphics driver - e.g. the
-audio driver might need to refer to an HDMI connector.
-
-Instead, I'd probably put the connector nodes at the top level of the
-device tree, and have graphics contain a property that lists the
-phandles of all available connectors.
-
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+> +* DMA client
 > +
-> +			connector@0 {
-> +				reg = <0>;
-> +				edid = /incbin/("machine.edid");
-> +				output = <&lvds>;
-> +			};
+> +Client drivers should specify the DMA property using a phandle to the controller
+> +followed by the number of DMA request/channel and the transfer type of the
 
-I think each of these needs some kind of compatible value to indicate
-their type. Also, the ability to represent both HDMI video and audio
-streams so that a sound card binding could use the HDMI connector too. I
-see that drivers/extcon/ has appeared recently, and I wonder if the
-connector nodes in DT shouldn't be handled by that subsystem?
+What exactly is "request/channel"? Is it a request ID, a channel ID,
+both packed into a single integer (which bits are used for each field),
+etc.?
 
-> +			connector@1 {
-> +				reg = <1>;
-> +				output = <&hdmi>;
-> +				ddc = <&i2c2>;
+If this is up to the individual controller binding, then I think the
+description should just specify that there is a phandle followed by a
+DMA specifier, and the DMA specifier contains #dma-cells from the
+phandle node. See other similar bindings for suitable wording.
+
+> +channel (eg. device-to-memory, memory-to-device, memory-to-memory, etc). Drivers
+> +should use the DMA Engine enum dma_transfer_direction (eg. DMA_DEV_TO_MEM,
+> +DMA_MEM_TO_DEV, etc) for specifying the transfer type.
+
+The binding document should stand alone; you shouldn't need to go look
+up values in any particular OS/driver's source code. In other words,
+this should explicitly enumerate the values for DMA_DEV_TO_MEM etc.
+here. That said, I'm not sure it's appropriate to mandate that every DMA
+controller's DMA specifier actually include this information in DT (a
+controller might only support DEV_TO_MEM for example, and hence not need
+this information in DT at all).
+
+The DMA client's binding should specify how many entries it needs in the
+dma property and what they mean, e.g. it should know that dma property
+index 0 is the TX DMA specifier, and index 1 is the RX specifier.
+
+> +Required property:
+> +    - dma: List of phandle + dma-request/channel + transfer-type,
+> +      one group per request "line".
 > +
-> +				hpd-gpio = <&gpio 111 0>; /* PN7 */
-> +			};
-> +		};
-> +	};
-> +};
-
-> diff --git a/arch/arm/mach-tegra/board-dt-tegra20.c b/arch/arm/mach-tegra/board-dt-tegra20.c
-
-> +	{ "host1x",     "pll_c",        144000000,      true },
-> +	{ "disp1",      "pll_p",        600000000,      true },
-> +	{ "disp2",      "pll_p",        600000000,      true },
-
-Can we use these tables /just/ to set up the clock parent relationships,
-and rely on the drivers to enable/disable the clocks as needed? I'm
-hoping to replace these tables with DT once Tegra support common clock
-and bindings, but I don't want to see the ability to turn clocks on
-there, just set the parenting relationships, and perhaps initial rates.
-
-> diff --git a/arch/arm/mach-tegra/include/mach/iomap.h b/arch/arm/mach-tegra/include/mach/iomap.h
-> index 7e76da7..3e80f3f 100644
-> --- a/arch/arm/mach-tegra/include/mach/iomap.h
-> +++ b/arch/arm/mach-tegra/include/mach/iomap.h
-> @@ -56,6 +56,12 @@
->  #define TEGRA_HDMI_BASE			0x54280000
->  #define TEGRA_HDMI_SIZE			SZ_256K
->  
-> +#define TEGRA_TVO_BASE			0x542c0000
-> +#define TEGRA_TVO_SIZE			SZ_256K
+> +Example:
 > +
-> +#define TEGRA_DSI_BASE			0x54300000
-> +#define TEGRA_DSI_SIZE			SZ_256K
+> +	i2c1: i2c@1 {
+> +		...
+> +		dma = <&sdma 2 1 &sdma 3 2>;
 
-Perhaps we can just hard-code the addresses into the AUXDATA in
-board-dt-tegra20.c to save defining more entries in this file. Hopefully
-this file is going away ASAP when we get rid of board files.
+Should that be "dmas" (plural) to be consistency with interrupts, gpios,
+...?
+
+
+Back to pieces of your patch description:
+
+> v3: - avoid passing an xlate function and instead pass DMA engine parameters
+>     - define number of dma channels and requests in dma-controller node
+
+Perhaps I lack context of previous discussion, but that seems the wrong
+direction, and doesn't allow DMA controllers to define the format of
+their DMA specifiers.
+
+I'd expect the process to work just like other DT bindings:
+
+* Client calls dma_request(index)
+* OF DMA core gets property, does the following until it hits index:
+** Get phandle
+** Get provider node for phandle
+** Parses #dma-cells from provider node
+** If at appropriate index:
+*** call xlate/get function to convert the DMA specifier to something
+that could be passed to e.g. dma_request_channel.
+*** else skip that many cells and loop
+
+Now, the structure returned from the xlate function could encompass
+filter_fn and filter_param if required.
+
+In fact, I'd expect that all xlate return something like:
+
+struct of_dma_filter_param {
+    struct device_node *node;
+    dma_filter_fn filter_fn;
+    void *filter_param;
+};
+
+and the following filter function to always be used for the DT case:
+
+bool of_dma_filter_func(...)
+{
+    struct of_dma_filter_param *p = ...;
+
+    /* First, only match the controller of the DT node that parsed this
+       filter data */
+    if (p->node != xxx->node)
+        return false;
+
+    /* Then let the individual controller do whatever match it needs */
+    return p->filter_fn(xxx, p->filter_param);
+}
+
+> 3. Representing and requesting channel information
+> 
+>    From a hardware perspective, a DMA channel could be represented as ...
+> 
+>    i. channel index/number
+>    ii. channel transfer type (optional)
+>    iii. DMA interrupt mapping (optional)
+
+I think the representation should be down to the individual DMA controller.
+
+For example, Tegra has n identical DMA channels, and each can be used
+with any peripheral. However, when allocating the channel, you have to
+specify which peripheral request to use on that channel. So, you need to
+specify DMA request ID for Tegra, not DMA channel ID.
+
+I can imagine another DMA controller where each channel is dedicated to
+one particular piece of HW (e.g. I2S controller 0 TX FIFO). In this
+case, you'd need to specify DMA channel ID here, not request ID (well, I
+guess they're equivalent 1:1)
+
+This is why I think DMA controller should specify the format of their
+own DMA specifier in DT, and why they should provide an xlate function
+to parse that.
