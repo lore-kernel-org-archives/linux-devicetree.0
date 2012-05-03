@@ -1,90 +1,21 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH RESEND v5] rtc: Add device tree support for LPC32xx
-Date: Thu, 03 May 2012 14:36:43 -0500
-Message-ID: <4FA2DE4B.3070606@gmail.com>
-References: <1336073581-25667-1-git-send-email-stigge@antcom.de>
+From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: tegra: Add Tegra Memory Controller(MC) driver
+Date: Thu, 3 May 2012 20:48:13 +0100
+Message-ID: <20120503204813.7fe6cd00@pyramind.ukuu.org.uk>
+References: <1336063897-12083-1-git-send-email-hdoyu@nvidia.com>
+	<4FA2D0C4.4020608@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1336073581-25667-1-git-send-email-stigge@antcom.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: a.zummo@towertech.it, grant.likely@secretlab.ca, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4FA2D0C4.4020608-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/2012 02:33 PM, Roland Stigge wrote:
-> This patch adds device tree support for rtc-lpc32xx.c
-> 
-> Signed-off-by: Roland Stigge <stigge@antcom.de>
-> 
+> Honestly, to me it seems best to keep purely platform-specific drivers
+> like this in arch/arm/mach-tegra, since that's the most closely
+> Tegra-related directory.
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
-
-> ---
-> 
-> Applies to v3.4-rc5
-> 
-> Changes since v4:
-> * Reduced "compatible" strings to just the first one
-> 
->  Documentation/devicetree/bindings/rtc/lpc32xx-rtc.txt |   15 +++++++++++++++
->  drivers/rtc/rtc-lpc32xx.c                             |   12 +++++++++++-
->  2 files changed, 26 insertions(+), 1 deletion(-)
-> 
-> --- /dev/null
-> +++ linux-2.6/Documentation/devicetree/bindings/rtc/lpc32xx-rtc.txt
-> @@ -0,0 +1,15 @@
-> +* NXP LPC32xx SoC Real Time Clock controller
-> +
-> +Required properties:
-> +- compatible: must be "nxp,lpc3220-rtc"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: The RTC interrupt
-> +
-> +Example:
-> +
-> +	rtc@40024000 {
-> +		compatible = "nxp,lpc3220-rtc";
-> +		reg = <0x40024000 0x1000>;
-> +		interrupts = <52 0>;
-> +	};
-> --- linux-2.6.orig/drivers/rtc/rtc-lpc32xx.c
-> +++ linux-2.6/drivers/rtc/rtc-lpc32xx.c
-> @@ -19,6 +19,7 @@
->  #include <linux/rtc.h>
->  #include <linux/slab.h>
->  #include <linux/io.h>
-> +#include <linux/of.h>
->  
->  /*
->   * Clock and Power control register offsets
-> @@ -386,13 +387,22 @@ static const struct dev_pm_ops lpc32xx_r
->  #define LPC32XX_RTC_PM_OPS NULL
->  #endif
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id lpc32xx_rtc_match[] = {
-> +	{ .compatible = "nxp,lpc3220-rtc" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, lpc32xx_rtc_match);
-> +#endif
-> +
->  static struct platform_driver lpc32xx_rtc_driver = {
->  	.probe		= lpc32xx_rtc_probe,
->  	.remove		= __devexit_p(lpc32xx_rtc_remove),
->  	.driver = {
->  		.name	= RTC_NAME,
->  		.owner	= THIS_MODULE,
-> -		.pm	= LPC32XX_RTC_PM_OPS
-> +		.pm	= LPC32XX_RTC_PM_OPS,
-> +		.of_match_table = of_match_ptr(lpc32xx_rtc_match),
->  	},
->  };
->  
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Or add a drivers/platform/tegra directory ?
