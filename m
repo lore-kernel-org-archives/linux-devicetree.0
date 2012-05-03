@@ -1,49 +1,27 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/3] MFD: twl6040: Device tree support
-Date: Thu,  3 May 2012 15:54:22 +0300
-Message-ID: <1336049665-27777-1-git-send-email-peter.ujfalusi@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/3] MFD: twl6040: Allocate IRQ numbers dynamically
+Date: Thu, 3 May 2012 14:20:05 +0100
+Message-ID: <20120503132004.GB14296@sirena.org.uk>
+References: <1336049665-27777-1-git-send-email-peter.ujfalusi@ti.com>
+ <1336049665-27777-3-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Misael Lopez Cruz <misael.lopez-l0cyMroinI0@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1336049665-27777-3-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, May 03, 2012 at 03:54:24PM +0300, Peter Ujfalusi wrote:
 
-The following series adds device tree support for the twl6040 MFD core driver.
-Support for the child drivers (vibra, ASoC codec) will be submitted via the
-corresponding subsystem since there is no compile time dependency between them.
+>  	/* In order to operate correctly we need valid interrupt config */
+> -	if (!client->irq || !pdata->irq_base) {
+> +	if (!client->irq) {
 
-The first patch is a minor clean up patch to remove wrapped lines in the
-twl6040-irq.c. The resulting code is more natural to read to me.
-
-The series depends on the regulator support patch for the twl6040:
-http://marc.info/?l=linux-kernel&m=133596703610515&w=2
-
-Regards,
-Peter
----
-Peter Ujfalusi (3):
-  MFD: twl6040: Code cleanup in interrupt initialization part
-  MFD: twl6040: Allocate IRQ numbers dynamically
-  MFD: twl6040: Support for DT
-
- Documentation/devicetree/bindings/mfd/twl6040.txt |   51 +++++++++++++++++++++
- drivers/mfd/twl6040-core.c                        |   26 +++++++---
- drivers/mfd/twl6040-irq.c                         |   32 +++++++++----
- 3 files changed, 92 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/twl6040.txt
-
--- 
-1.7.8.6
+It looks like you're totally removing the use of irq_base which will
+break any boards that didn't convert to DT.  The usual idiom is to use
+irq_base as the base for the range of requested IRQs if it's supplied,
+otherwise set it to -1 to allow dynamic allocation.  This should keep
+existing users working without disruption.
