@@ -1,352 +1,535 @@
 From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3 1/4] ARM: tegra: Add Tegra AHB driver
-Date: Thu,  3 May 2012 19:05:42 +0300
-Message-ID: <1336061147-10245-1-git-send-email-hdoyu@nvidia.com>
+Subject: [PATCH 1/1] ARM: tegra: Add Tegra Memory Controller(MC) driver
+Date: Thu,  3 May 2012 19:51:37 +0300
+Message-ID: <1336063897-12083-1-git-send-email-hdoyu@nvidia.com>
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tegra AHB Bus conforms to the AMBA Specification (Rev 2.0) Advanced
-High-performance Bus (AHB) architecture.
-
-The AHB Arbiter controls AHB bus master arbitration. This effectively
-forms a second level of arbitration for access to the memory
-controller through the AHB Slave Memory device. The AHB pre-fetch
-logic can be configured to enhance performance for devices doing
-sequential access. Each AHB master is assigned to either the high or
-low priority bin. Both Tegra20/30 have this AHB bus.
-
-Some of configuration param could be passed from DT too.
+Tegra Memory Controller(MC) driver for Tegra20/30.
+Added to support MC General interrupts, mainly for IOMMU.
 
 Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 ---
- arch/arm/mach-tegra/Kconfig |    8 ++
- drivers/Makefile            |    2 +-
- drivers/amba/Makefile       |    4 +-
- drivers/amba/tegra-ahb.c    |  272 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 283 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
-index 204d3d4..6a113a9 100644
---- a/arch/arm/mach-tegra/Kconfig
-+++ b/arch/arm/mach-tegra/Kconfig
-@@ -50,6 +50,14 @@ config TEGRA_PCI
- 	depends on ARCH_TEGRA_2x_SOC
- 	select PCI
- 
-+config TEGRA_AHB
-+	bool "Enable AHB driver for NVIDIA Tegra SoCs"
-+	default y
-+	help
-+	  Adds AHB configuration functionality for NVIDIA Tegra SoCs,
-+	  which controls AHB bus master arbitration and some
-+	  perfomance parameters(priority, prefech size).
-+
- comment "Tegra board type"
- 
- config MACH_HARMONY
-diff --git a/drivers/Makefile b/drivers/Makefile
-index 5870322..d97e2e2 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -18,7 +18,7 @@ obj-$(CONFIG_SFI)		+= sfi/
- # PnP must come after ACPI since it will eventually need to check if acpi
- # was used and do nothing if so
- obj-$(CONFIG_PNP)		+= pnp/
--obj-$(CONFIG_ARM_AMBA)		+= amba/
-+obj-$(CONFIG_ARM)		+= amba/
- # Many drivers will want to use DMA so this has to be made available
- # really early.
- obj-$(CONFIG_DMA_ENGINE)	+= dma/
-diff --git a/drivers/amba/Makefile b/drivers/amba/Makefile
-index 40fe740..66e81c2 100644
---- a/drivers/amba/Makefile
-+++ b/drivers/amba/Makefile
-@@ -1,2 +1,2 @@
--obj-y		+= bus.o
--
-+obj-$(CONFIG_ARM_AMBA)		+= bus.o
-+obj-$(CONFIG_TEGRA_AHB)		+= tegra-ahb.o
-diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
+The location of a file may not be suitable because of xxx_driver under arch/arm/mach-*.
+---
+diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
+index 2eb4445..4001cc8 100644
+--- a/arch/arm/mach-tegra/Makefile
++++ b/arch/arm/mach-tegra/Makefile
+@@ -1,3 +1,4 @@
++obj-y                                   += tegra-mc.o
+ obj-y                                   += board-pinmux.o
+ obj-y                                   += common.o
+ obj-y                                   += devices.o
+diff --git a/arch/arm/mach-tegra/tegra-mc.c b/arch/arm/mach-tegra/tegra-mc.c
 new file mode 100644
-index 0000000..03933f3
+index 0000000..7af2a99
 --- /dev/null
-+++ b/drivers/amba/tegra-ahb.c
-@@ -0,0 +1,272 @@
++++ b/arch/arm/mach-tegra/tegra-mc.c
+@@ -0,0 +1,502 @@
 +/*
++ * Tegra Memory Controller
++ *
 + * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
-+ * Copyright (C) 2011 Google, Inc.
 + *
-+ * Author:
-+ *	Jay Cheng <jacheng-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-+ *	James Wylder <james.wylder-3WKxDLwmzFNWk0Htik3J/w@public.gmane.org>
-+ *	Benoit Goby <benoit-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-+ *	Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-+ *	Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
 + *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program; if not, write to the Free Software Foundation, Inc.,
++ * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
 + */
 +
 +#include <linux/kernel.h>
 +#include <linux/module.h>
++#include <linux/ratelimit.h>
 +#include <linux/platform_device.h>
++#include <linux/interrupt.h>
 +#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
 +
-+#define DRV_NAME "tegra-ahb"
++#define DRV_NAME "tegra-mc"
 +
-+#define AHB_ARBITRATION_DISABLE		0x00
-+#define AHB_ARBITRATION_PRIORITY_CTRL	0x04
-+#define   AHB_PRIORITY_WEIGHT(x)	(((x) & 0x7) << 29)
-+#define   PRIORITY_SELECT_USB BIT(6)
-+#define   PRIORITY_SELECT_USB2 BIT(18)
-+#define   PRIORITY_SELECT_USB3 BIT(17)
++#define MC_INTSTATUS			0x0
++#define MC_INTMASK			0x4
 +
-+#define AHB_GIZMO_AHB_MEM		0x0c
-+#define   ENB_FAST_REARBITRATE BIT(2)
-+#define   DONT_SPLIT_AHB_WR     BIT(7)
++#define MC_INT_ERR_SHIFT		6
++#define MC_INT_ERR_MASK			(0x1f << MC_INT_ERR_SHIFT)
++#define MC_INT_DECERR_EMEM		BIT(MC_INT_ERR_SHIFT)
++#define MC_INT_INVALID_GART_PAGE	BIT(MC_INT_ERR_SHIFT + 1)
++#define MC_INT_SECURITY_VIOLATION	BIT(MC_INT_ERR_SHIFT + 2)
++#define MC_INT_ARBITRATION_EMEM		BIT(MC_INT_ERR_SHIFT + 3)
++#define MC_INT_INVALID_SMMU_PAGE	BIT(MC_INT_ERR_SHIFT + 4)
 +
-+#define AHB_GIZMO_APB_DMA		0x10
-+#define AHB_GIZMO_IDE			0x18
-+#define AHB_GIZMO_USB			0x1c
-+#define AHB_GIZMO_AHB_XBAR_BRIDGE	0x20
-+#define AHB_GIZMO_CPU_AHB_BRIDGE	0x24
-+#define AHB_GIZMO_COP_AHB_BRIDGE	0x28
-+#define AHB_GIZMO_XBAR_APB_CTLR		0x2c
-+#define AHB_GIZMO_VCP_AHB_BRIDGE	0x30
-+#define AHB_GIZMO_NAND			0x3c
-+#define AHB_GIZMO_SDMMC4		0x44
-+#define AHB_GIZMO_XIO			0x48
-+#define AHB_GIZMO_BSEV			0x60
-+#define AHB_GIZMO_BSEA			0x70
-+#define AHB_GIZMO_NOR			0x74
-+#define AHB_GIZMO_USB2			0x78
-+#define AHB_GIZMO_USB3			0x7c
-+#define   IMMEDIATE	BIT(18)
++#define MC_ERR_STATUS			0x8
++#define MC_ERR_ADR			0xc
 +
-+#define AHB_GIZMO_SDMMC1		0x80
-+#define AHB_GIZMO_SDMMC2		0x84
-+#define AHB_GIZMO_SDMMC3		0x88
-+#define AHB_MEM_PREFETCH_CFG_X		0xd8
-+#define AHB_ARBITRATION_XBAR_CTRL	0xdc
-+#define AHB_MEM_PREFETCH_CFG3		0xe0
-+#define AHB_MEM_PREFETCH_CFG4		0xe4
-+#define AHB_MEM_PREFETCH_CFG1		0xec
-+#define AHB_MEM_PREFETCH_CFG2		0xf0
-+#define   PREFETCH_ENB	BIT(31)
-+#define   MST_ID(x)	(((x) & 0x1f) << 26)
-+#define   AHBDMA_MST_ID	MST_ID(5)
-+#define   USB_MST_ID	MST_ID(6)
-+#define   USB2_MST_ID	MST_ID(18)
-+#define   USB3_MST_ID	MST_ID(17)
-+#define   ADDR_BNDRY(x)	(((x) & 0xf) << 21)
-+#define   INACTIVITY_TIMEOUT(x)	(((x) & 0xffff) << 0)
++#define MC_ERR_TYPE_SHIFT		28
++#define MC_ERR_TYPE_MASK		(7 << MC_ERR_TYPE_SHIFT)
++#define MC_ERR_TYPE_DECERR_EMEM		2
++#define MC_ERR_TYPE_SECURITY_TRUSTZONE	3
++#define MC_ERR_TYPE_SECURITY_CARVEOUT	4
++#define MC_ERR_TYPE_INVALID_SMMU_PAGE	6
 +
-+#define AHB_ARBITRATION_AHB_MEM_WRQUE_MST_ID	0xf8
++#define MC_ERR_INVALID_SMMU_PAGE_SHIFT	25
++#define MC_ERR_INVALID_SMMU_PAGE_MASK	(7 << MC_ERR_INVALID_SMMU_PAGE_SHIFT)
++#define MC_ERR_RW_SHIFT			16
++#define MC_ERR_RW			BIT(MC_ERR_RW_SHIFT)
++#define MC_ERR_SECURITY			BIT(MC_ERR_RW_SHIFT + 1)
 +
-+static u32 tegra_ahb_gizmo[] = {
-+	AHB_ARBITRATION_DISABLE,
-+	AHB_ARBITRATION_PRIORITY_CTRL,
-+	AHB_GIZMO_AHB_MEM,
-+	AHB_GIZMO_APB_DMA,
-+	AHB_GIZMO_IDE,
-+	AHB_GIZMO_USB,
-+	AHB_GIZMO_AHB_XBAR_BRIDGE,
-+	AHB_GIZMO_CPU_AHB_BRIDGE,
-+	AHB_GIZMO_COP_AHB_BRIDGE,
-+	AHB_GIZMO_XBAR_APB_CTLR,
-+	AHB_GIZMO_VCP_AHB_BRIDGE,
-+	AHB_GIZMO_NAND,
-+	AHB_GIZMO_SDMMC4,
-+	AHB_GIZMO_XIO,
-+	AHB_GIZMO_BSEV,
-+	AHB_GIZMO_BSEA,
-+	AHB_GIZMO_NOR,
-+	AHB_GIZMO_USB2,
-+	AHB_GIZMO_USB3,
-+	AHB_GIZMO_SDMMC1,
-+	AHB_GIZMO_SDMMC2,
-+	AHB_GIZMO_SDMMC3,
-+	AHB_MEM_PREFETCH_CFG_X,
-+	AHB_ARBITRATION_XBAR_CTRL,
-+	AHB_MEM_PREFETCH_CFG3,
-+	AHB_MEM_PREFETCH_CFG4,
-+	AHB_MEM_PREFETCH_CFG1,
-+	AHB_MEM_PREFETCH_CFG2,
-+	AHB_ARBITRATION_AHB_MEM_WRQUE_MST_ID,
++#define MC_GART_ERROR_REQ		0x30
++#define MC_GART_ERROR_ADDR		0x34
++
++#define MC_DECERR_EMEM_OTHERS_STATUS	0x58
++#define MC_DECERR_EMEM_OTHERS_ADR	0x5c
++
++#define MC_SECURITY_VIOLATION_STATUS	0x74
++#define MC_SECURITY_VIOLATION_ADR	0x78
++
++#define SECURITY_VIOLATION_TYPE		BIT(30)	/* 0=TRUSTZONE, 1=CARVEOUT */
++
++#define MC_EMEM_ARB_CFG			0x90
++#define MC_EMEM_ARB_OUTSTANDING_REQ	0x94
++#define MC_EMEM_ARB_TIMING_RCD		0x98
++#define MC_EMEM_ARB_TIMING_RP		0x9c
++#define MC_EMEM_ARB_TIMING_RC		0xa0
++#define MC_EMEM_ARB_TIMING_RAS		0xa4
++#define MC_EMEM_ARB_TIMING_FAW		0xa8
++#define MC_EMEM_ARB_TIMING_RRD		0xac
++#define MC_EMEM_ARB_TIMING_RAP2PRE	0xb0
++#define MC_EMEM_ARB_TIMING_WAP2PRE	0xb4
++#define MC_EMEM_ARB_TIMING_R2R		0xb8
++#define MC_EMEM_ARB_TIMING_W2W		0xbc
++#define MC_EMEM_ARB_TIMING_R2W		0xc0
++#define MC_EMEM_ARB_TIMING_W2R		0xc4
++
++#define MC_EMEM_ARB_DA_TURNS		0xd0
++#define MC_EMEM_ARB_DA_COVERS		0xd4
++#define MC_EMEM_ARB_MISC0		0xd8
++#define MC_EMEM_ARB_MISC1		0xdc
++
++#define MC_EMEM_ARB_RING3_THROTTLE	0xe4
++#define MC_EMEM_ARB_OVERRIDE		0xe8
++
++#define MC_TIMING_CONTROL		0xfc
++
++static const char * const mc_int_err[] = {
++	"MC_DECERR",
++	"MC_GART_ERR",
++	"MC_SECURITY_ERR",
++	"MC_ARBITRATION_EMEM",
++	"MC_SMMU_ERR",
 +};
 +
-+struct tegra_ahb {
-+	void __iomem	*regs;
-+	struct device	*dev;
-+	u32		ctx[0];
++struct tegra_mc;
++
++struct tegra_mc_info {
++	u32 intmask;
++	void (*decode)(struct tegra_mc *mc, u32 stat);
++	const char * const *client;
++	int num_client;
++	u32 id_mask;
 +};
 +
-+static inline u32 gizmo_readl(struct tegra_ahb *ahb, u32 offset)
++struct tegra_mc {
++	void __iomem *regs;
++	struct device *dev;
++	struct tegra_mc_info *info;
++	u32 ctx[0];
++};
++
++static inline u32 mc_readl(struct tegra_mc *mc, u32 offset)
 +{
-+	return readl(ahb->regs + offset);
++	return readl(mc->regs + offset);
 +}
 +
-+static inline void gizmo_writel(struct tegra_ahb *ahb, u32 value, u32 offset)
++static inline void mc_writel(struct tegra_mc *mc, u32 value, u32 offset)
 +{
-+	writel(value, ahb->regs + offset);
++	writel(value, mc->regs + offset);
 +}
 +
-+static int tegra_ahb_suspend(struct device *dev)
++#ifdef CONFIG_ARCH_TEGRA_2x_SOC
++static const char * const tegra20_mc_client[] = {
++	"cbr_display0a",
++	"cbr_display0ab",
++	"cbr_display0b",
++	"cbr_display0bb",
++	"cbr_display0c",
++	"cbr_display0cb",
++	"cbr_display1b",
++	"cbr_display1bb",
++	"cbr_eppup",
++	"cbr_g2pr",
++	"cbr_g2sr",
++	"cbr_mpeunifbr",
++	"cbr_viruv",
++	"csr_avpcarm7r",
++	"csr_displayhc",
++	"csr_displayhcb",
++	"csr_fdcdrd",
++	"csr_g2dr",
++	"csr_host1xdmar",
++	"csr_host1xr",
++	"csr_idxsrd",
++	"csr_mpcorer",
++	"csr_mpe_ipred",
++	"csr_mpeamemrd",
++	"csr_mpecsrd",
++	"csr_ppcsahbdmar",
++	"csr_ppcsahbslvr",
++	"csr_texsrd",
++	"csr_vdebsevr",
++	"csr_vdember",
++	"csr_vdemcer",
++	"csr_vdetper",
++	"cbw_eppu",
++	"cbw_eppv",
++	"cbw_eppy",
++	"cbw_mpeunifbw",
++	"cbw_viwsb",
++	"cbw_viwu",
++	"cbw_viwv",
++	"cbw_viwy",
++	"ccw_g2dw",
++	"csw_avpcarm7w",
++	"csw_fdcdwr",
++	"csw_host1xw",
++	"csw_ispw",
++	"csw_mpcorew",
++	"csw_mpecswr",
++	"csw_ppcsahbdmaw",
++	"csw_ppcsahbslvw",
++	"csw_vdebsevw",
++	"csw_vdembew",
++	"csw_vdetpmw",
++};
++
++static void tegra20_mc_decode(struct tegra_mc *mc, u32 stat)
++{
++	u32 addr, req;
++	const char *client = "Unknown";
++	int idx, cid;
++	struct reg_info {
++		u32 offset;
++		u32 write_bit;	/* 0=READ, 1=WRITE */
++		int cid_shift;
++	} reg[] = {
++		{
++			.offset = MC_DECERR_EMEM_OTHERS_STATUS,
++			.write_bit = 31,
++		},
++		{
++			.offset	= MC_GART_ERROR_REQ,
++			.cid_shift = 1,
++		},
++		{
++			.offset = MC_SECURITY_VIOLATION_STATUS,
++			.write_bit = 31,
++		},
++	};
++
++	idx = __ffs(stat >> MC_INT_ERR_SHIFT);
++	req = mc_readl(mc, reg[idx].offset);
++	cid = (req >> reg[idx].cid_shift) & mc->info->id_mask;
++	addr = mc_readl(mc, reg[idx].offset + sizeof(u32));
++
++	if (cid < mc->info->num_client)
++		client = mc->info->client[cid];
++
++	pr_err_ratelimited("%s (0x%08x): 0x%08x %s (%s %s)\n",
++			   mc_int_err[idx], req, addr, client,
++			   (req & (1 << reg[idx].write_bit)) ? "write" : "read",
++			   (reg[idx].offset == MC_SECURITY_VIOLATION_STATUS) ?
++			   ((req & SECURITY_VIOLATION_TYPE) ?
++			    "carveout" : "trustzone") : "");
++}
++
++static struct tegra_mc_info tegra20_mc_info = {
++	.intmask = MC_INT_INVALID_GART_PAGE,
++	.decode = tegra20_mc_decode,
++	.client = tegra20_mc_client,
++	.num_client = ARRAY_SIZE(tegra20_mc_client),
++	.id_mask = 0x3f,
++};
++#else
++static struct tegra_mc_info tegra20_mc_info = {};
++#endif	/* CONFIG_ARCH_TEGRA_2x_SOC */
++
++#ifdef CONFIG_ARCH_TEGRA_3x_SOC
++static const char * const tegra30_mc_client[] = {
++	"csr_ptcr",
++	"cbr_display0a",
++	"cbr_display0ab",
++	"cbr_display0b",
++	"cbr_display0bb",
++	"cbr_display0c",
++	"cbr_display0cb",
++	"cbr_display1b",
++	"cbr_display1bb",
++	"cbr_eppup",
++	"cbr_g2pr",
++	"cbr_g2sr",
++	"cbr_mpeunifbr",
++	"cbr_viruv",
++	"csr_afir",
++	"csr_avpcarm7r",
++	"csr_displayhc",
++	"csr_displayhcb",
++	"csr_fdcdrd",
++	"csr_fdcdrd2",
++	"csr_g2dr",
++	"csr_hdar",
++	"csr_host1xdmar",
++	"csr_host1xr",
++	"csr_idxsrd",
++	"csr_idxsrd2",
++	"csr_mpe_ipred",
++	"csr_mpeamemrd",
++	"csr_mpecsrd",
++	"csr_ppcsahbdmar",
++	"csr_ppcsahbslvr",
++	"csr_satar",
++	"csr_texsrd",
++	"csr_texsrd2",
++	"csr_vdebsevr",
++	"csr_vdember",
++	"csr_vdemcer",
++	"csr_vdetper",
++	"csr_mpcorelpr",
++	"csr_mpcorer",
++	"cbw_eppu",
++	"cbw_eppv",
++	"cbw_eppy",
++	"cbw_mpeunifbw",
++	"cbw_viwsb",
++	"cbw_viwu",
++	"cbw_viwv",
++	"cbw_viwy",
++	"ccw_g2dw",
++	"csw_afiw",
++	"csw_avpcarm7w",
++	"csw_fdcdwr",
++	"csw_fdcdwr2",
++	"csw_hdaw",
++	"csw_host1xw",
++	"csw_ispw",
++	"csw_mpcorelpw",
++	"csw_mpcorew",
++	"csw_mpecswr",
++	"csw_ppcsahbdmaw",
++	"csw_ppcsahbslvw",
++	"csw_sataw",
++	"csw_vdebsevw",
++	"csw_vdedbgw",
++	"csw_vdembew",
++	"csw_vdetpmw",
++};
++
++static void tegra30_mc_decode(struct tegra_mc *mc, u32 stat)
++{
++	u32 err, addr;
++	char *err_type[] = {
++		"Unknown",
++		"Unknown",
++		"DECERR_EMEM",
++		"SECURITY_TRUSTZONE",
++		"SECURITY_CARVEOUT",
++		"Unknown",
++		"INVALID_SMMU_PAGE",
++		"Unknown",
++	};
++	char attr[6];
++	int cid, perm, type, idx;
++	const char *client = "Unknown";
++
++	err = readl(mc + MC_ERR_STATUS);
++	addr = readl(mc + MC_ERR_ADR);
++
++	idx = __ffs(stat >> MC_INT_ERR_SHIFT);
++	type = (err & MC_ERR_TYPE_MASK) >> MC_ERR_TYPE_SHIFT;
++
++	cid = err & mc->info->id_mask;
++	if (cid < mc->info->num_client)
++		client = mc->info->client[cid];
++
++	perm = (err & MC_ERR_INVALID_SMMU_PAGE_MASK) >>
++		MC_ERR_INVALID_SMMU_PAGE_SHIFT;
++
++	if (type == MC_ERR_TYPE_INVALID_SMMU_PAGE)
++		sprintf(attr, "%c-%c-%c",
++			(perm & BIT(2)) ? 'R' : '-',
++			(perm & BIT(1)) ? 'W' : '-',
++			(perm & BIT(0)) ? 'S' : '-');
++	else
++		attr[0] = '\0';
++
++	pr_err_ratelimited("%s (0x%08x): 0x%08x %s (%s %s %s %s)\n",
++			   mc_int_err[idx], err, addr, client,
++			   (err & MC_ERR_SECURITY) ? "secure" : "non-secure",
++			   (err & MC_ERR_RW) ? "write" : "read",
++			   err_type[type], attr);
++}
++
++static struct tegra_mc_info tegra30_mc_info = {
++	.intmask = MC_INT_INVALID_SMMU_PAGE,
++	.decode = tegra30_mc_decode,
++	.client = tegra30_mc_client,
++	.num_client = ARRAY_SIZE(tegra30_mc_client),
++	.id_mask = 0x7f,
++};
++
++static u32 tegra_mc_ctx[] = {
++	MC_EMEM_ARB_CFG,
++	MC_EMEM_ARB_OUTSTANDING_REQ,
++	MC_EMEM_ARB_TIMING_RCD,
++	MC_EMEM_ARB_TIMING_RP,
++	MC_EMEM_ARB_TIMING_RC,
++	MC_EMEM_ARB_TIMING_RAS,
++	MC_EMEM_ARB_TIMING_FAW,
++	MC_EMEM_ARB_TIMING_RRD,
++	MC_EMEM_ARB_TIMING_RAP2PRE,
++	MC_EMEM_ARB_TIMING_WAP2PRE,
++	MC_EMEM_ARB_TIMING_R2R,
++	MC_EMEM_ARB_TIMING_W2W,
++	MC_EMEM_ARB_TIMING_R2W,
++	MC_EMEM_ARB_TIMING_W2R,
++	MC_EMEM_ARB_DA_TURNS,
++	MC_EMEM_ARB_DA_COVERS,
++	MC_EMEM_ARB_MISC0,
++	MC_EMEM_ARB_MISC1,
++	MC_EMEM_ARB_RING3_THROTTLE,
++	MC_EMEM_ARB_OVERRIDE,
++	MC_INTMASK,
++};
++
++static int tegra_mc_suspend(struct device *dev)
 +{
 +	int i;
-+	struct tegra_ahb *ahb = dev_get_drvdata(dev);
++	struct tegra_mc *mc = dev_get_drvdata(dev);
 +
-+	for (i = 0; i < ARRAY_SIZE(tegra_ahb_gizmo); i++)
-+		ahb->ctx[i] = gizmo_readl(ahb, tegra_ahb_gizmo[i]);
++	for (i = 0; i < ARRAY_SIZE(tegra_mc_ctx); i++)
++		mc->ctx[i] = mc_readl(mc, tegra_mc_ctx[i]);
 +	return 0;
 +}
 +
-+static int tegra_ahb_resume(struct device *dev)
++static int tegra_mc_resume(struct device *dev)
 +{
 +	int i;
-+	struct tegra_ahb *ahb = dev_get_drvdata(dev);
++	struct tegra_mc *mc = dev_get_drvdata(dev);
 +
-+	for (i = 0; i < ARRAY_SIZE(tegra_ahb_gizmo); i++)
-+		gizmo_writel(ahb, ahb->ctx[i], tegra_ahb_gizmo[i]);
++	for (i = 0; i < ARRAY_SIZE(tegra_mc_ctx); i++)
++		mc_writel(mc, mc->ctx[i], tegra_mc_ctx[i]);
++
++	mc_writel(mc, 1, MC_TIMING_CONTROL);
++	/* Read-back to ensure that write reached */
++	mc_readl(mc, MC_TIMING_CONTROL);
 +	return 0;
 +}
 +
-+static UNIVERSAL_DEV_PM_OPS(tegra_ahb_pm,
-+			    tegra_ahb_suspend,
-+			    tegra_ahb_resume, NULL);
++#else
++static u32 tegra_mc_ctx[0];
++#define tegra_mc_suspend	NULL
++#define tegra_mc_resume		NULL
++static struct tegra_mc_info tegra30_mc_info = {};
++#endif	/* CONFIG_ARCH_TEGRA_3x_SOC */
 +
-+static void tegra_ahb_gizmo_init(struct tegra_ahb *ahb)
++static UNIVERSAL_DEV_PM_OPS(tegra_mc_pm,
++			    tegra_mc_suspend,
++			    tegra_mc_resume, NULL);
++
++static const struct of_device_id tegra_mc_of_match[] __devinitconst = {
++	{ .compatible = "nvidia,tegra30-mc", .data = &tegra30_mc_info, },
++	{ .compatible = "nvidia,tegra20-mc", .data = &tegra20_mc_info, },
++	{},
++};
++
++static irqreturn_t tegra_mc_isr(int irq, void *data)
 +{
-+	u32 val;
++	u32 stat, mask, bit;
++	struct tegra_mc *mc = data;
 +
-+	val = gizmo_readl(ahb, AHB_GIZMO_AHB_MEM);
-+	val |= ENB_FAST_REARBITRATE | IMMEDIATE | DONT_SPLIT_AHB_WR;
-+	gizmo_writel(ahb, val, AHB_GIZMO_AHB_MEM);
-+
-+	val = gizmo_readl(ahb, AHB_GIZMO_USB);
-+	val |= IMMEDIATE;
-+	gizmo_writel(ahb, val, AHB_GIZMO_USB);
-+
-+	val = gizmo_readl(ahb, AHB_GIZMO_USB2);
-+	val |= IMMEDIATE;
-+	gizmo_writel(ahb, val, AHB_GIZMO_USB2);
-+
-+	val = gizmo_readl(ahb, AHB_GIZMO_USB3);
-+	val |= IMMEDIATE;
-+	gizmo_writel(ahb, val, AHB_GIZMO_USB3);
-+
-+	val = gizmo_readl(ahb, AHB_ARBITRATION_PRIORITY_CTRL);
-+	val |= PRIORITY_SELECT_USB |
-+		PRIORITY_SELECT_USB2 |
-+		PRIORITY_SELECT_USB3 |
-+		AHB_PRIORITY_WEIGHT(7);
-+	gizmo_writel(ahb, val, AHB_ARBITRATION_PRIORITY_CTRL);
-+
-+	val = gizmo_readl(ahb, AHB_MEM_PREFETCH_CFG1);
-+	val &= ~MST_ID(~0);
-+	val |= PREFETCH_ENB |
-+		AHBDMA_MST_ID |
-+		ADDR_BNDRY(0xc) |
-+		INACTIVITY_TIMEOUT(0x1000);
-+	gizmo_writel(ahb, val, AHB_MEM_PREFETCH_CFG1);
-+
-+	val = gizmo_readl(ahb, AHB_MEM_PREFETCH_CFG2);
-+	val &= ~MST_ID(~0);
-+	val |= PREFETCH_ENB |
-+		USB_MST_ID |
-+		ADDR_BNDRY(0xc) |
-+		INACTIVITY_TIMEOUT(0x1000);
-+	gizmo_writel(ahb, val, AHB_MEM_PREFETCH_CFG2);
-+
-+	val = gizmo_readl(ahb, AHB_MEM_PREFETCH_CFG3);
-+	val &= ~MST_ID(~0);
-+	val |= PREFETCH_ENB |
-+		USB3_MST_ID |
-+		ADDR_BNDRY(0xc) |
-+		INACTIVITY_TIMEOUT(0x1000);
-+	gizmo_writel(ahb, val, AHB_MEM_PREFETCH_CFG3);
-+
-+	val = gizmo_readl(ahb, AHB_MEM_PREFETCH_CFG4);
-+	val &= ~MST_ID(~0);
-+	val |= PREFETCH_ENB |
-+		USB2_MST_ID |
-+		ADDR_BNDRY(0xc) |
-+		INACTIVITY_TIMEOUT(0x1000);
-+	gizmo_writel(ahb, val, AHB_MEM_PREFETCH_CFG4);
++	stat = mc_readl(mc, MC_INTSTATUS);
++	mask = mc_readl(mc, MC_INTMASK);
++	mask &= stat;
++	while ((bit = ffs(mask)) != 0)
++		mc->info->decode(mc, 1 << (bit - 1));
++	mc_writel(mc, stat, MC_INTSTATUS);
++	return IRQ_HANDLED;
 +}
 +
-+static int __devinit tegra_ahb_probe(struct platform_device *pdev)
++static int __devinit tegra_mc_probe(struct platform_device *pdev)
 +{
 +	struct resource *res;
-+	struct tegra_ahb *ahb;
++	struct tegra_mc *mc;
 +	size_t bytes;
++	int err;
++	const struct of_device_id *id;
++	struct tegra_mc_info *info;
 +
-+	bytes = sizeof(*ahb) + sizeof(u32) * ARRAY_SIZE(tegra_ahb_gizmo);
-+	ahb = devm_kzalloc(&pdev->dev, bytes, GFP_KERNEL);
-+	if (!ahb)
++	bytes = sizeof(*mc) + sizeof(u32) * ARRAY_SIZE(tegra_mc_ctx);
++	mc = devm_kzalloc(&pdev->dev, bytes, GFP_KERNEL);
++	if (!mc)
 +		return -ENOMEM;
++	mc->dev = &pdev->dev;
 +
 +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 +	if (!res)
 +		return -ENODEV;
-+	ahb->regs = devm_request_and_ioremap(&pdev->dev, res);
-+	if (!ahb->regs)
++	mc->regs = devm_request_and_ioremap(&pdev->dev, res);
++	if (!mc->regs)
 +		return -EBUSY;
 +
-+	ahb->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, ahb);
-+	tegra_ahb_gizmo_init(ahb);
++	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	if (!res)
++		return -ENODEV;
++	err = devm_request_irq(&pdev->dev, res->start, tegra_mc_isr,
++			       IRQF_SHARED, dev_name(&pdev->dev), mc);
++	if (err)
++		return -ENODEV;
++
++	id = of_match_device(tegra_mc_of_match, &pdev->dev);
++	if (!id)
++		return -ENODEV;
++	platform_set_drvdata(pdev, mc);
++
++	info = id->data;
++	if (!info)
++		return -EINVAL;
++	mc->info = info;
++	info->intmask |= MC_INT_DECERR_EMEM | MC_INT_SECURITY_VIOLATION;
++	mc_writel(mc, info->intmask, MC_INTMASK);
 +	return 0;
 +}
 +
-+static int __devexit tegra_ahb_remove(struct platform_device *pdev)
++static int __devexit tegra_mc_remove(struct platform_device *pdev)
 +{
 +	return 0;
 +}
 +
-+static const struct of_device_id tegra_ahb_of_match[] __devinitconst = {
-+	{ .compatible = "nvidia,tegra30-ahb", },
-+	{ .compatible = "nvidia,tegra20-ahb", },
-+	{},
-+};
-+
-+static struct platform_driver tegra_ahb_driver = {
-+	.probe = tegra_ahb_probe,
-+	.remove = __devexit_p(tegra_ahb_remove),
++static struct platform_driver tegra_mc_driver = {
++	.probe = tegra_mc_probe,
++	.remove = __devexit_p(tegra_mc_remove),
 +	.driver = {
 +		.name = DRV_NAME,
 +		.owner = THIS_MODULE,
-+		.of_match_table = tegra_ahb_of_match,
-+		.pm = &tegra_ahb_pm,
++		.of_match_table = tegra_mc_of_match,
++		.pm = &tegra_mc_pm,
 +	},
 +};
-+
-+static int __init tegra_ahb_module_init(void)
-+{
-+	return platform_driver_register(&tegra_ahb_driver);
-+}
-+postcore_initcall(tegra_ahb_module_init);
-+
-+static void __exit tegra_ahb_module_exit(void)
-+{
-+	platform_driver_unregister(&tegra_ahb_driver);
-+}
-+module_exit(tegra_ahb_module_exit);
++module_platform_driver(tegra_mc_driver);
 +
 +MODULE_AUTHOR("Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>");
-+MODULE_DESCRIPTION("Tegra AHB driver");
++MODULE_DESCRIPTION("Tegra MC driver");
 +MODULE_LICENSE("GPL v2");
 +MODULE_ALIAS("platform:" DRV_NAME);
 -- 
