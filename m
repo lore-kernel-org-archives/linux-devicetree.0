@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 1/3] MFD: twl6040: Code cleanup in interrupt initialization part
-Date: Thu,  3 May 2012 15:54:23 +0300
-Message-ID: <1336049665-27777-2-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH 2/3] MFD: twl6040: Allocate IRQ numbers dynamically
+Date: Thu,  3 May 2012 15:54:24 +0300
+Message-ID: <1336049665-27777-3-git-send-email-peter.ujfalusi@ti.com>
 References: <1336049665-27777-1-git-send-email-peter.ujfalusi@ti.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1336049665-27777-1-git-send-email-peter.ujfalusi@ti.com>
@@ -10,55 +10,74 @@ To: Samuel Ortiz <sameo@linux.intel.com>
 Cc: linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-No functional change, just to make the code a bit more uniform and
-remove wrapped lines.
+Use irq_alloc_descs() to get the IRQ number range dynamically instead of
+the hardwired use if pdata->irq_base.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/mfd/twl6040-irq.c |   17 ++++++++---------
- 1 files changed, 8 insertions(+), 9 deletions(-)
+ drivers/mfd/twl6040-core.c |    3 +--
+ drivers/mfd/twl6040-irq.c  |   13 +++++++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/mfd/twl6040-core.c b/drivers/mfd/twl6040-core.c
+index 7a92d95..c50fba7 100644
+--- a/drivers/mfd/twl6040-core.c
++++ b/drivers/mfd/twl6040-core.c
+@@ -515,7 +515,7 @@ static int __devinit twl6040_probe(struct i2c_client *client,
+ 	}
+ 
+ 	/* In order to operate correctly we need valid interrupt config */
+-	if (!client->irq || !pdata->irq_base) {
++	if (!client->irq) {
+ 		dev_err(&client->dev, "Invalid IRQ configuration\n");
+ 		return -EINVAL;
+ 	}
+@@ -552,7 +552,6 @@ static int __devinit twl6040_probe(struct i2c_client *client,
+ 
+ 	twl6040->dev = &client->dev;
+ 	twl6040->irq = client->irq;
+-	twl6040->irq_base = pdata->irq_base;
+ 
+ 	mutex_init(&twl6040->mutex);
+ 	mutex_init(&twl6040->io_mutex);
 diff --git a/drivers/mfd/twl6040-irq.c b/drivers/mfd/twl6040-irq.c
-index b3f8dda..008022c 100644
+index 008022c..914978e 100644
 --- a/drivers/mfd/twl6040-irq.c
 +++ b/drivers/mfd/twl6040-irq.c
-@@ -138,7 +138,7 @@ static irqreturn_t twl6040_irq_thread(int irq, void *data)
+@@ -23,6 +23,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/err.h>
+ #include <linux/irq.h>
+ #include <linux/interrupt.h>
+ #include <linux/mfd/core.h>
+@@ -138,7 +139,7 @@ static irqreturn_t twl6040_irq_thread(int irq, void *data)
  
  int twl6040_irq_init(struct twl6040 *twl6040)
  {
--	int cur_irq, ret;
-+	int i, nr_irqs, ret;
+-	int i, nr_irqs, ret;
++	int i, nr_irqs, irq_base, ret;
  	u8 val;
  
  	mutex_init(&twl6040->irq_mutex);
-@@ -148,21 +148,20 @@ int twl6040_irq_init(struct twl6040 *twl6040)
- 	twl6040->irq_masks_cache = TWL6040_ALLINT_MSK;
+@@ -149,8 +150,16 @@ int twl6040_irq_init(struct twl6040 *twl6040)
  	twl6040_reg_write(twl6040, TWL6040_REG_INTMR, TWL6040_ALLINT_MSK);
  
-+	nr_irqs = ARRAY_SIZE(twl6040_irqs);
+ 	nr_irqs = ARRAY_SIZE(twl6040_irqs);
++
++	irq_base = irq_alloc_descs(-1, 0, nr_irqs, 0);
++	if (IS_ERR_VALUE(irq_base)) {
++		dev_err(twl6040->dev, "Fail to allocate IRQ descs\n");
++		return irq_base;
++	}
++	twl6040->irq_base = irq_base;
++
  	/* Register them with genirq */
--	for (cur_irq = twl6040->irq_base;
--	     cur_irq < twl6040->irq_base + ARRAY_SIZE(twl6040_irqs);
--	     cur_irq++) {
--		irq_set_chip_data(cur_irq, twl6040);
--		irq_set_chip_and_handler(cur_irq, &twl6040_irq_chip,
-+	for (i = twl6040->irq_base; i < twl6040->irq_base + nr_irqs; i++) {
-+		irq_set_chip_data(i, twl6040);
-+		irq_set_chip_and_handler(i, &twl6040_irq_chip,
+-	for (i = twl6040->irq_base; i < twl6040->irq_base + nr_irqs; i++) {
++	for (i = irq_base; i < irq_base + nr_irqs; i++) {
+ 		irq_set_chip_data(i, twl6040);
+ 		irq_set_chip_and_handler(i, &twl6040_irq_chip,
  					 handle_level_irq);
--		irq_set_nested_thread(cur_irq, 1);
-+		irq_set_nested_thread(i, 1);
- 
- 		/* ARM needs us to explicitly flag the IRQ as valid
- 		 * and will set them noprobe when we do so. */
- #ifdef CONFIG_ARM
--		set_irq_flags(cur_irq, IRQF_VALID);
-+		set_irq_flags(i, IRQF_VALID);
- #else
--		irq_set_noprobe(cur_irq);
-+		irq_set_noprobe(i);
- #endif
- 	}
- 
 -- 
 1.7.8.6
