@@ -1,7 +1,7 @@
 From: Jon Hunter <jon-hunter@ti.com>
 Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 4 May 2012 10:17:28 -0500
-Message-ID: <4FA3F308.6030900@ti.com>
+Date: Fri, 4 May 2012 10:22:01 -0500
+Message-ID: <4FA3F419.5050707@ti.com>
 References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <CAJe_Zhe-SqDMDGOhrYZtBBJnCYqLR0H07cPKzG4SyUxiLrgFnQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
