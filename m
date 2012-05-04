@@ -1,52 +1,63 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] regulator: Add generic DT parsing for regulators
-Date: Thu, 3 May 2012 16:29:42 -0700
-Message-ID: <2C89F4165782854891CDE0F3198B753C14F5473BA2@HQMAIL01.nvidia.com>
-References: <1335451941-26333-1-git-send-email-thierry.reding@avionic-design.de>
- <20120427180124.GQ18260@opensource.wolfsonmicro.com>,
- <4F9AE7C2.6010306@wwwdotorg.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] OF: PCI: const usage needed by MIPS
+Date: Thu, 3 May 2012 18:30:20 -0600
+Message-ID: <CAErSpo4bZ=0=DtbDots_GOGeLNhX6Q4eJrdetaFQMv4iiv5+XA@mail.gmail.com>
+References: <1335808019-24502-1-git-send-email-blogic@openwrt.org>
+ <4F9ED1DC.3050007@gmail.com> <4F9FE4F6.5070909@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F9AE7C2.6010306-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <4F9FE4F6.5070909@openwrt.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: John Crispin <blogic@openwrt.org>
+Cc: David Daney <ddaney.cavm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Grant Likely <grant.likely@secretlab.ca>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/27/2012 11:38 AM, Stephen Warren wrote:
->On 04/27/2012 12:01 PM, Mark Brown wrote:
->> On Thu, Apr 26, 2012 at 04:52:20PM +0200, Thierry Reding wrote:
->>> Looking up init data for regulators found on chips is a common operation
->>> that can be handled in a generic way. The new helper function introduced
->>> by this patch looks up the children of a given node by names specified
->>> in a match table and fills that match table with information parsed from
->>> the DT.
+On Tue, May 1, 2012 at 7:28 AM, John Crispin <blogic@openwrt.org> wrote=
+:
+> On 30/04/12 19:54, David Daney wrote:
+>> On 04/30/2012 10:46 AM, John Crispin wrote:
+>>> On MIPS we want to call of_irq_map_pci from inside
 >>>
->>> This is based on work by Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
+>>> arch/mips/include/asm/pci.h:extern int pcibios_map_irq(
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 const struct pci_dev *dev, u8 slot,=
+ u8 pin);
+>>>
+>>> For this to work we need to change several functions to const usage=
+=2E
 >>
->> Rhyland, does this new interface work for you?
+>> I think there is a mismatch on this throughout the kernel.
+>>
+>> Properly fixing it requires touching many more places than these.
+>> Although I haven't tried it, I wouldn't be surprised if doing this
+>> caused warnings to appear in non-MIPS code.
+>>
+>> Ralf had a patch at one point that tried to make this consistent
+>> tree-wide, but it is not yet applied.
+>>
+>> David Daney
 >
->I believe Rhyland is OOTO for the latter part of this week and perhaps
->some of next week too. (and he wasn't CC'd; I just added him)
+> Hi,
+>
+> Ok, lets see what Ralf has to say.
+>
+> I just tested the patch on x86 with OF enabled and drivers turned on
+> that use the API. I did not see any errors appear.
 
-Sorry for the delay.... Yes I think this patch looks like it will work for my purposes 
-as well. 
+I'm far from a const expert, but I think this should be safe.  Here's
+my reasoning:
 
--Rhyland
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+We're changing pci_swizzle_interrupt_pin() to take a pointer to a
+constant struct pci_dev.  pci_swizzle_interrupt_pin() only reads the
+struct pci_dev; it doesn't modify it.  It is legal to pass either
+"struct pci_dev *" or "const struct pci_dev *" to a function expecting
+"const struct pci_dev *"; the callee just won't be able to modify the
+struct, even if the caller can.
+
+Similar reasoning applies to of_irq_map_pci().
+
+So I'm fine with this.  You sent it to Grant, so I'll assume he'll
+merge it unless I hear otherwise.
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
