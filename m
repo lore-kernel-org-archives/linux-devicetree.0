@@ -1,174 +1,129 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] ARM: davinci: add support for the am1808 based
- enbw_cmc board
-Date: Sat, 5 May 2012 00:06:21 +0530
-Message-ID: <4FA421A5.4020109@ti.com>
-References: <1330945804-3379-1-git-send-email-hs@denx.de> <4FA3F6C2.9010602@denx.de>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Sat, 5 May 2012 00:31:49 +0530
+Message-ID: <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	<CAJe_Zhe-SqDMDGOhrYZtBBJnCYqLR0H07cPKzG4SyUxiLrgFnQ@mail.gmail.com>
+	<4FA3F308.6030900@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FA3F6C2.9010602-ynQEQJNshbs@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hs-ynQEQJNshbs@public.gmane.org
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FA3F308.6030900@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On 4 May 2012 20:47, Jon Hunter <jon-hunter@ti.com> wrote:
+> Hi Jassi,
+>
+> On 05/04/2012 01:56 AM, Jassi Brar wrote:
+>> On 1 May 2012 02:47, Jon Hunter <jon-hunter@ti.com> wrote:
+>>> From: Jon Hunter <jon-hunter@ti.com>
+>>>
+>>> This is based upon the work by Benoit Cousson [1] and Nicolas Ferre=
+ [2]
+>>> to add some basic helpers to retrieve a DMA controller device_node =
+and the
+>>> DMA request/channel information.
+>>>
+>>> Aim of DMA helpers
+>>> - The purpose of device-tree (as far as I understand), is to descri=
+be the
+>>> =A0capabilites of the hardware. Thinking about DMA controllers pure=
+ly from the
+>>> =A0context of the hardware to begin with, we can describe a device =
+in terms of
+>>> =A0a DMA controller as follows ...
+>>> =A0 =A0 =A0 =A01. Number of DMA controllers
+>>> =A0 =A0 =A0 =A02. Number of channels (maybe physical or logical)
+>>> =A0 =A0 =A0 =A03. Mapping of DMA requests signals to DMA controller
+>>> =A0 =A0 =A0 =A04. Number of DMA interrupts
+>>> =A0 =A0 =A0 =A05. Mapping of DMA interrupts to channels
+>>> - With the above in mind the aim of the DT DMA helper functions is =
+to extract
+>>> =A0the above information from the DT and provide to the appropriate=
+ driver.
+>>> =A0However, due to the vast number of DMA controllers and not all a=
+re using a
+>>> =A0common driver (such as DMA Engine) it has been seen that this is=
+ not a
+>>> =A0trivial task.
+>>>
+>> Sorry for being slow, but so far I thought DT is only to provide _h/=
+w_
+>> specific info
+>> to the _controller_ drivers. It was not supposed to provide any info
+>> pertaining to
+>> some API (dmaengine in this case).
+>>
+>> And I believe this is one of few situations where we are better off
+>> not generalizing
+>> the interface - pass controller specific info in the controller
+>> driver's specified format.
+>> Generalizing only seems to complicate things here, when we anyway ha=
+ve machine
+>> specific dtb, which could always have clients requesting and the
+>> controllers given
+>> dma's info in controller driver's specific format.
+>>
+>> Perhaps I am overlooking the need to generalize. If you think so, pl=
+ease help me
+>> understand by pointing out some use case for it.
+>
+> No not really, your points are valid. From reading the previous
+> discussions one of the items that was clearly lacking was the ability=
+ to
+> represent and identify a device having more than one DMA controller. =
+In
+> other words, when you request the DMA resource, how do you identify
+> which DMA controller in the system that resource belongs too. With DM=
+A
+> engine there are ways we can do this.
+>
+Well, if we really can't have dmac drivers make 'intelligent' runtime d=
+ecision
+of request mapping on more than one capable controllers, we still can
+make it simpler than the proposed scheme.
 
-On 5/4/2012 9:03 PM, Heiko Schocher wrote:
-> Hello,
-> 
-> this v3 patchset is now pending for more than 1 month without
-> seeing comments for it. Are there no more issues?
++       i2c1: i2c@1 {
++               ...
++               dma =3D <&sdma 2 1 &sdma 3 2>;
++               ...
++       };
+>
+I see this requires a client driver to specify a particular req_line on=
+ a
+particular dma controller. I am not sure if this is most optimal.
 
-I am yet to get to them. I have mostly cleared my backlog and will be
-looking into these next. Sorry about the delay.
+I think such client->req_line map should be provided to the dmac contro=
+ller
+driver via its dt node in some format. The dmac driver could then popul=
+ate
+a dma_chan, or similar, only for that req_line and not for the unused o=
+ne
+which otherwise could also have served the same client.
 
-> Should I rebase it (if no further comments occur), as it is
-> pending so long? (If so, against which tree?)
+Ideally the I2C driver should simply ask, say, a channel for TX and ano=
+ther
+for RX, everything else should already be setup via dmac's dt nodes.
 
-The series touches multiple subsystems, so may be each patch will go
-through individual subsystem maintainer.
+Channel properties like duplex, priority etc specified in client's dt n=
+ode
+doesn't seem really necessary - the client's driver is able to adjust
+according to the capability of the channel the dmaengine api is able
+to provide and the client driver can't really do anything if it saw "tx=
+rx"
+specified in it's dt node while it doesn't yet support full-duplex (say=
+).
 
-Also copying Grant and Rob as device tree maintainers.
-
-Thanks,
-Sekhar
-
-> 
-> Thanks.
-> 
-> bye,
-> Heiko
-> 
-> Heiko Schocher wrote:
->> This patchserie add support for the davinci am1808 based
->> enbw_cmc board.
->>
->> Important: I rebased this patchserie against the irqdomain/next
->> branch from grant likely, as he suggested to rework the OF
->> intcontroller changes to the irqdomain work, branch found here:
->>
->> http://git.secretlab.ca/?p=linux-2.6.git;a=shortlog;h=refs/heads/irqdomain/next
->>
->>     git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
->>
->>     commit 280ad7fda5f95211857fda38960f2b6fdf6edd3e
->>     Author: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>     Date:   Fri Feb 24 14:58:54 2012 -0700
->>
->>     mfd: twl-core: Add IRQ_DOMAIN dependency
->>
->> changes for v2:
->> Post this patchserie now as v2, as reworked in the
->> comments I got for the RFC serie.
->>
->> changes for v3:
->> - Interrupt Controller:
->>   - comment from Sergei Shtylyov:
->>     - rename compatible" prop to "ti,cp_intc"
->>     - cp_intc_init() is now also for the of case
->>       the name of the init function (it calls the
->>       "new" __cp_intc_init() function, which was
->>       the "old" cp_intc_init()). Through this
->>       rework the changes for OF is better visible.
->>       As the OF case uses the irq_domain rework from
->>       Grant Likely, maybe the none OF case can use
->>       this also, but this should be tested on a hw ...
->>  
->> Got no comments to the following points, I noted in the
->> RFC series, so posting this patchseries with them:
->>
->> - ARM: davinci: configure davinci aemif chipselects through OF
->>   not moved to mfd, as mentioned in this discussion:
->>   http://davinci-linux-open-source.1494791.n2.nabble.com/PATCH-arm-davinci-configure-davinci-aemif-chipselects-through-OF-td7059739.html
->>   instead use a phandle in the DTS, so drivers which
->>   uses the davinci aemif, can call davinci_aemif_setup_timing_of()
->>
->>   This is just thought as an RFC ... The enbw_cmc board
->>   support not really need to setup this bus timings, as
->>   they are setup in U-Boot ... but I want to post this,
->>   as I think, it is a nice to have, and I am not really
->>   sure, if this has to be a MFD device (If so, all bus
->>   interfaces for other SoCs should be converted also to
->>   MFD devices) ... as an example how this can be used
->>   I add this to the davinci nand controller OF support
->>   patch, in this patchserie.
->>
->> - ARM: davinci: mux: add OF support
->>   I want to get rid of the pin setup code in board code ...
->>   This patch introduces a davinci_cfg_reg_of() function,
->>   which davinci drivers can call, if they found a
->>   "pinmux-handle", so used in the following drivers in
->>   this patchserie:
->>
->>   drivers/net/ethernet/ti/davinci_emac
->>   drivers/i2c/busses/i2c-davinci.c
->>   drivers/mtd/nand/davinci_nand.c
->>
->> - post this board support with USB support, even though
->>   USB is only working with the 10 ms "workaround", posted here:
->>   http://comments.gmane.org/gmane.linux.usb.general/54505
->>   I see this issue also on the AM1808 TMDXEXP1808L evalboard.
->>
->> - MMC and USB are not using OF support yet, ideas how to port
->>   this are welcome. I need for USB and MMC board specific
->>   callbacks, how to solve this with OF support?
->>
->> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
->> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
->> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
->> Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
->> Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
->> Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
->> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
->> Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
->>
->> Heiko Schocher (7):
->>   ARM: davinci, intc: Add OF support for TI interrupt controller
->>   ARM: davinci: configure davinci aemif chipselects through OF
->>   ARM: davinci: mux: add OF support
->>   ARM: davinci: net: davinci_emac: add OF support
->>   ARM: davinci: i2c: add OF support
->>   ARM: mtd: nand: davinci: add OF support for davinci nand controller
->>   ARM: davinci: add support for the am1808 based enbw_cmc board
->>
->>  .../devicetree/bindings/arm/davinci/aemif.txt      |  119 ++++++
->>  .../bindings/arm/davinci/davinci_emac.txt          |   43 +++
->>  .../devicetree/bindings/arm/davinci/i2c.txt        |   33 ++
->>  .../devicetree/bindings/arm/davinci/intc.txt       |   27 ++
->>  .../devicetree/bindings/arm/davinci/mux.txt        |   40 ++
->>  .../devicetree/bindings/arm/davinci/nand.txt       |   74 ++++
->>  arch/arm/boot/dts/enbw_cmc.dts                     |  268 ++++++++++++++
->>  arch/arm/configs/enbw_cmc_defconfig                |  123 +++++++
->>  arch/arm/mach-davinci/Kconfig                      |    9 +
->>  arch/arm/mach-davinci/Makefile                     |    1 +
->>  arch/arm/mach-davinci/aemif.c                      |   86 +++++-
->>  arch/arm/mach-davinci/board-enbw-cmc.c             |  380 ++++++++++++++++++++
->>  arch/arm/mach-davinci/cp_intc.c                    |   87 ++++-
->>  arch/arm/mach-davinci/include/mach/aemif.h         |    1 +
->>  arch/arm/mach-davinci/include/mach/mux.h           |    2 +
->>  arch/arm/mach-davinci/include/mach/uncompress.h    |    1 +
->>  arch/arm/mach-davinci/mux.c                        |   73 ++++-
->>  drivers/i2c/busses/i2c-davinci.c                   |   37 ++
->>  drivers/mtd/nand/davinci_nand.c                    |   85 +++++-
->>  drivers/net/ethernet/ti/davinci_emac.c             |   94 +++++-
->>  20 files changed, 1569 insertions(+), 14 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/aemif.txt
->>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
->>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/i2c.txt
->>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/intc.txt
->>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/mux.txt
->>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
->>  create mode 100644 arch/arm/boot/dts/enbw_cmc.dts
->>  create mode 100644 arch/arm/configs/enbw_cmc_defconfig
->>  create mode 100644 arch/arm/mach-davinci/board-enbw-cmc.c
->>
-> 
+Having spilled my guts and realizing the fact that the Maradonas and Pe=
+les
+of the game seem to have already bought the scheme, I am afraid it only
+points to my not yet diagnosed adhd  :o
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
