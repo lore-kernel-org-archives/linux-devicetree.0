@@ -1,7 +1,7 @@
 From: Dong Aisheng <b29396@freescale.com>
-Subject: [PATCH v2 3/5] dma: mxs-dma: add device tree probe support
-Date: Fri, 4 May 2012 20:12:17 +0800
-Message-ID: <1336133539-13465-3-git-send-email-b29396@freescale.com>
+Subject: [PATCH v2 5/5] ARM: mx28evk: add mxs-dma dt support
+Date: Fri, 4 May 2012 20:12:19 +0800
+Message-ID: <1336133539-13465-5-git-send-email-b29396@freescale.com>
 References: <1336133539-13465-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -25,119 +25,52 @@ From: Dong Aisheng <dong.aisheng@linaro.org>
 
 Cc: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Vinod Koul <vinod.koul@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Sascha Hauer <s.hauer@pengutronix.de>
 Cc: Huang Shijie <b32955@freescale.com>
 Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
 Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
 ---
-ChangeLog v1->v2:
-* remove #ifdef CONFIG_OF for mxs_dma_dt_ids based on Shawn's
-  suggestion.
----
- .../devicetree/bindings/dma/fsl-mxs-dma.txt        |   19 +++++++++++++
- drivers/dma/mxs-dma.c                              |   29 ++++++++++++++++---
- 2 files changed, 43 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
+ arch/arm/boot/dts/imx28.dtsi   |    4 ++--
+ arch/arm/mach-mxs/clock-mx28.c |    2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt b/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
-new file mode 100644
-index 0000000..ded0398
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
-@@ -0,0 +1,19 @@
-+* Freescale MXS DMA
-+
-+Required properties:
-+- compatible : Should be "fsl,<chip>-dma-apbh" or "fsl,<chip>-dma-apbx"
-+- reg : Should contain registers location and length
-+
-+Supported chips:
-+imx23, imx28.
-+
-+Examples:
-+dma-apbh@80004000 {
-+	compatible = "fsl,imx28-dma-apbh";
-+	reg = <0x80004000 2000>;
-+};
-+
-+dma-apbx@80024000 {
-+	compatible = "fsl,imx28-dma-apbx";
-+	reg = <0x80024000 2000>;
-+};
-diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-index d8505d3..f6a3bf6 100644
---- a/drivers/dma/mxs-dma.c
-+++ b/drivers/dma/mxs-dma.c
-@@ -22,8 +22,11 @@
- #include <linux/platform_device.h>
- #include <linux/dmaengine.h>
- #include <linux/delay.h>
-+#include <linux/module.h>
- #include <linux/fsl/mxs-dma.h>
- #include <linux/stmp_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index d1f4f8c..5f61777 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -52,8 +52,8 @@
+ 			};
  
- #include <asm/irq.h>
+ 			dma-apbh@80004000 {
++				compatible = "fsl,imx28-dma-apbh";
+ 				reg = <0x80004000 2000>;
+-				status = "disabled";
+ 			};
  
-@@ -172,6 +175,15 @@ static struct platform_device_id mxs_dma_ids[] = {
- 	}
+ 			perfmon@80006000 {
+@@ -115,8 +115,8 @@
+ 			};
+ 
+ 			dma-apbx@80024000 {
++				compatible = "fsl,imx28-dma-apbx";
+ 				reg = <0x80024000 2000>;
+-				status = "disabled";
+ 			};
+ 
+ 			dcp@80028000 {
+diff --git a/arch/arm/mach-mxs/clock-mx28.c b/arch/arm/mach-mxs/clock-mx28.c
+index cca2cf7..9c926b6 100644
+--- a/arch/arm/mach-mxs/clock-mx28.c
++++ b/arch/arm/mach-mxs/clock-mx28.c
+@@ -652,6 +652,8 @@ static struct clk_lookup lookups[] = {
+ 	_REGISTER_CLOCK("80074000.serial", NULL, uart_clk)
+ 	_REGISTER_CLOCK("800f0000.ethernet", NULL, fec_clk)
+ 	_REGISTER_CLOCK("800f4000.ethernet", NULL, fec_clk)
++	_REGISTER_CLOCK("80004000.dma-apbh", NULL, hbus_clk)
++	_REGISTER_CLOCK("80024000.dma-apbx", NULL, xbus_clk)
  };
  
-+static const struct of_device_id mxs_dma_dt_ids[] = {
-+	{ .compatible = "fsl,imx23-dma-apbh", .data = &mxs_dma_ids[0], },
-+	{ .compatible = "fsl,imx23-dma-apbx", .data = &mxs_dma_ids[1], },
-+	{ .compatible = "fsl,imx28-dma-apbh", .data = &mxs_dma_ids[2], },
-+	{ .compatible = "fsl,imx28-dma-apbx", .data = &mxs_dma_ids[3], },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mxs_dma_dt_ids);
-+
- static struct mxs_dma_chan *to_mxs_dma_chan(struct dma_chan *chan)
- {
- 	return container_of(chan, struct mxs_dma_chan, chan);
-@@ -647,10 +659,9 @@ err_out:
- 
- static int __init mxs_dma_probe(struct platform_device *pdev)
- {
--	const struct platform_device_id *id_entry =
--				platform_get_device_id(pdev);
--	const struct mxs_dma_type *dma_type =
--			(struct mxs_dma_type *)id_entry->driver_data;
-+	const struct platform_device_id *id_entry;
-+	const struct of_device_id *of_id;
-+	const struct mxs_dma_type *dma_type;
- 	struct mxs_dma_engine *mxs_dma;
- 	struct resource *iores;
- 	int ret, i;
-@@ -659,8 +670,15 @@ static int __init mxs_dma_probe(struct platform_device *pdev)
- 	if (!mxs_dma)
- 		return -ENOMEM;
- 
--	mxs_dma->dev_id = dma_type->id;
-+	of_id = of_match_device(mxs_dma_dt_ids, &pdev->dev);
-+	if (of_id)
-+		id_entry = of_id->data;
-+	else
-+		id_entry = platform_get_device_id(pdev);
-+
-+	dma_type = (struct mxs_dma_type *)id_entry->driver_data;
- 	mxs_dma->type = dma_type->type;
-+	mxs_dma->dev_id = dma_type->id;
- 
- 	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 
-@@ -746,6 +764,7 @@ err_request_region:
- static struct platform_driver mxs_dma_driver = {
- 	.driver		= {
- 		.name	= "mxs-dma",
-+		.of_match_table = mxs_dma_dt_ids,
- 	},
- 	.id_table	= mxs_dma_ids,
- };
+ static int clk_misc_init(void)
 -- 
 1.7.0.4
