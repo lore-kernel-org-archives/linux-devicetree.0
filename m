@@ -1,331 +1,69 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] dma: mxs-dma: make platform_device_id more generic
-Date: Fri, 4 May 2012 14:15:03 +0200
-Message-ID: <201205041415.04095.marek.vasut@gmail.com>
-References: <1336133539-13465-1-git-send-email-b29396@freescale.com>
- <1336133539-13465-2-git-send-email-b29396@freescale.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/3] MFD: twl6040: Allocate IRQ numbers dynamically
+Date: Fri, 4 May 2012 13:17:30 +0100
+Message-ID: <20120504121730.GG14230@opensource.wolfsonmicro.com>
+References: <20120503132004.GB14296@sirena.org.uk>
+ <4FA2881B.6010902@ti.com>
+ <20120503145248.GJ3955@opensource.wolfsonmicro.com>
+ <4FA2A08C.5000403@ti.com>
+ <20120503152643.GM3955@opensource.wolfsonmicro.com>
+ <4FA3958A.4080206@ti.com>
+ <20120504090856.GA14230@opensource.wolfsonmicro.com>
+ <4FA3B182.5060001@ti.com>
+ <20120504112204.GE14230@opensource.wolfsonmicro.com>
+ <4FA3C3B9.3030009@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1336133539-13465-2-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hcut4fGOf7Kh6EdG"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FA3C3B9.3030009@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Dong Aisheng,
 
-> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Rewrite mxs_dma_is_apbh and mxs_dma_is_apbx in order to support
-> other SoCs like imx6q and reform the platform_device_id for the
-> better further dt support.
-> 
-> Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v1->v2:
-> * remove using mxs_dma->version
-> * other minor fixes suggested by Shawn.
-> ---
->  arch/arm/mach-mxs/clock-mx23.c           |    4 +-
->  arch/arm/mach-mxs/clock-mx28.c           |    4 +-
->  arch/arm/mach-mxs/devices/platform-dma.c |   14 ++--
->  drivers/dma/mxs-dma.c                    |  115
-> ++++++++++++++++++++--------- include/linux/fsl/mxs-dma.h              |  
-> 12 +---
->  5 files changed, 93 insertions(+), 56 deletions(-)
-> 
-> diff --git a/arch/arm/mach-mxs/clock-mx23.c
-> b/arch/arm/mach-mxs/clock-mx23.c index e3ac52c..1e67b85 100644
-> --- a/arch/arm/mach-mxs/clock-mx23.c
-> +++ b/arch/arm/mach-mxs/clock-mx23.c
-> @@ -427,8 +427,8 @@ static struct clk_lookup lookups[] = {
->  	_REGISTER_CLOCK("duart", NULL, uart_clk)
->  	_REGISTER_CLOCK("mxs-auart.0", NULL, uart_clk)
->  	_REGISTER_CLOCK("rtc", NULL, rtc_clk)
-> -	_REGISTER_CLOCK("mxs-dma-apbh", NULL, hbus_clk)
-> -	_REGISTER_CLOCK("mxs-dma-apbx", NULL, xbus_clk)
-> +	_REGISTER_CLOCK("imx23-dma-apbh", NULL, hbus_clk)
-> +	_REGISTER_CLOCK("imx23-dma-apbx", NULL, xbus_clk)
->  	_REGISTER_CLOCK("mxs-mmc.0", NULL, ssp_clk)
->  	_REGISTER_CLOCK("mxs-mmc.1", NULL, ssp_clk)
->  	_REGISTER_CLOCK(NULL, "usb", usb_clk)
-> diff --git a/arch/arm/mach-mxs/clock-mx28.c
-> b/arch/arm/mach-mxs/clock-mx28.c index 1867a17..cca2cf7 100644
-> --- a/arch/arm/mach-mxs/clock-mx28.c
-> +++ b/arch/arm/mach-mxs/clock-mx28.c
-> @@ -625,8 +625,8 @@ static struct clk_lookup lookups[] = {
->  	_REGISTER_CLOCK("mxs-auart.4", NULL, uart_clk)
->  	_REGISTER_CLOCK("rtc", NULL, rtc_clk)
->  	_REGISTER_CLOCK("pll2", NULL, pll2_clk)
-> -	_REGISTER_CLOCK("mxs-dma-apbh", NULL, hbus_clk)
-> -	_REGISTER_CLOCK("mxs-dma-apbx", NULL, xbus_clk)
-> +	_REGISTER_CLOCK("imx28-dma-apbh", NULL, hbus_clk)
-> +	_REGISTER_CLOCK("imx28-dma-apbx", NULL, xbus_clk)
->  	_REGISTER_CLOCK("mxs-mmc.0", NULL, ssp0_clk)
->  	_REGISTER_CLOCK("mxs-mmc.1", NULL, ssp1_clk)
->  	_REGISTER_CLOCK("mxs-mmc.2", NULL, ssp2_clk)
-> diff --git a/arch/arm/mach-mxs/devices/platform-dma.c
-> b/arch/arm/mach-mxs/devices/platform-dma.c index 6a0202b..aff4813 100644
-> --- a/arch/arm/mach-mxs/devices/platform-dma.c
-> +++ b/arch/arm/mach-mxs/devices/platform-dma.c
-> @@ -32,17 +32,19 @@ static struct platform_device *__init mxs_add_dma(const
-> char *devid,
-> 
->  static int __init mxs_add_mxs_dma(void)
->  {
-> -	char *apbh = "mxs-dma-apbh";
-> -	char *apbx = "mxs-dma-apbx";
-> +	char *mx23_apbh = "imx23-dma-apbh";
-> +	char *mx23_apbx = "imx23-dma-apbx";
-> +	char *mx28_apbh = "imx28-dma-apbh";
-> +	char *mx28_apbx = "imx28-dma-apbx";
+--hcut4fGOf7Kh6EdG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Wild guess ... but const char * won't hurt here ?
+On Fri, May 04, 2012 at 02:55:37PM +0300, Peter Ujfalusi wrote:
+> On 05/04/2012 02:22 PM, Mark Brown wrote:
+> >> The OMAP platform related drives has been already converted to use
+> >> irq_alloc_descs(-1, 0, nr_irqs, 0); to map their range (including GPIO,
+> >> twl6030, etc).
 
-> 
->  	if (cpu_is_mx23()) {
-> -		mxs_add_dma(apbh, MX23_APBH_DMA_BASE_ADDR);
-> -		mxs_add_dma(apbx, MX23_APBX_DMA_BASE_ADDR);
-> +		mxs_add_dma(mx23_apbh, MX23_APBH_DMA_BASE_ADDR);
-> +		mxs_add_dma(mx23_apbx, MX23_APBX_DMA_BASE_ADDR);
->  	}
-> 
->  	if (cpu_is_mx28()) {
-> -		mxs_add_dma(apbh, MX28_APBH_DMA_BASE_ADDR);
-> -		mxs_add_dma(apbx, MX28_APBX_DMA_BASE_ADDR);
-> +		mxs_add_dma(mx28_apbh, MX28_APBH_DMA_BASE_ADDR);
-> +		mxs_add_dma(mx28_apbx, MX28_APBX_DMA_BASE_ADDR);
->  	}
-> 
->  	return 0;
-> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-> index 0fefdd3..d8505d3 100644
-> --- a/drivers/dma/mxs-dma.c
-> +++ b/drivers/dma/mxs-dma.c
-> @@ -35,12 +35,8 @@
->   * dma can program the controller registers of peripheral devices.
->   */
-> 
-> -#define MXS_DMA_APBH		0
-> -#define MXS_DMA_APBX		1
-> -#define dma_is_apbh()		(mxs_dma->dev_id == MXS_DMA_APBH)
-> -
-> -#define APBH_VERSION_LATEST	3
-> -#define apbh_is_old()		(mxs_dma->version < APBH_VERSION_LATEST)
-> +#define dma_is_apbh()		(mxs_dma->type == MXS_DMA_APBH)
-> +#define apbh_is_old()		(mxs_dma->dev_id == IMX23_DMA)
-> 
->  #define HW_APBHX_CTRL0				0x000
->  #define BM_APBH_CTRL0_APB_BURST8_EN		(1 << 29)
-> @@ -50,9 +46,6 @@
->  #define HW_APBHX_CTRL2				0x020
->  #define HW_APBHX_CHANNEL_CTRL			0x030
->  #define BP_APBHX_CHANNEL_CTRL_RESET_CHANNEL	16
-> -#define HW_APBH_VERSION				(cpu_is_mx23() ? 0x3f0 : 
-0x800)
-> -#define HW_APBX_VERSION				0x800
-> -#define BP_APBHX_VERSION_MAJOR			24
->  #define HW_APBHX_CHn_NXTCMDAR(n) \
->  	(((dma_is_apbh() && apbh_is_old()) ? 0x050 : 0x110) + (n) * 0x70)
->  #define HW_APBHX_CHn_SEMA(n) \
-> @@ -120,9 +113,19 @@ struct mxs_dma_chan {
->  #define MXS_DMA_CHANNELS		16
->  #define MXS_DMA_CHANNELS_MASK		0xffff
-> 
-> +enum mxs_dma_devtype {
-> +	MXS_DMA_APBH,
-> +	MXS_DMA_APBX,
-> +};
-> +
-> +enum mxs_dma_id {
-> +	IMX23_DMA,
-> +	IMX28_DMA,
-> +};
-> +
->  struct mxs_dma_engine {
-> -	int				dev_id;
-> -	unsigned int			version;
-> +	enum mxs_dma_id			dev_id;
-> +	enum mxs_dma_devtype		type;
->  	void __iomem			*base;
->  	struct clk			*clk;
->  	struct dma_device		dma_device;
-> @@ -130,6 +133,66 @@ struct mxs_dma_engine {
->  	struct mxs_dma_chan		mxs_chans[MXS_DMA_CHANNELS];
->  };
-> 
-> +struct mxs_dma_type {
-> +	enum mxs_dma_id id;
-> +	enum mxs_dma_devtype type;
-> +};
-> +
-> +static struct mxs_dma_type mxs_dma_types[] = {
-> +	{
-> +		.id = IMX23_DMA,
-> +		.type = MXS_DMA_APBH,
-> +	}, {
-> +		.id = IMX23_DMA,
-> +		.type = MXS_DMA_APBX,
-> +	}, {
-> +		.id = IMX28_DMA,
-> +		.type = MXS_DMA_APBH,
-> +	}, {
-> +		.id = IMX28_DMA,
-> +		.type = MXS_DMA_APBX,
-> +	}
-> +};
-> +
-> +static struct platform_device_id mxs_dma_ids[] = {
-> +	{
-> +		.name = "imx23-dma-apbh",
-> +		.driver_data = (kernel_ulong_t) &mxs_dma_types[0],
-> +	}, {
-> +		.name = "imx23-dma-apbx",
-> +		.driver_data = (kernel_ulong_t) &mxs_dma_types[1],
-> +	}, {
-> +		.name = "imx28-dma-apbh",
-> +		.driver_data = (kernel_ulong_t) &mxs_dma_types[2],
-> +	}, {
-> +		.name = "imx28-dma-apbx",
-> +		.driver_data = (kernel_ulong_t) &mxs_dma_types[3],
-> +	}, {
-> +		/* end of list */
-> +	}
-> +};
-> +
-> +static struct mxs_dma_chan *to_mxs_dma_chan(struct dma_chan *chan)
-> +{
-> +	return container_of(chan, struct mxs_dma_chan, chan);
-> +}
-> +
-> +int mxs_dma_is_apbh(struct dma_chan *chan)
-> +{
-> +	struct mxs_dma_chan *mxs_chan = to_mxs_dma_chan(chan);
-> +	struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
+> > How does this work for interrupts on things like SPI and I2C devices?
 
-Do you need the above here ? :)
+> You mean on devices like twl6040, twl6030, twl4030 (I2C MFD devices)?
+> Or "irq expander" type of devices?
 
-> +
-> +	return dma_is_apbh();
-> +}
-> +
-> +int mxs_dma_is_apbx(struct dma_chan *chan)
-> +{
-> +	struct mxs_dma_chan *mxs_chan = to_mxs_dma_chan(chan);
-> +	struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
-> +
+The latter, and also just any driver that delivers an interrupt via a
+GPIO on OMAP - if the GPIO IRQ numbers are all dynamically allocated
+then it gets hard to register an off-chip device and tell it which
+interrupt to request.
 
-Dtto ?
+--hcut4fGOf7Kh6EdG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +	return !dma_is_apbh();
-> +}
-> +
->  static void mxs_dma_reset_chan(struct mxs_dma_chan *mxs_chan)
->  {
->  	struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
-> @@ -193,11 +256,6 @@ static void mxs_dma_resume_chan(struct mxs_dma_chan
-> *mxs_chan) mxs_chan->status = DMA_IN_PROGRESS;
->  }
-> 
-> -static struct mxs_dma_chan *to_mxs_dma_chan(struct dma_chan *chan)
-> -{
-> -	return container_of(chan, struct mxs_dma_chan, chan);
-> -}
-> -
->  static dma_cookie_t mxs_dma_tx_submit(struct dma_async_tx_descriptor *tx)
->  {
->  	return dma_cookie_assign(tx);
-> @@ -570,12 +628,6 @@ static int __init mxs_dma_init(struct mxs_dma_engine
-> *mxs_dma) if (ret)
->  		goto err_out;
-> 
-> -	/* only major version matters */
-> -	mxs_dma->version = readl(mxs_dma->base +
-> -				((mxs_dma->dev_id == MXS_DMA_APBX) ?
-> -				HW_APBX_VERSION : HW_APBH_VERSION)) >>
-> -				BP_APBHX_VERSION_MAJOR;
-> -
->  	/* enable apbh burst */
->  	if (dma_is_apbh()) {
->  		writel(BM_APBH_CTRL0_APB_BURST_EN,
-> @@ -597,6 +649,8 @@ static int __init mxs_dma_probe(struct platform_device
-> *pdev) {
->  	const struct platform_device_id *id_entry =
->  				platform_get_device_id(pdev);
-> +	const struct mxs_dma_type *dma_type =
-> +			(struct mxs_dma_type *)id_entry->driver_data;
->  	struct mxs_dma_engine *mxs_dma;
->  	struct resource *iores;
->  	int ret, i;
-> @@ -605,7 +659,8 @@ static int __init mxs_dma_probe(struct platform_device
-> *pdev) if (!mxs_dma)
->  		return -ENOMEM;
-> 
-> -	mxs_dma->dev_id = id_entry->driver_data;
-> +	mxs_dma->dev_id = dma_type->id;
-> +	mxs_dma->type = dma_type->type;
-> 
->  	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> 
-> @@ -688,23 +743,11 @@ err_request_region:
->  	return ret;
->  }
-> 
-> -static struct platform_device_id mxs_dma_type[] = {
-> -	{
-> -		.name = "mxs-dma-apbh",
-> -		.driver_data = MXS_DMA_APBH,
-> -	}, {
-> -		.name = "mxs-dma-apbx",
-> -		.driver_data = MXS_DMA_APBX,
-> -	}, {
-> -		/* end of list */
-> -	}
-> -};
-> -
->  static struct platform_driver mxs_dma_driver = {
->  	.driver		= {
->  		.name	= "mxs-dma",
->  	},
-> -	.id_table	= mxs_dma_type,
-> +	.id_table	= mxs_dma_ids,
->  };
-> 
->  static int __init mxs_dma_module_init(void)
-> diff --git a/include/linux/fsl/mxs-dma.h b/include/linux/fsl/mxs-dma.h
-> index 203d7c4..55d8702 100644
-> --- a/include/linux/fsl/mxs-dma.h
-> +++ b/include/linux/fsl/mxs-dma.h
-> @@ -15,14 +15,6 @@ struct mxs_dma_data {
->  	int chan_irq;
->  };
-> 
-> -static inline int mxs_dma_is_apbh(struct dma_chan *chan)
-> -{
-> -	return !strcmp(dev_name(chan->device->dev), "mxs-dma-apbh");
-> -}
-> -
-> -static inline int mxs_dma_is_apbx(struct dma_chan *chan)
-> -{
-> -	return !strcmp(dev_name(chan->device->dev), "mxs-dma-apbx");
-> -}
-> -
-> +extern int mxs_dma_is_apbh(struct dma_chan *chan);
-> +extern int mxs_dma_is_apbx(struct dma_chan *chan);
->  #endif /* __MACH_MXS_DMA_H__ */
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPo8jNAAoJEBus8iNuMP3d49wP/1APiZ/L0/M3Q7cyCZ/XFNKw
+3jTXpAWKcrW+6tzTdue6Wqa+EpquJq+6kBW5lFWP6488PKQmnkniTaX+pqKoGDFI
+l0mHDGFRpVHYvRO8GGmbXlUez/OixlA2dwZ52SlnRDeiognFeiRePhv7hJQOR5x2
+ZcV2E36ImZX88mJGc4NUx9nBNfIq3PlGFTQswNPdTf1ULTis+V8S2TsSXxEQ1TE+
+3vxjT5X/755MINABx/FFna3cucewCjInbhzwwL3BqSOcFTzV9rhh3mu/ZVCs9QEv
+WSRTcZHxvB15aq40us9LAA2vyBlvePnSLFpytHbqgejg1d3Gu+GH6ICwHpXbaLwu
+YAg5v+sU+K9OW/CeuYRd8glqz5xA7xnuxjgNj0AVg3i1GFfRjd7xcaMNZvuXUt60
+XlqaziMEklpBCVtiAj+XPsueDhDIvYE6+VV0+NPadcAikBg32zdsr80plEkNZez9
+tavgZpmKLvULr3o7GveIt2+tzJVdbjW9+FDf+yd54zkzriDYmqyKeezuwgrdMzgu
+FG1sVqVSrjBNMVOXf3CvXUNs5VmLBf1PVBMbdwYb/rxmJfBwgeFUmxivbB3df4To
+17oe0gRoT4BoEBUvny8l9UjnzOhOXHi0fhfSyQoo1+FWNJuPDTuJvBM2VXyPCSvN
+1V5gw4EWsH7Encxon3uU
+=3bWX
+-----END PGP SIGNATURE-----
+
+--hcut4fGOf7Kh6EdG--
