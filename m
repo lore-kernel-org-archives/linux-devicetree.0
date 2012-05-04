@@ -1,73 +1,37 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 4 May 2012 12:26:13 +0530
-Message-ID: <CAJe_Zhe-SqDMDGOhrYZtBBJnCYqLR0H07cPKzG4SyUxiLrgFnQ@mail.gmail.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 2/3] MFD: twl6040: Allocate IRQ numbers dynamically
+Date: Fri, 04 May 2012 11:38:34 +0300
+Message-ID: <4FA3958A.4080206@ti.com>
+References: <1336049665-27777-1-git-send-email-peter.ujfalusi@ti.com> <1336049665-27777-3-git-send-email-peter.ujfalusi@ti.com> <20120503132004.GB14296@sirena.org.uk> <4FA2881B.6010902@ti.com> <20120503145248.GJ3955@opensource.wolfsonmicro.com> <4FA2A08C.5000403@ti.com> <20120503152643.GM3955@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120503152643.GM3955@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1 May 2012 02:47, Jon Hunter <jon-hunter@ti.com> wrote:
-> From: Jon Hunter <jon-hunter@ti.com>
->
-> This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [=
-2]
-> to add some basic helpers to retrieve a DMA controller device_node an=
-d the
-> DMA request/channel information.
->
-> Aim of DMA helpers
-> - The purpose of device-tree (as far as I understand), is to describe=
- the
-> =A0capabilites of the hardware. Thinking about DMA controllers purely=
- from the
-> =A0context of the hardware to begin with, we can describe a device in=
- terms of
-> =A0a DMA controller as follows ...
-> =A0 =A0 =A0 =A01. Number of DMA controllers
-> =A0 =A0 =A0 =A02. Number of channels (maybe physical or logical)
-> =A0 =A0 =A0 =A03. Mapping of DMA requests signals to DMA controller
-> =A0 =A0 =A0 =A04. Number of DMA interrupts
-> =A0 =A0 =A0 =A05. Mapping of DMA interrupts to channels
-> - With the above in mind the aim of the DT DMA helper functions is to=
- extract
-> =A0the above information from the DT and provide to the appropriate d=
-river.
-> =A0However, due to the vast number of DMA controllers and not all are=
- using a
-> =A0common driver (such as DMA Engine) it has been seen that this is n=
-ot a
-> =A0trivial task.
->
-Sorry for being slow, but so far I thought DT is only to provide _h/w_
-specific info
-to the _controller_ drivers. It was not supposed to provide any info
-pertaining to
-some API (dmaengine in this case).
+On 05/03/2012 06:26 PM, Mark Brown wrote:
+> On Thu, May 03, 2012 at 06:13:16PM +0300, Peter Ujfalusi wrote:
+>> On 05/03/2012 05:52 PM, Mark Brown wrote:
+>>> Are you sure there aren't any boards out there which rely on the
+>>> interrupt base (eg, using a GPIO with the IRQ output of a chip)?
+>=20
+>> Yes, I'm sure.
+>=20
+> Because...?
 
-And I believe this is one of few situations where we are better off
-not generalizing
-the interface - pass controller specific info in the controller
-driver's specified format.
-Generalizing only seems to complicate things here, when we anyway have =
-machine
-specific dtb, which could always have clients requesting and the
-controllers given
-dma's info in controller driver's specific format.
+The irq_base was used to map the nested interrupt numbers somewhere hig=
+h
+enough. twl6040 has one irq line towards the CPU (comes via
+i2c_client->irq).
+With this change we just change the mapping of the nested interrupt
+range provided by twl6040 (instead of hardwired number we ask for
+suitable range).
+We have sdp4430 and PandaBoard with twl6040. They are fine. The other
+non upstream boards should be fine as well with this change.
 
-Perhaps I am overlooking the need to generalize. If you think so, pleas=
-e help me
-understand by pointing out some use case for it.
-
-Thanks.
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+P=E9ter
