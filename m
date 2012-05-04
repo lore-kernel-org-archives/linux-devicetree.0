@@ -1,41 +1,39 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 2/3] MFD: twl6040: Allocate IRQ numbers dynamically
-Date: Fri, 04 May 2012 15:33:51 +0300
-Message-ID: <4FA3CCAF.3020902@ti.com>
-References: <20120503132004.GB14296@sirena.org.uk> <4FA2881B.6010902@ti.com> <20120503145248.GJ3955@opensource.wolfsonmicro.com> <4FA2A08C.5000403@ti.com> <20120503152643.GM3955@opensource.wolfsonmicro.com> <4FA3958A.4080206@ti.com> <20120504090856.GA14230@opensource.wolfsonmicro.com> <4FA3B182.5060001@ti.com> <20120504112204.GE14230@opensource.wolfsonmicro.com> <4FA3C3B9.3030009@ti.com> <20120504121730.GG14230@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 4 May 2012 12:39:39 +0000
+Message-ID: <201205041239.39630.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+ <4FA30604.1030401@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120504121730.GG14230@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FA30604.1030401-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2012 03:17 PM, Mark Brown wrote:
->> You mean on devices like twl6040, twl6030, twl4030 (I2C MFD devices)=
-?
->> Or "irq expander" type of devices?
->=20
-> The latter, and also just any driver that delivers an interrupt via a
-> GPIO on OMAP - if the GPIO IRQ numbers are all dynamically allocated
-> then it gets hard to register an off-chip device and tell it which
-> interrupt to request.
+On Thursday 03 May 2012, Stephen Warren wrote:
+> > +    - #dma-channels: Number of DMA channels supported by the controller.
+> > +    - #dma-requests: Number of DMA requests signals supported by the controller.
+> 
+> I don't see why those properties would be mandatory in device tree. They
+> don't appear to be involved in parsing a DMA client's DMA specifier.
+> Shouldn't this information be provided at run-time by the DMA controller
+> driver. If it supports different HW models with different capabilities,
+> then it certainly could represent those values in DT, but I don't think
+> this should be required.
 
-=46or GPIO IRQ there's the gpio_to_irq() call which returns the mapped =
-IRQ
-number for the given GPIO.
-If there is "irq expander" type of chip I assume it would have similar
-way to get the IRQ number based on either GPIO number or some other
-enumeration value.
-The twl6040 does not have such a feature. The interrupts are generated
-internally and it has one IRQ line towards the host. We have nested
-interrupts for the childs (plug detect is handled by ASoC codec, Vibra
-overcurrent is handled by the vibra driver, etc).
-Client drivers got their interrupts via platform_get_irq(); they does
-not need to know anything about irq_base, or where the IRQ number has
-been mapped.
+Agreed. I would list them as 'optional' though, so that every specific
+binding that needs these will have to use the same format.
 
---=20
-P=E9ter
+	Arnd
