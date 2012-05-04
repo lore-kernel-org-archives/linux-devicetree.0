@@ -1,110 +1,123 @@
-From: Jon Hunter <jon-hunter@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 4 May 2012 14:19:53 -0500
-Message-ID: <4FA42BD9.3090705@ti.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <4FA30604.1030401@wwwdotorg.org> <4FA3F08D.7030603@ti.com> <4FA41E3E.3020303@wwwdotorg.org>
+Date: Fri, 4 May 2012 19:23:07 +0000
+Message-ID: <201205041923.07620.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+ <4FA3F308.6030900@ti.com>
+ <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FA41E3E.3020303@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On 05/04/2012 01:21 PM, Stephen Warren wrote:
-> On 05/04/2012 09:06 AM, Jon Hunter wrote:
->> Hi Stephen,
->>
->> On 05/03/2012 05:26 PM, Stephen Warren wrote:
->>> On 04/30/2012 03:17 PM, Jon Hunter wrote:
->>>> From: Jon Hunter <jon-hunter@ti.com>
->>>>
->>>> This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [2]
->>>> to add some basic helpers to retrieve a DMA controller device_node and the
->>>> DMA request/channel information.
-> ...
->>>> +
->>>> +	sdma: dmaengine@48000000 {
->>>> +		compatible = "ti,omap4-sdma"
->>>> +		reg = <0x48000000 0x1000>;
->>>> +		interrupts = <4>;
->>>> +		#dma-cells = <2>;
->>>> +		#dma-channels = <32>;
->>>> +		#dma-requests = <127>;
->>>> +	};
->>>> +
->>>> +
->>>> +* DMA client
->>>> +
->>>> +Client drivers should specify the DMA property using a phandle to the controller
->>>> +followed by the number of DMA request/channel and the transfer type of the
->>>
->>> What exactly is "request/channel"? Is it a request ID, a channel ID,
->>> both packed into a single integer (which bits are used for each field),
->>> etc.?
->>
->> The thought here was that some DMAs may distinguish between devices by a
->> request ID or a channel ID or both. In the case of say an OMAP4, we have
->> 32 channels and 127 request IDs. From a h/w perspective we need to know
->> both. Each of the 32 channels can be programmed to use any one of the
->> 127 h/w request signals.
+On Friday 04 May 2012, Jassi Brar wrote:
+> I see this requires a client driver to specify a particular req_line on a
+> particular dma controller. I am not sure if this is most optimal.
 > 
-> From a HW perspective, do you actually need to know both? I think the HW
-> description must specify the request ID, but because any channel can be
-> programmed to any request ID, you don't actually care about the channel
-> ID; it can be dynamically allocated by the DMA driver when the client
-> driver calls dma_request_channel().
-
->From the perspective of a driver using the DMA, no. However, I thought
-that having the number of programmable channels stored in the device
-tree could be useful so that the DMA driver could query how many
-programmable channels are available. So my point was the DMA driver
-needs to know how many channels it has. However, this does not need to
-belong in the device tree. I added it for completeness of the DMA
-controller description really. Does that make sense?
-
-> Actually, you say the following below, so I guess you already agree here:
-
-Yes.
-
->> Yes this is the same as OMAPs SDMA. In the case of such DMA controllers
->> you only really care about the request ID and total number of channels
->> that are available to you.
+> I think such client->req_line map should be provided to the dmac controller
+> driver via its dt node in some format. The dmac driver could then populate
+> a dma_chan, or similar, only for that req_line and not for the unused one
+> which otherwise could also have served the same client.
 > 
-> ...
->>> This is why I think DMA controller should specify the format of their
->>> own DMA specifier in DT, and why they should provide an xlate function
->>> to parse that.
->>
->> Ok fair enough. However, it seems that at a minimum we could provide one
->> or two xlate functions in the generic binding for people to use. One
->> could be the DMA engine xlate binding and another could be the simple
->> xlate binding Nicolas proposed for a DMA controller that returns a
->> single channel/request ID.
->>
->> However, at the same time, may be people would prefer that devices such
->> as tegra, omap, at91, etc, offer their own xlate function for DMA
->> engine. I am not sure, but we could go either way.
-> 
-> I'd expect the bindings to be written to allow the individual DMA
-> controllers to have complete control over the meaning of the DMA specifier.
+> Ideally the I2C driver should simply ask, say, a channel for TX and another
+> for RX, everything else should already be setup via dmac's dt nodes.
 
-Ok.
+If I understand you correctly, you think we can generalize the dma-request
+data in a way that we don't need to pass a specific dma engine phandle.
+I very much doubt this is possible, given how different the requirements
+are for each of the engines we support. You really need to pass a specific
+phandle so that we can find the code that can interpret the data in a
+meaningful way.
 
-> That said, I would certainly expect some common patterns to emerge, such
-> as a single cell to specify the DMA channel ID, or a single cell to
-> specify the DMA request/selector ID. We should certainly make sure that
-> where different controllers need the same information, they use the same
-> way to represent it, and use common utility code to implement the xlate
-> functionality. We could perhaps even write these common cases into the
-> core DMA bindings as examples to help ensure uniformity. However, we
-> just need to do this in a way that allows other cases too.
+It would be nice though if we could support your scenario where multiple
+dma engines are available that can be used by a single client.
+I've already mentioned that I think we can provide multiple channel
+definitions and let the driver request each of them until one succeeds,
+but that does require extra code inside of each driver that might need
+to do this.
+Another alternative would be to change the binding so that it can deal
+with multiple distinct dmaengine instances using a single device node.
 
-Yes this makes sense. I could have a go at re-writing next week sometime.
+Given the example from exynos5250.dtsi, which currently contains this
+fragment:
 
-Thanks
-Jon
+                pdma0: pdma@121A0000 {
+                        compatible = "arm,pl330", "arm,primecell";
+                        reg = <0x121A0000 0x1000>;
+                        interrupts = <0 34 0>;
+                };
+
+                pdma1: pdma@121B0000 {
+                        compatible = "arm,pl330", "arm,primecell";
+                        reg = <0x121B0000 0x1000>;
+                        interrupts = <0 35 0>;
+                };
+
+                mdma0: pdma@10800000 {
+                        compatible = "arm,pl330", "arm,primecell";
+                        reg = <0x10800000 0x1000>;
+                        interrupts = <0 33 0>;
+                };
+
+                mdma1: pdma@11C10000 {
+                        compatible = "arm,pl330", "arm,primecell";
+                        reg = <0x11C10000 0x1000>;
+                        interrupts = <0 124 0>;
+                };
+
+We could transform it into one node with multiple children:
+
+	dma: dma-engines {
+                compatible = "arm,pl330-multi", "arm,primecell";
+		#dma-cells = <3>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+                pdma@121A0000 {
+                        compatible = "arm,pl330", "arm,primecell";
+			arm,pl330-instance = <0>;
+                        reg = <0x121A0000 0x1000>;
+                        interrupts = <0 34 0>;
+                };
+
+                pdma@121B0000 {
+                        compatible = "arm,pl330", "arm,primecell";
+			arm,pl330-instance = <1>;
+                        reg = <0x121B0000 0x1000>;
+                        interrupts = <0 35 0>;
+                };
+
+                pdma@10800000 {
+                        compatible = "arm,pl330", "arm,primecell";
+			arm,pl330-instance = <2>;
+                        reg = <0x10800000 0x1000>;
+                        interrupts = <0 33 0>;
+                };
+
+                pdma@11C10000 {
+                        compatible = "arm,pl330", "arm,primecell";
+			arm,pl330-instance = <3>;
+                        reg = <0x11C10000 0x1000>;
+                        interrupts = <0 124 0>;
+                };
+	};
+
+This way, a client would just point to the dma-engines device node
+that cover all of the actual engines, and the pl330 code registers
+the four devices with the dmaengine layer.
+
+	Arnd
