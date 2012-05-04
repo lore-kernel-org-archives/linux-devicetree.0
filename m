@@ -1,147 +1,69 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
+From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 Subject: Re: [PATCH 04/14] OF: pinctrl: MIPS: lantiq: implement lantiq/xway
  pinctrl support
-Date: Fri, 04 May 2012 14:57:26 -0600
-Message-ID: <4FA442B6.1020501@wwwdotorg.org>
-References: <1336133919-26525-1-git-send-email-blogic@openwrt.org> <1336133919-26525-4-git-send-email-blogic@openwrt.org>
+Date: Fri, 04 May 2012 23:29:53 +0200
+Message-ID: <4FA44A51.9070204@openwrt.org>
+References: <1336133919-26525-1-git-send-email-blogic@openwrt.org>
+ <1336133919-26525-4-git-send-email-blogic@openwrt.org>
+ <4FA442B6.1020501@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1336133919-26525-4-git-send-email-blogic@openwrt.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-To: John Crispin <blogic@openwrt.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FA442B6.1020501-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2012 06:18 AM, John Crispin wrote:
-> Implement support for pinctrl on lantiq/xway socs. The IO core found on these
-> socs has the registers for pinctrl, pinconf and gpio mixed up in the same
-> register range. As the gpio_chip handling is only a few lines, the driver also
-> implements the gpio functionality. This obseletes the old gpio driver that was
-> located in the arch/ folder.
+Hi Stephen,
 
-Overall looks pretty reasonable. Some comments below.
+Thanks for the comments
+> Overall looks pretty reasonable. Some comments below.
+>
+> There doesn't appear to be binding documentation. Something is needed to
+> describe how to instantiate the pinctrl driver, and the format of the
+> "pin configuration nodes". See
+> Documentation/devicetree/bindings/pinctrl/ for some examples.
+>
+I am expecting to send a V2 of the series. This will include a patch
+with the binding documentation. I am still fine tuning the patch.
+>> +int irq_to_gpio(unsigned int gpio)
+>> +{
+>> +	return -EINVAL;
+>> +}
+>> +EXPORT_SYMBOL(irq_to_gpio);
+> Hasn't this function been removed? Perhaps it's only ARM that removed it.
 
-There doesn't appear to be binding documentation. Something is needed to
-describe how to instantiate the pinctrl driver, and the format of the
-"pin configuration nodes". See
-Documentation/devicetree/bindings/pinctrl/ for some examples.
+We need it on MIPS. I am not sure if other arches need it.  OF does
+obselete this function i guess.
 
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>> +static inline int xway_gpio_pin_count(void)
+>> +{
+>> +	if (of_machine_is_compatible("lantiq,ar9") ||
+>> +			of_machine_is_compatible("lantiq,gr9") ||
+>> +			of_machine_is_compatible("lantiq,vr9"))
+>> +		return 56;
+>> +	return 32;
+>> +}
+> What are those compatible values? Are they SoC variants or boards?
 
->  config LANTIQ
-...
-> +	select PINCTRL
+These are the adsl, vdsl and no dsl SoCs. I don't really want this info
+inside the DT as it is static. I will follow the .data variant you proposed.
+> Presumably, of_gpiochip_add() above dynamically allocates the base GPIO
+> number? If so, that value needs to be transferred into
+> xway_gpio_range.base too.
+>
 
-> diff --git a/arch/mips/lantiq/Kconfig b/arch/mips/lantiq/Kconfig
+Yes, i missed that one.
 
->  config SOC_TYPE_XWAY
->  	bool
-> +	select PINCTRL_XWAY
 
-I'd be tempted to just select PINCTRL and PINCTRL_XWAY in the same place
-under SOC_TYPE_XWAY.
-
-> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-
->  obj-$(CONFIG_PINCTRL_TEGRA30)	+= pinctrl-tegra30.o
->  obj-$(CONFIG_PINCTRL_U300)	+= pinctrl-u300.o
->  obj-$(CONFIG_PINCTRL_COH901)	+= pinctrl-coh901.o
-> +obj-$(CONFIG_PINCTRL_LANTIQ)	+= pinctrl-lantiq.o
-> +obj-$(CONFIG_PINCTRL_XWAY)	+= pinctrl-xway.o
-
-It'd be nice to keep this sorted. I know COH901 isn't right now; I guess
-I should send a patch for that.
-
-> diff --git a/drivers/pinctrl/pinctrl-lantiq.c b/drivers/pinctrl/pinctrl-lantiq.c
-
-> +static const char *ltq_get_group_name(struct pinctrl_dev *pctrldev,
-> +					 unsigned selector)
-> +{
-> +	struct ltq_pinmux_info *info = pinctrl_dev_get_drvdata(pctrldev);
-> +	if (selector >= info->num_grps)
-> +		return NULL;
-
-Most/all other drivers removed this range checking, instead relying on
-the pinctrl core to not be buggy, and to respect the limits set out in
-the pinctrl device descriptor.
-
-> +static int ltq_pinctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-
-> +				"%s mixes pins and groups settings\n",
-
-s/mixes/muxes/.
-
-> +int ltq_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
-
-> +	*map = kzalloc(*num_maps * sizeof(struct pinctrl_map), GFP_KERNEL);
-
-Check for failure.
-
-> diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
-
-> +static int xway_pinconf_get(struct pinctrl_dev *pctldev,
-...
-> +	default:
-> +		pr_err("%s: Invalid config param %04x\n",
-> +					pinctrl_dev_get_name(pctldev), param);
-
-Use dev_err instead of pr_err everywhere?
-
-> +int irq_to_gpio(unsigned int gpio)
-> +{
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL(irq_to_gpio);
-
-Hasn't this function been removed? Perhaps it's only ARM that removed it.
-
-> +static inline int xway_gpio_pin_count(void)
-> +{
-> +	if (of_machine_is_compatible("lantiq,ar9") ||
-> +			of_machine_is_compatible("lantiq,gr9") ||
-> +			of_machine_is_compatible("lantiq,vr9"))
-> +		return 56;
-> +	return 32;
-> +}
-
-What are those compatible values? Are they SoC variants or boards?
-
-If they're SoC variants, then putting each of those compatible values
-into the of_device_id table, and storing the per-SoC information in the
-.data field is one way to go. Or, simply put this information into a
-device-tree property.
-
-If they're board names, this seems wrong; the code should be switching
-on the SoC variant rather than the individual board. If a board happens
-to hook up fewer of the pins that other boards that's fine, just don't
-use them, but they still exist on the SoC and hence are reasonable to
-represent in the driver.
-
-> +static int __devinit pinmux_xway_probe(struct platform_device *pdev)
-
-> +	for (i = 0; i < xway_chip.ngpio; i++) {
-> +		/* strlen("ioXY") + 1 = 5 */
-> +		char *name = devm_kzalloc(&pdev->dev, 5, GFP_KERNEL);
-> +
-> +		if (!name) {
-> +			dev_err(&pdev->dev, "Failed to allocate pad name\n");
-> +			return -ENOMEM;
-> +		}
-> +		snprintf(name, 5, "io%d", i);
-
-Maybe time for a devm_kasprintf()?
-
-> +	/* finish with registering the gpio range in pinctrl */
-> +	xway_gpio_range.npins = xway_chip.ngpio;
-
-Presumably, of_gpiochip_add() above dynamically allocates the base GPIO
-number? If so, that value needs to be transferred into
-xway_gpio_range.base too.
-
-> +core_initcall_sync(pinmux_xway_init);
-
-Does this need to be a core_initcall_sync; would a simple module_init()
-do instead?
+Thanks,
+John
