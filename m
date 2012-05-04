@@ -1,52 +1,29 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/9] ARM: mmp: support DT in irq
-Date: Fri, 4 May 2012 12:56:30 +0000
-Message-ID: <201205041256.30409.arnd@arndb.de>
-References: <1335515957-1798-1-git-send-email-haojian.zhuang@gmail.com>
- <201205021251.16967.arnd@arndb.de>
- <CAN1soZwE7MoifmxtPS8f_x6CrK-dF97=vPMTMStg=VW1wsoLrA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8] gpio: Device tree support for LPC32xx
+Date: Fri, 4 May 2012 12:57:58 +0000
+Message-ID: <201205041257.58252.arnd@arndb.de>
+References: <1336076428-29419-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAN1soZwE7MoifmxtPS8f_x6CrK-dF97=vPMTMStg=VW1wsoLrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1336076428-29419-1-git-send-email-stigge@antcom.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: grant.likely@secretlab.ca, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 04 May 2012, Haojian Zhuang wrote:
-> On Wed, May 2, 2012 at 8:51 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 02 May 2012, Haojian Zhuang wrote:
-> >> I use two CONFIG_OF in this file. The first one is used to record
-> >> register base address
-> >> of interrupt controller. In legacy code, the register address is
-> >> hardcoding. Do you mean
-> >> that I should remove this CONFIG_OF?
-> >
-> > Unless it's a noticeable performance impact, I would recommend just
-> > always using the mmp_icu_base variable, even for when CONFIG_OF is
-> > disabled.
+On Thursday 03 May 2012, Roland Stigge wrote:
+> This patch adds device tree support for gpio-lpc32xx.c.
 > 
-> But I appended new irq handler for DT support. I still need to reserve
-> this CONFIG_OF
-> since I need to keep compatible with legacy code.
+> The various GPIO groups correspond to the different irregular GPIO banks of the
+> LPC32xx hardware. Most importantly, there are the GPI(0-27), GPO(0-23) and
+> GPIO(0-5) banks. Each bank must be registered individually since they are
+> implemented with different functions. Registration is done via gpiochip_add()
+> which requires an individual gpio bank subnode in the device tree for each
+> call.
+> 
+> Signed-off-by: Roland Stigge <stigge@antcom.de>
 
-You don't need to worry about out-of-tree code, it can adapt. For the
-non-DT version, why can't you move the 'mmp_icu_base' variable into
-common.c and just initialize it to ICU_VIRT_BASE?
-If you do that, any combination of DT- and non-DT board files should
-work with the same entry-macro.S code.
-
-Another alternative would be to convert MMP over to
-CONFIG_MULTI_IRQ_HANDLER and use different handle_irq functions.
-
-	Arnd
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
