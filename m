@@ -1,123 +1,120 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Jon Hunter <jon-hunter@ti.com>
 Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 4 May 2012 19:23:07 +0000
-Message-ID: <201205041923.07620.arnd@arndb.de>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
- <4FA3F308.6030900@ti.com>
- <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
+Date: Fri, 4 May 2012 14:26:38 -0500
+Message-ID: <4FA42D6E.5040106@ti.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205041556.38918.arnd@arndb.de> <4FA40F8E.5010204@ti.com> <201205041906.13959.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201205041906.13959.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 04 May 2012, Jassi Brar wrote:
-> I see this requires a client driver to specify a particular req_line on a
-> particular dma controller. I am not sure if this is most optimal.
+Hi Arnd,
+
+On 05/04/2012 02:06 PM, Arnd Bergmann wrote:
+> On Friday 04 May 2012, Jon Hunter wrote:
 > 
-> I think such client->req_line map should be provided to the dmac controller
-> driver via its dt node in some format. The dmac driver could then populate
-> a dma_chan, or similar, only for that req_line and not for the unused one
-> which otherwise could also have served the same client.
+>>>
+>>> I believe this is not entirely correct: sometimes the filter_fn is provided
+>>> by the slave driver, sometimes by the master driver.
+>>
+>> Ok, but in the master case I assume they still use the same API?
 > 
-> Ideally the I2C driver should simply ask, say, a channel for TX and another
-> for RX, everything else should already be setup via dmac's dt nodes.
+> The all use dma_request_channel, but the format of the data that gets
+> passed depends only on whoever provides the filter function, which
+> is not necessarily the slave or the master, but could be either one.
+> 
+> FWIW, I believe that for each dma engine implementation we only do
+> one or the other, i.e. if the dmaengine driver provides a filter function,
+> it is always used with these devices.
 
-If I understand you correctly, you think we can generalize the dma-request
-data in a way that we don't need to pass a specific dma engine phandle.
-I very much doubt this is possible, given how different the requirements
-are for each of the engines we support. You really need to pass a specific
-phandle so that we can find the code that can interpret the data in a
-meaningful way.
+Ok, I think I am with you now. That should be fine.
 
-It would be nice though if we could support your scenario where multiple
-dma engines are available that can be used by a single client.
-I've already mentioned that I think we can provide multiple channel
-definitions and let the driver request each of them until one succeeds,
-but that does require extra code inside of each driver that might need
-to do this.
-Another alternative would be to change the binding so that it can deal
-with multiple distinct dmaengine instances using a single device node.
+>>>>
+>>>>   Next we need to think about how the DMA controller and channels are described
+>>>>   in the device tree itself. The following device tree node example describes
+>>>>   the properties of the DMA controller that includes, the register address
+>>>>   range, number of interrupt supported, number of channels and number of request
+>>>>   signals. This has been enhanced from the previous versions by adding number of
+>>>>   channels and number of request signals.
+>>>
+>>> I think you can actually use strings, too, as long as you use a fixed number
+>>> of cells.
+>>>
+>>> Wouldn't something like this work:?
+>>>
+>>> 	dma-controller1: dma1 {
+>>> 		compatible = "something-using-strings";
+>>> 		#dma-cells = <1>;
+>>> 	};
+>>>
+>>> 	dma-controller2: dma2 {
+>>> 		compatible = "something-using-integers";
+>>> 		#dma-cells = <3>
+>>> 	};
+>>>
+>>> 	some-device {
+>>> 		compatible = "something";
+>>> 		dmas = <&dma-controller1>, "some-dma",
+>>> 			<&dma-controller2 1 2 3>;
+>>> 	}
+>>>
+>>> The only hard requirement is that the format of the attributes is
+>>> what the binding specific to that controller understands.
+>>
+>> Yes it could. My point was why do this, if at the end of the day you
+>> need to resolve the string into a number at some point in the driver?
+>> However, this may make the migration easier for those using strings.
+> 
+> Well, actually Stephen just clarified that we should not use strings
+> here :(
+> We will always have to use numbers then.
 
-Given the example from exynos5250.dtsi, which currently contains this
-fragment:
+Ok. I think it makes life easier in the long run too.
 
-                pdma0: pdma@121A0000 {
-                        compatible = "arm,pl330", "arm,primecell";
-                        reg = <0x121A0000 0x1000>;
-                        interrupts = <0 34 0>;
-                };
+>>> I think a better interface for the device driver would be something that combines
+>>> your of_get_dma_channel_info() function with the dma_request_channel() function,
+>>> like
+>>>
+>>> 	struct dma_chan *of_dma_request_channel(struct device_node *dn, int index);
+>>>
+>>> When we have the device tree, the driver using that channel doesn't actually have
+>>> to care about the specific of how the channel is defined any more, it just needs
+>>> to say which one it's interested in, out of the list of channels defined for that
+>>> device node.
+>>
+>> Yes true. I was trying to avoid any changes to DMA engine itself. Plus
+>> in the feedback from Stephen his preference was to isolate the binding
+>> from DMA engine.
+>>
+>> So in your example, is index passed via dma_request_channel()? I assume
+>> that of_dma_request_channel() get called in the context of
+>> dma_request_channel somewhere???
+> 
+> What I meant what that you should still provide the existing
+> dma_request_channel interface without changes, and also provide
+> of_dma_request_channel as a wrapper around it that does a lookup
+> in the way that your of_get_dma_channel_info does, passing the
+> data it gets back from the device tree into the filter function
+> that was provided by the dma engine driver.
 
-                pdma1: pdma@121B0000 {
-                        compatible = "arm,pl330", "arm,primecell";
-                        reg = <0x121B0000 0x1000>;
-                        interrupts = <0 35 0>;
-                };
+Ok, gotcha.
 
-                mdma0: pdma@10800000 {
-                        compatible = "arm,pl330", "arm,primecell";
-                        reg = <0x10800000 0x1000>;
-                        interrupts = <0 33 0>;
-                };
+>> By the way, have you looked at the pl330_filter() function
+>> (drivers/dma/pl330.c)? They parse the device-tree in the filter function
+>> itself. The index could be passed as the filter_param. In this type of
+>> implementation there would be no need for a generic dma binding.
+>> However, would only work for devices supporting DMA engine.
+> 
+> IMHO this will have to change, we should not have allowed a nonstandard
+> binding for pl330 to be used for the samsung platforms and should migrate
+> to the new binding as soon as possible.
 
-                mdma1: pdma@11C10000 {
-                        compatible = "arm,pl330", "arm,primecell";
-                        reg = <0x11C10000 0x1000>;
-                        interrupts = <0 124 0>;
-                };
+Ok, that's fine with me.
 
-We could transform it into one node with multiple children:
-
-	dma: dma-engines {
-                compatible = "arm,pl330-multi", "arm,primecell";
-		#dma-cells = <3>;
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges;
-
-                pdma@121A0000 {
-                        compatible = "arm,pl330", "arm,primecell";
-			arm,pl330-instance = <0>;
-                        reg = <0x121A0000 0x1000>;
-                        interrupts = <0 34 0>;
-                };
-
-                pdma@121B0000 {
-                        compatible = "arm,pl330", "arm,primecell";
-			arm,pl330-instance = <1>;
-                        reg = <0x121B0000 0x1000>;
-                        interrupts = <0 35 0>;
-                };
-
-                pdma@10800000 {
-                        compatible = "arm,pl330", "arm,primecell";
-			arm,pl330-instance = <2>;
-                        reg = <0x10800000 0x1000>;
-                        interrupts = <0 33 0>;
-                };
-
-                pdma@11C10000 {
-                        compatible = "arm,pl330", "arm,primecell";
-			arm,pl330-instance = <3>;
-                        reg = <0x11C10000 0x1000>;
-                        interrupts = <0 124 0>;
-                };
-	};
-
-This way, a client would just point to the dma-engines device node
-that cover all of the actual engines, and the pl330 code registers
-the four devices with the dmaengine layer.
-
-	Arnd
+Cheers
+Jon
