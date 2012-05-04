@@ -1,41 +1,73 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 1/4] ARM: tegra: Add Tegra AHB driver
-Date: Fri, 4 May 2012 08:40:30 +0200
-Message-ID: <20120504.094030.1816474762821188264.hdoyu@nvidia.com>
-References: <1336061147-10245-1-git-send-email-hdoyu@nvidia.com><4FA2C785.2080703@wwwdotorg.org>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 4 May 2012 12:26:13 +0530
+Message-ID: <CAJe_Zhe-SqDMDGOhrYZtBBJnCYqLR0H07cPKzG4SyUxiLrgFnQ@mail.gmail.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FA2C785.2080703-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org" <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv3 1/4] ARM: tegra: Add Tegra AHB driver
-Date: Thu, 3 May 2012 19:59:33 +0200
-Message-ID: <4FA2C785.2080703-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+On 1 May 2012 02:47, Jon Hunter <jon-hunter@ti.com> wrote:
+> From: Jon Hunter <jon-hunter@ti.com>
+>
+> This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [=
+2]
+> to add some basic helpers to retrieve a DMA controller device_node an=
+d the
+> DMA request/channel information.
+>
+> Aim of DMA helpers
+> - The purpose of device-tree (as far as I understand), is to describe=
+ the
+> =A0capabilites of the hardware. Thinking about DMA controllers purely=
+ from the
+> =A0context of the hardware to begin with, we can describe a device in=
+ terms of
+> =A0a DMA controller as follows ...
+> =A0 =A0 =A0 =A01. Number of DMA controllers
+> =A0 =A0 =A0 =A02. Number of channels (maybe physical or logical)
+> =A0 =A0 =A0 =A03. Mapping of DMA requests signals to DMA controller
+> =A0 =A0 =A0 =A04. Number of DMA interrupts
+> =A0 =A0 =A0 =A05. Mapping of DMA interrupts to channels
+> - With the above in mind the aim of the DT DMA helper functions is to=
+ extract
+> =A0the above information from the DT and provide to the appropriate d=
+river.
+> =A0However, due to the vast number of DMA controllers and not all are=
+ using a
+> =A0common driver (such as DMA Engine) it has been seen that this is n=
+ot a
+> =A0trivial task.
+>
+Sorry for being slow, but so far I thought DT is only to provide _h/w_
+specific info
+to the _controller_ drivers. It was not supposed to provide any info
+pertaining to
+some API (dmaengine in this case).
 
-> On 05/03/2012 10:05 AM, Hiroshi DOYU wrote:
-> > Tegra AHB Bus conforms to the AMBA Specification (Rev 2.0) Advanced
-> > High-performance Bus (AHB) architecture.
-> > 
-> > The AHB Arbiter controls AHB bus master arbitration. This effectively
-> > forms a second level of arbitration for access to the memory
-> > controller through the AHB Slave Memory device. The AHB pre-fetch
-> > logic can be configured to enhance performance for devices doing
-> > sequential access. Each AHB master is assigned to either the high or
-> > low priority bin. Both Tegra20/30 have this AHB bus.
-> > 
-> > Some of configuration param could be passed from DT too.
-> 
-> This patch should add
-> Documentation/devicetree/bindings/arm/tegra/tegra20-ahb.txt to describe
-> the DT binding.
+And I believe this is one of few situations where we are better off
+not generalizing
+the interface - pass controller specific info in the controller
+driver's specified format.
+Generalizing only seems to complicate things here, when we anyway have =
+machine
+specific dtb, which could always have clients requesting and the
+controllers given
+dma's info in controller driver's specific format.
 
->From 'dts' POV, there's no difference between tegra20 and
-tegra30. They just have a register range. Is
-"../bindings/arm/tegra/tegra-ahb.txt" ok, instead of having both
-tegra{20,30}-ahb.txt?
+Perhaps I am overlooking the need to generalize. If you think so, pleas=
+e help me
+understand by pointing out some use case for it.
+
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
