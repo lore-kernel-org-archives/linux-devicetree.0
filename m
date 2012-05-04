@@ -1,76 +1,194 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: [PATCH v2 5/5] ARM: mx28evk: add mxs-dma dt support
-Date: Fri, 4 May 2012 20:12:19 +0800
-Message-ID: <1336133539-13465-5-git-send-email-b29396@freescale.com>
-References: <1336133539-13465-1-git-send-email-b29396@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1336133539-13465-1-git-send-email-b29396@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: b32955@freescale.com, vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, marek.vasut@gmail.com, kernel@pengutronix.de, dan.j.williams@intel.com, s.hauer@pengutronix.de, shawn.guo@freescale.com
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] Input: tl6040-vibra: Device Tree support
+Date: Fri,  4 May 2012 15:05:13 +0300
+Message-ID: <1336133113-12224-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dtor@mail.ru>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dong Aisheng <dong.aisheng@linaro.org>
+Enable DT based probing of the vibra driver.
 
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Huang Shijie <b32955@freescale.com>
-Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
-Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+Example of dts section to load the twl6040-vibra driver:
+twl6040: twl6040@4b {
+	...
+	twl6040_vibra: twl6040@1 {
+		compatible = "ti,twl6040-vibra";
+		interrupts = <4>;
+		vddvibl-supply = <&vbat>;
+		vddvibr-supply = <&vbat>;
+		vibldrv_res = <8>;
+		vibrdrv_res = <3>;
+		viblmotor_res = <10>;
+		vibrmotor_res = <10>;
+	};
+};
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/imx28.dtsi   |    4 ++--
- arch/arm/mach-mxs/clock-mx28.c |    2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index d1f4f8c..5f61777 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -52,8 +52,8 @@
- 			};
+Hello,
+
+Device tree support for the other twl6040 drivers (MFD core, ASoC codec) will
+go via the appropriate subsystem since we do not have compile time or runtime
+dependencies on them.
+
+Regards,
+Peter
+
+ .../devicetree/bindings/input/twl6040-vibra.txt    |   37 ++++++++++++++++
+ drivers/input/misc/twl6040-vibra.c                 |   46 +++++++++++++++-----
+ 2 files changed, 72 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/twl6040-vibra.txt
+
+diff --git a/Documentation/devicetree/bindings/input/twl6040-vibra.txt b/Documentation/devicetree/bindings/input/twl6040-vibra.txt
+new file mode 100644
+index 0000000..5b1918b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/twl6040-vibra.txt
+@@ -0,0 +1,37 @@
++Vibra driver for the twl6040 family
++
++The vibra driver is a child of the twl6040 MFD dirver.
++Documentation/devicetree/bindings/mfd/twl6040.txt
++
++Required properties:
++- compatible : Must be "ti,twl6040-vibra";
++- interrupts: 4, Vibra overcurrent interrupt
++- vddvibl-supply: Regulator supplying the left vibra motor
++- vddvibr-supply: Regulator supplying the right vibra motor
++- vibldrv_res: Board specific left driver resistance
++- vibrdrv_res: Board specific right driver resistance
++- viblmotor_res: Board specific left motor resistance
++- vibrmotor_res: Board specific right motor resistance
++
++Optional properties:
++- vddvibl_uV: If the vddvibl default voltage need to be changed
++- vddvibr_uV: If the vddvibr default voltage need to be changed
++
++Example:
++/*
++ * 8-channel high quality low-power audio codec
++ * http://www.ti.com/lit/ds/symlink/twl6040.pdf
++ */
++twl6040: twl6040@4b {
++	...
++	twl6040_vibra: twl6040@1 {
++		compatible = "ti,twl6040-vibra";
++		interrupts = <4>;
++		vddvibl-supply = <&vbat>;
++		vddvibr-supply = <&vbat>;
++		vibldrv_res = <8>;
++		vibrdrv_res = <3>;
++		viblmotor_res = <10>;
++		vibrmotor_res = <10>;
++	};
++};
+diff --git a/drivers/input/misc/twl6040-vibra.c b/drivers/input/misc/twl6040-vibra.c
+index 14e94f5..bb134ce 100644
+--- a/drivers/input/misc/twl6040-vibra.c
++++ b/drivers/input/misc/twl6040-vibra.c
+@@ -27,6 +27,7 @@
+  */
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/of_device.h>
+ #include <linux/workqueue.h>
+ #include <linux/input.h>
+ #include <linux/mfd/twl6040.h>
+@@ -258,10 +259,13 @@ static SIMPLE_DEV_PM_OPS(twl6040_vibra_pm_ops, twl6040_vibra_suspend, NULL);
+ static int __devinit twl6040_vibra_probe(struct platform_device *pdev)
+ {
+ 	struct twl6040_vibra_data *pdata = pdev->dev.platform_data;
++	struct device_node *node = pdev->dev.of_node;
+ 	struct vibra_info *info;
++	int vddvibl_uV = 0;
++	int vddvibr_uV = 0;
+ 	int ret;
  
- 			dma-apbh@80004000 {
-+				compatible = "fsl,imx28-dma-apbh";
- 				reg = <0x80004000 2000>;
--				status = "disabled";
- 			};
+-	if (!pdata) {
++	if (!pdata && !node) {
+ 		dev_err(&pdev->dev, "platform_data not available\n");
+ 		return -EINVAL;
+ 	}
+@@ -273,11 +277,26 @@ static int __devinit twl6040_vibra_probe(struct platform_device *pdev)
+ 	}
  
- 			perfmon@80006000 {
-@@ -115,8 +115,8 @@
- 			};
+ 	info->dev = &pdev->dev;
++
+ 	info->twl6040 = dev_get_drvdata(pdev->dev.parent);
+-	info->vibldrv_res = pdata->vibldrv_res;
+-	info->vibrdrv_res = pdata->vibrdrv_res;
+-	info->viblmotor_res = pdata->viblmotor_res;
+-	info->vibrmotor_res = pdata->vibrmotor_res;
++	if (pdata) {
++		info->vibldrv_res = pdata->vibldrv_res;
++		info->vibrdrv_res = pdata->vibrdrv_res;
++		info->viblmotor_res = pdata->viblmotor_res;
++		info->vibrmotor_res = pdata->vibrmotor_res;
++		vddvibl_uV = pdata->vddvibl_uV;
++		vddvibr_uV = pdata->vddvibr_uV;
++	} else {
++		of_property_read_u32(node, "vibldrv_res", &info->vibldrv_res);
++		of_property_read_u32(node, "vibrdrv_res", &info->vibrdrv_res);
++		of_property_read_u32(node, "viblmotor_res",
++				     &info->viblmotor_res);
++		of_property_read_u32(node, "vibrmotor_res",
++				     &info->vibrmotor_res);
++		of_property_read_u32(node, "vddvibl_uV", &vddvibl_uV);
++		of_property_read_u32(node, "vddvibr_uV", &vddvibr_uV);
++	}
++
+ 	if ((!info->vibldrv_res && !info->viblmotor_res) ||
+ 	    (!info->vibrdrv_res && !info->vibrmotor_res)) {
+ 		dev_err(info->dev, "invalid vibra driver/motor resistance\n");
+@@ -339,10 +358,9 @@ static int __devinit twl6040_vibra_probe(struct platform_device *pdev)
+ 		goto err_regulator;
+ 	}
  
- 			dma-apbx@80024000 {
-+				compatible = "fsl,imx28-dma-apbx";
- 				reg = <0x80024000 2000>;
--				status = "disabled";
- 			};
+-	if (pdata->vddvibl_uV) {
++	if (vddvibl_uV) {
+ 		ret = regulator_set_voltage(info->supplies[0].consumer,
+-					    pdata->vddvibl_uV,
+-					    pdata->vddvibl_uV);
++					    vddvibl_uV, vddvibl_uV);
+ 		if (ret) {
+ 			dev_err(info->dev, "failed to set VDDVIBL volt %d\n",
+ 				ret);
+@@ -350,10 +368,9 @@ static int __devinit twl6040_vibra_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
- 			dcp@80028000 {
-diff --git a/arch/arm/mach-mxs/clock-mx28.c b/arch/arm/mach-mxs/clock-mx28.c
-index cca2cf7..9c926b6 100644
---- a/arch/arm/mach-mxs/clock-mx28.c
-+++ b/arch/arm/mach-mxs/clock-mx28.c
-@@ -652,6 +652,8 @@ static struct clk_lookup lookups[] = {
- 	_REGISTER_CLOCK("80074000.serial", NULL, uart_clk)
- 	_REGISTER_CLOCK("800f0000.ethernet", NULL, fec_clk)
- 	_REGISTER_CLOCK("800f4000.ethernet", NULL, fec_clk)
-+	_REGISTER_CLOCK("80004000.dma-apbh", NULL, hbus_clk)
-+	_REGISTER_CLOCK("80024000.dma-apbx", NULL, xbus_clk)
+-	if (pdata->vddvibr_uV) {
++	if (vddvibr_uV) {
+ 		ret = regulator_set_voltage(info->supplies[1].consumer,
+-					    pdata->vddvibr_uV,
+-					    pdata->vddvibr_uV);
++					    vddvibr_uV, vddvibr_uV);
+ 		if (ret) {
+ 			dev_err(info->dev, "failed to set VDDVIBR volt %d\n",
+ 				ret);
+@@ -401,6 +418,12 @@ static int __devexit twl6040_vibra_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id twl6040_vibra_of_match[] = {
++	{.compatible = "ti,twl6040-vibra", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, twl6040_vibra_of_match);
++
+ static struct platform_driver twl6040_vibra_driver = {
+ 	.probe		= twl6040_vibra_probe,
+ 	.remove		= __devexit_p(twl6040_vibra_remove),
+@@ -408,6 +431,7 @@ static struct platform_driver twl6040_vibra_driver = {
+ 		.name	= "twl6040-vibra",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &twl6040_vibra_pm_ops,
++		.of_match_table = twl6040_vibra_of_match,
+ 	},
  };
- 
- static int clk_misc_init(void)
+ module_platform_driver(twl6040_vibra_driver);
 -- 
-1.7.0.4
+1.7.8.6
