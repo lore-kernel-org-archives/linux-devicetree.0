@@ -1,50 +1,82 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] dma: mxs-dma: make platform_device_id more generic
-Date: Sat, 5 May 2012 16:32:14 +0200
-Message-ID: <201205051632.14882.marex@denx.de>
-References: <1336133539-13465-1-git-send-email-b29396@freescale.com>
- <201205051512.17972.marex@denx.de>
- <CAAQ0ZWTztNaqwjVA257N+42PByhH1k1Gswi18S9G=dHEaO5PhQ@mail.gmail.com>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Sat, 5 May 2012 22:40:58 +0530
+Message-ID: <CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	<4FA3F308.6030900@ti.com>
+	<CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
+	<201205041923.07620.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAAQ0ZWTztNaqwjVA257N+42PByhH1k1Gswi18S9G=dHEaO5PhQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201205041923.07620.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jon Hunter <jon-hunter@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Shawn Guo,
+On 5 May 2012 00:53, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 04 May 2012, Jassi Brar wrote:
+>> I see this requires a client driver to specify a particular req_line on a
+>> particular dma controller. I am not sure if this is most optimal.
+>>
+>> I think such client->req_line map should be provided to the dmac controller
+>> driver via its dt node in some format. The dmac driver could then populate
+>> a dma_chan, or similar, only for that req_line and not for the unused one
+>> which otherwise could also have served the same client.
+>>
+>> Ideally the I2C driver should simply ask, say, a channel for TX and another
+>> for RX, everything else should already be setup via dmac's dt nodes.
+>
+> If I understand you correctly, you think we can generalize the dma-request
+> data in a way that we don't need to pass a specific dma engine phandle.
+> I very much doubt this is possible, given how different the requirements
+> are for each of the engines we support. You really need to pass a specific
+> phandle so that we can find the code that can interpret the data in a
+> meaningful way.
+>
+Hmm... there ought to be a way by which a client is handed a random 'token'
+via its dt node and similarly the dmac informed which channel (and with what
+capabilities) to allocate should it see a request coming with that token.
 
-> On 5 May 2012 21:12, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> > Can't the patches be reordered then to avoid adding this altogether?
-> 
-> Maybe.  But I do not think it's really worth the effort.
-> 
-> > You don't have to add dead code in this patch and re-add it when needed.
-> > Or fix the macro to take the parameter then, though I don't understand
-> > why you'd want to take it and then hide it.
-> 
-> I do not completely understand the comment.  My point is the problem
-> is in the existing code.  It's not introduced by Dong's patch.  The
-> problem should be fixed in another patch, and we do not want to do
-> several things in one patch.
+That way dmac and client drivers using DT could do away with the filter_fn.
 
-Then order such a patch before Dong's series then? It'd all be clear, without 
-compromises.
+Roughly speaking (I am not very well versed with DT syntax)
 
-> 
-> Regards,
-> Shawn
+Client Node:-
 
-Best regards,
-Marek Vasut
+mmc1: mmc@13002000 {
+        ...
+        dma_tx = <891>   //some platform-wide unique value
+        dma_rx = <927>   //some platform-wide unique value
+        ...
+ };
+
+
+Say the PL330 chapter of SoC's trm specifies that "channel_id" for
+MMC1_TX is 7 and MMC1_RX is 8 on second instance of PL330.
+
+DMAC's Node:-
+
+pdma2: pdma@10800000 {
+         .......
+        dma_map = <891, 7>,       //Map mmc1_tx onto i/f 7
+                              <927, 8>,      //Map mmc1_rx onto i/f 8
+                              <487, 9>,      // Map other dma clients
+                                    .......
+};
+
+The dma_map could also encode features like duplex, priority etc
+depending on the needs of the client and capability of the dmac.
+(The "channel_id" could very well be an composite value specifying
+more than one parameter.... basically a value private to the dmac driver)
+
+As a positive side effect, the dmac controller could populate channels only
+for which some client exists on the machine.
+
+Also the decision to map a client onto one of two or more supporting dmacs
+is made here - token 927 wouldn't appear in dma_map of pdma1 even
+if it also could do RX for MMC1.
+
+The solution seems so simple that I am already cringing at the thought
+of having overlooked something fundamental. Please clarify :)
