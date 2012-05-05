@@ -1,69 +1,41 @@
-From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 04/14] OF: pinctrl: MIPS: lantiq: implement lantiq/xway
- pinctrl support
-Date: Fri, 04 May 2012 23:29:53 +0200
-Message-ID: <4FA44A51.9070204@openwrt.org>
-References: <1336133919-26525-1-git-send-email-blogic@openwrt.org>
- <1336133919-26525-4-git-send-email-blogic@openwrt.org>
- <4FA442B6.1020501@wwwdotorg.org>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [patch] max17042_battery: fix a couple buffer overflows
+Date: Fri, 4 May 2012 19:26:42 -0700
+Message-ID: <20120505022642.GA812@lizard>
+References: <20120315113732.GA364@elgon.mountain>
+ <4F6224E2.5060006@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FA442B6.1020501-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F6224E2.5060006@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dirk Brandewie <dirk.brandewie@gmail.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philip Rakity <prakity@marvell.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Thu, Mar 15, 2012 at 10:20:34AM -0700, Dirk Brandewie wrote:
+> On 03/15/2012 04:37 AM, Dan Carpenter wrote:
+> >There are a couple issues here caused by confusion between sizeof()
+> >and ARRAY_SIZE().  "table_size" should be the number of elements, but we
+> >should allocate it with kcalloc() so that we allocate the correct number
+> >of bytes.
+> >
+> >In max17042_init_model() we don't allocate enough space so we go past
+> >the end of the array in max17042_read_model_data() and
+> >max17042_model_data_compare().
+> >
+> >In max17042_verify_model_lock() we allocate the right amount of space
+> >but we call max17042_read_model_data() with the wrong number of elements
+> >and also in the for loop we go past the end of the array.
+> >
+> >Signed-off-by: Dan Carpenter<dan.carpenter@oracle.com>
+> Acked-by: Dirk Brandewie <dirk.brandewie@gmail.com>
+> 
+> Typo in first ack :-(
 
-Thanks for the comments
-> Overall looks pretty reasonable. Some comments below.
->
-> There doesn't appear to be binding documentation. Something is needed to
-> describe how to instantiate the pinctrl driver, and the format of the
-> "pin configuration nodes". See
-> Documentation/devicetree/bindings/pinctrl/ for some examples.
->
-I am expecting to send a V2 of the series. This will include a patch
-with the binding documentation. I am still fine tuning the patch.
->> +int irq_to_gpio(unsigned int gpio)
->> +{
->> +	return -EINVAL;
->> +}
->> +EXPORT_SYMBOL(irq_to_gpio);
-> Hasn't this function been removed? Perhaps it's only ARM that removed it.
+Applied, thanks! :-)
 
-We need it on MIPS. I am not sure if other arches need it.  OF does
-obselete this function i guess.
-
->> +static inline int xway_gpio_pin_count(void)
->> +{
->> +	if (of_machine_is_compatible("lantiq,ar9") ||
->> +			of_machine_is_compatible("lantiq,gr9") ||
->> +			of_machine_is_compatible("lantiq,vr9"))
->> +		return 56;
->> +	return 32;
->> +}
-> What are those compatible values? Are they SoC variants or boards?
-
-These are the adsl, vdsl and no dsl SoCs. I don't really want this info
-inside the DT as it is static. I will follow the .data variant you proposed.
-> Presumably, of_gpiochip_add() above dynamically allocates the base GPIO
-> number? If so, that value needs to be transferred into
-> xway_gpio_range.base too.
->
-
-Yes, i missed that one.
-
-
-Thanks,
-John
+-- 
+Anton Vorontsov
+Email: cbouatmailru@gmail.com
