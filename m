@@ -1,8 +1,10 @@
 From: Roland Stigge <stigge@antcom.de>
 Subject: [PATCH RESEND v3 1/2] input: keyboard: Add keys driver for the LPC32xx SoC
-Date: Sat,  5 May 2012 14:00:19 +0200
-Message-ID: <1336219221-27791-1-git-send-email-stigge@antcom.de>
+Date: Sat,  5 May 2012 14:00:20 +0200
+Message-ID: <1336219221-27791-2-git-send-email-stigge@antcom.de>
+References: <1336219221-27791-1-git-send-email-stigge@antcom.de>
 Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1336219221-27791-1-git-send-email-stigge@antcom.de>
 Sender: linux-input-owner@vger.kernel.org
 To: dmitry.torokhov@gmail.com, axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 Cc: Roland Stigge <stigge@antcom.de>
