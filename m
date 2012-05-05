@@ -1,82 +1,45 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Sat, 5 May 2012 22:40:58 +0530
-Message-ID: <CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	<4FA3F308.6030900@ti.com>
-	<CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
-	<201205041923.07620.arnd@arndb.de>
+From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH RESEND] Documentation: devicetree: Fix value format
+ description
+Date: Sat, 05 May 2012 13:44:20 -0500
+Message-ID: <4FA57504.2070308@landley.net>
+References: <1336217886-27224-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201205041923.07620.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jon Hunter <jon-hunter@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1336217886-27224-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 May 2012 00:53, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 04 May 2012, Jassi Brar wrote:
->> I see this requires a client driver to specify a particular req_line on a
->> particular dma controller. I am not sure if this is most optimal.
->>
->> I think such client->req_line map should be provided to the dmac controller
->> driver via its dt node in some format. The dmac driver could then populate
->> a dma_chan, or similar, only for that req_line and not for the unused one
->> which otherwise could also have served the same client.
->>
->> Ideally the I2C driver should simply ask, say, a channel for TX and another
->> for RX, everything else should already be setup via dmac's dt nodes.
->
-> If I understand you correctly, you think we can generalize the dma-request
-> data in a way that we don't need to pass a specific dma engine phandle.
-> I very much doubt this is possible, given how different the requirements
-> are for each of the engines we support. You really need to pass a specific
-> phandle so that we can find the code that can interpret the data in a
-> meaningful way.
->
-Hmm... there ought to be a way by which a client is handed a random 'token'
-via its dt node and similarly the dmac informed which channel (and with what
-capabilities) to allocate should it see a request coming with that token.
+On 05/05/2012 06:38 AM, Roland Stigge wrote:
+> Numeric values in dts files can be specified in decimal and hex (the latter
+> prefixed 0x). The current documentation is updated with this patch to prevent
+> confusion about what is meant with values without "0x" (previously hex, now
+> dec).
 
-That way dmac and client drivers using DT could do away with the filter_fn.
+This updates the documentation to consistently say 0x in front of hex
+values, but doesn't change the device tree _parser_. What did the parser
+previously do with this input?
 
-Roughly speaking (I am not very well versed with DT syntax)
+> Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 
-Client Node:-
+Acked-by: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
 
-mmc1: mmc@13002000 {
-        ...
-        dma_tx = <891>   //some platform-wide unique value
-        dma_rx = <927>   //some platform-wide unique value
-        ...
- };
+Should I track this one, or is Grant taking it in the device device tree
+tree?
 
-
-Say the PL330 chapter of SoC's trm specifies that "channel_id" for
-MMC1_TX is 7 and MMC1_RX is 8 on second instance of PL330.
-
-DMAC's Node:-
-
-pdma2: pdma@10800000 {
-         .......
-        dma_map = <891, 7>,       //Map mmc1_tx onto i/f 7
-                              <927, 8>,      //Map mmc1_rx onto i/f 8
-                              <487, 9>,      // Map other dma clients
-                                    .......
-};
-
-The dma_map could also encode features like duplex, priority etc
-depending on the needs of the client and capability of the dmac.
-(The "channel_id" could very well be an composite value specifying
-more than one parameter.... basically a value private to the dmac driver)
-
-As a positive side effect, the dmac controller could populate channels only
-for which some client exists on the machine.
-
-Also the decision to map a client onto one of two or more supporting dmacs
-is made here - token 927 wouldn't appear in dma_map of pdma1 even
-if it also could do RX for MMC1.
-
-The solution seems so simple that I am already cringing at the thought
-of having overlooked something fundamental. Please clarify :)
+Rob
+-- 
+GNU/Linux isn't: Linux=GPLv2, GNU=GPLv3+, they can't share code.
+Either it's "mere aggregation", or a license violation.  Pick one.
