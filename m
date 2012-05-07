@@ -1,54 +1,40 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 2/3] MFD: twl6040: Allocate IRQ numbers dynamically
-Date: Mon, 07 May 2012 09:49:55 +0300
-Message-ID: <4FA77093.9060306@ti.com>
-References: <20120503145248.GJ3955@opensource.wolfsonmicro.com> <4FA2A08C.5000403@ti.com> <20120503152643.GM3955@opensource.wolfsonmicro.com> <4FA3958A.4080206@ti.com> <20120504090856.GA14230@opensource.wolfsonmicro.com> <4FA3B182.5060001@ti.com> <20120504112204.GE14230@opensource.wolfsonmicro.com> <4FA3C3B9.3030009@ti.com> <20120504121730.GG14230@opensource.wolfsonmicro.com> <4FA3CCAF.3020902@ti.com> <20120504124750.GL14230@opensource.wolfsonmicro.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: tl6040-vibra: Device Tree support
+Date: Mon, 7 May 2012 00:02:34 -0700
+Message-ID: <20120507070233.GB22074@core.coreip.homeip.net>
+References: <1336133113-12224-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120504124750.GL14230@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1336133113-12224-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2012 03:47 PM, Mark Brown wrote:
-> This doesn't really work for board files, though - you can only call
-> gpio_to_irq() at runtime so if you're statically registering the devi=
-ces
-> on the board you'd need to make the structures non-const, manage to f=
-ind
-> the GPIO controller at runtime then do the lookup, update the struct =
-and
-> finally register the device.
+Hi Peter,
 
-I've seen some board files doing this already (obviously not for the
-twl6040). Which is not the nicest thing...
+On Fri, May 04, 2012 at 03:05:13PM +0300, Peter Ujfalusi wrote:
+> +	if (pdata) {
+> +		info->vibldrv_res = pdata->vibldrv_res;
+> +		info->vibrdrv_res = pdata->vibrdrv_res;
+> +		info->viblmotor_res = pdata->viblmotor_res;
+> +		info->vibrmotor_res = pdata->vibrmotor_res;
+> +		vddvibl_uV = pdata->vddvibl_uV;
+> +		vddvibr_uV = pdata->vddvibr_uV;
+> +	} else {
+> +		of_property_read_u32(node, "vibldrv_res", &info->vibldrv_res);
+> +		of_property_read_u32(node, "vibrdrv_res", &info->vibrdrv_res);
+> +		of_property_read_u32(node, "viblmotor_res",
+> +				     &info->viblmotor_res);
+> +		of_property_read_u32(node, "vibrmotor_res",
+> +				     &info->vibrmotor_res);
 
->> If there is "irq expander" type of chip I assume it would have simil=
-ar
->> way to get the IRQ number based on either GPIO number or some other
->> enumeration value.
->=20
-> No, there's no generic interface for this.
+Since these 4 appear to be mandatory properties don't we need to
+validate they are actually present in DT?
 
-This dynamic range allocation for IRQ, GPIO will work nicely with DT at
-the end. In legacy way we will need to have workarounds. Or just forget
-about booting without DT.
+Thanks.
 
->> The twl6040 does not have such a feature. The interrupts are generat=
-ed
->> internally and it has one IRQ line towards the host. We have nested
->> interrupts for the childs (plug detect is handled by ASoC codec, Vib=
-ra
->> overcurrent is handled by the vibra driver, etc).
->=20
-> OK, that's fine then - you should put this in the changelog to make i=
-t
-> clear that there are no external users who could be affected.
-
-I'll do that.
-
-Thank you,
-P=E9ter
+-- 
+Dmitry
