@@ -1,84 +1,72 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V1] regulator: fixed: dt: add property for gpio open
- drain flag
-Date: Mon, 7 May 2012 17:24:20 +0100
-Message-ID: <20120507162419.GK17002@opensource.wolfsonmicro.com>
-References: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com>
- <4FA7E4A3.6050004@wwwdotorg.org>
- <4FA7E57B.30804@nvidia.com>
- <4FA7E841.7020100@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC v2 5/5] drm: Add NVIDIA Tegra support
+Date: Mon, 07 May 2012 10:27:59 -0600
+Message-ID: <4FA7F80F.5090002@wwwdotorg.org>
+References: <1335347102-14905-1-git-send-email-thierry.reding@avionic-design.de>
+	<1335347102-14905-6-git-send-email-thierry.reding@avionic-design.de>
+	<4FA78CBD.5010606@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3D7yMlnunRPwJqC7"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FA7E841.7020100@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, "lrg@ti.com" <lrg@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4FA78CBD.5010606-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 05/07/2012 02:50 AM, Terje Bergstr=F6m wrote:
+> On 25.04.2012 12:45, Thierry Reding wrote:
+> =
 
---3D7yMlnunRPwJqC7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> +/ {
+>> +       ...
+>> +
+>> +       /* host1x */
+>> +       host1x: host1x@50000000 {
+>> +               compatible =3D "nvidia,tegra20-host1x";
+>> +               reg =3D <0x50000000 0x00024000>;
+>> +               interrupts =3D <0 64 0x04   /* cop syncpt */
+>> +                             0 65 0x04   /* mpcore syncpt */
+>> +                             0 66 0x04   /* cop general */
+>> +                             0 67 0x04>; /* mpcore general */
+>> +       };
+>> +
+>> +       /* video-encoding/decoding */
+>> +       mpe@54040000 {
+>> +               reg =3D <0x54040000 0x00040000>;
+>> +               interrupts =3D <0 68 0x04>;
+>> +       };
+>> +
+> =
 
-On Mon, May 07, 2012 at 09:20:33AM -0600, Stephen Warren wrote:
+> (...)
+> =
 
-> My point is that there's clear intent for of_gpio_simple_xlate() to
-> return the GPIO flags from a field in the GPIO specifier in device tree,
-> irrespective of whether some GPIO bindings don't allow this, or whether
-> this is fully documented.
+> Hi Thierry,
+> =
 
-It's really not idiomatic for drivers using GPIOs to allow configuration
-of their flags in the first place.  Or, quite frankly, to use flags.
-Honestly I'd not expect any bindings that the GPIO driver provides to
-have any attention at all paid to them most of the time, looking at the
-code seems to support that (though there's surprisingly few bindings
-using GPIOs at all it seems).
+> I have still lots of questions regarding how device trees work. I'm now
+> just trying to match the device tree structure with hardware - let me
+> know if that goes wrong.
+> =
 
-Before we start doing stuff to improve this it feels like we should do
-things like get devm_ versions of gpiolib APIs in there (since most
-conversions would really benefit from that too) - I've been sending a
-patch for that but my backlog of unmerged patches for it keeps getting
-bigger rather than smaller.
+> There's a hierarchy in the hardware, which should be represented in the
+> device trees. All of the hardware are client modules for host1x - with
+> the exception of host1x obviously. CPU has two methods for accessing the
+> hardware: clients' register aperture and host1x channels. Both of these
+> operate via host1x hardware.
+> =
 
-> We shouldn't have two different mechanisms to represent this
-> information. How do we resolve the situation where a particular SoC's
-> GPIO binding allows the flags to be specified, and this patch allows the
-> open-drain flag to be specified, and the two values are different?
+> We should define host1x bus in the device tree, and move all nodes
+> except host1x under that bus.
 
-> Either we should force all bindings to have some way of specifying the
-> flags, or we should remove the flags from all bindings and rely on
-> separate properties.
-
-There's also the case where the bindings probably should be ignored
-because the device driver knows what the connection has to be anyway and
-there's no point in forcing people to encode it in the binding.
-
-It's a real shame all these bindings are driver specific, it's just like
-interrupts :(
-
---3D7yMlnunRPwJqC7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPp/ctAAoJEBus8iNuMP3d2PsP/Ajv0ha4ZMhDNv+xdeAySaCT
-5E6XdxEg0r9HC1g3YjckSPH/eXQbTG8r4Q4cfxwR6UG0A3JexBShvY42R9nbbwdX
-rHHhpVa7/T0AIwWloS747O0GNay29om5fu5aOmtGi29JwSKYCIXnT54qOvraSBxL
-pvltea6+MW9JjV7sVHpobNcHr4i/v90gJIbT4QzOJMOE467tIMA+u5M2aM0x7JPU
-Lp9koMitfeXfTtPLKMmXj5GZqab74uo41ZdMJk+xTv8XYVZaPsNKerIdDUGTNKPG
-mlnVed6IuJt8wlNxLApwEwLnoDo0gKCeQvWjY3HIkQDJt6pNccuiQg3VL3ncTVQZ
-hHRvQCXlzH3Cq1Tv5Jx+d+KV0Zv6MRZW7c1Zyx8oZrPm8cHxz2+0sPYsmZMmz7AI
-VZ40mBdE3qRDktQyZK+jO4bImnj8+511oxdYni3bsZZTr9W06T37gUBhidkXOPwj
-fl5XL9IElVWoprTpHXhMjXjlUJ16G1+z9h9hOg48wNUSd3Wgyr70YzTUib0ttmnq
-EuA3fBELcqxUgmJpNyZmL1cVNHUG0clRwU0nm/Nax95q+lPI5vKe0mAbsPcoqwwB
-OTUrYV4owzqtROYpphWGzQ06es+jr5PdFIH4AO/9AivUtoTMql7kfw6glV9uTzlD
-PtsTGmIamicx2pMJnPCl
-=DM2l
------END PGP SIGNATURE-----
-
---3D7yMlnunRPwJqC7--
+I think the host1x node /is/ that bus.
