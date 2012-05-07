@@ -1,49 +1,55 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] Input: tl6040-vibra: Device Tree support
-Date: Mon, 07 May 2012 13:49:29 +0300
-Message-ID: <4FA7A8B9.4040208@ti.com>
-References: <1336133113-12224-1-git-send-email-peter.ujfalusi@ti.com> <20120507070233.GB22074@core.coreip.homeip.net>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V1] regulator: fixed: dt: add property for gpio open
+ drain flag
+Date: Mon, 7 May 2012 12:35:29 +0100
+Message-ID: <20120507113528.GK4415@opensource.wolfsonmicro.com>
+References: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120507070233.GB22074@core.coreip.homeip.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="++alDQ2ROsODg1x+"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: lrg@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
 
-On 05/07/2012 10:02 AM, Dmitry Torokhov wrote:
-> Hi Peter,
->=20
-> On Fri, May 04, 2012 at 03:05:13PM +0300, Peter Ujfalusi wrote:
->> +	if (pdata) {
->> +		info->vibldrv_res =3D pdata->vibldrv_res;
->> +		info->vibrdrv_res =3D pdata->vibrdrv_res;
->> +		info->viblmotor_res =3D pdata->viblmotor_res;
->> +		info->vibrmotor_res =3D pdata->vibrmotor_res;
->> +		vddvibl_uV =3D pdata->vddvibl_uV;
->> +		vddvibr_uV =3D pdata->vddvibr_uV;
->> +	} else {
->> +		of_property_read_u32(node, "vibldrv_res", &info->vibldrv_res);
->> +		of_property_read_u32(node, "vibrdrv_res", &info->vibrdrv_res);
->> +		of_property_read_u32(node, "viblmotor_res",
->> +				     &info->viblmotor_res);
->> +		of_property_read_u32(node, "vibrmotor_res",
->> +				     &info->vibrmotor_res);
->=20
-> Since these 4 appear to be mandatory properties don't we need to
-> validate they are actually present in DT?
+--++alDQ2ROsODg1x+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If the property does not exist in the DT blob the variable will not be
-updated - it will remain 0.
-I have kept the validity check for the resistance values. This will
-catch the case when something is missing from the DT blob.
+On Mon, May 07, 2012 at 03:58:19PM +0530, Laxman Dewangan wrote:
+> Add property for the gpio flag open drain when registering
+> fixed regulator.
 
-I just did not wanted to complicate the code with additional checks
-since the end result would be the same.
+Applied, thanks.
 
---=20
-P=E9ter
+There's no need to put stuff like "v1" in your patch description, it can
+sometimes be useful to do this if it's a revision of a previous patch
+but if it's the first version it's not adding anything.
+
+--++alDQ2ROsODg1x+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPp7LXAAoJEBus8iNuMP3dmAEQAIbdANv6697lMCgE+1U77e2/
+BnaWlVCveLPlxgIBt0Zm7yP1MKeoaMSE9dIZp5vdtCxEUOh4JtBdDVJ873KhuiYp
+tvHS4GmNfptd0mgA68A7OKu+Dtjum+3dGJi8SoE8QeFWbb7cl7unh32CEhqujMe0
+0Ea06uaNmhkPLIaOVExRqyimzpPPLMc46FLVQ2j60caq98dFxwaOsqhs3aIXt3aB
+r/r1uU49CY/UcBnW9YHfe8wpw7S5IXeWQTDy65Y9b2gRQfmKdF2/bHNAmnHVBh/k
+aBGMxv2P9Nc/aObo8ouE+rQqdmPK2gWkPAaYsP4y4EcK3ZKrl2jNUzRGPtWsCfUV
+oJw0JQm+wflHhjz5c6HaidncaFrieBileBSqGDsO0Wrh0FIk1kHsQkJviK+vpbj0
+3WrwsTtcXglaR/lPgTrl0Tj0nMH1yy4pBGEceyvbOZ6dfo5tnn9OBC1TZlLY61FK
+BUF99AoGpsDhhOdoGgTqa/XmSBHxkydy+B8Dj2gP8diWBCE48B8hMNm0GxTL9IZT
+4c44bl3i6RuHq+a6fzdYcM5c/SRTFx/b+jp9BswKAgcP8c4OqNTU/6BgANIVPwaH
+5jZG0Raj3qxfLcCj49a4pRp7k1WbSuPP8slxk8V3XQT6jw5PMeLnDUtKPUeD8tr0
+IIQNkVV0e6QJZ03m7h9h
+=ZAKn
+-----END PGP SIGNATURE-----
+
+--++alDQ2ROsODg1x+--
