@@ -1,28 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv5 1/3] ARM: tegra: Add Tegra AHB driver
-Date: Mon, 7 May 2012 10:24:48 +0000
-Message-ID: <201205071024.48958.arnd@arndb.de>
-References: <20120507074228.GK26481@n2100.arm.linux.org.uk> <201205070859.29174.arnd@arndb.de> <20120507.122333.2024326166703361049.hdoyu@nvidia.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V1] regulator: fixed: dt: add property for gpio open drain flag
+Date: Mon,  7 May 2012 15:58:19 +0530
+Message-ID: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120507.122333.2024326166703361049.hdoyu@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Hiroshi Doyu <hdoyu@nvidia.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "balbi@ti.com" <balbi@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "ccross@android.com" <ccross@android.com>, "olof@lixom.net" <olof@lixom.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ohad@wizery.com" <ohad@wizery.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linville@tuxdriver.com" <linville@tuxdriver.com>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.ke>
+To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 May 2012, Hiroshi Doyu wrote:
-> Tegra doesn't enable ARM_AMBA and Tegra doesn't use the following
-> "drivers/amba/bus.c" right now. I needed to make this directory
-> available to ones without ARM_AMBA enabled.
+Add property for the gpio flag open drain when registering
+fixed regulator.
 
-Ah, right. I looked at arch/arm/Kconfig earlier to see if
-tegra enabled ARM_AMBA but was accidentally looking
-at ARCH_INtegraTOR when grepping for TEGRA ;-)
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+ .../bindings/regulator/fixed-regulator.txt         |    5 ++++-
+ drivers/regulator/fixed.c                          |    3 +++
+ 2 files changed, 7 insertions(+), 1 deletions(-)
 
-Your proposed solution sounds good then.
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 9cf57fd..2f5b6b1 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -8,6 +8,8 @@ Optional properties:
+ - startup-delay-us: startup time in microseconds
+ - enable-active-high: Polarity of GPIO is Active high
+ If this property is missing, the default assumed is Active low.
++- gpio-open-drain: GPIO is open drain type.
++  If this property is missing then default assumption is false.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+@@ -25,5 +27,6 @@ Example:
+ 		gpio = <&gpio1 16 0>;
+ 		startup-delay-us = <70000>;
+ 		enable-active-high;
+-		regulator-boot-on
++		regulator-boot-on;
++		gpio-open-drain;
+ 	};
+diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+index bd437c1..f09fe7b 100644
+--- a/drivers/regulator/fixed.c
++++ b/drivers/regulator/fixed.c
+@@ -90,6 +90,9 @@ of_get_fixed_voltage_config(struct device *dev)
+ 	if (of_find_property(np, "enable-active-high", NULL))
+ 		config->enable_high = true;
+ 
++	if (of_find_property(np, "gpio-open-drain", NULL))
++		config->gpio_is_open_drain = true;
++
+ 	return config;
+ }
+ 
+-- 
+1.7.1.1
 
-	Arnd
