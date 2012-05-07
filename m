@@ -1,71 +1,28 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/3] MFD: twl6040: Allocate IRQ numbers dynamically
-Date: Mon, 7 May 2012 10:49:26 +0100
-Message-ID: <20120507094925.GE4415@opensource.wolfsonmicro.com>
-References: <20120503152643.GM3955@opensource.wolfsonmicro.com>
- <4FA3958A.4080206@ti.com>
- <20120504090856.GA14230@opensource.wolfsonmicro.com>
- <4FA3B182.5060001@ti.com>
- <20120504112204.GE14230@opensource.wolfsonmicro.com>
- <4FA3C3B9.3030009@ti.com>
- <20120504121730.GG14230@opensource.wolfsonmicro.com>
- <4FA3CCAF.3020902@ti.com>
- <20120504124750.GL14230@opensource.wolfsonmicro.com>
- <4FA77093.9060306@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv5 1/3] ARM: tegra: Add Tegra AHB driver
+Date: Mon, 7 May 2012 10:24:48 +0000
+Message-ID: <201205071024.48958.arnd@arndb.de>
+References: <20120507074228.GK26481@n2100.arm.linux.org.uk> <201205070859.29174.arnd@arndb.de> <20120507.122333.2024326166703361049.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EXKGNeO8l0xGFBjy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FA77093.9060306@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120507.122333.2024326166703361049.hdoyu@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Hiroshi Doyu <hdoyu@nvidia.com>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "balbi@ti.com" <balbi@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "ccross@android.com" <ccross@android.com>, "olof@lixom.net" <olof@lixom.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ohad@wizery.com" <ohad@wizery.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linville@tuxdriver.com" <linville@tuxdriver.com>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.ke>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 07 May 2012, Hiroshi Doyu wrote:
+> Tegra doesn't enable ARM_AMBA and Tegra doesn't use the following
+> "drivers/amba/bus.c" right now. I needed to make this directory
+> available to ones without ARM_AMBA enabled.
 
---EXKGNeO8l0xGFBjy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ah, right. I looked at arch/arm/Kconfig earlier to see if
+tegra enabled ARM_AMBA but was accidentally looking
+at ARCH_INtegraTOR when grepping for TEGRA ;-)
 
-On Mon, May 07, 2012 at 09:49:55AM +0300, Peter Ujfalusi wrote:
-> On 05/04/2012 03:47 PM, Mark Brown wrote:
+Your proposed solution sounds good then.
 
-> >> If there is "irq expander" type of chip I assume it would have similar
-> >> way to get the IRQ number based on either GPIO number or some other
-> >> enumeration value.
-
-> > No, there's no generic interface for this.
-
-> This dynamic range allocation for IRQ, GPIO will work nicely with DT at
-> the end. In legacy way we will need to have workarounds. Or just forget
-> about booting without DT.
-
-Device tree is only available for a small minority of architectures.
-Just as you shouldn't assume that people only ever use the reference
-boards you work on so you should also not assume that people are using
-ARM (and ARM systems that support DT at at that).
-
---EXKGNeO8l0xGFBjy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPp5qZAAoJEBus8iNuMP3dZ90P/2FIQriBYoVERd80IGc+ukbt
-SLPRTIDHiVPG+i5dwyMBVxAjs7qEr58x3Mb/RKCzEvllM8Tym8m19+VjfeHWOcxO
-z0VdiVcUn3tfI34U2hgj20Za3wQyOsoPF6fkhb3ffI37fCLOzR6SMF3G4mZXiArS
-GY4mwNupY1ftm4o0sdCx5sk+G89qtMr7E5A+WBc1EwPkSCU+bG3ag1NEhBNBAdUi
-7E3nP/l6Bg/oZYnzbppIxCsFwF/xS4s8QIYl/BcVkOL3W7gi1A2mZJy8G+6Op5ls
-726hYTNb00awifsR6wsRAfCjoGkxv31QMbyRxnrb9yRHIASz+TBiwQcEl0tzEtUa
-haqoDpzZX3065lz2SjBrzo4vQwMMqOdFzWvMoSW99MNGGhivMXk86EN4YA2dB3za
-dEFUuV6Gpte9g/xjW5zVBxbqIoSLglsL+xFboEq7Y2rUefOo0mj6lj4Y+bB3wCVi
-wDYOtYy/05blK18IDfRBBF9uQTMAjFZtun5wLaP6jG4Zp1GGJjCeXeFBInMtPcKk
-zH4cxKZUzEMxMdWXO1sHJeaEc5dEVxtavrEfuxY6Fq8MHkZDW0xarJ897yHkBDJI
-bsEGAxR/uDw63kCdNni1wmqWyf1J4BMWLpiByfj4KZj8oNk8B1yXXubzVHwbNHnp
-VPx5AjMhXx4vxDZYRZmy
-=9T+a
------END PGP SIGNATURE-----
-
---EXKGNeO8l0xGFBjy--
+	Arnd
