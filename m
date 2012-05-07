@@ -1,70 +1,101 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Mon, 07 May 2012 09:53:45 -0600
-Message-ID: <4FA7F009.5010003@wwwdotorg.org>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <4FA3F308.6030900@ti.com> <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com> <201205041923.07620.arnd@arndb.de> <CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dt: tegra20: Add GART device
+Date: Mon, 07 May 2012 10:06:46 -0600
+Message-ID: <4FA7F316.7070904@wwwdotorg.org>
+References: <4FA2CE32.7010406@wwwdotorg.org><20120504.121357.1085445784831612281.hdoyu@nvidia.com><4FA410DD.3090105@wwwdotorg.org> <20120507.144758.1558303336683449254.hdoyu@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120507.144758.1558303336683449254.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2012 11:10 AM, Jassi Brar wrote:
-> On 5 May 2012 00:53, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Friday 04 May 2012, Jassi Brar wrote:
->>> I see this requires a client driver to specify a particular req_line on a
->>> particular dma controller. I am not sure if this is most optimal.
->>>
->>> I think such client->req_line map should be provided to the dmac controller
->>> driver via its dt node in some format. The dmac driver could then populate
->>> a dma_chan, or similar, only for that req_line and not for the unused one
->>> which otherwise could also have served the same client.
->>>
->>> Ideally the I2C driver should simply ask, say, a channel for TX and another
->>> for RX, everything else should already be setup via dmac's dt nodes.
+On 05/07/2012 05:47 AM, Hiroshi Doyu wrote:
+> Stephen Warren wrote at Fri, 4 May 2012 19:24:45 +0200:
+...
+>> Perhaps the simplest way is to represent those chunks as separate reg
+>> entries:
 >>
->> If I understand you correctly, you think we can generalize the dma-request
->> data in a way that we don't need to pass a specific dma engine phandle.
->> I very much doubt this is possible, given how different the requirements
->> are for each of the engines we support. You really need to pass a specific
->> phandle so that we can find the code that can interpret the data in a
->> meaningful way.
+>>     mc@7000f010 {
+>>         compatible = "nvidia,tegra30-mc";
+>>         reg = <0x7000f010 0x1d4 0x70000228 0xd4>;
+>>     };
 >>
-> Hmm... there ought to be a way by which a client is handed a random 'token'
-> via its dt node and similarly the dmac informed which channel (and with what
-> capabilities) to allocate should it see a request coming with that token.
+>>     smmu@0x70000050 {
+>>         compatible = "nvidia,tegra30-smmu";
+>>         reg = <0x70000010 0x2c 0x70000228 0x5c>;
+>>     };
+...
+> Ok, let's start with the simplest way, and improve later with nice
+> framework.
 
-I think that's the whole point of the patch.
+Uggh. So that patch is for the SMMU, but this thread is about the GART.
+Also, attaching patches makes it more difficult to review them, since
+them may not appear inline when reading the mail, and certainly don't
+when replying. Anyway...
 
-However, the token needs to be some driver-specific struct, since the
-required information may be more than just a single channel or request
-ID in general.
+> diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
 
-> That way dmac and client drivers using DT could do away with the filter_fn.
-> 
-> Roughly speaking (I am not very well versed with DT syntax)
-> 
-> Client Node:-
-> 
-> mmc1: mmc@13002000 {
->         ...
->         dma_tx = <891>   //some platform-wide unique value
->         dma_rx = <927>   //some platform-wide unique value
->         ...
->  };
+> +#include <mach/tegra-ahb.h>
 
-I believe we specifically don't want to introduce any global concept of
-DMA channel ID, either within the kernel, or at the device tree level.
+Note that this patch therefor depends on the AHB series that you just
+posted, and isn't applied anywhere yet.
 
-While we do have global interrupt and GPIO IDs within the kernel, this
-has caused problems, I think primarily due to the need to manage this
-unified namespace and allocate a single global ID for a bunch of
-different ranges of controller-specific IDs.
+> +static int get_reg_bank(u32 offset)
+>  {
+> -	writel(val, smmu->regs + offs);
+> +	int i;
+> +	const struct smmu_reg_bank {
+> +		u32 start;
+> +		size_t size;
+> +	} r[] = {
+> +		{
+> +			.start = 0x10,
+> +			.size = 0x2c,
+> +		},
+> +		{
+> +			.start = 0x1f0,
+> +			.size = 0x10,
+> +		},
+> +		{
+> +			.start = 0x228,
+> +			.size = 0x5c,
+> +		},
+> +	};
+> +
+> +	for (i = 0; i < ARRAY_SIZE(r); i++) {
+> +		BUG_ON(offset < r[i].start);
+> +		if (offset < r[i].start + r[i].size)
+> +			return i;
+> +	}
+> +	BUG();
+> +	return 0; /* Never reach here */
+>  }
 
-Within device tree, everything is always represented as an ID
-relative-to or within a particular controller, so it's easy to namespace
-things separately.
+While stylistically nice, I'm not sure that will be as likely to
+optimize out as the simple if/else code I gave as an example. I suppose
+it's not a big deal though.
+
+>  static int tegra_smmu_probe(struct platform_device *pdev)
+
+> +	err = of_get_dma_window(dev->of_node, "dma-window", 0, NULL,
+> +				&base, &size);
+
+So this also relies on the generic DMA window parsing patch too. I don't
+think that's checked in anywhere yet right?
+
+> +	size >>= SMMU_PAGE_SHIFT;
+> +	if (!size)
+> +		return -ENODEV;
+
+It seems like this should validate that !(size & ((1 << SMMU_PAGE_SHIFT)
+- 1)) too?
+
+This patch looks like it adds the full implementation of device tree
+support, yet doesn't add any documentation for the binding.
+
+Finally, I assume you're going to post a similar patch for the Tegra20
+GART, so its register ranges don't overlap the Tegra20 MC?
