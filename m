@@ -1,101 +1,84 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dt: tegra20: Add GART device
-Date: Mon, 07 May 2012 10:06:46 -0600
-Message-ID: <4FA7F316.7070904@wwwdotorg.org>
-References: <4FA2CE32.7010406@wwwdotorg.org><20120504.121357.1085445784831612281.hdoyu@nvidia.com><4FA410DD.3090105@wwwdotorg.org> <20120507.144758.1558303336683449254.hdoyu@nvidia.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V1] regulator: fixed: dt: add property for gpio open
+ drain flag
+Date: Mon, 7 May 2012 17:24:20 +0100
+Message-ID: <20120507162419.GK17002@opensource.wolfsonmicro.com>
+References: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com>
+ <4FA7E4A3.6050004@wwwdotorg.org>
+ <4FA7E57B.30804@nvidia.com>
+ <4FA7E841.7020100@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120507.144758.1558303336683449254.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3D7yMlnunRPwJqC7"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FA7E841.7020100@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "lrg@ti.com" <lrg@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2012 05:47 AM, Hiroshi Doyu wrote:
-> Stephen Warren wrote at Fri, 4 May 2012 19:24:45 +0200:
-...
->> Perhaps the simplest way is to represent those chunks as separate reg
->> entries:
->>
->>     mc@7000f010 {
->>         compatible = "nvidia,tegra30-mc";
->>         reg = <0x7000f010 0x1d4 0x70000228 0xd4>;
->>     };
->>
->>     smmu@0x70000050 {
->>         compatible = "nvidia,tegra30-smmu";
->>         reg = <0x70000010 0x2c 0x70000228 0x5c>;
->>     };
-...
-> Ok, let's start with the simplest way, and improve later with nice
-> framework.
 
-Uggh. So that patch is for the SMMU, but this thread is about the GART.
-Also, attaching patches makes it more difficult to review them, since
-them may not appear inline when reading the mail, and certainly don't
-when replying. Anyway...
+--3D7yMlnunRPwJqC7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+On Mon, May 07, 2012 at 09:20:33AM -0600, Stephen Warren wrote:
 
-> +#include <mach/tegra-ahb.h>
+> My point is that there's clear intent for of_gpio_simple_xlate() to
+> return the GPIO flags from a field in the GPIO specifier in device tree,
+> irrespective of whether some GPIO bindings don't allow this, or whether
+> this is fully documented.
 
-Note that this patch therefor depends on the AHB series that you just
-posted, and isn't applied anywhere yet.
+It's really not idiomatic for drivers using GPIOs to allow configuration
+of their flags in the first place.  Or, quite frankly, to use flags.
+Honestly I'd not expect any bindings that the GPIO driver provides to
+have any attention at all paid to them most of the time, looking at the
+code seems to support that (though there's surprisingly few bindings
+using GPIOs at all it seems).
 
-> +static int get_reg_bank(u32 offset)
->  {
-> -	writel(val, smmu->regs + offs);
-> +	int i;
-> +	const struct smmu_reg_bank {
-> +		u32 start;
-> +		size_t size;
-> +	} r[] = {
-> +		{
-> +			.start = 0x10,
-> +			.size = 0x2c,
-> +		},
-> +		{
-> +			.start = 0x1f0,
-> +			.size = 0x10,
-> +		},
-> +		{
-> +			.start = 0x228,
-> +			.size = 0x5c,
-> +		},
-> +	};
-> +
-> +	for (i = 0; i < ARRAY_SIZE(r); i++) {
-> +		BUG_ON(offset < r[i].start);
-> +		if (offset < r[i].start + r[i].size)
-> +			return i;
-> +	}
-> +	BUG();
-> +	return 0; /* Never reach here */
->  }
+Before we start doing stuff to improve this it feels like we should do
+things like get devm_ versions of gpiolib APIs in there (since most
+conversions would really benefit from that too) - I've been sending a
+patch for that but my backlog of unmerged patches for it keeps getting
+bigger rather than smaller.
 
-While stylistically nice, I'm not sure that will be as likely to
-optimize out as the simple if/else code I gave as an example. I suppose
-it's not a big deal though.
+> We shouldn't have two different mechanisms to represent this
+> information. How do we resolve the situation where a particular SoC's
+> GPIO binding allows the flags to be specified, and this patch allows the
+> open-drain flag to be specified, and the two values are different?
 
->  static int tegra_smmu_probe(struct platform_device *pdev)
+> Either we should force all bindings to have some way of specifying the
+> flags, or we should remove the flags from all bindings and rely on
+> separate properties.
 
-> +	err = of_get_dma_window(dev->of_node, "dma-window", 0, NULL,
-> +				&base, &size);
+There's also the case where the bindings probably should be ignored
+because the device driver knows what the connection has to be anyway and
+there's no point in forcing people to encode it in the binding.
 
-So this also relies on the generic DMA window parsing patch too. I don't
-think that's checked in anywhere yet right?
+It's a real shame all these bindings are driver specific, it's just like
+interrupts :(
 
-> +	size >>= SMMU_PAGE_SHIFT;
-> +	if (!size)
-> +		return -ENODEV;
+--3D7yMlnunRPwJqC7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-It seems like this should validate that !(size & ((1 << SMMU_PAGE_SHIFT)
-- 1)) too?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-This patch looks like it adds the full implementation of device tree
-support, yet doesn't add any documentation for the binding.
+iQIcBAEBAgAGBQJPp/ctAAoJEBus8iNuMP3d2PsP/Ajv0ha4ZMhDNv+xdeAySaCT
+5E6XdxEg0r9HC1g3YjckSPH/eXQbTG8r4Q4cfxwR6UG0A3JexBShvY42R9nbbwdX
+rHHhpVa7/T0AIwWloS747O0GNay29om5fu5aOmtGi29JwSKYCIXnT54qOvraSBxL
+pvltea6+MW9JjV7sVHpobNcHr4i/v90gJIbT4QzOJMOE467tIMA+u5M2aM0x7JPU
+Lp9koMitfeXfTtPLKMmXj5GZqab74uo41ZdMJk+xTv8XYVZaPsNKerIdDUGTNKPG
+mlnVed6IuJt8wlNxLApwEwLnoDo0gKCeQvWjY3HIkQDJt6pNccuiQg3VL3ncTVQZ
+hHRvQCXlzH3Cq1Tv5Jx+d+KV0Zv6MRZW7c1Zyx8oZrPm8cHxz2+0sPYsmZMmz7AI
+VZ40mBdE3qRDktQyZK+jO4bImnj8+511oxdYni3bsZZTr9W06T37gUBhidkXOPwj
+fl5XL9IElVWoprTpHXhMjXjlUJ16G1+z9h9hOg48wNUSd3Wgyr70YzTUib0ttmnq
+EuA3fBELcqxUgmJpNyZmL1cVNHUG0clRwU0nm/Nax95q+lPI5vKe0mAbsPcoqwwB
+OTUrYV4owzqtROYpphWGzQ06es+jr5PdFIH4AO/9AivUtoTMql7kfw6glV9uTzlD
+PtsTGmIamicx2pMJnPCl
+=DM2l
+-----END PGP SIGNATURE-----
 
-Finally, I assume you're going to post a similar patch for the Tegra20
-GART, so its register ranges don't overlap the Tegra20 MC?
+--3D7yMlnunRPwJqC7--
