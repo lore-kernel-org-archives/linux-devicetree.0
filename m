@@ -1,56 +1,70 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Input: tl6040-vibra: Device Tree support
-Date: Mon, 7 May 2012 08:48:26 -0700
-Message-ID: <20120507154826.GB10222@core.coreip.homeip.net>
-References: <1336133113-12224-1-git-send-email-peter.ujfalusi@ti.com>
- <20120507070233.GB22074@core.coreip.homeip.net>
- <4FA7A8B9.4040208@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Mon, 07 May 2012 09:53:45 -0600
+Message-ID: <4FA7F009.5010003@wwwdotorg.org>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <4FA3F308.6030900@ti.com> <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com> <201205041923.07620.arnd@arndb.de> <CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FA7A8B9.4040208@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 07, 2012 at 01:49:29PM +0300, Peter Ujfalusi wrote:
-> Hi Dmitry,
-> 
-> On 05/07/2012 10:02 AM, Dmitry Torokhov wrote:
-> > Hi Peter,
-> > 
-> > On Fri, May 04, 2012 at 03:05:13PM +0300, Peter Ujfalusi wrote:
-> >> +	if (pdata) {
-> >> +		info->vibldrv_res = pdata->vibldrv_res;
-> >> +		info->vibrdrv_res = pdata->vibrdrv_res;
-> >> +		info->viblmotor_res = pdata->viblmotor_res;
-> >> +		info->vibrmotor_res = pdata->vibrmotor_res;
-> >> +		vddvibl_uV = pdata->vddvibl_uV;
-> >> +		vddvibr_uV = pdata->vddvibr_uV;
-> >> +	} else {
-> >> +		of_property_read_u32(node, "vibldrv_res", &info->vibldrv_res);
-> >> +		of_property_read_u32(node, "vibrdrv_res", &info->vibrdrv_res);
-> >> +		of_property_read_u32(node, "viblmotor_res",
-> >> +				     &info->viblmotor_res);
-> >> +		of_property_read_u32(node, "vibrmotor_res",
-> >> +				     &info->vibrmotor_res);
-> > 
-> > Since these 4 appear to be mandatory properties don't we need to
-> > validate they are actually present in DT?
-> 
-> If the property does not exist in the DT blob the variable will not be
-> updated - it will remain 0.
-> I have kept the validity check for the resistance values. This will
-> catch the case when something is missing from the DT blob.
-> 
-> I just did not wanted to complicate the code with additional checks
-> since the end result would be the same.
+On 05/05/2012 11:10 AM, Jassi Brar wrote:
+> On 5 May 2012 00:53, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Friday 04 May 2012, Jassi Brar wrote:
+>>> I see this requires a client driver to specify a particular req_line on a
+>>> particular dma controller. I am not sure if this is most optimal.
+>>>
+>>> I think such client->req_line map should be provided to the dmac controller
+>>> driver via its dt node in some format. The dmac driver could then populate
+>>> a dma_chan, or similar, only for that req_line and not for the unused one
+>>> which otherwise could also have served the same client.
+>>>
+>>> Ideally the I2C driver should simply ask, say, a channel for TX and another
+>>> for RX, everything else should already be setup via dmac's dt nodes.
+>>
+>> If I understand you correctly, you think we can generalize the dma-request
+>> data in a way that we don't need to pass a specific dma engine phandle.
+>> I very much doubt this is possible, given how different the requirements
+>> are for each of the engines we support. You really need to pass a specific
+>> phandle so that we can find the code that can interpret the data in a
+>> meaningful way.
+>>
+> Hmm... there ought to be a way by which a client is handed a random 'token'
+> via its dt node and similarly the dmac informed which channel (and with what
+> capabilities) to allocate should it see a request coming with that token.
 
-Ah, indeed, I missed that we still validate the values.
+I think that's the whole point of the patch.
 
-Applied, thanks Peter.
+However, the token needs to be some driver-specific struct, since the
+required information may be more than just a single channel or request
+ID in general.
 
--- 
-Dmitry
+> That way dmac and client drivers using DT could do away with the filter_fn.
+> 
+> Roughly speaking (I am not very well versed with DT syntax)
+> 
+> Client Node:-
+> 
+> mmc1: mmc@13002000 {
+>         ...
+>         dma_tx = <891>   //some platform-wide unique value
+>         dma_rx = <927>   //some platform-wide unique value
+>         ...
+>  };
+
+I believe we specifically don't want to introduce any global concept of
+DMA channel ID, either within the kernel, or at the device tree level.
+
+While we do have global interrupt and GPIO IDs within the kernel, this
+has caused problems, I think primarily due to the need to manage this
+unified namespace and allocate a single global ID for a bunch of
+different ranges of controller-specific IDs.
+
+Within device tree, everything is always represented as an ID
+relative-to or within a particular controller, so it's easy to namespace
+things separately.
