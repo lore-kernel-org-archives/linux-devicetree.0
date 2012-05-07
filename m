@@ -1,57 +1,49 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V1] regulator: fixed: dt: add property for gpio open drain flag
-Date: Mon,  7 May 2012 15:58:19 +0530
-Message-ID: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] Input: tl6040-vibra: Device Tree support
+Date: Mon, 07 May 2012 13:49:29 +0300
+Message-ID: <4FA7A8B9.4040208@ti.com>
+References: <1336133113-12224-1-git-send-email-peter.ujfalusi@ti.com> <20120507070233.GB22074@core.coreip.homeip.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120507070233.GB22074@core.coreip.homeip.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add property for the gpio flag open drain when registering
-fixed regulator.
+Hi Dmitry,
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- .../bindings/regulator/fixed-regulator.txt         |    5 ++++-
- drivers/regulator/fixed.c                          |    3 +++
- 2 files changed, 7 insertions(+), 1 deletions(-)
+On 05/07/2012 10:02 AM, Dmitry Torokhov wrote:
+> Hi Peter,
+>=20
+> On Fri, May 04, 2012 at 03:05:13PM +0300, Peter Ujfalusi wrote:
+>> +	if (pdata) {
+>> +		info->vibldrv_res =3D pdata->vibldrv_res;
+>> +		info->vibrdrv_res =3D pdata->vibrdrv_res;
+>> +		info->viblmotor_res =3D pdata->viblmotor_res;
+>> +		info->vibrmotor_res =3D pdata->vibrmotor_res;
+>> +		vddvibl_uV =3D pdata->vddvibl_uV;
+>> +		vddvibr_uV =3D pdata->vddvibr_uV;
+>> +	} else {
+>> +		of_property_read_u32(node, "vibldrv_res", &info->vibldrv_res);
+>> +		of_property_read_u32(node, "vibrdrv_res", &info->vibrdrv_res);
+>> +		of_property_read_u32(node, "viblmotor_res",
+>> +				     &info->viblmotor_res);
+>> +		of_property_read_u32(node, "vibrmotor_res",
+>> +				     &info->vibrmotor_res);
+>=20
+> Since these 4 appear to be mandatory properties don't we need to
+> validate they are actually present in DT?
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 9cf57fd..2f5b6b1 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -8,6 +8,8 @@ Optional properties:
- - startup-delay-us: startup time in microseconds
- - enable-active-high: Polarity of GPIO is Active high
- If this property is missing, the default assumed is Active low.
-+- gpio-open-drain: GPIO is open drain type.
-+  If this property is missing then default assumption is false.
- 
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-@@ -25,5 +27,6 @@ Example:
- 		gpio = <&gpio1 16 0>;
- 		startup-delay-us = <70000>;
- 		enable-active-high;
--		regulator-boot-on
-+		regulator-boot-on;
-+		gpio-open-drain;
- 	};
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index bd437c1..f09fe7b 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -90,6 +90,9 @@ of_get_fixed_voltage_config(struct device *dev)
- 	if (of_find_property(np, "enable-active-high", NULL))
- 		config->enable_high = true;
- 
-+	if (of_find_property(np, "gpio-open-drain", NULL))
-+		config->gpio_is_open_drain = true;
-+
- 	return config;
- }
- 
--- 
-1.7.1.1
+If the property does not exist in the DT blob the variable will not be
+updated - it will remain 0.
+I have kept the validity check for the resistance values. This will
+catch the case when something is missing from the DT blob.
 
+I just did not wanted to complicate the code with additional checks
+since the end result would be the same.
+
+--=20
+P=E9ter
