@@ -1,72 +1,95 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC v2 5/5] drm: Add NVIDIA Tegra support
-Date: Mon, 07 May 2012 10:27:59 -0600
-Message-ID: <4FA7F80F.5090002@wwwdotorg.org>
-References: <1335347102-14905-1-git-send-email-thierry.reding@avionic-design.de>
-	<1335347102-14905-6-git-send-email-thierry.reding@avionic-design.de>
-	<4FA78CBD.5010606@nvidia.com>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Mon, 7 May 2012 22:49:36 +0530
+Message-ID: <CAJe_ZheHFP9NZEiZfCvS3LL1k7xamzGq4Oep8gfmPRi6RR7R5Q@mail.gmail.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	<4FA3F308.6030900@ti.com>
+	<CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
+	<201205041923.07620.arnd@arndb.de>
+	<CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
+	<4FA7F009.5010003@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <4FA78CBD.5010606-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FA7F009.5010003@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2012 02:50 AM, Terje Bergstr=F6m wrote:
-> On 25.04.2012 12:45, Thierry Reding wrote:
-> =
+On 7 May 2012 21:23, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 05/05/2012 11:10 AM, Jassi Brar wrote:
+>
+>> Hmm... there ought to be a way by which a client is handed a random =
+'token'
+>> via its dt node and similarly the dmac informed which channel (and w=
+ith what
+>> capabilities) to allocate should it see a request coming with that t=
+oken.
+>
+> I think that's the whole point of the patch.
+>
+> However, the token needs to be some driver-specific struct, since the
+> required information may be more than just a single channel or reques=
+t
+> ID in general.
+>
+Well, what I call 'token' could just as well be some numerical hash of
+what you call 'driver-specific struct'.
+And I never thought we could do without h/w specific information,
+just that peculiarities lie with the dmac controllers and that's where
+the discerning should happen.
 
->> +/ {
->> +       ...
->> +
->> +       /* host1x */
->> +       host1x: host1x@50000000 {
->> +               compatible =3D "nvidia,tegra20-host1x";
->> +               reg =3D <0x50000000 0x00024000>;
->> +               interrupts =3D <0 64 0x04   /* cop syncpt */
->> +                             0 65 0x04   /* mpcore syncpt */
->> +                             0 66 0x04   /* cop general */
->> +                             0 67 0x04>; /* mpcore general */
->> +       };
->> +
->> +       /* video-encoding/decoding */
->> +       mpe@54040000 {
->> +               reg =3D <0x54040000 0x00040000>;
->> +               interrupts =3D <0 68 0x04>;
->> +       };
->> +
-> =
+Our opinions differ in that, I believe client side shouldn't need to
+parse/decode the h/w specific parameters from data gotten via DT
+(what I call 'token' and you 'driver-specific struct') - because that i=
+s
+the key to having common client drivers working with different dma
+controllers. And yes, I don't think we could find a future proof generi=
+c
+and simple enough representation of dma resource specification in a
+DT node :)
 
-> (...)
-> =
+Instead, I suggest we encode the finer details of each channel-request
+in node of the dma controller matched against the 'token' assigned
+to the respective clients. That encoding("channel_id") would be dma
+controller specific and if we also manage to contain it within fixed nu=
+mber
+of bytes we could also have common helpers for fetching it, though
+it still would need to be decoded by dmac controller driver - which I t=
+hink
+we can't do without, considering the variety of dma floating around.
 
-> Hi Thierry,
-> =
 
-> I have still lots of questions regarding how device trees work. I'm now
-> just trying to match the device tree structure with hardware - let me
-> know if that goes wrong.
-> =
-
-> There's a hierarchy in the hardware, which should be represented in the
-> device trees. All of the hardware are client modules for host1x - with
-> the exception of host1x obviously. CPU has two methods for accessing the
-> hardware: clients' register aperture and host1x channels. Both of these
-> operate via host1x hardware.
-> =
-
-> We should define host1x bus in the device tree, and move all nodes
-> except host1x under that bus.
-
-I think the host1x node /is/ that bus.
+>> That way dmac and client drivers using DT could do away with the fil=
+ter_fn.
+>>
+>> Roughly speaking (I am not very well versed with DT syntax)
+>>
+>> Client Node:-
+>>
+>> mmc1: mmc@13002000 {
+>> =A0 =A0 =A0 =A0 ...
+>> =A0 =A0 =A0 =A0 dma_tx =3D <891> =A0 //some platform-wide unique val=
+ue
+>> =A0 =A0 =A0 =A0 dma_rx =3D <927> =A0 //some platform-wide unique val=
+ue
+>> =A0 =A0 =A0 =A0 ...
+>> =A0};
+>
+> I believe we specifically don't want to introduce any global concept =
+of
+> DMA channel ID, either within the kernel, or at the device tree level=
+=2E
+>
+I don't think these tokens have to be global.
+They just need to be common for .dts that define client and dmac nodes
+- which would usually be the same file. They just have to be unique acr=
+oss
+all dma clients on a given machine.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
