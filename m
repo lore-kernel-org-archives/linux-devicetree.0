@@ -1,64 +1,44 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 1/3] MFD: twl6040: Code cleanup in interrupt initialization part
-Date: Tue,  8 May 2012 14:33:28 +0300
-Message-ID: <1336476810-26945-2-git-send-email-peter.ujfalusi@ti.com>
-References: <1336476810-26945-1-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 0/3] MFD: twl6040: Device tree support
+Date: Tue,  8 May 2012 14:33:27 +0300
+Message-ID: <1336476810-26945-1-git-send-email-peter.ujfalusi@ti.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1336476810-26945-1-git-send-email-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Samuel Ortiz <sameo@linux.intel.com>
 Cc: linux-kernel@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, peter.ujfalusi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-No functional change, just to make the code a bit more uniform and
-remove wrapped lines.
+Hello,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Changes since v1:
+- Commit message for patch 2 (Allocate IRQ numbers dynamically) has been updated
+  to describe that the twl6040 can not be used as IRQ extender type of device.
+
+Commit message from v1:
+
+The following series adds device tree support for the twl6040 MFD core driver.
+Support for the child drivers (vibra, ASoC codec) will be submitted via the
+corresponding subsystem since there is no compile time dependency between them.
+
+The first patch is a minor clean up patch to remove wrapped lines in the
+twl6040-irq.c. The resulting code is more natural to read to me.
+
+The series depends on the regulator support patch for the twl6040:
+http://marc.info/?l=linux-kernel&m=133596703610515&w=2
+
+Regards,
+Peter
 ---
- drivers/mfd/twl6040-irq.c |   17 ++++++++---------
- 1 files changed, 8 insertions(+), 9 deletions(-)
+Peter Ujfalusi (3):
+  MFD: twl6040: Code cleanup in interrupt initialization part
+  MFD: twl6040: Allocate IRQ numbers dynamically
+  MFD: twl6040: Support for DT
 
-diff --git a/drivers/mfd/twl6040-irq.c b/drivers/mfd/twl6040-irq.c
-index b3f8dda..008022c 100644
---- a/drivers/mfd/twl6040-irq.c
-+++ b/drivers/mfd/twl6040-irq.c
-@@ -138,7 +138,7 @@ static irqreturn_t twl6040_irq_thread(int irq, void *data)
- 
- int twl6040_irq_init(struct twl6040 *twl6040)
- {
--	int cur_irq, ret;
-+	int i, nr_irqs, ret;
- 	u8 val;
- 
- 	mutex_init(&twl6040->irq_mutex);
-@@ -148,21 +148,20 @@ int twl6040_irq_init(struct twl6040 *twl6040)
- 	twl6040->irq_masks_cache = TWL6040_ALLINT_MSK;
- 	twl6040_reg_write(twl6040, TWL6040_REG_INTMR, TWL6040_ALLINT_MSK);
- 
-+	nr_irqs = ARRAY_SIZE(twl6040_irqs);
- 	/* Register them with genirq */
--	for (cur_irq = twl6040->irq_base;
--	     cur_irq < twl6040->irq_base + ARRAY_SIZE(twl6040_irqs);
--	     cur_irq++) {
--		irq_set_chip_data(cur_irq, twl6040);
--		irq_set_chip_and_handler(cur_irq, &twl6040_irq_chip,
-+	for (i = twl6040->irq_base; i < twl6040->irq_base + nr_irqs; i++) {
-+		irq_set_chip_data(i, twl6040);
-+		irq_set_chip_and_handler(i, &twl6040_irq_chip,
- 					 handle_level_irq);
--		irq_set_nested_thread(cur_irq, 1);
-+		irq_set_nested_thread(i, 1);
- 
- 		/* ARM needs us to explicitly flag the IRQ as valid
- 		 * and will set them noprobe when we do so. */
- #ifdef CONFIG_ARM
--		set_irq_flags(cur_irq, IRQF_VALID);
-+		set_irq_flags(i, IRQF_VALID);
- #else
--		irq_set_noprobe(cur_irq);
-+		irq_set_noprobe(i);
- #endif
- 	}
- 
+ Documentation/devicetree/bindings/mfd/twl6040.txt |   51 +++++++++++++++++++++
+ drivers/mfd/twl6040-core.c                        |   26 +++++++---
+ drivers/mfd/twl6040-irq.c                         |   32 +++++++++----
+ 3 files changed, 92 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/twl6040.txt
+
 -- 
 1.7.8.6
