@@ -1,31 +1,66 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv5 1/3] ARM: tegra: Add Tegra AHB driver
-Date: Tue, 08 May 2012 13:45:59 -0600
-Message-ID: <4FA977F7.9080806@wwwdotorg.org>
-References: <201205070859.29174.arnd@arndb.de><20120507.122333.2024326166703361049.hdoyu@nvidia.com><201205071024.48958.arnd@arndb.de> <20120507.143647.508182574757518311.hdoyu@nvidia.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V1] regulator: fixed: dt: add property for gpio open drain
+ flag
+Date: Tue, 08 May 2012 15:26:16 -0600
+Message-ID: <4FA98F78.4080803@wwwdotorg.org>
+References: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com> <4FA7E4A3.6050004@wwwdotorg.org> <4FA7E57B.30804@nvidia.com> <4FA7E841.7020100@wwwdotorg.org> <20120507162419.GK17002@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120507.143647.508182574757518311.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org" <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>lin
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120507162419.GK17002@opensource.wolfsonmicro.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2012 05:36 AM, Hiroshi Doyu wrote:
-...
-> Tegra AHB Bus conforms to the AMBA Specification (Rev 2.0) Advanced
-> High-performance Bus (AHB) architecture.
+On 05/07/2012 10:24 AM, Mark Brown wrote:
+> On Mon, May 07, 2012 at 09:20:33AM -0600, Stephen Warren wrote:
 > 
-> The AHB Arbiter controls AHB bus master arbitration. This effectively
-> forms a second level of arbitration for access to the memory
-> controller through the AHB Slave Memory device. The AHB pre-fetch
-> logic can be configured to enhance performance for devices doing
-> sequential access. Each AHB master is assigned to either the high or
-> low priority bin. Both Tegra20/30 have this AHB bus.
+>> My point is that there's clear intent for of_gpio_simple_xlate()
+>> to return the GPIO flags from a field in the GPIO specifier in
+>> device tree, irrespective of whether some GPIO bindings don't
+>> allow this, or whether this is fully documented.
+> 
+> It's really not idiomatic for drivers using GPIOs to allow
+> configuration of their flags in the first place.  Or, quite
+> frankly, to use flags. Honestly I'd not expect any bindings that
+> the GPIO driver provides to have any attention at all paid to them
+> most of the time, looking at the code seems to support that (though
+> there's surprisingly few bindings using GPIOs at all it seems).
 
-I've applied this (minus the Change-Id line) and the other two patches
-to Tegra's for-next branch. I'll let it sit there for a day or two
-before sending a pull request into arm-soc for 3.5; hopefully it's not
-too late for that.
+So, are you saying we should remove the flags from the GPIO bindings,
+and do something custom in each consumer?
+
+Right now, we can't rely on of_get_gpio_flags(), since not all GPIO
+drivers actually allow flags to be represented in bindings.
+
+However, having each client have a unique binding for things like
+open-drain, inverted, ... seems bad; there are probably fewer
+providers than consumers, although a single standardized
+representation might admittedly have been ever better.
+
+> Before we start doing stuff to improve this it feels like we should
+> do things like get devm_ versions of gpiolib APIs in there (since
+> most conversions would really benefit from that too) - I've been
+> sending a patch for that but my backlog of unmerged patches for it
+> keeps getting bigger rather than smaller.
+> 
+>> We shouldn't have two different mechanisms to represent this 
+>> information. How do we resolve the situation where a particular
+>> SoC's GPIO binding allows the flags to be specified, and this
+>> patch allows the open-drain flag to be specified, and the two
+>> values are different?
+> 
+>> Either we should force all bindings to have some way of
+>> specifying the flags, or we should remove the flags from all
+>> bindings and rely on separate properties.
+> 
+> There's also the case where the bindings probably should be
+> ignored because the device driver knows what the connection has to
+> be anyway and there's no point in forcing people to encode it in
+> the binding.
+> 
+> It's a real shame all these bindings are driver specific, it's just
+> like interrupts :(
+
