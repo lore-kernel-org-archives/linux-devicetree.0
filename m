@@ -1,68 +1,101 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 5/6 v3] mfd: tps65910-irq: Add devicetree init support
-Date: Tue, 8 May 2012 17:29:02 +0100
-Message-ID: <20120508162901.GD15893@opensource.wolfsonmicro.com>
-References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
- <1336502563-31789-6-git-send-email-rklein@nvidia.com>
- <20120508154820.GA15893@opensource.wolfsonmicro.com>
- <1336504291.31930.24.camel@rklein-linux>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Tue, 08 May 2012 10:35:21 -0600
+Message-ID: <4FA94B49.5050500@wwwdotorg.org>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <4FA3F308.6030900@ti.com> <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com> <201205041923.07620.arnd@arndb.de> <CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com> <4FA7F009.5010003@wwwdotorg.org> <CAJe_ZheHFP9NZEiZfCvS3LL1k7xamzGq4Oep8gfmPRi6RR7R5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="va9XEZk9/dJ5GUjX"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1336504291.31930.24.camel@rklein-linux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rhyland Klein <rklein@nvidia.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAJe_ZheHFP9NZEiZfCvS3LL1k7xamzGq4Oep8gfmPRi6RR7R5Q@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 05/07/2012 11:19 AM, Jassi Brar wrote:
+> On 7 May 2012 21:23, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 05/05/2012 11:10 AM, Jassi Brar wrote:
+>>
+>>> Hmm... there ought to be a way by which a client is handed a random 'token'
+>>> via its dt node and similarly the dmac informed which channel (and with what
+>>> capabilities) to allocate should it see a request coming with that token.
+>>
+>> I think that's the whole point of the patch.
+>>
+>> However, the token needs to be some driver-specific struct, since the
+>> required information may be more than just a single channel or request
+>> ID in general.
+>>
+> Well, what I call 'token' could just as well be some numerical hash of
+> what you call 'driver-specific struct'.
+> And I never thought we could do without h/w specific information,
+> just that peculiarities lie with the dmac controllers and that's where
+> the discerning should happen.
+> 
+> Our opinions differ in that, I believe client side shouldn't need to
+> parse/decode the h/w specific parameters from data gotten via DT
+> (what I call 'token' and you 'driver-specific struct') - because that is
+> the key to having common client drivers working with different dma
+> controllers. And yes, I don't think we could find a future proof generic
+> and simple enough representation of dma resource specification in a
+> DT node :)
 
---va9XEZk9/dJ5GUjX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, I don't believe that follows.
 
-On Tue, May 08, 2012 at 12:11:31PM -0700, Rhyland Klein wrote:
+The data doesn't need to be part of the DMA controller node in order for
+the DMA controller driver to be the entity interpreting it.
 
-> Is this more what you would expect? If the dt code initialized the
-> irq_base to 0 instead of -1 then this should also work.
+In many existing DT bindings, the structure of the client's property is:
 
-> pdata->irq_base = irq_alloc_descs(-1, pdata->irq_base,
-> 			tps65910->irq_num, -1);
-> if (pdata->irq_base <= 0) {
-> 	dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
-> 		pdata->irq_base);
-> 	return pdata->irq_base;
-> }
+phandle specifier
 
-More like:
+... all possibly repeated n times if you need to represent n resources,
+like n interrupts, n GPIOs, n DMA channels/...)
 
-	if (pdata->irq_base)
-		base = pdata->irq_base;
-	else
-		base = 0;
-	pdata->irq_base = irq_alloc_descs(base, 0,
+... where specifier is some arbitrary sequence of cells, whose size and
+format are entirely determined by the driver for the node referred to by
+phandle.
 
---va9XEZk9/dJ5GUjX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The parsing of this whole construct is hidden inside some utility code,
+so clients simply call e.g. of_get_gpio(), which internally calls a
+function in the relevant GPIO driver (as specified by the phandle) to
+parse the specifier, and return whatever representation of that
+specifier is required for the client to either use directly (e.g. GPIO
+ID to pass to gpio_request()) or pass back to the relevant APIs for the
+driver's subsystem (e.g. complete possibly driver-specific DMA
+filter/data representation for dmaengine).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+The advantage here is that:
 
-iQIcBAEBAgAGBQJPqUmNAAoJEBus8iNuMP3dSM4P/0ijljyUmSbByLrUko7ObgAg
-Sp0ZIJruO2ozlbMfVn9YlI6B+JUFyDWZOFdveadjCcS2XW9Pt9xhVL3IfUfXw3WL
-eC0ZubeweY0L8hA9mMeNe+Wdc+vbvbRjOiS1KzDSs0C274lc5wolGcZEF8ezaZ7n
-pK3u+risU1T/nSl4ZtCr84H81WpNbUcFJO0/AaevKrpsUbSm69qpMWOK+JW99lxV
-ro6w5AfGMGF0/kRrws53FJZG4mWlKGYuvbYEKl9F4v7X7YQUV+6d+EUj5eKH9iqq
-KvviIkbAkGbuTqUB4Nw26PwpyzJze+8KOhx/JUnVRBv/6WscnR2uz7mM8KAWaCqe
-BfToLCv3UdROXH4i6AMyLyYYHQfsTzr916pnhiB0XqSNa76RAAPwvxpC1f+lq3lH
-088i7HpsUHw7itlrW10Kvppw1RFITbF9tFIoySjfdFt0sU5EHt0O8aUmW/bSJeNM
-IrZct8PF5BDULuwnYeRtyhIxNwcEuCraEEb+P1IB9rDX5zpDUCIQBueTZQ8X+UWk
-nI6qmvEtXTaQF92k7bhCW+ck8hSY84ywhvvAe0cxu4oFkJLTswXvAtxPuDiTCq5H
-3+Ic9piVJpFuEu2AAwctAuw4VZmwqFmbsqtTsoUzw67+IK4hYX4Wb796jy1q5a+C
-ksb8/V+J1LhTpl4RtcmV
-=1Y44
------END PGP SIGNATURE-----
+* The specifier is stored in the client, not the IRQ/GPIO/DMA
+controller's node, so it's located right at the usage site, which
+typically makes working out what resources a client uses easier. This
+also keeps client-specific information out of the provider node,
+allowing it to be fully generic.
 
---va9XEZk9/dJ5GUjX--
+* The client doesn't know anything about the format of "specifier",
+since the provider driver parses it, so clients can still work with
+arbitrary providers of resources.
+
+> Instead, I suggest we encode the finer details of each channel-request
+> in node of the dma controller matched against the 'token' assigned
+> to the respective clients.
+
+Well, I guess I addressed that above - there's no need for the data to
+be in the DMA controller node for the DMA controller driver to parse it.
+
+> That encoding("channel_id") would be dma
+> controller specific and if we also manage to contain it within fixed number
+> of bytes we could also have common helpers for fetching it,
+
+I don't think there's any need for it to fit into a fixed number of
+bytes; the parsing routine can simply return a pointer to a
+driver-specific structure (or perhaps a dmaengine-defined structure,
+which in turn might contain a pointer to a driver-specific structure).
+That would allow complete flexibility in the representation of the
+driver-specific data.
+
+> though
+> it still would need to be decoded by dmac controller driver - which I think
+> we can't do without, considering the variety of dma floating around.
