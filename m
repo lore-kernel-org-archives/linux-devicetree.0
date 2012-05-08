@@ -1,37 +1,68 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 6/6 v3] ARM: Tegra: Add support for TPS65910 PMIC
-Date: Tue, 08 May 2012 10:15:51 -0600
-Message-ID: <4FA946B7.2020302@wwwdotorg.org>
-References: <1336502563-31789-1-git-send-email-rklein@nvidia.com> <1336502563-31789-7-git-send-email-rklein@nvidia.com> <4FA94212.4000207@wwwdotorg.org> <20120508155847.GC15893@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 5/6 v3] mfd: tps65910-irq: Add devicetree init support
+Date: Tue, 8 May 2012 17:29:02 +0100
+Message-ID: <20120508162901.GD15893@opensource.wolfsonmicro.com>
+References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
+ <1336502563-31789-6-git-send-email-rklein@nvidia.com>
+ <20120508154820.GA15893@opensource.wolfsonmicro.com>
+ <1336504291.31930.24.camel@rklein-linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="va9XEZk9/dJ5GUjX"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120508155847.GC15893@opensource.wolfsonmicro.com>
+Content-Disposition: inline
+In-Reply-To: <1336504291.31930.24.camel@rklein-linux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Rhyland Klein <rklein@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Rhyland Klein <rklein@nvidia.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2012 09:58 AM, Mark Brown wrote:
-> On Tue, May 08, 2012 at 09:56:02AM -0600, Stephen Warren wrote:
->> On 05/08/2012 12:42 PM, Rhyland Klein wrote:
->>> Add support for the tps65910 pmic on cardhu.
-> 
->> Lets ignore this one patch for now; it's not clear whether Cardhu
->> should instantiate the TPS65910 or TPS62360 PMU; apparently
->> different Cardhu variants have one, the other, or even both. I'm
->> trying to find out which variant(s) is/are useful to support.
-> 
-> IIRC it's the same as Whistler was and even more fun that that -
-> you might have random PMIC boards appearing from random places and
-> can't rely on what's on the system at all!  See the thread I
-> started about plugin modules the other day :)
 
-I think you're thinking of some other board. Cardhu is a tablet
-reference platform without pluggable modules, and I believe the PMIC
-mess is just due to some rework in later board revisions to solve some
-under-power issues in the earlier variants. But I believe there is
-some Tegra30 reference board equivalent to Whistler with all kinds of
-pluggable modules, although I haven't touched one yet, and don't
-recall its name.
+--va9XEZk9/dJ5GUjX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, May 08, 2012 at 12:11:31PM -0700, Rhyland Klein wrote:
+
+> Is this more what you would expect? If the dt code initialized the
+> irq_base to 0 instead of -1 then this should also work.
+
+> pdata->irq_base = irq_alloc_descs(-1, pdata->irq_base,
+> 			tps65910->irq_num, -1);
+> if (pdata->irq_base <= 0) {
+> 	dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
+> 		pdata->irq_base);
+> 	return pdata->irq_base;
+> }
+
+More like:
+
+	if (pdata->irq_base)
+		base = pdata->irq_base;
+	else
+		base = 0;
+	pdata->irq_base = irq_alloc_descs(base, 0,
+
+--va9XEZk9/dJ5GUjX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPqUmNAAoJEBus8iNuMP3dSM4P/0ijljyUmSbByLrUko7ObgAg
+Sp0ZIJruO2ozlbMfVn9YlI6B+JUFyDWZOFdveadjCcS2XW9Pt9xhVL3IfUfXw3WL
+eC0ZubeweY0L8hA9mMeNe+Wdc+vbvbRjOiS1KzDSs0C274lc5wolGcZEF8ezaZ7n
+pK3u+risU1T/nSl4ZtCr84H81WpNbUcFJO0/AaevKrpsUbSm69qpMWOK+JW99lxV
+ro6w5AfGMGF0/kRrws53FJZG4mWlKGYuvbYEKl9F4v7X7YQUV+6d+EUj5eKH9iqq
+KvviIkbAkGbuTqUB4Nw26PwpyzJze+8KOhx/JUnVRBv/6WscnR2uz7mM8KAWaCqe
+BfToLCv3UdROXH4i6AMyLyYYHQfsTzr916pnhiB0XqSNa76RAAPwvxpC1f+lq3lH
+088i7HpsUHw7itlrW10Kvppw1RFITbF9tFIoySjfdFt0sU5EHt0O8aUmW/bSJeNM
+IrZct8PF5BDULuwnYeRtyhIxNwcEuCraEEb+P1IB9rDX5zpDUCIQBueTZQ8X+UWk
+nI6qmvEtXTaQF92k7bhCW+ck8hSY84ywhvvAe0cxu4oFkJLTswXvAtxPuDiTCq5H
+3+Ic9piVJpFuEu2AAwctAuw4VZmwqFmbsqtTsoUzw67+IK4hYX4Wb796jy1q5a+C
+ksb8/V+J1LhTpl4RtcmV
+=1Y44
+-----END PGP SIGNATURE-----
+
+--va9XEZk9/dJ5GUjX--
