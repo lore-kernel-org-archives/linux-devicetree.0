@@ -1,55 +1,53 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 04/14] OF: pinctrl: MIPS: lantiq: implement lantiq/xway
- pinctrl support
-Date: Tue, 08 May 2012 17:59:33 +0200
-Message-ID: <4FA942E5.20906@phrozen.org>
-References: <1336133919-26525-1-git-send-email-blogic@openwrt.org>
- <1336133919-26525-4-git-send-email-blogic@openwrt.org>
- <CACRpkdYJDd84GbKM7r4Xy+d4iOtdD+rJ3kdq-zwVbf_Attj2Gw@mail.gmail.com>
- <4FA93B97.4070406@wwwdotorg.org> <4FA93E37.70305@phrozen.org>
- <4FA940F3.4090008@wwwdotorg.org>
+From: Rhyland Klein <rklein@nvidia.com>
+Subject: Re: [PATCH 5/6 v3] mfd: tps65910-irq: Add devicetree init support
+Date: Tue, 08 May 2012 12:11:31 -0700
+Message-ID: <1336504291.31930.24.camel@rklein-linux>
+References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
+	 <1336502563-31789-6-git-send-email-rklein@nvidia.com>
+	 <20120508154820.GA15893@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FA940F3.4090008-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120508154820.GA15893@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-
->> How about we do the following.
->>
->> config LANTIQ
->> 	select PINCTRL
->>
->> config PINCTRL_LANTIQ
->> 	def_bool y
->> 	depends on LANTIQ
->>
->> config PINCTRL_LANTIQ_XWAY
->> 	def_bool y
->> 	depends on SOC_TYPE_XWAY
->>
->> This would auto select the right symbols, have all the dependency logic
->> in 1 place and reduce the size of arch/mips/lantiq/Kconfig
+On Tue, 2012-05-08 at 08:48 -0700, Mark Brown wrote:
+> * PGP Signed by an unknown key
 > 
-> Is it useful to build a kernel for XWAY without pinctrl, once the driver
-> is there? That's the main difference between arch/mips/lantiq/Kconfig
-> selecting PINCTRL_LANTIQ_XWAY vs that being a def_bool, and hence
-> allowing the user to deselect it.
+> On Tue, May 08, 2012 at 11:42:42AM -0700, Rhyland Klein wrote:
+> 
+> > +	if (pdata->irq_base <= 0)
+> > +		pdata->irq_base = irq_alloc_descs(-1, 0, tps65910->irq_num, -1);
+> > +
+> > +	if (pdata->irq_base <= 0) {
+> > +		dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
+> > +			pdata->irq_base);
+> > +		return pdata->irq_base;
+> > +	}
+> 
+> I'd expect the driver to always call irq_alloc_descs() but to use the
+> value specified in platform data if there is any.  This is the normal
+> way of doing things, anyway.
 > 
 
-it would not make sense to build an image without.
+Is this more what you would expect? If the dt code initialized the
+irq_base to 0 instead of -1 then this should also work.
 
-config LANTIQ and config SOC_TYPE_XWAY should explicitly select the
-symbols that they need.
+pdata->irq_base = irq_alloc_descs(-1, pdata->irq_base,
+			tps65910->irq_num, -1);
+
+if (pdata->irq_base <= 0) {
+	dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
+		pdata->irq_base);
+	return pdata->irq_base;
+}
+
+> * Unknown Key
+> * 0x6E30FDDD
+
+-- 
+nvpublic
