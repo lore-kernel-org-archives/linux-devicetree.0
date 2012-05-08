@@ -1,60 +1,55 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 6/6 v3] ARM: Tegra: Add support for TPS65910 PMIC
-Date: Tue, 8 May 2012 16:58:47 +0100
-Message-ID: <20120508155847.GC15893@opensource.wolfsonmicro.com>
-References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
- <1336502563-31789-7-git-send-email-rklein@nvidia.com>
- <4FA94212.4000207@wwwdotorg.org>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 04/14] OF: pinctrl: MIPS: lantiq: implement lantiq/xway
+ pinctrl support
+Date: Tue, 08 May 2012 17:59:33 +0200
+Message-ID: <4FA942E5.20906@phrozen.org>
+References: <1336133919-26525-1-git-send-email-blogic@openwrt.org>
+ <1336133919-26525-4-git-send-email-blogic@openwrt.org>
+ <CACRpkdYJDd84GbKM7r4Xy+d4iOtdD+rJ3kdq-zwVbf_Attj2Gw@mail.gmail.com>
+ <4FA93B97.4070406@wwwdotorg.org> <4FA93E37.70305@phrozen.org>
+ <4FA940F3.4090008@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vM12nk/63StVgfqY"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FA94212.4000207@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Rhyland Klein <rklein@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FA940F3.4090008-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---vM12nk/63StVgfqY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> How about we do the following.
+>>
+>> config LANTIQ
+>> 	select PINCTRL
+>>
+>> config PINCTRL_LANTIQ
+>> 	def_bool y
+>> 	depends on LANTIQ
+>>
+>> config PINCTRL_LANTIQ_XWAY
+>> 	def_bool y
+>> 	depends on SOC_TYPE_XWAY
+>>
+>> This would auto select the right symbols, have all the dependency logic
+>> in 1 place and reduce the size of arch/mips/lantiq/Kconfig
+> 
+> Is it useful to build a kernel for XWAY without pinctrl, once the driver
+> is there? That's the main difference between arch/mips/lantiq/Kconfig
+> selecting PINCTRL_LANTIQ_XWAY vs that being a def_bool, and hence
+> allowing the user to deselect it.
+> 
 
-On Tue, May 08, 2012 at 09:56:02AM -0600, Stephen Warren wrote:
-> On 05/08/2012 12:42 PM, Rhyland Klein wrote:
-> > Add support for the tps65910 pmic on cardhu.
+it would not make sense to build an image without.
 
-> Lets ignore this one patch for now; it's not clear whether Cardhu should
-> instantiate the TPS65910 or TPS62360 PMU; apparently different Cardhu
-> variants have one, the other, or even both. I'm trying to find out which
-> variant(s) is/are useful to support.
-
-IIRC it's the same as Whistler was and even more fun that that - you
-might have random PMIC boards appearing from random places and can't
-rely on what's on the system at all!  See the thread I started about
-plugin modules the other day :)
-
---vM12nk/63StVgfqY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPqUKvAAoJEBus8iNuMP3ducMP/iYfwe3UZ0uFF+L/6hSwTsXA
-/E5qs0QShaaSPpYJwORl4EzAk2jl9kbdz1jJ0W2qDt6h6Dd0qsb7UUQwyp+wU2Ca
-BCNla0gMVLzQQTfvoXQVeTp7IWgyjqeWQAoKQE5u/27e7OwlVQZn4tb9u+RfjmuS
-Kl5qci1XDDj/UmJURBXdQxljC+ZJypq5QMzyec/DkS5oTaadtlt+ApkrhJNHZ0v2
-sA0HJqBehW9DSKScbMvvES3Gz8ThJyV8qn7LF2d+iaCeMpRDEJu67NQUZfStntAk
-DvJ+0+WRBRoU/JWp4zGbVqtHeXvFfnvhmD74ObGXL086Ij29xzso+p57O0DjhXW+
-ZJJg/gojzvfuqUEGdGBV1Qcgtq1yEKhH+OhMA88EjlJu4T784gNBSZb6tFrMIEBz
-xbPoY6174rbLuOk0LitIZHTrWxAxqzy882bdWKiTjIZXJN15yqfXo/7y5SUY//97
-ys5Ou+zBBJAtuctMSphP6fhFRrtvBDxt8FPgiAHeRpPr69y2QcFppd9KEZ895Bx5
-UJJ6XdZjjfVSYmXzkG+zPOmZEYpwbcaQNSdWNL5xMzWDOro5LoyE7T7L7iQVfTaY
-MR+FmLFBN+E5bDx6TynjglGHyBr8xL5J22blcU9sPQ5BXQur2VWC0IDfpYCDA8KH
-CEpKfwMVsSbk4cHWSuXD
-=vFKq
------END PGP SIGNATURE-----
-
---vM12nk/63StVgfqY--
+config LANTIQ and config SOC_TYPE_XWAY should explicitly select the
+symbols that they need.
