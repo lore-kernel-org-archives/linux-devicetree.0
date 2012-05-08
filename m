@@ -1,51 +1,38 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: Re: [PATCH 5/6 v3] mfd: tps65910-irq: Add devicetree init support
-Date: Tue, 08 May 2012 12:36:18 -0400
-Message-ID: <1336494978.31930.41.camel@rklein-linux>
-References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
-	 <1336502563-31789-6-git-send-email-rklein@nvidia.com>
-	 <20120508154820.GA15893@opensource.wolfsonmicro.com>
-	 <1336504291.31930.24.camel@rklein-linux>
-	 <20120508162901.GD15893@opensource.wolfsonmicro.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: [PATCH 0/3] ARM: OMAP: OMAP4 DTS updates
+Date: Tue, 8 May 2012 18:37:24 +0200
+Message-ID: <1336495047-5882-1-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120508162901.GD15893@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2012-05-08 at 09:29 -0700, Mark Brown wrote:
-> * PGP Signed by an unknown key
-> 
-> On Tue, May 08, 2012 at 12:11:31PM -0700, Rhyland Klein wrote:
-> 
-> > Is this more what you would expect? If the dt code initialized the
-> > irq_base to 0 instead of -1 then this should also work.
-> 
-> > pdata->irq_base = irq_alloc_descs(-1, pdata->irq_base,
-> > 			tps65910->irq_num, -1);
-> > if (pdata->irq_base <= 0) {
-> > 	dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
-> > 		pdata->irq_base);
-> > 	return pdata->irq_base;
-> > }
-> 
-> More like:
-> 
-> 	if (pdata->irq_base)
-> 		base = pdata->irq_base;
-> 	else
-> 		base = 0;
-> 	pdata->irq_base = irq_alloc_descs(base, 0,
+Hi Tony,
 
-Alright, will do in next round of changes.
+Here is a small series I have done for 3.4 but never posted before.
+It adds GPIO node for twl4030 embedded gpio controller and some LEDs data
+to be able to get rid of the static init done in board file right now.
 
-> 
-> * Unknown Key
-> * 0x6E30FDDD
+It is based on arm-soc/omap/dt-missed-3.4 to get the previous patches not yet
+in linus/master.
 
--- 
-nvpublic
+The patches are available here:
+git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.5/dts/all
+
+Regards,
+Benoit
+
+
+Benoit Cousson (3):
+  arm/dts: twl4030: Add twl4030-gpio node
+  arm/dts: omap4-sdp: Add LEDs support
+  arm/dts: omap4-panda: Add LEDs support
+
+ arch/arm/boot/dts/omap4-panda.dts |   15 +++++++++++++
+ arch/arm/boot/dts/omap4-sdp.dts   |   43 +++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/twl4030.dtsi    |    8 +++++++
+ 3 files changed, 66 insertions(+), 0 deletions(-)
+
