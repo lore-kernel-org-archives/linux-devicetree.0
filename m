@@ -1,66 +1,59 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V1] regulator: fixed: dt: add property for gpio open drain
- flag
-Date: Tue, 08 May 2012 15:26:16 -0600
-Message-ID: <4FA98F78.4080803@wwwdotorg.org>
-References: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com> <4FA7E4A3.6050004@wwwdotorg.org> <4FA7E57B.30804@nvidia.com> <4FA7E841.7020100@wwwdotorg.org> <20120507162419.GK17002@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120507162419.GK17002@opensource.wolfsonmicro.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 00/10] spi: s3c64xx: add support for device tree
+Date: Wed, 09 May 2012 03:34:44 +0530
+Message-ID: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2012 10:24 AM, Mark Brown wrote:
-> On Mon, May 07, 2012 at 09:20:33AM -0600, Stephen Warren wrote:
-> 
->> My point is that there's clear intent for of_gpio_simple_xlate()
->> to return the GPIO flags from a field in the GPIO specifier in
->> device tree, irrespective of whether some GPIO bindings don't
->> allow this, or whether this is fully documented.
-> 
-> It's really not idiomatic for drivers using GPIOs to allow
-> configuration of their flags in the first place.  Or, quite
-> frankly, to use flags. Honestly I'd not expect any bindings that
-> the GPIO driver provides to have any attention at all paid to them
-> most of the time, looking at the code seems to support that (though
-> there's surprisingly few bindings using GPIOs at all it seems).
+This patch series adds device tree based discovery support for Samsung's
+s3c64xx compatible spi controller. This is mainly tested for Exynos4210
+and Exynos5250 with onboard spi nor flash device.
 
-So, are you saying we should remove the flags from the GPIO bindings,
-and do something custom in each consumer?
+This patch series is based on Linux 3.4-rc5 with the following two
+patch series applied.
 
-Right now, we can't rely on of_get_gpio_flags(), since not all GPIO
-drivers actually allow flags to be represented in bindings.
+[1] http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg10494.html
+    [PATCH 00/20] ARM: Samsung: Add support for Exynos5250 Rev1.0
 
-However, having each client have a unique binding for things like
-open-drain, inverted, ... seems bad; there are probably fewer
-providers than consumers, although a single standardized
-representation might admittedly have been ever better.
+[2] http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg09640.html
+    [PATCH 0/6] S3C24XX: Add support for HSSPI on S3C2416/S3C2443
 
-> Before we start doing stuff to improve this it feels like we should
-> do things like get devm_ versions of gpiolib APIs in there (since
-> most conversions would really benefit from that too) - I've been
-> sending a patch for that but my backlog of unmerged patches for it
-> keeps getting bigger rather than smaller.
-> 
->> We shouldn't have two different mechanisms to represent this 
->> information. How do we resolve the situation where a particular
->> SoC's GPIO binding allows the flags to be specified, and this
->> patch allows the open-drain flag to be specified, and the two
->> values are different?
-> 
->> Either we should force all bindings to have some way of
->> specifying the flags, or we should remove the flags from all
->> bindings and rely on separate properties.
-> 
-> There's also the case where the bindings probably should be
-> ignored because the device driver knows what the connection has to
-> be anyway and there's no point in forcing people to encode it in
-> the binding.
-> 
-> It's a real shame all these bindings are driver specific, it's just
-> like interrupts :(
+Thomas Abraham (10):
+  spi: s3c64xx: remove unused S3C64XX_SPI_ST_TRLCNTZ macro
+  spi: s3c64xx: move controller information into driver data
+  ARM: Samsung: Remove spi hardware controller information from platform data
+  ARM: Samsung: Remove pdev pointer paremeter from spi gpio setup functions
+  ARM: Samsung: Update the device names for spi clock lookup
+  ARM: Samsung: Modify s3c64xx_spi{0|1|2}_set_platdata function
+  spi: s3c64xx: Remove the 'set_level' callback from controller data
+  ARM: Exynos4: Fix the incorrect hierarchy of spi controller bus clock
+  ARM: Exynos5: Add spi clock support
+  spi: s3c64xx: add device tree support
 
+.../devicetree/bindings/spi/spi-samsung.txt        |  113 +++++
+ arch/arm/mach-exynos/clock-exynos4.c               |   66 ++-
+ arch/arm/mach-exynos/clock-exynos5.c               |   98 ++++
+ arch/arm/mach-exynos/include/mach/regs-clock.h     |    4 +
+ arch/arm/mach-exynos/setup-spi.c                   |   33 +--
+ arch/arm/mach-s3c24xx/clock-s3c2416.c              |    2 +-
+ arch/arm/mach-s3c24xx/clock-s3c2443.c              |    2 +-
+ arch/arm/mach-s3c24xx/common-s3c2443.c             |    4 +-
+ arch/arm/mach-s3c24xx/setup-spi.c                  |   10 +-
+ arch/arm/mach-s3c64xx/clock.c                      |   20 +-
+ arch/arm/mach-s3c64xx/mach-crag6410.c              |    2 +-
+ arch/arm/mach-s3c64xx/setup-spi.c                  |   19 +-
+ arch/arm/mach-s5p64x0/clock-s5p6440.c              |   12 +-
+ arch/arm/mach-s5p64x0/clock-s5p6450.c              |   12 +-
+ arch/arm/mach-s5p64x0/setup-spi.c                  |   21 +-
+ arch/arm/mach-s5pc100/clock.c                      |   30 +-
+ arch/arm/mach-s5pc100/setup-spi.c                  |   30 +--
+ arch/arm/mach-s5pv210/clock.c                      |   14 +-
+ arch/arm/mach-s5pv210/setup-spi.c                  |   21 +-
+ arch/arm/plat-samsung/devs.c                       |   50 +--
+ arch/arm/plat-samsung/include/plat/s3c64xx-spi.h   |   31 +-
+ drivers/spi/spi-s3c64xx.c                          |  467 +++++++++++++++++---
+ 22 files changed, 753 insertions(+), 308 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-samsung.txt
