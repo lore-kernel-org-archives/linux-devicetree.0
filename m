@@ -1,42 +1,52 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: [PATCH 1/3] arm/dts: twl4030: Add twl4030-gpio node
-Date: Tue, 8 May 2012 18:37:25 +0200
-Message-ID: <1336495047-5882-2-git-send-email-b-cousson@ti.com>
-References: <1336495047-5882-1-git-send-email-b-cousson@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 0/6 v3] Update TPS65910 to boot using devicetree
+Date: Tue, 8 May 2012 17:48:45 +0100
+Message-ID: <20120508164845.GE15893@opensource.wolfsonmicro.com>
+References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1336495047-5882-1-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>, Felipe Balbi <balbi@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="03sphU6jKm9HdgU1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rhyland Klein <rklein@nvidia.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add the twl-gpio node inside twl4030 definition.
 
-Cc: Felipe Balbi <balbi@ti.com>
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
----
- arch/arm/boot/dts/twl4030.dtsi |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+--03sphU6jKm9HdgU1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
-index a94654c..22f4d13 100644
---- a/arch/arm/boot/dts/twl4030.dtsi
-+++ b/arch/arm/boot/dts/twl4030.dtsi
-@@ -36,4 +36,12 @@
- 		regulator-min-microvolt = <1850000>;
- 		regulator-max-microvolt = <3150000>;
- 	};
-+
-+	twl_gpio: gpio {
-+		compatible = "ti,twl4030-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
- };
--- 
-1.7.0.4
+On Tue, May 08, 2012 at 11:42:37AM -0700, Rhyland Klein wrote:
 
+>   mfd: tps65910-irq: Add devicetree init support
+
+Actually, it's not really relevant to this patch series but looking at
+the code for the interrupt controller here it looks like it could be
+done in terms of regmap-irq.
+
+--03sphU6jKm9HdgU1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPqU5KAAoJEBus8iNuMP3dmfAQAIXWFmrMLTLeARZmP90SCOhM
+SdlhKVW3SK9smFOKh37GYMsooZRjSwXFECizKqf4t48I8tY+WLDmT0ljQDhWKA9P
+YMpY498RRQLuKwrSPkN7/EQNQal3NNyZTVZnKwXzDtk15Ir3RXd8AIz41S4e7poF
+YoHN24ajswOcDzzRntNCU3mp/054lvtm1yt9FQPksNPe9kNMws1ckd7qn76cXO7/
+T15ftmHQ0/NZMmtDvaWZ6iVLQuIWxbzjHJDNUpRhinxUKcl9JtuX/7o1NFuzPk+9
+RUTkthQxyyKKL6G2gwPTRNaC7YdlQ8F7YWs/MplZyIHD55YyxSrVfYaJau7B3qXQ
+1yb8qjTWj2SinBScVdAfCOVklxVCDWeiCxQ7AHE32jLhU/Xnf1tQHo9cpGE7M/kp
+IGjHDcAp64i3m4jz/RqNLXkHRlvuM9Dy6iDaw+tRSFxzj8G+FJXJJWf45ukcWzN5
+EWj5/kZuoIDor89Fv7UQDK6StZTUwpia0fJJ4vRN7B2gd0ap9hw0uNKXZSNoPjmY
+QF8q9F1xR6FhKsD10MxO67FYyIN3SvcLqim6jLwWjJ7RY10/+5rkELPNh3e+s1Gv
+su+PsYBxuwdhMH1oG9qi3mHB3VR0nUfcilQrlYYXvvOFOoO9VL0HJq8zF+2be3hM
+b4GyeIOo91dL60Ja+hlJ
+=aKiT
+-----END PGP SIGNATURE-----
+
+--03sphU6jKm9HdgU1--
