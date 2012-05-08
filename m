@@ -1,60 +1,69 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 5/6 v3] mfd: tps65910-irq: Add devicetree init support
-Date: Tue, 8 May 2012 16:48:21 +0100
-Message-ID: <20120508154820.GA15893@opensource.wolfsonmicro.com>
-References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
- <1336502563-31789-6-git-send-email-rklein@nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 04/14] OF: pinctrl: MIPS: lantiq: implement lantiq/xway
+ pinctrl support
+Date: Tue, 08 May 2012 09:51:15 -0600
+Message-ID: <4FA940F3.4090008@wwwdotorg.org>
+References: <1336133919-26525-1-git-send-email-blogic@openwrt.org>
+ <1336133919-26525-4-git-send-email-blogic@openwrt.org>
+ <CACRpkdYJDd84GbKM7r4Xy+d4iOtdD+rJ3kdq-zwVbf_Attj2Gw@mail.gmail.com>
+ <4FA93B97.4070406@wwwdotorg.org> <4FA93E37.70305@phrozen.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BtNCO5h84ExDStzY"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1336502563-31789-6-git-send-email-rklein@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rhyland Klein <rklein@nvidia.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FA93E37.70305-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 05/08/2012 09:39 AM, John Crispin wrote:
+>>> I don't think anyone else is going to want to compile
+>>> this.
+>>
+>> This Kconfig option is selected by the ARCH Kconfig, so only selected at
+>> the right time. The user won't get prompted for it since there's no
+>> string after "bool". I think this is OK. Tegra's pinctrl Kconfig option
+>> doesn't have any "depends ARCH_TEGRA" here either, although I note that
+>> many other pinctrl drivers do.
+> 
+> Hi,
+> 
+> I guess it makes it more apparent, that the symbol is specific to a
+> arch/soc. Tegra is a well known SoC, so its easy to figure out what the
+> codes purpose is. Other files might not be that easy to guess.
+> 
+> For the Lantiq SoC to function normally we need to always load these
+> drivers. PINTCTRL_LANTIQ has some generic functions and
+> PINTCTRL_LANTIQ_XWAY holds the code specific to the XWAY SoC. (i have a
+> patch in the local queue to add FALCON SoC support, giving
+> PINTCTRL_LANTIQ 2 users)
+> 
+> How about we do the following.
+> 
+> config LANTIQ
+> 	select PINCTRL
+> 
+> config PINCTRL_LANTIQ
+> 	def_bool y
+> 	depends on LANTIQ
+> 
+> config PINCTRL_LANTIQ_XWAY
+> 	def_bool y
+> 	depends on SOC_TYPE_XWAY
+> 
+> This would auto select the right symbols, have all the dependency logic
+> in 1 place and reduce the size of arch/mips/lantiq/Kconfig
 
---BtNCO5h84ExDStzY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, May 08, 2012 at 11:42:42AM -0700, Rhyland Klein wrote:
-
-> +	if (pdata->irq_base <= 0)
-> +		pdata->irq_base = irq_alloc_descs(-1, 0, tps65910->irq_num, -1);
-> +
-> +	if (pdata->irq_base <= 0) {
-> +		dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
-> +			pdata->irq_base);
-> +		return pdata->irq_base;
-> +	}
-
-I'd expect the driver to always call irq_alloc_descs() but to use the
-value specified in platform data if there is any.  This is the normal
-way of doing things, anyway.
-
---BtNCO5h84ExDStzY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPqUA/AAoJEBus8iNuMP3dXpgP/iaxTdpK8yfhWwckz9oQAatR
-WbAsz8Gkf6iiZrxX4kW8OaClB7Ug68VKpA6V+h5hqfIw8YfHMS4QWyQP9X0SZBDR
-eJbItS38oudgpae8nQp7rIESBk5wQrRJqK4tp+UCsLJ/XX9OS26Mstzi9WXuCYby
-o6zw6mlawGrMu5ZlbWBIUePJ0WhXRK0LrVEhUdd4eMiMwKyo1/oCiowoU22CfIAJ
-5OY22W6Bkca+PxfmdMnat1KkPMNpuaYyjt0s9YWXZPJPiDb4srOPWZ7dLSTDwgn9
-F3QL1IyVURUBeLwON8DRFpuFF104/ofiaLCLAGs5/0O2gAkr+s0mF5j5MrGdn1f0
-777UFzCWvaiLcsjTdPyKOZkk+aOiMmAlJaIenb3oJDq5zXhbg+IehyQotk3wHgjv
-+jH5K7Y8h+oJJcaEIRwLuN7JH5NrZjGaz28bN9eVhYE4s85rgXOe4hZ5PycnOUlK
-gREyH4reb43t5ADskKRXytntE9kx7wTTs6cwlWm1rpF5QCuq/WharX1Xfn3Mky9r
-XVr2PxnLGtSw94rBEo4lXvliuT0wBscod32VJ66+kYuQnsf0a2chUotI7LKisHtw
-WnF6ot4LX9R2boOiAWoigqceNYx5JLpD02NbbT/81SfEfBOVSZlqRqyuuKMEMBVq
-+tDcluGIeN71kRWAouS0
-=lrxs
------END PGP SIGNATURE-----
-
---BtNCO5h84ExDStzY--
+Is it useful to build a kernel for XWAY without pinctrl, once the driver
+is there? That's the main difference between arch/mips/lantiq/Kconfig
+selecting PINCTRL_LANTIQ_XWAY vs that being a def_bool, and hence
+allowing the user to deselect it.
