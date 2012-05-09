@@ -1,165 +1,60 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 10 May 2012 03:08:57 +0530
-Message-ID: <CAJe_Zhcrr2QqoY=H3=3EJLPQBjC3Yc43EDjqYXaNok9-T+=0yw@mail.gmail.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	<4FA3F308.6030900@ti.com>
-	<CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
-	<201205041923.07620.arnd@arndb.de>
-	<CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
-	<4FA7F009.5010003@wwwdotorg.org>
-	<CAJe_ZheHFP9NZEiZfCvS3LL1k7xamzGq4Oep8gfmPRi6RR7R5Q@mail.gmail.com>
-	<4FA94B49.5050500@wwwdotorg.org>
-	<CAJe_Zhf0=Qnsgsc7U_GbKxc0_6DKj33QWs0UW2giyrVEjPnrvw@mail.gmail.com>
-	<4FAAC111.9020308@wwwdotorg.org>
+From: Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] OMAP: mailbox initial device tree support
+Date: Wed, 9 May 2012 18:48:31 -0500
+Message-ID: <CALLhW=5u75kSU1gorxMga2XHp4fbZnBBJhicTKGUCSTH86nAww@mail.gmail.com>
+References: <1335894460-19941-1-git-send-email-omar.luna@linaro.org>
+	<B5906170F1614E41A8A28DE3B8D121433EA68F6D@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FAAC111.9020308@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <B5906170F1614E41A8A28DE3B8D121433EA68F6D-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: "Bedia, Vaibhav" <vaibhav.bedia-l0cyMroinI0@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10 May 2012 00:40, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 05/08/2012 01:09 PM, Jassi Brar wrote:
+Hi Vaibhav,
+
+Somehow I missed this mail.
+
+On 2 May 2012 00:42, Bedia, Vaibhav <vaibhav.bedia-l0cyMroinI0@public.gmane.org> wrote:
+> Hi Omar,
+>
+> On Tue, May 01, 2012 at 23:17:38, Omar Ramirez Luna wrote:
+>> To allow mailbox driver to function with device tree.
 >>
->> There is important difference between providing data via clients
->> during runtime vs providing info about every client to the dmac driv=
-er
->> at one go during its probe.
+>> Tested in OMAP4 and OMAP3. OMAP2 untested.
+>>
 >
-> I certainly see that there is a difference.
->
-> I don't understand why it's an important difference; I think everythi=
-ng
-> needs to be handled at run-time no matter what:
->
-> Just because there is information in the DT that "this client DT node
-> uses this channel/request-ID/... of this DMA controller" doesn't mean
-> that the driver for the client is going to be loaded, or that SW runn=
-ing
-> on the system is going to cause that driver to actually be opened and=
- do
-> any DMA. As such, any resource allocation rules etc. must be evaluate=
-d
-> only if/when a driver actually requests/uses a DMA channel, so having
-> "all the information up front" doesn't seem like a theoretically
-> possible thing anyway.
->
-One point is about 'qos' here.... something like bandwidth allocation.
-If the dmac driver knew up-front the max possible clients that could be
-active simultaneously, it could "divide the bandwidth" accordingly.
-Again, the example of PL330 employing 2physical channels for better
-service - LLI (you got it right), where even 1 physical channel would
-also have served only not as reliably. I believe there would be
-more such scenarios.
+> I think the mailbox code needs a cleanup similar to what you
+> had proposed earlier [1] before the device tree support is added.
 
-Another minor benefit could be that the dmac driver populate only
-as many "struct dma_chan" as there are actually clients on the
-machine (and this population has to be done during probe).
-It could mean ~8 instead of ~40 channels populated on a machine.
-Note, a PL330 dmac can have 32 channels, OMAP's has 128....
+I believe the cleanup needs to be there, but this is generic enough to
+support DT as it is.
 
-Most importantly, I just think it's a cleaner approach.
+> We probably need to decide whether the number of mailbox sub-modules
+> should be part of hwmod attribute or come from device tree.
 
+All the data is currently coming from hwmod, so I don't see why this
+must be split now between hwmod and DT, but I'm open for suggestions.
 
-> Very similar to this, in order to support your point that a given cli=
-ent
-> could potentially use a channel from either of 2 different DMA
-> controller instances, you don't know until run-time which controller
-> will be used, so can't have up-front information in this scenario
-> either, even if the DMA does actually take place.
->
-Sorry, perhaps I wasn't clear enough.
-A client sees _no_ difference between the two channels that could serve=
- it.
-And it can't start using two, if two are available.
-Client just needs one suitable channel on whichever dmac that might be.
-If the channel for a client is to be switched runtime, that decision
-should lie with the dmac driver, not the client. And I am not really
-after implementing that runtime decision support.
+> IMO the
+> static allocation of the mailboxes is better suited in the device-tree
+> data.
 
+If possible I wouldn't want to tie use case specifics to DT or hwmod,
+the whole point for the cleanup was to allow a dynamic mailbox
+allocation and not statically assign them.
 
-> Solving (b) seems to require something very roughly like:
->
-> dma-controller@0 {
-> =A0 =A0compatible =3D "foo,dmac-xxx";
-> =A0 =A0dma-requests =3D <
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&client0 0 // DMAC req 0 is client0's =
-0th req output
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&client0 1
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&client1 0
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&client1 1
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&client2 0
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0...>;
-> };
->
-> dma-controller@1 {
-> =A0 =A0compatible =3D "bar,dmac-yyy";
-> =A0 =A0dma-requests =3D <
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0// Supports some client modules, but n=
-ot the same ones
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&client0 0
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&client1 0
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&client3 0
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0...>;
-> };
->
-> client0: i2s {
-> =A0 =A0/* has 2 DMA request output signals: 0, 1 */
-> };
->
-> client1: spdif {
-> =A0 =A0/* has 2 DMA request signals: 0, 1 */
-> };
->
-> client2: foo {
-> =A0 =A0/* has 1 DMA request signal: 0 */
-> };
->
-> client3: bar {
-> =A0 =A0/* has 1 DMA request signal: 0 */
-> };
->
-> and then having the core DMA code have an API like:
->
-> channel =3D dma_request(clients_dma_req_output_id)
->
-> which looks in each DMA controller's dma-requests list for the client=
-'s
-> phandle and matching dma_req_output_id.
->
-Almost what I proposed in my third post in this thread !!
+Regards,
 
-The minor difference being, you use the {request-signal, phandle} pair
-to find the right channel, I used only 'token'.
-
-Please note, with this method we specify info about every client at one
-go and via dmac's DT node - hence those benefits.
-
-Also note that, a client's dma specifier becomes perfectly general
-and future-proof
-   client1: spdif {
-          dma_tx =3D <278>
-          dma_rx =3D <723>
-    };
-
-otherwise the following representation
-    client1: spdif {
-               dma =3D <&sdma 2 1 &sdma 3 2>;
-     };
-could break with some weird dma setups (IIANW Russell already finds
-it wouldn't work for him).
-
-I am arguing for (b) for the above mentioned reasons, and not because
-I want to have clients switching channels in runtime.
-
-Thanks,
-Jassi
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Omar
