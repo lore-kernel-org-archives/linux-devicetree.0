@@ -1,55 +1,23 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [V2 2/5] powerpc: 40x: Add AHB, APB of_device_ids
-Date: Wed, 9 May 2012 10:58:46 +0530
-Message-ID: <CACoXjcn1H_Jov86a5fmonY-5CtKCcGgBHMwzUf-i-66-VatqJw@mail.gmail.com>
-References: <1333956052-25319-1-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-2-git-send-email-tinamdar@apm.com>
-	<CA+5PVA4HGVGRbnLCMOAbO1mYnFCgHhh1_ErLdKq5YhMdV0VhQw@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@st.com>
+Subject: Re: [PATCH V3 2/2] Input: spear-keyboard: add device tree bindings
+Date: Wed, 9 May 2012 12:23:20 +0530
+Message-ID: <4FAA1460.9020600@st.com>
+References: <cover.1333009670.git.viresh.kumar@st.com> <eebfde0a1511204cab203fa18efe6264abe00486.1333009670.git.viresh.kumar@st.com> <20120509052828.GD10514@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+5PVA4HGVGRbnLCMOAbO1mYnFCgHhh1_ErLdKq5YhMdV0VhQw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Boyer <jwboyer@gmail.com>
-Cc: benh@kernel.crashing.org, grant.likely@secretlab.ca, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20120509052828.GD10514@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "swarren@nvidia.com" <swarren@nvidia.com>, spear-devel <spear-devel@list.st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "sr@denx.de" <sr@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 2, 2012 at 7:11 PM, Josh Boyer <jwboyer@gmail.com> wrote:
-> On Mon, Apr 9, 2012 at 3:20 AM, Tanmay Inamdar <tinamdar@apm.com> wro=
-te:
->> Adding of_device_id's for AHB and APB buses used in klondike (APM801=
-8X) in
->> platforms/40x/ppc40x_simple.c file
->>
->> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
->
-> You should probably combine the first 3 patches in this series into o=
-ne
-> patch. =A0Otherwise you run the risk of changing the DTS to something=
- the
-> kernel can't support. =A0At the least, this change should be patch 1 =
-in
-> the series, and you can probably combine the two DTS changes.
->
+On 5/9/2012 10:58 AM, Dmitry Torokhov wrote:
+> Now that I got matrix_keypad_build_keymap() also handle DT case, how
+> about the patch below?
 
-I will do it in next version of patches.
+Yes it looks fine.
 
-> josh
-
-Thanks,
-Tanmay
-CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,=
-=20
-is for the sole use of the intended recipient(s) and contains informati=
-on=A0
-that is confidential and proprietary to AppliedMicro Corporation or its=
- subsidiaries.=20
-It is to be used solely for the purpose of furthering the parties' busi=
-ness relationship.=20
-All unauthorized review, use, disclosure or distribution is prohibited.=
-=20
-If you are not the intended recipient, please contact the sender by rep=
-ly e-mail=20
-and destroy all copies of the original message.
-=0D
+-- 
+viresh
