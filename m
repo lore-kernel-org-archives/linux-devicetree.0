@@ -1,51 +1,28 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 06/10] ARM: Samsung: Modify
-	s3c64xx_spi{0|1|2}_set_platdata function
-Date: Wed, 9 May 2012 11:10:14 +0200
-Message-ID: <201205091110.15224.heiko@sntech.de>
-References: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org>
-	<1336514694-22393-7-git-send-email-thomas.abraham@linaro.org>
-	<20120509085617.GB28702@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] ARM: imx: enable pinctrl dummy states
+Date: Wed, 9 May 2012 11:11:25 +0200
+Message-ID: <CACRpkdY7vy3rPXR6a0+phgtpOBiycvF+ERgjcP5qdjoq+nDLrw@mail.gmail.com>
+References: <1335958282-3068-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20120509085617.GB28702-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1335958282-3068-1-git-send-email-b29396@freescale.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, cjb@laptop.org, w.sang@pengutronix.de, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 9. Mai 2012, 10:56:17 schrieb Mark Brown:
-> On Wed, May 09, 2012 at 03:34:50AM +0530, Thomas Abraham wrote:
-> > +	s3c64xx_spi0_set_platdata("s3c6410-spi", NULL, 0, 1);
-> 
-> Shouldn't we just set the name in the struct platform_device rather than
-> requiring the machine to pass it through by hand?
+On Wed, May 2, 2012 at 1:31 PM, Dong Aisheng <b29396@freescale.com> wrote:
 
-Similar to the adc and rtc driver, all Samsung platforms reuse a common 
-platform-device definition for the s3c64xx-spi and simply will set the correct 
-name when the machine type is determined during boot.
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+>
+> Enable pinctrl dummy states for imx platforms without pinctrl
+> support.
+>
+> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
 
-I.e. I will also have to change my out-of-tree machine stuff to set the 
-s3c2443-spi name using this method.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-The alternative is creating a mulitude of platform devices for each possible 
-machine type using this driver.
-
-
-Heiko
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Yours,
+Linus Walleij
