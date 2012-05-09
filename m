@@ -1,440 +1,159 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/2] Input: matrix_keymap - wire up device tree support
-Date: Tue, 8 May 2012 22:25:40 -0700
-Message-ID: <20120509052540.GC10514@core.coreip.homeip.net>
-References: <20120426081909.GA2726@core.coreip.homeip.net>
- <4F99642E.1010305@wwwdotorg.org>
- <20120430041955.GC1055@core.coreip.homeip.net>
- <4F9EB72A.10403@wwwdotorg.org>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [V2 5/5] powerpc: kernel: 16650 UART reg-shift support
+Date: Wed, 9 May 2012 10:57:51 +0530
+Message-ID: <CACoXjcnpVi6n7__6SgdzYUuMuRkdtZpVGkOiEowFsL8Gq2kC7w@mail.gmail.com>
+References: <1333956052-25319-1-git-send-email-tinamdar@apm.com>
+	<1333956052-25319-2-git-send-email-tinamdar@apm.com>
+	<1333956052-25319-3-git-send-email-tinamdar@apm.com>
+	<1333956052-25319-4-git-send-email-tinamdar@apm.com>
+	<1333956052-25319-5-git-send-email-tinamdar@apm.com>
+	<CA+5PVA4sjX_Dk6ecySG4ZZoM=xhaWu2jGrQ=LtFgxGL88G=-Nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F9EB72A.10403@wwwdotorg.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-input@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rakesh Iyer <riyer@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+5PVA4sjX_Dk6ecySG4ZZoM=xhaWu2jGrQ=LtFgxGL88G=-Nw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Boyer <jwboyer@gmail.com>
+Cc: benh@kernel.crashing.org, grant.likely@secretlab.ca, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 30, 2012 at 10:00:42AM -0600, Stephen Warren wrote:
-> On 04/29/2012 10:19 PM, Dmitry Torokhov wrote:
-> > On Thu, Apr 26, 2012 at 09:05:18AM -0600, Stephen Warren wrote:
-> >> On 04/26/2012 02:19 AM, Dmitry Torokhov wrote:
-> >>> When platform keymap is not supplied to matrix_keypad_build_keymap()
-> >>> and device tree support is enabled, try locating specified property
-> >>> and load keymap from it. If property name is not defined, try using
-> >>> "linux,keymap".
-> >>>
-> >>> Based on earlier patch by Viresh Kumar <viresh.kumar@st.com>
-> >>
-> >> I think this series looks mostly OK. A few comments below.
-> >>
-> >> We don't actually have the KBC driver hooked up on any boards yet, so I
-> >> can't actually test this yet.
-> >>
-> >> How will the linux,fn-keymap handling work? It looks like this code is
-> >> allocating a keymap data structure with one additional row to represent
-> >> fn-not-pressed vs. fn-pressed.
-> > 
-> > No, it loads 2x rows (therefore giving you twice original keymap size).
-> 
-> Yes, I mean an extra row signal, so therefore twice as many rows.
-> 
-> >> I assume this will work without issue
-> >> even though the second half is not filled in. Won't this allow the
-> >> linux,keymap property entries to pass validation "if (row >= rows)" for
-> >> one more row than it should?
-> > 
-> > Maybe... I think we should revisit this when you actually have
-> > linux,fn-keymap. Probably will need to export matrix_keypad_parse_
-> 
-> Would it be better to just drop the support for the linux,fn-keymap
-> property, until the full support is there? That wouldn't lose any
-> functionality, but would avoid this potential error-checking issue.
-
-Fair enough, how about the version below?
-
--- 
-Dmitry
-
-
-Input: matrix_keymap - wire up device tree support
-
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-When platform keymap is not supplied to matrix_keypad_build_keymap()
-and device tree support is enabled, try locating specified property
-and load keymap from it. If property name is not defined, try using
-"linux,keymap".
-
-Based on earlier patch by Viresh Kumar <viresh.kumar@st.com>
-
-Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
----
-
- drivers/input/keyboard/tegra-kbc.c  |   56 ++++++-----
- drivers/input/matrix-keymap.c       |  175 ++++++++++++++++++++---------------
- include/linux/input/matrix_keypad.h |   18 ----
- 3 files changed, 130 insertions(+), 119 deletions(-)
-
-
-diff --git a/drivers/input/keyboard/tegra-kbc.c b/drivers/input/keyboard/tegra-kbc.c
-index 6722d37..4ffe64d 100644
---- a/drivers/input/keyboard/tegra-kbc.c
-+++ b/drivers/input/keyboard/tegra-kbc.c
-@@ -619,8 +619,8 @@ tegra_kbc_check_pin_cfg(const struct tegra_kbc_platform_data *pdata,
- }
- 
- #ifdef CONFIG_OF
--static struct tegra_kbc_platform_data * __devinit
--tegra_kbc_dt_parse_pdata(struct platform_device *pdev)
-+static struct tegra_kbc_platform_data * __devinit tegra_kbc_dt_parse_pdata(
-+	struct platform_device *pdev)
+On Wed, May 2, 2012 at 7:08 PM, Josh Boyer <jwboyer@gmail.com> wrote:
+> On Mon, Apr 9, 2012 at 3:20 AM, Tanmay Inamdar <tinamdar@apm.com> wro=
+te:
+>> In APM8018X SOC, UART register address space has been relocated to 3=
+2-bit
+>> data boundaries for APB bus implementation.
+>> Current legacy_serial driver ignores the reg-shift property. This pa=
+tch
+>> modifies legacy_serial.c and udbg_16550.c to work with above mention=
+ed UARTs.
+>>
+>> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
+>> ---
+>> :100644 100644 8338aef... f5fc106... M =A0arch/powerpc/include/asm/u=
+dbg.h
+>> :100644 100644 bedd12e... d523b7d... M =A0arch/powerpc/kernel/legacy=
+_serial.c
+>> :100644 100644 6837f83... e0cb7dc... M =A0arch/powerpc/kernel/udbg_1=
+6550.c
+>> =A0arch/powerpc/include/asm/udbg.h =A0 =A0 | =A0 =A02 +-
+>> =A0arch/powerpc/kernel/legacy_serial.c | =A0 16 +++++---
+>> =A0arch/powerpc/kernel/udbg_16550.c =A0 =A0| =A0 64 ++++++++++++++++=
+++++++------------
+>> =A03 files changed, 52 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/udbg.h b/arch/powerpc/include/=
+asm/udbg.h
+>> index 8338aef..f5fc106 100644
+>> --- a/arch/powerpc/include/asm/udbg.h
+>> +++ b/arch/powerpc/include/asm/udbg.h
+>> @@ -29,7 +29,7 @@ extern void udbg_printf(const char *fmt, ...)
+>> =A0extern void udbg_progress(char *s, unsigned short hex);
+>>
+>> =A0extern void udbg_init_uart(void __iomem *comport, unsigned int sp=
+eed,
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned int cl=
+ock);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned int cl=
+ock, =A0unsigned int regshift);
+>> =A0extern unsigned int udbg_probe_uart_speed(void __iomem *comport,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0unsigned int clock);
+>>
+>> diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kern=
+el/legacy_serial.c
+>> index bedd12e..d523b7d 100644
+>> --- a/arch/powerpc/kernel/legacy_serial.c
+>> +++ b/arch/powerpc/kernel/legacy_serial.c
+>> @@ -33,6 +33,7 @@ static struct legacy_serial_info {
+>> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0c=
+lock;
+>> =A0 =A0 =A0 =A0int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 irq_check_parent;
+>> =A0 =A0 =A0 =A0phys_addr_t =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 t=
+addr;
+>> + =A0 =A0 =A0 unsigned int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0re=
+gshift;
+>> =A0} legacy_serial_infos[MAX_LEGACY_SERIAL_PORTS];
+>>
+>> =A0static struct __initdata of_device_id legacy_serial_parents[] =3D=
  {
- 	struct tegra_kbc_platform_data *pdata;
- 	struct device_node *np = pdev->dev.of_node;
-@@ -660,10 +660,6 @@ tegra_kbc_dt_parse_pdata(struct platform_device *pdev)
- 		pdata->pin_cfg[KBC_MAX_ROW + i].type = PIN_CFG_COL;
- 	}
- 
--	pdata->keymap_data = matrix_keyboard_of_fill_keymap(np, "linux,keymap");
--
--	/* FIXME: Add handling of linux,fn-keymap here */
--
- 	return pdata;
- }
- #else
-@@ -674,10 +670,36 @@ static inline struct tegra_kbc_platform_data *tegra_kbc_dt_parse_pdata(
- }
- #endif
- 
-+static int __devinit tegra_kbd_setup_keymap(struct tegra_kbc *kbc)
-+{
-+	const struct tegra_kbc_platform_data *pdata = kbc->pdata;
-+	const struct matrix_keymap_data *keymap_data = pdata->keymap_data;
-+	unsigned int keymap_rows = KBC_MAX_KEY;
-+	int retval;
-+
-+	if (keymap_data && pdata->use_fn_map)
-+		keymap_rows *= 2;
-+
-+	retval = matrix_keypad_build_keymap(keymap_data, NULL,
-+					    keymap_rows, KBC_MAX_COL,
-+					    kbc->keycode, kbc->idev);
-+	if (retval == -ENOSYS || retval == -ENOENT) {
-+		/*
-+		 * If there is no OF support in kernel or keymap
-+		 * property is missing, use default keymap.
-+		 */
-+		retval = matrix_keypad_build_keymap(
-+					&tegra_kbc_default_keymap_data, NULL,
-+					keymap_rows, KBC_MAX_COL,
-+					kbc->keycode, kbc->idev);
-+	}
-+
-+	return retval;
-+}
-+
- static int __devinit tegra_kbc_probe(struct platform_device *pdev)
- {
- 	const struct tegra_kbc_platform_data *pdata = pdev->dev.platform_data;
--	const struct matrix_keymap_data *keymap_data;
- 	struct tegra_kbc *kbc;
- 	struct input_dev *input_dev;
- 	struct resource *res;
-@@ -686,7 +708,6 @@ static int __devinit tegra_kbc_probe(struct platform_device *pdev)
- 	int num_rows = 0;
- 	unsigned int debounce_cnt;
- 	unsigned int scan_time_rows;
--	unsigned int keymap_rows;
- 
- 	if (!pdata)
- 		pdata = tegra_kbc_dt_parse_pdata(pdev);
-@@ -768,17 +789,9 @@ static int __devinit tegra_kbc_probe(struct platform_device *pdev)
- 	input_dev->open = tegra_kbc_open;
- 	input_dev->close = tegra_kbc_close;
- 
--	keymap_rows = KBC_MAX_KEY;
--	if (pdata->use_fn_map)
--		keymap_rows *= 2;
--
--	keymap_data = pdata->keymap_data ?: &tegra_kbc_default_keymap_data;
--
--	err = matrix_keypad_build_keymap(keymap_data, NULL,
--					 keymap_rows, KBC_MAX_COL,
--					 kbc->keycode, input_dev);
-+	err = tegra_kbd_setup_keymap(kbc);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to build keymap\n");
-+		dev_err(&pdev->dev, "failed to setup keymap\n");
- 		goto err_put_clk;
- 	}
- 
-@@ -805,9 +818,6 @@ static int __devinit tegra_kbc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, kbc);
- 	device_init_wakeup(&pdev->dev, pdata->wakeup);
- 
--	if (!pdev->dev.platform_data)
--		matrix_keyboard_of_free_keymap(pdata->keymap_data);
--
- 	return 0;
- 
- err_free_irq:
-@@ -822,10 +832,8 @@ err_free_mem:
- 	input_free_device(input_dev);
- 	kfree(kbc);
- err_free_pdata:
--	if (!pdev->dev.platform_data) {
--		matrix_keyboard_of_free_keymap(pdata->keymap_data);
-+	if (!pdev->dev.platform_data)
- 		kfree(pdata);
--	}
- 
- 	return err;
- }
-diff --git a/drivers/input/matrix-keymap.c b/drivers/input/matrix-keymap.c
-index de7992d..db92c1e 100644
---- a/drivers/input/matrix-keymap.c
-+++ b/drivers/input/matrix-keymap.c
-@@ -17,15 +17,91 @@
-  *
-  */
- 
-+#include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/input.h>
- #include <linux/of.h>
- #include <linux/export.h>
--#include <linux/gfp.h>
--#include <linux/slab.h>
- #include <linux/input/matrix_keypad.h>
- 
-+static bool matrix_keypad_map_key(struct input_dev *input_dev,
-+				  unsigned int rows, unsigned int cols,
-+				  unsigned int row_shift, unsigned int key)
-+{
-+	unsigned char *keymap = input_dev->keycode;
-+	unsigned int row = KEY_ROW(key);
-+	unsigned int col = KEY_COL(key);
-+	unsigned short code = KEY_VAL(key);
-+
-+	if (row >= rows || col >= cols) {
-+		dev_err(input_dev->dev.parent,
-+			"%s: invalid keymap entry 0x%x (row: %d, col: %d, rows: %d, cols: %d)\n",
-+			__func__, key, row, col, rows, cols);
-+		return false;
-+	}
-+
-+	keymap[MATRIX_SCAN_CODE(row, col, row_shift)] = code;
-+	__set_bit(code, input_dev->keybit);
-+
-+	return true;
-+}
-+
-+#ifdef CONFIG_OF
-+static int matrix_keypad_parse_of_keymap(const char *propname,
-+					 unsigned int rows, unsigned int cols,
-+					 struct input_dev *input_dev)
-+{
-+	struct device *dev = input_dev->dev.parent;
-+	struct device_node *np = dev->of_node;
-+	unsigned int row_shift = get_count_order(cols);
-+	unsigned int max_keys = rows << row_shift;
-+	unsigned int proplen, i, size;
-+	const __be32 *prop;
-+
-+	if (!np)
-+		return -ENOENT;
-+
-+	if (!propname)
-+		propname = "linux,keymap";
-+
-+	prop = of_get_property(np, propname, &proplen);
-+	if (!prop) {
-+		dev_err(dev, "OF: %s property not defined in %s\n",
-+			propname, np->full_name);
-+		return -ENOENT;
-+	}
-+
-+	if (proplen % sizeof(u32)) {
-+		dev_err(dev, "OF: Malformed keycode property %s in %s\n",
-+			propname, np->full_name);
-+		return -EINVAL;
-+	}
-+
-+	size = proplen / sizeof(u32);
-+	if (size > max_keys) {
-+		dev_err(dev, "OF: %s size overflow\n", propname);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < size; i++) {
-+		unsigned int key = be32_to_cpup(prop + i);
-+
-+		if (!matrix_keypad_map_key(input_dev, rows, cols,
-+					   row_shift, key))
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int matrix_keypad_parse_of_keymap(const char *propname,
-+					 unsigned int rows, unsigned int cols,
-+					 struct input_dev *input_dev)
-+{
-+	return -ENOSYS;
-+}
-+#endif
- 
- /**
-  * matrix_keypad_build_keymap - convert platform keymap into matrix keymap
-@@ -41,6 +117,13 @@
-  * This function converts platform keymap (encoded with KEY() macro) into
-  * an array of keycodes that is suitable for using in a standard matrix
-  * keyboard driver that uses row and col as indices.
-+ *
-+ * If @keymap_data is not supplied and device tree support is enabled
-+ * it will attempt load the keymap from property specified by @keymap_name
-+ * argument (or "linux,keymap" if @keymap_name is %NULL).
-+ *
-+ * Callers are expected to set up input_dev->dev.parent before calling this
-+ * function.
-  */
- int matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
- 			       const char *keymap_name,
-@@ -50,6 +133,7 @@ int matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
- {
- 	unsigned int row_shift = get_count_order(cols);
- 	int i;
-+	int error;
- 
- 	input_dev->keycode = keymap;
- 	input_dev->keycodesize = sizeof(*keymap);
-@@ -57,86 +141,23 @@ int matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
- 
- 	__set_bit(EV_KEY, input_dev->evbit);
- 
--	for (i = 0; i < keymap_data->keymap_size; i++) {
--		unsigned int key = keymap_data->keymap[i];
--		unsigned int row = KEY_ROW(key);
--		unsigned int col = KEY_COL(key);
--		unsigned short code = KEY_VAL(key);
-+	if (keymap_data) {
-+		for (i = 0; i < keymap_data->keymap_size; i++) {
-+			unsigned int key = keymap_data->keymap[i];
- 
--		if (row >= rows || col >= cols) {
--			dev_err(input_dev->dev.parent,
--				"%s: invalid keymap entry %d (row: %d, col: %d, rows: %d, cols: %d)\n",
--				__func__, i, row, col, rows, cols);
--			return -EINVAL;
-+			if (!matrix_keypad_map_key(input_dev, rows, cols,
-+						   row_shift, key))
-+				return -EINVAL;
- 		}
--
--		keymap[MATRIX_SCAN_CODE(row, col, row_shift)] = code;
--		__set_bit(code, input_dev->keybit);
-+	} else {
-+		error = matrix_keypad_parse_of_keymap(keymap_name, rows, cols,
-+						      input_dev);
-+		if (error)
-+			return error;
- 	}
-+
- 	__clear_bit(KEY_RESERVED, input_dev->keybit);
- 
- 	return 0;
- }
- EXPORT_SYMBOL(matrix_keypad_build_keymap);
--
--#ifdef CONFIG_OF
--struct matrix_keymap_data *
--matrix_keyboard_of_fill_keymap(struct device_node *np,
--			       const char *propname)
--{
--	struct matrix_keymap_data *kd;
--	u32 *keymap;
--	int proplen, i;
--	const __be32 *prop;
--
--	if (!np)
--		return NULL;
--
--	if (!propname)
--		propname = "linux,keymap";
--
--	prop = of_get_property(np, propname, &proplen);
--	if (!prop)
--		return NULL;
--
--	if (proplen % sizeof(u32)) {
--		pr_warn("Malformed keymap property %s in %s\n",
--			propname, np->full_name);
--		return NULL;
--	}
--
--	kd = kzalloc(sizeof(*kd), GFP_KERNEL);
--	if (!kd)
--		return NULL;
--
--	kd->keymap = keymap = kzalloc(proplen, GFP_KERNEL);
--	if (!kd->keymap) {
--		kfree(kd);
--		return NULL;
--	}
--
--	kd->keymap_size = proplen / sizeof(u32);
--
--	for (i = 0; i < kd->keymap_size; i++) {
--		u32 tmp = be32_to_cpup(prop + i);
--		int key_code, row, col;
--
--		row = (tmp >> 24) & 0xff;
--		col = (tmp >> 16) & 0xff;
--		key_code = tmp & 0xffff;
--		keymap[i] = KEY(row, col, key_code);
--	}
--
--	return kd;
--}
--EXPORT_SYMBOL_GPL(matrix_keyboard_of_fill_keymap);
--
--void matrix_keyboard_of_free_keymap(const struct matrix_keymap_data *kd)
--{
--	if (kd) {
--		kfree(kd->keymap);
--		kfree(kd);
--	}
--}
--EXPORT_SYMBOL_GPL(matrix_keyboard_of_free_keymap);
--#endif
-diff --git a/include/linux/input/matrix_keypad.h b/include/linux/input/matrix_keypad.h
-index e8fe08e..5f3aa6b 100644
---- a/include/linux/input/matrix_keypad.h
-+++ b/include/linux/input/matrix_keypad.h
-@@ -81,22 +81,4 @@ int matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
- 			       unsigned short *keymap,
- 			       struct input_dev *input_dev);
- 
--#ifdef CONFIG_OF
--struct matrix_keymap_data *
--matrix_keyboard_of_fill_keymap(struct device_node *np, const char *propname);
--
--void matrix_keyboard_of_free_keymap(const struct matrix_keymap_data *kd);
--#else
--static inline struct matrix_keymap_data *
--matrix_keyboard_of_fill_keymap(struct device_node *np, const char *propname)
--{
--	return NULL;
--}
--
--static inline void
--matrix_keyboard_of_free_keymap(const struct matrix_keymap_data *kd)
--{
--}
--#endif
--
- #endif /* _MATRIX_KEYPAD_H */
+>> @@ -42,6 +43,7 @@ static struct __initdata of_device_id legacy_seria=
+l_parents[] =3D {
+>> =A0 =A0 =A0 =A0{.compatible =3D "ibm,opb",},
+>> =A0 =A0 =A0 =A0{.compatible =3D "simple-bus",},
+>> =A0 =A0 =A0 =A0{.compatible =3D "wrs,epld-localbus",},
+>> + =A0 =A0 =A0 {.compatible =3D "apm,apb",},
+>> =A0 =A0 =A0 =A0{},
+>> =A0};
+>>
+>> @@ -163,11 +165,6 @@ static int __init add_legacy_soc_port(struct de=
+vice_node *np,
+>> =A0 =A0 =A0 =A0if (of_get_property(np, "clock-frequency", NULL) =3D=3D=
+ NULL)
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -1;
+>>
+>> - =A0 =A0 =A0 /* if reg-shift or offset, don't try to use it */
+>> - =A0 =A0 =A0 if ((of_get_property(np, "reg-shift", NULL) !=3D NULL)=
+ ||
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 (of_get_property(np, "reg-offset", NUL=
+L) !=3D NULL))
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> -
+>
+> So we explicitly didn't support reg-shift before. =A0I'm guessing the=
+re is
+> a reason for that, but I don't recall what. =A0Ben?
+>
+> Also, why do you need to use the legacy serial driver at all for this
+> SOC? =A0As far as I remember, the OF serial driver should be sufficie=
+nt.
+>
+
+You are right. There is no need to use legacy serial driver. However I
+realized that when 40x is selected, 'PPC_UDBG_16550' is by default
+selected. This enables legacy serial driver.
+
+Is it now required to enable 'PPC_UDBG_16550' by default for every SOC
+that uses 40x processor?
+
+>> +static unsigned int reg_shift;
+>> +#define ns16550_offset(addr) (addr - (unsigned char *)udbg_comport)
+>> +
+>> =A0static struct NS16550 __iomem *udbg_comport;
+>>
+>> +static inline u8 serial_read(unsigned char *addr)
+>> +{
+>> + =A0 =A0 =A0 u32 offset =3D ns16550_offset(addr) << reg_shift;
+>> + =A0 =A0 =A0 return readb(udbg_comport + offset);
+>> +}
+>> +
+>> +static inline void serial_write(unsigned char *addr, char val)
+>> +{
+>> + =A0 =A0 =A0 u32 offset =3D ns16550_offset(addr) << reg_shift;
+>> + =A0 =A0 =A0 writeb(val, udbg_comport + offset);
+>> +}
+>> +
+>
+> I don't think readb/writeb are correct here. =A0Why did you switch to
+> using those instead of sticking with in_8/out_8?
+>
+> josh
+
+Thanks,
+Tanmay
+CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,=
+=20
+is for the sole use of the intended recipient(s) and contains informati=
+on=A0
+that is confidential and proprietary to AppliedMicro Corporation or its=
+ subsidiaries.=20
+It is to be used solely for the purpose of furthering the parties' busi=
+ness relationship.=20
+All unauthorized review, use, disclosure or distribution is prohibited.=
+=20
+If you are not the intended recipient, please contact the sender by rep=
+ly e-mail=20
+and destroy all copies of the original message.
+=0D
