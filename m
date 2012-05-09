@@ -1,28 +1,100 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] ARM: imx: enable pinctrl dummy states
-Date: Wed, 9 May 2012 11:11:25 +0200
-Message-ID: <CACRpkdY7vy3rPXR6a0+phgtpOBiycvF+ERgjcP5qdjoq+nDLrw@mail.gmail.com>
-References: <1335958282-3068-1-git-send-email-b29396@freescale.com>
+From: Heiko =?iso-8859-15?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 07/10] spi: s3c64xx: Remove the 'set_level' callback from controller data
+Date: Wed, 9 May 2012 11:20:41 +0200
+Message-ID: <201205091120.41978.heiko@sntech.de>
+References: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org> <1336514694-22393-8-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1335958282-3068-1-git-send-email-b29396@freescale.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, cjb@laptop.org, w.sang@pengutronix.de, linux-mmc@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1336514694-22393-8-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 2, 2012 at 1:31 PM, Dong Aisheng <b29396@freescale.com> wrote:
+Am Mittwoch, 9. Mai 2012, 00:04:51 schrieb Thomas Abraham:
+> The set_level callback in the controller data, which is used to configure
+> the slave select line, cannot be supported when migrating the driver to
+> device tree based discovery. Since all the platforms currently use gpio
+> as the slave select line, this callback can be removed from the
+> controller data and replaced with call to gpio_set_value in the driver.
 
-> From: Dong Aisheng <dong.aisheng@linaro.org>
->
-> Enable pinctrl dummy states for imx platforms without pinctrl
-> support.
->
-> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+I was quite fond of the set_level callback. On one of the machines I'm working
+on there is some sort of multiplexer (TI-sn74cbtlv3257) sitting between the
+controller and spi devices to provide support for more than one device.
+So I was doing the switch to the correct device in the set_level callback,
+which worked quite well.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Yours,
-Linus Walleij
+In the end, I'm still ok with this consolidation, as the device line has
+reached it's end of life and the second device (an epaper controller)
+provides another form of access to it through the display controller of the
+s3c2416.
+
+
+Heiko
+
+[1] https://github.com/mmind/linux-es600/blob/topic/es600-devel/arch/arm/mach-s3c24xx/common-es600.c#L1155
+
+> Cc: Jaswinder Singh <jaswinder.singh@linaro.org>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  arch/arm/plat-samsung/include/plat/s3c64xx-spi.h |    2 --
+>  drivers/spi/spi-s3c64xx.c                        |    8 ++++----
+>  2 files changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
+> b/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h index a733ce9..48a6495
+> 100644
+> --- a/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
+> +++ b/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
+> @@ -18,7 +18,6 @@ struct platform_device;
+>   * @fb_delay: Slave specific feedback delay.
+>   *            Refer to FB_CLK_SEL register definition in SPI chapter.
+>   * @line: Custom 'identity' of the CS line.
+> - * @set_level: CS line control.
+>   *
+>   * This is per SPI-Slave Chipselect information.
+>   * Allocate and initialize one in machine init code and make the
+> @@ -27,7 +26,6 @@ struct platform_device;
+>  struct s3c64xx_spi_csinfo {
+>  	u8 fb_delay;
+>  	unsigned line;
+> -	void (*set_level)(unsigned line_id, int lvl);
+>  };
+> 
+>  /**
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index f6bc0e3..d84ce7f 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -406,14 +406,14 @@ static inline void enable_cs(struct
+> s3c64xx_spi_driver_data *sdd, if (sdd->tgl_spi != spi) { /* if last mssg
+> on diff device */
+>  			/* Deselect the last toggled device */
+>  			cs = sdd->tgl_spi->controller_data;
+> -			cs->set_level(cs->line,
+> -					spi->mode & SPI_CS_HIGH ? 0 : 1);
+> +			gpio_set_value(cs->line,
+> +				spi->mode & SPI_CS_HIGH ? 0 : 1);
+>  		}
+>  		sdd->tgl_spi = NULL;
+>  	}
+> 
+>  	cs = spi->controller_data;
+> -	cs->set_level(cs->line, spi->mode & SPI_CS_HIGH ? 1 : 0);
+> +	gpio_set_value(cs->line, spi->mode & SPI_CS_HIGH ? 1 : 0);
+>  }
+> 
+>  static int wait_for_xfer(struct s3c64xx_spi_driver_data *sdd,
+> @@ -499,7 +499,7 @@ static inline void disable_cs(struct
+> s3c64xx_spi_driver_data *sdd, if (sdd->tgl_spi == spi)
+>  		sdd->tgl_spi = NULL;
+> 
+> -	cs->set_level(cs->line, spi->mode & SPI_CS_HIGH ? 0 : 1);
+> +	gpio_set_value(cs->line, spi->mode & SPI_CS_HIGH ? 0 : 1);
+>  }
+> 
+>  static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
