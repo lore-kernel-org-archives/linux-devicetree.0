@@ -1,100 +1,83 @@
-From: Heiko =?iso-8859-15?q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 07/10] spi: s3c64xx: Remove the 'set_level' callback from controller data
-Date: Wed, 9 May 2012 11:20:41 +0200
-Message-ID: <201205091120.41978.heiko@sntech.de>
-References: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org> <1336514694-22393-8-git-send-email-thomas.abraham@linaro.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V1] regulator: fixed: dt: add property for gpio open
+ drain flag
+Date: Wed, 9 May 2012 11:14:28 +0100
+Message-ID: <20120509101428.GE3955@opensource.wolfsonmicro.com>
+References: <1336386499-20408-1-git-send-email-ldewangan@nvidia.com>
+ <4FA7E4A3.6050004@wwwdotorg.org>
+ <4FA7E57B.30804@nvidia.com>
+ <4FA7E841.7020100@wwwdotorg.org>
+ <20120507162419.GK17002@opensource.wolfsonmicro.com>
+ <4FA98F78.4080803@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1336514694-22393-8-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lteA1dqeVaWQ9QQl"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FA98F78.4080803@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Laxman Dewangan <ldewangan@nvidia.com>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 9. Mai 2012, 00:04:51 schrieb Thomas Abraham:
-> The set_level callback in the controller data, which is used to configure
-> the slave select line, cannot be supported when migrating the driver to
-> device tree based discovery. Since all the platforms currently use gpio
-> as the slave select line, this callback can be removed from the
-> controller data and replaced with call to gpio_set_value in the driver.
 
-I was quite fond of the set_level callback. On one of the machines I'm working
-on there is some sort of multiplexer (TI-sn74cbtlv3257) sitting between the
-controller and spi devices to provide support for more than one device.
-So I was doing the switch to the correct device in the set_level callback,
-which worked quite well.
+--lteA1dqeVaWQ9QQl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, May 08, 2012 at 03:26:16PM -0600, Stephen Warren wrote:
+> On 05/07/2012 10:24 AM, Mark Brown wrote:
 
-In the end, I'm still ok with this consolidation, as the device line has
-reached it's end of life and the second device (an epaper controller)
-provides another form of access to it through the display controller of the
-s3c2416.
+> > It's really not idiomatic for drivers using GPIOs to allow
+> > configuration of their flags in the first place.  Or, quite
+> > frankly, to use flags. Honestly I'd not expect any bindings that
+> > the GPIO driver provides to have any attention at all paid to them
+> > most of the time, looking at the code seems to support that (though
+> > there's surprisingly few bindings using GPIOs at all it seems).
 
+> So, are you saying we should remove the flags from the GPIO bindings,
+> and do something custom in each consumer?
 
-Heiko
+Not really, it's more internal Linux stuff with the gpio API being a bit
+stuck.
 
-[1] https://github.com/mmind/linux-es600/blob/topic/es600-devel/arch/arm/mach-s3c24xx/common-es600.c#L1155
+> Right now, we can't rely on of_get_gpio_flags(), since not all GPIO
+> drivers actually allow flags to be represented in bindings.
 
-> Cc: Jaswinder Singh <jaswinder.singh@linaro.org>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
->  arch/arm/plat-samsung/include/plat/s3c64xx-spi.h |    2 --
->  drivers/spi/spi-s3c64xx.c                        |    8 ++++----
->  2 files changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
-> b/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h index a733ce9..48a6495
-> 100644
-> --- a/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
-> +++ b/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
-> @@ -18,7 +18,6 @@ struct platform_device;
->   * @fb_delay: Slave specific feedback delay.
->   *            Refer to FB_CLK_SEL register definition in SPI chapter.
->   * @line: Custom 'identity' of the CS line.
-> - * @set_level: CS line control.
->   *
->   * This is per SPI-Slave Chipselect information.
->   * Allocate and initialize one in machine init code and make the
-> @@ -27,7 +26,6 @@ struct platform_device;
->  struct s3c64xx_spi_csinfo {
->  	u8 fb_delay;
->  	unsigned line;
-> -	void (*set_level)(unsigned line_id, int lvl);
->  };
-> 
->  /**
-> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index f6bc0e3..d84ce7f 100644
-> --- a/drivers/spi/spi-s3c64xx.c
-> +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -406,14 +406,14 @@ static inline void enable_cs(struct
-> s3c64xx_spi_driver_data *sdd, if (sdd->tgl_spi != spi) { /* if last mssg
-> on diff device */
->  			/* Deselect the last toggled device */
->  			cs = sdd->tgl_spi->controller_data;
-> -			cs->set_level(cs->line,
-> -					spi->mode & SPI_CS_HIGH ? 0 : 1);
-> +			gpio_set_value(cs->line,
-> +				spi->mode & SPI_CS_HIGH ? 0 : 1);
->  		}
->  		sdd->tgl_spi = NULL;
->  	}
-> 
->  	cs = spi->controller_data;
-> -	cs->set_level(cs->line, spi->mode & SPI_CS_HIGH ? 1 : 0);
-> +	gpio_set_value(cs->line, spi->mode & SPI_CS_HIGH ? 1 : 0);
->  }
-> 
->  static int wait_for_xfer(struct s3c64xx_spi_driver_data *sdd,
-> @@ -499,7 +499,7 @@ static inline void disable_cs(struct
-> s3c64xx_spi_driver_data *sdd, if (sdd->tgl_spi == spi)
->  		sdd->tgl_spi = NULL;
-> 
-> -	cs->set_level(cs->line, spi->mode & SPI_CS_HIGH ? 0 : 1);
-> +	gpio_set_value(cs->line, spi->mode & SPI_CS_HIGH ? 0 : 1);
->  }
-> 
->  static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
+> However, having each client have a unique binding for things like
+> open-drain, inverted, ... seems bad; there are probably fewer
+> providers than consumers, although a single standardized
+
+It really depends what the device is doing with the GPIO, we would at
+least need to have a way for the user to get the flags back out in case
+the configuration is important for what it does.  Most of this stuff is
+going to be nonsensical for most uses anyway, though, and obviously
+there's the whole middleware emulation thing as well.
+
+> representation might admittedly have been ever better.
+
+Well, that's legacy device tree stuff for you :/
+
+--lteA1dqeVaWQ9QQl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPqkN9AAoJEBus8iNuMP3dW8cP/iVw2Do0tUScVvgtfYf25cHn
+JMLmX51fRmkKBp03FxdLVGkecHZmBPKBi48JSLD3hW1r81IydjhGFH/5LUrK3mmt
+wQxEHOo4iHH2kwfHtINdMu9FT3q52+iCd02jNBABLc8hlRwm6BIXCDdzdHdNKKxl
+6VWUvHkfGaNu/vfZOE/6oqpQbGqLwjdrSmsaosNB4V22+buISbx7D0A40ph/ZZqL
+T3XvbrIG8ZcE4DXWwz38iTLSr1J4UbUuyKtjugSsOQmIHoYKZ447E/vH3YsXPHoC
+AFY2dEZkZ8cMzVgbxFEoHJR80BxZpEuNCVhV6xcX7U+3wGxVzMVIFoqELBRg3FlS
+0fw+yCsS1b0u7hw6HzKmKSgpMK1J95vrDg6i+//Rh+wg0Rre1p2jPd7oSsjcHqvm
+1KlYe3Hvo0usoZJetKVMzWqmGlj0/VWU0QTDGXn5gVL85v39DFBCPXDe3l+Pj6/p
+X3FfUzQKAry9cfq/okgQH5nC3Y8ncMllEmS+iTW7EweA/6P1iC5aBmroaElYhMsm
+Oz0TDbNiHuKsqW5QxqHzoxs1PNPtwp3KxNSpg+RarMdVcJK68vgbVSVXU2xB4lYS
+QrPdg++vMORGDTNIGtHSVFGxWzNi7B36ohGjKU7CT8Ce+zVDMro8ETG/mt+kgtMT
+/0kduD0Okzsdhy6XYBfH
+=QoqK
+-----END PGP SIGNATURE-----
+
+--lteA1dqeVaWQ9QQl--
