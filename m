@@ -1,23 +1,29 @@
-From: Viresh Kumar <viresh.kumar@st.com>
-Subject: Re: [PATCH V3 2/2] Input: spear-keyboard: add device tree bindings
-Date: Wed, 9 May 2012 12:23:20 +0530
-Message-ID: <4FAA1460.9020600@st.com>
-References: <cover.1333009670.git.viresh.kumar@st.com> <eebfde0a1511204cab203fa18efe6264abe00486.1333009670.git.viresh.kumar@st.com> <20120509052828.GD10514@core.coreip.homeip.net>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 07/10] spi: s3c64xx: Remove the 'set_level' callback from
+ controller data
+Date: Wed, 9 May 2012 13:33:54 +0530
+Message-ID: <CABb+yY0Yu3Em+oU5+xjzBpxLaTrZ34Gxh4TK0-ra_z23RNBdJw@mail.gmail.com>
+References: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org>
+	<1336514694-22393-8-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20120509052828.GD10514@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "swarren@nvidia.com" <swarren@nvidia.com>, spear-devel <spear-devel@list.st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "sr@denx.de" <sr@denx.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1336514694-22393-8-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/9/2012 10:58 AM, Dmitry Torokhov wrote:
-> Now that I got matrix_keypad_build_keymap() also handle DT case, how
-> about the patch below?
-
-Yes it looks fine.
-
--- 
-viresh
+On Wed, May 9, 2012 at 3:34 AM, Thomas Abraham
+<thomas.abraham@linaro.org> wrote:
+>
+> The set_level callback in the controller data, which is used to configure
+> the slave select line, cannot be supported when migrating the driver to
+> device tree based discovery. Since all the platforms currently use gpio
+> as the slave select line, this callback can be removed from the
+> controller data and replaced with call to gpio_set_value in the driver.
+>
+This patch is ok.
+Separately, you might also want to see if we really need the air-tight
+protection of spin_lock_irqsave around enable_cs - IIRC someone
+had a CS coming out of an gpio extender connected over I2C
