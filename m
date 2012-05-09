@@ -1,159 +1,189 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [V2 5/5] powerpc: kernel: 16650 UART reg-shift support
-Date: Wed, 9 May 2012 10:57:51 +0530
-Message-ID: <CACoXjcnpVi6n7__6SgdzYUuMuRkdtZpVGkOiEowFsL8Gq2kC7w@mail.gmail.com>
-References: <1333956052-25319-1-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-2-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-3-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-4-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-5-git-send-email-tinamdar@apm.com>
-	<CA+5PVA4sjX_Dk6ecySG4ZZoM=xhaWu2jGrQ=LtFgxGL88G=-Nw@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH V3 2/2] Input: spear-keyboard: add device tree bindings
+Date: Tue, 8 May 2012 22:28:28 -0700
+Message-ID: <20120509052828.GD10514@core.coreip.homeip.net>
+References: <cover.1333009670.git.viresh.kumar@st.com>
+ <eebfde0a1511204cab203fa18efe6264abe00486.1333009670.git.viresh.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+5PVA4sjX_Dk6ecySG4ZZoM=xhaWu2jGrQ=LtFgxGL88G=-Nw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Boyer <jwboyer@gmail.com>
-Cc: benh@kernel.crashing.org, grant.likely@secretlab.ca, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <eebfde0a1511204cab203fa18efe6264abe00486.1333009670.git.viresh.kumar@st.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@st.com>
+Cc: swarren@nvidia.com, spear-devel@list.st.com, viresh.linux@gmail.com, devicetree-discuss@lists.ozlabs.org, olof@lixom.net, linux-input@vger.kernel.org, sr@denx.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 2, 2012 at 7:08 PM, Josh Boyer <jwboyer@gmail.com> wrote:
-> On Mon, Apr 9, 2012 at 3:20 AM, Tanmay Inamdar <tinamdar@apm.com> wro=
-te:
->> In APM8018X SOC, UART register address space has been relocated to 3=
-2-bit
->> data boundaries for APB bus implementation.
->> Current legacy_serial driver ignores the reg-shift property. This pa=
-tch
->> modifies legacy_serial.c and udbg_16550.c to work with above mention=
-ed UARTs.
->>
->> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
->> ---
->> :100644 100644 8338aef... f5fc106... M =A0arch/powerpc/include/asm/u=
-dbg.h
->> :100644 100644 bedd12e... d523b7d... M =A0arch/powerpc/kernel/legacy=
-_serial.c
->> :100644 100644 6837f83... e0cb7dc... M =A0arch/powerpc/kernel/udbg_1=
-6550.c
->> =A0arch/powerpc/include/asm/udbg.h =A0 =A0 | =A0 =A02 +-
->> =A0arch/powerpc/kernel/legacy_serial.c | =A0 16 +++++---
->> =A0arch/powerpc/kernel/udbg_16550.c =A0 =A0| =A0 64 ++++++++++++++++=
-++++++------------
->> =A03 files changed, 52 insertions(+), 30 deletions(-)
->>
->> diff --git a/arch/powerpc/include/asm/udbg.h b/arch/powerpc/include/=
-asm/udbg.h
->> index 8338aef..f5fc106 100644
->> --- a/arch/powerpc/include/asm/udbg.h
->> +++ b/arch/powerpc/include/asm/udbg.h
->> @@ -29,7 +29,7 @@ extern void udbg_printf(const char *fmt, ...)
->> =A0extern void udbg_progress(char *s, unsigned short hex);
->>
->> =A0extern void udbg_init_uart(void __iomem *comport, unsigned int sp=
-eed,
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned int cl=
-ock);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned int cl=
-ock, =A0unsigned int regshift);
->> =A0extern unsigned int udbg_probe_uart_speed(void __iomem *comport,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0unsigned int clock);
->>
->> diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kern=
-el/legacy_serial.c
->> index bedd12e..d523b7d 100644
->> --- a/arch/powerpc/kernel/legacy_serial.c
->> +++ b/arch/powerpc/kernel/legacy_serial.c
->> @@ -33,6 +33,7 @@ static struct legacy_serial_info {
->> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0c=
-lock;
->> =A0 =A0 =A0 =A0int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 irq_check_parent;
->> =A0 =A0 =A0 =A0phys_addr_t =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 t=
-addr;
->> + =A0 =A0 =A0 unsigned int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0re=
-gshift;
->> =A0} legacy_serial_infos[MAX_LEGACY_SERIAL_PORTS];
->>
->> =A0static struct __initdata of_device_id legacy_serial_parents[] =3D=
+Hi Viresh,
+
+On Thu, Mar 29, 2012 at 02:03:27PM +0530, Viresh Kumar wrote:
+>  
+> -	matrix_keypad_build_keymap(keymap, ROW_SHIFT,
+> -			input_dev->keycode, input_dev->keybit);
+> +	if (np) {
+> +		error = matrix_keypad_of_build_keymap(input_dev, ROW_SHIFT,
+> +				"linux,keymap");
+> +		if (error) {
+> +			dev_err(&pdev->dev, "OF: failed to build keymap\n");
+> +			goto err_put_clk;
+> +		}
+> +	} else {
+> +		matrix_keypad_build_keymap(pdata->keymap, ROW_SHIFT,
+> +				input_dev->keycode, input_dev->keybit);
+> +	}
+
+Now that I got matrix_keypad_build_keymap() also handle DT case, how
+about the patch below?
+
+Thanks.
+
+-- 
+Dmitry
+
+
+Input: spear-keyboard - add device tree bindings
+
+From: Viresh Kumar <viresh.kumar@st.com>
+
+This adds simple DT bindings for spear-keyboard controller.
+
+Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
+Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
+---
+
+ drivers/input/keyboard/spear-keyboard.c |   71 ++++++++++++++++++++++++-------
+ 1 files changed, 56 insertions(+), 15 deletions(-)
+
+
+diff --git a/drivers/input/keyboard/spear-keyboard.c b/drivers/input/keyboard/spear-keyboard.c
+index e83cab2..6f287f7 100644
+--- a/drivers/input/keyboard/spear-keyboard.c
++++ b/drivers/input/keyboard/spear-keyboard.c
+@@ -19,6 +19,7 @@
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_wakeup.h>
+ #include <linux/slab.h>
+@@ -63,6 +64,7 @@ struct spear_kbd {
+ 	unsigned int mode;
+ 	unsigned short last_key;
+ 	unsigned short keycodes[NUM_ROWS * NUM_COLS];
++	bool rep;
+ };
+ 
+ static irqreturn_t spear_kbd_interrupt(int irq, void *dev_id)
+@@ -138,27 +140,49 @@ static void spear_kbd_close(struct input_dev *dev)
+ 	kbd->last_key = KEY_RESERVED;
+ }
+ 
+-static int __devinit spear_kbd_probe(struct platform_device *pdev)
++#ifdef CONFIG_OF
++static int __devinit spear_kbd_parse_dt(struct platform_device *pdev,
++                                        struct spear_kbd *kbd)
  {
->> @@ -42,6 +43,7 @@ static struct __initdata of_device_id legacy_seria=
-l_parents[] =3D {
->> =A0 =A0 =A0 =A0{.compatible =3D "ibm,opb",},
->> =A0 =A0 =A0 =A0{.compatible =3D "simple-bus",},
->> =A0 =A0 =A0 =A0{.compatible =3D "wrs,epld-localbus",},
->> + =A0 =A0 =A0 {.compatible =3D "apm,apb",},
->> =A0 =A0 =A0 =A0{},
->> =A0};
->>
->> @@ -163,11 +165,6 @@ static int __init add_legacy_soc_port(struct de=
-vice_node *np,
->> =A0 =A0 =A0 =A0if (of_get_property(np, "clock-frequency", NULL) =3D=3D=
- NULL)
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -1;
->>
->> - =A0 =A0 =A0 /* if reg-shift or offset, don't try to use it */
->> - =A0 =A0 =A0 if ((of_get_property(np, "reg-shift", NULL) !=3D NULL)=
- ||
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 (of_get_property(np, "reg-offset", NUL=
-L) !=3D NULL))
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -1;
->> -
->
-> So we explicitly didn't support reg-shift before. =A0I'm guessing the=
-re is
-> a reason for that, but I don't recall what. =A0Ben?
->
-> Also, why do you need to use the legacy serial driver at all for this
-> SOC? =A0As far as I remember, the OF serial driver should be sufficie=
-nt.
->
-
-You are right. There is no need to use legacy serial driver. However I
-realized that when 40x is selected, 'PPC_UDBG_16550' is by default
-selected. This enables legacy serial driver.
-
-Is it now required to enable 'PPC_UDBG_16550' by default for every SOC
-that uses 40x processor?
-
->> +static unsigned int reg_shift;
->> +#define ns16550_offset(addr) (addr - (unsigned char *)udbg_comport)
->> +
->> =A0static struct NS16550 __iomem *udbg_comport;
->>
->> +static inline u8 serial_read(unsigned char *addr)
->> +{
->> + =A0 =A0 =A0 u32 offset =3D ns16550_offset(addr) << reg_shift;
->> + =A0 =A0 =A0 return readb(udbg_comport + offset);
->> +}
->> +
->> +static inline void serial_write(unsigned char *addr, char val)
->> +{
->> + =A0 =A0 =A0 u32 offset =3D ns16550_offset(addr) << reg_shift;
->> + =A0 =A0 =A0 writeb(val, udbg_comport + offset);
->> +}
->> +
->
-> I don't think readb/writeb are correct here. =A0Why did you switch to
-> using those instead of sticking with in_8/out_8?
->
-> josh
-
-Thanks,
-Tanmay
-CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,=
-=20
-is for the sole use of the intended recipient(s) and contains informati=
-on=A0
-that is confidential and proprietary to AppliedMicro Corporation or its=
- subsidiaries.=20
-It is to be used solely for the purpose of furthering the parties' busi=
-ness relationship.=20
-All unauthorized review, use, disclosure or distribution is prohibited.=
-=20
-If you are not the intended recipient, please contact the sender by rep=
-ly e-mail=20
-and destroy all copies of the original message.
-=0D
+-	const struct kbd_platform_data *pdata = pdev->dev.platform_data;
+-	const struct matrix_keymap_data *keymap;
+-	struct spear_kbd *kbd;
+-	struct input_dev *input_dev;
+-	struct resource *res;
+-	int irq;
++	struct device_node *np = pdev->dev.of_node;
+ 	int error;
++	u32 val;
+ 
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "Invalid platform data\n");
++	if (!np) {
++		dev_err(&pdev->dev, "Missing DT data\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	keymap = pdata->keymap;
+-	if (!keymap) {
+-		dev_err(&pdev->dev, "no keymap defined\n");
+-		return -EINVAL;
++	if (of_property_read_bool(np, "autorepeat"))
++		kbd->rep = true;
++
++	error = of_property_read_u32(np, "st,mode", &val);
++	if (error) {
++		dev_err(&pdev->dev, "DT: Invalid or missing mode\n");
++		return error;
+ 	}
+ 
++	kbd->mode = val;
++	return 0;
++}
++#else
++static inline int spear_kbd_parse_dt(struct platform_device *pdev,
++				     struct spear_kbd *kbd)
++{
++	return -ENOSYS;
++}
++#endif
++
++static int __devinit spear_kbd_probe(struct platform_device *pdev)
++{
++	struct kbd_platform_data *pdata = dev_get_platdata(&pdev->dev);
++	const struct matrix_keymap_data *keymap = pdata ? pdata->keymap : NULL;
++	struct spear_kbd *kbd;
++	struct input_dev *input_dev;
++	struct resource *res;
++	int irq;
++	int error;
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+ 		dev_err(&pdev->dev, "no keyboard resource defined\n");
+@@ -181,7 +205,15 @@ static int __devinit spear_kbd_probe(struct platform_device *pdev)
+ 
+ 	kbd->input = input_dev;
+ 	kbd->irq = irq;
+-	kbd->mode = pdata->mode;
++
++	if (!pdata) {
++		error = spear_kbd_parse_dt(pdev, kbd);
++		if (error)
++			goto err_free_mem;
++	} else {
++		kbd->mode = pdata->mode;
++		kbd->rep = pdata->rep;
++	}
+ 
+ 	kbd->res = request_mem_region(res->start, resource_size(res),
+ 				      pdev->name);
+@@ -221,7 +253,7 @@ static int __devinit spear_kbd_probe(struct platform_device *pdev)
+ 		goto err_put_clk;
+ 	}
+ 
+-	if (pdata->rep)
++	if (kbd->rep)
+ 		__set_bit(EV_REP, input_dev->evbit);
+ 	input_set_capability(input_dev, EV_MSC, MSC_SCAN);
+ 
+@@ -318,6 +350,14 @@ static int spear_kbd_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(spear_kbd_pm_ops, spear_kbd_suspend, spear_kbd_resume);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id spear_kbd_id_table[] = {
++	{ .compatible = "st,spear300-kbd" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, spear_kbd_id_table);
++#endif
++
+ static struct platform_driver spear_kbd_driver = {
+ 	.probe		= spear_kbd_probe,
+ 	.remove		= __devexit_p(spear_kbd_remove),
+@@ -325,6 +365,7 @@ static struct platform_driver spear_kbd_driver = {
+ 		.name	= "keyboard",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &spear_kbd_pm_ops,
++		.of_match_table = of_match_ptr(spear_kbd_id_table),
+ 	},
+ };
+ module_platform_driver(spear_kbd_driver);
