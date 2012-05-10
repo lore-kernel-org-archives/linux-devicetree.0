@@ -1,52 +1,129 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: tegra30: Add Tegra Memory Controller(MC) driver
-Date: Thu, 10 May 2012 14:46:04 -0700
-Message-ID: <20120510214604.GA3525@kroah.com>
-References: <1336635764-30597-1-git-send-email-hdoyu@nvidia.com>
- <1336635764-30597-3-git-send-email-hdoyu@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1336635764-30597-3-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Aneesh V <aneesh-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V2 2/4] regulator: tps62360: add dt support
+Date: Thu, 10 May 2012 16:32:34 -0600
+Message-ID: <20120510223234.687863E04A6@localhost>
+References: <1336682979-11810-1-git-send-email-ldewangan@nvidia.com> <1336682979-11810-3-git-send-email-ldewangan@nvidia.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1336682979-11810-3-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: rob.herring@calxeda.com, linux@arm.linux.org.uk, lrg@ti.com, broonie@opensource.wolfsonmicro.com, swarren@nvidia.com, olof@lixom.net
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 10, 2012 at 10:42:32AM +0300, Hiroshi DOYU wrote:
-> Tegra Memory Controller(MC) driver for Tegra30
-> Added to support MC General interrupts, mainly for IOMMU(SMMU).
+On Fri, 11 May 2012 02:19:37 +0530, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> Add dt support for the pmu device tps62360 and
+> Add binding documentation with example.
+> With this patch driver will support both device-tree and
+> non-device tree registration.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+> Changes from V1:
+> Fixed possible build error in non devicetree.
 
-I'll apply this, but:
+Minor comments below...
 
-> +static inline u32 mc_readl(struct tegra30_mc *mc, u32 offs)
+> 
+>  .../bindings/regulator/tps62360-regulator.txt      |   45 ++++++++++++
+>  drivers/regulator/tps62360-regulator.c             |   74 +++++++++++++++++++-
+>  2 files changed, 118 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/tps62360-regulator.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/tps62360-regulator.txt b/Documentation/devicetree/bindings/regulator/tps62360-regulator.txt
+> new file mode 100644
+> index 0000000..e337cd6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/tps62360-regulator.txt
+> @@ -0,0 +1,45 @@
+> +TPS62360 Voltage regulators
+> +
+> +Required properties:
+> +- compatible: Must be one of the following.
+> +	"ti,tps62360"
+> +	"ti,tps62361",
+> +	"ti,tps62362",
+> +	"ti,tps62363",
+> +- reg: I2C slave address
+> +
+> +Optional properties:
+> +- ti,enable-force-pwm: Enable fore PWM mode. This is boolean value.
+typo ----------------------------^^^^
+
+> +- ti,enable-vout-discharge: Enable output discharge. This is boolean value.
+> +- ti,enable-pull-down: Enable pull down. This is boolean value.
+> +- ti,vsel0-gpio: GPIO for controlling VSEL0 line.
+> +  If this property is missing, then assume that there is no GPIO
+> +  for vsel0 control.
+> +- ti,vsel1-gpio: Gpio for controlling VSEL1 line.
+> +  If this property is missing, then assume that there is no GPIO
+> +  for vsel1 control.
+> +- ti,vsel0-state-high: Inital state of vsel0 input is high.
+> +  If this property is missing, then assume the state as low (0).
+> +- ti,vsel1-state-high: Inital state of vsel1 input is high.
+> +  If this property is missing, then assume the state as low (0).
+> +
+> +Any property defined as part of the core regulator binding, defined in
+> +regulator.txt, can also be used.
+> +
+> +Example:
+> +
+> +	abc: tps62360 {
+> +		compatible = "ti,tps62361";
+> +		reg =  <0x60>;
+> +		regulator-name = "tps62361-vout";
+> +		regulator-min-microvolt = <500000>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-boot-on
+> +		ti,vsel0-gpio = <&gpio1 16 0>;
+> +		ti,vsel1-gpio = <&gpio1 17 0>;
+> +		ti,vsel0-state-high;
+> +		ti,vsel1-state-high;
+> +		ti,enable-pull-down;
+> +		ti,enable-force-pwm;
+> +		ti,enable-vout-discharge;
+> +	};
+> diff --git a/drivers/regulator/tps62360-regulator.c b/drivers/regulator/tps62360-regulator.c
+> index 3506900..9985303 100644
+> --- a/drivers/regulator/tps62360-regulator.c
+> +++ b/drivers/regulator/tps62360-regulator.c
+> @@ -26,6 +26,10 @@
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/regulator/of_regulator.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/driver.h>
+>  #include <linux/regulator/machine.h>
+> @@ -297,6 +301,58 @@ static const struct regmap_config tps62360_regmap_config = {
+>  	.cache_type		= REGCACHE_RBTREE,
+>  };
+>  
+> +static struct tps62360_regulator_platform_data *
+> +	of_get_tps62360_platform_data(struct device *dev)
 > +{
-> +	if (offs < 0x10)
-> +		return readl(mc->regs[0] + offs);
-> +	BUG_ON(offs < 0x3c);
-> +	if (offs < 0x1f0)
-> +		return readl(mc->regs[1] + offs - 0x3c);
-> +	BUG_ON(offs < 0x200);
-> +	if (offs < 0x228)
-> +		return readl(mc->regs[2] + offs - 0x200);
-> +	BUG_ON(offs < 0x284);
-> +	if (offs < 0x400)
-> +		return readl(mc->regs[3] + offs - 0x284);
-> +	BUG();
-> +}
+> +	struct tps62360_regulator_platform_data *pdata;
+> +	struct device_node *np = dev->of_node;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata) {
+> +		dev_err(dev, "Memory alloc failed for platform data\n");
+> +		return NULL;
+> +	}
+> +
+> +	pdata->reg_init_data = of_get_regulator_init_data(dev, dev->of_node);
+> +	if (!pdata->reg_init_data) {
+> +		dev_err(dev, "Not able to get OF regulator init data\n");
+> +		return NULL;
+> +	}
+> +
+> +	pdata->vsel0_gpio = of_get_named_gpio(np, "vsel0-gpio", 0);
+> +	pdata->vsel1_gpio = of_get_named_gpio(np, "vsel1_gpio", 0);
+typo --------------------------------------------------^^^
 
-That's a lot of BUG* calls.  Same thing with the 1/4 patch in this
-series.
+Otherwise looks good to me.
 
-We really should not have a BUG call in any driver, as you just stopped
-the whole system.  I can understand this being there for debugging when
-you create the code originally, but as these are things no one should
-ever be able to hit now, you should remove them, right?
+g.
 
-Care to write a follow-on patch removing all of these BUG_ON and BUG
-calls in this and the drivers/memory/tegra20-mc.c driver?
-
-thanks,
-
-greg k-h
