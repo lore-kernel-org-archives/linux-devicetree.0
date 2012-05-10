@@ -1,83 +1,371 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 4/7] mmc: dw_mmc: add samsung exynos5250 specific extentions
-Date: Thu, 10 May 2012 20:17:23 +0900
-Message-ID: <4FABA3C3.9070300@samsung.com>
-References: <1335935266-25289-1-git-send-email-thomas.abraham@linaro.org>
- <1335935266-25289-5-git-send-email-thomas.abraham@linaro.org>
- <CAH9JG2XBinh=XAVnt3EnWrEqeTKz34d9yB6wfiuF-J-Se_Q__Q@mail.gmail.com>
- <4FA0E706.8060700@samsung.com>
- <CAJuYYwS=qExrAjG1kgd=tPYL0pQeP+7xE1SuMaP+do-Eg3D7eQ@mail.gmail.com>
+From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH V2 03/14] OF: MIPS: lantiq: implement irq_domain support
+Date: Thu, 10 May 2012 14:27:25 +0200
+Message-ID: <1336652846-31871-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwS=qExrAjG1kgd=tPYL0pQeP+7xE1SuMaP+do-Eg3D7eQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Kyungmin Park <kmpark@infradead.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/10/2012 07:55 PM, Thomas Abraham wrote:
+Add support for irq_domain on lantiq socs. The conversion is straight forward
+as the ICU found inside the socs allows the usage of irq_domain_add_linear.
 
-> On 2 May 2012 13:19, Jaehoon Chung <jh80.chung@samsung.com> wrote:
->> On 05/02/2012 04:01 PM, Kyungmin Park wrote:
->>
->>> Hi,
->>>
->>> On 5/2/12, Thomas Abraham <thomas.abraham@linaro.org> wrote:
->>>> The instantiation of the Synopsis Designware controller on Exynos5250
->>>> include extension for SDR and DDR specific tx/rx phase shift timing
->>>> and CIU internal divider. In addition to that, the option to skip the
->>>> command hold stage is also introduced. Add support for these Exynos5250
->>>> specfic extenstions.
-> 
-> [...]
-> 
->>>> @@ -265,6 +266,10 @@ static u32 dw_mci_prepare_command(struct mmc_host *mmc,
->>>> struct mmc_command *cmd)
->>>>                      cmdr |= SDMMC_CMD_DAT_WR;
->>>>      }
->>>>
->>>> +    if (slot->host->drv_data->ctrl_type == DW_MCI_TYPE_EXYNOS5250)
->>>> +            if (SDMMC_CLKSEL_GET_SELCLK_DRV(mci_readl(slot->host, CLKSEL)))
->>>> +                    cmdr |= SDMMC_USE_HOLD_REG;
->>> Some other board, custom SOC also can use this HOLD register. So it's
->>> not EXYNOS5250 specific one. I think we introduce the more generic
->>> quirks for this instead of SOC specific.
->>
->> One more, I think that also need to check the IMPLEMENT_HOLD_REG bit in HCON register.
->> It has dependency with that.
-> 
-> The above code is specific to Exynos5250 and hence it is not required
-> to check the IMPLEMENT_HOLD_REG bit in HCON register. On Exynos5250,
-> the hold register is implemented and available.
+Harware IRQ 0->7 are the generic MIPS IRQs. 8->199 are the Lantiq IRQ Modules.
+Our irq_chip callbacks need to substract 8 (MIPS_CPU_IRQ_CASCADE) from d->hwirq
+to find out the correct offset into the Interrupt Modules register range.
 
-Right, the above code is specific for Exynos5250.
-But HOLD_REG should be used in other SoC. it's not only Exynos5250 specific.
-I want more generic code than specific code for Exynos5250.
+Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+This patch is part of a series moving the mips/lantiq target to OF and clkdev
+support. The patch, once Acked, should go upstream via Ralf's MIPS tree.
 
-Best Regards,
-Jaehoon Chung
+Changes in V2
+* properly reserve 8 irqs for MIPS
+* use d->hwirq rather than d->irq
+* use BIT(x) instead of (1 << x)
+* adds a optional property to allow setting the number of available EIU sources
+* simplify icu_map()
 
-> 
-> 
->> As Mr.Park is mentioned, this register is clock phasing.
->> In spec, card is enumerated in SDR12 or SDR25 mode, the application must program the use_hold_reg.
-> 
-> Exynos5250 hardware manual specifies additional restrictions on the
-> use of hold register. The above code checks for those restrictions and
-> programs the USE_HOLD_REG accordingly. Please let me know if there is
-> any condition that is not handled by the above code.
-> 
-> Thanks,
-> Thomas.
-> 
->>
->> Best Regards,
->> Jaehoon Chung
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+ arch/mips/lantiq/irq.c |  177 +++++++++++++++++++++++++++---------------------
+ 1 files changed, 101 insertions(+), 76 deletions(-)
+
+diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
+index d227be1..9b5c3fc 100644
+--- a/arch/mips/lantiq/irq.c
++++ b/arch/mips/lantiq/irq.c
+@@ -9,6 +9,11 @@
+ 
+ #include <linux/interrupt.h>
+ #include <linux/ioport.h>
++#include <linux/sched.h>
++#include <linux/irqdomain.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ 
+ #include <asm/bootinfo.h>
+ #include <asm/irq_cpu.h>
+@@ -16,7 +21,7 @@
+ #include <lantiq_soc.h>
+ #include <irq.h>
+ 
+-/* register definitions */
++/* register definitions - internal irqs */
+ #define LTQ_ICU_IM0_ISR		0x0000
+ #define LTQ_ICU_IM0_IER		0x0008
+ #define LTQ_ICU_IM0_IOSR	0x0010
+@@ -25,6 +30,7 @@
+ #define LTQ_ICU_IM1_ISR		0x0028
+ #define LTQ_ICU_OFFSET		(LTQ_ICU_IM1_ISR - LTQ_ICU_IM0_ISR)
+ 
++/* register definitions - external irqs */
+ #define LTQ_EIU_EXIN_C		0x0000
+ #define LTQ_EIU_EXIN_INIC	0x0004
+ #define LTQ_EIU_EXIN_INEN	0x000C
+@@ -37,13 +43,14 @@
+ #define LTQ_EIU_IR4		(INT_NUM_IM1_IRL0 + 1)
+ #define LTQ_EIU_IR5		(INT_NUM_IM1_IRL0 + 2)
+ #define LTQ_EIU_IR6		(INT_NUM_IM2_IRL0 + 30)
+-
++#define XWAY_EXIN_COUNT		3
+ #define MAX_EIU			6
+ 
+ /* the performance counter */
+ #define LTQ_PERF_IRQ		(INT_NUM_IM4_IRL0 + 31)
+ 
+-/* irqs generated by device attached to the EBU need to be acked in
++/*
++ * irqs generated by devices attached to the EBU need to be acked in
+  * a special manner
+  */
+ #define LTQ_ICU_EBU_IRQ		22
+@@ -58,6 +65,9 @@
+ #define MIPS_CPU_IPI_RESCHED_IRQ	0
+ #define MIPS_CPU_IPI_CALL_IRQ		1
+ 
++/* we have a cascade of 8 irqs */
++#define MIPS_CPU_IRQ_CASCADE		8
++
+ #if defined(CONFIG_MIPS_MT_SMP) || defined(CONFIG_MIPS_MT_SMTC)
+ int gic_present;
+ #endif
+@@ -71,64 +81,51 @@ static unsigned short ltq_eiu_irq[MAX_EIU] = {
+ 	LTQ_EIU_IR5,
+ };
+ 
+-static struct resource ltq_icu_resource = {
+-	.name	= "icu",
+-	.start	= LTQ_ICU_BASE_ADDR,
+-	.end	= LTQ_ICU_BASE_ADDR + LTQ_ICU_SIZE - 1,
+-	.flags	= IORESOURCE_MEM,
+-};
+-
+-static struct resource ltq_eiu_resource = {
+-	.name	= "eiu",
+-	.start	= LTQ_EIU_BASE_ADDR,
+-	.end	= LTQ_EIU_BASE_ADDR + LTQ_ICU_SIZE - 1,
+-	.flags	= IORESOURCE_MEM,
+-};
+-
++static int exin_avail;
+ static void __iomem *ltq_icu_membase;
+ static void __iomem *ltq_eiu_membase;
+ 
+ void ltq_disable_irq(struct irq_data *d)
+ {
+ 	u32 ier = LTQ_ICU_IM0_IER;
+-	int irq_nr = d->irq - INT_NUM_IRQ0;
++	int offset = d->hwirq - MIPS_CPU_IRQ_CASCADE;
+ 
+-	ier += LTQ_ICU_OFFSET * (irq_nr / INT_NUM_IM_OFFSET);
+-	irq_nr %= INT_NUM_IM_OFFSET;
+-	ltq_icu_w32(ltq_icu_r32(ier) & ~(1 << irq_nr), ier);
++	ier += LTQ_ICU_OFFSET * (offset / INT_NUM_IM_OFFSET);
++	offset %= INT_NUM_IM_OFFSET;
++	ltq_icu_w32(ltq_icu_r32(ier) & ~BIT(offset), ier);
+ }
+ 
+ void ltq_mask_and_ack_irq(struct irq_data *d)
+ {
+ 	u32 ier = LTQ_ICU_IM0_IER;
+ 	u32 isr = LTQ_ICU_IM0_ISR;
+-	int irq_nr = d->irq - INT_NUM_IRQ0;
++	int offset = d->hwirq - MIPS_CPU_IRQ_CASCADE;
+ 
+-	ier += LTQ_ICU_OFFSET * (irq_nr / INT_NUM_IM_OFFSET);
+-	isr += LTQ_ICU_OFFSET * (irq_nr / INT_NUM_IM_OFFSET);
+-	irq_nr %= INT_NUM_IM_OFFSET;
+-	ltq_icu_w32(ltq_icu_r32(ier) & ~(1 << irq_nr), ier);
+-	ltq_icu_w32((1 << irq_nr), isr);
++	ier += LTQ_ICU_OFFSET * (offset / INT_NUM_IM_OFFSET);
++	isr += LTQ_ICU_OFFSET * (offset / INT_NUM_IM_OFFSET);
++	offset %= INT_NUM_IM_OFFSET;
++	ltq_icu_w32(ltq_icu_r32(ier) & ~BIT(offset), ier);
++	ltq_icu_w32(BIT(offset), isr);
+ }
+ 
+ static void ltq_ack_irq(struct irq_data *d)
+ {
+ 	u32 isr = LTQ_ICU_IM0_ISR;
+-	int irq_nr = d->irq - INT_NUM_IRQ0;
++	int offset = d->hwirq - MIPS_CPU_IRQ_CASCADE;
+ 
+-	isr += LTQ_ICU_OFFSET * (irq_nr / INT_NUM_IM_OFFSET);
+-	irq_nr %= INT_NUM_IM_OFFSET;
+-	ltq_icu_w32((1 << irq_nr), isr);
++	isr += LTQ_ICU_OFFSET * (offset / INT_NUM_IM_OFFSET);
++	offset %= INT_NUM_IM_OFFSET;
++	ltq_icu_w32(BIT(offset), isr);
+ }
+ 
+ void ltq_enable_irq(struct irq_data *d)
+ {
+ 	u32 ier = LTQ_ICU_IM0_IER;
+-	int irq_nr = d->irq - INT_NUM_IRQ0;
++	int offset = d->hwirq - MIPS_CPU_IRQ_CASCADE;
+ 
+-	ier += LTQ_ICU_OFFSET  * (irq_nr / INT_NUM_IM_OFFSET);
+-	irq_nr %= INT_NUM_IM_OFFSET;
+-	ltq_icu_w32(ltq_icu_r32(ier) | (1 << irq_nr), ier);
++	ier += LTQ_ICU_OFFSET  * (offset / INT_NUM_IM_OFFSET);
++	offset %= INT_NUM_IM_OFFSET;
++	ltq_icu_w32(ltq_icu_r32(ier) | BIT(offset), ier);
+ }
+ 
+ static unsigned int ltq_startup_eiu_irq(struct irq_data *d)
+@@ -137,15 +134,15 @@ static unsigned int ltq_startup_eiu_irq(struct irq_data *d)
+ 
+ 	ltq_enable_irq(d);
+ 	for (i = 0; i < MAX_EIU; i++) {
+-		if (d->irq == ltq_eiu_irq[i]) {
++		if (d->hwirq == ltq_eiu_irq[i]) {
+ 			/* low level - we should really handle set_type */
+ 			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_C) |
+ 				(0x6 << (i * 4)), LTQ_EIU_EXIN_C);
+ 			/* clear all pending */
+-			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_INIC) & ~(1 << i),
++			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_INIC) & ~BIT(i),
+ 				LTQ_EIU_EXIN_INIC);
+ 			/* enable */
+-			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_INEN) | (1 << i),
++			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_INEN) | BIT(i),
+ 				LTQ_EIU_EXIN_INEN);
+ 			break;
+ 		}
+@@ -160,9 +157,9 @@ static void ltq_shutdown_eiu_irq(struct irq_data *d)
+ 
+ 	ltq_disable_irq(d);
+ 	for (i = 0; i < MAX_EIU; i++) {
+-		if (d->irq == ltq_eiu_irq[i]) {
++		if (d->hwirq == ltq_eiu_irq[i]) {
+ 			/* disable */
+-			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_INEN) & ~(1 << i),
++			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_INEN) & ~BIT(i),
+ 				LTQ_EIU_EXIN_INEN);
+ 			break;
+ 		}
+@@ -199,14 +196,15 @@ static void ltq_hw_irqdispatch(int module)
+ 	if (irq == 0)
+ 		return;
+ 
+-	/* silicon bug causes only the msb set to 1 to be valid. all
++	/*
++	 * silicon bug causes only the msb set to 1 to be valid. all
+ 	 * other bits might be bogus
+ 	 */
+ 	irq = __fls(irq);
+-	do_IRQ((int)irq + INT_NUM_IM0_IRL0 + (INT_NUM_IM_OFFSET * module));
++	do_IRQ((int)irq + MIPS_CPU_IRQ_CASCADE + (INT_NUM_IM_OFFSET * module));
+ 
+ 	/* if this is a EBU irq, we need to ack it or get a deadlock */
+-	if ((irq == LTQ_ICU_EBU_IRQ) && (module == 0))
++	if ((irq == LTQ_ICU_EBU_IRQ) && (module == 0) && LTQ_EBU_PCC_ISTAT)
+ 		ltq_ebu_w32(ltq_ebu_r32(LTQ_EBU_PCC_ISTAT) | 0x10,
+ 			LTQ_EBU_PCC_ISTAT);
+ }
+@@ -290,38 +288,66 @@ out:
+ 	return;
+ }
+ 
++static int icu_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
++{
++	struct irq_chip *chip = &ltq_irq_type;
++	int i;
++
++	for (i = 0; i < exin_avail; i++)
++		if (hw == ltq_eiu_irq[i])
++			chip = &ltq_eiu_type;
++
++	irq_set_chip_and_handler(hw, chip, handle_level_irq);
++
++	return 0;
++}
++
++static const struct irq_domain_ops irq_domain_ops = {
++	.xlate = irq_domain_xlate_onetwocell,
++	.map = icu_map,
++};
++
+ static struct irqaction cascade = {
+ 	.handler = no_action,
+ 	.name = "cascade",
+ };
+ 
+-void __init arch_init_irq(void)
++int __init icu_of_init(struct device_node *node, struct device_node *parent)
+ {
++	struct device_node *eiu_node;
++	struct resource res;
+ 	int i;
+ 
+-	if (insert_resource(&iomem_resource, &ltq_icu_resource) < 0)
+-		panic("Failed to insert icu memory");
++	if (of_address_to_resource(node, 0, &res))
++		panic("Failed to get icu memory range");
+ 
+-	if (request_mem_region(ltq_icu_resource.start,
+-			resource_size(&ltq_icu_resource), "icu") < 0)
+-		panic("Failed to request icu memory");
++	if (request_mem_region(res.start, resource_size(&res), res.name) < 0)
++		pr_err("Failed to request icu memory");
+ 
+-	ltq_icu_membase = ioremap_nocache(ltq_icu_resource.start,
+-				resource_size(&ltq_icu_resource));
++	ltq_icu_membase = ioremap_nocache(res.start, resource_size(&res));
+ 	if (!ltq_icu_membase)
+ 		panic("Failed to remap icu memory");
+ 
+-	if (insert_resource(&iomem_resource, &ltq_eiu_resource) < 0)
+-		panic("Failed to insert eiu memory");
+-
+-	if (request_mem_region(ltq_eiu_resource.start,
+-			resource_size(&ltq_eiu_resource), "eiu") < 0)
+-		panic("Failed to request eiu memory");
+-
+-	ltq_eiu_membase = ioremap_nocache(ltq_eiu_resource.start,
+-				resource_size(&ltq_eiu_resource));
+-	if (!ltq_eiu_membase)
+-		panic("Failed to remap eiu memory");
++	/* the external interrupts are optional and xway only */
++	eiu_node = of_find_compatible_node(NULL, NULL, "lantiq,eiu");
++	if (eiu_node && of_address_to_resource(eiu_node, 0, &res)) {
++		/* find out how many external irq sources we have */
++		const __be32 *count = of_get_property(node, "lantiq,count", NULL);
++
++		if (count)
++			exin_avail = *count;
++		if (exin_avail > MAX_EIU)
++			exin_avail = MAX_EIU;
++
++		if (request_mem_region(res.start, resource_size(&res),
++							res.name) < 0)
++			pr_err("Failed to request eiu memory");
++
++		ltq_eiu_membase = ioremap_nocache(res.start,
++							resource_size(&res));
++		if (!ltq_eiu_membase)
++			panic("Failed to remap eiu memory");
++	}
+ 
+ 	/* turn off all irqs by default */
+ 	for (i = 0; i < 5; i++) {
+@@ -346,20 +372,8 @@ void __init arch_init_irq(void)
+ 		set_vi_handler(7, ltq_hw5_irqdispatch);
+ 	}
+ 
+-	for (i = INT_NUM_IRQ0;
+-		i <= (INT_NUM_IRQ0 + (5 * INT_NUM_IM_OFFSET)); i++)
+-		if ((i == LTQ_EIU_IR0) || (i == LTQ_EIU_IR1) ||
+-			(i == LTQ_EIU_IR2))
+-			irq_set_chip_and_handler(i, &ltq_eiu_type,
+-				handle_level_irq);
+-		/* EIU3-5 only exist on ar9 and vr9 */
+-		else if (((i == LTQ_EIU_IR3) || (i == LTQ_EIU_IR4) ||
+-			(i == LTQ_EIU_IR5)) && (ltq_is_ar9() || ltq_is_vr9()))
+-			irq_set_chip_and_handler(i, &ltq_eiu_type,
+-				handle_level_irq);
+-		else
+-			irq_set_chip_and_handler(i, &ltq_irq_type,
+-				handle_level_irq);
++	irq_domain_add_linear(node, 6 * INT_NUM_IM_OFFSET,
++		&irq_domain_ops, 0);
+ 
+ #if defined(CONFIG_MIPS_MT_SMP)
+ 	if (cpu_has_vint) {
+@@ -382,9 +396,20 @@ void __init arch_init_irq(void)
+ 
+ 	/* tell oprofile which irq to use */
+ 	cp0_perfcount_irq = LTQ_PERF_IRQ;
++	return 0;
+ }
+ 
+ unsigned int __cpuinit get_c0_compare_int(void)
+ {
+ 	return CP0_LEGACY_COMPARE_IRQ;
+ }
++
++static struct of_device_id __initdata of_irq_ids[] = {
++	{ .compatible = "lantiq,icu", .data = icu_of_init },
++	{},
++};
++
++void __init arch_init_irq(void)
++{
++	of_irq_init(of_irq_ids);
++}
+-- 
+1.7.9.1
