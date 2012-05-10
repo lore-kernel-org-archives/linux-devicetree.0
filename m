@@ -1,72 +1,50 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH 4/7] mmc: dw_mmc: add samsung exynos5250 specific extentions
-Date: Thu, 10 May 2012 16:25:59 +0530
-Message-ID: <CAJuYYwQsOpDWzsNnnJuNYvD+ag6qO5bTOBt52AYV7V2u9bv9bQ@mail.gmail.com>
-References: <1335935266-25289-1-git-send-email-thomas.abraham@linaro.org>
-	<1335935266-25289-5-git-send-email-thomas.abraham@linaro.org>
-	<CAOesGMiJrfCgLHmBix1WUrpF-0D9tG5r6xi-3zsiM7KQjkO=ug@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: DT: Add binding for GIC virtualization extentions
+ (VGIC)
+Date: Thu, 10 May 2012 12:11:06 +0100
+Message-ID: <4FABA24A.9040209@arm.com>
+References: <1336586277-28454-1-git-send-email-marc.zyngier@arm.com>
+ <201205092047.06852.arnd@arndb.de>
+ <ed0ce2390716adbfc949f86c16dab996@localhost>
+ <201205101053.09954.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMiJrfCgLHmBix1WUrpF-0D9tG5r6xi-3zsiM7KQjkO=ug@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201205101053.09954.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 May 2012 23:40, Olof Johansson <olof@lixom.net> wrote:
-> Hi,
->
-> On Tue, May 1, 2012 at 10:07 PM, Thomas Abraham
-> <thomas.abraham@linaro.org> wrote:
->> The instantiation of the Synopsis Designware controller on Exynos525=
-0
->> include extension for SDR and DDR specific tx/rx phase shift timing
->> and CIU internal divider. In addition to that, the option to skip th=
-e
->> command hold stage is also introduced. Add support for these Exynos5=
-250
->> specfic extenstions.
+On 10/05/12 11:53, Arnd Bergmann wrote:
+> On Wednesday 09 May 2012, Marc Zyngier wrote:
+>>>
+>>> Sounds good. I don't have a strong preference whether that should be a
+>>> property like you suggest or a separate "compatible" value, maybe Rob or
+>>> Grant can comment on what they prefer.
 >>
->> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
->> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->> ---
->> =A0.../devicetree/bindings/mmc/synposis-dw-mshc.txt =A0 | =A0 33 +++=
-++++++++++++++++-
->> =A0drivers/mmc/host/dw_mmc-pltfm.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 =A08 +++++
->> =A0drivers/mmc/host/dw_mmc.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0| =A0 32 ++++++++++++++++++-
->> =A0drivers/mmc/host/dw_mmc.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0| =A0 13 ++++++++
->> =A0include/linux/mmc/dw_mmc.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 | =A0 =A06 +++
->> =A05 files changed, 89 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/synposis-dw-mshc.=
-txt b/Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
->> index c1ed70e..465fc31 100644
->> --- a/Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
->> @@ -7,6 +7,8 @@ Required Properties:
->>
->> =A0* compatible: should be one of the following
->> =A0 =A0 =A0 =A0- synopsis,dw-mshc: for controllers compliant with sy=
-nopsis dw-mshc.
->> + =A0 =A0 =A0 - synopsis,dw-mshc-exynos5250: for controllers with Sa=
-msung
->> + =A0 =A0 =A0 =A0 Exynos5250 specific extentions.
->
-> It makes more sense to use your own manufacturer prefix here:
->
-> samsung,exynos5250-dw-mshc
->
+>> At the moment, the compatible string should be pretty explicit, as it is
+>> not possible to build an A7 or A15 based SoC without the virtualization
+>> extensions.
+> 
+> Ok, makes sense. Then again, if you run an A15 guests on an A15 host,
+> the virtual GIC would not have those extensions, right?
 
-Ok. I will modify the compatible value as you have suggested.
+Indeed, they would be inaccessible (the hypervisor should not map them
+into the guest address space). I'd expect the guest kernel not to try to
+use them anyway, as it wouldn't be able to use the HYP mode.
 
-Thanks,
-Thomas.
+But again, this is implementation specific.
 
->
-> -Olof
+	M.
+-- 
+Jazz is not dead. It just smells funny...
