@@ -1,27 +1,169 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
-Date: Thu, 10 May 2012 16:38:27 -0600
-Message-ID: <20120510223828.091203E04A6@localhost>
-References: <1336636221-31575-1-git-send-email-hdoyu@nvidia.com> <1336636221-31575-2-git-send-email-hdoyu@nvidia.com> <4FAC2041.7030405@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FAC2041.7030405-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: Re: [PATCH RESEND v8] gpio: Device tree support for LPC32xx
+Date: Thu, 10 May 2012 17:41:00 -0600
+Message-ID: <20120510234100.7F5463E04A6@localhost>
+References: <1336679838-30738-1-git-send-email-stigge@antcom.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1336679838-30738-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 May 2012 14:08:33 -0600, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 05/10/2012 01:50 AM, Hiroshi DOYU wrote:
-> > The necessary info is expected to pass from DT.
-> > 
-> > For more precise resource reservation, there shouldn't be any
-> > overlapping of register range between SMMU and MC. SMMU register
-> > offset needs to be calculated correctly, based on its register bank.
-> > 
-> > Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Thu, 10 May 2012 21:57:18 +0200, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org> wrote:
+> This patch adds device tree support for gpio-lpc32xx.c.
 > 
-> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> The various GPIO groups correspond to the different irregular GPIO banks of the
+> LPC32xx hardware. Most importantly, there are the GPI(0-27), GPO(0-23) and
+> GPIO(0-5) banks. Each bank must be registered individually since they are
+> implemented with different functions. Registration is done via gpiochip_add()
+> which requires an individual gpio bank subnode in the device tree for each
+> call.
+> 
+> Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+> Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> 
+> ---
+> 
+> Applies to v3.4-rc6
+> 
+> Changes since last version:
+> * Updated patch description (above)
+> 
+> Thanks to Jean-Christophe PLAGNIOL-VILLARD, Grant Likely, Arnd Bergmann, Jon
+> Smirl, Mark Brown for reviewing!
+> 
+> I can also provide a git branch to pull from. On top of which one should I
+> provide it, if not mainline rc?
+>  
+>  Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt |   65 ++++++++++++++++
+>  arch/arm/mach-lpc32xx/include/mach/gpio.h               |    9 +-
+>  drivers/gpio/gpio-lpc32xx.c                             |   56 +++++++++++++
+>  3 files changed, 127 insertions(+), 3 deletions(-)
+> 
+> --- /dev/null
+> +++ linux-2.6/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+> @@ -0,0 +1,65 @@
+> +NXP LPC32xx SoC GPIO controller
+> +
+> +Required properties:
+> +- compatible: must be "nxp,lpc3220-gpio"
+> +- reg: Physical base address and length of the controller's registers.
+> +- #address-cells: Always 1, for indexing of the subnodes (GPIO groups of the
+> +  SoC)
+> +- #size-cells: Always 0
+> +
+> +Required properties of sub-nodes which describe the GPIO groups of LPC32xx:
+> +- gpio-controller: Marks the device node as a GPIO controller.
+> +- #gpio-cells: Should be two. The first cell is the pin number and the
+> +  second cell is used to specify optional parameters:
+> +  - bit 0 specifies polarity (0 for normal, 1 for inverted)
+> +- reg: Index of the GPIO group
+> +
+> +Optional properties of sub-nodes which describe the GPIO groups of LPC32xx:
+> +- status: Set to "disabled" if you don't use the respective GPIO group
+> +  of the LPC32xx SoC
+> +
+> +Example:
+> +
+> +	gpio: gpio@40028000 {
+> +		compatible = "nxp,lpc3220-gpio";
+> +		reg = <0x40028000 0x1000>;
+> +		/* create a private address space for enumeration */
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		gpio_p0: gpio-bank@0 {
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			reg = <0>;
+> +		};
+> +
+> +		gpio_p1: gpio-bank@1 {
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			reg = <1>;
+> +		};
+> +
+> +		gpio_p2: gpio-bank@2 {
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			reg = <2>;
+> +		};
+> +
+> +		gpio_p3: gpio-bank@3 {
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			reg = <3>;
+> +		};
+> +
+> +		gpi_p3: gpio-bank@4 {
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			reg = <4>;
+> +		};
+> +
+> +		gpo_p3: gpio-bank@5 {
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			reg = <5>;
+> +		};
+> +	};
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Ugh.  I know this patch has been around for a while, but I can't help
+it, this binding is just really ugly.  It results in a big chunk of
+boilerplate for the gpio controller node just to enumerate the banks
+which will *always* be there.
+
+The real problem is that one of_xlate function cannot currently be
+used for multiple banks, but there is no good reason why that should
+be so.
+
+How about the following instead (very rough, there should be a cleaner
+way to update the gc pointer in of_xlate):
+
+	gpio: gpio@40028000 {
+		compatible = "nxp,lpc3220-gpio";
+		reg = <0x40028000 0x1000>;
+		gpio-controller;
+		#gpio-cells = <3>; /* bank, pin, flags */
+	}
+
+Modify gpiolib-of to use:
+of_xlate(struct gpio_chip **gc, const struct of_phandle_args *gpiospec, u32 *flags);
+(so that the value of gc can be modified)
+
+And then in the driver:
+
+static int lpc32xx_of_xlate(struct gpio_chip **gc, const struct
+                            of_phandle_args *gpiospec, u32 *flags)
+{
+	if (WARN_ON(gpiospec->args_count < 3))
+		return -EINVAL;
+
+	*gc = &lpc32xx_gpiochip[gpiospec->args[0]].chip;
+	if (flags)
+		*flags = gpiospec->args[2];
+	return gpiospec->args[1];
+}
+
+Make all the gpiochips use the same of_xlate function and of_node
+pointer so that it doesn't matter which one gets matched because the
+xlate always completely resolves the gpio_chip.
+
+Another way to do it would be to split the of_xlate functions out of
+gpio_chip entirely and have a separate registry for gpio device_nodes
+and their xlate functions.
 
 g.
