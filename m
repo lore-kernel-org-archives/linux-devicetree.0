@@ -1,150 +1,206 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] eeprom/of: Add device tree bindings to at25.
-Date: Fri, 11 May 2012 15:05:23 -0700
-Message-ID: <1336773923-17866-4-git-send-email-ddaney.cavm@gmail.com>
-References: <1336773923-17866-1-git-send-email-ddaney.cavm@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] gpio: Add Avionic Design N-bit GPIO expander support
+Date: Fri, 11 May 2012 17:47:27 -0600
+Message-ID: <20120511234728.0A4623E0791@localhost>
+References: <1334229858-1665-1-git-send-email-thierry.reding@avionic-design.de>
+ <1334229858-1665-2-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1336773923-17866-1-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1334229858-1665-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On Thu, 12 Apr 2012 13:24:18 +0200, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> This commit adds a driver for the Avionic Design N-bit GPIO expander.
+> The expander provides a variable number of GPIO pins with interrupt
+> support.
 
-We can extract the "pagesize", "size" and "address-width" from the
-device tree so that SPI eeproms can be fully specified in the device
-tree.
+Hi Thierry,  comments below...
 
-Also add a MODULE_DEVICE_TABLE so the drivers can be automatically bound.
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 7875c3f..d86c3b7 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -373,6 +373,25 @@ config GPIO_ADP5588_IRQ
+>  	  Say yes here to enable the adp5588 to be used as an interrupt
+>  	  controller. It requires the driver to be built in the kernel.
+>  
+> +config GPIO_ADNP
+> +	tristate "Avionic Design N-bit GPIO expander"
+> +	depends on I2C
+> +	help
+> +	  This option enables support for N GPIOs found on Avionic Design
+> +	  I2C GPIO expanders. The register space will be extended by powers
+> +	  of two, so the controller will need to accomodate for that. For
+> +	  example: if a controller provides 48 pins, 6 registers will be
+> +	  enough to represent all pins, but the driver will assume a
+> +	  register layout for 64 pins (8 registers).
+> +
+> +config GPIO_ADNP_IRQ
+> +	bool "Interrupt controller support"
+> +	depends on GPIO_ADNP
+> +	help
+> +	  Say yes here to enable the Avionic Design N-bit GPIO expander to
+> +	  be used as an interrupt controller. It requires the driver to be
+> +	  built in the kernel.
+> +
 
-Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/misc/eeprom/at25.c |   61 +++++++++++++++++++++++++++++++++++++++++---
- 1 files changed, 57 insertions(+), 4 deletions(-)
+Why does it require the driver to be built in?
 
-diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-index 01ab3c9..609ee72 100644
---- a/drivers/misc/eeprom/at25.c
-+++ b/drivers/misc/eeprom/at25.c
-@@ -16,6 +16,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/sched.h>
-+#include <linux/of.h>
- 
- #include <linux/spi/spi.h>
- #include <linux/spi/eeprom.h>
-@@ -293,6 +294,9 @@ static int at25_probe(struct spi_device *spi)
- {
- 	struct at25_data	*at25 = NULL;
- 	const struct spi_eeprom *chip;
-+#ifdef CONFIG_OF
-+	struct spi_eeprom of_chip;
-+#endif
- 	int			err;
- 	int			sr;
- 	int			addrlen;
-@@ -300,9 +304,51 @@ static int at25_probe(struct spi_device *spi)
- 	/* Chip description */
- 	chip = spi->dev.platform_data;
- 	if (!chip) {
--		dev_dbg(&spi->dev, "no chip description\n");
--		err = -ENODEV;
--		goto fail;
-+#ifdef CONFIG_OF
-+		if (spi->dev.of_node) {
-+			u32 val;
-+			memset(&of_chip, 0, sizeof(of_chip));
-+			if (of_property_read_u32(spi->dev.of_node, "pagesize", &val)) {
-+				dev_dbg(&spi->dev, "no \"pagesize\" property\n");
-+				err = -ENODEV;
-+				goto fail;
-+			}
-+			of_chip.page_size = val;
-+			if (of_property_read_u32(spi->dev.of_node, "size", &val)) {
-+				dev_dbg(&spi->dev, "no \"size\" property\n");
-+				err = -ENODEV;
-+				goto fail;
-+			}
-+			of_chip.byte_len = val;
-+			if (of_property_read_u32(spi->dev.of_node, "address-width", &val)) {
-+				dev_dbg(&spi->dev, "no \"address-width\" property\n");
-+				err = -ENODEV;
-+				goto fail;
-+			}
-+			switch (val) {
-+			case 8:
-+				of_chip.flags |= EE_ADDR1;
-+				break;
-+			case 16:
-+				of_chip.flags |= EE_ADDR2;
-+				break;
-+			case 24:
-+				of_chip.flags |= EE_ADDR3;
-+				break;
-+			default:
-+				dev_dbg(&spi->dev, "bad \"address-width\" property: %u\n", val);
-+				err = -EINVAL;
-+				goto fail;
-+			}
-+			strlcpy(of_chip.name, spi->dev.of_node->name, sizeof(of_chip.name));
-+			chip = &of_chip;
-+		} else
-+#endif
-+		{
-+			dev_dbg(&spi->dev, "no chip description\n");
-+			err = -ENODEV;
-+			goto fail;
-+		}
- 	}
- 
- 	/* For now we only support 8/16/24 bit addressing */
-@@ -396,11 +442,19 @@ static int __devexit at25_remove(struct spi_device *spi)
- 
- /*-------------------------------------------------------------------------*/
- 
-+static const struct spi_device_id at25_id[] = {
-+	{"at25", 0},
-+	{"m95256", 0},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, at25_id);
-+
- static struct spi_driver at25_driver = {
- 	.driver = {
- 		.name		= "at25",
- 		.owner		= THIS_MODULE,
- 	},
-+	.id_table	= at25_id,
- 	.probe		= at25_probe,
- 	.remove		= __devexit_p(at25_remove),
- };
-@@ -410,4 +464,3 @@ module_spi_driver(at25_driver);
- MODULE_DESCRIPTION("Driver for most SPI EEPROMs");
- MODULE_AUTHOR("David Brownell");
- MODULE_LICENSE("GPL");
--MODULE_ALIAS("spi:at25");
--- 
-1.7.2.3
+> +struct adnp {
+> +	struct i2c_client *client;
+> +	struct gpio_chip gpio;
+> +	unsigned int reg_shift;
+> +
+> +	struct mutex i2c_lock;
+> +
+> +#ifdef CONFIG_GPIO_ADNP_IRQ
+> +	struct irq_domain *domain;
+> +	struct mutex irq_lock;
+> +
+> +	unsigned int irq_base;
+> +	unsigned int nrirq;
 
+This driver should use the irq_domain linear mapping which makes
+irq_base unnecessary.
 
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+> +static int adnp_gpio_setup(struct adnp *gpio, struct adnp_platform_data *pdata)
+> +{
+> +	struct gpio_chip *chip = &gpio->gpio;
+> +
+> +	gpio->reg_shift = get_count_order(pdata->nr_gpios) - 3;
+> +
+> +	chip->direction_input = adnp_gpio_direction_input;
+> +	chip->direction_output = adnp_gpio_direction_output;
+> +	chip->get = adnp_gpio_get;
+> +	chip->set = adnp_gpio_set;
+> +	chip->dbg_show = adnp_gpio_dbg_show;
+> +	chip->can_sleep = 1;
+> +
+> +	chip->base = pdata->gpio_base;
+> +	chip->ngpio = pdata->nr_gpios;
+> +	chip->label = gpio->client->name;
+> +	chip->dev = &gpio->client->dev;
+> +	chip->owner = THIS_MODULE;
+> +	chip->names = pdata->names;
+> +
+> +#ifdef CONFIG_OF_GPIO
+> +	chip->of_node = chip->dev->of_node;
+> +#endif
+
+Drop the #ifdef protection.  dev->of_node always exists so this
+assignment is safe.
+
+> +static int adnp_irq_setup(struct adnp *gpio, struct adnp_platform_data *pdata)
+> +{
+> +	unsigned int regs = 1 << gpio->reg_shift;
+> +	struct gpio_chip *chip = &gpio->gpio;
+> +	int pin;
+> +	int err;
+> +
+> +	mutex_init(&gpio->irq_lock);
+> +
+> +	gpio->irq_mask = devm_kzalloc(gpio->gpio.dev, regs * 4, GFP_KERNEL);
+> +	if (!gpio->irq_mask)
+> +		return -ENOMEM;
+> +
+> +	gpio->irq_mask_cur = gpio->irq_mask + (regs * 1);
+> +	gpio->irq_rising = gpio->irq_mask + (regs * 2);
+> +	gpio->irq_falling = gpio->irq_mask + (regs * 3);
+> +
+> +	err = irq_alloc_descs(-1, pdata->irq_base, gpio->gpio.ngpio, -1);
+> +	if (err < 0) {
+> +		dev_err(gpio->gpio.dev, "%s failed: %d\n",
+> +				"irq_alloc_descs()", err);
+> +		return err;
+> +	}
+> +
+> +	gpio->nrirq = gpio->gpio.ngpio;
+> +	gpio->irq_base = err;
+> +
+> +	gpio->domain = irq_domain_add_legacy(chip->dev->of_node, gpio->nrirq,
+> +			gpio->irq_base, 0, &irq_domain_simple_ops, NULL);
+
+Use the linear mapping instead with takes care of allocating irq_descs
+for you and simplifies a lot of the driver.
+
+> +
+> +	for (pin = 0; pin < gpio->nrirq; pin++) {
+> +		int irq = irq_find_mapping(gpio->domain, pin);
+> +
+> +		irq_clear_status_flags(irq, IRQ_NOREQUEST);
+> +		irq_set_chip_data(irq, gpio);
+> +		irq_set_chip(irq, &adnp_irq_chip);
+> +		irq_set_nested_thread(irq, true);
+> +#ifdef CONFIG_ARM
+> +		set_irq_flags(irq, IRQF_VALID);
+> +#else
+> +		irq_set_noprobe(irq);
+> +#endif
+> +	}
+
+The body of this for loop needs to be performed in the irq_domain map
+hook.
+
+> +static const struct i2c_device_id adnp_i2c_id[] = {
+> +	{ "gpio-adnp" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, adnp_i2c_id);
+
+Should use an of_device_id table since this is a DT-enabled
+driver.
+
+> +
+> +static struct i2c_driver adnp_i2c_driver = {
+> +	.driver = {
+> +		.name = "gpio-adnp",
+> +		.owner = THIS_MODULE,
+> +	},
+> +	.probe = adnp_i2c_probe,
+> +	.remove = __devexit_p(adnp_i2c_remove),
+> +	.id_table = adnp_i2c_id,
+> +};
+> +module_i2c_driver(adnp_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("Avionic Design N-bit GPIO expander");
+> +MODULE_AUTHOR("Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/i2c/gpio-adnp.h b/include/linux/i2c/gpio-adnp.h
+> new file mode 100644
+> index 0000000..6e077a3
+> --- /dev/null
+> +++ b/include/linux/i2c/gpio-adnp.h
+> @@ -0,0 +1,19 @@
+> +/*
+> + * Copyright (C) 2011-2012 Avionic Design GmbH
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _LINUX_I2C_ADNP_H
+> +#define _LINUX_I2C_ADNP_H 1
+> +
+> +struct adnp_platform_data {
+> +	unsigned gpio_base;
+> +	unsigned nr_gpios;
+> +	int irq_base;
+> +	const char *const *names;
+> +};
+
+>From the start this is a DT enabled driver.  There should be no reason
+to also include platform_data support.
