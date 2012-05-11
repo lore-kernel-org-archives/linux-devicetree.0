@@ -1,46 +1,38 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH RESEND v8] gpio: Device tree support for LPC32xx
-Date: Fri, 11 May 2012 11:32:57 -0600
-Message-ID: <20120511173257.98E2C3E0791@localhost>
-References: <1336679838-30738-1-git-send-email-stigge@antcom.de> <201205111219.10025.arnd@arndb.de> <4FAD0A79.8040207@antcom.de> <201205111322.15191.arnd@arndb.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201205111322.15191.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Roland Stigge <stigge@antcom.de>
-Cc: arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
+Date: Fri, 11 May 2012 12:04:57 -0600
+Message-ID: <4FAD54C9.6040904@wwwdotorg.org>
+References: <1336636221-31575-1-git-send-email-hdoyu@nvidia.com> <1336636221-31575-2-git-send-email-hdoyu@nvidia.com> <4FAC2041.7030405@wwwdotorg.org> <20120511094625.GA11750@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120511094625.GA11750-5C7GfCeVMHo@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>
+Cc: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 May 2012 13:22:14 +0000, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 11 May 2012, Roland Stigge wrote:
-> > Right. Personally, I would be fine with either of my v8 (all banks in
-> > dt, referenced naturally by name) and v9 (one simple DT entry for the
-> > whole GPIO controller, integer index for referencing banks) patches.
-> > 
-> > Consider the DT-documented mapping in the latter case:
-> > 
-> >       0: GPIO P0
-> >       1: GPIO P1
-> >       2: GPIO P2
-> >       3: GPIO P3
-> >       4: GPI P3
-> >       5: GPO P3
-> > 
-> > Not too difficult and would also be acceptable, IMO.
-> > 
-> > So Arnd and Grant, please agree one of those and pick it. :-)
-> > 
+On 05/11/2012 03:46 AM, Joerg Roedel wrote:
+> On Thu, May 10, 2012 at 02:08:33PM -0600, Stephen Warren wrote:
+>> On 05/10/2012 01:50 AM, Hiroshi DOYU wrote:
+>>> The necessary info is expected to pass from DT.
+>>>
+>>> For more precise resource reservation, there shouldn't be any
+>>> overlapping of register range between SMMU and MC. SMMU register
+>>> offset needs to be calculated correctly, based on its register bank.
+>>>
+>>> Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>
+>> I expect patch 1 will go through the IOMMU tree, and I'll take patch 2
+>> through the Tegra tree.
 > 
-> Grant is maintainer for both GPIO and DT, so his opinion is what
-> counts in this case.
-> I was merely giving the background on how we got there so he
-> can make an informed decision.
+> Any reason for splitting it up? The patches touch mostly drivers/iommu.
+> So to avoid conflicts its probably the best to apply them together.
 
-It adds a lot of boilerplate to the DT to split it up into nodes and
-mapping index to a bank isn't onerous.  I think I like the single node
-with #gpio-cells = <3> better.  When DTC handles named constants then
-it will be even easier.
-
-Just need to decide on the best way to implement it.  Arnd, can you
-review Roland's v9 patches for me and give me your opinion?
-
-g.
+Patch 1 is the driver that touches drivers/iommu and related
+documentation, whereas patch 2 touches the device tree file in
+arch/arm/boot/dts. Either of the patches would get conflicts if they
+were merged into the "other" tree.
