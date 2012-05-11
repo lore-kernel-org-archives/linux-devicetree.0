@@ -1,58 +1,122 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 2/4] regulator: tps62360: add dt support
-Date: Fri, 11 May 2012 21:05:01 +0530
-Message-ID: <4FAD31A5.7090006@nvidia.com>
-References: <1336718325-8372-1-git-send-email-ldewangan@nvidia.com> <1336718325-8372-3-git-send-email-ldewangan@nvidia.com> <20120511145833.GG3960@opensource.wolfsonmicro.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ASoC: twl6040: Support for DT
+Date: Fri, 11 May 2012 17:44:19 +0200
+Message-ID: <4FAD33D3.3050104@ti.com>
+References: <20120509133511.GQ3955@opensource.wolfsonmicro.com>
+ <4FACF1C2.7050008@ti.com> <20120511130816.GB3960@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120511145833.GG3960-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120511130816.GB3960-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Misael Lopez Cruz <misael.lopez-l0cyMroinI0@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 11 May 2012 08:28 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
+On 5/11/2012 3:08 PM, Mark Brown wrote:
+> On Fri, May 11, 2012 at 01:02:26PM +0200, Cousson, Benoit wrote:
+>> On 5/9/2012 3:35 PM, Mark Brown wrote:
 >
-> On Fri, May 11, 2012 at 12:08:43PM +0530, Laxman Dewangan wrote:
+>>> Clearly.  This is all very circular.  Obviously if you're intent on
+>>> using a phandle specific to the MFD child then you need to have that in
+>>> the device tree but this is because you're making the child devices
+>>> externally visible...  Clearly if we're not going to use the MFD
+>>> subdevices in the DT then the links ought to reference the chip.
 >
-> This looks good overall but I do have a few things with the binding.
+>> I'm not sure to understand you concern here.
 >
->> +Optional properties:
->> +- ti,enable-force-pwm: Enable force PWM mode. This is boolean value.
-> Hrm, this is fairly generic - it's REGULATOR_MODE_ACTIVE.  But I'm a bit
-> unsure about how generic exposing it is in bindings since it's often
-> dynamic in the running system, we've really not got any mainline
-> examples of something setting a mode.  With modern regulators the mode
-> detection stuff in the hardware is generally good enough that there's no
-> benefit from doing this, it's suprising to actually see systems that
-> benefit.
+>> Describing sub nodes, especially for big SoC is pretty useful.
+>> It is as useful as doing that for board that are sharing similar components.
 >
+> The concern here is that the device tree you're writing here is clearly
+> just a direct translation of the particular stuff Linux happens to use
+> internally into device tree; this is similar to the thing with using
+> hwmod in the device tree representation and omitting basic stuff like
+> the register ranges.
+>
+>> It will allow to define several Audio / PMIC variants without having
+>> to rewrite a driver potentially.
+>
+> This binding doesn't do anything to move towards that goal given that
+> the only information it includes about the contents of the chip is the
+> name.
 
-Yaah, I think this flag can map directly to REGULATOR_MODE_FAST. If I 
-understand PWM mode properly then this is used when high current load is 
-require or fast switching on  load current is require. By enabling force 
-PWM enable, hw will not switch to PFM mode based on load current.
+But it does not have to expose everything. And what will be your 
+definition of everything in that case?
 
-I think if we map the regulator mode to FAST as the force PWM enable and 
-NORMAL as force PWM =0 then it will be generic.
-Client can pass the initial mode when they fill constraint at the time 
-of registration and it can also give the opportunity to change mode by 
-calling regulator_set_mode().
-If this is fine then I can create patch for removing this flag from 
-platform data and add set_mode/get_mode function.
+> Writing the name out in separate CODEC and vibra nodes really
+> isn't going to accomplish much to promote reuse that can't trivially be
+> achieved by parsing the name in the MFD driver.
 
->> +- ti,enable-vout-discharge: Enable output discharge. This is boolean value.
-> This I think we should definitely add a framework feature for this and
-> make into a generic property, it's a very standard feature and more
-> normally set unconditionally.
+Maybe, but... so what? This is not because you can do it with MFD that 
+you cannot make it more flexible with DT.
+Preferring to hard code that in MFD is similar to keeping all the static 
+C board files we are all trying to remove. It is possible, sure, but 
+there are now better way to describe HW modules than hard-coding that in 
+a C file.
+
+Moreover, there is not an unique way to describe the HW. So for sure we 
+will cheat a little bit and make some assumption about what the SW will 
+really use. But otherwise you will end up putting the full RTL inside 
+the DT node.
+It is very similar to the discussion we had for the clock tree. For sure 
+we can describe the full clock tree in DT, but that's huge and useless. 
+So we are taking some assumption and expose only the ones that have to 
+be exposed because dependent of the board or needed by the devices.
+
+> If the binding were doing things like describing the internals of the
+> device in a way that meant the driver didn't need to know that this was
+> a twl6040 in particular this sort of thinking is useful but the binding
+> we have here just isn't doing that at all.
 >
+>> Both Vibra and Codec IPs can be located elsewhere, so by exposing
+>> that inside the DT, you will increase the level of HW details and
+>> thus make the re-use of these sub-IPs easier.
+>
+> Especially for the CODEC it's not really an IP in itself, it's an
+> assembly of large numbers of other IPs - digital audio interfaces,
+> analogue amps and whatnot.  Like I say if the device tree described
+> this assembly it'd be different but it's really not doing that.
+>
+>> Moreover, the fact the Linux implementation uses MFD to represent
+>> that is irrelevant for the DT description. We should be able to use
+>> whatever SW representation for this type of HW.
+>
+> This is precisely my point, what we're being presented with here is a
+> device tree description of the particular way that Linux wants to
+> understand this stuff rather than something that lets us learn about the
+> chip internals.
 
-I think this is not require to enable always otherwise there may be 
-power dissipation from this path always, just when we off the rail 
-(disable rail or when go to shutdown so that the voltage output can go 
-down faster).
-Should we add "unsigned en_discharge:1" in regulator init data but did 
-not get how core driver can use this flag specially when shutdown?
+As I said before; there is not a single way to describe that kind of HW. 
+But still this description is perfectly valid for the HW point of view. 
+It just does not represent all the details inside the CODEC. But the way 
+DT is done, nothing can prevent someone else to add further details 
+below that node assuming there will be some SW to use that at some point.
+
+It is up to the driver owner to assess the level of information he'd 
+like to expose to DT based on the number of chip variants that already 
+exist.
+
+So far, MFD was the only way to describe some HW hierarchy in a SoC that 
+only have platform_device.
+Now, DT can do that as well without hard coding some sub device 
+information inside a driver, thus allowing you to change that sub-device 
+without changing the driver.
+
+Both formats are valid.
+It is just a matter of flexibility / personal choice / mood of the day.
+
+The important point is that this is not a black or white kind of 
+decision, we can be in the grey area and use a little bit of both approach.
+
+Thanks,
+Benoit
