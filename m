@@ -1,62 +1,78 @@
-From: Hiroshi Doyu <hdoyu@nvidia.com>
-Subject: Re: [PATCH 1/4] ARM: tegra20: Add Tegra Memory Controller(MC)
- driver
-Date: Fri, 11 May 2012 09:50:12 +0300
-Message-ID: <20120511095012.57f737d1b0d2536e0d367a9b@nvidia.com>
-References: <1336635764-30597-1-git-send-email-hdoyu@nvidia.com>
-	<4FABF9AB.6020902@wwwdotorg.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 3/3] mmc: sdhci-imx-esdhc: convert to use pinctrl
+ subsystem
+Date: Fri, 11 May 2012 15:36:56 +0800
+Message-ID: <20120511073653.GX17875@S2101-09.ap.freescale.net>
+References: <1335958282-3068-1-git-send-email-b29396@freescale.com>
+ <1335958282-3068-3-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4FABF9AB.6020902@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Benoit Cousson <b-cousson@ti.com>, Aneesh V <aneesh@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1335958282-3068-3-git-send-email-b29396@freescale.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, cjb@laptop.org, w.sang@pengutronix.de, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg, Stephen,
+On Wed, May 02, 2012 at 07:31:22PM +0800, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> ---
+> ChangeLog v4->v5:
+>  *split arch/arm/mach-imx/* changes into a separate patch
+> ChangeLog v3->v4:
+>  * call provide dummies in imx*_soc_init().
+> ChangeLog v2->v3:
+>  * patch name updated.
+>    v1 name is ARM: imx6q: switch to use pinctrl driver
+>  * using pinctrl dummy state to avoid breaking other platforms to use this
+>    driver.
+> ChangeLog v1->v2:
+>  * using updated binding
+> ---
+>  arch/arm/boot/dts/imx6q-arm2.dts   |    4 ++++
+>  arch/arm/boot/dts/imx6q.dtsi       |   32 ++++++++++++++++++++++++++++++++
+>  drivers/mmc/host/sdhci-esdhc-imx.c |    9 +++++++++
+>  3 files changed, 45 insertions(+), 0 deletions(-)
 
-On Thu, 10 May 2012 19:23:55 +0200
-Stephen Warren <swarren@wwwdotorg.org> wrote:
+Since we now have dummy state enabled for imx6q as well, I just split
+the patches into following two for better separation, with first one
+on my imx/pinctrl/for-3.5 and the second one on imx/dt/for-3.5 branch
+respectively.
 
-> On 05/10/2012 01:42 AM, Hiroshi DOYU wrote:
-> > Tegra Memory Controller(MC) driver for Tegra20
-> > Added to support MC General interrupts, mainly for IOMMU(GART).
-> 
-> Greg, you appear to have been commiting all of drivers/memory. I assume
-> you'll take patches 1 and 3 in this series, and I will take 2 and 4
-> through the Tegra tree? I can take them all through the Tegra tree if
-> you want. Taking the .dts patches through your tree might cause
-> conflicts in 3.6, since I anticipate some DT-wide cleanup in 3.6.
-> 
-> Hiroshi, one question below (same for patch 3)
-> 
-> > diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
-> 
-> > @@ -20,6 +20,8 @@ config ARCH_TEGRA_2x_SOC
-> >  	select PL310_ERRATA_727915 if CACHE_L2X0
-> >  	select PL310_ERRATA_769419 if CACHE_L2X0
-> >  	select CPU_FREQ_TABLE if CPU_FREQ
-> > +	select MEMORY
-> > +	select TEGRA20_MC
-> 
-> Does ARCH_TEGRA_2x_SOC /have/ to select these?
-> 
-> I'd be inclined to drop the change to mach-tegra/Kconfig. As rationale,
-> the code works fine without the driver right now. You'd need to make
-> config TEGRA*_MC user-visible/selectable though.
-> 
-> You could replace this change with a patch to tegra_defconfig which
-> enables MEMORY and TEGRA*_MC, or perhaps make config TEGRA20_MC default y.
+commit e62d8b8fe73518d1875371a2ee9c5fdd31eba6f8
+Author: Dong Aisheng <dong.aisheng@linaro.org>
+Date:   Fri May 11 14:56:01 2012 +0800
 
-I'm sending the fixup patches, following this mail, since Greg has
-already put the original patches in queue. I think that the following
-fixup patches could be squashed into the original ones. The fixup
-patches are:
+    mmc: sdhci-imx-esdhc: adopt pinctrl support
 
-  [PATCH 1/3] ARM: tegra20: Make MC optional in Kconfig
-  [PATCH 2/3] ARM: tegra30: Make MC optional in Kconfig
-  [PATCH 3/3] ARM: tegra: Make TEGRA{20,30}_MC selectable in defconfig
+    Cc: linux-mmc@vger.kernel.org
+    Cc: Chris Ball <cjb@laptop.org>
+    Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+    Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+    Acked-by: Stephen Warren <swarren@wwwdotorg.org>
 
-Let me know if it's better to resend the complete patches again.
+ drivers/mmc/host/sdhci-esdhc-imx.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
+
+commit 551fd208f204780bac1ca5bce1748ba7a6f7ee6e
+Author: Dong Aisheng <dong.aisheng@linaro.org>
+Date:   Fri May 11 14:58:00 2012 +0800
+
+    ARM: dts: imx6q-arm2: add pinctrl state for usdhc
+
+    Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+    Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+
+ arch/arm/boot/dts/imx6q-arm2.dts |    4 ++++
+ arch/arm/boot/dts/imx6q.dtsi     |   32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 0 deletions(-)
+
+Please have a check to see if everything is correct.
+
+-- 
+Regards,
+Shawn
