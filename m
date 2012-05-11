@@ -1,169 +1,158 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH RESEND v8] gpio: Device tree support for LPC32xx
-Date: Thu, 10 May 2012 17:41:00 -0600
-Message-ID: <20120510234100.7F5463E04A6@localhost>
-References: <1336679838-30738-1-git-send-email-stigge@antcom.de>
+From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/1] dt: Add general DMA window parser
+Date: Fri, 11 May 2012 08:07:53 +0300
+Message-ID: <1336712873-32244-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1336679838-30738-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 May 2012 21:57:18 +0200, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org> wrote:
-> This patch adds device tree support for gpio-lpc32xx.c.
-> 
-> The various GPIO groups correspond to the different irregular GPIO banks of the
-> LPC32xx hardware. Most importantly, there are the GPI(0-27), GPO(0-23) and
-> GPIO(0-5) banks. Each bank must be registered individually since they are
-> implemented with different functions. Registration is done via gpiochip_add()
-> which requires an individual gpio bank subnode in the device tree for each
-> call.
-> 
-> Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-> Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> 
-> ---
-> 
-> Applies to v3.4-rc6
-> 
-> Changes since last version:
-> * Updated patch description (above)
-> 
-> Thanks to Jean-Christophe PLAGNIOL-VILLARD, Grant Likely, Arnd Bergmann, Jon
-> Smirl, Mark Brown for reviewing!
-> 
-> I can also provide a git branch to pull from. On top of which one should I
-> provide it, if not mainline rc?
->  
->  Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt |   65 ++++++++++++++++
->  arch/arm/mach-lpc32xx/include/mach/gpio.h               |    9 +-
->  drivers/gpio/gpio-lpc32xx.c                             |   56 +++++++++++++
->  3 files changed, 127 insertions(+), 3 deletions(-)
-> 
-> --- /dev/null
-> +++ linux-2.6/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
-> @@ -0,0 +1,65 @@
-> +NXP LPC32xx SoC GPIO controller
-> +
-> +Required properties:
-> +- compatible: must be "nxp,lpc3220-gpio"
-> +- reg: Physical base address and length of the controller's registers.
-> +- #address-cells: Always 1, for indexing of the subnodes (GPIO groups of the
-> +  SoC)
-> +- #size-cells: Always 0
-> +
-> +Required properties of sub-nodes which describe the GPIO groups of LPC32xx:
-> +- gpio-controller: Marks the device node as a GPIO controller.
-> +- #gpio-cells: Should be two. The first cell is the pin number and the
-> +  second cell is used to specify optional parameters:
-> +  - bit 0 specifies polarity (0 for normal, 1 for inverted)
-> +- reg: Index of the GPIO group
-> +
-> +Optional properties of sub-nodes which describe the GPIO groups of LPC32xx:
-> +- status: Set to "disabled" if you don't use the respective GPIO group
-> +  of the LPC32xx SoC
-> +
-> +Example:
-> +
-> +	gpio: gpio@40028000 {
-> +		compatible = "nxp,lpc3220-gpio";
-> +		reg = <0x40028000 0x1000>;
-> +		/* create a private address space for enumeration */
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		gpio_p0: gpio-bank@0 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			reg = <0>;
-> +		};
-> +
-> +		gpio_p1: gpio-bank@1 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			reg = <1>;
-> +		};
-> +
-> +		gpio_p2: gpio-bank@2 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			reg = <2>;
-> +		};
-> +
-> +		gpio_p3: gpio-bank@3 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			reg = <3>;
-> +		};
-> +
-> +		gpi_p3: gpio-bank@4 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			reg = <4>;
-> +		};
-> +
-> +		gpo_p3: gpio-bank@5 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			reg = <5>;
-> +		};
-> +	};
+This code was based on:
+	"arch/microblaze/kernel/prom_parse.c"
+	"arch/powerpc/kernel/prom_parse.c"
 
-Ugh.  I know this patch has been around for a while, but I can't help
-it, this binding is just really ugly.  It results in a big chunk of
-boilerplate for the gpio controller node just to enumerate the banks
-which will *always* be there.
+"ibm," prefix could be supported with some modification.
 
-The real problem is that one of_xlate function cannot currently be
-used for multiple banks, but there is no good reason why that should
-be so.
+Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+---
+ drivers/of/Kconfig         |    4 ++
+ drivers/of/Makefile        |    1 +
+ drivers/of/of_dma.c        |   70 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_address.h |   13 ++++++++
+ 4 files changed, 88 insertions(+), 0 deletions(-)
 
-How about the following instead (very rough, there should be a cleaner
-way to update the gc pointer in of_xlate):
-
-	gpio: gpio@40028000 {
-		compatible = "nxp,lpc3220-gpio";
-		reg = <0x40028000 0x1000>;
-		gpio-controller;
-		#gpio-cells = <3>; /* bank, pin, flags */
-	}
-
-Modify gpiolib-of to use:
-of_xlate(struct gpio_chip **gc, const struct of_phandle_args *gpiospec, u32 *flags);
-(so that the value of gc can be modified)
-
-And then in the driver:
-
-static int lpc32xx_of_xlate(struct gpio_chip **gc, const struct
-                            of_phandle_args *gpiospec, u32 *flags)
-{
-	if (WARN_ON(gpiospec->args_count < 3))
-		return -EINVAL;
-
-	*gc = &lpc32xx_gpiochip[gpiospec->args[0]].chip;
-	if (flags)
-		*flags = gpiospec->args[2];
-	return gpiospec->args[1];
-}
-
-Make all the gpiochips use the same of_xlate function and of_node
-pointer so that it doesn't matter which one gets matched because the
-xlate always completely resolves the gpio_chip.
-
-Another way to do it would be to split the of_xlate functions out of
-gpio_chip entirely and have a separate registry for gpio device_nodes
-and their xlate functions.
-
-g.
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index dfba3e6..3b0298b 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -83,4 +83,8 @@ config OF_MTD
+ 	depends on MTD
+ 	def_bool y
+ 
++config OF_DMA
++	depends on HAS_DMA
++	def_bool y
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index e027f44..711ff5b 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -11,3 +11,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
++obj-$(CONFIG_OF_DMA)	+= of_dma.o
+diff --git a/drivers/of/of_dma.c b/drivers/of/of_dma.c
+new file mode 100644
+index 0000000..a89fe61
+--- /dev/null
++++ b/drivers/of/of_dma.c
+@@ -0,0 +1,70 @@
++/*
++ * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Based on:
++ *	"arch/microblaze/kernel/prom_parse.c"
++ *	"arch/powerpc/kernel/prom_parse.c"
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/export.h>
++#include <linux/of_address.h>
++
++int of_get_dma_window(struct device_node *dn,
++			const char *propname, int index,
++			unsigned long *busno,
++			dma_addr_t *addr, size_t *size)
++{
++	const __be32 *dma_window, *end;
++	int bytes, cur_index = 0;
++
++	if (!dn || !addr || !size)
++		return -EINVAL;
++
++	if (!propname)
++		propname = "dma-window";
++
++	dma_window = of_get_property(dn, propname, &bytes);
++	if (!dma_window)
++		return -ENODEV;
++	end = dma_window + bytes / sizeof(*dma_window);
++
++	while (dma_window < end) {
++		u32 cells;
++		const void *prop;
++
++		/* busno is always one cell */
++		if (busno)
++			*busno = be32_to_cpup(dma_window++);
++
++		prop = of_get_property(dn, "#dma-address-cells", NULL);
++		if (!prop)
++			prop = of_get_property(dn, "#address-cells", NULL);
++
++		cells = prop ? be32_to_cpup(prop) : of_n_addr_cells(dn);
++		if (!cells)
++			return -EINVAL;
++		*addr = of_read_number(dma_window, cells);
++		dma_window += cells;
++
++		prop = of_get_property(dn, "#dma-size-cells", NULL);
++		cells = prop ? be32_to_cpup(prop) : of_n_size_cells(dn);
++		if (!cells)
++			return -EINVAL;
++		*size = of_read_number(dma_window, cells);
++		dma_window += cells;
++
++		if (cur_index++ == index)
++			break;
++	}
++	return 0;
++}
++EXPORT_SYMBOL(of_get_dma_window);
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 01b925a..9d9da9d 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -21,6 +21,11 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
+ extern const u32 *of_get_address(struct device_node *dev, int index,
+ 			   u64 *size, unsigned int *flags);
+ 
++extern int of_get_dma_window(struct device_node *dev,
++			       const char *propname, int index,
++			       unsigned long *busno,
++			       dma_addr_t *phys, size_t *size);
++
+ #ifndef pci_address_to_pio
+ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+ #define pci_address_to_pio pci_address_to_pio
+@@ -48,6 +53,14 @@ static inline const u32 *of_get_address(struct device_node *dev, int index,
+ {
+ 	return NULL;
+ }
++
++extern int of_get_dma_window(struct device_node *dev,
++			       const char *propname, int index,
++			       unsigned long *busno,
++			       dma_addr_t *phys, size_t *size)
++{
++	return 0;
++}
+ #endif /* CONFIG_OF_ADDRESS */
+ 
+ 
+-- 
+1.7.5.4
