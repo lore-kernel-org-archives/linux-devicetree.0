@@ -1,58 +1,199 @@
-From: Hiroshi Doyu <hdoyu@nvidia.com>
-Subject: Re: [PATCH 3/4] ARM: tegra30: Add Tegra Memory Controller(MC) driver
-Date: Fri, 11 May 2012 08:16:55 +0200
-Message-ID: <20120511.091655.1764445721704382888.hdoyu@nvidia.com>
-References: <1336635764-30597-1-git-send-email-hdoyu@nvidia.com><1336635764-30597-3-git-send-email-hdoyu@nvidia.com><20120510214604.GA3525@kroah.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3 2/4] regulator: tps62360: add dt support
+Date: Fri, 11 May 2012 12:08:43 +0530
+Message-ID: <1336718325-8372-3-git-send-email-ldewangan@nvidia.com>
+References: <1336718325-8372-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120510214604.GA3525@kroah.com>
+In-Reply-To: <1336718325-8372-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "ccross@android.com" <ccross@android.com>, "olof@lixom.net" <olof@lixom.net>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "b-cousson@ti.com" <b-cousson@ti.com>, "aneesh@ti.com" <aneesh@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, linux@arm.linux.org.uk, lrg@ti.com, broonie@opensource.wolfsonmicro.com, swarren@nvidia.com, olof@lixom.net
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+Add dt support for the pmu device tps62360 and
+Add binding documentation with example.
+With this patch driver will support both device-tree and
+non-device tree registration.
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/4] ARM: tegra30: Add Tegra Memory Controller(MC) driver
-Date: Thu, 10 May 2012 23:46:04 +0200
-Message-ID: <20120510214604.GA3525@kroah.com>
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V1:
+	Fixed compilation error in non-devicetree configuration.
+Changes from V2:
+	Taken care of Grant's review comments.
 
-> On Thu, May 10, 2012 at 10:42:32AM +0300, Hiroshi DOYU wrote:
-> > Tegra Memory Controller(MC) driver for Tegra30
-> > Added to support MC General interrupts, mainly for IOMMU(SMMU).
-> 
-> I'll apply this, but:
+ .../bindings/regulator/tps62360-regulator.txt      |   45 ++++++++++++
+ drivers/regulator/tps62360-regulator.c             |   73 +++++++++++++++++++-
+ 2 files changed, 117 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps62360-regulator.txt
 
-Thanks.
+diff --git a/Documentation/devicetree/bindings/regulator/tps62360-regulator.txt b/Documentation/devicetree/bindings/regulator/tps62360-regulator.txt
+new file mode 100644
+index 0000000..f411b57
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/tps62360-regulator.txt
+@@ -0,0 +1,45 @@
++TPS62360 Voltage regulators
++
++Required properties:
++- compatible: Must be one of the following.
++	"ti,tps62360"
++	"ti,tps62361",
++	"ti,tps62362",
++	"ti,tps62363",
++- reg: I2C slave address
++
++Optional properties:
++- ti,enable-force-pwm: Enable force PWM mode. This is boolean value.
++- ti,enable-vout-discharge: Enable output discharge. This is boolean value.
++- ti,enable-pull-down: Enable pull down. This is boolean value.
++- ti,vsel0-gpio: GPIO for controlling VSEL0 line.
++  If this property is missing, then assume that there is no GPIO
++  for vsel0 control.
++- ti,vsel1-gpio: Gpio for controlling VSEL1 line.
++  If this property is missing, then assume that there is no GPIO
++  for vsel1 control.
++- ti,vsel0-state-high: Inital state of vsel0 input is high.
++  If this property is missing, then assume the state as low (0).
++- ti,vsel1-state-high: Inital state of vsel1 input is high.
++  If this property is missing, then assume the state as low (0).
++
++Any property defined as part of the core regulator binding, defined in
++regulator.txt, can also be used.
++
++Example:
++
++	abc: tps62360 {
++		compatible = "ti,tps62361";
++		reg =  <0x60>;
++		regulator-name = "tps62361-vout";
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-boot-on
++		ti,vsel0-gpio = <&gpio1 16 0>;
++		ti,vsel1-gpio = <&gpio1 17 0>;
++		ti,vsel0-state-high;
++		ti,vsel1-state-high;
++		ti,enable-pull-down;
++		ti,enable-force-pwm;
++		ti,enable-vout-discharge;
++	};
+diff --git a/drivers/regulator/tps62360-regulator.c b/drivers/regulator/tps62360-regulator.c
+index 3506900..60765cc 100644
+--- a/drivers/regulator/tps62360-regulator.c
++++ b/drivers/regulator/tps62360-regulator.c
+@@ -26,6 +26,10 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/err.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
++#include <linux/regulator/of_regulator.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+@@ -297,6 +301,56 @@ static const struct regmap_config tps62360_regmap_config = {
+ 	.cache_type		= REGCACHE_RBTREE,
+ };
+ 
++static struct tps62360_regulator_platform_data *
++	of_get_tps62360_platform_data(struct device *dev)
++{
++	struct tps62360_regulator_platform_data *pdata;
++	struct device_node *np = dev->of_node;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata) {
++		dev_err(dev, "Memory alloc failed for platform data\n");
++		return NULL;
++	}
++
++	pdata->reg_init_data = of_get_regulator_init_data(dev, dev->of_node);
++	if (!pdata->reg_init_data) {
++		dev_err(dev, "Not able to get OF regulator init data\n");
++		return NULL;
++	}
++
++	pdata->vsel0_gpio = of_get_named_gpio(np, "vsel0-gpio", 0);
++	pdata->vsel1_gpio = of_get_named_gpio(np, "vsel1-gpio", 0);
++
++	if (of_find_property(np, "ti,vsel0-state-high", NULL))
++		pdata->vsel0_def_state = 1;
++
++	if (of_find_property(np, "ti,vsel1-state-high", NULL))
++		pdata->vsel1_def_state = 1;
++
++	if (of_find_property(np, "ti,enable-pull-down", NULL))
++		pdata->en_internal_pulldn = true;
++
++	if (of_find_property(np, "ti,enable-force-pwm", NULL))
++		pdata->en_force_pwm = true;
++
++	if (of_find_property(np, "ti,enable-vout-discharge", NULL))
++		pdata->en_discharge = true;
++
++	return pdata;
++}
++
++#if defined(CONFIG_OF)
++static const struct of_device_id tps62360_of_match[] = {
++	 { .compatible = "ti,tps62360", .data = (void *)TPS62360},
++	 { .compatible = "ti,tps62361", .data = (void *)TPS62361},
++	 { .compatible = "ti,tps62362", .data = (void *)TPS62362},
++	 { .compatible = "ti,tps62363", .data = (void *)TPS62363},
++	{},
++}
++MODULE_DEVICE_TABLE(of, tps62360_of_match);
++#endif
++
+ static int __devinit tps62360_probe(struct i2c_client *client,
+ 				     const struct i2c_device_id *id)
+ {
+@@ -306,8 +360,24 @@ static int __devinit tps62360_probe(struct i2c_client *client,
+ 	struct tps62360_chip *tps;
+ 	int ret;
+ 	int i;
++	int chip_id;
+ 
+ 	pdata = client->dev.platform_data;
++	chip_id = id->driver_data;
++
++	if (client->dev.of_node) {
++		const struct of_device_id *match;
++		match = of_match_device(of_match_ptr(tps62360_of_match),
++				&client->dev);
++		if (!match) {
++			dev_err(&client->dev, "Error: No device match found\n");
++			return -ENODEV;
++		}
++		chip_id = (int)match->data;
++		if (!pdata)
++			pdata = of_get_tps62360_platform_data(&client->dev);
++	}
++
+ 	if (!pdata) {
+ 		dev_err(&client->dev, "%s(): Platform data not found\n",
+ 						__func__);
+@@ -328,7 +398,7 @@ static int __devinit tps62360_probe(struct i2c_client *client,
+ 	tps->vsel1_gpio = pdata->vsel1_gpio;
+ 	tps->dev = &client->dev;
+ 
+-	switch (id->driver_data) {
++	switch (chip_id) {
+ 	case TPS62360:
+ 	case TPS62362:
+ 		tps->voltage_base = TPS62360_BASE_VOLTAGE;
+@@ -484,6 +554,7 @@ static struct i2c_driver tps62360_i2c_driver = {
+ 	.driver = {
+ 		.name = "tps62360",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(tps62360_of_match),
+ 	},
+ 	.probe = tps62360_probe,
+ 	.remove = __devexit_p(tps62360_remove),
+-- 
+1.7.1.1
 
-> > +static inline u32 mc_readl(struct tegra30_mc *mc, u32 offs)
-> > +{
-> > +	if (offs < 0x10)
-> > +		return readl(mc->regs[0] + offs);
-> > +	BUG_ON(offs < 0x3c);
-> > +	if (offs < 0x1f0)
-> > +		return readl(mc->regs[1] + offs - 0x3c);
-> > +	BUG_ON(offs < 0x200);
-> > +	if (offs < 0x228)
-> > +		return readl(mc->regs[2] + offs - 0x200);
-> > +	BUG_ON(offs < 0x284);
-> > +	if (offs < 0x400)
-> > +		return readl(mc->regs[3] + offs - 0x284);
-> > +	BUG();
-> > +}
-> 
-> That's a lot of BUG* calls.  Same thing with the 1/4 patch in this
-> series.
-> 
-> We really should not have a BUG call in any driver, as you just stopped
-> the whole system.  I can understand this being there for debugging when
-> you create the code originally, but as these are things no one should
-> ever be able to hit now, you should remove them, right?
-> 
-> Care to write a follow-on patch removing all of these BUG_ON and BUG
-> calls in this and the drivers/memory/tegra20-mc.c driver?
-
-Ok, they are replying to this email.
