@@ -1,18 +1,16 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH v2] ARM: DT: Add binding for GIC virtualization extentions
  (VGIC)
-Date: Fri, 11 May 2012 09:11:28 -0600
-Message-ID: <CACxGe6v7dZZOY1_vjvDu7Dt7ib-xqP5kYQTMy-jWRMt4UO3fvg@mail.gmail.com>
+Date: Fri, 11 May 2012 09:15:17 -0600
+Message-ID: <20120511151517.D25303E0791@localhost>
 References: <1336586277-28454-1-git-send-email-marc.zyngier@arm.com>
- <201205092027.50059.arnd@arndb.de>
- <37e096905f891fc6abdccf8977bd7447@localhost>
- <201205092047.06852.arnd@arndb.de>
- <ed0ce2390716adbfc949f86c16dab996@localhost>
+ <4FAD1EDE.8010505@citrix.com> <4FAD255A.4080504@arm.com>
+ <4FAD25A1.2080106@citrix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <ed0ce2390716adbfc949f86c16dab996@localhost>
+In-Reply-To: <4FAD25A1.2080106-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,47 +20,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+To: David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 9, 2012 at 3:34 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, 9 May 2012 20:47:06 +0000, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> On Wednesday 09 May 2012, Marc Zyngier wrote:
->>> Ah, I see what you mean. But these registers and interrupt are actually
->>> only visible on the hypervizor side. The guest shouldn't see any of
-> this.
->>
->> Rihgt, that makes sense.
->>
->>> I suppose we could have a "arm,has-virt-extensions" property in devices
->>> that implement the virtualization extensions (GIC, timers...).
->>>
->>> What do you think?
->>
->> Sounds good. I don't have a strong preference whether that should be a
->> property like you suggest or a separate "compatible" value, maybe Rob or
->> Grant can comment on what they prefer.
->
-> At the moment, the compatible string should be pretty explicit, as it is
-> not possible to build an A7 or A15 based SoC without the virtualization
-> extensions.
->
->> On the guest side, is it guaranteed that the virtual GIC looks like
->> a real GIC without those extensions? If the actual behavior depends on
->> the hypervisor, it might still make sense to add another flag in there
->> to tell that it's virtual, even if we don't require it for now.
->
-> Nothing is really guaranteed, as the VGIC only exposes a GIC CPU interface
-> to the guest, and the distributor has to be modeled by the hypervisor. But
-> if the difference is observable by the guest, is it still a GIC? And how to
-> differentiate between behavior A and behavior B with a single flag?
->
-> My take would be that if the guest can tell the difference, than it
-> shouldn't be called a GIC, and have separate bindings. Or at least a
-> different compatible string that we could use to enable quirks in the
-> driver.
+On Fri, 11 May 2012 15:43:45 +0100, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+> On 11/05/12 15:42, Marc Zyngier wrote:
+> > On 11/05/12 15:14, David Vrabel wrote:
+> >> On 09/05/12 18:57, Marc Zyngier wrote:
+> >>> The GICv2 can have virtualization extension support, consisting
+> >>> of an additional set of registers and interrupts. Add the necessary
+> >>> binding to the GIC DT documentation.
+> >>
+> >> This looks fine for Xen.
+> > 
+> > Thanks David. Can I add your Acked-by:?
+> 
+> Sure.
+> 
+> Acked-by: David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 
-I would agree with that.
+Applied, thanks.
 
 g.
