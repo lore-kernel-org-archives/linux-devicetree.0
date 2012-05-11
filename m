@@ -1,38 +1,46 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
-Date: Fri, 11 May 2012 12:04:57 -0600
-Message-ID: <4FAD54C9.6040904@wwwdotorg.org>
-References: <1336636221-31575-1-git-send-email-hdoyu@nvidia.com> <1336636221-31575-2-git-send-email-hdoyu@nvidia.com> <4FAC2041.7030405@wwwdotorg.org> <20120511094625.GA11750@amd.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120511094625.GA11750-5C7GfCeVMHo@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>
-Cc: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 5/6 v3] mfd: tps65910-irq: Add devicetree init support
+Date: Fri, 11 May 2012 12:45:32 -0600
+Message-ID: <20120511184532.C74D73E0791@localhost>
+References: <1336502563-31789-1-git-send-email-rklein@nvidia.com> <1336502563-31789-6-git-send-email-rklein@nvidia.com> <20120508154820.GA15893@opensource.wolfsonmicro.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120508154820.GA15893@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Rhyland Klein <rklein@nvidia.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/11/2012 03:46 AM, Joerg Roedel wrote:
-> On Thu, May 10, 2012 at 02:08:33PM -0600, Stephen Warren wrote:
->> On 05/10/2012 01:50 AM, Hiroshi DOYU wrote:
->>> The necessary info is expected to pass from DT.
->>>
->>> For more precise resource reservation, there shouldn't be any
->>> overlapping of register range between SMMU and MC. SMMU register
->>> offset needs to be calculated correctly, based on its register bank.
->>>
->>> Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>
->> I expect patch 1 will go through the IOMMU tree, and I'll take patch 2
->> through the Tegra tree.
+On Tue, 8 May 2012 16:48:21 +0100, Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
+> On Tue, May 08, 2012 at 11:42:42AM -0700, Rhyland Klein wrote:
 > 
-> Any reason for splitting it up? The patches touch mostly drivers/iommu.
-> So to avoid conflicts its probably the best to apply them together.
+> > +	if (pdata->irq_base <= 0)
+> > +		pdata->irq_base = irq_alloc_descs(-1, 0, tps65910->irq_num, -1);
+> > +
+> > +	if (pdata->irq_base <= 0) {
+> > +		dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
+> > +			pdata->irq_base);
+> > +		return pdata->irq_base;
+> > +	}
+> 
+> I'd expect the driver to always call irq_alloc_descs() but to use the
+> value specified in platform data if there is any.  This is the normal
+> way of doing things, anyway.
 
-Patch 1 is the driver that touches drivers/iommu and related
-documentation, whereas patch 2 touches the device tree file in
-arch/arm/boot/dts. Either of the patches would get conflicts if they
-were merged into the "other" tree.
+More importantly, the driver should be converted to use an irq_domain
+and remove the custom irq_to_tps65910_irq function.
+irq_find_mapping() handles the hwirq --> irq lookup and
+irq_data->hwirq will always give you the controller's irq number.
+
+When irq_base is -1, then use irq_domain_add_linear() which will also
+manage irq_desc allocations for you.  If the driver requires a
+specific irq_base then the descs still need to be manually allocated
+and use an irq_domain_add_legacy() to set it up. (this is sub-optimal
+though; I hope to have a better solution for legacy that also manages
+desc allocations just like the other mappings; maybe in the 3.6
+timeframe).
+
+g.
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
