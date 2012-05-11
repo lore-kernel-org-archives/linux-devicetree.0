@@ -1,54 +1,122 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V3 2/4] regulator: tps62360: add dt support
-Date: Fri, 11 May 2012 21:36:20 +0100
-Message-ID: <20120511203619.GC29835@opensource.wolfsonmicro.com>
-References: <1336718325-8372-1-git-send-email-ldewangan@nvidia.com>
- <1336718325-8372-3-git-send-email-ldewangan@nvidia.com>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Sat, 12 May 2012 02:36:32 +0530
+Message-ID: <CAJe_Zhc8T-vR8fjFLyT4bz6dj=TUyx0F8k=fAPYn_MnbGW5LBg@mail.gmail.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	<4FA3F308.6030900@ti.com>
+	<CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
+	<201205041923.07620.arnd@arndb.de>
+	<CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
+	<4FA7F009.5010003@wwwdotorg.org>
+	<CAJe_ZheHFP9NZEiZfCvS3LL1k7xamzGq4Oep8gfmPRi6RR7R5Q@mail.gmail.com>
+	<4FA94B49.5050500@wwwdotorg.org>
+	<CAJe_Zhf0=Qnsgsc7U_GbKxc0_6DKj33QWs0UW2giyrVEjPnrvw@mail.gmail.com>
+	<4FAAC111.9020308@wwwdotorg.org>
+	<CAJe_Zhcrr2QqoY=H3=3EJLPQBjC3Yc43EDjqYXaNok9-T+=0yw@mail.gmail.com>
+	<4FABF445.3030105@wwwdotorg.org>
+	<CAJe_ZhduQuHnFyF20VnjZW9uz1szwL6O7=ow+tMqanmeHs58pQ@mail.gmail.com>
+	<4FAD6848.40700@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ctP54qlpMx3WjD+/"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1336718325-8372-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, linux@arm.linux.org.uk, lrg@ti.com, swarren@nvidia.com, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FAD6848.40700@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12 May 2012 00:58, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 05/10/2012 01:59 PM, Jassi Brar wrote:
+>
+>> I think arbitrary numerical tokens are a reasonable price to pay for=
+ the
+>> robustness and simplicity they bring.
+>
+> I have to disagree here.
+>
+> Using phandle+ID is almost as simple, and much more flexible. Global =
+IDs
+> have a number of disadvantages:
+>
+> a) You have to somehow keep them unique. Even with just a single .dts
+> file, that's going to be a little painful since there's no central ta=
+ble
+> of these IDs.
+>
+> What if the DT is composed of a bunch of chunks that represent plugga=
+ble
+> boards, which may be mixed/matched together depending on what the use=
+r
+> actually plugged in? Then, you have to be very careful to keep the n
+> different files' numbering ranges segregated, or conflicts will occur=
+=2E
+>
+You might want to revisit this point after working out the finer detail=
+s of what
+you propose for a client's specifier :)
 
---ctP54qlpMx3WjD+/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>>
+>> Well, I doubt if there would ever be enough such platforms to warran=
+t a
+>> new generic framework. For now, I would leave that to be a matter be=
+tween
+>> the dmac driver and its DT node.
+>>
+>> Similarly let every dmac, being unique, require DT data in it's own =
+custom
+>> format - I don't believe we can find a generic DT format for every k=
+ind of
+>> dmac that does exist or would exist. (For ex, you found a way for RM=
+K's
+>> mux'ed req_lines, but what about assigning priorities to clients whi=
+ch is
+>> possible with PL08X dmacs but not most others?)
+>
+> Good question. Again thought that sounds a little like policy, so
+> perhaps should be negotiated at runtime rather than described in DT?
+>
+As much as we love everything to be runtime configurable, I am afraid i=
+t
+can't be. We can't add new calls to the dmaengine api for simply
+supporting specific features of various dmacs (priority in this case)
+Because that would mean ideally every client going through the mostly
+useless ritual of querying/setting those features and most dmacs
+just 'pretending' to support some, except for the rare ones that actual=
+ly do.
+So as much as these sound like policy, they would usually be directly
+hardcoded via dt for the machine or deducted by the dmac driver.
 
-On Fri, May 11, 2012 at 12:08:43PM +0530, Laxman Dewangan wrote:
-> Add dt support for the pmu device tps62360 and
-> Add binding documentation with example.
-> With this patch driver will support both device-tree and
-> non-device tree registration.
+>>
+>>> client0: i2s {
+>>> =A0 /* has 2 DMA request output signals: 0, 1 */
+>>> };
+>>>
+>>> client1: spdif {
+>>> =A0 /* has 2 DMA request signals: 0, 1 */
+>>> };
+>>>
+>> Do we also need to somehow tag these signals for the client to
+>> differentiate between TX and RX channel ?
+>
+> Yes, the client's DT binding would certainly need to describe how man=
+y
+> DMA request signals its HW generates, and give a unique ID to each. T=
+he
+> driver would need to request a DMA channel for a specific one of its =
+DMA
+> requests.
+>
+Did I read "give a unique ID to each" correctly ?
+Could you please take some time out to jot down an example of how a
+typical client's dma specifier should look.
 
-Oh, sorry - I meant to say that I went ahead and applied this.  Ideally
-the active discharge thing will get factored out quickly though.
+=46WIW, I think I can live with what you propose. Let us go for the kil=
+l.
 
---ctP54qlpMx3WjD+/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPrXg6AAoJEBus8iNuMP3dyHsP/AgtZUk+LjHHIbPdLjrCB/dX
-u10Xi4RSFSP7sgKVR/A7WuifEfXfzmykJDVkRGnKsWvfsNc/QKr5ZTZWcccGmCaI
-hZimnp95b3KReT8y6vj2nQbXprnxb561Yu9wNuEFv5BCOih1oNZfO272JFqqtaXV
-uBlxVySimxwnJFt9zvxqoZ5htIL6WohxXXbG8NfnU/5hH0g1zopIx7thV/k3rS8Z
-SeQXAKqPIWn81cPVp7Lm5rKtpJXaYmIE3Zg/QUG7xk/rtMClP/D932d4yPY8kbff
-dOCWjuds1RpnfAftXFLJx9AgRcvG4ruKIImvfF9V8r82GQICLra54gYiH5Cwfvq5
-tEnoNhD3d/l7KTc6vZMKvVyuT6iL9K+bfVmTK+4y7T8W6s1Mb5jtlcx6wF3kXdla
-uO1POwCEavqtNnec0mVcqZxPgQAtyYKi0l9FmwNYNJYKvgN+dSsZy96ZW7UCHwNz
-L18fbuDsLYesTCLBnA/JQS8dJ4oDsXIP2JuHoI1QdpaZH9k5kYezGf6JDAU0+2fh
-BkQ9EhIHU/iJG13n3LoOcN78tS0jMXGz8QpwNsc4G86AR1sQRhrqt/SiNRpDYuCP
-WWlyElLYE8kMTiebivTNF6nVhVqe5tnDYsXLFOGiENLB2FCl9vLc9xbzX4CYvMUw
-85ygqBYtBE+1jnIEhFpu
-=tC4w
------END PGP SIGNATURE-----
-
---ctP54qlpMx3WjD+/--
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
