@@ -1,46 +1,45 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 5/6 v3] mfd: tps65910-irq: Add devicetree init support
-Date: Fri, 11 May 2012 12:45:32 -0600
-Message-ID: <20120511184532.C74D73E0791@localhost>
-References: <1336502563-31789-1-git-send-email-rklein@nvidia.com> <1336502563-31789-6-git-send-email-rklein@nvidia.com> <20120508154820.GA15893@opensource.wolfsonmicro.com>
+From: Rhyland Klein <rklein@nvidia.com>
+Subject: Re: [PATCH 0/6 v3] Update TPS65910 to boot using devicetree
+Date: Fri, 11 May 2012 12:21:58 -0700
+Message-ID: <1336764118.3085.0.camel@rhyland-vbox>
+References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
+	 <20120511093842.GC1214@sortiz-mobl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120508154820.GA15893@opensource.wolfsonmicro.com>
+In-Reply-To: <20120511093842.GC1214@sortiz-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Rhyland Klein <rklein@nvidia.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 May 2012 16:48:21 +0100, Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
-> On Tue, May 08, 2012 at 11:42:42AM -0700, Rhyland Klein wrote:
+On Fri, 2012-05-11 at 02:38 -0700, Samuel Ortiz wrote:
+> Hi Rhyland,
 > 
-> > +	if (pdata->irq_base <= 0)
-> > +		pdata->irq_base = irq_alloc_descs(-1, 0, tps65910->irq_num, -1);
-> > +
-> > +	if (pdata->irq_base <= 0) {
-> > +		dev_err(tps65910->dev, "Failed to allocate irq descs: %d\n",
-> > +			pdata->irq_base);
-> > +		return pdata->irq_base;
-> > +	}
+> On Tue, May 08, 2012 at 11:42:37AM -0700, Rhyland Klein wrote:
+> > This patch set updates the tps65910 driver to boot using devicetree.
+> > 
+> > This patch set now uses the new addition to the of_regulator code,
+> > of_regulator_match to find all the regulator init data for the device.
+> > 
+> > Rhyland Klein (6):
+> >   mfd: tps65910: Commonize regmap access through header
+> >   regulator: tps65910: Add device tree bindings
+> >   mfd: tps65910: Add device-tree support
+> >   regulator: tps65910 regulator: add device tree support
+> >   mfd: tps65910-irq: Add devicetree init support
+> >   ARM: Tegra: Add support for TPS65910 PMIC
+> I applied patches 1,2 and 3 to my for-next branch.
+> Patch 4 is a regulator one, I assume Mark is going to take it. And patch 5
+> needs some additional work.
 > 
-> I'd expect the driver to always call irq_alloc_descs() but to use the
-> value specified in platform data if there is any.  This is the normal
-> way of doing things, anyway.
+> Cheers,
+> Samuel.
+> 
+Thank! I will resend the change for patch 5.
 
-More importantly, the driver should be converted to use an irq_domain
-and remove the custom irq_to_tps65910_irq function.
-irq_find_mapping() handles the hwirq --> irq lookup and
-irq_data->hwirq will always give you the controller's irq number.
-
-When irq_base is -1, then use irq_domain_add_linear() which will also
-manage irq_desc allocations for you.  If the driver requires a
-specific irq_base then the descs still need to be manually allocated
-and use an irq_domain_add_legacy() to set it up. (this is sub-optimal
-though; I hope to have a better solution for legacy that also manages
-desc allocations just like the other mappings; maybe in the 3.6
-timeframe).
-
-g.
+-rhyland
 
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+nvpublic
