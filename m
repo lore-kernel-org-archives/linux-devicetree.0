@@ -1,105 +1,179 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Sat, 12 May 2012 19:10:06 +0530
-Message-ID: <CAJe_Zhe61GTQQy+ZCVndAd=mrHxGBqyZ8JGZTSHsvE2XRzfGoA@mail.gmail.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	<4FA3F308.6030900@ti.com>
-	<CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com>
-	<201205041923.07620.arnd@arndb.de>
-	<CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com>
-	<4FA7F009.5010003@wwwdotorg.org>
-	<CAJe_ZheHFP9NZEiZfCvS3LL1k7xamzGq4Oep8gfmPRi6RR7R5Q@mail.gmail.com>
-	<4FA94B49.5050500@wwwdotorg.org>
-	<CAJe_Zhf0=Qnsgsc7U_GbKxc0_6DKj33QWs0UW2giyrVEjPnrvw@mail.gmail.com>
-	<4FAAC111.9020308@wwwdotorg.org>
-	<CAJe_Zhcrr2QqoY=H3=3EJLPQBjC3Yc43EDjqYXaNok9-T+=0yw@mail.gmail.com>
-	<4FABF445.3030105@wwwdotorg.org>
-	<CAJe_ZhduQuHnFyF20VnjZW9uz1szwL6O7=ow+tMqanmeHs58pQ@mail.gmail.com>
-	<4FAD6848.40700@wwwdotorg.org>
-	<CAJe_Zhc8T-vR8fjFLyT4bz6dj=TUyx0F8k=fAPYn_MnbGW5LBg@mail.gmail.com>
-	<4FADA5EC.8040807@wwwdotorg.org>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] i2c-ocore: support 16 and 32-bit wide registers
+Date: Sat, 12 May 2012 16:56:48 +0200
+Message-ID: <20120512145648.GM20673@pengutronix.de>
+References: <1336483529-19140-1-git-send-email-jayachandranc@netlogicmicro.com>
+ <1336483529-19140-3-git-send-email-jayachandranc@netlogicmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FADA5EC.8040807@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VB1oQhYtJt8uuzk+"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1336483529-19140-3-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 May 2012 05:21, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 05/11/2012 03:06 PM, Jassi Brar wrote:
->> On 12 May 2012 00:58, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> On 05/10/2012 01:59 PM, Jassi Brar wrote:
-> ...
->>>>> client0: i2s {
->>>>> =A0 /* has 2 DMA request output signals: 0, 1 */
->>>>> };
->>>>>
->>>>> client1: spdif {
->>>>> =A0 /* has 2 DMA request signals: 0, 1 */
->>>>> };
->>>>>
->>>> Do we also need to somehow tag these signals for the client to
->>>> differentiate between TX and RX channel ?
->>>
->>> Yes, the client's DT binding would certainly need to describe how m=
-any
->>> DMA request signals its HW generates, and give a unique ID to each.=
- The
->>> driver would need to request a DMA channel for a specific one of it=
-s DMA
->>> requests.
->>>
->> Did I read "give a unique ID to each" correctly ?
->
-> It'd be unique relative to that individual device or DT node, not at =
-any
-> larger scope.
->
-OK.
 
->> Could you please take some time out to jot down an example of how a
->> typical client's dma specifier should look.
->
-> With this proposal, I'm not sure that the client DT node would need a=
-ny
-> DMA information at all, at least nothing that identifies which DMA
-> controllers, channels, or requests are required to service this
-> node/device's DMA requests - that routing information is all represen=
-ted
-> in the DMA controller itself.
->
-> (I think Arnd made the following point earlier in this thread):
->
-> If you did need to put any other information in DT, then that probabl=
-y
-> would go in the DMA client node, since it'd presumably be the same
-> irrespective of which DMA controller got used. However, that informat=
-ion
-> presumably wouldn't be needed in DT at all, since the driver would kn=
-ow
-> it, since it'd be a facet of the HW.
->
-> Note: I'm thinking things like DMA physical address (presumably an
-> offset from the reg property), DMA access size (presumably a fixed
-> property of the HW), DMA burst size (presumably a property of the HW,
-> although at least some HW can be programmed to raise the DMA request
-> signal with a varying number of FIFO entries free, so not fixed), etc=
-=2E
->
-Yeah, neither did I think a client node should tell more than IDs of
-its channels
-- which we now decide to simply mention in its binding.
+--VB1oQhYtJt8uuzk+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-How do I know if you or someone is interested in reworking the patchset
-or want me to give it a try?
+On Tue, May 08, 2012 at 06:55:29PM +0530, Jayachandran C wrote:
+> From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>=20
+> Some architectures supports only 16-bit or 32-bit read/write access
+> to their iospace. Add a 'regwidth' platform and OF parameter which
+> specifies the IO width to support these platforms.
+>=20
+> regwidth can be specified as 1, 2 or 4, and has a default value
+> of 1 if it is unspecified.
+>=20
+> Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+
+Hmm, this is a generic issue and should not be handled with a driver
+specific property. CCing devicetree-discuss, maybe there is already a
+way to handle this? The already existing 'regstep' looks suspicious, too?
+Can't find any documentation for it.
 
 Thanks,
-Jassi
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+   Wolfram
+
+> ---
+>  drivers/i2c/busses/i2c-ocores.c |   32 ++++++++++++++++++++++++++++++--
+>  include/linux/i2c-ocores.h      |    1 +
+>  2 files changed, 31 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-oco=
+res.c
+> index ebd2700..1313145 100644
+> --- a/drivers/i2c/busses/i2c-ocores.c
+> +++ b/drivers/i2c/busses/i2c-ocores.c
+> @@ -19,6 +19,9 @@
+>   * - regstep         : size of device registers in bytes
+>   * - clock-frequency : frequency of bus clock in Hz
+>   *=20
+> + * Optional properties:
+> + * - regwidth        : io register width in bytes (1, 2 or 4)
+> +
+>   * Example:
+>   *
+>   *  i2c0: ocores@a0000000 {
+> @@ -27,6 +30,7 @@
+>   *              interrupts =3D <10>;
+>   *
+>   *              regstep =3D <1>;
+> + *              regwidth =3D <1>;
+>   *              clock-frequency =3D <20000000>;
+>   *
+>   * -- Devices connected on this I2C bus get
+> @@ -60,6 +64,7 @@
+>  struct ocores_i2c {
+>  	void __iomem *base;
+>  	int regstep;
+> +	int regwidth;
+>  	wait_queue_head_t wait;
+>  	struct i2c_adapter adap;
+>  	struct i2c_msg *msg;
+> @@ -102,12 +107,22 @@ struct ocores_i2c {
+> =20
+>  static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
+>  {
+> -	iowrite8(value, i2c->base + reg * i2c->regstep);
+> +	if (i2c->regwidth =3D=3D 4)
+> +		iowrite32(value, i2c->base + reg * i2c->regstep);
+> +	else if (i2c->regwidth =3D=3D 2)
+> +		iowrite16(value, i2c->base + reg * i2c->regstep);
+> +	else
+> +		iowrite8(value, i2c->base + reg * i2c->regstep);
+>  }
+> =20
+>  static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
+>  {
+> -	return ioread8(i2c->base + reg * i2c->regstep);
+> +	if (i2c->regwidth =3D=3D 4)
+> +		return ioread32(i2c->base + reg * i2c->regstep);
+> +	else if (i2c->regwidth =3D=3D 2)
+> +		return ioread16(i2c->base + reg * i2c->regstep);
+> +	else
+> +		return ioread8(i2c->base + reg * i2c->regstep);
+>  }
+> =20
+>  static void ocores_process(struct ocores_i2c *i2c)
+> @@ -267,6 +282,10 @@ static int ocores_i2c_of_probe(struct platform_devic=
+e* pdev,
+>  	}
+>  	i2c->clock_khz =3D be32_to_cpup(val) / 1000;
+> =20
+> +	val =3D of_get_property(pdev->dev.of_node, "regwidth", NULL);
+> +	if (val)
+> +		i2c->regwidth =3D be32_to_cpup(val);
+> +
+>  	return 0;
+>  }
+>  #else
+> @@ -309,12 +328,21 @@ static int __devinit ocores_i2c_probe(struct platfo=
+rm_device *pdev)
+>  	pdata =3D pdev->dev.platform_data;
+>  	if (pdata) {
+>  		i2c->regstep =3D pdata->regstep;
+> +		i2c->regwidth =3D pdata->regwidth;
+>  		i2c->clock_khz =3D pdata->clock_khz;
+>  	} else {
+>  		ret =3D ocores_i2c_of_probe(pdev, i2c);
+>  		if (ret)
+>  			return ret;
+>  	}
+> +	if (i2c->regwidth =3D=3D 0)
+> +		i2c->regwidth =3D 1;	/* not configured, use default */
+> +	else if (i2c->regwidth !=3D 1 && i2c->regwidth !=3D 2 &&
+> +			i2c->regwidth !=3D 4) {
+> +		dev_err(&pdev->dev, "Invalid register width %d\n",
+> +			i2c->regwidth);
+> +		return -EINVAL;
+> +	}
+> =20
+>  	ocores_init(i2c);
+> =20
+> diff --git a/include/linux/i2c-ocores.h b/include/linux/i2c-ocores.h
+> index 4d5e57f..d1258ad 100644
+> --- a/include/linux/i2c-ocores.h
+> +++ b/include/linux/i2c-ocores.h
+> @@ -13,6 +13,7 @@
+> =20
+>  struct ocores_i2c_platform_data {
+>  	u32 regstep;   /* distance between registers */
+> +	u32 regwidth;  /* io read/write register witdth */
+>  	u32 clock_khz; /* input clock in kHz */
+>  	u8 num_devices; /* number of devices in the devices list */
+>  	struct i2c_board_info const *devices; /* devices connected to the bus */
+> --=20
+> 1.7.9.5
+>=20
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--VB1oQhYtJt8uuzk+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk+uejAACgkQD27XaX1/VRtyYwCgwBArHJJrr1CGwv2lvkq4GKpX
+MpkAnigsCeCcrcwzStGxM5V7RNO6O3UC
+=367B
+-----END PGP SIGNATURE-----
+
+--VB1oQhYtJt8uuzk+--
