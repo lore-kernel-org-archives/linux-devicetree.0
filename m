@@ -1,30 +1,39 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: Re: [PATCH] OF: PCI: const usage needed by MIPS
-Date: Sat, 12 May 2012 07:55:05 +0200
-Message-ID: <4FADFB39.6010100@openwrt.org>
-References: <1335808019-24502-1-git-send-email-blogic@openwrt.org> <4F9ED1DC.3050007@gmail.com> <4F9FE4F6.5070909@openwrt.org> <CAErSpo4bZ=0=DtbDots_GOGeLNhX6Q4eJrdetaFQMv4iiv5+XA@mail.gmail.com> <4FA32E47.7020406@gmail.com> <4FA3B596.3050106@openwrt.org> <CAErSpo4AQh3cJzULkmP_Dqsf0cSPRP1WqvhuQR3gePXw2rN7rQ@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 3/7] mmc: dw_mmc: add device tree support
+Date: Sat, 12 May 2012 12:31:28 +0530
+Message-ID: <CAJuYYwQj7gzZ9piJAJLcf7SiyJnQ6nZ63-X9ieQ-FCj6TNhQPQ@mail.gmail.com>
+References: <1335935266-25289-1-git-send-email-thomas.abraham@linaro.org>
+	<1335935266-25289-4-git-send-email-thomas.abraham@linaro.org>
+	<Pine.LNX.4.64.1205040047280.18111@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo4AQh3cJzULkmP_Dqsf0cSPRP1WqvhuQR3gePXw2rN7rQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, David Daney <ddaney.cavm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-mips@linux-mips.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1205040047280.18111@axis700.grange>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-> I compiled alpha, ia64, mips, parisc, powerpc, sh, sparc, and x86 and
-> didn't see any issues related to this patch.  There might still be
-> something,  but I'm willing to help work through them or revert this
-> if it turns out to be a problem.  I'm still assuming that Grant will
-> handle this.
+On 4 May 2012 04:18, Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
 >
-> Bjorn
-Hi Grant,
+> What do you think about this patch
+>
+> http://www.spinics.net/lists/linux-sh/msg11259.html
+>
+> and about using mmc-generic OF properties instead of creating yet another
+> copy of proprietary ones?
 
-Is this patch ok with you ? If so would you mind if Ralf takes this via
-his tree ? (this would avoid merge order problems)
+Hi Guennadi,
+
+This patch does not intend to add any custom mmc properties. I checked
+your patch (in the link mentioned above) and most of the bindings are
+similar to what you have come up with except for the "ro-gpios" for
+which I have used "wp-gpios". But this is following what Arnd had
+proposed here: http://www.spinics.net/lists/linux-mmc/msg13564.html.
+
+Regarding the MMC_CAP_4_BIT_DATA and MMC_CAP_8_BIT_DATA in your patch,
+these can be derived from the bus width information that the driver
+receives.
 
 Thanks,
-John
+Thomas.
