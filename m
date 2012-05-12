@@ -1,51 +1,26 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 4/6 v3] regulator: tps65910 regulator: add device tree
- support
-Date: Sat, 12 May 2012 11:19:07 +0100
-Message-ID: <20120512101906.GG1781@opensource.wolfsonmicro.com>
-References: <1336502563-31789-1-git-send-email-rklein@nvidia.com>
- <1336502563-31789-5-git-send-email-rklein@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 2/2] gpio: Device tree support for LPC32xx
+Date: Sat, 12 May 2012 13:21:32 +0000
+Message-ID: <201205121321.33106.arnd@arndb.de>
+References: <1336729660-7670-1-git-send-email-stigge@antcom.de> <1336729660-7670-2-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XRI2XbIfl/05pQwm"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1336502563-31789-5-git-send-email-rklein@nvidia.com>
+In-Reply-To: <1336729660-7670-2-git-send-email-stigge@antcom.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rhyland Klein <rklein@nvidia.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: glikely@secretlab.ca, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
+On Friday 11 May 2012, Roland Stigge wrote:
+> This patch adds device tree support for gpio-lpc32xx.c.
+> 
+> To register the various GPIO banks as (struct) gpio_chips via the same DT
+> gpio-controller, we utilize the adjusted of_xlate API to manipulate the
+> actually used struct gpio_chip.
+> 
+> Signed-off-by: Roland Stigge <stigge@antcom.de>
 
---XRI2XbIfl/05pQwm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, May 08, 2012 at 11:42:41AM -0700, Rhyland Klein wrote:
-> Add devicetree based initialization support for TI tps65910 regulators.
-
-Applied, thanks.
-
---XRI2XbIfl/05pQwm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPrjkUAAoJEBus8iNuMP3dQvEP/Ri9O7zgTYX9QwI/fh6kp8Q7
-jSdI8ejjjflXnGF23c30I161nJa1hvoknjqvBOcl24WGOl8ajG3S/Eff6rWJle7p
-a77t87/8DrtqJQgRA6KiaCsJVBoqWa7OcjQDg6Yznwc2cKsYmlaQl+DZ12E5ySH/
-xqYuzh4GT+IFnWjUv8m2J8Hg4uJ6JkNnT6Ohk+AbTom2gulK+wdwSya/l7+enoTm
-cXUBwZhrCVw0q9ln9gn7jUmb+JLyF7qKcbHA9HGGOogRCy3UkjQhKb+Fe192rPYL
-rtX0EHSdwEnJTlvwLuwwf1uffVA0RmECV3Jn7TXRexnEpKdMwttvh7iZTiU7xfL0
-d8EQ63wKVHx0JgGna7H2XTxWhA/YmRbItBc2NjGxKSK5oAgNd+DHua1dsOXBb7M/
-lAlXg0cF+PZZ95GqMqruf5aZoQ3xxDpZC101R2rNGS1OUzIDmsEDIwHGX/m5RJoT
-rWizFcNYinP/wzWrA2Hc+LmkwauuSG6Phx+/KdJuDI67zrMtCBMkC+AtWLS/OH2a
-FTW5y8bpdfos8g7j/y5DWu6Avo9nMR1kwbdSfu7eEmTyE1BxZxyoJI6+MbAZKu1g
-BcPW2uNFn9rBKAwXf1k8ZqYfOBS4KovULza1qfUPZh6/faPil8tp6hQ4u7I4l/GT
-rDbZE1RnhhO0bcgsMBCW
-=NReA
------END PGP SIGNATURE-----
-
---XRI2XbIfl/05pQwm--
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
