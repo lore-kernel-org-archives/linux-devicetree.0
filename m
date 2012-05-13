@@ -1,166 +1,66 @@
-From: "Jayachandran C." <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH 2/2] i2c-ocore: support 16 and 32-bit wide registers
-Date: Sun, 13 May 2012 17:09:34 +0530
-Message-ID: <20120513113933.GA22906@jayachandranc.netlogicmicro.com>
-References: <1336483529-19140-1-git-send-email-jayachandranc@netlogicmicro.com>
- <1336483529-19140-3-git-send-email-jayachandranc@netlogicmicro.com>
- <20120512145648.GM20673@pengutronix.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 05/10] ARM: Samsung: Update the device names for spi
+ clock lookup
+Date: Sun, 13 May 2012 15:51:35 +0100
+Message-ID: <20120513145134.GA6381@opensource.wolfsonmicro.com>
+References: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org>
+ <1336514694-22393-6-git-send-email-thomas.abraham@linaro.org>
+ <20120509085249.GA28702@sirena.org.uk>
+ <CAJuYYwQ+Wn11puF7AdPD41Jntbuj7oZHqNfzQA2T8V=2cigQnw@mail.gmail.com>
+ <20120509142836.GT3955@opensource.wolfsonmicro.com>
+ <CAJuYYwSTJoNRuN87GoTZMgF-qahbu02kJ9SUd7omQ5WD0VjTww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120512145648.GM20673-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+In-Reply-To: <CAJuYYwSTJoNRuN87GoTZMgF-qahbu02kJ9SUd7omQ5WD0VjTww@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 12, 2012 at 04:56:48PM +0200, Wolfram Sang wrote:
-> On Tue, May 08, 2012 at 06:55:29PM +0530, Jayachandran C wrote:
-> > From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > 
-> > Some architectures supports only 16-bit or 32-bit read/write access
-> > to their iospace. Add a 'regwidth' platform and OF parameter which
-> > specifies the IO width to support these platforms.
-> > 
-> > regwidth can be specified as 1, 2 or 4, and has a default value
-> > of 1 if it is unspecified.
-> > 
-> > Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-> 
-> Hmm, this is a generic issue and should not be handled with a driver
-> specific property. CCing devicetree-discuss, maybe there is already a
-> way to handle this? The already existing 'regstep' looks suspicious, too?
-> Can't find any documentation for it.
 
-My suggestion would be to use "reg-shift" and "reg-io-width" like the
-uart and some other devices. I am not sure why "regstep" was used when
-there is already a standard "reg-shift" parameter.
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-We will post an updated patch that deprecates "regstep" and uses "reg-shift"
-and "reg-io-width" if that is preferred.
+On Thu, May 10, 2012 at 01:17:32AM +0800, Thomas Abraham wrote:
+> On 9 May 2012 22:28, Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
 
-Thanks,
-JC.
+> > This means that bisection will be broken - anything with only one tree
+> > won't be able to load the SPI driver successfully until it's merged
+> > with the other which isn't ideal.
 
-> 
-> > ---
-> >  drivers/i2c/busses/i2c-ocores.c |   32 ++++++++++++++++++++++++++++++--
-> >  include/linux/i2c-ocores.h      |    1 +
-> >  2 files changed, 31 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-> > index ebd2700..1313145 100644
-> > --- a/drivers/i2c/busses/i2c-ocores.c
-> > +++ b/drivers/i2c/busses/i2c-ocores.c
-> > @@ -19,6 +19,9 @@
-> >   * - regstep         : size of device registers in bytes
-> >   * - clock-frequency : frequency of bus clock in Hz
-> >   * 
-> > + * Optional properties:
-> > + * - regwidth        : io register width in bytes (1, 2 or 4)
-> > +
-> >   * Example:
-> >   *
-> >   *  i2c0: ocores@a0000000 {
-> > @@ -27,6 +30,7 @@
-> >   *              interrupts = <10>;
-> >   *
-> >   *              regstep = <1>;
-> > + *              regwidth = <1>;
-> >   *              clock-frequency = <20000000>;
-> >   *
-> >   * -- Devices connected on this I2C bus get
-> > @@ -60,6 +64,7 @@
-> >  struct ocores_i2c {
-> >  	void __iomem *base;
-> >  	int regstep;
-> > +	int regwidth;
-> >  	wait_queue_head_t wait;
-> >  	struct i2c_adapter adap;
-> >  	struct i2c_msg *msg;
-> > @@ -102,12 +107,22 @@ struct ocores_i2c {
-> >  
-> >  static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
-> >  {
-> > -	iowrite8(value, i2c->base + reg * i2c->regstep);
-> > +	if (i2c->regwidth == 4)
-> > +		iowrite32(value, i2c->base + reg * i2c->regstep);
-> > +	else if (i2c->regwidth == 2)
-> > +		iowrite16(value, i2c->base + reg * i2c->regstep);
-> > +	else
-> > +		iowrite8(value, i2c->base + reg * i2c->regstep);
-> >  }
-> >  
-> >  static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
-> >  {
-> > -	return ioread8(i2c->base + reg * i2c->regstep);
-> > +	if (i2c->regwidth == 4)
-> > +		return ioread32(i2c->base + reg * i2c->regstep);
-> > +	else if (i2c->regwidth == 2)
-> > +		return ioread16(i2c->base + reg * i2c->regstep);
-> > +	else
-> > +		return ioread8(i2c->base + reg * i2c->regstep);
-> >  }
-> >  
-> >  static void ocores_process(struct ocores_i2c *i2c)
-> > @@ -267,6 +282,10 @@ static int ocores_i2c_of_probe(struct platform_device* pdev,
-> >  	}
-> >  	i2c->clock_khz = be32_to_cpup(val) / 1000;
-> >  
-> > +	val = of_get_property(pdev->dev.of_node, "regwidth", NULL);
-> > +	if (val)
-> > +		i2c->regwidth = be32_to_cpup(val);
-> > +
-> >  	return 0;
-> >  }
-> >  #else
-> > @@ -309,12 +328,21 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
-> >  	pdata = pdev->dev.platform_data;
-> >  	if (pdata) {
-> >  		i2c->regstep = pdata->regstep;
-> > +		i2c->regwidth = pdata->regwidth;
-> >  		i2c->clock_khz = pdata->clock_khz;
-> >  	} else {
-> >  		ret = ocores_i2c_of_probe(pdev, i2c);
-> >  		if (ret)
-> >  			return ret;
-> >  	}
-> > +	if (i2c->regwidth == 0)
-> > +		i2c->regwidth = 1;	/* not configured, use default */
-> > +	else if (i2c->regwidth != 1 && i2c->regwidth != 2 &&
-> > +			i2c->regwidth != 4) {
-> > +		dev_err(&pdev->dev, "Invalid register width %d\n",
-> > +			i2c->regwidth);
-> > +		return -EINVAL;
-> > +	}
-> >  
-> >  	ocores_init(i2c);
-> >  
-> > diff --git a/include/linux/i2c-ocores.h b/include/linux/i2c-ocores.h
-> > index 4d5e57f..d1258ad 100644
-> > --- a/include/linux/i2c-ocores.h
-> > +++ b/include/linux/i2c-ocores.h
-> > @@ -13,6 +13,7 @@
-> >  
-> >  struct ocores_i2c_platform_data {
-> >  	u32 regstep;   /* distance between registers */
-> > +	u32 regwidth;  /* io read/write register witdth */
-> >  	u32 clock_khz; /* input clock in kHz */
-> >  	u8 num_devices; /* number of devices in the devices list */
-> >  	struct i2c_board_info const *devices; /* devices connected to the bus */
-> > -- 
-> > 1.7.9.5
-> > 
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> -- 
-> Pengutronix e.K.                           | Wolfram Sang                |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Yes, we would have that problem until the two trees are merged. But I
+> still prefer not to squash the two patches which already contain huge
+> diff.
+
+I'd not say the diff is *that* big (and most of what's there is simple
+and repetitive), and bisection is a very useful tool.  I know I
+frequently find it enormously painful trying to figure out breakage when
+large chunks of the history don't work usefully.
+
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPr8o7AAoJEBus8iNuMP3dgagP/A7mKrizYW+adHb7Rn///vWv
+3Ob/XG/AgiioD+0zeHs5/tKECe4oHrFiXZUKwKuXHHH2KU/uYuEkGlW+O5VoHG/2
+msxyuaWFU8HjrMkrM7onjRJdQJNIocXLXgR8Ou4AKt3xgfVzajwtxfcIz6+jP6WQ
+PK6Dng9666yoHzKcwJoQkdmJJXy9O5i8VuyUclf12ifssPjDiF+Osl+zth5TcZ6T
+SN0SS8lS537huRXbbfbNvd1KZl4E98e1l2HGfiYdLmcWyN1QVK6I5dC0pU0OiGKG
+7oxi51BQ3T3HBcXTKHErIdvHRgVY92gXwoQOLgAzPCxaeT3n/mC2lHQmuq/8q5UH
+SdFHfKRiFMzjDJmgvSOeFFODwu5v1xNWsXxAjNybIpaA35alX8m7+GSVv3pCp3Pt
+MF0WRDkwnA9vjS9TK52IoOMytaDVn8tOnJSzl9EorLAhr62Hg2l/g42EQxsZFeh0
+V/+LPPsVITs5X497EW+Nx4dWfKYjWdAUpfC4Q4txkJ/xiUq4iagZTMwwrB3HGiwL
+D/vE+8AVhPsRdTTu4LNe8qmXKQwqfJ0uLwELRBMq8r0P9MLPS5N7kTIkKJKLKLYP
+MTEohI7940V6/gWBoqfwnvn+0WOnXdFaz94NWj6Fca7iVIzxyqpwFXp6lI7hcbSR
+RQ/WulHFOW9St3zQf+5T
+=M6co
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
