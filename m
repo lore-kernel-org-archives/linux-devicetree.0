@@ -1,59 +1,105 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] dtc: check for duplicate labels when they are defined
-Date: Mon, 14 May 2012 12:40:22 -0600
-Message-ID: <4FB15196.3090200@wwwdotorg.org>
-References: <1332905984-2130-1-git-send-email-swarren@wwwdotorg.org>
- <20120403024634.GG7481@truffala.fritz.box>
+From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] iommu/tegra: smmu: Simplify allocation at once
+Date: Mon, 14 May 2012 22:16:10 +0300
+Message-ID: <1337022975-23999-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120403024634.GG7481-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2012 08:46 PM, David Gibson wrote:
-> On Tue, Mar 27, 2012 at 09:39:44PM -0600, Stephen Warren wrote:
->> Currently, the DT is checked for duplicate labels after the entire DT has
->> been parsed. However, once parts of the DT can be deleted, some entities
->> with labels may have been deleted by this time, thus making those labels
->> invisible to the duplicate label check, which can then lead to false
->> negatives.
->>
->> Instead, maintain a list of all known labels, from which entries are
->> never deleted, and check against this list for duplicates when adding
->> labels.
->>
->> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->> ---
->> This patch should be applied before my previously posted "dtc: Add
->> ability to delete nodes and properties". I believe it addresses David's
->> concerns with that patch re: the assumption that labels are
->> immutable.
-> 
-> Hm, I suppose it does.  Or at least it removes the more complex
-> objections.  I'd still want to relook at the deletion patch to
-> convince myself that the syntax is as good as we can reasonably make
-> it.
-> 
-> This patch is a bit of a hack, and I'm not thrilled at the loss of
-> information from the error message, but I can live wth it.
-> 
-> The other approach I was thinking of, which is hacky in different
-> ways, would be to change the deletion patch so that instead of
-> actually removing the deleted nodes from the tree, just marks them as
-> deleted.  They'd then be omitted from the output pass, but the labels
-> attached therein can still be found.
+To simplify the code, alloc necessary data at once.
 
-So is this patch good to be applied, or would you rather it was reworked
-according the other approach you mentioned?
+Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+This patch requires:
+
+    [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
+        http://marc.info/?l=linux-tegra&m=133663641107327&w=2
+
+Also the above patch requires:
+
+    [PATCH 1/1] dt: Add general DMA window parser
+        http://marc.info/?l=linux-tegra&m=133671302703840&w=2
+---
+ drivers/iommu/tegra-smmu.c |   29 +++++++++--------------------
+ 1 files changed, 9 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index dbaba77..e4acd44 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -241,8 +241,6 @@ struct smmu_device {
+ 	spinlock_t	lock;
+ 	char		*name;
+ 	struct device	*dev;
+-	int		num_as;
+-	struct smmu_as	*as;		/* Run-time allocated array */
+ 	struct page *avp_vector_page;	/* dummy page shared by all AS's */
+ 
+ 	/*
+@@ -254,6 +252,9 @@ struct smmu_device {
+ 	unsigned long asid_security;
+ 
+ 	struct device_node *ahb;
++
++	int		num_as;
++	struct smmu_as	as[0];		/* Run-time allocated array */
+ };
+ 
+ static struct smmu_device *smmu_handle; /* unique for a system */
+@@ -902,15 +903,18 @@ static int tegra_smmu_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	int i, asids, err = 0;
+ 	dma_addr_t base;
+-	size_t size;
+-	const void *prop;
++	size_t bytes, size;
+ 
+ 	if (smmu_handle)
+ 		return -EIO;
+ 
+ 	BUILD_BUG_ON(PAGE_SHIFT != SMMU_PAGE_SHIFT);
+ 
+-	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
++	if (of_property_read_u32(dev->of_node, "nvidia,#asids", &asids))
++		return -ENODEV;
++
++	bytes = sizeof(*smmu) + asids * sizeof(*smmu->as);
++	smmu = devm_kzalloc(dev, bytes, GFP_KERNEL);
+ 	if (!smmu) {
+ 		dev_err(dev, "failed to allocate smmu_device\n");
+ 		return -ENOMEM;
+@@ -939,13 +943,6 @@ static int tegra_smmu_probe(struct platform_device *pdev)
+ 	if (!size)
+ 		return -EINVAL;
+ 
+-	prop = of_get_property(dev->of_node, "nvidia,#asids", NULL);
+-	if (!prop)
+-		return -ENODEV;
+-	asids = be32_to_cpup(prop);
+-	if (!asids)
+-		return -ENODEV;
+-
+ 	smmu->ahb = of_parse_phandle(dev->of_node, "nvidia,ahb", 0);
+ 	if (!smmu->ahb)
+ 		return -ENODEV;
+@@ -960,14 +957,6 @@ static int tegra_smmu_probe(struct platform_device *pdev)
+ 	smmu->translation_enable_2 = ~0;
+ 	smmu->asid_security = 0;
+ 
+-	smmu->as = devm_kzalloc(dev,
+-			sizeof(smmu->as[0]) * smmu->num_as, GFP_KERNEL);
+-	if (!smmu->as) {
+-		dev_err(dev, "failed to allocate smmu_as\n");
+-		err = -ENOMEM;
+-		goto fail;
+-	}
+-
+ 	for (i = 0; i < smmu->num_as; i++) {
+ 		struct smmu_as *as = &smmu->as[i];
+ 
+-- 
+1.7.5.4
