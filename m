@@ -1,105 +1,47 @@
-From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] iommu/tegra: smmu: Simplify allocation at once
-Date: Mon, 14 May 2012 22:16:10 +0300
-Message-ID: <1337022975-23999-1-git-send-email-hdoyu@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] mmc: dt: Consolidate DT bindings
+Date: Mon, 14 May 2012 19:53:45 +0000
+Message-ID: <201205141953.45616.arnd@arndb.de>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org> <201205131946.33109.arnd@arndb.de> <87pqa7suyk.fsf@laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <87pqa7suyk.fsf@laptop.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Viresh Kumar <viresh.kumar@st.com>, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, rob.herring@calxeda.com, Anton Vorontsov <anton.vorontsov@linaro.org>, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, kgene.kim@samsung.com, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-To simplify the code, alloc necessary data at once.
+On Sunday 13 May 2012, Chris Ball wrote:
+> Hi Arnd,
+> 
+> On Sun, May 13 2012, Arnd Bergmann wrote:
+> > I've verified that there are no conflicts with anything we have in
+> > arm-soc right now, so I think it should just go through your
+> > tree.
+> 
+> Ah, I based the patch on latest linux-next.  That's why there aren't
+> conflicts against arm-soc, but there are conflicts (in the omap and
+> tegra dts changes) between the patch and Linus master/mmc-next:
+> 
+> Applying: mmc: dt: Consolidate DT bindings
+> error: patch failed: arch/arm/boot/dts/omap3-beagle.dts:57
+> error: patch failed: arch/arm/boot/dts/omap4-panda.dts:55
+> error: patch failed: arch/arm/boot/dts/omap4-sdp.dts:94
+> error: patch failed: arch/arm/boot/dts/tegra-cardhu.dts:141
+> error: patch failed: arch/arm/boot/dts/tegra-harmony.dts:335
+> error: patch failed: arch/arm/boot/dts/tegra-ventana.dts:338
+> Patch failed at 0001 mmc: dt: Consolidate DT bindings
+> 
+> So I think merging via arm-soc is the only way to get it to Linus
+> without conflicts.  (Alternatively I can take it in mmc-next and
+> Linus can handle the conflicts.)
 
-Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-This patch requires:
+I've created a drivers/mmc branch with this patch and its direct dependencies
+now and pulled that into the next/drivers branch of arm-soc
 
-    [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
-        http://marc.info/?l=linux-tegra&m=133663641107327&w=2
+Thanks,
 
-Also the above patch requires:
-
-    [PATCH 1/1] dt: Add general DMA window parser
-        http://marc.info/?l=linux-tegra&m=133671302703840&w=2
----
- drivers/iommu/tegra-smmu.c |   29 +++++++++--------------------
- 1 files changed, 9 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index dbaba77..e4acd44 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -241,8 +241,6 @@ struct smmu_device {
- 	spinlock_t	lock;
- 	char		*name;
- 	struct device	*dev;
--	int		num_as;
--	struct smmu_as	*as;		/* Run-time allocated array */
- 	struct page *avp_vector_page;	/* dummy page shared by all AS's */
- 
- 	/*
-@@ -254,6 +252,9 @@ struct smmu_device {
- 	unsigned long asid_security;
- 
- 	struct device_node *ahb;
-+
-+	int		num_as;
-+	struct smmu_as	as[0];		/* Run-time allocated array */
- };
- 
- static struct smmu_device *smmu_handle; /* unique for a system */
-@@ -902,15 +903,18 @@ static int tegra_smmu_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	int i, asids, err = 0;
- 	dma_addr_t base;
--	size_t size;
--	const void *prop;
-+	size_t bytes, size;
- 
- 	if (smmu_handle)
- 		return -EIO;
- 
- 	BUILD_BUG_ON(PAGE_SHIFT != SMMU_PAGE_SHIFT);
- 
--	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
-+	if (of_property_read_u32(dev->of_node, "nvidia,#asids", &asids))
-+		return -ENODEV;
-+
-+	bytes = sizeof(*smmu) + asids * sizeof(*smmu->as);
-+	smmu = devm_kzalloc(dev, bytes, GFP_KERNEL);
- 	if (!smmu) {
- 		dev_err(dev, "failed to allocate smmu_device\n");
- 		return -ENOMEM;
-@@ -939,13 +943,6 @@ static int tegra_smmu_probe(struct platform_device *pdev)
- 	if (!size)
- 		return -EINVAL;
- 
--	prop = of_get_property(dev->of_node, "nvidia,#asids", NULL);
--	if (!prop)
--		return -ENODEV;
--	asids = be32_to_cpup(prop);
--	if (!asids)
--		return -ENODEV;
--
- 	smmu->ahb = of_parse_phandle(dev->of_node, "nvidia,ahb", 0);
- 	if (!smmu->ahb)
- 		return -ENODEV;
-@@ -960,14 +957,6 @@ static int tegra_smmu_probe(struct platform_device *pdev)
- 	smmu->translation_enable_2 = ~0;
- 	smmu->asid_security = 0;
- 
--	smmu->as = devm_kzalloc(dev,
--			sizeof(smmu->as[0]) * smmu->num_as, GFP_KERNEL);
--	if (!smmu->as) {
--		dev_err(dev, "failed to allocate smmu_as\n");
--		err = -ENOMEM;
--		goto fail;
--	}
--
- 	for (i = 0; i < smmu->num_as; i++) {
- 		struct smmu_as *as = &smmu->as[i];
- 
--- 
-1.7.5.4
+	Arnd
