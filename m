@@ -1,54 +1,62 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] iommu/tegra: smmu: Simplify allocation at once
-Date: Tue, 15 May 2012 10:26:49 +0200
-Message-ID: <20120515.112649.411607744957826949.hdoyu@nvidia.com>
-References: <1337022975-23999-1-git-send-email-hdoyu@nvidia.com><4FB19677.4040702@wwwdotorg.org>
+From: Roland Stigge <stigge@antcom.de>
+Subject: Re: [PATCH] MTD: LPC32xx SLC NAND driver
+Date: Tue, 15 May 2012 15:20:55 +0200
+Message-ID: <4FB25837.2050603@antcom.de>
+References: <1336829386-23301-1-git-send-email-stigge@antcom.de> <1337068543.2528.143.camel@sauron.fi.intel.com> <4FB2109A.2080505@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FB19677.4040702-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <4FB2109A.2080505@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: dedekind1@gmail.com, Bastian Hecht <hechtb@googlemail.com>, Lars-Peter Clausen <lars@metafoo.de>, Lei Wen <leiwen@marvell.com>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Tue, 15 May 2012 01:34:15 +0200:
+Hi Artem and Huang,
 
-> On 05/14/2012 01:16 PM, Hiroshi DOYU wrote:
-> > To simplify the code, alloc necessary data at once.
-> > 
-> > Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > This patch requires:
-> > 
-> >     [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
-> >         http://marc.info/?l=linux-tegra&m=133663641107327&w=2
-> > 
-> > Also the above patch requires:
-> > 
-> >     [PATCH 1/1] dt: Add general DMA window parser
-> >         http://marc.info/?l=linux-tegra&m=133671302703840&w=2
-> 
-> I know I've been harping on about dependencies, but you typically only
-> need to mention them if the dependencies are not already checked into
-> the branch you expect this patch to be checked into.
-> 
-> > -	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
-> > +	if (of_property_read_u32(dev->of_node, "nvidia,#asids", &asids))
-> > +		return -ENODEV;
-> 
-> I believe you need to change the asids variable from int to u32 to avoid
-> a warning here.
+thank you for your feedback!
 
-There's no warning but it's allowed because of "-Wno-pointer-sign". It
-seems that this flag has been used for long in kernel, and there are
-many places. Is this conversion allowed because it's expeced that the
-author should know the range of value, or any other reason?
+On 05/15/2012 10:15 AM, Huang Shijie wrote:
+>> On Sat, 2012-05-12 at 15:29 +0200, Roland Stigge wrote:
+>>> +       /*
+>>> +        * The DMA is finished, but the NAND controller may still have
+>>> +        * buffered data. Wait until all the data is sent.
+> When all the data is sent, is there an interrupt for this?
 
-*1:
--Wno-pointer-sign
-    Don't warn for pointer argument passing or assignment with
-    different signedness. Only useful in the negative form since this
-    warning is enabled by default. This option is only supported for C
-    and Objective-C.
+Bad news is: No
+
+Good news is: The previous DMA operation finished with an interrupt
+which according to the manual should already corresponds to this
+condition. Tests show that at this point of sampling:
+
+>>> +       timeout = LPC32XX_DMA_SIMPLE_TIMEOUT;
+>>> +       while ((readl(SLC_STAT(host->io_base))&  SLCSTAT_DMA_FIFO)
+>>> +&&  (timeout>  0))
+>>> +               timeout--;
+
+... the condition is always true and always just jumps over this loop,
+at least with my hardware.
+
+>> /* Chip reaction time timeout in milliseconds */
+>> #define LPC32XX_DMA_TIMEOUT 100
+>>
+>> timeout = loops_per_jiffy * msecs_to_jiffies(LPC32XX_DMA_TIMEOUT);
+>>
+>> while ((readl(...))&&  timeout-->  0)
+>>     cpu_relax();
+
+As I understand loops_per_jiffy, this loop will take much longer than
+the 100 ms you defined above?
+
+Anyway, I will keep the loop for safety reasons, add an msleep() and add
+a warning, should the loop be entered _at all_.
+
+Maybe someone from NXP can give us more insight here? Maybe the
+condition check isn't necessary anymore after I ported the driver to
+dmaengine (this controller is always wired together with an amba-pl080
+in the LPC32xx)?
+
+Thanks in advance,
+
+Roland
