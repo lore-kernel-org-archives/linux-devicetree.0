@@ -1,32 +1,82 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/3] eeprom/of: Add device tree bindings to at25.
-Date: Tue, 15 May 2012 08:47:17 -0700
-Message-ID: <20120515154717.GA15552@kroah.com>
-References: <1336773923-17866-1-git-send-email-ddaney.cavm@gmail.com>
- <1336773923-17866-4-git-send-email-ddaney.cavm@gmail.com>
+From: Roland Stigge <stigge@antcom.de>
+Subject: Re: [PATCH] MTD: LPC32xx MLC NAND driver
+Date: Tue, 15 May 2012 17:49:56 +0200
+Message-ID: <4FB27B24.3030604@antcom.de>
+References: <1337091832-10138-1-git-send-email-stigge@antcom.de> <20120515143428.GC13860@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1336773923-17866-4-git-send-email-ddaney.cavm@gmail.com>
+In-Reply-To: <20120515143428.GC13860@n2100.arm.linux.org.uk>
 Sender: linux-doc-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, David Daney <david.daney@cavium.com>, Michael Hennerich <michael.hennerich@analog.com>, Axel Lin <axel.lin@gmail.com>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2012 at 03:05:23PM -0700, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> We can extract the "pagesize", "size" and "address-width" from the
-> device tree so that SPI eeproms can be fully specified in the device
-> tree.
-> 
-> Also add a MODULE_DEVICE_TABLE so the drivers can be automatically bound.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> Cc: Michael Hennerich <michael.hennerich@analog.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Axel Lin <axel.lin@gmail.com>
+Hi Russell!
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks for your notes!
 
+On 05/15/2012 04:34 PM, Russell King - ARM Linux wrote:
+> On Tue, May 15, 2012 at 04:23:52PM +0200, Roland Stigge wrote:
+>> +static int lpc32xx_xmit_dma(struct mtd_info *mtd, dma_addr_t dma,
+>> +			    void *mem, int len, enum dma_transfer_direction dir)
+>> +{
+>> +	struct nand_chip *chip = mtd->priv;
+>> +	struct lpc32xx_nand_host *host = chip->priv;
+>> +	struct dma_async_tx_descriptor *desc;
+>> +	int flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+>> +	int res;
+>> +	dma_cookie_t cookie;
+>> +
+>> +	host->dma_slave_config.direction = dir;
+>> +	host->dma_slave_config.src_addr = dma;
+>> +	host->dma_slave_config.dst_addr = dma;
+>> +	if (dmaengine_slave_config(host->dma_chan, &host->dma_slave_config)) {
+>> +		dev_err(mtd->dev.parent, "Failed to setup DMA slave\n");
+>> +		return -ENXIO;
+>> +	}
+> 
+> The 'direction' argument should be ignored by all modern DMA engine
+> drivers
+
+Good - this way, I can move dmaengine_slave_config() to the dma_setup()
+function, i.e., to probe().
+
+However, I needed to set it there to some initial value (e.g., DMA_DEV_TO_MEM) -
+otherwise the amba-pl08x driver didn't accept it. Is this a bug in the pl08x
+driver?
+
+Can we remove the .direction element from the struct dma_slave_config to prevent
+others from making the same mistakes? Or is it useful for sth. else still?
+
+>> +
+>> +	sg_init_one(&host->sgl, mem, len);
+>> +
+>> +	res = dma_map_sg(host->dma_chan->device->dev, &host->sgl, 1, dir);
+> 
+> Also note that dma transfer directions and dma data directions are
+> different things.  You shouldn't mix the two.
+
+Thanks for pointing this out - I wasn't aware that the distinction between the
+two is so important. Also consider e.g.:
+
+arch/arm/mm/dma-mapping.c:
+/**
+ * dma_map_sg - map a set of SG buffers for streaming mode DMA
+ * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
+ * @sg: list of buffers
+ * @nents: number of buffers to map 
+ * @dir: DMA transfer direction
+         ^^^^^^^^^^^^^^^^^^^^^^
+ *
+[...]
+ * Device ownership issues as mentioned for dma_map_single are the same
+ * here.
+ */
+int dma_map_sg(struct device *dev, struct scatterlist *sg, int nents,
+                enum dma_data_direction dir)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+;-)
+
+Roland
