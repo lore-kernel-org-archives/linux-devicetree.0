@@ -1,107 +1,106 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH] MTD: LPC32xx SLC NAND driver
-Date: Tue, 15 May 2012 10:55:43 +0300
-Message-ID: <1337068543.2528.143.camel@sauron.fi.intel.com>
-References: <1336829386-23301-1-git-send-email-stigge@antcom.de>
-Reply-To: dedekind1@gmail.com
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ASoC: twl6040: Support for DT
+Date: Tue, 15 May 2012 11:00:25 +0300
+Message-ID: <4FB20D19.3030801@ti.com>
+References: <20120509133511.GQ3955@opensource.wolfsonmicro.com>
+	<4FACF1C2.7050008@ti.com>
+	<20120511130816.GB3960@opensource.wolfsonmicro.com>
+	<4FAD33D3.3050104@ti.com>
+	<20120511203425.GB29835@opensource.wolfsonmicro.com>
+	<4FB0EEAC.6060204@ti.com>
+	<20120514121127.GR31985@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-BUTr4U2qvF8OaNVex7Q2"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1336829386-23301-1-git-send-email-stigge@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>, Bastian Hecht <hechtb@googlemail.com>, Lars-Peter Clausen <lars@metafoo.de>, Huang Shijie <b32955@freescale.com>, Lei Wen <leiwen@marvell.com>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20120514121127.GR31985@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: alsa-devel@alsa-project.org, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dtor@mail.ru>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Misael Lopez Cruz <misael.lopez@ti.com>, Liam Girdwood <lrg@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
---=-BUTr4U2qvF8OaNVex7Q2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 05/14/2012 03:11 PM, Mark Brown wrote:
+> I'm just not seeing anything in the device tree that abstracts the chip
+> top level from the function drivers; if there were then it'd be very
+> much easier to see a general use for this.
 
-I am CCing few other guys who take care of several drivers which use
-similar way of busy-waiting - probably you could change it?
+While we are discussing on how to handle the twl6040 MFD deive via DT
+and to whether load the child drivers via DT or to load them via
+mfd_add_devices() I came up with this dts entry for the later case
+(mfd_add_devices mode):
 
-Bastian: drivers/mtd/nand/sh_flctl.c
-Lars-Peter: drivers/mtd/nand/jz4740_nand.c
-Huang: drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-Lei Wen: drivers/mtd/nand/pxa3xx_nand.c
+&i2c1 {
+	twl6040: twl@4b {
+		compatible =3D "ti,twl6040";
+		reg =3D <0x4b>;
 
-On Sat, 2012-05-12 at 15:29 +0200, Roland Stigge wrote:
-> +       /*
-> +        * The DMA is finished, but the NAND controller may still have
-> +        * buffered data. Wait until all the data is sent.
-> +        */
-> +       timeout =3D LPC32XX_DMA_SIMPLE_TIMEOUT;
-> +       while ((readl(SLC_STAT(host->io_base)) & SLCSTAT_DMA_FIFO)
-> +              && (timeout > 0))
-> +               timeout--;
-> +       if (!timeout) {
-> +               dev_err(mtd->dev.parent, "FIFO held data too long\n");
-> +               status =3D -EIO;
-> +       }=20
+		interrupts =3D <0 119 4>;
+		interrupt-parent =3D <&gic>;
+		twl6040,audpwron-gpio =3D <&gpio4 31 0>;
 
-I know the MTD tree is full of this, but this is bad, I think. The
-timeout should be time-backed, not CPU-cycles-backed.
+		vio-supply =3D <&v1v8>;
+		v2v1-supply =3D <&v2v1>;
+		enable-active-high;
 
-I do not know the best way to do this, hopefully someone in the arm list
-could suggest, but the following pattern is at least better:
+		/* regulators for vibra motor */
+		vddvibl-supply =3D <&vbat>;
+		vddvibr-supply =3D <&vbat>;
+
+		vibra {
+			/* Vibra driver, motor resistance parameters */
+			ti,vibldrv-res =3D <8>;
+			ti,vibrdrv-res =3D <3>;
+			ti,viblmotor-res =3D <10>;
+			ti,vibrmotor-res =3D <10>;
+		};
+	};
+};
+
+With this mode:
+No need to tell that twl6040 is acts as interrupt controller since the
+interrupts it is handling is only for internal functions dispatched via
+a single irq line toward the CPU.
+
+The audio (ASoC codec) child is always enabled since it is the main
+function of the twl6040.
+
+The tricky part is the vibra: it needs two regulators (to provide power
+to the motors). Since the regulators can only be connected to the device
+described in dt, this is what I need to do:
+to get the vibra parameters (in the twl6040-vibra driver):
+
+struct device_node *node =3D of_find_node_by_name(
+				pdev->dev.parent->of_node, "vibra");
+
+...
+of_property_read_u32(node, "ti,vibldrv-res", &info->vibldrv_res);
+...
+
+To get the regulators needed by the vibra driver when booted with DT:
+
+info->supplies[0].supply =3D "vddvibl";
+info->supplies[1].supply =3D "vddvibr";
+if (!pdata)
+	ret =3D regulator_bulk_get(pdev->dev.parent,
+		ARRAY_SIZE(info->supplies), info->supplies);
+else
+	ret =3D regulator_bulk_get(info->dev,
+		ARRAY_SIZE(info->supplies), info->supplies);
 
 
-/* Chip reaction time timeout in milliseconds */
-#define LPC32XX_DMA_TIMEOUT 100
+I need to use the pdev->dev.parent to be able to get the needed
+regulators. Is this acceptable?
 
-timeout =3D loops_per_jiffy * msecs_to_jiffies(LPC32XX_DMA_TIMEOUT);
+-- =
 
-while ((readl(...)) && timeout-- > 0)
-	cpu_relax();
-
-if (!timeout)
-	error;
-
-
-So basically I turned your hard-coded iterations count into a time-based
-timeout. I also used cpu_relax() which is commonly used in tight-loops
-like this. Here is a piece of documentation about cpu_relax():
-
-"
-The right way to perform a busy wait is:
-
-    while (my_variable !=3D what_i_want)
-        cpu_relax();
-
-The cpu_relax() call can lower CPU power consumption or yield to a
-hyperthreaded twin processor; it also happens to serve as a compiler
-barrier, so, once again, volatile is unnecessary.  Of course, busy-
-waiting is generally an anti-social act to begin with.
-"
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-BUTr4U2qvF8OaNVex7Q2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJPsgv/AAoJECmIfjd9wqK0kHMQAKVtllaa4HiixNCsPIC+QKdN
-jrONKGOnOZSuXrAL4DStVWwbij4E2u7RvdoPI4egWXgfe4xhr8HN70PyYxDbTBr3
-29qHm0f3GfBzfZH/VTsFkvih7webx3vVbFii26rbMiQn2AISvmBFduHA+krmECO3
-iJ0O2QAGn7iP6STTcdMuFKff91efFiWWi4PXqLKISh6EpuVJmteHGbWr6JG99m3g
-PzGDbovdQRibMaPJoruEcna6VI9hodMW3WEf02LCJFBVwZvU9UbG/A9j6sFVo4p6
-5iQebBK7GTvF/66UHsjgoJRD2395Lt+Di6ukF+7tlVQREHIc1OR35JUy05D/SZyd
-q26gxEHrVj7qH+dHArwtw3Zl3Ba+UJJpLG9QJTfZbp/FIuDxrotgb+4tQl7CsyLf
-VD8FL6xCN1NPovTwotBULY+7EkarhqjQAjc4efS2pfHUf8SjasJjZWEaSvID7JOq
-4yJXkMZ0E/le5/FrFpeBPfpiKKeD5nRJsY6BB8QsNhHMiaNTn8mSmSzIUvug9ScG
-CCdz9lOM/9cvk83GE9M44koT5R0J1MaMrySe5JQ49ssRSVG1u2FnsEkt5Om2qV/V
-sNcRj/M+5ZJyN11KBJPh8LdyEGcM+h2+gUl8+XuSq8s9d3fQgMKQZKebvUKnOQgM
-m2gUm+QepsF1x1AtA1nE
-=J9oH
------END PGP SIGNATURE-----
-
---=-BUTr4U2qvF8OaNVex7Q2--
-
+P=E9ter
