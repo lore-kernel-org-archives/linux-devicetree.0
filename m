@@ -1,82 +1,49 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] MTD: LPC32xx MLC NAND driver
-Date: Tue, 15 May 2012 17:00:07 +0100
-Message-ID: <20120515160006.GF13860@n2100.arm.linux.org.uk>
-References: <1337091832-10138-1-git-send-email-stigge@antcom.de> <20120515143428.GC13860@n2100.arm.linux.org.uk> <4FB27B24.3030604@antcom.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] iommu/tegra: smmu: Simplify allocation at once
+Date: Tue, 15 May 2012 10:09:13 -0600
+Message-ID: <4FB27FA9.20106@wwwdotorg.org>
+References: <1337022975-23999-1-git-send-email-hdoyu@nvidia.com><4FB19677.4040702@wwwdotorg.org> <20120515.112649.411607744957826949.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FB27B24.3030604@antcom.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120515.112649.411607744957826949.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 15, 2012 at 05:49:56PM +0200, Roland Stigge wrote:
-> On 05/15/2012 04:34 PM, Russell King - ARM Linux wrote:
-> > On Tue, May 15, 2012 at 04:23:52PM +0200, Roland Stigge wrote:
-> >> +static int lpc32xx_xmit_dma(struct mtd_info *mtd, dma_addr_t dma,
-> >> +			    void *mem, int len, enum dma_transfer_direction dir)
-> >> +{
-> >> +	struct nand_chip *chip = mtd->priv;
-> >> +	struct lpc32xx_nand_host *host = chip->priv;
-> >> +	struct dma_async_tx_descriptor *desc;
-> >> +	int flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> >> +	int res;
-> >> +	dma_cookie_t cookie;
-> >> +
-> >> +	host->dma_slave_config.direction = dir;
-> >> +	host->dma_slave_config.src_addr = dma;
-> >> +	host->dma_slave_config.dst_addr = dma;
-> >> +	if (dmaengine_slave_config(host->dma_chan, &host->dma_slave_config)) {
-> >> +		dev_err(mtd->dev.parent, "Failed to setup DMA slave\n");
-> >> +		return -ENXIO;
-> >> +	}
-> > 
-> > The 'direction' argument should be ignored by all modern DMA engine
-> > drivers
+On 05/15/2012 02:26 AM, Hiroshi Doyu wrote:
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Tue, 15 May 2012 01:34:15 +0200:
 > 
-> Good - this way, I can move dmaengine_slave_config() to the dma_setup()
-> function, i.e., to probe().
+>> On 05/14/2012 01:16 PM, Hiroshi DOYU wrote:
+>>> To simplify the code, alloc necessary data at once.
+>>>
+>>> Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>> This patch requires:
+>>>
+>>>     [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
+>>>         http://marc.info/?l=linux-tegra&m=133663641107327&w=2
+>>>
+>>> Also the above patch requires:
+>>>
+>>>     [PATCH 1/1] dt: Add general DMA window parser
+>>>         http://marc.info/?l=linux-tegra&m=133671302703840&w=2
+>>
+>> I know I've been harping on about dependencies, but you typically only
+>> need to mention them if the dependencies are not already checked into
+>> the branch you expect this patch to be checked into.
+>>
+>>> -	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
+>>> +	if (of_property_read_u32(dev->of_node, "nvidia,#asids", &asids))
+>>> +		return -ENODEV;
+>>
+>> I believe you need to change the asids variable from int to u32 to avoid
+>> a warning here.
 > 
-> However, I needed to set it there to some initial value (e.g., DMA_DEV_TO_MEM) -
-> otherwise the amba-pl08x driver didn't accept it. Is this a bug in the pl08x
-> driver?
+> There's no warning but it's allowed because of "-Wno-pointer-sign". It
 
-At some point, pl08x should lose all checking on that...  It should select
-the parameters from the DMA slave config at prepare time instead.
-
-> Can we remove the .direction element from the struct dma_slave_config to
-> prevent others from making the same mistakes? Or is it useful for sth.
-> else still?
-
-That's the intention, but as yet there's been little effort in terms of
-patches.  It requires co-operation from all the folk with DMA engine
-drivers to sort their stuff out as well...
-
-> >> +
-> >> +	sg_init_one(&host->sgl, mem, len);
-> >> +
-> >> +	res = dma_map_sg(host->dma_chan->device->dev, &host->sgl, 1, dir);
-> > 
-> > Also note that dma transfer directions and dma data directions are
-> > different things.  You shouldn't mix the two.
-> 
-> Thanks for pointing this out - I wasn't aware that the distinction between the
-> two is so important. Also consider e.g.:
-> 
-> arch/arm/mm/dma-mapping.c:
-> /**
->  * dma_map_sg - map a set of SG buffers for streaming mode DMA
->  * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
->  * @sg: list of buffers
->  * @nents: number of buffers to map 
->  * @dir: DMA transfer direction
->          ^^^^^^^^^^^^^^^^^^^^^^
-
-This pre-dates DMA engine renaming their 'dma_data_direction' to
-'dma_transfer_direction', and it's really unfortunate that it now causes
-confusion.
-
-The key thing is the enum type, not the comments.
+That's odd. I'm sure I have seen this warning recently when calling this
+API, but you're right, I'm not able to trigger that warning right now,
+so this is fine.
