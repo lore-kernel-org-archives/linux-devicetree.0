@@ -1,98 +1,94 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 2/4] MFD: twl6040: Allocate IRQ numbers dynamically
-Date: Wed, 16 May 2012 14:11:56 +0300
-Message-ID: <1337166718-8458-3-git-send-email-peter.ujfalusi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v3 3/4] MFD: twl6040: Register the child for the ASoC codec unconditionally
+Date: Wed, 16 May 2012 14:11:57 +0300
+Message-ID: <1337166718-8458-4-git-send-email-peter.ujfalusi@ti.com>
 References: <1337166718-8458-1-git-send-email-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1337166718-8458-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, Misael Lopez Cruz <misael.lopez-l0cyMroinI0@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1337166718-8458-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, peter.ujfalusi@ti.com, Misael Lopez Cruz <misael.lopez@ti.com>, Dmitry Torokhov <dtor@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-Use irq_alloc_descs() to get the IRQ number range dynamically instead of
-the hardwired use if pdata->irq_base.
-The twl6040 only provides interrupts for it's internal components which
-means that it is not working as an IRQ expander type of device.
-The client drivers will receive their interrupt numbers as resource which
-is configured based on the received IRQ range we got from irq_alloc_descs()
+The main function of the twl6040 is to provide audio on OMAP4+ platforms.
+Since the ASoC codec driver can work without the pdata we can register the
+child to load the codec driver whenever the twl6040 MFD driver is loaded.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/mfd/twl6040-core.c |    3 +--
- drivers/mfd/twl6040-irq.c  |   13 +++++++++++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ drivers/mfd/twl6040-core.c |   39 +++++++++++++++++++--------------------
+ 1 files changed, 19 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/mfd/twl6040-core.c b/drivers/mfd/twl6040-core.c
-index 7a92d95..c50fba7 100644
+index c50fba7..9765dc2 100644
 --- a/drivers/mfd/twl6040-core.c
 +++ b/drivers/mfd/twl6040-core.c
-@@ -515,7 +515,7 @@ static int __devinit twl6040_probe(struct i2c_client *client,
+@@ -507,7 +507,7 @@ static int __devinit twl6040_probe(struct i2c_client *client,
+ 	struct twl6040_platform_data *pdata = client->dev.platform_data;
+ 	struct twl6040 *twl6040;
+ 	struct mfd_cell *cell = NULL;
+-	int ret, children = 0;
++	int irq, ret, children = 0;
+ 
+ 	if (!pdata) {
+ 		dev_err(&client->dev, "Platform data is missing\n");
+@@ -589,22 +589,27 @@ static int __devinit twl6040_probe(struct i2c_client *client,
+ 	/* dual-access registers controlled by I2C only */
+ 	twl6040_set_bits(twl6040, TWL6040_REG_ACCCTL, TWL6040_I2CSEL);
+ 
++	/*
++	 * The main functionality of twl6040 to provide audio on OMAP4+ systems.
++	 * We can add the ASoC codec child whenever this driver has been loaded.
++	 * The ASoC codec can work without pdata, pass the platform_data only if
++	 * it has been provided.
++	 */
++	irq = twl6040->irq_base + TWL6040_IRQ_PLUG;
++	cell = &twl6040->cells[children];
++	cell->name = "twl6040-codec";
++	twl6040_codec_rsrc[0].start = irq;
++	twl6040_codec_rsrc[0].end = irq;
++	cell->resources = twl6040_codec_rsrc;
++	cell->num_resources = ARRAY_SIZE(twl6040_codec_rsrc);
+ 	if (pdata->codec) {
+-		int irq = twl6040->irq_base + TWL6040_IRQ_PLUG;
+-
+-		cell = &twl6040->cells[children];
+-		cell->name = "twl6040-codec";
+-		twl6040_codec_rsrc[0].start = irq;
+-		twl6040_codec_rsrc[0].end = irq;
+-		cell->resources = twl6040_codec_rsrc;
+-		cell->num_resources = ARRAY_SIZE(twl6040_codec_rsrc);
+ 		cell->platform_data = pdata->codec;
+ 		cell->pdata_size = sizeof(*pdata->codec);
+-		children++;
+ 	}
++	children++;
+ 
+ 	if (pdata->vibra) {
+-		int irq = twl6040->irq_base + TWL6040_IRQ_VIB;
++		irq = twl6040->irq_base + TWL6040_IRQ_VIB;
+ 
+ 		cell = &twl6040->cells[children];
+ 		cell->name = "twl6040-vibra";
+@@ -618,16 +623,10 @@ static int __devinit twl6040_probe(struct i2c_client *client,
+ 		children++;
  	}
  
- 	/* In order to operate correctly we need valid interrupt config */
--	if (!client->irq || !pdata->irq_base) {
-+	if (!client->irq) {
- 		dev_err(&client->dev, "Invalid IRQ configuration\n");
- 		return -EINVAL;
- 	}
-@@ -552,7 +552,6 @@ static int __devinit twl6040_probe(struct i2c_client *client,
+-	if (children) {
+-		ret = mfd_add_devices(&client->dev, -1, twl6040->cells,
+-				      children, NULL, 0);
+-		if (ret)
+-			goto mfd_err;
+-	} else {
+-		dev_err(&client->dev, "No platform data found for children\n");
+-		ret = -ENODEV;
++	ret = mfd_add_devices(&client->dev, -1, twl6040->cells, children,
++			      NULL, 0);
++	if (ret)
+ 		goto mfd_err;
+-	}
  
- 	twl6040->dev = &client->dev;
- 	twl6040->irq = client->irq;
--	twl6040->irq_base = pdata->irq_base;
+ 	return 0;
  
- 	mutex_init(&twl6040->mutex);
- 	mutex_init(&twl6040->io_mutex);
-diff --git a/drivers/mfd/twl6040-irq.c b/drivers/mfd/twl6040-irq.c
-index 008022c..914978e 100644
---- a/drivers/mfd/twl6040-irq.c
-+++ b/drivers/mfd/twl6040-irq.c
-@@ -23,6 +23,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/err.h>
- #include <linux/irq.h>
- #include <linux/interrupt.h>
- #include <linux/mfd/core.h>
-@@ -138,7 +139,7 @@ static irqreturn_t twl6040_irq_thread(int irq, void *data)
- 
- int twl6040_irq_init(struct twl6040 *twl6040)
- {
--	int i, nr_irqs, ret;
-+	int i, nr_irqs, irq_base, ret;
- 	u8 val;
- 
- 	mutex_init(&twl6040->irq_mutex);
-@@ -149,8 +150,16 @@ int twl6040_irq_init(struct twl6040 *twl6040)
- 	twl6040_reg_write(twl6040, TWL6040_REG_INTMR, TWL6040_ALLINT_MSK);
- 
- 	nr_irqs = ARRAY_SIZE(twl6040_irqs);
-+
-+	irq_base = irq_alloc_descs(-1, 0, nr_irqs, 0);
-+	if (IS_ERR_VALUE(irq_base)) {
-+		dev_err(twl6040->dev, "Fail to allocate IRQ descs\n");
-+		return irq_base;
-+	}
-+	twl6040->irq_base = irq_base;
-+
- 	/* Register them with genirq */
--	for (i = twl6040->irq_base; i < twl6040->irq_base + nr_irqs; i++) {
-+	for (i = irq_base; i < irq_base + nr_irqs; i++) {
- 		irq_set_chip_data(i, twl6040);
- 		irq_set_chip_and_handler(i, &twl6040_irq_chip,
- 					 handle_level_irq);
 -- 
 1.7.8.6
