@@ -1,31 +1,72 @@
-From: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] Input: twl6040-vibra: Update for device tree support
-Date: Wed, 16 May 2012 22:55:13 +0300
-Message-ID: <CAPo=G1zf1XJcoKgCxMn3X09T0LOUG-9aw3iopqC7OPqcuc5hcQ@mail.gmail.com>
-References: <1337167186-8535-1-git-send-email-peter.ujfalusi@ti.com>
-	<20120516193546.GA15920@core.coreip.homeip.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120516193546.GA15920@core.coreip.homeip.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Roland Stigge <stigge@antcom.de>
+Subject: [PATCH RESEND v3 2/2] ARM: LPC32xx: Make platform use key driver
+Date: Wed, 16 May 2012 22:25:55 +0200
+Message-ID: <1337199955-26441-2-git-send-email-stigge@antcom.de>
+References: <1337199955-26441-1-git-send-email-stigge@antcom.de>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1337199955-26441-1-git-send-email-stigge@antcom.de>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
+Cc: Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+This patch connects the lpc32xx-key driver to the LPC32xx platform (via
+lpc32xx.dtsi), and more specifically to the reference board via its dts file.
+The clock.c file needs to be changed to match the automatic device name to its
+clock.
 
-On Wed, May 16, 2012 at 10:35 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> So in this case why don't you have parent parse all DT data and
-> construct instance of pdata for vibra driver to consume?
+Signed-off-by: Roland Stigge <stigge@antcom.de>
 
-If there is a need to change the parameters (add new ones for example)
-for the vibra driver in this way the change in code only need to be
-done in the vibra driver.
-If the MFD core would construct the pdata, in this case I would need
-to modify both the MFD core and vibra driver.
+---
+Applies to v3.4-rc7 + LPC32xx DT patches
 
---=20
-P=E9ter
+Please pick this patch for the arm-soc subsystem.
+
+Changes since v2:
+* DT: Use "keypad,num-rows", "keypad,num-columns" and "linux,keymap" properties
+
+ arch/arm/boot/dts/lpc32xx.dtsi |    2 ++
+ arch/arm/boot/dts/phy3250.dts  |    9 +++++++++
+ arch/arm/mach-lpc32xx/clock.c  |    2 +-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
+--- linux-2.6.orig/arch/arm/boot/dts/lpc32xx.dtsi
++++ linux-2.6/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -249,6 +249,8 @@
+ 			key@40050000 {
+ 				compatible = "nxp,lpc3220-key";
+ 				reg = <0x40050000 0x1000>;
++				interrupts = <54 0>;
++				status = "disable";
+ 			};
+ 
+ 		};
+--- linux-2.6.orig/arch/arm/boot/dts/phy3250.dts
++++ linux-2.6/arch/arm/boot/dts/phy3250.dts
+@@ -135,6 +135,15 @@
+ 			tsc@40048000 {
+ 				status = "okay";
+ 			};
++
++			key@40050000 {
++				status = "okay";
++				keypad,num-rows = <1>;
++				keypad,num-columns = <1>;
++				nxp,debounce-delay-ms = <3>;
++				nxp,scan-delay-ms = <34>;
++				linux,keymap = <0x00000002>;
++			};
+ 		};
+ 	};
+ 
+--- linux-2.6.orig/arch/arm/mach-lpc32xx/clock.c
++++ linux-2.6/arch/arm/mach-lpc32xx/clock.c
+@@ -1134,7 +1134,7 @@ static struct clk_lookup lookups[] = {
+ 	CLKDEV_INIT("31020300.i2c", NULL, &clk_i2c2),
+ 	CLKDEV_INIT("dev:ssp0", NULL, &clk_ssp0),
+ 	CLKDEV_INIT("dev:ssp1", NULL, &clk_ssp1),
+-	CLKDEV_INIT("lpc32xx_keys.0", NULL, &clk_kscan),
++	CLKDEV_INIT("40050000.key", NULL, &clk_kscan),
+ 	CLKDEV_INIT("20020000.flash", NULL, &clk_nand),
+ 	CLKDEV_INIT("200a8000.flash", NULL, &clk_nand_mlc),
+ 	CLKDEV_INIT("40048000.adc", NULL, &clk_adc),
