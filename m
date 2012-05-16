@@ -1,176 +1,134 @@
 From: Roland Stigge <stigge@antcom.de>
-Subject: [PATCH RESEND] Documentation: devicetree: Fix value format description
-Date: Wed, 16 May 2012 22:33:55 +0200
-Message-ID: <1337200436-26528-1-git-send-email-stigge@antcom.de>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: rob@landley.net, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rdunlap@xenotime.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, w.sang@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH RESEND v9 1/2] gpio: Adjust of_xlate API to support multiple GPIO chips
+Date: Wed, 16 May 2012 22:40:31 +0200
+Message-ID: <1337200832-26630-1-git-send-email-stigge@antcom.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: glikely@secretlab.ca, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 Cc: Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-Numeric values in dts files can be specified in decimal and hex (the latter
-prefixed 0x). The current documentation is updated with this patch to prevent
-confusion about what is meant with values without "0x" (previously hex, now
-dec).
+This patch changes the of_xlate API to make it possible to manipulate the
+actual used gc. This way, multiple GPIO banks can be supported with the same DT
+registered GPIO controller.
+
+The issue was discussed upon the integration of LPC32xx's DT support for its
+GPIO (see separate patch).
 
 Signed-off-by: Roland Stigge <stigge@antcom.de>
-Acked-by: Rob Landley <rob@landley.net>
 
 ---
 Applies to v3.4-rc7
 
- Documentation/devicetree/booting-without-of.txt |   55 ++++++++++++------------
- 1 file changed, 28 insertions(+), 27 deletions(-)
+Changes since last version:
+* Added this patch to the series
 
---- linux-2.6.orig/Documentation/devicetree/booting-without-of.txt
-+++ linux-2.6/Documentation/devicetree/booting-without-of.txt
-@@ -551,12 +551,13 @@ Here is an example of a simple device-tr
- designates a node followed by the node unit name. Properties are
- presented with their name followed by their content. "content"
- represents an ASCII string (zero terminated) value, while <content>
--represents a 32-bit hexadecimal value. The various nodes in this
--example will be discussed in a later chapter. At this point, it is
--only meant to give you a idea of what a device-tree looks like. I have
--purposefully kept the "name" and "linux,phandle" properties which
--aren't necessary in order to give you a better idea of what the tree
--looks like in practice.
-+represents a 32-bit value, specified in decimal or hexadecimal (the
-+latter prefixed 0x). The various nodes in this example will be
-+discussed in a later chapter. At this point, it is only meant to give
-+you a idea of what a device-tree looks like. I have purposefully kept
-+the "name" and "linux,phandle" properties which aren't necessary in
-+order to give you a better idea of what the tree looks like in
-+practice.
+Thanks to Grant Likely for reviewing and advice!
+
+ drivers/gpio/gpio-samsung.c |   10 +++++-----
+ drivers/of/gpio.c           |   14 ++++++++------
+ include/asm-generic/gpio.h  |    2 +-
+ include/linux/of_gpio.h     |    2 +-
+ 4 files changed, 15 insertions(+), 13 deletions(-)
+
+--- linux-2.6.orig/drivers/gpio/gpio-samsung.c
++++ linux-2.6/drivers/gpio/gpio-samsung.c
+@@ -2657,21 +2657,21 @@ static struct samsung_gpio_chip exynos5_
  
-   / o device-tree
-       |- name = "device-tree"
-@@ -576,14 +577,14 @@ looks like in practice.
-       |   |- name = "PowerPC,970"
-       |   |- device_type = "cpu"
-       |   |- reg = <0>
--      |   |- clock-frequency = <5f5e1000>
-+      |   |- clock-frequency = <0x5f5e1000>
-       |   |- 64-bit
-       |   |- linux,phandle = <2>
-       |
-       o memory@0
-       | |- name = "memory"
-       | |- device_type = "memory"
--      | |- reg = <00000000 00000000 00000000 20000000>
-+      | |- reg = <0x00000000 0x00000000 0x00000000 0x20000000>
-       | |- linux,phandle = <3>
-       |
-       o chosen
-@@ -1010,8 +1011,8 @@ compatibility.
- 		#size-cells = <1>;
- 		#interrupt-cells = <2>;
- 		device_type = "soc";
--		ranges = <00000000 e0000000 00100000>
--		reg = <e0000000 00003000>;
-+		ranges = <0x00000000 0xe0000000 0x00100000>
-+		reg = <0xe0000000 0x00003000>;
- 		bus-frequency = <0>;
+ 
+ #if defined(CONFIG_ARCH_EXYNOS) && defined(CONFIG_OF)
+-static int exynos_gpio_xlate(struct gpio_chip *gc,
++static int exynos_gpio_xlate(struct gpio_chip **gc,
+ 			const struct of_phandle_args *gpiospec, u32 *flags)
+ {
+ 	unsigned int pin;
+ 
+-	if (WARN_ON(gc->of_gpio_n_cells < 4))
++	if (WARN_ON((*gc)->of_gpio_n_cells < 4))
+ 		return -EINVAL;
+ 
+-	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
++	if (WARN_ON(gpiospec->args_count < (*gc)->of_gpio_n_cells))
+ 		return -EINVAL;
+ 
+-	if (gpiospec->args[0] > gc->ngpio)
++	if (gpiospec->args[0] > (*gc)->ngpio)
+ 		return -EINVAL;
+ 
+-	pin = gc->base + gpiospec->args[0];
++	pin = (*gc)->base + gpiospec->args[0];
+ 
+ 	if (s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(gpiospec->args[1])))
+ 		pr_warn("gpio_xlate: failed to set pin function\n");
+--- linux-2.6.orig/drivers/of/gpio.c
++++ linux-2.6/drivers/of/gpio.c
+@@ -64,7 +64,7 @@ int of_get_named_gpio_flags(struct devic
+ 	if (flags)
+ 		*flags = 0;
+ 
+-	ret = gc->of_xlate(gc, &gpiospec, flags);
++	ret = gc->of_xlate(&gc, &gpiospec, flags);
+ 	if (ret < 0)
+ 		goto err1;
+ 
+@@ -114,7 +114,9 @@ EXPORT_SYMBOL(of_gpio_named_count);
+ 
+ /**
+  * of_gpio_simple_xlate - translate gpio_spec to the GPIO number and flags
+- * @gc:		pointer to the gpio_chip structure
++ * @gc:		pointer to pointer to the gpio_chip structure: the xlate
++ *              function can alter *gc itself to make GPIO distribution to
++ *              multiple gpio_chips possible
+  * @np:		device node of the GPIO chip
+  * @gpio_spec:	gpio specifier as found in the device tree
+  * @flags:	a flags pointer to fill in
+@@ -123,7 +125,7 @@ EXPORT_SYMBOL(of_gpio_named_count);
+  * gpio chips. This function performs only one sanity check: whether gpio
+  * is less than ngpios (that is specified in the gpio_chip).
+  */
+-int of_gpio_simple_xlate(struct gpio_chip *gc,
++int of_gpio_simple_xlate(struct gpio_chip **gc,
+ 			 const struct of_phandle_args *gpiospec, u32 *flags)
+ {
+ 	/*
+@@ -132,15 +134,15 @@ int of_gpio_simple_xlate(struct gpio_chi
+ 	 * number and the flags from a single gpio cell -- this is possible,
+ 	 * but not recommended).
+ 	 */
+-	if (gc->of_gpio_n_cells < 2) {
++	if ((*gc)->of_gpio_n_cells < 2) {
+ 		WARN_ON(1);
+ 		return -EINVAL;
  	}
  
-@@ -1085,16 +1086,16 @@ supported currently at the toplevel.
-                                  * terminated string
- 				 */
+-	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
++	if (WARN_ON(gpiospec->args_count < (*gc)->of_gpio_n_cells))
+ 		return -EINVAL;
  
--  property2 = <1234abcd>;	/* define a property containing a
-+  property2 = <0x1234abcd>;	/* define a property containing a
-                                  * numerical 32-bit value (hexadecimal)
- 				 */
+-	if (gpiospec->args[0] >= gc->ngpio)
++	if (gpiospec->args[0] >= (*gc)->ngpio)
+ 		return -EINVAL;
  
--  property3 = <12345678 12345678 deadbeef>;
-+  property3 = <0x12345678 0x12345678 0xdeadbeef>;
-                                 /* define a property containing 3
-                                  * numerical 32-bit values (cells) in
-                                  * hexadecimal
- 				 */
--  property4 = [0a 0b 0c 0d de ea ad be ef];
-+  property4 = [0x0a 0x0b 0x0c 0x0d 0xde 0xea 0xad 0xbe 0xef];
-                                 /* define a property whose content is
-                                  * an arbitrary array of bytes
-                                  */
-@@ -1350,10 +1351,10 @@ Appendix A - Sample SOC node for MPC8540
- 			model = "TSEC";
- 			compatible = "gianfar", "simple-bus";
- 			reg = <0x24000 0x1000>;
--			local-mac-address = [ 00 E0 0C 00 73 00 ];
--			interrupts = <29 2 30 2 34 2>;
-+			local-mac-address = [ 0x00 0xE0 0x0C 0x00 0x73 0x00 ];
-+			interrupts = <0x29 2 0x30 2 0x34 2>;
- 			phy-handle = <&phy0>;
--			sleep = <&pmc 00000080>;
-+			sleep = <&pmc 0x00000080>;
- 			ranges;
+ 	if (flags)
+--- linux-2.6.orig/include/asm-generic/gpio.h
++++ linux-2.6/include/asm-generic/gpio.h
+@@ -129,7 +129,7 @@ struct gpio_chip {
+ 	 */
+ 	struct device_node *of_node;
+ 	int of_gpio_n_cells;
+-	int (*of_xlate)(struct gpio_chip *gc,
++	int (*of_xlate)(struct gpio_chip **gc,
+ 		        const struct of_phandle_args *gpiospec, u32 *flags);
+ #endif
+ };
+--- linux-2.6.orig/include/linux/of_gpio.h
++++ linux-2.6/include/linux/of_gpio.h
+@@ -59,7 +59,7 @@ extern int of_mm_gpiochip_add(struct dev
+ extern void of_gpiochip_add(struct gpio_chip *gc);
+ extern void of_gpiochip_remove(struct gpio_chip *gc);
+ extern struct gpio_chip *of_node_to_gpiochip(struct device_node *np);
+-extern int of_gpio_simple_xlate(struct gpio_chip *gc,
++extern int of_gpio_simple_xlate(struct gpio_chip **gc,
+ 				const struct of_phandle_args *gpiospec,
+ 				u32 *flags);
  
- 			mdio@24520 {
-@@ -1385,10 +1386,10 @@ Appendix A - Sample SOC node for MPC8540
- 			model = "TSEC";
- 			compatible = "gianfar";
- 			reg = <0x25000 0x1000>;
--			local-mac-address = [ 00 E0 0C 00 73 01 ];
--			interrupts = <13 2 14 2 18 2>;
-+			local-mac-address = [ 0x00 0xE0 0x0C 0x00 0x73 0x01 ];
-+			interrupts = <0x13 2 0x14 2 0x18 2>;
- 			phy-handle = <&phy1>;
--			sleep = <&pmc 00000040>;
-+			sleep = <&pmc 0x00000040>;
- 		};
- 
- 		ethernet@26000 {
-@@ -1396,17 +1397,17 @@ Appendix A - Sample SOC node for MPC8540
- 			model = "FEC";
- 			compatible = "gianfar";
- 			reg = <0x26000 0x1000>;
--			local-mac-address = [ 00 E0 0C 00 73 02 ];
--			interrupts = <41 2>;
-+			local-mac-address = [ 0x00 0xE0 0x0C 0x00 0x73 0x02 ];
-+			interrupts = <0x41 2>;
- 			phy-handle = <&phy3>;
--			sleep = <&pmc 00000020>;
-+			sleep = <&pmc 0x00000020>;
- 		};
- 
- 		serial@4500 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "fsl,mpc8540-duart", "simple-bus";
--			sleep = <&pmc 00000002>;
-+			sleep = <&pmc 0x00000002>;
- 			ranges;
- 
- 			serial@4500 {
-@@ -1414,7 +1415,7 @@ Appendix A - Sample SOC node for MPC8540
- 				compatible = "ns16550";
- 				reg = <0x4500 0x100>;
- 				clock-frequency = <0>;
--				interrupts = <42 2>;
-+				interrupts = <0x42 2>;
- 			};
- 
- 			serial@4600 {
-@@ -1422,7 +1423,7 @@ Appendix A - Sample SOC node for MPC8540
- 				compatible = "ns16550";
- 				reg = <0x4600 0x100>;
- 				clock-frequency = <0>;
--				interrupts = <42 2>;
-+				interrupts = <0x42 2>;
- 			};
- 		};
- 
-@@ -1436,11 +1437,11 @@ Appendix A - Sample SOC node for MPC8540
- 		};
- 
- 		i2c@3000 {
--			interrupts = <43 2>;
-+			interrupts = <0x43 2>;
- 			reg = <0x3000 0x100>;
- 			compatible  = "fsl-i2c";
- 			dfsrr;
--			sleep = <&pmc 00000004>;
-+			sleep = <&pmc 0x00000004>;
- 		};
- 
- 		pmc: power@e0070 {
