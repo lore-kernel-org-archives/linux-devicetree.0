@@ -1,55 +1,97 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] iommu/tegra: smmu: Simplify allocation at once
-Date: Tue, 15 May 2012 20:47:58 +0200
-Message-ID: <20120515.214758.1198702094241248784.hdoyu@nvidia.com>
-References: <4FB19677.4040702@wwwdotorg.org><20120515.112649.411607744957826949.hdoyu@nvidia.com><4FB27FA9.20106@wwwdotorg.org>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Tue, 15 May 2012 20:05:55 -0500
+Message-ID: <4FB2FD73.3010309@ti.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <4FA3F308.6030900@ti.com> <CAJe_ZhfFhZVG4gyaaVUgeQedJiSE=zj9nE28XCNH9DkPVgqj=A@mail.gmail.com> <201205041923.07620.arnd@arndb.de> <CAJe_Zhe8jYd1j=ti6FvqxXL7i5mbgf0jqb-84sFMTeUqyAonpw@mail.gmail.com> <4FA7F009.5010003@wwwdotorg.org> <CAJe_ZheHFP9NZEiZfCvS3LL1k7xamzGq4Oep8gfmPRi6RR7R5Q@mail.gmail.com> <4FA94B49.5050500@wwwdotorg.org> <CAJe_Zhf0=Qnsgsc7U_GbKxc0_6DKj33QWs0UW2giyrVEjPnrvw@mail.gmail.com> <4FAAC111.9020308@wwwdotorg.org> <CAJe_Zhcrr2QqoY=H3=3EJLPQBjC3Yc43EDjqYXaNok9-T+=0yw@mail.gmail.com> <4FABF445.3030105@wwwdotorg.org> <CAJe_ZhduQuHnFyF20VnjZW9uz1szwL6O7=ow+tMqanmeHs58pQ@mail.gmail.com> <4FAD6848.40700@wwwdotorg.org> <CAJe_Zhc8T-vR8fjFLyT4bz6dj=TUyx0F8k=fAPYn_MnbGW5LBg@mail.gmail.com> <4FADA5EC.8040807@wwwdotorg
+ .org> <CAJe_Zhe61GTQQy+ZCVndAd=mrHxGBqyZ8JGZTSHsvE2XRzfGoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FB27FA9.20106-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAJe_Zhe61GTQQy+ZCVndAd=mrHxGBqyZ8JGZTSHsvE2XRzfGoA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Tue, 15 May 2012 18:09:13 +0200:
+Hi Jassi,
 
-> On 05/15/2012 02:26 AM, Hiroshi Doyu wrote:
-> > Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Tue, 15 May 2012 01:34:15 +0200:
-> > 
-> >> On 05/14/2012 01:16 PM, Hiroshi DOYU wrote:
-> >>> To simplify the code, alloc necessary data at once.
-> >>>
-> >>> Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>> ---
-> >>> This patch requires:
-> >>>
-> >>>     [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
-> >>>         http://marc.info/?l=linux-tegra&m=133663641107327&w=2
-> >>>
-> >>> Also the above patch requires:
-> >>>
-> >>>     [PATCH 1/1] dt: Add general DMA window parser
-> >>>         http://marc.info/?l=linux-tegra&m=133671302703840&w=2
-> >>
-> >> I know I've been harping on about dependencies, but you typically only
-> >> need to mention them if the dependencies are not already checked into
-> >> the branch you expect this patch to be checked into.
-> >>
-> >>> -	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
-> >>> +	if (of_property_read_u32(dev->of_node, "nvidia,#asids", &asids))
-> >>> +		return -ENODEV;
-> >>
-> >> I believe you need to change the asids variable from int to u32 to avoid
-> >> a warning here.
-> > 
-> > There's no warning but it's allowed because of "-Wno-pointer-sign". It
+On 05/12/2012 08:40 AM, Jassi Brar wrote:
+> On 12 May 2012 05:21, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 05/11/2012 03:06 PM, Jassi Brar wrote:
+>>> On 12 May 2012 00:58, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>>> On 05/10/2012 01:59 PM, Jassi Brar wrote:
+>> ...
+>>>>>> client0: i2s {
+>>>>>>   /* has 2 DMA request output signals: 0, 1 */
+>>>>>> };
+>>>>>>
+>>>>>> client1: spdif {
+>>>>>>   /* has 2 DMA request signals: 0, 1 */
+>>>>>> };
+>>>>>>
+>>>>> Do we also need to somehow tag these signals for the client to
+>>>>> differentiate between TX and RX channel ?
+>>>>
+>>>> Yes, the client's DT binding would certainly need to describe how many
+>>>> DMA request signals its HW generates, and give a unique ID to each. The
+>>>> driver would need to request a DMA channel for a specific one of its DMA
+>>>> requests.
+>>>>
+>>> Did I read "give a unique ID to each" correctly ?
+>>
+>> It'd be unique relative to that individual device or DT node, not at any
+>> larger scope.
+>>
+> OK.
 > 
-> That's odd. I'm sure I have seen this warning recently when calling this
-> API, but you're right, I'm not able to trigger that warning right now,
-> so this is fine.
+>>> Could you please take some time out to jot down an example of how a
+>>> typical client's dma specifier should look.
+>>
+>> With this proposal, I'm not sure that the client DT node would need any
+>> DMA information at all, at least nothing that identifies which DMA
+>> controllers, channels, or requests are required to service this
+>> node/device's DMA requests - that routing information is all represented
+>> in the DMA controller itself.
+>>
+>> (I think Arnd made the following point earlier in this thread):
+>>
+>> If you did need to put any other information in DT, then that probably
+>> would go in the DMA client node, since it'd presumably be the same
+>> irrespective of which DMA controller got used. However, that information
+>> presumably wouldn't be needed in DT at all, since the driver would know
+>> it, since it'd be a facet of the HW.
+>>
+>> Note: I'm thinking things like DMA physical address (presumably an
+>> offset from the reg property), DMA access size (presumably a fixed
+>> property of the HW), DMA burst size (presumably a property of the HW,
+>> although at least some HW can be programmed to raise the DMA request
+>> signal with a varying number of FIFO entries free, so not fixed), etc.
+>>
+> Yeah, neither did I think a client node should tell more than IDs of
+> its channels
+> - which we now decide to simply mention in its binding.
+> 
+> How do I know if you or someone is interested in reworking the patchset
+> or want me to give it a try?
 
-Then, either [PATCH v1] or [PATCH v2] would be ok, but v2 may be a bit
-better because it's exacltly compatible with that function prototype,
-of_property_read_u32(...u32 *).
+Sorry for not participating more in the discussion here, but I got tied
+up. I was planning on a V4 on the patch-set last week, but it did not
+happen. So I was planning for it this week. The V4 I had in mind was a
+more generic version of what I previously submitted, using xlate
+function to permit different DT tree formats. However, there would be a
+couple default xlate functions for people to use.
+
+I am concerned that this implementation may not address all your
+concerns. So if you have something to propose then please feel free to
+do so.
+
+By the way, what it unclear to me, if you have a client that could use
+more than one channel of multiple controllers, how is the handled? Who
+makes the decision on which to use?
+
+The TI DMAs are somewhat inflexible and simple in this manner that you
+don't have a choice :-)
+
+Cheers
+Jon
