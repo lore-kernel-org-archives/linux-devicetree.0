@@ -1,115 +1,88 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
 Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 17 May 2012 02:46:38 +0530
-Message-ID: <CAJe_ZhebPfmLS8ur8FAnmdj37ye25HrE2QF-Qk5PVDnzmpAniQ@mail.gmail.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	<4FB3D294.4020505@wwwdotorg.org>
-	<CAJe_Zhe6uT7u-+0VEx2XCieuynmK5nOO=4DSpDDS_Q=N8-QtPA@mail.gmail.com>
-	<201205161942.20296.arnd@arndb.de>
+Date: Wed, 16 May 2012 17:59:37 -0600
+Message-ID: <4FB43F69.1070608@wwwdotorg.org>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <4FB3D294.4020505@wwwdotorg.org> <CAJe_Zhe6uT7u-+0VEx2XCieuynmK5nOO=4DSpDDS_Q=N8-QtPA@mail.gmail.com> <201205161942.20296.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
 In-Reply-To: <201205161942.20296.arnd@arndb.de>
 Sender: linux-omap-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 May 2012 01:12, Arnd Bergmann <arnd@arndb.de> wrote:
+On 05/16/2012 01:42 PM, Arnd Bergmann wrote:
+> On Wednesday 16 May 2012, Jassi Brar wrote:
+>> On 16 May 2012 21:45, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> 
 >>
->> Generic binding to provide a way to provide the client-channel map a=
-nd
+>> Generic binding to provide a way to provide the client-channel map and
 >> other dmac specific parameters to the dma controller driver
 >>
 >> DMA Model:-
->> =A0 Only the most common characteristics of a dma setup are assumed
+>>   Only the most common characteristics of a dma setup are assumed
 >> in this binding.
 >> Client: Some h/w controller that could request a DMA controller in
 >> the system to perform data transfer on its behalf. Example SPI, MMC,
 >> I2S etc.
 >> DMAC: A DMA Controller instance. Example, PL330, PL08X, SDMA etc.
 >>
->> =A0The assumed model of the DMAC, in this binding, has P peripheral
+>>  The assumed model of the DMAC, in this binding, has P peripheral
 >> interfaces (P request signals) that could request a data transfer
 >> and C physical channels that actually do the data transfers, hence,
 >> at most C out of P peripherals could be served by the DMAC at any
->> point of time. Usually C :=3D P, but not always. Usually, any of the
+>> point of time. Usually C := P, but not always. Usually, any of the
 >> physical channels could be employed by the DMAC driver to serve any
 >> client.
->> =A0The DMAC driver identifies a client by its i/f number, 'peri_id'
+>>  The DMAC driver identifies a client by its i/f number, 'peri_id'
 >> on the given DMAC. For example, TX for SPI has 7th while RX_TX
 >> (half-duplex) for MMC has 10th peripheral interface (request-signal)
 >> on a given DMAC. Usually, any of the physical channels could be
 >> employed by the DMAC driver to serve a client.
->
-Btw, just to be clear... this is not _my_ setup.
-The dma controller manuals might use different terms but underneath
-most(if not all) dma controllers fit this model. At lease every dmac
-on Samsung SoCs and ARM's PL330 and PL08x does.
-In fact, I have trouble imaging some dmac not conforming to this model.=
-=2E.
-but then again it could be just me.
-
-
+> 
 > I'm still anything but convinced by this model. Basically it's the
 > exact opposite of what we do for every other subsystem (irq, pinctrl,
 > regulator, gpio, ...), where the device using some infrastructure
 > contains the information about who provides it, whereas here you
-> move all the information into the device that provides the functional=
-ity,
+> move all the information into the device that provides the functionality,
 > and have no handle in the device using it by which the driver can
 > identify it.
->
-The idea was that a client shouldn't need to know/tell which dma contro=
-ller
-serves it or which peripheral interface of a dma controller.
-I think in future third-party device IPs, like ARM's Primecell, are onl=
-y gonna
-get more common so it makes even more sense.
 
+Yes, I guess this is backwards. But, the HW is a little different too;
+GPIOs (and probably interrupts) don't have multiple places they could
+come from.
 
-> I believe that it can work and that it solves the problem you are
-> faced with at minimal complexity, but you put the burden of this
-> complexity on everybody who does not have this issue, and make
-> the general binding confusing and harder to read.
->
-I am sorry if I gave you the wrong impression, but I didn't intend to j=
-ust
-scratch my personal itch. I truly believed I and Stephen reached a gene=
-ric
-solution i.e, as much as it could be.
+The problem is that if we did something like this in the DMA client:
 
+dma-reqs = <&dmac1 DMAC1_DMA_REQ_6 &dmac1 DMAC1_DMA_REQ_8>;
 
-> It also adds much more data to the device tree (in source and binary =
-form)
-> because you need to describe every device using a dma controller
-> and have a label to reference it.
->
-I don't see why one can't add entries to chan-map as and when more
-clients appear for the DMAC ? It should be perfectly ok to specify less
-than the maximum possible clients in chan-map.
-Requiring labels - yes, doesn't sound very nice, but many nodes already=
- do.
+how do we know if the client is emitting 2 DMA request signals that get
+routed to two different inputs on the DMA controller, or whether this is
+two alternatives for the same signal.
 
-> More importantly, you make it very hard to add devices in a board fil=
-e
-> to a dma controller that already has descriptions for some channels,
-> because you cannot easily extend the chan-map unless you rewrite all =
-of it.
->
-I am not sure I understand the point.
+Perhaps we can separate each logical request into separate properties.
+This will make the simple case slightly more complex, since there are n
+properties rather than n entries in each property, but still allow the
+more complex case:
 
-> We really need something simpler than this for the common case.
-> I have already made suggestions for how to make it still possible
-> to cover the corner case of multiple dma engines connected to the
-> same slave, which would keep the complexity local to those devices
-> that actually need it.
->
-Thanks $DEITY, I posted a preview. Maybe I should put it on hold.
-And thank you for speaking up immediately. Really!
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Simple case:
+
+/* e.g. FIFO TX DMA req - 2 DMACs possible */
+dma-req-0 = <&dmac1 DMAC1_DMA_REQ_6>;
+/* e.g. FIFO RX DMA req 1 DMAC possible */
+dma-req-1 = <&dmac1 DMAC1_DMA_REQ_8>;
+
+Multiple DMAC case:
+
+/* e.g. FIFO TX DMA req - 2 DMACs possible */
+dma-req-0 = <&dmac1 DMAC1_DMA_REQ_6 &dmac2 DMA_2_DMA_REQ_8>;
+/* e.g. FIFO RX DMA req 1 DMAC possible */
+dma-req-1 = <&dmac1 DMAC1_DMA_REQ_8>;
+
+Then, when the DMA client calls the standard API to "get DMA channel for
+my outbound DMA request "n", the core code will kasprintf("dma-req-%d",
+n); to generate the property name. That's how pinctrl works.
+
+Does that seem better?
