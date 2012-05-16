@@ -1,175 +1,115 @@
-From: Roland Stigge <stigge@antcom.de>
-Subject: [PATCH RESEND v9 2/2] gpio: Device tree support for LPC32xx
-Date: Wed, 16 May 2012 22:40:32 +0200
-Message-ID: <1337200832-26630-2-git-send-email-stigge@antcom.de>
-References: <1337200832-26630-1-git-send-email-stigge@antcom.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1337200832-26630-1-git-send-email-stigge@antcom.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: glikely@secretlab.ca, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
-Cc: Roland Stigge <stigge@antcom.de>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Thu, 17 May 2012 02:46:38 +0530
+Message-ID: <CAJe_ZhebPfmLS8ur8FAnmdj37ye25HrE2QF-Qk5PVDnzmpAniQ@mail.gmail.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	<4FB3D294.4020505@wwwdotorg.org>
+	<CAJe_Zhe6uT7u-+0VEx2XCieuynmK5nOO=4DSpDDS_Q=N8-QtPA@mail.gmail.com>
+	<201205161942.20296.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201205161942.20296.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support for gpio-lpc32xx.c.
+On 17 May 2012 01:12, Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> Generic binding to provide a way to provide the client-channel map a=
+nd
+>> other dmac specific parameters to the dma controller driver
+>>
+>> DMA Model:-
+>> =A0 Only the most common characteristics of a dma setup are assumed
+>> in this binding.
+>> Client: Some h/w controller that could request a DMA controller in
+>> the system to perform data transfer on its behalf. Example SPI, MMC,
+>> I2S etc.
+>> DMAC: A DMA Controller instance. Example, PL330, PL08X, SDMA etc.
+>>
+>> =A0The assumed model of the DMAC, in this binding, has P peripheral
+>> interfaces (P request signals) that could request a data transfer
+>> and C physical channels that actually do the data transfers, hence,
+>> at most C out of P peripherals could be served by the DMAC at any
+>> point of time. Usually C :=3D P, but not always. Usually, any of the
+>> physical channels could be employed by the DMAC driver to serve any
+>> client.
+>> =A0The DMAC driver identifies a client by its i/f number, 'peri_id'
+>> on the given DMAC. For example, TX for SPI has 7th while RX_TX
+>> (half-duplex) for MMC has 10th peripheral interface (request-signal)
+>> on a given DMAC. Usually, any of the physical channels could be
+>> employed by the DMAC driver to serve a client.
+>
+Btw, just to be clear... this is not _my_ setup.
+The dma controller manuals might use different terms but underneath
+most(if not all) dma controllers fit this model. At lease every dmac
+on Samsung SoCs and ARM's PL330 and PL08x does.
+In fact, I have trouble imaging some dmac not conforming to this model.=
+=2E.
+but then again it could be just me.
 
-To register the various GPIO banks as (struct) gpio_chips via the same DT
-gpio-controller, we utilize the adjusted of_xlate API to manipulate the
-actually used struct gpio_chip.
 
-Signed-off-by: Roland Stigge <stigge@antcom.de>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> I'm still anything but convinced by this model. Basically it's the
+> exact opposite of what we do for every other subsystem (irq, pinctrl,
+> regulator, gpio, ...), where the device using some infrastructure
+> contains the information about who provides it, whereas here you
+> move all the information into the device that provides the functional=
+ity,
+> and have no handle in the device using it by which the driver can
+> identify it.
+>
+The idea was that a client shouldn't need to know/tell which dma contro=
+ller
+serves it or which peripheral interface of a dma controller.
+I think in future third-party device IPs, like ARM's Primecell, are onl=
+y gonna
+get more common so it makes even more sense.
 
----
-Applies to v3.4-rc7
 
-Changes since last version:
-* Use new of_xlate API: Register all GPIO banks at once via the
-  same GPIO controller DT entry by manipulating the actually used struct
-  gpio_chip.
-* Updated devicetree binding documentation
+> I believe that it can work and that it solves the problem you are
+> faced with at minimal complexity, but you put the burden of this
+> complexity on everybody who does not have this issue, and make
+> the general binding confusing and harder to read.
+>
+I am sorry if I gave you the wrong impression, but I didn't intend to j=
+ust
+scratch my personal itch. I truly believed I and Stephen reached a gene=
+ric
+solution i.e, as much as it could be.
 
-Thanks to Jean-Christophe PLAGNIOL-VILLARD, Grant Likely, Arnd Bergmann, Jon
-Smirl, Mark Brown for reviewing!
 
-You can also pull from:
-  git://git.antcom.de/linux-2.6.git dt/gpio
-  http://git.antcom.de/linux-2.6.git dt/gpio
-  http://git.antcom.de/?p=linux-2.6.git;a=shortlog;h=refs/heads/dt/gpio
+> It also adds much more data to the device tree (in source and binary =
+form)
+> because you need to describe every device using a dma controller
+> and have a label to reference it.
+>
+I don't see why one can't add entries to chan-map as and when more
+clients appear for the DMAC ? It should be perfectly ok to specify less
+than the maximum possible clients in chan-map.
+Requiring labels - yes, doesn't sound very nice, but many nodes already=
+ do.
 
- Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt |   43 ++++++++++++
- arch/arm/mach-lpc32xx/include/mach/gpio.h               |    9 ++
- drivers/gpio/gpio-lpc32xx.c                             |   55 +++++++++++++++-
- 3 files changed, 105 insertions(+), 2 deletions(-)
+> More importantly, you make it very hard to add devices in a board fil=
+e
+> to a dma controller that already has descriptions for some channels,
+> because you cannot easily extend the chan-map unless you rewrite all =
+of it.
+>
+I am not sure I understand the point.
 
---- /dev/null
-+++ linux-2.6/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
-@@ -0,0 +1,43 @@
-+NXP LPC32xx SoC GPIO controller
-+
-+Required properties:
-+- compatible: must be "nxp,lpc3220-gpio"
-+- reg: Physical base address and length of the controller's registers.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Should be 3:
-+   1) bank:
-+      0: GPIO P0
-+      1: GPIO P1
-+      2: GPIO P2
-+      3: GPIO P3
-+      4: GPI P3
-+      5: GPO P3
-+   2) pin number
-+   3) optional parameters:
-+      - bit 0 specifies polarity (0 for normal, 1 for inverted)
-+- reg: Index of the GPIO group
-+
-+Example:
-+
-+	gpio: gpio@40028000 {
-+		compatible = "nxp,lpc3220-gpio";
-+		reg = <0x40028000 0x1000>;
-+		gpio-controller;
-+		#gpio-cells = <3>; /* bank, pin, flags */
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			gpios = <&gpio 5 1 1>; /* GPO_P3 1, active low */
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led1 {
-+			gpios = <&gpio 5 14 1>; /* GPO_P3 14, active low */
-+			linux,default-trigger = "timer";
-+			default-state = "off";
-+		};
-+	};
---- linux-2.6.orig/arch/arm/mach-lpc32xx/include/mach/gpio.h
-+++ linux-2.6/arch/arm/mach-lpc32xx/include/mach/gpio.h
-@@ -1 +1,8 @@
--/* empty */
-+#ifndef __MACH_GPIO_H
-+#define __MACH_GPIO_H
-+
-+#include "gpio-lpc32xx.h"
-+
-+#define ARCH_NR_GPIOS (LPC32XX_GPO_P3_GRP + LPC32XX_GPO_P3_MAX)
-+
-+#endif /* __MACH_GPIO_H */
---- linux-2.6.orig/drivers/gpio/gpio-lpc32xx.c
-+++ linux-2.6/drivers/gpio/gpio-lpc32xx.c
-@@ -21,6 +21,9 @@
- #include <linux/io.h>
- #include <linux/errno.h>
- #include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
- 
- #include <mach/hardware.h>
- #include <mach/platform.h>
-@@ -454,10 +457,60 @@ static struct lpc32xx_gpio_chip lpc32xx_
- 	},
- };
- 
-+/* Empty now, can be removed later when mach-lpc32xx is finally switched over
-+ * to DT support
-+ */
- void __init lpc32xx_gpio_init(void)
- {
-+}
-+
-+static int lpc32xx_of_xlate(struct gpio_chip **gc,
-+			    const struct of_phandle_args *gpiospec, u32 *flags)
-+{
-+	u32 bank;
-+	if (WARN_ON(gpiospec->args_count < 3))
-+		return -EINVAL;
-+
-+	bank = gpiospec->args[0];
-+	if (WARN_ON(bank > 5))
-+		return -EINVAL;
-+
-+	*gc = &lpc32xx_gpiochip[bank].chip;
-+	if (flags)
-+		*flags = gpiospec->args[2];
-+	return gpiospec->args[1];
-+}
-+
-+static int __devinit lpc32xx_gpio_probe(struct platform_device *pdev)
-+{
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(lpc32xx_gpiochip); i++)
-+	for (i = 0; i < ARRAY_SIZE(lpc32xx_gpiochip); i++) {
-+		if (pdev->dev.of_node) {
-+			lpc32xx_gpiochip[i].chip.of_xlate = lpc32xx_of_xlate;
-+			lpc32xx_gpiochip[i].chip.of_gpio_n_cells = 3;
-+			lpc32xx_gpiochip[i].chip.of_node = pdev->dev.of_node;
-+		}
- 		gpiochip_add(&lpc32xx_gpiochip[i].chip);
-+	}
-+
-+	return 0;
- }
-+
-+#ifdef CONFIG_OF
-+static struct of_device_id lpc32xx_gpio_of_match[] __devinitdata = {
-+	{ .compatible = "nxp,lpc3220-gpio", },
-+	{ },
-+};
-+#endif
-+
-+static struct platform_driver lpc32xx_gpio_driver = {
-+	.driver		= {
-+		.name	= "lpc32xx-gpio",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(lpc32xx_gpio_of_match),
-+	},
-+	.probe		= lpc32xx_gpio_probe,
-+};
-+
-+module_platform_driver(lpc32xx_gpio_driver);
+> We really need something simpler than this for the common case.
+> I have already made suggestions for how to make it still possible
+> to cover the corner case of multiple dma engines connected to the
+> same slave, which would keep the complexity local to those devices
+> that actually need it.
+>
+Thanks $DEITY, I posted a preview. Maybe I should put it on hold.
+And thank you for speaking up immediately. Really!
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
