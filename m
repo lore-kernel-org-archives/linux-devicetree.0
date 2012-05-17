@@ -1,45 +1,62 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH REPOST] dt: add vendor prefix for EM Microelectronics
-Date: Thu, 17 May 2012 15:18:31 -0600
-Message-ID: <1337289511-18183-1-git-send-email-swarren@wwwdotorg.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH V3 2/2] Input: spear-keyboard: add device tree bindings
+Date: Thu, 17 May 2012 14:31:46 -0700
+Message-ID: <20120517213145.GB29141@core.coreip.homeip.net>
+References: <cover.1333009670.git.viresh.kumar@st.com>
+ <eebfde0a1511204cab203fa18efe6264abe00486.1333009670.git.viresh.kumar@st.com>
+ <20120509052828.GD10514@core.coreip.homeip.net>
+ <CAOh2x=k2bZy-FV9XUWUxDaB7hCi1mfYv9tFVTnGObiAVjfOpvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOh2x=k2bZy-FV9XUWUxDaB7hCi1mfYv9tFVTnGObiAVjfOpvQ@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: viresh kumar <viresh.linux@gmail.com>
+Cc: Viresh Kumar <viresh.kumar@st.com>, swarren@nvidia.com, spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, olof@lixom.net, linux-input@vger.kernel.org, sr@denx.de
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Tue, May 15, 2012 at 12:24:11PM +0530, viresh kumar wrote:
+> Hi Dmitry,
+>=20
+> On Wed, May 9, 2012 at 10:58 AM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> > Now that I got matrix_keypad_build_keymap() also handle DT case, ho=
+w
+> > about the patch below?
+> >
+> > Input: spear-keyboard - add device tree bindings
+> >
+> > From: Viresh Kumar <viresh.kumar@st.com>
+> >
+> > This adds simple DT bindings for spear-keyboard controller.
+> >
+> > Signed-off-by: Viresh Kumar <viresh.kumar@st.com>
+> > Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
+> > ---
+> >
+> > =A0drivers/input/keyboard/spear-keyboard.c | =A0 71 +++++++++++++++=
++++++++++-------
+> > =A01 files changed, 56 insertions(+), 15 deletions(-)
+>=20
+> You missed following file in this patch, which was there in original =
+patch.
+>=20
+> Documentation/devicetree/bindings/input/spear-keyboard.txt
 
-Add "emmicro" as the prefix for EM Microelectronics. A web search implies
-this is a pretty unique and relevant match.
+Oh, yes, sorry about that - that is danges of stgit - if patch does not
+import cleanly for some reason (local changes in the tree for example)
+and I have to massage and apply the patch then new files are not added
+to git automatically and I sometimes forget about them. I'll ressurect
+the doc change.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 107d8ad..6eab917 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -14,6 +14,7 @@ chrp	Common Hardware Reference Platform
- cortina	Cortina Systems, Inc.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- denx	Denx Software Engineering
-+emmicro	EM Microelectronic
- epson	Seiko Epson Corp.
- est	ESTeem Wireless Modems
- fsl	Freescale Semiconductor
--- 
-1.7.0.4
+--=20
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
