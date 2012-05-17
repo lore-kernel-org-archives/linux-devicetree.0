@@ -1,245 +1,179 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/2] gpio/MIPS/OCTEON: Add a driver for OCTEON's on-chip GPIO pins.
-Date: Thu, 17 May 2012 14:50:44 -0600
-Message-ID: <20120517205044.81B1C3E0621@localhost>
-References: <1334275820-7791-1-git-send-email-ddaney.cavm@gmail.com> <1334275820-7791-3-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1334275820-7791-3-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>, ralf@linux-mips.org, linux-mips@linux-mips.org, Linus Walleij <linus.walleij@stericsson.com>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] dma: tegra: add dmaengine based dma driver
+Date: Thu, 17 May 2012 14:54:20 -0600
+Message-ID: <4FB5657C.1010902@wwwdotorg.org>
+References: <1336734044-14275-1-git-send-email-ldewangan@nvidia.com> <1336734044-14275-3-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1336734044-14275-3-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Apr 2012 17:10:20 -0700, David Daney <ddaney.cavm@gmail.com> wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> The SOCs in the OCTEON family have 16 (or in some cases 20) on-chip
-> GPIO pins, this driver handles them all.  Configuring the pins as
-> interrupt sources is handled elsewhere (OCTEON's irq handling code).
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+On 05/11/2012 05:00 AM, Laxman Dewangan wrote:
+> Adding dmaengine based NVIDIA's Tegra APB DMA driver.
+> This driver support the slave mode of data transfer from
+> peripheral to memory and vice versa.
+> The driver supports for the cyclic and non-cyclic mode
+> of data transfer.
 
-Aside from the bugs already pointed out;
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> +config TEGRA_DMA
 
-Will you merge this series via the MIPS tree, or do I need to pick it
-up?
+Could we name this TEGRA20_APB_DMA
 
-> ---
->  drivers/gpio/Kconfig       |    8 ++
->  drivers/gpio/Makefile      |    1 +
->  drivers/gpio/gpio-octeon.c |  166 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 175 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/gpio/gpio-octeon.c
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index edadbda..d9d924c 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -136,6 +136,14 @@ config GPIO_MXS
->  	select GPIO_GENERIC
->  	select GENERIC_IRQ_CHIP
->  
-> +config GPIO_OCTEON
-> +	tristate "Cavium OCTEON GPIO"
-> +	depends on GPIOLIB && CPU_CAVIUM_OCTEON
-> +	default y
-> +	help
-> +	  Say yes here to support the on-chip GPIO lines on the OCTEON
-> +	  family of SOCs.
-> +
->  config GPIO_PL061
->  	bool "PrimeCell PL061 GPIO support"
->  	depends on ARM_AMBA
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 007f54b..ce0348c 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -37,6 +37,7 @@ obj-$(CONFIG_GPIO_MSM_V2)	+= gpio-msm-v2.o
->  obj-$(CONFIG_GPIO_MXC)		+= gpio-mxc.o
->  obj-$(CONFIG_GPIO_MXS)		+= gpio-mxs.o
->  obj-$(CONFIG_PLAT_NOMADIK)	+= gpio-nomadik.o
-> +obj-$(CONFIG_GPIO_OCTEON)	+= gpio-octeon.o
->  obj-$(CONFIG_ARCH_OMAP)		+= gpio-omap.o
->  obj-$(CONFIG_GPIO_PCA953X)	+= gpio-pca953x.o
->  obj-$(CONFIG_GPIO_PCF857X)	+= gpio-pcf857x.o
-> diff --git a/drivers/gpio/gpio-octeon.c b/drivers/gpio/gpio-octeon.c
-> new file mode 100644
-> index 0000000..e679b44
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-octeon.c
-> @@ -0,0 +1,166 @@
-> +/*
-> + * This file is subject to the terms and conditions of the GNU General Public
-> + * License.  See the file "COPYING" in the main directory of this archive
-> + * for more details.
-> + *
-> + * Copyright (C) 2011,2012 Cavium Inc.
-> + */
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/gpio.h>
-> +#include <linux/io.h>
-> +
-> +#include <asm/octeon/octeon.h>
-> +#include <asm/octeon/cvmx-gpio-defs.h>
-> +
-> +#define DRV_VERSION "1.0"
-> +#define DRV_DESCRIPTION "Cavium Inc. OCTEON GPIO Driver"
-> +
-> +#define RX_DAT 0x80
-> +#define TX_SET 0x88
-> +#define TX_CLEAR 0x90
-> +/*
-> + * The address offset of the GPIO configuration register for a given
-> + * line.
-> + */
-> +static unsigned int bit_cfg_reg(unsigned int gpio)
-> +{
-> +	if (gpio < 16)
-> +		return 8 * gpio;
-> +	else
-> +		return 8 * (gpio - 16) + 0x100;
-> +}
-> +
-> +struct octeon_gpio {
-> +	struct gpio_chip chip;
-> +	u64 register_base;
-> +};
-> +
-> +static int octeon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
-> +{
-> +	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-> +
-> +	cvmx_write_csr(gpio->register_base + bit_cfg_reg(offset), 0);
-> +	return 0;
-> +}
-> +
-> +static void octeon_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-> +{
-> +	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-> +	u64 mask = 1ull << offset;
-> +	u64 reg = gpio->register_base + (value ? TX_SET : TX_CLEAR);
-> +	cvmx_write_csr(reg, mask);
-> +}
-> +
-> +static int octeon_gpio_dir_out(struct gpio_chip *chip, unsigned offset,
-> +			       int value)
-> +{
-> +	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-> +	union cvmx_gpio_bit_cfgx cfgx;
-> +
-> +
-> +	octeon_gpio_set(chip, offset, value);
-> +
-> +	cfgx.u64 = 0;
-> +	cfgx.s.tx_oe = 1;
-> +
-> +	cvmx_write_csr(gpio->register_base + bit_cfg_reg(offset), cfgx.u64);
-> +	return 0;
-> +}
-> +
-> +static int octeon_gpio_get(struct gpio_chip *chip, unsigned offset)
-> +{
-> +	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-> +	u64 read_bits = cvmx_read_csr(gpio->register_base + RX_DAT);
-> +
-> +	return ((1ull << offset) & read_bits) != 0;
-> +}
-> +
-> +static int __init octeon_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct octeon_gpio *gpio;
-> +	struct gpio_chip *chip;
-> +	struct resource *res_mem;
-> +	int err = 0;
-> +
-> +	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-> +	if (!gpio)
-> +		return -ENOMEM;
-> +	chip = &gpio->chip;
-> +
-> +	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (res_mem == NULL) {
-> +		dev_err(&pdev->dev, "found no memory resource\n");
-> +		err = -ENXIO;
-> +		goto out;
+Rational being: Include the version number so that if there's ever a
+newer version that requires a new driver, we won't have to rename this.
+Also, there is an AHB DMA engine too, even if it's quite unlikely we'll
+ever write a driver for it.
+
+> +	  Support for the NVIDIA Tegra DMA controller driver. The DMA
+                                      ^
+
+Similarly, probably best to insert the word "APB" here.
+
+> diff --git a/drivers/dma/tegra_dma.c b/drivers/dma/tegra_dma.c
+
+Can we name this tegra20-apb-dma.c for similar reasons?
+
+> +#define GEN_ENABLE			BIT(31)
+...
+> +#define CSR_ENB				BIT(31)
+> +#define CSR_IE_EOC			BIT(30)
+> +#define CSR_HOLD			BIT(29)
+...
+
+It looks like there are still quite a few macros that aren't namespaced
+(prefixed with TEGRA_APBDMA). I don't care too much about this since
+they're inside this one file, but I think this is something Vinod wanted
+you to fix?
+
+> +struct tegra_dma_channel {
+...
+> +	/* Different lists for managing the requests */
+> +	struct list_head	free_sg_req;
+> +	struct list_head	pending_sg_req;
+> +	struct list_head	free_dma_desc;
+> +	struct list_head	wait_ack_dma_desc;
+> +	struct list_head	cb_desc;
+...
+> +static int tegra_dma_allocate_desc(struct tegra_dma_channel *tdc,
+> +		int ndma_desc, int nsg_req)
+
+The queue management here seems a lot more complex than other drivers I
+briefly looked at, which don't (a) allocate multiple descriptors at once
+or (b) maintain a pool of free descriptors. I guess if this all works
+it's fine, but it sure makes it harder for me to understand the driver
+and review it. I'd personally love to have seen a much simpler driver
+and then add these optimizations later if they prove worthwhile.
+
+(As an aside, it seems like if this descriptor management logic is
+worthwhile, it should be part of the dmaengine core, not individual drivers)
+
+> +static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
+...
+> +	if (status & STATUS_ISE_EOC) {
+> +		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
+> +		if (!list_empty(&tdc->cb_desc)) {
+
+Given that the tasklet is just running the completion callbacks, is this
+condition really an error? Can't you just add some more entries onto the
+tail of the list of callbacks for the tasklet?
+
+> +			dev_err(tdc2dev(tdc),
+> +				"Int before tasklet handled, Stopping DMA\n");
+> +			tegra_dma_stop(tdc);
+> +			tdc->isr_handler(tdc, true);
+> +			tegra_dma_abort_all(tdc);
+> +			/* Schedule tasklet to make callback */
+> +			tasklet_schedule(&tdc->tasklet);
+> +			goto end;
+> +		}
+> +		tdc->isr_handler(tdc, false);
+> +		tasklet_schedule(&tdc->tasklet);
+> +	} else {
+> +		dev_info(tdc2dev(tdc),
+> +			"Interrupt already handled status 0x%08lx\n", status);
+
+Shouldn't this cause IRQ_NONE to be returned?
+
 > +	}
-> +	if (!devm_request_mem_region(&pdev->dev, res_mem->start,
-> +					resource_size(res_mem),
-> +				     res_mem->name)) {
-> +		dev_err(&pdev->dev, "request_mem_region failed\n");
-> +		err = -ENXIO;
-> +		goto out;
-> +	}
-> +	gpio->register_base = (u64)devm_ioremap(&pdev->dev, res_mem->start,
-> +						resource_size(res_mem));
 > +
-> +
-> +	pdev->dev.platform_data = chip;
-> +	chip->label = "octeon-gpio";
-> +	chip->dev = &pdev->dev;
-> +	chip->owner = THIS_MODULE;
-> +	chip->base = 0;
-> +	chip->can_sleep = 0;
-> +
-> +	if (OCTEON_IS_MODEL(OCTEON_CN66XX) ||
-> +	    OCTEON_IS_MODEL(OCTEON_CN61XX) ||
-> +	    OCTEON_IS_MODEL(OCTEON_CNF71XX))
-> +		chip->ngpio = 20;
-> +	else
-> +		chip->ngpio = 16;
-> +
-> +	chip->direction_input = octeon_gpio_dir_in;
-> +	chip->get = octeon_gpio_get;
-> +	chip->direction_output = octeon_gpio_dir_out;
-> +	chip->set = octeon_gpio_set;
-> +	err = gpiochip_add(chip);
-> +	if (err)
-> +		goto out;
-> +
-> +	dev_info(&pdev->dev, "version: " DRV_VERSION "\n");
-> +out:
-> +	return err;
+> +end:
+> +	spin_unlock_irqrestore(&tdc->lock, flags);
+> +	return IRQ_HANDLED;
 > +}
-> +
-> +static int __exit octeon_gpio_remove(struct platform_device *pdev)
+
+> +static void tegra_dma_terminate_all(struct dma_chan *dc)
 > +{
-> +	struct gpio_chip *chip = pdev->dev.platform_data;
-> +	return gpiochip_remove(chip);
-> +}
+
+> +	if (!tdc->busy)
+> +		goto skip_dma_stop;
 > +
-> +static struct of_device_id octeon_gpio_match[] = {
-> +	{
-> +		.compatible = "cavium,octeon-3860-gpio",
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, octeon_mgmt_match);
+> +	/* Pause DMA before checking the queue status */
+> +	tegra_dma_pause(tdc, true);
 > +
-> +static struct platform_driver octeon_gpio_driver = {
+> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+> +	if (status & STATUS_ISE_EOC) {
+> +		dev_dbg(tdc2dev(tdc), "%s():handling isr\n", __func__);
+> +		tdc->isr_handler(tdc, true);
+> +		status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+> +	}
+
+In the termination case, do we really need to run the isr handler?
+Presumably since the DMA is being aborted, the caller doesn't really
+care about getting the absolute latest up-to-date information, so the
+fact that something completed within the last
+EGRA_APBDMA_BURST_COMPLETE_TIME micro-seconds isn't something it's worth
+determining?
+
+> +static int __devinit tegra_dma_probe(struct platform_device *pdev)
+
+> +	tdma->dma_clk = clk_get(&pdev->dev, NULL);
+
+Since this won't be applied until 3.6, I think you can use
+devm_clk_get() here.
+
+> +static int tegra_dma_suspend_noirq(struct device *dev)
+
+Why do we need to implement the _noirq variants for system
+suspend/resume? In the mainline kernel, the existence of deferred probe
+most likely means we don't need to use _noirq any more.
+
+> +static struct platform_driver tegra_dmac_driver = {
 > +	.driver = {
-> +		.name		= "octeon_gpio",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table = octeon_gpio_match,
-> +	},
-> +	.probe		= octeon_gpio_probe,
-> +	.remove		= __exit_p(octeon_gpio_remove),
-> +};
-> +
-> +module_platform_driver(octeon_gpio_driver);
-> +
-> +MODULE_DESCRIPTION(DRV_DESCRIPTION);
-> +MODULE_AUTHOR("David Daney");
-> +MODULE_LICENSE("GPL");
-> +MODULE_VERSION(DRV_VERSION);
-> -- 
-> 1.7.2.3
-> 
+> +		.name	= "tegra30-apbdma",
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+Probably better be tegra20-apbdma, since that's the first chip this
+driver supports.
+
+> +static int __init tegra_dmac_init(void)
+> +{
+> +	return platform_driver_register(&tegra_dmac_driver);
+> +}
+> +arch_initcall_sync(tegra_dmac_init);
+
+Can we make this a module_init() instead of an arch_initcall?
+
+> +static void __exit tegra_dmac_exit(void)
+> +{
+> +	platform_driver_unregister(&tegra_dmac_driver);
+> +}
+> +module_exit(tegra_dmac_exit);
+
+If so, the above 11 lines can be replaced with:
+
+module_platform_driver(tegra_dmac_driver);
+
+Overall, I haven't reviewed the driver's interaction with dmaengine too
+much since I'm not familiar with dmaengine. I think Vinod has been
+covering those aspects fine. However, I did try to follow the DMA HW
+programming, and I think it does avoid the problems we were trying to
+solve in the existing APB DMA driver, perhaps mainly because dmaengine
+doesn't expose quite as many functions to client code.
+
+So overall, aside from the comments above, this looks good.
