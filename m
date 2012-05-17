@@ -1,35 +1,49 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH 3/7] mmc: dw_mmc: add device tree support
-Date: Thu, 17 May 2012 21:09:21 +0530
-Message-ID: <CAJuYYwTf=+Nkw2Ox9MYLybovSH8dNttYQzV4-Gg2xvZnVffZXw@mail.gmail.com>
-References: <1335935266-25289-1-git-send-email-thomas.abraham@linaro.org>
-	<1335935266-25289-4-git-send-email-thomas.abraham@linaro.org>
-	<Pine.LNX.4.64.1205040047280.18111@axis700.grange>
-	<CAJuYYwQj7gzZ9piJAJLcf7SiyJnQ6nZ63-X9ieQ-FCj6TNhQPQ@mail.gmail.com>
-	<Pine.LNX.4.64.1205122117340.11826@axis700.grange>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
+Date: Thu, 17 May 2012 10:48:39 -0600
+Message-ID: <4FB52BE7.8080908@wwwdotorg.org>
+References: <1336636221-31575-1-git-send-email-hdoyu@nvidia.com> <1336636221-31575-2-git-send-email-hdoyu@nvidia.com> <4FB143C4.6030502@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1205122117340.11826@axis700.grange>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4FB143C4.6030502-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 May 2012 01:01, Guennadi Liakhovetski <g.liakhovetski@gmx.de> wro=
-te:
-> Sure. I think, my patch, that I mentioned above, shall be dropped, at
-> least in its present form. But if at least in principle we do want to=
- have
-> a common MMC OF parser for common bindings, some code from your patch
-> would become redundant, I think. BTW, isn't this
->
-> + =A0 =A0 =A0 gpio =3D of_get_named_gpio(np, "wp_gpios", 0);
->
-> a typo? Shouldn't it be "wp-gpios" instead?
+On 05/14/2012 11:41 AM, Stephen Warren wrote:
+> On 05/10/2012 01:50 AM, Hiroshi DOYU wrote:
+>> The necessary info is expected to pass from DT.
+>>
+>> For more precise resource reservation, there shouldn't be any
+>> overlapping of register range between SMMU and MC. SMMU register
+>> offset needs to be calculated correctly, based on its register bank.
+>>
+>> Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> This patch requires the following ones, sent earlier:
+>>
+>> DMA window:
+>> http://article.gmane.org/gmane.linux.ports.tegra/4603
+> 
+> This patch has been merged even though the patch above isn't present in
+> the kernel anywhere, let alone in the history of the iommu tree. This
+> breaks compilation in linux-next.
+> 
+>> AHB:
+>> http://article.gmane.org/gmane.linux.ports.tegra/4657
+> 
+> This patch is in linux-next, but also is not in the history of the iommu
+> tree, so will break bisection of the iommu tree for Tegra.
 
-Yes, it is a typo. Thanks for your review. This is fixed now.
+Joerg,
 
-Regards,
-Thomas.
+Can this patch please be dropped or reverted? It's still breaking
+tegra_defconfig in next-20120517 since the dependencies I mentioned
+above aren't satisfied. At this stage, it seems unlikely that the DMA
+window parsing change is going to make it into 3.5, so this isn't just a
+temporary issue.
+
+Thanks.
