@@ -1,31 +1,83 @@
-From: Rob Landley <rob@landley.net>
-Subject: Re: [PATCH RESEND] Documentation: devicetree: Fix value format description
-Date: Wed, 16 May 2012 20:09:17 -0500
-Message-ID: <4FB44FBD.1000408@landley.net>
-References: <1337200436-26528-1-git-send-email-stigge@antcom.de>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Thu, 17 May 2012 09:35:39 +0530
+Message-ID: <CAJe_ZheKUoM+UjagtfmqLha-vwQr4J+CdEjvtR8t0cmdOQJPyw@mail.gmail.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	<4FB3D294.4020505@wwwdotorg.org>
+	<CAJe_Zhe6uT7u-+0VEx2XCieuynmK5nOO=4DSpDDS_Q=N8-QtPA@mail.gmail.com>
+	<201205161942.20296.arnd@arndb.de>
+	<4FB43F69.1070608@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1337200436-26528-1-git-send-email-stigge@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rdunlap@xenotime.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, w.sang@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FB43F69.1070608@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/16/2012 03:33 PM, Roland Stigge wrote:
-> Numeric values in dts files can be specified in decimal and hex (the latter
-> prefixed 0x). The current documentation is updated with this patch to prevent
-> confusion about what is meant with values without "0x" (previously hex, now
-> dec).
-> 
-> Signed-off-by: Roland Stigge <stigge@antcom.de>
-> Acked-by: Rob Landley <rob@landley.net>
-
-This should go in through the device tree tree. (There's policy
-involved, not just documenting the status quo.)
-
-Rob
--- 
-GNU/Linux isn't: Linux=GPLv2, GNU=GPLv3+, they can't share code.
-Either it's "mere aggregation", or a license violation.  Pick one.
+On 17 May 2012 05:29, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>>
+>>> Generic binding to provide a way to provide the client-channel map =
+and
+>>> other dmac specific parameters to the dma controller driver
+>>>
+>>> DMA Model:-
+>>> =A0 Only the most common characteristics of a dma setup are assumed
+>>> in this binding.
+>>> Client: Some h/w controller that could request a DMA controller in
+>>> the system to perform data transfer on its behalf. Example SPI, MMC=
+,
+>>> I2S etc.
+>>> DMAC: A DMA Controller instance. Example, PL330, PL08X, SDMA etc.
+>>>
+>>> =A0The assumed model of the DMAC, in this binding, has P peripheral
+>>> interfaces (P request signals) that could request a data transfer
+>>> and C physical channels that actually do the data transfers, hence,
+>>> at most C out of P peripherals could be served by the DMAC at any
+>>> point of time. Usually C :=3D P, but not always. Usually, any of th=
+e
+>>> physical channels could be employed by the DMAC driver to serve any
+>>> client.
+>>> =A0The DMAC driver identifies a client by its i/f number, 'peri_id'
+>>> on the given DMAC. For example, TX for SPI has 7th while RX_TX
+>>> (half-duplex) for MMC has 10th peripheral interface (request-signal=
+)
+>>> on a given DMAC. Usually, any of the physical channels could be
+>>> employed by the DMAC driver to serve a client.
+>>
+>> I'm still anything but convinced by this model. Basically it's the
+>> exact opposite of what we do for every other subsystem (irq, pinctrl=
+,
+>> regulator, gpio, ...), where the device using some infrastructure
+>> contains the information about who provides it, whereas here you
+>> move all the information into the device that provides the functiona=
+lity,
+>> and have no handle in the device using it by which the driver can
+>> identify it.
+>
+> Yes, I guess this is backwards. But, the HW is a little different too=
+;
+> GPIOs (and probably interrupts) don't have multiple places they could
+> come from.
+>
+> The problem is that if we did something like this in the DMA client:
+>
+> dma-reqs =3D <&dmac1 DMAC1_DMA_REQ_6 &dmac1 DMAC1_DMA_REQ_8>;
+>
+> how do we know if the client is emitting 2 DMA request signals that g=
+et
+> routed to two different inputs on the DMA controller, or whether this=
+ is
+> two alternatives for the same signal.
+>
+=46WIW, I wouldn't lose sleep over the possibility of redundancy on sam=
+e DMAC.
+If a client's request signal is routed to 2 inputs, they are usually
+on different DMACs.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
