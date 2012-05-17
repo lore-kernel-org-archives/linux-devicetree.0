@@ -1,39 +1,31 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Input: twl6040-vibra: Update for device tree support
-Date: Wed, 16 May 2012 17:59:14 -0700
-Message-ID: <94a2ece7-00b3-4624-82d5-93b22695aa5d@email.android.com>
-References: <1337167186-8535-1-git-send-email-peter.ujfalusi@ti.com> <20120516193546.GA15920@core.coreip.homeip.net> <CAPo=G1zf1XJcoKgCxMn3X09T0LOUG-9aw3iopqC7OPqcuc5hcQ@mail.gmail.com>
+From: Rob Landley <rob@landley.net>
+Subject: Re: [PATCH RESEND] Documentation: devicetree: Fix value format description
+Date: Wed, 16 May 2012 20:09:17 -0500
+Message-ID: <4FB44FBD.1000408@landley.net>
+References: <1337200436-26528-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPo=G1zf1XJcoKgCxMn3X09T0LOUG-9aw3iopqC7OPqcuc5hcQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1337200436-26528-1-git-send-email-stigge@antcom.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rdunlap@xenotime.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, w.sang@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-"Ujfalusi, Peter" <peter.ujfalusi@ti.com> wrote:
+On 05/16/2012 03:33 PM, Roland Stigge wrote:
+> Numeric values in dts files can be specified in decimal and hex (the latter
+> prefixed 0x). The current documentation is updated with this patch to prevent
+> confusion about what is meant with values without "0x" (previously hex, now
+> dec).
+> 
+> Signed-off-by: Roland Stigge <stigge@antcom.de>
+> Acked-by: Rob Landley <rob@landley.net>
 
->Hi Dmitry,
->
->On Wed, May 16, 2012 at 10:35 PM, Dmitry Torokhov
-><dmitry.torokhov@gmail.com> wrote:
->> So in this case why don't you have parent parse all DT data and
->> construct instance of pdata for vibra driver to consume?
->
->If there is a need to change the parameters (add new ones for example)
->for the vibra driver in this way the change in code only need to be
->done in the vibra driver.
->If the MFD core would construct the pdata, in this case I would need
->to modify both the MFD core and vibra driver.
->
+This should go in through the device tree tree. (There's policy
+involved, not just documenting the status quo.)
 
-Ok, fair enough.
-
-Thanks.
-
-
---
-Dmitry
+Rob
+-- 
+GNU/Linux isn't: Linux=GPLv2, GNU=GPLv3+, they can't share code.
+Either it's "mere aggregation", or a license violation.  Pick one.
