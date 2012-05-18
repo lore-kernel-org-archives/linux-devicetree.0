@@ -1,66 +1,68 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] of: add const to struct of_device_id.data
-Date: Fri, 18 May 2012 16:43:17 +0200
-Message-ID: <20120518144317.GD3710@pengutronix.de>
-References: <1335171381-24869-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/1] iommu/tegra: smmu: Add DMA window parser
+Date: Fri, 18 May 2012 09:15:34 -0600
+Message-ID: <4FB66796.1030007@wwwdotorg.org>
+References: <20120518085051.4a0fca863c5ab37cf8d42cb1@nvidia.com> <1337323393-1035-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1335171381-24869-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1337323393-1035-1-git-send-email-hdoyu@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hiroshi DOYU <hdoyu@nvidia.com>
+Cc: joerg.roedel@amd.com, iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 05/18/2012 12:43 AM, Hiroshi DOYU wrote:
+> This code was based on:
+>     "arch/microblaze/kernel/prom_parse.c"
+>     "arch/powerpc/kernel/prom_parse.c"
+> 
+> Can be promoted as a global function for general use.
+> 
+> Signed-off-by: Hiroshi DOYU <hdoyu@nvidia.com>
 
-On Mon, Apr 23, 2012 at 10:56:21AM +0200, Uwe Kleine-K=F6nig wrote:
-> Drivers should never need to modify the data of a device id. So it can
-> be const which in turn allows more consts in the driver.
-> =
+Hiroshi,
 
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> this might introduce warnings in drivers that access the data member
-> without using const, so this is definitly merge window material if it is
-> considered at all.
-> =
+Once this is accepted, it might be worth following up on the original
+of_get_dma_window thread and noting that once it's approved, an updated
+version of the patch will be needed to remove this code at the same time.
 
->  include/linux/mod_devicetable.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> =
+A couple comments below though:
 
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_deviceta=
-ble.h
-> index 501da4c..183f411 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -222,7 +222,7 @@ struct of_device_id
->  	char	type[32];
->  	char	compatible[128];
->  #ifdef __KERNEL__
-> -	void	*data;
-> +	const void *data;
->  #else
->  	kernel_ulong_t data;
->  #endif
-any thoughts on this one? I got no feed back and it doesn't appear in
-next-20120518.
+> +static int of_get_dma_window(struct device_node *dn,
+> +			const char *propname, int index,
+> +			unsigned long *busno,
+> +			dma_addr_t *addr, size_t *size)
+> +{
+> +	const __be32 *dma_window, *end;
+> +	int bytes, cur_index = 0;
 
-Best regards
-Uwe
+Since bytes is an out parameter from of_get_property, do you need to
+wrap the declaration in uninitialized_var() to prevent a compile warning
+like the other patch you sent me downstream?
 
--- =
+> +	if (!dn || !addr || !size)
+> +		return -EINVAL;
+> +
+> +	if (!propname)
+> +		propname = "dma-window";
+> +
+> +	dma_window = of_get_property(dn, propname, &bytes);
+> +	if (!dma_window)
+> +		return -ENODEV;
+> +	end = dma_window + bytes / sizeof(*dma_window);
+> +
+> +	while (dma_window < end) {
+> +		u32 cells;
+> +		const void *prop;
+> +
+> +		/* busno is always one cell */
+> +		if (busno)
+> +			*busno = be32_to_cpup(dma_window++);
 
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Shouldn't the ++ happen even if (!busno)?
+
+Once those are fixed, in the interests of fixing the compile error,
+
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
