@@ -1,76 +1,43 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 18 May 2012 16:20:23 -0600
-Message-ID: <4FB6CB27.8020500@wwwdotorg.org>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205182050.00095.arnd@arndb.de> <4FB6BA29.6070400@wwwdotorg.org> <201205182143.55140.arnd@arndb.de>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH v6 0/3] netdev/of/phy: MDIO bus multiplexer support.
+Date: Fri, 18 May 2012 15:23:45 -0700
+Message-ID: <4FB6CBF1.40300@gmail.com>
+References: <1336007799-31016-1-git-send-email-ddaney.cavm@gmail.com> <CAOZdJXWVCu+aNxcQRkcSSDsWWxnn8B9X5Y6=8oVgFwJ9SZTTGQ@mail.gmail.com> <4FB6C728.3090507@gmail.com> <4FB6C886.3050105@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201205182143.55140.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4FB6C886.3050105@freescale.com>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <b04825@freescale.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/18/2012 03:43 PM, Arnd Bergmann wrote:
-> On Friday 18 May 2012, Stephen Warren wrote:
->>> The driver can still request the dma line by name "tx" and the subsystem
->>> would pick one out of those with the same name.
->>>
->>> For the majority of cases, we would only need a single dma request line
->>
->> Hmm. Many devices have multiple different FIFOs, and hence multiple DMA
->> request signals (e.g. Tegra I2S has separate RX and TX FIFO, Tegra
->> S/PDIF has 2 FIFOs in each direction). That would require the driver to
->> always use get_by_name() to differentiate between 2/4 options for the
->> same DMA req or 2/4 different DMA requests. Most other bindings allow
->> use of get_by_id() or get_by_name() interchangeably.
-> 
-> Ok, good point. So we could make the common case that they are numbered
-> but not named and require all drivers to use named properties when
-> there is the possibility that the device might be connected to multiple
-> controllers, but that seems tricky because a driver can start being
-> used on a platform that has only one controller and have no dma-name
-> property in the device tree but then get used on a different soc
-> that actually has multiple controllers.
+On 05/18/2012 03:09 PM, Timur Tabi wrote:
+> David Daney wrote:
+>>>> I'm not sure what the "parent" MDIO bus node is supposed to represent.
+>>>>    Is that that device that actually controls the muxing hardware
+>
+>> No.  It is the device that implements the master 802.3 clause {22,45}
+>> MDIO Station Management (STA) protocol.
+>
+> Ah, I think I get it.  It is *the* MDIO node that would normally exist if
+> muxing we're necessary on the board.  From the looks of it, that node
+> would look exactly the same if you didn't need muxing?
+>
 
-Indeed.
+Yes.  You may note in the DTS file I attached in the parent (sorry for 
+the fubar mime types), that there are two, almost identical, MDIO 
+masters.  smi0 has two directly attached PHYs.  smi1 goes to the mux, 
+and each child of the mux has four attached PHYs.
 
-> So if we do that, we might want to make the dma-names property mandatory
-> for every device, and document what the names are.
+This is a fairly complex configuration as the GPIOs controlling the MDIO 
+mux are on I2C GPIO expanders which are themselves behind an I2C mux...
 
-We could do that, but one more proposal: Add the client's ID/index into
-the dmas property, so:
+The nice thing about this is that the Linux I2C and MDIO infrastructure 
+is all configured dynamically from the device tree and everything works 
+well together with no locking issues.  The addition of the deferred 
+driver probe mechanism was the last part of the puzzle (I think... 
+actually I don't know if all my I2C things are merged yet...).
 
-simple 1 req:
-
-dmas = <0 &dmac1 xxx>;
-
-simple 2 req:
-
-dmas = <0 &dmac1 xxx 1 &dmac1 yyy>;
-
-multiple dmacs:
-
-dmas = <0 &dmac1 xxx 0 &dmac2 zzz 1 &dmac1 yyy>;
-
-(i.e. dmas = [client_dma_req_id phandle dma-specifier]*)
-
-(where 0==TX_FIFO, 1=RX_FIFO for example, but could also have
-2=TX_FIFO_B, 3=RX_FIFO_B, ...)
-
-Then dma-names would map name to ID, but you'd still need to search all
-through the dmas property to find the ID match.
-
-> Another option would be to encode the direction in the property in
-> a generic way and provide an API that lets you ask specifically
-> for a read, write or readwrite channel out of the ones that are
-> available, rather than assuming there is only one kind. Consequently,
-> any device that uses more than one read channel or more than one
-> write channel would still have to use names to identify them.
-
-I'm not sure that /just/ direction cuts it; Tegra's SPDIF has 2 TX DMAs
-("PCM" data and control data) and same for RX. The format above is
-roughly the same as what you proposed, but with an explicit ID rather
-than direction in the dmas property.
+David Daney
