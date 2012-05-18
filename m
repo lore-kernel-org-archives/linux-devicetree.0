@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH] regulator: dt: fix the name of regulator supply
-Date: Sat, 19 May 2012 01:01:54 +0530
-Message-ID: <1337369514-27007-1-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V2] regulator: dt: fix the name of regulator supply
+Date: Sat, 19 May 2012 01:04:12 +0530
+Message-ID: <1337369652-27094-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
@@ -10,7 +10,7 @@ To: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@
 Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-If there is any input supply for reglator then the name
+If there is any input supply for regulator then the name
 of supply need to provided by init_data->supply_regulator.
 In dt case, the input supply is searched by the <name>-supply
 and here it is require to fix the name so that correct device
@@ -20,6 +20,9 @@ Fixing the name for input supply as "regulator-supply".
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
+Change from V1:
+Correction of typo in changelog.
+
  .../devicetree/bindings/regulator/regulator.txt    |    4 ++--
  drivers/regulator/of_regulator.c                   |    3 +++
  2 files changed, 5 insertions(+), 2 deletions(-)
