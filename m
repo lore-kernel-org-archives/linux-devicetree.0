@@ -1,83 +1,79 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/1] iommu/tegra: smmu: Add DMA window parser
-Date: Fri, 18 May 2012 22:56:19 +0200
-Message-ID: <20120518.235619.175499431618565933.hdoyu@nvidia.com>
-References: <20120518085051.4a0fca863c5ab37cf8d42cb1@nvidia.com><1337323393-1035-1-git-send-email-hdoyu@nvidia.com><4FB66796.1030007@wwwdotorg.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 18 May 2012 21:04:55 +0000
+Message-ID: <201205182104.55990.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+ <201205161942.20296.arnd@arndb.de>
+ <CAJe_ZhebPfmLS8ur8FAnmdj37ye25HrE2QF-Qk5PVDnzmpAniQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FB66796.1030007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "joerg.roedel-5C7GfCeVMHo@public.gmane.org" <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org" <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAJe_ZhebPfmLS8ur8FAnmdj37ye25HrE2QF-Qk5PVDnzmpAniQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen, Joerg,
+On Wednesday 16 May 2012, Jassi Brar wrote:
+> On 17 May 2012 01:12, Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+> > I'm still anything but convinced by this model. Basically it's the
+> > exact opposite of what we do for every other subsystem (irq, pinctrl,
+> > regulator, gpio, ...), where the device using some infrastructure
+> > contains the information about who provides it, whereas here you
+> > move all the information into the device that provides the functionality,
+> > and have no handle in the device using it by which the driver can
+> > identify it.
+> >
+> The idea was that a client shouldn't need to know/tell which dma controller
+> serves it or which peripheral interface of a dma controller.
+> I think in future third-party device IPs, like ARM's Primecell, are only gonna
+> get more common so it makes even more sense.
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Fri, 18 May 2012 17:15:34 +0200:
+I don't understand why this is an advantage. I definitely agree that the
+client driver should not know or care about the type of DMA controller
+that is being used, IMHO it makes a lot of sense if the device node
+specifies the dma line in the way that is specific to the controller.
+It already does the same thing for IRQ, GPIO and other stuff, so it's
+consistent and not an additional burden on the author of the device
+tree source file.
 
-> On 05/18/2012 12:43 AM, Hiroshi DOYU wrote:
-> > This code was based on:
-> >     "arch/microblaze/kernel/prom_parse.c"
-> >     "arch/powerpc/kernel/prom_parse.c"
-> > 
-> > Can be promoted as a global function for general use.
-> > 
-> > Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Hiroshi,
-> 
-> Once this is accepted, it might be worth following up on the original
-> of_get_dma_window thread and noting that once it's approved, an updated
-> version of the patch will be needed to remove this code at the same time.
-> 
-> A couple comments below though:
-> 
-> > +static int of_get_dma_window(struct device_node *dn,
-> > +			const char *propname, int index,
-> > +			unsigned long *busno,
-> > +			dma_addr_t *addr, size_t *size)
-> > +{
-> > +	const __be32 *dma_window, *end;
-> > +	int bytes, cur_index = 0;
-> 
-> Since bytes is an out parameter from of_get_property, do you need to
-> wrap the declaration in uninitialized_var() to prevent a compile warning
-> like the other patch you sent me downstream?
-> 
-> > +	if (!dn || !addr || !size)
-> > +		return -EINVAL;
-> > +
-> > +	if (!propname)
-> > +		propname = "dma-window";
-> > +
-> > +	dma_window = of_get_property(dn, propname, &bytes);
-> > +	if (!dma_window)
-> > +		return -ENODEV;
-> > +	end = dma_window + bytes / sizeof(*dma_window);
-> > +
-> > +	while (dma_window < end) {
-> > +		u32 cells;
-> > +		const void *prop;
-> > +
-> > +		/* busno is always one cell */
-> > +		if (busno)
-> > +			*busno = be32_to_cpup(dma_window++);
-> 
-> Shouldn't the ++ happen even if (!busno)?
+> > I believe that it can work and that it solves the problem you are
+> > faced with at minimal complexity, but you put the burden of this
+> > complexity on everybody who does not have this issue, and make
+> > the general binding confusing and harder to read.
+> >
+> I am sorry if I gave you the wrong impression, but I didn't intend to just
+> scratch my personal itch. I truly believed I and Stephen reached a generic
+> solution i.e, as much as it could be.
 
-Hm...the above code happens to work with our "dma-window" format right
-now, but most likely this seems incmpatible with "ibm,dma-window"
-format. I couldn't find the official format previously. I'm wondering
-that those "(ibm,)dma-window" and "(ibm,)dma-range" may be able to be
-generally used since those parameters are quite common to any
-IOMMUs. I'll hold off those patches at least this time
+Yes, I realize I should have stepped in earlier. The proposal you have made
+is indeed generic and can cover important cases that the original proposal
+did not. My objection is that it's too complex at doing that for the common
+case though and that I think we can get a simpler solution that still
+solves the same problem.
 
-Joerg, as Stephen proposed originally. Could you please revert or drop
-the original one this time?
+I already replied to Stephen expanding on his proposed solution, which I
+find reasonable, especially in the refined version of my reply. Like your
+proposal, it treats multiple dma engines for the same client as the normal
+case, by slightly extending the binding that Jon posted.
 
-  [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
+Another solution that I find equally ok is the one that I proposed earlier
+in this thread, where we assume that for each dma request line there is
+exactly one dma engine master, and then add either a map (similar to the
+interrupt-map property) to cover the complex case in a special way, or
+to extend the binding for a specific dma engine so that you can have a
+single device node represent all dma engines of the same soc, separating
+this from the multiple struct dma_device instances that represent the
+multiple hardware blocks in Linux.
 
-PS: I'm being off-line'd mostly next four weeks, and my response would
-be delayed.
+	Arnd
