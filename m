@@ -1,65 +1,40 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 18 May 2012 15:07:53 -0600
-Message-ID: <4FB6BA29.6070400@wwwdotorg.org>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205161942.20296.arnd@arndb.de> <4FB43F69.1070608@wwwdotorg.org> <201205182050.00095.arnd@arndb.de>
+From: Tabi Timur-B04825 <B04825@freescale.com>
+Subject: Re: [PATCH v6 0/3] netdev/of/phy: MDIO bus multiplexer support.
+Date: Fri, 18 May 2012 21:42:34 +0000
+Message-ID: <CAOZdJXWVCu+aNxcQRkcSSDsWWxnn8B9X5Y6=8oVgFwJ9SZTTGQ@mail.gmail.com>
+References: <1336007799-31016-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201205182050.00095.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1336007799-31016-1-git-send-email-ddaney.cavm@gmail.com>
+Content-Language: en-US
+Content-ID: <426B810870A0D0478A3EFD67A7394FD3@mgd.freescale.com>
+Sender: netdev-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/18/2012 02:49 PM, Arnd Bergmann wrote:
-> On Wednesday 16 May 2012, Stephen Warren wrote:
->> Simple case:
->>
->> /* e.g. FIFO TX DMA req - 2 DMACs possible */
->> dma-req-0 = <&dmac1 DMAC1_DMA_REQ_6>;
->> /* e.g. FIFO RX DMA req 1 DMAC possible */
->> dma-req-1 = <&dmac1 DMAC1_DMA_REQ_8>;
->>
->> Multiple DMAC case:
->>
->> /* e.g. FIFO TX DMA req - 2 DMACs possible */
->> dma-req-0 = <&dmac1 DMAC1_DMA_REQ_6 &dmac2 DMA_2_DMA_REQ_8>;
->> /* e.g. FIFO RX DMA req 1 DMAC possible */
->> dma-req-1 = <&dmac1 DMAC1_DMA_REQ_8>;
->>
->> Then, when the DMA client calls the standard API to "get DMA channel for
->> my outbound DMA request "n", the core code will kasprintf("dma-req-%d",
->> n); to generate the property name. That's how pinctrl works.
->>
->> Does that seem better?
-> 
-> Yes, that is one way that I suggested at an earlier point. After some
-> discussion, I would use a different syntax for these though, to the exact
-> same effect, writing it as
-> 
-> 
-> 	dmas = <&dmac1 DMAC1_DMA_REQ_6>,  <&dmac2 DMA_2_DMA_REQ_8>,  <&dmac1 DMAC1_DMA_REQ_8>;
-> 	dma-names = "tx", "tx", "rx";
+On Wed, May 2, 2012 at 8:16 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+> From: David Daney <david.daney@cavium.com>
+>
+> This code has been working well for about six months on a couple of
+> different configurations (boards), so I thought it would be a good
+> time to send it out again, and I hope get it on the path towards
+> merging.
 
-That looks pretty reasonable. One comment below.
+David,
 
-> The driver can still request the dma line by name "tx" and the subsystem
-> would pick one out of those with the same name.
-> 
-> For the majority of cases, we would only need a single dma request line
+I'm trying to implement this feature on our boards, which don't use
+GPIOs but rather a memory-mapped FPGA.  I control the mux by setting
+some bits in one of the FPGA registers.
 
-Hmm. Many devices have multiple different FIFOs, and hence multiple DMA
-request signals (e.g. Tegra I2S has separate RX and TX FIFO, Tegra
-S/PDIF has 2 FIFOs in each direction). That would require the driver to
-always use get_by_name() to differentiate between 2/4 options for the
-same DMA req or 2/4 different DMA requests. Most other bindings allow
-use of get_by_id() or get_by_name() interchangeably.
+Do you have a real device tree I can use as an example?
 
-> and could leave out the dma-names property, so when you don't ask for a
-> specific name, you just get any dma line out of the dmas array.
-> 
-> 	Arnd
-> 
+I'm not sure what the "parent" MDIO bus node is supposed to represent.
+ Is that that device that actually controls the muxing hardware, which
+in our case would be the FPGA?
 
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
