@@ -1,38 +1,43 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 0/9] support dt for mmp2
-Date: Thu, 17 May 2012 18:57:48 -0500
-Message-ID: <4FB5907C.9080105@gmail.com>
-References: <1336134626-12262-1-git-send-email-haojian.zhuang@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt: add vendor prefix for EM Microelectronics
+Date: Thu, 17 May 2012 19:16:07 -0500
+Message-ID: <4FB594C7.9020303@gmail.com>
+References: <1335548984-22241-1-git-send-email-swarren@wwwdotorg.org>
+ <4FA15CA2.5090905@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1336134626-12262-1-git-send-email-haojian.zhuang@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: eric.y.miao@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FA15CA2.5090905-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2012 07:30 AM, Haojian Zhuang wrote:
-> v2:
-> 1. remove MACH_MMP_LEGACY & MACH_MMP2_LEGACY
-> 2. use irq.c to replace irq-pxa168.c & irq-mmp2.c
-> 3. Avoid to use CONFIG_OF in entry-macro.S
+On 05/02/2012 11:11 AM, Stephen Warren wrote:
+> On 04/27/2012 11:49 AM, Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> Add "emmicro" as the prefix for EM Microelectronics. A web search implies
+>> this is a pretty unique and relevant match.
 > 
+> Rob, Grant, do you want to take this through the devicetree git tree, or
+> should I put it into the Tegra tree?
 
-I think you should combine all the DT board files in this series into 1
-DT board file. The only diff I can see between the files is auxdata and
-board strings. You don't have any platform_data for the auxdata, so I'm
-guessing you are using it for clkdev lookup. You can instead simply add
-addition clkdev lookup names for the DT device names. Any other reason
-for needing the old device name is pretty much wrong.
+Feel free to take it.
 
-Rob
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
