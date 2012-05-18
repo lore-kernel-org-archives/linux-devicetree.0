@@ -1,40 +1,47 @@
-From: Tabi Timur-B04825 <B04825@freescale.com>
-Subject: Re: [PATCH v6 0/3] netdev/of/phy: MDIO bus multiplexer support.
-Date: Fri, 18 May 2012 21:42:34 +0000
-Message-ID: <CAOZdJXWVCu+aNxcQRkcSSDsWWxnn8B9X5Y6=8oVgFwJ9SZTTGQ@mail.gmail.com>
-References: <1336007799-31016-1-git-send-email-ddaney.cavm@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 18 May 2012 21:43:54 +0000
+Message-ID: <201205182143.55140.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205182050.00095.arnd@arndb.de> <4FB6BA29.6070400@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1336007799-31016-1-git-send-email-ddaney.cavm@gmail.com>
-Content-Language: en-US
-Content-ID: <426B810870A0D0478A3EFD67A7394FD3@mgd.freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FB6BA29.6070400@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 2, 2012 at 8:16 PM, David Daney <ddaney.cavm@gmail.com> wrote:
-> From: David Daney <david.daney@cavium.com>
->
-> This code has been working well for about six months on a couple of
-> different configurations (boards), so I thought it would be a good
-> time to send it out again, and I hope get it on the path towards
-> merging.
+On Friday 18 May 2012, Stephen Warren wrote:
+> > The driver can still request the dma line by name "tx" and the subsystem
+> > would pick one out of those with the same name.
+> > 
+> > For the majority of cases, we would only need a single dma request line
+> 
+> Hmm. Many devices have multiple different FIFOs, and hence multiple DMA
+> request signals (e.g. Tegra I2S has separate RX and TX FIFO, Tegra
+> S/PDIF has 2 FIFOs in each direction). That would require the driver to
+> always use get_by_name() to differentiate between 2/4 options for the
+> same DMA req or 2/4 different DMA requests. Most other bindings allow
+> use of get_by_id() or get_by_name() interchangeably.
 
-David,
+Ok, good point. So we could make the common case that they are numbered
+but not named and require all drivers to use named properties when
+there is the possibility that the device might be connected to multiple
+controllers, but that seems tricky because a driver can start being
+used on a platform that has only one controller and have no dma-name
+property in the device tree but then get used on a different soc
+that actually has multiple controllers.
+So if we do that, we might want to make the dma-names property mandatory
+for every device, and document what the names are.
 
-I'm trying to implement this feature on our boards, which don't use
-GPIOs but rather a memory-mapped FPGA.  I control the mux by setting
-some bits in one of the FPGA registers.
+Another option would be to encode the direction in the property in
+a generic way and provide an API that lets you ask specifically
+for a read, write or readwrite channel out of the ones that are
+available, rather than assuming there is only one kind. Consequently,
+any device that uses more than one read channel or more than one
+write channel would still have to use names to identify them.
 
-Do you have a real device tree I can use as an example?
-
-I'm not sure what the "parent" MDIO bus node is supposed to represent.
- Is that that device that actually controls the muxing hardware, which
-in our case would be the FPGA?
-
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+	Arnd
