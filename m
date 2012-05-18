@@ -1,75 +1,53 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2] regulator: dt: fix the name of regulator supply
-Date: Sat, 19 May 2012 01:04:12 +0530
-Message-ID: <1337369652-27094-1-git-send-email-ldewangan@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 18 May 2012 20:49:59 +0000
+Message-ID: <201205182050.00095.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205161942.20296.arnd@arndb.de> <4FB43F69.1070608@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FB43F69.1070608@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-If there is any input supply for regulator then the name
-of supply need to provided by init_data->supply_regulator.
-In dt case, the input supply is searched by the <name>-supply
-and here it is require to fix the name so that correct device
-node can be identified at the time of regulator registration.
+On Wednesday 16 May 2012, Stephen Warren wrote:
+> Simple case:
+> 
+> /* e.g. FIFO TX DMA req - 2 DMACs possible */
+> dma-req-0 = <&dmac1 DMAC1_DMA_REQ_6>;
+> /* e.g. FIFO RX DMA req 1 DMAC possible */
+> dma-req-1 = <&dmac1 DMAC1_DMA_REQ_8>;
+> 
+> Multiple DMAC case:
+> 
+> /* e.g. FIFO TX DMA req - 2 DMACs possible */
+> dma-req-0 = <&dmac1 DMAC1_DMA_REQ_6 &dmac2 DMA_2_DMA_REQ_8>;
+> /* e.g. FIFO RX DMA req 1 DMAC possible */
+> dma-req-1 = <&dmac1 DMAC1_DMA_REQ_8>;
+> 
+> Then, when the DMA client calls the standard API to "get DMA channel for
+> my outbound DMA request "n", the core code will kasprintf("dma-req-%d",
+> n); to generate the property name. That's how pinctrl works.
+> 
+> Does that seem better?
 
-Fixing the name for input supply as "regulator-supply".
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
-Change from V1:
-Correction of typo in changelog.
-
- .../devicetree/bindings/regulator/regulator.txt    |    4 ++--
- drivers/regulator/of_regulator.c                   |    3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 5b7a408..6c8de69 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -9,7 +9,7 @@ Optional properties:
- - regulator-max-microamp: largest current consumers may set
- - regulator-always-on: boolean, regulator should never be disabled
- - regulator-boot-on: bootloader/firmware enabled regulator
--- <name>-supply: phandle to the parent supply/regulator node
-+- regulator-supply: phandle to the parent supply/regulator node
- 
- Example:
- 
-@@ -17,7 +17,7 @@ Example:
- 		regulator-min-microvolt = <1000000>;
- 		regulator-max-microvolt = <2500000>;
- 		regulator-always-on;
--		vin-supply = <&vin>;
-+		regulator-supply = <&vin>;
- 	};
- 
- Regulator Consumers:
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 56593b7..48d6449 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -60,6 +60,9 @@ static void of_get_regulation_constraints(struct device_node *np,
- 		constraints->always_on = true;
- 	else /* status change should be possible if not always on. */
- 		constraints->valid_ops_mask |= REGULATOR_CHANGE_STATUS;
-+
-+	if (of_find_property(np, "regulator-supply", NULL))
-+		(*init_data)->supply_regulator = "regulator";
- }
- 
- /**
--- 
-1.7.1.1
+Yes, that is one way that I suggested at an earlier point. After some
+discussion, I would use a different syntax for these though, to the exact
+same effect, writing it as
 
 
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+	dmas = <&dmac1 DMAC1_DMA_REQ_6>,  <&dmac2 DMA_2_DMA_REQ_8>,  <&dmac1 DMAC1_DMA_REQ_8>;
+	dma-names = "tx", "tx", "rx";
+
+The driver can still request the dma line by name "tx" and the subsystem
+would pick one out of those with the same name.
+
+For the majority of cases, we would only need a single dma request line
+and could leave out the dma-names property, so when you don't ask for a
+specific name, you just get any dma line out of the dmas array.
+
+	Arnd
