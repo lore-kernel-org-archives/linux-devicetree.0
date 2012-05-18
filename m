@@ -1,63 +1,100 @@
-From: Hiroshi Doyu <hdoyu@nvidia.com>
-Subject: Re: [PATCH 1/2] iommu/tegra: smmu: Add device tree support for SMMU
-Date: Fri, 18 May 2012 08:50:51 +0300
-Message-ID: <20120518085051.4a0fca863c5ab37cf8d42cb1@nvidia.com>
-References: <1336636221-31575-1-git-send-email-hdoyu@nvidia.com>
-	<1336636221-31575-2-git-send-email-hdoyu@nvidia.com>
-	<4FB143C4.6030502@wwwdotorg.org>
-	<4FB52BE7.8080908@wwwdotorg.org>
+From: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/1] iommu/tegra: smmu: Add DMA window parser
+Date: Fri, 18 May 2012 09:43:09 +0300
+Message-ID: <1337323393-1035-1-git-send-email-hdoyu@nvidia.com>
+References: <20120518085051.4a0fca863c5ab37cf8d42cb1@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4FB52BE7.8080908@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joerg Roedel <joerg.roedel@amd.com>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Jiri Kosina <jkosina@suse.cz>, Thierry Reding <thierry.reding@avionic-design.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20120518085051.4a0fca863c5ab37cf8d42cb1-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, joerg.roedel-5C7GfCeVMHo@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen and Joerg,
+This code was based on:
+    "arch/microblaze/kernel/prom_parse.c"
+    "arch/powerpc/kernel/prom_parse.c"
 
-On Thu, 17 May 2012 18:48:39 +0200
-Stephen Warren <swarren@wwwdotorg.org> wrote:
+Can be promoted as a global function for general use.
 
-> On 05/14/2012 11:41 AM, Stephen Warren wrote:
-> > On 05/10/2012 01:50 AM, Hiroshi DOYU wrote:
-> >> The necessary info is expected to pass from DT.
-> >>
-> >> For more precise resource reservation, there shouldn't be any
-> >> overlapping of register range between SMMU and MC. SMMU register
-> >> offset needs to be calculated correctly, based on its register bank.
-> >>
-> >> Signed-off-by: Hiroshi DOYU <hdoyu@nvidia.com>
-> >> ---
-> >> This patch requires the following ones, sent earlier:
-> >>
-> >> DMA window:
-> >> http://article.gmane.org/gmane.linux.ports.tegra/4603
-> > 
-> > This patch has been merged even though the patch above isn't present in
-> > the kernel anywhere, let alone in the history of the iommu tree. This
-> > breaks compilation in linux-next.
-> > 
-> >> AHB:
-> >> http://article.gmane.org/gmane.linux.ports.tegra/4657
-> > 
-> > This patch is in linux-next, but also is not in the history of the iommu
-> > tree, so will break bisection of the iommu tree for Tegra.
-> 
-> Joerg,
-> 
-> Can this patch please be dropped or reverted? It's still breaking
-> tegra_defconfig in next-20120517 since the dependencies I mentioned
-> above aren't satisfied. At this stage, it seems unlikely that the DMA
-> window parsing change is going to make it into 3.5, so this isn't just a
-> temporary issue.
+Signed-off-by: Hiroshi DOYU <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Based on the discussion:
+http://marc.info/?l=linux-tegra&m=133732046606458&w=2
+---
+ drivers/iommu/tegra-smmu.c |   50 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 50 insertions(+), 0 deletions(-)
 
-I can move of_get_dma_window() function into tegra-smmu.c as a static
-function. I just want SMMU available with DT for the furthuer
-development. Then, it's also possible to promote that function global
-later as is in the origianl patch.
-
-I'm posting that patch follows this email. Please take it if this
-proposal is acceptable.
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 192fc4a..7fc444b 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -874,6 +874,56 @@ static struct iommu_ops smmu_iommu_ops = {
+ 	.pgsize_bitmap	= SMMU_IOMMU_PGSIZES,
+ };
+ 
++static int of_get_dma_window(struct device_node *dn,
++			const char *propname, int index,
++			unsigned long *busno,
++			dma_addr_t *addr, size_t *size)
++{
++	const __be32 *dma_window, *end;
++	int bytes, cur_index = 0;
++
++	if (!dn || !addr || !size)
++		return -EINVAL;
++
++	if (!propname)
++		propname = "dma-window";
++
++	dma_window = of_get_property(dn, propname, &bytes);
++	if (!dma_window)
++		return -ENODEV;
++	end = dma_window + bytes / sizeof(*dma_window);
++
++	while (dma_window < end) {
++		u32 cells;
++		const void *prop;
++
++		/* busno is always one cell */
++		if (busno)
++			*busno = be32_to_cpup(dma_window++);
++
++		prop = of_get_property(dn, "#dma-address-cells", NULL);
++		if (!prop)
++			prop = of_get_property(dn, "#address-cells", NULL);
++
++		cells = prop ? be32_to_cpup(prop) : of_n_addr_cells(dn);
++		if (!cells)
++			return -EINVAL;
++		*addr = of_read_number(dma_window, cells);
++		dma_window += cells;
++
++		prop = of_get_property(dn, "#dma-size-cells", NULL);
++		cells = prop ? be32_to_cpup(prop) : of_n_size_cells(dn);
++		if (!cells)
++			return -EINVAL;
++		*size = of_read_number(dma_window, cells);
++		dma_window += cells;
++
++		if (cur_index++ == index)
++			break;
++	}
++	return 0;
++}
++
+ static int tegra_smmu_suspend(struct device *dev)
+ {
+ 	struct smmu_device *smmu = dev_get_drvdata(dev);
+-- 
+1.7.5.4
