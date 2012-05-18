@@ -1,35 +1,43 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 3/6] mmc: dw_mmc: lookup for optional biu and ciu
-	clocks
-Date: Fri, 18 May 2012 08:49:01 +0100
-Message-ID: <20120518074901.GA843@n2100.arm.linux.org.uk>
-References: <1337267411-28226-1-git-send-email-thomas.abraham@linaro.org> <1337267411-28226-4-git-send-email-thomas.abraham@linaro.org>
+From: Roland Stigge <stigge@antcom.de>
+Subject: Re: [PATCH RESEND v9 1/2] gpio: Adjust of_xlate API to support multiple
+ GPIO chips
+Date: Fri, 18 May 2012 10:03:22 +0200
+Message-ID: <4FB6024A.5010002@antcom.de>
+References: <1337200832-26630-1-git-send-email-stigge@antcom.de> <20120517203706.6B8223E0621@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1337267411-28226-4-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120517203706.6B8223E0621@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: glikely@secretlab.ca, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2012 at 08:40:08PM +0530, Thomas Abraham wrote:
-> +err_clk:
-> +	if (!IS_ERR(host->ciu_clk))
-> +		clk_disable_unprepare(host->ciu_clk);
-> +	if (!IS_ERR(host->biu_clk))
-> +		clk_disable_unprepare(host->biu_clk);
-> +	clk_put(host->ciu_clk);
-> +	clk_put(host->biu_clk);
+Hi Grant,
 
-+	if (!IS_ERR(host->ciu_clk)) {
-+		clk_disable_unprepare(host->ciu_clk);
-+		clk_put(host->ciu_clk);
-+	}
-+	if (!IS_ERR(host->biu_clk)) {
-+		clk_disable_unprepare(host->biu_clk);
-+		clk_put(host->biu_clk);
-+	}
+On 05/17/2012 10:37 PM, Grant Likely wrote:
+> On Wed, 16 May 2012 22:40:31 +0200, Roland Stigge <stigge@antcom.de> wrote:
+>> This patch changes the of_xlate API to make it possible to manipulate the
+>> actual used gc. This way, multiple GPIO banks can be supported with the same DT
+>> registered GPIO controller.
+>>
+>> The issue was discussed upon the integration of LPC32xx's DT support for its
+>> GPIO (see separate patch).
+>>
+>> Signed-off-by: Roland Stigge <stigge@antcom.de>
+> 
+> I still wasn't happy with this approach, so I bugged Arnd and we
+> discussed some options.  So, I think I've got a better solution that
+> doesn't change the signature of of_xlate.  Instead it allows of_xlate
+> to return an error code and still have multiple banks referring to the
+> same gpio_chip.
+> 
+> I've just posted the series.  Can you try it out and make sure it
+> works for you?
 
-And the same in the other occurrence.
+Works fine, just consider the little compile error bugfix, see next mail.
+
+Thanks,
+
+Roland
