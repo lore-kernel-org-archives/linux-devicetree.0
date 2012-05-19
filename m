@@ -1,71 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Sat, 19 May 2012 08:44:03 +0000
-Message-ID: <201205190844.03654.arnd@arndb.de>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205182143.55140.arnd@arndb.de> <4FB6CB27.8020500@wwwdotorg.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V2] regulator: dt: fix the name of regulator supply
+Date: Sat, 19 May 2012 11:43:03 +0100
+Message-ID: <20120519104303.GQ4039@opensource.wolfsonmicro.com>
+References: <1337369652-27094-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FB6CB27.8020500@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sBcizk6cgRZY6rnJ"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1337369652-27094-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 May 2012, Stephen Warren wrote:
-> On 05/18/2012 03:43 PM, Arnd Bergmann wrote:
 
-> > So if we do that, we might want to make the dma-names property mandatory
-> > for every device, and document what the names are.
-> 
-> We could do that, but one more proposal: Add the client's ID/index into
-> the dmas property, so:
-> 
-> simple 1 req:
-> 
-> dmas = <0 &dmac1 xxx>;
-> 
-> simple 2 req:
-> 
-> dmas = <0 &dmac1 xxx 1 &dmac1 yyy>;
-> 
-> multiple dmacs:
-> 
-> dmas = <0 &dmac1 xxx 0 &dmac2 zzz 1 &dmac1 yyy>;
-> 
-> (i.e. dmas = [client_dma_req_id phandle dma-specifier]*)
-> 
-> (where 0==TX_FIFO, 1=RX_FIFO for example, but could also have
-> 2=TX_FIFO_B, 3=RX_FIFO_B, ...)
-> 
-> Then dma-names would map name to ID, but you'd still need to search all
-> through the dmas property to find the ID match.
+--sBcizk6cgRZY6rnJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Again, this would probably work, but it adds complexity and inconsistency
-for the common case, as nothing else requires these. I think it's much
-better than putting the information into the dma controller node, but
-not ideal.
+On Sat, May 19, 2012 at 01:04:12AM +0530, Laxman Dewangan wrote:
+> If there is any input supply for regulator then the name
+> of supply need to provided by init_data->supply_regulator.
+> In dt case, the input supply is searched by the <name>-supply
+> and here it is require to fix the name so that correct device
+> node can be identified at the time of regulator registration.
 
-> > Another option would be to encode the direction in the property in
-> > a generic way and provide an API that lets you ask specifically
-> > for a read, write or readwrite channel out of the ones that are
-> > available, rather than assuming there is only one kind. Consequently,
-> > any device that uses more than one read channel or more than one
-> > write channel would still have to use names to identify them.
-> 
-> I'm not sure that just direction cuts it; Tegra's SPDIF has 2 TX DMAs
-> ("PCM" data and control data) and same for RX. The format above is
-> roughly the same as what you proposed, but with an explicit ID rather
-> than direction in the dmas property.
+> Fixing the name for input supply as "regulator-supply".
 
-The point with the direction was that it covers most cases and makes
-them rather simple, while for the rare case where you need more than
-two channels, you just use the otherwise optional named interface
-rather than the numbered one. My feeling is that this also makes a
-lot of sense at the driver API level: most dirvers just ask for the
-read and write channels using a very simple interface, and those drivers
-that have more than two will want to name them anyway.
+No, supply_regulator is a legacy thing.  Regulators should set
+supply_name in their regulator_desc to tell the framework what name
+the parent has, allowing these supplies to behave in the same way
+as other supplies as far as the binding goes.
 
-	Arnd
+--sBcizk6cgRZY6rnJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPt3kxAAoJEBus8iNuMP3d3ScP/11QujY7F6TVrtKGiRWde8eU
+WVMiz5XxLDD/QiSjnMWpJv/mT70E9YMoRKmlGlRH0U211pHoyKpfTLw5TqbtbwQZ
+pn1G3wFmaZL0jKcRA8b/6nDE++m2ZktQZB4SQiW0ju+dEWELT1IBTO1PqfV1HInT
+1DXlxjTie7v8snJYETmZsKC3WdrUUJERMASSbRuRoiKF5AetWF4/Mf3sYvqtyXRW
+mh3fmI8zlrHNkYSDHBd749OFQHvk+3/ojpEzKcgdCZXtMF6Myj/mU4FjAeYHpNcR
+YtMjHnU91XJc7t0YMlePpq+hDHUBASOoRXSXgnapdChqv89h9yYmxSE63dhmCbDV
+xOlLL0p9ONkbMtayPM/1NHgWPFqelWYcb1emYDubZOUAZDisJX6SG5jHmGu4OYpJ
+N4LwWEcJwohaawKR9Cyr3lDjNh66W9CvSxGT0q7g33l0YMx6vUgaX6XjRqf5Xxf9
+5XKxhM0px9AsSvXQqpVTLqKXhhfHv/N3aZmigriKPoX7QKv6BL8IYqwSVZT0fdVG
+VaHq0WI5lSb0bfuC6PhPfrLrkvo6ccSr4tTNMGHViZBIBpvLjv0ZGwgshAm6VVZ7
+RAum7fU8kBkKvbzZDqUSps/fNxFoSbzCqGH9hlqglcg2w/8lg47fjE26WFnjsyb1
+ZSCp0yhawKf8v4jj3H05
+=3Yzs
+-----END PGP SIGNATURE-----
+
+--sBcizk6cgRZY6rnJ--
