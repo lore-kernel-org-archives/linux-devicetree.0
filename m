@@ -1,25 +1,31 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 4/5] staging: octeon_ethernet: Convert to use device tree.
-Date: Sat, 19 May 2012 00:07:27 -0600
-Message-ID: <20120519060727.C455D3E046E@localhost>
-References: <1335489630-27017-1-git-send-email-ddaney.cavm@gmail.com> <1335489630-27017-5-git-send-email-ddaney.cavm@gmail.com>
+Subject: Re: [PATCH v2 5/5] MIPS: Octeon: Use device tree to register serial ports.
+Date: Sat, 19 May 2012 00:08:27 -0600
+Message-ID: <20120519060827.0E8F53E046E@localhost>
+References: <1335489630-27017-1-git-send-email-ddaney.cavm@gmail.com> <1335489630-27017-6-git-send-email-ddaney.cavm@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1335489630-27017-5-git-send-email-ddaney.cavm@gmail.com>
+In-Reply-To: <1335489630-27017-6-git-send-email-ddaney.cavm@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Apr 2012 18:20:29 -0700, David Daney <ddaney.cavm@gmail.com> wrote:
+On Thu, 26 Apr 2012 18:20:30 -0700, David Daney <ddaney.cavm@gmail.com> wrote:
 > From: David Daney <david.daney@cavium.com>
 > 
-> Get MAC address and PHY connection from the device tree.  The driver
-> is converted to a platform driver.
+> Switch to using the device tree to register serial ports.
 > 
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Add all the ports with compatible = "cavium,octeon-3860-uart".  Octeon serial
+> ports have their own device type, required port flags, and I/O
+> functions, so using of_serial.c is not indicated.
+> 
+> We need to do this as late_initcall, as the 8250 driver must be
+> initialized before we add any ports.  8250 initialization is done at
+> device_initcall time.
+> 
+> The OCTEON_IRQ_UART{0,1,2} symbols are removed as they are now unused
+> and interfere with irq_domain used by the device tree code.
+> 
 > Signed-off-by: David Daney <david.daney@cavium.com>
-> Cc: netdev@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: David S. Miller <davem@davemloft.net>
 
 Acked-by: Grant Likely <grant.likely@secretlab.ca>
