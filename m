@@ -1,62 +1,57 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2] regulator: dt: fix the name of regulator supply
-Date: Sat, 19 May 2012 19:51:16 +0530
-Message-ID: <4FB7AC5C.9060609@nvidia.com>
-References: <1337369652-27094-1-git-send-email-ldewangan@nvidia.com> <20120519104303.GQ4039@opensource.wolfsonmicro.com> <4FB79444.9010306@nvidia.com> <20120519131019.GS4039@opensource.wolfsonmicro.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] MFD: twl6040: Device tree support
+Date: Sat, 19 May 2012 17:32:36 +0200
+Message-ID: <20120519153236.GQ12015@sortiz-mobl>
+References: <1337166718-8458-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120519131019.GS4039@opensource.wolfsonmicro.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1337166718-8458-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Misael Lopez Cruz <misael.lopez-l0cyMroinI0@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 19 May 2012 06:40 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Sat, May 19, 2012 at 06:08:28PM +0530, Laxman Dewangan wrote:
->
->> The descriptor is set on the regulator driver and hence it need to
->> be parse this in the regulator driver.
->> We need to set the name regulator_desc->supply_name and hence it
->> needs to be in dt binding documentation of that device/regulators.
->> Is this what you recommend?
-> I'm sorry, I still can't understand what you're trying to say here
-> especially the first sentance.  Listing the name of the supply in the
-> binding documentation doesn't seem like a bad idea if that's what you're
-> trying to say.
+Hi Peter,
 
-Sorry for not explaining this in well.
-In dts file for regulator, I want to specify the supply name same as the 
-regulator name i.e.
+On Wed, May 16, 2012 at 02:11:54PM +0300, Peter Ujfalusi wrote:
+> Hello,
+> 
+> Changes since v2:
+> - Child devices are no longer described in dts, they are created with
+>   mfd_add_devices()
+> - ASoC codec device is created unconditionally (main function of twl6040)
+> 
+> Changes since v1:
+> - Commit message for patch 2 (Allocate IRQ numbers dynamically) has been updated
+>   to describe that the twl6040 can not be used as IRQ extender type of device.
+> 
+> Commit message from v1:
+> 
+> The following series adds device tree support for the twl6040 MFD core driver.
+> Support for the child drivers (vibra, ASoC codec) will be submitted via the
+> corresponding subsystem since there is no compile time dependency between them.
+> 
+> The first patch is a minor clean up patch to remove wrapped lines in the
+> twl6040-irq.c. The resulting code is more natural to read to me.
+> 
+> The series depends on the regulator support patch for the twl6040:
+> http://marc.info/?l=linux-kernel&m=133596703610515&w=2
+All 4 patches applied, thanks.
 
-more generic
+Cheers,
+Samuel.
 
-my_reg1: abc {
-:::::::::::
-};
-
-my_reg2: xyz {
-::::::::::::::;
-  xyz-supply = <&my_reg1>;
-};
-
-
-other way:
-my_regname: <name> {
-:::::::::;
-<name>-supply = <&supply_reg>
-};
-
-
-This will be parsed in regulator driver file, not in core files.
-
-
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
