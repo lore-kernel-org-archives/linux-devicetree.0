@@ -1,123 +1,71 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 19/20] ARM: Exynos5: Add combiner, wakeup interrupt
- controller and ethernet nodes
-Date: Fri, 18 May 2012 23:23:43 -0700
-Message-ID: <CAOesGMjrDL2-cS7XFUYnJdL5i6=YFzf6yRUO3eLX4a4GVB4x_w@mail.gmail.com>
-References: <1335813270-13083-1-git-send-email-thomas.abraham@linaro.org>
-	<1335813270-13083-20-git-send-email-thomas.abraham@linaro.org>
-	<CAOesGMhxn6L+Pcp-v2v6z7srGd=8kGwqff7Tt6ok8pHMVXp3ZQ@mail.gmail.com>
-	<20120519061129.BEE9D3E046E@localhost>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Sat, 19 May 2012 08:44:03 +0000
+Message-ID: <201205190844.03654.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205182143.55140.arnd@arndb.de> <4FB6CB27.8020500@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20120519061129.BEE9D3E046E@localhost>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FB6CB27.8020500@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 18, 2012 at 11:11 PM, Grant Likely
-<grant.likely@secretlab.ca> wrote:
-> On Wed, 2 May 2012 10:57:11 -0700, Olof Johansson <olof@lixom.net> wr=
-ote:
->> Hi,
->>
->> [adding devicetree-discuss]
->>
->> On Mon, Apr 30, 2012 at 12:14 PM, Thomas Abraham
->> <thomas.abraham@linaro.org> wrote:
->> > And interrupt combiner, external interrupt wakeup interrupt contro=
-ller
->> > and smsc9215 lan controller nodes.
->> >
->> > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->> > ---
->> > =A0arch/arm/boot/dts/exynos5250-smdk5250.dts | =A0 11 ++++++
->> > =A0arch/arm/boot/dts/exynos5250.dtsi =A0 =A0 =A0 =A0 | =A0 55 ++++=
-+++++++++++++++++++++++++
->> > =A02 files changed, 66 insertions(+), 0 deletions(-)
->> >
->> > diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/=
-boot/dts/exynos5250-smdk5250.dts
->> > index bcc4b89..dbc4bdb 100644
->> > --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> > +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> > @@ -24,6 +24,17 @@
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0bootargs =3D "root=3D/dev/ram0 rw r=
-amdisk=3D8192 console=3DttySAC1,115200";
->> > =A0 =A0 =A0 =A0};
->> >
->> > + =A0 =A0 =A0 lan9215@0x05000000 {
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "smsc,lan9215", "smsc=
-,lan9115";
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x05000000 0x20000>;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <5 0>;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupt-parent =3D <&wakeup_eint>;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 phy-mode =3D "mii";
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 smsc,irq-push-pull;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 smsc,force-internal-phy;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 local-mac-address =3D [00 80 00 23 4=
-5 67];
->> > + =A0 =A0 =A0 };
->> > +
->>
->> since the 911x sits on a chipselect bus, you should instead add that
->> bus to the dtsi and define this on that bus.
->>
->> Something like this in the dtsi:
->>
->> =A0 =A0 =A0 =A0sromc-bus {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#address-cells =3D <2>;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#size-cells =3D <1>;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0ranges =3D < 0 0 0x04000000 0x20000
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1 0 0x05000000 0=
-x20000
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 2 0 0x06000000 0=
-x20000
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 3 0 0x07000000 0=
-x20000>;
->> =A0 =A0 =A0 =A0};
->>
->> and in the dts:
->>
->> =A0 =A0 =A0 =A0sromc-bus {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0lan9215@1,0 {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "smsc,=
-lan9215", "smsc,lan9115";
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <1 0 0x20000>=
-;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupts =3D <5 0>;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupt-parent =3D =
-<&wakeup_eint>;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0phy-mode =3D "mii";
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0smsc,irq-push-pull;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0smsc,force-internal-p=
-hy;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0local-mac-address =3D=
- [00 80 00 23 45 67];
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
->> =A0 =A0 =A0 =A0 };
->>
->>
->> (You might be able to do just fine with one address cell, I'm not 10=
-0%
->> sure why Grant's example uses two, but I used the same above for
->> consistency).
->
-> Because otherwise there is no way to describe an offset from the base
-> of the chipselect base value, and the core code will try to apply the
-> size to the cs part of the address specifier. (so in the example
-> above the address range described by:
->
-> =A0 =A0 =A0 =A0reg =3D <1 0x20000>;
->
-> would mean cs values 1 to 0x20001; which is definitely wrong.
+On Friday 18 May 2012, Stephen Warren wrote:
+> On 05/18/2012 03:43 PM, Arnd Bergmann wrote:
 
-Ah yes, that makes perfect sense. I can't seem to create an account to
-update the 'Device_Tree_Usage' page on the devicetree.org wiki, but
-it'd probably not be a bad idea to include the above for explanation
-there.
+> > So if we do that, we might want to make the dma-names property mandatory
+> > for every device, and document what the names are.
+> 
+> We could do that, but one more proposal: Add the client's ID/index into
+> the dmas property, so:
+> 
+> simple 1 req:
+> 
+> dmas = <0 &dmac1 xxx>;
+> 
+> simple 2 req:
+> 
+> dmas = <0 &dmac1 xxx 1 &dmac1 yyy>;
+> 
+> multiple dmacs:
+> 
+> dmas = <0 &dmac1 xxx 0 &dmac2 zzz 1 &dmac1 yyy>;
+> 
+> (i.e. dmas = [client_dma_req_id phandle dma-specifier]*)
+> 
+> (where 0==TX_FIFO, 1=RX_FIFO for example, but could also have
+> 2=TX_FIFO_B, 3=RX_FIFO_B, ...)
+> 
+> Then dma-names would map name to ID, but you'd still need to search all
+> through the dmas property to find the ID match.
 
+Again, this would probably work, but it adds complexity and inconsistency
+for the common case, as nothing else requires these. I think it's much
+better than putting the information into the dma controller node, but
+not ideal.
 
--Olof
+> > Another option would be to encode the direction in the property in
+> > a generic way and provide an API that lets you ask specifically
+> > for a read, write or readwrite channel out of the ones that are
+> > available, rather than assuming there is only one kind. Consequently,
+> > any device that uses more than one read channel or more than one
+> > write channel would still have to use names to identify them.
+> 
+> I'm not sure that just direction cuts it; Tegra's SPDIF has 2 TX DMAs
+> ("PCM" data and control data) and same for RX. The format above is
+> roughly the same as what you proposed, but with an explicit ID rather
+> than direction in the dmas property.
+
+The point with the direction was that it covers most cases and makes
+them rather simple, while for the rare case where you need more than
+two channels, you just use the otherwise optional named interface
+rather than the numbered one. My feeling is that this also makes a
+lot of sense at the driver API level: most dirvers just ask for the
+read and write channels using a very simple interface, and those drivers
+that have more than two will want to name them anyway.
+
+	Arnd
