@@ -1,65 +1,86 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 4/6] ARM: Samsung: Modify
- s3c64xx_spi{0|1|2}_set_platdata function
-Date: Sun, 20 May 2012 10:21:13 +0100
-Message-ID: <20120520092113.GA20652@opensource.wolfsonmicro.com>
-References: <1337333613-6216-1-git-send-email-thomas.abraham@linaro.org>
- <1337333613-6216-5-git-send-email-thomas.abraham@linaro.org>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] ARM: davinci, intc: Add OF support for TI interrupt
+ controller
+Date: Sun, 20 May 2012 16:28:08 +0530
+Message-ID: <4FB8CE40.4030404@ti.com>
+References: <1330945804-3379-1-git-send-email-hs@denx.de>
+ <1330945804-3379-2-git-send-email-hs@denx.de>
+ <20120519061628.663F53E046E@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1337333613-6216-5-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120519061628.663F53E046E@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 5/19/2012 11:46 AM, Grant Likely wrote:
+> On Mon,  5 Mar 2012 12:09:58 +0100, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
+>> Add a function to initialize the Common Platform Interrupt Controller
+>> (cp_intc) from TI used on OMAP-L1x SoCs using a device tree node.
+>>
+>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+>> Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+>>
+>> ---
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> @@ -165,13 +197,48 @@ void __init cp_intc_init(void)
+>>  		for (i = 0; host_map[i] != -1; i++)
+>>  			cp_intc_write(host_map[i], CP_INTC_HOST_MAP(i));
+>>  
+>> -	/* Set up genirq dispatching for cp_intc */
+>> -	for (i = 0; i < num_irq; i++) {
+>> -		irq_set_chip(i, &cp_intc_irq_chip);
+>> -		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
+>> -		irq_set_handler(i, handle_edge_irq);
+>> +	if (node) {
+>> +		irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
+>> +		if (irq_base < 0) {
+>> +			pr_warn("Couldn't allocate IRQ numbers\n");
+>> +			irq_base = 0;
+>> +		}
+>> +
+>> +		/* create a legacy host */
+>> +		cp_intc_domain = irq_domain_add_legacy(node, num_irq,
+>> +					irq_base, 0, &cp_intc_host_ops, NULL);
+>> +		if (cp_intc_domain == NULL) {
+>> +			pr_err("CP INTC: failed to allocate irq host!\n");
+>> +			return -EINVAL;
+>> +		}
+>> +	} else {
+>> +		/* Set up genirq dispatching for cp_intc */
+>> +		for (i = 0; i < num_irq; i++) {
+>> +			irq_set_chip(i, &cp_intc_irq_chip);
+>> +			set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
+>> +			irq_set_handler(i, handle_edge_irq);
+>> +		}
+> 
+> No need for the if/else clause here.  irq_domain should be used for
+> both DT and non-DT.  It makes the code a lot simpler that way.  The
+> only difference I would suggest is to call irq_domain_add_linear() in
+> the DT case instead of irq_domain_add_legacy()...  and this is
+> temporary too until I fix up the irq_domain code to better handle both
+> static and dynamic mapping.
 
-On Fri, May 18, 2012 at 03:03:31PM +0530, Thomas Abraham wrote:
+It will also help to do the irq_domain conversion in a separate patch.
+That way irq_domain conversion can be reviewed separately from DT
+conversion.
 
-> -	s3c64xx_spi0_set_platdata(&s3c64xx_spi0_pdata, 0, 1);
-> +	s3c64xx_spi0_set_platdata("s3c6410-spi", NULL, 0, 1);
-
-...
-
-> +	pd.src_clk_nr = src_clk_nr;
-> +	pd.cfg_gpio = (cfg_gpio) ? cfg_gpio : s3c64xx_spi0_cfg_gpio;
-> +	s3c64xx_device_spi0.name = dev_name;
-
-This looks *really* strange.  Why do we need to pass in a name to set in
-s3c64xx_device_spi0's name, why would we want to use a different name?
-This dev_name also isn't equivalent to dev_name() which makes matters
-more confusing than they need to be.
-
-There was similar code for the I2C controllers which caused some really
-hard to debug brittleness.
-
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPuLd9AAoJEBus8iNuMP3dLqoQAIR6rqQ9pjM8FvqwohQzlWo+
-1jzGq53e1GzU9X3dEGxd9JKO+G7dH1zsltCbYlMpOAZC/RJVjsC+f6Ni8+ZOI7Em
-9ixnGTf+iQT475vW4XBi0FZoWzsdYtvU9f8RD0xVLkVjNPfF1ALubhfdBu/hJo8i
-eyYk+426Lc9QCI2YrMceCJcgLv7CwwZ6sFckDU5pSXvDReSQ9AJ+LtCR/e9MOds3
-otGDcT4x5+5BoFm+m01628qqJoN2VrNlrxprtMMg1rYW2s/jKOKN9KNujC6DmY7S
-i5pIF9EqNsa4+xrGRbDnqCo5mr/9yEAXFCSA1P0PnbAKUO0QL9U0iJu/20hZoAX3
-bOsvy+YinWi/I6t3bMcOND6uivjcDJDzaXcXCTCtfXeQAlzecQ/OfU7t7KwJuGb8
-yKD2Li02enYN9z/NFA0tOB6g75Nkuy+HFL0IpWi3zqz8Ap8qxjssukBMMuvtuu1N
-7mBr3WKhxTh/XnGLGT2zoCvTvc/p/wznajsM3fDB5Afygf3WP5cHU6t5BdO1jpaT
-e6uskxXD9fS3+PsXheAqggAMEBNnU2U+ca8MVzAq7t2Ncr5xgKJINaJhd7uQaTXp
-LzyITh8TCogXQKSQAxbv+edWKL1XEMKTGaHtITg6NYgMh9o0Phf7DREEXvSBZa2b
-dB7NFN04HgHCpyh1YajU
-=fwSS
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
+Thanks,
+Sekhar
