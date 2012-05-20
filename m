@@ -1,47 +1,65 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V3 2/4] regulator: tps62360: add dt support
-Date: Sun, 20 May 2012 12:49:11 +0530
-Message-ID: <4FB89AEF.3080107@nvidia.com>
-References: <1336718325-8372-1-git-send-email-ldewangan@nvidia.com> <1336718325-8372-3-git-send-email-ldewangan@nvidia.com> <20120511145833.GG3960@opensource.wolfsonmicro.com> <4FAD31A5.7090006@nvidia.com> <20120511213001.GD29835@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 4/6] ARM: Samsung: Modify
+ s3c64xx_spi{0|1|2}_set_platdata function
+Date: Sun, 20 May 2012 10:21:13 +0100
+Message-ID: <20120520092113.GA20652@opensource.wolfsonmicro.com>
+References: <1337333613-6216-1-git-send-email-thomas.abraham@linaro.org>
+ <1337333613-6216-5-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120511213001.GD29835@opensource.wolfsonmicro.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "lrg@ti.com" <lrg@ti.com>, Stephen Warren <swarren@nvidia.com>, "olof@lixom.net" <olof@lixom.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1337333613-6216-5-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 12 May 2012 03:00 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Fri, May 11, 2012 at 09:05:01PM +0530, Laxman Dewangan wrote:
->
->> I think this is not require to enable always otherwise there may be
->> power dissipation from this path always, just when we off the rail
->> (disable rail or when go to shutdown so that the voltage output can
->> go down faster).
->> Should we add "unsigned en_discharge:1" in regulator init data but
->> did not get how core driver can use this flag specially when
->> shutdown?
-> Oh, now you say this I think I remember discussing this with you before!
-> This is pretty unusual for such hardware.  Normally there's something in
-> the digital block so that the discharge is only enabled if the regulator
-> is disabled, if it's enabled then the discharge would automatically be
-> taken off since actively discharging while enabled doesn't make sense
-> and may in fact be actively harmful.
->
 
-Just to share  here with our new pmu which we got recently, the 
-discharge path behavior is exactly same as what Mark mentioned
-It need to be enable always. The pmu auto disable the DISC path in 
-normal operation so there is no power dissipation but when it detects 
-the en_bit is written 0 or any external control is making the rail to be 
-off, it automatically turn on the path so that ramp-down can happen faster.
-Just we need to enable this always.
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> If the hardware doesn't do that then I'd expect the driver to take care
-> of this if it implements the framework feature (once the framework
-> feature is added).
+On Fri, May 18, 2012 at 03:03:31PM +0530, Thomas Abraham wrote:
 
+> -	s3c64xx_spi0_set_platdata(&s3c64xx_spi0_pdata, 0, 1);
+> +	s3c64xx_spi0_set_platdata("s3c6410-spi", NULL, 0, 1);
+
+...
+
+> +	pd.src_clk_nr = src_clk_nr;
+> +	pd.cfg_gpio = (cfg_gpio) ? cfg_gpio : s3c64xx_spi0_cfg_gpio;
+> +	s3c64xx_device_spi0.name = dev_name;
+
+This looks *really* strange.  Why do we need to pass in a name to set in
+s3c64xx_device_spi0's name, why would we want to use a different name?
+This dev_name also isn't equivalent to dev_name() which makes matters
+more confusing than they need to be.
+
+There was similar code for the I2C controllers which caused some really
+hard to debug brittleness.
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPuLd9AAoJEBus8iNuMP3dLqoQAIR6rqQ9pjM8FvqwohQzlWo+
+1jzGq53e1GzU9X3dEGxd9JKO+G7dH1zsltCbYlMpOAZC/RJVjsC+f6Ni8+ZOI7Em
+9ixnGTf+iQT475vW4XBi0FZoWzsdYtvU9f8RD0xVLkVjNPfF1ALubhfdBu/hJo8i
+eyYk+426Lc9QCI2YrMceCJcgLv7CwwZ6sFckDU5pSXvDReSQ9AJ+LtCR/e9MOds3
+otGDcT4x5+5BoFm+m01628qqJoN2VrNlrxprtMMg1rYW2s/jKOKN9KNujC6DmY7S
+i5pIF9EqNsa4+xrGRbDnqCo5mr/9yEAXFCSA1P0PnbAKUO0QL9U0iJu/20hZoAX3
+bOsvy+YinWi/I6t3bMcOND6uivjcDJDzaXcXCTCtfXeQAlzecQ/OfU7t7KwJuGb8
+yKD2Li02enYN9z/NFA0tOB6g75Nkuy+HFL0IpWi3zqz8Ap8qxjssukBMMuvtuu1N
+7mBr3WKhxTh/XnGLGT2zoCvTvc/p/wznajsM3fDB5Afygf3WP5cHU6t5BdO1jpaT
+e6uskxXD9fS3+PsXheAqggAMEBNnU2U+ca8MVzAq7t2Ncr5xgKJINaJhd7uQaTXp
+LzyITh8TCogXQKSQAxbv+edWKL1XEMKTGaHtITg6NYgMh9o0Phf7DREEXvSBZa2b
+dB7NFN04HgHCpyh1YajU
+=fwSS
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
