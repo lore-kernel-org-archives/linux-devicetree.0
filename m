@@ -1,171 +1,51 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [V2 5/5] powerpc: kernel: 16650 UART reg-shift support
-Date: Mon, 21 May 2012 09:48:08 +0530
-Message-ID: <CACoXjck-=q9SBoFrLufs0GbrEcHN0jrHNmKLJ9Uf2-5MnhMD2Q@mail.gmail.com>
-References: <1333956052-25319-1-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-2-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-3-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-4-git-send-email-tinamdar@apm.com>
-	<1333956052-25319-5-git-send-email-tinamdar@apm.com>
-	<CA+5PVA4sjX_Dk6ecySG4ZZoM=xhaWu2jGrQ=LtFgxGL88G=-Nw@mail.gmail.com>
-	<CACoXjcnpVi6n7__6SgdzYUuMuRkdtZpVGkOiEowFsL8Gq2kC7w@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Input: twl6040-vibra: Update for device tree support
+Date: Sun, 20 May 2012 22:32:00 -0700
+Message-ID: <20120521053159.GA30285@core.coreip.homeip.net>
+References: <1337167186-8535-1-git-send-email-peter.ujfalusi@ti.com>
+ <20120516193546.GA15920@core.coreip.homeip.net>
+ <CAPo=G1zf1XJcoKgCxMn3X09T0LOUG-9aw3iopqC7OPqcuc5hcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACoXjcnpVi6n7__6SgdzYUuMuRkdtZpVGkOiEowFsL8Gq2kC7w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Boyer <jwboyer@gmail.com>
-Cc: benh@kernel.crashing.org, grant.likely@secretlab.ca, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPo=G1zf1XJcoKgCxMn3X09T0LOUG-9aw3iopqC7OPqcuc5hcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "Ujfalusi, Peter" <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 9, 2012 at 10:57 AM, Tanmay Inamdar <tinamdar@apm.com> wrot=
-e:
-> On Wed, May 2, 2012 at 7:08 PM, Josh Boyer <jwboyer@gmail.com> wrote:
->> On Mon, Apr 9, 2012 at 3:20 AM, Tanmay Inamdar <tinamdar@apm.com> wr=
-ote:
->>> In APM8018X SOC, UART register address space has been relocated to =
-32-bit
->>> data boundaries for APB bus implementation.
->>> Current legacy_serial driver ignores the reg-shift property. This p=
-atch
->>> modifies legacy_serial.c and udbg_16550.c to work with above mentio=
-ned UARTs.
->>>
->>> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
->>> ---
->>> :100644 100644 8338aef... f5fc106... M =A0arch/powerpc/include/asm/=
-udbg.h
->>> :100644 100644 bedd12e... d523b7d... M =A0arch/powerpc/kernel/legac=
-y_serial.c
->>> :100644 100644 6837f83... e0cb7dc... M =A0arch/powerpc/kernel/udbg_=
-16550.c
->>> =A0arch/powerpc/include/asm/udbg.h =A0 =A0 | =A0 =A02 +-
->>> =A0arch/powerpc/kernel/legacy_serial.c | =A0 16 +++++---
->>> =A0arch/powerpc/kernel/udbg_16550.c =A0 =A0| =A0 64 +++++++++++++++=
-+++++++------------
->>> =A03 files changed, 52 insertions(+), 30 deletions(-)
->>>
->>> diff --git a/arch/powerpc/include/asm/udbg.h b/arch/powerpc/include=
-/asm/udbg.h
->>> index 8338aef..f5fc106 100644
->>> --- a/arch/powerpc/include/asm/udbg.h
->>> +++ b/arch/powerpc/include/asm/udbg.h
->>> @@ -29,7 +29,7 @@ extern void udbg_printf(const char *fmt, ...)
->>> =A0extern void udbg_progress(char *s, unsigned short hex);
->>>
->>> =A0extern void udbg_init_uart(void __iomem *comport, unsigned int s=
-peed,
->>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned int c=
-lock);
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned int c=
-lock, =A0unsigned int regshift);
->>> =A0extern unsigned int udbg_probe_uart_speed(void __iomem *comport,
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0unsigned int clock);
->>>
->>> diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/ker=
-nel/legacy_serial.c
->>> index bedd12e..d523b7d 100644
->>> --- a/arch/powerpc/kernel/legacy_serial.c
->>> +++ b/arch/powerpc/kernel/legacy_serial.c
->>> @@ -33,6 +33,7 @@ static struct legacy_serial_info {
->>> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-clock;
->>> =A0 =A0 =A0 =A0int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 irq_check_parent;
->>> =A0 =A0 =A0 =A0phys_addr_t =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-taddr;
->>> + =A0 =A0 =A0 unsigned int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0r=
-egshift;
->>> =A0} legacy_serial_infos[MAX_LEGACY_SERIAL_PORTS];
->>>
->>> =A0static struct __initdata of_device_id legacy_serial_parents[] =3D=
- {
->>> @@ -42,6 +43,7 @@ static struct __initdata of_device_id legacy_seri=
-al_parents[] =3D {
->>> =A0 =A0 =A0 =A0{.compatible =3D "ibm,opb",},
->>> =A0 =A0 =A0 =A0{.compatible =3D "simple-bus",},
->>> =A0 =A0 =A0 =A0{.compatible =3D "wrs,epld-localbus",},
->>> + =A0 =A0 =A0 {.compatible =3D "apm,apb",},
->>> =A0 =A0 =A0 =A0{},
->>> =A0};
->>>
->>> @@ -163,11 +165,6 @@ static int __init add_legacy_soc_port(struct d=
-evice_node *np,
->>> =A0 =A0 =A0 =A0if (of_get_property(np, "clock-frequency", NULL) =3D=
-=3D NULL)
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -1;
->>>
->>> - =A0 =A0 =A0 /* if reg-shift or offset, don't try to use it */
->>> - =A0 =A0 =A0 if ((of_get_property(np, "reg-shift", NULL) !=3D NULL=
-) ||
->>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 (of_get_property(np, "reg-offset", NU=
-LL) !=3D NULL))
->>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -1;
->>> -
->>
->> So we explicitly didn't support reg-shift before. =A0I'm guessing th=
-ere is
->> a reason for that, but I don't recall what. =A0Ben?
->>
->> Also, why do you need to use the legacy serial driver at all for thi=
-s
->> SOC? =A0As far as I remember, the OF serial driver should be suffici=
-ent.
->>
->
-> You are right. There is no need to use legacy serial driver. However =
-I
-> realized that when 40x is selected, 'PPC_UDBG_16550' is by default
-> selected. This enables legacy serial driver.
->
-> Is it now required to enable 'PPC_UDBG_16550' by default for every SO=
-C
-> that uses 40x processor?
->
-Josh, Ben,
-
-Please let me know if you have any comments regarding above question.
-
->>> +static unsigned int reg_shift;
->>> +#define ns16550_offset(addr) (addr - (unsigned char *)udbg_comport=
-)
->>> +
->>> =A0static struct NS16550 __iomem *udbg_comport;
->>>
->>> +static inline u8 serial_read(unsigned char *addr)
->>> +{
->>> + =A0 =A0 =A0 u32 offset =3D ns16550_offset(addr) << reg_shift;
->>> + =A0 =A0 =A0 return readb(udbg_comport + offset);
->>> +}
->>> +
->>> +static inline void serial_write(unsigned char *addr, char val)
->>> +{
->>> + =A0 =A0 =A0 u32 offset =3D ns16550_offset(addr) << reg_shift;
->>> + =A0 =A0 =A0 writeb(val, udbg_comport + offset);
->>> +}
->>> +
->>
->> I don't think readb/writeb are correct here. =A0Why did you switch t=
-o
->> using those instead of sticking with in_8/out_8?
->>
->> josh
->
-> Thanks,
-> Tanmay
-CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,=
-=20
-is for the sole use of the intended recipient(s) and contains informati=
-on=A0
-that is confidential and proprietary to AppliedMicro Corporation or its=
- subsidiaries.=20
-It is to be used solely for the purpose of furthering the parties' busi=
-ness relationship.=20
-All unauthorized review, use, disclosure or distribution is prohibited.=
-=20
-If you are not the intended recipient, please contact the sender by rep=
-ly e-mail=20
-and destroy all copies of the original message.
-=0D
+T24gV2VkLCBNYXkgMTYsIDIwMTIgYXQgMTA6NTU6MTNQTSArMDMwMCwgVWpmYWx1c2ksIFBldGVy
+IHdyb3RlOgo+IEhpIERtaXRyeSwKPiAKPiBPbiBXZWQsIE1heSAxNiwgMjAxMiBhdCAxMDozNSBQ
+TSwgRG1pdHJ5IFRvcm9raG92Cj4gPGRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb20+IHdyb3RlOgo+
+ID4gU28gaW4gdGhpcyBjYXNlIHdoeSBkb24ndCB5b3UgaGF2ZSBwYXJlbnQgcGFyc2UgYWxsIERU
+IGRhdGEgYW5kCj4gPiBjb25zdHJ1Y3QgaW5zdGFuY2Ugb2YgcGRhdGEgZm9yIHZpYnJhIGRyaXZl
+ciB0byBjb25zdW1lPwo+IAo+IElmIHRoZXJlIGlzIGEgbmVlZCB0byBjaGFuZ2UgdGhlIHBhcmFt
+ZXRlcnMgKGFkZCBuZXcgb25lcyBmb3IgZXhhbXBsZSkKPiBmb3IgdGhlIHZpYnJhIGRyaXZlciBp
+biB0aGlzIHdheSB0aGUgY2hhbmdlIGluIGNvZGUgb25seSBuZWVkIHRvIGJlCj4gZG9uZSBpbiB0
+aGUgdmlicmEgZHJpdmVyLgo+IElmIHRoZSBNRkQgY29yZSB3b3VsZCBjb25zdHJ1Y3QgdGhlIHBk
+YXRhLCBpbiB0aGlzIGNhc2UgSSB3b3VsZCBuZWVkCj4gdG8gbW9kaWZ5IGJvdGggdGhlIE1GRCBj
+b3JlIGFuZCB2aWJyYSBkcml2ZXIuCgpIbW0sIEkgYW0gZ2V0dGluZzoKCiAgQ0MgICAgICBkcml2
+ZXJzL2lucHV0L21pc2MvdHdsNjA0MC12aWJyYS5vCmRyaXZlcnMvaW5wdXQvbWlzYy90d2w2MDQw
+LXZpYnJhLmM6IEluIGZ1bmN0aW9uIOKAmHR3bDYwNDBfdmlicmFfcHJvYmXigJk6CmRyaXZlcnMv
+aW5wdXQvbWlzYy90d2w2MDQwLXZpYnJhLmM6MjYzOjk6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJh
+dGlvbiBvZgpmdW5jdGlvbiDigJhvZl9maW5kX25vZGVfYnlfbmFtZeKAmSBbLVdlcnJvcj1pbXBs
+aWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0KZHJpdmVycy9pbnB1dC9taXNjL3R3bDYwNDAtdmli
+cmEuYzoyNjM6NDI6IHdhcm5pbmc6IGluaXRpYWxpemF0aW9uIG1ha2VzCnBvaW50ZXIgZnJvbSBp
+bnRlZ2VyIHdpdGhvdXQgYSBjYXN0IFtlbmFibGVkIGJ5IGRlZmF1bHRdCmNjMTogc29tZSB3YXJu
+aW5ncyBiZWluZyB0cmVhdGVkIGFzIGVycm9ycwptYWtlWzFdOiAqKiogW2RyaXZlcnMvaW5wdXQv
+bWlzYy90d2w2MDQwLXZpYnJhLm9dIEVycm9yIDEKbWFrZTogKioqIFtkcml2ZXJzL2lucHV0L21p
+c2MvdHdsNjA0MC12aWJyYS5vXSBFcnJvciAyCgoKaXQgbG9va3MgbGlrZSB0aGVyZSBpcyBubyBz
+dHViIGZvciBvZl9maW5kX25vZGVfYnlfbmFtZSgpLgoKVGhhbmtzLgoKLS0gCkRtaXRyeQpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
+c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
+dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
