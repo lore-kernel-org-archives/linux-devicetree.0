@@ -1,55 +1,64 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] serial/imx: make devdata member point to const data
-Date: Mon, 21 May 2012 21:57:39 +0200
-Message-ID: <1337630259-9510-1-git-send-email-u.kleine-koenig@pengutronix.de>
-References: <1335171381-24869-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 00/12] add imx usb driver for mx28/6x
+Date: Mon, 21 May 2012 22:07:34 +0200
+Message-ID: <201205212207.34978.marex@denx.de>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com> <201205212141.52171.marex@denx.de> <4FBA9BE4.7020303@grid-net.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1335171381-24869-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: linux-serial-owner@vger.kernel.org
-To: Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: kernel@pengutronix.de, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4FBA9BE4.7020303-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is only cosmetic for now. In case that
+Dear Subodh Nijsure,
 
-	http://mid.gmane.org/1335171381-24869-1-git-send-email-u.kleine-koenig=
-@pengutronix.de
+> On 05/21/2012 12:41 PM, Marek Vasut wrote:
+> > Dear Fabio Estevam,
+> > 
+> >> Hi Richard,
+> >> 
+> >> On Mon, May 21, 2012 at 6:23 AM, Richard Zhao
+> >> 
+> >> <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>  wrote:
+> >>> The work is based on  ci13xxx rework done by Alexander Shishkin.
+> >>> 
+> >>> Status:
+> >>>   - this version only support host
+> >>>   - usbotg controler works at host role
+> >>> 
+> >>> Changes since V1:
+> >>>   - Merge the work of Marek
+> >>>   - re-implement connect change notify
+> >>>   - imx6q: move part of code to clk
+> >>>   - imx6q: add config-on-boot gpios
+> >> 
+> >> Can you please also add the driver into the defconfig files?
+> >> 
+> >> What about the existing USB host drivers for mx27/mx31/mx35/mx25/mx35?
+> >> 
+> >> Is the idea to switch to drivers/usb/chipidea/host.c too?
+> > 
+> > I think the core is the same, it's just the ci13xxx-imx driver that'd
+> > need to be written differently for these
+> 
+> So that means driver that you did are not going to be up streamed for
+> mx28/mxs? And those interested should be tracking this patch set?
 
-will be applied, it fixes a warning
+This here is definitelly going to support mx28 and I'm slowly working through 
+the DT stuff to test this, all right?
 
-	drivers/tty/serial/imx.c: In function 'serial_imx_probe_dt':
-	drivers/tty/serial/imx.c:1430:17: warning: assignment discards 'const'=
- qualifier from pointer target type [enabled by default]
+We were talking about imx.{xz|x,y is [0-9a-z]} \ imx.{23,28,6q}
 
-though.
+> 
+> -Subodh
 
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
----
- drivers/tty/serial/imx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index e7fecee..d409bbb 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -205,7 +205,7 @@ struct imx_port {
- 	unsigned int		irda_inv_tx:1;
- 	unsigned short		trcv_delay; /* transceiver delay */
- 	struct clk		*clk;
--	struct imx_uart_data	*devdata;
-+	const struct imx_uart_data *devdata;
- };
-=20
- struct imx_port_ucrs {
---=20
-1.7.10
-
+Best regards,
+Marek Vasut
 --
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
