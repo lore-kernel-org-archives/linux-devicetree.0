@@ -1,16 +1,15 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] ARM: davinci, intc: Add OF support for TI interrupt
- controller
-Date: Sun, 20 May 2012 16:28:08 +0530
-Message-ID: <4FB8CE40.4030404@ti.com>
-References: <1330945804-3379-1-git-send-email-hs@denx.de>
- <1330945804-3379-2-git-send-email-hs@denx.de>
- <20120519061628.663F53E046E@localhost>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt: fsl-imx-cspi.txt: Fix comment about GPIOs used for
+ chip selects
+Date: Mon, 21 May 2012 00:27:08 -0300
+Message-ID: <CAOMZO5B9sX0VuE=Oz3DE4esRHMk9NXpA05pzFb5cxYm=8+qWcQ@mail.gmail.com>
+References: <1335028873-3395-1-git-send-email-festevam@gmail.com>
+ <CAAQ0ZWTsdrYQ28=K=acnP=HT3+1DuTa-X8q0NM66xcvSP21hgw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120519061628.663F53E046E@localhost>
+In-Reply-To: <CAAQ0ZWTsdrYQ28=K=acnP=HT3+1DuTa-X8q0NM66xcvSP21hgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,67 +19,23 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/19/2012 11:46 AM, Grant Likely wrote:
-> On Mon,  5 Mar 2012 12:09:58 +0100, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
->> Add a function to initialize the Common Platform Interrupt Controller
->> (cp_intc) from TI used on OMAP-L1x SoCs using a device tree node.
+On Sun, Apr 22, 2012 at 10:32 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 22 April 2012 01:21, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> The gpio numbers does not match the comment.
 >>
->> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
->> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
->> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
->> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
->> Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+>> Fix the comments for GPIOs used for chip selects.
 >>
->> ---
+>> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>
+> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Grant, Rob,
+>
+> Please let me know if you prefer to have it go through arm-soc tree
+> than spi or dt tree.
 
->> @@ -165,13 +197,48 @@ void __init cp_intc_init(void)
->>  		for (i = 0; host_map[i] != -1; i++)
->>  			cp_intc_write(host_map[i], CP_INTC_HOST_MAP(i));
->>  
->> -	/* Set up genirq dispatching for cp_intc */
->> -	for (i = 0; i < num_irq; i++) {
->> -		irq_set_chip(i, &cp_intc_irq_chip);
->> -		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
->> -		irq_set_handler(i, handle_edge_irq);
->> +	if (node) {
->> +		irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
->> +		if (irq_base < 0) {
->> +			pr_warn("Couldn't allocate IRQ numbers\n");
->> +			irq_base = 0;
->> +		}
->> +
->> +		/* create a legacy host */
->> +		cp_intc_domain = irq_domain_add_legacy(node, num_irq,
->> +					irq_base, 0, &cp_intc_host_ops, NULL);
->> +		if (cp_intc_domain == NULL) {
->> +			pr_err("CP INTC: failed to allocate irq host!\n");
->> +			return -EINVAL;
->> +		}
->> +	} else {
->> +		/* Set up genirq dispatching for cp_intc */
->> +		for (i = 0; i < num_irq; i++) {
->> +			irq_set_chip(i, &cp_intc_irq_chip);
->> +			set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
->> +			irq_set_handler(i, handle_edge_irq);
->> +		}
-> 
-> No need for the if/else clause here.  irq_domain should be used for
-> both DT and non-DT.  It makes the code a lot simpler that way.  The
-> only difference I would suggest is to call irq_domain_add_linear() in
-> the DT case instead of irq_domain_add_legacy()...  and this is
-> temporary too until I fix up the irq_domain code to better handle both
-> static and dynamic mapping.
-
-It will also help to do the irq_domain conversion in a separate patch.
-That way irq_domain conversion can be reviewed separately from DT
-conversion.
-
-Thanks,
-Sekhar
+Can this be applied?
