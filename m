@@ -1,82 +1,89 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Mon, 21 May 2012 11:33:52 -0600
-Message-ID: <4FBA7C80.4080801@wwwdotorg.org>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205182143.55140.arnd@arndb.de> <4FB6CB27.8020500@wwwdotorg.org> <201205190844.03654.arnd@arndb.de>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] usb: otg: add notify_connect_change callback
+Date: Mon, 21 May 2012 19:36:40 +0200
+Message-ID: <201205211936.40359.marex@denx.de>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com> <1337592237-5090-2-git-send-email-richard.zhao@freescale.com> <20120521130556.GB18926@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201205190844.03654.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120521130556.GB18926-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/19/2012 02:44 AM, Arnd Bergmann wrote:
-> On Friday 18 May 2012, Stephen Warren wrote:
->> On 05/18/2012 03:43 PM, Arnd Bergmann wrote:
-> 
->>> So if we do that, we might want to make the dma-names property mandatory
->>> for every device, and document what the names are.
->>
->> We could do that, but one more proposal: Add the client's ID/index into
->> the dmas property, so:
->>
->> simple 1 req:
->>
->> dmas = <0 &dmac1 xxx>;
->>
->> simple 2 req:
->>
->> dmas = <0 &dmac1 xxx 1 &dmac1 yyy>;
->>
->> multiple dmacs:
->>
->> dmas = <0 &dmac1 xxx 0 &dmac2 zzz 1 &dmac1 yyy>;
->>
->> (i.e. dmas = [client_dma_req_id phandle dma-specifier]*)
->>
->> (where 0==TX_FIFO, 1=RX_FIFO for example, but could also have
->> 2=TX_FIFO_B, 3=RX_FIFO_B, ...)
->>
->> Then dma-names would map name to ID, but you'd still need to search all
->> through the dmas property to find the ID match.
-> 
-> Again, this would probably work, but it adds complexity and inconsistency
-> for the common case, as nothing else requires these. I think it's much
-> better than putting the information into the dma controller node, but
-> not ideal.
-> 
->>> Another option would be to encode the direction in the property in
->>> a generic way and provide an API that lets you ask specifically
->>> for a read, write or readwrite channel out of the ones that are
->>> available, rather than assuming there is only one kind. Consequently,
->>> any device that uses more than one read channel or more than one
->>> write channel would still have to use names to identify them.
->>
->> I'm not sure that just direction cuts it; Tegra's SPDIF has 2 TX DMAs
->> ("PCM" data and control data) and same for RX. The format above is
->> roughly the same as what you proposed, but with an explicit ID rather
->> than direction in the dmas property.
-> 
-> The point with the direction was that it covers most cases and makes
-> them rather simple, while for the rare case where you need more than
-> two channels, you just use the otherwise optional named interface
-> rather than the numbered one. My feeling is that this also makes a
-> lot of sense at the driver API level: most dirvers just ask for the
-> read and write channels using a very simple interface, and those drivers
-> that have more than two will want to name them anyway.
+Dear Greg KH,
 
-How are you thinking of representing the direction in DT - as part of
-the DMA request specifier, so in a DMAC-specific way?
+> On Mon, May 21, 2012 at 05:23:46PM +0800, Richard Zhao wrote:
+> > This let usb phy driver has a chance to change hw settings when connect
+> > status change.
+> > 
+> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> > 
+> >  include/linux/usb/otg.h |   13 +++++++++++++
+> >  1 files changed, 13 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+> > index 38ab3f4..385641d 100644
+> > --- a/include/linux/usb/otg.h
+> > +++ b/include/linux/usb/otg.h
+> > @@ -117,6 +117,10 @@ struct usb_phy {
+> > 
+> >  	int	(*set_suspend)(struct usb_phy *x,
+> >  	
+> >  				int suspend);
+> > 
+> > +	/* notify phy connect status change */
+> > +	int	(*notify_connect_change)(struct usb_phy *x,
+> > +					 int port,
+> > +					 int connected);
+> > 
+> >  };
+> 
+> No, please make this two different callbacks.  As you see in your code
+> when you implemented this, you really have:
+> 	if (connected) {
+> 		do this...
+> 	} else {
+> 		do that...
+> 	}
+> 
+> So you there is no consolidation in the driver, so just make it 2
+> callbacks, especially as someone wanted to make connected -1 just for a
+> tristate, which would be impossible to document properly...
 
-If so, that seems a little odd; you have to request a DMA channel for
-"TX", but then end up having the common code check all the entries in
-the dmas property since it can't know which are TX, and then have the
-wrong ones almost accidentally fail, since the DMAC will then determine
-that it can't support TX on the RX DMA request IDs.
+Or he could make connected an enum maybe ?
 
-If not, then presumably there's going to be a cell for "direction", so
-it may as well just be a cell for "outgoing DMA request ID" - the two
-are equivalent in the simple case.
+> 
+> greg k-h
+> 
+> > @@ -252,6 +256,15 @@ usb_phy_set_suspend(struct usb_phy *x, int suspend)
+> > 
+> >  }
+> >  
+> >  static inline int
+> > 
+> > +usb_phy_notify_connect_change(struct usb_phy *x, int port, int
+> > connected) +{
+> > +	if (x->notify_connect_change != NULL)
+> > +		return x->notify_connect_change(x, port, connected);
+> > +	else
+> > +		return 0;
+> > +}
+> > +
+> > +static inline int
+> > 
+> >  otg_start_srp(struct usb_otg *otg)
+> >  {
+> >  
+> >  	if (otg && otg->start_srp)
+
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
