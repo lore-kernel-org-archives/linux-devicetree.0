@@ -1,51 +1,52 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Input: twl6040-vibra: Update for device tree support
-Date: Sun, 20 May 2012 22:32:00 -0700
-Message-ID: <20120521053159.GA30285@core.coreip.homeip.net>
-References: <1337167186-8535-1-git-send-email-peter.ujfalusi@ti.com>
- <20120516193546.GA15920@core.coreip.homeip.net>
- <CAPo=G1zf1XJcoKgCxMn3X09T0LOUG-9aw3iopqC7OPqcuc5hcQ@mail.gmail.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2 03/12] usb: ehci-hcd: notify phy when connect change
+Date: Mon, 21 May 2012 17:23:48 +0800
+Message-ID: <1337592237-5090-4-git-send-email-richard.zhao@freescale.com>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPo=G1zf1XJcoKgCxMn3X09T0LOUG-9aw3iopqC7OPqcuc5hcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Ujfalusi, Peter" <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1337592237-5090-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMTYsIDIwMTIgYXQgMTA6NTU6MTNQTSArMDMwMCwgVWpmYWx1c2ksIFBldGVy
-IHdyb3RlOgo+IEhpIERtaXRyeSwKPiAKPiBPbiBXZWQsIE1heSAxNiwgMjAxMiBhdCAxMDozNSBQ
-TSwgRG1pdHJ5IFRvcm9raG92Cj4gPGRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb20+IHdyb3RlOgo+
-ID4gU28gaW4gdGhpcyBjYXNlIHdoeSBkb24ndCB5b3UgaGF2ZSBwYXJlbnQgcGFyc2UgYWxsIERU
-IGRhdGEgYW5kCj4gPiBjb25zdHJ1Y3QgaW5zdGFuY2Ugb2YgcGRhdGEgZm9yIHZpYnJhIGRyaXZl
-ciB0byBjb25zdW1lPwo+IAo+IElmIHRoZXJlIGlzIGEgbmVlZCB0byBjaGFuZ2UgdGhlIHBhcmFt
-ZXRlcnMgKGFkZCBuZXcgb25lcyBmb3IgZXhhbXBsZSkKPiBmb3IgdGhlIHZpYnJhIGRyaXZlciBp
-biB0aGlzIHdheSB0aGUgY2hhbmdlIGluIGNvZGUgb25seSBuZWVkIHRvIGJlCj4gZG9uZSBpbiB0
-aGUgdmlicmEgZHJpdmVyLgo+IElmIHRoZSBNRkQgY29yZSB3b3VsZCBjb25zdHJ1Y3QgdGhlIHBk
-YXRhLCBpbiB0aGlzIGNhc2UgSSB3b3VsZCBuZWVkCj4gdG8gbW9kaWZ5IGJvdGggdGhlIE1GRCBj
-b3JlIGFuZCB2aWJyYSBkcml2ZXIuCgpIbW0sIEkgYW0gZ2V0dGluZzoKCiAgQ0MgICAgICBkcml2
-ZXJzL2lucHV0L21pc2MvdHdsNjA0MC12aWJyYS5vCmRyaXZlcnMvaW5wdXQvbWlzYy90d2w2MDQw
-LXZpYnJhLmM6IEluIGZ1bmN0aW9uIOKAmHR3bDYwNDBfdmlicmFfcHJvYmXigJk6CmRyaXZlcnMv
-aW5wdXQvbWlzYy90d2w2MDQwLXZpYnJhLmM6MjYzOjk6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJh
-dGlvbiBvZgpmdW5jdGlvbiDigJhvZl9maW5kX25vZGVfYnlfbmFtZeKAmSBbLVdlcnJvcj1pbXBs
-aWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0KZHJpdmVycy9pbnB1dC9taXNjL3R3bDYwNDAtdmli
-cmEuYzoyNjM6NDI6IHdhcm5pbmc6IGluaXRpYWxpemF0aW9uIG1ha2VzCnBvaW50ZXIgZnJvbSBp
-bnRlZ2VyIHdpdGhvdXQgYSBjYXN0IFtlbmFibGVkIGJ5IGRlZmF1bHRdCmNjMTogc29tZSB3YXJu
-aW5ncyBiZWluZyB0cmVhdGVkIGFzIGVycm9ycwptYWtlWzFdOiAqKiogW2RyaXZlcnMvaW5wdXQv
-bWlzYy90d2w2MDQwLXZpYnJhLm9dIEVycm9yIDEKbWFrZTogKioqIFtkcml2ZXJzL2lucHV0L21p
-c2MvdHdsNjA0MC12aWJyYS5vXSBFcnJvciAyCgoKaXQgbG9va3MgbGlrZSB0aGVyZSBpcyBubyBz
-dHViIGZvciBvZl9maW5kX25vZGVfYnlfbmFtZSgpLgoKVGhhbmtzLgoKLS0gCkRtaXRyeQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+It still has below limitations:
+- it does not work for multi-phy ehci
+- the best place is after debounce, but I can't get
+  phy there
+
+Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/usb/host/ehci-hcd.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
+index 5597e60..389252e 100644
+--- a/drivers/usb/host/ehci-hcd.c
++++ b/drivers/usb/host/ehci-hcd.c
+@@ -928,6 +928,15 @@ static irqreturn_t ehci_irq (struct usb_hcd *hcd)
+ 			pstatus = ehci_readl(ehci,
+ 					 &ehci->regs->port_status[i]);
+ 
++			/* FIXME:
++			 * - it does not work for multi-phy ehci
++			 * - the best place is after debounce, but I can't get
++			 *   phy there
++			 */
++			if ((pstatus & PORT_CSC) && ehci->transceiver)
++				usb_phy_notify_connect_change(ehci->transceiver,
++						i, pstatus & PORT_CONNECT);
++
+ 			if (pstatus & PORT_OWNER)
+ 				continue;
+ 			if (!(test_bit(i, &ehci->suspended_ports) &&
+-- 
+1.7.5.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
