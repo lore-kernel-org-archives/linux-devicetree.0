@@ -1,54 +1,103 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Mon, 21 May 2012 14:32:10 -0600
-Message-ID: <4FBAA64A.200@wwwdotorg.org>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205190844.03654.arnd@arndb.de> <4FBA7C80.4080801@wwwdotorg.org> <201205211818.45646.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201205211818.45646.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] dt: name all Tegra binding docs consistently
+Date: Mon, 21 May 2012 16:11:40 -0600
+Message-ID: <1337638300-29155-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/2012 12:18 PM, Arnd Bergmann wrote:
-> On Monday 21 May 2012, Stephen Warren wrote:
->>>
->>> The point with the direction was that it covers most cases and makes
->>> them rather simple, while for the rare case where you need more than
->>> two channels, you just use the otherwise optional named interface
->>> rather than the numbered one. My feeling is that this also makes a
->>> lot of sense at the driver API level: most dirvers just ask for the
->>> read and write channels using a very simple interface, and those drivers
->>> that have more than two will want to name them anyway.
->>
->> How are you thinking of representing the direction in DT - as part of
->> the DMA request specifier, so in a DMAC-specific way?
->>
->> If so, that seems a little odd; you have to request a DMA channel for
->> "TX", but then end up having the common code check all the entries in
->> the dmas property since it can't know which are TX, and then have the
->> wrong ones almost accidentally fail, since the DMAC will then determine
->> that it can't support TX on the RX DMA request IDs.
-> 
-> I think the direction must be encoded in a way that does not depend on
-> the binding for the specific controller. There are two ways I can see
-> how we might do it:
-> 
-> 1. have separate property names for tx and rx channels, and probably
->    one for combined rx/tx channels
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> 2. define the second cell in each channel specifier to be the direction
->    in a predefined format, followed by the other (controller specific)
->    attributes, if any.
+Rename all Tegra binding documentation according to the first or
+primary compatible value they describe. This provides a clear naming
+scheme for the files, and prevents any naming conflicts should future
+SoC versions require their own binding.
 
-In this option, lets say bit 0 is 0==TX, 1==RX (or perhaps 2 bits if
-combined TX/RX is needed)
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+I can take this through the Tegra tree if you want.
 
-Then, we could reserve say bits 7:1 as client DMA request ID.
+ .../arm/tegra/{emc.txt => nvidia,tegra20-emc.txt}  |    0
+ .../{gpio_nvidia.txt => nvidia,tegra20-gpio.txt}   |    0
+ .../{tegra-kbc.txt => nvidia,tegra20-kbc.txt}      |    0
+ .../{nvidia-sdhci.txt => nvidia,tegra20-sdhci.txt} |    0
+ .../nvec/{nvec_nvidia.txt => nvidia,nvec.txt}      |    0
+ ...-alc5632.txt => nvidia,tegra-audio-alc5632.txt} |    0
+ ...mslice.txt => nvidia,tegra-audio-trimslice.txt} |    0
+ ...io-wm8753.txt => nvidia,tegra-audio-wm8753.txt} |    0
+ ...io-wm8903.txt => nvidia,tegra-audio-wm8903.txt} |    0
+ .../{tegra20-das.txt => nvidia,tegra20-das.txt}    |    0
+ .../{tegra20-i2s.txt => nvidia,tegra20-i2s.txt}    |    0
+ .../spi/{spi_nvidia.txt => nvidia,tegra20-spi.txt} |    0
+ .../usb/{tegra-usb.txt => nvidia,tegra20-ehci.txt} |    0
+ 13 files changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/arm/tegra/{emc.txt => nvidia,tegra20-emc.txt} (100%)
+ rename Documentation/devicetree/bindings/gpio/{gpio_nvidia.txt => nvidia,tegra20-gpio.txt} (100%)
+ rename Documentation/devicetree/bindings/input/{tegra-kbc.txt => nvidia,tegra20-kbc.txt} (100%)
+ rename Documentation/devicetree/bindings/mmc/{nvidia-sdhci.txt => nvidia,tegra20-sdhci.txt} (100%)
+ rename Documentation/devicetree/bindings/nvec/{nvec_nvidia.txt => nvidia,nvec.txt} (100%)
+ rename Documentation/devicetree/bindings/sound/{tegra-audio-alc5632.txt => nvidia,tegra-audio-alc5632.txt} (100%)
+ rename Documentation/devicetree/bindings/sound/{tegra-audio-trimslice.txt => nvidia,tegra-audio-trimslice.txt} (100%)
+ rename Documentation/devicetree/bindings/sound/{tegra-audio-wm8753.txt => nvidia,tegra-audio-wm8753.txt} (100%)
+ rename Documentation/devicetree/bindings/sound/{tegra-audio-wm8903.txt => nvidia,tegra-audio-wm8903.txt} (100%)
+ rename Documentation/devicetree/bindings/sound/{tegra20-das.txt => nvidia,tegra20-das.txt} (100%)
+ rename Documentation/devicetree/bindings/sound/{tegra20-i2s.txt => nvidia,tegra20-i2s.txt} (100%)
+ rename Documentation/devicetree/bindings/spi/{spi_nvidia.txt => nvidia,tegra20-spi.txt} (100%)
+ rename Documentation/devicetree/bindings/usb/{tegra-usb.txt => nvidia,tegra20-ehci.txt} (100%)
 
-And then have bits 31:8 as DMAC specific data.
-
-Wouldn't that allow us to have our cake and eat it?
+diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/tegra/emc.txt
+rename to Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
+rename to Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.txt
+diff --git a/Documentation/devicetree/bindings/input/tegra-kbc.txt b/Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/input/tegra-kbc.txt
+rename to Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt
+diff --git a/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
+rename to Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+diff --git a/Documentation/devicetree/bindings/nvec/nvec_nvidia.txt b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/nvec/nvec_nvidia.txt
+rename to Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
+diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-alc5632.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/sound/tegra-audio-alc5632.txt
+rename to Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
+diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-trimslice.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/sound/tegra-audio-trimslice.txt
+rename to Documentation/devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt
+diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-wm8753.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/sound/tegra-audio-wm8753.txt
+rename to Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
+diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-wm8903.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/sound/tegra-audio-wm8903.txt
+rename to Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
+diff --git a/Documentation/devicetree/bindings/sound/tegra20-das.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra20-das.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/sound/tegra20-das.txt
+rename to Documentation/devicetree/bindings/sound/nvidia,tegra20-das.txt
+diff --git a/Documentation/devicetree/bindings/sound/tegra20-i2s.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra20-i2s.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/sound/tegra20-i2s.txt
+rename to Documentation/devicetree/bindings/sound/nvidia,tegra20-i2s.txt
+diff --git a/Documentation/devicetree/bindings/spi/spi_nvidia.txt b/Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/spi/spi_nvidia.txt
+rename to Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
+diff --git a/Documentation/devicetree/bindings/usb/tegra-usb.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/usb/tegra-usb.txt
+rename to Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt
+-- 
+1.7.0.4
