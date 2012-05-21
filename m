@@ -1,64 +1,54 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 00/12] add imx usb driver for mx28/6x
-Date: Mon, 21 May 2012 22:07:34 +0200
-Message-ID: <201205212207.34978.marex@denx.de>
-References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com> <201205212141.52171.marex@denx.de> <4FBA9BE4.7020303@grid-net.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Mon, 21 May 2012 14:32:10 -0600
+Message-ID: <4FBAA64A.200@wwwdotorg.org>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205190844.03654.arnd@arndb.de> <4FBA7C80.4080801@wwwdotorg.org> <201205211818.45646.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FBA9BE4.7020303-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201205211818.45646.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Subodh Nijsure,
-
-> On 05/21/2012 12:41 PM, Marek Vasut wrote:
-> > Dear Fabio Estevam,
-> > 
-> >> Hi Richard,
-> >> 
-> >> On Mon, May 21, 2012 at 6:23 AM, Richard Zhao
-> >> 
-> >> <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>  wrote:
-> >>> The work is based on  ci13xxx rework done by Alexander Shishkin.
-> >>> 
-> >>> Status:
-> >>>   - this version only support host
-> >>>   - usbotg controler works at host role
-> >>> 
-> >>> Changes since V1:
-> >>>   - Merge the work of Marek
-> >>>   - re-implement connect change notify
-> >>>   - imx6q: move part of code to clk
-> >>>   - imx6q: add config-on-boot gpios
-> >> 
-> >> Can you please also add the driver into the defconfig files?
-> >> 
-> >> What about the existing USB host drivers for mx27/mx31/mx35/mx25/mx35?
-> >> 
-> >> Is the idea to switch to drivers/usb/chipidea/host.c too?
-> > 
-> > I think the core is the same, it's just the ci13xxx-imx driver that'd
-> > need to be written differently for these
+On 05/21/2012 12:18 PM, Arnd Bergmann wrote:
+> On Monday 21 May 2012, Stephen Warren wrote:
+>>>
+>>> The point with the direction was that it covers most cases and makes
+>>> them rather simple, while for the rare case where you need more than
+>>> two channels, you just use the otherwise optional named interface
+>>> rather than the numbered one. My feeling is that this also makes a
+>>> lot of sense at the driver API level: most dirvers just ask for the
+>>> read and write channels using a very simple interface, and those drivers
+>>> that have more than two will want to name them anyway.
+>>
+>> How are you thinking of representing the direction in DT - as part of
+>> the DMA request specifier, so in a DMAC-specific way?
+>>
+>> If so, that seems a little odd; you have to request a DMA channel for
+>> "TX", but then end up having the common code check all the entries in
+>> the dmas property since it can't know which are TX, and then have the
+>> wrong ones almost accidentally fail, since the DMAC will then determine
+>> that it can't support TX on the RX DMA request IDs.
 > 
-> So that means driver that you did are not going to be up streamed for
-> mx28/mxs? And those interested should be tracking this patch set?
-
-This here is definitelly going to support mx28 and I'm slowly working through 
-the DT stuff to test this, all right?
-
-We were talking about imx.{xz|x,y is [0-9a-z]} \ imx.{23,28,6q}
-
+> I think the direction must be encoded in a way that does not depend on
+> the binding for the specific controller. There are two ways I can see
+> how we might do it:
 > 
-> -Subodh
+> 1. have separate property names for tx and rx channels, and probably
+>    one for combined rx/tx channels
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2. define the second cell in each channel specifier to be the direction
+>    in a predefined format, followed by the other (controller specific)
+>    attributes, if any.
+
+In this option, lets say bit 0 is 0==TX, 1==RX (or perhaps 2 bits if
+combined TX/RX is needed)
+
+Then, we could reserve say bits 7:1 as client DMA request ID.
+
+And then have bits 31:8 as DMAC specific data.
+
+Wouldn't that allow us to have our cake and eat it?
