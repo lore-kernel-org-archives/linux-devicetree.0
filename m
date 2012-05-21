@@ -1,84 +1,94 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] usb: otg: add notify_connect_change callback
-Date: Mon, 21 May 2012 06:05:56 -0700
-Message-ID: <20120521130556.GB18926@kroah.com>
-References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
- <1337592237-5090-2-git-send-email-richard.zhao@freescale.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC v2 5/5] drm: Add NVIDIA Tegra support
+Date: Mon, 21 May 2012 15:58:38 +0200
+Message-ID: <20120521135838.GA15046@avionic-0098.mockup.avionic-design.de>
+References: <1335347102-14905-1-git-send-email-thierry.reding@avionic-design.de>
+ <1335347102-14905-6-git-send-email-thierry.reding@avionic-design.de>
+ <4FA78CBD.5010606@nvidia.com>
+ <4FA7F80F.5090002@wwwdotorg.org>
+ <20120521110514.GC27686@avionic-0098.mockup.avionic-design.de>
+ <4FBA28FD.2060504@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1337592237-5090-2-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
+In-Reply-To: <4FBA28FD.2060504-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 21, 2012 at 05:23:46PM +0800, Richard Zhao wrote:
-> This let usb phy driver has a chance to change hw settings when connect
-> status change.
-> 
-> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  include/linux/usb/otg.h |   13 +++++++++++++
->  1 files changed, 13 insertions(+), 0 deletions(-)
-> 
-> diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-> index 38ab3f4..385641d 100644
-> --- a/include/linux/usb/otg.h
-> +++ b/include/linux/usb/otg.h
-> @@ -117,6 +117,10 @@ struct usb_phy {
->  	int	(*set_suspend)(struct usb_phy *x,
->  				int suspend);
->  
-> +	/* notify phy connect status change */
-> +	int	(*notify_connect_change)(struct usb_phy *x,
-> +					 int port,
-> +					 int connected);
->  };
 
-No, please make this two different callbacks.  As you see in your code
-when you implemented this, you really have:
-	if (connected) {
-		do this...
-	} else {
-		do that...
-	}
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So you there is no consolidation in the driver, so just make it 2
-callbacks, especially as someone wanted to make connected -1 just for a
-tristate, which would be impossible to document properly...
+* Terje Bergstr=C3=B6m wrote:
+> On 21.05.2012 14:05, Thierry Reding wrote:
+>=20
+> > I agree. It's really just a "simple-bus" kind of bus. Except that it'll=
+ need
+> > another compatible value to make the host1x driver bind to it. But we s=
+hould
+> > be able to make it work without creating a completely new bus. I guess =
+the
+> > "ranges" property could specify 0x54000000 as the base address and child
+> > nodes could use offsets relative to that. Maybe even that is overkill,
+> > though.
+>=20
+>=20
+> Hi,
+>=20
+> In the phase where we are just getting display up, yes, the bus is a
+> really simple bus. For that, all you need to know about host1x is that
+> it needs to be turned on whenever you talk to the display. Having a bus
+> seems overkill.
+>=20
+> At a latest stage, we're going to need support for host1x channels and
+> related infrastructure. In that phase, we need to find good homes for
+> channel allocation, job tracking, push buffer management, and other code
+> common to all host1x drivers. In the current nvhost driver, it's the job
+> of the bus_type and related utilities, and that seems like a good enough
+> fit.
+>=20
+> I have a bit of hard time understanding the significance of a bus_type
+> in the Linux driver model.
+>=20
+> On one hand, bus_type allows grouping a set of devices and drivers
+> according to the APIs they implement. In nvhost, we have struct
+> nvhost_device and struct nvhost_driver, and each host1x client driver
+> needs to use them. It's natural to put them in the same bus_type. As a
+> bonus, we can assign further common tasks to the bus_type.
+>=20
+> On the other hand, implementing a bus_type introduces code almost
+> duplicate to platform bus. This is the part that I have hard time with.
+>=20
+> The device tree should reflect the target state, as it's going to be an
+> API between kernel and boot loader. I believe it'd be best to introduce
+> host1x as a bus and put all host1x clients as nodes inside host1x.
 
-greg k-h
+I agree that reflecting the hardware hierarchy within the device tree makes
+sense. I'll need to add some code to tear down child devices in the cleanup
+path, but that shouldn't be too difficult.
 
+However, adding a whole bus_type implementation would pretty much duplicate
+the platform bus code. I guess host1x could just provide struct host1x_clie=
+nt
+a set of corresponding APIs to create them, request channels, etc.
 
->  
->  
-> @@ -252,6 +256,15 @@ usb_phy_set_suspend(struct usb_phy *x, int suspend)
->  }
->  
->  static inline int
-> +usb_phy_notify_connect_change(struct usb_phy *x, int port, int connected)
-> +{
-> +	if (x->notify_connect_change != NULL)
-> +		return x->notify_connect_change(x, port, connected);
-> +	else
-> +		return 0;
-> +}
-> +
-> +static inline int
->  otg_start_srp(struct usb_otg *otg)
->  {
->  	if (otg && otg->start_srp)
-> -- 
-> 1.7.5.4
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk+6Sg4ACgkQZ+BJyKLjJp8pMQCcDzkRrXEqkRzMw++24qKAm5nz
+uIYAn36d3doXZ7hlZV5xh09uRQChZxh3
+=7PcX
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
