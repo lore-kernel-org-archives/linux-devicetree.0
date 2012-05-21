@@ -1,7 +1,7 @@
 From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 03/12] usb: ehci-hcd: notify phy when connect change
-Date: Mon, 21 May 2012 17:23:48 +0800
-Message-ID: <1337592237-5090-4-git-send-email-richard.zhao@freescale.com>
+Subject: [PATCH v2 01/12] usb: otg: add notify_connect_change callback
+Date: Mon, 21 May 2012 17:23:46 +0800
+Message-ID: <1337592237-5090-2-git-send-email-richard.zhao@freescale.com>
 References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,36 +12,45 @@ To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCv
 Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It still has below limitations:
-- it does not work for multi-phy ehci
-- the best place is after debounce, but I can't get
-  phy there
+This let usb phy driver has a chance to change hw settings when connect
+status change.
 
 Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/host/ehci-hcd.c |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+ include/linux/usb/otg.h |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
-index 5597e60..389252e 100644
---- a/drivers/usb/host/ehci-hcd.c
-+++ b/drivers/usb/host/ehci-hcd.c
-@@ -928,6 +928,15 @@ static irqreturn_t ehci_irq (struct usb_hcd *hcd)
- 			pstatus = ehci_readl(ehci,
- 					 &ehci->regs->port_status[i]);
+diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+index 38ab3f4..385641d 100644
+--- a/include/linux/usb/otg.h
++++ b/include/linux/usb/otg.h
+@@ -117,6 +117,10 @@ struct usb_phy {
+ 	int	(*set_suspend)(struct usb_phy *x,
+ 				int suspend);
  
-+			/* FIXME:
-+			 * - it does not work for multi-phy ehci
-+			 * - the best place is after debounce, but I can't get
-+			 *   phy there
-+			 */
-+			if ((pstatus & PORT_CSC) && ehci->transceiver)
-+				usb_phy_notify_connect_change(ehci->transceiver,
-+						i, pstatus & PORT_CONNECT);
++	/* notify phy connect status change */
++	int	(*notify_connect_change)(struct usb_phy *x,
++					 int port,
++					 int connected);
+ };
+ 
+ 
+@@ -252,6 +256,15 @@ usb_phy_set_suspend(struct usb_phy *x, int suspend)
+ }
+ 
+ static inline int
++usb_phy_notify_connect_change(struct usb_phy *x, int port, int connected)
++{
++	if (x->notify_connect_change != NULL)
++		return x->notify_connect_change(x, port, connected);
++	else
++		return 0;
++}
 +
- 			if (pstatus & PORT_OWNER)
- 				continue;
- 			if (!(test_bit(i, &ehci->suspended_ports) &&
++static inline int
+ otg_start_srp(struct usb_otg *otg)
+ {
+ 	if (otg && otg->start_srp)
 -- 
 1.7.5.4
 
