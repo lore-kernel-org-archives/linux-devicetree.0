@@ -1,50 +1,49 @@
-From: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 00/12] add imx usb driver for mx28/6x
-Date: Mon, 21 May 2012 12:47:48 -0700
-Message-ID: <4FBA9BE4.7020303@grid-net.com>
-References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com> <CAOMZO5AcP2cAAkuFPJn3Xp5NuR+JG4hDO7Ehq5H-V6PCy4DwNA@mail.gmail.com> <201205212141.52171.marex@denx.de>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] spi/imx: make devtype_data member point to const data
+Date: Mon, 21 May 2012 21:49:35 +0200
+Message-ID: <1337629775-9166-1-git-send-email-u.kleine-koenig@pengutronix.de>
+References: <1335171381-24869-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201205212141.52171.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1335171381-24869-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/2012 12:41 PM, Marek Vasut wrote:
-> Dear Fabio Estevam,
->
->> Hi Richard,
->>
->> On Mon, May 21, 2012 at 6:23 AM, Richard Zhao
->>
->> <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>  wrote:
->>> The work is based on  ci13xxx rework done by Alexander Shishkin.
->>>
->>> Status:
->>>   - this version only support host
->>>   - usbotg controler works at host role
->>>
->>> Changes since V1:
->>>   - Merge the work of Marek
->>>   - re-implement connect change notify
->>>   - imx6q: move part of code to clk
->>>   - imx6q: add config-on-boot gpios
->> Can you please also add the driver into the defconfig files?
->>
->> What about the existing USB host drivers for mx27/mx31/mx35/mx25/mx35?
->>
->> Is the idea to switch to drivers/usb/chipidea/host.c too?
-> I think the core is the same, it's just the ci13xxx-imx driver that'd need to be
-> written differently for these
-
-So that means driver that you did are not going to be up streamed for 
-mx28/mxs? And those interested should be tracking this patch set?
-
--Subodh
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBpcyBvbmx5IGNvc21ldGljIGZvciBub3cuIEluIGNhc2UgdGhhdAoKCWh0dHA6Ly9taWQu
+Z21hbmUub3JnLzEzMzUxNzEzODEtMjQ4NjktMS1naXQtc2VuZC1lbWFpbC11LmtsZWluZS1rb2Vu
+aWdAcGVuZ3V0cm9uaXguZGUKCndpbGwgYmUgYXBwbGllZCwgaXQgZml4ZXMgYSB3YXJuaW5nCgoJ
+ZHJpdmVycy9zcGkvc3BpLWlteC5jOiBJbiBmdW5jdGlvbiBzcGlfaW14X3Byb2JlOgoJZHJpdmVy
+cy9zcGkvc3BpLWlteC5jOjgxNDoyNDogd2FybmluZzogYXNzaWdubWVudCBkaXNjYXJkcyBjb25z
+dCBxdWFsaWZpZXIgZnJvbSBwb2ludGVyIHRhcmdldCB0eXBlIFtlbmFibGVkIGJ5IGRlZmF1bHRd
+Cgp0aG91Z2guCgpTaWduZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8dS5rbGVpbmUta29l
+bmlnQHBlbmd1dHJvbml4LmRlPgotLS0KIGRyaXZlcnMvc3BpL3NwaS1pbXguYyB8ICAgIDIgKy0K
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvc3BpL3NwaS1pbXguYyBiL2RyaXZlcnMvc3BpL3NwaS1pbXguYwppbmRleCA1
+NzBmMjIwLi4zN2IzYTI2IDEwMDY0NAotLS0gYS9kcml2ZXJzL3NwaS9zcGktaW14LmMKKysrIGIv
+ZHJpdmVycy9zcGkvc3BpLWlteC5jCkBAIC05NSw3ICs5NSw3IEBAIHN0cnVjdCBzcGlfaW14X2Rh
+dGEgewogCWNvbnN0IHZvaWQgKnR4X2J1ZjsKIAl1bnNpZ25lZCBpbnQgdHhmaWZvOyAvKiBudW1i
+ZXIgb2Ygd29yZHMgcHVzaGVkIGluIHR4IEZJRk8gKi8KIAotCXN0cnVjdCBzcGlfaW14X2RldnR5
+cGVfZGF0YSAqZGV2dHlwZV9kYXRhOworCWNvbnN0IHN0cnVjdCBzcGlfaW14X2RldnR5cGVfZGF0
+YSAqZGV2dHlwZV9kYXRhOwogCWludCBjaGlwc2VsZWN0WzBdOwogfTsKIAotLSAKMS43LjEwCgoK
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tCkxpdmUgU2VjdXJpdHkgVmlydHVhbCBDb25mZXJlbmNlCkV4
+Y2x1c2l2ZSBsaXZlIGV2ZW50IHdpbGwgY292ZXIgYWxsIHRoZSB3YXlzIHRvZGF5J3Mgc2VjdXJp
+dHkgYW5kIAp0aHJlYXQgbGFuZHNjYXBlIGhhcyBjaGFuZ2VkIGFuZCBob3cgSVQgbWFuYWdlcnMg
+Y2FuIHJlc3BvbmQuIERpc2N1c3Npb25zIAp3aWxsIGluY2x1ZGUgZW5kcG9pbnQgc2VjdXJpdHks
+IG1vYmlsZSBzZWN1cml0eSBhbmQgdGhlIGxhdGVzdCBpbiBtYWx3YXJlIAp0aHJlYXRzLiBodHRw
+Oi8vd3d3LmFjY2VsYWNvbW0uY29tL2phdy9zZnJubDA0MjQyMDEyLzExNC81MDEyMjI2My8KX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kc3BpLWRldmVsLWdl
+bmVyYWwgbWFpbGluZyBsaXN0CnNwaS1kZXZlbC1nZW5lcmFsQGxpc3RzLnNvdXJjZWZvcmdlLm5l
+dApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9zcGktZGV2ZWwt
+Z2VuZXJhbAo=
