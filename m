@@ -1,74 +1,193 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: bootloader support for DTB on x86
-Date: Tue, 22 May 2012 14:56:22 +0200
-Message-ID: <20120522125622.GA21187@avionic-0098.mockup.avionic-design.de>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v3 3/3] ARM: dts: add nodes for atmel hsmci controllers
+ for atmel platforms
+Date: Tue, 22 May 2012 15:11:59 +0200
+Message-ID: <4FBB909F.4090606@atmel.com>
+References: <1337681352-18521-1-git-send-email-ludovic.desroches@atmel.com> <1337681352-18521-4-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5426565873141015862=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1337681352-18521-4-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: ludovic.desroches@atmel.com
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/22/2012 12:09 PM, ludovic.desroches@atmel.com :
+> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+> 
+> Add nodes for mci controllers.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> ---
+>  arch/arm/boot/dts/at91sam9g20.dtsi     |   12 ++++++++++++
 
---===============5426565873141015862==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
-Content-Disposition: inline
+Maybe this one will have to be reworked on top of new ADC declarations.
+Maybe also take into account the device tree support for sam9260: it is
+linked with 9g20 support...
+
+otherwise, once rebased you can add my:
+
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+(and I think that this one also should go through arm-soc)
+
+>  arch/arm/boot/dts/at91sam9g25ek.dts    |   16 ++++++++++++++++
+>  arch/arm/boot/dts/at91sam9g45.dtsi     |   24 ++++++++++++++++++++++++
+>  arch/arm/boot/dts/at91sam9m10g45ek.dts |   17 +++++++++++++++++
+>  arch/arm/boot/dts/at91sam9x5.dtsi      |   24 ++++++++++++++++++++++++
+>  5 files changed, 93 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
+> index 773ef48..6a28bfe 100644
+> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
+> @@ -197,6 +197,18 @@
+>  				interrupts = <10 4>;
+>  				status = "disabled";
+>  			};
+> +
+> +			mmc0: mmc@fffa800 {
+> +				compatible = "atmel,hsmci";
+> +				reg = <0xfffa800 0x600>;
+> +				interrupts = <9 4>;
+> +				status = "disabled";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				slot@0 {
+> +					reg = <0>;
+> +				};
+> +			};
+>  		};
+>  
+>  		nand0: nand@40000000 {
+> diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
+> index 7829a4d..dd94f4b 100644
+> --- a/arch/arm/boot/dts/at91sam9g25ek.dts
+> +++ b/arch/arm/boot/dts/at91sam9g25ek.dts
+> @@ -32,6 +32,22 @@
+>  				phy-mode = "rmii";
+>  				status = "okay";
+>  			};
+> +
+> +			mmc0: mmc@f0008000 {
+> +				status = "okay";
+> +				slot@0 {
+> +					bus-width = <4>;
+> +					cd-gpios = <&pioD 15 0>;
+> +				};
+> +			};
+> +
+> +			mmc1: mmc@f000c000 {
+> +				status = "okay";
+> +				slot@0 {
+> +					bus-width = <4>;
+> +					cd-gpios = <&pioD 14 0>;
+> +				};
+> +			};
+>  		};
+>  
+>  		usb0: ohci@00600000 {
+> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> index c804214..2922648 100644
+> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> @@ -199,6 +199,30 @@
+>  				interrupts = <25 4>;
+>  				status = "disabled";
+>  			};
+> +
+> +			mmc0: mmc@fff80000 {
+> +				compatible = "atmel,hsmci";
+> +				reg = <0xfff80000 0x600>;
+> +				interrupts = <11 4>;
+> +				status = "disabled";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				slot@0 {
+> +					reg = <0>;
+> +				};
+> +			};
+> +
+> +			mmc1: mmc@fffd0000 {
+> +				compatible = "atmel,hsmci";
+> +				reg = <0xfffd0000 0x600>;
+> +				interrupts = <29 4>;
+> +				status = "disabled";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				slot@0 {
+> +					reg = <0>;
+> +				};
+> +			};
+>  		};
+>  
+>  		nand0: nand@40000000 {
+> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> index a3633bd..bc4cb3c 100644
+> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> @@ -46,6 +46,23 @@
+>  				phy-mode = "rmii";
+>  				status = "okay";
+>  			};
+> +
+> +			mmc0: mmc@fff80000 {
+> +				status = "okay";
+> +				slot@0 {
+> +					bus-width = <4>;
+> +					cd-gpios = <&pioD 10 0>;
+> +				};
+> +			};
+> +
+> +			mmc1: mmc@fffd0000 {
+> +				status = "okay";
+> +				slot@0 {
+> +					bus-width = <4>;
+> +					cd-gpios = <&pioD 11 0>;
+> +					wp-gpios = <&pioD 29 0>;
+> +				};
+> +			};
+>  		};
+>  
+>  		nand0: nand@40000000 {
+> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+> index dd4ed74..d5999b2 100644
+> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+> @@ -190,6 +190,30 @@
+>  				interrupts = <27 4>;
+>  				status = "disabled";
+>  			};
+> +
+> +			mmc0: mmc@f0008000 {
+> +				compatible = "atmel,hsmci";
+> +				reg = <0xf0008000 0x600>;
+> +				interrupts = <12 4>;
+> +				status = "disabled";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				slot@0 {
+> +					reg = <0>;
+> +				};
+> +			};
+> +
+> +			mmc1: mmc@f000c000 {
+> +				compatible = "atmel,hsmci";
+> +				reg = <0xf000c000 0x600>;
+> +				interrupts = <26 4>;
+> +				status = "disabled";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				slot@0 {
+> +					reg = <0>;
+> +				};
+> +			};
+>  		};
+>  
+>  		nand0: nand@40000000 {
 
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-I was looking at booting an x86-based platform using DT. However I wasn't
-able to find a bootloader that supports this. There also doesn't seem to be a
-method to append the DTB to the zImage (which I wouldn't want to use anyway).
-Does anybody know of a bootloader that supports this?
-
-I'm currently using syslinux (specifically extlinux) and was looking at
-perhaps adding the support myself based on the information given in
-Documentation/x86/boot.txt. However I'm not overly familiar with syslinux
-code and this could prove more difficult than I anticipate.
-
-The only x86 platforms that use DT seem to be OLPC and CE4100 and according
-to the web the OLPC has a complete OF implementation. Does anyone know which
-bootloader the CE4100 uses?
-
-Thierry
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk+7jPYACgkQZ+BJyKLjJp93PwCeKELs3Ea0ip+BrcCT0i7zRzUP
-4q0AoLCUTVtC+4xq50FjMUqiuoNHIWSz
-=UCBD
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
-
---===============5426565873141015862==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5426565873141015862==--
+-- 
+Nicolas Ferre
