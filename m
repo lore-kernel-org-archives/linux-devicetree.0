@@ -1,48 +1,48 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 09/12] ARM: imx6q: disable usb charger detector
-Date: Tue, 22 May 2012 11:48:11 +0800
-Message-ID: <20120522034809.GI8140@S2101-09.ap.freescale.net>
-References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
- <1337592237-5090-10-git-send-email-richard.zhao@freescale.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 07/12] ARM: imx6q: add config-on-boot gpios
+Date: Tue, 22 May 2012 06:20:16 +0200
+Message-ID: <201205220620.17109.marex@denx.de>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com> <201205220525.39660.marex@denx.de> <CAAQ0ZWSiD170Yb5CQdGEZw066ULvSOr4AFcBtYFiLw3P9L-VuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1337592237-5090-10-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <CAAQ0ZWSiD170Yb5CQdGEZw066ULvSOr4AFcBtYFiLw3P9L-VuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 21, 2012 at 05:23:54PM +0800, Richard Zhao wrote:
-> +static void __init imx6q_usb_init(void)
-> +{
-> +#define HW_ANADIG_USB1_CHRG_DETECT		0x000001b0
-> +#define HW_ANADIG_USB2_CHRG_DETECT		0x00000210
-> +
-> +#define BM_ANADIG_USB_CHRG_DETECT_EN_B		0x00100000
-> +#define BM_ANADIG_USB_CHRG_DETECT_CHK_CHRG_B	0x00080000
-> +
-> +	/*
-> +	 * The external charger detector needs to be disabled,
-> +	 * or the signal at DP will be poor
-> +	 */
-> +
-Nit: drop this unnecessary new line.
+Dear Shawn Guo,
 
-Regards,
-Shawn
+> On 22 May 2012 11:25, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
+> > Dear Shawn Guo,
+> > 
+> >> Apart from my comments below, we really need to know Rob and Grant's
+> >> opinion on this.
+> > 
+> > Hm ... so why don't you actually write per-board driver ? :-) That'd
+> > handle every single board very well, you'd configure the GPIOs there,
+> > every single additional necessary thing that has to be configured would
+> > sink there too etc.
+> 
+> I'm not completely sure about how the per-board driver looks like
+> exactly.  Can you have some code demonstrating it?
 
-> +	anatop_write_reg(NULL, HW_ANADIG_USB1_CHRG_DETECT,
-> +			BM_ANADIG_USB_CHRG_DETECT_EN_B
-> +			| BM_ANADIG_USB_CHRG_DETECT_CHK_CHRG_B,
-> +			~0);
-> +	anatop_write_reg(NULL, HW_ANADIG_USB2_CHRG_DETECT,
-> +			BM_ANADIG_USB_CHRG_DETECT_EN_B |
-> +			BM_ANADIG_USB_CHRG_DETECT_CHK_CHRG_B,
-> +			~0);
-> +}
-> +
+Well such per-board driver would handle the board-specific init, like 
+configuring the hub GPIO (as Richard has to do so on mx6q) or flick some other 
+GPIOs, configure registers etc.
+
+You can not depend on a bootloader to do such init for you, even though the 
+bootloader should do it and should do it right.
+
+> 
+> Regards,
+> Shawn
+
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
