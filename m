@@ -1,271 +1,56 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] mmc: atmel-mci: add device tree support
-Date: Tue, 22 May 2012 17:18:11 +0200
-Message-ID: <4FBBAE33.5050506@atmel.com>
-References: <1337681352-18521-1-git-send-email-ludovic.desroches@atmel.com>
- <1337681352-18521-2-git-send-email-ludovic.desroches@atmel.com>
- <20120522140845.GA3377@game.jcrosoft.org> <4FBBA756.8030501@atmel.com>
- <20120522151048.GD3377@game.jcrosoft.org>
+From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 05/12] usb: chipidea: add imx driver binding
+Date: Tue, 22 May 2012 23:28:35 +0800
+Message-ID: <20120522152833.GC2380@richard-laptop>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
+ <1337592237-5090-6-git-send-email-richard.zhao@freescale.com>
+ <87bolgbjnr.fsf@ashishki-desk.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120522151048.GD3377-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87bolgbjnr.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2012 05:10 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> On 16:48 Tue 22 May     , ludovic.desroches wrote:
->> Le 05/22/2012 04:08 PM, Jean-Christophe PLAGNIOL-VILLARD a =E9crit :
->>> On 12:09 Tue 22 May     , ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
->>>> From: Ludovic Desroches<ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>>>
->>>> Signed-off-by: Ludovic Desroches<ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/mmc/atmel-hsmci.txt        |   67 +++++++++++=
-++++
->>>>  drivers/mmc/host/atmel-mci.c                       |   89 +++++++++++=
-++++++++-
->>>>  2 files changed, 154 insertions(+), 2 deletions(-)
->>>>  create mode 100644 Documentation/devicetree/bindings/mmc/atmel-hsmci.=
-txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt b/D=
-ocumentation/devicetree/bindings/mmc/atmel-hsmci.txt
->>>> new file mode 100644
->>>> index 0000000..81c20cc
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
->>>> @@ -0,0 +1,67 @@
->>>> +* Atmel High Speed MultiMedia Card Interface
->>>> +
->>>> +This controller on atmel products provides an interface for MMC, SD a=
-nd SDIO
->>>> +types of memory cards.
->>>> +
->>>> +1) MCI node
->>>> +
->>>> +Required properties:
->>>> +- compatible: no blank "atmel,hsmci"
->>>> +- reg: should contain HSMCI registers location and length
->>>> +- interrupts: should contain HSMCI interrupt number
->>>> +- #address-cells: should be one. The cell is the slot id.
->>>> +- #size-cells: should be zero.
->>>> +- at least one slot node
->>>> +
->>>> +The node contains child nodes for each slot that the platform uses
->>>> +
->>>> +Example MCI node:
->>>> +
->>>> +mmc0: mmc@f0008000 {
->>>> +	compatible =3D "atmel,hsmci";
->>>> +	reg =3D<0xf0008000 0x600>;
->>>> +	interrupts =3D<12 4>;
->>>> +	#address-cells =3D<1>;
->>>> +	#size-cells =3D<0>;
->>>> +
->>>> +	[ child node definitions...]
->>>> +};
->>>> +
->>>> +2) slot nodes
->>>> +
->>>> +Required properties:
->>>> +- reg: should contain the slot id.
->>>> +- bus-width: number of data lines connected to the controller
->>>> +
->>>> +Optional properties:
->>>> +- cd-gpios: specify GPIOs for card detection
->>>> +- cd-inverted: invert the value of external card detect gpio line
->>> why this
->>>
->>> no need you can use the third field and OF_GPIO_ACTIVE_LOW
->>> as done on ohci-at91.c
->>>
->>
->> It's a property from the common mmc binding so why not using it?
-> gpio alread carry this information mmc common bindingd need to use is
+On Tue, May 22, 2012 at 01:21:44PM +0300, Alexander Shishkin wrote:
+> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> 
+> > +#include "ci.h"
+> > +
+> > +#define PORT0_STATUS	0x184
+> 
+> This doesn't seem to be used anywhere.
+> 
+> [snip]
+> > +	ci13xxx_imx_udc_driver.phy = data->phy;
+> 
+> See my comment to the other patch about phy pointer being a per-device
+> thing rather then per-platform driver. Now, (at the risk of being
+> flamed) I think it could work if you allocated the
+> ci13xxx_imx_udc_driver dynamically in every probe, but that's not what
+> you want to do for the actual platform data. 
+At least for imx, most platfrom data memory is duplicated when add
+device. arch/arm/plat-mxc/devices/
+> So, I suggest we come up
+> with a better way of passing phy to the driver. I also think that it's
+> really about time we renamed "struct ci13xxx_udc_driver" to something
+> that emphasizes the "platform" in it. What do you think?
+struct ci13xxx_plat_data ?
 
-Discussion seem ongoing about common mmc binding. What you describe
-above has been proposed but not adopted. So, until it reaches a
-consensus, we keep what is described in current binding.
-
-
-> btw for bool property you need to use of_property_read_bool
->>
->>>> +- wp-gpios: specify GPIOs for write protection
->>>> +
->>>> +Example slot node:
->>>> +
->>>> +slot@0 {
->>>> +	reg =3D<0>;
->>>> +	bus-width =3D<4>;
->>>> +	cd-gpios =3D<&pioD 15 0>
->>>> +	cd-inverted;
->>>> +};
->>>> +
->>>> +Example full MCI node:
->>>> +mmc0: mmc@f0008000 {
->>>> +	compatible =3D "atmel,hsmci";
->>>> +	reg =3D<0xf0008000 0x600>;
->>>> +	interrupts =3D<12 4>;
->>>> +	#address-cells =3D<1>;
->>>> +	#size-cells =3D<0>;
->>>> +	slot@0 {
->>>> +		reg =3D<0>;
->>>> +		bus-width =3D<4>;
->>>> +		cd-gpios =3D<&pioD 15 0>
->>>> +		cd-inverted;
->>>> +	};
->>>> +	slot@1 {
->>>> +		reg =3D<1>;
->>>> +		bus-width =3D<4>;
->>>> +	};
->>>> +};
->>>> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci=
-.c
->>>> index 556d384..43f98fc 100644
->>>> --- a/drivers/mmc/host/atmel-mci.c
->>>> +++ b/drivers/mmc/host/atmel-mci.c
->>>> @@ -19,6 +19,9 @@
->>>>  #include<linux/interrupt.h>
->>>>  #include<linux/ioport.h>
->>>>  #include<linux/module.h>
->>>> +#include<linux/of.h>
->>>> +#include<linux/of_device.h>
->>>> +#include<linux/of_gpio.h>
->>>>  #include<linux/platform_device.h>
->>>>  #include<linux/scatterlist.h>
->>>>  #include<linux/seq_file.h>
->>>> @@ -493,6 +496,74 @@ err:
->>>>  	dev_err(&mmc->class_dev, "failed to initialize debugfs for slot\n");
->>>>  }
->>>>
->>>> +#if defined(CONFIG_OF)
->>>> +static const struct of_device_id atmci_dt_ids[] =3D {
->>>> +	{ .compatible =3D "atmel,hsmci" },
->>>> +	{ /* sentinel */ }
->>>> +};
->>>> +
->>>> +MODULE_DEVICE_TABLE(of, atmci_dt_ids);
->>>> +
->>>> +static struct mci_platform_data __devinit*
->>>> +atmci_of_init(struct platform_device *pdev)
->>>> +{
->>>> +	struct device_node *np =3D pdev->dev.of_node;
->>>> +	struct device_node *cnp;
->>>> +	struct mci_platform_data *pdata;
->>>> +	unsigned int slot_id;
->>>> +	const __be32 *reg;
->>>> +
->>>> +	if (!np) {
->>>> +		dev_err(&pdev->dev, "device node not found\n");
->>>> +		return ERR_PTR(-EINVAL);
->>>> +	}
->>>> +
->>>> +	pdata =3D devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->>>> +	if (!pdata) {
->>>> +		dev_err(&pdev->dev, "could not allocate memory for pdata\n");
->>>> +		return ERR_PTR(-ENOMEM);
->>>> +	}
->>>> +
->>>> +	for_each_child_of_node(np, cnp) {
->>>> +		reg =3D of_get_property(cnp, "reg", NULL);
->>>> +		if (!reg) {
->>>> +			dev_warn(&pdev->dev, "reg property is missing for %s\n",
->>>> +				 cnp->full_name);
->>>> +			continue;
->>>> +		}
->>>> +
->>>> +		slot_id =3D be32_to_cpu(reg[0]);
->>> read_u32
->>
->> ok
->>
->>>> +
->>>> +		if (slot_id>  (ATMCI_MAX_NR_SLOTS-1)) {
->>>> +			dev_warn(&pdev->dev, "can't have more than %d slots\n",
->>>> +			         ATMCI_MAX_NR_SLOTS);
->>>> +			break;
->>>> +		}
->>>> +
->>>> +		if (of_property_read_u32(cnp, "bus-width",
->>>> +		&pdata->slot[slot_id].bus_width))
->>>> +			pdata->slot[slot_id].bus_width =3D 1;
->>>> +
->>>> +		pdata->slot[slot_id].detect_pin =3D
->>>> +			of_get_named_gpio(cnp, "cd-gpios", 0);
->>>> +
->>>> +		if (of_find_property(cnp, "cd-inverted", NULL))
->>>> +			pdata->slot[slot_id].detect_is_active_high =3D true;
->>>> +
->>>> +		pdata->slot[slot_id].wp_pin =3D
->>>> +			of_get_named_gpio(cnp, "wp-gpios", 0);
->>>> +	}
->>>> +
->>>> +	return pdata;
->>>> +}
->>>> +#else /* CONFIG_OF */
->>>> +static inline struct mci_platform_data*
->>>> +atmci_of_init(struct platform_device *dev)
->>>> +{
->>>> +	return ERR_PTR(-EINVAL);
->>>> +}
->>>> +#endif
->>>> +
->>>>  static inline unsigned int atmci_get_version(struct atmel_mci *host)
->>>>  {
->>>>  	return atmci_readl(host, ATMCI_VERSION)&  0x00000fff;
->>>> @@ -2038,6 +2109,13 @@ static int __init atmci_init_slot(struct atmel_=
-mci *host,
->>>>  	slot->sdc_reg =3D sdc_reg;
->>>>  	slot->sdio_irq =3D sdio_irq;
->>>>
->>>> +	dev_dbg(&mmc->class_dev,
->>>> +	        "slot[%u]: bus_width=3D%u, detect_pin=3D%d, "
->>>> +		"detect_is_active_high=3D%s, wp_pin=3D%d\n",
->>>> +		id, slot_data->bus_width, slot_data->detect_pin,
->>>> +		slot_data->detect_is_active_high ? "true" : "false",
->>>> +		slot_data->wp_pin);
->>>> +
->>>>  	mmc->ops =3D&atmci_ops;
->>>>  	mmc->f_min =3D DIV_ROUND_UP(host->bus_hz, 512);
->>>>  	mmc->f_max =3D host->bus_hz / 2;
->>>> @@ -2258,8 +2336,14 @@ static int __init atmci_probe(struct platform_d=
-evice *pdev)
->>>>  	if (!regs)
->>>>  		return -ENXIO;
->>>>  	pdata =3D pdev->dev.platform_data;
->>>> -	if (!pdata)
->>>> -		return -ENXIO;
->>> check the node and then check the return
->>>
->>
->> Sorry but what do you mean? The node is checked into atmci_of_init
->> and the return is checked:
->>
->> +	if (!pdata) {
->> +		pdata =3D atmci_of_init(pdev);
->> +		if (IS_ERR(pdata)) {
->> +			dev_err(&pdev->dev, "platform data not available\n");
->> +			return -EINVAL;
-> and here return the reall error btw
->> +		}
->> +	}
-> you just call the of_init if you have a node
-
-Well, this seems simple and elegant to me.
-
-Bye,
--- =
-
-Nicolas Ferre
+Thanks
+Richard
+> 
+> Regards,
+> --
+> Alex
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
