@@ -1,63 +1,57 @@
-From: "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: bootloader support for DTB on x86
-Date: Tue, 22 May 2012 14:53:54 -0700
-Message-ID: <4FBC0AF2.2030106@zytor.com>
-References: <20120522125622.GA21187@avionic-0098.mockup.avionic-design.de>
- <20120522195107.GA17501@linutronix.de>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH 1/3] of: Add prefix parameter to of_modalias_node().
+Date: Tue, 22 May 2012 15:49:43 -0700
+Message-ID: <4FBC1807.4050402@gmail.com>
+References: <1336773923-17866-1-git-send-email-ddaney.cavm@gmail.com> <1336773923-17866-2-git-send-email-ddaney.cavm@gmail.com> <20120520055436.13AF03E03B8@localhost> <20120520060802.03CE73E03B8@localhost> <4FBBECC2.10503@gmail.com> <CACxGe6tYQVfPRtXxmYF2OPYcEFu+x4-_uzFta9f3mwu=xUrt=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120522195107.GA17501-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Thomas Renninger <trenn-l3A5Bk7waGM@public.gmane.org>
-Cc: x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6tYQVfPRtXxmYF2OPYcEFu+x4-_uzFta9f3mwu=xUrt=g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "spi-devel-general@lists.sourceforge.net" <spi-devel-general@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Liam Girdwood <lrg@ti.com>, Tabi Timur-B04825 <B04825@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMjIvMjAxMiAxMjo1MSBQTSwgU2ViYXN0aWFuIEFuZHJ6ZWogU2lld2lvciB3cm90ZToK
-PiAKPiBJdCBzaG91bGQgbm90IGJlIHRoYXQgZGlmZmljdWx0LiAKPiAtIExvb2sgaG93IHRoZSBp
-bml0cmQgaXMgbG9hZGVkLiBVc2UgdGhlIHNhbWUgdGVjaG5pcXVlIHRvIGxvYWQgdGhlIGR0YiAK
-PiAgIGJsb2IuIAo+IAo+IC0gQWxsb2NhdGUgYW5vdGhlciBtZW1vcnkgYmxvY2sgZm9yIHNldHVw
-X2RhdGEuIFlvdSBuZWVkIG9uZSBlbnRyeSBvZiAKPiAgIHR5cGUgU0VUVVBfRFRCIHBvaW50aW5n
-IHRvIHRoZSBkdGIuIElmIEkgcmVtZW1iZXIgY29ycmVjdGx5LCB0aGUgCj4gICBzZXR1cF9kYXRh
-IGlzIHRocm93biBhd2F5IGJ5IGtlcm5lbCBhbmQgdGhlIGR0YiBibG9iIGl0c2VsZiBpcyAgCj4g
-ICByZWxvY2F0ZWQgdG8gc29tZSBwbGFjZSBzYWZlLgo+IAo+IC0gWW91IG1heSBuZWVkIHRvIHNl
-dCBoYXJkd2FyZV9zdWJhcmNoIHRvIHNvbWUgc2ltaWxhciB0byAKPiAgIFg4Nl9TVUJBUkNIX0NF
-NDEwMC4gSSBtZWFuIHlvdSAqbWF5KiBuZWVkIHlvdXIgb3duIHN1YmFyY2ggdmFsdWUgYnV0IAo+
-ICAgeW91IGNhbiBtb3N0IGxpa2VseSByZXVzZSBtb3N0IG9mIHRoZSBmdW5jdGlvbnMgdGhhdCBj
-ZTQxMDAgaXMgdXNpbmcuIAo+ICAgVGhlIFBDSSBidXMgYW5kIFVBUlQgaXMgYnJva2VuIGlzIGEg
-c3BlY2lhbCB3YXksIGV2ZXJ5dGhpbmcgZWxzZSBpcwo+ICAgZ2VuZXJpYy4gU2luY2Ugd2UgZG9u
-J3QgaGF2ZSBBQ1BJL1NGSSzDosKAxaAgd2UgbmVlZCBzb21ldGhpbmcgdG8gZmluZAo+ICAgSFBF
-VCwgSU8tQVBJQywgaXJxIHJvdXRpbmcsw6LCgMWgCj4gCgpDYXJlZnVsIGhlcmUhCgpXZSBoYXZl
-IGp1c3QgaGFkIGEgbG9uZyBkaXNjdXNzaW9uIGhvdyB3ZSB3YW50IHRvIGhhbmRsZSBsYXJnZSBk
-YXRhCmJsb2JzIHdoaWNoIG5lZWQgYm9vdGxvYWRlciBzdXBwb3J0IGluIHg4NiBzcGFjZS4gIFRo
-ZSBjb25zZW5zdXMgb3BpbmlvbgplbmRlZCB1cCB0aGF0IHRoZXkgc2hvdWxkIGJlIHByZXBlbmRl
-ZCB0byB0aGUgaW5pdHJhbWZzLCB1bmNvbXByZXNzZWQsCmFuZCB1c2luZyBhIGNwaW8gaGVhZGVy
-IHdpdGggYSBmaWxlIG5hbWUgYmVnaW5uaW5nIHdpdGggImtlcm5lbC8iLgoKVGh1cywgaXQgaXMg
-bG9naWNhbGx5IHBhcnQgb2YgaW5pdHJhbWZzIGJ1dCBjYW4gYmUgYWNjZXNzZWQgZWFybGllciBp
-bgp0aGUgYm9vdC4gIFRoaXMgaGFzIGEgbnVtYmVyIG9mIGFkdmFudGFnZXMgZm9yIHRoZSBib290
-bG9hZGVyLCBpbmNsdWRpbmcKYSBtb2RpY3VtIG9mIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgd2l0
-aCBsZWdhY3kgYm9vdGxvYWRlcnMuCgpJbnRlbmRlZCB1c2VycyBvZiB0aGlzIG1lY2hhbmlzbSBp
-bmNsdWRlIG1pY3JvY29kZSB1cGRhdGVzIGFuZCBBQ1BJCnRhYmxlIG92ZXJyaWRlcy4KCkkgcmVh
-bGx5IGRvbid0IHdhbnQgdG8gc2VlIG1vcmUgYWQgaG9ja2VyeSBvZiB0aGUgQ0U0MTAwIHZhcmll
-dHkuCgpUaGUgY29kZSBmb3IgdGhpcyBpcyBzdGlsbCBub3QgaW50ZWdyYXRlZDsgSSB3cm90ZSB1
-cCBzb21lIGNwaW8gcGFyc2luZwpjb2RlIGZvciB0aGlzOgoKaHR0cDovL3d3dy56eXRvci5jb20v
-fmhwYS9rZXJuZWwvZmluZGNwaW8uYwoKLi4uIGJ1dCBpdCBoYXNuJ3QgYmVlbiBpbmNsdWRlZCBp
-biBhbnkga2VybmVsIHRyZWVzIHlldC4gIEkga25vdyBUaG9tYXMKUmVubmluZ2VyIHNhaWQgaGUg
-d2FzIGdvaW5nIHRvIHdvcmsgb24gaXQsIGJ1dCBJIGhhdmVuJ3Qgc2VlbiBhbnl0aGluZy4KClNl
-ZSB0aGUgTEtNTCB0aHJlYWQgIltQQVRDSF0gQUNQSTogSW1wbGVtZW50IG92ZXJyaWRpbmcgb2Yg
-YXJiaXRyYXJ5CkFDUEkgdGFibGVzIHZpYSBpbml0cmQiOgoKaHR0cDovL2xrbWwua2VybmVsLm9y
-Zy9yLzEzMzI1MTI5ODQtNzk2NjQtMS1naXQtc2VuZC1lbWFpbC10cmVubkBzdXNlLmRlCgoJLWhw
-YQoKLS0gCkguIFBldGVyIEFudmluLCBJbnRlbCBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRl
-cgpJIHdvcmsgZm9yIEludGVsLiAgSSBkb24ndCBzcGVhayBvbiB0aGVpciBiZWhhbGYuCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On 05/22/2012 01:09 PM, Grant Likely wrote:
+> On Tue, May 22, 2012 at 1:45 PM, David Daney<ddaney.cavm@gmail.com>  wrote:
+>> On 05/19/2012 11:08 PM, Grant Likely wrote:
+>>>
+>>> On Sat, 19 May 2012 23:54:36 -0600, Grant
+>>> Likely<grant.likely@secretlab.ca>    wrote:
+>>>>
+>>>> On Fri, 11 May 2012 15:05:21 -0700, David Daney<ddaney.cavm@gmail.com>
+>>>>   wrote:
+>>>>>
+>>>>> From: David Daney<david.daney@cavium.com>
+>>>>>
+>>>>> When generating MODALIASes, it is convenient to add things like "spi:"
+>>>>> or "i2c:" to the front of the strings.  This allows the standard
+>>>>> modprobe to find the right driver when automatically populating bus
+>>>>> children from the device tree structure.
+>>>>>
+>>>>> Add a prefix parameter, and adjust callers.  For
+>>>>> of_register_spi_devices() use the "spi:" prefix.
+>>>>>
+>>>>> Signed-off-by: David Daney<david.daney@cavium.com>
+>>>>
+>>>>
+>>>> Applied, thanks.  Some notes below...
+>>>
+>>>
+>>> Wait... why is this necessary?
+>>
+>>
+>> Because in of_register_spi_devices() in of_spi.c, you do:
+>>
+>>         request_module(spi->modalias);
+>>
+>> The string passed to request_module() must have the "spi:" prefix.
+>
+> How about modifying the call to request_module() to include the prefix
+> also?  I think that would be a simpler change overall.  Would that
+> work?
+
+It seems to.  I just sent such a patch in a new thread.
+
+David Daney
