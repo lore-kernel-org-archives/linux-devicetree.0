@@ -1,128 +1,235 @@
-From: padma venkat <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/10] spi: s3c64xx: add support for device tree
-Date: Tue, 22 May 2012 18:05:20 +0530
-Message-ID: <CAAgF-BeU9_dgmNyjZBx5QARbv=qU==2qBCfD3ggabE608fRG7A@mail.gmail.com>
-References: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v3 1/3] mmc: atmel-mci: add device tree support
+Date: Tue, 22 May 2012 14:55:09 +0200
+Message-ID: <4FBB8CAD.5090004@atmel.com>
+References: <1337681352-18521-1-git-send-email-ludovic.desroches@atmel.com> <1337681352-18521-2-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1336514694-22393-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1337681352-18521-2-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: ludovic.desroches@atmel.com
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On 05/22/2012 12:09 PM, ludovic.desroches@atmel.com :
+> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-On Wed, May 9, 2012 at 3:34 AM, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-wrote:
-> This patch series adds device tree based discovery support for Samsung's
-> s3c64xx compatible spi controller. This is mainly tested for Exynos4210
-> and Exynos5250 with onboard spi nor flash device.
->
-> This patch series is based on Linux 3.4-rc5 with the following two
-> patch series applied.
->
-> [1]
-http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg10494.html
->    [PATCH 00/20] ARM: Samsung: Add support for Exynos5250 Rev1.0
->
-> [2]
-http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg09640.html
->    [PATCH 0/6] S3C24XX: Add support for HSSPI on S3C2416/S3C2443
->
-> Thomas Abraham (10):
->  spi: s3c64xx: remove unused S3C64XX_SPI_ST_TRLCNTZ macro
->  spi: s3c64xx: move controller information into driver data
->  ARM: Samsung: Remove spi hardware controller information from platform
-data
->  ARM: Samsung: Remove pdev pointer paremeter from spi gpio setup functions
->  ARM: Samsung: Update the device names for spi clock lookup
->  ARM: Samsung: Modify s3c64xx_spi{0|1|2}_set_platdata function
->  spi: s3c64xx: Remove the 'set_level' callback from controller data
->  ARM: Exynos4: Fix the incorrect hierarchy of spi controller bus clock
->  ARM: Exynos5: Add spi clock support
->  spi: s3c64xx: add device tree support
->
-> .../devicetree/bindings/spi/spi-samsung.txt        |  113 +++++
->  arch/arm/mach-exynos/clock-exynos4.c               |   66 ++-
->  arch/arm/mach-exynos/clock-exynos5.c               |   98 ++++
->  arch/arm/mach-exynos/include/mach/regs-clock.h     |    4 +
->  arch/arm/mach-exynos/setup-spi.c                   |   33 +--
->  arch/arm/mach-s3c24xx/clock-s3c2416.c              |    2 +-
->  arch/arm/mach-s3c24xx/clock-s3c2443.c              |    2 +-
->  arch/arm/mach-s3c24xx/common-s3c2443.c             |    4 +-
->  arch/arm/mach-s3c24xx/setup-spi.c                  |   10 +-
->  arch/arm/mach-s3c64xx/clock.c                      |   20 +-
->  arch/arm/mach-s3c64xx/mach-crag6410.c              |    2 +-
->  arch/arm/mach-s3c64xx/setup-spi.c                  |   19 +-
->  arch/arm/mach-s5p64x0/clock-s5p6440.c              |   12 +-
->  arch/arm/mach-s5p64x0/clock-s5p6450.c              |   12 +-
->  arch/arm/mach-s5p64x0/setup-spi.c                  |   21 +-
->  arch/arm/mach-s5pc100/clock.c                      |   30 +-
->  arch/arm/mach-s5pc100/setup-spi.c                  |   30 +--
->  arch/arm/mach-s5pv210/clock.c                      |   14 +-
->  arch/arm/mach-s5pv210/setup-spi.c                  |   21 +-
->  arch/arm/plat-samsung/devs.c                       |   50 +--
->  arch/arm/plat-samsung/include/plat/s3c64xx-spi.h   |   31 +-
->  drivers/spi/spi-s3c64xx.c                          |  467
-+++++++++++++++++---
->  22 files changed, 753 insertions(+), 308 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-samsung.txt
->
->
-After applying this patchset, there is a build warning in the boot log.
-Below is the warning..
+Looks neat!
 
-------------[ cut here ]------------
-WARNING: at drivers/base/dd.c:257 driver_probe_device+0x1ac/0x218()
-Modules linked in:
-[<c00159fc>] (unwind_backtrace+0x0/0xfc) from [<c0023e5c>]
-(warn_slowpath_common+0x54/0x64)
-[<c0023e5c>] (warn_slowpath_common+0x54/0x64) from [<c0023e88>]
-(warn_slowpath_null+0x1c/0x24)
-[<c0023e88>] (warn_slowpath_null+0x1c/0x24) from [<c02b6670>]
-(driver_probe_device+0x1ac/0x218)
-[<c02b6670>] (driver_probe_device+0x1ac/0x218) from [<c02b6768>]
-(__driver_attach+0x8c/0x90)
-[<c02b6768>] (__driver_attach+0x8c/0x90) from [<c02b4ddc>]
-(bus_for_each_dev+0x54/0x80)
-[<c02b4ddc>] (bus_for_each_dev+0x54/0x80) from [<c02b564c>]
-(bus_add_driver+0x1f4/0x2c0)
-[<c02b564c>] (bus_add_driver+0x1f4/0x2c0) from [<c02b6d5c>]
-(driver_register+0x78/0x180)
-[<c02b6d5c>] (driver_register+0x78/0x180) from [<c00085f8>]
-(do_one_initcall+0x34/0x180)
-[<c00085f8>] (do_one_initcall+0x34/0x180) from [<c069139c>]
-(kernel_init+0x114/0x1c0)
-[<c069139c>] (kernel_init+0x114/0x1c0) from [<c000ffec>]
-(kernel_thread_exit+0x0/0x8)
----[ end trace 6227d56b6a736442 ]---
-m25p80 spi1.0: found w25q80, expected w25x80
-m25p80 spi1.0: w25q80 (1024 Kbytes)
-2 ofpart partitions found on MTD device spi1.0
-Creating 2 MTD partitions on "spi1.0":
-0x000000000000-0x000000040000 : "U-Boot"
-0x000000040000-0x000000100000 : "Kernel"
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-Thanks&Regards
-Padma
-> --
-> To unsubscribe from this list: send the line "unsubscribe
-linux-samsung-soc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+> ---
+>  .../devicetree/bindings/mmc/atmel-hsmci.txt        |   67 +++++++++++++++
+>  drivers/mmc/host/atmel-mci.c                       |   89 +++++++++++++++++++-
+>  2 files changed, 154 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> new file mode 100644
+> index 0000000..81c20cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> @@ -0,0 +1,67 @@
+> +* Atmel High Speed MultiMedia Card Interface
+> +
+> +This controller on atmel products provides an interface for MMC, SD and SDIO
+> +types of memory cards.
+> +
+> +1) MCI node
+> +
+> +Required properties:
+> +- compatible: no blank "atmel,hsmci"
+> +- reg: should contain HSMCI registers location and length
+> +- interrupts: should contain HSMCI interrupt number
+> +- #address-cells: should be one. The cell is the slot id.
+> +- #size-cells: should be zero.
+> +- at least one slot node
+> +
+> +The node contains child nodes for each slot that the platform uses
+> +
+> +Example MCI node:
+> +
+> +mmc0: mmc@f0008000 {
+> +	compatible = "atmel,hsmci";
+> +	reg = <0xf0008000 0x600>;
+> +	interrupts = <12 4>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	[ child node definitions...]
+> +};
+> +
+> +2) slot nodes
+> +
+> +Required properties:
+> +- reg: should contain the slot id.
+> +- bus-width: number of data lines connected to the controller
+> +
+> +Optional properties:
+> +- cd-gpios: specify GPIOs for card detection
+> +- cd-inverted: invert the value of external card detect gpio line
+> +- wp-gpios: specify GPIOs for write protection
+> +
+> +Example slot node:
+> +
+> +slot@0 {
+> +	reg = <0>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pioD 15 0>
+> +	cd-inverted;
+> +};
+> +
+> +Example full MCI node:
+> +mmc0: mmc@f0008000 {
+> +	compatible = "atmel,hsmci";
+> +	reg = <0xf0008000 0x600>;
+> +	interrupts = <12 4>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	slot@0 {
+> +		reg = <0>;
+> +		bus-width = <4>;
+> +		cd-gpios = <&pioD 15 0>
+> +		cd-inverted;
+> +	};
+> +	slot@1 {
+> +		reg = <1>;
+> +		bus-width = <4>;
+> +	};
+> +};
+> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
+> index 556d384..43f98fc 100644
+> --- a/drivers/mmc/host/atmel-mci.c
+> +++ b/drivers/mmc/host/atmel-mci.c
+> @@ -19,6 +19,9 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/ioport.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/seq_file.h>
+> @@ -493,6 +496,74 @@ err:
+>  	dev_err(&mmc->class_dev, "failed to initialize debugfs for slot\n");
+>  }
+>  
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id atmci_dt_ids[] = {
+> +	{ .compatible = "atmel,hsmci" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, atmci_dt_ids);
+> +
+> +static struct mci_platform_data __devinit*
+> +atmci_of_init(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *cnp;
+> +	struct mci_platform_data *pdata;
+> +	unsigned int slot_id;
+> +	const __be32 *reg;
+> +
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "device node not found\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata) {
+> +		dev_err(&pdev->dev, "could not allocate memory for pdata\n");
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	for_each_child_of_node(np, cnp) {
+> +		reg = of_get_property(cnp, "reg", NULL);
+> +		if (!reg) {
+> +			dev_warn(&pdev->dev, "reg property is missing for %s\n",
+> +				 cnp->full_name);
+> +			continue;
+> +		}
+> +
+> +		slot_id = be32_to_cpu(reg[0]);
+> +
+> +		if (slot_id > (ATMCI_MAX_NR_SLOTS-1)) {
+> +			dev_warn(&pdev->dev, "can't have more than %d slots\n",
+> +			         ATMCI_MAX_NR_SLOTS);
+> +			break;
+> +		}
+> +
+> +		if (of_property_read_u32(cnp, "bus-width",
+> +		                         &pdata->slot[slot_id].bus_width))
+> +			pdata->slot[slot_id].bus_width = 1;
+> +
+> +		pdata->slot[slot_id].detect_pin =
+> +			of_get_named_gpio(cnp, "cd-gpios", 0);
+> +
+> +		if (of_find_property(cnp, "cd-inverted", NULL))
+> +			pdata->slot[slot_id].detect_is_active_high = true;
+> +
+> +		pdata->slot[slot_id].wp_pin =
+> +			of_get_named_gpio(cnp, "wp-gpios", 0);
+> +	}
+> +
+> +	return pdata;
+> +}
+> +#else /* CONFIG_OF */
+> +static inline struct mci_platform_data*
+> +atmci_of_init(struct platform_device *dev)
+> +{
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +#endif
+> +
+>  static inline unsigned int atmci_get_version(struct atmel_mci *host)
+>  {
+>  	return atmci_readl(host, ATMCI_VERSION) & 0x00000fff;
+> @@ -2038,6 +2109,13 @@ static int __init atmci_init_slot(struct atmel_mci *host,
+>  	slot->sdc_reg = sdc_reg;
+>  	slot->sdio_irq = sdio_irq;
+>  
+> +	dev_dbg(&mmc->class_dev,
+> +	        "slot[%u]: bus_width=%u, detect_pin=%d, "
+> +		"detect_is_active_high=%s, wp_pin=%d\n",
+> +		id, slot_data->bus_width, slot_data->detect_pin,
+> +		slot_data->detect_is_active_high ? "true" : "false",
+> +		slot_data->wp_pin);
+> +
+>  	mmc->ops = &atmci_ops;
+>  	mmc->f_min = DIV_ROUND_UP(host->bus_hz, 512);
+>  	mmc->f_max = host->bus_hz / 2;
+> @@ -2258,8 +2336,14 @@ static int __init atmci_probe(struct platform_device *pdev)
+>  	if (!regs)
+>  		return -ENXIO;
+>  	pdata = pdev->dev.platform_data;
+> -	if (!pdata)
+> -		return -ENXIO;
+> +	if (!pdata) {
+> +		pdata = atmci_of_init(pdev);
+> +		if (IS_ERR(pdata)) {
+> +			dev_err(&pdev->dev, "platform data not available\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0)
+>  		return irq;
+> @@ -2477,6 +2561,7 @@ static struct platform_driver atmci_driver = {
+>  	.driver		= {
+>  		.name		= "atmel_mci",
+>  		.pm		= ATMCI_PM_OPS,
+> +		.of_match_table	= of_match_ptr(atmci_dt_ids),
+>  	},
+>  };
+>  
+
+
+-- 
+Nicolas Ferre
