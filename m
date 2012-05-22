@@ -1,103 +1,104 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] dt: name all Tegra binding docs consistently
-Date: Mon, 21 May 2012 16:11:40 -0600
-Message-ID: <1337638300-29155-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] usb: otg: add notify_connect_change callback
+Date: Tue, 22 May 2012 08:27:59 +0800
+Message-ID: <20120522002759.GD6206@b20223-02.ap.freescale.net>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
+ <201205212032.21757.marex@denx.de>
+ <20120521184014.GA21692@kroah.com>
+ <201205212127.51020.marex@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201205212127.51020.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Mon, May 21, 2012 at 09:27:50PM +0200, Marek Vasut wrote:
+> Dear Greg KH,
+> 
+> > On Mon, May 21, 2012 at 08:32:21PM +0200, Marek Vasut wrote:
+> > > Dear Greg KH,
+> > > 
+> > > > On Mon, May 21, 2012 at 07:36:40PM +0200, Marek Vasut wrote:
+> > > > > Dear Greg KH,
+> > > > > 
+> > > > > > On Mon, May 21, 2012 at 05:23:46PM +0800, Richard Zhao wrote:
+> > > > > > > This let usb phy driver has a chance to change hw settings when
+> > > > > > > connect status change.
+> > > > > > > 
+> > > > > > > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > > > > ---
+> > > > > > > 
+> > > > > > >  include/linux/usb/otg.h |   13 +++++++++++++
+> > > > > > >  1 files changed, 13 insertions(+), 0 deletions(-)
+> > > > > > > 
+> > > > > > > diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+> > > > > > > index 38ab3f4..385641d 100644
+> > > > > > > --- a/include/linux/usb/otg.h
+> > > > > > > +++ b/include/linux/usb/otg.h
+> > > > > > > @@ -117,6 +117,10 @@ struct usb_phy {
+> > > > > > > 
+> > > > > > >  	int	(*set_suspend)(struct usb_phy *x,
+> > > > > > >  	
+> > > > > > >  				int suspend);
+> > > > > > > 
+> > > > > > > +	/* notify phy connect status change */
+> > > > > > > +	int	(*notify_connect_change)(struct usb_phy *x,
+> > > > > > > +					 int port,
+> > > > > > > +					 int connected);
+> > > > > > > 
+> > > > > > >  };
+> > > > > > 
+> > > > > > No, please make this two different callbacks.  As you see in your
+> > > > > > code
+> > > > > > 
+> > > > > > when you implemented this, you really have:
+> > > > > > 	if (connected) {
+> > > > > > 	
+> > > > > > 		do this...
+> > > > > > 	
+> > > > > > 	} else {
+> > > > > > 	
+> > > > > > 		do that...
+> > > > > > 	
+> > > > > > 	}
+> > > > > > 
+> > > > > > So you there is no consolidation in the driver, so just make it 2
+> > > > > > callbacks, especially as someone wanted to make connected -1 just
+> > > > > > for a tristate, which would be impossible to document properly...
+> > > > > 
+> > > > > Or he could make connected an enum maybe ?
+> > > > 
+> > > > No, again, that will make nothing easier on the driver end at all.
+> > > > 
+> > > > What's the problem with different functions that people keep resisting?
+> > > 
+> > > The structure grows a few bytes ... so the kernel eats a bit more ram.
+> > 
+> > The time it took you to write this email just made up for that extra
+> > ram, sorry :)
+> 
+> Heh :-) But is this email constantly allocated in your kernel space?
+> 
+> > It doesn't matter, have people leaned nothing from our past mistakes?
+> 
+> All right, I won't argue with you. Richard, let's obey.
+Sure. I'll change it. I think Greq's point here is maintenance. And
+4-byte ram consume don't cost to be noticed.
 
-Rename all Tegra binding documentation according to the first or
-primary compatible value they describe. This provides a clear naming
-scheme for the files, and prevents any naming conflicts should future
-SoC versions require their own binding.
+Thanks
+Richard
+> 
+> > greg k-h
+> 
+> Best regards,
+> Marek Vasut
+> 
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-I can take this through the Tegra tree if you want.
-
- .../arm/tegra/{emc.txt => nvidia,tegra20-emc.txt}  |    0
- .../{gpio_nvidia.txt => nvidia,tegra20-gpio.txt}   |    0
- .../{tegra-kbc.txt => nvidia,tegra20-kbc.txt}      |    0
- .../{nvidia-sdhci.txt => nvidia,tegra20-sdhci.txt} |    0
- .../nvec/{nvec_nvidia.txt => nvidia,nvec.txt}      |    0
- ...-alc5632.txt => nvidia,tegra-audio-alc5632.txt} |    0
- ...mslice.txt => nvidia,tegra-audio-trimslice.txt} |    0
- ...io-wm8753.txt => nvidia,tegra-audio-wm8753.txt} |    0
- ...io-wm8903.txt => nvidia,tegra-audio-wm8903.txt} |    0
- .../{tegra20-das.txt => nvidia,tegra20-das.txt}    |    0
- .../{tegra20-i2s.txt => nvidia,tegra20-i2s.txt}    |    0
- .../spi/{spi_nvidia.txt => nvidia,tegra20-spi.txt} |    0
- .../usb/{tegra-usb.txt => nvidia,tegra20-ehci.txt} |    0
- 13 files changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/arm/tegra/{emc.txt => nvidia,tegra20-emc.txt} (100%)
- rename Documentation/devicetree/bindings/gpio/{gpio_nvidia.txt => nvidia,tegra20-gpio.txt} (100%)
- rename Documentation/devicetree/bindings/input/{tegra-kbc.txt => nvidia,tegra20-kbc.txt} (100%)
- rename Documentation/devicetree/bindings/mmc/{nvidia-sdhci.txt => nvidia,tegra20-sdhci.txt} (100%)
- rename Documentation/devicetree/bindings/nvec/{nvec_nvidia.txt => nvidia,nvec.txt} (100%)
- rename Documentation/devicetree/bindings/sound/{tegra-audio-alc5632.txt => nvidia,tegra-audio-alc5632.txt} (100%)
- rename Documentation/devicetree/bindings/sound/{tegra-audio-trimslice.txt => nvidia,tegra-audio-trimslice.txt} (100%)
- rename Documentation/devicetree/bindings/sound/{tegra-audio-wm8753.txt => nvidia,tegra-audio-wm8753.txt} (100%)
- rename Documentation/devicetree/bindings/sound/{tegra-audio-wm8903.txt => nvidia,tegra-audio-wm8903.txt} (100%)
- rename Documentation/devicetree/bindings/sound/{tegra20-das.txt => nvidia,tegra20-das.txt} (100%)
- rename Documentation/devicetree/bindings/sound/{tegra20-i2s.txt => nvidia,tegra20-i2s.txt} (100%)
- rename Documentation/devicetree/bindings/spi/{spi_nvidia.txt => nvidia,tegra20-spi.txt} (100%)
- rename Documentation/devicetree/bindings/usb/{tegra-usb.txt => nvidia,tegra20-ehci.txt} (100%)
-
-diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/tegra/emc.txt
-rename to Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-rename to Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.txt
-diff --git a/Documentation/devicetree/bindings/input/tegra-kbc.txt b/Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/input/tegra-kbc.txt
-rename to Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt
-diff --git a/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
-rename to Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-diff --git a/Documentation/devicetree/bindings/nvec/nvec_nvidia.txt b/Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/nvec/nvec_nvidia.txt
-rename to Documentation/devicetree/bindings/nvec/nvidia,nvec.txt
-diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-alc5632.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/sound/tegra-audio-alc5632.txt
-rename to Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
-diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-trimslice.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/sound/tegra-audio-trimslice.txt
-rename to Documentation/devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt
-diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-wm8753.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/sound/tegra-audio-wm8753.txt
-rename to Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
-diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-wm8903.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/sound/tegra-audio-wm8903.txt
-rename to Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
-diff --git a/Documentation/devicetree/bindings/sound/tegra20-das.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra20-das.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/sound/tegra20-das.txt
-rename to Documentation/devicetree/bindings/sound/nvidia,tegra20-das.txt
-diff --git a/Documentation/devicetree/bindings/sound/tegra20-i2s.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra20-i2s.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/sound/tegra20-i2s.txt
-rename to Documentation/devicetree/bindings/sound/nvidia,tegra20-i2s.txt
-diff --git a/Documentation/devicetree/bindings/spi/spi_nvidia.txt b/Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/spi/spi_nvidia.txt
-rename to Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
-diff --git a/Documentation/devicetree/bindings/usb/tegra-usb.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/usb/tegra-usb.txt
-rename to Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt
--- 
-1.7.0.4
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
