@@ -1,83 +1,47 @@
 From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 10/12] ARM: dts: imx6q-sabrelite: add usb devices
-Date: Tue, 22 May 2012 13:59:02 +0800
-Message-ID: <20120522055901.GR6206@b20223-02.ap.freescale.net>
+Subject: Re: [PATCH v2 07/12] ARM: imx6q: add config-on-boot gpios
+Date: Tue, 22 May 2012 14:07:14 +0800
+Message-ID: <20120522060713.GS6206@b20223-02.ap.freescale.net>
 References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
- <1337592237-5090-11-git-send-email-richard.zhao@freescale.com>
- <20120522051005.GN8140@S2101-09.ap.freescale.net>
+ <201205220722.00653.marex@denx.de>
+ <CAAQ0ZWSS3ONsF=MLQOJ2u1h3mGErfZ4W2QoSNk4+MQHTC830MQ@mail.gmail.com>
+ <201205220727.30910.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120522051005.GN8140-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <201205220727.30910.marex-ynQEQJNshbs@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2012 at 01:10:08PM +0800, Shawn Guo wrote:
-> On Mon, May 21, 2012 at 05:23:55PM +0800, Richard Zhao wrote:
-> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx6q-sabrelite.dts |   18 ++++++++++++-
-> >  arch/arm/boot/dts/imx6q.dtsi          |   44 +++++++++++++++++++++++++++++++-
-> >  2 files changed, 59 insertions(+), 3 deletions(-)
+On Tue, May 22, 2012 at 07:27:30AM +0200, Marek Vasut wrote:
+> Dear Shawn Guo,
+> 
+> > On 22 May 2012 13:22, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
+> > > Something like that ... but didn't Linus complain that we have too many
+> > > files in arch/arm/ ?
 > > 
-> > diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
-> > index 1dd2261..1d28957 100644
-> > --- a/arch/arm/boot/dts/imx6q-sabrelite.dts
-> > +++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
-> > @@ -48,10 +48,26 @@
-> >  					status = "okay";
-> >  				};
-> >  			};
-> > -
-> > +			iomuxc@020e0000 {
-> > +				gpios {
-> > +					pinctrl_gpio_hog: gpiohog {
+> > So what do you exactly mean by per-board driver?
 > 
-> This isn't really welcomed, and should really be removed after we have
-> gpio_request() be able to call pinctrl to set the mux.
-Yes, but we don't have now. If I add dependency which don't even hit
-next tree, I experienced people refuse pick my patch.
-Of course, If you're ok to pick other patches, I can leave the code
-locally for test.
-> 
-> > +						fsl,pins = <1044 0x80000000
-> > +							   144  0x80000000>;	/* MX6Q_PAD_GPIO_17__GPIO_7_12 */
-> 
-> Here are what I get from fsl,imx6q-pinctrl.txt.  The comment was put on
-> the wrong line?
-> 
-> MX6Q_PAD_EIM_D22__GPIO_3_22                     144
-> MX6Q_PAD_GPIO_17__GPIO_7_12                     1044 
-Good catch.
-> 
-> > +					};
-> > +				};
-> > +			};
-> >  		};
-> >  
-> ...
-> 
-> > @@ -495,6 +500,11 @@
-> >  					};
-> >  				};
-> >  
-> > +				gpios {
-> > +					pinctrl_gpio_hog: gpiohog {
-> > +					};
-> > +				};
-> > +
-> Why the empty nodes?
-It's place holder that let use know to add gpio hog-on-boot in board dts.
+> Exactly such fixup as there's for mx6q-sabrelite. But then, if you have too 
+> broken bootloader, you'll need such a fixup for every such board. Or do you want 
+> to let mach-imx6q.c grow in size with each broken board?
+As Shawn said, this patch is trying to abstract common things.
+We don't need to repeat the code that interpret output-gpios.
+
+Generally discuss often draw no conclusion. So let's talk about
+code.
 
 Thanks
 Richard
 > 
-> -- 
-> Regards,
-> Shawn
+> > Regards,
+> > Shawn
+> 
+> Best regards,
+> Marek Vasut
 > 
 
 --
