@@ -1,37 +1,237 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 05/12] usb: chipidea: add imx driver binding
-Date: Tue, 22 May 2012 21:52:59 +0800
-Message-ID: <20120522135257.GQ8140@S2101-09.ap.freescale.net>
-References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
- <1337592237-5090-6-git-send-email-richard.zhao@freescale.com>
- <201205220630.57007.marex@denx.de>
- <20120522045120.GL6206@b20223-02.ap.freescale.net>
- <87fwasbkt7.fsf@ashishki-desk.ger.corp.intel.com>
- <20120522100624.GP30559@arwen.pp.htv.fi>
- <20120522103139.GD32035@b20223-02.ap.freescale.net>
- <20120522103516.GR30559@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120522103516.GR30559-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH v4 4/7] ARM: davinci: net: davinci_emac: add OF support
+Date: Tue, 22 May 2012 15:55:17 +0200
+Message-ID: <1337694920-8925-5-git-send-email-hs@denx.de>
+References: <1337694920-8925-1-git-send-email-hs@denx.de>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1337694920-8925-1-git-send-email-hs@denx.de>
+Sender: netdev-owner@vger.kernel.org
+To: davinci-linux-open-source@linux.davincidsp.com
+Cc: Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Sekhar Nori <nsekhar@ti.com>, Wolfgang Denk <wd@denx.de>, Anatoly Sivov <mm05@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2012 at 01:35:17PM +0300, Felipe Balbi wrote:
-> My suggestion to Alex is to remove all dependencies for at least a
-> couple of merge windows and only add dependencies for stuff which
-> actually matters; like only building the PCI glue layer when CONFIG_PCI
-> is defined instead of when ARCH_X86 is defined and so on.
-> 
-As ci13xxx_imx is a DT only driver, it needs to depend on CONFIG_OF.
+add of support for the davinci_emac driver.
 
+Signed-off-by: Heiko Schocher <hs@denx.de>
+Cc: davinci-linux-open-source@linux.davincidsp.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: netdev@vger.kernel.org
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Sekhar Nori <nsekhar@ti.com>
+Cc: Wolfgang Denk <wd@denx.de>
+Cc: Anatoly Sivov <mm05@mail.ru>
+
+---
+- changes for v2:
+  - add comment from Anatoly Sivov
+    - fix typo in davinci_emac.txt
+  - add comment from Grant Likely:
+    - add prefix "ti,davinci-" to davinci specific property names
+    - remove version property
+    - use compatible name "ti,davinci-dm6460-emac"
+    - use devm_kzalloc()
+    - use of_match_ptr()
+    - document all new properties
+    - remove of_address_to_resource() and do not overwrite
+      resource table
+    - whitespace fixes
+    - remove hw_ram_addr as it is not used in current
+      board code
+- no changes for v3
+- changes for v4:
+  add comments from Nori Sekhar:
+  - move devictree documentation to:
+    Documentation/devicetree/bindings/net/davinci_emac.txt
+  - fix typo in it
+  - rename compatible property to "ti,davinci-dm6467-emac"
+  - remove pinmux-handle
+  - set version directly in pdata->version
+---
+ .../devicetree/bindings/net/davinci_emac.txt       |   41 +++++++++
+ drivers/net/ethernet/ti/davinci_emac.c             |   87 +++++++++++++++++++-
+ 2 files changed, 127 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/davinci_emac.txt
+
+diff --git a/Documentation/devicetree/bindings/net/davinci_emac.txt b/Documentation/devicetree/bindings/net/davinci_emac.txt
+new file mode 100644
+index 0000000..48b259e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/davinci_emac.txt
+@@ -0,0 +1,41 @@
++* Texas Instruments Davinci EMAC
++
++This file provides information, what the device node
++for the davinci_emac interface contains.
++
++Required properties:
++- compatible: "ti,davinci-dm6467-emac";
++- reg: Offset and length of the register set for the device
++- ti,davinci-ctrl-reg-offset: offset to control register
++- ti,davinci-ctrl-mod-reg-offset: offset to control module register
++- ti,davinci-ctrl-ram-offset: offset to control module ram
++- ti,davinci-ctrl-ram-size: size of control module ram
++- ti,davinci-rmii-en: use RMII
++- ti,davinci-no-bd-ram: has the emac controller BD RAM
++- phy-handle: Contains a phandle to an Ethernet PHY.
++              if not, davinci_emac driver defaults to 100/FULL
++- interrupts: interrupt mapping for the davinci emac interrupts sources:
++              4 sources: <Receive Threshold Interrupt
++			  Receive Interrupt
++			  Transmit Interrupt
++			  Miscellaneous Interrupt>
++
++Optional properties:
++- local-mac-address : 6 bytes, mac address
++
++Example (enbw_cmc board):
++	eth0: emac@1e20000 {
++		compatible = "ti,davinci-dm6467-emac";
++		reg = <0x220000 0x4000>;
++		ti,davinci-ctrl-reg-offset = <0x3000>;
++		ti,davinci-ctrl-mod-reg-offset = <0x2000>;
++		ti,davinci-ctrl-ram-offset = <0>;
++		ti,davinci-ctrl-ram-size = <0x2000>;
++		local-mac-address = [ 00 00 00 00 00 00 ];
++		interrupts = <33
++				34
++				35
++				36
++				>;
++		interrupt-parent = <&intc>;
++	};
+diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
+index 4da93a5..645618d 100644
+--- a/drivers/net/ethernet/ti/davinci_emac.c
++++ b/drivers/net/ethernet/ti/davinci_emac.c
+@@ -58,6 +58,12 @@
+ #include <linux/io.h>
+ #include <linux/uaccess.h>
+ #include <linux/davinci_emac.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of_net.h>
++
++#include <mach/mux.h>
+ 
+ #include <asm/irq.h>
+ #include <asm/page.h>
+@@ -339,6 +345,9 @@ struct emac_priv {
+ 	u32 rx_addr_type;
+ 	atomic_t cur_tx;
+ 	const char *phy_id;
++#ifdef CONFIG_OF
++	struct device_node *phy_node;
++#endif
+ 	struct phy_device *phydev;
+ 	spinlock_t lock;
+ 	/*platform specific members*/
+@@ -1762,6 +1771,75 @@ static const struct net_device_ops emac_netdev_ops = {
+ #endif
+ };
+ 
++#ifdef CONFIG_OF
++static struct emac_platform_data
++	*davinci_emac_of_get_pdata(struct platform_device *pdev,
++	struct emac_priv *priv)
++{
++	struct device_node *np;
++	struct emac_platform_data *pdata = NULL;
++	const u8 *mac_addr;
++	u32 data;
++	int ret;
++
++	pdata = pdev->dev.platform_data;
++	if (!pdata) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata)
++			goto nodata;
++	}
++
++	np = pdev->dev.of_node;
++	if (!np)
++		goto nodata;
++	else
++		pdata->version = EMAC_VERSION_2;
++
++	mac_addr = of_get_mac_address(np);
++	if (mac_addr)
++		memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
++
++	ret = of_property_read_u32(np, "ti,davinci-ctrl-reg-offset", &data);
++	if (!ret)
++		pdata->ctrl_reg_offset = data;
++
++	ret = of_property_read_u32(np, "ti,davinci-ctrl-mod-reg-offset",
++		&data);
++	if (!ret)
++		pdata->ctrl_mod_reg_offset = data;
++
++	ret = of_property_read_u32(np, "ti,davinci-ctrl-ram-offset", &data);
++	if (!ret)
++		pdata->ctrl_ram_offset = data;
++
++	ret = of_property_read_u32(np, "ti,davinci-ctrl-ram-size", &data);
++	if (!ret)
++		pdata->ctrl_ram_size = data;
++
++	ret = of_property_read_u32(np, "ti,davinci-rmii-en", &data);
++	if (!ret)
++		pdata->rmii_en = data;
++
++	ret = of_property_read_u32(np, "ti,davinci-no-bd-ram", &data);
++	if (!ret)
++		pdata->no_bd_ram = data;
++
++	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
++	if (!priv->phy_node)
++		pdata->phy_id = "";
++
++	pdev->dev.platform_data = pdata;
++nodata:
++	return  pdata;
++}
++#else
++static struct emac_platform_data
++	*davinci_emac_of_get_pdata(struct platform_device *pdev,
++	struct emac_priv *priv)
++{
++	return  pdev->dev.platform_data;
++}
++#endif
+ /**
+  * davinci_emac_probe: EMAC device probe
+  * @pdev: The DaVinci EMAC device that we are removing
+@@ -1804,7 +1882,7 @@ static int __devinit davinci_emac_probe(struct platform_device *pdev)
+ 
+ 	spin_lock_init(&priv->lock);
+ 
+-	pdata = pdev->dev.platform_data;
++	pdata = davinci_emac_of_get_pdata(pdev, priv);
+ 	if (!pdata) {
+ 		dev_err(&pdev->dev, "no platform data\n");
+ 		rc = -ENODEV;
+@@ -2015,6 +2093,12 @@ static const struct dev_pm_ops davinci_emac_pm_ops = {
+ 	.resume		= davinci_emac_resume,
+ };
+ 
++static const struct of_device_id davinci_emac_of_match[] = {
++	{.compatible = "ti,davinci-dm6467-emac", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, davinci_emac_of_match);
++
+ /**
+  * davinci_emac_driver: EMAC platform driver structure
+  */
+@@ -2023,6 +2107,7 @@ static struct platform_driver davinci_emac_driver = {
+ 		.name	 = "davinci_emac",
+ 		.owner	 = THIS_MODULE,
+ 		.pm	 = &davinci_emac_pm_ops,
++		.of_match_table = of_match_ptr(davinci_emac_of_match),
+ 	},
+ 	.probe = davinci_emac_probe,
+ 	.remove = __devexit_p(davinci_emac_remove),
 -- 
-Regards,
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.7.6
