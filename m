@@ -1,193 +1,89 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v3 3/3] ARM: dts: add nodes for atmel hsmci controllers
- for atmel platforms
-Date: Tue, 22 May 2012 15:11:59 +0200
-Message-ID: <4FBB909F.4090606@atmel.com>
-References: <1337681352-18521-1-git-send-email-ludovic.desroches@atmel.com> <1337681352-18521-4-git-send-email-ludovic.desroches@atmel.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v2 00/12] add imx usb driver for mx28/6x
+Date: Tue, 22 May 2012 15:13:36 +0200
+Message-ID: <4FBB9100.8070502@de.bosch.com>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
+ <CAOMZO5AcP2cAAkuFPJn3Xp5NuR+JG4hDO7Ehq5H-V6PCy4DwNA@mail.gmail.com>
+ <20120522050831.GQ6206@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1337681352-18521-4-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ludovic.desroches@atmel.com
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120522050831.GQ6206@b20223-02.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Richard Zhao <richard.zhao@freescale.com>
+Cc: "marex@denx.de" <marex@denx.de>, "B20596@freescale.com" <B20596@freescale.com>, "linuxzsc@gmaill.com" <linuxzsc@gmaill.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "fabio.estevam@freescale.com" <fabio.estevam@freescale.com>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "B29397@freescale.com" <B29397@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dong.aisheng@linaro.org" <dong.aisheng@linaro.org>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2012 12:09 PM, ludovic.desroches@atmel.com :
-> From: Ludovic Desroches <ludovic.desroches@atmel.com>
-> 
-> Add nodes for mci controllers.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> ---
->  arch/arm/boot/dts/at91sam9g20.dtsi     |   12 ++++++++++++
+On 22.05.2012 07:08, Richard Zhao wrote:
+> On Mon, May 21, 2012 at 04:34:15PM -0300, Fabio Estevam wrote:
+>> Hi Richard,
+>>
+>> On Mon, May 21, 2012 at 6:23 AM, Richard Zhao
+>> <richard.zhao@freescale.com> wrote:
+>>> The work is based on  ci13xxx rework done by Alexander Shishkin.
+>>>
+>>> Status:
+>>>  - this version only support host
+>>>  - usbotg controler works at host role
+>>>
+>>> Changes since V1:
+>>>  - Merge the work of Marek
+>>>  - re-implement connect change notify
+>>>  - imx6q: move part of code to clk
+>>>  - imx6q: add config-on-boot gpios
+>> Can you please also add the driver into the defconfig files?
+> Thanks for you reminder.
 
-Maybe this one will have to be reworked on top of new ADC declarations.
-Maybe also take into account the device tree support for sam9260: it is
-linked with 9g20 support...
+For i.MX6 I use something like [1].
 
-otherwise, once rebased you can add my:
+Best regards
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Dirk
 
-(and I think that this one also should go through arm-soc)
+[1]
 
->  arch/arm/boot/dts/at91sam9g25ek.dts    |   16 ++++++++++++++++
->  arch/arm/boot/dts/at91sam9g45.dtsi     |   24 ++++++++++++++++++++++++
->  arch/arm/boot/dts/at91sam9m10g45ek.dts |   17 +++++++++++++++++
->  arch/arm/boot/dts/at91sam9x5.dtsi      |   24 ++++++++++++++++++++++++
->  5 files changed, 93 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-> index 773ef48..6a28bfe 100644
-> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-> @@ -197,6 +197,18 @@
->  				interrupts = <10 4>;
->  				status = "disabled";
->  			};
-> +
-> +			mmc0: mmc@fffa800 {
-> +				compatible = "atmel,hsmci";
-> +				reg = <0xfffa800 0x600>;
-> +				interrupts = <9 4>;
-> +				status = "disabled";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				slot@0 {
-> +					reg = <0>;
-> +				};
-> +			};
->  		};
->  
->  		nand0: nand@40000000 {
-> diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-> index 7829a4d..dd94f4b 100644
-> --- a/arch/arm/boot/dts/at91sam9g25ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-> @@ -32,6 +32,22 @@
->  				phy-mode = "rmii";
->  				status = "okay";
->  			};
-> +
-> +			mmc0: mmc@f0008000 {
-> +				status = "okay";
-> +				slot@0 {
-> +					bus-width = <4>;
-> +					cd-gpios = <&pioD 15 0>;
-> +				};
-> +			};
-> +
-> +			mmc1: mmc@f000c000 {
-> +				status = "okay";
-> +				slot@0 {
-> +					bus-width = <4>;
-> +					cd-gpios = <&pioD 14 0>;
-> +				};
-> +			};
->  		};
->  
->  		usb0: ohci@00600000 {
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-> index c804214..2922648 100644
-> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -199,6 +199,30 @@
->  				interrupts = <25 4>;
->  				status = "disabled";
->  			};
-> +
-> +			mmc0: mmc@fff80000 {
-> +				compatible = "atmel,hsmci";
-> +				reg = <0xfff80000 0x600>;
-> +				interrupts = <11 4>;
-> +				status = "disabled";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				slot@0 {
-> +					reg = <0>;
-> +				};
-> +			};
-> +
-> +			mmc1: mmc@fffd0000 {
-> +				compatible = "atmel,hsmci";
-> +				reg = <0xfffd0000 0x600>;
-> +				interrupts = <29 4>;
-> +				status = "disabled";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				slot@0 {
-> +					reg = <0>;
-> +				};
-> +			};
->  		};
->  
->  		nand0: nand@40000000 {
-> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> index a3633bd..bc4cb3c 100644
-> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> @@ -46,6 +46,23 @@
->  				phy-mode = "rmii";
->  				status = "okay";
->  			};
-> +
-> +			mmc0: mmc@fff80000 {
-> +				status = "okay";
-> +				slot@0 {
-> +					bus-width = <4>;
-> +					cd-gpios = <&pioD 10 0>;
-> +				};
-> +			};
-> +
-> +			mmc1: mmc@fffd0000 {
-> +				status = "okay";
-> +				slot@0 {
-> +					bus-width = <4>;
-> +					cd-gpios = <&pioD 11 0>;
-> +					wp-gpios = <&pioD 29 0>;
-> +				};
-> +			};
->  		};
->  
->  		nand0: nand@40000000 {
-> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-> index dd4ed74..d5999b2 100644
-> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-> @@ -190,6 +190,30 @@
->  				interrupts = <27 4>;
->  				status = "disabled";
->  			};
-> +
-> +			mmc0: mmc@f0008000 {
-> +				compatible = "atmel,hsmci";
-> +				reg = <0xf0008000 0x600>;
-> +				interrupts = <12 4>;
-> +				status = "disabled";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				slot@0 {
-> +					reg = <0>;
-> +				};
-> +			};
-> +
-> +			mmc1: mmc@f000c000 {
-> +				compatible = "atmel,hsmci";
-> +				reg = <0xf000c000 0x600>;
-> +				interrupts = <26 4>;
-> +				status = "disabled";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				slot@0 {
-> +					reg = <0>;
-> +				};
-> +			};
->  		};
->  
->  		nand0: nand@40000000 {
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: [PATCH] ARM: imx_v6_v7_defconfig: Enable chipidea USB host driver
 
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+---
+  arch/arm/configs/imx_v6_v7_defconfig |    8 ++++++--
+  1 files changed, 6 insertions(+), 2 deletions(-)
 
--- 
-Nicolas Ferre
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig 
+b/arch/arm/configs/imx_v6_v7_defconfig
+index c3a828e..45001ef 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -130,6 +130,7 @@ CONFIG_GPIO_SYSFS=y
+  CONFIG_WATCHDOG=y
+  CONFIG_IMX2_WDT=y
+  CONFIG_MFD_MC13XXX=y
++CONFIG_MFD_ANATOP=y
+  CONFIG_REGULATOR=y
+  CONFIG_REGULATOR_FIXED_VOLTAGE=y
+  CONFIG_REGULATOR_MC13783=y
+@@ -166,9 +167,12 @@ CONFIG_LOGO_LINUX_MONO=y
+  CONFIG_LOGO_LINUX_VGA16=y
+  CONFIG_LOGO_LINUX_CLUT224=y
+  CONFIG_USB=y
+-CONFIG_USB_EHCI_HCD=y
+-CONFIG_USB_EHCI_MXC=y
++CONFIG_USB_EHCI_ROOT_HUB_TT=y
++CONFIG_USB_CHIPIDEA=y
++CONFIG_USB_CHIPIDEA_HOST=y
++CONFIG_USB_CHIPIDEA_DEBUG=y
+  CONFIG_USB_STORAGE=y
++CONFIG_USB_MXS_PHY=y
+  CONFIG_MMC=y
+  CONFIG_MMC_SDHCI=y
+  CONFIG_MMC_SDHCI_PLTFM=y
