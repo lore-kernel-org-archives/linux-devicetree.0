@@ -1,14 +1,13 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] ARM: davinci, intc: Add irq domain support
-Date: Tue, 22 May 2012 19:51:24 +0400
-Message-ID: <4FBBB5FC.5060901@mvista.com>
-References: <1337694920-8925-1-git-send-email-hs@denx.de>
- <1337694920-8925-2-git-send-email-hs@denx.de>
+From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: bootloader support for DTB on x86
+Date: Tue, 22 May 2012 09:17:33 -0700
+Message-ID: <4FBBBC1D.9080307@gmail.com>
+References: <20120522125622.GA21187@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1337694920-8925-2-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <20120522125622.GA21187-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,73 +17,49 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2012 05:55 PM, Heiko Schocher wrote:
-
-> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
-> Cc: Sergei Shtylyov<sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-
-    In the patch subject, you'd better specify cp_intc, to avoid any confusion. 
-Same comment for the next patch...
-
-> diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
-> index f83152d..bb52807 100644
-> --- a/arch/arm/mach-davinci/cp_intc.c
-> +++ b/arch/arm/mach-davinci/cp_intc.c
-[...]
-> @@ -99,18 +101,37 @@ static struct irq_chip cp_intc_irq_chip = {
-[...]
-> +int __init __cp_intc_init(struct device_node *node)
-> +{
-> +	u32 num_irq		= davinci_soc_info.intc_irq_num;
->   	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
->   	u32 *host_map		= davinci_soc_info.intc_host_map;
->   	unsigned num_reg	= BITS_TO_LONGS(num_irq);
-> -	int i;
-> +	int i, irq_base;
+On 05/22/2012 05:56 AM, Thierry Reding wrote:
+> Hi,
 >
->   	davinci_intc_type = DAVINCI_INTC_TYPE_CP_INTC;
->   	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
-> +
+> I was looking at booting an x86-based platform using DT. However I wasn't
+> able to find a bootloader that supports this. There also doesn't seem to be a
+> method to append the DTB to the zImage (which I wouldn't want to use anyway).
+> Does anybody know of a bootloader that supports this?
 
-    Empty line not needed.
-
->   	if (WARN_ON(!davinci_intc_base))
-[...]
-> @@ -165,13 +186,28 @@ void __init cp_intc_init(void)
->   		for (i = 0; host_map[i] != -1; i++)
->   			cp_intc_write(host_map[i], CP_INTC_HOST_MAP(i));
 >
-> -	/* Set up genirq dispatching for cp_intc */
-> -	for (i = 0; i<  num_irq; i++) {
-> -		irq_set_chip(i,&cp_intc_irq_chip);
-> -		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
-> -		irq_set_handler(i, handle_edge_irq);
-> +	irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
-> +	if (irq_base < 0) {
-> +		pr_warn("Couldn't allocate IRQ numbers\n");
-> +		irq_base = 0;
-> +	}
-> +
-> +	/* create a legacy host */
-> +	cp_intc_domain = irq_domain_add_legacy(node, num_irq,
-> +					irq_base, 0,&cp_intc_host_ops, NULL);
-> +
-> +	if (cp_intc_domain == NULL) {
+> I'm currently using syslinux (specifically extlinux) and was looking at
+> perhaps adding the support myself based on the information given in
+> Documentation/x86/boot.txt. However I'm not overly familiar with syslinux
+> code and this could prove more difficult than I anticipate.
+>
+> The only x86 platforms that use DT seem to be OLPC and CE4100 and according
+> to the web the OLPC has a complete OF implementation. Does anyone know which
+> bootloader the CE4100 uses?
 
-    'if (!cp_int_domain)' please -- to keep the style consistent.
+The falcon falls CE4100 based board we used to do the DT support uses redboot
+The code is available at git://gitorious.org/driver-work/redboot.git
 
-> +		pr_err("CP INTC: failed to allocate irq host!\n");
+I never got to the point where the bootloader was loading the FDT from storage.
+I linked the FDT blobs(s) into the kernel and used a kernel command line option 
+to specify the compat string for the blob the kernel should use.
 
-   s/CP_INTC/cp_intc/
+You can see a snapshot of what I was using at:
+https://gitorious.org/driver-work/linux/commits/base-ce4100.public
 
-WBR, Sergei
+The command line parameter stuff did not get merged linking the DTB(s)
+into the kernel did
+aab9433 of: Add support for linking device tree blobs into vmlinux
+
+
+>
+> Thierry
+>
+>
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
