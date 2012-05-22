@@ -1,45 +1,90 @@
-From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 05/12] usb: chipidea: add imx driver binding
-Date: Tue, 22 May 2012 23:30:04 +0800
-Message-ID: <20120522153003.GD2380@richard-laptop>
-References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
- <1337592237-5090-6-git-send-email-richard.zhao@freescale.com>
- <87bolgbjnr.fsf@ashishki-desk.ger.corp.intel.com>
- <878vgkbjie.fsf@ashishki-desk.ger.corp.intel.com>
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 1/7] ARM: davinci, intc: Add irq domain support
+Date: Tue, 22 May 2012 19:51:24 +0400
+Message-ID: <4FBBB5FC.5060901@mvista.com>
+References: <1337694920-8925-1-git-send-email-hs@denx.de>
+ <1337694920-8925-2-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <878vgkbjie.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1337694920-8925-2-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2012 at 01:24:57PM +0300, Alexander Shishkin wrote:
-> Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> writes:
-> 
-> > Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-> >
-> >> +#include "ci.h"
-> >> +
-> >> +#define PORT0_STATUS	0x184
-> >
-> > This doesn't seem to be used anywhere.
-> 
-> Please disregard this one.
-Thanks.
+On 05/22/2012 05:55 PM, Heiko Schocher wrote:
 
-Richard
-> 
-> Regards,
-> --
-> Alex
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
+> Cc: Sergei Shtylyov<sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+
+    In the patch subject, you'd better specify cp_intc, to avoid any confusion. 
+Same comment for the next patch...
+
+> diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+> index f83152d..bb52807 100644
+> --- a/arch/arm/mach-davinci/cp_intc.c
+> +++ b/arch/arm/mach-davinci/cp_intc.c
+[...]
+> @@ -99,18 +101,37 @@ static struct irq_chip cp_intc_irq_chip = {
+[...]
+> +int __init __cp_intc_init(struct device_node *node)
+> +{
+> +	u32 num_irq		= davinci_soc_info.intc_irq_num;
+>   	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
+>   	u32 *host_map		= davinci_soc_info.intc_host_map;
+>   	unsigned num_reg	= BITS_TO_LONGS(num_irq);
+> -	int i;
+> +	int i, irq_base;
+>
+>   	davinci_intc_type = DAVINCI_INTC_TYPE_CP_INTC;
+>   	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
+> +
+
+    Empty line not needed.
+
+>   	if (WARN_ON(!davinci_intc_base))
+[...]
+> @@ -165,13 +186,28 @@ void __init cp_intc_init(void)
+>   		for (i = 0; host_map[i] != -1; i++)
+>   			cp_intc_write(host_map[i], CP_INTC_HOST_MAP(i));
+>
+> -	/* Set up genirq dispatching for cp_intc */
+> -	for (i = 0; i<  num_irq; i++) {
+> -		irq_set_chip(i,&cp_intc_irq_chip);
+> -		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
+> -		irq_set_handler(i, handle_edge_irq);
+> +	irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
+> +	if (irq_base < 0) {
+> +		pr_warn("Couldn't allocate IRQ numbers\n");
+> +		irq_base = 0;
+> +	}
+> +
+> +	/* create a legacy host */
+> +	cp_intc_domain = irq_domain_add_legacy(node, num_irq,
+> +					irq_base, 0,&cp_intc_host_ops, NULL);
+> +
+> +	if (cp_intc_domain == NULL) {
+
+    'if (!cp_int_domain)' please -- to keep the style consistent.
+
+> +		pr_err("CP INTC: failed to allocate irq host!\n");
+
+   s/CP_INTC/cp_intc/
+
+WBR, Sergei
