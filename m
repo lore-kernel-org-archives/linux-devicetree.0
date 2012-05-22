@@ -1,27 +1,40 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 08/12] ARM: imx6q: add usbphy clocks
-Date: Tue, 22 May 2012 12:45:18 +0800
-Message-ID: <20120522044515.GK8140@S2101-09.ap.freescale.net>
+Subject: Re: [PATCH v2 11/12] ARM: mxs: clk_register_clkdev mx28 usb clocks
+Date: Tue, 22 May 2012 12:48:48 +0800
+Message-ID: <20120522044846.GL8140@S2101-09.ap.freescale.net>
 References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
- <1337592237-5090-9-git-send-email-richard.zhao@freescale.com>
- <201205220632.13896.marex@denx.de>
+ <1337592237-5090-12-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201205220632.13896.marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <1337592237-5090-12-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2012 at 06:32:13AM +0200, Marek Vasut wrote:
-> Dear Richard Zhao,
+On Mon, May 21, 2012 at 05:23:56PM +0800, Richard Zhao wrote:
+> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/clk/mxs/clk-imx28.c |    4 ++++
+>  1 files changed, 4 insertions(+), 0 deletions(-)
 > 
-> Maybe reorder this so it's in before the PHY driver?
-> 
-It should not matter, as I suppose all those "usb: ..." patches will
-go via usb tree, while all those "ARM: ..." will go via arm-soc tree.
+> diff --git a/drivers/clk/mxs/clk-imx28.c b/drivers/clk/mxs/clk-imx28.c
+> index 2826a26..5330b27 100644
+> --- a/drivers/clk/mxs/clk-imx28.c
+> +++ b/drivers/clk/mxs/clk-imx28.c
+> @@ -328,6 +328,10 @@ int __init mx28_clocks_init(void)
+>  	clk_register_clkdevs(clks[fec], fec_lookups, ARRAY_SIZE(fec_lookups));
+>  	clk_register_clkdevs(clks[can0], can0_lookups, ARRAY_SIZE(can0_lookups));
+>  	clk_register_clkdevs(clks[can1], can1_lookups, ARRAY_SIZE(can1_lookups));
+> +	clk_register_clkdev(clks[usb0_pwr], NULL, "8007c000.usbphy");
+> +	clk_register_clkdev(clks[usb1_pwr], NULL, "8007e000.usbphy");
+> +	clk_register_clkdev(clks[usb0], NULL, "80080000.usbctrl");
+> +	clk_register_clkdev(clks[usb1], NULL, "80090000.usbctrl");
+>  
+You changed usb node name from "usbctrl" to "usb".  The clk lookup
+needs to be updated correspondingly.
 
 -- 
 Regards,
