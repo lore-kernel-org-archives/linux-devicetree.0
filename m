@@ -1,60 +1,37 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 2/2] input: Add support for the Semtech SX8634 controller
-Date: Tue, 22 May 2012 15:48:34 +0200
-Message-ID: <20120522134834.GC21187@avionic-0098.mockup.avionic-design.de>
-References: <1334229613-678-1-git-send-email-thierry.reding@avionic-design.de>
- <1334229613-678-2-git-send-email-thierry.reding@avionic-design.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 05/12] usb: chipidea: add imx driver binding
+Date: Tue, 22 May 2012 21:52:59 +0800
+Message-ID: <20120522135257.GQ8140@S2101-09.ap.freescale.net>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com>
+ <1337592237-5090-6-git-send-email-richard.zhao@freescale.com>
+ <201205220630.57007.marex@denx.de>
+ <20120522045120.GL6206@b20223-02.ap.freescale.net>
+ <87fwasbkt7.fsf@ashishki-desk.ger.corp.intel.com>
+ <20120522100624.GP30559@arwen.pp.htv.fi>
+ <20120522103139.GD32035@b20223-02.ap.freescale.net>
+ <20120522103516.GR30559@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/e2eDi0V/xtL+Mc8"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1334229613-678-2-git-send-email-thierry.reding@avionic-design.de>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <20120522103516.GR30559-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 22, 2012 at 01:35:17PM +0300, Felipe Balbi wrote:
+> My suggestion to Alex is to remove all dependencies for at least a
+> couple of merge windows and only add dependencies for stuff which
+> actually matters; like only building the PCI glue layer when CONFIG_PCI
+> is defined instead of when ARCH_X86 is defined and so on.
+> 
+As ci13xxx_imx is a DT only driver, it needs to depend on CONFIG_OF.
 
---/e2eDi0V/xtL+Mc8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-* Thierry Reding wrote:
-> This commit adds support for the Semtech SX8634 Capacitive Button and
-> Slider Touch controller.
->=20
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
-> ---
->  Documentation/devicetree/bindings/input/sx8634.txt |   58 ++
->  drivers/input/misc/Kconfig                         |   10 +
->  drivers/input/misc/Makefile                        |    1 +
->  drivers/input/misc/sx8634.c                        |  745 ++++++++++++++=
-++++++
->  include/linux/input/sx8634.h                       |   32 +
->  5 files changed, 846 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/sx8634.txt
->  create mode 100644 drivers/input/misc/sx8634.c
->  create mode 100644 include/linux/input/sx8634.h
-
-Any comments on this one?
-
-Thierry
-
---/e2eDi0V/xtL+Mc8
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk+7mTIACgkQZ+BJyKLjJp/XkwCgqk+qi56/XRxlB5OSNpXfp3jQ
-OHQAn1oQpVBdkhMdzZBzqqKHae9l02uH
-=yQbt
------END PGP SIGNATURE-----
-
---/e2eDi0V/xtL+Mc8--
+-- 
+Regards,
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
