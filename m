@@ -1,144 +1,300 @@
 From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 02/12] usb: chipidea: permit driver bindings pass phy pointer
-Date: Tue, 22 May 2012 06:22:33 +0200
-Message-ID: <201205220622.33999.marex@denx.de>
-References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com> <1337592237-5090-3-git-send-email-richard.zhao@freescale.com>
+Subject: Re: [PATCH v2 05/12] usb: chipidea: add imx driver binding
+Date: Tue, 22 May 2012 06:30:56 +0200
+Message-ID: <201205220630.57007.marex@denx.de>
+References: <1337592237-5090-1-git-send-email-richard.zhao@freescale.com> <1337592237-5090-6-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1337592237-5090-3-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1337592237-5090-6-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-MeMPY/F8WlbQT0dZR+AlfA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Dear Richard Zhao,
 
-> Sometimes, the driver bindings may know what phy they use.
-> For example, when using device tree, the usb controller may have a
-> phandler pointing to usb phy.
-> 
+> Just add host support.
+
+Maybe rephrase it to something like "This patch supports only the host-mode 
+functionality so far."
+
 > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 > ---
->  drivers/usb/chipidea/ci.h    |    2 ++
->  drivers/usb/chipidea/core.c  |    4 ++++
->  drivers/usb/chipidea/host.c  |    1 +
->  drivers/usb/chipidea/udc.c   |   11 +++++++----
->  include/linux/usb/chipidea.h |    3 +++
->  5 files changed, 17 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |   20 ++
+>  drivers/usb/chipidea/Makefile                      |    8 +
+>  drivers/usb/chipidea/ci13xxx_imx.c                 |  191
+> ++++++++++++++++++++ 3 files changed, 219 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>  create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
 > 
-> diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-> index 50911f8..71d7080 100644
-> --- a/drivers/usb/chipidea/ci.h
-> +++ b/drivers/usb/chipidea/ci.h
-> @@ -160,6 +160,8 @@ struct ci13xxx {
-> 
->  	struct ci13xxx_udc_driver	*udc_driver;
->  	int				vbus_active;
-> +	/* FIXME: some day, we'll not use global phy */
-> +	bool				global_phy;
->  	struct usb_phy			*transceiver;
->  	struct usb_hcd			*hcd;
->  };
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> index 15e03b3..0492786 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -365,6 +365,10 @@ static int __devinit ci_hdrc_probe(struct
-> platform_device *pdev)
-> 
->  	ci->dev = dev;
->  	ci->udc_driver = dev->platform_data;
-> +	if (ci->udc_driver->phy)
-> +		ci->transceiver = ci->udc_driver->phy;
-> +	else
-> +		ci->global_phy = 1;
-> 
->  	ret = hw_device_init(ci, base);
->  	if (ret < 0) {
-> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-> index 9eacd21..7bc11a5 100644
-> --- a/drivers/usb/chipidea/host.c
-> +++ b/drivers/usb/chipidea/host.c
-> @@ -121,6 +121,7 @@ static int host_start(struct ci13xxx *ci)
->  	ehci = hcd_to_ehci(hcd);
->  	ehci->caps = ci->hw_bank.cap;
->  	ehci->has_hostpc = ci->hw_bank.lpm;
-> +	ehci->transceiver = ci->transceiver;
-> 
->  	ret = usb_add_hcd(hcd, 0, 0);
->  	if (ret)
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> index 51f9694..22139fae 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -1687,7 +1687,8 @@ static int udc_start(struct ci13xxx *udc)
-> 
->  	udc->gadget.ep0 = &udc->ep0in->ep;
-> 
-> -	udc->transceiver = usb_get_transceiver();
-> +	if (udc->global_phy) {
-> +		udc->transceiver = usb_get_transceiver();
-> 
->  	if (udc->udc_driver->flags & CI13XXX_REQUIRE_TRANSCEIVER) {
->  		if (udc->transceiver == NULL) {
-> @@ -1731,7 +1732,8 @@ static int udc_start(struct ci13xxx *udc)
->  remove_trans:
->  	if (udc->transceiver) {
->  		otg_set_peripheral(udc->transceiver->otg, &udc->gadget);
-> -		usb_put_transceiver(udc->transceiver);
-> +		if (udc->global_phy)
-> +			usb_put_transceiver(udc->transceiver);
->  	}
-> 
->  	dev_err(dev, "error = %i\n", retval);
-> @@ -1740,7 +1742,7 @@ remove_dbg:
->  unreg_device:
->  	device_unregister(&udc->gadget.dev);
->  put_transceiver:
-> -	if (udc->transceiver)
-> +	if (udc->transceiver && udc->global_phy)
->  		usb_put_transceiver(udc->transceiver);
->  free_pools:
->  	dma_pool_destroy(udc->td_pool);
-> @@ -1774,7 +1776,8 @@ static void udc_stop(struct ci13xxx *udc)
-> 
->  	if (udc->transceiver) {
->  		otg_set_peripheral(udc->transceiver->otg, NULL);
-> -		usb_put_transceiver(udc->transceiver);
-> +		if (udc->global_phy)
-> +			usb_put_transceiver(udc->transceiver);
->  	}
->  	dbg_remove_files(&udc->gadget.dev);
->  	device_unregister(&udc->gadget.dev);
-> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-> index edb90d6..c46c9e9 100644
-> --- a/include/linux/usb/chipidea.h
-> +++ b/include/linux/usb/chipidea.h
-> @@ -5,12 +5,15 @@
->  #ifndef __LINUX_USB_CHIPIDEA_H
->  #define __LINUX_USB_CHIPIDEA_H
-> 
-> +#include <linux/usb/otg.h>
+> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt new file mode
+> 100644
+> index 0000000..beb75d6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> @@ -0,0 +1,20 @@
+> +* Freescale i.MX ci13xxx usb controllers
 > +
->  struct ci13xxx;
->  struct ci13xxx_udc_driver {
->  	const char	*name;
->  	/* offset of the capability registers */
->  	uintptr_t	 capoffset;
->  	unsigned	 power_budget;
-> +	struct usb_phy	*phy;
->  	unsigned long	 flags;
->  #define CI13XXX_REGS_SHARED		BIT(0)
->  #define CI13XXX_REQUIRE_TRANSCEIVER	BIT(1)
+> +Required properties:
+> +- compatible: Should be "fsl,imx31-usb"
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain controller interrupt
+> +
+> +Optional properties:
+> +- fsl,usbphy: phandler of usb phy that connects to the only one port
+> +- fsl,hub-reset-gpios: gpio used to reset on-board usb hub
+> +- fsl,vbus-power-gpios: gpio used to set vbus power of the only one port
+> +
+> +Examples:
+> +usb@02184000 { /* USB OTG */
+> +	compatible = "fsl,imx6q-usb", "fsl,imx31-usb";
+> +	reg = <0x02184000 0x200>;
+> +	interrupts = <0 43 0x04>;
+> +	fsl,usbphy = <&usbphy1>;
+> +	fsl,vbus-power-gpios = <&gpio3 22 0>;
+> +};
+> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+> index cc34937..ffa2f63 100644
+> --- a/drivers/usb/chipidea/Makefile
+> +++ b/drivers/usb/chipidea/Makefile
+> @@ -12,3 +12,11 @@ endif
+>  ifneq ($(CONFIG_ARCH_MSM),)
+>  	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_msm.o
+>  endif
+> +
+> +ifneq ($(CONFIG_ARCH_MXC),)
+> +	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_imx.o
+> +else
+> +  ifneq ($(CONFIG_ARCH_MXS),)
+> +	  obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_imx.o
+> +  endif
+> +endif
 
-Best regards,
-Marek Vasut
+I think someone commented on these patches (my previous set of patches 
+actually), that this should be fixed in a way that you can actually select which 
+bindings you want to compile in (and not limit it via Makefile like it's now).
+
+> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c
+> b/drivers/usb/chipidea/ci13xxx_imx.c new file mode 100644
+> index 0000000..9f64b3c
+> --- /dev/null
+> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
+> @@ -0,0 +1,191 @@
+> +/*
+> + * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> + * on behalf of DENX Software Engineering GmbH
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/usb/chipidea.h>
+> +#include <linux/usb/ehci_def.h>
+> +#include <linux/usb/gadget.h>
+> +#include <linux/usb/chipidea.h>
+> +#include <linux/usb/otg.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/clk.h>
+> +#include <linux/string.h>
+> +
+> +#include "ci.h"
+> +
+> +#define PORT0_STATUS	0x184
+> +
+> +#define pdev_to_phy(pdev) \
+> +	((struct usb_phy *)platform_get_drvdata(pdev))
+> +
+> +struct ci13xxx_imx_data {
+> +	struct device_node *phy_np;
+> +	struct usb_phy *phy;
+> +	struct platform_device *ci_pdev;
+> +	struct clk *clk;
+> +	int gpio_hub_rst, gpio_vbus_pwr;
+> +};
+> +
+> +static struct ci13xxx_udc_driver ci13xxx_imx_udc_driver __devinitdata  = {
+> +	.name			= "ci13xxx_imx",
+> +	.flags			= CI13XXX_REQUIRE_TRANSCEIVER |
+> +				  CI13XXX_PULLUP_ON_VBUS |
+> +				  CI13XXX_DISABLE_STREAMING,
+> +	.capoffset		= DEF_CAPOFFSET,
+> +};
+> +
+> +static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
+> +{
+> +	struct ci13xxx_imx_data *data;
+> +	struct platform_device *plat_ci, *phy_pdev;
+> +	struct platform_device_info ci_pdevinfo;
+> +	struct device_node *phy_np;
+> +	struct resource *res;
+> +	int vbus_pwr;
+> +	int ret;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data) {
+> +		dev_err(&pdev->dev, "Failed to allocate CI13xxx-IMX data!\n");
+> +		return -ENOMEM;
+> +	}
+> +	data->gpio_hub_rst = -1;
+> +	data->gpio_vbus_pwr = -1;
+
+This really freaks me out. Maybe we should have some kind of a regulator that 
+manages the VBUS and let this driver toggle the regulator when fitting? That'd 
+solve the problem to some extent, as other people would be able to supply NOP 
+regulator.
+
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "can't get device resources!\n");
+
+Can't ... capital "C" ;-)
+
+> +		return -ENOENT;
+> +	}
+> +
+> +	data->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(data->clk)) {
+> +		dev_err(&pdev->dev, "Failed to get clock!\n");
+> +		return PTR_ERR(data->clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(data->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to prepare or enable clock!\n");
+> +		return ret;
+> +	}
+> +
+> +	phy_np = of_parse_phandle(pdev->dev.of_node, "fsl,usbphy", 0);
+> +	if (phy_np) {
+> +		data->phy_np = phy_np;
+> +		phy_pdev = of_find_device_by_node(phy_np);
+> +		if (phy_pdev) {
+> +			struct usb_phy *phy;
+
+Do we really want to define new variables in the middle of a code?
+
+> +			phy = pdev_to_phy(phy_pdev);
+> +			if (phy &&
+> +			    try_module_get(phy_pdev->dev.driver->owner)) {
+> +				usb_phy_init(phy);
+> +				data->phy = phy;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* we only support host now, so enable vbus here */
+> +	vbus_pwr = of_get_named_gpio(pdev->dev.of_node,
+> +					"fsl,vbus-power-gpios", 0);
+
+(This one is for my personal enlightment) Why is the property called "gpios" 
+(plural) if it's only one GPIO?
+
+> +	if (gpio_is_valid(vbus_pwr) &&
+> +	    !devm_gpio_request(&pdev->dev, vbus_pwr, "vbus-pwr")) {
+> +		gpio_direction_output(vbus_pwr, 1);
+> +		data->gpio_hub_rst = vbus_pwr;
+> +	}
+> +
+> +	ci13xxx_imx_udc_driver.phy = data->phy;
+> +	memset(&ci_pdevinfo, 0, sizeof(ci_pdevinfo));
+> +	ci_pdevinfo.parent = &pdev->dev;
+> +	ci_pdevinfo.name = "ci_hdrc";
+> +	ci_pdevinfo.id = (int)res->start;
+> +	ci_pdevinfo.res = pdev->resource;
+> +	ci_pdevinfo.num_res = pdev->num_resources;
+> +	ci_pdevinfo.data = &ci13xxx_imx_udc_driver;
+> +	ci_pdevinfo.size_data = sizeof(ci13xxx_imx_udc_driver);
+> +	ci_pdevinfo.dma_mask = DMA_BIT_MASK(32);
+> +
+> +	plat_ci = platform_device_register_full(&ci_pdevinfo);
+> +	if (IS_ERR(plat_ci)) {
+> +		dev_err(&pdev->dev, "can't register ci_hdrc platform device\n");
+> +		ret = PTR_ERR(plat_ci);
+> +		goto put_np;
+> +	}
+> +
+> +	data->ci_pdev = plat_ci;
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	pm_runtime_no_callbacks(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+> +
+> +	return 0;
+> +
+> +put_np:
+> +	if (phy_np)
+> +		of_node_put(phy_np);
+> +	return ret;
+> +}
+> +
+> +static int __devexit ci13xxx_imx_remove(struct platform_device *pdev)
+> +{
+> +	struct ci13xxx_imx_data *data = platform_get_drvdata(pdev);
+> +
+> +	kfree(data->ci_pdev->dev.dma_mask);
+> +	data->ci_pdev->dev.dma_mask = NULL;
+> +	platform_device_unregister(data->ci_pdev);
+> +
+> +	if (data->gpio_vbus_pwr != -1)
+> +		gpio_direction_output(data->gpio_vbus_pwr, 0);
+> +	if (data->gpio_hub_rst != -1)
+> +		gpio_direction_output(data->gpio_hub_rst, 0);
+> +
+> +	if (data->phy) {
+> +		usb_phy_shutdown(data->phy);
+> +		module_put(data->phy->dev->driver->owner);
+> +	}
+> +
+> +	of_node_put(data->phy_np);
+> +
+> +	clk_disable_unprepare(data->clk);
+> +
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ci13xxx_imx_dt_ids[] = {
+> +	{ .compatible = "fsl,imx31-usb", },
+
+Wow, now it's imx31-usb ?
+
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver ci13xxx_imx_driver = {
+> +	.probe = ci13xxx_imx_probe,
+> +	.remove = __devexit_p(ci13xxx_imx_remove),
+> +	.driver = {
+> +		.name = "imx_usb",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = ci13xxx_imx_dt_ids,
+> +	 },
+> +};
+> +
+> +module_platform_driver(ci13xxx_imx_driver);
+> +
+
+Richard, thanks for your work on these patches so far. Sorry for taking so long 
+with reviewing these.
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
