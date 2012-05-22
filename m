@@ -1,65 +1,87 @@
-From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: bootloader support for DTB on x86
-Date: Tue, 22 May 2012 09:17:33 -0700
-Message-ID: <4FBBBC1D.9080307@gmail.com>
-References: <20120522125622.GA21187@avionic-0098.mockup.avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120522125622.GA21187-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH 2/5] netdev/phy/of: Handle IEEE802.3 clause 45 Ethernet PHYs in of_mdiobus_register()
+Date: Tue, 22 May 2012 10:59:49 -0700
+Message-ID: <1337709592-23347-3-git-send-email-ddaney.cavm@gmail.com>
+References: <1337709592-23347-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1337709592-23347-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Andy Fleming <afleming@freescale.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2012 05:56 AM, Thierry Reding wrote:
-> Hi,
->
-> I was looking at booting an x86-based platform using DT. However I wasn't
-> able to find a bootloader that supports this. There also doesn't seem to be a
-> method to append the DTB to the zImage (which I wouldn't want to use anyway).
-> Does anybody know of a bootloader that supports this?
+From: David Daney <david.daney@cavium.com>
 
->
-> I'm currently using syslinux (specifically extlinux) and was looking at
-> perhaps adding the support myself based on the information given in
-> Documentation/x86/boot.txt. However I'm not overly familiar with syslinux
-> code and this could prove more difficult than I anticipate.
->
-> The only x86 platforms that use DT seem to be OLPC and CE4100 and according
-> to the web the OLPC has a complete OF implementation. Does anyone know which
-> bootloader the CE4100 uses?
+Define two new "compatible" values for Ethernet
+PHYs. "ethernet-phy-ieee802.3-c22" and "ethernet-phy-ieee802.3-c45"
+are used to indicate a PHY uses the corresponding protocol.
 
-The falcon falls CE4100 based board we used to do the DT support uses redboot
-The code is available at git://gitorious.org/driver-work/redboot.git
+If a PHY is "compatible" with "ethernet-phy-ieee802.3-c45", we
+indicate this so that get_phy_device() can properly probe the device.
 
-I never got to the point where the bootloader was loading the FDT from storage.
-I linked the FDT blobs(s) into the kernel and used a kernel command line option 
-to specify the compat string for the blob the kernel should use.
+If get_phy_device() fails, it was probably due to failing the probe of
+the PHY identifier registers.  Since we have the device tree telling
+us the PHY exists, go ahead and add it anyhow with a phy_id of zero.
+There may be a driver match based on the "compatible" property.
 
-You can see a snapshot of what I was using at:
-https://gitorious.org/driver-work/linux/commits/base-ce4100.public
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ Documentation/devicetree/bindings/net/phy.txt |   12 +++++++++++-
+ drivers/of/of_mdio.c                          |   14 +++++++++++---
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-The command line parameter stuff did not get merged linking the DTB(s)
-into the kernel did
-aab9433 of: Add support for linking device tree blobs into vmlinux
-
-
->
-> Thierry
->
->
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index bb8c742..7cd18fb 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -14,10 +14,20 @@ Required properties:
+  - linux,phandle :  phandle for this node; likely referenced by an
+    ethernet controller node.
+ 
++Optional Properties:
++
++- compatible: Compatible list, may contain
++  "ethernet-phy-ieee802.3-c22" or "ethernet-phy-ieee802.3-c45" for
++  PHYs that implement IEEE802.3 clause 22 or IEEE802.3 clause 45
++  specifications. If neither of these are specified, the default is to
++  assume clause 22. The compatible list may also contain other
++  elements.
++
+ Example:
+ 
+ ethernet-phy@0 {
+-	linux,phandle = <2452000>
++	compatible = "ethernet-phy-ieee802.3-c22";
++	linux,phandle = <2452000>;
+ 	interrupt-parent = <40000>;
+ 	interrupts = <35 1>;
+ 	reg = <0>;
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 2574abd..0f08aaf 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -79,11 +79,19 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 				mdio->irq[addr] = PHY_POLL;
+ 		}
+ 
++		if (of_device_is_compatible(child,
++					    "ethernet-phy-ieee802.3-c45"))
++			addr |= MII_ADDR_C45;
++
+ 		phy = get_phy_device(mdio, addr);
+ 		if (!phy || IS_ERR(phy)) {
+-			dev_err(&mdio->dev, "error probing PHY at address %i\n",
+-				addr);
+-			continue;
++			phy = phy_device_create(mdio, addr, 0, NULL);
++			if (!phy || IS_ERR(phy)) {
++				dev_err(&mdio->dev,
++					"error creating PHY at address %i\n",
++					addr);
++				continue;
++			}
+ 		}
+ 
+ 		/* Associate the OF node with the device structure so it
+-- 
+1.7.2.3
