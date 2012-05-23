@@ -1,35 +1,95 @@
-From: David Brown <davidb@codeaurora.org>
-Subject: Re: [PATCH v5 1/4] regulator: helper routine to extract
- regulator_init_data
-Date: Wed, 23 May 2012 10:48:03 -0700
-Message-ID: <20120523174803.GA18609@codeaurora.org>
-References: <1321615040-13257-1-git-send-email-rnayak@ti.com>
- <1321615040-13257-2-git-send-email-rnayak@ti.com>
+From: <ludovic.desroches@atmel.com>
+Subject: [PATCH v4 2/3] ARM: at91: add clocks for DT entries
+Date: Wed, 23 May 2012 21:38:51 +0200
+Message-ID: <1337801931-13823-1-git-send-email-ludovic.desroches@atmel.com>
+References: <1337681352-18521-3-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1321615040-13257-2-git-send-email-rnayak@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, robherring2@gmail.com, linaro-dev@lists.linaro.org, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1337681352-18521-3-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 18, 2011 at 04:47:17PM +0530, Rajendra Nayak wrote:
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-> +	xyzreg: regulator@0 {
-> +		regulator-min-microvolt = <1000000>;
-> +		regulator-max-microvolt = <2500000>;
-> +		regulator-always-on;
-> +		vin-supply = <&vin>;
-> +	};
+Add clocks to clock lookup table for DT entries.
 
-Just noticed this, but the '@0' shouldn't be on the name, since there
-isn't a reg attribute on this node.  Perhaps it should be
-"regulator-xyz"?
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+---
+v4: add new chips
 
-David
+ arch/arm/mach-at91/at91sam9260.c |    1 +
+ arch/arm/mach-at91/at91sam9263.c |    2 ++
+ arch/arm/mach-at91/at91sam9g45.c |    2 ++
+ arch/arm/mach-at91/at91sam9n12.c |    1 +
+ arch/arm/mach-at91/at91sam9x5.c  |    2 ++
+ 5 files changed, 8 insertions(+), 0 deletions(-)
 
+diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
+index 2b1e438..ddba004 100644
+--- a/arch/arm/mach-at91/at91sam9260.c
++++ b/arch/arm/mach-at91/at91sam9260.c
+@@ -226,6 +226,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("t1_clk", "fffdc000.timer", &tc4_clk),
+ 	CLKDEV_CON_DEV_ID("t2_clk", "fffdc000.timer", &tc5_clk),
+ 	CLKDEV_CON_DEV_ID("hclk", "500000.ohci", &ohci_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "fffa8000.mmc", &mmc_clk),
+ 	/* fake hclk clock */
+ 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
+ 	CLKDEV_CON_ID("pioA", &pioA_clk),
+diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
+index 0eb20f9..f165b25 100644
+--- a/arch/arm/mach-at91/at91sam9263.c
++++ b/arch/arm/mach-at91/at91sam9263.c
+@@ -211,6 +211,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("hclk", "a00000.ohci", &ohci_clk),
+ 	CLKDEV_CON_DEV_ID("spi_clk", "fffa4000.spi", &spi0_clk),
+ 	CLKDEV_CON_DEV_ID("spi_clk", "fffa8000.spi", &spi1_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "fff80000.mmc", &mmc0_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "fff84000.mmc", &mmc1_clk),
+ };
+ 
+ static struct clk_lookup usart_clocks_lookups[] = {
+diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
+index 4792682..aa24e82 100644
+--- a/arch/arm/mach-at91/at91sam9g45.c
++++ b/arch/arm/mach-at91/at91sam9g45.c
+@@ -242,6 +242,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("t0_clk", "fffd4000.timer", &tcb0_clk),
+ 	CLKDEV_CON_DEV_ID("hclk", "700000.ohci", &uhphs_clk),
+ 	CLKDEV_CON_DEV_ID("ehci_clk", "800000.ehci", &uhphs_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "fff80000.mmc", &mmc0_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "fffd0000.mmc", &mmc1_clk),
+ 	/* fake hclk clock */
+ 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &uhphs_clk),
+ 	CLKDEV_CON_ID("pioA", &pioA_clk),
+diff --git a/arch/arm/mach-at91/at91sam9n12.c b/arch/arm/mach-at91/at91sam9n12.c
+index 0849466..cce4e0f 100644
+--- a/arch/arm/mach-at91/at91sam9n12.c
++++ b/arch/arm/mach-at91/at91sam9n12.c
+@@ -168,6 +168,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("usart", "f8028000.serial", &usart3_clk),
+ 	CLKDEV_CON_DEV_ID("t0_clk", "f8008000.timer", &tcb_clk),
+ 	CLKDEV_CON_DEV_ID("t0_clk", "f800c000.timer", &tcb_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "f0008000.mmc", &mmc_clk),
+ 	CLKDEV_CON_DEV_ID("dma_clk", "ffffec00.dma-controller", &dma_clk),
+ 	CLKDEV_CON_ID("pioA", &pioAB_clk),
+ 	CLKDEV_CON_ID("pioB", &pioAB_clk),
+diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
+index 1b144b4..de86e37 100644
+--- a/arch/arm/mach-at91/at91sam9x5.c
++++ b/arch/arm/mach-at91/at91sam9x5.c
+@@ -231,6 +231,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("t0_clk", "f800c000.timer", &tcb0_clk),
+ 	CLKDEV_CON_DEV_ID("dma_clk", "ffffec00.dma-controller", &dma0_clk),
+ 	CLKDEV_CON_DEV_ID("dma_clk", "ffffee00.dma-controller", &dma1_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "f0008000.mmc", &mmc0_clk),
++	CLKDEV_CON_DEV_ID("mci_clk", "f000c000.mmc", &mmc1_clk),
+ 	CLKDEV_CON_ID("pioA", &pioAB_clk),
+ 	CLKDEV_CON_ID("pioB", &pioAB_clk),
+ 	CLKDEV_CON_ID("pioC", &pioCD_clk),
 -- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+1.7.5.4
+
