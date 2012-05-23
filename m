@@ -1,308 +1,92 @@
-From: <ludovic.desroches@atmel.com>
-Subject: [PATCH v4 3/3] ARM: dts: add nodes for atmel hsmci controllers for atmel platforms
-Date: Wed, 23 May 2012 21:42:45 +0200
-Message-ID: <1337802165-13866-1-git-send-email-ludovic.desroches@atmel.com>
-References: <1337681352-18521-4-git-send-email-ludovic.desroches@atmel.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH RFC v3 3/3] pinctrl: add pinctrl gpio binding support
+Date: Wed, 23 May 2012 14:44:03 -0600
+Message-ID: <4FBD4C13.8080209@wwwdotorg.org>
+References: <1337779362-31259-1-git-send-email-b29396@freescale.com> <1337779362-31259-3-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1337681352-18521-4-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, Ludovic Desroches <ludovic.desroches@atmel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1337779362-31259-3-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
+On 05/23/2012 07:22 AM, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> This patch implements a standard common binding for pinctrl gpio ranges.
+> Each SoC can add gpio ranges through device tree by adding a gpio-maps property
+> under their pinctrl devices node with the format:
+> <&gpio $gpio_offset $pin_offset $npin>.
+> 
+> Then the pinctrl driver can call pinctrl_dt_add_gpio_ranges(pctldev, node)
+> to parse and register the gpio ranges from device tree.
+> 
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
 
-Add nodes for mci controllers.
+This is mostly good. Just a few comments:
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
----
-v4: add new chips and boards
+> +gpio-maps: 4 integers array, each entry in the array represents a gpio
+> +range with the format: <&gpio $gpio_offset $pin_offset $count>
+> +- gpio: phandle pointing at gpio device node
+> +- gpio_offset: integer, the local offset of $gpio
+> +- pin_offset: integer, the pin offset or pin id
+> +- npins: integer, the gpio ranges starting from pin_offset
 
- arch/arm/boot/dts/at91sam9260.dtsi          |    9 +++++++++
- arch/arm/boot/dts/at91sam9263.dtsi          |   18 ++++++++++++++++++
- arch/arm/boot/dts/at91sam9263ek.dts         |   10 ++++++++++
- arch/arm/boot/dts/at91sam9g20ek_2mmc.dts    |   12 ++++++++++++
- arch/arm/boot/dts/at91sam9g20ek_common.dtsi |    9 +++++++++
- arch/arm/boot/dts/at91sam9g25ek.dts         |   18 ++++++++++++++++++
- arch/arm/boot/dts/at91sam9g45.dtsi          |   18 ++++++++++++++++++
- arch/arm/boot/dts/at91sam9m10g45ek.dts      |   19 +++++++++++++++++++
- arch/arm/boot/dts/at91sam9n12.dtsi          |    9 +++++++++
- arch/arm/boot/dts/at91sam9n12ek.dts         |    9 +++++++++
- arch/arm/boot/dts/at91sam9x5.dtsi           |   18 ++++++++++++++++++
- 11 files changed, 149 insertions(+), 0 deletions(-)
+This uses a single cell to represent a GPIO ID within a GPIO controller.
+The standard GPIO bindings use #gpio-cells, where that's a property in
+the GPIO controller's node. I wonder if we shouldn't do the same here,
+and call into the GPIO driver to parse #gpio-cells and give back the
+Linux GPIO ID, just like of_get_named_gpio_flags() does. This would also
+make this code able to cope with the GPIO of_xlate function returning a
+different GPIO chip, which Grant put in place for banked GPIO controllers.
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index f449efc..ae54bf3 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -198,6 +198,15 @@
- 				status = "disabled";
- 			};
- 
-+			mmc0: mmc@fffa8000 {
-+				compatible = "atmel,hsmci";
-+				reg = <0xfffa800 0x600>;
-+				interrupts = <9 4>;
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
- 			adc0: adc@fffe0000 {
- 				compatible = "atmel,at91sam9260-adc";
- 				reg = <0xfffe0000 0x100>;
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 0209913..a327ebe 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -179,6 +179,24 @@
- 				interrupts = <24 4>;
- 				status = "disabled";
- 			};
-+
-+			mmc0: mmc@fff80000 {
-+				compatible = "atmel,hsmci";
-+				reg = <0xfff80000 0x600>;
-+				interrupts = <10 4>;
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			mmc1: mmc@fff84000 {
-+				compatible = "atmel,hsmci";
-+				reg = <0xfff84000 0x600>;
-+				interrupts = <11 4>;
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
-index f86ac4b..05028ed 100644
---- a/arch/arm/boot/dts/at91sam9263ek.dts
-+++ b/arch/arm/boot/dts/at91sam9263ek.dts
-@@ -50,6 +50,16 @@
- 				atmel,vbus-gpio = <&pioA 25 0>;
- 				status = "okay";
- 			};
-+
-+			mmc0: mmc@fff80000 {
-+				status = "okay";
-+				slot@0 {
-+					reg = <0>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioE 18 0>;
-+					wp-gpios = <&pioE 19 0>;
-+				};
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9g20ek_2mmc.dts b/arch/arm/boot/dts/at91sam9g20ek_2mmc.dts
-index f1b2e14..684b229 100644
---- a/arch/arm/boot/dts/at91sam9g20ek_2mmc.dts
-+++ b/arch/arm/boot/dts/at91sam9g20ek_2mmc.dts
-@@ -12,6 +12,18 @@
- 	model = "Atmel at91sam9g20ek 2 mmc";
- 	compatible = "atmel,at91sam9g20ek_2mmc", "atmel,at91sam9g20", "atmel,at91sam9";
- 
-+	ahb {
-+		apb{
-+			mmc0: mmc@fffa8000 {
-+				slot@0 {
-+					reg = <0>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioC 2 0>;
-+				};
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-diff --git a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-index b06c0db..7da326a 100644
---- a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-@@ -51,6 +51,15 @@
- 				atmel,vbus-gpio = <&pioC 5 0>;
- 				status = "okay";
- 			};
-+
-+			mmc0: mmc@fffa8000 {
-+				status = "okay";
-+				slot@1 {
-+					reg = <1>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioC 9 0>;
-+				};
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-index 7829a4d..422a9fb 100644
---- a/arch/arm/boot/dts/at91sam9g25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-@@ -32,6 +32,24 @@
- 				phy-mode = "rmii";
- 				status = "okay";
- 			};
-+
-+			mmc0: mmc@f0008000 {
-+				status = "okay";
-+				slot@0 {
-+					reg = <0>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioD 15 0>;
-+				};
-+			};
-+
-+			mmc1: mmc@f000c000 {
-+				status = "okay";
-+				slot@0 {
-+					reg = <0>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioD 14 0>;
-+				};
-+			};
- 		};
- 
- 		usb0: ohci@00600000 {
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 7dbccaf..0360bf8 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -236,6 +236,24 @@
- 					trigger-value = <0x6>;
- 				};
- 			};
-+
-+			mmc0: mmc@fff80000 {
-+				compatible = "atmel,hsmci";
-+				reg = <0xfff80000 0x600>;
-+				interrupts = <11 4>;
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			mmc1: mmc@fffd0000 {
-+				compatible = "atmel,hsmci";
-+				reg = <0xfffd0000 0x600>;
-+				interrupts = <29 4>;
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index a3633bd..7a7b571 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -46,6 +46,25 @@
- 				phy-mode = "rmii";
- 				status = "okay";
- 			};
-+
-+			mmc0: mmc@fff80000 {
-+				status = "okay";
-+				slot@0 {
-+					reg = <0>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioD 10 0>;
-+				};
-+			};
-+
-+			mmc1: mmc@fffd0000 {
-+				status = "okay";
-+				slot@0 {
-+					reg = <0>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioD 11 0>;
-+					wp-gpios = <&pioD 29 0>;
-+				};
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index cb84de7..f3e03fb 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -82,6 +82,15 @@
- 				reg = <0xfffffe10 0x10>;
- 			};
- 
-+			mmc0: mmc@f0008000 {
-+				compatible = "atmel,hsmci";
-+				reg = <0xf0008000 0x600>;
-+				interrupts = <12 4>;
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
- 			tcb0: timer@f8008000 {
- 				compatible = "atmel,at91sam9x5-tcb";
- 				reg = <0xf8008000 0x100>;
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index f4e43e3..44b42d9 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -37,6 +37,15 @@
- 			dbgu: serial@fffff200 {
- 				status = "okay";
- 			};
-+
-+			mmc0: mmc@f0008000 {
-+				status = "okay";
-+				slot@0 {
-+					reg = <0>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioA 7 0>;
-+				};
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 6b3ef43..4e8125b 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -228,6 +228,24 @@
- 					trigger-value = <0x6>;
- 				};
- 			};
-+
-+			mmc0: mmc@f0008000 {
-+				compatible = "atmel,hsmci";
-+				reg = <0xf0008000 0x600>;
-+				interrupts = <12 4>;
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			mmc1: mmc@f000c000 {
-+				compatible = "atmel,hsmci";
-+				reg = <0xf000c000 0x600>;
-+				interrupts = <26 4>;
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
--- 
-1.7.5.4
+> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
 
+> +int pinctrl_dt_add_gpio_ranges(struct pinctrl_dev *pctldev,
+
+The locking I was talking about before is between the following line:
+
+> +		ranges[i].gc = of_node_to_gpiochip(np_gpio);
+
+and this code:
+
+> +		ranges[i].name = dev_name(pctldev->dev);
+> +		ranges[i].base = ranges[i].gc->base + gpio_offset;
+> +		ranges[i].pin_base = pin_offset;
+> +		ranges[i].npins = npins;
+
+If of_node_to_gpiochip() doesn't mark the GPIO chip as "in use", then
+the module that provides that device could be unloaded between the two
+blocks of code above.
+
+Re: your locking comments in your other email: ranges[i].gc doesn't
+appear to be used anywhere else in pinctrl, so I think it's OK not to
+lock the GPIO chip for any more time than between the above two blocks
+of code.
+
+Finally, just a minor nit:
+
+> +		ranges[i].gc = of_node_to_gpiochip(np_gpio);
+> +		if (!ranges[i].gc) {
+> +			dev_err(pctldev->dev,
+> +				"can not find gpio chip of node(%s)\n",
+> +				np_gpio->name);
+> +			of_node_put(np_gpio);
+> +			return -EPROBE_DEFER;
+> +		}
+> +
+> +		of_node_put(np_gpio);
+
+could be slightly simpler:
+
++		ranges[i].gc = of_node_to_gpiochip(np_gpio);
++		of_node_put(np_gpio); <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
++		if (!ranges[i].gc) {
++			dev_err(pctldev->dev,
++				"can not find gpio chip of node(%s)\n",
++				np_gpio->name);
++			return -EPROBE_DEFER;
++		}
