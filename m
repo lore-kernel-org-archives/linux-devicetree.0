@@ -1,92 +1,52 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH RFC v3 3/3] pinctrl: add pinctrl gpio binding support
-Date: Wed, 23 May 2012 14:44:03 -0600
-Message-ID: <4FBD4C13.8080209@wwwdotorg.org>
-References: <1337779362-31259-1-git-send-email-b29396@freescale.com> <1337779362-31259-3-git-send-email-b29396@freescale.com>
+From: Omar Ramirez Luna <omar.luna@linaro.org>
+Subject: Re: [PATCH 0/2] OMAP: mailbox initial device tree support
+Date: Wed, 23 May 2012 17:03:51 -0500
+Message-ID: <CALLhW=7ENCpodLxf-vaY6EzYRv9uKz_52FDsUbMAaSGNFy4LiQ@mail.gmail.com>
+References: <1335894460-19941-1-git-send-email-omar.luna@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1337779362-31259-3-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1335894460-19941-1-git-send-email-omar.luna@linaro.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Vaibhav Bedia <vaibhav.bedia@ti.com>, Omar Ramirez Luna <omar.luna@linaro.org>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, patches@linaro.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/2012 07:22 AM, Dong Aisheng wrote:
-> From: Dong Aisheng <dong.aisheng@linaro.org>
-> 
-> This patch implements a standard common binding for pinctrl gpio ranges.
-> Each SoC can add gpio ranges through device tree by adding a gpio-maps property
-> under their pinctrl devices node with the format:
-> <&gpio $gpio_offset $pin_offset $npin>.
-> 
-> Then the pinctrl driver can call pinctrl_dt_add_gpio_ranges(pctldev, node)
-> to parse and register the gpio ranges from device tree.
-> 
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+Hi Tony, Benoit,
 
-This is mostly good. Just a few comments:
+On 1 May 2012 12:47, Omar Ramirez Luna <omar.luna@linaro.org> wrote:
+> To allow mailbox driver to function with device tree.
+>
+> Tested in OMAP4 and OMAP3. OMAP2 untested.
+>
+> Omar Ramirez Luna (2):
+> =A0OMAP: mailbox: add device tree support
+> =A0arm/dts: OMAP2+: Add mailbox nodes
+>
+> =A0.../devicetree/bindings/arm/omap/mailbox.txt =A0 =A0 =A0 | =A0 =A0=
+9 +++++++++
+> =A0arch/arm/boot/dts/omap2.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 | =A0 =A05 +++++
+> =A0arch/arm/boot/dts/omap3.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 | =A0 =A05 +++++
+> =A0arch/arm/boot/dts/omap4.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 | =A0 =A05 +++++
+> =A0arch/arm/mach-omap2/devices.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0| =A0 =A03 +++
+> =A0arch/arm/mach-omap2/mailbox.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0| =A0 12 ++++++++++++
+> =A06 files changed, 39 insertions(+), 0 deletions(-)
+> =A0create mode 100644 Documentation/devicetree/bindings/arm/omap/mail=
+box.txt
 
-> +gpio-maps: 4 integers array, each entry in the array represents a gpio
-> +range with the format: <&gpio $gpio_offset $pin_offset $count>
-> +- gpio: phandle pointing at gpio device node
-> +- gpio_offset: integer, the local offset of $gpio
-> +- pin_offset: integer, the pin offset or pin id
-> +- npins: integer, the gpio ranges starting from pin_offset
+Can you share your thoughts for these patches?
 
-This uses a single cell to represent a GPIO ID within a GPIO controller.
-The standard GPIO bindings use #gpio-cells, where that's a property in
-the GPIO controller's node. I wonder if we shouldn't do the same here,
-and call into the GPIO driver to parse #gpio-cells and give back the
-Linux GPIO ID, just like of_get_named_gpio_flags() does. This would also
-make this code able to cope with the GPIO of_xlate function returning a
-different GPIO chip, which Grant put in place for banked GPIO controllers.
+Regards,
 
-> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-
-> +int pinctrl_dt_add_gpio_ranges(struct pinctrl_dev *pctldev,
-
-The locking I was talking about before is between the following line:
-
-> +		ranges[i].gc = of_node_to_gpiochip(np_gpio);
-
-and this code:
-
-> +		ranges[i].name = dev_name(pctldev->dev);
-> +		ranges[i].base = ranges[i].gc->base + gpio_offset;
-> +		ranges[i].pin_base = pin_offset;
-> +		ranges[i].npins = npins;
-
-If of_node_to_gpiochip() doesn't mark the GPIO chip as "in use", then
-the module that provides that device could be unloaded between the two
-blocks of code above.
-
-Re: your locking comments in your other email: ranges[i].gc doesn't
-appear to be used anywhere else in pinctrl, so I think it's OK not to
-lock the GPIO chip for any more time than between the above two blocks
-of code.
-
-Finally, just a minor nit:
-
-> +		ranges[i].gc = of_node_to_gpiochip(np_gpio);
-> +		if (!ranges[i].gc) {
-> +			dev_err(pctldev->dev,
-> +				"can not find gpio chip of node(%s)\n",
-> +				np_gpio->name);
-> +			of_node_put(np_gpio);
-> +			return -EPROBE_DEFER;
-> +		}
-> +
-> +		of_node_put(np_gpio);
-
-could be slightly simpler:
-
-+		ranges[i].gc = of_node_to_gpiochip(np_gpio);
-+		of_node_put(np_gpio); <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-+		if (!ranges[i].gc) {
-+			dev_err(pctldev->dev,
-+				"can not find gpio chip of node(%s)\n",
-+				np_gpio->name);
-+			return -EPROBE_DEFER;
-+		}
+Omar
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
