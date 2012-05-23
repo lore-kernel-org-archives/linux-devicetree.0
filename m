@@ -1,101 +1,225 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] dma: tegra: add dmaengine based dma driver
-Date: Wed, 23 May 2012 12:13:32 +0530
-Message-ID: <4FBC8714.5030808@nvidia.com>
-References: <1336734044-14275-1-git-send-email-ldewangan@nvidia.com> <1336734044-14275-3-git-send-email-ldewangan@nvidia.com> <4FB5657C.1010902@wwwdotorg.org>
+From: <ludovic.desroches@atmel.com>
+Subject: [PATCH v4 1/3] mmc: atmel-mci: add device tree support
+Date: Wed, 23 May 2012 09:23:50 +0200
+Message-ID: <1337757830-19361-1-git-send-email-ludovic.desroches@atmel.com>
+References: <1337681352-18521-2-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FB5657C.1010902-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1337681352-18521-2-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 May 2012 02:24 AM, Stephen Warren wrote:
-> On 05/11/2012 05:00 AM, Laxman Dewangan wrote:
->> Adding dmaengine based NVIDIA's Tegra APB DMA driver.
->> This driver support the slave mode of data transfer from
->> peripheral to memory and vice versa.
->> The driver supports for the cyclic and non-cyclic mode
->> of data transfer.
->> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-I have taken care of all your comments. Few clarification here.
->> +static int tegra_dma_allocate_desc(struct tegra_dma_channel *tdc,
->> +		int ndma_desc, int nsg_req)
-> The queue management here seems a lot more complex than other drivers I
-> briefly looked at, which don't (a) allocate multiple descriptors at once
-> or (b) maintain a pool of free descriptors. I guess if this all works
-> it's fine, but it sure makes it harder for me to understand the driver
-> and review it. I'd personally love to have seen a much simpler driver
-> and then add these optimizations later if they prove worthwhile.
->
-> (As an aside, it seems like if this descriptor management logic is
-> worthwhile, it should be part of the dmaengine core, not individual drivers)
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+---
+ .../devicetree/bindings/mmc/atmel-hsmci.txt        |   67 +++++++++++++++
+ drivers/mmc/host/atmel-mci.c                       |   87 +++++++++++++++++++-
+ 2 files changed, 152 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
 
-This is done by Russel in one of his patch as virt_dma. I will use that 
-later on, not on this series of patch as it is not available now.
+diff --git a/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+new file mode 100644
+index 0000000..81c20cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+@@ -0,0 +1,67 @@
++* Atmel High Speed MultiMedia Card Interface
++
++This controller on atmel products provides an interface for MMC, SD and SDIO
++types of memory cards.
++
++1) MCI node
++
++Required properties:
++- compatible: no blank "atmel,hsmci"
++- reg: should contain HSMCI registers location and length
++- interrupts: should contain HSMCI interrupt number
++- #address-cells: should be one. The cell is the slot id.
++- #size-cells: should be zero.
++- at least one slot node
++
++The node contains child nodes for each slot that the platform uses
++
++Example MCI node:
++
++mmc0: mmc@f0008000 {
++	compatible = "atmel,hsmci";
++	reg = <0xf0008000 0x600>;
++	interrupts = <12 4>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	[ child node definitions...]
++};
++
++2) slot nodes
++
++Required properties:
++- reg: should contain the slot id.
++- bus-width: number of data lines connected to the controller
++
++Optional properties:
++- cd-gpios: specify GPIOs for card detection
++- cd-inverted: invert the value of external card detect gpio line
++- wp-gpios: specify GPIOs for write protection
++
++Example slot node:
++
++slot@0 {
++	reg = <0>;
++	bus-width = <4>;
++	cd-gpios = <&pioD 15 0>
++	cd-inverted;
++};
++
++Example full MCI node:
++mmc0: mmc@f0008000 {
++	compatible = "atmel,hsmci";
++	reg = <0xf0008000 0x600>;
++	interrupts = <12 4>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	slot@0 {
++		reg = <0>;
++		bus-width = <4>;
++		cd-gpios = <&pioD 15 0>
++		cd-inverted;
++	};
++	slot@1 {
++		reg = <1>;
++		bus-width = <4>;
++	};
++};
+diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
+index 556d384..1842dc7 100644
+--- a/drivers/mmc/host/atmel-mci.c
++++ b/drivers/mmc/host/atmel-mci.c
+@@ -19,6 +19,9 @@
+ #include <linux/interrupt.h>
+ #include <linux/ioport.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/scatterlist.h>
+ #include <linux/seq_file.h>
+@@ -493,6 +496,72 @@ err:
+ 	dev_err(&mmc->class_dev, "failed to initialize debugfs for slot\n");
+ }
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id atmci_dt_ids[] = {
++	{ .compatible = "atmel,hsmci" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, atmci_dt_ids);
++
++static struct mci_platform_data __devinit*
++atmci_of_init(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *cnp;
++	struct mci_platform_data *pdata;
++	u32 slot_id;
++	int ret;
++
++	if (!np) {
++		dev_err(&pdev->dev, "device node not found\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata) {
++		dev_err(&pdev->dev, "could not allocate memory for pdata\n");
++		return ERR_PTR(-ENOMEM);
++	}
++
++	for_each_child_of_node(np, cnp) {
++		ret = of_property_read_u32(cnp, "reg", &slot_id);
++		if (ret) {
++			dev_warn(&pdev->dev, "reg property is missing for %s\n",
++				 cnp->full_name);
++			continue;
++		}
++
++		if (slot_id > (ATMCI_MAX_NR_SLOTS-1)) {
++			dev_warn(&pdev->dev, "can't have more than %d slots\n",
++			         ATMCI_MAX_NR_SLOTS);
++			break;
++		}
++
++		if (of_property_read_u32(cnp, "bus-width",
++		                         &pdata->slot[slot_id].bus_width))
++			pdata->slot[slot_id].bus_width = 1;
++
++		pdata->slot[slot_id].detect_pin =
++			of_get_named_gpio(cnp, "cd-gpios", 0);
++
++		pdata->slot[slot_id].detect_is_active_high =
++			of_property_read_bool(cnp, "cd-inverted");
++
++		pdata->slot[slot_id].wp_pin =
++			of_get_named_gpio(cnp, "wp-gpios", 0);
++	}
++
++	return pdata;
++}
++#else /* CONFIG_OF */
++static inline struct mci_platform_data*
++atmci_of_init(struct platform_device *dev)
++{
++	return ERR_PTR(-EINVAL);
++}
++#endif
++
+ static inline unsigned int atmci_get_version(struct atmel_mci *host)
+ {
+ 	return atmci_readl(host, ATMCI_VERSION) & 0x00000fff;
+@@ -2038,6 +2107,13 @@ static int __init atmci_init_slot(struct atmel_mci *host,
+ 	slot->sdc_reg = sdc_reg;
+ 	slot->sdio_irq = sdio_irq;
+ 
++	dev_dbg(&mmc->class_dev,
++	        "slot[%u]: bus_width=%u, detect_pin=%d, "
++		"detect_is_active_high=%s, wp_pin=%d\n",
++		id, slot_data->bus_width, slot_data->detect_pin,
++		slot_data->detect_is_active_high ? "true" : "false",
++		slot_data->wp_pin);
++
+ 	mmc->ops = &atmci_ops;
+ 	mmc->f_min = DIV_ROUND_UP(host->bus_hz, 512);
+ 	mmc->f_max = host->bus_hz / 2;
+@@ -2258,8 +2334,14 @@ static int __init atmci_probe(struct platform_device *pdev)
+ 	if (!regs)
+ 		return -ENXIO;
+ 	pdata = pdev->dev.platform_data;
+-	if (!pdata)
+-		return -ENXIO;
++	if (!pdata) {
++		pdata = atmci_of_init(pdev);
++		if (IS_ERR(pdata)) {
++			dev_err(&pdev->dev, "platform data not available\n");
++			return PTR_ERR(pdata);
++		}
++	}
++
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+ 		return irq;
+@@ -2477,6 +2559,7 @@ static struct platform_driver atmci_driver = {
+ 	.driver		= {
+ 		.name		= "atmel_mci",
+ 		.pm		= ATMCI_PM_OPS,
++		.of_match_table	= of_match_ptr(atmci_dt_ids),
+ 	},
+ };
+ 
+-- 
+1.7.5.4
 
->
-> Given that the tasklet is just running the completion callbacks, is this
-> condition really an error? Can't you just add some more entries onto the
-> tail of the list of callbacks for the tasklet?
->
-Taken care. Using ref count and calling clalback multiple times here. 
-There was discussion on this topic and I went as per suggestion on that 
-topic.
-
-
->> +	/* Pause DMA before checking the queue status */
->> +	tegra_dma_pause(tdc, true);
->> +
->> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->> +	if (status&  STATUS_ISE_EOC) {
->> +		dev_dbg(tdc2dev(tdc), "%s():handling isr\n", __func__);
->> +		tdc->isr_handler(tdc, true);
->> +		status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->> +	}
-> In the termination case, do we really need to run the isr handler?
-> Presumably since the DMA is being aborted, the caller doesn't really
-> care about getting the absolute latest up-to-date information, so the
-> fact that something completed within the last
-> EGRA_APBDMA_BURST_COMPLETE_TIME micro-seconds isn't something it's worth
-> determining?
->
-
-For serial case, we will need this info as on the serial communication, 
-we will use abort most of time. Reson is that we do not know how much 
-data is goign to arrive and so program dma for larger size and based on 
-uart controller interrupt, abort dma and get actual bytes transfered by dma.
->> +	tdma->dma_clk = clk_get(&pdev->dev, NULL);
-> Since this won't be applied until 3.6, I think you can use
-> devm_clk_get() here.
->
-
-Will use on later patch as on Vinod's tree may  not have this change now.
-
->> +static int tegra_dma_suspend_noirq(struct device *dev)
-> Why do we need to implement the _noirq variants for system
-> suspend/resume? In the mainline kernel, the existence of deferred probe
-> most likely means we don't need to use _noirq any more.
->
-
-Removed.
->
-> If so, the above 11 lines can be replaced with:
->
-> module_platform_driver(tegra_dmac_driver);
-Done.
-
-> Overall, I haven't reviewed the driver's interaction with dmaengine too
-> much since I'm not familiar with dmaengine. I think Vinod has been
-> covering those aspects fine. However, I did try to follow the DMA HW
-> programming, and I think it does avoid the problems we were trying to
-> solve in the existing APB DMA driver, perhaps mainly because dmaengine
-> doesn't expose quite as many functions to client code.
->
-> So overall, aside from the comments above, this looks good.
-Thanks for review,
