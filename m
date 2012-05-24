@@ -1,151 +1,279 @@
-From: Dong Aisheng <aisheng.dong@freescale.com>
-Subject: Re: [PATCH RFC v3 3/3] pinctrl: add pinctrl gpio binding support
-Date: Thu, 24 May 2012 13:19:47 +0800
-Message-ID: <20120524051946.GA14953@shlinux2.ap.freescale.net>
-References: <1337779362-31259-1-git-send-email-b29396@freescale.com>
- <1337779362-31259-3-git-send-email-b29396@freescale.com>
- <4FBD4C13.8080209@wwwdotorg.org>
- <CAA+hA=Rb1Qix67QBthPjo_4d5ATWjA7pePembZRwJkPMtQNpjg@mail.gmail.com>
- <4FBDBC2B.3090300@wwwdotorg.org>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v2 2/6] spi: s3c64xx: move controller information into
+ driver data
+Date: Thu, 24 May 2012 16:18:48 +0900
+Message-ID: <005a01cd397d$77f39600$67dac200$%kim@samsung.com>
+References: <1337333613-6216-1-git-send-email-thomas.abraham@linaro.org>
+ <1337333613-6216-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FBDBC2B.3090300@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Dong Aisheng <dongas86@gmail.com>, Dong Aisheng-B29396 <B29396@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1337333613-6216-3-git-send-email-thomas.abraham@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, broonie@opensource.wolfsonmicro.com, 'Kyoungil Kim' <ki0351.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 24, 2012 at 12:42:19PM +0800, Stephen Warren wrote:
-> On 05/23/2012 07:42 PM, Dong Aisheng wrote:
-> > On Thu, May 24, 2012 at 4:44 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> >> On 05/23/2012 07:22 AM, Dong Aisheng wrote:
-> >>> From: Dong Aisheng <dong.aisheng@linaro.org>
-> >>>
-> >>> This patch implements a standard common binding for pinctrl gpio ranges.
-> >>> Each SoC can add gpio ranges through device tree by adding a gpio-maps property
-> >>> under their pinctrl devices node with the format:
-> >>> <&gpio $gpio_offset $pin_offset $npin>.
-> >>>
-> >>> Then the pinctrl driver can call pinctrl_dt_add_gpio_ranges(pctldev, node)
-> >>> to parse and register the gpio ranges from device tree.
-> >>>
-> >>> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> >>
-> >> This is mostly good. Just a few comments:
-> >>
-> >>> +gpio-maps: 4 integers array, each entry in the array represents a gpio
-> >>> +range with the format: <&gpio $gpio_offset $pin_offset $count>
-> >>> +- gpio: phandle pointing at gpio device node
-> >>> +- gpio_offset: integer, the local offset of $gpio
-> >>> +- pin_offset: integer, the pin offset or pin id
-> >>> +- npins: integer, the gpio ranges starting from pin_offset
-> >>
-> >> This uses a single cell to represent a GPIO ID within a GPIO controller.
-> >> The standard GPIO bindings use #gpio-cells, where that's a property in
-> >> the GPIO controller's node. I wonder if we shouldn't do the same here,
-> >> and call into the GPIO driver to parse #gpio-cells and give back the
-> >> Linux GPIO ID, just like of_get_named_gpio_flags() does. This would also
-> >> make this code able to cope with the GPIO of_xlate function returning a
-> >> different GPIO chip, which Grant put in place for banked GPIO controllers.
-> >>
-> > I checked the code, the second cell only represents gpio flag in
-> > of_gpio_simple_xlate which seems meaningless to pinctrl, so it looks
-> > increase overhead to pinctrl gpio ranges map.
+Thomas Abraham wrote:
 > 
-> With the simple translation function, yes it's just flags. However, not
-> all GPIO controllers use the simple translation function; I think I
-> recall the Exynos binding having 4 or 5 cells. In other words, the
-> format is defined by each individual GPIO controller, even if many/most
-> do happen to follow the same format.
+> Platform data is used to specify controller hardware specific information
+> such as the tx/rx fifo level mask and bit offset of rx fifo level. Such
+> information is not suitable to be supplied from device tree. Instead,
+> it can be moved into the driver data and removed from platform data.
 > 
-Correct, it should be SoC dependent.
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> Acked-by: Jaswinder Singh <jaswinder.singh@linaro.org>
+> ---
+>  arch/arm/mach-exynos/clock-exynos4.c             |   18 +-
+>  arch/arm/mach-exynos/setup-spi.c                 |   25 ---
+>  arch/arm/mach-s3c24xx/clock-s3c2416.c            |    2 +-
+>  arch/arm/mach-s3c24xx/clock-s3c2443.c            |    2 +-
+>  arch/arm/mach-s3c24xx/common-s3c2443.c           |    4 +-
+>  arch/arm/mach-s3c24xx/setup-spi.c                |    8 -
+>  arch/arm/mach-s3c64xx/clock.c                    |   20 ++--
+>  arch/arm/mach-s3c64xx/setup-spi.c                |   13 --
+>  arch/arm/mach-s5p64x0/clock-s5p6440.c            |   12 +-
+>  arch/arm/mach-s5p64x0/clock-s5p6450.c            |   12 +-
+>  arch/arm/mach-s5p64x0/setup-spi.c                |   16 --
+>  arch/arm/mach-s5pc100/clock.c                    |   30 ++--
+>  arch/arm/mach-s5pc100/setup-spi.c                |   22 ---
+>  arch/arm/mach-s5pv210/clock.c                    |   14 +-
+>  arch/arm/mach-s5pv210/setup-spi.c                |   15 --
+>  arch/arm/plat-samsung/include/plat/s3c64xx-spi.h |   15 --
+>  drivers/spi/spi-s3c64xx.c                        |  180
+++++++++++++++++++----
+>  17 files changed, 210 insertions(+), 198 deletions(-)
+> 
+Basically, looks ok to me and there are small comments.
 
-> > However, it seems i may have to agree that we need keep align with the
-> > exist of gpio design to use the standard way to get gpio number via
-> > of_xlate function rather than do it privately in pinctrl driver.
-> > 
-> > One disadvantage is that i can not reuse of_get_named_gpio_flags due
-> > to different format
-> > for gpio-maps, i may have to write a slightly different one as
-> > of_get_named_gpio_flags
-> > for gpio-maps.
-> > 
-> >>> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-> >>
-> >>> +int pinctrl_dt_add_gpio_ranges(struct pinctrl_dev *pctldev,
-> >>
-> >> The locking I was talking about before is between the following line:
-> >>
-> >>> +             ranges[i].gc = of_node_to_gpiochip(np_gpio);
-> >>
-> >> and this code:
-> >>
-> >>> +             ranges[i].name = dev_name(pctldev->dev);
-> >>> +             ranges[i].base = ranges[i].gc->base + gpio_offset;
-> >>> +             ranges[i].pin_base = pin_offset;
-> >>> +             ranges[i].npins = npins;
-> >>
-> >> If of_node_to_gpiochip() doesn't mark the GPIO chip as "in use", then
-> >> the module that provides that device could be unloaded between the two
-> >> blocks of code above.
-> >>
-> > Correct.
-> > 
-> >> Re: your locking comments in your other email: ranges[i].gc doesn't
-> >> appear to be used anywhere else in pinctrl, so I think it's OK not to
-> >> lock the GPIO chip for any more time than between the above two blocks
-> >> of code.
-> >>
-> > So i will add lock between them like:
-> > ranges[i].gc = of_node_to_gpiochip(np_gpio);
-> > if (!try_module_get(ranges[i].gc->owner))
-> >     err...
+> diff --git a/arch/arm/mach-exynos/clock-exynos4.c b/arch/arm/mach-
+> exynos/clock-exynos4.c
+> index bcb7db4..10a46a9 100644
+> --- a/arch/arm/mach-exynos/clock-exynos4.c
+> +++ b/arch/arm/mach-exynos/clock-exynos4.c
+> @@ -586,17 +586,17 @@ static struct clk exynos4_init_clocks_off[] = {
+>  		.ctrlbit	= (1 << 13),
+>  	}, {
+>  		.name		= "spi",
+> -		.devname	= "s3c64xx-spi.0",
+> +		.devname	= "exynos4210-spi.0",
+
+Please consider that this can be used only for exynos4210 or all of exynos4
+Socs. We need to keep the consistency for the naming.
+
+[...]
+
+> diff --git a/arch/arm/mach-s3c24xx/clock-s3c2416.c b/arch/arm/mach-
+> s3c24xx/clock-s3c2416.c
+> index 8702ecf..a582ba1 100644
+> --- a/arch/arm/mach-s3c24xx/clock-s3c2416.c
+> +++ b/arch/arm/mach-s3c24xx/clock-s3c2416.c
+> @@ -144,7 +144,7 @@ static struct clk_lookup s3c2416_clk_lookup[] = {
+>  	CLKDEV_INIT("s3c-sdhci.0", "mmc_busclk.0", &hsmmc0_clk),
+>  	CLKDEV_INIT("s3c-sdhci.0", "mmc_busclk.2", &hsmmc_mux0.clk),
+>  	CLKDEV_INIT("s3c-sdhci.1", "mmc_busclk.2", &hsmmc_mux1.clk),
+> -	CLKDEV_INIT("s3c64xx-spi.0", "spi_busclk2", &hsspi_mux.clk),
+> +	CLKDEV_INIT("s3c2443-spi.0", "spi_busclk2", &hsspi_mux.clk),
+
+I think, in this case, some comment helps to know that 's3c2443-spi' can
+support s3c2416/s3c2450 together.
+
+[...]
+
+> diff --git a/arch/arm/mach-s5p64x0/clock-s5p6440.c b/arch/arm/mach-
+> s5p64x0/clock-s5p6440.c
+> index ee1e8e7..55ea3ab 100644
+> --- a/arch/arm/mach-s5p64x0/clock-s5p6440.c
+> +++ b/arch/arm/mach-s5p64x0/clock-s5p6440.c
+
+[...]
+
+> @@ -519,8 +519,8 @@ static struct clk_lookup s5p6440_clk_lookup[] = {
+>  	CLKDEV_INIT(NULL, "clk_uart_baud2", &clk_pclk_low.clk),
+>  	CLKDEV_INIT(NULL, "clk_uart_baud3", &clk_sclk_uclk.clk),
+>  	CLKDEV_INIT(NULL, "spi_busclk0", &clk_p),
+> -	CLKDEV_INIT("s3c64xx-spi.0", "spi_busclk1", &clk_sclk_spi0.clk),
+> -	CLKDEV_INIT("s3c64xx-spi.1", "spi_busclk1", &clk_sclk_spi1.clk),
+> +	CLKDEV_INIT("s5p64x0.0", "spi_busclk1", &clk_sclk_spi0.clk),
+> +	CLKDEV_INIT("s5p64x0.1", "spi_busclk1", &clk_sclk_spi1.clk),
+
+Should be s5p64x0-spi.0 and s5p64x0-spi.1 ?
+
+[...]
+
+> diff --git a/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
+> b/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
+> index fa95e9a..4e9b9c3 100644
+> --- a/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
+> +++ b/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
+
+[...]
+
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index 6a3d51a..f6bc0e3 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -31,6 +31,8 @@
+>  #include <mach/dma.h>
+>  #include <plat/s3c64xx-spi.h>
 > 
-> I think that module_get() needs to happen inside of_node_to_gpiochip(),
-> so that it executes inside any lock that function takes.
-Can you please help explain a bit more?
-I did not quite understand.
-It looks to me of_node_to_gpiochip is only convert the gpio node to gpio chip.
-Why need get the module inside this function?
-For gpio_request function, it also calls try_module_get(gc) after find the gpio
-chip.
+> +#define MAX_SPI_PORTS		3
+
+As you know, if spi_isp is used, this can be 5 for latest SoCs later. Just
+note.
+
+[...]
+
+>  /**
+> + * struct s3c64xx_spi_info - SPI Controller hardware info
+> + * @fifo_lvl_mask: Bit-mask for {TX|RX}_FIFO_LVL bits in SPI_STATUS
+> register.
+> + * @rx_lvl_offset: Bit offset of RX_FIFO_LVL bits in SPI_STATUS regiter.
+> + * @tx_st_done: Bit offset of TX_DONE bit in SPI_STATUS regiter.
+> + * @high_speed: True, if the controller supports HIGH_SPEED_EN bit.
+> + * @clk_from_cmu: True, if the controller does not include a clock mux
+> and
+> + *	prescaler unit.
+> + *
+> + * The Samsung s3c64xx SPI controller are used on various Samsung SoC's
+> but
+> + * differ in some aspects such as the size of the fifo and spi bus clock
+> + * setup. Such differences are specified to the driver using this
+> structure
+> + * which is provided as driver data to the driver.
+> + */
+> +struct s3c64xx_spi_port_config {
+> +	int	fifo_lvl_mask[MAX_SPI_PORTS];
+> +	int	rx_lvl_offset;
+> +	int	tx_st_done;
+> +	bool	high_speed;
+> +	bool	clk_from_cmu;
+> +};
+
+When I saw this, I thought this will be used for each SPI port. But I know,
+above structure is used for each SoC not each SPI port. So I think, how
+about to change the structure name to avoid confusion?
+
+[...]
+
+> @@ -1000,6 +1029,7 @@ static int __init s3c64xx_spi_probe(struct
+> platform_device *pdev)
+>  	platform_set_drvdata(pdev, master);
+> 
+>  	sdd = spi_master_get_devdata(master);
+> +	sdd->port_conf = s3c64xx_spi_get_port_config(pdev);
+>  	sdd->master = master;
+>  	sdd->cntrlr_info = sci;
+>  	sdd->pdev = pdev;
+> @@ -1008,10 +1038,11 @@ static int __init s3c64xx_spi_probe(struct
+> platform_device *pdev)
+>  	sdd->tx_dma.direction = DMA_MEM_TO_DEV;
+>  	sdd->rx_dma.dmach = dmarx_res->start;
+>  	sdd->rx_dma.direction = DMA_DEV_TO_MEM;
+> +	sdd->port_id = pdev->id;
+> 
+>  	sdd->cur_bpw = 8;
+> 
+> -	master->bus_num = pdev->id;
+> +	master->bus_num = sdd->port_id;
+
+[...]
+
+> @@ -1071,7 +1102,7 @@ static int __init s3c64xx_spi_probe(struct
+> platform_device *pdev)
+>  	}
+> 
+>  	/* Setup Deufult Mode */
+> -	s3c64xx_spi_hwinit(sdd, pdev->id);
+> +	s3c64xx_spi_hwinit(sdd, sdd->port_id);
+
+Do we need this change?
 
 > 
-> > ranges[i].name = dev_name(pctldev->dev);
-> > ranges[i].base = ranges[i].gc->base + gpio_offset;
-> > ranges[i].pin_base = pin_offset;
-> > ranges[i].npins = npins;
-> > module_put(ranges[i].gc->owner)
-> > If anything wrong please let me know.
-> > 
-> >> Finally, just a minor nit:
-> >>
-> >>> +             ranges[i].gc = of_node_to_gpiochip(np_gpio);
-> >>> +             if (!ranges[i].gc) {
-> >>> +                     dev_err(pctldev->dev,
-> >>> +                             "can not find gpio chip of node(%s)\n",
-> >>> +                             np_gpio->name);
-> >>> +                     of_node_put(np_gpio);
-> >>> +                     return -EPROBE_DEFER;
-> >>> +             }
-> >>> +
-> >>> +             of_node_put(np_gpio);
-> >>
-> >> could be slightly simpler:
-> >>
-> >> +               ranges[i].gc = of_node_to_gpiochip(np_gpio);
-> >> +               of_node_put(np_gpio); <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-> >> +               if (!ranges[i].gc) {
-> >> +                       dev_err(pctldev->dev,
-> >> +                               "can not find gpio chip of node(%s)\n",
-> >> +                               np_gpio->name);
-> > Because here still uese np_gpio,  Can i still use it after of_node_put?
+>  	spin_lock_init(&sdd->lock);
+>  	init_completion(&sdd->xfer_completion);
+> @@ -1096,7 +1127,7 @@ static int __init s3c64xx_spi_probe(struct
+> platform_device *pdev)
 > 
-> Oh right, that makes sense, yes.
-> 
-I guess you mean no(can not use the node after of_node_put), right?
+>  	dev_dbg(&pdev->dev, "Samsung SoC SPI Driver loaded for Bus SPI-%d "
+>  					"with %d Slaves attached\n",
+> -					pdev->id, master->num_chipselect);
+> +					sdd->port_id,
+master->num_chipselect);
 
-Regards
-Dong Aisheng
+Same as above.
+
+>  	dev_dbg(&pdev->dev, "\tIOmem=[0x%x-0x%x]\tDMA=[Rx-%d, Tx-%d]\n",
+>  					mem_res->end, mem_res->start,
+>  					sdd->rx_dma.dmach,
+sdd->tx_dma.dmach);
+> @@ -1189,7 +1220,7 @@ static int s3c64xx_spi_resume(struct device *dev)
+>  	clk_enable(sdd->src_clk);
+>  	clk_enable(sdd->clk);
+> 
+> -	s3c64xx_spi_hwinit(sdd, pdev->id);
+> +	s3c64xx_spi_hwinit(sdd, sdd->port_id);
+
+Same as above.
+
+[...]
+
+> +#ifdef CONFIG_ARCH_EXYNOS4
+> +struct s3c64xx_spi_port_config exynos4_spi_port_config = {
+
+Is this available on exynos4212/exynos4412? If not, this should be
+'exynos4210_spi_port_config' and ifdef CONFIG_CPU_EXYNOS4210.
+
+> +	.fifo_lvl_mask	= { 0x1ff, 0x7F, 0x7F },
+> +	.rx_lvl_offset	= 15,
+> +	.tx_st_done	= 25,
+> +	.high_speed	= 1,
+> +	.clk_from_cmu	= true,
+> +};
+> +#define EXYNOS4_SPI_PORT_CONFIG
+((kernel_ulong_t)&exynos4_spi_port_config)
+> +#else
+> +#define EXYNOS4_SPI_PORT_CONFIG ((kernel_ulong_t)NULL)
+> +#endif /* CONFIG_ARCH_EXYNOS4 */
+
+And let's think the name of ..._SPI_PORT_CONFIG again. How about just
+..._SPI_CONFIG?
+
+> +
+> +static struct platform_device_id s3c64xx_spi_driver_ids[] = {
+> +	{
+> +		.name		= "s3c2443-spi",
+> +		.driver_data	= S3C2443_SPI_PORT_CONFIG,
+> +	}, {
+> +		.name		= "s3c6410-spi",
+> +		.driver_data	= S3C6410_SPI_PORT_CONFIG,
+> +	}, {
+> +		.name		= "s5p64x0-spi",
+> +		.driver_data	= S5P64X0_SPI_PORT_CONFIG,
+> +	}, {
+> +		.name		= "s5pc100-spi",
+> +		.driver_data	= S5PC100_SPI_PORT_CONFIG,
+> +	}, {
+> +		.name		= "s5pv210-spi",
+> +		.driver_data	= S5PV210_SPI_PORT_CONFIG,
+> +	}, {
+> +		.name		= "exynos4210-spi",
+> +		.driver_data	= EXYNOS4_SPI_PORT_CONFIG,
+
+As I commented, if this is only for exynos4210, EXYNOS4210_SPI_CONFIG should
+be used here not EXYNOS4_SPI_.
+
+[...]
+
+And I think, it's time to change the name of spi driver to spi-samsung.c and
+samsung_spi as a prefix even though we have another s3c24xx spi driver now.
+
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
