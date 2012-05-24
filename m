@@ -1,387 +1,457 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v2 2/6] spi: s3c64xx: move controller information into
- driver data
-Date: Thu, 24 May 2012 14:13:36 +0530
-Message-ID: <CAJuYYwR9GYcKCTLG3JanzQ2UzvqO9UW0Tdnj6p4WoHXb4hG9SA@mail.gmail.com>
-References: <1337333613-6216-1-git-send-email-thomas.abraham@linaro.org>
-	<1337333613-6216-3-git-send-email-thomas.abraham@linaro.org>
-	<005a01cd397d$77f39600$67dac200$%kim@samsung.com>
+From: <b29983@freescale.com>
+Subject: [PATCH 1/2] powerpc/85xx: Add P1024rdb dts support
+Date: Thu, 24 May 2012 17:08:27 +0800
+Message-ID: <1337850508-31827-1-git-send-email-b29983@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <005a01cd397d$77f39600$67dac200$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, broonie@opensource.wolfsonmicro.com, Kyoungil Kim <ki0351.kim@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: galak@kernel.crashing.org
+Cc: Tang Yuantian <Yuantian.Tang@freescale.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 24 May 2012 12:48, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> Thomas Abraham wrote:
->>
->> Platform data is used to specify controller hardware specific inform=
-ation
->> such as the tx/rx fifo level mask and bit offset of rx fifo level. S=
-uch
->> information is not suitable to be supplied from device tree. Instead=
-,
->> it can be moved into the driver data and removed from platform data.
->>
->> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->> Acked-by: Jaswinder Singh <jaswinder.singh@linaro.org>
->> ---
->> =A0arch/arm/mach-exynos/clock-exynos4.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
- 18 +-
->> =A0arch/arm/mach-exynos/setup-spi.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-| =A0 25 ---
->> =A0arch/arm/mach-s3c24xx/clock-s3c2416.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- =A02 +-
->> =A0arch/arm/mach-s3c24xx/clock-s3c2443.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- =A02 +-
->> =A0arch/arm/mach-s3c24xx/common-s3c2443.c =A0 =A0 =A0 =A0 =A0 | =A0 =
-=A04 +-
->> =A0arch/arm/mach-s3c24xx/setup-spi.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A08 -
->> =A0arch/arm/mach-s3c64xx/clock.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 20 ++--
->> =A0arch/arm/mach-s3c64xx/setup-spi.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 13 --
->> =A0arch/arm/mach-s5p64x0/clock-s5p6440.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- 12 +-
->> =A0arch/arm/mach-s5p64x0/clock-s5p6450.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- 12 +-
->> =A0arch/arm/mach-s5p64x0/setup-spi.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 16 --
->> =A0arch/arm/mach-s5pc100/clock.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 30 ++--
->> =A0arch/arm/mach-s5pc100/setup-spi.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 22 ---
->> =A0arch/arm/mach-s5pv210/clock.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 14 +-
->> =A0arch/arm/mach-s5pv210/setup-spi.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 15 --
->> =A0arch/arm/plat-samsung/include/plat/s3c64xx-spi.h | =A0 15 --
->> =A0drivers/spi/spi-s3c64xx.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0| =A0180
-> ++++++++++++++++++----
->> =A017 files changed, 210 insertions(+), 198 deletions(-)
->>
-> Basically, looks ok to me and there are small comments.
->
->> diff --git a/arch/arm/mach-exynos/clock-exynos4.c b/arch/arm/mach-
->> exynos/clock-exynos4.c
->> index bcb7db4..10a46a9 100644
->> --- a/arch/arm/mach-exynos/clock-exynos4.c
->> +++ b/arch/arm/mach-exynos/clock-exynos4.c
->> @@ -586,17 +586,17 @@ static struct clk exynos4_init_clocks_off[] =3D=
- {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .ctrlbit =A0 =A0 =A0 =A0=3D (1 << 13),
->> =A0 =A0 =A0 }, {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =A0 =A0 =A0 =A0 =3D "spi",
->> - =A0 =A0 =A0 =A0 =A0 =A0 .devname =A0 =A0 =A0 =A0=3D "s3c64xx-spi.0=
-",
->> + =A0 =A0 =A0 =A0 =A0 =A0 .devname =A0 =A0 =A0 =A0=3D "exynos4210-sp=
-i.0",
->
-> Please consider that this can be used only for exynos4210 or all of e=
-xynos4
-> Socs. We need to keep the consistency for the naming.
+From: Tang Yuantian <Yuantian.Tang@freescale.com>
 
-It is always easier to assign a specific device name such as
-Exynos4210. Any other SoC in the Exynos4 family which has a exactly
-similar SPI controller(s) as that of Exynos4210 can claim
-compatibility to the Exynos4210 type by using Exynos4210 as the device
-name.
+Signed-off-by: Jin Qing <b24347@freescale.com>
+Signed-off-by: Li Yang <leoli@freescale.com>
+Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
+---
+ arch/powerpc/boot/dts/p1024rdb.dtsi    |  228 ++++++++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/p1024rdb_32b.dts |   87 ++++++++++++
+ arch/powerpc/boot/dts/p1024rdb_36b.dts |   87 ++++++++++++
+ 3 files changed, 402 insertions(+), 0 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/p1024rdb.dtsi
+ create mode 100644 arch/powerpc/boot/dts/p1024rdb_32b.dts
+ create mode 100644 arch/powerpc/boot/dts/p1024rdb_36b.dts
 
-Using generic name like Exynos4 as problems. If any one of the SoC's
-in the Exynos4 family (present or upcoming) uses different properties
-from that of Exynos4210 SPI controller (such as different tx/rx fifo
-size, different bit positions in a register or new functionality),
-then it can no more be classified as a Exynos4 compatible SPI
-controller.
-
->
-> [...]
->
->> diff --git a/arch/arm/mach-s3c24xx/clock-s3c2416.c b/arch/arm/mach-
->> s3c24xx/clock-s3c2416.c
->> index 8702ecf..a582ba1 100644
->> --- a/arch/arm/mach-s3c24xx/clock-s3c2416.c
->> +++ b/arch/arm/mach-s3c24xx/clock-s3c2416.c
->> @@ -144,7 +144,7 @@ static struct clk_lookup s3c2416_clk_lookup[] =3D=
- {
->> =A0 =A0 =A0 CLKDEV_INIT("s3c-sdhci.0", "mmc_busclk.0", &hsmmc0_clk),
->> =A0 =A0 =A0 CLKDEV_INIT("s3c-sdhci.0", "mmc_busclk.2", &hsmmc_mux0.c=
-lk),
->> =A0 =A0 =A0 CLKDEV_INIT("s3c-sdhci.1", "mmc_busclk.2", &hsmmc_mux1.c=
-lk),
->> - =A0 =A0 CLKDEV_INIT("s3c64xx-spi.0", "spi_busclk2", &hsspi_mux.clk=
-),
->> + =A0 =A0 CLKDEV_INIT("s3c2443-spi.0", "spi_busclk2", &hsspi_mux.clk=
-),
->
-> I think, in this case, some comment helps to know that 's3c2443-spi' =
-can
-> support s3c2416/s3c2450 together.
-
-Ok.
-
->
-> [...]
->
->> diff --git a/arch/arm/mach-s5p64x0/clock-s5p6440.c b/arch/arm/mach-
->> s5p64x0/clock-s5p6440.c
->> index ee1e8e7..55ea3ab 100644
->> --- a/arch/arm/mach-s5p64x0/clock-s5p6440.c
->> +++ b/arch/arm/mach-s5p64x0/clock-s5p6440.c
->
-> [...]
->
->> @@ -519,8 +519,8 @@ static struct clk_lookup s5p6440_clk_lookup[] =3D=
- {
->> =A0 =A0 =A0 CLKDEV_INIT(NULL, "clk_uart_baud2", &clk_pclk_low.clk),
->> =A0 =A0 =A0 CLKDEV_INIT(NULL, "clk_uart_baud3", &clk_sclk_uclk.clk),
->> =A0 =A0 =A0 CLKDEV_INIT(NULL, "spi_busclk0", &clk_p),
->> - =A0 =A0 CLKDEV_INIT("s3c64xx-spi.0", "spi_busclk1", &clk_sclk_spi0=
-=2Eclk),
->> - =A0 =A0 CLKDEV_INIT("s3c64xx-spi.1", "spi_busclk1", &clk_sclk_spi1=
-=2Eclk),
->> + =A0 =A0 CLKDEV_INIT("s5p64x0.0", "spi_busclk1", &clk_sclk_spi0.clk=
-),
->> + =A0 =A0 CLKDEV_INIT("s5p64x0.1", "spi_busclk1", &clk_sclk_spi1.clk=
-),
->
-> Should be s5p64x0-spi.0 and s5p64x0-spi.1 ?
-
-Yes, you are right. I will fix this.
-
->
-> [...]
->
->> diff --git a/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
->> b/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
->> index fa95e9a..4e9b9c3 100644
->> --- a/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
->> +++ b/arch/arm/plat-samsung/include/plat/s3c64xx-spi.h
->
-> [...]
->
->> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
->> index 6a3d51a..f6bc0e3 100644
->> --- a/drivers/spi/spi-s3c64xx.c
->> +++ b/drivers/spi/spi-s3c64xx.c
->> @@ -31,6 +31,8 @@
->> =A0#include <mach/dma.h>
->> =A0#include <plat/s3c64xx-spi.h>
->>
->> +#define MAX_SPI_PORTS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A03
->
-> As you know, if spi_isp is used, this can be 5 for latest SoCs later.=
- Just
-> note.
-
-Ok.
-
->
-> [...]
->
->> =A0/**
->> + * struct s3c64xx_spi_info - SPI Controller hardware info
->> + * @fifo_lvl_mask: Bit-mask for {TX|RX}_FIFO_LVL bits in SPI_STATUS
->> register.
->> + * @rx_lvl_offset: Bit offset of RX_FIFO_LVL bits in SPI_STATUS reg=
-iter.
->> + * @tx_st_done: Bit offset of TX_DONE bit in SPI_STATUS regiter.
->> + * @high_speed: True, if the controller supports HIGH_SPEED_EN bit.
->> + * @clk_from_cmu: True, if the controller does not include a clock =
-mux
->> and
->> + * =A0 prescaler unit.
->> + *
->> + * The Samsung s3c64xx SPI controller are used on various Samsung S=
-oC's
->> but
->> + * differ in some aspects such as the size of the fifo and spi bus =
-clock
->> + * setup. Such differences are specified to the driver using this
->> structure
->> + * which is provided as driver data to the driver.
->> + */
->> +struct s3c64xx_spi_port_config {
->> + =A0 =A0 int =A0 =A0 fifo_lvl_mask[MAX_SPI_PORTS];
->> + =A0 =A0 int =A0 =A0 rx_lvl_offset;
->> + =A0 =A0 int =A0 =A0 tx_st_done;
->> + =A0 =A0 bool =A0 =A0high_speed;
->> + =A0 =A0 bool =A0 =A0clk_from_cmu;
->> +};
->
-> When I saw this, I thought this will be used for each SPI port. But I=
- know,
-> above structure is used for each SoC not each SPI port. So I think, h=
-ow
-> about to change the structure name to avoid confusion?
-
-The name of the above structure is following the existing name
-conventions which the driver is using to name its structures.
-
->
-> [...]
->
->> @@ -1000,6 +1029,7 @@ static int __init s3c64xx_spi_probe(struct
->> platform_device *pdev)
->> =A0 =A0 =A0 platform_set_drvdata(pdev, master);
->>
->> =A0 =A0 =A0 sdd =3D spi_master_get_devdata(master);
->> + =A0 =A0 sdd->port_conf =3D s3c64xx_spi_get_port_config(pdev);
->> =A0 =A0 =A0 sdd->master =3D master;
->> =A0 =A0 =A0 sdd->cntrlr_info =3D sci;
->> =A0 =A0 =A0 sdd->pdev =3D pdev;
->> @@ -1008,10 +1038,11 @@ static int __init s3c64xx_spi_probe(struct
->> platform_device *pdev)
->> =A0 =A0 =A0 sdd->tx_dma.direction =3D DMA_MEM_TO_DEV;
->> =A0 =A0 =A0 sdd->rx_dma.dmach =3D dmarx_res->start;
->> =A0 =A0 =A0 sdd->rx_dma.direction =3D DMA_DEV_TO_MEM;
->> + =A0 =A0 sdd->port_id =3D pdev->id;
->>
->> =A0 =A0 =A0 sdd->cur_bpw =3D 8;
->>
->> - =A0 =A0 master->bus_num =3D pdev->id;
->> + =A0 =A0 master->bus_num =3D sdd->port_id;
->
-> [...]
->
->> @@ -1071,7 +1102,7 @@ static int __init s3c64xx_spi_probe(struct
->> platform_device *pdev)
->> =A0 =A0 =A0 }
->>
->> =A0 =A0 =A0 /* Setup Deufult Mode */
->> - =A0 =A0 s3c64xx_spi_hwinit(sdd, pdev->id);
->> + =A0 =A0 s3c64xx_spi_hwinit(sdd, sdd->port_id);
->
-> Do we need this change?
-
-Yes, this change is required. In dt mode, the port_id is obtained from
-the alias node (since pdev->id is not valid).
-
->
->>
->> =A0 =A0 =A0 spin_lock_init(&sdd->lock);
->> =A0 =A0 =A0 init_completion(&sdd->xfer_completion);
->> @@ -1096,7 +1127,7 @@ static int __init s3c64xx_spi_probe(struct
->> platform_device *pdev)
->>
->> =A0 =A0 =A0 dev_dbg(&pdev->dev, "Samsung SoC SPI Driver loaded for B=
-us SPI-%d "
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 "with %d Slaves attached\n",
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 pdev->id, master->num_chipselect);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 sdd->port_id,
-> master->num_chipselect);
->
-> Same as above.
-
-Yes. This is required.
-
->
->> =A0 =A0 =A0 dev_dbg(&pdev->dev, "\tIOmem=3D[0x%x-0x%x]\tDMA=3D[Rx-%d=
-, Tx-%d]\n",
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 mem_res->end, mem_res->start,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 sdd->rx_dma.dmach,
-> sdd->tx_dma.dmach);
->> @@ -1189,7 +1220,7 @@ static int s3c64xx_spi_resume(struct device *d=
-ev)
->> =A0 =A0 =A0 clk_enable(sdd->src_clk);
->> =A0 =A0 =A0 clk_enable(sdd->clk);
->>
->> - =A0 =A0 s3c64xx_spi_hwinit(sdd, pdev->id);
->> + =A0 =A0 s3c64xx_spi_hwinit(sdd, sdd->port_id);
->
-> Same as above.
-
-Yes. This is required.
-
->
-> [...]
->
->> +#ifdef CONFIG_ARCH_EXYNOS4
->> +struct s3c64xx_spi_port_config exynos4_spi_port_config =3D {
->
-> Is this available on exynos4212/exynos4412? If not, this should be
-> 'exynos4210_spi_port_config' and ifdef CONFIG_CPU_EXYNOS4210.
->
->> + =A0 =A0 .fifo_lvl_mask =A0=3D { 0x1ff, 0x7F, 0x7F },
->> + =A0 =A0 .rx_lvl_offset =A0=3D 15,
->> + =A0 =A0 .tx_st_done =A0 =A0 =3D 25,
->> + =A0 =A0 .high_speed =A0 =A0 =3D 1,
->> + =A0 =A0 .clk_from_cmu =A0 =3D true,
->> +};
->> +#define EXYNOS4_SPI_PORT_CONFIG
-> ((kernel_ulong_t)&exynos4_spi_port_config)
->> +#else
->> +#define EXYNOS4_SPI_PORT_CONFIG ((kernel_ulong_t)NULL)
->> +#endif /* CONFIG_ARCH_EXYNOS4 */
->
-> And let's think the name of ..._SPI_PORT_CONFIG again. How about just
-> ..._SPI_CONFIG?
-
-Ok. I will change it.
-
->
->> +
->> +static struct platform_device_id s3c64xx_spi_driver_ids[] =3D {
->> + =A0 =A0 {
->> + =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =A0 =A0 =A0 =A0 =3D "s3c2443-spi=
-",
->> + =A0 =A0 =A0 =A0 =A0 =A0 .driver_data =A0 =A0=3D S3C2443_SPI_PORT_C=
-ONFIG,
->> + =A0 =A0 }, {
->> + =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =A0 =A0 =A0 =A0 =3D "s3c6410-spi=
-",
->> + =A0 =A0 =A0 =A0 =A0 =A0 .driver_data =A0 =A0=3D S3C6410_SPI_PORT_C=
-ONFIG,
->> + =A0 =A0 }, {
->> + =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =A0 =A0 =A0 =A0 =3D "s5p64x0-spi=
-",
->> + =A0 =A0 =A0 =A0 =A0 =A0 .driver_data =A0 =A0=3D S5P64X0_SPI_PORT_C=
-ONFIG,
->> + =A0 =A0 }, {
->> + =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =A0 =A0 =A0 =A0 =3D "s5pc100-spi=
-",
->> + =A0 =A0 =A0 =A0 =A0 =A0 .driver_data =A0 =A0=3D S5PC100_SPI_PORT_C=
-ONFIG,
->> + =A0 =A0 }, {
->> + =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =A0 =A0 =A0 =A0 =3D "s5pv210-spi=
-",
->> + =A0 =A0 =A0 =A0 =A0 =A0 .driver_data =A0 =A0=3D S5PV210_SPI_PORT_C=
-ONFIG,
->> + =A0 =A0 }, {
->> + =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =A0 =A0 =A0 =A0 =3D "exynos4210-=
-spi",
->> + =A0 =A0 =A0 =A0 =A0 =A0 .driver_data =A0 =A0=3D EXYNOS4_SPI_PORT_C=
-ONFIG,
->
-> As I commented, if this is only for exynos4210, EXYNOS4210_SPI_CONFIG=
- should
-> be used here not EXYNOS4_SPI_.
-
-Ok.
-
->
-> [...]
->
-> And I think, it's time to change the name of spi driver to spi-samsun=
-g.c and
-> samsung_spi as a prefix even though we have another s3c24xx spi drive=
-r now.
-
-Ok. It would be better to handle this change outside of this patch
-series. This patch series is mainly about adding device tree support.
-
-Thanks for your review and comments.
-
-Regards,
-Thomas.
+diff --git a/arch/powerpc/boot/dts/p1024rdb.dtsi b/arch/powerpc/boot/dts/p1024rdb.dtsi
+new file mode 100644
+index 0000000..b05dcb4
+--- /dev/null
++++ b/arch/powerpc/boot/dts/p1024rdb.dtsi
+@@ -0,0 +1,228 @@
++/*
++ * P1024 RDB Device Tree Source stub (no addresses or top-level ranges)
++ *
++ * Copyright 2012 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++&lbc {
++	nor@0,0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "cfi-flash";
++		reg = <0x0 0x0 0x1000000>;
++		bank-width = <2>;
++		device-width = <1>;
++
++		partition@0 {
++			/* This location must not be altered  */
++			/* 256KB for Vitesse 7385 Switch firmware */
++			reg = <0x0 0x00040000>;
++			label = "NOR Vitesse-7385 Firmware";
++			read-only;
++		};
++
++		partition@40000 {
++			/* 256KB for DTB Image */
++			reg = <0x00040000 0x00040000>;
++			label = "NOR DTB Image";
++		};
++
++		partition@80000 {
++			/* 3.5 MB for Linux Kernel Image */
++			reg = <0x00080000 0x00380000>;
++			label = "NOR Linux Kernel Image";
++		};
++
++		partition@400000 {
++			/* 11MB for JFFS2 based Root file System */
++			reg = <0x00400000 0x00b00000>;
++			label = "NOR JFFS2 Root File System";
++		};
++
++		partition@f00000 {
++			/* This location must not be altered  */
++			/* 512KB for u-boot Bootloader Image */
++			/* 512KB for u-boot Environment Variables */
++			reg = <0x00f00000 0x00100000>;
++			label = "NOR U-Boot Image";
++			read-only;
++		};
++	};
++
++	nand@1,0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,p1020-fcm-nand",
++				 "fsl,elbc-fcm-nand";
++		reg = <0x1 0x0 0x40000>;
++
++		partition@0 {
++			/* This location must not be altered  */
++			/* 1MB for u-boot Bootloader Image */
++			reg = <0x0 0x00100000>;
++			label = "NAND U-Boot Image";
++			read-only;
++		};
++
++		partition@100000 {
++			/* 1MB for DTB Image */
++			reg = <0x00100000 0x00100000>;
++			label = "NAND DTB Image";
++		};
++
++		partition@200000 {
++			/* 4MB for Linux Kernel Image */
++			reg = <0x00200000 0x00400000>;
++			label = "NAND Linux Kernel Image";
++		};
++
++		partition@600000 {
++			/* 4MB for Compressed Root file System Image */
++			reg = <0x00600000 0x00400000>;
++			label = "NAND Compressed RFS Image";
++		};
++
++		partition@a00000 {
++			/* 15MB for JFFS2 based Root file System */
++			reg = <0x00a00000 0x00f00000>;
++			label = "NAND JFFS2 Root File System";
++		};
++
++		partition@1900000 {
++			/* 7MB for User Writable Area */
++			reg = <0x01900000 0x00700000>;
++			label = "NAND Writable User area";
++		};
++	};
++};
++
++&soc {
++	spi@7000 {
++		flash@0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "spansion,m25p80";
++			reg = <0>;
++			spi-max-frequency = <40000000>;
++
++			partition@0 {
++				/* 512KB for u-boot Bootloader Image */
++				reg = <0x0 0x00080000>;
++				label = "SPI U-Boot Image";
++				read-only;
++			};
++
++			partition@80000 {
++				/* 512KB for DTB Image */
++				reg = <0x00080000 0x00080000>;
++				label = "SPI DTB Image";
++			};
++
++			partition@100000 {
++				/* 4MB for Linux Kernel Image */
++				reg = <0x00100000 0x00400000>;
++				label = "SPI Linux Kernel Image";
++			};
++
++			partition@500000 {
++				/* 4MB for Compressed RFS Image */
++				reg = <0x00500000 0x00400000>;
++				label = "SPI Compressed RFS Image";
++			};
++
++			partition@900000 {
++				/* 7MB for JFFS2 based RFS */
++				reg = <0x00900000 0x00700000>;
++				label = "SPI JFFS2 RFS";
++			};
++		};
++	};
++
++	i2c@3000 {
++		rtc@68 {
++			compatible = "dallas,ds1339";
++			reg = <0x68>;
++		};
++	};
++
++	usb@22000 {
++		phy_type = "ulpi";
++	};
++
++	usb@23000 {
++		status = "disabled";
++	};
++
++	mdio@24000 {
++		phy0: ethernet-phy@0 {
++			interrupts = <3 1 0 0>;
++			reg = <0x0>;
++		};
++		phy1: ethernet-phy@1 {
++			interrupts = <2 1 0 0>;
++			reg = <0x1>;
++		};
++		phy2: ethernet-phy@2 {
++			interrupts = <1 1 0 0>;
++			reg = <0x2>;
++		};
++	};
++
++	mdio@25000 {
++		tbi0: tbi-phy@11 {
++			reg = <0x11>;
++			device_type = "tbi-phy";
++		};
++	};
++
++	mdio@26000 {
++		tbi1: tbi-phy@11 {
++			reg = <0x11>;
++			device_type = "tbi-phy";
++		};
++	};
++
++	ethernet@b0000 {
++		phy-handle = <&phy2>;
++		phy-connection-type = "rgmii-id";
++	};
++
++	ethernet@b1000 {
++		phy-handle = <&phy0>;
++		tbi-handle = <&tbi0>;
++		phy-connection-type = "sgmii";
++	};
++
++	ethernet@b2000 {
++		phy-handle = <&phy1>;
++		phy-connection-type = "rgmii-id";
++	};
++};
+diff --git a/arch/powerpc/boot/dts/p1024rdb_32b.dts b/arch/powerpc/boot/dts/p1024rdb_32b.dts
+new file mode 100644
+index 0000000..90e803e
+--- /dev/null
++++ b/arch/powerpc/boot/dts/p1024rdb_32b.dts
+@@ -0,0 +1,87 @@
++/*
++ * P1024 RDB 32Bit Physical Address Map Device Tree Source
++ *
++ * Copyright 2012 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/include/ "fsl/p1020si-pre.dtsi"
++/ {
++	model = "fsl,P1024RDB";
++	compatible = "fsl,P1024RDB";
++
++	memory {
++		device_type = "memory";
++	};
++
++	lbc: localbus@ffe05000 {
++		reg = <0x0 0xffe05000 0 0x1000>;
++		ranges = <0x0 0x0 0x0 0xef000000 0x01000000
++			  0x1 0x0 0x0 0xff800000 0x00040000>;
++	};
++
++	soc: soc@ffe00000 {
++		ranges = <0x0 0x0 0xffe00000 0x100000>;
++	};
++
++	pci0: pcie@ffe09000 {
++		reg = <0x0 0xffe09000 0 0x1000>;
++		ranges = <0x2000000 0x0 0xe0000000 0x0 0xa0000000 0x0 0x20000000
++			  0x1000000 0x0 0x00000000 0x0 0xffc10000 0x0 0x10000>;
++		pcie@0 {
++			ranges = <0x2000000 0x0 0xe0000000
++				  0x2000000 0x0 0xe0000000
++				  0x0 0x20000000
++
++				  0x1000000 0x0 0x0
++				  0x1000000 0x0 0x0
++				  0x0 0x100000>;
++		};
++	};
++
++	pci1: pcie@ffe0a000 {
++		reg = <0x0 0xffe0a000 0 0x1000>;
++		ranges = <0x2000000 0x0 0xe0000000 0x0 0x80000000 0x0 0x20000000
++			  0x1000000 0x0 0x00000000 0x0 0xffc00000 0x0 0x10000>;
++		pcie@0 {
++			reg = <0x0 0x0 0x0 0x0 0x0>;
++			ranges = <0x2000000 0x0 0xe0000000
++				  0x2000000 0x0 0xe0000000
++				  0x0 0x20000000
++
++				  0x1000000 0x0 0x0
++				  0x1000000 0x0 0x0
++				  0x0 0x100000>;
++		};
++	};
++};
++
++/include/ "p1024rdb.dtsi"
++/include/ "fsl/p1020si-post.dtsi"
+diff --git a/arch/powerpc/boot/dts/p1024rdb_36b.dts b/arch/powerpc/boot/dts/p1024rdb_36b.dts
+new file mode 100644
+index 0000000..3656825
+--- /dev/null
++++ b/arch/powerpc/boot/dts/p1024rdb_36b.dts
+@@ -0,0 +1,87 @@
++/*
++ * P1024 RDB 36Bit Physical Address Map Device Tree Source
++ *
++ * Copyright 2012 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/include/ "fsl/p1020si-pre.dtsi"
++/ {
++	model = "fsl,P1024RDB";
++	compatible = "fsl,P1024RDB";
++
++	memory {
++		device_type = "memory";
++	};
++
++	lbc: localbus@fffe05000 {
++		reg = <0xf 0xffe05000 0 0x1000>;
++		ranges = <0x0 0x0 0xf 0xef000000 0x01000000
++			  0x1 0x0 0xf 0xff800000 0x00040000>;
++	};
++
++	soc: soc@fffe00000 {
++		ranges = <0x0 0xf 0xffe00000 0x100000>;
++	};
++
++	pci0: pcie@fffe09000 {
++		reg = <0xf 0xffe09000 0 0x1000>;
++		ranges = <0x2000000 0x0 0xe0000000 0xc 0x20000000 0x0 0x20000000
++			  0x1000000 0x0 0x00000000 0xf 0xffc10000 0x0 0x10000>;
++		pcie@0 {
++			ranges = <0x2000000 0x0 0xe0000000
++				  0x2000000 0x0 0xe0000000
++				  0x0 0x20000000
++
++				  0x1000000 0x0 0x0
++				  0x1000000 0x0 0x0
++				  0x0 0x100000>;
++		};
++	};
++
++	pci1: pcie@fffe0a000 {
++		reg = <0xf 0xffe0a000 0 0x1000>;
++		ranges = <0x2000000 0x0 0xe0000000 0xc 0x00000000 0x0 0x20000000
++			  0x1000000 0x0 0x00000000 0xf 0xffc00000 0x0 0x10000>;
++		pcie@0 {
++			reg = <0x0 0x0 0x0 0x0 0x0>;
++			ranges = <0x2000000 0x0 0xe0000000
++				  0x2000000 0x0 0xe0000000
++				  0x0 0x20000000
++
++				  0x1000000 0x0 0x0
++				  0x1000000 0x0 0x0
++				  0x0 0x100000>;
++		};
++	};
++};
++
++/include/ "p1024rdb.dtsi"
++/include/ "fsl/p1020si-post.dtsi"
+-- 
+1.6.4
