@@ -1,77 +1,58 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 2/2] arm/dts: OMAP2+: Add mailbox nodes
-Date: Thu, 24 May 2012 17:47:30 +0200
-Message-ID: <4FBE5812.8020806@ti.com>
-References: <1335894460-19941-1-git-send-email-omar.luna@linaro.org> <1335894460-19941-3-git-send-email-omar.luna@linaro.org>
+From: Timur Tabi <b04825@freescale.com>
+Subject: Re: [PATCH v6 0/3] netdev/of/phy: MDIO bus multiplexer support.
+Date: Thu, 24 May 2012 13:28:40 -0500
+Message-ID: <4FBE7DD8.509@freescale.com>
+References: <1336007799-31016-1-git-send-email-ddaney.cavm@gmail.com> <CAOZdJXWVCu+aNxcQRkcSSDsWWxnn8B9X5Y6=8oVgFwJ9SZTTGQ@mail.gmail.com> <4FB6C728.3090507@gmail.com> <4FB6C886.3050105@freescale.com> <4FB6CBF1.40300@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1335894460-19941-3-git-send-email-omar.luna@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Omar Ramirez Luna <omar.luna@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, patches@linaro.org, linaro-dev@lists.linaro.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4FB6CBF1.40300@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/1/2012 7:47 PM, Omar Ramirez Luna wrote:
-> Add nodes for mailbox DT, to interface with hwmods.
->
-> Signed-off-by: Omar Ramirez Luna<omar.luna@linaro.org>
+David Daney wrote:
+> Yes.  You may note in the DTS file I attached in the parent (sorry for 
+> the fubar mime types), that there are two, almost identical, MDIO 
+> masters.  smi0 has two directly attached PHYs.  smi1 goes to the mux, 
+> and each child of the mux has four attached PHYs.
 
-Acked-by: Benoit Cousson <b-cousson@ti.com>
+I'm till have trouble understanding all this.  I'm just hacking things up
+in order to help me understand it, but it's a slow and painful process.
 
-> ---
->   arch/arm/boot/dts/omap2.dtsi |    5 +++++
->   arch/arm/boot/dts/omap3.dtsi |    5 +++++
->   arch/arm/boot/dts/omap4.dtsi |    5 +++++
->   3 files changed, 15 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
-> index f2ab4ea..2175cc3 100644
-> --- a/arch/arm/boot/dts/omap2.dtsi
-> +++ b/arch/arm/boot/dts/omap2.dtsi
-> @@ -46,6 +46,11 @@
->   			#interrupt-cells =<1>;
->   		};
->
-> +		mailbox: mailbox@48094000 {
-> +			compatible = "ti,omap2-mailbox";
-> +			ti,hwmods = "mailbox";
-> +		};
-> +
->   		uart1: serial@4806a000 {
->   			compatible = "ti,omap2-uart";
->   			ti,hwmods = "uart1";
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index c612135..540f6d6 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -69,6 +69,11 @@
->   			reg =<0x48200000 0x1000>;
->   		};
->
-> +		mailbox: mailbox@48094000 {
-> +			compatible = "ti,omap3-mailbox";
-> +			ti,hwmods = "mailbox";
-> +		};
-> +
->   		uart1: serial@4806a000 {
->   			compatible = "ti,omap3-uart";
->   			ti,hwmods = "uart1";
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index 3d35559..84f27dd 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -104,6 +104,11 @@
->   			<0x48240100 0x0100>;
->   		};
->
-> +		mailbox: mailbox@4a0f4000 {
-> +			compatible = "ti,omap4-mailbox";
-> +			ti,hwmods = "mailbox";
-> +		};
-> +
->   		uart1: serial@4806a000 {
->   			compatible = "ti,omap4-uart";
->   			ti,hwmods = "uart1";
+This call in mdio_mux_init() is failing:
 
+	parent_bus = of_mdio_find_bus(parent_bus_node);
+
+It returns NULL.  Here is my MDIO node:
+
+		fman0: fman@400000 {
+			enet0: ethernet@e0000 {
+				tbi-handle = <&tbi0>;
+				phy-handle = <&phy0>;
+				phy-connection-type = "sgmii";
+			};
+
+			mdio0: mdio@e1120 {
+				gpios = <&gpio0 0 0
+					 &gpio0 1 0>;
+
+				tbi0: tbi-phy@8 {
+					reg = <0x8>;
+					device_type = "tbi-phy";
+				};
+
+				phy0: ethernet-phy@1c {
+					reg = <0x1c>;
+				};
+			};
+		};
+
+What am I missing?  What do I need to do in order to get
+of_mdio_find_bus() to return a real value?
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
