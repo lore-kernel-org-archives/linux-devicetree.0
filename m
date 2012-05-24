@@ -1,50 +1,62 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] netdev/of/phy: MDIO bus multiplexer support.
-Date: Thu, 24 May 2012 12:19:53 -0700
-Message-ID: <4FBE89D9.2090307@gmail.com>
-References: <1336007799-31016-1-git-send-email-ddaney.cavm@gmail.com>
- <CAOZdJXWVCu+aNxcQRkcSSDsWWxnn8B9X5Y6=8oVgFwJ9SZTTGQ@mail.gmail.com>
- <4FB6C728.3090507@gmail.com> <4FB6C886.3050105@freescale.com>
- <4FB6CBF1.40300@gmail.com> <4FBE7DD8.509@freescale.com>
- <4FBE82F2.6080100@gmail.com> <4FBE8605.2020507@freescale.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [GIT PULL] devicetree changes for v3.5 merge window
+Date: Thu, 24 May 2012 14:02:44 -0600
+Message-ID: <CACxGe6sTLbNoVN79iayrZ24oaHHnS4jdiOwFVVXWNdeFdp87MA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FBE8605.2020507-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <b04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/24/2012 12:03 PM, Timur Tabi wrote:
-> David Daney wrote:
->
->> Well, the MDIO bus must have an associated device tree node.
->>
->> For my OCTEON code, the MDIO bus device is created as a result of the
->> call to of_platform_bus_probe(), which takes care of filling in all the
->> device tree nodes of the devices it finds and creates.
->
-> Ok, let me give you some background.  We actually already have MDIO muxing
-> code in-house, but it's different from yours.  So now I'm rewriting it to
-> use your design instead.
->
-> So our current code looks for "virtual MDIO nodes", and we call
-> mdiobus_alloc() and then of_mdiobus_register().  I think this is what I'm
-> missing now.
->
-> I just don't know what to do next.
+Hi Linus,
 
-You will have to debug it and find out why the device match is failing, 
-then fix it.
+Description below, please pull.
+g.
 
-David Daney
+The following changes since commit 36be50515fe2aef61533b516fa2576a2c7fe7664:
+
+  Linux 3.4-rc7 (2012-05-12 18:37:47 -0700)
+
+are available in the git repository at:
+
+  git://git.secretlab.ca/git/linux-2.6 tags/devicetree-for-linus
+
+for you to fetch changes up to 8d6c1efa51236bb781f202aa13b9f4ba654978c6:
+
+  Merge branch 'devicetree/merge' into devicetree/next (2012-05-20
+20:18:37 -0600)
+
+----------------------------------------------------------------
+
+Device tree changes for v3.5 merge window
+
+Mostly documentation updates, but also includes an empty stub for
+non-CONFIG_OF builds.
+
+----------------------------------------------------------------
+Grant Likely (1):
+      Merge branch 'devicetree/merge' into devicetree/next
+
+Marc Zyngier (1):
+      ARM: DT: Add binding for GIC virtualization extentions (VGIC)
+
+Roland Stigge (1):
+      dt/documentation: Fix value format description
+
+Stephen Warren (1):
+      dt: add vendor prefix for EM Microelectronics
+
+Thomas Abraham (1):
+      of/irq: add empty irq_of_parse_and_map() for non-dt builds
+
+ Documentation/devicetree/bindings/arm/gic.txt      |   35 ++++++++++++-
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ Documentation/devicetree/booting-without-of.txt    |   55 ++++++++++----------
+ include/linux/of_irq.h                             |   12 ++++-
+ 4 files changed, 72 insertions(+), 31 deletions(-)
+
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
