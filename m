@@ -1,37 +1,39 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v4 2/3] ARM: at91: add clocks for DT entries
-Date: Thu, 24 May 2012 11:43:47 +0200
-Message-ID: <20120524094347.GI3377@game.jcrosoft.org>
-References: <1337681352-18521-3-git-send-email-ludovic.desroches@atmel.com>
- <1337801931-13823-1-git-send-email-ludovic.desroches@atmel.com>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH v4 1/3] mmc: atmel-mci: add device tree support
+Date: Thu, 24 May 2012 10:40:07 -0400
+Message-ID: <878vghfxrs.fsf@laptop.org>
+References: <1337681352-18521-2-git-send-email-ludovic.desroches@atmel.com>
+	<1337757830-19361-1-git-send-email-ludovic.desroches@atmel.com>
+	<20120524094304.GH3377@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1337801931-13823-1-git-send-email-ludovic.desroches@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ludovic.desroches@atmel.com
-Cc: nicolas.ferre@atmel.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20120524094304.GH3377@game.jcrosoft.org> (Jean-Christophe
+	PLAGNIOL-VILLARD's message of "Thu, 24 May 2012 11:43:04 +0200")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: ludovic.desroches@atmel.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@atmel.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 21:38 Wed 23 May     , ludovic.desroches@atmel.com wrote:
-> From: Ludovic Desroches <ludovic.desroches@atmel.com>
-> 
-> Add clocks to clock lookup table for DT entries.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Hi,
 
-please next time send it as a new thread
+On Thu, May 24 2012, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>> +
+>> +		pdata->slot[slot_id].detect_is_active_high =
+>> +			of_property_read_bool(cnp, "cd-inverted");
+> 
+> I really this this is redondant with gpio binding
+>
+> Chris??
 
-Best Regards,
-J.
+Hm, I think go ahead and add it for now -- I agree it's redundant, but
+we should go through and remove the redundancy from all drivers (and the
+binding document, which is in 3.5-rc1 now) at once later.  Since it's in
+the bindings doc, best to implement it until that changes.
+
+Thanks,
+
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
