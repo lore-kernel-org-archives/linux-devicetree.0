@@ -1,90 +1,178 @@
-From: <b29983@freescale.com>
-Subject: [PATCH 2/2] powerpc/85xx: Add P1024rdb board support
-Date: Thu, 24 May 2012 17:08:28 +0800
-Message-ID: <1337850508-31827-2-git-send-email-b29983@freescale.com>
-References: <1337850508-31827-1-git-send-email-b29983@freescale.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v4 1/3] mmc: atmel-mci: add device tree support
+Date: Thu, 24 May 2012 11:43:04 +0200
+Message-ID: <20120524094304.GH3377@game.jcrosoft.org>
+References: <1337681352-18521-2-git-send-email-ludovic.desroches@atmel.com>
+ <1337757830-19361-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1337850508-31827-1-git-send-email-b29983@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: galak@kernel.crashing.org
-Cc: Tang Yuantian <Yuantian.Tang@freescale.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1337757830-19361-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: ludovic.desroches@atmel.com
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@atmel.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <Yuantian.Tang@freescale.com>
+On 09:23 Wed 23 May     , ludovic.desroches@atmel.com wrote:
+> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> ---
+>  .../devicetree/bindings/mmc/atmel-hsmci.txt        |   67 +++++++++++++++
+>  drivers/mmc/host/atmel-mci.c                       |   87 +++++++++++++++++++-
+>  2 files changed, 152 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> new file mode 100644
+> index 0000000..81c20cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> @@ -0,0 +1,67 @@
+> +* Atmel High Speed MultiMedia Card Interface
+> +
+> +This controller on atmel products provides an interface for MMC, SD and SDIO
+> +types of memory cards.
+> +
+> +1) MCI node
+> +
+> +Required properties:
+> +- compatible: no blank "atmel,hsmci"
+> +- reg: should contain HSMCI registers location and length
+> +- interrupts: should contain HSMCI interrupt number
+> +- #address-cells: should be one. The cell is the slot id.
+> +- #size-cells: should be zero.
+> +- at least one slot node
+> +
+> +The node contains child nodes for each slot that the platform uses
+> +
+> +Example MCI node:
+> +
+> +mmc0: mmc@f0008000 {
+> +	compatible = "atmel,hsmci";
+> +	reg = <0xf0008000 0x600>;
+> +	interrupts = <12 4>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	[ child node definitions...]
+> +};
+> +
+> +2) slot nodes
+> +
+> +Required properties:
+> +- reg: should contain the slot id.
+> +- bus-width: number of data lines connected to the controller
+> +
+> +Optional properties:
+> +- cd-gpios: specify GPIOs for card detection
+> +- cd-inverted: invert the value of external card detect gpio line
+> +- wp-gpios: specify GPIOs for write protection
+> +
+> +Example slot node:
+> +
+> +slot@0 {
+> +	reg = <0>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pioD 15 0>
+> +	cd-inverted;
+> +};
+> +
+> +Example full MCI node:
+> +mmc0: mmc@f0008000 {
+> +	compatible = "atmel,hsmci";
+> +	reg = <0xf0008000 0x600>;
+> +	interrupts = <12 4>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	slot@0 {
+> +		reg = <0>;
+> +		bus-width = <4>;
+> +		cd-gpios = <&pioD 15 0>
+> +		cd-inverted;
+> +	};
+> +	slot@1 {
+> +		reg = <1>;
+> +		bus-width = <4>;
+> +	};
+> +};
+> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
+> index 556d384..1842dc7 100644
+> --- a/drivers/mmc/host/atmel-mci.c
+> +++ b/drivers/mmc/host/atmel-mci.c
+> @@ -19,6 +19,9 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/ioport.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/seq_file.h>
+> @@ -493,6 +496,72 @@ err:
+>  	dev_err(&mmc->class_dev, "failed to initialize debugfs for slot\n");
+>  }
+>  
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id atmci_dt_ids[] = {
+> +	{ .compatible = "atmel,hsmci" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, atmci_dt_ids);
+> +
+> +static struct mci_platform_data __devinit*
+> +atmci_of_init(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *cnp;
+> +	struct mci_platform_data *pdata;
+> +	u32 slot_id;
+> +	int ret;
+> +
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "device node not found\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata) {
+> +		dev_err(&pdev->dev, "could not allocate memory for pdata\n");
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	for_each_child_of_node(np, cnp) {
+> +		ret = of_property_read_u32(cnp, "reg", &slot_id);
+> +		if (ret) {
+really need ret = ?
+> +			dev_warn(&pdev->dev, "reg property is missing for %s\n",
+> +				 cnp->full_name);
+> +			continue;
+> +		}
+> +
+> +		if (slot_id > (ATMCI_MAX_NR_SLOTS-1)) {
+missing spase arround '-'
+if (slot_id >= ATMCI_MAX_NR_SLOTS)
+will do the same
+> +			dev_warn(&pdev->dev, "can't have more than %d slots\n",
+> +			         ATMCI_MAX_NR_SLOTS);
+> +			break;
+> +		}
+> +
+> +		if (of_property_read_u32(cnp, "bus-width",
+> +		                         &pdata->slot[slot_id].bus_width))
+> +			pdata->slot[slot_id].bus_width = 1;
+> +
+> +		pdata->slot[slot_id].detect_pin =
+> +			of_get_named_gpio(cnp, "cd-gpios", 0);
+> +
+> +		pdata->slot[slot_id].detect_is_active_high =
+> +			of_property_read_bool(cnp, "cd-inverted");
+I really this this is redondant with gpio binding
 
-The p1024rdb has the similar feature as the p1020rdb. Therefore, p1024rdb use
-the same platform file as the p1/p2 rdb board.
-Overview of P2020RDB platform
-	- DDR3 1G
-	- NOR flash 16M
-	- 3 Ethernet interfaces
-	- NAND Flash 32M
-	- SPI EEPROM 16M
-	- SD/MMC
-	- 2 USB ports
-	- 4 TDM ports
+Chris??
 
-Signed-off-by: Jin Qing <b24347@freescale.com>
-Signed-off-by: Li Yang <leoli@freescale.com>
-Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
----
- arch/powerpc/platforms/85xx/mpc85xx_rdb.c |   22 ++++++++++++++++++++++
- 1 files changed, 22 insertions(+), 0 deletions(-)
-
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-index 313fce4..1910fdc 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-@@ -169,6 +169,7 @@ machine_device_initcall(p1020_rdb_pc, mpc85xx_common_publish_devices);
- machine_device_initcall(p1020_utm_pc, mpc85xx_common_publish_devices);
- machine_device_initcall(p1021_rdb_pc, mpc85xx_common_publish_devices);
- machine_device_initcall(p1025_rdb, mpc85xx_common_publish_devices);
-+machine_device_initcall(p1024_rdb, mpc85xx_common_publish_devices);
- 
- /*
-  * Called very early, device-tree isn't unflattened
-@@ -237,6 +238,13 @@ static int __init p1020_utm_pc_probe(void)
- 	return of_flat_dt_is_compatible(root, "fsl,P1020UTM-PC");
- }
- 
-+static int __init p1024_rdb_probe(void)
-+{
-+	unsigned long root = of_get_flat_dt_root();
-+
-+	return of_flat_dt_is_compatible(root, "fsl,P1024RDB");
-+}
-+
- define_machine(p2020_rdb) {
- 	.name			= "P2020 RDB",
- 	.probe			= p2020_rdb_probe,
-@@ -348,3 +356,17 @@ define_machine(p1020_rdb_pc) {
- 	.calibrate_decr		= generic_calibrate_decr,
- 	.progress		= udbg_progress,
- };
-+
-+define_machine(p1024_rdb) {
-+	.name			= "P1024 RDB",
-+	.probe			= p1024_rdb_probe,
-+	.setup_arch		= mpc85xx_rdb_setup_arch,
-+	.init_IRQ		= mpc85xx_rdb_pic_init,
-+#ifdef CONFIG_PCI
-+	.pcibios_fixup_bus	= fsl_pcibios_fixup_bus,
-+#endif
-+	.get_irq		= mpic_get_irq,
-+	.restart		= fsl_rstcr_restart,
-+	.calibrate_decr		= generic_calibrate_decr,
-+	.progress		= udbg_progress,
-+};
--- 
-1.6.4
+BestRegards,
+J.
