@@ -1,29 +1,111 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v4 5/6] of: add of_parse_phandle_with_args_ext function
-Date: Fri, 25 May 2012 10:50:43 -0600
-Message-ID: <4FBFB863.7060601@wwwdotorg.org>
-References: <1337952980-14621-1-git-send-email-b29396@freescale.com> <1337952980-14621-5-git-send-email-b29396@freescale.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4 6/6] pinctrl: add pinctrl gpio binding support
+Date: Fri, 25 May 2012 11:03:48 -0600
+Message-ID: <4FBFBB74.901@wwwdotorg.org>
+References: <1337952980-14621-1-git-send-email-b29396@freescale.com>
+ <1337952980-14621-6-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1337952980-14621-5-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1337952980-14621-6-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 05/25/2012 07:36 AM, Dong Aisheng wrote:
-> From: Dong Aisheng <dong.aisheng@linaro.org>
+> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> The api is used when user wants to get some more extended args except ones
-> indicated by the cells_name.
-> For example, gpio cells is 2.
-> list = <&gpio 1 2 3 4>;
+> This patch implements a standard common binding for pinctrl gpio ranges.
+> Each SoC can add gpio ranges through device tree by adding a gpio-maps property
+> under their pinctrl devices node with the format:
+> <&gpio $gpio-specifier $pin_offset $count>
+> while the gpio phandle and gpio-specifier are the standard approach
+> to represent a gpio in device tree.
+> Then we can cooperate it with the gpio xlate function to get the gpio number
+> from device tree to set up the gpio ranges map.
+> 
+> Then the pinctrl driver can call pinctrl_dt_add_gpio_ranges(pctldev, node)
+> to parse and register the gpio ranges from device tree.
+> 
+> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> Personally i'm not very satisfied with current solution due to a few reasons:
+> 1) i can not user standard gpio api to get gpio number
+> 2) i need to reinvent a new api of_parse_phandles_with_args_ext which i'm not
+> sure if it can be accepted by DT maintainer.
+> If i did not invent that API, i need to rewrite a lot of duplicated code
+> with slight differences with the exist functions like of_get_named_gpio_flags
+> and of_parse_phandle_with_args for the special pinctrl gpio maps format.
+> 
+> So i just sent it out first to see people's comment and if any better solution.
+> 
+> One alternative solution is that that the gpio-maps into two parts:
+> pinctrl-gpios = <&gpio_phandle gpio-specifier ..>
+> pinctrl-gpio-maps = <pin_id count ..>
+> Then we can reuse the standard gpio api altough it's not better than the
+> original one.
 
-I assume either that property should be named "gpios", or ...
+The problem I see with that is that it splits what is essentially a
+single array with phandle+specifier+pin-id+count into two separate
+arrays. Anyone reading/editing the DT needs to fully understand this,
+and keep the entries in the two properties in the same order. Putting
+everything into a single property makes this much more obvious to me. I
+personally don't see any issue with the
+of_parse_phandles_with_args_ext() function; it seems pretty clean to me.
 
-> If users want to get extended args including 3, 4, he can call:
-> of_parse_phandle_with_args_ext(np, "gpios", "#gpio-cells", index, 2, &outargs);
+> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
 
-The second parameter above should be "list".
+> +	if (!nranges) {
+> +		dev_err(pctldev->dev, "no gpio ranges found\n");
+> +		return -ENODEV;
+> +	}
+
+In the case of a generic pinctrl IP block that can support an external
+GPIO controller but happens not to be hooked up to one within a
+particular SoC, that might not be an error. However, that situation is
+pretty unlikely, so I think it's find to call dev_err() for now, and we
+can change it later if we need.
+
+> +		ranges[i].base = ranges[i].gc->of_xlate(ranges[i].gc, &gpiospec, NULL);
+
+I believe Grant wants to change the of_xlate prototype in order to be
+able to return a different gc value, so this will probably need slight
+rework work with that change, once they're both approved. Still, I think
+this is fine for now.
+
+> +		if (ranges[i].base < 0) {
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +		ranges[i].base += ranges[i].gc->base;
+> +		ranges[i].pin_base = gpiospec.args[gpiospec.args_count - 2];
+> +		ranges[i].npins = gpiospec.args[gpiospec.args_count - 1];
+> +
+> +		gpiochip_put(ranges[i].gc);
+
+I wonder if this shouldn't happen until the pinctrl device is free'd,
+and all the GPIO ranges are removed from it?
+
+If we don't do that, I would argue that we shouldn't store ranges[i].gc,
+since it might become invalid - I believe the only use of it is within
+this function?
+
+> +		of_node_put(gpiospec.np);
+> +	}
+
+Aside from the comments I've made, this series all seems reasonable.
+There certainly are alternative ways of doing some of it, but I don't
+see any other approach having any particular advantage over this one.
+So, the series,
+
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
