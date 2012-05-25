@@ -1,62 +1,76 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [GIT PULL] devicetree changes for v3.5 merge window
-Date: Thu, 24 May 2012 14:02:44 -0600
-Message-ID: <CACxGe6sTLbNoVN79iayrZ24oaHHnS4jdiOwFVVXWNdeFdp87MA@mail.gmail.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 00/12] add imx usb driver for mx28/6x
+Date: Fri, 25 May 2012 10:24:13 +0800
+Message-ID: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+The work is based on  ci13xxx rework done by Alexander Shishkin.
 
-Description below, please pull.
-g.
+Status:
+  - this version only support host
+  - usbotg controler works at host role
 
-The following changes since commit 36be50515fe2aef61533b516fa2576a2c7fe7664:
+Changes since V2:
+  - Rebase to Alex's tree
+  - Use regulator to control vbus power
+  - Remove ARCH check in Kconfig, but add OF_DEV check.
+  - Other changes according laster version comments.
 
-  Linux 3.4-rc7 (2012-05-12 18:37:47 -0700)
+Richard Zhao (12):
+  usb: otg: add notify_connect/notify_disconnect callback
+  usb: chipidea: permit driver bindings pass phy pointer
+  usb: ehci-hcd: notify phy when connect change
+  usb: otg: add basic mxs phy driver support
+  usb: chipidea: add imx platform driver
+  ARM: imx6q: correct device name of usbphy and usb controller clock
+    export
+  ARM: imx6q: add config-on-boot gpios
+  ARM: imx6q: add usbphy clocks
+  ARM: imx6q: disable usb charger detector
+  ARM: dts: imx6q-sabrelite: add usb devices
+  ARM: mxs: clk_register_clkdev mx28 usb clocks
+  ARM: dts: imx28-evk: add usb devices
 
-are available in the git repository at:
-
-  git://git.secretlab.ca/git/linux-2.6 tags/devicetree-for-linus
-
-for you to fetch changes up to 8d6c1efa51236bb781f202aa13b9f4ba654978c6:
-
-  Merge branch 'devicetree/merge' into devicetree/next (2012-05-20
-20:18:37 -0600)
-
-----------------------------------------------------------------
-
-Device tree changes for v3.5 merge window
-
-Mostly documentation updates, but also includes an empty stub for
-non-CONFIG_OF builds.
-
-----------------------------------------------------------------
-Grant Likely (1):
-      Merge branch 'devicetree/merge' into devicetree/next
-
-Marc Zyngier (1):
-      ARM: DT: Add binding for GIC virtualization extentions (VGIC)
-
-Roland Stigge (1):
-      dt/documentation: Fix value format description
-
-Stephen Warren (1):
-      dt: add vendor prefix for EM Microelectronics
-
-Thomas Abraham (1):
-      of/irq: add empty irq_of_parse_and_map() for non-dt builds
-
- Documentation/devicetree/bindings/arm/gic.txt      |   35 ++++++++++++-
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- Documentation/devicetree/booting-without-of.txt    |   55 ++++++++++----------
- include/linux/of_irq.h                             |   12 ++++-
- 4 files changed, 72 insertions(+), 31 deletions(-)
-
+ .../devicetree/bindings/arm/config-on-boot.txt     |   12 ++
+ .../devicetree/bindings/usb/ci13xxx-imx.txt        |   20 ++
+ Documentation/devicetree/bindings/usb/mxs-phy.txt  |   13 ++
+ arch/arm/boot/dts/imx28-evk.dts                    |   36 ++++
+ arch/arm/boot/dts/imx28.dtsi                       |   12 +-
+ arch/arm/boot/dts/imx6q-sabrelite.dts              |   35 ++++
+ arch/arm/boot/dts/imx6q.dtsi                       |   36 ++++-
+ arch/arm/mach-imx/clk-imx6q.c                      |   12 +-
+ arch/arm/mach-imx/mach-imx6q.c                     |   59 ++++++
+ drivers/clk/mxs/clk-imx28.c                        |    4 +
+ drivers/usb/chipidea/Makefile                      |    3 +
+ drivers/usb/chipidea/ci.h                          |    2 +
+ drivers/usb/chipidea/ci13xxx_imx.c                 |  189 ++++++++++++++++++
+ drivers/usb/chipidea/core.c                        |    4 +
+ drivers/usb/chipidea/host.c                        |    1 +
+ drivers/usb/chipidea/udc.c                         |   11 +-
+ drivers/usb/host/ehci-hcd.c                        |   14 ++
+ drivers/usb/otg/Kconfig                            |    8 +
+ drivers/usb/otg/Makefile                           |    1 +
+ drivers/usb/otg/mxs-phy.c                          |  204 ++++++++++++++++++++
+ include/linux/usb/chipidea.h                       |    3 +
+ include/linux/usb/otg.h                            |   21 ++
+ 22 files changed, 690 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/config-on-boot.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/mxs-phy.txt
+ create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
+ create mode 100644 drivers/usb/otg/mxs-phy.c
 
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+1.7.5.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
