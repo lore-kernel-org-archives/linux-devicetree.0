@@ -1,37 +1,34 @@
-From: <jgq516@gmail.com>
-Subject: [PATCH 0/3] omap3/omap4: add device tree support for wdt
-Date: Fri, 25 May 2012 18:42:29 +0800
-Message-ID: <1337942552-28218-1-git-send-email-jgq516@gmail.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH v4 1/6] gpio: fix a typo of comment message
+Date: Fri, 25 May 2012 21:36:15 +0800
+Message-ID: <1337952980-14621-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux@arm.linux.org.uk, b-cousson@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, rnayak@ti.com, tony@atomide.com, wim@iguana.be
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-watchdog@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, b29396@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-From: Xiao Jiang <jgq516@gmail.com>
+From: Dong Aisheng <dong.aisheng@linaro.org>
 
-This series can be applied to dt branch of linux-omap tree.
+Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+---
+ drivers/gpio/gpiolib-of.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Since omap24xx series has different wdt base addr (omap2420: 0x48022000 and
-omap2430: 0x49016000) per commit 2817142f31bfbf26c216bf4f9192540c81b2d071, so
-I don't add wdt node in omap2.dtsi just like omap3 and omap4, maybe different
-dts files are needed for omap2420 and omap2430.
-
-Tested with omap4430 blaze board.
-
-Xiao Jiang (3):
-  arm/dts: add wdt node for omap3 and omap4
-  OMAP: wdt: add device tree support
-  watchdog: omap_wdt: add device tree support
-
- arch/arm/boot/dts/omap3.dtsi  |    5 +++++
- arch/arm/boot/dts/omap4.dtsi  |    5 +++++
- arch/arm/mach-omap2/devices.c |    2 +-
- drivers/watchdog/omap_wdt.c   |    8 ++++++++
- 4 files changed, 19 insertions(+), 1 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index d18068a..8389d4a 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -21,7 +21,7 @@
+ #include <linux/of_gpio.h>
+ #include <linux/slab.h>
+ 
+-/* Private data structure for of_gpiochip_is_match */
++/* Private data structure for of_gpiochip_find_and_xlate */
+ struct gg_data {
+ 	enum of_gpio_flags *flags;
+ 	struct of_phandle_args gpiospec;
 -- 
-1.7.3
-
+1.7.0.4
