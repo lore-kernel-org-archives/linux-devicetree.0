@@ -1,143 +1,127 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v4 1/7] ARM: davinci, intc: Add irq domain support
-Date: Sat, 26 May 2012 00:03:12 -0600
-Message-ID: <20120526060312.815A13E2578@localhost>
-References: <1337694920-8925-1-git-send-email-hs@denx.de>
- <1337694920-8925-2-git-send-email-hs@denx.de>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v4 2/6] gpio: re-add of_node_to_gpiochip function
+Date: Sat, 26 May 2012 09:15:09 -0700
+Message-ID: <CAA+hA=SLSk9wMtiFiarVR0t+T6KHSTQkYwPk99Kj75RYFP205g@mail.gmail.com>
+References: <1337952980-14621-1-git-send-email-b29396@freescale.com>
+	<1337952980-14621-2-git-send-email-b29396@freescale.com>
+	<20120526000127.A53903E0D27@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1337694920-8925-2-git-send-email-hs@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: davinci-linux-open-source@linux.davincidsp.com
-Cc: Wolfgang Denk <wd@denx.de>, Sergei Shtylyov <sshtylyov@mvista.com>, devicetree-discuss@lists.ozlabs.org, Sekhar Nori <nsekhar@ti.com>, Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120526000127.A53903E0D27@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 May 2012 15:55:14 +0200, Heiko Schocher <hs@denx.de> wrote:
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: Wolfgang Denk <wd@denx.de>
-> Cc: Sergei Shtylyov <sshtylyov@mvista.com>
+On Sat, May 26, 2012 at 8:01 AM, Grant Likely <grant.likely@secretlab.c=
+a> wrote:
+> On Fri, 25 May 2012 21:36:16 +0800, Dong Aisheng <b29396@freescale.co=
+m> wrote:
+>> From: Dong Aisheng <dong.aisheng@linaro.org>
+>>
+>> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+>
+> Nack. =A0Several problems here. =A0First and foremost there isn't any
+> description of *why* this change is needed or when it was removed.
+Sorry i sent it too fast to eager to see people's comments on the main
+issue of patch 6.
+It should have description on what you pointed out.
+It's needed by the patch 6 in this series that it wants to find gpiochi=
+p from
+node then calculate the gpio number from device tree in a standard way.
 
-Hi Heiko,
+> Any patch beyond the most trivial change needs to have a commit
+> message the describes it.
+>
+> Second, of_node_to_gpiochip() is no longer a valid API because gpioli=
+b
+> now allows multiple gpiochips to use the same device tree node. =A0Se=
+e
+> commit 3d0f7cf0f "gpio: Adjust of_xlate API to support multiple GPIO
+> chips" to see a description of why this was changed.
+>
+I noticed that of_node_to_gpiochip() is removed by that patch.
+But i did not realized that this API was broken before.
+After looking a bit more on the sample code of an banked gpio,
+https://lkml.org/lkml/2012/5/18/51
+it seems besides the gpio node, we also depend on controller specific
+gpio .of_xlate function
+to find the correct gpiochip in the same bank for the same node.
+So it's correct that of_node_to_gpiochip() is broken now.
 
-Earlier today I commented (again) on the previous version of this
-patch.  Sorry about that.  I'm happy with the direction this series is
-going.  Here's one more comments.
+I may change it if we finally still find this API is needed.
 
-> diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
-> index f83152d..bb52807 100644
-> --- a/arch/arm/mach-davinci/cp_intc.c
-> +++ b/arch/arm/mach-davinci/cp_intc.c
-> @@ -9,8 +9,10 @@
->   * kind, whether express or implied.
->   */
->  
-> +#include <linux/export.h>
->  #include <linux/init.h>
->  #include <linux/irq.h>
-> +#include <linux/irqdomain.h>
->  #include <linux/io.h>
->  
->  #include <mach/common.h>
-> @@ -99,18 +101,37 @@ static struct irq_chip cp_intc_irq_chip = {
->  	.irq_set_wake	= cp_intc_set_wake,
->  };
+Thanks for the review.
 
-All of the irq_chip hooks need to be switched from using d->irq to
-d->hwirq for the hardware irq number.  That sets up to driver to
-switch to using dynamic allocation of irq_descs.
+Regards
+Dong Aisheng
 
->  
-> -void __init cp_intc_init(void)
-> +static struct irq_domain *cp_intc_domain;
-> +
-> +static int cp_intc_host_map(struct irq_domain *h, unsigned int virq,
-> +			  irq_hw_number_t hw)
->  {
-> -	unsigned long num_irq	= davinci_soc_info.intc_irq_num;
-> +	pr_debug("cp_intc_host_map(%d, 0x%lx)\n", virq, hw);
-> +
-> +	irq_set_chip(virq, &cp_intc_irq_chip);
-> +	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
-> +	irq_set_handler(virq, handle_edge_irq);
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops cp_intc_host_ops = {
-> +	.map = cp_intc_host_map,
-> +	.xlate = irq_domain_xlate_onetwocell,
-> +};
-> +
-> +int __init __cp_intc_init(struct device_node *node)
-> +{
-> +	u32 num_irq		= davinci_soc_info.intc_irq_num;
->  	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
->  	u32 *host_map		= davinci_soc_info.intc_host_map;
->  	unsigned num_reg	= BITS_TO_LONGS(num_irq);
-> -	int i;
-> +	int i, irq_base;
->  
->  	davinci_intc_type = DAVINCI_INTC_TYPE_CP_INTC;
->  	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
-> +
->  	if (WARN_ON(!davinci_intc_base))
-> -		return;
-> +		return -EINVAL;
->  
->  	cp_intc_write(0, CP_INTC_GLOBAL_ENABLE);
->  
-> @@ -165,13 +186,28 @@ void __init cp_intc_init(void)
->  		for (i = 0; host_map[i] != -1; i++)
->  			cp_intc_write(host_map[i], CP_INTC_HOST_MAP(i));
->  
-> -	/* Set up genirq dispatching for cp_intc */
-> -	for (i = 0; i < num_irq; i++) {
-> -		irq_set_chip(i, &cp_intc_irq_chip);
-> -		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
-> -		irq_set_handler(i, handle_edge_irq);
-> +	irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
-> +	if (irq_base < 0) {
-> +		pr_warn("Couldn't allocate IRQ numbers\n");
-> +		irq_base = 0;
-> +	}
-> +
-> +	/* create a legacy host */
-> +	cp_intc_domain = irq_domain_add_legacy(node, num_irq,
-> +					irq_base, 0, &cp_intc_host_ops, NULL);
-> +
-> +	if (cp_intc_domain == NULL) {
-> +		pr_err("CP INTC: failed to allocate irq host!\n");
-> +		return -EINVAL;
->  	}
->  
->  	/* Enable global interrupt */
->  	cp_intc_write(1, CP_INTC_GLOBAL_ENABLE);
-> +
-> +	return 0;
-> +}
-> +
-> +void __init cp_intc_init(void)
-> +{
-> +	__cp_intc_init(NULL);
->  }
-> -- 
-> 1.7.7.6
-> 
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+>> ---
+>> =A0drivers/gpio/gpiolib-of.c | =A0 11 +++++++++++
+>> =A0include/linux/of_gpio.h =A0 | =A0 =A05 +++++
+>> =A02 files changed, 16 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+>> index 8389d4a..b8010a9 100644
+>> --- a/drivers/gpio/gpiolib-of.c
+>> +++ b/drivers/gpio/gpiolib-of.c
+>> @@ -234,3 +234,14 @@ void of_gpiochip_remove(struct gpio_chip *chip)
+>> =A0 =A0 =A0 if (chip->of_node)
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 of_node_put(chip->of_node);
+>> =A0}
+>> +
+>> +/* Private function for resolving node pointer to gpio_chip */
+>> +static int of_gpiochip_is_match(struct gpio_chip *chip, void *data)
+>> +{
+>> + =A0 =A0 return chip->of_node =3D=3D data;
+>> +}
+>> +
+>> +struct gpio_chip *of_node_to_gpiochip(struct device_node *np)
+>> +{
+>> + =A0 =A0 return gpiochip_find(np, of_gpiochip_is_match);
+>> +}
+>> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+>> index c454f57..880783b 100644
+>> --- a/include/linux/of_gpio.h
+>> +++ b/include/linux/of_gpio.h
+>> @@ -61,6 +61,7 @@ extern void of_gpiochip_remove(struct gpio_chip *g=
+c);
+>> =A0extern int of_gpio_simple_xlate(struct gpio_chip *gc,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 const st=
+ruct of_phandle_args *gpiospec,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 *fla=
+gs);
+>> +extern struct gpio_chip *of_node_to_gpiochip(struct device_node *np=
+);
+>>
+>> =A0#else /* CONFIG_OF_GPIO */
+>>
+>> @@ -84,6 +85,10 @@ static inline int of_gpio_simple_xlate(struct gpi=
+o_chip *gc,
+>> =A0 =A0 =A0 return -ENOSYS;
+>> =A0}
+>>
+>> +static struct gpio_chip *of_node_to_gpiochip(struct device_node *np=
+)
+>> +{
+>> + =A0 =A0 return NULL;
+>> +}
+>> =A0static inline void of_gpiochip_add(struct gpio_chip *gc) { }
+>> =A0static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
+>>
+>> --
+>> 1.7.0.4
+>>
+>>
+>
+> --
+> Grant Likely, B.Sc, P.Eng.
+> Secret Lab Technologies, Ltd.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at =A0http://www.tux.org/lkml/
