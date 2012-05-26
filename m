@@ -1,48 +1,113 @@
-From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] add imx usb driver for mx28/6x
-Date: Sat, 26 May 2012 20:50:44 +0800
-Message-ID: <CANg6MZhKkjre_5wCj70Zajc2s51hw88t=K-eemmN+DVePEQD5A@mail.gmail.com>
-References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
-	<201205261337.59500.marex@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201205261337.59500.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4 6/6] pinctrl: add pinctrl gpio binding support
+Date: Fri, 25 May 2012 18:29:49 -0600
+Message-ID: <20120526002950.062683E14F7@localhost>
+References: <1337952980-14621-1-git-send-email-b29396@freescale.com> <1337952980-14621-6-git-send-email-b29396@freescale.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1337952980-14621-6-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, b29396@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On Fri, 25 May 2012 21:36:20 +0800, Dong Aisheng <b29396@freescale.com> wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> This patch implements a standard common binding for pinctrl gpio ranges.
+> Each SoC can add gpio ranges through device tree by adding a gpio-maps property
+> under their pinctrl devices node with the format:
+> <&gpio $gpio-specifier $pin_offset $count>
+> while the gpio phandle and gpio-specifier are the standard approach
+> to represent a gpio in device tree.
+> Then we can cooperate it with the gpio xlate function to get the gpio number
+> from device tree to set up the gpio ranges map.
+> 
+> Then the pinctrl driver can call pinctrl_dt_add_gpio_ranges(pctldev, node)
+> to parse and register the gpio ranges from device tree.
+> 
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> ---
+> Personally i'm not very satisfied with current solution due to a few reasons:
+> 1) i can not user standard gpio api to get gpio number
+> 2) i need to reinvent a new api of_parse_phandles_with_args_ext which i'm not
+> sure if it can be accepted by DT maintainer.
 
-On Sat, May 26, 2012 at 7:37 PM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> Dear Richard Zhao,
->
->> The work is based on =A0ci13xxx rework done by Alexander Shishkin.
->>
->> Status:
->> =A0 - this version only support host
->> =A0 - usbotg controler works at host role
->>
->> Changes since V2:
->> =A0 - Rebase to Alex's tree
->> =A0 - Use regulator to control vbus power
->> =A0 - Remove ARCH check in Kconfig, but add OF_DEV check.
->> =A0 - Other changes according laster version comments.
->
-> Is there any git tree with these patches?
-https://github.com/riczhao/kernel-imx/commits/topics/usb
+Right, as mentioned in my other email, doing it this way completely
+breaks the way the phandle-with-args pattern works.  That pattern
+depends on the phandle node to have a #-cells property telling it how
+many cells to process for the binding.  Adding additional data cells
+means the kernel is no longer able to parse multiple entries in the
+gpios property.
 
-> Also, on top of what tree are these
-> based on please?
-They're based on Alex's tree.
->
-> Thanks!
->
-> Best regards,
-> Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If i did not invent that API, i need to rewrite a lot of duplicated code
+> with slight differences with the exist functions like of_get_named_gpio_flags
+> and of_parse_phandle_with_args for the special pinctrl gpio maps format.
+> 
+> So i just sent it out first to see people's comment and if any better solution.
+> 
+> One alternative solution is that that the gpio-maps into two parts:
+> pinctrl-gpios = <&gpio_phandle gpio-specifier ..>
+> pinctrl-gpio-maps = <pin_id count ..>
+> Then we can reuse the standard gpio api altough it's not better than the
+> original one.
+> 
+> Comments are welcome!
+> 
+> ChangeLog v3->v4:
+> * using standard gpio parsing approach to get the gpio number from device
+>   tree. The gpio-maps becomes a little slightly different as before:
+>   <&gpio $gpio_specifier $pin_offset $npin>.
+>   The $gpio_specifier length is controller dependent which is specified by
+>   '#gpio-cells' in in gpio controller node.
+> 
+> ChangeLog v2->v3:
+> * standardise the gpio ranges node name to 'gpio-maps'. Each SoC should use this
+> node name to define gpio ranges.
+> * defer probe if can not get gpiochip from node in case gpio driver is still
+> not loaded.
+> * some other minor fixes suggested by Stephen Warren.
+> 
+> ChangeLog v1->v2:
+> * introduce standard binding for gpio range.
+> ---
+>  .../bindings/pinctrl/pinctrl-bindings.txt          |   22 +++++
+>  drivers/pinctrl/devicetree.c                       |   95 ++++++++++++++++++++
+>  include/linux/pinctrl/pinctrl.h                    |   11 +++
+>  3 files changed, 128 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> index c95ea82..e999be5 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -126,3 +126,25 @@ device; they may be grandchildren, for example. Whether this is legal, and
+>  whether there is any interaction between the child and intermediate parent
+>  nodes, is again defined entirely by the binding for the individual pin
+>  controller device.
+> +
+> +=== pinctrl gpio ranges ===
+> +Some pins in pinctrl device can also be multiplexed as gpio. With a gpio range
+> +map, user can know which pin in the range can be used as gpio.
+> +
+> +Required properties:
+> +gpio-maps: integers array, each entry in the array represents a gpio range
+> +with the format: <&gpio $gpio-specifier $pin_offset $count>
+> +- gpio: phandle pointing at gpio device node
+> +- gpio-specifier: array of #gpio-cells specifying specific gpio, the length is
+> +  controller specific. Usually it may be two cells for simple gpio.
+> +- pin_offset: integer, the pin offset or pin id
+> +- npins: integer, the gpio ranges starting from pin_offset
+> +
+> +For example:
+> +pincontroller {
+> +	/* gpio-specifier is two cells */
+> +	gpio-maps = <&gpio1 0 0 0 32
+> +		     &gpio2 0 0 0 30
+> +		     &gpio3 1 0 100 1
+> +		     ....>;
+
+Hmmm.... I need more information about this gpio-maps property.  How
+is it arranged?  What kind of data is in it.  Can you give some
+specific examples of how hardware would be described with a gpio-maps
+property?
+
+g.
