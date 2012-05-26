@@ -1,184 +1,150 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH v4 4/6] gpio: introduce lock mechanism for gpiochip_find
-Date: Sat, 26 May 2012 09:17:04 -0700
-Message-ID: <CAA+hA=QOC4_bWzDfbdLEwHBDw_CBjcd-iQOTp9TU0h3j_qwyxw@mail.gmail.com>
+From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 6/6] pinctrl: add pinctrl gpio binding support
+Date: Sat, 26 May 2012 09:52:32 -0700
+Message-ID: <CAA+hA=QMe6Yo2aLMBcbkYLDXSagb9L919hjdQaq8TyH4uKh9Mw@mail.gmail.com>
 References: <1337952980-14621-1-git-send-email-b29396@freescale.com>
-	<1337952980-14621-4-git-send-email-b29396@freescale.com>
-	<20120526002500.CA3123E14E9@localhost>
+ <1337952980-14621-6-git-send-email-b29396@freescale.com>
+ <4FBFBB74.901@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120526002500.CA3123E14E9@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FBFBB74.901-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2012 at 5:25 PM, Grant Likely <grant.likely@secretlab.c=
-a> wrote:
-> On Fri, 25 May 2012 21:36:18 +0800, Dong Aisheng <b29396@freescale.co=
-m> wrote:
->> From: Dong Aisheng <dong.aisheng@linaro.org>
+On Fri, May 25, 2012 at 10:03 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wr=
+ote:
+> On 05/25/2012 07:36 AM, Dong Aisheng wrote:
+>> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >>
->> The module lock will be automatically claimed for gpiochip_find func=
-tion
->> in case the gpio module is removed during the using of gpiochip inst=
-ance.
->> Users are responsible to call gpiochip_put to release the lock after
->> the using.
+>> This patch implements a standard common binding for pinctrl gpio ranges.
+>> Each SoC can add gpio ranges through device tree by adding a gpio-maps p=
+roperty
+>> under their pinctrl devices node with the format:
+>> <&gpio $gpio-specifier $pin_offset $count>
+>> while the gpio phandle and gpio-specifier are the standard approach
+>> to represent a gpio in device tree.
+>> Then we can cooperate it with the gpio xlate function to get the gpio nu=
+mber
+>> from device tree to set up the gpio ranges map.
 >>
->> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+>> Then the pinctrl driver can call pinctrl_dt_add_gpio_ranges(pctldev, nod=
+e)
+>> to parse and register the gpio ranges from device tree.
+>>
+>> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> Personally i'm not very satisfied with current solution due to a few rea=
+sons:
+>> 1) i can not user standard gpio api to get gpio number
+>> 2) i need to reinvent a new api of_parse_phandles_with_args_ext which i'=
+m not
+>> sure if it can be accepted by DT maintainer.
+>> If i did not invent that API, i need to rewrite a lot of duplicated code
+>> with slight differences with the exist functions like of_get_named_gpio_=
+flags
+>> and of_parse_phandle_with_args for the special pinctrl gpio maps format.
+>>
+>> So i just sent it out first to see people's comment and if any better so=
+lution.
+>>
+>> One alternative solution is that that the gpio-maps into two parts:
+>> pinctrl-gpios =3D <&gpio_phandle gpio-specifier ..>
+>> pinctrl-gpio-maps =3D <pin_id count ..>
+>> Then we can reuse the standard gpio api altough it's not better than the
+>> original one.
 >
-> Hey Dong,
->
-> Does this actually protect anything? =A0From what I can see the gpio_=
-lock
-> is held for the entire time of iterating over gpio_chips when the
-> match function is called and the gpio number is fully resolved before
-> gpiochip_find returns when called from of_get_named_gpio_flags().
->
-Correct, the of_get_named_gpio_flags() has no issues.
-The problem is the gpiochip pointer is returned and user may use it
-with no lock which may possible already been released.
-I got this suggestion from Stephen Warren originally and i agreed with =
-him.
+> The problem I see with that is that it splits what is essentially a
+> single array with phandle+specifier+pin-id+count into two separate
+> arrays. Anyone reading/editing the DT needs to fully understand this,
+> and keep the entries in the two properties in the same order. Putting
+> everything into a single property makes this much more obvious to me. I
+Yes, i agree with you.
+That's why i insisted to send this format first.
 
-> Also, it doesn't do anything to protect against the gpio_chip being
-> removed after the gpio number is resolved, which means the gpio numbe=
-r
-> may no longer be valid, or may no longer point to the same gpio chip.
-Can you help explain this case a bit more?
-The module lock used here is only prevent the gpio module to be
-removed which causes
-the gpiochip to be release during the using.
-You mean except module remove, the gpio_chip can also be removed by oth=
-er case?
+> personally don't see any issue with the
+> of_parse_phandles_with_args_ext() function; it seems pretty clean to me.
+>
+Thanks, you gave me some confidence on it.
 
-> It looks like the locking protection needs to be wider to be useful.
+>> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
 >
-> Or is this patch to fix something in the mach-mx35-3ds.c, which is th=
-e
-> only other use of gpiochip_find().
+>> + =A0 =A0 if (!nranges) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 dev_err(pctldev->dev, "no gpio ranges found\n"=
+);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+>> + =A0 =A0 }
 >
-=46ormerly it's used for patch 6 since it used the gpiochip_find functi=
-on.
-But yes, mach-mx35-3ds.c should also need the lock if this is an issue.
+> In the case of a generic pinctrl IP block that can support an external
+> GPIO controller but happens not to be hooked up to one within a
+> particular SoC, that might not be an error. However, that situation is
+> pretty unlikely, so I think it's find to call dev_err() for now, and we
+> can change it later if we need.
+>
+>> + =A0 =A0 =A0 =A0 =A0 =A0 ranges[i].base =3D ranges[i].gc->of_xlate(rang=
+es[i].gc, &gpiospec, NULL);
+>
+> I believe Grant wants to change the of_xlate prototype in order to be
+> able to return a different gc value, so this will probably need slight
+> rework work with that change, once they're both approved. Still, I think
+> this is fine for now.
+>
+I looked Grant's commit 3d0f7cf0f "gpio: Adjust of_xlate API to
+support multiple GPIO
+chips", it seemed i need make some changes here since
+of_node_to_gpiochip is broken now
+after support banked gpio. Thus the gc got here may not correct for
+some special gpio
+controllers.
+
+>> + =A0 =A0 =A0 =A0 =A0 =A0 if (ranges[i].base < 0) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -EINVAL;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto out;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 }
+>> + =A0 =A0 =A0 =A0 =A0 =A0 ranges[i].base +=3D ranges[i].gc->base;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 ranges[i].pin_base =3D gpiospec.args[gpiospec.=
+args_count - 2];
+>> + =A0 =A0 =A0 =A0 =A0 =A0 ranges[i].npins =3D gpiospec.args[gpiospec.arg=
+s_count - 1];
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 gpiochip_put(ranges[i].gc);
+>
+> I wonder if this shouldn't happen until the pinctrl device is free'd,
+> and all the GPIO ranges are removed from it?
+>
+Hmm, that may bring some complexities since non-dt case also needs
+to be covered if we do that...
+
+> If we don't do that, I would argue that we shouldn't store ranges[i].gc,
+> since it might become invalid - I believe the only use of it is within
+> this function?
+>
+In my option, i think it's ok to store it since they're just some data
+to describe
+hw properties. The gpio function may become invalid but not data.
+Is it reasonable to you?
+
+>> + =A0 =A0 =A0 =A0 =A0 =A0 of_node_put(gpiospec.np);
+>> + =A0 =A0 }
+>
+> Aside from the comments I've made, this series all seems reasonable.
+> There certainly are alternative ways of doing some of it, but I don't
+> see any other approach having any particular advantage over this one.
+> So, the series,
+>
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Thanks.
 
 Regards
 Dong Aisheng
->
->> ---
->> =A0drivers/gpio/gpiolib-of.c =A0| =A0 =A05 ++++-
->> =A0drivers/gpio/gpiolib.c =A0 =A0 | =A0 17 +++++++++++++++++
->> =A0include/asm-generic/gpio.h | =A0 =A02 +-
->> =A03 files changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
->> index b8010a9..d521452 100644
->> --- a/drivers/gpio/gpiolib-of.c
->> +++ b/drivers/gpio/gpiolib-of.c
->> @@ -63,6 +63,7 @@ int of_get_named_gpio_flags(struct device_node *np=
-, const char *propname,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 int index, e=
-num of_gpio_flags *flags)
->> =A0{
->> =A0 =A0 =A0 struct gg_data gg_data =3D { .flags =3D flags, .out_gpio=
- =3D -ENODEV };
->> + =A0 =A0 struct gpio_chip *chip;
->> =A0 =A0 =A0 int ret;
->>
->> =A0 =A0 =A0 /* .of_xlate might decide to not fill in the flags, so c=
-lear it. */
->> @@ -76,7 +77,9 @@ int of_get_named_gpio_flags(struct device_node *np=
-, const char *propname,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
->> =A0 =A0 =A0 }
->>
->> - =A0 =A0 gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
->> + =A0 =A0 chip =3D gpiochip_find(&gg_data, of_gpiochip_find_and_xlat=
-e);
->> + =A0 =A0 if (chip)
->> + =A0 =A0 =A0 =A0 =A0 =A0 gpiochip_put(chip);
->>
->> =A0 =A0 =A0 of_node_put(gg_data.gpiospec.np);
->> =A0 =A0 =A0 pr_debug("%s exited with status %d\n", __func__, ret);
->> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->> index 120b2a0..6453d43 100644
->> --- a/drivers/gpio/gpiolib.c
->> +++ b/drivers/gpio/gpiolib.c
->> @@ -1144,6 +1144,18 @@ int gpiochip_remove(struct gpio_chip *chip)
->> =A0EXPORT_SYMBOL_GPL(gpiochip_remove);
->>
->> =A0/**
->> + * gpiochip_put() - release a gpio_chip
->> + * @chip: the chip to release
->> + */
->> +inline void gpiochip_put(struct gpio_chip *chip)
->> +{
->> + =A0 =A0 BUG_ON(!chip);
->> +
->> + =A0 =A0 module_put(chip->owner);
->> +}
->> +EXPORT_SYMBOL_GPL(gpiochip_put);
->> +
->> +/**
->> =A0 * gpiochip_find() - iterator for locating a specific gpio_chip
->> =A0 * @data: data to pass to match function
->> =A0 * @callback: Callback function to check gpio_chip
->> @@ -1153,6 +1165,9 @@ EXPORT_SYMBOL_GPL(gpiochip_remove);
->> =A0 * 0 if the device doesn't match and non-zero if it does. =A0If t=
-he callback is
->> =A0 * non-zero, this function will return to the caller and not iter=
-ate over any
->> =A0 * more gpio_chips.
->> + *
->> + * Note the gpio_chip is returned with the module locked, users are=
- responsible
->> + * to release the lock with gpiochip_put(chip) after using it.
->> =A0 */
->> =A0struct gpio_chip *gpiochip_find(void *data,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 int (*ma=
-tch)(struct gpio_chip *chip,
->> @@ -1169,6 +1184,8 @@ struct gpio_chip *gpiochip_find(void *data,
->>
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (match(gpio_desc[i].chip, data)) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 chip =3D gpio_desc[i].ch=
-ip;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!try_module_get(chip->=
-owner))
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 chip =3D N=
-ULL;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
->> =A0 =A0 =A0 }
->> diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
->> index 365ea09..af372be 100644
->> --- a/include/asm-generic/gpio.h
->> +++ b/include/asm-generic/gpio.h
->> @@ -145,7 +145,7 @@ extern int __must_check gpiochip_remove(struct g=
-pio_chip *chip);
->> =A0extern struct gpio_chip *gpiochip_find(void *data,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 int (*match)(struct gpio_chip *chip,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0void *data));
->> -
->> +extern void gpiochip_put(struct gpio_chip *chip);
->>
->> =A0/* Always use the library code for GPIO management calls,
->> =A0 * or when sleeping may be involved.
->> --
->> 1.7.0.4
->>
->>
->
-> --
-> Grant Likely, B.Sc, P.Eng.
-> Secret Lab Technologies, Ltd.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at =A0http://www.tux.org/lkml/
