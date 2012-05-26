@@ -1,104 +1,84 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Fri, 25 May 2012 18:48:05 -0600
-Message-ID: <20120526004805.92B373E1E4E@localhost>
-References: <1334229858-1665-1-git-send-email-thierry.reding@avionic-design.de>
- <1334229858-1665-2-git-send-email-thierry.reding@avionic-design.de>
- <20120511234728.0A4623E0791@localhost>
- <20120521102032.GA27686@avionic-0098.mockup.avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120521102032.GA27686-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4 2/6] gpio: re-add of_node_to_gpiochip function
+Date: Fri, 25 May 2012 18:01:27 -0600
+Message-ID: <20120526000127.A53903E0D27@localhost>
+References: <1337952980-14621-1-git-send-email-b29396@freescale.com> <1337952980-14621-2-git-send-email-b29396@freescale.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1337952980-14621-2-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, b29396@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 May 2012 12:20:32 +0200, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> * Grant Likely wrote:
-> > On Thu, 12 Apr 2012 13:24:18 +0200, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> > > This commit adds a driver for the Avionic Design N-bit GPIO expander.
-> > > The expander provides a variable number of GPIO pins with interrupt
-> > > support.
-> > 
-> > Hi Thierry,  comments below...
-> > 
-> > > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > > index 7875c3f..d86c3b7 100644
-> > > --- a/drivers/gpio/Kconfig
-> > > +++ b/drivers/gpio/Kconfig
-> > > @@ -373,6 +373,25 @@ config GPIO_ADP5588_IRQ
-> > >  	  Say yes here to enable the adp5588 to be used as an interrupt
-> > >  	  controller. It requires the driver to be built in the kernel.
-> > >  
-> > > +config GPIO_ADNP
-> > > +	tristate "Avionic Design N-bit GPIO expander"
-> > > +	depends on I2C
-> > > +	help
-> > > +	  This option enables support for N GPIOs found on Avionic Design
-> > > +	  I2C GPIO expanders. The register space will be extended by powers
-> > > +	  of two, so the controller will need to accomodate for that. For
-> > > +	  example: if a controller provides 48 pins, 6 registers will be
-> > > +	  enough to represent all pins, but the driver will assume a
-> > > +	  register layout for 64 pins (8 registers).
-> > > +
-> > > +config GPIO_ADNP_IRQ
-> > > +	bool "Interrupt controller support"
-> > > +	depends on GPIO_ADNP
-> > > +	help
-> > > +	  Say yes here to enable the Avionic Design N-bit GPIO expander to
-> > > +	  be used as an interrupt controller. It requires the driver to be
-> > > +	  built in the kernel.
-> > > +
-> > 
-> > Why does it require the driver to be built in?
+On Fri, 25 May 2012 21:36:16 +0800, Dong Aisheng <b29396@freescale.com> wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
 > 
-> That's primarily a relic from pre-IRQ domain days when it wasn't possible to
-> register interrupt controllers after the boot phase. While this should now no
-> longer be a problem, I still haven't been able to find out how to properly
-> clean up the IRQ domain when the module is unloaded. I feel that the cleanup
-> path should be properly implemented before allowing this to be built as a
-> module.
-> 
-> Can you enlighten me?
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
 
-That's a bug in irq_domain.  It should be fixed in mainline now.  See
-commit 58ee99ada "irqdomain: Support removal of IRQ domains."
+Nack.  Several problems here.  First and foremost there isn't any
+description of *why* this change is needed or when it was removed.
+Any patch beyond the most trivial change needs to have a commit
+message the describes it.
 
-> > > +struct adnp_platform_data {
-> > > +	unsigned gpio_base;
-> > > +	unsigned nr_gpios;
-> > > +	int irq_base;
-> > > +	const char *const *names;
-> > > +};
-> > 
-> > From the start this is a DT enabled driver.  There should be no reason
-> > to also include platform_data support.
-> 
-> I thought it might be a good idea to support both for now. There have been
-> some discussions that the device tree should be just an alternative source
-> for platform data, the main argument being that platform data could be used
-> to overwrite data provided via DT.
-
-Unless you have an *actual* user of platform_data, don't borrow
-trouble by adding it.
-
-> Also I use this driver on some older kernels that can't boot from DT yet, but
-> I guess that argument isn't very valid because those kernels don't have IRQ
-> domain support either and the driver needs more changes anyway.
-> 
-> Is the official position to introduce new drivers as DT only?
-
-More like the official position is not not add things that are unused.
+Second, of_node_to_gpiochip() is no longer a valid API because gpiolib
+now allows multiple gpiochips to use the same device tree node.  See
+commit 3d0f7cf0f "gpio: Adjust of_xlate API to support multiple GPIO
+chips" to see a description of why this was changed.
 
 g.
+
+> ---
+>  drivers/gpio/gpiolib-of.c |   11 +++++++++++
+>  include/linux/of_gpio.h   |    5 +++++
+>  2 files changed, 16 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 8389d4a..b8010a9 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -234,3 +234,14 @@ void of_gpiochip_remove(struct gpio_chip *chip)
+>  	if (chip->of_node)
+>  		of_node_put(chip->of_node);
+>  }
+> +
+> +/* Private function for resolving node pointer to gpio_chip */
+> +static int of_gpiochip_is_match(struct gpio_chip *chip, void *data)
+> +{
+> +	return chip->of_node == data;
+> +}
+> +
+> +struct gpio_chip *of_node_to_gpiochip(struct device_node *np)
+> +{
+> +	return gpiochip_find(np, of_gpiochip_is_match);
+> +}
+> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+> index c454f57..880783b 100644
+> --- a/include/linux/of_gpio.h
+> +++ b/include/linux/of_gpio.h
+> @@ -61,6 +61,7 @@ extern void of_gpiochip_remove(struct gpio_chip *gc);
+>  extern int of_gpio_simple_xlate(struct gpio_chip *gc,
+>  				const struct of_phandle_args *gpiospec,
+>  				u32 *flags);
+> +extern struct gpio_chip *of_node_to_gpiochip(struct device_node *np);
+>  
+>  #else /* CONFIG_OF_GPIO */
+>  
+> @@ -84,6 +85,10 @@ static inline int of_gpio_simple_xlate(struct gpio_chip *gc,
+>  	return -ENOSYS;
+>  }
+>  
+> +static struct gpio_chip *of_node_to_gpiochip(struct device_node *np)
+> +{
+> +	return NULL;
+> +}
+>  static inline void of_gpiochip_add(struct gpio_chip *gc) { }
+>  static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
+>  
+> -- 
+> 1.7.0.4
+> 
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
