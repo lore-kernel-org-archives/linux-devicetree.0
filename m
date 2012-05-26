@@ -1,192 +1,139 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] ARM: davinci: i2c: add OF support
-Date: Sat, 26 May 2012 00:08:54 -0600
-Message-ID: <20120526060854.A9BB93E2E10@localhost>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4 1/7] ARM: davinci, intc: Add irq domain support
+Date: Sat, 26 May 2012 00:03:12 -0600
+Message-ID: <20120526060312.815A13E2578@localhost>
 References: <1337694920-8925-1-git-send-email-hs@denx.de>
-	<1337694920-8925-6-git-send-email-hs@denx.de>
+ <1337694920-8925-2-git-send-email-hs@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1337694920-8925-6-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1337694920-8925-2-git-send-email-hs@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: davinci-linux-open-source@linux.davincidsp.com
+Cc: Wolfgang Denk <wd@denx.de>, Sergei Shtylyov <sshtylyov@mvista.com>, devicetree-discuss@lists.ozlabs.org, Sekhar Nori <nsekhar@ti.com>, Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 May 2012 15:55:18 +0200, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
-> add of support for the davinci i2c driver.
-> 
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-> Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> 
-> ---
-> - changes for v2:
-> - add comments from Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
->   - use "cell-index" instead "id"
->   - OF_DEV_AUXDATA in the machine code, instead pre-define platform
->     device name
-> - add comment from Grant Likely:
->   - removed "id" resp. "cell-index" completely
->   - fixed documentation
->   - use of_match_ptr()
->   - use devm_kzalloc() for allocating plattform data mem
->   - fixed a whitespace issue
-> - no changes for v3
-> - changes for v4
->   remove "pinmux-handle" property as discussed here:
->   http://www.spinics.net/lists/arm-kernel/msg175701.html
->   with Nori Sekhar
-> ---
->  .../devicetree/bindings/arm/davinci/i2c.txt        |   31 +++++++++++++++++++
->  drivers/i2c/busses/i2c-davinci.c                   |   32 ++++++++++++++++++++
->  2 files changed, 63 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/davinci/i2c.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/i2c.txt b/Documentation/devicetree/bindings/arm/davinci/i2c.txt
-> new file mode 100644
-> index 0000000..e98a025
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/davinci/i2c.txt
-> @@ -0,0 +1,31 @@
-> +* Texas Instruments Davinci I2C
-> +
-> +This file provides information, what the device node for the
-> +davinci i2c interface contain.
-> +
-> +Required properties:
-> +- compatible: "ti,davinci-i2c";
-> +- reg : Offset and length of the register set for the device
-> +
-> +Recommended properties :
-> +- interrupts : <a> standard interrupt property.
-> +- clock-frequency : desired I2C bus clock frequency in Hz.
-> +
-> +Optional properties:
-> +- bus-delay: bus delay in usec
-> +
-> +Example (enbw_cmc board):
-> +	i2c@1c22000 {
-> +		compatible = "ti,davinci-i2c";
-> +		reg = <0x22000 0x1000>;
-> +		clock-frequency = <100000>;
-> +		interrupts = <15>;
-> +		interrupt-parent = <&intc>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		dtt@48 {
-> +				compatible = "national,lm75";
-> +				reg = <0x48>;
-> +			};
-> +	};
-> diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
-> index a76d85f..c1783bb 100644
-> --- a/drivers/i2c/busses/i2c-davinci.c
-> +++ b/drivers/i2c/busses/i2c-davinci.c
-> @@ -38,9 +38,12 @@
->  #include <linux/slab.h>
->  #include <linux/cpufreq.h>
->  #include <linux/gpio.h>
-> +#include <linux/of_i2c.h>
-> +#include <linux/of_device.h>
+On Tue, 22 May 2012 15:55:14 +0200, Heiko Schocher <hs@denx.de> wrote:
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> Cc: davinci-linux-open-source@linux.davincidsp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Sekhar Nori <nsekhar@ti.com>
+> Cc: Wolfgang Denk <wd@denx.de>
+> Cc: Sergei Shtylyov <sshtylyov@mvista.com>
+
+Hi Heiko,
+
+Earlier today I commented (again) on the previous version of this
+patch.  Sorry about that.  I'm happy with the direction this series is
+going.  Here's one more comments.
+
+> diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+> index f83152d..bb52807 100644
+> --- a/arch/arm/mach-davinci/cp_intc.c
+> +++ b/arch/arm/mach-davinci/cp_intc.c
+> @@ -9,8 +9,10 @@
+>   * kind, whether express or implied.
+>   */
 >  
->  #include <mach/hardware.h>
->  #include <mach/i2c.h>
-> +#include <mach/mux.h>
+> +#include <linux/export.h>
+>  #include <linux/init.h>
+>  #include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+>  #include <linux/io.h>
 >  
->  /* ----- global defines ----------------------------------------------- */
->  
-> @@ -635,6 +638,12 @@ static struct i2c_algorithm i2c_davinci_algo = {
->  	.functionality	= i2c_davinci_func,
+>  #include <mach/common.h>
+> @@ -99,18 +101,37 @@ static struct irq_chip cp_intc_irq_chip = {
+>  	.irq_set_wake	= cp_intc_set_wake,
 >  };
+
+All of the irq_chip hooks need to be switched from using d->irq to
+d->hwirq for the hardware irq number.  That sets up to driver to
+switch to using dynamic allocation of irq_descs.
+
 >  
-> +static const struct of_device_id davinci_i2c_of_match[] = {
-> +	{.compatible = "ti,davinci-i2c", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, davinci_i2c_of_match);
+> -void __init cp_intc_init(void)
+> +static struct irq_domain *cp_intc_domain;
 > +
->  static int davinci_i2c_probe(struct platform_device *pdev)
+> +static int cp_intc_host_map(struct irq_domain *h, unsigned int virq,
+> +			  irq_hw_number_t hw)
 >  {
->  	struct davinci_i2c_dev *dev;
-> @@ -676,6 +685,26 @@ static int davinci_i2c_probe(struct platform_device *pdev)
->  	dev->irq = irq->start;
->  	platform_set_drvdata(pdev, dev);
->  
-> +	if ((dev->dev->platform_data == NULL) &&
-> +		(pdev->dev.of_node)) {
-> +		struct davinci_i2c_platform_data *pdata;
-> +		u32 prop;
+> -	unsigned long num_irq	= davinci_soc_info.intc_irq_num;
+> +	pr_debug("cp_intc_host_map(%d, 0x%lx)\n", virq, hw);
 > +
-> +		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +		if (!pdata) {
-> +			r = -ENOMEM;
-> +			goto err_free_mem;
-> +		}
-> +		memcpy(pdata, &davinci_i2c_platform_data_default,
-> +			sizeof(*pdata));
-> +		dev->dev->platform_data = pdata;
-
-This is actually illegal.  Drivers must not change the value of
-dev->dev->platform_data.  It messes up unbinding/rebinding drivers.
-You'll need to have a copy of the pointer in davinci_i2c_dev.
-
-Other than that this patch looks good.
-
-g.
-
-> +		if (!of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-> +			&prop))
-> +			pdata->bus_freq = prop / 1000;
-> +		if (!of_property_read_u32(pdev->dev.of_node, "bus-delay",
-> +			&prop))
-> +			pdata->bus_delay = prop;
+> +	irq_set_chip(virq, &cp_intc_irq_chip);
+> +	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
+> +	irq_set_handler(virq, handle_edge_irq);
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops cp_intc_host_ops = {
+> +	.map = cp_intc_host_map,
+> +	.xlate = irq_domain_xlate_onetwocell,
+> +};
+> +
+> +int __init __cp_intc_init(struct device_node *node)
+> +{
+> +	u32 num_irq		= davinci_soc_info.intc_irq_num;
+>  	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
+>  	u32 *host_map		= davinci_soc_info.intc_host_map;
+>  	unsigned num_reg	= BITS_TO_LONGS(num_irq);
+> -	int i;
+> +	int i, irq_base;
+>  
+>  	davinci_intc_type = DAVINCI_INTC_TYPE_CP_INTC;
+>  	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
+> +
+>  	if (WARN_ON(!davinci_intc_base))
+> -		return;
+> +		return -EINVAL;
+>  
+>  	cp_intc_write(0, CP_INTC_GLOBAL_ENABLE);
+>  
+> @@ -165,13 +186,28 @@ void __init cp_intc_init(void)
+>  		for (i = 0; host_map[i] != -1; i++)
+>  			cp_intc_write(host_map[i], CP_INTC_HOST_MAP(i));
+>  
+> -	/* Set up genirq dispatching for cp_intc */
+> -	for (i = 0; i < num_irq; i++) {
+> -		irq_set_chip(i, &cp_intc_irq_chip);
+> -		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
+> -		irq_set_handler(i, handle_edge_irq);
+> +	irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
+> +	if (irq_base < 0) {
+> +		pr_warn("Couldn't allocate IRQ numbers\n");
+> +		irq_base = 0;
 > +	}
->  	dev->clk = clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(dev->clk)) {
->  		r = -ENODEV;
-> @@ -711,6 +740,7 @@ static int davinci_i2c_probe(struct platform_device *pdev)
->  	adap->algo = &i2c_davinci_algo;
->  	adap->dev.parent = &pdev->dev;
->  	adap->timeout = DAVINCI_I2C_TIMEOUT;
-> +	adap->dev.of_node = pdev->dev.of_node;
->  
->  	adap->nr = pdev->id;
->  	r = i2c_add_numbered_adapter(adap);
-> @@ -718,6 +748,7 @@ static int davinci_i2c_probe(struct platform_device *pdev)
->  		dev_err(&pdev->dev, "failure adding adapter\n");
->  		goto err_free_irq;
+> +
+> +	/* create a legacy host */
+> +	cp_intc_domain = irq_domain_add_legacy(node, num_irq,
+> +					irq_base, 0, &cp_intc_host_ops, NULL);
+> +
+> +	if (cp_intc_domain == NULL) {
+> +		pr_err("CP INTC: failed to allocate irq host!\n");
+> +		return -EINVAL;
 >  	}
-> +	of_i2c_register_devices(adap);
 >  
->  	return 0;
->  
-> @@ -809,6 +840,7 @@ static struct platform_driver davinci_i2c_driver = {
->  		.name	= "i2c_davinci",
->  		.owner	= THIS_MODULE,
->  		.pm	= davinci_i2c_pm_ops,
-> +		.of_match_table = of_match_ptr(davinci_i2c_of_match),
->  	},
->  };
->  
+>  	/* Enable global interrupt */
+>  	cp_intc_write(1, CP_INTC_GLOBAL_ENABLE);
+> +
+> +	return 0;
+> +}
+> +
+> +void __init cp_intc_init(void)
+> +{
+> +	__cp_intc_init(NULL);
+>  }
 > -- 
 > 1.7.7.6
 > 
