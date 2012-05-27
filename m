@@ -1,110 +1,34 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] MXS: Add DT binding support into stmp3xxx-rtc
-Date: Sun, 27 May 2012 04:11:29 +0200
-Message-ID: <1338084689-12003-1-git-send-email-marex@denx.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 6/6] pinctrl: add pinctrl gpio binding support
+Date: Sun, 27 May 2012 09:39:19 -0600
+Message-ID: <4FC24AA7.9040100@wwwdotorg.org>
+References: <1337952980-14621-1-git-send-email-b29396@freescale.com> <1337952980-14621-6-git-send-email-b29396@freescale.com> <4FBFBB74.901@wwwdotorg.org> <CAA+hA=QMe6Yo2aLMBcbkYLDXSagb9L919hjdQaq8TyH4uKh9Mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAA+hA=QMe6Yo2aLMBcbkYLDXSagb9L919hjdQaq8TyH4uKh9Mw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <dongas86@gmail.com>
+Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-Add simple binding for the stmp3xxx-rtc.
+On 05/26/2012 10:52 AM, Dong Aisheng wrote:
+> On Fri, May 25, 2012 at 10:03 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 05/25/2012 07:36 AM, Dong Aisheng wrote:
+...
+>> If we don't do that, [lock ranges[i].gc] I would argue that we
+>> shouldn't store ranges[i].gc, since it might become invalid - I
+>> believe the only use of it is withinthis function?
+>>
+> In my option, i think it's ok to store it since they're just some data
+> to describe
+> hw properties. The gpio function may become invalid but not data.
+> Is it reasonable to you?
 
-Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/rtc/stmp3xxx-rtc.txt       |   20 ++++++++++++++++++++
- arch/arm/boot/dts/imx28.dtsi                       |    1 +
- drivers/rtc/rtc-stmp3xxx.c                         |    8 ++++++++
- 3 files changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
-
-diff --git a/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
-new file mode 100644
-index 0000000..a49dd52
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
-@@ -0,0 +1,20 @@
-+* STMP3xxx/i.MX28 Time Clock controller
-+
-+Required properties:
-+- compatible: should be one of the following.
-+    * "fsl,stmp3xxx-rtc"
-+    * "fsl,imx28-rtc"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: Two interrupt numbers to the cpu should be specified. First
-+  interrupt number is the rtc rick interupt and second interrupt number
-+  is the rtc alarm interrupt. The number of cells representing a interrupt
-+  depends on the parent interrupt controller.
-+
-+Example:
-+
-+	rtc@80056000 {
-+		compatible = "fsl,imx28-rtc";
-+		reg = <0x80056000 2000>;
-+		interrupts = <28 29>;
-+	};
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index d470276..119f183 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -370,6 +370,7 @@
- 			};
- 
- 			rtc@80056000 {
-+				compatible = "fsl,imx28-rtc";
- 				reg = <0x80056000 2000>;
- 				interrupts = <28 29>;
- 				status = "disabled";
-diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-index 1028786..dea9764 100644
---- a/drivers/rtc/rtc-stmp3xxx.c
-+++ b/drivers/rtc/rtc-stmp3xxx.c
-@@ -25,6 +25,7 @@
- #include <linux/interrupt.h>
- #include <linux/rtc.h>
- #include <linux/slab.h>
-+#include <linux/of_device.h>
- 
- #include <mach/common.h>
- 
-@@ -265,6 +266,12 @@ static int stmp3xxx_rtc_resume(struct platform_device *dev)
- #define stmp3xxx_rtc_resume	NULL
- #endif
- 
-+static const struct of_device_id rtc_dt_ids[] = {
-+	{ .compatible = "fsl,stmp3xxx-rtc", },
-+	{ .compatible = "fsl,imx28-rtc", },
-+	{ /* sentinel */ }
-+};
-+
- static struct platform_driver stmp3xxx_rtcdrv = {
- 	.probe		= stmp3xxx_rtc_probe,
- 	.remove		= stmp3xxx_rtc_remove,
-@@ -273,6 +280,7 @@ static struct platform_driver stmp3xxx_rtcdrv = {
- 	.driver		= {
- 		.name	= "stmp3xxx-rtc",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = rtc_dt_ids,
- 	},
- };
- 
--- 
-1.7.10
+The problem is that if someone tries to dereference the gc field, and
+it's no longer valid, which could cause an OOPS. Perhaps we can get away
+just with a comment in the struct definition indicating that this field
+should only be used by drivers that provided the gc field directly
+rather than having it set up by DT, but then why even store it when
+creating the ranges from DT in that case?
