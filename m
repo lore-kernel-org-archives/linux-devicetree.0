@@ -1,34 +1,68 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v4 6/6] pinctrl: add pinctrl gpio binding support
-Date: Sun, 27 May 2012 09:39:19 -0600
-Message-ID: <4FC24AA7.9040100@wwwdotorg.org>
-References: <1337952980-14621-1-git-send-email-b29396@freescale.com> <1337952980-14621-6-git-send-email-b29396@freescale.com> <4FBFBB74.901@wwwdotorg.org> <CAA+hA=QMe6Yo2aLMBcbkYLDXSagb9L919hjdQaq8TyH4uKh9Mw@mail.gmail.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 05/12] usb: chipidea: add imx platform driver
+Date: Tue, 29 May 2012 11:05:06 +0800
+Message-ID: <20120529030505.GA2542@b20223-02.ap.freescale.net>
+References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
+ <1337912665-16615-6-git-send-email-richard.zhao@freescale.com>
+ <87k400ac6x.fsf@ashishki-desk.ger.corp.intel.com>
+ <20120525085109.GB18733@b20223-02.ap.freescale.net>
+ <87hav4a8ud.fsf@ashishki-desk.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAA+hA=QMe6Yo2aLMBcbkYLDXSagb9L919hjdQaq8TyH4uKh9Mw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <dongas86@gmail.com>
-Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87hav4a8ud.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/26/2012 10:52 AM, Dong Aisheng wrote:
-> On Fri, May 25, 2012 at 10:03 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 05/25/2012 07:36 AM, Dong Aisheng wrote:
-...
->> If we don't do that, [lock ranges[i].gc] I would argue that we
->> shouldn't store ranges[i].gc, since it might become invalid - I
->> believe the only use of it is withinthis function?
->>
-> In my option, i think it's ok to store it since they're just some data
-> to describe
-> hw properties. The gpio function may become invalid but not data.
-> Is it reasonable to you?
+Hi Alex,
 
-The problem is that if someone tries to dereference the gc field, and
-it's no longer valid, which could cause an OOPS. Perhaps we can get away
-just with a comment in the struct definition indicating that this field
-should only be used by drivers that provided the gc field directly
-rather than having it set up by DT, but then why even store it when
-creating the ranges from DT in that case?
+On Fri, May 25, 2012 at 12:49:46PM +0300, Alexander Shishkin wrote:
+> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> 
+> > On Fri, May 25, 2012 at 11:37:26AM +0300, Alexander Shishkin wrote:
+> >> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> >> 
+> >> > This patch supports only the host-mode functionality so far.
+> >> >
+> >> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> >> > Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >> > Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >> > Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> >> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> >> > ---
+> >> >  .../devicetree/bindings/usb/ci13xxx-imx.txt        |   20 ++
+> >> >  drivers/usb/chipidea/Makefile                      |    3 +
+> >> >  drivers/usb/chipidea/ci13xxx_imx.c                 |  189 ++++++++++++++++++++
+> >> 
+> >> One comment: I was going to suggest dropping "13xxx" suffix from
+> >> everywhere in the driver, maybe module names too, since it doesn't
+> >> really add any value and people often mistype it, so maybe for the new
+> >> code it makes sense to avoid it? ci-imx looks better than ci13xxx-imx
+> >> anyway and same goes for ci_imx_probe() vs ci13xxx_imx_probe().
+> >> Does this make sense to you?
+> > I'm not clear with the history. Does Chipidea only have one IP?
+> 
+> As far as their USB controllers go, there are several versions with
+> different features and register layouts, but essentially similar. I want
+> to support all of them with this driver. As for the other IPs designed
+> by chipidea -- I have no idea about those, but I don't think we should
+> care.
+Cleaning up ci13xxx will touch almost every chipidea driver files. Do
+you want me to do it or ?
+
+Thanks
+Richard
+> 
+> Regards,
+> --
+> Alex
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
