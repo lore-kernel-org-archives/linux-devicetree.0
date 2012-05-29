@@ -1,93 +1,48 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] ARM: davinci: i2c: add OF support
-Date: Tue, 29 May 2012 15:28:21 +0200
-Message-ID: <4FC4CEF5.2030206@denx.de>
-References: <1337694920-8925-1-git-send-email-hs@denx.de>
- <1337694920-8925-6-git-send-email-hs@denx.de>
- <20120526060854.A9BB93E2E10@localhost>
-Reply-To: hs-ynQEQJNshbs@public.gmane.org
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 0/3] omap3/omap4: add device tree support for wdt
+Date: Tue, 29 May 2012 12:47:14 -0500
+Message-ID: <4FC50BA2.4070404@ti.com>
+References: <1337942552-28218-1-git-send-email-jgq516@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20120526060854.A9BB93E2E10@localhost>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1337942552-28218-1-git-send-email-jgq516@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jgq516@gmail.com
+Cc: linux@arm.linux.org.uk, b-cousson@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, rnayak@ti.com, tony@atomide.com, wim@iguana.be, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Grant,
+Hi Xiao Jiang,
 
-Am 26.05.2012 08:08, Grant Likely wrote:
-> On Tue, 22 May 2012 15:55:18 +0200, Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>  wrote:
->> add of support for the davinci i2c driver.
->>
->> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
->> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
->> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: Ben Dooks<ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
->> Cc: Wolfram Sang<w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
->> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
->> Cc: Sylwester Nawrocki<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> ---
->> - changes for v2:
->> - add comments from Sylwester Nawrocki<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
->>    - use "cell-index" instead "id"
->>    - OF_DEV_AUXDATA in the machine code, instead pre-define platform
->>      device name
->> - add comment from Grant Likely:
->>    - removed "id" resp. "cell-index" completely
->>    - fixed documentation
->>    - use of_match_ptr()
->>    - use devm_kzalloc() for allocating plattform data mem
->>    - fixed a whitespace issue
->> - no changes for v3
->> - changes for v4
->>    remove "pinmux-handle" property as discussed here:
->>    http://www.spinics.net/lists/arm-kernel/msg175701.html
->>    with Nori Sekhar
->> ---
->>   .../devicetree/bindings/arm/davinci/i2c.txt        |   31 +++++++++++++++++++
->>   drivers/i2c/busses/i2c-davinci.c                   |   32 ++++++++++++++++++++
->>   2 files changed, 63 insertions(+), 0 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/arm/davinci/i2c.txt
-[...]
->> diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
->> index a76d85f..c1783bb 100644
->> --- a/drivers/i2c/busses/i2c-davinci.c
->> +++ b/drivers/i2c/busses/i2c-davinci.c
-[...]
->> @@ -676,6 +685,26 @@ static int davinci_i2c_probe(struct platform_device *pdev)
->>   	dev->irq = irq->start;
->>   	platform_set_drvdata(pdev, dev);
->>
->> +	if ((dev->dev->platform_data == NULL)&&
->> +		(pdev->dev.of_node)) {
->> +		struct davinci_i2c_platform_data *pdata;
->> +		u32 prop;
->> +
->> +		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->> +		if (!pdata) {
->> +			r = -ENOMEM;
->> +			goto err_free_mem;
->> +		}
->> +		memcpy(pdata,&davinci_i2c_platform_data_default,
->> +			sizeof(*pdata));
->> +		dev->dev->platform_data = pdata;
->
-> This is actually illegal.  Drivers must not change the value of
-> dev->dev->platform_data.  It messes up unbinding/rebinding drivers.
-> You'll need to have a copy of the pointer in davinci_i2c_dev.
+On 05/25/2012 05:42 AM, jgq516@gmail.com wrote:
+> From: Xiao Jiang <jgq516@gmail.com>
+> 
+> This series can be applied to dt branch of linux-omap tree.
 
-fixed.
+Thanks for sending this!
 
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Since omap24xx series has different wdt base addr (omap2420: 0x48022000 and
+> omap2430: 0x49016000) per commit 2817142f31bfbf26c216bf4f9192540c81b2d071, so
+> I don't add wdt node in omap2.dtsi just like omap3 and omap4, maybe different
+> dts files are needed for omap2420 and omap2430.
+
+Good point. I am wondering if we can simple drop the address from the
+wdt2 node for omap2. It is not really being used. May be Benoit can comment.
+
+Cheers
+Jon
+
+> Tested with omap4430 blaze board.
+> 
+> Xiao Jiang (3):
+>   arm/dts: add wdt node for omap3 and omap4
+>   OMAP: wdt: add device tree support
+>   watchdog: omap_wdt: add device tree support
+> 
+>  arch/arm/boot/dts/omap3.dtsi  |    5 +++++
+>  arch/arm/boot/dts/omap4.dtsi  |    5 +++++
+>  arch/arm/mach-omap2/devices.c |    2 +-
+>  drivers/watchdog/omap_wdt.c   |    8 ++++++++
+>  4 files changed, 19 insertions(+), 1 deletions(-)
+> 
