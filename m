@@ -1,23 +1,135 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH v4 6/6] pinctrl: add pinctrl gpio binding support
-Date: Wed, 30 May 2012 14:35:46 +0800
-Message-ID: <20120530063547.01BD83E065C@localhost>
-References: <1337952980-14621-1-git-send-email-b29396@freescale.com> <1337952980-14621-6-git-send-email-b29396@freescale.com> <4FBFBB74.901@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FBFBB74.901@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
+Date: Wed, 30 May 2012 14:46:41 +0800
+Message-ID: <20120530064641.26D383E065C@localhost>
+References: <1337952980-14621-1-git-send-email-b29396@freescale.com>
+ <1337952980-14621-6-git-send-email-b29396@freescale.com>
+ <20120526002950.062683E14F7@localhost>
+ <CAA+hA=QT83wqe8MOi4B4xY4zTGbQPVhKxwuU_A+cPg-U3JicGw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3474177696633543474=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAA+hA=QT83wqe8MOi4B4xY4zTGbQPVhKxwuU_A+cPg-U3JicGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 May 2012 11:03:48 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> I believe Grant wants to change the of_xlate prototype in order to be
-> able to return a different gc value, so this will probably need slight
-> rework work with that change, once they're both approved. Still, I think
-> this is fine for now.
+--===============3474177696633543474==
+Content-Type: text/plain
 
-I took a different approach.  Now multiple gpio_chips can use the same
-of node, and of_xlate needs to match on the entire gpio specifier, not
-just the node.  This code is now in mainline.
+On Sat, 26 May 2012 09:58:06 -0700, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, May 25, 2012 at 5:29 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > On Fri, 25 May 2012 21:36:20 +0800, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> >> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>
+> >> This patch implements a standard common binding for pinctrl gpio ranges.
+> >> Each SoC can add gpio ranges through device tree by adding a gpio-maps property
+> >> under their pinctrl devices node with the format:
+> >> <&gpio $gpio-specifier $pin_offset $count>
+> >> while the gpio phandle and gpio-specifier are the standard approach
+> >> to represent a gpio in device tree.
+> >> Then we can cooperate it with the gpio xlate function to get the gpio number
+> >> from device tree to set up the gpio ranges map.
+> >>
+> >> Then the pinctrl driver can call pinctrl_dt_add_gpio_ranges(pctldev, node)
+> >> to parse and register the gpio ranges from device tree.
+> >>
+> >> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >> Personally i'm not very satisfied with current solution due to a few reasons:
+> >> 1) i can not user standard gpio api to get gpio number
+> >> 2) i need to reinvent a new api of_parse_phandles_with_args_ext which i'm not
+> >> sure if it can be accepted by DT maintainer.
+> >
+> > Right, as mentioned in my other email, doing it this way completely
+> > breaks the way the phandle-with-args pattern works.  That pattern
+> > depends on the phandle node to have a #-cells property telling it how
+> > many cells to process for the binding.  Adding additional data cells
+> > means the kernel is no longer able to parse multiple entries in the
+> > gpios property.
+> Hmm, it can still parse multiple entries in the gpios property except
+> that it adds two args although it's not related to gpio, but it is useful
+> for users for special case like pinctrl gpio ranges map.
+
+Really?  How exactly does it know that each record is longer than
+#gpio-cells specifies (I'm speaking from the binding level; not having
+custom code that just "knows" the the records have additional
+padding).
+
+I have no interest in creating exceptions to the phandle-with-args
+pattern since it adds yet more implicit knowledge about how to parse.
+For example, the common gpio code can no longer parse a gpios property
+that is padded out because the common code doesn't know anything about
+padding.
 
 g.
+
+> > Hmmm.... I need more information about this gpio-maps property.  How
+> > is it arranged?  What kind of data is in it.  Can you give some
+> > specific examples of how hardware would be described with a gpio-maps
+> > property?
+> >
+> For exampe:
+> MX6Q_PAD_SD2_DAT2__GPIO_1_13 means MX6Q_PAD_SD2_DAT2 can be used as GPIO_1_13,
+> For reference gpio1,13, we usually do: xx-gpios = <gpio1 13 0> in device tree.
+> Here we want to create a pin map of gpio1,13 to MX6Q_PAD_SD2_DAT2 for
+> pinctrl gpio ranges map,
+> the format should be <GPIO_NUMBER PIN_ID NPINS>, then the pinctrl core
+> can automatically mux
+> the PIN_ID to gpio function by refer to this map.
+> For GPIO_NUMBER, we want to use the standard gpio dt represent way
+> since the gpio base may
+> be dynamically.
+> Assume MX6Q_PAD_SD2_DAT2 pin id is 1 and only one pin starting from it
+> can be used as gpio.
+> Then the gpio-maps for MX6Q_PAD_SD2_DAT2 can be:
+> gpio-maps = <gpio1 13 0 1 1>
+> 
+> We may have several pins can be used as gpio on mx6q.
+> Then the gpio-maps may becomes:
+> gpio-maps = <gpio1 13 0 1 1>,
+>                    <gpio1 14 0 5 1>,
+>                    <gpio2 0 0 20 1>,
+>                    ................
+> 
+> Since the format is a little different from the standard gpio
+> represent way, so i can not use the standard gpio
+> api to parse the gpio number. That's why i need to invent
+> of_parse_phandle_args_ext function for this special
+> format.
+> 
+> we still did not find any better way to do that.
+> Do you have any suggestion for this special case?
+
+Oh, I see....  Does this gpio-maps property sit beside a normal
+"gpios" property?  Or is it in a completely separate node?  If it sits
+beside a normal "gpios" property and lines up with the gpio properties
+there, then I would just make it a tuple for each gpio.  Ie:
+
+gpios = <&gpio1 13 0>, <&gpio1 14 0>, <&gpio2 0 0>;
+gpio-pinmux = <1 1>,   <5 1>,         <20 1>;
+
+g.
+
+
+--===============3474177696633543474==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3474177696633543474==--
