@@ -1,57 +1,69 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] slimbus: Linux driver framework for SLIMbus.
-Date: Wed, 30 May 2012 19:13:40 +0100
-Message-ID: <20120530181340.GT9947@opensource.wolfsonmicro.com>
-References: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
+From: Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] OMAP: mailbox initial device tree support
+Date: Wed, 30 May 2012 14:31:57 -0500
+Message-ID: <CALLhW=7hdmTZsipbVvGXNNCwE=NsvYJc9mUWRff3V7CA=_vskQ@mail.gmail.com>
+References: <1335894460-19941-1-git-send-email-omar.luna@linaro.org>
+	<B5906170F1614E41A8A28DE3B8D121433EA68F6D@DBDE01.ent.ti.com>
+	<4FBE574F.6070408@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nSQp8DZZn7gZbDHt"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sagar Dharia <sdharia@codeaurora.org>
-Cc: davidb@codeaurora.org, bryanh@codeaurora.org, kheitke@codeaurora.org, marc@plastictigers.com, gclemson@audience.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rob@landley.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, ohad@wizery.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, rusty@rustcorp.com.au, joerg.roedel@amd.com, trenn@suse.de, ak@linux.intel.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <4FBE574F.6070408-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Bedia,
+	Vaibhav" <vaibhav.bedia-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---nSQp8DZZn7gZbDHt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 24 May 2012 10:44, Cousson, Benoit <b-cousson-l0cyMroinI0@public.gmane.org> wrote:
+> On 5/2/2012 7:42 AM, Bedia, Vaibhav wrote:
+>>
+>> Hi Omar,
+>>
+>> On Tue, May 01, 2012 at 23:17:38, Omar Ramirez Luna wrote:
+>>>
+>>> To allow mailbox driver to function with device tree.
+>>>
+>>> Tested in OMAP4 and OMAP3. OMAP2 untested.
+>>
+>>
+>> I think the mailbox code needs a cleanup similar to what you
+>> had proposed earlier [1] before the device tree support is added.
+>>
+>> We probably need to decide whether the number of mailbox sub-modules
+>> should be part of hwmod attribute or come from device tree. IMO the
+>> static allocation of the mailboxes is better suited in the device-tree
+>> data.
+>
+>
+> Ideally yes, but that assumes we are supporting only DT boot method, which
+> is still not the case today.
+>
+> That being said, the driver might still be able to leverage DT if available
+> already.
+>
+>
+> This can be done later as well.
+>
+> Omar,
+> That's up to you.
 
-On Tue, May 29, 2012 at 07:11:33PM -0600, Sagar Dharia wrote:
-> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
-> developed by MIPI (Mobile Industry Processor Interface) alliance.
+Thanks for the ack on the 2nd patch.
 
-This patch is about 150k which is rather large to review.  It would be
-enormously helpful for review if it could be broken down into a patch
-series.  For example, things like the device registration could be
-broken out into a separate patch as could the core bus operations and
-things like the clocking/bandwidth management.
+Yes, I think these changes doesn't depend on the cleanup of the
+driver, they could be included prior to them.
 
-I've not actually looked through the patch yet, partly because doing it
-all in one sitting will take some time.
+Regards,
 
---nSQp8DZZn7gZbDHt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPxmNNAAoJEBus8iNuMP3dWncQAJz+MUy1mv9h5xcNZiY/kJR7
-YQuFHPMND62UShnWdoygqvEQkH4dOqJ28hZvh9n8qwWazJGf6o8FLTBPM71htCZ8
-L9eGgGJASvF5us0dleOtJLUNj3//tbIxAFXozOyAPJmXrYsp1h3V50CWMqarFRL0
-CMRLKJT/pW69NtusPvQPYD6UDOIuaUTlihP+zz6ccXzm2g7tC0rRLnpIp4mMlG2z
-GzOI35Kb0zyTGE16F69Mgyl29K/GvHP3MBn5PFJPWsNLe1QM9i+WRJouxRwLW0ZV
-aMD42VRyuCpCF7lAiBanh048t0KulxrhQ1a4vwmbMONTkm+Xu6ZpjZUw16SNI2vF
-U9tVVEpbRsE6LAZo2FMwHlg0l+q2EsH1VKX37/m2zma3RMDwPwt9LC5/kJFi9F/I
-x5Y1ZEhekBul2RE92e3kLzHfqUn5L1/NVY6Vu8iSe2mcCS+LeN4SOqpkDGmF3/AH
-3fCaInROWD2ZMrBxN7mcTJ3Li/+4hkScjPSHDsyrqFX26wB2ZsiwMpTGhlm0Hb/+
-v9VIgkJ/pKUAvBiC/YeHl0cERVV7zu02dlLfStJXx2AQFvAShBCkpC8QvMnN1s97
-mk40jYMXeDXCmOwusWC8jAE0u6sJ9RYRklAp+BwLzOV7GmSG2xMgvfI4GGwT7nWx
-CTUA7Gr0bLtmXvXLaZAs
-=TAq0
------END PGP SIGNATURE-----
-
---nSQp8DZZn7gZbDHt--
+Omar
