@@ -1,135 +1,137 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4 6/6] pinctrl: add pinctrl gpio binding support
-Date: Wed, 30 May 2012 14:46:41 +0800
-Message-ID: <20120530064641.26D383E065C@localhost>
-References: <1337952980-14621-1-git-send-email-b29396@freescale.com>
- <1337952980-14621-6-git-send-email-b29396@freescale.com>
- <20120526002950.062683E14F7@localhost>
- <CAA+hA=QT83wqe8MOi4B4xY4zTGbQPVhKxwuU_A+cPg-U3JicGw@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 02/10] spi: s3c64xx: move controller information into
+ driver data
+Date: Wed, 30 May 2012 00:23:49 -0700
+Message-ID: <CAOesGMjGfCH1T6WXPzMDLKsD=URdm15G1SDM=ac624KLmSS=4w@mail.gmail.com>
+References: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org>
+	<1336514694-22393-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3474177696633543474=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAA+hA=QT83wqe8MOi4B4xY4zTGbQPVhKxwuU_A+cPg-U3JicGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1336514694-22393-3-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
---===============3474177696633543474==
-Content-Type: text/plain
+Hi,
 
-On Sat, 26 May 2012 09:58:06 -0700, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, May 25, 2012 at 5:29 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > On Fri, 25 May 2012 21:36:20 +0800, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> >> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>
-> >> This patch implements a standard common binding for pinctrl gpio ranges.
-> >> Each SoC can add gpio ranges through device tree by adding a gpio-maps property
-> >> under their pinctrl devices node with the format:
-> >> <&gpio $gpio-specifier $pin_offset $count>
-> >> while the gpio phandle and gpio-specifier are the standard approach
-> >> to represent a gpio in device tree.
-> >> Then we can cooperate it with the gpio xlate function to get the gpio number
-> >> from device tree to set up the gpio ranges map.
-> >>
-> >> Then the pinctrl driver can call pinctrl_dt_add_gpio_ranges(pctldev, node)
-> >> to parse and register the gpio ranges from device tree.
-> >>
-> >> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> ---
-> >> Personally i'm not very satisfied with current solution due to a few reasons:
-> >> 1) i can not user standard gpio api to get gpio number
-> >> 2) i need to reinvent a new api of_parse_phandles_with_args_ext which i'm not
-> >> sure if it can be accepted by DT maintainer.
-> >
-> > Right, as mentioned in my other email, doing it this way completely
-> > breaks the way the phandle-with-args pattern works.  That pattern
-> > depends on the phandle node to have a #-cells property telling it how
-> > many cells to process for the binding.  Adding additional data cells
-> > means the kernel is no longer able to parse multiple entries in the
-> > gpios property.
-> Hmm, it can still parse multiple entries in the gpios property except
-> that it adds two args although it's not related to gpio, but it is useful
-> for users for special case like pinctrl gpio ranges map.
+Some comments below.
 
-Really?  How exactly does it know that each record is longer than
-#gpio-cells specifies (I'm speaking from the binding level; not having
-custom code that just "knows" the the records have additional
-padding).
+On Tue, May 8, 2012 at 3:04 PM, Thomas Abraham
+<thomas.abraham@linaro.org> wrote:
+> Platform data is used to specify controller hardware specific informa=
+tion
+> such as the tx/rx fifo level mask and bit offset of rx fifo level. Su=
+ch
+> information is not suitable to be supplied from device tree. Instead,
+> it can be moved into the driver data and removed from platform data.
+>
+> Cc: Jaswinder Singh <jaswinder.singh@linaro.org>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+> =A0drivers/spi/spi-s3c64xx.c | =A0180 +++++++++++++++++++++++++++++++=
++++++++-------
+> =A01 files changed, 153 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index 6a3d51a..f6bc0e3 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
 
-I have no interest in creating exceptions to the phandle-with-args
-pattern since it adds yet more implicit knowledge about how to parse.
-For example, the common gpio code can no longer parse a gpios property
-that is padded out because the common code doesn't know anything about
-padding.
+> @@ -171,6 +198,8 @@ struct s3c64xx_spi_driver_data {
+> =A0 =A0 =A0 =A0struct s3c64xx_spi_dma_data =A0 =A0 rx_dma;
+> =A0 =A0 =A0 =A0struct s3c64xx_spi_dma_data =A0 =A0 tx_dma;
+> =A0 =A0 =A0 =A0struct samsung_dma_ops =A0 =A0 =A0 =A0 =A0*ops;
+> + =A0 =A0 =A0 struct s3c64xx_spi_port_config =A0*port_conf;
+> + =A0 =A0 =A0 unsigned =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+port_id;
 
-g.
-
-> > Hmmm.... I need more information about this gpio-maps property.  How
-> > is it arranged?  What kind of data is in it.  Can you give some
-> > specific examples of how hardware would be described with a gpio-maps
-> > property?
-> >
-> For exampe:
-> MX6Q_PAD_SD2_DAT2__GPIO_1_13 means MX6Q_PAD_SD2_DAT2 can be used as GPIO_1_13,
-> For reference gpio1,13, we usually do: xx-gpios = <gpio1 13 0> in device tree.
-> Here we want to create a pin map of gpio1,13 to MX6Q_PAD_SD2_DAT2 for
-> pinctrl gpio ranges map,
-> the format should be <GPIO_NUMBER PIN_ID NPINS>, then the pinctrl core
-> can automatically mux
-> the PIN_ID to gpio function by refer to this map.
-> For GPIO_NUMBER, we want to use the standard gpio dt represent way
-> since the gpio base may
-> be dynamically.
-> Assume MX6Q_PAD_SD2_DAT2 pin id is 1 and only one pin starting from it
-> can be used as gpio.
-> Then the gpio-maps for MX6Q_PAD_SD2_DAT2 can be:
-> gpio-maps = <gpio1 13 0 1 1>
-> 
-> We may have several pins can be used as gpio on mx6q.
-> Then the gpio-maps may becomes:
-> gpio-maps = <gpio1 13 0 1 1>,
->                    <gpio1 14 0 5 1>,
->                    <gpio2 0 0 20 1>,
->                    ................
-> 
-> Since the format is a little different from the standard gpio
-> represent way, so i can not use the standard gpio
-> api to parse the gpio number. That's why i need to invent
-> of_parse_phandle_args_ext function for this special
-> format.
-> 
-> we still did not find any better way to do that.
-> Do you have any suggestion for this special case?
-
-Oh, I see....  Does this gpio-maps property sit beside a normal
-"gpios" property?  Or is it in a completely separate node?  If it sits
-beside a normal "gpios" property and lines up with the gpio properties
-there, then I would just make it a tuple for each gpio.  Ie:
-
-gpios = <&gpio1 13 0>, <&gpio1 14 0>, <&gpio2 0 0>;
-gpio-pinmux = <1 1>,   <5 1>,         <20 1>;
-
-g.
+unsigned int
 
 
---===============3474177696633543474==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> @@ -942,6 +964,13 @@ static void s3c64xx_spi_hwinit(struct s3c64xx_sp=
+i_driver_data *sdd, int channel)
+> =A0 =A0 =A0 =A0flush_fifo(sdd);
+> =A0}
+>
+> +static inline struct s3c64xx_spi_port_config *s3c64xx_spi_get_port_c=
+onfig(
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 struct platform_device *pdev)
+> +{
+> + =A0 =A0 =A0 return (struct s3c64xx_spi_port_config *)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0platform_get_device_=
+id(pdev)->driver_data;
+> +}
+> +
+> =A0static int __init s3c64xx_spi_probe(struct platform_device *pdev)
+> =A0{
+> =A0 =A0 =A0 =A0struct resource *mem_res, *dmatx_res, *dmarx_res;
+> @@ -1000,6 +1029,7 @@ static int __init s3c64xx_spi_probe(struct plat=
+form_device *pdev)
+> =A0 =A0 =A0 =A0platform_set_drvdata(pdev, master);
+>
+> =A0 =A0 =A0 =A0sdd =3D spi_master_get_devdata(master);
+> + =A0 =A0 =A0 sdd->port_conf =3D s3c64xx_spi_get_port_config(pdev);
+> =A0 =A0 =A0 =A0sdd->master =3D master;
+> =A0 =A0 =A0 =A0sdd->cntrlr_info =3D sci;
+> =A0 =A0 =A0 =A0sdd->pdev =3D pdev;
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+Single-use helper? Might as well open code it in this case.
 
---===============3474177696633543474==--
+
+> @@ -1227,6 +1258,100 @@ static const struct dev_pm_ops s3c64xx_spi_pm=
+ =3D {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 s3c64xx_spi_runti=
+me_resume, NULL)
+> =A0};
+>
+> +#if defined(CONFIG_CPU_S3C2416) || defined(CONFIG_CPU_S3C2443)
+> +struct s3c64xx_spi_port_config s3c2443_spi_port_config =3D {
+> + =A0 =A0 =A0 .fifo_lvl_mask =A0=3D { 0x7f },
+> + =A0 =A0 =A0 .rx_lvl_offset =A0=3D 13,
+> + =A0 =A0 =A0 .tx_st_done =A0 =A0 =3D 21,
+> + =A0 =A0 =A0 .high_speed =A0 =A0 =3D true,
+> +};
+> +#define S3C2443_SPI_PORT_CONFIG ((kernel_ulong_t)&s3c2443_spi_port_c=
+onfig)
+> +#else
+> +#define S3C2443_SPI_PORT_CONFIG ((kernel_ulong_t)NULL)
+> +#endif
+
+Is it really worth it to do the ifdefs here for just 16 bytes of data
+per entry? The table itself below takes more space.
+
+
+[..]
+
+> +#ifdef CONFIG_ARCH_S5PV210
+> +struct s3c64xx_spi_port_config s5pv210_spi_port_config =3D {
+> + =A0 =A0 =A0 .fifo_lvl_mask =A0=3D { 0x1ff, 0x7F },
+> + =A0 =A0 =A0 .rx_lvl_offset =A0=3D 15,
+> + =A0 =A0 =A0 .tx_st_done =A0 =A0 =3D 25,
+> + =A0 =A0 =A0 .high_speed =A0 =A0 =3D 1,
+
+high_speed =3D true
+
+> +};
+> +#define S5PV210_SPI_PORT_CONFIG ((kernel_ulong_t)&s5pv210_spi_port_c=
+onfig)
+> +#else
+> +#define S5PV210_SPI_PORT_CONFIG ((kernel_ulong_t)NULL)
+> +#endif /* CONFIG_ARCH_S5PV210 */
+> +
+> +#ifdef CONFIG_ARCH_EXYNOS4
+> +struct s3c64xx_spi_port_config exynos4_spi_port_config =3D {
+> + =A0 =A0 =A0 .fifo_lvl_mask =A0=3D { 0x1ff, 0x7F, 0x7F },
+> + =A0 =A0 =A0 .rx_lvl_offset =A0=3D 15,
+> + =A0 =A0 =A0 .tx_st_done =A0 =A0 =3D 25,
+> + =A0 =A0 =A0 .high_speed =A0 =A0 =3D 1,
+
+high_speed =3D true
+
+
+
+-Olof
