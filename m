@@ -1,256 +1,120 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v5 6/7] ARM: mtd: nand: davinci: add OF support for davinci
- nand controller
-Date: Wed, 30 May 2012 12:19:02 +0200
-Message-ID: <1338373143-7467-7-git-send-email-hs@denx.de>
-References: <1338373143-7467-1-git-send-email-hs@denx.de>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 1/3] arm/dts: add wdt node for omap3 and omap4
+Date: Wed, 30 May 2012 09:42:45 -0500
+Message-ID: <4FC631E5.9080000@ti.com>
+References: <1337942552-28218-1-git-send-email-jgq516@gmail.com>
+ <1337942552-28218-2-git-send-email-jgq516@gmail.com>
+ <4FC50CCD.7090404@ti.com> <4FC591C9.2050004@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1338373143-7467-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4FC591C9.2050004@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Xiao Jiang <jgq516@gmail.com>
+Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, wim@iguana.be, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add OF support for the davinci nand controller.
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 05/29/2012 10:19 PM, Xiao Jiang wrote:
+> Jon Hunter wrote:
+>> On 05/25/2012 05:42 AM, jgq516@gmail.com wrote:
+>>  
+>>> From: Xiao Jiang <jgq516@gmail.com>
+>>>
+>>> Add wdt node to support dt.
+>>>
+>>> Signed-off-by: Xiao Jiang <jgq516@gmail.com>
+>>> ---
+>>>  arch/arm/boot/dts/omap3.dtsi |    5 +++++
+>>>  arch/arm/boot/dts/omap4.dtsi |    5 +++++
+>>>  2 files changed, 10 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+>>> index 99474fa..039df5c 100644
+>>> --- a/arch/arm/boot/dts/omap3.dtsi
+>>> +++ b/arch/arm/boot/dts/omap3.dtsi
+>>> @@ -215,5 +215,10 @@
+>>>              compatible = "ti,omap3-hsmmc";
+>>>              ti,hwmods = "mmc3";
+>>>          };
+>>> +
+>>> +        wdt: wdt@48314000{
+>>>     
+>>
+>> Minor comment, may be call this wdt2 as this is watchdog timer 2. Also
+>> ass a space between the address and the "{".
+>>
+>>   
+> Ok, will change it to "wdt2: wdt@48314000 {".
+>>> +            compatible = "ti,omap3-wdt";
+>>> +            ti,hwmods = "wd_timer2";
+>>> +        };
+>>>      };
+>>>  };
+>>> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+>>> index 359c497..d01403d 100644
+>>> --- a/arch/arm/boot/dts/omap4.dtsi
+>>> +++ b/arch/arm/boot/dts/omap4.dtsi
+>>> @@ -272,5 +272,10 @@
+>>>              ti,hwmods = "mmc5";
+>>>              ti,needs-special-reset;
+>>>          };
+>>> +
+>>> +        wdt: wdt@4a314000{
+>>>     
+>>
+>> Same as above.
+>>
+>>   
+> Ditto.
+>>> +            compatible = "ti,omap4-wdt";
+>>> +            ti,hwmods = "wd_timer2";
+>>> +        };
+>>>      };
+>>>  };
+>>>     
+>>
+>> Also we should add some documentation to describe the binding. Here it
+>> is very simple, but nonetheless we should have something as we have for
+>> gpio [1].
+>>
+>>   
+> Thanks for reminding, how about below patch?
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
+> b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
+> new file mode 100644
+> index 0000000..4272d06
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
+> @@ -0,0 +1,15 @@
+> +TI Watchdog Timer (WDT) Controller for OMAP
+> +
+> +Required properties:
+> +- compatible:
+> +  - "ti,omap2-wdt" for OMAP2
+> +  - "ti,omap3-wdt" for OMAP3
+> +  - "ti,omap4-wdt" for OMAP4
+> +- ti,hwmods: Name of the hwmod associated to the WDT
+> +
+> +Examples:
+> +
+> +wdt2: wdt@73f98000 {
+> +       compatible = "ti,omap4-wdt";
+> +       ti,hwmods = "wd_timer2";
+> +};
 
----
-- changes for v2:
-  - add comments from Scott Wood:
-    - add "ti,davinci-" prefix
-    - Dashes are preferred to underscores
-    - rename "nandflash" to "nand"
-    - introduce new "ti,davinci" specific properties for setting
-      up ecc_mode, ecc_bits, options and bbt options, instead
-      using linux defines
-    - readme fixes
-- no changes for v3
-- changes for v4
-  remove "pinmux-handle" property as discussed here:
-  http://www.spinics.net/lists/arm-kernel/msg175701.html
-  with Nori Sekhar
-- no changes for v5
+Yes looks good. Thanks! Minor nit-pick in the example I would just copy
+the omap4 node completely with the actual omap4 address :-)
 
- .../devicetree/bindings/arm/davinci/nand.txt       |   72 ++++++++++++++++++
- drivers/mtd/nand/davinci_nand.c                    |   80 +++++++++++++++++++-
- 2 files changed, 151 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-new file mode 100644
-index 0000000..5afe4a6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-@@ -0,0 +1,72 @@
-+* Texas Instruments Davinci NAND
-+
-+This file provides information, what the device node for the
-+davinci nand interface contain.
-+
-+Required properties:
-+- compatible: "ti,davinci-nand";
-+- reg : contain 2 offset/length values:
-+        - offset and length for the access window
-+        - offset and length for accessing the aemif control registers
-+- ti,davinci-chipselect: Indicates on the davinci_nand driver which
-+                         chipselect is used for accessing the nand.
-+
-+Recommended properties :
-+- ti,davinci-mask-ale: mask for ale
-+- ti,davinci-mask-cle: mask for cle
-+- ti,davinci-mask-chipsel: mask for chipselect
-+- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
-+		- "none"
-+		- "soft"
-+		- "hw"
-+- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
-+- ti,davinci-nand-buswidth: buswidth 8 or 16
-+- ti,davinci-nand-use-bbt: use flash based bad block table support.
-+
-+Optional properties:
-+- timing-handle: contains a handle to setup aemif timing.
-+
-+Example (enbw_cmc board):
-+aemif@60000000 {
-+	compatible = "ti,davinci-aemif";
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	reg = <0x68000000 0x80000>;
-+	ranges = <2 0 0x60000000 0x02000000
-+		  3 0 0x62000000 0x02000000
-+		  4 0 0x64000000 0x02000000
-+		  5 0 0x66000000 0x02000000
-+		  6 0 0x68000000 0x02000000>;
-+	nand_cs: cs3@68000000 {
-+		compatible = "ti,davinci-cs";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		/* all timings in nanoseconds */
-+		cs = <3>;
-+		asize = <0>;
-+		ta = <0>;
-+		rhold = <7>;
-+		rstrobe = <42>;
-+		rsetup = <7>;
-+		whold = <7>;
-+		wstrobe = <14>;
-+		wsetup = <7>;
-+		ew = <0>;
-+		ss = <0>;
-+	};
-+	nand@3,0 {
-+		compatible = "ti,davinci-nand";
-+		reg = <3 0x0 0x807ff
-+			6 0x0 0x8000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ti,davinci-chipselect = <1>;
-+		ti,davinci-mask-ale = <0>;
-+		ti,davinci-mask-cle = <0>;
-+		ti,davinci-mask-chipsel = <0>;
-+		ti,davinci-ecc-mode = "hw";
-+		ti,davinci-ecc-bits = <4>;
-+		ti,davinci-nand-use-bbt;
-+		timing-handle = <&nand_cs>;
-+	};
-+};
-diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-index d94b03c..67bdd29 100644
---- a/drivers/mtd/nand/davinci_nand.c
-+++ b/drivers/mtd/nand/davinci_nand.c
-@@ -33,9 +33,12 @@
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
- #include <linux/slab.h>
-+#include <linux/of_i2c.h>
-+#include <linux/of_device.h>
- 
- #include <mach/nand.h>
- #include <mach/aemif.h>
-+#include <mach/mux.h>
- 
- /*
-  * This is a device driver for the NAND flash controller found on the
-@@ -518,9 +521,81 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
- 	},
- };
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id davinci_nand_of_match[] = {
-+	{.compatible = "ti,davinci-nand", },
-+	{},
-+}
-+MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
-+
-+static struct davinci_nand_pdata
-+	*nand_davinci_get_pdata(struct platform_device *pdev)
-+{
-+	if ((pdev->dev.platform_data == NULL) &&
-+		(pdev->dev.of_node)) {
-+		struct device_node *tmp_np;
-+		struct davinci_nand_pdata *pdata;
-+		const char *mode;
-+		u32 prop;
-+		int len;
-+
-+		pdata =  kzalloc(sizeof(struct davinci_nand_pdata),
-+				GFP_KERNEL);
-+		pdev->dev.platform_data = pdata;
-+		if (!pdata)
-+			return NULL;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-chipselect", &prop))
-+			pdev->id = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-ale", &prop))
-+			pdata->mask_ale = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-cle", &prop))
-+			pdata->mask_cle = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-chipsel", &prop))
-+			pdata->mask_chipsel = prop;
-+		if (!of_property_read_string(pdev->dev.of_node,
-+			"ti,davinci-ecc-mode", &mode)) {
-+			if (!strncmp("none", mode, 4))
-+				pdata->ecc_mode = NAND_ECC_NONE;
-+			if (!strncmp("soft", mode, 4))
-+				pdata->ecc_mode = NAND_ECC_SOFT;
-+			if (!strncmp("hw", mode, 2))
-+				pdata->ecc_mode = NAND_ECC_HW;
-+		}
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-ecc-bits", &prop))
-+			pdata->ecc_bits = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-nand-buswidth", &prop))
-+			if (prop == 16)
-+				pdata->options |= NAND_BUSWIDTH_16;
-+		if (of_find_property(pdev->dev.of_node,
-+			"ti,davinci-nand-use-bbt", &len))
-+			pdata->bbt_options = NAND_BBT_USE_FLASH;
-+
-+		tmp_np = of_parse_phandle(pdev->dev.of_node,
-+				"timing-handle", 0);
-+		if (tmp_np)
-+			davinci_aemif_setup_timing_of(tmp_np);
-+	}
-+
-+	return pdev->dev.platform_data;
-+}
-+#else
-+#define davinci_nand_of_match NULL
-+static struct davinci_nand_pdata
-+	*nand_davinci_get_pdata(struct platform_device *pdev)
-+{
-+	return pdev->dev.platform_data;
-+}
-+#endif
-+
- static int __init nand_davinci_probe(struct platform_device *pdev)
- {
--	struct davinci_nand_pdata	*pdata = pdev->dev.platform_data;
-+	struct davinci_nand_pdata	*pdata;
- 	struct davinci_nand_info	*info;
- 	struct resource			*res1;
- 	struct resource			*res2;
-@@ -530,6 +605,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
- 	uint32_t			val;
- 	nand_ecc_modes_t		ecc_mode;
- 
-+	pdata = nand_davinci_get_pdata(pdev);
- 	/* insist on board-specific configuration */
- 	if (!pdata)
- 		return -ENODEV;
-@@ -816,6 +892,8 @@ static struct platform_driver nand_davinci_driver = {
- 	.remove		= __exit_p(nand_davinci_remove),
- 	.driver		= {
- 		.name	= "davinci_nand",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = davinci_nand_of_match,
- 	},
- };
- MODULE_ALIAS("platform:davinci_nand");
--- 
-1.7.7.6
+Cheers
+Jon
