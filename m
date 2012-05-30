@@ -1,90 +1,71 @@
-From: Xiao Jiang <jgq516@gmail.com>
-Subject: Re: [PATCH 0/3] omap3/omap4: add device tree support for wdt
-Date: Wed, 30 May 2012 18:14:33 +0800
-Message-ID: <4FC5F309.9080604@gmail.com>
-References: <1337942552-28218-1-git-send-email-jgq516@gmail.com>
- <4FC50BA2.4070404@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 4/6] ARM: Samsung: Modify
+ s3c64xx_spi{0|1|2}_set_platdata function
+Date: Wed, 30 May 2012 10:34:21 +0100
+Message-ID: <20120530093421.GA9947@opensource.wolfsonmicro.com>
+References: <1337333613-6216-1-git-send-email-thomas.abraham@linaro.org>
+ <1337333613-6216-5-git-send-email-thomas.abraham@linaro.org>
+ <20120520092113.GA20652@opensource.wolfsonmicro.com>
+ <CAOesGMhFcdv7QW=_1U8HHfaETD83mJt=Dgk-8z40yOrC3PB_fA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4FC50BA2.4070404@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, wim@iguana.be, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMhFcdv7QW=_1U8HHfaETD83mJt=Dgk-8z40yOrC3PB_fA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Jon Hunter wrote:
-> Hi Xiao Jiang,
->
-> On 05/25/2012 05:42 AM, jgq516@gmail.com wrote:
->   
->> From: Xiao Jiang <jgq516@gmail.com>
->>
->> This series can be applied to dt branch of linux-omap tree.
->>     
->
-> Thanks for sending this!
->
->   
->> Since omap24xx series has different wdt base addr (omap2420: 0x48022000 and
->> omap2430: 0x49016000) per commit 2817142f31bfbf26c216bf4f9192540c81b2d071, so
->> I don't add wdt node in omap2.dtsi just like omap3 and omap4, maybe different
->> dts files are needed for omap2420 and omap2430.
->>     
->
-> Good point. I am wondering if we can simple drop the address from the
-> wdt2 node for omap2. It is not really being used. May be Benoit can comment.
->
->   
-Hmm, I think the address doesn't need anymore since the related hw_mod 
-has the right addr as follows.
 
-static struct omap_hwmod_addr_space omap2420_wd_timer2_addrs[] = {
-        {  
-                .pa_start       = 0x48022000,
-                .pa_end         = 0x4802207f,
-                .flags          = ADDR_TYPE_RT
-        }, 
-        { }
-};
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-static struct omap_hwmod_addr_space omap2430_wd_timer2_addrs[] = {
-        {  
-                .pa_start       = 0x49016000,
-                .pa_end         = 0x4901607f,
-                .flags          = ADDR_TYPE_RT
-        }, 
-        { }
-};
+On Wed, May 30, 2012 at 12:28:55AM -0700, Olof Johansson wrote:
+> On Sun, May 20, 2012 at 2:21 AM, Mark Brown
 
-static struct omap_hwmod_addr_space omap3xxx_wd_timer2_addrs[] = {
-        {   
-                .pa_start       = 0x48314000,
-                .pa_end         = 0x4831407f,
-                .flags          = ADDR_TYPE_RT
-        },  
-        { } 
-};
+> > This dev_name also isn't equivalent to dev_name() which makes matters
+> > more confusing than they need to be.
 
-static struct omap_hwmod_addr_space omap44xx_wd_timer2_addrs[] = {
-        {   
-                .pa_start       = 0x4a313000,
-                .pa_end         = 0x4a31407f,
-                .flags          = ADDR_TYPE_RT
-        },  
-        { } 
-};
+> Looks like they use the name as the magic string to pick initialization data.
 
-Regards,
-Xiao
-> Cheers
-> Jon
+Right, and there's no problem at all with using the name.  The thing is
+that there's no need to set the name at runtime since the struct device
+being configured is always going to end up with the same name and doing
+so is just causing confusion.  The device being registered is specific
+to the SoC already so setting the SoC name at runtime isn't needed.
+
+> I wonder if it makes more sense to keep the platform_data still
+> around, and just fill it in with the table (from patch "spi: s3c64xx:
+> move controller information into driver data") based on the OF
+> compatible field for the device-tree probe case, instead of trying to
+> overload and having to change the name in this way.
+
+We could do that, though it does seem nice to have everything be
+consistent.
+
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPxemUAAoJEBus8iNuMP3dMWUP+wTZbcGGsFGuCIND/9RCdWsM
+ZHEFJqzGoXlfOnBDeE21ELj2G6+pnhho0DtThshMxDlMzag6RdowKZ4z3FHRxVA+
+f2fCR3wWxu8c+Wmot28t6f1H8aDAfJ+ZmRCkq/2cm8UAGiYPDmrH67qkp9DnO5yv
+SvNVeruPD4gNtK6evvpJY/FD7DeE4jx8nGGK+bB+So8GGhtLNv2/KNUXmQZ93D0/
+YubNJOqMl6UVwVmR+i2IGPuqjp0efgWf3HhlKG/73xydVyFzkfATzxKILsPlPnK/
+ETKfz+Op/tvKWY2M52cgUQmWAxXTSPUIO2IYhmodKgRB7G6srhnboLa5oTxnyZTu
+eHUncVxgT0W5mrpgynmsdUWMXmhYQCQfPW8Q+Bjk4XvsviC/02zWTAsKoU7tv00r
+uo+PdW4BsQ11AlGayAghjiq5mwzWPTSt1N7BVj4mXtKPtA6N9nNxh+s4ID6kryeo
+g7RYPE/blWySa9/nBqCn03rcDt+TMpgO05Oin6yyUF1e/T4D1OVFKIBw8kU4IaGQ
+nekocLphtZIn6F70l5THq7Jurqxwzcdb1z/qOrDKDKM52y8WlDA8ys+99DBqz1r3
+0OSaHuJN0gZK3Akei6wWGbxa/RbNuRres+yEIisKSkpZVDc9FW23UqwTVrfLhk1+
+7Dz23oKjCx7qXxMDbAgn
+=h4ST
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
