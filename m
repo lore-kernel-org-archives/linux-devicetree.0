@@ -1,111 +1,48 @@
-From: Xiao Jiang <jgq516@gmail.com>
-Subject: Re: [PATCH 1/3] arm/dts: add wdt node for omap3 and omap4
-Date: Wed, 30 May 2012 11:19:37 +0800
-Message-ID: <4FC591C9.2050004@gmail.com>
-References: <1337942552-28218-1-git-send-email-jgq516@gmail.com> <1337942552-28218-2-git-send-email-jgq516@gmail.com> <4FC50CCD.7090404@ti.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v4 6/6] pinctrl: add pinctrl gpio binding support
+Date: Wed, 30 May 2012 11:01:57 +0800
+Message-ID: <20120530030157.GA2235@b29396-Latitude-E6410>
+References: <1337952980-14621-1-git-send-email-b29396@freescale.com>
+ <1337952980-14621-6-git-send-email-b29396@freescale.com>
+ <4FBFBB74.901@wwwdotorg.org>
+ <CAA+hA=QMe6Yo2aLMBcbkYLDXSagb9L919hjdQaq8TyH4uKh9Mw@mail.gmail.com>
+ <4FC24AA7.9040100@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FC50CCD.7090404@ti.com>
+Content-Disposition: inline
+In-Reply-To: <4FC24AA7.9040100@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: linux@arm.linux.org.uk, b-cousson@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, rnayak@ti.com, tony@atomide.com, wim@iguana.be, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-Jon Hunter wrote:
-> On 05/25/2012 05:42 AM, jgq516@gmail.com wrote:
->   
->> From: Xiao Jiang <jgq516@gmail.com>
->>
->> Add wdt node to support dt.
->>
->> Signed-off-by: Xiao Jiang <jgq516@gmail.com>
->> ---
->>  arch/arm/boot/dts/omap3.dtsi |    5 +++++
->>  arch/arm/boot/dts/omap4.dtsi |    5 +++++
->>  2 files changed, 10 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
->> index 99474fa..039df5c 100644
->> --- a/arch/arm/boot/dts/omap3.dtsi
->> +++ b/arch/arm/boot/dts/omap3.dtsi
->> @@ -215,5 +215,10 @@
->>  			compatible = "ti,omap3-hsmmc";
->>  			ti,hwmods = "mmc3";
->>  		};
->> +
->> +		wdt: wdt@48314000{
->>     
->
-> Minor comment, may be call this wdt2 as this is watchdog timer 2. Also
-> ass a space between the address and the "{".
->
->   
-Ok, will change it to "wdt2: wdt@48314000 {".
->> +			compatible = "ti,omap3-wdt";
->> +			ti,hwmods = "wd_timer2";
->> +		};
->>  	};
->>  };
->> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
->> index 359c497..d01403d 100644
->> --- a/arch/arm/boot/dts/omap4.dtsi
->> +++ b/arch/arm/boot/dts/omap4.dtsi
->> @@ -272,5 +272,10 @@
->>  			ti,hwmods = "mmc5";
->>  			ti,needs-special-reset;
->>  		};
->> +
->> +		wdt: wdt@4a314000{
->>     
->
-> Same as above.
->
->   
-Ditto.
->> +			compatible = "ti,omap4-wdt";
->> +			ti,hwmods = "wd_timer2";
->> +		};
->>  	};
->>  };
->>     
->
-> Also we should add some documentation to describe the binding. Here it
-> is very simple, but nonetheless we should have something as we have for
-> gpio [1].
->
->   
-Thanks for reminding, how about below patch?
+On Sun, May 27, 2012 at 09:39:19AM -0600, Stephen Warren wrote:
+> On 05/26/2012 10:52 AM, Dong Aisheng wrote:
+> > On Fri, May 25, 2012 at 10:03 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> >> On 05/25/2012 07:36 AM, Dong Aisheng wrote:
+> ...
+> >> If we don't do that, [lock ranges[i].gc] I would argue that we
+> >> shouldn't store ranges[i].gc, since it might become invalid - I
+> >> believe the only use of it is withinthis function?
+> >>
+> > In my option, i think it's ok to store it since they're just some data
+> > to describe
+> > hw properties. The gpio function may become invalid but not data.
+> > Is it reasonable to you?
+> 
+> The problem is that if someone tries to dereference the gc field, and
+> it's no longer valid, which could cause an OOPS. Perhaps we can get away
+> just with a comment in the struct definition indicating that this field
+> should only be used by drivers that provided the gc field directly
+> rather than having it set up by DT, but then why even store it when
+> creating the ranges from DT in that case?
+Yes, you're right.
+Maybe we could both not store the gc filed for DT (currently we did not see
+the need to store it for dt, right?) and add a comment in the struct definition
+as you said. For non-dt users the driver owner should manage that field
+correctly with lock since it's provided directly by driver.
+Is that ok?
 
-diff --git a/Documentation/devicetree/bindings/watchdog/omap-wdt.txt 
-b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
-new file mode 100644
-index 0000000..4272d06
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
-@@ -0,0 +1,15 @@
-+TI Watchdog Timer (WDT) Controller for OMAP
-+
-+Required properties:
-+- compatible:
-+  - "ti,omap2-wdt" for OMAP2
-+  - "ti,omap3-wdt" for OMAP3
-+  - "ti,omap4-wdt" for OMAP4
-+- ti,hwmods: Name of the hwmod associated to the WDT
-+
-+Examples:
-+
-+wdt2: wdt@73f98000 {
-+       compatible = "ti,omap4-wdt";
-+       ti,hwmods = "wd_timer2";
-+};
-
-Regards,
-Xiao
-> Cheers
-> Jon
->
-> [1]
-> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=blob;f=Documentation/devicetree/bindings/gpio/gpio-omap.txt;h=bff51a2fee1eae7d387b40ea913e04782554bf68;hb=HEAD
->   
+Regards
+Dong Aisheng
