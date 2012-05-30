@@ -1,82 +1,162 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 3/3] watchdog: omap_wdt: add device tree support
-Date: Wed, 30 May 2012 09:54:07 +0200
-Message-ID: <4FC5D21F.2030702@ti.com>
-References: <1337942552-28218-1-git-send-email-jgq516@gmail.com> <1337942552-28218-4-git-send-email-jgq516@gmail.com> <4FC51008.1050004@ti.com> <4FC59171.8040009@gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 02/10] spi: s3c64xx: move controller information into
+ driver data
+Date: Wed, 30 May 2012 16:00:15 +0800
+Message-ID: <CAJuYYwRn5R-qm7kv8D8pf6dfinNkDOdgJpMhqgsH2vVF-J9vUw@mail.gmail.com>
+References: <1336514694-22393-1-git-send-email-thomas.abraham@linaro.org>
+	<1336514694-22393-3-git-send-email-thomas.abraham@linaro.org>
+	<CAOesGMjGfCH1T6WXPzMDLKsD=URdm15G1SDM=ac624KLmSS=4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FC59171.8040009@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Xiao Jiang <jgq516@gmail.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, linux@arm.linux.org.uk, rob.herring@calxeda.com, grant.likely@secretlab.ca, rnayak@ti.com, tony@atomide.com, wim@iguana.be, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMjGfCH1T6WXPzMDLKsD=URdm15G1SDM=ac624KLmSS=4w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/30/2012 5:18 AM, Xiao Jiang wrote:
-> Jon Hunter wrote:
->> On 05/25/2012 05:42 AM, jgq516@gmail.com wrote:
->>> From: Xiao Jiang <jgq516@gmail.com>
->>>
->>> Add device table for omap_wdt to support dt.
->>>
->>> Signed-off-by: Xiao Jiang <jgq516@gmail.com>
->>> ---
->>> drivers/watchdog/omap_wdt.c | 8 ++++++++
->>> 1 files changed, 8 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/drivers/watchdog/omap_wdt.c b/drivers/watchdog/omap_wdt.c
->>> index 8285d65..d98c615 100644
->>> --- a/drivers/watchdog/omap_wdt.c
->>> +++ b/drivers/watchdog/omap_wdt.c
->>> @@ -430,6 +430,13 @@ static int omap_wdt_resume(struct
->>> platform_device *pdev)
->>> #define omap_wdt_resume NULL
->>> #endif
->>>
->>> +static const struct of_device_id omap_wdt_of_match[] = {
->>> + { .compatible = "ti,omap3-wdt", },
->>> + { .compatible = "ti,omap4-wdt", },
+Hi Olof,
 
-If there is no difference between the OMAP3 and the OMAP4 WDT IP, just 
-add one entry "ti,omap3-wdt". And then in the OMAP4 DTS you will just 
-put : compatible = "ti,omap3-wdt"; or compatible =  "ti,omap4-wdt", 
-"ti,omap3-wdt";
-I'm still a little bit confused about the real need for the 
-"ti,omap4-wdt: entry, but it seems to be the way to do it in PPC.
-
->>> + {},
->>> +};
->>> +MODULE_DEVICE_TABLE(of, omap_wdt_of_match);
->>> +
->>> static struct platform_driver omap_wdt_driver = {
->>> .probe = omap_wdt_probe,
->>> .remove = __devexit_p(omap_wdt_remove),
->>> @@ -439,6 +446,7 @@ static struct platform_driver omap_wdt_driver = {
->>> .driver = {
->>> .owner = THIS_MODULE,
->>> .name = "omap_wdt",
->>> + .of_match_table = omap_wdt_of_match,
->>> },
->>> };
->>>
+On 30 May 2012 15:23, Olof Johansson <olof@lixom.net> wrote:
+> Hi,
+>
+> Some comments below.
+>
+> On Tue, May 8, 2012 at 3:04 PM, Thomas Abraham
+> <thomas.abraham@linaro.org> wrote:
+>> Platform data is used to specify controller hardware specific inform=
+ation
+>> such as the tx/rx fifo level mask and bit offset of rx fifo level. S=
+uch
+>> information is not suitable to be supplied from device tree. Instead=
+,
+>> it can be moved into the driver data and removed from platform data.
 >>
->> I think we need to add some code to the probe function that calls
->> of_match_device() and ensures we find a match. For example ...
+>> Cc: Jaswinder Singh <jaswinder.singh@linaro.org>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>> =A0drivers/spi/spi-s3c64xx.c | =A0180 ++++++++++++++++++++++++++++++=
+++++++++-------
+>> =A01 files changed, 153 insertions(+), 27 deletions(-)
 >>
->> if (of_have_populated_dt())
->> if (!of_match_device(omap_wdt_of_match, &pdev->dev))
->> return -EINVAL;
+>> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+>> index 6a3d51a..f6bc0e3 100644
+>> --- a/drivers/spi/spi-s3c64xx.c
+>> +++ b/drivers/spi/spi-s3c64xx.c
+>
+>> @@ -171,6 +198,8 @@ struct s3c64xx_spi_driver_data {
+>> =A0 =A0 =A0 =A0struct s3c64xx_spi_dma_data =A0 =A0 rx_dma;
+>> =A0 =A0 =A0 =A0struct s3c64xx_spi_dma_data =A0 =A0 tx_dma;
+>> =A0 =A0 =A0 =A0struct samsung_dma_ops =A0 =A0 =A0 =A0 =A0*ops;
+>> + =A0 =A0 =A0 struct s3c64xx_spi_port_config =A0*port_conf;
+>> + =A0 =A0 =A0 unsigned =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+port_id;
+>
+> unsigned int
+
+Ok.
+
+>
+>
+>> @@ -942,6 +964,13 @@ static void s3c64xx_spi_hwinit(struct s3c64xx_s=
+pi_driver_data *sdd, int channel)
+>> =A0 =A0 =A0 =A0flush_fifo(sdd);
+>> =A0}
 >>
-> Will add it in v2, thanks for suggestion.
+>> +static inline struct s3c64xx_spi_port_config *s3c64xx_spi_get_port_=
+config(
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 =A0 struct platform_device *pdev)
+>> +{
+>> + =A0 =A0 =A0 return (struct s3c64xx_spi_port_config *)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0platform_get_device=
+_id(pdev)->driver_data;
+>> +}
+>> +
+>> =A0static int __init s3c64xx_spi_probe(struct platform_device *pdev)
+>> =A0{
+>> =A0 =A0 =A0 =A0struct resource *mem_res, *dmatx_res, *dmarx_res;
+>> @@ -1000,6 +1029,7 @@ static int __init s3c64xx_spi_probe(struct pla=
+tform_device *pdev)
+>> =A0 =A0 =A0 =A0platform_set_drvdata(pdev, master);
+>>
+>> =A0 =A0 =A0 =A0sdd =3D spi_master_get_devdata(master);
+>> + =A0 =A0 =A0 sdd->port_conf =3D s3c64xx_spi_get_port_config(pdev);
+>> =A0 =A0 =A0 =A0sdd->master =3D master;
+>> =A0 =A0 =A0 =A0sdd->cntrlr_info =3D sci;
+>> =A0 =A0 =A0 =A0sdd->pdev =3D pdev;
+>
+> Single-use helper? Might as well open code it in this case.
 
-No, in fact this is not needed. We need that mainly when several 
-instances can match the same driver and thus we select the proper one 
-using the of_match_device. Otherwise, just check is the device_node is 
-there.
+This helper function 's3c64xx_spi_get_port_config' is populated with
+more code later in the 'add spi support' patch. Which simplifies the
+code flow here. So I prefer to maintain this as a separate function.
 
-In that case, the driver does not even care about any DT node so there 
-is no need to add extra code for that. Keep it simple.
+>
+>
+>> @@ -1227,6 +1258,100 @@ static const struct dev_pm_ops s3c64xx_spi_p=
+m =3D {
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 s3c64xx_spi_runt=
+ime_resume, NULL)
+>> =A0};
+>>
+>> +#if defined(CONFIG_CPU_S3C2416) || defined(CONFIG_CPU_S3C2443)
+>> +struct s3c64xx_spi_port_config s3c2443_spi_port_config =3D {
+>> + =A0 =A0 =A0 .fifo_lvl_mask =A0=3D { 0x7f },
+>> + =A0 =A0 =A0 .rx_lvl_offset =A0=3D 13,
+>> + =A0 =A0 =A0 .tx_st_done =A0 =A0 =3D 21,
+>> + =A0 =A0 =A0 .high_speed =A0 =A0 =3D true,
+>> +};
+>> +#define S3C2443_SPI_PORT_CONFIG ((kernel_ulong_t)&s3c2443_spi_port_=
+config)
+>> +#else
+>> +#define S3C2443_SPI_PORT_CONFIG ((kernel_ulong_t)NULL)
+>> +#endif
+>
+> Is it really worth it to do the ifdefs here for just 16 bytes of data
+> per entry? The table itself below takes more space.
+
+Ok. The ifdefs do reduce the readability of this code. So I will leave
+the ifdefs in this patch.
+
+>
+>
+> [..]
+>
+>> +#ifdef CONFIG_ARCH_S5PV210
+>> +struct s3c64xx_spi_port_config s5pv210_spi_port_config =3D {
+>> + =A0 =A0 =A0 .fifo_lvl_mask =A0=3D { 0x1ff, 0x7F },
+>> + =A0 =A0 =A0 .rx_lvl_offset =A0=3D 15,
+>> + =A0 =A0 =A0 .tx_st_done =A0 =A0 =3D 25,
+>> + =A0 =A0 =A0 .high_speed =A0 =A0 =3D 1,
+>
+> high_speed =3D true
+>
+>> +};
+>> +#define S5PV210_SPI_PORT_CONFIG ((kernel_ulong_t)&s5pv210_spi_port_=
+config)
+>> +#else
+>> +#define S5PV210_SPI_PORT_CONFIG ((kernel_ulong_t)NULL)
+>> +#endif /* CONFIG_ARCH_S5PV210 */
+>> +
+>> +#ifdef CONFIG_ARCH_EXYNOS4
+>> +struct s3c64xx_spi_port_config exynos4_spi_port_config =3D {
+>> + =A0 =A0 =A0 .fifo_lvl_mask =A0=3D { 0x1ff, 0x7F, 0x7F },
+>> + =A0 =A0 =A0 .rx_lvl_offset =A0=3D 15,
+>> + =A0 =A0 =A0 .tx_st_done =A0 =A0 =3D 25,
+>> + =A0 =A0 =A0 .high_speed =A0 =A0 =3D 1,
+>
+> high_speed =3D true
+
+Ok.
+
+Thanks for your comments.
 
 Regards,
-Benoit
+Thomas.
+
+>
+>
+>
+> -Olof
