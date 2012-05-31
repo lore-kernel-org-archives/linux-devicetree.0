@@ -1,51 +1,132 @@
-From: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] ARM: mmp: support DT in irq
-Date: Wed, 30 May 2012 23:23:37 -0400
-Message-ID: <87vcjdm3t2.fsf@laptop.org>
-References: <1335515957-1798-1-git-send-email-haojian.zhuang@gmail.com>
- <1335515957-1798-4-git-send-email-haojian.zhuang@gmail.com>
- <87ehq1tq5w.fsf@laptop.org>
- <CAN1soZz2=NcadK1kD6d9t92G6Xdfn=TPGP5_ngwX_fGj+QhOVA@mail.gmail.com>
+From: Xiao Jiang <jgq516@gmail.com>
+Subject: Re: [PATCH 1/3] arm/dts: add wdt node for omap3 and omap4
+Date: Thu, 31 May 2012 13:51:19 +0800
+Message-ID: <4FC706D7.2010801@gmail.com>
+References: <1337942552-28218-1-git-send-email-jgq516@gmail.com>
+ <1337942552-28218-2-git-send-email-jgq516@gmail.com>
+ <4FC50CCD.7090404@ti.com> <4FC591C9.2050004@gmail.com>
+ <4FC631E5.9080000@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAN1soZz2=NcadK1kD6d9t92G6Xdfn=TPGP5_ngwX_fGj+QhOVA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
- (Haojian Zhuang's message of "Thu, 31 May 2012 11:07:52 +0800")
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4FC631E5.9080000@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Hunter <jon-hunter@ti.com>, b-cousson@ti.com
+Cc: linux@arm.linux.org.uk, linux-watchdog@vger.kernel.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, wim@iguana.be, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, May 30 2012, Haojian Zhuang wrote:
->> Did you test non-DT boot with these changes?
+Hi Jon and Benoit,
+>> Thanks for reminding, how about below patch?
 >>
-> I tested non-DT boot on my brownstone board on TTC dkb board.
+>> diff --git a/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
+>> b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
+>> new file mode 100644
+>> index 0000000..4272d06
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
+>> @@ -0,0 +1,15 @@
+>> +TI Watchdog Timer (WDT) Controller for OMAP
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +  - "ti,omap2-wdt" for OMAP2
+>> +  - "ti,omap3-wdt" for OMAP3
+>> +  - "ti,omap4-wdt" for OMAP4
+>> +- ti,hwmods: Name of the hwmod associated to the WDT
+>> +
+>> +Examples:
+>> +
+>> +wdt2: wdt@73f98000 {
+>> +       compatible = "ti,omap4-wdt";
+>> +       ti,hwmods = "wd_timer2";
+>> +};
+>>     
+>
+> Yes looks good. Thanks! Minor nit-pick in the example I would just copy
+> the omap4 node completely with the actual omap4 address :-)
+>
+>   
+Oops, wrong addr, :). Perhaps we can drop address as you said, since the 
+right addresses are defined
+in wd_timer2 hwmod (see [1]), and wdt also works without the address as 
+follows.
 
-Thanks.  Do you know how/where cascade_irq gets set on that board?
+diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
+index f2ab4ea..0017bd8 100644
+--- a/arch/arm/boot/dts/omap2.dtsi
++++ b/arch/arm/boot/dts/omap2.dtsi
+@@ -63,5 +63,10 @@
+                        ti,hwmods = "uart3";
+                        clock-frequency = <48000000>;
+                };
++
++               wdt2: wdt {
++                       compatible = "ti,omap2-wdt";
++                       ti,hwmods = "wd_timer2";
++               };
+        };
+ };
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 99474fa..dbf8a5b 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -215,5 +215,10 @@
+                        compatible = "ti,omap3-hsmmc";
+                        ti,hwmods = "mmc3";
+                };
++
++               wdt2: wdt {
++                       compatible = "ti,omap3-wdt", "ti,omap2-wdt";
++                       ti,hwmods = "wd_timer2";
++               };
+        };
+ };
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 359c497..ce74e87 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -272,5 +272,10 @@
+                        ti,hwmods = "mmc5";
+                        ti,needs-special-reset;
+                };
++
++               wdt2: wdt {
++                       compatible = "ti,omap4-wdt", "ti,omap2-wdt";
++                       ti,hwmods = "wd_timer2";
++               };
+        };
+ };
 
-> It seems that you meet issue in icu_mux_irq_demux(). Could you give me
-> the detail which interrupt is running while you meet the error?
+Infos for omap3:
+# dmesg|grep Machine
+<6>[    0.000000] Machine: Generic OMAP3 (Flattened Device Tree), model: 
+TI OMAP3 EVM (OMAP3530, AM/DM37x)
+# dmesg|grep omap_wdt_probe
+<4>[    2.552825] in omap_wdt_probe: 299, res->start = 0x48314000
 
-It was IRQ 17 (TWSI).
+Infos for omap4:
+root@localhost:/root> dmesg|grep Machine
+[    0.000000] Machine: Generic OMAP4 (Flattened Device Tree), model: TI 
+OMAP4 SDP board
+root@localhost:/root> dmesg|grep omap_wdt_probe
+[    1.687896] in omap_wdt_probe: 299, res->start = 0x4a314000
 
-> By the way, do you have the boot log?
+So can I drop the wdt addr from dts file? otherwise it is not feasible 
+to add omap2 wdt node in omap2.dtsi
+due to different addrs for omap2420 and omap2430.
 
-I'll send it tomorrow when I get back to work.
-
-Thanks,
-
-- Chris.
--- 
-Chris Ball   <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>   <http://printf.net/>
-One Laptop Per Child
+Regards,
+Xiao
+[1] http://marc.info/?l=linux-omap&m=133836995026565&w=2
+> Cheers
+> Jon
+>   
