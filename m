@@ -1,121 +1,72 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 1/3] arm/dts: add wdt node for omap3 and omap4
-Date: Thu, 31 May 2012 09:55:46 -0500
-Message-ID: <4FC78672.6040805@ti.com>
-References: <1337942552-28218-1-git-send-email-jgq516@gmail.com> <1337942552-28218-2-git-send-email-jgq516@gmail.com> <4FC50CCD.7090404@ti.com> <4FC591C9.2050004@gmail.com> <4FC631E5.9080000@ti.com> <4FC706D7.2010801@gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [RFC 2/2] linux.c32: Add initrd= parameter
+Date: Thu, 31 May 2012 17:41:36 +0200
+Message-ID: <1338478896-11417-3-git-send-email-thierry.reding@avionic-design.de>
+References: <1338478896-11417-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FC706D7.2010801@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Xiao Jiang <jgq516@gmail.com>
-Cc: b-cousson@ti.com, linux@arm.linux.org.uk, rob.herring@calxeda.com, grant.likely@secretlab.ca, rnayak@ti.com, tony@atomide.com, wim@iguana.be, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1338478896-11417-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: syslinux-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This new parameter can be used to specify a Flattened Device Tree (FDT)
+blob to pass to the Linux kernel.
 
-On 05/31/2012 12:51 AM, Xiao Jiang wrote:
-> Hi Jon and Benoit,
->>> Thanks for reminding, how about below patch?
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
->>> b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
->>> new file mode 100644
->>> index 0000000..4272d06
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
->>> @@ -0,0 +1,15 @@
->>> +TI Watchdog Timer (WDT) Controller for OMAP
->>> +
->>> +Required properties:
->>> +- compatible:
->>> +  - "ti,omap2-wdt" for OMAP2
->>> +  - "ti,omap3-wdt" for OMAP3
->>> +  - "ti,omap4-wdt" for OMAP4
->>> +- ti,hwmods: Name of the hwmod associated to the WDT
->>> +
->>> +Examples:
->>> +
->>> +wdt2: wdt@73f98000 {
->>> +       compatible = "ti,omap4-wdt";
->>> +       ti,hwmods = "wd_timer2";
->>> +};
->>>     
->>
->> Yes looks good. Thanks! Minor nit-pick in the example I would just copy
->> the omap4 node completely with the actual omap4 address :-)
->>
->>   
-> Oops, wrong addr, :). Perhaps we can drop address as you said, since the
-> right addresses are defined
-> in wd_timer2 hwmod (see [1]), and wdt also works without the address as
-> follows.
-> 
-> diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
-> index f2ab4ea..0017bd8 100644
-> --- a/arch/arm/boot/dts/omap2.dtsi
-> +++ b/arch/arm/boot/dts/omap2.dtsi
-> @@ -63,5 +63,10 @@
->                        ti,hwmods = "uart3";
->                        clock-frequency = <48000000>;
->                };
-> +
-> +               wdt2: wdt {
-> +                       compatible = "ti,omap2-wdt";
-> +                       ti,hwmods = "wd_timer2";
-> +               };
->        };
-> };
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 99474fa..dbf8a5b 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -215,5 +215,10 @@
->                        compatible = "ti,omap3-hsmmc";
->                        ti,hwmods = "mmc3";
->                };
-> +
-> +               wdt2: wdt {
-> +                       compatible = "ti,omap3-wdt", "ti,omap2-wdt";
-> +                       ti,hwmods = "wd_timer2";
-> +               };
->        };
-> };
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index 359c497..ce74e87 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -272,5 +272,10 @@
->                        ti,hwmods = "mmc5";
->                        ti,needs-special-reset;
->                };
-> +
-> +               wdt2: wdt {
-> +                       compatible = "ti,omap4-wdt", "ti,omap2-wdt";
-> +                       ti,hwmods = "wd_timer2";
-> +               };
->        };
-> };
-> 
-> Infos for omap3:
-> # dmesg|grep Machine
-> <6>[    0.000000] Machine: Generic OMAP3 (Flattened Device Tree), model:
-> TI OMAP3 EVM (OMAP3530, AM/DM37x)
-> # dmesg|grep omap_wdt_probe
-> <4>[    2.552825] in omap_wdt_probe: 299, res->start = 0x48314000
-> 
-> Infos for omap4:
-> root@localhost:/root> dmesg|grep Machine
-> [    0.000000] Machine: Generic OMAP4 (Flattened Device Tree), model: TI
-> OMAP4 SDP board
-> root@localhost:/root> dmesg|grep omap_wdt_probe
-> [    1.687896] in omap_wdt_probe: 299, res->start = 0x4a314000
-> 
-> So can I drop the wdt addr from dts file? otherwise it is not feasible
-> to add omap2 wdt node in omap2.dtsi
-> due to different addrs for omap2420 and omap2430.
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+---
+ com32/modules/linux.c |   20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-Benoit, what is your preference here?
-
-Cheers
-Jon
+diff --git a/com32/modules/linux.c b/com32/modules/linux.c
+index b902ebc..cc1e6fe 100644
+--- a/com32/modules/linux.c
++++ b/com32/modules/linux.c
+@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
+ {
+     const char *kernel_name;
+     struct initramfs *initramfs;
++    struct fdt *fdt;
+     char *cmdline;
+     char *boot_image;
+     void *kernel_data;
+@@ -207,8 +208,25 @@ int main(int argc, char *argv[])
+ 	    goto bail;
+     }
+ 
++    fdt = fdt_init();
++    if (!fdt)
++	goto bail;
++
++    if ((arg = find_argument(argp, "fdt="))) {
++	if (!opt_quiet)
++	    printf("Loading %s... ", arg);
++
++	if (fdt_load(fdt, arg)) {
++	    printf("failed!\n");
++	    goto bail;
++	}
++
++	if (!opt_quiet)
++	    printf("ok\n");
++    }
++
+     /* This should not return... */
+-    syslinux_boot_linux(kernel_data, kernel_len, initramfs, cmdline);
++    syslinux_boot_linux(kernel_data, kernel_len, initramfs, fdt, cmdline);
+ 
+ bail:
+     fprintf(stderr, "Kernel load failure (insufficient memory?)\n");
+-- 
+1.7.10.2
