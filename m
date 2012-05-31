@@ -1,132 +1,74 @@
-From: Xiao Jiang <jgq516@gmail.com>
-Subject: Re: [PATCH 1/3] arm/dts: add wdt node for omap3 and omap4
-Date: Thu, 31 May 2012 13:51:19 +0800
-Message-ID: <4FC706D7.2010801@gmail.com>
-References: <1337942552-28218-1-git-send-email-jgq516@gmail.com>
- <1337942552-28218-2-git-send-email-jgq516@gmail.com>
- <4FC50CCD.7090404@ti.com> <4FC591C9.2050004@gmail.com>
- <4FC631E5.9080000@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 4/6] ARM: Samsung: Modify
+ s3c64xx_spi{0|1|2}_set_platdata function
+Date: Thu, 31 May 2012 12:36:59 +0100
+Message-ID: <20120531113659.GB2666@opensource.wolfsonmicro.com>
+References: <1337333613-6216-1-git-send-email-thomas.abraham@linaro.org>
+ <1337333613-6216-5-git-send-email-thomas.abraham@linaro.org>
+ <20120520092113.GA20652@opensource.wolfsonmicro.com>
+ <CAOesGMhFcdv7QW=_1U8HHfaETD83mJt=Dgk-8z40yOrC3PB_fA@mail.gmail.com>
+ <20120530093421.GA9947@opensource.wolfsonmicro.com>
+ <CAJuYYwShLhKSrpGhaTyxX4dqaiKDAcjBtuWSMYAdsWcOMfP=qw@mail.gmail.com>
+ <20120530101326.GF9947@opensource.wolfsonmicro.com>
+ <CAJuYYwT88mpTKmOD8mpCjsQo9O_+Giri7+q-Rzz=zPNj+F7aDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4FC631E5.9080000@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jon-hunter@ti.com>, b-cousson@ti.com
-Cc: linux@arm.linux.org.uk, linux-watchdog@vger.kernel.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, wim@iguana.be, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJuYYwT88mpTKmOD8mpCjsQo9O_+Giri7+q-Rzz=zPNj+F7aDg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: Olof Johansson <olof@lixom.net>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon and Benoit,
->> Thanks for reminding, how about below patch?
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
->> b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
->> new file mode 100644
->> index 0000000..4272d06
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/watchdog/omap-wdt.txt
->> @@ -0,0 +1,15 @@
->> +TI Watchdog Timer (WDT) Controller for OMAP
->> +
->> +Required properties:
->> +- compatible:
->> +  - "ti,omap2-wdt" for OMAP2
->> +  - "ti,omap3-wdt" for OMAP3
->> +  - "ti,omap4-wdt" for OMAP4
->> +- ti,hwmods: Name of the hwmod associated to the WDT
->> +
->> +Examples:
->> +
->> +wdt2: wdt@73f98000 {
->> +       compatible = "ti,omap4-wdt";
->> +       ti,hwmods = "wd_timer2";
->> +};
->>     
->
-> Yes looks good. Thanks! Minor nit-pick in the example I would just copy
-> the omap4 node completely with the actual omap4 address :-)
->
->   
-Oops, wrong addr, :). Perhaps we can drop address as you said, since the 
-right addresses are defined
-in wd_timer2 hwmod (see [1]), and wdt also works without the address as 
-follows.
 
-diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
-index f2ab4ea..0017bd8 100644
---- a/arch/arm/boot/dts/omap2.dtsi
-+++ b/arch/arm/boot/dts/omap2.dtsi
-@@ -63,5 +63,10 @@
-                        ti,hwmods = "uart3";
-                        clock-frequency = <48000000>;
-                };
-+
-+               wdt2: wdt {
-+                       compatible = "ti,omap2-wdt";
-+                       ti,hwmods = "wd_timer2";
-+               };
-        };
- };
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 99474fa..dbf8a5b 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -215,5 +215,10 @@
-                        compatible = "ti,omap3-hsmmc";
-                        ti,hwmods = "mmc3";
-                };
-+
-+               wdt2: wdt {
-+                       compatible = "ti,omap3-wdt", "ti,omap2-wdt";
-+                       ti,hwmods = "wd_timer2";
-+               };
-        };
- };
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 359c497..ce74e87 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -272,5 +272,10 @@
-                        ti,hwmods = "mmc5";
-                        ti,needs-special-reset;
-                };
-+
-+               wdt2: wdt {
-+                       compatible = "ti,omap4-wdt", "ti,omap2-wdt";
-+                       ti,hwmods = "wd_timer2";
-+               };
-        };
- };
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Infos for omap3:
-# dmesg|grep Machine
-<6>[    0.000000] Machine: Generic OMAP3 (Flattened Device Tree), model: 
-TI OMAP3 EVM (OMAP3530, AM/DM37x)
-# dmesg|grep omap_wdt_probe
-<4>[    2.552825] in omap_wdt_probe: 299, res->start = 0x48314000
+On Thu, May 31, 2012 at 10:05:42AM +0800, Thomas Abraham wrote:
+> On 30 May 2012 18:13, Mark Brown <broonie@opensource.wolfsonmicro.com> wr=
+ote:
 
-Infos for omap4:
-root@localhost:/root> dmesg|grep Machine
-[    0.000000] Machine: Generic OMAP4 (Flattened Device Tree), model: TI 
-OMAP4 SDP board
-root@localhost:/root> dmesg|grep omap_wdt_probe
-[    1.687896] in omap_wdt_probe: 299, res->start = 0x4a314000
+> > No there isn't. =A0You've got things like s3c64xx_device_spi0 in
+> > arch/arm/plat-samsung/devs.c (which you'd expect since the resources
+> > that are passed in for memory mapping, DMA and interrupt vary with the
+> > SoC). =A0The bit of code I was querying just changes "s3c64xx-spi" to
+> > "s3c6410-spi" at runtime in that structure which seems like a waste of
+> > time.
 
-So can I drop the wdt addr from dts file? otherwise it is not feasible 
-to add omap2 wdt node in omap2.dtsi
-due to different addrs for omap2420 and omap2430.
+> So is the concern only with the change of device name from
+> "s3c64xx-spi" to "s3c6410-spi"? Is there any concern with changing the
+> name of the static spi platform device (s3c64xx_device_spi0/1/2) at
+> runtime which then is used to select a driver data?
 
-Regards,
-Xiao
-[1] http://marc.info/?l=linux-omap&m=133836995026565&w=2
-> Cheers
-> Jon
->   
+No, you're not getting it at all.  The changing at runtime is the
+problem, it's achieving nothing except making the code more fragile and
+obscure.  Those devices will always come out with exactly the same name
+so we should just assign that name statically.
+
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPx1fFAAoJEBus8iNuMP3djjQP/iTDFIB6+JISK/182WzEohok
+KaSOevQ9ZNdxpig9fqWnPFesBcr2GCPoPl4pMzg1wmaHNrztZPkIcn3PUf+veMPi
+CIzzZOG5HGMe+atDfUEy+1JiGmA6AX+/oKTadwep4gdQUb2qJZMLgXuqItxoEXqz
+xg20CrYk3sywQPpaTVDewqsQNuvUR3kXPq1vPfHNbYzQ4Os6it6Vj6EaPnDIEHqW
+g7VL0SvJyiKUzMXXhVun938uzDt2WQVySEH2+nl8rnenu5wGY5Fi4wwHrt+9Xyjy
+WdRAFXvMNnuFr/ISriB/DZhncUXVEhqkVXLtNqmb8WGN74jxU8+Xvga5TRijYhn3
+5871LBQdejmm2TKMsby6a//jjTZm8aO0JsZzoIKEMCSillZIvxvgH8/OtBlSspIe
+y5EKsWSFuBMoKuV4oCKek0UENI75NP2xvWekqr6wUZp1Ecfy5fdHh/WZTsyIKNj7
+tYmH0qwoJ0gmCe9kKyZg+oRtmzHXDB3KN0rLdHh6h+08t+CUn3bEdquEIQaaH+AL
+CbWJVf19Xexio2l3rXppHCmLDYh4jCx8PFK4f+rcqKUEY3EIlZMQ1//ci7dHdX9x
+BcGCEOo7arsTgpzqbLGxP7Y6TiEfNmDtwxPnUiJxOYLguI8Iq7FPr6TxCY0bWbCq
+aRSQ1qlP2AG8sEVNY4vE
+=vWQf
+-----END PGP SIGNATURE-----
+
+--oC1+HKm2/end4ao3--
