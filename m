@@ -1,105 +1,90 @@
-From: Marc Butler <marc@plastictigers.com>
-Subject: Re: [PATCH] slimbus: Linux driver framework for SLIMbus.
-Date: Thu, 31 May 2012 20:16:17 -0400
-Message-ID: <20120601001617.GA16311@plastictigers.com>
-References: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] ARM: Samsung: Modify
+ s3c64xx_spi{0|1|2}_set_platdata function
+Date: Fri, 1 Jun 2012 10:47:44 +0800
+Message-ID: <CAJuYYwS5vPO9GNFMGArroOe57Z80+gP0vnRMjPuXRaxukNJ8uw@mail.gmail.com>
+References: <1337333613-6216-1-git-send-email-thomas.abraham@linaro.org>
+ <1337333613-6216-5-git-send-email-thomas.abraham@linaro.org>
+ <20120520092113.GA20652@opensource.wolfsonmicro.com>
+ <CAOesGMhFcdv7QW=_1U8HHfaETD83mJt=Dgk-8z40yOrC3PB_fA@mail.gmail.com>
+ <20120530093421.GA9947@opensource.wolfsonmicro.com>
+ <CAJuYYwShLhKSrpGhaTyxX4dqaiKDAcjBtuWSMYAdsWcOMfP=qw@mail.gmail.com>
+ <20120530101326.GF9947@opensource.wolfsonmicro.com>
+ <CAJuYYwT88mpTKmOD8mpCjsQo9O_+Giri7+q-Rzz=zPNj+F7aDg@mail.gmail.com>
+ <20120531113659.GB2666@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sagar Dharia <sdharia@codeaurora.org>
-Cc: ohad@wizery.com, rusty@rustcorp.com.au, rob@landley.net, joerg.roedel@amd.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org, broonie@opensource.wolfsonmicro.com, bryanh@codeaurora.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, kheitke@codeaurora.org, ak@linux.intel.com, gclemson@audience.com, gregkh@linuxfoundation.org, davidb@codeaurora.org, trenn@suse.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120531113659.GB2666-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2012 at 07:11:33PM -0600, Sagar Dharia wrote:
-> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
-> developed by MIPI (Mobile Industry Processor Interface) alliance.
+On 31 May 2012 19:36, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrot=
+e:
+> On Thu, May 31, 2012 at 10:05:42AM +0800, Thomas Abraham wrote:
+>> On 30 May 2012 18:13, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> w=
+rote:
+>
+>> > No there isn't. =A0You've got things like s3c64xx_device_spi0 in
+>> > arch/arm/plat-samsung/devs.c (which you'd expect since the resources
+>> > that are passed in for memory mapping, DMA and interrupt vary with the
+>> > SoC). =A0The bit of code I was querying just changes "s3c64xx-spi" to
+>> > "s3c6410-spi" at runtime in that structure which seems like a waste of
+>> > time.
+>
+>> So is the concern only with the change of device name from
+>> "s3c64xx-spi" to "s3c6410-spi"? Is there any concern with changing the
+>> name of the static spi platform device (s3c64xx_device_spi0/1/2) at
+>> runtime which then is used to select a driver data?
+>
+> No, you're not getting it at all. =A0The changing at runtime is the
+> problem, it's achieving nothing except making the code more fragile and
+> obscure. =A0Those devices will always come out with exactly the same name
+> so we should just assign that name statically.
 
-These are initial comments. A full review of the patch will take some
-time. While I am posting this email, this is the result of work both
-by myself, and my colleague Greg Clemson (cc'ed).
+Yes, I am not able to understand your point. So I am listing out my
+understanding of the issue here. Please let me know which of these you
+think needs to be changed.
 
-1. enum slim_ch_proto
+1. There is one instance of 'struct platform_device' for each of the
+spi controller instances (0/1/2) named "s3c64xx-spi" (in
+arch/arm/plat-samsung/devs.c).
 
-The enumeration slim_ch_proto is incorrect. It declares 2 transport
-protocols which do not exist in the specification: SLIM_HARD_ISO;
-SLIM_AUTO_ISO.
+2. These instances of platform device is then statically assigned the
+resources (mem/irq/dma) based on the SoC for which it is being
+compiled (IRQ_SPI0, S3C_PA_SPI0, DMACH_SPI0_TX and DMACH_SPI0_RX).
+These macros have different values for different SoC's.
 
-This in turn causes the subsequent values for the other protocols such
-as SLIM_PUSH, to be incorrectly coded in the NEXT_DEFINE_CHANNEL
-message generated in slim_reconfigure_now(). That is the push protocol
-is incorrectly encoded as 3 instead of 2 as per the specification
-(Table 47).
+3. Board files based on Samsung SoC's includes the static 'struct
+platform_device' for spi in the list of platform devices that are
+registered. Which means, the spi platform device is registered with
+the name "s3c64xx-spi" for all s3c, s5p and Exynos series SoC's.
 
-I believe a correct definition would be:
+4. So, in order to use a "struct platform_device_id" table in the spi
+driver (drivers/spi/spi-s3c64xx.c), the '.name' in spi's "struct
+platform_device" is changed at runtime, to indicate the SoC on which
+it is being used, and correspondingly, match with one of the entries
+in the "struct platform_device_id" table in the driver.
 
-enum slim_ch_proto {
-        SLIM_ISO,
-	SLIM_PUSH,
-	SLIM_PULL,
-	SLIM_LOCKED,
-	SLIM_ASYNC_SMPLX,
-	SLIM_ASYNC_HALF_DUP,
-	SLIM_EXT_SMPLX,
-	SLIM_EXT_HALF_DUP,
-	SLIM_USER_DEF1 = 14,
-	SLIM_USER_DEF2 = 15
-};
+5. If point 4 is not correct, the other option is to create a separate
+instances of 'struct platform_device' for each of the s3c, s5p and
+Exynos4/5 SoC's. Is this the correct way, and if yes, could you please
+help me understand the issues in setting the name of the platform
+device at runtime.
 
-However doing so will break the logic in slim_nextdefine_ch().
+Sorry to prolong this for so long, but I want to understand your point on t=
+his.
 
-2. Use of the term elemental address.
-
-Commentary around the use of struct slim_eaddr uses the term
-"elemental address". However, the term used in the specification is
-"enumeration address". There is no elemental address in the
-specification, and using this term may result confusion when referring
-to accessing the information and value elements.
-
-I suggest that term "enumeration address" should be used. 
-
-3. Probing sequence for drivers.
-
-The current probing sequence for drivers appears to make some
-assumptions, that are problematic.
-
-a) The code assumes that when the controller is registered the bus is
-operational (booted). No allowance is made for any problems the active
-framer may have synchronizing the bus. 
-
-The drivers really should not be probed until the bus has at least
-booted. This can be worked around by only registering the controller
-after it has booted the bus. This should be noted in the comments.
-
-b) Similarly to (a) the driver may be probed before the device has
-been given a logical address (LA). This makes sense in the case of
-driver that turns on the device (say via gpio) once the bus has
-booted. However, the driver then needs to sit and poll
-slim_get_logical_addr() until the logical address.
-
-A possible alternate solution would be to add a parameter to probe:
-
-enum slim_dev_status {
-        SLIM_BUS_READY,
-	SLIM_DEV_READY
-};
-
-int (*probe)(struct slim_device *sldev, enum slim_dev_status status);
-
-Where SLIM_BUS_READY == bus has booted, and SLIM_DEV_READY == device
-has been assigned its logical address.
-
-Alternatively you could have 2 separate probe type callbacks. 
-
-This would make the driver logical simpler.
+Thanks,
+Thomas.
