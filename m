@@ -1,14 +1,16 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [PATCH 3/3] libfdt: Add helper function to create a trivial,
- empty tree
-Date: Fri,  1 Jun 2012 14:12:38 +1000
-Message-ID: <1338523958-16909-4-git-send-email-david@gibson.dropbear.id.au>
-References: <1338523958-16909-1-git-send-email-david@gibson.dropbear.id.au>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: Add empty of_property_match_string() function
+Date: Fri, 1 Jun 2012 07:59:20 +0200
+Message-ID: <20120601055920.GA15874@avionic-0098.adnet.avionic-design.de>
+References: <1334327016-8949-1-git-send-email-thierry.reding@avionic-design.de>
+ <20120426190112.GA28018@avionic-0098.mockup.avionic-design.de>
+ <20120427164554.2F7E33E0B4D@localhost>
+ <20120427204154.GA12617@avionic-0098.mockup.avionic-design.de>
+ <20120427205307.GA16099@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6355612326679178518=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1338523958-16909-1-git-send-email-david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+In-Reply-To: <20120427205307.GA16099-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,169 +20,81 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The libfdt read/write functions are now usable enough that it's become a
-moderately common pattern to use them to build and manipulate a device
-tree from scratch.  For example, we do so ourself in our rw_tree1 testcase,
-and qemu is starting to use this model when building device trees for some
-targets such as e500.
 
-However, the read/write functions require some sort of valid tree to begin
-with, so this necessitates either having a trivial canned dtb to begin with
-or, more commonly, creating an empty tree using the serial-write functions
-first.
+--===============6355612326679178518==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
+Content-Disposition: inline
 
-This patch adds a helper function which uses the serial-write functions to
-create a trivial, empty but complete and valid tree in a supplied buffer,
-ready for manipulation with the read/write functions.
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
----
- libfdt/Makefile.libfdt  |    2 +-
- libfdt/fdt_empty_tree.c |   84 +++++++++++++++++++++++++++++++++++++++++++++++
- libfdt/libfdt.h         |    1 +
- tests/rw_tree1.c        |   12 +------
- 4 files changed, 87 insertions(+), 12 deletions(-)
- create mode 100644 libfdt/fdt_empty_tree.c
+--HlL+5n6rz5pIUxbD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/libfdt/Makefile.libfdt b/libfdt/Makefile.libfdt
-index d55a6f8..4366627 100644
---- a/libfdt/Makefile.libfdt
-+++ b/libfdt/Makefile.libfdt
-@@ -6,5 +6,5 @@
- LIBFDT_soname = libfdt.$(SHAREDLIB_EXT).1
- LIBFDT_INCLUDES = fdt.h libfdt.h
- LIBFDT_VERSION = version.lds
--LIBFDT_SRCS = fdt.c fdt_ro.c fdt_wip.c fdt_sw.c fdt_rw.c fdt_strerror.c
-+LIBFDT_SRCS = fdt.c fdt_ro.c fdt_wip.c fdt_sw.c fdt_rw.c fdt_strerror.c fdt_empty_tree.c
- LIBFDT_OBJS = $(LIBFDT_SRCS:%.c=%.o)
-diff --git a/libfdt/fdt_empty_tree.c b/libfdt/fdt_empty_tree.c
-new file mode 100644
-index 0000000..f72d13b
---- /dev/null
-+++ b/libfdt/fdt_empty_tree.c
-@@ -0,0 +1,84 @@
-+/*
-+ * libfdt - Flat Device Tree manipulation
-+ * Copyright (C) 2012 David Gibson, IBM Corporation.
-+ *
-+ * libfdt is dual licensed: you can use it either under the terms of
-+ * the GPL, or the BSD license, at your option.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Alternatively,
-+ *
-+ *  b) Redistribution and use in source and binary forms, with or
-+ *     without modification, are permitted provided that the following
-+ *     conditions are met:
-+ *
-+ *     1. Redistributions of source code must retain the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer.
-+ *     2. Redistributions in binary form must reproduce the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer in the documentation and/or other materials
-+ *        provided with the distribution.
-+ *
-+ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-+ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-+ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-+ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-+ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-+ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-+ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-+ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-+ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-+ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+#include "libfdt_env.h"
-+
-+#include <fdt.h>
-+#include <libfdt.h>
-+
-+#include "libfdt_internal.h"
-+
-+int fdt_create_empty_tree(void *buf, int bufsize)
-+{
-+	int err;
-+
-+	err = fdt_create(buf, bufsize);
-+	if (err)
-+		return err;
-+
-+	err = fdt_finish_reservemap(buf);
-+	if (err)
-+		return err;
-+
-+	err = fdt_begin_node(buf, "");
-+	if (err)
-+		return err;
-+
-+	err =  fdt_end_node(buf);
-+	if (err)
-+		return err;
-+
-+	err = fdt_finish(buf);
-+	if (err)
-+		return err;
-+
-+	return fdt_open_into(buf, buf, bufsize);
-+}
-+
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 35d78b8..73f4975 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -1014,6 +1014,7 @@ int fdt_finish(void *fdt);
- /* Read-write functions                                               */
- /**********************************************************************/
- 
-+int fdt_create_empty_tree(void *buf, int bufsize);
- int fdt_open_into(const void *fdt, void *buf, int bufsize);
- int fdt_pack(void *fdt);
- 
-diff --git a/tests/rw_tree1.c b/tests/rw_tree1.c
-index f4965ec..103a24d 100644
---- a/tests/rw_tree1.c
-+++ b/tests/rw_tree1.c
-@@ -57,17 +57,7 @@ int main(int argc, char *argv[])
- 	fdt = xmalloc(SPACE);
- 
- 	/* First create empty tree with SW */
--	CHECK(fdt_create(fdt, SPACE));
--
--	CHECK(fdt_finish_reservemap(fdt));
--	CHECK(fdt_begin_node(fdt, ""));
--	CHECK(fdt_end_node(fdt));
--	CHECK(fdt_finish(fdt));
--
--	verbose_printf("Built empty tree, totalsize = %d\n",
--		       fdt_totalsize(fdt));
--
--	CHECK(fdt_open_into(fdt, fdt, SPACE));
-+	CHECK(fdt_create_empty_tree(fdt, SPACE));
- 
- 	CHECK(fdt_add_mem_rsv(fdt, TEST_ADDR_1, TEST_SIZE_1));
- 	CHECK(fdt_add_mem_rsv(fdt, TEST_ADDR_2, TEST_SIZE_2));
--- 
-1.7.10
+* Thierry Reding wrote:
+> * Thierry Reding wrote:
+> > The latest series for the PWM subsystem is here[0]. However that version
+> > doesn't contain the latest changes that require this. I haven't pushed =
+those
+> > changes yet because they cause the build to fail (because of these two
+> > missing patches).
+>=20
+> I just pushed the latest code to the for-next branch. That's the state th=
+at I
+> was going to submit during the 3.5 merge window.
+>=20
+> Thierry
+>=20
+> > [0]: http://gitorious.org/linux-pwm/linux-pwm
+
+Hi Grant,
+
+Do you have any comments on this? I really want the PWM subsystem to go into
+3.6, and for that to happen we need to find a solution for this. As I stated
+previously the empty functions are needed to compile the PWM core in !OF
+configurations.
+
+Usually this would be solved by just #ifdef'ing the corresponding code, but
+with the recent introduction of the config_enabled() and IS_ENABLED() macros
+there seems to be a move to replace #ifdef usage with those in order to have
+the corresponding code compile-checked in all configurations and have the
+compiler throw away the unused code.
+
+I believe that this is a good thing, but it will required these empty OF
+functions to be added. If you don't find this an acceptable solution, please
+let me know and I'll convert the OF-specific code in the PWM core to use
+#ifdef instead.
+
+Thanks,
+Thierry
+
+--HlL+5n6rz5pIUxbD
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk/IWjgACgkQZ+BJyKLjJp+eNwCeO9XTxDTt6oQvMO6rTVSIk0TG
+tlAAoIXWLHvSsVM1UO2h27MOSNTkDK1d
+=JRFg
+-----END PGP SIGNATURE-----
+
+--HlL+5n6rz5pIUxbD--
+
+--===============6355612326679178518==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6355612326679178518==--
