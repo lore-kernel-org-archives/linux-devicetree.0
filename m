@@ -1,99 +1,74 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] ARM: davinci, cp_intc: Add irq domain support
-Date: Sat, 2 Jun 2012 01:06:41 +0530
-Message-ID: <4FC919C9.6070107@ti.com>
-References: <1338373143-7467-1-git-send-email-hs@denx.de>
- <1338373143-7467-2-git-send-email-hs@denx.de>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V4] i2c: Add generic I2C multiplexer using pinctrl API
+Date: Sat, 2 Jun 2012 11:24:09 +0200
+Message-ID: <20120602092409.GA13673@pengutronix.de>
+References: <1337354974-22307-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1338373143-7467-2-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1337354974-22307-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
 
-On 5/30/2012 3:48 PM, Heiko Schocher wrote:
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-> Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-> 
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 18, 2012 at 09:29:34AM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> This is useful for SoCs whose I2C module's signals can be routed to
+> different sets of pins at run-time, using the pinctrl API.
+>=20
+>                                  +-----+  +-----+
+>                                  | dev |  | dev |
+>     +------------------------+   +-----+  +-----+
+>     | SoC                    |      |        |
+>     |                   /----|------+--------+
+>     |   +---+   +------+     | child bus A, on first set of pins
+>     |   |I2C|---|Pinmux|     |
+>     |   +---+   +------+     | child bus B, on second set of pins
+>     |                   \----|------+--------+--------+
+>     |                        |      |        |        |
+>     +------------------------+  +-----+  +-----+  +-----+
+>                                 | dev |  | dev |  | dev |
+>                                 +-----+  +-----+  +-----+
+>=20
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > ---
+> Wolfram, when you apply this for 3.6, could you please put just this
+> patch into a stable topic branch - that way, I can merge this into a
+> Tegra branch too so that I can use the new driver in 3.6.
 
-On AM18x EVM, with this patch applied and CONFIG_KEYBOARD_GPIO_POLLED=y,
-I get warnings of type:
+Thanks, looks good to me. I think I'll wait for rc1 and try to convince
+Linus to apply the new driver rule, so we can have it in 3.5 already.
 
-irq 0, desc: c0372950, depth: 1, count: 0, unhandled: 0
+Regards,
 
-->handle_irq():  c00552f8, handle_bad_irq+0x0/0x23c
+  Wolfram
 
-->irq_data.chip(): c03794e8, 0xc03794e8
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
-->action():   (null)
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-   IRQ_NOPROBE set
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
- IRQ_NOREQUEST set
+iEYEARECAAYFAk/J27kACgkQD27XaX1/VRvqPgCgp8CdnuQ0flYh5sZK9kc0J5v3
+s3cAnAiPOA6HEjzxVukw8Xu8tY9xDhEo
+=t5NK
+-----END PGP SIGNATURE-----
 
-
-They do not come when CONFIG_KEYBOARD_GPIO_POLLED=n. I am yet to debug
-this, but wanted to point out now in case there is anything obvious.
-
-# cat /proc/interrupts
-           CPU0
-
-  0:         32      none
-
- 11:          0   cp_intc  edma
-
- 12:          0   cp_intc  edma_error
-
- 15:    1048613   cp_intc  i2c_davinci
-
- 21:      50992   cp_intc  clockevent
-
- 22:         17   cp_intc  free-run counter
-
- 33:          0   cp_intc  eth0
-
- 34:      13747   cp_intc  eth0
-
- 35:       5032   cp_intc  eth0
-
- 36:          0   cp_intc  eth0
-
- 52:     162759   cp_intc  da8xx_lcdc
-
- 61:        270   cp_intc  serial
-
- 93:          0   cp_intc  edma
-
- 94:          0   cp_intc  edma_error
-
-Err:         32
-
-
-The interrupt number 0 shows up which seems to be causing these warnings.
-
-I also had to select IRQ_DOMAIN for CP_INTC in
-arch/arm/mach-davinci/Kconfig to make the kernel builds after applying
-this patch.
-
-Thanks,
-Sekhar
+--7JfCtLOvnd9MIVvH--
