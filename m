@@ -1,21 +1,13 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dt: tegra: cardhu: register core regulator
- tps65911
-Date: Sun, 03 Jun 2012 06:11:21 -1000
-Message-ID: <4FCB8CA9.40602@firmworks.com>
-References: <4FBBCA8F.3050903@wwwdotorg.org> <4FBBD33C.8020802@nvidia.com>
- <4FBBDA97.6000006@wwwdotorg.org> <4FBBDE06.5080806@nvidia.com>
- <4FC916AC.4060804@wwwdotorg.org>
- <20120601204052.GB4258@opensource.wolfsonmicro.com>
- <4FC92990.5030104@wwwdotorg.org>
- <20120601210451.GC4258@opensource.wolfsonmicro.com>
- <CAOesGMgYAR938F8PnVWaymzMBQwDKeAiUgEP81bv2nN14NmLGg@mail.gmail.com>
- <4FCACFB6.2060601@gmail.com>
- <20120603120506.GG4258@opensource.wolfsonmicro.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] slimbus: Linux driver framework for SLIMbus.
+Date: Sun, 03 Jun 2012 09:34:20 -0700
+Message-ID: <1338741260.1881.14.camel@joe2Laptop>
+References: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4410612512823642337=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120603120506.GG4258-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <1338340310-4473-1-git-send-email-sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,128 +17,84 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, marc-vHKVnW1TcfG0ar3PoB3IswC/G2K4zDHf@public.gmane.org, gclemson-hxvC4TZJLZFWk0Htik3J/w@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joerg.roedel-5C7GfCeVMHo@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, trenn-l3A5Bk7waGM@public.gmane.org, bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ak-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============4410612512823642337==
-Content-Type: multipart/alternative;
- boundary="------------090800080201060304060301"
+On Tue, 2012-05-29 at 19:11 -0600, Sagar Dharia wrote:
+> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
+> developed by MIPI (Mobile Industry Processor Interface) alliance.
 
-This is a multi-part message in MIME format.
---------------090800080201060304060301
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Just a few trivial notes before stopped reading as it was
+very long.
 
-On 6/3/2012 2:05 AM, Mark Brown wrote:
-> On Sat, Jun 02, 2012 at 09:45:10PM -0500, Rob Herring wrote:
->
->> I tend to agree with Steven's and Olof's comments in this thread. As the
->> node names generally don't have much meaning, I don't think we should
->> start now. We've already got multiple styles of bindings and I don't
->> think we need more.
->
-> Well, if we're going to go with an existing idiom the normal thing would
-> be an ordered array which is absolutely abysmal from a usability
-> standpoint.  Compatible properties don't work as the whole reason we
-> have an issue here is that people want to have a single node
-> representing a group of regulators - for regulators which we can add a
-> compatible property to we're already doing that and have no issue.
->
-> What device tree seems to need rather badly is a way of representing
-> key/value pairs -
+> diff --git a/drivers/of/of_slimbus.c b/drivers/of/of_slimbus.c
+[]
+> +		name = kzalloc(SLIMBUS_NAME_SIZE, GFP_KERNEL);
+> +		if (!name) {
+> +			dev_err(&ctrl->dev, "of_slim: out of memory");
 
-Perhaps ironically, the fundamental device tree construct - the 
-"property" - is a key/value pair.
+OOM messages aren't necessary as they are reported
+with a dump_stack in the alloc functions and please
+make sure all messages are newline terminated.
 
-> aside from the legacy bindings that seems to be the
-> major source of pain when trying to contort things into DT.
->
-> Using the "regulator" string that we have to put in the binding (which
-> is currently totally meaningless) does seem like a good way forward
-> here.
->
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+[]
 
---------------090800080201060304060301
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+> +		binfo = krealloc(binfo, (n + 1) * sizeof(struct slim_boardinfo),
+> +					GFP_KERNEL);
 
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <tt>On 6/3/2012 2:05 AM, Mark Brown wrote:</tt>
-    <blockquote
-      cite="mid:20120603120506.GG4258-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org"
-      type="cite">
-      <pre wrap=""><tt>On Sat, Jun 02, 2012 at 09:45:10PM -0500, Rob Herring wrote:
+Reallocs should _always_ use a new temporary.
+Otherwise, there will be a memory leak of the
+original pointer memory on failure.
 
-</tt></pre>
-      <blockquote type="cite">
-        <pre wrap=""><tt>I tend to agree with Steven's and Olof's comments in this thread. As the
-node names generally don't have much meaning, I don't think we should
-start now. We've already got multiple styles of bindings and I don't
-think we need more.
-</tt></pre>
-      </blockquote>
-      <pre wrap=""><tt>
-Well, if we're going to go with an existing idiom the normal thing would
-be an ordered array which is absolutely abysmal from a usability
-standpoint.  Compatible properties don't work as the whole reason we
-have an issue here is that people want to have a single node
-representing a group of regulators - for regulators which we can add a
-compatible property to we're already doing that and have no issue.
+> diff --git a/drivers/slimbus/slimbus.c b/drivers/slimbus/slimbus.c
+[]
+> +	if (ctrl->nchans) {
+> +		ctrl->chans = kzalloc(ctrl->nchans * sizeof(struct slim_ich),
+> +					GFP_KERNEL);
 
-What device tree seems to need rather badly is a way of representing
-key/value pairs - </tt></pre>
-    </blockquote>
-    <br>
-    Perhaps ironically, the fundamental device tree construct - the
-    "property" - is a key/value pair.<br>
-    <br>
-    <blockquote
-      cite="mid:20120603120506.GG4258-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org"
-      type="cite">
-      <pre wrap=""><tt>aside from the legacy bindings that seems to be the
-major source of pain when trying to contort things into DT.
+please use kcalloc where appropriate.
 
-Using the "regulator" string that we have to put in the binding (which
-is currently totally meaningless) does seem like a good way forward
-here.
-</tt></pre>
-      <tt><br>
-      </tt>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <tt><br>
-      </tt>
-      <pre wrap=""><tt>_______________________________________________
-devicetree-discuss mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org">devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org</a>
-<a class="moz-txt-link-freetext" href="https://lists.ozlabs.org/listinfo/devicetree-discuss">https://lists.ozlabs.org/listinfo/devicetree-discuss</a>
-</tt></pre>
-    </blockquote>
-  </body>
-</html>
+> +		ctrl->sched.chc1 =
+> +			kzalloc(ctrl->nchans * sizeof(struct slim_ich *),
+> +			GFP_KERNEL);
+[]
+> +		ctrl->sched.chc3 =
+> +			kzalloc(ctrl->nchans * sizeof(struct slim_ich *),
+> +			GFP_KERNEL);
 
---------------090800080201060304060301--
+kcalloc...
 
---===============4410612512823642337==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +			ctrl->txnt = krealloc(ctrl->txnt,
+> +					(i + 1) * sizeof(struct slim_msg_txn *),
+> +					GFP_KERNEL);
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+that realloc ptr use again.
 
---===============4410612512823642337==--
+> +int slim_assign_laddr(struct slim_controller *ctrl, struct slim_eaddr *e_addr,
+> +				u8 *laddr)
+[]
+> +			ctrl->addrt = krealloc(ctrl->addrt,
+> +					(ctrl->num_dev + 1) *
+> +					sizeof(struct slim_addrt),
+> +					GFP_KERNEL);
+
+and again, I won't look for it again.
+
+> +static u16 slim_slicesize(u32 code)
+> +{
+> +	static const u8 sizetocode[16] = {0, 1, 2, 3, 3, 4, 4, 5, 5, 5, 5, 6, 6,
+> +						6, 6, 7};
+
+Perhaps more style conformant as:
+
+	static const u8 sizetocode[16] = {
+		0, 1, 2, 3, 3, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7
+	};
+
+> +	if (code == 0)
+> +		code = 1;
+> +	if (code > ARRAY_SIZE(sizetocode))
+> +		code = 16;
+
+clamp()
