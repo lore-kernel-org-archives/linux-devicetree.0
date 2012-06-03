@@ -1,81 +1,65 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v2 4/6] ARM: Samsung: Modify s3c64xx_spi{0|1|2}_set_platdata
- function
-Date: Sun, 3 Jun 2012 14:59:50 +0530
-Message-ID: <CAJuYYwS6xgTQD=azEc_020fBCvEzpu5bF6ANvnu1_iZfGptP-Q@mail.gmail.com>
-References: <1337333613-6216-1-git-send-email-thomas.abraham@linaro.org>
-	<1337333613-6216-5-git-send-email-thomas.abraham@linaro.org>
-	<20120520092113.GA20652@opensource.wolfsonmicro.com>
-	<CAOesGMhFcdv7QW=_1U8HHfaETD83mJt=Dgk-8z40yOrC3PB_fA@mail.gmail.com>
-	<20120530093421.GA9947@opensource.wolfsonmicro.com>
-	<CAJuYYwShLhKSrpGhaTyxX4dqaiKDAcjBtuWSMYAdsWcOMfP=qw@mail.gmail.com>
-	<20120530101326.GF9947@opensource.wolfsonmicro.com>
-	<CAJuYYwT88mpTKmOD8mpCjsQo9O_+Giri7+q-Rzz=zPNj+F7aDg@mail.gmail.com>
-	<20120531113659.GB2666@opensource.wolfsonmicro.com>
-	<CAJuYYwS5vPO9GNFMGArroOe57Z80+gP0vnRMjPuXRaxukNJ8uw@mail.gmail.com>
-	<20120601123902.GL24139@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: ARM PCI controller registration and representation using device
+ tree?
+Date: Sun, 3 Jun 2012 11:54:42 +0000
+Message-ID: <201206031154.42290.arnd@arndb.de>
+References: <4113992.BTnO0ZYQON@bender> <201206030241.52775.arnd@arndb.de>
+ <20120603075544.GA15354@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20120601123902.GL24139@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Olof Johansson <olof@lixom.net>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120603075544.GA15354-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 June 2012 18:09, Mark Brown <broonie@opensource.wolfsonmicro.com> =
-wrote:
-> On Fri, Jun 01, 2012 at 10:47:44AM +0800, Thomas Abraham wrote:
->
->> 1. There is one instance of 'struct platform_device' for each of the
->> spi controller instances (0/1/2) named "s3c64xx-spi" (in
->> arch/arm/plat-samsung/devs.c).
->
-> Right, which looks rather like it is specific to s3c64xx at least giv=
-en
-> the naming... =A0there aren't any current in tree users, though I do =
-have
-> one out of tree user on s3c6410. =A0If this is supposed to be used on=
- the
-> later SoCs too then I guess it ought to be renamed anyway since what'=
-s
-> there looks wrong.
+On Sunday 03 June 2012, Russell King - ARM Linux wrote:
+> 
+> On Sun, Jun 03, 2012 at 02:41:52AM +0000, Arnd Bergmann wrote:
+> > On Saturday 02 June 2012, Russell King - ARM Linux wrote:
+> > > I think we have to keep the existing strategy of having struct hw_pci and
+> > > its pci_sys_data, registering each bus separately with its own individual
+> > > swizzle and map_irq functions depending on how the bus hardware is setup.
+> > 
+> > Actually, I think we won't need to call pci_fixup_irqs for DT at all, so
+> > there won't be host specific swizzle and map_irq functions. AFAICT the
+> > interrupt-map property can handle all possible cases, it certainly does
+> > so for a large number of obscure buses on powerpc.
+> 
+> That means you have to list every PCI device in DT along with its
+> interrupt number - which means your boot loader will have to scan the
+> PCI bus and provide interrupt and BAR settings into the kernel.
 
-The spi platform device is not really s3c64xx specific. It can be
-reused on all other Samsung SoC's as well, but there are no users of
-this except for s3c64xx SoC. The resources for this platform devices
-are statically bound for a SoC during compile time. I would not
-consider the existing spi platform device instance name
-(s3c64xx_device_spi0) or the .name (s3c64xx-spi) to be factor in
-reusing it on other Samsung SoC's.
+Actually not, there is only one "interrupt-map" property in the PCI
+host node, no need to list the add-on cards that use regular swizzling.
 
->
->> 5. If point 4 is not correct, the other option is to create a separa=
-te
->> instances of 'struct platform_device' for each of the s3c, s5p and
->> Exynos4/5 SoC's. Is this the correct way, and if yes, could you plea=
-se
->> help me understand the issues in setting the name of the platform
->> device at runtime.
->
-> That would seem less painful to me. =A0The big problem I've found is =
-with
-> things like matching clocks up where if you look at the device that's
-> being registered it has one name but at runtime it has another name, =
-it
-> makes everything much harder to follow. =A0There was one of the devic=
-es
-> where the .id also ended up getting changed which created even more
-> confusion.
+The binding is a little hard to understand at first, but it's all in there:
+http://www.openfirmware.org/1275/proposals/Attachments/321att.pdf
 
-Yes, I agree with you that changing device names at runtime can be
-confusing at times. Probably, additional comments to indicate possible
-runtime changes in device names could be useful.
+> And that will suck if you have something like a 4 port PCI network card
+> which has a PCI-to-PCI bridge on - are boot loaders going to have the
+> correct swizzling support?  I think not.
 
-=46or now, I will avoid runtime setting of platform device name as you
-have suggested. Thank your for providing clarification for my
-questions.
+I can assure you that those cases are covered by the binding. We have PCI
+buses on most PowerPC systems, and we don't normally list the devices on
+them, although the PCI binding allows us to. In the example you mention,
+of_irq_map_pci will walk up the buses across all PCI bridges using standard
+swizzling until it gets to a device that has a device node, which is
+normally the host controller, but it can also be a device that is hardwired.
 
-Regards,
-Thomas.
+If a device or slot is hardwired to a specific IRQ, there is no problem
+listing it in the device tree without the need for a bus walk in the boot
+loarder. If it's not hardwired, then it should use the swizzling algorithm
+in the bridge.
+
+	Arnd
