@@ -1,65 +1,63 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ARM PCI controller registration and representation using device
- tree?
-Date: Sun, 3 Jun 2012 11:54:42 +0000
-Message-ID: <201206031154.42290.arnd@arndb.de>
-References: <4113992.BTnO0ZYQON@bender> <201206030241.52775.arnd@arndb.de>
- <20120603075544.GA15354@n2100.arm.linux.org.uk>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dt: tegra: cardhu: register core regulator
+ tps65911
+Date: Sun, 3 Jun 2012 12:55:43 +0100
+Message-ID: <20120603115529.GF4258@opensource.wolfsonmicro.com>
+References: <4FBBC830.2060802@nvidia.com>
+ <4FBBCA8F.3050903@wwwdotorg.org>
+ <4FBBD33C.8020802@nvidia.com>
+ <4FBBDA97.6000006@wwwdotorg.org>
+ <4FBBDE06.5080806@nvidia.com>
+ <4FC916AC.4060804@wwwdotorg.org>
+ <20120601204052.GB4258@opensource.wolfsonmicro.com>
+ <4FC92990.5030104@wwwdotorg.org>
+ <20120601210451.GC4258@opensource.wolfsonmicro.com>
+ <CAOesGMgYAR938F8PnVWaymzMBQwDKeAiUgEP81bv2nN14NmLGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120603075544.GA15354-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zhtSGe8h3+lMyY1M"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMgYAR938F8PnVWaymzMBQwDKeAiUgEP81bv2nN14NmLGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 03 June 2012, Russell King - ARM Linux wrote:
-> 
-> On Sun, Jun 03, 2012 at 02:41:52AM +0000, Arnd Bergmann wrote:
-> > On Saturday 02 June 2012, Russell King - ARM Linux wrote:
-> > > I think we have to keep the existing strategy of having struct hw_pci and
-> > > its pci_sys_data, registering each bus separately with its own individual
-> > > swizzle and map_irq functions depending on how the bus hardware is setup.
-> > 
-> > Actually, I think we won't need to call pci_fixup_irqs for DT at all, so
-> > there won't be host specific swizzle and map_irq functions. AFAICT the
-> > interrupt-map property can handle all possible cases, it certainly does
-> > so for a large number of obscure buses on powerpc.
-> 
-> That means you have to list every PCI device in DT along with its
-> interrupt number - which means your boot loader will have to scan the
-> PCI bus and provide interrupt and BAR settings into the kernel.
 
-Actually not, there is only one "interrupt-map" property in the PCI
-host node, no need to list the add-on cards that use regular swizzling.
+--zhtSGe8h3+lMyY1M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The binding is a little hard to understand at first, but it's all in there:
-http://www.openfirmware.org/1275/proposals/Attachments/321att.pdf
+On Sat, Jun 02, 2012 at 02:19:57PM -0700, Olof Johansson wrote:
 
-> And that will suck if you have something like a 4 port PCI network card
-> which has a PCI-to-PCI bridge on - are boot loaders going to have the
-> correct swizzling support?  I think not.
+> naming dependencies to only be under the regulators in question. In
+> particular, for things such as fixed regulators, they can be located
+> at other places in the device tree.
 
-I can assure you that those cases are covered by the binding. We have PCI
-buses on most PowerPC systems, and we don't normally list the devices on
-them, although the PCI binding allows us to. In the example you mention,
-of_irq_map_pci will walk up the buses across all PCI bridges using standard
-swizzling until it gets to a device that has a device node, which is
-normally the host controller, but it can also be a device that is hardwired.
+I'm sorry, I can't parse this at all.  What "naming dependencies" are
+you talking about?  This is purely an issue for multi-regulator chips.
 
-If a device or slot is hardwired to a specific IRQ, there is no problem
-listing it in the device tree without the need for a bus walk in the boot
-loarder. If it's not hardwired, then it should use the swizzling algorithm
-in the bridge.
+--zhtSGe8h3+lMyY1M
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-	Arnd
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPy1C2AAoJEBus8iNuMP3dsYsP/i1U6p0kOYBZ4EyFstVpfKUv
+RpzPtvqsBdbEfqAnp0LlW3/DHOJsA8UiD4EJsB5cKnOwNi7Rru53fBMoXbWmIq+P
+MydTj1opKkifb8BhPG86reGUDlWfTYLpHWPeLMqaQuULfK9HBijPUsZVZ8JaPnAL
+6yps1o4TrmDrSQIhoNKAyfTGZxWPFwk1D7sXfx/WMv5I7Eh8H0C3Vv4/Cn4LPswm
+w99nNdX57gRKogqUjCMGl294XdWHvLsImPFBDESH0vjr7TadYyZdxrd4sIi9h+Yn
+61xR9bw4nXE11SNoGtGr9zk8dONqq698FOmHRXmiz17vbjDms58COmLgRuVa8xvD
+Vi5L+NwyCNXeu7bmw7hPjFdkJcOUDeaEdLK0wp3zLm5Io7zdMBSQQ/biLOdRRpaQ
+3T7DnKfy/eg/4SqsnOi50kw9IwrXx3sab95Y/SGn33Gbp9rlJsdeBJHWmVtVQ8x5
+NQzmOk+2MGkrZfJqHW42g5vy4irAWLmE9/BEMy9YOhrMthH1IRL4+o0m3h9d2EiM
+XzB0y+195zdb6jQ0ZlKfC+rlkDV9HFzKLCTJrpsKExhDBitFm/j8d8Umidmh4ARY
+PPw6i56iWl+p875/l3yGlRo/298bASkQLAaHc4ZcjAyTZuQcS9qRHJ56b0EWLtH6
+wEV0ZjbK+PbWIbhKp5vS
+=BFIC
+-----END PGP SIGNATURE-----
+
+--zhtSGe8h3+lMyY1M--
