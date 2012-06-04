@@ -1,62 +1,77 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] add imx usb driver for mx28/6x
-Date: Mon, 4 Jun 2012 18:00:28 +0300
-Message-ID: <20120604150024.GN8002@arwen.pp.htv.fi>
-References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
- <20120604004610.GA2857@b20223-02.ap.freescale.net>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Marc Butler <marc@plastictigers.com>
+Subject: Re: [PATCH] slimbus: Linux driver framework for SLIMbus.
+Date: Mon, 4 Jun 2012 13:13:44 -0400
+Message-ID: <20120604171344.GA15837@plastictigers.com>
+References: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
+ <20120601001617.GA16311@plastictigers.com>
+ <74993ac9d11db0db7080c0864daef397.squirrel@www.codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cs5saTBZh7UZl2eX"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120604004610.GA2857-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+In-Reply-To: <74993ac9d11db0db7080c0864daef397.squirrel@www.codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sagar Dharia <sdharia@codeaurora.org>
+Cc: davidb@codeaurora.org, bryanh@codeaurora.org, kheitke@codeaurora.org, gclemson@audience.com, broonie@opensource.wolfsonmicro.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rob@landley.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, ohad@wizery.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, rusty@rustcorp.com.au, joerg.roedel@amd.com, trenn@suse.de, ak@linux.intel.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 04, 2012 at 03:21:06AM -0700, Sagar Dharia wrote:
+> > The enumeration slim_ch_proto is incorrect. It declares 2 transport
+> > protocols which do not exist in the specification: SLIM_HARD_ISO;
+> > SLIM_AUTO_ISO.
+> 
+> The enums are more SW representation (and not 1-1 mapping). Difference
+> between HARD_ISO and AUTO_ISO with example:
+> Let's say the root frequency is 24.576MHz. then all 4K family channels
+> (sample rate multiple of 4K) can run isochronously, and all 11.025KHz
+> channel can run with good efficiency.
+> So if a client wants 11.025KHz and is does not want to do flow-control at
+> this root frequency, then the client can specify AUTO_ISO to get the next
+> available isochronous frequency.
 
---cs5saTBZh7UZl2eX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I understand it is not a 1-to-1 mapping. However it *is* used as such:
 
-On Mon, Jun 04, 2012 at 08:46:11AM +0800, Richard Zhao wrote:
-> Hi Guys,
->=20
-> The merge window was closed. Do you have time to check whether the
-> patch series is ok to pick up?
+ wbuf[2] = (u8)((segdist & 0xF00) >> 8) | (slc->prop.prot << 4);
 
-The drivers/ part looks fine to me.
+which results in NEXT_DEFINE_CHANNEL messages with an invalid TP
+field.
 
---=20
-balbi
+More importantly I think it makes it harder to understand the
+framework. The concept of HARD_ISO and AUTO_ISO are extensions, and
+should really look like such, say perhaps:
 
---cs5saTBZh7UZl2eX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+enum {
+       SLIM_ISO,
+       SLIM_PUSH,
+       SLIM_PULL,
+       SLIM_LOCKED,
+       SLIM_ASYNC_SMPLX,
+       SLIM_ASYNC_HALF_DUP,
+       SLIM_EXT_SMPLX, 
+       SLIM_EXT_HALF_DUP,
+       SLIM_AUTO_ISO,
+       SLIM_USER_DEF_1 = 14,
+       SLIM_USER_DEF_2 = 15,
+       /* extensions */
+       SLIM_HARD_ISO,
+       SLIM_AUTO_ISO
+};       
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+> > b) Similarly to (a) the driver may be probed before the device has
+> > been given a logical address (LA). This makes sense in the case of
+> > driver that turns on the device (say via gpio) once the bus has
+> > booted. However, the driver then needs to sit and poll
+> > slim_get_logical_addr() until the logical address.
+> This is not the case anymore.
+> While taking care of the comments for RFC, I have introduced a completion
+> that will be signalled when LA is given to the device. The driver can wait
+> on that completion (wait_enum) instead of polling.
 
-iQIcBAEBAgAGBQJPzM2IAAoJEIaOsuA1yqREOkYP/Ak8B3bkuWSphIIY7QmuWtSN
-dDhdxG2Xt10V40GOUlxgnqXUqq6vCRplAD3riD2AeSUwI3Cyfcz8CETSD3fI92jX
-dYTFgZ7zlW6upl0QojmUIVZSGnFu8fWrnoYKtywXXWyaSNyUpXDUQein/oxB84tB
-s8IKWJVbq0un2fZDBhVuxdVksa1r9Ppw7HRajnSME3Sk6XfgH/CAJJ/7hl0ALb0A
-q8n0RZBop8ELku8OcCUnBLmCJMEpKbpAzSf1XPVVuv4vY5/gsDQ/znVgIZUKZHvH
-rfOa8VHykCy2mfbpgA5EN13dgG9Op74SDBo0ffd7kugCPJbX489bKGtVc0fS0cYq
-Ec0fUkXZs7SRnVlHb4UfUfCBr6YiCKAQymKuKY8TuORdHpfkkD1Dl8subqznbBWE
-rclad4d3TQMSg18r/cJGPdl5ckJ9B+j/AGhLheZT0Aiqp8pkQLn8alZ99dWlkX2X
-o9K3pJXn0UiibnPaksFoA8I7A514mJaqkCDDtdgnI1Pg1FxbBoDwdnGx28hzzRQ6
-lVPDV9837PNY4tcsfxS3+aS8ERPb21UntADRLrl3q+uayzbVI5NzhTAvIz7l1V1O
-bVllIq+8mPxHOXHrwv+k2JPEcY3aJARr+0oAYSpwMnuV37Kod+zVi4CSm48keKJi
-m7eEDy49Eg7pM9ZpCK6J
-=pOmd
------END PGP SIGNATURE-----
+Yes, my mistake. The driver wouldn't have to poll if there was another
+callback. So I don't see how the completion mechanism is superior: it
+forces a synchronous interface to asynchronous events, or the driver
+developer has to work around it.
 
---cs5saTBZh7UZl2eX--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+If you wake up and you're not in pain, you know you're dead.
+(Russian Proverb)
