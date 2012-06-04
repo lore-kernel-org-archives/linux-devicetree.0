@@ -1,57 +1,68 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+From: "Sagar Dharia" <sdharia@codeaurora.org>
 Subject: Re: [PATCH] slimbus: Linux driver framework for SLIMbus.
-Date: Mon, 4 Jun 2012 08:29:33 +0100
-Message-ID: <20120604072933.GE26676@opensource.wolfsonmicro.com>
+Date: Mon, 4 Jun 2012 02:51:49 -0700 (PDT)
+Message-ID: <53f16b8f6198e1adb9cc54bb8b9d80cb.squirrel@www.codeaurora.org>
 References: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
- <4FCC280C.6030103@landley.net>
+    <4FCC280C.6030103@landley.net>
+Reply-To: sdharia@codeaurora.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Yb+qhiCg54lqZFXW"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <4FCC280C.6030103@landley.net>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: Rob Landley <rob@landley.net>
-Cc: Sagar Dharia <sdharia@codeaurora.org>, davidb@codeaurora.org, bryanh@codeaurora.org, kheitke@codeaurora.org, marc@plastictigers.com, gclemson@audience.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ohad@wizery.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, rusty@rustcorp.com.au, joerg.roedel@amd.com, trenn@suse.de, ak@linux.intel.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Sagar Dharia <sdharia@codeaurora.org>, davidb@codeaurora.org, bryanh@codeaurora.org, kheitke@codeaurora.org, marc@plastictigers.com, gclemson@audience.com, broonie@opensource.wolfsonmicro.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ohad@wizery.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, rusty@rustcorp.com.au, joerg.roedel@amd.com, trenn@suse.de, ak@linux.intel.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+>
+> Slim?
+>
+SLIMbus is MIPI alliance specification. Since word "bus" is part of the
+specification, I thought it will be good to keep it that way.
 
---Yb+qhiCg54lqZFXW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The specification is available to all MIPI members.
+Some more info here:
+http://mipi.org/specifications/serial-low-power-inter-chip-media-bus-slimbussm-specification
 
-On Sun, Jun 03, 2012 at 10:14:20PM -0500, Rob Landley wrote:
-> On 05/29/2012 08:11 PM, Sagar Dharia wrote:
+>> +and the messages can be of unicast and broadcast type. E.g.
+>> reading/writing
+>> +device specific values is typically a unicast message. A data channel
+>> +reconfiguration sequence is announced to all devices using a broadcast
+>> message.
+>
+> Unicast messages are seen by all devices?
+>
+I was trying to give example of each type of both message. I will reword
+it to be more clear.
 
-> > SLIMbus replaces many digital audio buses and control buses by
-> > providing flexible and dynamic bus-bandwidth between data-functions
-> > and control-functions.
+>> +Slimbus specification has different types of device classifications
+>> based on
+>> +their capabilities.
+>
+> I'm trying to figure out if that sentence conveys any information at all.
+>
+I will reword this to say: "has following type of device classifications
+based on capabilities:".
 
-> So that's a really long way of saying "A bit like I2C but faster"?
+> So each slimbus has 1 manager device that enumerates configures, and
+> allocates channels for the other devices on the bus. The rest are
+> "framer" devices that transmit data packets?
+>
+Typically there is 1 framer per bus, but if there are multiple framers
+then manager is responsible for doing handoff between framers.
+>
+> However, I expect some example code would be far more useful than this
+> document...
+>
+Please refer to slimbus.c for slimbus framework.
 
-No, it's replacing I2S (or whatever) too.  Really it's much more like
-USB than I2C.
+Thank you for your comments. I will address all the comments in the next
+patch.
 
---Yb+qhiCg54lqZFXW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Regards
+Sagar
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
 
-iQIcBAEBAgAGBQJPzGPUAAoJEBus8iNuMP3dUMgP/i1KUksq0K6N+2VORV+rCsXD
-5YjTFQJ4JPSm2Y+Ln/m9aRdo1MbxpRkp5qruGkt8Pv5yH7g5bmaAhCfAQi47xzQ6
-eoxJ9C2ADI0rruRd5QwSFsdScgETmsrHp/gnJX6qJP0Oea6QOItdIvA0lBRIQ+Mg
-c8JZuc301+Ub3Ih2jXMVQPU5U8nzukbOdUHHJS9dwpu90RbKCcSIMLvGTd6UfVc0
-biJGA8uumN052OR44yLEBpUBsUwug623fr3gImUnYVE7O9v2GdMpRUa4qc0nbIxx
-1RjC7StFSLqOyOub8FnDEL4EmIGVtFLof7YBXPUxOU23KYszVZcIVEuu3kgQdLa7
-+Pqv4gbJs53ptVerTpgCFLxxRPJF6LZpbgJ4Q7Yomz862uYxfwicsFaPtbFpDZ/T
-///nFDUpCcoAyM36rxDNnnYaGxNb0N96626w8J+arUHZlCZxKwySmMdxq9W3q4Nj
-wC5mhmypLfhyyVQMc7MFBOwOGZDE+fHaNZyVn2cnkEzZLtlOF9tEtSw7jO+TruaN
-yI3Y0V0usd86l9z1gMV/5MqKtETQRkiT3VZzBRIeF1CxnLltdTL7Uj1sz/IyHQP2
-oocMhRTnxUbAZbdO8R1I5voWWMuN79lP03UoRjzmH5Eop32+IMml43SqrEW8AIF9
-zF5Stq/oNFwbDBerqFiv
-=6S9H
------END PGP SIGNATURE-----
-
---Yb+qhiCg54lqZFXW--
