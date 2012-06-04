@@ -1,69 +1,62 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] slimbus: Linux driver framework for SLIMbus.
-Date: Mon, 4 Jun 2012 11:42:33 +0100
-Message-ID: <20120604104233.GG7538@opensource.wolfsonmicro.com>
-References: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
- <20120601001617.GA16311@plastictigers.com>
- <74993ac9d11db0db7080c0864daef397.squirrel@www.codeaurora.org>
- <20120604102747.GC7538@opensource.wolfsonmicro.com>
- <69926c6ce4b1e004069662fb13287e9b.squirrel@www.codeaurora.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 00/12] add imx usb driver for mx28/6x
+Date: Mon, 4 Jun 2012 18:00:28 +0300
+Message-ID: <20120604150024.GN8002@arwen.pp.htv.fi>
+References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
+ <20120604004610.GA2857@b20223-02.ap.freescale.net>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5L6AZ1aJH5mDrqCQ"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="cs5saTBZh7UZl2eX"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <69926c6ce4b1e004069662fb13287e9b.squirrel@www.codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sagar Dharia <sdharia@codeaurora.org>
-Cc: davidb@codeaurora.org, bryanh@codeaurora.org, kheitke@codeaurora.org, gclemson@audience.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rob@landley.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, ohad@wizery.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, rusty@rustcorp.com.au, joerg.roedel@amd.com, trenn@suse.de, ak@linux.intel.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <20120604004610.GA2857-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---5L6AZ1aJH5mDrqCQ
+--cs5saTBZh7UZl2eX
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 04, 2012 at 03:36:55AM -0700, Sagar Dharia wrote:
+On Mon, Jun 04, 2012 at 08:46:11AM +0800, Richard Zhao wrote:
+> Hi Guys,
+>=20
+> The merge window was closed. Do you have time to check whether the
+> patch series is ok to pick up?
 
-> I would expect that the slim_device's driver will only power-on the device
-> during probe (and use wait_for_completion during 1st transfer to get LA).
-> Typically transfers are not done as part of probe. Even if transfers need
+The drivers/ part looks fine to me.
 
-I'd really expect that we'll have devices that we want to interact with
-during probe, for example to determine the device variant.  I'd also
-expect that it'd be useful to defer things like registering the device
-with higher level APIs until we've actually got it up and running, it
-tends to make life simpler.
+--=20
+balbi
 
-> to be done as part of probe, I expect wait_for_completion (with timeout to
-> avoid potential HW problems causing linux probe to wait forever) will be
-> better than polling for get_logical_addr.
-
-I agree that a completion is better if we have to block in the device
-driver, but the idea someone suggested of having the framework generate
-a second callback when it's assigned a logical address seems even
-better.
-
---5L6AZ1aJH5mDrqCQ
+--cs5saTBZh7UZl2eX
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJPzJESAAoJEBus8iNuMP3dToEP/3uAq5mU2+un6Js3xjkPr+gu
-+hNf6/YtRqfFufFYf5v7Y37g0EB2226f9zfiWvsl0Am6VGZV5qWYdOqMqpZS4+Cd
-mky0GFYk8Afd96kADQMm+mKLcGOkfHgRX7e5H0KrYwrZjfPXhsYa9+aRAlRcaznU
-jI7fF4+l676dTbr1YTj+vG0GfKUXkyWbrqvLp++p0citcGZp3Mhjh7XFn3U4YUS9
-5hjXCGSHWgJAD79Q376SX0wSuePOM/9dBQxc/RE1DDhw62oK6kl8HAKxXPGxk0Pn
-2K6BP2BfnAhptQK3hadSSkHmhKr7FzrgZzhWySNGOcu3zcsZzJScNstP4ASQQ/u/
-PJfou9TwHhbsgs0VQWLAbHBAkebPLjfANzbiBM6XuI189M9bm8z7DztgYYS5IlVn
-NHBa0ad0uG9YhEkfZQQ3AHvirk/u4TLKoqjviVC9LqAkGOwQlH5XK+sVWwlqI7Er
-OoLTsv+nVmAYhHF40JmlI4D/0Dgtst5qYYFSyCRLm2LUTFTr23GEjErvT64Zfgq6
-AeEImMH57qoygRNxiBW18NM/P+5WeETar70oo3262omILQDJIHXJJFYIiCYAJViw
-1q+UB7jIlJ3ud/RaejWgpBZMCNvjd14p5WdHe3vurvg13h2yDPMx54qqT7O3VdEi
-zPnWlBkyOtLUNhiazkXE
-=Nk4v
+iQIcBAEBAgAGBQJPzM2IAAoJEIaOsuA1yqREOkYP/Ak8B3bkuWSphIIY7QmuWtSN
+dDhdxG2Xt10V40GOUlxgnqXUqq6vCRplAD3riD2AeSUwI3Cyfcz8CETSD3fI92jX
+dYTFgZ7zlW6upl0QojmUIVZSGnFu8fWrnoYKtywXXWyaSNyUpXDUQein/oxB84tB
+s8IKWJVbq0un2fZDBhVuxdVksa1r9Ppw7HRajnSME3Sk6XfgH/CAJJ/7hl0ALb0A
+q8n0RZBop8ELku8OcCUnBLmCJMEpKbpAzSf1XPVVuv4vY5/gsDQ/znVgIZUKZHvH
+rfOa8VHykCy2mfbpgA5EN13dgG9Op74SDBo0ffd7kugCPJbX489bKGtVc0fS0cYq
+Ec0fUkXZs7SRnVlHb4UfUfCBr6YiCKAQymKuKY8TuORdHpfkkD1Dl8subqznbBWE
+rclad4d3TQMSg18r/cJGPdl5ckJ9B+j/AGhLheZT0Aiqp8pkQLn8alZ99dWlkX2X
+o9K3pJXn0UiibnPaksFoA8I7A514mJaqkCDDtdgnI1Pg1FxbBoDwdnGx28hzzRQ6
+lVPDV9837PNY4tcsfxS3+aS8ERPb21UntADRLrl3q+uayzbVI5NzhTAvIz7l1V1O
+bVllIq+8mPxHOXHrwv+k2JPEcY3aJARr+0oAYSpwMnuV37Kod+zVi4CSm48keKJi
+m7eEDy49Eg7pM9ZpCK6J
+=pOmd
 -----END PGP SIGNATURE-----
 
---5L6AZ1aJH5mDrqCQ--
+--cs5saTBZh7UZl2eX--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
