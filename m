@@ -1,81 +1,64 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 resend] ASoC: omap-abe-twl6040: Add
-	device tree support
-Date: Tue, 5 Jun 2012 14:35:28 +0100
-Message-ID: <20120605133527.GX23408@opensource.wolfsonmicro.com>
-References: <1338902291-8244-1-git-send-email-peter.ujfalusi@ti.com>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v3 03/12] usb: ehci-hcd: notify phy when connect change
+Date: Tue, 05 Jun 2012 17:00:59 +0300
+Message-ID: <87y5o197tw.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com> <1337912665-16615-4-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0670691876793036582=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1338902291-8244-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, Liam Girdwood <lrg@ti.com>, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1337912665-16615-4-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
 
---===============0670691876793036582==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nqu5fpgjE+BQlEdo"
-Content-Disposition: inline
+> It still has below limitations:
+> - it does not work for multi-phy ehci
+> - the best place is after debounce, but I can't get
+>   phy there
+>
+> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
+Alan, are you ok with this?
 
---nqu5fpgjE+BQlEdo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jun 05, 2012 at 04:18:11PM +0300, Peter Ujfalusi wrote:
-
+> ---
+>  drivers/usb/host/ehci-hcd.c |   14 ++++++++++++++
+>  1 files changed, 14 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
+> index b100f5f..8c39a7a 100644
+> --- a/drivers/usb/host/ehci-hcd.c
+> +++ b/drivers/usb/host/ehci-hcd.c
+> @@ -928,6 +928,20 @@ static irqreturn_t ehci_irq (struct usb_hcd *hcd)
+>  			pstatus = ehci_readl(ehci,
+>  					 &ehci->regs->port_status[i]);
+>  
+> +			/* FIXME:
+> +			 * - it does not work for multi-phy ehci
+> +			 * - the best place is after debounce, but I can't get
+> +			 *   phy there
+> +			 */
+> +			if ((pstatus & PORT_CSC) && ehci->transceiver) {
+> +				if (pstatus & PORT_CONNECT)
+> +					usb_phy_notify_connect(
+> +						ehci->transceiver, i);
+> +				else
+> +					usb_phy_notify_disconnect(
+> +						ehci->transceiver, i);
+> +			}
 > +
-> +		ret = snd_soc_of_parse_audio_routing(card,
-> +						"ti,audio-routing");
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"Error while parsing DAPM routing\n");
-> +			return -EINVAL;
+>  			if (pstatus & PORT_OWNER)
+>  				continue;
+>  			if (!(test_bit(i, &ehci->suspended_ports) &&
+> -- 
+> 1.7.5.4
 
-Should pass back the error code you got.  Otherwise this looks good -
-with that fixed up
-
-Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-
---nqu5fpgjE+BQlEdo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPzgsWAAoJEBus8iNuMP3dLqkP/RYn8T/fSzEcEh4fac+3OmDq
-mJVMCyAYXWOogE4dLI8eJrlEQwH+iUl5dCqUenhO9I1yZXYUhvNddLy0PQAJSM6U
-mFY+s1HVpgilafnZ0BgbjGZsIPVJeAzCPftBqEpKWNzMp4j/7m6F1LJCuLHPvD3e
-koOSHnTatSA6g9gOg/l5p3uwg5Bk3iuI15Sef6LLzqkH6WGEjVRF6Di3yCDGoXWV
-g//UZ00UdcUP3T5oWvABYsYRMk65IOquOFkTIq6Ua4WmUy/WzxHFl9VlelpePJVu
-R9yAYy47cO/NCOI0DcP/uoXlzgy33TCNliuw8q1QnhKAYNsCHt/sA81x18FDfQAF
-A7TItFNj86pcnKKW+kQXv09Mo+nTORuVk3sxSlCoe/Kb0D/+J02SAHZp6cUQxZJR
-IvDpJaoJ8pNXTP6k8RdvVzZtf+wz/oowD+x9viY7rGgCLP8L2F0e9RLqcEOjaf1n
-bDtuj6cepYq36uOyaX78lFjxsOKgQhRYgd7tCXALxsW4Klj+/OcS6AeSHMYXWrUo
-LbUqpsyfvq23DKrOh17GsmBm4G3dm5edtg+ETq8l06q0YwYlmJJHq88VlZA80HXh
-zo2kmTL2vqhm+UElPIQUdtzhAyW1RNl9SuBt302+bhZuU5QGbaNHbhcBisb1+cNW
-xdDHnOVa0VtPm4jRvPzY
-=QGWN
------END PGP SIGNATURE-----
-
---nqu5fpgjE+BQlEdo--
-
---===============0670691876793036582==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0670691876793036582==--
+Regards,
+--
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
