@@ -1,130 +1,50 @@
-From: "Jayachandran C" <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Subject: [PATCH 4/4] i2c: i2c-ocores: support for 16bit and 32bit IO
-Date: Tue, 5 Jun 2012 21:11:08 +0530
-Message-ID: <1338910868-12318-5-git-send-email-jayachandranc@netlogicmicro.com>
-References: <1338910868-12318-1-git-send-email-jayachandranc@netlogicmicro.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v3 03/12] usb: ehci-hcd: notify phy when connect change
+Date: Tue, 5 Jun 2012 12:56:10 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1206051250400.1542-100000@iolanthe.rowland.org>
+References: <201206051703.17691.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1338910868-12318-1-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201206051703.17691.marex-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Tue, 5 Jun 2012, Marek Vasut wrote:
 
-Some architectures supports only 16-bit or 32-bit read/write access to
-their IO space. Add a 'reg-io-width' platform and OF parameter which
-specifies the IO width to support these platforms.
+> > > > +			/* FIXME:
+> > > > +			 * - it does not work for multi-phy ehci
+> > > > +			 * - the best place is after debounce, but I can't get
+> > > > +			 *   phy there
+> > > > +			 */
+> > > > +			if ((pstatus & PORT_CSC) && ehci->transceiver) {
+> > 
+> > Do the tests in the opposite order and add "unlikely":
+> > 
+> > 			if (unlikely(ehci->transceiver &&
+> > 					(pstatus & PORT_CSC)) {
+> > 
+> > That way it will fail more quickly on systems where it doesn't apply or
+> > for unaffected ports.
+> 
+> Does this unlikely() have any effect on ARM/MIPS/PPC, where this chipidea IP is 
+> used ? Or is there some x86 device sporting this IP too?
 
-reg-io-width can be specified as 1, 2 or 4, and has a default value
-of 1 if it is unspecified.
+I don't know what unlikely() does on architectures other than x86.  And 
+I haven't heard of any x86 systems that would need to use this code.
 
-Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 ++
- drivers/i2c/busses/i2c-ocores.c                    |   21 ++++++++++++++++++--
- include/linux/i2c-ocores.h                         |    1 +
- 3 files changed, 22 insertions(+), 2 deletions(-)
+On the other hand, port-status changes don't occur very frequently.  A 
+little time penalty one way or the other won't make much difference.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-index 1c9334b..c15781f 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-@@ -10,6 +10,7 @@ Required properties:
- 
- Optional properties:
- - reg-shift       : device register offsets are shifted by this value
-+- reg-io-width    : io register width in bytes (1, 2 or 4)
- - regstep         : deprecated, use reg-shift above
- 
- Example:
-@@ -23,6 +24,7 @@ Example:
- 		clock-frequency = <20000000>;
- 
- 		reg-shift = <0>;	/* 8 bit registers */
-+		reg-io-width = <1>;	/* 8 bit read/write */
- 
- 		dummy@60 {
- 			compatible = "dummy";
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index 9617ec1..034d1d5 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -30,6 +30,7 @@
- struct ocores_i2c {
- 	void __iomem *base;
- 	int reg_shift;
-+	int reg_io_width;
- 	wait_queue_head_t wait;
- 	struct i2c_adapter adap;
- 	struct i2c_msg *msg;
-@@ -72,12 +73,22 @@ struct ocores_i2c {
- 
- static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
- {
--	iowrite8(value, i2c->base + (reg << i2c->reg_shift));
-+	if (i2c->reg_io_width == 4)
-+		iowrite32(value, i2c->base + (reg << i2c->reg_shift));
-+	else if (i2c->reg_io_width == 2)
-+		iowrite16(value, i2c->base + (reg << i2c->reg_shift));
-+	else
-+		iowrite8(value, i2c->base + (reg << i2c->reg_shift));
- }
- 
- static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
- {
--	return ioread8(i2c->base + (reg << i2c->reg_shift));
-+	if (i2c->reg_io_width == 4)
-+		return ioread32(i2c->base + (reg << i2c->reg_shift));
-+	else if (i2c->reg_io_width == 2)
-+		return ioread16(i2c->base + (reg << i2c->reg_shift));
-+	else
-+		return ioread8(i2c->base + (reg << i2c->reg_shift));
- }
- 
- static void ocores_process(struct ocores_i2c *i2c)
-@@ -244,6 +255,8 @@ static int ocores_i2c_of_probe(struct platform_device *pdev,
- 	}
- 	i2c->clock_khz = val / 1000;
- 
-+	of_property_read_u32(pdev->dev.of_node, "reg-io-width",
-+				&i2c->reg_io_width);
- 	return 0;
- }
- #else
-@@ -286,6 +299,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- 	pdata = pdev->dev.platform_data;
- 	if (pdata) {
- 		i2c->reg_shift = pdata->reg_shift;
-+		i2c->reg_io_width = pdata->reg_io_width;
- 		i2c->clock_khz = pdata->clock_khz;
- 	} else {
- 		ret = ocores_i2c_of_probe(pdev, i2c);
-@@ -293,6 +307,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- 			return ret;
- 	}
- 
-+	if (i2c->reg_io_width == 0)
-+		i2c->reg_io_width = 1; /* Set to default value */
-+
- 	ocores_init(i2c);
- 
- 	init_waitqueue_head(&i2c->wait);
-diff --git a/include/linux/i2c-ocores.h b/include/linux/i2c-ocores.h
-index bb58c7d..1d99ebd 100644
---- a/include/linux/i2c-ocores.h
-+++ b/include/linux/i2c-ocores.h
-@@ -13,6 +13,7 @@
- 
- struct ocores_i2c_platform_data {
- 	u32 reg_shift;		/* register offset shift value */
-+	u32 reg_io_width;	/* register io read/write width */
- 	u32 clock_khz;		/* input clock in kHz */
- 	u8 num_devices;		/* number of devices in the devices list */
- 	struct i2c_board_info const *devices; /* devices connected to the bus */
--- 
-1.7.9.5
+Alan Stern
