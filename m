@@ -1,196 +1,50 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v8 1/1] of/lib: Allow scripts/dtc/libfdt to be used from kernel code
-Date: Wed,  6 Jun 2012 15:49:32 -0700
-Message-ID: <1339022972-20036-1-git-send-email-ddaney.cavm@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] edac: add support for Calxeda highbank memory controller
+Date: Wed, 06 Jun 2012 17:56:40 -0500
+Message-ID: <4FCFE028.10005@gmail.com>
+References: <1339020125-20198-1-git-send-email-robherring2@gmail.com> <1339020125-20198-2-git-send-email-robherring2@gmail.com> <4FCFDB12.3090403@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FCFDB12.3090403@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+To: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+Mauro,
 
-libfdt is part of the device tree support in scripts/dtc/libfdt.  For
-some platforms that use the Device Tree, we want to be able to edit
-the flattened device tree form.
+On 06/06/2012 05:34 PM, Mauro Carvalho Chehab wrote:
+> Hi Rob,
+> 
+> Em 06-06-2012 19:02, Rob Herring escreveu:
+>> From: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Add support for memory controller on Calxeda Highbank platforms. Highbank
+>> platforms support a single 4GB mini-DIMM with 1-bit correction and 2-bit
+>> detection.
+>>
 
-We don't want to burden kernel builds that do not require it, so we
-gate compilation of libfdt files with CONFIG_LIBFDT.  So if it is
-needed, you need to do this in your Kconfig:
+[snip]
 
-	select LIBFDT
+>> +
+>> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+>> +	layers[0].size = 1;
+>> +	layers[0].is_virt_csrow = true;
+>> +	layers[1].type = EDAC_MC_LAYER_CHANNEL;
+>> +	layers[1].size = 1;
+>> +	layers[1].is_virt_csrow = false;
+>> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+>> +			    sizeof(struct hb_mc_drvdata));
+> 
+> Hmm... I suspect that memories by DIMM chip select/channel at Calxeda,
+> as it is using just 1 cs/channel. It probably makes more sense to add new layer
+> type(s) to properly represent the way your memory controller addresses it, if
+> Calxeda doesn't work with DIMMs.
 
-And in the Makefile of the code using libfdt something like:
+Not sure I follow. DIMMs are supported, but only a newer JEDEC form
+factor (DDR3 72-bit mini DIMM). The h/w pretty much fixed to a single
+4GB DIMM. The controller is 1 72-bit channel.
 
-ccflags-y := -I$(src)/../../../scripts/dtc/libfdt
-
-Signed-off-by: David Daney <david.daney@cavium.com>
----
-This patch has been seen several times before as part of a larger
-patch set for my OCTEON Device Tree work.  After further refinement to
-my patches that depend on core Device Tree functionality, this is the
-only remaining patch to the common 'core' code.
-
-Here is the history:
-
-v8: Rebased lib/Makefile to avoid merge conflict.
-
-v7: No changes other that to split from other, now unneeded, patches.
-
-v6: No changes other than to split these out of the MIPS/OCTEON patch
-    set to allow them to be merged separately if desired.
-
-v5: Build libfdt in the lib directory instead of devices/of, and
-    include all libfdt files.
-
-    Changes to of_find_node_by_path() requested by Grant Likely.
-
-v4: No changes to these two patches.
-
-v3: libfdt building moved to devices/of/libfdt.  Cleanup and style
-    improvements as suggested by Grant Likely.
-
-v2: No changes to these two patches.
-
-There are a couple of possibility for merging this.
-
-1) Via the Device Tree maintainers, thus blocking the follow-ons until
-   it is merged.
-
-2) Via Ralf's Linux/MIPS tree with the rest of the patches after
-   Device Tree maintainer sign-off.
-
- include/linux/libfdt.h     |    8 ++++++++
- include/linux/libfdt_env.h |   13 +++++++++++++
- lib/Kconfig                |    6 ++++++
- lib/Makefile               |    5 +++++
- lib/fdt.c                  |    2 ++
- lib/fdt_ro.c               |    2 ++
- lib/fdt_rw.c               |    2 ++
- lib/fdt_strerror.c         |    2 ++
- lib/fdt_sw.c               |    2 ++
- lib/fdt_wip.c              |    2 ++
- 10 files changed, 44 insertions(+), 0 deletions(-)
- create mode 100644 include/linux/libfdt.h
- create mode 100644 include/linux/libfdt_env.h
- create mode 100644 lib/fdt.c
- create mode 100644 lib/fdt_ro.c
- create mode 100644 lib/fdt_rw.c
- create mode 100644 lib/fdt_strerror.c
- create mode 100644 lib/fdt_sw.c
- create mode 100644 lib/fdt_wip.c
-
-diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
-new file mode 100644
-index 0000000..4c0306c
---- /dev/null
-+++ b/include/linux/libfdt.h
-@@ -0,0 +1,8 @@
-+#ifndef _INCLUDE_LIBFDT_H_
-+#define _INCLUDE_LIBFDT_H_
-+
-+#include <linux/libfdt_env.h>
-+#include "../../scripts/dtc/libfdt/fdt.h"
-+#include "../../scripts/dtc/libfdt/libfdt.h"
-+
-+#endif /* _INCLUDE_LIBFDT_H_ */
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-new file mode 100644
-index 0000000..01508c7
---- /dev/null
-+++ b/include/linux/libfdt_env.h
-@@ -0,0 +1,13 @@
-+#ifndef _LIBFDT_ENV_H
-+#define _LIBFDT_ENV_H
-+
-+#include <linux/string.h>
-+
-+#include <asm/byteorder.h>
-+
-+#define fdt32_to_cpu(x) be32_to_cpu(x)
-+#define cpu_to_fdt32(x) cpu_to_be32(x)
-+#define fdt64_to_cpu(x) be64_to_cpu(x)
-+#define cpu_to_fdt64(x) cpu_to_be64(x)
-+
-+#endif /* _LIBFDT_ENV_H */
-diff --git a/lib/Kconfig b/lib/Kconfig
-index a9e1540..e091300 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -395,4 +395,10 @@ config SIGNATURE
- 	  Digital signature verification. Currently only RSA is supported.
- 	  Implementation is done using GnuPG MPI library
- 
-+#
-+# libfdt files, only selected if needed.
-+#
-+config LIBFDT
-+	bool
-+
- endmenu
-diff --git a/lib/Makefile b/lib/Makefile
-index 8c31a0c..2f2be5a 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -130,6 +130,11 @@ obj-$(CONFIG_GENERIC_STRNLEN_USER) += strnlen_user.o
- 
- obj-$(CONFIG_STMP_DEVICE) += stmp_device.o
- 
-+libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o
-+$(foreach file, $(libfdt_files), \
-+	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
-+lib-$(CONFIG_LIBFDT) += $(libfdt_files)
-+
- hostprogs-y	:= gen_crc32table
- clean-files	:= crc32table.h
- 
-diff --git a/lib/fdt.c b/lib/fdt.c
-new file mode 100644
-index 0000000..97f2006
---- /dev/null
-+++ b/lib/fdt.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt.c"
-diff --git a/lib/fdt_ro.c b/lib/fdt_ro.c
-new file mode 100644
-index 0000000..f73c04e
---- /dev/null
-+++ b/lib/fdt_ro.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_ro.c"
-diff --git a/lib/fdt_rw.c b/lib/fdt_rw.c
-new file mode 100644
-index 0000000..0c1f0f4
---- /dev/null
-+++ b/lib/fdt_rw.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_rw.c"
-diff --git a/lib/fdt_strerror.c b/lib/fdt_strerror.c
-new file mode 100644
-index 0000000..8713e3f
---- /dev/null
-+++ b/lib/fdt_strerror.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_strerror.c"
-diff --git a/lib/fdt_sw.c b/lib/fdt_sw.c
-new file mode 100644
-index 0000000..9ac7e50
---- /dev/null
-+++ b/lib/fdt_sw.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_sw.c"
-diff --git a/lib/fdt_wip.c b/lib/fdt_wip.c
-new file mode 100644
-index 0000000..45b3fc3
---- /dev/null
-+++ b/lib/fdt_wip.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_wip.c"
--- 
-1.7.2.3
+Rob
