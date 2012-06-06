@@ -1,64 +1,82 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] usb: ehci-hcd: notify phy when connect change
-Date: Wed, 6 Jun 2012 09:27:44 +0800
-Message-ID: <20120606012743.GA16929@b20223-02.ap.freescale.net>
-References: <201206051923.09063.marex@denx.de>
- <Pine.LNX.4.44L0.1206051328430.1542-100000@iolanthe.rowland.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 8/9] ARM: dts: refresh dts file for arch mmp
+Date: Wed, 6 Jun 2012 01:28:27 +0000
+Message-ID: <201206060128.28167.arnd@arndb.de>
+References: <1336134626-12262-1-git-send-email-haojian.zhuang@gmail.com>
+ <1336134626-12262-9-git-send-email-haojian.zhuang@gmail.com>
+ <87d35ezkm1.fsf@laptop.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1206051328430.1542-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87d35ezkm1.fsf@laptop.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Ball <cjb@laptop.org>
+Cc: linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, Haojian Zhuang <haojian.zhuang@gmail.com>, grant.likely@secretlab.ca, Mitch Bradley <wmb@firmworks.com>, eric.y.miao@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 05, 2012 at 01:30:08PM -0400, Alan Stern wrote:
-> On Tue, 5 Jun 2012, Marek Vasut wrote:
+On Tuesday 05 June 2012, Chris Ball wrote:
+> Hi Haojian,
 > 
-> > > > > Do the tests in the opposite order and add "unlikely":
-> > > > > 			if (unlikely(ehci->transceiver &&
-> > > > > 			
-> > > > > 					(pstatus & PORT_CSC)) {
-> > > > > 
-> > > > > That way it will fail more quickly on systems where it doesn't apply or
-> > > > > for unaffected ports.
-> > > > 
-> > > > Does this unlikely() have any effect on ARM/MIPS/PPC, where this chipidea
-> > > > IP is used ? Or is there some x86 device sporting this IP too?
-> > > 
-> > > I don't know what unlikely() does on architectures other than x86.
-> > 
-> > It should be optimized out to nothing on anything else but x86. On x86 it is a 
-> > hint for the branch predictor. Or that's what I believe it is.
+> On Fri, May 04 2012, Haojian Zhuang wrote:
+> > Append mmp2 and pxa910 dts files. Update PXA168 dts files for irq,
+> > timer, gpio components.
 > 
-> That's right.  Then it should have no effect on ARM/MIPS/PPC.
-I prefer add the unlikely, we don't need to care about the arch
-implementation. Maybe it'll be implemented some day if it don't. and
-at least the code tell the reader the condition is unlikely.
+> The patch I'm replying to introduced a device tree for MMP2/Brownstone
+> in 3.5-rc1.  We're looking at adopting the MMP2 device tree for the OLPC
+> XO-1.75 board, and Mitch Bradley has some corrections to the device tree
+> format that we'd like to make, appended below.
+> 
+> You can see all of the files Mitch mentions at:
+> http://dev.laptop.org/~wmb/mmp2-devicetree/
+> 
+> Here's my proposal for what to do next:
+>  * First, you choose one of the two forms that Mitch links to.
+>    (Either "mmp2.dtsi" or "mmp2-flat.dtsi"; we have a weak preference
+>    for mmp2-flat.dtsi.)
 
-I'll post a update to this series.
+My preference would be towards mmp2.dtsi. I've recommended doing it
+that way to other people, too.
 
-Thanks
-Richard
+> d) Moved the "intcmux" nodes down a level so they are children of the
+> top-level interrupt-controller node.  The problem with having them as
+> peers of the top-level interrupt-controller is that their "reg"
+> properties conflict.  For example:
+> intcmux4@d4282150 { ... reg = <0x150 0x4>, <0x168 0x4> ... }
 > 
-> > > And
-> > > I haven't heard of any x86 systems that would need to use this code.
-> > >
-> > > On the other hand, port-status changes don't occur very frequently.  A
-> > > little time penalty one way or the other won't make much difference.
-> > 
-> > I'm not opposed, just curious :)
+> This is incorrect in several ways:
 > 
-> No big deal either way.  But the order of the tests should be switched, 
-> because on most systems, ehci->transceiver will be NULL.
-> 
-> Alan Stern
-> 
-> 
+>    1) "@d4282150" is inconsistent with "reg = <0x150" .  The "unit
+>       address" after @ is supposed to be the same as the first component
+>       of the reg property.  d4282150 is not identical to 150.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I thought the rule was that the @... part should be a translated address
+in the presence of "ranges" translation so we get a unique value in case
+we have multiple devices of the same name on the same address but on
+different buses.
+
+If we change this here, I suppose it also needs to be changed in a number
+of other places, and we have to rethink the method for unique device
+names.
+
+> The solution is to put the intcmux nodes underneath the
+> interrupt-controller node.  The interrupt-controller node now has
+> #address-cells and #size-cells properties so it can have children, but
+> it does not have a ranges property, so the address space is not passed
+> through.  The child (intcmux) reg addresses can then be interpreted
+> independently, without conflict.
+
+Right. The implication for this however is that the driver cannot
+treat the reg property as a physical address it can do ioremap on,
+but needs to interface with the driver that provides the address
+space.
+
+	Arnd
