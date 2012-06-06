@@ -1,57 +1,42 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v6] MTD: LPC32xx SLC NAND driver
-Date: Wed, 06 Jun 2012 16:41:36 +0300
-Message-ID: <1338990096.6875.52.camel@sauron.fi.intel.com>
-References: <1338974414-5308-1-git-send-email-stigge@antcom.de>
-Reply-To: dedekind1@gmail.com
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v4] usb: ehci-hcd: notify phy when connect change
+Date: Wed, 6 Jun 2012 10:19:59 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1206061017210.1788-100000@iolanthe.rowland.org>
+References: <1338946190-19105-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-4702nwg7fga9mZeThSKX"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1338974414-5308-1-git-send-email-stigge@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1338946190-19105-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 6 Jun 2012, Richard Zhao wrote:
 
---=-4702nwg7fga9mZeThSKX
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> It still has below limitations:
+> - it does not work for multi-phy ehci
+> - the best place is after debounce, but I can't get
+>   phy there
 
-On Wed, 2012-06-06 at 11:20 +0200, Roland Stigge wrote:
->  drivers/mtd/nand/lpc32xx_nand_slc.c                   | 1060 +++++++++++=
-+++++++
+> +			/* FIXME:
+> +			 * - it does not work for multi-phy ehci
+> +			 * - the best place is after debounce, but I can't get
+> +			 *   phy there
+> +			 */
+> +			if (unlikely(ehci->transceiver &&
+> +					(pstatus & PORT_CSC))) {
 
-Can you please rename it to lpc32xx_slc.c? It is already in the "nand"
-sub-directory, no need to add "nand" to the file name.
+A new thought...  If you move the transceiver pointer from struct 
+ehci_hcd to struct usb_hcd, then you _will_ be able to get at it from 
+within the debouncing routine.
 
---=20
-Best Regards,
-Artem Bityutskiy
+Or if you prefer, leave the pointer where it is and add a method to 
+struct hc_driver for retrieving the pointer.
 
---=-4702nwg7fga9mZeThSKX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Alan Stern
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJPz14QAAoJECmIfjd9wqK0V6oQANCYRPLO5K9qalkxC83P9V+A
-2LYCUIaXWs0zvNT/Ho+8M+faTu+pBHMlDsknaiG6IaX/uj9AgD/M+pGD4t6A3MgA
-OUHtFZhEXEStAak87n5Nfa8+GjDsDGoLfIalhc4LWXTAxlzExcB2+DEdY9xpQtKR
-YjplXhEedBbuLEMMp88uX8nLzFvFTQdf888EGLs18N2RqrYy/vVcspGVCmqUYCmo
-oglv3tRxS6yCpfHqwv6L8h/lWq29xOmOObQZXzJzMrC6/0t3yRvOTppmsaOMFIiH
-WoxhZpC3lvCyyf2qN3Yp0Cpu3FLHVU75vhTYjptiXkugpx7Q69AUIbnJf9L169wN
-bONf+iqwxAzbkHmiTxwAOAt/GQSDL4Zl5LZVk6ywxInFpK4YrRwfcclfX/ZEXhGR
-Fm7diq2Ng7Vo9ZZClHziatTfcq6FlFGykoMCQrGm4vk3Ck2cUlyHuIfhyQ424nUZ
-HL2B+eJk/QVQAcVONXZjeeGwbSWkd8ew7FlGV34OLljdLza7kkkD1gCdrwaRy15p
-QjdNipn90vlFtBBReI//ynExJaRog57tZNGZ9guAsfDwWtvDgPKnaOzSfC94cc0B
-UeZPXVOD16yoTaCHWI0zNz50X2SQx+dWeNYGXcxjpJ/npWpwLVWJX6AmNYqMhRS1
-Au7LogFVYeJysWE5mwlb
-=7oQh
------END PGP SIGNATURE-----
-
---=-4702nwg7fga9mZeThSKX--
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
