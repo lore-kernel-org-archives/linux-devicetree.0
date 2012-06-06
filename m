@@ -1,60 +1,64 @@
-From: Marc Butler <marc@plastictigers.com>
-Subject: Re: [PATCH] slimbus: Linux driver framework for SLIMbus.
-Date: Tue, 5 Jun 2012 16:57:21 -0400
-Message-ID: <20120605205721.GA20560@plastictigers.com>
-References: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 03/12] usb: ehci-hcd: notify phy when connect change
+Date: Wed, 6 Jun 2012 09:27:44 +0800
+Message-ID: <20120606012743.GA16929@b20223-02.ap.freescale.net>
+References: <201206051923.09063.marex@denx.de>
+ <Pine.LNX.4.44L0.1206051328430.1542-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sagar Dharia <sdharia@codeaurora.org>
-Cc: davidb@codeaurora.org, bryanh@codeaurora.org, kheitke@codeaurora.org, gclemson@audience.com, broonie@opensource.wolfsonmicro.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rob@landley.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, ohad@wizery.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, rusty@rustcorp.com.au, joerg.roedel@amd.com, trenn@suse.de, ak@linux.intel.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <Pine.LNX.4.44L0.1206051328430.1542-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch below fixes an bug where devices that have not be matched
-to a driver will result in a segv when the bus is shutdown.
+On Tue, Jun 05, 2012 at 01:30:08PM -0400, Alan Stern wrote:
+> On Tue, 5 Jun 2012, Marek Vasut wrote:
+> 
+> > > > > Do the tests in the opposite order and add "unlikely":
+> > > > > 			if (unlikely(ehci->transceiver &&
+> > > > > 			
+> > > > > 					(pstatus & PORT_CSC)) {
+> > > > > 
+> > > > > That way it will fail more quickly on systems where it doesn't apply or
+> > > > > for unaffected ports.
+> > > > 
+> > > > Does this unlikely() have any effect on ARM/MIPS/PPC, where this chipidea
+> > > > IP is used ? Or is there some x86 device sporting this IP too?
+> > > 
+> > > I don't know what unlikely() does on architectures other than x86.
+> > 
+> > It should be optimized out to nothing on anything else but x86. On x86 it is a 
+> > hint for the branch predictor. Or that's what I believe it is.
+> 
+> That's right.  Then it should have no effect on ARM/MIPS/PPC.
+I prefer add the unlikely, we don't need to care about the arch
+implementation. Maybe it'll be implemented some day if it don't. and
+at least the code tell the reader the condition is unlikely.
 
-I am not sure what the policy on patches-on-patches is, it just
-doesn't seem workable. So I this will be the first and last. Instead I
-am maintaing a git repository that tracks Linus's tree:
+I'll post a update to this series.
 
-git://git.plastictigers.com/slimbus.git
+Thanks
+Richard
+> 
+> > > And
+> > > I haven't heard of any x86 systems that would need to use this code.
+> > >
+> > > On the other hand, port-status changes don't occur very frequently.  A
+> > > little time penalty one way or the other won't make much difference.
+> > 
+> > I'm not opposed, just curious :)
+> 
+> No big deal either way.  But the order of the tests should be switched, 
+> because on most systems, ehci->transceiver will be NULL.
+> 
+> Alan Stern
+> 
+> 
 
-or it can be browsed via the web:
-
-http://git.plastictigers.com/
-
-Currently there are 3 branches:
-
-slimbus-rfc-patch   : the original rfc patch (for reference)
-slimbus-patch       : the current patch (as posted by Sagar)
-slimbus-patch-fixes : slimbus-patch + fixes (like the one below)
-
-There will likely be a couple of new branches in the future.
-
-If anyone has a suggestion on a better way of doing this I am all
-ears.
-
----
- drivers/slimbus/slimbus.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/slimbus/slimbus.c b/drivers/slimbus/slimbus.c
-index 6d20241..673222c 100644
---- a/drivers/slimbus/slimbus.c
-+++ b/drivers/slimbus/slimbus.c
-@@ -125,6 +125,9 @@ static void slim_device_shutdown(struct device *dev)
- 	struct slim_device *slim_dev;
- 	struct slim_driver *driver;
- 
-+	if (!dev->driver)
-+		return;
-+
- 	if (dev->type == &slim_dev_type)
- 		slim_dev = to_slim_device(dev);
- 	else
--- 
-1.7.7
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
