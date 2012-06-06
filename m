@@ -1,82 +1,95 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] add imx usb driver for mx28/6x
-Date: Wed, 06 Jun 2012 16:20:40 +0300
-Message-ID: <87ehps8tlj.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com> <20120605150209.GZ28631@arwen.pp.htv.fi> <20120606022714.GA2667@S2101-09.ap.freescale.net> <20120606060348.GD32345@arwen.pp.htv.fi> <20120606063030.GA29481@b20223-02.ap.freescale.net>
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Subject: Re: [PATCH v6] MTD: LPC32xx SLC NAND driver
+Date: Wed, 06 Jun 2012 16:38:41 +0300
+Message-ID: <1338989921.6875.50.camel@sauron.fi.intel.com>
+References: <1338974414-5308-1-git-send-email-stigge@antcom.de>
+Reply-To: dedekind1@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120606063030.GA29481-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-BV9XYac1pt6IiyWn8trZ"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1338974414-5308-1-git-send-email-stigge@antcom.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
 
-> On Wed, Jun 06, 2012 at 09:03:50AM +0300, Felipe Balbi wrote:
->> On Wed, Jun 06, 2012 at 10:27:22AM +0800, Shawn Guo wrote:
->> > On Tue, Jun 05, 2012 at 06:02:13PM +0300, Felipe Balbi wrote:
->> > > Hi,
->> > > 
->> > > On Fri, May 25, 2012 at 10:24:13AM +0800, Richard Zhao wrote:
->> > > > The work is based on  ci13xxx rework done by Alexander Shishkin.
->> > > > 
->> > > > Status:
->> > > >   - this version only support host
->> > > >   - usbotg controler works at host role
->> > > > 
->> > > > Changes since V2:
->> > > >   - Rebase to Alex's tree
->> > > >   - Use regulator to control vbus power
->> > > >   - Remove ARCH check in Kconfig, but add OF_DEV check.
->> > > >   - Other changes according laster version comments.
->> > > > 
->> > > > Richard Zhao (12):
->> > > >   usb: otg: add notify_connect/notify_disconnect callback
->> > > >   usb: chipidea: permit driver bindings pass phy pointer
->> > > >   usb: ehci-hcd: notify phy when connect change
->> > > >   usb: otg: add basic mxs phy driver support
->> > > >   usb: chipidea: add imx platform driver
->> > > >   ARM: imx6q: correct device name of usbphy and usb controller clock
->> > > >     export
->> > > >   ARM: imx6q: add config-on-boot gpios
->> > > >   ARM: imx6q: add usbphy clocks
->> > > >   ARM: imx6q: disable usb charger detector
->> > > >   ARM: dts: imx6q-sabrelite: add usb devices
->> > > >   ARM: mxs: clk_register_clkdev mx28 usb clocks
->> > > >   ARM: dts: imx28-evk: add usb devices
->> > > 
->> > > how are we going to handle these series ? drivers/usb/otg/* parts are
->> > > mostly ok (I need to look deeper) but if I take drivers/usb/otg/* we
->> > > will have to delay drivers/usb/chipidea I guess...
->> > > 
->> > > So someone would have to take the whole series ? Who will be that
->> > > person? Alex, will it be you ?
->> > > 
->> > I'm unsure about drivers/usb part, but arch/arm part should go via
->> > arm-soc tree.
->> 
->> Yes, sure but the whole series is very "coupled" together... Maybe
->> Richard could try to split this series into things that can go through
->> arm-soc with no dependency on the other part and things that depend on
->> drivers/usb/*
-> I'm not clear. How does the ARM part depend on drivers/usb?
-> Shawn maybe could pick the ARM platform part. But the usb driver part
-> is divided into three maintainer, Balbi for otg, Alan for ehci-hcd,
-> Alex for Chipidea. Chipidea part depends on ehci-hcd and otg. So I
-> guess Greg could pick up all the driver part and Balbi, Alan and Alex
-> merge them back. Hope it could avoid loop dependency.
+--=-BV9XYac1pt6IiyWn8trZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I will apply this stuff to my tree as soon as we have an explicit ack
-from Alan on the notifiers patch [1].
+On Wed, 2012-06-06 at 11:20 +0200, Roland Stigge wrote:
+> +#ifdef CONFIG_PM
+> +static int lpc32xx_nand_resume(struct platform_device *pdev)
+> +{
+> +	struct lpc32xx_nand_host *host =3D platform_get_drvdata(pdev);
+> +
+> +	/* Re-enable NAND clock */
+> +	clk_enable(host->clk);
+> +
+> +	/* Fresh init of NAND controller */
+> +	lpc32xx_nand_setup(host);
+> +
+> +	/* Disable write protect */
+> +	lpc32xx_wp_disable(host);
+> +
+> +	return 0;
+> +}
+> +
+> +static int lpc32xx_nand_suspend(struct platform_device *pdev, pm_message=
+_t pm)
+> +{
+> +	u32 tmp;
+> +	struct lpc32xx_nand_host *host =3D platform_get_drvdata(pdev);
+> +
+> +	/* Force CE high */
+> +	tmp =3D readl(SLC_CTRL(host->io_base));
+> +	tmp &=3D ~SLCCFG_CE_LOW;
+> +	writel(tmp, SLC_CTRL(host->io_base));
+> +
+> +	/* Enable write protect for safety */
+> +	lpc32xx_wp_enable(host);
+> +
+> +	/* Disable clock */
+> +	clk_disable(host->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +#else
+> +#define lpc32xx_nand_resume NULL
+> +#define lpc32xx_nand_suspend NULL
+> +#endif
 
-[1] http://marc.info/?l=linux-arm-kernel&m=133894640106323&w=2
+0, not NULL.
 
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Best Regards,
+Artem Bityutskiy
+
+--=-BV9XYac1pt6IiyWn8trZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAABAgAGBQJPz11hAAoJECmIfjd9wqK0zXYP/0XeKxiYFsgdBuLZs9y8rmLD
+LvIIjTjmN4cQC8OmTwX57RHVxxCPc3ZmOxNc0mzxMrsbArpONPOX66M2cmM23OS/
+tjh2pup1kRzZCEqDIOIv6cnCo+VpTrGW0dopmLMjkUGNCFzcvk59evkJIadbZQCy
+uYcmzl13B7hrcHLL0s5gDOVIkDuFpCTbYl382+5JO9Xgc1UZCfgcatfEAyvzBTvA
+Qpgk9flf6hYYJAy0wrckPl/hTXT8doeZSBT21cyL3AbKn+H1gqMcc/yzYRw5qcBD
+5BpqBIsMY3aQvcEW9gJcUpR5xCuh6dCLDfGdux68G7GhSOgpiFE5pI/gT3wZQrOh
+kqb91Mss3jUK//w9VjvOeAaRXWdCMZYpuSCpeu/dgNEJLDtD0ol+47DyC7WTqG3H
+6bddJok3Fz72WulaLfcbfExF4TxwisyKSkPtuhE6qIWyByBg0Gd8L7TZqqjwRSfN
+S6FDCgyWYjxty+7wSWbYN2Y1QsX40sTEbzb9dGr0ufagwDoagrcquq3wqkklaBUS
+g75mcbcWgwRl2YueT88ZQbaWRJtBHsx6mmXMYGA2n+jYxvn1ypes5L6Rfdldd1pA
+KxQ5KwD3oI+QCuprCQ3IAsM+kS0WLbOExD+sX28mnqbU6p9FkkJuTpI4D1yfMV3m
+rADYN3Sx+yXk9rhzunPn
+=y6sL
+-----END PGP SIGNATURE-----
+
+--=-BV9XYac1pt6IiyWn8trZ--
+
