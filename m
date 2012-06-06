@@ -1,130 +1,104 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] MXS: Add DT binding support into stmp3xxx-rtc
-Date: Wed, 6 Jun 2012 13:29:36 +0800
-Message-ID: <20120606052934.GD2667@S2101-09.ap.freescale.net>
-References: <1338084689-12003-1-git-send-email-marex@denx.de>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 00/12] add imx usb driver for mx28/6x
+Date: Wed, 6 Jun 2012 09:03:50 +0300
+Message-ID: <20120606060348.GD32345@arwen.pp.htv.fi>
+References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
+ <20120605150209.GZ28631@arwen.pp.htv.fi>
+ <20120606022714.GA2667@S2101-09.ap.freescale.net>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6WlEvdN9Dv0WHSBl"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1338084689-12003-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20120606022714.GA2667-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 27, 2012 at 04:11:29AM +0200, Marek Vasut wrote:
-> Add simple binding for the stmp3xxx-rtc.
-> 
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/rtc/stmp3xxx-rtc.txt       |   20 ++++++++++++++++++++
->  arch/arm/boot/dts/imx28.dtsi                       |    1 +
->  drivers/rtc/rtc-stmp3xxx.c                         |    8 ++++++++
->  3 files changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
-> new file mode 100644
-> index 0000000..a49dd52
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
-> @@ -0,0 +1,20 @@
-> +* STMP3xxx/i.MX28 Time Clock controller
-> +
-> +Required properties:
-> +- compatible: should be one of the following.
-> +    * "fsl,stmp3xxx-rtc"
-> +    * "fsl,imx28-rtc"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: Two interrupt numbers to the cpu should be specified. First
-> +  interrupt number is the rtc rick interupt and second interrupt number
 
-s/rick/tick?
+--6WlEvdN9Dv0WHSBl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +  is the rtc alarm interrupt. The number of cells representing a interrupt
-> +  depends on the parent interrupt controller.
-> +
-> +Example:
-> +
-> +	rtc@80056000 {
-> +		compatible = "fsl,imx28-rtc";
-> +		reg = <0x80056000 2000>;
-> +		interrupts = <28 29>;
-> +	};
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index d470276..119f183 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -370,6 +370,7 @@
->  			};
->  
->  			rtc@80056000 {
-> +				compatible = "fsl,imx28-rtc";
->  				reg = <0x80056000 2000>;
->  				interrupts = <28 29>;
->  				status = "disabled";
-> diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-> index 1028786..dea9764 100644
-> --- a/drivers/rtc/rtc-stmp3xxx.c
-> +++ b/drivers/rtc/rtc-stmp3xxx.c
-> @@ -25,6 +25,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/rtc.h>
->  #include <linux/slab.h>
-> +#include <linux/of_device.h>
->  
->  #include <mach/common.h>
->  
-> @@ -265,6 +266,12 @@ static int stmp3xxx_rtc_resume(struct platform_device *dev)
->  #define stmp3xxx_rtc_resume	NULL
->  #endif
->  
-> +static const struct of_device_id rtc_dt_ids[] = {
-> +	{ .compatible = "fsl,stmp3xxx-rtc", },
-> +	{ .compatible = "fsl,imx28-rtc", },
+On Wed, Jun 06, 2012 at 10:27:22AM +0800, Shawn Guo wrote:
+> On Tue, Jun 05, 2012 at 06:02:13PM +0300, Felipe Balbi wrote:
+> > Hi,
+> >=20
+> > On Fri, May 25, 2012 at 10:24:13AM +0800, Richard Zhao wrote:
+> > > The work is based on  ci13xxx rework done by Alexander Shishkin.
+> > >=20
+> > > Status:
+> > >   - this version only support host
+> > >   - usbotg controler works at host role
+> > >=20
+> > > Changes since V2:
+> > >   - Rebase to Alex's tree
+> > >   - Use regulator to control vbus power
+> > >   - Remove ARCH check in Kconfig, but add OF_DEV check.
+> > >   - Other changes according laster version comments.
+> > >=20
+> > > Richard Zhao (12):
+> > >   usb: otg: add notify_connect/notify_disconnect callback
+> > >   usb: chipidea: permit driver bindings pass phy pointer
+> > >   usb: ehci-hcd: notify phy when connect change
+> > >   usb: otg: add basic mxs phy driver support
+> > >   usb: chipidea: add imx platform driver
+> > >   ARM: imx6q: correct device name of usbphy and usb controller clock
+> > >     export
+> > >   ARM: imx6q: add config-on-boot gpios
+> > >   ARM: imx6q: add usbphy clocks
+> > >   ARM: imx6q: disable usb charger detector
+> > >   ARM: dts: imx6q-sabrelite: add usb devices
+> > >   ARM: mxs: clk_register_clkdev mx28 usb clocks
+> > >   ARM: dts: imx28-evk: add usb devices
+> >=20
+> > how are we going to handle these series ? drivers/usb/otg/* parts are
+> > mostly ok (I need to look deeper) but if I take drivers/usb/otg/* we
+> > will have to delay drivers/usb/chipidea I guess...
+> >=20
+> > So someone would have to take the whole series ? Who will be that
+> > person? Alex, will it be you ?
+> >=20
+> I'm unsure about drivers/usb part, but arch/arm part should go via
+> arm-soc tree.
 
-If we do not have any tweaking in the driver between stmp3xxx-rtc and
-imx28-rtc, that means imx28-rtc is compatible with stmp3xxx-rtc.  That
-said, we only need stmp3xxx-rtc in this of_device_id table, and having
-the following line in imx28 dts will just work for imx28.
+Yes, sure but the whole series is very "coupled" together... Maybe
+Richard could try to split this series into things that can go through
+arm-soc with no dependency on the other part and things that depend on
+drivers/usb/*
 
-	compatible = "fsl,imx28-rtc", "stmp3xxx-rtc";
+Richard, can you do that ?
 
-Regards,
-Shawn
+--=20
+balbi
 
-> +	{ /* sentinel */ }
-> +};
-> +
->  static struct platform_driver stmp3xxx_rtcdrv = {
->  	.probe		= stmp3xxx_rtc_probe,
->  	.remove		= stmp3xxx_rtc_remove,
-> @@ -273,6 +280,7 @@ static struct platform_driver stmp3xxx_rtcdrv = {
->  	.driver		= {
->  		.name	= "stmp3xxx-rtc",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = rtc_dt_ids,
->  	},
->  };
->  
-> -- 
-> 1.7.10
-> 
+--6WlEvdN9Dv0WHSBl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPzvLEAAoJEIaOsuA1yqREvmoP/0K3sEjLEvZ7DWo1gGbAqQ82
+8iErdWfwUx5ymGwZhuYeCJuQeo4Ob3LEAXQUU4lhnxD4Hpyy7DIdqL32QgCE68xJ
+TrXitVuTPFyD2FKrQFtJmQEtUuK4qCVSKVCGndWdhf7Hpm7O13hI8R80ecM1xmT9
+3kz0mbfCxrQ81XcaTdRx3n0Sdw4ZPTIxdQaEC+UtAH16LFeAPqe5GyYq1RU4V620
+eHT0Kxgrs6oKDxQZQQXwx8ldLNSLLJ4fjqqAOa0SuxSr0+7Xf0bZErd9ldrH13BK
+vuHUYW466dydbBHVWKoNXvlcc+ZlIsuVr31J3LYGrEJGQ6lIDgxti23Zd3ufIEDW
+y0/GFbL5k6K0caLl691YUjpGWnvHJG+TNbV9vLgF/gHe3uQvP0omywxA9wi3axcm
+xylyLuFiwThPZCpSPYEDMYgEFexH0vchUws5mYDsSFP5UjCGrGz4kQTkiMRwR+FK
+atbDiId1+gSnex06t+8DDqb4+C6KKO3wmITpCeicXTqiVPzphMBZj5jdV40I2l6G
++J2obkUOa6wyC67p8PRiL7jlUxnzCxJeZHvO17F+qijPHIlt8v6GE+FGqSLFF7KC
+ZvtZF6uwILo27wVooAK9XjV/hRaanAs+0Lki10MZg2tdxbIYbTwY2I21oSqkWhJl
+BNmsdRq5drqywlzqOq2S
+=vdnj
+-----END PGP SIGNATURE-----
+
+--6WlEvdN9Dv0WHSBl--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
