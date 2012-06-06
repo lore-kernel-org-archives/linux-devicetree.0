@@ -1,42 +1,40 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v4] usb: ehci-hcd: notify phy when connect change
-Date: Wed, 6 Jun 2012 10:19:59 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1206061017210.1788-100000@iolanthe.rowland.org>
-References: <1338946190-19105-1-git-send-email-richard.zhao@freescale.com>
+From: Roland Stigge <stigge@antcom.de>
+Subject: Re: [PATCH v6] MTD: LPC32xx SLC NAND driver
+Date: Wed, 06 Jun 2012 16:27:42 +0200
+Message-ID: <4FCF68DE.6000701@antcom.de>
+References: <1338974414-5308-1-git-send-email-stigge@antcom.de> <1338989921.6875.50.camel@sauron.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1338946190-19105-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1338989921.6875.50.camel@sauron.fi.intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: dedekind1@gmail.com
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 Jun 2012, Richard Zhao wrote:
+Hi,
 
-> It still has below limitations:
-> - it does not work for multi-phy ehci
-> - the best place is after debounce, but I can't get
->   phy there
+On 06/06/2012 03:38 PM, Artem Bityutskiy wrote:
+>> +#else +#define lpc32xx_nand_resume NULL +#define
+>> lpc32xx_nand_suspend NULL +#endif
+> 
+> 0, not NULL.
 
-> +			/* FIXME:
-> +			 * - it does not work for multi-phy ehci
-> +			 * - the best place is after debounce, but I can't get
-> +			 *   phy there
-> +			 */
-> +			if (unlikely(ehci->transceiver &&
-> +					(pstatus & PORT_CSC))) {
+Can you please point me to an explanation for this? NULL sounds
+natural here, since it is used as a pointer, and other nand drivers
+are already doing it via NULL:
 
-A new thought...  If you move the transceiver pointer from struct 
-ehci_hcd to struct usb_hcd, then you _will_ be able to get at it from 
-within the debouncing routine.
+bcm_umi_nand.c
+bf5xx_nand.c
+pxa3xx_nand.c
+r852.c
+s3c2410.c
+tmio_nand.c
+txx9ndfmc.c
 
-Or if you prefer, leave the pointer where it is and add a method to 
-struct hc_driver for retrieving the pointer.
+... and none is #defining as 0.
 
-Alan Stern
+Thanks in advance,
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Roland
