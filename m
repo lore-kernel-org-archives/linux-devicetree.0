@@ -1,62 +1,44 @@
-From: =?utf-8?Q?Lothar_Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH] MXS: Add DT binding support into stmp3xxx-rtc
-Date: Wed, 6 Jun 2012 09:57:54 +0200
-Message-ID: <20431.3458.407509.669784@ipc1.ka-ro>
-References: <1338084689-12003-1-git-send-email-marex@denx.de>
- <20120606052934.GD2667@S2101-09.ap.freescale.net>
+From: "Sagar Dharia" <sdharia@codeaurora.org>
+Subject: Re: [PATCH] slimbus: Linux driver framework for SLIMbus.
+Date: Wed, 6 Jun 2012 01:13:30 -0700 (PDT)
+Message-ID: <dd131f3f86e367a47b3528015cde9dd9.squirrel@www.codeaurora.org>
+References: <1338340310-4473-1-git-send-email-sdharia@codeaurora.org>
+    <20120601001617.GA16311@plastictigers.com>
+    <74993ac9d11db0db7080c0864daef397.squirrel@www.codeaurora.org>
+    <20120604171344.GA15837@plastictigers.com>
+Reply-To: sdharia@codeaurora.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120606052934.GD2667@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Marek Vasut <marex@denx.de>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120604171344.GA15837@plastictigers.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Butler <marc@plastictigers.com>
+Cc: Sagar Dharia <sdharia@codeaurora.org>, davidb@codeaurora.org, bryanh@codeaurora.org, kheitke@codeaurora.org, gclemson@audience.com, broonie@opensource.wolfsonmicro.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rob@landley.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, ohad@wizery.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, rusty@rustcorp.com.au, joerg.roedel@amd.com, trenn@suse.de, ak@linux.intel.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpTaGF3biBHdW8gd3JpdGVzOgo+IE9uIFN1biwgTWF5IDI3LCAyMDEyIGF0IDA0OjExOjI5
-QU0gKzAyMDAsIE1hcmVrIFZhc3V0IHdyb3RlOgo+ID4gQWRkIHNpbXBsZSBiaW5kaW5nIGZvciB0
-aGUgc3RtcDN4eHgtcnRjLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXJlayBWYXN1dCA8bWFy
-ZXhAZGVueC5kZT4KPiA+IENjOiBBbGVzc2FuZHJvIFp1bW1vIDxhLnp1bW1vQHRvd2VydGVjaC5p
-dD4KPiA+IENjOiBkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwo+ID4gQ2M6IEdy
-YW50IExpa2VseSA8Z3JhbnQubGlrZWx5QHNlY3JldGxhYi5jYT4KPiA+IENjOiBSb2IgSGVycmlu
-ZyA8cm9iLmhlcnJpbmdAY2FseGVkYS5jb20+Cj4gPiBDYzogcnRjLWxpbnV4QGdvb2dsZWdyb3Vw
-cy5jb20KPiA+IENjOiBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPgo+ID4gLS0tCj4g
-PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3N0bXAzeHh4LXJ0Yy50eHQgICAgICAgfCAg
-IDIwICsrKysrKysrKysrKysrKysrKysrCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14MjguZHRz
-aSAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKPiA+ICBkcml2ZXJzL3J0Yy9ydGMtc3Rt
-cDN4eHguYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDggKysrKysrKysKPiA+ICAzIGZp
-bGVzIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9zdG1wM3h4eC1ydGMudHh0Cj4gPiAK
-PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3N0
-bXAzeHh4LXJ0Yy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3N0
-bXAzeHh4LXJ0Yy50eHQKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAw
-Li5hNDlkZDUyCj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcnRjL3N0bXAzeHh4LXJ0Yy50eHQKPiA+IEBAIC0wLDAgKzEsMjAgQEAK
-PiA+ICsqIFNUTVAzeHh4L2kuTVgyOCBUaW1lIENsb2NrIGNvbnRyb2xsZXIKPiA+ICsKPiA+ICtS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZiB0
-aGUgZm9sbG93aW5nLgo+ID4gKyAgICAqICJmc2wsc3RtcDN4eHgtcnRjIgo+ID4gKyAgICAqICJm
-c2wsaW14MjgtcnRjIgo+ID4gKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNv
-bnRyb2xsZXIgYW5kIGxlbmd0aCBvZiBtZW1vcnkgbWFwcGVkCj4gPiArICByZWdpb24uCj4gPiAr
-LSBpbnRlcnJ1cHRzOiBUd28gaW50ZXJydXB0IG51bWJlcnMgdG8gdGhlIGNwdSBzaG91bGQgYmUg
-c3BlY2lmaWVkLiBGaXJzdAo+ID4gKyAgaW50ZXJydXB0IG51bWJlciBpcyB0aGUgcnRjIHJpY2sg
-aW50ZXJ1cHQgYW5kIHNlY29uZCBpbnRlcnJ1cHQgbnVtYmVyCj4gCj4gcy9yaWNrL3RpY2s/Cj4g
-CnMvaW50ZXJ1cHQvaW50ZXJydXB0LwoKCi0tIApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwoKS2EtUm8gZWxlY3Ryb25pY3MgR21iSCB8
-IFBhc2NhbHN0cmHDn2UgMjIgfCBEIC0gNTIwNzYgQWFjaGVuClBob25lOiArNDkgMjQwOCAxNDAy
-LTAgfCBGYXg6ICs0OSAyNDA4IDE0MDItMTAKR2VzY2jDpGZ0c2bDvGhyZXI6IE1hdHRoaWFzIEth
-dXNzZW4KSGFuZGVsc3JlZ2lzdGVyZWludHJhZzogQW10c2dlcmljaHQgQWFjaGVuLCBIUkIgNDk5
-NgoKd3d3Lmthcm8tZWxlY3Ryb25pY3MuZGUgfCBpbmZvQGthcm8tZWxlY3Ryb25pY3MuZGUKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+> I understand it is not a 1-to-1 mapping. However it *is* used as such:
+>
+>  wbuf[2] = (u8)((segdist & 0xF00) >> 8) | (slc->prop.prot << 4);
+>
+> which results in NEXT_DEFINE_CHANNEL messages with an invalid TP
+> field.
+Yes, thanks for catching this. I will make changes to rectify this.
+
+>
+> Yes, my mistake. The driver wouldn't have to poll if there was another
+> callback. So I don't see how the completion mechanism is superior: it
+> forces a synchronous interface to asynchronous events, or the driver
+> developer has to work around it.
+The get_logical_address API itself doesn't take completion. Completion is
+part of slim_device structure so that the slim_device's driver can wait on
+it whenever it needs LA for the first time. (Framework signals completion
+on a slim_device when it gets enumerated)
+If callback is preferred, I will change it to callback.
+
+Regards-
+Sagar
+
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+
