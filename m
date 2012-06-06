@@ -1,53 +1,77 @@
 From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4] usb: ehci-hcd: notify phy when connect change
-Date: Wed, 06 Jun 2012 14:27:19 +0300
-Message-ID: <87k3zk8yug.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1337912665-16615-4-git-send-email-richard.zhao@freescale.com> <1338946190-19105-1-git-send-email-richard.zhao@freescale.com> <87mx4g93tg.fsf@ashishki-desk.ger.corp.intel.com> <20120606110539.GA5566@b20223-02.ap.freescale.net>
+Subject: Re: [PATCH v3 00/12] add imx usb driver for mx28/6x
+Date: Wed, 06 Jun 2012 16:20:40 +0300
+Message-ID: <87ehps8tlj.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com> <20120605150209.GZ28631@arwen.pp.htv.fi> <20120606022714.GA2667@S2101-09.ap.freescale.net> <20120606060348.GD32345@arwen.pp.htv.fi> <20120606063030.GA29481@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120606110539.GA5566-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
+In-Reply-To: <20120606063030.GA29481-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
 
-> On Wed, Jun 06, 2012 at 12:39:55PM +0300, Alexander Shishkin wrote:
->> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> On Wed, Jun 06, 2012 at 09:03:50AM +0300, Felipe Balbi wrote:
+>> On Wed, Jun 06, 2012 at 10:27:22AM +0800, Shawn Guo wrote:
+>> > On Tue, Jun 05, 2012 at 06:02:13PM +0300, Felipe Balbi wrote:
+>> > > Hi,
+>> > > 
+>> > > On Fri, May 25, 2012 at 10:24:13AM +0800, Richard Zhao wrote:
+>> > > > The work is based on  ci13xxx rework done by Alexander Shishkin.
+>> > > > 
+>> > > > Status:
+>> > > >   - this version only support host
+>> > > >   - usbotg controler works at host role
+>> > > > 
+>> > > > Changes since V2:
+>> > > >   - Rebase to Alex's tree
+>> > > >   - Use regulator to control vbus power
+>> > > >   - Remove ARCH check in Kconfig, but add OF_DEV check.
+>> > > >   - Other changes according laster version comments.
+>> > > > 
+>> > > > Richard Zhao (12):
+>> > > >   usb: otg: add notify_connect/notify_disconnect callback
+>> > > >   usb: chipidea: permit driver bindings pass phy pointer
+>> > > >   usb: ehci-hcd: notify phy when connect change
+>> > > >   usb: otg: add basic mxs phy driver support
+>> > > >   usb: chipidea: add imx platform driver
+>> > > >   ARM: imx6q: correct device name of usbphy and usb controller clock
+>> > > >     export
+>> > > >   ARM: imx6q: add config-on-boot gpios
+>> > > >   ARM: imx6q: add usbphy clocks
+>> > > >   ARM: imx6q: disable usb charger detector
+>> > > >   ARM: dts: imx6q-sabrelite: add usb devices
+>> > > >   ARM: mxs: clk_register_clkdev mx28 usb clocks
+>> > > >   ARM: dts: imx28-evk: add usb devices
+>> > > 
+>> > > how are we going to handle these series ? drivers/usb/otg/* parts are
+>> > > mostly ok (I need to look deeper) but if I take drivers/usb/otg/* we
+>> > > will have to delay drivers/usb/chipidea I guess...
+>> > > 
+>> > > So someone would have to take the whole series ? Who will be that
+>> > > person? Alex, will it be you ?
+>> > > 
+>> > I'm unsure about drivers/usb part, but arch/arm part should go via
+>> > arm-soc tree.
 >> 
->> > It still has below limitations:
->> > - it does not work for multi-phy ehci
->> > - the best place is after debounce, but I can't get
->> >   phy there
->> >
->> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> > ---
->> >  drivers/usb/host/ehci-hcd.c |   15 +++++++++++++++
->> >  1 files changed, 15 insertions(+), 0 deletions(-)
->> >
->> > diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
->> > index b100f5f..724ac471 100644
->> > --- a/drivers/usb/host/ehci-hcd.c
->> > +++ b/drivers/usb/host/ehci-hcd.c
->> > @@ -928,6 +928,21 @@ static irqreturn_t ehci_irq (struct usb_hcd *hcd)
->> >  			pstatus = ehci_readl(ehci,
->> >  					 &ehci->regs->port_status[i]);
->> >  
->> > +			/* FIXME:
->> > +			 * - it does not work for multi-phy ehci
->> > +			 * - the best place is after debounce, but I can't get
->> > +			 *   phy there
->> > +			 */
->> > +			if (unlikely(ehci->transceiver &&
->> > +					(pstatus & PORT_CSC))) {
->> 
->> I don't think you need parens around (pstatus & PORT_CSC), since it
->> should already have higher precedence.
-> But it's more readable. Isn't it?
+>> Yes, sure but the whole series is very "coupled" together... Maybe
+>> Richard could try to split this series into things that can go through
+>> arm-soc with no dependency on the other part and things that depend on
+>> drivers/usb/*
+> I'm not clear. How does the ARM part depend on drivers/usb?
+> Shawn maybe could pick the ARM platform part. But the usb driver part
+> is divided into three maintainer, Balbi for otg, Alan for ehci-hcd,
+> Alex for Chipidea. Chipidea part depends on ehci-hcd and otg. So I
+> guess Greg could pick up all the driver part and Balbi, Alan and Alex
+> merge them back. Hope it could avoid loop dependency.
 
-I guess it is.
+I will apply this stuff to my tree as soon as we have an explicit ack
+from Alan on the notifiers patch [1].
+
+[1] http://marc.info/?l=linux-arm-kernel&m=133894640106323&w=2
 
 Regards,
 --
