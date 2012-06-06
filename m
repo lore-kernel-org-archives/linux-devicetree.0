@@ -1,34 +1,85 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: [PATCH v3 00/12] add imx usb driver for mx28/6x
-Date: Wed, 6 Jun 2012 14:27:34 +0800
-Message-ID: <CAAQ0ZWQATu+grzkpy=TLVSbqTGDScj=Zp-zMfwNu1E4=55s0vA@mail.gmail.com>
+Date: Wed, 6 Jun 2012 14:30:32 +0800
+Message-ID: <20120606063030.GA29481@b20223-02.ap.freescale.net>
 References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
-	<20120605150209.GZ28631@arwen.pp.htv.fi>
-	<20120606022714.GA2667@S2101-09.ap.freescale.net>
-	<20120606060348.GD32345@arwen.pp.htv.fi>
+ <20120605150209.GZ28631@arwen.pp.htv.fi>
+ <20120606022714.GA2667@S2101-09.ap.freescale.net>
+ <20120606060348.GD32345@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <20120606060348.GD32345-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6 June 2012 14:03, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+On Wed, Jun 06, 2012 at 09:03:50AM +0300, Felipe Balbi wrote:
+> On Wed, Jun 06, 2012 at 10:27:22AM +0800, Shawn Guo wrote:
+> > On Tue, Jun 05, 2012 at 06:02:13PM +0300, Felipe Balbi wrote:
+> > > Hi,
+> > > 
+> > > On Fri, May 25, 2012 at 10:24:13AM +0800, Richard Zhao wrote:
+> > > > The work is based on  ci13xxx rework done by Alexander Shishkin.
+> > > > 
+> > > > Status:
+> > > >   - this version only support host
+> > > >   - usbotg controler works at host role
+> > > > 
+> > > > Changes since V2:
+> > > >   - Rebase to Alex's tree
+> > > >   - Use regulator to control vbus power
+> > > >   - Remove ARCH check in Kconfig, but add OF_DEV check.
+> > > >   - Other changes according laster version comments.
+> > > > 
+> > > > Richard Zhao (12):
+> > > >   usb: otg: add notify_connect/notify_disconnect callback
+> > > >   usb: chipidea: permit driver bindings pass phy pointer
+> > > >   usb: ehci-hcd: notify phy when connect change
+> > > >   usb: otg: add basic mxs phy driver support
+> > > >   usb: chipidea: add imx platform driver
+> > > >   ARM: imx6q: correct device name of usbphy and usb controller clock
+> > > >     export
+> > > >   ARM: imx6q: add config-on-boot gpios
+> > > >   ARM: imx6q: add usbphy clocks
+> > > >   ARM: imx6q: disable usb charger detector
+> > > >   ARM: dts: imx6q-sabrelite: add usb devices
+> > > >   ARM: mxs: clk_register_clkdev mx28 usb clocks
+> > > >   ARM: dts: imx28-evk: add usb devices
+> > > 
+> > > how are we going to handle these series ? drivers/usb/otg/* parts are
+> > > mostly ok (I need to look deeper) but if I take drivers/usb/otg/* we
+> > > will have to delay drivers/usb/chipidea I guess...
+> > > 
+> > > So someone would have to take the whole series ? Who will be that
+> > > person? Alex, will it be you ?
+> > > 
+> > I'm unsure about drivers/usb part, but arch/arm part should go via
+> > arm-soc tree.
+> 
 > Yes, sure but the whole series is very "coupled" together... Maybe
 > Richard could try to split this series into things that can go through
 > arm-soc with no dependency on the other part and things that depend on
 > drivers/usb/*
->
-As far as arch/arm patches applying concerned, I haven't seen any
-dependency on drivers/usb part.  If those patches can be applied on
-arm-soc tree and do not break anything, that's good enough.  For usb
-to actually function, we will need to wait usb and arm-soc trees get
-together somewhere, firstly linux-next, eventually mainline.
+I'm not clear. How does the ARM part depend on drivers/usb?
+Shawn maybe could pick the ARM platform part. But the usb driver part
+is divided into three maintainer, Balbi for otg, Alan for ehci-hcd,
+Alex for Chipidea. Chipidea part depends on ehci-hcd and otg. So I
+guess Greg could pick up all the driver part and Balbi, Alan and Alex
+merge them back. Hope it could avoid loop dependency.
 
-Regards,
-Shawn
+Thanks
+Richard
+> 
+> Richard, can you do that ?
+> 
+> -- 
+> balbi
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
