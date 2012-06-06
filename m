@@ -1,372 +1,196 @@
-From: Mauro Carvalho Chehab <mchehab@redhat.com>
-Subject: Re: [PATCH 1/2] edac: add support for Calxeda highbank memory controller
-Date: Wed, 06 Jun 2012 19:34:58 -0300
-Message-ID: <4FCFDB12.3090403@redhat.com>
-References: <1339020125-20198-1-git-send-email-robherring2@gmail.com> <1339020125-20198-2-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v8 1/1] of/lib: Allow scripts/dtc/libfdt to be used from kernel code
+Date: Wed,  6 Jun 2012 15:49:32 -0700
+Message-ID: <1339022972-20036-1-git-send-email-ddaney.cavm@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1339020125-20198-2-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Doug Thompson <dougthompson@xmission.com>, Rob Herring <rob.herring@calxeda.com>
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: David Daney <david.daney@cavium.com>
 
-Em 06-06-2012 19:02, Rob Herring escreveu:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Add support for memory controller on Calxeda Highbank platforms. Highbank
-> platforms support a single 4GB mini-DIMM with 1-bit correction and 2-bit
-> detection.
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> ---
->  .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
->  arch/arm/boot/dts/highbank.dts                     |    6 +
->  drivers/edac/Kconfig                               |    9 +-
->  drivers/edac/Makefile                              |    2 +
->  drivers/edac/highbank_mc_edac.c                    |  238 ++++++++++++++++++++
->  5 files changed, 271 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
->  create mode 100644 drivers/edac/highbank_mc_edac.c
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt b/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
-> new file mode 100644
-> index 0000000..5c74a0b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
-> @@ -0,0 +1,17 @@
-> +Calxeda DDR memory controller
-> +
-> +Properties:
-> +- compatible : Should be "calxeda,hb-ddr-ctrl"
-> +- reg : Address and size for DDR controller registers.
-> +- interrupts : Interrupt for DDR controller.
-> +
-> +Example:
-> +
-> +	memory-controller@fff00000 {
-> +		compatible = "calxeda,hb-ddr-ctrl";
-> +		reg = <0xfff00000 0x1000>;
-> +		interrupts = <0 91 4>;
-> +	};
-> +
-> +
-> +
-> diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
-> index 83e7229..d4b4941 100644
-> --- a/arch/arm/boot/dts/highbank.dts
-> +++ b/arch/arm/boot/dts/highbank.dts
-> @@ -118,6 +118,12 @@
->  			interrupts = <0 90 4>;
->  		};
->  
-> +		memory-controller@fff00000 {
-> +			compatible = "calxeda,hb-ddr-ctrl";
-> +			reg = <0xfff00000 0x1000>;
-> +			interrupts = <0 91 4>;
-> +		};
-> +
->  		ipc@fff20000 {
->  			compatible = "arm,pl320", "arm,primecell";
->  			reg = <0xfff20000 0x1000>;
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index fdffa1b..2d01a53 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -7,7 +7,7 @@
->  menuconfig EDAC
->  	bool "EDAC (Error Detection And Correction) reporting"
->  	depends on HAS_IOMEM
-> -	depends on X86 || PPC || TILE
-> +	depends on X86 || PPC || TILE || ARM
->  	help
->  	  EDAC is designed to report errors in the core system.
->  	  These are low-level errors that are reported in the CPU or
-> @@ -294,4 +294,11 @@ config EDAC_TILE
->  	  Support for error detection and correction on the
->  	  Tilera memory controller.
->  
-> +config EDAC_HIGHBANK_MC
-> +	tristate "Highbank Memory Controller"
-> +	depends on EDAC_MM_EDAC && ARCH_HIGHBANK
-> +	help
-> +	  Support for error detection and correction on the
-> +	  Calxeda Highbank memory controller.
-> +
->  endif # EDAC
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index 196a63d..44f2044 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -55,3 +55,5 @@ obj-$(CONFIG_EDAC_AMD8111)		+= amd8111_edac.o
->  obj-$(CONFIG_EDAC_AMD8131)		+= amd8131_edac.o
->  
->  obj-$(CONFIG_EDAC_TILE)			+= tile_edac.o
-> +
-> +obj-$(CONFIG_EDAC_HIGHBANK_MC)	+= highbank_mc_edac.o
-> diff --git a/drivers/edac/highbank_mc_edac.c b/drivers/edac/highbank_mc_edac.c
-> new file mode 100644
-> index 0000000..65951ffb
-> --- /dev/null
-> +++ b/drivers/edac/highbank_mc_edac.c
-> @@ -0,0 +1,238 @@
-> +/*
-> + * Copyright 2011-2012 Calxeda, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#include <linux/types.h>
-> +#include <linux/kernel.h>
-> +#include <linux/ctype.h>
-> +#include <linux/edac.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
-> +
-> +#include "edac_core.h"
-> +#include "edac_module.h"
-> +
-> +/* DDR Ctrlr Error Registers */
-> +#define HB_DDR_ECC_OPT			0x128
-> +#define HB_DDR_ECC_U_ERR_ADDR		0x130
-> +#define HB_DDR_ECC_U_ERR_STAT		0x134
-> +#define HB_DDR_ECC_U_ERR_DATAL		0x138
-> +#define HB_DDR_ECC_U_ERR_DATAH		0x13c
-> +#define HB_DDR_ECC_C_ERR_ADDR		0x140
-> +#define HB_DDR_ECC_C_ERR_STAT		0x144
-> +#define HB_DDR_ECC_C_ERR_DATAL		0x148
-> +#define HB_DDR_ECC_C_ERR_DATAH		0x14c
-> +#define HB_DDR_ECC_INT_STATUS		0x180
-> +#define HB_DDR_ECC_INT_ACK		0x184
-> +#define HB_DDR_ECC_U_ERR_ID		0x424
-> +#define HB_DDR_ECC_C_ERR_ID		0x428
-> +
-> +#define HB_DDR_ECC_INT_STAT_CE		0x8
-> +#define HB_DDR_ECC_INT_STAT_DOUBLE_CE	0x10
-> +#define HB_DDR_ECC_INT_STAT_UE		0x20
-> +#define HB_DDR_ECC_INT_STAT_DOUBLE_UE	0x40
-> +
-> +struct hb_mc_drvdata {
-> +	void __iomem *mc_vbase;
-> +};
-> +
-> +static irqreturn_t highbank_mc_err_handler(int irq, void *dev_id)
-> +{
-> +	struct mem_ctl_info *mci = dev_id;
-> +	struct hb_mc_drvdata *drvdata = mci->pvt_info;
-> +	u32 status, err_addr;
-> +
-> +	/* Read the interrupt status register */
-> +	status = readl(drvdata->mc_vbase + HB_DDR_ECC_INT_STATUS);
-> +
-> +	if (status & HB_DDR_ECC_INT_STAT_UE) {
-> +		err_addr = readl(drvdata->mc_vbase + HB_DDR_ECC_U_ERR_ADDR);
-> +		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
-> +				     err_addr >> PAGE_SHIFT,
-> +				     err_addr & ~PAGE_MASK, 0,
-> +				     0, 0, -1,
-> +				     mci->ctl_name, "", NULL);
-> +	}
-> +	if (status & HB_DDR_ECC_INT_STAT_CE) {
-> +		u32 syndrome = readl(drvdata->mc_vbase + HB_DDR_ECC_C_ERR_STAT);
-> +		syndrome = (syndrome >> 8) & 0xff;
-> +		err_addr = readl(drvdata->mc_vbase + HB_DDR_ECC_C_ERR_ADDR);
-> +		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
-> +				     err_addr >> PAGE_SHIFT,
-> +				     err_addr & ~PAGE_MASK, syndrome,
-> +				     0, 0, -1,
-> +				     mci->ctl_name, "", NULL);
-> +	}
-> +
-> +	/* clear the error, clears the interrupt */
-> +	writel(status, drvdata->mc_vbase + HB_DDR_ECC_INT_ACK);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static ssize_t highbank_mc_inject_ctrl_store(struct mem_ctl_info *mci,
-> +					     const char *data, size_t count)
-> +{
-> +	struct hb_mc_drvdata *pdata = mci->pvt_info;
-> +	u32 reg;
-> +	u8 synd;
-> +	if (!isdigit(*data))
-> +		return 0;
-> +
-> +	reg = readl(pdata->mc_vbase + HB_DDR_ECC_OPT) & 0x3;
-> +	if (!kstrtou8(data, 16, &synd)) {
-> +		reg |= synd << 16;
-> +		reg |= 0x100;
-> +		writel(reg, pdata->mc_vbase + HB_DDR_ECC_OPT);
-> +	}
-> +	return count;
-> +}
-> +
-> +static struct mcidev_sysfs_attribute highbank_mc_sysfs_attributes[] = {
-> +	{
-> +	 .attr = {
-> +		  .name = "inject_ctrl",
-> +		  .mode = (S_IRUGO | S_IWUSR)
-> +		  },
-> +	 .store = highbank_mc_inject_ctrl_store,
-> +	},
-> +	{
-> +	 .attr = {.name = NULL} /* End of list */
-> +	}
-> +};
+libfdt is part of the device tree support in scripts/dtc/libfdt.  For
+some platforms that use the Device Tree, we want to be able to edit
+the flattened device tree form.
 
-This won't work after the kobj->struct device conversion patches that are at
--next tree, as this struct will not exist anymore.
+We don't want to burden kernel builds that do not require it, so we
+gate compilation of libfdt files with CONFIG_LIBFDT.  So if it is
+needed, you need to do this in your Kconfig:
 
-Also, as this is for error injection, the better is to use debugfs.
+	select LIBFDT
 
-It shouldn't be hard to change it to use debugfs. If you want an example, you
-can take a look on this patch:
+And in the Makefile of the code using libfdt something like:
 
-	http://git.kernel.org/?p=linux/kernel/git/mchehab/linux-edac.git;a=commitdiff;h=303f3e2113d81d49feef9c0803c2958d41513f14
+ccflags-y := -I$(src)/../../../scripts/dtc/libfdt
 
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+This patch has been seen several times before as part of a larger
+patch set for my OCTEON Device Tree work.  After further refinement to
+my patches that depend on core Device Tree functionality, this is the
+only remaining patch to the common 'core' code.
 
-> +
-> +static int __devinit highbank_mc_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_mc_layer layers[2];
-> +	struct mem_ctl_info *mci;
-> +	struct hb_mc_drvdata *drvdata;
-> +	struct dimm_info *dimm;
-> +	struct resource *r;
-> +	u32 control;
-> +	int irq;
-> +	int res = 0;
-> +
-> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-> +	layers[0].size = 1;
-> +	layers[0].is_virt_csrow = true;
-> +	layers[1].type = EDAC_MC_LAYER_CHANNEL;
-> +	layers[1].size = 1;
-> +	layers[1].is_virt_csrow = false;
-> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-> +			    sizeof(struct hb_mc_drvdata));
+Here is the history:
 
-Hmm... I suspect that memories by DIMM chip select/channel at Calxeda,
-as it is using just 1 cs/channel. It probably makes more sense to add new layer
-type(s) to properly represent the way your memory controller addresses it, if
-Calxeda doesn't work with DIMMs.
+v8: Rebased lib/Makefile to avoid merge conflict.
 
-> +	if (!mci)
-> +		return -ENOMEM;
-> +
-> +	drvdata = mci->pvt_info;
-> +	mci->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, mci);
-> +
-> +	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!r) {
-> +		dev_err(&pdev->dev, "Unable to get mem resource\n");
-> +		res = -ENODEV;
-> +		goto err;
-> +	}
-> +
-> +	if (!devm_request_mem_region(&pdev->dev, r->start,
-> +				     resource_size(r), dev_name(&pdev->dev))) {
-> +		dev_err(&pdev->dev, "Error while requesting mem region\n");
-> +		res = -EBUSY;
-> +		goto err;
-> +	}
-> +
-> +	drvdata->mc_vbase = devm_ioremap(&pdev->dev,
-> +					  r->start, resource_size(r));
-> +	if (!drvdata->mc_vbase) {
-> +		dev_err(&pdev->dev, "Unable to map regs\n");
-> +		res = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	control = readl(drvdata->mc_vbase + HB_DDR_ECC_OPT) & 0x3;
-> +	if (!control || (control == 0x2)) {
-> +		dev_err(&pdev->dev, "No ECC present, or ECC disabled\n");
-> +		res = -ENODEV;
-> +		goto err;
-> +	}
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	res = devm_request_irq(&pdev->dev, irq, highbank_mc_err_handler,
-> +			       0, dev_name(&pdev->dev), mci);
-> +	if (res < 0) {
-> +		dev_err(&pdev->dev, "Unable to request irq %d\n", irq);
-> +		goto err;
-> +	}
-> +
-> +	mci->mtype_cap = MEM_FLAG_DDR3;
-> +	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-> +	mci->edac_cap = EDAC_FLAG_SECDED;
-> +	mci->mod_name = dev_name(&pdev->dev);
-> +	mci->mod_ver = "1";
-> +	mci->ctl_name = dev_name(&pdev->dev);
-> +	mci->scrub_mode = SCRUB_SW_SRC;
-> +	mci->mc_driver_sysfs_attributes = highbank_mc_sysfs_attributes;
-> +
-> +	/* Only a single 4GB DIMM is supported */
-> +	dimm = mci->dimms;
-> +	dimm->nr_pages = (~0UL >> PAGE_SHIFT) + 1;
-> +	dimm->grain = 8;
-> +	dimm->dtype = DEV_X8;
-> +	dimm->mtype = MEM_DDR3;
-> +	dimm->edac_mode = EDAC_SECDED;
-> +
-> +	res = edac_mc_add_mc(mci);
-> +	if (res < 0)
-> +		goto err;
-> +
-> +	devres_close_group(&pdev->dev, NULL);
-> +	return 0;
-> +err:
-> +	devres_release_group(&pdev->dev, NULL);
-> +	edac_mc_free(mci);
-> +	return res;
-> +}
-> +
-> +static int highbank_mc_remove(struct platform_device *pdev)
-> +{
-> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-> +
-> +	edac_mc_del_mc(&pdev->dev);
-> +	edac_mc_free(mci);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id hb_ddr_ctrl_of_match[] = {
-> +	{ .compatible = "calxeda,hb-ddr-ctrl", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, hb_ddr_ctrl_of_match);
-> +
-> +static struct platform_driver highbank_mc_edac_driver = {
-> +	.probe = highbank_mc_probe,
-> +	.remove = highbank_mc_remove,
-> +	.driver = {
-> +		.name = "hb_mc_edac",
-> +		.of_match_table = hb_ddr_ctrl_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(highbank_mc_edac_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Calxeda, Inc.");
-> +MODULE_DESCRIPTION("EDAC Driver for Highbank");
+v7: No changes other that to split from other, now unneeded, patches.
+
+v6: No changes other than to split these out of the MIPS/OCTEON patch
+    set to allow them to be merged separately if desired.
+
+v5: Build libfdt in the lib directory instead of devices/of, and
+    include all libfdt files.
+
+    Changes to of_find_node_by_path() requested by Grant Likely.
+
+v4: No changes to these two patches.
+
+v3: libfdt building moved to devices/of/libfdt.  Cleanup and style
+    improvements as suggested by Grant Likely.
+
+v2: No changes to these two patches.
+
+There are a couple of possibility for merging this.
+
+1) Via the Device Tree maintainers, thus blocking the follow-ons until
+   it is merged.
+
+2) Via Ralf's Linux/MIPS tree with the rest of the patches after
+   Device Tree maintainer sign-off.
+
+ include/linux/libfdt.h     |    8 ++++++++
+ include/linux/libfdt_env.h |   13 +++++++++++++
+ lib/Kconfig                |    6 ++++++
+ lib/Makefile               |    5 +++++
+ lib/fdt.c                  |    2 ++
+ lib/fdt_ro.c               |    2 ++
+ lib/fdt_rw.c               |    2 ++
+ lib/fdt_strerror.c         |    2 ++
+ lib/fdt_sw.c               |    2 ++
+ lib/fdt_wip.c              |    2 ++
+ 10 files changed, 44 insertions(+), 0 deletions(-)
+ create mode 100644 include/linux/libfdt.h
+ create mode 100644 include/linux/libfdt_env.h
+ create mode 100644 lib/fdt.c
+ create mode 100644 lib/fdt_ro.c
+ create mode 100644 lib/fdt_rw.c
+ create mode 100644 lib/fdt_strerror.c
+ create mode 100644 lib/fdt_sw.c
+ create mode 100644 lib/fdt_wip.c
+
+diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
+new file mode 100644
+index 0000000..4c0306c
+--- /dev/null
++++ b/include/linux/libfdt.h
+@@ -0,0 +1,8 @@
++#ifndef _INCLUDE_LIBFDT_H_
++#define _INCLUDE_LIBFDT_H_
++
++#include <linux/libfdt_env.h>
++#include "../../scripts/dtc/libfdt/fdt.h"
++#include "../../scripts/dtc/libfdt/libfdt.h"
++
++#endif /* _INCLUDE_LIBFDT_H_ */
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+new file mode 100644
+index 0000000..01508c7
+--- /dev/null
++++ b/include/linux/libfdt_env.h
+@@ -0,0 +1,13 @@
++#ifndef _LIBFDT_ENV_H
++#define _LIBFDT_ENV_H
++
++#include <linux/string.h>
++
++#include <asm/byteorder.h>
++
++#define fdt32_to_cpu(x) be32_to_cpu(x)
++#define cpu_to_fdt32(x) cpu_to_be32(x)
++#define fdt64_to_cpu(x) be64_to_cpu(x)
++#define cpu_to_fdt64(x) cpu_to_be64(x)
++
++#endif /* _LIBFDT_ENV_H */
+diff --git a/lib/Kconfig b/lib/Kconfig
+index a9e1540..e091300 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -395,4 +395,10 @@ config SIGNATURE
+ 	  Digital signature verification. Currently only RSA is supported.
+ 	  Implementation is done using GnuPG MPI library
+ 
++#
++# libfdt files, only selected if needed.
++#
++config LIBFDT
++	bool
++
+ endmenu
+diff --git a/lib/Makefile b/lib/Makefile
+index 8c31a0c..2f2be5a 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -130,6 +130,11 @@ obj-$(CONFIG_GENERIC_STRNLEN_USER) += strnlen_user.o
+ 
+ obj-$(CONFIG_STMP_DEVICE) += stmp_device.o
+ 
++libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o
++$(foreach file, $(libfdt_files), \
++	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
++lib-$(CONFIG_LIBFDT) += $(libfdt_files)
++
+ hostprogs-y	:= gen_crc32table
+ clean-files	:= crc32table.h
+ 
+diff --git a/lib/fdt.c b/lib/fdt.c
+new file mode 100644
+index 0000000..97f2006
+--- /dev/null
++++ b/lib/fdt.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt.c"
+diff --git a/lib/fdt_ro.c b/lib/fdt_ro.c
+new file mode 100644
+index 0000000..f73c04e
+--- /dev/null
++++ b/lib/fdt_ro.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_ro.c"
+diff --git a/lib/fdt_rw.c b/lib/fdt_rw.c
+new file mode 100644
+index 0000000..0c1f0f4
+--- /dev/null
++++ b/lib/fdt_rw.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_rw.c"
+diff --git a/lib/fdt_strerror.c b/lib/fdt_strerror.c
+new file mode 100644
+index 0000000..8713e3f
+--- /dev/null
++++ b/lib/fdt_strerror.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_strerror.c"
+diff --git a/lib/fdt_sw.c b/lib/fdt_sw.c
+new file mode 100644
+index 0000000..9ac7e50
+--- /dev/null
++++ b/lib/fdt_sw.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_sw.c"
+diff --git a/lib/fdt_wip.c b/lib/fdt_wip.c
+new file mode 100644
+index 0000000..45b3fc3
+--- /dev/null
++++ b/lib/fdt_wip.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_wip.c"
+-- 
+1.7.2.3
