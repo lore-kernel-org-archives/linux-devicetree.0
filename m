@@ -1,7 +1,7 @@
 From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v8 0/4] MIPS: OCTEON: Use Device Tree.
-Date: Wed,  6 Jun 2012 15:57:39 -0700
-Message-ID: <1339023463-20267-1-git-send-email-ddaney.cavm@gmail.com>
+Subject: [PATCH v3 0/5] MIPS: OCTEON: Convert some device to use Device Tree.
+Date: Wed,  6 Jun 2012 16:28:29 -0700
+Message-ID: <1339025314-24216-1-git-send-email-ddaney.cavm@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
@@ -10,136 +10,59 @@ List-Id: devicetree@vger.kernel.org
 
 From: David Daney <david.daney@cavium.com>
 
-This code has now had extensive testing, it is running on more
-than 10 different boards and SOC combinations.
+This patch set depends on the previous set to add Device Tree to
+OCTEON.  That set can be found among other places here:
 
-The patches in this set are all in the arch/mips tree and should
-probably be merged by Ralf.
+http://www.linux-mips.org/archives/linux-mips/2012-06/msg00081.html
 
-They do depend on this libfdt patch:
+For v3:
 
-http://patchwork.linux-mips.org/patch/3933/
+No functional changes, Added more Acked-bys, rebased to avoid merge
+conflicts.
 
-As well as thses MIPS patches:
+For v2:
 
-http://patchwork.linux-mips.org/patch/3932/
-http://patchwork.linux-mips.org/patch/3930/
-http://patchwork.linux-mips.org/patch/3931/
+No functional changes, but minor clean-ups to use some new device tree
+helper functions.
 
-New in v8:
+Some Acked-bys added.
 
-o Reordered to maintain bisectability.
+I am suggesting that all these go via Ralf's linux-mips.org tree as
+they depend on other patches in that tree.
 
-o Rebased to avoid merge conflicts.
+>From v1:
 
-New in v7:
+The patches are for drivers scattered throughout the tree, but there
+is an order dependency as well as the dependency mentioned above, so
+it may be preferable to merge them all via Ralf's linux-mips.org tree
+rather that separately via the various device sub-system maintainers.
 
-o irq_domain support revised based on feedback from Grant and Rob.
+The mdio-octeon.c and octeon_mgmt patches were already Acked-by davem.
 
-New in v6:
+The i2c has been seen before, but to my knowledge was never acked.
 
-o Device Tree bindings updated based on feedback and more actual use.
+The octeon_ethernet patch is in staging and has also been seen before.
 
-o Use of irq_domain support added to recent kernels.
+The serial patch is new.
 
-New in v5:
+David Daney (5):
+  i2c: Convert i2c-octeon.c to use device tree.
+  netdev: mdio-octeon.c: Convert to use device tree.
+  netdev: octeon_mgmt: Convert to use device tree.
+  staging: octeon_ethernet: Convert to use device tree.
+  MIPS: Octeon: Use device tree to register serial ports.
 
-o New irq triggering mode constants.
-
-o Boot protocol to pass flattened device tree from bootloader.  This
-  protocol may change based on attempts to arrive at a common protocol
-  for all MIPS boards.
-
-New in v4:
-
-o Cleanup and error checking suggested by Sergei Shtylyov.
-
-o Use device tree passed by bootloader if present.
-
-New in v3:
-
-o More updates to device tree bindings, and perhaps more importantly
-  descriptions/definitions of the bindings
-
-o Cleanup and style improvements as suggested by Grant Likley.
-
-o Omitted all the driver changes, as they are unchanged from the last
-  set, and at this stage the patches are just an RFC.
-
-New in v2:
-
-o Changed many device tree bindings.  They should be closer to the
-  standard naming scheme now.
-
-o Editing of the template device tree is done in the flattened form
-  using libfdt.
-
-o Standard platform driver functions used in preference to the
-  of_platform variety.
-
-v1:
-
-Background: The Octeon family of SOCs has a variety of on-chip
-controllers for Ethernet, MDIO, I2C, and several other I/O devices.
-These chips are used on boards with a great variety of different
-configurations.  To date, the configuration and bus topology
-information has been hard coded in the drivers and support code.
-
-To facilitate supporting new chips and boards, we are using the Device
-Tree to encode the configuration information.  The migration from the
-legacy approach to the device tree is as follows:
-
-o A device tree template is statically linked into the kernel image.
-  Based on SOC type and board type, legacy configuration probing code
-  is used to prune and patch the device tree template.
-
-o New SOCs and boards will directly use a device tree passed by the
-  bootloader.
-
-David Daney (4):
-  MIPS: Don't define early_init_devtree() and device_tree_init() in
-    prom.c for CPU_CAVIUM_OCTEON
-  MIPS: Octeon: Add device tree source files.
-  MIPS: Octeon: Initialize and fixup device tree.
-  MIPS: Octeon: Setup irq_domains for interrupts.
-
- .../bindings/ata/cavium-compact-flash.txt          |   30 +
- .../bindings/gpio/cavium-octeon-gpio.txt           |   49 ++
- .../devicetree/bindings/i2c/cavium-i2c.txt         |   34 ++
- .../devicetree/bindings/mips/cavium/bootbus.txt    |  126 ++++
- .../devicetree/bindings/mips/cavium/ciu.txt        |   26 +
- .../devicetree/bindings/mips/cavium/ciu2.txt       |   27 +
- .../devicetree/bindings/mips/cavium/dma-engine.txt |   21 +
- .../devicetree/bindings/mips/cavium/uctl.txt       |   47 ++
- .../devicetree/bindings/net/cavium-mdio.txt        |   27 +
- .../devicetree/bindings/net/cavium-mix.txt         |   40 ++
- .../devicetree/bindings/net/cavium-pip.txt         |   98 +++
- .../devicetree/bindings/serial/cavium-uart.txt     |   19 +
- arch/mips/Kconfig                                  |    2 +
- arch/mips/cavium-octeon/.gitignore                 |    2 +
- arch/mips/cavium-octeon/Makefile                   |   16 +
- arch/mips/cavium-octeon/octeon-irq.c               |  215 +++++++-
- arch/mips/cavium-octeon/octeon-platform.c          |  523 ++++++++++++++++-
- arch/mips/cavium-octeon/octeon_3xxx.dts            |  571 ++++++++++++++++++
- arch/mips/cavium-octeon/octeon_68xx.dts            |  625 ++++++++++++++++++++
- arch/mips/cavium-octeon/setup.c                    |   45 ++
- arch/mips/kernel/prom.c                            |    2 +
- 21 files changed, 2535 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/cavium-compact-flash.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/cavium-octeon-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/cavium-i2c.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/bootbus.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/ciu.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/ciu2.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/dma-engine.txt
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/uctl.txt
- create mode 100644 Documentation/devicetree/bindings/net/cavium-mdio.txt
- create mode 100644 Documentation/devicetree/bindings/net/cavium-mix.txt
- create mode 100644 Documentation/devicetree/bindings/net/cavium-pip.txt
- create mode 100644 Documentation/devicetree/bindings/serial/cavium-uart.txt
- create mode 100644 arch/mips/cavium-octeon/.gitignore
- create mode 100644 arch/mips/cavium-octeon/octeon_3xxx.dts
- create mode 100644 arch/mips/cavium-octeon/octeon_68xx.dts
+ arch/mips/cavium-octeon/octeon-irq.c      |    8 -
+ arch/mips/cavium-octeon/octeon-platform.c |  176 ----------------
+ arch/mips/cavium-octeon/serial.c          |  134 +++++--------
+ arch/mips/include/asm/octeon/octeon.h     |    5 -
+ drivers/i2c/busses/i2c-octeon.c           |   92 +++++----
+ drivers/net/ethernet/octeon/octeon_mgmt.c |  312 +++++++++++++++++++----------
+ drivers/net/phy/mdio-octeon.c             |   92 ++++++---
+ drivers/staging/octeon/ethernet-mdio.c    |   28 ++--
+ drivers/staging/octeon/ethernet.c         |  153 +++++++++-----
+ drivers/staging/octeon/octeon-ethernet.h  |    3 +
+ 10 files changed, 484 insertions(+), 519 deletions(-)
 
 -- 
 1.7.2.3
