@@ -1,60 +1,49 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v6] MTD: LPC32xx SLC NAND driver
-Date: Wed, 06 Jun 2012 17:36:30 +0300
-Message-ID: <1338993390.6875.63.camel@sauron.fi.intel.com>
-References: <1338974414-5308-1-git-send-email-stigge@antcom.de>
-	 <1338989921.6875.50.camel@sauron.fi.intel.com> <4FCF68DE.6000701@antcom.de>
-Reply-To: dedekind1@gmail.com
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH v2 8/9] ARM: dts: refresh dts file for arch mmp
+Date: Wed, 06 Jun 2012 06:22:57 -1000
+Message-ID: <4FCF83E1.9060000@firmworks.com>
+References: <1336134626-12262-1-git-send-email-haojian.zhuang@gmail.com>
+ <1336134626-12262-9-git-send-email-haojian.zhuang@gmail.com>
+ <87d35ezkm1.fsf@laptop.org> <201206060128.28167.arnd@arndb.de>
+ <4FCEB694.8080904@firmworks.com>
+ <CAN1soZykbTFGk=qAmzDe2qyQVVYBJpxcPYh6OzWyPxiBacJ-mg@mail.gmail.com>
+ <4FCEE91F.1030308@firmworks.com>
+ <CAN1soZx5BiY4kgt1EzbyFqRQOAYxkX9p2sNbrxZ-D=oocZuuRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-Ef4+bn1I7oqMnE/pAFFN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FCF68DE.6000701@antcom.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAN1soZx5BiY4kgt1EzbyFqRQOAYxkX9p2sNbrxZ-D=oocZuuRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 6/5/2012 7:25 PM, Haojian Zhuang wrote:
+> ...
+>
+>>> mmp2-brownstone.dts is too complex since both apb&    axi are imported.
+>>>
+>>> Could we only use flat structure in mmp2-brownstone.dts?
+>>
+>>
+>> See http://dev.laptop.org/~wmb/mmp2-devicetree/mmp2-brownstone-flat.dts
+>> <http://dev.laptop.org/%7Ewmb/mmp2-devicetree/mmp2-brownstone-flat.dts>
+>>
+>
+> My meaning is mmp2-brownstone-flat.dts + mmp2.dtsi. Is it acceptable?
+>
 
---=-Ef4+bn1I7oqMnE/pAFFN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+No, you must use mmp2-brownstone.dts with mmp2.dtsi .  The position of 
+the uart , twsi, and rtc nodes must agree in both cases.
 
-On Wed, 2012-06-06 at 16:27 +0200, Roland Stigge wrote:
-> >> +#else +#define lpc32xx_nand_resume NULL +#define
-> >> lpc32xx_nand_suspend NULL +#endif
-> >=20
-> > 0, not NULL.
->=20
-> Can you please point me to an explanation for this? NULL sounds
-
-Right, sorry, that was incorrect.
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-Ef4+bn1I7oqMnE/pAFFN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJPz2ruAAoJECmIfjd9wqK0AhsP/Rl8yELzehgMokWZaJPv4sxY
-TX4yqAqO7Jd2T4VFnjj8z84dXcYsHuFgYsJPmEtn9pLwmDC85FMQZTSNz5mTYxZe
-9sElONk5SD3qEa6WsOzqbQ2ehnIA9/7o0kq8qNV/z92OTwrQtD29VlY7u1ENF4dY
-2q/RUZozxAYIeQZ/kSqBwSV2aErbcTX8CiltYGXboRqA1BPSVGtOkDAPC/tZJNM2
-OlF7AaCAUAdUcGxJvPrH2L1vU8+ctnJwn2raZrEkeZQWMudryWPtNd95UZ5IV79z
-Y8x+O64XG0RZxa+P0gGmwukORfpRDj8qayEbnmM3blzWwlB8IvA6dd0OLLY0wTXy
-ffQGT2vgG1G2XCOGfkPF6VEkuDRDgeF4nwydm7WLjpbRZLA0zqjo5cv+MaFx/mek
-le3pkuZiZPb9CALIDzuCX0Xd/oRONRRdGRBymVN9+8RhYCHLuwPPQdzgCTJPIPwG
-+HahoagrheSuheiG6Rvsesa2tgjnePf71Y0UsP/mXr9nGG2S0WMaYnKx/BcI0lEL
-MnrhIQ1ItnYw10rkYdNS9cUXiUPB75YZm4xjh4YHcypnAWZ1oJv0MmBESEewEXwM
-mJwqZrfPgOdelgiJukSAjKivvUhkIguan7rKyc4FTi06AaETYnybhJ8lqcYT9I3L
-3V7M12mj7jX8bLgyUzzn
-=wGXp
------END PGP SIGNATURE-----
-
---=-Ef4+bn1I7oqMnE/pAFFN--
+Do you have a use case where exposing the AXI and APB bus levels is helpful?
