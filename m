@@ -1,150 +1,307 @@
 From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 02/12] usb: chipidea: permit driver bindings pass phy
- pointer
-Date: Wed, 6 Jun 2012 11:50:22 +0300
-Message-ID: <20120606085020.GB15368@arwen.pp.htv.fi>
+Subject: Re: [PATCH v3 04/12] usb: otg: add basic mxs phy driver support
+Date: Wed, 6 Jun 2012 11:51:46 +0300
+Message-ID: <20120606085145.GC15368@arwen.pp.htv.fi>
 References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
- <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
+ <1337912665-16615-5-git-send-email-richard.zhao@freescale.com>
 Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Fba/0zbH8Xs+Fj9o"
+	protocol="application/pgp-signature"; boundary="96YOpH+ONegL0A3E"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1337912665-16615-3-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1337912665-16615-5-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---Fba/0zbH8Xs+Fj9o
+--96YOpH+ONegL0A3E
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 25, 2012 at 10:24:15AM +0800, Richard Zhao wrote:
-> Sometimes, the driver bindings may know what phy they use.
-> For example, when using device tree, the usb controller may have a
-> phandler pointing to usb phy.
+On Fri, May 25, 2012 at 10:24:17AM +0800, Richard Zhao wrote:
+> mxs phy is used in Freescale i.MX SoCs, for example
+> imx23, imx28, imx6Q. This patch adds the basic host
+> support.
 >=20
 > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
 Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 
 > ---
->  drivers/usb/chipidea/ci.h    |    2 ++
->  drivers/usb/chipidea/core.c  |    4 ++++
->  drivers/usb/chipidea/host.c  |    1 +
->  drivers/usb/chipidea/udc.c   |   11 +++++++----
->  include/linux/usb/chipidea.h |    3 +++
->  5 files changed, 17 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/usb/mxs-phy.txt |   13 ++
+>  drivers/usb/otg/Kconfig                           |    8 +
+>  drivers/usb/otg/Makefile                          |    1 +
+>  drivers/usb/otg/mxs-phy.c                         |  204 +++++++++++++++=
+++++++
+>  4 files changed, 226 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/mxs-phy.txt
+>  create mode 100644 drivers/usb/otg/mxs-phy.c
 >=20
-> diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-> index 9655e35..d738603 100644
-> --- a/drivers/usb/chipidea/ci.h
-> +++ b/drivers/usb/chipidea/ci.h
-> @@ -160,6 +160,8 @@ struct ci13xxx {
-> =20
->  	struct ci13xxx_platform_data	*platdata;
->  	int				vbus_active;
-> +	/* FIXME: some day, we'll not use global phy */
-> +	bool				global_phy;
->  	struct usb_phy			*transceiver;
->  	struct usb_hcd			*hcd;
->  };
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> index c14ce2b..21407e7 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -419,6 +419,10 @@ static int __devinit ci_hdrc_probe(struct platform_d=
-evice *pdev)
-> =20
->  	ci->dev =3D dev;
->  	ci->platdata =3D dev->platform_data;
-> +	if (ci->platdata->phy)
-> +		ci->transceiver =3D ci->platdata->phy;
-> +	else
-> +		ci->global_phy =3D true;
-> =20
->  	ret =3D hw_device_init(ci, base);
->  	if (ret < 0) {
-> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-> index 4a4fdb8..4479f5a 100644
-> --- a/drivers/usb/chipidea/host.c
-> +++ b/drivers/usb/chipidea/host.c
-> @@ -121,6 +121,7 @@ static int host_start(struct ci13xxx *ci)
->  	ehci =3D hcd_to_ehci(hcd);
->  	ehci->caps =3D ci->hw_bank.cap;
->  	ehci->has_hostpc =3D ci->hw_bank.lpm;
-> +	ehci->transceiver =3D ci->transceiver;
-> =20
->  	ret =3D usb_add_hcd(hcd, 0, 0);
->  	if (ret)
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> index ca9b387..b43b29c 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -1684,7 +1684,8 @@ static int udc_start(struct ci13xxx *ci)
-> =20
->  	ci->gadget.ep0 =3D &ci->ep0in->ep;
-> =20
-> -	ci->transceiver =3D usb_get_transceiver();
-> +	if (ci->global_phy) {
-> +		ci->transceiver =3D usb_get_transceiver();
-> =20
->  	if (ci->platdata->flags & CI13XXX_REQUIRE_TRANSCEIVER) {
->  		if (ci->transceiver =3D=3D NULL) {
-> @@ -1728,7 +1729,8 @@ static int udc_start(struct ci13xxx *ci)
->  remove_trans:
->  	if (ci->transceiver) {
->  		otg_set_peripheral(ci->transceiver->otg, &ci->gadget);
-> -		usb_put_transceiver(ci->transceiver);
-> +		if (ci->global_phy)
-> +			usb_put_transceiver(ci->transceiver);
->  	}
-> =20
->  	dev_err(dev, "error =3D %i\n", retval);
-> @@ -1737,7 +1739,7 @@ remove_dbg:
->  unreg_device:
->  	device_unregister(&ci->gadget.dev);
->  put_transceiver:
-> -	if (ci->transceiver)
-> +	if (ci->transceiver && ci->global_phy)
->  		usb_put_transceiver(ci->transceiver);
->  free_pools:
->  	dma_pool_destroy(ci->td_pool);
-> @@ -1771,7 +1773,8 @@ static void udc_stop(struct ci13xxx *ci)
-> =20
->  	if (ci->transceiver) {
->  		otg_set_peripheral(ci->transceiver->otg, NULL);
-> -		usb_put_transceiver(ci->transceiver);
-> +		if (ci->global_phy)
-> +			usb_put_transceiver(ci->transceiver);
->  	}
->  	dbg_remove_files(&ci->gadget.dev);
->  	device_unregister(&ci->gadget.dev);
-> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-> index be078f0..544825d 100644
-> --- a/include/linux/usb/chipidea.h
-> +++ b/include/linux/usb/chipidea.h
-> @@ -5,12 +5,15 @@
->  #ifndef __LINUX_USB_CHIPIDEA_H
->  #define __LINUX_USB_CHIPIDEA_H
-> =20
-> +#include <linux/usb/otg.h>
+> diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Document=
+ation/devicetree/bindings/usb/mxs-phy.txt
+> new file mode 100644
+> index 0000000..5835b27
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+> @@ -0,0 +1,13 @@
+> +* Freescale MXS USB Phy Device
 > +
->  struct ci13xxx;
->  struct ci13xxx_platform_data {
->  	const char	*name;
->  	/* offset of the capability registers */
->  	uintptr_t	 capoffset;
->  	unsigned	 power_budget;
-> +	struct usb_phy	*phy;
->  	unsigned long	 flags;
->  #define CI13XXX_REGS_SHARED		BIT(0)
->  #define CI13XXX_REQUIRE_TRANSCEIVER	BIT(1)
+> +Required properties:
+> +- compatible: Should be "fsl,imx23-usbphy"
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain phy interrupt
+> +
+> +Example:
+> +usbphy1: usbphy@020c9000 {
+> +	compatible =3D "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
+> +	reg =3D <0x020c9000 0x1000>;
+> +	interrupts =3D <0 44 0x04>;
+> +};
+> diff --git a/drivers/usb/otg/Kconfig b/drivers/usb/otg/Kconfig
+> index 5c87db0..3a9bc44 100644
+> --- a/drivers/usb/otg/Kconfig
+> +++ b/drivers/usb/otg/Kconfig
+> @@ -116,6 +116,14 @@ config FSL_USB2_OTG
+>  	help
+>  	  Enable this to support Freescale USB OTG transceiver.
+> =20
+> +config USB_MXS_PHY
+> +	tristate "Freescale MXS USB PHY support"
+> +	select USB_OTG_UTILS
+> +	help
+> +	  Enable this to support the Freescale MXS USB PHY.
+> +
+> +	  MXS Phy is used by some of the i.MX SoCs, for example imx23/28/6x.
+> +
+>  config USB_MV_OTG
+>  	tristate "Marvell USB OTG support"
+>  	depends on USB_EHCI_MV && USB_MV_UDC && USB_SUSPEND
+> diff --git a/drivers/usb/otg/Makefile b/drivers/usb/otg/Makefile
+> index 41aa509..a844b8d 100644
+> --- a/drivers/usb/otg/Makefile
+> +++ b/drivers/usb/otg/Makefile
+> @@ -20,4 +20,5 @@ obj-$(CONFIG_USB_MSM_OTG)	+=3D msm_otg.o
+>  obj-$(CONFIG_AB8500_USB)	+=3D ab8500-usb.o
+>  fsl_usb2_otg-objs		:=3D fsl_otg.o otg_fsm.o
+>  obj-$(CONFIG_FSL_USB2_OTG)	+=3D fsl_usb2_otg.o
+> +obj-$(CONFIG_USB_MXS_PHY)	+=3D mxs-phy.o
+>  obj-$(CONFIG_USB_MV_OTG)	+=3D mv_otg.o
+> diff --git a/drivers/usb/otg/mxs-phy.c b/drivers/usb/otg/mxs-phy.c
+> new file mode 100644
+> index 0000000..a55aaed
+> --- /dev/null
+> +++ b/drivers/usb/otg/mxs-phy.c
+> @@ -0,0 +1,204 @@
+> +/*
+> + * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> + * on behalf of DENX Software Engineering GmbH
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +#include <linux/usb/otg.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +
+> +#define DRIVER_NAME "mxs_phy"
+> +
+> +#define HW_USBPHY_PWD				0x00
+> +#define HW_USBPHY_CTRL				0x30
+> +#define HW_USBPHY_CTRL_SET			0x34
+> +#define HW_USBPHY_CTRL_CLR			0x38
+> +
+> +#define BM_USBPHY_CTRL_SFTRST			BIT(31)
+> +#define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+> +#define BM_USBPHY_CTRL_ENUTMILEVEL3		BIT(15)
+> +#define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
+> +#define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
+> +
+> +struct mxs_phy {
+> +	struct usb_phy phy;
+> +	struct clk *clk;
+> +	int connected:1;
+> +};
+> +
+> +#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+> +
+> +static void mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> +{
+> +	void __iomem *base =3D mxs_phy->phy.io_priv;
+> +
+> +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE, base + HW_USBPHY_CTRL_CLR);
+> +
+> +	/* Reset USBPHY module */
+> +	writel_relaxed(BM_USBPHY_CTRL_SFTRST, base + HW_USBPHY_CTRL_SET);
+> +	udelay(10);
+> +
+> +	/* Remove CLKGATE and SFTRST */
+> +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE | BM_USBPHY_CTRL_SFTRST,
+> +			base + HW_USBPHY_CTRL_CLR);
+> +	udelay(10);
+> +
+> +	/* Power up the PHY */
+> +	writel_relaxed(0, base + HW_USBPHY_PWD);
+> +
+> +	/* enable FS/LS device */
+> +	writel_relaxed(BM_USBPHY_CTRL_ENUTMILEVEL2 |
+> +			BM_USBPHY_CTRL_ENUTMILEVEL3,
+> +			base + HW_USBPHY_CTRL_SET);
+> +
+> +}
+> +
+> +static int mxs_phy_init(struct usb_phy *phy)
+> +{
+> +	struct mxs_phy *mxs_phy =3D to_mxs_phy(phy);
+> +
+> +	clk_prepare_enable(mxs_phy->clk);
+> +	mxs_phy_hw_init(mxs_phy);
+> +
+> +	return 0;
+> +}
+> +
+> +static void mxs_phy_shutdown(struct usb_phy *phy)
+> +{
+> +	struct mxs_phy *mxs_phy =3D to_mxs_phy(phy);
+> +
+> +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE,
+> +			phy->io_priv + HW_USBPHY_CTRL_SET);
+> +
+> +	clk_disable_unprepare(mxs_phy->clk);
+> +}
+> +
+> +static int mxs_phy_on_connect(struct usb_phy *phy, int port)
+> +{
+> +	struct mxs_phy *mxs_phy =3D to_mxs_phy(phy);
+> +
+> +	dev_dbg(phy->dev, "Connect on port %d\n", port);
+> +
+> +	if (mxs_phy->connected)
+> +		return 0;
+> +	mxs_phy_hw_init(to_mxs_phy(phy));
+> +	writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
+> +			phy->io_priv + HW_USBPHY_CTRL_SET);
+> +	mxs_phy->connected =3D 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mxs_phy_on_disconnect(struct usb_phy *phy, int port)
+> +{
+> +	struct mxs_phy *mxs_phy =3D to_mxs_phy(phy);
+> +
+> +	dev_dbg(phy->dev, "Disconnect on port %d\n", port);
+> +
+> +	if (!mxs_phy->connected)
+> +		return 0;
+> +	writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
+> +			phy->io_priv + HW_USBPHY_CTRL_CLR);
+> +	mxs_phy->connected =3D 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mxs_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +	struct mxs_phy *mxs_phy;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "can't get device resources\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	base =3D devm_request_and_ioremap(&pdev->dev, res);
+> +	if (!base)
+> +		return -EBUSY;
+> +
+> +	clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		dev_err(&pdev->dev, "can't get the clock!");
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	mxs_phy =3D devm_kzalloc(&pdev->dev, sizeof(*mxs_phy), GFP_KERNEL);
+> +	if (!mxs_phy) {
+> +		dev_err(&pdev->dev, "Failed to allocate USB PHY structure!\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	mxs_phy->phy.io_priv		=3D base;
+> +	mxs_phy->phy.dev		=3D &pdev->dev;
+> +	mxs_phy->phy.label		=3D DRIVER_NAME;
+> +	mxs_phy->phy.init		=3D mxs_phy_init;
+> +	mxs_phy->phy.shutdown		=3D mxs_phy_shutdown;
+> +	mxs_phy->phy.notify_connect	=3D mxs_phy_on_connect;
+> +	mxs_phy->phy.notify_disconnect	=3D mxs_phy_on_disconnect;
+> +
+> +	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
+> +
+> +	mxs_phy->clk =3D clk;
+> +
+> +	platform_set_drvdata(pdev, &mxs_phy->phy);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __devexit mxs_phy_remove(struct platform_device *pdev)
+> +{
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mxs_phy_dt_ids[] =3D {
+> +	{ .compatible =3D "fsl,imx23-usbphy", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver mxs_phy_driver =3D {
+> +	.probe =3D mxs_phy_probe,
+> +	.remove =3D __devexit_p(mxs_phy_remove),
+> +	.driver =3D {
+> +		.name =3D DRIVER_NAME,
+> +		.owner	=3D THIS_MODULE,
+> +		.of_match_table =3D mxs_phy_dt_ids,
+> +	 },
+> +};
+> +
+> +static int __init mxs_phy_module_init(void)
+> +{
+> +	return platform_driver_register(&mxs_phy_driver);
+> +}
+> +postcore_initcall(mxs_phy_module_init);
+> +
+> +static void __exit mxs_phy_module_exit(void)
+> +{
+> +	platform_driver_unregister(&mxs_phy_driver);
+> +}
+> +module_exit(mxs_phy_module_exit);
+> +
+> +MODULE_ALIAS("platform:mxs-usb-phy");
+> +MODULE_AUTHOR("Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>");
+> +MODULE_AUTHOR("Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>");
+> +MODULE_DESCRIPTION("Freescale MXS USB PHY driver");
+> +MODULE_LICENSE("GPL");
 > --=20
 > 1.7.5.4
 >=20
@@ -153,29 +310,29 @@ evice *pdev)
 --=20
 balbi
 
---Fba/0zbH8Xs+Fj9o
+--96YOpH+ONegL0A3E
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJPzxnMAAoJEIaOsuA1yqREnPAP/jLAt+bxqNhuXrXR1FkaILIC
-RDM5yp7AuSiLlyiYYUmJK9oMIIahkYspZ3p8dCcKzHE3q4noJUGC/H+lMDQyVrIQ
-O9xI7R5yUIirAhndQeZlnJQxCVfr+kLfo6nXyoMeFm+U1OHPmtUvIEicIwqS4o63
-BPlW0Z4bk/hfTRnkv0dTiDrr8IOEJ/14FYk12cq4SNBtep8khqwhypPi+l+eNH1M
-9IQYF8CuVltoH2DmCdbIpv3T00QFIPlvoMc8Y5mpMCS3NF7M0TEIJChBO0n6odQW
-9KVK1SY433dpnyQdFyL8Cht3O/ZfaCxTjUCgZi4oRGhG/AiUwPinduOhj6jZ/Zr7
-Buzy5L0+R+9aZxDGbAPbSg2acfCbw8lEQ3FFT8sSw6uS1+iJq6HF0Gcxib1sY7f5
-qG/XS0L54M2rFUMPatjxCtrTN4s0IHSumrV600lAAnMeaW7Fb7+jlUIgSb28ikOi
-6cIquzj6ELihrbiNweF+5+3R1EeEUuXQf46+FPAYGrmnD+t1kyoEDUF3ZACR+Lz+
-8vFm7HPdndce38rTWCD8QlAEkvGH2vW41b4Gnu/xwKM1pIlGlLpPn5adMXEW9A4c
-KlAxKdQHzob/ZJyPyO0n9iCJcDHmxRhBU3658fbnIOlOPF1RtXg4dRiT68w4p0uy
-4FlOQ+2+YbjjVbj6nhAD
-=pWoV
+iQIcBAEBAgAGBQJPzxohAAoJEIaOsuA1yqREeWgQAK1ciFE2XkHP8nCOjbyjbh0u
+0hY6t9NeReudNpkXxNYaPiltxqh6xCgeYlrgRhRDYFHfOIZCkPmFIYNyf45c9OJt
+SAInn+a+2/KRH2nbjOTXFHTzUnfBVydGQ/KCQjhVsKCpOVmef+4VGUSBzZrHEzq6
+br7syJNgwscYOF2/KNmgAahsZKUV5yoVZgKxBCU7xkjOYFS44FibRIBF7fk0Ew6c
+8MSzzREBwDpOJSnIvO8JxZjx+j0qEx6bkHD9qAjZv+4fkewJ0R4NuuBpi5wR7DuD
+zN2nmSK4qUhMs8b0bzZpyAduqILBMjy+5ZZCyGB5Xxxr6pQrcVgUCZBuviw1Ya1I
+myZOQbsakcTh3PQMUzPGG4tD3eEvXpKFt4YTJa8r8Qt3aPoGB0H27jVy/0/2KHI3
+KnqF0fU0WCDTCrVUbMIl5Q0piGqK/zywtIcm1+vse0BIkrYQzh5RKVLretKtPafW
+F14Se0VVZz5RykUumyTfL63iSeCKpV6gZhN0GVRR2Hw6hI6sqnjTdyauVWJvkimV
+vFHDlKYJNX1U8Z0k3yPUrnWp1q63aoUStghQUf++rACkUzNdV2bxGJMy/6np77h1
+28lkvFfwe3l4B1aSB/B7/uipTQRqu1yPqObVqqvPwFm3aNxtcfT7maGcI1Em9ik0
+EOrymYLEmnnv2NXfVYaI
+=qIiO
 -----END PGP SIGNATURE-----
 
---Fba/0zbH8Xs+Fj9o--
+--96YOpH+ONegL0A3E--
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
