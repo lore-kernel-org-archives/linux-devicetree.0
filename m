@@ -1,113 +1,376 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 01/12] usb: otg: add notify_connect/notify_disconnect
- callback
-Date: Wed, 6 Jun 2012 11:49:55 +0300
-Message-ID: <20120606084954.GA15368@arwen.pp.htv.fi>
-References: <1337912665-16615-1-git-send-email-richard.zhao@freescale.com>
- <1337912665-16615-2-git-send-email-richard.zhao@freescale.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v3] ASoC: omap-abe-twl6040: Add device tree
+	support
+Date: Wed,  6 Jun 2012 11:51:56 +0300
+Message-ID: <1338972716-32301-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1337912665-16615-2-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lrg@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: devicetree-discuss@lists.ozlabs.org, peter.ujfalusi@ti.com, alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+When the board boots with device tree the driver will receive the name of the
+card, DAPM routing map, phandle for the audio components described in the dts
+file, mclk speed, and the possibility of detecting the jack detection.
 
---wac7ysb48OaltWcw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The card will be set up based on this information.
+Since the routing is provided via DT we can mark the card fully routed so
+core can take care of disconnecting the unused pins.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+---
 
 Hi,
 
-On Fri, May 25, 2012 at 10:24:14AM +0800, Richard Zhao wrote:
-> This let usb phy driver has a chance to change hw settings when connect
-> status change.
->=20
-> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Changes since v2 (resend):
+- Do not override the return value from snd_soc_of_parse_audio_routing in case
+  of error.
 
-Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Regards,
+Peter
 
-> ---
->  include/linux/usb/otg.h |   21 +++++++++++++++++++++
->  1 files changed, 21 insertions(+), 0 deletions(-)
->=20
-> diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-> index 38ab3f4..6dfdc8d 100644
-> --- a/include/linux/usb/otg.h
-> +++ b/include/linux/usb/otg.h
-> @@ -117,6 +117,9 @@ struct usb_phy {
->  	int	(*set_suspend)(struct usb_phy *x,
->  				int suspend);
-> =20
-> +	/* notify phy connect status change */
-> +	int	(*notify_connect)(struct usb_phy *x, int port);
-> +	int	(*notify_disconnect)(struct usb_phy *x, int port);
->  };
-> =20
-> =20
-> @@ -252,6 +255,24 @@ usb_phy_set_suspend(struct usb_phy *x, int suspend)
->  }
-> =20
->  static inline int
-> +usb_phy_notify_connect(struct usb_phy *x, int port)
-> +{
-> +	if (x->notify_connect)
-> +		return x->notify_connect(x, port);
-> +	else
-> +		return 0;
-> +}
-> +
-> +static inline int
-> +usb_phy_notify_disconnect(struct usb_phy *x, int port)
-> +{
-> +	if (x->notify_disconnect)
-> +		return x->notify_disconnect(x, port);
-> +	else
-> +		return 0;
-> +}
-> +
-> +static inline int
->  otg_start_srp(struct usb_otg *otg)
->  {
->  	if (otg && otg->start_srp)
-> --=20
-> 1.7.5.4
->=20
->=20
+ .../devicetree/bindings/sound/omap-abe-twl6040.txt |   91 ++++++++++++
+ sound/soc/omap/omap-abe-twl6040.c                  |  145 ++++++++++++++++----
+ 2 files changed, 206 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
 
---=20
-balbi
-
---wac7ysb48OaltWcw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPzxmyAAoJEIaOsuA1yqREsGsQALB8BtEH43WtN72L2gt/i9N6
-Yt4X1VRfJDCZfVD/7BnwCM2IAZnDuF40x4kGWhG2dmeIUwkpUoLIdHUVSBH7ul0a
-nGQwpFkD0Z1VGInfM2HvG4uuKHh1AXW/77j2anVAScliWA3etfDXAacEJCt8OQF0
-idT8kmznqvlXTTy6IJG8/P5BySK4GOfne48Na3iGDJq1l1jvW5/nzlhkSY+jf4AP
-baWX2a+HyV6fnKQRuL6Fn9ApIkLh/0Pz6+Ah8ZtbAXG0SLz+0Nie3blqzodwbxW/
-dkz9wXCZ0oIXdE1bU/Vaq1c/6giwr9AU1Z9tOqwJTziFHcPvZw45MczrIVqOubjH
-ez6bX9PvDXQni0jO8+uGfUGEoyuBSwI95GWpjPxgRvAxJCeNfoE0n0YZ1pf1wcan
-4ylBNYgghJJCgHXwBa0yO/rMziWyeqKurEXHOe9y6fldM35zFrQa3blMn/5MlGFv
-Viqfb/aTG7sU//5MGRp492n4fSSdh7229vqcvTEhMjJh1sfPJLGZIi443T/9ZA/l
-JP7BJiDbUjIiZla6ZybvLKXz+SVYHgdfaYclxo1F4NNhp1TdkikBobj9r6z3UjL8
-1J49ABEMeBZKZmgTMuFYjabuinFFGPrTT0TZFdsQQpJlnaV7CwZrASfk5reu/fgK
-Nc88ZaPckmUAcp8gJH/n
-=ucUA
------END PGP SIGNATURE-----
-
---wac7ysb48OaltWcw--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
+new file mode 100644
+index 0000000..65dec87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
+@@ -0,0 +1,91 @@
++* Texas Instruments OMAP4+ and twl6040 based audio setups
++
++Required properties:
++- compatible: "ti,abe-twl6040"
++- ti,model: Name of the sound card ( for example "SDP4430")
++- ti,mclk-freq: MCLK frequency for HPPLL operation
++- ti,mcpdm: phandle for the McPDM node
++- ti,twl6040: phandle for the twl6040 core node
++- ti,audio-routing: List of connections between audio components.
++  Each entry is a pair of strings, the first being the connection's sink,
++  the second being the connection's source.
++
++Optional properties:
++- ti,dmic: phandle for the OMAP dmic node if the machine have it connected
++- ti,jack_detection: Need to be set to <1> if the board capable to detect jack
++  insertion, removal.
++
++Available audio endpoints for the audio-routing table:
++
++Board connectors:
++ * Headset Stereophone
++ * Earphone Spk
++ * Ext Spk
++ * Line Out
++ * Vibrator
++ * Headset Mic
++ * Main Handset Mic
++ * Sub Handset Mic
++ * Line In
++ * Digital Mic
++
++twl6040 pins:
++ * HSOL
++ * HSOR
++ * EP
++ * HFL
++ * HFR
++ * AUXL
++ * AUXR
++ * VIBRAL
++ * VIBRAR
++ * HSMIC
++ * MAINMIC
++ * SUBMIC
++ * AFML
++ * AFMR
++
++ * Headset Mic Bias
++ * Main Mic Bias
++ * Digital Mic1 Bias
++ * Digital Mic2 Bias
++
++Digital mic pins:
++ * DMic
++
++Example:
++
++sound {
++	compatible = "ti,abe-twl6040";
++	ti,model = "SDP4430";
++
++	ti,jack-detection = <1>;
++	ti,mclk-freq = <38400000>;
++
++	ti,mcpdm = <&mcpdm>;
++	ti,dmic = <&dmic>;
++
++	ti,twl6040 = <&twl6040>;
++
++	/* Audio routing */
++	ti,audio-routing =
++		"Headset Stereophone", "HSOL",
++		"Headset Stereophone", "HSOR",
++		"Earphone Spk", "EP",
++		"Ext Spk", "HFL",
++		"Ext Spk", "HFR",
++		"Line Out", "AUXL",
++		"Line Out", "AUXR",
++		"Vibrator", "VIBRAL",
++		"Vibrator", "VIBRAR",
++		"HSMIC", "Headset Mic",
++		"Headset Mic", "Headset Mic Bias",
++		"MAINMIC", "Main Handset Mic",
++		"Main Handset Mic", "Main Mic Bias",
++		"SUBMIC", "Sub Handset Mic",
++		"Sub Handset Mic", "Main Mic Bias",
++		"AFML", "Line In",
++		"AFMR", "Line In",
++		"DMic", "Digital Mic",
++		"Digital Mic", "Digital Mic1 Bias";
++};
+diff --git a/sound/soc/omap/omap-abe-twl6040.c b/sound/soc/omap/omap-abe-twl6040.c
+index 9d93793..1343147 100644
+--- a/sound/soc/omap/omap-abe-twl6040.c
++++ b/sound/soc/omap/omap-abe-twl6040.c
+@@ -25,6 +25,7 @@
+ #include <linux/mfd/twl6040.h>
+ #include <linux/platform_data/omap-abe-twl6040.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ 
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+@@ -43,6 +44,8 @@
+ struct abe_twl6040 {
+ 	int	jack_detection;	/* board can detect jack events */
+ 	int	mclk_freq;	/* MCLK frequency speed for twl6040 */
++
++	struct platform_device *dmic_codec_dev;
+ };
+ 
+ static int omap_abe_hw_params(struct snd_pcm_substream *substream,
+@@ -185,17 +188,6 @@ static int omap_abe_twl6040_init(struct snd_soc_pcm_runtime *rtd)
+ 	int hs_trim;
+ 	int ret = 0;
+ 
+-	/* Disable not connected paths if not used */
+-	twl6040_disconnect_pin(dapm, pdata->has_hs, "Headset Stereophone");
+-	twl6040_disconnect_pin(dapm, pdata->has_hf, "Ext Spk");
+-	twl6040_disconnect_pin(dapm, pdata->has_ep, "Earphone Spk");
+-	twl6040_disconnect_pin(dapm, pdata->has_aux, "Line Out");
+-	twl6040_disconnect_pin(dapm, pdata->has_vibra, "Vinrator");
+-	twl6040_disconnect_pin(dapm, pdata->has_hsmic, "Headset Mic");
+-	twl6040_disconnect_pin(dapm, pdata->has_mainmic, "Main Handset Mic");
+-	twl6040_disconnect_pin(dapm, pdata->has_submic, "Sub Handset Mic");
+-	twl6040_disconnect_pin(dapm, pdata->has_afm, "Line In");
+-
+ 	/*
+ 	 * Configure McPDM offset cancellation based on the HSOTRIM value from
+ 	 * twl6040.
+@@ -216,6 +208,24 @@ static int omap_abe_twl6040_init(struct snd_soc_pcm_runtime *rtd)
+ 		twl6040_hs_jack_detect(codec, &hs_jack, SND_JACK_HEADSET);
+ 	}
+ 
++	/*
++	 * NULL pdata means we booted with DT. In this case the routing is
++	 * provided and the card is fully routed, no need to mark pins.
++	 */
++	if (!pdata)
++		return ret;
++
++	/* Disable not connected paths if not used */
++	twl6040_disconnect_pin(dapm, pdata->has_hs, "Headset Stereophone");
++	twl6040_disconnect_pin(dapm, pdata->has_hf, "Ext Spk");
++	twl6040_disconnect_pin(dapm, pdata->has_ep, "Earphone Spk");
++	twl6040_disconnect_pin(dapm, pdata->has_aux, "Line Out");
++	twl6040_disconnect_pin(dapm, pdata->has_vibra, "Vinrator");
++	twl6040_disconnect_pin(dapm, pdata->has_hsmic, "Headset Mic");
++	twl6040_disconnect_pin(dapm, pdata->has_mainmic, "Main Handset Mic");
++	twl6040_disconnect_pin(dapm, pdata->has_submic, "Sub Handset Mic");
++	twl6040_disconnect_pin(dapm, pdata->has_afm, "Line In");
++
+ 	return ret;
+ }
+ 
+@@ -270,52 +280,116 @@ static struct snd_soc_card omap_abe_card = {
+ static __devinit int omap_abe_probe(struct platform_device *pdev)
+ {
+ 	struct omap_abe_twl6040_data *pdata = dev_get_platdata(&pdev->dev);
++	struct device_node *node = pdev->dev.of_node;
+ 	struct snd_soc_card *card = &omap_abe_card;
+ 	struct abe_twl6040 *priv;
+ 	int num_links = 0;
+-	int ret;
++	int ret = 0;
+ 
+ 	card->dev = &pdev->dev;
+ 
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "Missing pdata\n");
+-		return -ENODEV;
+-	}
+-
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(struct abe_twl6040), GFP_KERNEL);
+ 	if (priv == NULL)
+ 		return -ENOMEM;
+ 
+-	if (pdata->card_name) {
+-		card->name = pdata->card_name;
++	priv->dmic_codec_dev = ERR_PTR(-EINVAL);
++
++	if (node) {
++		struct device_node *dai_node;
++
++		if (snd_soc_of_parse_card_name(card, "ti,model")) {
++			dev_err(&pdev->dev, "Card name is not provided\n");
++			return -ENODEV;
++		}
++
++		ret = snd_soc_of_parse_audio_routing(card,
++						"ti,audio-routing");
++		if (ret) {
++			dev_err(&pdev->dev,
++				"Error while parsing DAPM routing\n");
++			return ret;
++		}
++
++		dai_node = of_parse_phandle(node, "ti,mcpdm", 0);
++		if (!dai_node) {
++			dev_err(&pdev->dev, "McPDM node is not provided\n");
++			return -EINVAL;
++		}
++		abe_twl6040_dai_links[0].cpu_dai_name  = NULL;
++		abe_twl6040_dai_links[0].cpu_dai_of_node = dai_node;
++
++		dai_node = of_parse_phandle(node, "ti,dmic", 0);
++		if (dai_node) {
++			num_links = 2;
++			abe_twl6040_dai_links[1].cpu_dai_name  = NULL;
++			abe_twl6040_dai_links[1].cpu_dai_of_node = dai_node;
++
++			priv->dmic_codec_dev = platform_device_register_simple(
++						"dmic-codec", -1, NULL, 0);
++			if (IS_ERR(priv->dmic_codec_dev)) {
++				dev_err(&pdev->dev,
++					"Can't instantiate dmic-codec\n");
++				return PTR_ERR(priv->dmic_codec_dev);
++			}
++		} else {
++			num_links = 1;
++		}
++
++		of_property_read_u32(node, "ti,jack-detection",
++				     &priv->jack_detection);
++		of_property_read_u32(node, "ti,mclk-freq",
++				     &priv->mclk_freq);
++		if (!priv->mclk_freq) {
++			dev_err(&pdev->dev, "MCLK frequency not provided\n");
++			ret = -EINVAL;
++			goto err_unregister;
++		}
++
++		omap_abe_card.fully_routed = 1;
++	} else if (pdata) {
++		if (pdata->card_name) {
++			card->name = pdata->card_name;
++		} else {
++			dev_err(&pdev->dev, "Card name is not provided\n");
++			return -ENODEV;
++		}
++
++		if (pdata->has_dmic)
++			num_links = 2;
++		else
++			num_links = 1;
++
++		priv->jack_detection = pdata->jack_detection;
++		priv->mclk_freq = pdata->mclk_freq;
+ 	} else {
+-		dev_err(&pdev->dev, "Card name is not provided\n");
++		dev_err(&pdev->dev, "Missing pdata\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	priv->jack_detection = pdata->jack_detection;
+-	priv->mclk_freq = pdata->mclk_freq;
+-
+ 
+ 	if (!priv->mclk_freq) {
+ 		dev_err(&pdev->dev, "MCLK frequency missing\n");
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto err_unregister;
+ 	}
+ 
+-	if (pdata->has_dmic)
+-		num_links = 2;
+-	else
+-		num_links = 1;
+-
+ 	card->dai_link = abe_twl6040_dai_links;
+ 	card->num_links = num_links;
+ 
+ 	snd_soc_card_set_drvdata(card, priv);
+ 
+ 	ret = snd_soc_register_card(card);
+-	if (ret)
++	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card() failed: %d\n",
+ 			ret);
++		goto err_unregister;
++	}
++
++	return 0;
++
++err_unregister:
++	if (!IS_ERR(priv->dmic_codec_dev))
++		platform_device_unregister(priv->dmic_codec_dev);
+ 
+ 	return ret;
+ }
+@@ -323,17 +397,28 @@ static __devinit int omap_abe_probe(struct platform_device *pdev)
+ static int __devexit omap_abe_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
++	struct abe_twl6040 *priv = snd_soc_card_get_drvdata(card);
+ 
+ 	snd_soc_unregister_card(card);
+ 
++	if (!IS_ERR(priv->dmic_codec_dev))
++		platform_device_unregister(priv->dmic_codec_dev);
++
+ 	return 0;
+ }
+ 
++static const struct of_device_id omap_abe_of_match[] = {
++	{.compatible = "ti,abe-twl6040", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, omap_abe_of_match);
++
+ static struct platform_driver omap_abe_driver = {
+ 	.driver = {
+ 		.name = "omap-abe-twl6040",
+ 		.owner = THIS_MODULE,
+ 		.pm = &snd_soc_pm_ops,
++		.of_match_table = omap_abe_of_match,
+ 	},
+ 	.probe = omap_abe_probe,
+ 	.remove = __devexit_p(omap_abe_remove),
+-- 
+1.7.8.6
