@@ -1,30 +1,33 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH V2 0/2] arm/dts: Add OMAP2420 SDP support
-Date: Thu, 7 Jun 2012 17:11:04 -0500
-Message-ID: <1339107066-10461-1-git-send-email-jon-hunter@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
-Cc: Jon Hunter <jon-hunter@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH] of: export of_platform_populate()
+Date: Thu,  7 Jun 2012 17:57:36 -0600
+Message-ID: <1339113456-27089-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This series fixes the OMAP2 interrupt controller binding and adds support for
-the OMAP2420 SDP board. I have verified that the kernel boots with device-tree
-on this board.
+From: Stephen Warren <swarren@nvidia.com>
 
-This series is based upon the linux-omap master branch (3.5-rc1).
+Without this, modules can't use this API, leading to build failures.
 
-Jon Hunter (2):
-  arm/dts: OMAP2: Add support for OMAP2420 SDP
-  arm/dts: OMAP2: Fix interrupt controller binding
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+This is useful in 3.5.
 
- arch/arm/boot/dts/omap2.dtsi       |    2 ++
- arch/arm/boot/dts/omap2420-sdp.dts |   20 ++++++++++++++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap2420-sdp.dts
+ drivers/of/platform.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 343ad29..3132ea0 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -462,4 +462,5 @@ int of_platform_populate(struct device_node *root,
+ 	of_node_put(root);
+ 	return rc;
+ }
++EXPORT_SYMBOL_GPL(of_platform_populate);
+ #endif /* CONFIG_OF_ADDRESS */
 -- 
-1.7.9.5
-
+1.7.0.4
