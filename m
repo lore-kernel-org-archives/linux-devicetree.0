@@ -1,66 +1,61 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v6] MTD: LPC32xx SLC NAND driver
-Date: Thu, 07 Jun 2012 12:11:05 +0300
-Message-ID: <1339060265.6875.91.camel@sauron.fi.intel.com>
-References: <1338974414-5308-1-git-send-email-stigge@antcom.de>
-	 <1338989921.6875.50.camel@sauron.fi.intel.com>
-	 <20120607081108.GO8262@n2100.arm.linux.org.uk>
-Reply-To: dedekind1@gmail.com
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: [PATCH RESEND] of: add const to struct of_device_id.data
+Date: Thu, 7 Jun 2012 12:20:14 +0200
+Message-ID: <20120607102014.GI22191@pengutronix.de>
+References: <1335171381-24869-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-HlyRmc8aspg0NFDOi0CL"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120607081108.GO8262@n2100.arm.linux.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1335171381-24869-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Roland Stigge <stigge@antcom.de>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com
+To: devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>
+Cc: kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+Drivers should never need to modify the data of a device id. So it can
+be const which in turn allows more consts in the driver.
 
---=-HlyRmc8aspg0NFDOi0CL
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+---
+(Cc +=3D lkml + Grant)
 
-On Thu, 2012-06-07 at 09:11 +0100, Russell King - ARM Linux wrote:
-> On Wed, Jun 06, 2012 at 04:38:41PM +0300, Artem Bityutskiy wrote:
-> > On Wed, 2012-06-06 at 11:20 +0200, Roland Stigge wrote:
-> > > +#else
-> > > +#define lpc32xx_nand_resume NULL
-> > > +#define lpc32xx_nand_suspend NULL
-> > > +#endif
-> >=20
-> > 0, not NULL.
->=20
-> Err, what planet are you on there.  These are _pointers_ to functions,
-> so using a _pointer_ is more correct than using an _integer_.
+Hello,
 
-Yes, thanks, I was wrong.=20
+this might introduce warnings in drivers that access the data member
+without using const, so this is definitly merge window material if it i=
+s
+considered at all.
+
+Best regards
+Uwe
+
+ include/linux/mod_devicetable.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_device=
+table.h
+index 501da4c..183f411 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -222,7 +222,7 @@ struct of_device_id
+ 	char	type[32];
+ 	char	compatible[128];
+ #ifdef __KERNEL__
+-	void	*data;
++	const void *data;
+ #else
+ 	kernel_ulong_t data;
+ #endif
+--=20
+1.7.10
+
+
 
 --=20
-Best Regards,
-Artem Bityutskiy
-
---=-HlyRmc8aspg0NFDOi0CL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJP0HApAAoJECmIfjd9wqK04RsQAI8lnLfEntn0nSK+pohXkzd4
-Ea56RZe6g+mSUVieRq1g2L1BlbhRQ6KL3HByWSeFCrTwJOsy2crRJz8EuMc6meh5
-u7eTmGjUP0mS2GK0W6serb2iwe/e5QC2WWXFoIYwhnekwoT7n90M9Pk7prcmGXos
-IIoDpv7WMcbGBb6KJO9BwoBWg8d+S36+ddvlXgVmGGdEzFyXc33tEzx/KNjG7lEH
-Y/h6CSwNw6LS9iVURkQ8wY+l34xk/U6uRHlBVP64xSGcTEpMAnBMnz687oBfMNAo
-BsH3US4VVDPVT3qaZI/vyJohBi9Xf3+qF9RKaqYSa7l/n6ezHI1kNbkvHFxdxNr9
-1x1u7ers7fN83ruyn5jlW+4fUTjXLe4ChlJdXQTNUxttO3AWHZF+9ltzBfxgg6O2
-J1FP01ZSZTUb8ti1fHhnJ4eVP8Vi9RVR0eG7uvRXN7eDInz5lAuMrJ23zfAWua4j
-2yLXSG4XskclVuoHvnnqQ9HxNP/0C5jAuPWh320sT3231+Bf6vMz5/SbN56EhOYP
-vMPnjsWCnNXuytGf4lT+0L3JlJRLp3wH+Z/a8xgPFbOMGkTRDX5ocoQ/bITmiXH5
-D00aF+H25mNC6SV8uAD8usY97BkorZcTfbctbl9rMZfk6GkeKr+VnHyYPP359DCP
-w7ItUxvXp8zRIFQbm3NW
-=+9MT
------END PGP SIGNATURE-----
-
---=-HlyRmc8aspg0NFDOi0CL--
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
