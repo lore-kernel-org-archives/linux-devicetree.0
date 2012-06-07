@@ -1,97 +1,66 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 2/2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Thu, 7 Jun 2012 10:40:15 +0200
-Message-ID: <20120607084015.GA27764@avionic-0098.adnet.avionic-design.de>
-References: <1334229858-1665-1-git-send-email-thierry.reding@avionic-design.de>
- <1334229858-1665-2-git-send-email-thierry.reding@avionic-design.de>
- <20120511234728.0A4623E0791@localhost>
- <20120521102032.GA27686@avionic-0098.mockup.avionic-design.de>
- <20120526004805.92B373E1E4E@localhost>
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Subject: Re: [PATCH v6] MTD: LPC32xx SLC NAND driver
+Date: Thu, 07 Jun 2012 12:11:05 +0300
+Message-ID: <1339060265.6875.91.camel@sauron.fi.intel.com>
+References: <1338974414-5308-1-git-send-email-stigge@antcom.de>
+	 <1338989921.6875.50.camel@sauron.fi.intel.com>
+	 <20120607081108.GO8262@n2100.arm.linux.org.uk>
+Reply-To: dedekind1@gmail.com
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2598500782730428273=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120526004805.92B373E1E4E@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-HlyRmc8aspg0NFDOi0CL"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120607081108.GO8262@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Roland Stigge <stigge@antcom.de>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============2598500782730428273==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
-Content-Disposition: inline
-
-
---/04w6evG8XlLl3ft
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-HlyRmc8aspg0NFDOi0CL
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-* Grant Likely wrote:
-> On Mon, 21 May 2012 12:20:32 +0200, Thierry Reding <thierry.reding@avioni=
-c-design.de> wrote:
-> > * Grant Likely wrote:
-> > > On Thu, 12 Apr 2012 13:24:18 +0200, Thierry Reding <thierry.reding@av=
-ionic-design.de> wrote:
-[...]
-> > > > +struct adnp_platform_data {
-> > > > +	unsigned gpio_base;
-> > > > +	unsigned nr_gpios;
-> > > > +	int irq_base;
-> > > > +	const char *const *names;
-> > > > +};
-> > >=20
-> > > From the start this is a DT enabled driver.  There should be no reason
-> > > to also include platform_data support.
+On Thu, 2012-06-07 at 09:11 +0100, Russell King - ARM Linux wrote:
+> On Wed, Jun 06, 2012 at 04:38:41PM +0300, Artem Bityutskiy wrote:
+> > On Wed, 2012-06-06 at 11:20 +0200, Roland Stigge wrote:
+> > > +#else
+> > > +#define lpc32xx_nand_resume NULL
+> > > +#define lpc32xx_nand_suspend NULL
+> > > +#endif
 > >=20
-> > I thought it might be a good idea to support both for now. There have b=
-een
-> > some discussions that the device tree should be just an alternative sou=
-rce
-> > for platform data, the main argument being that platform data could be =
-used
-> > to overwrite data provided via DT.
+> > 0, not NULL.
 >=20
-> Unless you have an *actual* user of platform_data, don't borrow
-> trouble by adding it.
+> Err, what planet are you on there.  These are _pointers_ to functions,
+> so using a _pointer_ is more correct than using an _integer_.
 
-If I make the driver DT-only I should probably add a "select OF" to it's
-Kconfig entry, right? Or should it rather be "depends on OF"?
+Yes, thanks, I was wrong.=20
 
-Thierry
+--=20
+Best Regards,
+Artem Bityutskiy
 
---/04w6evG8XlLl3ft
-Content-Type: application/pgp-signature
+--=-HlyRmc8aspg0NFDOi0CL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-iEYEARECAAYFAk/QaO8ACgkQZ+BJyKLjJp+9owCfavl3YWLyH2UOz3R1tTeAw2e/
-04kAn03dZf3rFP0x7n/YP3phu60Nz/pH
-=3ITj
+iQIcBAABAgAGBQJP0HApAAoJECmIfjd9wqK04RsQAI8lnLfEntn0nSK+pohXkzd4
+Ea56RZe6g+mSUVieRq1g2L1BlbhRQ6KL3HByWSeFCrTwJOsy2crRJz8EuMc6meh5
+u7eTmGjUP0mS2GK0W6serb2iwe/e5QC2WWXFoIYwhnekwoT7n90M9Pk7prcmGXos
+IIoDpv7WMcbGBb6KJO9BwoBWg8d+S36+ddvlXgVmGGdEzFyXc33tEzx/KNjG7lEH
+Y/h6CSwNw6LS9iVURkQ8wY+l34xk/U6uRHlBVP64xSGcTEpMAnBMnz687oBfMNAo
+BsH3US4VVDPVT3qaZI/vyJohBi9Xf3+qF9RKaqYSa7l/n6ezHI1kNbkvHFxdxNr9
+1x1u7ers7fN83ruyn5jlW+4fUTjXLe4ChlJdXQTNUxttO3AWHZF+9ltzBfxgg6O2
+J1FP01ZSZTUb8ti1fHhnJ4eVP8Vi9RVR0eG7uvRXN7eDInz5lAuMrJ23zfAWua4j
+2yLXSG4XskclVuoHvnnqQ9HxNP/0C5jAuPWh320sT3231+Bf6vMz5/SbN56EhOYP
+vMPnjsWCnNXuytGf4lT+0L3JlJRLp3wH+Z/a8xgPFbOMGkTRDX5ocoQ/bITmiXH5
+D00aF+H25mNC6SV8uAD8usY97BkorZcTfbctbl9rMZfk6GkeKr+VnHyYPP359DCP
+w7ItUxvXp8zRIFQbm3NW
+=+9MT
 -----END PGP SIGNATURE-----
 
---/04w6evG8XlLl3ft--
-
---===============2598500782730428273==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2598500782730428273==--
+--=-HlyRmc8aspg0NFDOi0CL--
