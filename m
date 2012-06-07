@@ -1,146 +1,41 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
-Date: Fri, 8 Jun 2012 20:37:06 +0800
-Message-ID: <1339159026-15837-1-git-send-email-richard.zhao@freescale.com>
-References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
+From: Borislav Petkov <bp@amd64.org>
+Subject: Re: [PATCH 1/2] edac: add support for Calxeda highbank memory
+ controller
+Date: Thu, 7 Jun 2012 14:43:48 +0200
+Message-ID: <20120607124348.GD11153@aftab.osrc.amd.com>
+References: <1339020125-20198-1-git-send-email-robherring2@gmail.com>
+ <1339020125-20198-2-git-send-email-robherring2@gmail.com>
+ <4FCFDB12.3090403@redhat.com>
+ <4FCFE028.10005@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: marex@denx.de, B20596@freescale.com, dong.aisheng@linaro.org, fabio.estevam@freescale.com, alexander.shishkin@linux.intel.com, B29397@freescale.com, balbi@ti.com, stern@rowland.harvard.edu, kernel@pengutronix.de, gregkh@linuxfoundation.org, richard.zhao@freescale.com, shawn.guo@linaro.org, linuxzsc@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FCFE028.10005@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Sometimes, the driver bindings may know what phy they use.
-For example, when using device tree, the usb controller may have a
-phandler pointing to usb phy.
+On Wed, Jun 06, 2012 at 05:56:40PM -0500, Rob Herring wrote:
+> > Hmm... I suspect that memories by DIMM chip select/channel at Calxeda,
+> > as it is using just 1 cs/channel. It probably makes more sense to add new layer
+> > type(s) to properly represent the way your memory controller addresses it, if
+> > Calxeda doesn't work with DIMMs.
+> 
+> Not sure I follow. DIMMs are supported, but only a newer JEDEC form
+> factor (DDR3 72-bit mini DIMM). The h/w pretty much fixed to a single
+> 4GB DIMM. The controller is 1 72-bit channel.
 
-Signed-off-by: Richard Zhao <richard.zhao@freescale.com>
-Reviewed-by: Marek Vasut <marex@denx.de>
-Acked-by: Felipe Balbi <balbi@ti.com>
----
-Changes since laster version:
-- hcd transceiver renamed to phy
+Me too, why would this need a new define although those are more-or-less
+normal DIMMs (modulo the form factor)?
 
- drivers/usb/chipidea/ci.h    |    2 ++
- drivers/usb/chipidea/core.c  |    4 ++++
- drivers/usb/chipidea/host.c  |    1 +
- drivers/usb/chipidea/udc.c   |   11 +++++++----
- include/linux/usb/chipidea.h |    3 +++
- 5 files changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-index 9655e35..d738603 100644
---- a/drivers/usb/chipidea/ci.h
-+++ b/drivers/usb/chipidea/ci.h
-@@ -160,6 +160,8 @@ struct ci13xxx {
- 
- 	struct ci13xxx_platform_data	*platdata;
- 	int				vbus_active;
-+	/* FIXME: some day, we'll not use global phy */
-+	bool				global_phy;
- 	struct usb_phy			*transceiver;
- 	struct usb_hcd			*hcd;
- };
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index c14ce2b..21407e7 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -419,6 +419,10 @@ static int __devinit ci_hdrc_probe(struct platform_device *pdev)
- 
- 	ci->dev = dev;
- 	ci->platdata = dev->platform_data;
-+	if (ci->platdata->phy)
-+		ci->transceiver = ci->platdata->phy;
-+	else
-+		ci->global_phy = true;
- 
- 	ret = hw_device_init(ci, base);
- 	if (ret < 0) {
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index 4a4fdb8..ebff9f4 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -117,6 +117,7 @@ static int host_start(struct ci13xxx *ci)
- 	hcd->has_tt = 1;
- 
- 	hcd->power_budget = ci->platdata->power_budget;
-+	hcd->phy = ci->transceiver;
- 
- 	ehci = hcd_to_ehci(hcd);
- 	ehci->caps = ci->hw_bank.cap;
-diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-index ca9b387..b43b29c 100644
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -1684,7 +1684,8 @@ static int udc_start(struct ci13xxx *ci)
- 
- 	ci->gadget.ep0 = &ci->ep0in->ep;
- 
--	ci->transceiver = usb_get_transceiver();
-+	if (ci->global_phy) {
-+		ci->transceiver = usb_get_transceiver();
- 
- 	if (ci->platdata->flags & CI13XXX_REQUIRE_TRANSCEIVER) {
- 		if (ci->transceiver == NULL) {
-@@ -1728,7 +1729,8 @@ static int udc_start(struct ci13xxx *ci)
- remove_trans:
- 	if (ci->transceiver) {
- 		otg_set_peripheral(ci->transceiver->otg, &ci->gadget);
--		usb_put_transceiver(ci->transceiver);
-+		if (ci->global_phy)
-+			usb_put_transceiver(ci->transceiver);
- 	}
- 
- 	dev_err(dev, "error = %i\n", retval);
-@@ -1737,7 +1739,7 @@ remove_dbg:
- unreg_device:
- 	device_unregister(&ci->gadget.dev);
- put_transceiver:
--	if (ci->transceiver)
-+	if (ci->transceiver && ci->global_phy)
- 		usb_put_transceiver(ci->transceiver);
- free_pools:
- 	dma_pool_destroy(ci->td_pool);
-@@ -1771,7 +1773,8 @@ static void udc_stop(struct ci13xxx *ci)
- 
- 	if (ci->transceiver) {
- 		otg_set_peripheral(ci->transceiver->otg, NULL);
--		usb_put_transceiver(ci->transceiver);
-+		if (ci->global_phy)
-+			usb_put_transceiver(ci->transceiver);
- 	}
- 	dbg_remove_files(&ci->gadget.dev);
- 	device_unregister(&ci->gadget.dev);
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index be078f0..544825d 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -5,12 +5,15 @@
- #ifndef __LINUX_USB_CHIPIDEA_H
- #define __LINUX_USB_CHIPIDEA_H
- 
-+#include <linux/usb/otg.h>
-+
- struct ci13xxx;
- struct ci13xxx_platform_data {
- 	const char	*name;
- 	/* offset of the capability registers */
- 	uintptr_t	 capoffset;
- 	unsigned	 power_budget;
-+	struct usb_phy	*phy;
- 	unsigned long	 flags;
- #define CI13XXX_REGS_SHARED		BIT(0)
- #define CI13XXX_REQUIRE_TRANSCEIVER	BIT(1)
 -- 
-1.7.9.5
+Regards/Gruss,
+Boris.
+
+Advanced Micro Devices GmbH
+Einsteinring 24, 85609 Dornach
+GM: Alberto Bozzo
+Reg: Dornach, Landkreis Muenchen
+HRB Nr. 43632 WEEE Registernr: 129 19551
