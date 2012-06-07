@@ -1,7 +1,7 @@
 From: Jon Hunter <jon-hunter@ti.com>
 Subject: [PATCH 0/2] arm/dts: Add OMAP2420 SDP support
-Date: Thu, 7 Jun 2012 17:05:36 -0500
-Message-ID: <1339106736-9894-1-git-send-email-jon-hunter@ti.com>
+Date: Thu, 7 Jun 2012 17:06:51 -0500
+Message-ID: <1339106813-9962-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-omap-owner@vger.kernel.org>
