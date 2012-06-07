@@ -1,57 +1,26 @@
-From: ludovic.desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: at91: at91 based machines specify their own
- irq handler at run time
-Date: Thu, 7 Jun 2012 09:25:03 +0200
-Message-ID: <4FD0574F.6000200@atmel.com>
-References: <1338907664-24646-1-git-send-email-ludovic.desroches@atmel.com>
- <1338907664-24646-2-git-send-email-ludovic.desroches@atmel.com>
- <20120606094748.GA26504@taskit.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v6] MTD: LPC32xx SLC NAND driver
+Date: Thu, 7 Jun 2012 09:11:08 +0100
+Message-ID: <20120607081108.GO8262@n2100.arm.linux.org.uk>
+References: <1338974414-5308-1-git-send-email-stigge@antcom.de> <1338989921.6875.50.camel@sauron.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120606094748.GA26504-7uXufW8GZECzQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Glindkamp <christian.glindkamp-7uXufW8GZECzQB+pC5nmwQ@public.gmane.org>
-Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1338989921.6875.50.camel@sauron.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Artem Bityutskiy <dedekind1@gmail.com>
+Cc: Roland Stigge <stigge@antcom.de>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Christian,
+On Wed, Jun 06, 2012 at 04:38:41PM +0300, Artem Bityutskiy wrote:
+> On Wed, 2012-06-06 at 11:20 +0200, Roland Stigge wrote:
+> > +#else
+> > +#define lpc32xx_nand_resume NULL
+> > +#define lpc32xx_nand_suspend NULL
+> > +#endif
+> 
+> 0, not NULL.
 
-On 06/06/2012 11:47 AM, Christian Glindkamp wrote:
-> On 2012-06-05 16:47, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
->> From: Ludovic Desroches<ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>
->> SOC_AT91SAM9 selects MULTI_IRQ_HANDLER in order to let machines specify their
->> own IRQ handler at run time.
->>
->> Signed-off-by: Ludovic Desroches<ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
->>   arch/arm/mach-at91/board-cpu9krea.c           |    1 +
->>   arch/arm/mach-at91/board-sam9g20ek.c          |    1 +
->>   arch/arm/mach-at91/board-sam9261ek.c          |    1 +
->>   arch/arm/mach-at91/board-stamp9g20.c          |    1 +
->>   arch/arm/mach-at91/board-usb-a926x.c          |    1 +
->
-> At least these board files contain more than one MACHINE_START, but
-> you only update the last one. Same for the third patch.
-
-Thanks for your feedback, I'll correct it in V2.
-
->
-> I have not looked at the rest of the patch.
->
->
-
-Regards
-
-Ludovic
+Err, what planet are you on there.  These are _pointers_ to functions,
+so using a _pointer_ is more correct than using an _integer_.
