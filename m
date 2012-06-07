@@ -1,58 +1,41 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v7] MTD: LPC32xx SLC NAND driver
-Date: Thu, 07 Jun 2012 15:39:08 +0300
-Message-ID: <1339072748.6875.100.camel@sauron.fi.intel.com>
-References: <1339064536-20553-1-git-send-email-stigge@antcom.de>
-Reply-To: dedekind1@gmail.com
+From: Borislav Petkov <borislav.petkov@amd.com>
+Subject: Re: [PATCH 1/2] edac: add support for Calxeda highbank memory
+ controller
+Date: Thu, 7 Jun 2012 14:44:52 +0200
+Message-ID: <20120607124452.GE11153@aftab.osrc.amd.com>
+References: <1339020125-20198-1-git-send-email-robherring2@gmail.com>
+ <1339020125-20198-2-git-send-email-robherring2@gmail.com>
+ <4FCFDB12.3090403@redhat.com>
+ <4FCFE028.10005@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-dL/mz9iGgrqke2qktgDF"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1339064536-20553-1-git-send-email-stigge@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FCFE028.10005@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 06, 2012 at 05:56:40PM -0500, Rob Herring wrote:
+> > Hmm... I suspect that memories by DIMM chip select/channel at Calxeda,
+> > as it is using just 1 cs/channel. It probably makes more sense to add new layer
+> > type(s) to properly represent the way your memory controller addresses it, if
+> > Calxeda doesn't work with DIMMs.
+> 
+> Not sure I follow. DIMMs are supported, but only a newer JEDEC form
+> factor (DDR3 72-bit mini DIMM). The h/w pretty much fixed to a single
+> 4GB DIMM. The controller is 1 72-bit channel.
 
---=-dL/mz9iGgrqke2qktgDF
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Me too, why would this need a new define although those are more-or-less
+normal DIMMs (modulo the form factor)?
 
-On Thu, 2012-06-07 at 12:22 +0200, Roland Stigge wrote:
-> This patch adds support for the SLC NAND controller inside the LPC32xx So=
-C.
->=20
-> Signed-off-by: Roland Stigge <stigge@antcom.de>
+-- 
+Regards/Gruss,
+Boris.
 
-Pushed to l2-mtd.git, thanks!
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-dL/mz9iGgrqke2qktgDF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJP0KDsAAoJECmIfjd9wqK0aTkQAIfkmp7/O2ovGN7E954gGVfu
-9A4JKJP5qBqiCbkPOUI/9XG1r4PusTkbChduJqjv94r7BcXoBEmru9/F3OCfpG4u
-Ge2g70rteWRgXB9OIqfzKx3FhGqKmBFR0R42/v45UyVZo1nsjYl04xMmmWZ/++lG
-TM9yuM5kD6N6jDXGsndToBz8gRo3C0N6Dh3CEAOUAzAj0np79agbWY2m6vwAxRbX
-YsUffd6YDJ5zzvWSACB/aj6rVe/nP6A9tJvHxEBrx+XIqoCqAB7zCkxJGFlMY+r1
-ERwsqHAN/5rjbv3t7sNY4lUDJbnzaiWAwYqSWscgOHA7I9rLYePq1vm3mbWYgtLA
-T3KilvBvQiJd4mGxgMky2ZBMjnOV4vgCD7jhfXZPQlGTMt6UApKtHskURM7pJx0i
-OkWDVScA1T+Zq9GiSEV0dgpVzkkf/7uF23U2fJBpTD7W8RDiMjiuyvWArAbds3Tt
-CXbvaWHLeYHd8X6N4BiF2mgiKbCRwhYMOuzy0sQcYnjA/SLgMazR9nmUum0DbGtz
-WtePqKX+qk6tCcmMfEj/WWejMiVkirSX1EUOtlRZrwpgJI4sQlCyxt2y1HLFSSiM
-SSruj1iigp7ARjOPhSmpy5htfBM5sJpVxa+7kdZz/avdWxU931gOdtBdZkJSl8Yt
-/Tw3NLP0KLVCRvF3xgkv
-=otGa
------END PGP SIGNATURE-----
-
---=-dL/mz9iGgrqke2qktgDF--
-
+Advanced Micro Devices GmbH
+Einsteinring 24, 85609 Dornach
+GM: Alberto Bozzo
+Reg: Dornach, Landkreis Muenchen
+HRB Nr. 43632 WEEE Registernr: 129 19551
