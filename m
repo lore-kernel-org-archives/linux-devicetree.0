@@ -1,33 +1,77 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] of: export of_platform_populate()
-Date: Thu,  7 Jun 2012 17:57:36 -0600
-Message-ID: <1339113456-27089-1-git-send-email-swarren@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] edac: add support for Calxeda highbank memory controller
+Date: Thu, 07 Jun 2012 20:12:51 -0500
+Message-ID: <4FD15193.8080800@gmail.com>
+References: <1339020125-20198-1-git-send-email-robherring2@gmail.com> <1339020125-20198-2-git-send-email-robherring2@gmail.com> <4FCFDB12.3090403@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FCFDB12.3090403@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+To: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Doug Thompson <dougthompson@xmission.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+Mauro,
 
-Without this, modules can't use this API, leading to build failures.
+On 06/06/2012 05:34 PM, Mauro Carvalho Chehab wrote:
+> Hi Rob,
+> 
+> Em 06-06-2012 19:02, Rob Herring escreveu:
+>> From: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Add support for memory controller on Calxeda Highbank platforms. Highbank
+>> platforms support a single 4GB mini-DIMM with 1-bit correction and 2-bit
+>> detection.
+>>
+>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+>> ---
+>>  .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
+>>  arch/arm/boot/dts/highbank.dts                     |    6 +
+>>  drivers/edac/Kconfig                               |    9 +-
+>>  drivers/edac/Makefile                              |    2 +
+>>  drivers/edac/highbank_mc_edac.c                    |  238 ++++++++++++++++++++
+>>  5 files changed, 271 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
+>>  create mode 100644 drivers/edac/highbank_mc_edac.c
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-This is useful in 3.5.
+[snip]
 
- drivers/of/platform.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+>> +
+>> +static struct mcidev_sysfs_attribute highbank_mc_sysfs_attributes[] = {
+>> +	{
+>> +	 .attr = {
+>> +		  .name = "inject_ctrl",
+>> +		  .mode = (S_IRUGO | S_IWUSR)
+>> +		  },
+>> +	 .store = highbank_mc_inject_ctrl_store,
+>> +	},
+>> +	{
+>> +	 .attr = {.name = NULL} /* End of list */
+>> +	}
+>> +};
+> 
+> This won't work after the kobj->struct device conversion patches that are at
+> -next tree, as this struct will not exist anymore.
+> 
+> Also, as this is for error injection, the better is to use debugfs.
+> 
+> It shouldn't be hard to change it to use debugfs. If you want an example, you
+> can take a look on this patch:
+> 
+> 	http://git.kernel.org/?p=linux/kernel/git/mchehab/linux-edac.git;a=commitdiff;h=303f3e2113d81d49feef9c0803c2958d41513f14
+> 
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 343ad29..3132ea0 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -462,4 +462,5 @@ int of_platform_populate(struct device_node *root,
- 	of_node_put(root);
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(of_platform_populate);
- #endif /* CONFIG_OF_ADDRESS */
--- 
-1.7.0.4
+I've got this working, but don't really like the resulting debugfs
+layout. I end-up with something like this (using dev_name() of platform
+driver):
+
+/mc0/fake*
+/fff00000.memory-controller/inject_ctrl
+
+It would be nice if there was a top level edac directory and any entries
+I add are added under mcX. I can do that for the next version if that's
+okay.
+
+Rob
