@@ -1,41 +1,42 @@
-From: Borislav Petkov <bp@amd64.org>
-Subject: Re: [PATCH 1/2] edac: add support for Calxeda highbank memory
- controller
-Date: Thu, 7 Jun 2012 14:43:48 +0200
-Message-ID: <20120607124348.GD11153@aftab.osrc.amd.com>
-References: <1339020125-20198-1-git-send-email-robherring2@gmail.com>
- <1339020125-20198-2-git-send-email-robherring2@gmail.com>
- <4FCFDB12.3090403@redhat.com>
- <4FCFE028.10005@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FCFE028.10005@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 1/7] arm/dts: omap4: Add entry for OMAP McPDM IP
+Date: Fri,  8 Jun 2012 17:01:59 +0300
+Message-ID: <1339164125-32534-2-git-send-email-peter.ujfalusi@ti.com>
+References: <1339164125-32534-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1339164125-32534-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 06, 2012 at 05:56:40PM -0500, Rob Herring wrote:
-> > Hmm... I suspect that memories by DIMM chip select/channel at Calxeda,
-> > as it is using just 1 cs/channel. It probably makes more sense to add new layer
-> > type(s) to properly represent the way your memory controller addresses it, if
-> > Calxeda doesn't work with DIMMs.
-> 
-> Not sure I follow. DIMMs are supported, but only a newer JEDEC form
-> factor (DDR3 72-bit mini DIMM). The h/w pretty much fixed to a single
-> 4GB DIMM. The controller is 1 72-bit channel.
+McPDM is used on OMAP4 based boards to communicate with an external audio
+codec (twl6040).
 
-Me too, why would this need a new define although those are more-or-less
-normal DIMMs (modulo the form factor)?
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/omap4.dtsi |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 359c497..4c43f3b 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -272,5 +272,14 @@
+ 			ti,hwmods = "mmc5";
+ 			ti,needs-special-reset;
+ 		};
++
++		mcpdm: mcpdm@40132000 {
++			compatible = "ti,omap4-mcpdm";
++			reg = <0x40132000 0x7f>, /* MPU private access */
++			      <0x49032000 0x7f>; /* L3 Interconnect */
++			interrupts = <0 112 0x4>;
++			interrupt-parent = <&gic>;
++			ti,hwmods = "mcpdm";
++		};
+ 	};
+ };
 -- 
-Regards/Gruss,
-Boris.
+1.7.8.6
 
-Advanced Micro Devices GmbH
-Einsteinring 24, 85609 Dornach
-GM: Alberto Bozzo
-Reg: Dornach, Landkreis Muenchen
-HRB Nr. 43632 WEEE Registernr: 129 19551
