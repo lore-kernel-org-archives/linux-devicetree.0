@@ -1,56 +1,60 @@
-From: "Jayachandran C." <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH 2/4] i2c: i2c-ocores: Use reg-shift property
-Date: Fri, 8 Jun 2012 17:56:52 +0530
-Message-ID: <20120608122651.GD26948@jayachandranc.netlogicmicro.com>
-References: <1338910868-12318-1-git-send-email-jayachandranc@netlogicmicro.com>
- <1338910868-12318-3-git-send-email-jayachandranc@netlogicmicro.com>
- <87aa0ejaj3.fsf@macbook.be.48ers.dk>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v5 2/2] USB: notify phy when root hub port connect change
+Date: Fri, 8 Jun 2012 20:32:29 +0800
+Message-ID: <1339158749-15634-2-git-send-email-richard.zhao@freescale.com>
+References: <1338946190-19105-1-git-send-email-richard.zhao@freescale.com>
+ <1339158749-15634-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87aa0ejaj3.fsf-uXGAPMMVk8amE9MCos8gUmSdvHPH+/yF@public.gmane.org>
-Content-Disposition: inline
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1339158749-15634-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: marex-ynQEQJNshbs@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 08, 2012 at 01:41:36PM +0200, Peter Korsgaard wrote:
-> >>>>> "J" == Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org> writes:
-> 
->  J> From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->  J> Deprecate 'regstep' property and use the standard 'reg-shift' property
->  J> for register offset shifts. 'regstep' will still be supported as an
->  J> optional property, but will give a warning when used.
-> 
-> ..
->  
->  J>  struct ocores_i2c_platform_data {
->  J> -	u32 regstep;   /* distance between registers */
->  J> -	u32 clock_khz; /* input clock in kHz */
->  J> -	u8 num_devices; /* number of devices in the devices list */
->  J> +	u32 reg_shift;		/* register offset shift value */
->  J> +	u32 clock_khz;		/* input clock in kHz */
->  J> +	u8 num_devices;		/* number of devices in the devices list */
->  J>  	struct i2c_board_info const *devices; /* devices connected to the bus */
->  J>  };
-> 
-> Why not just keep this change to the dt bindings, instead of risking
-> breaking stuff for platform drivers as well? There's no conceptual
-> reason why reg_shift is any better than regstep.
+Phy may need to change settings when port connect change.
 
-This is to keep the names and meanings of platform property and DT
-property same. Having two ways (setting regstep in platform code or
-setting 'reg-shift' in DT) of specifying the same parameter is not
-a nice.
+Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/usb/core/hub.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-There is only one user of this API in the whole kernel tree, which
-is fixed as part of the patchset.
-
-Also we make sure that we do not break existing DTBs by still accepting
-'regstep' property.
-
-Regards,
-JC.
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 04fb834..e1a6d31 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -20,6 +20,7 @@
+ #include <linux/usb.h>
+ #include <linux/usbdevice_fs.h>
+ #include <linux/usb/hcd.h>
++#include <linux/usb/otg.h>
+ #include <linux/usb/quirks.h>
+ #include <linux/kthread.h>
+ #include <linux/mutex.h>
+@@ -4034,6 +4035,13 @@ static void hub_port_connect_change(struct usb_hub *hub, int port1,
+ 		}
+ 	}
+ 
++	if (unlikely(hcd->phy && !hdev->level)) {
++		if (portstatus & USB_PORT_STAT_CONNECTION)
++			usb_phy_notify_connect(hcd->phy, port1);
++		else
++			usb_phy_notify_disconnect(hcd->phy, port1);
++	}
++
+ 	/* Return now if debouncing failed or nothing is connected or
+ 	 * the device was "removed".
+ 	 */
+-- 
+1.7.9.5
