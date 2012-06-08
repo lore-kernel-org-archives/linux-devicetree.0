@@ -1,210 +1,146 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/2] USB: move transceiver from ehci_hcd and ohci_hcd to hcd
- and rename it as phy
-Date: Fri, 8 Jun 2012 20:32:28 +0800
-Message-ID: <1339158749-15634-1-git-send-email-richard.zhao@freescale.com>
-References: <1338946190-19105-1-git-send-email-richard.zhao@freescale.com>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
+Date: Fri, 8 Jun 2012 20:37:06 +0800
+Message-ID: <1339159026-15837-1-git-send-email-richard.zhao@freescale.com>
+References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1338946190-19105-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: marex-ynQEQJNshbs@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: marex@denx.de, B20596@freescale.com, dong.aisheng@linaro.org, fabio.estevam@freescale.com, alexander.shishkin@linux.intel.com, B29397@freescale.com, balbi@ti.com, stern@rowland.harvard.edu, kernel@pengutronix.de, gregkh@linuxfoundation.org, richard.zhao@freescale.com, shawn.guo@linaro.org, linuxzsc@gmail.com
 List-Id: devicetree@vger.kernel.org
 
- - to decrease redundant since both ehci_hcd and ohci_hcd have the same variable
- - it helps access phy in usb core code
- - phy is more meaningful than transceiver
+Sometimes, the driver bindings may know what phy they use.
+For example, when using device tree, the usb controller may have a
+phandler pointing to usb phy.
 
-Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Richard Zhao <richard.zhao@freescale.com>
+Reviewed-by: Marek Vasut <marex@denx.de>
+Acked-by: Felipe Balbi <balbi@ti.com>
 ---
- drivers/usb/host/ehci-fsl.c  |   21 ++++++++++-----------
- drivers/usb/host/ehci-hub.c  |    2 +-
- drivers/usb/host/ehci.h      |    4 ----
- drivers/usb/host/ohci-omap.c |   27 ++++++++++++++-------------
- drivers/usb/host/ohci.h      |    5 -----
- include/linux/usb/hcd.h      |    6 ++++++
- 6 files changed, 31 insertions(+), 34 deletions(-)
+Changes since laster version:
+- hcd transceiver renamed to phy
 
-diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
-index 4336257..3379945 100644
---- a/drivers/usb/host/ehci-fsl.c
-+++ b/drivers/usb/host/ehci-fsl.c
-@@ -142,19 +142,19 @@ static int usb_hcd_fsl_probe(const struct hc_driver *driver,
- 	if (pdata->operating_mode == FSL_USB2_DR_OTG) {
- 		struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+ drivers/usb/chipidea/ci.h    |    2 ++
+ drivers/usb/chipidea/core.c  |    4 ++++
+ drivers/usb/chipidea/host.c  |    1 +
+ drivers/usb/chipidea/udc.c   |   11 +++++++----
+ include/linux/usb/chipidea.h |    3 +++
+ 5 files changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
+index 9655e35..d738603 100644
+--- a/drivers/usb/chipidea/ci.h
++++ b/drivers/usb/chipidea/ci.h
+@@ -160,6 +160,8 @@ struct ci13xxx {
  
--		ehci->transceiver = usb_get_transceiver();
--		dev_dbg(&pdev->dev, "hcd=0x%p  ehci=0x%p, transceiver=0x%p\n",
--			hcd, ehci, ehci->transceiver);
-+		hcd->phy = usb_get_transceiver();
-+		dev_dbg(&pdev->dev, "hcd=0x%p  ehci=0x%p, phy=0x%p\n",
-+			hcd, ehci, hcd->phy);
- 
--		if (ehci->transceiver) {
--			retval = otg_set_host(ehci->transceiver->otg,
-+		if (hcd->phy) {
-+			retval = otg_set_host(hcd->phy->otg,
- 					      &ehci_to_hcd(ehci)->self);
- 			if (retval) {
--				usb_put_transceiver(ehci->transceiver);
-+				usb_put_transceiver(hcd->phy);
- 				goto err4;
- 			}
- 		} else {
--			dev_err(&pdev->dev, "can't find transceiver\n");
-+			dev_err(&pdev->dev, "can't find phy\n");
- 			retval = -ENODEV;
- 			goto err4;
- 		}
-@@ -190,11 +190,10 @@ static void usb_hcd_fsl_remove(struct usb_hcd *hcd,
- 			       struct platform_device *pdev)
- {
- 	struct fsl_usb2_platform_data *pdata = pdev->dev.platform_data;
--	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
- 
--	if (ehci->transceiver) {
--		otg_set_host(ehci->transceiver->otg, NULL);
--		usb_put_transceiver(ehci->transceiver);
-+	if (hcd->phy) {
-+		otg_set_host(hcd->phy->otg, NULL);
-+		usb_put_transceiver(hcd->phy);
- 	}
- 
- 	usb_remove_hcd(hcd);
-diff --git a/drivers/usb/host/ehci-hub.c b/drivers/usb/host/ehci-hub.c
-index fc9e7cc..dd5eef6 100644
---- a/drivers/usb/host/ehci-hub.c
-+++ b/drivers/usb/host/ehci-hub.c
-@@ -724,7 +724,7 @@ static int ehci_hub_control (
- #ifdef CONFIG_USB_OTG
- 			if ((hcd->self.otg_port == (wIndex + 1))
- 			    && hcd->self.b_hnp_enable) {
--				otg_start_hnp(ehci->transceiver->otg);
-+				otg_start_hnp(hcd->phy->otg);
- 				break;
- 			}
- #endif
-diff --git a/drivers/usb/host/ehci.h b/drivers/usb/host/ehci.h
-index 2694ed6..85c3572 100644
---- a/drivers/usb/host/ehci.h
-+++ b/drivers/usb/host/ehci.h
-@@ -175,10 +175,6 @@ struct ehci_hcd {			/* one per controller */
- #ifdef DEBUG
- 	struct dentry		*debug_dir;
- #endif
--	/*
--	 * OTG controllers and transceivers need software interaction
--	 */
--	struct usb_phy	*transceiver;
+ 	struct ci13xxx_platform_data	*platdata;
+ 	int				vbus_active;
++	/* FIXME: some day, we'll not use global phy */
++	bool				global_phy;
+ 	struct usb_phy			*transceiver;
+ 	struct usb_hcd			*hcd;
  };
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index c14ce2b..21407e7 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -419,6 +419,10 @@ static int __devinit ci_hdrc_probe(struct platform_device *pdev)
  
- /* convert between an HCD pointer and the corresponding EHCI_HCD */
-diff --git a/drivers/usb/host/ohci-omap.c b/drivers/usb/host/ohci-omap.c
-index 9ce35d0..eccddb4 100644
---- a/drivers/usb/host/ohci-omap.c
-+++ b/drivers/usb/host/ohci-omap.c
-@@ -167,14 +167,15 @@ static int omap_1510_local_bus_init(void)
+ 	ci->dev = dev;
+ 	ci->platdata = dev->platform_data;
++	if (ci->platdata->phy)
++		ci->transceiver = ci->platdata->phy;
++	else
++		ci->global_phy = true;
  
- static void start_hnp(struct ohci_hcd *ohci)
- {
--	const unsigned	port = ohci_to_hcd(ohci)->self.otg_port - 1;
-+	struct usb_hcd *hcd = ohci_to_hcd(ohci);
-+	const unsigned	port = hcd->self.otg_port - 1;
- 	unsigned long	flags;
- 	u32 l;
+ 	ret = hw_device_init(ci, base);
+ 	if (ret < 0) {
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 4a4fdb8..ebff9f4 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -117,6 +117,7 @@ static int host_start(struct ci13xxx *ci)
+ 	hcd->has_tt = 1;
  
--	otg_start_hnp(ohci->transceiver->otg);
-+	otg_start_hnp(hcd->phy->otg);
+ 	hcd->power_budget = ci->platdata->power_budget;
++	hcd->phy = ci->transceiver;
  
- 	local_irq_save(flags);
--	ohci->transceiver->state = OTG_STATE_A_SUSPEND;
-+	hcd->phy->state = OTG_STATE_A_SUSPEND;
- 	writel (RH_PS_PSS, &ohci->regs->roothub.portstatus [port]);
- 	l = omap_readl(OTG_CTRL);
- 	l &= ~OTG_A_BUSREQ;
-@@ -211,18 +212,18 @@ static int ohci_omap_init(struct usb_hcd *hcd)
+ 	ehci = hcd_to_ehci(hcd);
+ 	ehci->caps = ci->hw_bank.cap;
+diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+index ca9b387..b43b29c 100644
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -1684,7 +1684,8 @@ static int udc_start(struct ci13xxx *ci)
  
- #ifdef	CONFIG_USB_OTG
- 	if (need_transceiver) {
--		ohci->transceiver = usb_get_transceiver();
--		if (ohci->transceiver) {
--			int	status = otg_set_host(ohci->transceiver->otg,
-+		hcd->phy = usb_get_transceiver();
-+		if (hcd->phy) {
-+			int	status = otg_set_host(hcd->phy->otg,
- 						&ohci_to_hcd(ohci)->self);
--			dev_dbg(hcd->self.controller, "init %s transceiver, status %d\n",
--					ohci->transceiver->label, status);
-+			dev_dbg(hcd->self.controller, "init %s phy, status %d\n",
-+					hcd->phy->label, status);
- 			if (status) {
--				usb_put_transceiver(ohci->transceiver);
-+				usb_put_transceiver(hcd->phy);
- 				return status;
- 			}
- 		} else {
--			dev_err(hcd->self.controller, "can't find transceiver\n");
-+			dev_err(hcd->self.controller, "can't find phy\n");
- 			return -ENODEV;
- 		}
- 		ohci->start_hnp = start_hnp;
-@@ -403,9 +404,9 @@ usb_hcd_omap_remove (struct usb_hcd *hcd, struct platform_device *pdev)
- 	struct ohci_hcd		*ohci = hcd_to_ohci (hcd);
+ 	ci->gadget.ep0 = &ci->ep0in->ep;
  
- 	usb_remove_hcd(hcd);
--	if (ohci->transceiver) {
--		(void) otg_set_host(ohci->transceiver->otg, 0);
--		usb_put_transceiver(ohci->transceiver);
-+	if (hcd->phy) {
-+		(void) otg_set_host(hcd->phy->otg, 0);
-+		usb_put_transceiver(hcd->phy);
+-	ci->transceiver = usb_get_transceiver();
++	if (ci->global_phy) {
++		ci->transceiver = usb_get_transceiver();
+ 
+ 	if (ci->platdata->flags & CI13XXX_REQUIRE_TRANSCEIVER) {
+ 		if (ci->transceiver == NULL) {
+@@ -1728,7 +1729,8 @@ static int udc_start(struct ci13xxx *ci)
+ remove_trans:
+ 	if (ci->transceiver) {
+ 		otg_set_peripheral(ci->transceiver->otg, &ci->gadget);
+-		usb_put_transceiver(ci->transceiver);
++		if (ci->global_phy)
++			usb_put_transceiver(ci->transceiver);
  	}
- 	if (machine_is_omap_osk())
- 		gpio_free(9);
-diff --git a/drivers/usb/host/ohci.h b/drivers/usb/host/ohci.h
-index 1b19aea..d329914 100644
---- a/drivers/usb/host/ohci.h
-+++ b/drivers/usb/host/ohci.h
-@@ -372,11 +372,6 @@ struct ohci_hcd {
- 	struct ed		*ed_controltail;	/* last in ctrl list */
- 	struct ed		*periodic [NUM_INTS];	/* shadow int_table */
  
--	/*
--	 * OTG controllers and transceivers need software interaction;
--	 * other external transceivers should be software-transparent
--	 */
--	struct usb_phy	*transceiver;
- 	void (*start_hnp)(struct ohci_hcd *ohci);
+ 	dev_err(dev, "error = %i\n", retval);
+@@ -1737,7 +1739,7 @@ remove_dbg:
+ unreg_device:
+ 	device_unregister(&ci->gadget.dev);
+ put_transceiver:
+-	if (ci->transceiver)
++	if (ci->transceiver && ci->global_phy)
+ 		usb_put_transceiver(ci->transceiver);
+ free_pools:
+ 	dma_pool_destroy(ci->td_pool);
+@@ -1771,7 +1773,8 @@ static void udc_stop(struct ci13xxx *ci)
  
- 	/*
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index 7f855d5..c532cbe 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -93,6 +93,12 @@ struct usb_hcd {
- 	 */
- 	const struct hc_driver	*driver;	/* hw-specific hooks */
+ 	if (ci->transceiver) {
+ 		otg_set_peripheral(ci->transceiver->otg, NULL);
+-		usb_put_transceiver(ci->transceiver);
++		if (ci->global_phy)
++			usb_put_transceiver(ci->transceiver);
+ 	}
+ 	dbg_remove_files(&ci->gadget.dev);
+ 	device_unregister(&ci->gadget.dev);
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index be078f0..544825d 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -5,12 +5,15 @@
+ #ifndef __LINUX_USB_CHIPIDEA_H
+ #define __LINUX_USB_CHIPIDEA_H
  
-+	/*
-+	 * OTG and some Host controllers need software interaction with phys;
-+	 * other external phys should be software-transparent
-+	 */
-+	struct usb_phy	*phy;
++#include <linux/usb/otg.h>
 +
- 	/* Flags that need to be manipulated atomically because they can
- 	 * change while the host controller is running.  Always use
- 	 * set_bit() or clear_bit() to change their values.
+ struct ci13xxx;
+ struct ci13xxx_platform_data {
+ 	const char	*name;
+ 	/* offset of the capability registers */
+ 	uintptr_t	 capoffset;
+ 	unsigned	 power_budget;
++	struct usb_phy	*phy;
+ 	unsigned long	 flags;
+ #define CI13XXX_REGS_SHARED		BIT(0)
+ #define CI13XXX_REQUIRE_TRANSCEIVER	BIT(1)
 -- 
 1.7.9.5
