@@ -1,115 +1,87 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2] MXS: Add DT binding support into stmp3xxx-rtc
-Date: Fri, 08 Jun 2012 13:58:51 -0500
-Message-ID: <4FD24B6B.3010402@gmail.com>
-References: <1339181804-22822-1-git-send-email-marex@denx.de>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 8 Jun 2012 14:04:35 -0500
+Message-ID: <4FD24CC3.50700@ti.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201205190844.03654.arnd@arndb.de> <4FBA7C80.4080801@wwwdotorg.org> <201205211818.45646.arnd@arndb.de> <4FBAA64A.200@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1339181804-22822-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FBAA64A.200@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jassi Brar <jaswinder.singh@linaro.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2012 01:56 PM, Marek Vasut wrote:
-> Add simple binding for the stmp3xxx-rtc.
-> 
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+Hi Stephen, Arnd,
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Been a while ;-)
 
->  .../devicetree/bindings/rtc/stmp3xxx-rtc.txt        |   19 +++++++++++++++++++
->  arch/arm/boot/dts/imx28.dtsi                        |    1 +
->  drivers/rtc/rtc-stmp3xxx.c                          |    7 +++++++
->  3 files changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
+On 05/21/2012 03:32 PM, Stephen Warren wrote:
+> On 05/21/2012 12:18 PM, Arnd Bergmann wrote:
+>> On Monday 21 May 2012, Stephen Warren wrote:
+>>>>
+>>>> The point with the direction was that it covers most cases and makes
+>>>> them rather simple, while for the rare case where you need more than
+>>>> two channels, you just use the otherwise optional named interface
+>>>> rather than the numbered one. My feeling is that this also makes a
+>>>> lot of sense at the driver API level: most dirvers just ask for the
+>>>> read and write channels using a very simple interface, and those drivers
+>>>> that have more than two will want to name them anyway.
+>>>
+>>> How are you thinking of representing the direction in DT - as part of
+>>> the DMA request specifier, so in a DMAC-specific way?
+>>>
+>>> If so, that seems a little odd; you have to request a DMA channel for
+>>> "TX", but then end up having the common code check all the entries in
+>>> the dmas property since it can't know which are TX, and then have the
+>>> wrong ones almost accidentally fail, since the DMAC will then determine
+>>> that it can't support TX on the RX DMA request IDs.
+>>
+>> I think the direction must be encoded in a way that does not depend on
+>> the binding for the specific controller. There are two ways I can see
+>> how we might do it:
+>>
+>> 1. have separate property names for tx and rx channels, and probably
+>>    one for combined rx/tx channels
 > 
-> V2: Fix typos, remove fsl,imx28-rtc
+>> 2. define the second cell in each channel specifier to be the direction
+>>    in a predefined format, followed by the other (controller specific)
+>>    attributes, if any.
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
-> new file mode 100644
-> index 0000000..a7a7de5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
-> @@ -0,0 +1,19 @@
-> +* STMP3xxx/i.MX28 Time Clock controller
-> +
-> +Required properties:
-> +- compatible: should be one of the following.
-> +    * "fsl,stmp3xxx-rtc"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: Two interrupt numbers to the cpu should be specified. First
-> +  interrupt number is the rtc tick interrupt and second interrupt number
-> +  is the rtc alarm interrupt. The number of cells representing a interrupt
-> +  depends on the parent interrupt controller.
-> +
-> +Example:
-> +
-> +	rtc@80056000 {
-> +		compatible = "fsl,stmp3xxx-rtc";
-> +		reg = <0x80056000 2000>;
-> +		interrupts = <28 29>;
-> +	};
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index cabcce8..5053019 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -387,6 +387,7 @@
->  			};
->  
->  			rtc@80056000 {
-> +				compatible = "fsl,imx28-rtc", "fsl,stmp3xxx-rtc";
->  				reg = <0x80056000 2000>;
->  				interrupts = <28 29>;
->  				status = "disabled";
-> diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-> index 1028786..3aadb58 100644
-> --- a/drivers/rtc/rtc-stmp3xxx.c
-> +++ b/drivers/rtc/rtc-stmp3xxx.c
-> @@ -25,6 +25,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/rtc.h>
->  #include <linux/slab.h>
-> +#include <linux/of_device.h>
->  
->  #include <mach/common.h>
->  
-> @@ -265,6 +266,11 @@ static int stmp3xxx_rtc_resume(struct platform_device *dev)
->  #define stmp3xxx_rtc_resume	NULL
->  #endif
->  
-> +static const struct of_device_id rtc_dt_ids[] = {
-> +	{ .compatible = "fsl,stmp3xxx-rtc", },
-> +	{ /* sentinel */ }
-> +};
-> +
->  static struct platform_driver stmp3xxx_rtcdrv = {
->  	.probe		= stmp3xxx_rtc_probe,
->  	.remove		= stmp3xxx_rtc_remove,
-> @@ -273,6 +279,7 @@ static struct platform_driver stmp3xxx_rtcdrv = {
->  	.driver		= {
->  		.name	= "stmp3xxx-rtc",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = rtc_dt_ids,
->  	},
->  };
->  
+> In this option, lets say bit 0 is 0==TX, 1==RX (or perhaps 2 bits if
+> combined TX/RX is needed)
+> 
+> Then, we could reserve say bits 7:1 as client DMA request ID.
+> 
+> And then have bits 31:8 as DMAC specific data.
+> 
+> Wouldn't that allow us to have our cake and eat it?
+
+Sorry for not responding sooner.
+
+It seems to me we were pretty close on alignment. In fact, I was quite
+happy with Steven's 2nd to last proposal of  ...
+
+simple 1 req:
+dmas = <0 &dmac1 xxx>;
+
+simple 2 req:
+dmas = <0 &dmac1 xxx 1 &dmac1 yyy>;
+
+multiple dmacs:
+dmas = <0 &dmac1 xxx 0 &dmac2 zzz 1 &dmac1 yyy>;
+
+Arnd, I know that you had some concerns. However, in the above case I
+would expect that the 3rd parameter be optional and it can be some sort
+of match variable. In other words, we don't care how the 32-bits are
+encoded or what they represent but they would be used appropriately by
+the xlate function being used. So the xlate and this "match" variable
+would have to speak the same language.
+
+I think that I prefer the idea of having a 3rd optional match variable
+than encoding the DMA request ID and match data together in 1 32-bit
+variable. However, not a big deal either way.
+
+Cheers
+Jon
