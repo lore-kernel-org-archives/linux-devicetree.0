@@ -1,46 +1,87 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt: fsl-imx-cspi.txt: Fix comment about GPIOs used for
- chip selects
-Date: Sun, 10 Jun 2012 13:54:00 -0300
-Message-ID: <CAOMZO5AGBJXmLhuX4tGXR6Fp2WaU74B-BR2VYUFe0ODV9pdONA@mail.gmail.com>
-References: <1335028873-3395-1-git-send-email-festevam@gmail.com>
- <CAAQ0ZWTsdrYQ28=K=acnP=HT3+1DuTa-X8q0NM66xcvSP21hgw@mail.gmail.com>
- <CAOMZO5B9sX0VuE=Oz3DE4esRHMk9NXpA05pzFb5cxYm=8+qWcQ@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: kirkwood: use devicetree for orion-spi
+Date: Sun, 10 Jun 2012 13:06:20 -0400
+Message-ID: <20120610170620.GW14756@titan.lakedaemon.net>
+References: <1339324322-29388-6-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOMZO5B9sX0VuE=Oz3DE4esRHMk9NXpA05pzFb5cxYm=8+qWcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1339324322-29388-6-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, Michael Walle <micheal-QKn5cuLxLXY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Pinging again.
+On Sun, Jun 10, 2012 at 12:31:57PM +0200, Andrew Lunn wrote:
+> From: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
+> 
+> Populate the devices with auxdata to set the device names which are used by
+> clkdev to lookup the clocks.
+> 
+> Signed-off-by: Michael Walle <micheal-QKn5cuLxLXY@public.gmane.org>
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/kirkwood.dtsi   |    9 +++++++++
+>  arch/arm/mach-kirkwood/board-dt.c |    8 +++++++-
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> index 8eab7c4..7d282ab 100644
+> --- a/arch/arm/boot/dts/kirkwood.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> @@ -42,6 +42,15 @@
+>  			interrupts = <53>;
+>  		};
+>  
+> +		spi@10600 {
+> +			compatible = "marvell,orion-spi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			cell-index = <0>;
+> +			reg = <0x10600 0x28>;
+> +			status = "disabled";
+> +		};
+> +
+>  		nand@3000000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+> index fa51586..0942139 100644
+> --- a/arch/arm/mach-kirkwood/board-dt.c
+> +++ b/arch/arm/mach-kirkwood/board-dt.c
+> @@ -26,6 +26,11 @@ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
+>  	{ }
+>  };
+>  
+> +struct of_dev_auxdata kirkwood_auxdata_lookup[] __initdata = {
+> +	OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
 
-On Mon, May 21, 2012 at 12:27 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sun, Apr 22, 2012 at 10:32 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 22 April 2012 01:21, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> The gpio numbers does not match the comment.
->>>
->>> Fix the comments for GPIOs used for chip selects.
->>>
->>> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>
->> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> Grant, Rob,
->>
->> Please let me know if you prefer to have it go through arm-soc tree
->> than spi or dt tree.
->
-> Can this be applied?
+Isn't this ---------------------------------^^^^^^^^^^ defined somewhere?
+
+This is done about 1/4 of the time (56 / 187) in the kernel.  But
+honestly, I'd prefer it to be named.
+
+Other than that,
+
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+
+> +	{},
+> +};
+> +
+>  static void __init kirkwood_dt_init(void)
+>  {
+>  	pr_info("Kirkwood: %s, TCLK=%d.\n", kirkwood_id(), kirkwood_tclk);
+> @@ -69,7 +74,8 @@ static void __init kirkwood_dt_init(void)
+>  	if (of_machine_is_compatible("raidsonic,ib-nas62x0"))
+>  		ib62x0_init();
+>  
+> -	of_platform_populate(NULL, kirkwood_dt_match_table, NULL, NULL);
+> +	of_platform_populate(NULL, kirkwood_dt_match_table,
+> +			     kirkwood_auxdata_lookup, NULL);
+>  }
+>  
+>  static const char *kirkwood_dt_board_compat[] = {
+> -- 
+> 1.7.10
+> 
