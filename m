@@ -1,83 +1,46 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 4/9] spi-orion: add device tree binding
-Date: Sun, 10 Jun 2012 12:51:02 -0400
-Message-ID: <20120610165102.GV14756@titan.lakedaemon.net>
-References: <1339324322-29388-5-git-send-email-andrew@lunn.ch>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt: fsl-imx-cspi.txt: Fix comment about GPIOs used for
+ chip selects
+Date: Sun, 10 Jun 2012 13:54:00 -0300
+Message-ID: <CAOMZO5AGBJXmLhuX4tGXR6Fp2WaU74B-BR2VYUFe0ODV9pdONA@mail.gmail.com>
+References: <1335028873-3395-1-git-send-email-festevam@gmail.com>
+ <CAAQ0ZWTsdrYQ28=K=acnP=HT3+1DuTa-X8q0NM66xcvSP21hgw@mail.gmail.com>
+ <CAOMZO5B9sX0VuE=Oz3DE4esRHMk9NXpA05pzFb5cxYm=8+qWcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1339324322-29388-5-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOMZO5B9sX0VuE=Oz3DE4esRHMk9NXpA05pzFb5cxYm=8+qWcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 10, 2012 at 12:31:56PM +0200, Andrew Lunn wrote:
-> From: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
-> 
-> Signed-off-by: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Pinging again.
 
-Looks good.
-
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-
-> ---
->  Documentation/devicetree/bindings/spi/spi-orion.txt |    5 +++++
->  drivers/spi/spi-orion.c                             |    9 +++++++++
->  2 files changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-orion.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-orion.txt b/Documentation/devicetree/bindings/spi/spi-orion.txt
-> new file mode 100644
-> index 0000000..e68597a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-orion.txt
-> @@ -0,0 +1,5 @@
-> +Marvell Orion SPI device
-> +
-> +Required properties:
-> +- compatible : should be "marvell,orion-spi".
-> +- reg : offset and length of the register set for the device
-> diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-> index 8c3d625..b16db3d 100644
-> --- a/drivers/spi/spi-orion.c
-> +++ b/drivers/spi/spi-orion.c
-> @@ -17,6 +17,7 @@
->  #include <linux/io.h>
->  #include <linux/spi/spi.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/clk.h>
->  #include <asm/unaligned.h>
->  
-> @@ -429,6 +430,7 @@ static int __init orion_spi_probe(struct platform_device *pdev)
->  	if (orion_spi_reset(spi) < 0)
->  		goto out_rel_mem;
->  
-> +	master->dev.of_node = pdev->dev.of_node;
->  	status = spi_register_master(master);
->  	if (status < 0)
->  		goto out_rel_mem;
-> @@ -468,10 +470,17 @@ static int __exit orion_spi_remove(struct platform_device *pdev)
->  
->  MODULE_ALIAS("platform:" DRIVER_NAME);
->  
-> +static const struct of_device_id orion_spi_of_match_table[] __devinitdata = {
-> +	{ .compatible = "marvell,orion-spi", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, orion_spi_of_match_table);
-> +
->  static struct platform_driver orion_spi_driver = {
->  	.driver = {
->  		.name	= DRIVER_NAME,
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(orion_spi_of_match_table),
->  	},
->  	.remove		= __exit_p(orion_spi_remove),
->  };
-> -- 
-> 1.7.10
-> 
+On Mon, May 21, 2012 at 12:27 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sun, Apr 22, 2012 at 10:32 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 22 April 2012 01:21, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> The gpio numbers does not match the comment.
+>>>
+>>> Fix the comments for GPIOs used for chip selects.
+>>>
+>>> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>
+>> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Grant, Rob,
+>>
+>> Please let me know if you prefer to have it go through arm-soc tree
+>> than spi or dt tree.
+>
+> Can this be applied?
