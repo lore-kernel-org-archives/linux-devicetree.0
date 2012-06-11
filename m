@@ -1,73 +1,66 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Configure standalone GPIO in device tree?
-Date: Mon, 11 Jun 2012 10:46:41 -0500
-Message-ID: <4FD612E1.6070107@gmail.com>
-References: <4FD5F8F7.1020901@grid-net.com> <4FD5FEEF.70606@gmail.com>
- <4FD610D2.5020603@grid-net.com>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: Re: Overriding/concatenating kernel command-line with bootargs from
+ dtb?
+Date: Mon, 11 Jun 2012 19:51:30 +0200
+Message-ID: <1424241.AIpjaKT9XL@bender>
+References: <2050174.dvvKJHKP0J@flexo> <4FD601F9.8020201@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FD610D2.5020603-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4FD601F9.8020201@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2012 10:37 AM, Subodh Nijsure wrote:
-> On 06/11/2012 07:21 AM, Rob Herring wrote:
->> On 06/11/2012 08:56 AM, Subodh Nijsure wrote:
->>> Hello,
->>>
->>> I am working with a hardware that has couple of GPIOs that are not tied
->>> to any specific device one to indicate board status, other to indicate
->>> presence of this hardware to some other 'independent' hardware.
->>>
->>> I have been going through some of the device tree files and I haven't
->>> come across way to represent a GPIO independent of a specific device, is
->>> it possible to do so using DT? How would I specify such a GPIO?
->>>
->>> I am working on MX28 (MXS for linux) based platform but if there are
->>> some other platforms already doing that would appreciate pointer to that
->>> dt file.
->> How do you program that gpio line? It has to be controlled from
->> somewhere.
-> In non-dt version, .init_machine code used to configure GPIO using
-> gpio_request_one() interface and set the values.
-> 
-> Currently as a hack on my board, I am doing the following, but that
-> status led has nothing do with the ethernet driver.
-> 
->                 mac0: ethernet@800f0000 {
->                         phy-mode = "rmii";
->                         pinctrl-names = "default";
->                         pinctrl-0 = <&mac0_pins_a>;
->                         status-led = <&gpio3 5 0>;
->                         mac-address = [ 00 11 22 33 44 56 ];
->                 };
-> 
->                 int status_led;
->                 struct device_node *np = pdev->dev.of_node;
-> 
->                 status_led = of_get_named_gpio(np, "status-led", 0);
->                 gpio_request_one(status_led, GPIOF_OUT_INIT_LOW,
-> "status-led");
-> 
-> So in DT world I would like to  lookup  LED named status-led, only
-> version I know of of_get_named_gpio() requires device_node pointer,so I
-> guess I am looking for way to lookup gpio in .init_machine function,
-> without having a pointer to a device_node, is that possible?
+Hi Rob,
 
-Look at gpio-led. There are some examples in PowerPC dts files and
-documentation in Documentation/devicetree/bindings/gpio/led.txt.
+On Monday 11 June 2012 09:34:33 Rob Herring wrote:
+> On 06/08/2012 02:55 AM, Florian Fainelli wrote:
+> > Hi all,
+> > 
+> > I have a specific use case, where two boards using the same SoC have 
+different 
+> > UART speeds, which is something that I have specified in their 
+corresponding 
+> > dts files. In order to make sure people don't mess up the configuration, I 
+> > prefer not to rely on the bootloader-supplied kernel-command line.
+> > 
+> > I was kind of expecting that ARM_ATAG_DTB_COMPAT + CMDLINE_EXTEND would 
+> > actually concatenate the kernel command-line with the bootargs provided 
+from 
+> > dtb.
+> > 
+> > Is this something someone else would need? If so, shall we just make that 
+> > happen when the two config symbols mentionned above are enabled, or shall 
+we 
+> > introduce a 4th kernel command line handling strategy?
+> > 
+> > Thank you for your answers.
+> 
+> There was a patch to do this:
+> 
+> http://www.mail-archive.com/devicetree-
+discuss@lists.ozlabs.org/msg10448.html
+> 
+> Please comment if this works for you.
 
-Rob
+This patch indeeds work fine for me when I disable ARM_ATAG_DTB_COMPAT. If I 
+let it turned on the chosen node is correctly scanned, but its value, is the 
+one coming from tag_cmdline() which is actually the bootloader supplied 
+commad-line. I will cook up a patch for this, because I expect the 3 command-
+lines to be concatened in the end (built-in, atag and dtb).
+
+I don't see any comments from Ben or anyone after Doug sent his version 2 of 
+the patch, is there any reason not to merge it?
+-- 
+Florian
