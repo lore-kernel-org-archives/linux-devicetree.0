@@ -1,84 +1,67 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
-Date: Mon, 11 Jun 2012 10:33:05 -0500
-Message-ID: <4FD60FB1.7050106@gmail.com>
-References: <1339148585-16947-1-git-send-email-B38951@freescale.com>
+From: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
+Subject: Re: Configure standalone GPIO in device tree?
+Date: Mon, 11 Jun 2012 08:37:54 -0700
+Message-ID: <4FD610D2.5020603@grid-net.com>
+References: <4FD5F8F7.1020901@grid-net.com> <4FD5FEEF.70606@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1339148585-16947-1-git-send-email-B38951@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jia Hongtao <B38951@freescale.com>
-Cc: devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg KH <greg@kroah.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FD5FEEF.70606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[adding lkml and Greg KH]
+On 06/11/2012 07:21 AM, Rob Herring wrote:
+> On 06/11/2012 08:56 AM, Subodh Nijsure wrote:
+>> Hello,
+>>
+>> I am working with a hardware that has couple of GPIOs that are not tied
+>> to any specific device one to indicate board status, other to indicate
+>> presence of this hardware to some other 'independent' hardware.
+>>
+>> I have been going through some of the device tree files and I haven't
+>> come across way to represent a GPIO independent of a specific device, is
+>> it possible to do so using DT? How would I specify such a GPIO?
+>>
+>> I am working on MX28 (MXS for linux) based platform but if there are
+>> some other platforms already doing that would appreciate pointer to that
+>> dt file.
+> How do you program that gpio line? It has to be controlled from somewhere.
+In non-dt version, .init_machine code used to configure GPIO using 
+gpio_request_one() interface and set the values.
 
-On 06/08/2012 04:43 AM, Jia Hongtao wrote:
-> We changed the pcie controller driver to platform driver so that the PCI
-> of platform devices need to be created earlier in the arch_initcall stage
-> according to the original timing of calling fsl_add_bridge(). So we do PCI
-> probing separately from other devices. But probing more than once could
-> cause duplication warning. We add check if the devices have already probed
-> before probing any devices to avoid duplication warning.
-> 
-> Signed-off-by: Jia Hongtao <B38951@freescale.com>
-> Signed-off-by: Li Yang <leoli@freescale.com>
-> ---
+Currently as a hack on my board, I am doing the following, but that 
+status led has nothing do with the ethernet driver.
 
-Where's v1 and v2 history?
+                 mac0: ethernet@800f0000 {
+                         phy-mode = "rmii";
+                         pinctrl-names = "default";
+                         pinctrl-0 = <&mac0_pins_a>;
+                         status-led = <&gpio3 5 0>;
+                         mac-address = [ 00 11 22 33 44 56 ];
+                 };
 
->  drivers/of/platform.c |   18 ++++++++++++------
->  1 files changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index a37330e..3aab01f 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -139,6 +139,18 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  	if (!dev)
->  		return NULL;
->  
-> +	dev->dev.of_node = of_node_get(np);
-> +	if (bus_id)
-> +		dev_set_name(&dev->dev, "%s", bus_id);
-> +	else
-> +		of_device_make_bus_id(&dev->dev);
-> +
-> +	if (kset_find_obj(dev->dev.kobj.kset, kobject_name(&dev->dev.kobj))) {
+                 int status_led;
+                 struct device_node *np = pdev->dev.of_node;
 
-Is this a fast operation? I worry that we'd be doing this for every
-device creation. Looking at kobj's seems too low level as well.
+                 status_led = of_get_named_gpio(np, "status-led", 0);
+                 gpio_request_one(status_led, GPIOF_OUT_INIT_LOW, 
+"status-led");
 
-Perhaps moving the warning up the call stack and making the relevant
-functions __must_check would work.
+So in DT world I would like to  lookup  LED named status-led, only 
+version I know of of_get_named_gpio() requires device_node pointer,so I 
+guess I am looking for way to lookup gpio in .init_machine function, 
+without having a pointer to a device_node, is that possible?
 
-Rob
-
-> +		kfree(dev);
-> +		of_node_put(np);
-> +		return NULL;
-> +	}
-> +
->  	/* count the io and irq resources */
->  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
->  		num_reg++;
-> @@ -161,17 +173,11 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
->  	}
->  
-> -	dev->dev.of_node = of_node_get(np);
->  #if defined(CONFIG_MICROBLAZE)
->  	dev->dev.dma_mask = &dev->archdata.dma_mask;
->  #endif
->  	dev->dev.parent = parent;
->  
-> -	if (bus_id)
-> -		dev_set_name(&dev->dev, "%s", bus_id);
-> -	else
-> -		of_device_make_bus_id(&dev->dev);
-> -
->  	return dev;
->  }
->  EXPORT_SYMBOL(of_device_alloc);
+-Subodh
