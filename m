@@ -1,32 +1,58 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/4] dt: fsl-imx-esdhc.txt: Fix gpio number assignment
-Date: Mon, 11 Jun 2012 07:22:06 -0300
-Message-ID: <CAOMZO5ARs6wFn+HVF97GM=WkEY91+17fn3mPTcPeKX5UPjO2ZQ@mail.gmail.com>
-References: <1339349050-3105-1-git-send-email-festevam@gmail.com>
-	<4FD529B0.6010401@gmail.com>
-	<CAOMZO5A-QUA_i0HOWm-dZq6pbcFPMyuQbX+1N3hr7NVbRhjxVw@mail.gmail.com>
-	<4FD56FE1.3000800@gmail.com>
-	<20120611065011.GN30400@pengutronix.de>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH] devicetree: bindings: gpio-i2c belongs to i2c not gpio
+Date: Mon, 11 Jun 2012 14:26:48 +0200
+Message-ID: <20120611122648.GA4407@pengutronix.de>
+References: <1334934487-19201-1-git-send-email-w.sang@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120611065011.GN30400@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <1334934487-19201-1-git-send-email-w.sang@pengutronix.de>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Rob Herring <robherring2@gmail.com>, grant.likely@secretlab.ca, Fabio Estevam <fabio.estevam@freescale.com>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kernel@pengutronix.de
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
 
-On Mon, Jun 11, 2012 at 3:50 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Traditionally I started counting at 0 no matter what the datasheet told.
-> Now we go to match the numbering with the datasheets, which of course
-> can be confusing while transitioning this.
-> Fabios patch is correct, there is no gpio0 in the devicetree.
+On Fri, Apr 20, 2012 at 05:08:02PM +0200, Wolfram Sang wrote:
+> gpio-i2c describes an I2C controller (using gpios for data and clock),
+> so it must be described in i2c, not gpio.
+>=20
+> Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
+> ---
+>  .../{gpio/gpio_i2c.txt =3D> i2c/gpio-i2c.txt}        |    0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/{gpio/gpio_i2c.txt =3D> i2c/gpi=
+o-i2c.txt} (100%)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio_i2c.txt b/Docume=
+ntation/devicetree/bindings/i2c/gpio-i2c.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> rename to Documentation/devicetree/bindings/i2c/gpio-i2c.txt
 
-Who could pick this patch series?
+Any objections to me taking the patch via the i2c-tree?
 
-Thanks,
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
-Fabio Estevam
+--/04w6evG8XlLl3ft
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk/V5AgACgkQD27XaX1/VRuoogCgi/B2vC6FsJqwSQGjIz8DWlAW
+BvcAoIosuyoU9b+vrdzbHtLvQBufJUmg
+=5MXs
+-----END PGP SIGNATURE-----
+
+--/04w6evG8XlLl3ft--
