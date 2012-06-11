@@ -1,36 +1,127 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] devicetree: bindings: gpio-i2c belongs to i2c not gpio
-Date: Mon, 11 Jun 2012 07:31:52 -0500
-Message-ID: <4FD5E538.4050601@gmail.com>
-References: <1334934487-19201-1-git-send-email-w.sang@pengutronix.de> <20120611122648.GA4407@pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: Kirkwood: Add interrupt controller support for
+ DT boards
+Date: Mon, 11 Jun 2012 07:49:17 -0500
+Message-ID: <4FD5E94D.1010700@gmail.com>
+References: <1339324322-29388-2-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120611122648.GA4407@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@xenotime.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1339324322-29388-2-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2012 07:26 AM, Wolfram Sang wrote:
-> On Fri, Apr 20, 2012 at 05:08:02PM +0200, Wolfram Sang wrote:
->> gpio-i2c describes an I2C controller (using gpios for data and clock),
->> so it must be described in i2c, not gpio.
->>
->> Signed-off-by: Wolfram Sang <w.sang@pengutronix.de>
->> ---
->>  .../{gpio/gpio_i2c.txt => i2c/gpio-i2c.txt}        |    0
->>  1 file changed, 0 insertions(+), 0 deletions(-)
->>  rename Documentation/devicetree/bindings/{gpio/gpio_i2c.txt => i2c/gpio-i2c.txt} (100%)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio_i2c.txt b/Documentation/devicetree/bindings/i2c/gpio-i2c.txt
->> similarity index 100%
->> rename from Documentation/devicetree/bindings/gpio/gpio_i2c.txt
->> rename to Documentation/devicetree/bindings/i2c/gpio-i2c.txt
+On 06/10/2012 05:31 AM, Andrew Lunn wrote:
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/mrvl/intc.txt          |   20 ++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood.dtsi                    |    9 ++++++++
+>  arch/arm/mach-kirkwood/board-dt.c                  |   22 +++++++++++++++++++-
+>  3 files changed, 50 insertions(+), 1 deletion(-)
 > 
-> Any objections to me taking the patch via the i2c-tree?
+> diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> index 80b9a94..612536e 100644
+> --- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> +++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> @@ -38,3 +38,23 @@ Example:
+>  		reg-names = "mux status", "mux mask";
+>  		mrvl,intc-nr-irqs = <2>;
+>  	};
+> +
+> +* Marvell Orion Interrupt controller
+> +
+> +Required properties
+> +- compatible :  Should be "marvell,orion-intc"
+> +- #interrupt-cells: Specifies the number of cells needed to encode an
+> +  interrupt source. Supported value is <1>
+> +- interrupt-controller : So that its clear its an interrupt controller.
+> +Optional properties
+> +- reg : Not used yet, but will contain the interrupt mask address
+> +
+> +Example:
+> +
+> +	intc: interrupt-controller {
+> +        	compatible = "marvell,orion-intc", "marvell,intc";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +                reg = <0xfed20204 0x04>,
+> +		      <0xfed20214 0x04>;
+> +        };
+> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> index 926528b..8eab7c4 100644
+> --- a/arch/arm/boot/dts/kirkwood.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> @@ -2,6 +2,15 @@
+>  
+>  / {
+>  	compatible = "mrvl,kirkwood";
+> +	interrupt-parent = <&intc>;
+> +
+> +	intc: interrupt-controller {
+> +        	compatible = "marvell,orion-intc", "marvell,intc";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +                reg = <0xfed20204 0x04>,
+> +		      <0xfed20214 0x04>;
+> +        };
+>  
+>  	ocp@f1000000 {
+>  		compatible = "simple-bus";
+> diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+> index edc3f8a..fa51586 100644
+> --- a/arch/arm/mach-kirkwood/board-dt.c
+> +++ b/arch/arm/mach-kirkwood/board-dt.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/init.h>
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/kexec.h>
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach/map.h>
+> @@ -80,11 +81,30 @@ static const char *kirkwood_dt_board_compat[] = {
+>  	NULL
+>  };
+>  
+> +static int __init kirkwood_add_irq_domain(struct device_node *np,
+> +					  struct device_node *interrupt_parent)
+> +{
+> +	kirkwood_init_irq();
+> +	irq_domain_add_legacy(np, 64, 0, 0, &irq_domain_simple_ops, NULL);
 
-That's fine.
+The irqdomain should really be integrated into the interrupt controller
+itself rather than bolted on top and doesn't need to be DT only. In the
+process, use irq_data.hwirq rather than fixed Linux virq to hwirq
+conversion.
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+Once all interrupts are bound using DT, a linear domain should be used.
+But that may take some time.
+
+Rob
+
+> +	return 0;
+> +}rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+> +
+> +static const struct of_device_id kirkwood_irq_match[] = {
+> +	{ .compatible = "marvell,orion-intc",
+> +	  .data = kirkwood_add_irq_domain, },
+> +	{},
+> +};
+> +
+> +static void __init kirkwood_dt_init_irq(void)
+> +{
+> +	of_irq_init(kirkwood_irq_match);
+> +}
+> +
+>  DT_MACHINE_START(KIRKWOOD_DT, "Marvell Kirkwood (Flattened Device Tree)")
+>  	/* Maintainer: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> */
+>  	.map_io		= kirkwood_map_io,
+>  	.init_early	= kirkwood_init_early,
+> -	.init_irq	= kirkwood_init_irq,
+> +	.init_irq	= kirkwood_dt_init_irq,
+>  	.timer		= &kirkwood_timer,
+>  	.init_machine	= kirkwood_dt_init,
+>  	.restart	= kirkwood_restart,
