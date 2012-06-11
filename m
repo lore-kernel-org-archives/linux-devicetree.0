@@ -1,37 +1,55 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2] MXS: Add DT binding support into stmp3xxx-rtc
-Date: Mon, 11 Jun 2012 11:53:59 +0800
-Message-ID: <20120611035357.GC2344@S2101-09.ap.freescale.net>
-References: <1339181804-22822-1-git-send-email-marex@denx.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/4] dt: fsl-imx-esdhc.txt: Fix gpio number assignment
+Date: Sun, 10 Jun 2012 23:11:13 -0500
+Message-ID: <4FD56FE1.3000800@gmail.com>
+References: <1339349050-3105-1-git-send-email-festevam@gmail.com> <4FD529B0.6010401@gmail.com> <CAOMZO5A-QUA_i0HOWm-dZq6pbcFPMyuQbX+1N3hr7NVbRhjxVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1339181804-22822-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5A-QUA_i0HOWm-dZq6pbcFPMyuQbX+1N3hr7NVbRhjxVw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: grant.likely@secretlab.ca, Fabio Estevam <fabio.estevam@freescale.com>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 08, 2012 at 08:56:44PM +0200, Marek Vasut wrote:
-> Add simple binding for the stmp3xxx-rtc.
+On 06/10/2012 09:03 PM, Fabio Estevam wrote:
+> On Sun, Jun 10, 2012 at 8:11 PM, Rob Herring <robherring2@gmail.com> wrote:
+>> On 06/10/2012 12:24 PM, Fabio Estevam wrote:
+>>> From: Fabio Estevam <fabio.estevam@freescale.com>
+>>>
+>>> Fix gpio number assignment, so that it can match the number stated in the comment.
+>>>
+>>> Cc:
+>>> Signed-off-by: Fabio Estevam <fabio.estevam@freescale.com>
+>>> ---
+>>>  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |    4 ++--
+>>>  1 files changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+>>> index c7e404b..fea541e 100644
+>>> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+>>> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+>>> @@ -29,6 +29,6 @@ esdhc@70008000 {
+>>>       compatible = "fsl,imx51-esdhc";
+>>>       reg = <0x70008000 0x4000>;
+>>>       interrupts = <2>;
+>>> -     cd-gpios = <&gpio0 6 0>; /* GPIO1_6 */
+>>> -     wp-gpios = <&gpio0 5 0>; /* GPIO1_5 */
+>>> +     cd-gpios = <&gpio1 6 0>; /* GPIO1_6 */
+>>> +     wp-gpios = <&gpio1 5 0>; /* GPIO1_5 */
+>>
+>> Are you sure all these aren't just DT is 0 based and the chip is 1 based
+>> numbering?
 > 
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> We start counting gpio number from 0 in i.mx, so the DT number and the
+> GPIO number should match.
 
-Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I'm talking about bank numbers, not gpio numbers:
+
+/* There's a off-by-one betweem the gpio bank number and the gpiochip */
+/* range e.g. GPIO_1_5 is gpio 5 under linux */
+#define IMX_GPIO_NR(bank, nr)		(((bank) - 1) * 32 + (nr))
+
+
+Rob
