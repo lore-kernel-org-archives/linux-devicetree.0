@@ -1,50 +1,56 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Overriding/concatenating kernel command-line with bootargs from
- dtb?
-Date: Mon, 11 Jun 2012 09:34:33 -0500
-Message-ID: <4FD601F9.8020201@gmail.com>
-References: <2050174.dvvKJHKP0J@flexo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <2050174.dvvKJHKP0J@flexo>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH v2 03/10] ARM: pci: Allow passing per-controller private data
+Date: Mon, 11 Jun 2012 17:05:11 +0200
+Message-ID: <1339427118-32263-4-git-send-email-thierry.reding@avionic-design.de>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1339427118-32263-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2012 02:55 AM, Florian Fainelli wrote:
-> Hi all,
-> 
-> I have a specific use case, where two boards using the same SoC have different 
-> UART speeds, which is something that I have specified in their corresponding 
-> dts files. In order to make sure people don't mess up the configuration, I 
-> prefer not to rely on the bootloader-supplied kernel-command line.
-> 
-> I was kind of expecting that ARM_ATAG_DTB_COMPAT + CMDLINE_EXTEND would 
-> actually concatenate the kernel command-line with the bootargs provided from 
-> dtb.
-> 
-> Is this something someone else would need? If so, shall we just make that 
-> happen when the two config symbols mentionned above are enabled, or shall we 
-> introduce a 4th kernel command line handling strategy?
-> 
-> Thank you for your answers.
+In order to allow drivers to specify private data for each controller,
+this commit adds a private_data field to the struct hw_pci. This field
+is an array of nr_controllers pointers that will be used to initialize
+the private_data field of the corresponding controller's pci_sys_data
+structure.
 
-There was a patch to do this:
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 
-http://www.mail-archive.com/devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg10448.html
+---
+Changes in v2:
+- new patch
+---
+ arch/arm/include/asm/mach/pci.h |    1 +
+ arch/arm/kernel/bios32.c        |    3 +++
+ 2 files changed, 4 insertions(+)
 
-Please comment if this works for you.
-
-Rob
+diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/mach/pci.h
+index 26c511f..736cb8d 100644
+--- a/arch/arm/include/asm/mach/pci.h
++++ b/arch/arm/include/asm/mach/pci.h
+@@ -21,6 +21,7 @@ struct hw_pci {
+ #endif
+ 	struct pci_ops	*ops;
+ 	int		nr_controllers;
++	void		**private_data;
+ 	int		(*setup)(int nr, struct pci_sys_data *);
+ 	struct pci_bus *(*scan)(int nr, struct pci_sys_data *);
+ 	void		(*preinit)(void);
+diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+index c9d28dd..04858c6 100644
+--- a/arch/arm/kernel/bios32.c
++++ b/arch/arm/kernel/bios32.c
+@@ -442,6 +442,9 @@ static void __devinit pcibios_init_hw(struct hw_pci *hw, struct list_head *head)
+ 		sys->map_irq = hw->map_irq;
+ 		INIT_LIST_HEAD(&sys->resources);
+ 
++		if (hw->private_data)
++			sys->private_data = hw->private_data[nr];
++
+ 		ret = hw->setup(nr, sys);
+ 
+ 		if (ret > 0) {
+-- 
+1.7.10.4
