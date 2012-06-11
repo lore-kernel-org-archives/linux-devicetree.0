@@ -1,87 +1,84 @@
-From: Mauro Carvalho Chehab <mchehab@redhat.com>
-Subject: Re: [PATCH 1/2] edac: add support for Calxeda highbank memory controller
-Date: Mon, 11 Jun 2012 12:25:20 -0300
-Message-ID: <4FD60DE0.2010907@redhat.com>
-References: <1339020125-20198-1-git-send-email-robherring2@gmail.com> <1339020125-20198-2-git-send-email-robherring2@gmail.com> <4FCFDB12.3090403@redhat.com> <4FD15193.8080800@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+Date: Mon, 11 Jun 2012 10:33:05 -0500
+Message-ID: <4FD60FB1.7050106@gmail.com>
+References: <1339148585-16947-1-git-send-email-B38951@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FD15193.8080800@gmail.com>
+In-Reply-To: <1339148585-16947-1-git-send-email-B38951@freescale.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Doug Thompson <dougthompson@xmission.com>, Rob Herring <rob.herring@calxeda.com>
+To: Jia Hongtao <B38951@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg KH <greg@kroah.com>
 List-Id: devicetree@vger.kernel.org
 
-Em 07-06-2012 22:12, Rob Herring escreveu:
-> Mauro,
-> 
-> On 06/06/2012 05:34 PM, Mauro Carvalho Chehab wrote:
->> Hi Rob,
->>
->> Em 06-06-2012 19:02, Rob Herring escreveu:
->>> From: Rob Herring <rob.herring@calxeda.com>
->>>
->>> Add support for memory controller on Calxeda Highbank platforms. Highbank
->>> platforms support a single 4GB mini-DIMM with 1-bit correction and 2-bit
->>> detection.
->>>
->>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
->>> ---
->>>   .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
->>>   arch/arm/boot/dts/highbank.dts                     |    6 +
->>>   drivers/edac/Kconfig                               |    9 +-
->>>   drivers/edac/Makefile                              |    2 +
->>>   drivers/edac/highbank_mc_edac.c                    |  238 ++++++++++++++++++++
->>>   5 files changed, 271 insertions(+), 1 deletion(-)
->>>   create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
->>>   create mode 100644 drivers/edac/highbank_mc_edac.c
-> 
-> [snip]
-> 
->>> +
->>> +static struct mcidev_sysfs_attribute highbank_mc_sysfs_attributes[] = {
->>> +	{
->>> +	 .attr = {
->>> +		  .name = "inject_ctrl",
->>> +		  .mode = (S_IRUGO | S_IWUSR)
->>> +		  },
->>> +	 .store = highbank_mc_inject_ctrl_store,
->>> +	},
->>> +	{
->>> +	 .attr = {.name = NULL} /* End of list */
->>> +	}
->>> +};
->>
->> This won't work after the kobj->struct device conversion patches that are at
->> -next tree, as this struct will not exist anymore.
->>
->> Also, as this is for error injection, the better is to use debugfs.
->>
->> It shouldn't be hard to change it to use debugfs. If you want an example, you
->> can take a look on this patch:
->>
->> 	http://git.kernel.org/?p=linux/kernel/git/mchehab/linux-edac.git;a=commitdiff;h=303f3e2113d81d49feef9c0803c2958d41513f14
->>
-> 
-> I've got this working, but don't really like the resulting debugfs
-> layout. I end-up with something like this (using dev_name() of platform
-> driver):
-> 
-> /mc0/fake*
-> /fff00000.memory-controller/inject_ctrl
+[adding lkml and Greg KH]
 
-Yeah, that looks weird.
+On 06/08/2012 04:43 AM, Jia Hongtao wrote:
+> We changed the pcie controller driver to platform driver so that the PCI
+> of platform devices need to be created earlier in the arch_initcall stage
+> according to the original timing of calling fsl_add_bridge(). So we do PCI
+> probing separately from other devices. But probing more than once could
+> cause duplication warning. We add check if the devices have already probed
+> before probing any devices to avoid duplication warning.
 > 
-> It would be nice if there was a top level edac directory and any entries
-> I add are added under mcX. I can do that for the next version if that's
-> okay.
+> Signed-off-by: Jia Hongtao <B38951@freescale.com>
+> Signed-off-by: Li Yang <leoli@freescale.com>
+> ---
 
-Yeah, that sounds the right thing to do, e. g. having the error injection
-code under <debugfs>/edac/mc[0-9]+/.
+Where's v1 and v2 history?
 
-Regards,
-Mauro.
+>  drivers/of/platform.c |   18 ++++++++++++------
+>  1 files changed, 12 insertions(+), 6 deletions(-)
 > 
-> Rob
-> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index a37330e..3aab01f 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -139,6 +139,18 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>  	if (!dev)
+>  		return NULL;
+>  
+> +	dev->dev.of_node = of_node_get(np);
+> +	if (bus_id)
+> +		dev_set_name(&dev->dev, "%s", bus_id);
+> +	else
+> +		of_device_make_bus_id(&dev->dev);
+> +
+> +	if (kset_find_obj(dev->dev.kobj.kset, kobject_name(&dev->dev.kobj))) {
+
+Is this a fast operation? I worry that we'd be doing this for every
+device creation. Looking at kobj's seems too low level as well.
+
+Perhaps moving the warning up the call stack and making the relevant
+functions __must_check would work.
+
+Rob
+
+> +		kfree(dev);
+> +		of_node_put(np);
+> +		return NULL;
+> +	}
+> +
+>  	/* count the io and irq resources */
+>  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+>  		num_reg++;
+> @@ -161,17 +173,11 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+>  	}
+>  
+> -	dev->dev.of_node = of_node_get(np);
+>  #if defined(CONFIG_MICROBLAZE)
+>  	dev->dev.dma_mask = &dev->archdata.dma_mask;
+>  #endif
+>  	dev->dev.parent = parent;
+>  
+> -	if (bus_id)
+> -		dev_set_name(&dev->dev, "%s", bus_id);
+> -	else
+> -		of_device_make_bus_id(&dev->dev);
+> -
+>  	return dev;
+>  }
+>  EXPORT_SYMBOL(of_device_alloc);
