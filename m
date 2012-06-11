@@ -1,79 +1,54 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: [PATCH v2 10/10] ARM: tegra: trimslice: Initialize PCIe from DT
-Date: Mon, 11 Jun 2012 17:05:18 +0200
-Message-ID: <1339427118-32263-11-git-send-email-thierry.reding@avionic-design.de>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-tegra@vger.kernel.org
-Cc: Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>
+From: Mauro Carvalho Chehab <mchehab@redhat.com>
+Subject: Re: [PATCH 1/2] edac: add support for Calxeda highbank memory controller
+Date: Mon, 11 Jun 2012 12:22:10 -0300
+Message-ID: <4FD60D22.5030107@redhat.com>
+References: <1339020125-20198-1-git-send-email-robherring2@gmail.com> <1339020125-20198-2-git-send-email-robherring2@gmail.com> <4FCFDB12.3090403@redhat.com> <4FCFE028.10005@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FCFE028.10005@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-With the device tree support in place, probe the PCIe controller from
-the device tree and remove the corresponding workaround in the board
-file.
+Em 06-06-2012 19:56, Rob Herring escreveu:
+> Mauro,
+> 
+> On 06/06/2012 05:34 PM, Mauro Carvalho Chehab wrote:
+>> Hi Rob,
+>>
+>> Em 06-06-2012 19:02, Rob Herring escreveu:
+>>> From: Rob Herring <rob.herring@calxeda.com>
+>>>
+>>> Add support for memory controller on Calxeda Highbank platforms. Highbank
+>>> platforms support a single 4GB mini-DIMM with 1-bit correction and 2-bit
+>>> detection.
+>>>
+> 
+> [snip]
+> 
+>>> +
+>>> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+>>> +	layers[0].size = 1;
+>>> +	layers[0].is_virt_csrow = true;
+>>> +	layers[1].type = EDAC_MC_LAYER_CHANNEL;
+>>> +	layers[1].size = 1;
+>>> +	layers[1].is_virt_csrow = false;
+>>> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+>>> +			    sizeof(struct hb_mc_drvdata));
+>>
+>> Hmm... I suspect that memories by DIMM chip select/channel at Calxeda,
+>> as it is using just 1 cs/channel. It probably makes more sense to add new layer
+>> type(s) to properly represent the way your memory controller addresses it, if
+>> Calxeda doesn't work with DIMMs.
+> 
+> Not sure I follow. DIMMs are supported, but only a newer JEDEC form
+> factor (DDR3 72-bit mini DIMM). The h/w pretty much fixed to a single
+> 4GB DIMM. The controller is 1 72-bit channel.
 
-Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+OK. Then, the mapping is correct.
 
----
-Changes in v2:
-- new patch
----
- arch/arm/boot/dts/tegra-trimslice.dts  |    4 ++++
- arch/arm/mach-tegra/board-dt-tegra20.c |   18 ------------------
- 2 files changed, 4 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra-trimslice.dts b/arch/arm/boot/dts/tegra-trimslice.dts
-index 9de5636..fc48f371 100644
---- a/arch/arm/boot/dts/tegra-trimslice.dts
-+++ b/arch/arm/boot/dts/tegra-trimslice.dts
-@@ -274,6 +274,10 @@
- 		};
- 	};
- 
-+	pci {
-+		status = "okay";
-+	};
-+
- 	usb@c5000000 {
- 		status = "okay";
- 	};
-diff --git a/arch/arm/mach-tegra/board-dt-tegra20.c b/arch/arm/mach-tegra/board-dt-tegra20.c
-index c7b6ae2..3a8b825 100644
---- a/arch/arm/mach-tegra/board-dt-tegra20.c
-+++ b/arch/arm/mach-tegra/board-dt-tegra20.c
-@@ -116,21 +116,6 @@ static void __init tegra_dt_init(void)
- 				tegra20_auxdata_lookup, NULL);
- }
- 
--#ifdef CONFIG_MACH_TRIMSLICE
--static struct tegra_pcie_pdata trimslice_pcie_pdata = {
--	.enable_ports = {
--		[0] = true,
--		[1] = true,
--	},
--};
--
--static void __init trimslice_init(void)
--{
--	tegra_pcie_device.dev.platform_data = &trimslice_pcie_pdata;
--	platform_device_register(&tegra_pcie_device);
--}
--#endif
--
- #ifdef CONFIG_MACH_PAZ00
- static void __init paz00_init(void)
- {
-@@ -142,9 +127,6 @@ static struct {
- 	char *machine;
- 	void (*init)(void);
- } board_init_funcs[] = {
--#ifdef CONFIG_MACH_TRIMSLICE
--	{ "compulab,trimslice", trimslice_init },
--#endif
- #ifdef CONFIG_MACH_PAZ00
- 	{ "compal,paz00", paz00_init },
- #endif
--- 
-1.7.10.4
+Regards,
+Mauro
