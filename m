@@ -1,38 +1,173 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V2 1/2] arm/dts: OMAP2: Add support for OMAP2420 SDP
-Date: Tue, 12 Jun 2012 11:32:25 -0500
-Message-ID: <4FD76F19.5030808@ti.com>
-References: <1339107066-10461-1-git-send-email-jon-hunter@ti.com> <1339107066-10461-2-git-send-email-jon-hunter@ti.com> <20120612072025.GG12766@atomide.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Tue, 12 Jun 2012 19:20:41 +0200
+Message-ID: <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
+ <1339427118-32263-8-git-send-email-thierry.reding@avionic-design.de>
+ <4FD66410.7090001@wwwdotorg.org>
+ <20120612062124.GE4040@avionic-0098.adnet.avionic-design.de>
+ <4FD763C5.3090500@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120612072025.GG12766@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4FD763C5.3090500-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 06/12/2012 02:20 AM, Tony Lindgren wrote:
-> * Jon Hunter <jon-hunter@ti.com> [120607 15:15]:
->> Simple DTS file for OMAP2420 SDP adding memory information to allow device-tree
->> testing on an OMAP2420 SDP.
->>
->> Verified that kernel boots with DT using a simple RAMDISK file-system on
->> OMAP2420 SDP.
-> 
-> I suspect this is the H4 board? If so, please rename it to H4 as it shares
-> the "debug board" with H2 and H3 so in theory we may at some point have
-> some common .dtsi for the debug board devices..
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, in fact I believe that 2420 SDP == H4 [1]. We appear to like
-changing and chopping naming conventions at TI ;-)
+* Stephen Warren wrote:
+> On 06/12/2012 12:21 AM, Thierry Reding wrote:
+> > * Stephen Warren wrote:
+> >> On 06/11/2012 09:05 AM, Thierry Reding wrote:
+> >>> This commit adds support for instantiating the Tegra PCIe
+> >>> controller from a device tree.
+> >>=20
+> >>> +++ b/Documentation/devicetree/bindings/pci/tegra-pcie.txt
+> >>=20
+> >> Can we please name this nvidia,tegra20-pcie.txt to match the
+> >> naming of all the other Tegra bindings.
+> >=20
+> > Yes, will do.
+> >=20
+> >>> +Required properties: +- compatible: "nvidia,tegra20-pcie" +-
+> >>> reg: physical base address and length of the controller's
+> >>> registers
+> >>=20
+> >> Since there's more than one range now, that should specify how
+> >> many entries are required and what they represent.
+> >=20
+> > Okay.
+> >=20
+> >>> +Optional properties: +- pex-clk-supply: supply voltage for
+> >>> internal reference clock +- vdd-supply: power supply for
+> >>> controller (1.05V)
+> >>=20
+> >> Those shouldn't be optional. If the board has no regulator, the
+> >> board's .dts should provide a fixed always-on regulator that
+> >> those properties can refer to, so that the driver can always
+> >> get() those regulators.
+> >=20
+> > That'll add more dummy regulators and I don't think sprinkling them
+> > across the DTS is going to work very well. Maybe collecting them
+> > under a top-level "regulators" node is a good option. If you have a
+> > better alternative, I'm all open for it.
+> >=20
+> >>> diff --git a/arch/arm/boot/dts/tegra20.dtsi
+> >>> b/arch/arm/boot/dts/tegra20.dtsi
+> >>=20
+> >>> +	pci {
+> >> ...
+> >>> +		status =3D "disable";
+> >>=20
+> >> That should be "disabled"; sorry for providing a bad example.
+> >=20
+> > Yes.
+> >=20
+> >>> diff --git a/arch/arm/mach-tegra/pcie.c
+> >>> b/arch/arm/mach-tegra/pcie.c
+> >>=20
+> >>> +static struct tegra_pcie_pdata *tegra_pcie_parse_dt(struct
+> >>> platform_device *pdev)
+> >>=20
+> >>> +	if (of_find_property(node, "vdd-supply", NULL)) {
+> >>=20
+> >> As mentioned above, that if statement should be removed, since
+> >> the regulators shouldn't be optional.
+> >=20
+> > Okay.
+> >=20
+> >>> +		pcie->vdd_supply =3D regulator_get(&pdev->dev, "vdd");
+> >>=20
+> >> Those could be devm_regulator_get(). Then tegra_pcie_remove()
+> >> wouldn't have to put() them.
+> >=20
+> > Okay.
+> >=20
+> >>> +	for (i =3D 0; i < TEGRA_PCIE_MAX_PORTS; i++) +
+> >>> pdata->enable_ports[i] =3D true;
+> >>=20
+> >> Shouldn't the DT indicate which ports are used? I assume there's
+> >> some reason that the existing driver allows that to be
+> >> configured, rather than always enabling all ports. At least,
+> >> enumeration time wasted on non-existent ports springs to mind,
+> >> and perhaps attempting to enable port 1 when port 0 is x4 and
+> >> using all the lanes would cause errors in port 0?
+> >=20
+> > Yes, that's been on my mind as well. I'm not sure about the best
+> > binding for this. Perhaps something like:
+> >=20
+> > pci { enable-ports =3D <0 1 2>; };
+> >=20
+> > Would do?
+>=20
+> That seems reasonable, although since the property is presumably
+> something specific to the Tegra PCIe binding, not generic, I think it
+> should be nvidia,enable-ports.
 
-I will update to H4 to be more consistent with the kernel naming.
+I came up with the following alternative:
 
-Cheers
-Jon
+	pci {
+		compatible =3D "nvidia,tegra20-pcie";
+		reg =3D <0x80003000 0x00000800   /* PADS registers */
+		       0x80003800 0x00000200   /* AFI registers */
+		       0x80004000 0x00100000   /* configuration space */
+		       0x80104000 0x00100000   /* extended configuration space */
+		       0x80400000 0x00010000   /* downstream I/O */
+		       0x90000000 0x10000000   /* non-prefetchable memory */
+		       0xa0000000 0x10000000>; /* prefetchable memory */
+		interrupts =3D <0 98 0x04   /* controller interrupt */
+		              0 99 0x04>; /* MSI interrupt */
+		status =3D "disabled";
 
-[1]
-http://www.ti.com/general/docs/wtbu/wtbusplashcontent.tsp?templateId=6123&contentId=4750#omap2
+		ranges =3D <0x80000000 0x80000000 0x00002000   /* 2 root ports */
+			  0x80004000 0x80004000 0x00100000   /* configuration space */
+			  0x80104000 0x80104000 0x00100000   /* extended configuration space */
+			  0x80400000 0x80400000 0x00010000   /* downstream I/O */
+			  0x90000000 0x90000000 0x10000000   /* non-prefetchable memory */
+			  0xa0000000 0xa0000000 0x10000000>; /* prefetchable memory */
+
+		#address-cells =3D <1>;
+		#size-cells =3D <1>;
+
+		port@80000000 {
+			reg =3D <0x80000000 0x00001000>;
+			status =3D "disabled";
+		};
+
+		port@80001000 {
+			reg =3D <0x80001000 0x00001000>;
+			status =3D "disabled";
+		};
+	};
+
+The "ranges" property can probably be cleaned up a bit, but the most
+interesting part is the port@ children, which can simply be enabled in board
+DTS files by setting the status property to "okay". I find that somewhat mo=
+re
+intuitive to the variant with an "enable-ports" property.
+
+What do you think of this?
+
+Thierry
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk/XemkACgkQZ+BJyKLjJp90rwCfRYTbXWPgQGa/veupCqvN6ZN2
+eLgAoKlIwt5emH7f2jggIPM2ckIBOtAb
+=cguu
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
