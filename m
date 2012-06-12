@@ -1,47 +1,38 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 0/4] DT clock bindings
-Date: Tue, 12 Jun 2012 11:23:18 -0500
-Message-ID: <4FD76CF6.8090801@gmail.com>
-References: <1339512111-11172-1-git-send-email-robherring2@gmail.com> <20120612154735.GB19410@gmail.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V2 1/2] arm/dts: OMAP2: Add support for OMAP2420 SDP
+Date: Tue, 12 Jun 2012 11:32:25 -0500
+Message-ID: <4FD76F19.5030808@ti.com>
+References: <1339107066-10461-1-git-send-email-jon-hunter@ti.com> <1339107066-10461-2-git-send-email-jon-hunter@ti.com> <20120612072025.GG12766@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120612154735.GB19410@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, s.hauer@pengutronix.de, sboyd@codeaurora.org, Grant Likely <grant.likely@secretlab.ca>, skannan@codeaurora.org, shawn.guo@linaro.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120612072025.GG12766@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2012 10:47 AM, Mike Turquette wrote:
-> On 20120612-09:41, Rob Herring wrote:
->> From: Rob Herring <rob.herring@calxeda.com>
+
+On 06/12/2012 02:20 AM, Tony Lindgren wrote:
+> * Jon Hunter <jon-hunter@ti.com> [120607 15:15]:
+>> Simple DTS file for OMAP2420 SDP adding memory information to allow device-tree
+>> testing on an OMAP2420 SDP.
 >>
->> This series defines clock bindings for Device-Tree and adds kernel
->> support using the common clock infrastructure. The last patch enables
->> DT clock support for the Calxeda Highbank platform.
->>
->> I'm posting this again to solicit further review. There has been some
->> discussion[1], but no definite path forward. This series is not changed
->> from the last post other than rebasing to v3.5-rc2.
->>
+>> Verified that kernel boots with DT using a simple RAMDISK file-system on
+>> OMAP2420 SDP.
 > 
-> Hi Rob,
-> 
-> Just FYI, I was following the first thread but it did not seem to reach
-> resolution.  Namely Saravana seemed to have some lingering concerns.
-> But I'm definitely not ignoring this series.  I assume you still want
-> this to go through me once everyone is on board?
+> I suspect this is the H4 board? If so, please rename it to H4 as it shares
+> the "debug board" with H2 and H3 so in theory we may at some point have
+> some common .dtsi for the debug board devices..
 
-Right. This is why I have reposted and copied those whom commented on my
-pull request. I think at least some of Saravana's concerns boiled down
-to not requiring using DT clock bindings and not requiring driver
-changes to move to DT bindings. Both of these are met with this series.
-A platform can still use clkdev tables for binding clocks to devices and
-does not have to use DT for clocks. Drivers generally should not require
-any changes that I'm aware of, but if there are any concrete examples
-I'd like to know.
+Yes, in fact I believe that 2420 SDP == H4 [1]. We appear to like
+changing and chopping naming conventions at TI ;-)
 
-Yes, I think this should go thru you.
+I will update to H4 to be more consistent with the kernel naming.
 
-Rob
+Cheers
+Jon
+
+[1]
+http://www.ti.com/general/docs/wtbu/wtbusplashcontent.tsp?templateId=6123&contentId=4750#omap2
