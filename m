@@ -1,30 +1,54 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH V2 1/2] arm/dts: OMAP2: Add support for OMAP2420 SDP
-Date: Tue, 12 Jun 2012 00:20:26 -0700
-Message-ID: <20120612072025.GG12766@atomide.com>
-References: <1339107066-10461-1-git-send-email-jon-hunter@ti.com>
- <1339107066-10461-2-git-send-email-jon-hunter@ti.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2 05/10] ARM: tegra: Rewrite PCIe support as a driver
+Date: Tue, 12 Jun 2012 09:24:44 +0200
+Message-ID: <20120612072444.GA8577@avionic-0098.mockup.avionic-design.de>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
+ <1339427118-32263-6-git-send-email-thierry.reding@avionic-design.de>
+ <4FD65E98.4070200@wwwdotorg.org>
+ <20120612064124.GF4040@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1339107066-10461-2-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20120612064124.GF4040@avionic-0098.adnet.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-tegra@vger.kernel.org, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-* Jon Hunter <jon-hunter@ti.com> [120607 15:15]:
-> Simple DTS file for OMAP2420 SDP adding memory information to allow device-tree
-> testing on an OMAP2420 SDP.
-> 
-> Verified that kernel boots with DT using a simple RAMDISK file-system on
-> OMAP2420 SDP.
 
-I suspect this is the H4 board? If so, please rename it to H4 as it shares
-the "debug board" with H2 and H3 so in theory we may at some point have
-some common .dtsi for the debug board devices..
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
+* Thierry Reding wrote:
+> AFAICT the even partitioning of the non-prefetchable and prefetchable
+> memory regions is arbitrary and it could potentially be useful to make
+> it configurable via the DT.
 
-Tony
+So it turns out that this isn't true. But apart from the comments in the
+driver I couldn't find any reference to how the prefetch and non-prefetch
+ranges are partitioned. Judging by the code for Tegra2 this is evenly
+partitioned among ports 0 and 1 but it would be interesting to know this is
+done on Tegra3. Is there any way you can find out?
+
+It'd also be nice if some better documentation for the PCIe controller could
+be made available. The Tegra2 TRM doesn't contain any of the AFI or PADS
+registers and while the Tegra3 TRM documents more registers, their offsets
+are completely missing.
+
+Thierry
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEUEARECAAYFAk/W7rwACgkQZ+BJyKLjJp85+QCgmN07XBNfzBalb+sQaSasq/jt
+7h0AmNrMJIwLUYh+l6BAWLPvMxOVeNg=
+=iyKb
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
