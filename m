@@ -1,33 +1,117 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 09/10] ARM: tegra: harmony: Initialize PCIe from DT
-Date: Mon, 11 Jun 2012 15:41:46 -0600
-Message-ID: <4FD6661A.1060407@wwwdotorg.org>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de> <1339427118-32263-10-git-send-email-thierry.reding@avionic-design.de>
+From: Jia Hongtao-B38951 <B38951@freescale.com>
+Subject: RE: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+Date: Tue, 12 Jun 2012 02:16:18 +0000
+Message-ID: <412C8208B4A0464FA894C5F0C278CD5D01A0972B@039-SN1MPN1-002.039d.mgd.msft.net>
+References: <1339148585-16947-1-git-send-email-B38951@freescale.com>
+ <4FD60FB1.7050106@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1339427118-32263-10-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FD60FB1.7050106@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg KH <greg@kroah.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2012 09:05 AM, Thierry Reding wrote:
-> With the device tree support in place, probe the PCIe controller from
-> the device tree and remove the corresponding workaround in the board
-> file.
 
-> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
 
-> +	pci_vdd_reg: fixedregulator@0 {
+> -----Original Message-----
+> From: Rob Herring [mailto:robherring2@gmail.com]
+> Sent: Monday, June 11, 2012 11:33 PM
+> To: Jia Hongtao-B38951
+> Cc: devicetree-discuss@lists.ozlabs.org; linux-kernel@vger.kernel.org;
+> Greg KH
+> Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+> 
+> [adding lkml and Greg KH]
+> 
+> On 06/08/2012 04:43 AM, Jia Hongtao wrote:
+> > We changed the pcie controller driver to platform driver so that the
+> PCI
+> > of platform devices need to be created earlier in the arch_initcall
+> stage
+> > according to the original timing of calling fsl_add_bridge(). So we do
+> PCI
+> > probing separately from other devices. But probing more than once could
+> > cause duplication warning. We add check if the devices have already
+> probed
+> > before probing any devices to avoid duplication warning.
+> >
+> > Signed-off-by: Jia Hongtao <B38951@freescale.com>
+> > Signed-off-by: Li Yang <leoli@freescale.com>
+> > ---
+> 
+> Where's v1 and v2 history?
 
-I think that'd usually just be "regulator@0".
+Sorry, there is no V1 and V2.
+These are a series of patches and only this one related to device-tree operation.
+V3 are for other patches.
+I will aware of that in the future.
+Thanks for mentioning.
 
-If you need the "@0" part to differentiate between multiple regulators,
-the node needs a reg property too:
+> 
+> >  drivers/of/platform.c |   18 ++++++++++++------
+> >  1 files changed, 12 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > index a37330e..3aab01f 100644
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -139,6 +139,18 @@ struct platform_device *of_device_alloc(struct
+> device_node *np,
+> >  	if (!dev)
+> >  		return NULL;
+> >
+> > +	dev->dev.of_node = of_node_get(np);
+> > +	if (bus_id)
+> > +		dev_set_name(&dev->dev, "%s", bus_id);
+> > +	else
+> > +		of_device_make_bus_id(&dev->dev);
+> > +
+> > +	if (kset_find_obj(dev->dev.kobj.kset, kobject_name(&dev->dev.kobj)))
+> {
+> 
+> Is this a fast operation? I worry that we'd be doing this for every
+> device creation. Looking at kobj's seems too low level as well.
+>
 
-	reg = <0 0>;
+To us this is also the main concern.
 
-although then I wonder about putting the regulator under the root node,
-since the address wouldn't really make sense...
+-Jia Hongtao.
+ 
+> Perhaps moving the warning up the call stack and making the relevant
+> functions __must_check would work.
+> 
+> Rob
+> 
+> > +		kfree(dev);
+> > +		of_node_put(np);
+> > +		return NULL;
+> > +	}
+> > +
+> >  	/* count the io and irq resources */
+> >  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+> >  		num_reg++;
+> > @@ -161,17 +173,11 @@ struct platform_device *of_device_alloc(struct
+> device_node *np,
+> >  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) !=
+> num_irq);
+> >  	}
+> >
+> > -	dev->dev.of_node = of_node_get(np);
+> >  #if defined(CONFIG_MICROBLAZE)
+> >  	dev->dev.dma_mask = &dev->archdata.dma_mask;
+> >  #endif
+> >  	dev->dev.parent = parent;
+> >
+> > -	if (bus_id)
+> > -		dev_set_name(&dev->dev, "%s", bus_id);
+> > -	else
+> > -		of_device_make_bus_id(&dev->dev);
+> > -
+> >  	return dev;
+> >  }
+> >  EXPORT_SYMBOL(of_device_alloc);
+> 
