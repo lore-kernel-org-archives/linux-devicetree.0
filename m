@@ -1,13 +1,11 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/3] edac: create top-level debugfs directory
-Date: Mon, 11 Jun 2012 21:32:12 -0500
-Message-ID: <1339468334-9927-2-git-send-email-robherring2@gmail.com>
-References: <1339468334-9927-1-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 0/3] EDAC support for Calxeda Highbank
+Date: Mon, 11 Jun 2012 21:32:11 -0500
+Message-ID: <1339468334-9927-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1339468334-9927-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,109 +22,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Create a single, top-level "edac" directory for debugfs. An "mc[0-N]"
-directory is then created for each memory controller. Individual drivers
-can create additional entries such as h/w error injection control.
+This series adds EDAC support for Calxeda Highbank platform L2 and
+memory ECC hardware.
 
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
----
- drivers/edac/edac_mc_sysfs.c |   23 ++++++++++++++++++++++-
- drivers/edac/edac_module.c   |    3 +++
- drivers/edac/edac_module.h   |   14 ++++++++++++++
- 3 files changed, 39 insertions(+), 1 deletion(-)
+This version is rebased current edac next tree for 3.6. Changes in
+this version are the addition of a common edac debugfs directory and
+coverting the highbank error injection to use debugfs.
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 55b2f0a..a2bf7e9 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -899,13 +899,33 @@ static struct device_type mci_attr_type = {
- };
- 
- #ifdef CONFIG_EDAC_DEBUG
-+static struct dentry *edac_debugfs;
-+
-+int __init edac_debugfs_init(void)
-+{
-+	edac_debugfs = debugfs_create_dir("edac", NULL);
-+	if (IS_ERR(edac_debugfs)) {
-+		edac_debugfs = NULL;
-+		return -ENOMEM;
-+	}
-+	return 0;
-+}
-+
-+void __exit edac_debugfs_exit(void)
-+{
-+	debugfs_remove(edac_debugfs);
-+}
-+
- int edac_create_debug_nodes(struct mem_ctl_info *mci)
- {
- 	struct dentry *d, *parent;
- 	char name[80];
- 	int i;
- 
--	d = debugfs_create_dir(mci->dev.kobj.name, mci->debugfs);
-+	if (!edac_debugfs)
-+		return -ENODEV;
-+
-+	d = debugfs_create_dir(mci->dev.kobj.name, edac_debugfs);
- 	if (!d)
- 		return -ENOMEM;
- 	parent = d;
-@@ -930,6 +950,7 @@ int edac_create_debug_nodes(struct mem_ctl_info *mci)
- 	if (!d)
- 		goto nomem;
- 
-+	mci->debugfs = parent;
- 	return 0;
- nomem:
- 	debugfs_remove(mci->debugfs);
-diff --git a/drivers/edac/edac_module.c b/drivers/edac/edac_module.c
-index 3454798..58a28d8 100644
---- a/drivers/edac/edac_module.c
-+++ b/drivers/edac/edac_module.c
-@@ -94,6 +94,8 @@ static int __init edac_init(void)
- 	if (err)
- 		goto error;
- 
-+	edac_debugfs_init();
-+
- 	/* Setup/Initialize the workq for this core */
- 	err = edac_workqueue_setup();
- 	if (err) {
-@@ -118,6 +120,7 @@ static void __exit edac_exit(void)
- 	/* tear down the various subsystems */
- 	edac_workqueue_teardown();
- 	edac_mc_sysfs_exit();
-+	edac_debugfs_exit();
- }
- 
- /*
-diff --git a/drivers/edac/edac_module.h b/drivers/edac/edac_module.h
-index 62de640..3d139c6 100644
---- a/drivers/edac/edac_module.h
-+++ b/drivers/edac/edac_module.h
-@@ -57,6 +57,20 @@ extern void edac_mc_reset_delay_period(int value);
- extern void *edac_align_ptr(void **p, unsigned size, int n_elems);
- 
- /*
-+ * EDAC debugfs functions
-+ */
-+#ifdef CONFIG_EDAC_DEBUG
-+int edac_debugfs_init(void);
-+void edac_debugfs_exit(void);
-+#else
-+static inline int edac_debugfs_init(void)
-+{
-+	return -ENODEV;
-+}
-+static inline void edac_debugfs_exit(void) {}
-+#endif
-+
-+/*
-  * EDAC PCI functions
-  */
- #ifdef	CONFIG_PCI
+Rob
+
+Rob Herring (3):
+  edac: create top-level debugfs directory
+  edac: add support for Calxeda highbank memory controller
+  edac: add support for Calxeda highbank L2 cache ecc
+
+ .../devicetree/bindings/arm/calxeda/l2ecc.txt      |   17 ++
+ .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
+ arch/arm/boot/dts/highbank.dts                     |   12 +
+ drivers/edac/Kconfig                               |   16 +-
+ drivers/edac/Makefile                              |    4 +
+ drivers/edac/edac_mc_sysfs.c                       |   23 +-
+ drivers/edac/edac_module.c                         |    3 +
+ drivers/edac/edac_module.h                         |   14 ++
+ drivers/edac/highbank_l2_edac.c                    |  149 ++++++++++++
+ drivers/edac/highbank_mc_edac.c                    |  256 ++++++++++++++++++++
+ 10 files changed, 509 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
+ create mode 100644 drivers/edac/highbank_l2_edac.c
+ create mode 100644 drivers/edac/highbank_mc_edac.c
+
 -- 
 1.7.9.5
