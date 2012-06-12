@@ -1,46 +1,51 @@
-From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [RFC 4/4] sched: cpu_power: enable ARCH_POWER
-Date: Tue, 12 Jun 2012 14:02:04 +0200
-Message-ID: <1339502524-10265-5-git-send-email-vincent.guittot@linaro.org>
-References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: kirkwood: use devicetree for orion-spi
+Date: Tue, 12 Jun 2012 14:04:33 +0200
+Message-ID: <20120612120433.GA17893@lunn.ch>
+References: <1339324322-29388-6-git-send-email-andrew@lunn.ch>
+ <20120610170620.GW14756@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1339502524-10265-1-git-send-email-vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120610170620.GW14756-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, Michael Walle <micheal-QKn5cuLxLXY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Heteregeneous ARM platform uses arch_scale_freq_power function
-to reflect the relative capacity of each core
+> > +		spi@10600 {
+> > +			compatible = "marvell,orion-spi";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +			cell-index = <0>;
+> > +			reg = <0x10600 0x28>;
+> > +			status = "disabled";
+> > +		};
+> > +
 
-Signed-off-by: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- kernel/sched/features.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > index fa51586..0942139 100644
+> > --- a/arch/arm/mach-kirkwood/board-dt.c
+> > +++ b/arch/arm/mach-kirkwood/board-dt.c
+> > @@ -26,6 +26,11 @@ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
+> >  	{ }
+> >  };
+> >  
+> > +struct of_dev_auxdata kirkwood_auxdata_lookup[] __initdata = {
+> > +	OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
+> 
+> Isn't this ---------------------------------^^^^^^^^^^ defined somewhere?
 
-diff --git a/kernel/sched/features.h b/kernel/sched/features.h
-index de00a48..d98ae90 100644
---- a/kernel/sched/features.h
-+++ b/kernel/sched/features.h
-@@ -42,7 +42,7 @@ SCHED_FEAT(CACHE_HOT_BUDDY, true)
- /*
-  * Use arch dependent cpu power functions
-  */
--SCHED_FEAT(ARCH_POWER, false)
-+SCHED_FEAT(ARCH_POWER, true)
- 
- SCHED_FEAT(HRTICK, false)
- SCHED_FEAT(DOUBLE_TICK, false)
--- 
-1.7.9.5
+Hi Jason
+
+Yes, there is a #define for this. However, in this case, i think the
+number actually tells you more. The dtsi file has the number, not some
+symbolic representation. Also, some platforms, e.g. Dove, have more
+than one spi controller. Having the number there makes it easier to
+see the mapping between the node in DT and the name used in the
+platform device. If we use the #define it means making an indirection
+via kirkwood.h for a human to see the mapping.
+
+However, i can change it...
+
+	 Andrew
