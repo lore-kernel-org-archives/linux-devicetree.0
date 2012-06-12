@@ -1,114 +1,66 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Tue, 12 Jun 2012 14:15:39 -0600
-Message-ID: <4FD7A36B.9090409@wwwdotorg.org>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de> <1339427118-32263-8-git-send-email-thierry.reding@avionic-design.de> <4FD66410.7090001@wwwdotorg.org> <20120612062124.GE4040@avionic-0098.adnet.avionic-design.de> <4FD763C5.3090500@wwwdotorg.org> <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] Fix compilation warning/error in setprop_inplace.c
+Date: Tue, 12 Jun 2012 14:48:12 -0600
+Message-ID: <1339534092-27377-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-tegra@vger.kernel.org, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2012 11:20 AM, Thierry Reding wrote:
-...
-> I came up with the following alternative:
-> 
-> 	pci {
-> 		compatible = "nvidia,tegra20-pcie";
-> 		reg = <0x80003000 0x00000800   /* PADS registers */
-> 		       0x80003800 0x00000200   /* AFI registers */
-> 		       0x80004000 0x00100000   /* configuration space */
-> 		       0x80104000 0x00100000   /* extended configuration space */
-> 		       0x80400000 0x00010000   /* downstream I/O */
-> 		       0x90000000 0x10000000   /* non-prefetchable memory */
-> 		       0xa0000000 0x10000000>; /* prefetchable memory */
-> 		interrupts = <0 98 0x04   /* controller interrupt */
-> 		              0 99 0x04>; /* MSI interrupt */
-> 		status = "disabled";
-> 
-> 		ranges = <0x80000000 0x80000000 0x00002000   /* 2 root ports */
-> 			  0x80004000 0x80004000 0x00100000   /* configuration space */
-> 			  0x80104000 0x80104000 0x00100000   /* extended configuration space */
-> 			  0x80400000 0x80400000 0x00010000   /* downstream I/O */
-> 			  0x90000000 0x90000000 0x10000000   /* non-prefetchable memory */
-> 			  0xa0000000 0xa0000000 0x10000000>; /* prefetchable memory */
-> 
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 
-> 		port@80000000 {
-> 			reg = <0x80000000 0x00001000>;
-> 			status = "disabled";
-> 		};
-> 
-> 		port@80001000 {
-> 			reg = <0x80001000 0x00001000>;
-> 			status = "disabled";
-> 		};
-> 	};
-> 
-> The "ranges" property can probably be cleaned up a bit, but the most
-> interesting part is the port@ children, which can simply be enabled in board
-> DTS files by setting the status property to "okay". I find that somewhat more
-> intuitive to the variant with an "enable-ports" property.
-> 
-> What do you think of this?
-
-As a general concept, this kind of design seems OK to me.
-
-The "port" child nodes I think should be named "pci@..." given Mitch's
-comments, I think.
-
-The port nodes probably need two entries in reg, given the following in
-our downstream driver:
-
->         int rp_offset = 0;
->         int ctrl_offset = AFI_PEX0_CTRL;
-...
->         for (port = 0; port < MAX_PCIE_SUPPORTED_PORTS; port++) {
->                 ctrl_offset += (port * 8);
->                 rp_offset = (rp_offset + 0x1000) * port;
->                 if (tegra_pcie.plat_data->port_status[port])
->                         tegra_pcie_add_port(port, rp_offset, ctrl_offset);
->         }
-
-(which actually looks likely to be horribly buggy for port>1 and only
-accidentally correct for port==1, but anyway...)
-
-But instead, I'd be tempted to make the top-level node say:
-
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-... so that the child nodes' reg is just the port ID. The parent node
-can calculate the addresses/offsets of the per-port registers within the
-PCIe controller's register space based on the ID using code roughly like
-what I quoted above:
-
-	pci@0 {
-		reg = <0>;
-		status = "disabled";
-	};
-
-	pci@1 {
-		reg = <0>;
-		status = "disabled";
-	};
-
-That would save having to put 2 entries in the reg, and perhaps remove
-the need for any ranges property.
-
-I think you also need a property to specify the exact port layout; the
-Tegra20 controller supports:
-
-1 x4 port
-2 x2 ports (you can choose to use only 1 of these I assume)
-
-So just because only 1 of the ports is enabled, doesn't imply it's x4;
-it could still be x2.
-
-Tegra30 has more options.
+RnJvbTogU3RlcGhlbiBXYXJyZW4gPHN3YXJyZW5AbnZpZGlhLmNvbT4KCldoZW4gY29tcGlsaW5n
+IHRoZSBjdXJyZW50IGNvZGUtYmFzZSB3aXRoIGdjYyA0LjYuMSwgdGhlIGZvbGxvd2luZyB3YXJu
+aW5nCmlzIHJhaXNlZCwgd2hpY2ggaXMgaW50ZXJwcmV0ZWQgYXMgYW4gZXJyb3I6CgpjYzE6IHdh
+cm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJyb3JzCnRlc3RzL3NldHByb3BfaW5wbGFjZS5jOiBJ
+biBmdW5jdGlvbiDigJhtYWlu4oCZOgp0ZXN0cy9zZXRwcm9wX2lucGxhY2UuYzo2MjogZXJyb3I6
+IGZvcm1hdCDigJglMDE2bGx44oCZIGV4cGVjdHMgdHlwZSDigJhsb25nIGxvbmcgdW5zaWduZWQg
+aW504oCZLCBidXQgYXJndW1lbnQgMiBoYXMgdHlwZSDigJh1aW50NjRfdOKAmQp0ZXN0cy9zZXRw
+cm9wX2lucGxhY2UuYzo2ODogZXJyb3I6IGZvcm1hdCDigJglMDE2bGx44oCZIGV4cGVjdHMgdHlw
+ZSDigJhsb25nIGxvbmcgdW5zaWduZWQgaW504oCZLCBidXQgYXJndW1lbnQgMiBoYXMgdHlwZSDi
+gJh1aW50NjRfdOKAmQoKVXNlIHByaW50ZiBmb3JtYXQgc3BlY2lmaWVycyBmcm9tIDxpbnR0eXBl
+cy5oPiB0byBzb2x2ZSB0aGlzLgoKU2lnbmVkLW9mZi1ieTogU3RlcGhlbiBXYXJyZW4gPHN3YXJy
+ZW5AbnZpZGlhLmNvbT4KLS0tCiB0ZXN0cy9zZXRwcm9wX2lucGxhY2UuYyB8ICAgIDkgKysrKyst
+LS0tCiAxIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRp
+ZmYgLS1naXQgYS90ZXN0cy9zZXRwcm9wX2lucGxhY2UuYyBiL3Rlc3RzL3NldHByb3BfaW5wbGFj
+ZS5jCmluZGV4IDMwYTFjZjMuLjgyZDg5NTEgMTAwNjQ0Ci0tLSBhL3Rlc3RzL3NldHByb3BfaW5w
+bGFjZS5jCisrKyBiL3Rlc3RzL3NldHByb3BfaW5wbGFjZS5jCkBAIC0xOCw2ICsxOCw3IEBACiAg
+KiBGb3VuZGF0aW9uLCBJbmMuLCA1MSBGcmFua2xpbiBTdCwgRmlmdGggRmxvb3IsIEJvc3Rvbiwg
+TUEgMDIxMTAtMTMwMSBVU0EKICAqLwogCisjaW5jbHVkZSA8aW50dHlwZXMuaD4KICNpbmNsdWRl
+IDxzdGRsaWIuaD4KICNpbmNsdWRlIDxzdGRpby5oPgogI2luY2x1ZGUgPHN0cmluZy5oPgpAQCAt
+NDgsNyArNDksNyBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJndltdKQogCXZlcmJvc2Vf
+cHJpbnRmKCJPbGQgaW50IHZhbHVlIHdhcyAweCUwOHhcbiIsICppbnRwKTsKIAllcnIgPSBmZHRf
+c2V0cHJvcF9pbnBsYWNlX2NlbGwoZmR0LCAwLCAicHJvcC1pbnQiLCB+VEVTVF9WQUxVRV8xKTsK
+IAlpZiAoZXJyKQotCQlGQUlMKCJGYWlsZWQgdG8gc2V0IFwicHJvcC1pbnRcIiB0byAweDA4JXg6
+ICVzIiwKKwkJRkFJTCgiRmFpbGVkIHRvIHNldCBcInByb3AtaW50XCIgdG8gMHglMDh4OiAlcyIs
+CiAJCSAgICAgflRFU1RfVkFMVUVfMSwgZmR0X3N0cmVycm9yKGVycikpOwogCWludHAgPSBjaGVj
+a19nZXRwcm9wX2NlbGwoZmR0LCAwLCAicHJvcC1pbnQiLCB+VEVTVF9WQUxVRV8xKTsKIAl2ZXJi
+b3NlX3ByaW50ZigiTmV3IGludCB2YWx1ZSBpcyAweCUwOHhcbiIsICppbnRwKTsKQEAgLTU5LDEz
+ICs2MCwxMyBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJndltdKQogCiAJaW50NjRwID0g
+Y2hlY2tfZ2V0cHJvcF82NChmZHQsIDAsICJwcm9wLWludDY0IiwgVEVTVF9WQUxVRTY0XzEpOwog
+Ci0JdmVyYm9zZV9wcmludGYoIk9sZCBpbnQ2NCB2YWx1ZSB3YXMgMHglMDE2bGx4XG4iLCAqaW50
+NjRwKTsKKwl2ZXJib3NlX3ByaW50ZigiT2xkIGludDY0IHZhbHVlIHdhcyAweCUwMTYiIFBSSXg2
+NCAiXG4iLCAqaW50NjRwKTsKIAllcnIgPSBmZHRfc2V0cHJvcF9pbnBsYWNlX3U2NChmZHQsIDAs
+ICJwcm9wLWludDY0IiwgflRFU1RfVkFMVUU2NF8xKTsKIAlpZiAoZXJyKQotCQlGQUlMKCJGYWls
+ZWQgdG8gc2V0IFwicHJvcC1pbnQ2NFwiIHRvIDB4MDE2JWxseDogJXMiLAorCQlGQUlMKCJGYWls
+ZWQgdG8gc2V0IFwicHJvcC1pbnQ2NFwiIHRvIDB4JTAxNmxseDogJXMiLAogCQkgICAgIH5URVNU
+X1ZBTFVFNjRfMSwgZmR0X3N0cmVycm9yKGVycikpOwogCWludDY0cCA9IGNoZWNrX2dldHByb3Bf
+NjQoZmR0LCAwLCAicHJvcC1pbnQ2NCIsIH5URVNUX1ZBTFVFNjRfMSk7Ci0JdmVyYm9zZV9wcmlu
+dGYoIk5ldyBpbnQ2NCB2YWx1ZSBpcyAweCUwMTZsbHhcbiIsICppbnQ2NHApOworCXZlcmJvc2Vf
+cHJpbnRmKCJOZXcgaW50NjQgdmFsdWUgaXMgMHglMDE2IiBQUkl4NjQgIlxuIiwgKmludDY0cCk7
+CiAKIAlzdHJwID0gY2hlY2tfZ2V0cHJvcChmZHQsIDAsICJwcm9wLXN0ciIsIHN0cmxlbihURVNU
+X1NUUklOR18xKSsxLAogCQkJICAgICBURVNUX1NUUklOR18xKTsKLS0gCjEuNy4wLjQKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
+Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
+cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
