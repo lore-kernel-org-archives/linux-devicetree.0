@@ -1,31 +1,30 @@
-From: Shubhrajyoti <shubhrajyoti@ti.com>
-Subject: Re: [PATCH RESEND v4] input: keyboard: Add keys driver for the LPC32xx
- SoC
-Date: Tue, 12 Jun 2012 10:58:01 +0530
-Message-ID: <4FD6D361.2020305@ti.com>
-References: <1339443891-15197-1-git-send-email-stigge@antcom.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 06/10] ARM: tegra: pcie: Add MSI support
+Date: Mon, 11 Jun 2012 23:33:58 -0600
+Message-ID: <4FD6D4C6.2080201@wwwdotorg.org>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de> <1339427118-32263-7-git-send-email-thierry.reding@avionic-design.de> <4FD660F9.7030807@wwwdotorg.org> <20120612050713.GB3669@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1339443891-15197-1-git-send-email-stigge@antcom.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: dmitry.torokhov@gmail.com, axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20120612050713.GB3669@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-tegra@vger.kernel.org, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 12 June 2012 01:14 AM, Roland Stigge wrote:
-> +
-> +struct lpc32xx_kscan_drv {
-> +	struct input_dev *input;
-> +	struct lpc32xx_kscan_cfg *kscancfg;
-> +	struct clk *clk;
-> +	void __iomem *kscan_base;
-> +	int irq;
-Do you really need this irq field?  It is used in the probe and remove only.
+On 06/11/2012 11:07 PM, Thierry Reding wrote:
+> * Stephen Warren wrote:
+>> On 06/11/2012 09:05 AM, Thierry Reding wrote:
+>>> This commit adds support for message signaled interrupts to the
+>>> Tegra PCIe controller. Based on code by Krishna Kishore
+>>> <kthota@nvidia.com>.
+...
+>> Why allocate pcie->msi separately; why not include the fields
+>> directly into struct tegra_pcie_info *pcie?
+...
+> Second, and more importantly, this will keep the size of struct 
+> tegra_pcie_info smaller if PCI_MSI is not selected because there is
+> just one unused pointer instead of five unused fields.
 
-> +	u8 lastkeystates[8];
-> +	u32 io_p_start;
-> +	u32 io_p_size;
-> +};
-
+Well, you can always ifdef out the structure fields too, right?
