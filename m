@@ -1,51 +1,59 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 5/9] ARM: kirkwood: use devicetree for orion-spi
-Date: Tue, 12 Jun 2012 14:04:33 +0200
-Message-ID: <20120612120433.GA17893@lunn.ch>
-References: <1339324322-29388-6-git-send-email-andrew@lunn.ch>
- <20120610170620.GW14756@titan.lakedaemon.net>
+From: Mauro Carvalho Chehab <mchehab@redhat.com>
+Subject: Re: [PATCH v2 0/3] EDAC support for Calxeda Highbank
+Date: Tue, 12 Jun 2012 10:24:27 -0300
+Message-ID: <4FD7430B.6010005@redhat.com>
+References: <1339468334-9927-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120610170620.GW14756-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, Michael Walle <micheal-QKn5cuLxLXY@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1339468334-9927-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-> > +		spi@10600 {
-> > +			compatible = "marvell,orion-spi";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			cell-index = <0>;
-> > +			reg = <0x10600 0x28>;
-> > +			status = "disabled";
-> > +		};
-> > +
+Hi Rob,
 
-> > index fa51586..0942139 100644
-> > --- a/arch/arm/mach-kirkwood/board-dt.c
-> > +++ b/arch/arm/mach-kirkwood/board-dt.c
-> > @@ -26,6 +26,11 @@ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
-> >  	{ }
-> >  };
-> >  
-> > +struct of_dev_auxdata kirkwood_auxdata_lookup[] __initdata = {
-> > +	OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
+Em 11-06-2012 23:32, Rob Herring escreveu:
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
-> Isn't this ---------------------------------^^^^^^^^^^ defined somewhere?
+> This series adds EDAC support for Calxeda Highbank platform L2 and
+> memory ECC hardware.
+> 
+> This version is rebased current edac next tree for 3.6. Changes in
+> this version are the addition of a common edac debugfs directory and
+> coverting the highbank error injection to use debugfs.
 
-Hi Jason
+Thanks for the patches.
 
-Yes, there is a #define for this. However, in this case, i think the
-number actually tells you more. The dtsi file has the number, not some
-symbolic representation. Also, some platforms, e.g. Dove, have more
-than one spi controller. Having the number there makes it easier to
-see the mapping between the node in DT and the name used in the
-platform device. If we use the #define it means making an indirection
-via kirkwood.h for a human to see the mapping.
+It looks OK on my eyes, with regards to the EDAC API usage. While this patch
+touches at the arm/devicetree stuff, most of the changes belong to EDAC, so
+I'll apply them with my SOB on my tree.
 
-However, i can change it...
-
-	 Andrew
+Regards,
+Mauro.
+> 
+> Rob
+> 
+> Rob Herring (3):
+>    edac: create top-level debugfs directory
+>    edac: add support for Calxeda highbank memory controller
+>    edac: add support for Calxeda highbank L2 cache ecc
+> 
+>   .../devicetree/bindings/arm/calxeda/l2ecc.txt      |   17 ++
+>   .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
+>   arch/arm/boot/dts/highbank.dts                     |   12 +
+>   drivers/edac/Kconfig                               |   16 +-
+>   drivers/edac/Makefile                              |    4 +
+>   drivers/edac/edac_mc_sysfs.c                       |   23 +-
+>   drivers/edac/edac_module.c                         |    3 +
+>   drivers/edac/edac_module.h                         |   14 ++
+>   drivers/edac/highbank_l2_edac.c                    |  149 ++++++++++++
+>   drivers/edac/highbank_mc_edac.c                    |  256 ++++++++++++++++++++
+>   10 files changed, 509 insertions(+), 2 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
+>   create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
+>   create mode 100644 drivers/edac/highbank_l2_edac.c
+>   create mode 100644 drivers/edac/highbank_mc_edac.c
+> 
