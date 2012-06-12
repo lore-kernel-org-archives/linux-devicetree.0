@@ -1,36 +1,91 @@
-From: Mike Turquette <mturquette@ti.com>
-Subject: Re: [PATCH v3 0/4] DT clock bindings
-Date: Tue, 12 Jun 2012 08:47:35 -0700
-Message-ID: <20120612154735.GB19410@gmail.com>
-References: <1339512111-11172-1-git-send-email-robherring2@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 05/10] ARM: tegra: Rewrite PCIe support as a driver
+Date: Tue, 12 Jun 2012 10:00:26 -0600
+Message-ID: <4FD7679A.2080800@wwwdotorg.org>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de> <1339427118-32263-6-git-send-email-thierry.reding@avionic-design.de> <4FD65E98.4070200@wwwdotorg.org> <20120612064124.GF4040@avionic-0098.adnet.avionic-design.de> <20120612072444.GA8577@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1339512111-11172-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, s.hauer@pengutronix.de, sboyd@codeaurora.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, skannan@codeaurora.org, shawn.guo@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120612072444.GA8577-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20120612-09:41, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
+On 06/12/2012 01:24 AM, Thierry Reding wrote:
+> * Thierry Reding wrote:
+>> AFAICT the even partitioning of the non-prefetchable and 
+>> prefetchable memory regions is arbitrary and it could
+>> potentially be useful to make it configurable via the DT.
 > 
-> This series defines clock bindings for Device-Tree and adds kernel
-> support using the common clock infrastructure. The last patch enables
-> DT clock support for the Calxeda Highbank platform.
+> So it turns out that this isn't true. But apart from the comments 
+> in the driver I couldn't find any reference to how the prefetch
+> and non-prefetch ranges are partitioned. Judging by the code for
+> Tegra2 this is evenly partitioned among ports 0 and 1 but it would
+> be interesting to know this is done on Tegra3. Is there any way
+> you can find out?
 > 
-> I'm posting this again to solicit further review. There has been some
-> discussion[1], but no definite path forward. This series is not changed
-> from the last post other than rebasing to v3.5-rc2.
-> 
+> It'd also be nice if some better documentation for the PCIe 
+> controller could be made available. The Tegra2 TRM doesn't contain 
+> any of the AFI or PADS registers and while the Tegra3 TRM
+> documents more registers, their offsets are completely missing.
 
-Hi Rob,
+I've filed a bug to request better documentation.
 
-Just FYI, I was following the first thread but it did not seem to reach
-resolution.  Namely Saravana seemed to have some lingering concerns.
-But I'm definitely not ignoring this series.  I assume you still want
-this to go through me once everyone is on board?
+Looking at our downstream driver, the quoted comment below implies
+that the address space layout is pretty arbitrary and programmable at
+least for Tegra30. The code in function
+tegra_pcie_setup_translations() appears to support this (and is
+executed for both Tegra20 and Tegra30, even though the comment for
+Tegra20 doesn't mention any programmability).
 
-Regards,
-Mike
+Tegra20:
+
+> /*
+>  * Tegra2 defines 1GB in the AXI address map for PCIe.
+>  *
+>  * That address space is split into different regions, with sizes and
+>  * offsets as follows:
+>  *
+>  * 0x80000000 - 0x80003fff - PCI controller registers
+>  * 0x80004000 - 0x80103fff - PCI configuration space
+>  * 0x80104000 - 0x80203fff - PCI extended configuration space
+>  * 0x80203fff - 0x803fffff - unused
+>  * 0x80400000 - 0x8040ffff - downstream IO
+>  * 0x80410000 - 0x8fffffff - unused
+>  * 0x90000000 - 0x9fffffff - non-prefetchable memory
+>  * 0xa0000000 - 0xbfffffff - prefetchable memory
+>  */
+
+(I guess by "is split", it means the driver sets it up that way, not
+that the HW is fixed that way)
+
+Tegra30:
+
+> /*
+>  * AXI address map for the PCIe aperture , defines 1GB in the AXI
+>  *  address map for PCIe.
+>  *
+>  *  That address space is split into different regions, with sizes and
+>  *  offsets as follows. Exepct for the Register space, SW is free to slice the
+>  *  regions as it chooces.
+>  *
+>  *  The split below seems to work fine for now.
+>  *
+>  *  0x0000_0000 to 0x00ff_ffff - Register space          16MB.
+>  *  0x0100_0000 to 0x01ff_ffff - Config space            16MB.
+>  *  0x0200_0000 to 0x02ff_ffff - Extended config space   16MB.
+>  *  0x0300_0000 to 0x03ff_ffff - Downstream IO space
+>  *   ... Will be filled with other BARS like MSI/upstream IO etc.
+>  *  0x1000_0000 to 0x1fff_ffff - non-prefetchable memory aperture
+>  *  0x2000_0000 to 0x3fff_ffff - Prefetchable memory aperture
+>  *
+>  *  Config and Extended config sizes are choosen to support
+>  *  maximum of 256 devices,
+>  *  which is good enough for all the current use cases.
+>  *
+>  */
+
+From
+http://nv-tegra.nvidia.com/gitweb/?p=linux-2.6.git;a=blob;f=arch/arm/mach-tegra/pcie.c;h=b98d4892b5ee46120a9777a969e820a0b5cbb68a;hb=android-tegra-nv-3.1
