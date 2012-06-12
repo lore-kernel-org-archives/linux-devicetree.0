@@ -1,87 +1,31 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2 06/10] ARM: tegra: pcie: Add MSI support
-Date: Tue, 12 Jun 2012 07:07:13 +0200
-Message-ID: <20120612050713.GB3669@avionic-0098.mockup.avionic-design.de>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
- <1339427118-32263-7-git-send-email-thierry.reding@avionic-design.de>
- <4FD660F9.7030807@wwwdotorg.org>
+From: Shubhrajyoti <shubhrajyoti@ti.com>
+Subject: Re: [PATCH RESEND v4] input: keyboard: Add keys driver for the LPC32xx
+ SoC
+Date: Tue, 12 Jun 2012 10:58:01 +0530
+Message-ID: <4FD6D361.2020305@ti.com>
+References: <1339443891-15197-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FD660F9.7030807@wwwdotorg.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-tegra@vger.kernel.org, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1339443891-15197-1-git-send-email-stigge@antcom.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: dmitry.torokhov@gmail.com, axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 12 June 2012 01:14 AM, Roland Stigge wrote:
+> +
+> +struct lpc32xx_kscan_drv {
+> +	struct input_dev *input;
+> +	struct lpc32xx_kscan_cfg *kscancfg;
+> +	struct clk *clk;
+> +	void __iomem *kscan_base;
+> +	int irq;
+Do you really need this irq field?  It is used in the probe and remove only.
 
---uZ3hkaAS1mZxFaxD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +	u8 lastkeystates[8];
+> +	u32 io_p_start;
+> +	u32 io_p_size;
+> +};
 
-* Stephen Warren wrote:
-> On 06/11/2012 09:05 AM, Thierry Reding wrote:
-> > This commit adds support for message signaled interrupts to the Tegra
-> > PCIe controller. Based on code by Krishna Kishore <kthota@nvidia.com>.
->=20
-> > diff --git a/arch/arm/mach-tegra/pcie.c b/arch/arm/mach-tegra/pcie.c
->=20
-> > +static irqreturn_t tegra_pcie_msi_irq(int irq, void *data)
-> ...
-> > +			irq =3D irq_find_mapping(pcie->msi->domain, index);
-> > +			if (irq) {
-> > +				if (test_bit(index, pcie->msi->used))
-> > +					generic_handle_irq(irq);
->=20
-> This invokes the handler first ...
->=20
-> ...
-> > +			/* clear the interrupt */
-> > +			afi_writel(pcie, 1 << offset, AFI_MSI_VEC0 + i * 4);
-> > +			/* see if there's any more pending in this vector */
-> > +			reg =3D afi_readl(pcie, AFI_MSI_VEC0 + i * 4);
->=20
-> ... then clears the interrupt status in the PCIe controller. Won't that
-> lose interrupts if one is raised between when the handler clears the
-> root-cause, and when this code clears the received interrupt status?
-
-It certainly doesn't follow the conventional way of clearing the interrupt
-first. I carried this from the original MSI patch, but I'll move the
-interrupt clearing up and retest.
-
-> > +static int tegra_pcie_disable_msi(struct platform_device *pdev)
->=20
-> Should this free pcie->msi->pages?
-
-Yes it should. I actually mention making that change in the changelog but
-in fact didn't.
-
-> Why allocate pcie->msi separately; why not include the fields directly
-> into struct tegra_pcie_info *pcie?
-
-For one I find this easier to read. If this wasn't a separate structure, ea=
-ch
-of the individual fields would get an msi_ prefix anyway so there isn't much
-to be gained from keeping them directly in tegra_pcie_info.
-
-Second, and more importantly, this will keep the size of struct
-tegra_pcie_info smaller if PCI_MSI is not selected because there is just one
-unused pointer instead of five unused fields.
-
-Thierry
-
---uZ3hkaAS1mZxFaxD
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk/WzoEACgkQZ+BJyKLjJp+OqQCfVInBPASxy3NpkrYYAN3uL4tW
-BFsAoILbZcwvoU2Rw+WEEzu7jYkguONm
-=MH6Q
------END PGP SIGNATURE-----
-
---uZ3hkaAS1mZxFaxD--
