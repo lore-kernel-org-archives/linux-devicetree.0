@@ -1,59 +1,57 @@
-From: Mauro Carvalho Chehab <mchehab@redhat.com>
-Subject: Re: [PATCH v2 0/3] EDAC support for Calxeda Highbank
-Date: Tue, 12 Jun 2012 10:24:27 -0300
-Message-ID: <4FD7430B.6010005@redhat.com>
-References: <1339468334-9927-1-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH v3 0/4] DT clock bindings
+Date: Tue, 12 Jun 2012 09:41:47 -0500
+Message-ID: <1339512111-11172-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1339468334-9927-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, mturquette@linaro.org, sboyd@codeaurora.org, skannan@codeaurora.org, shawn.guo@linaro.org, s.hauer@pengutronix.de, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Rob Herring <rob.herring@calxeda.com>
 
-Em 11-06-2012 23:32, Rob Herring escreveu:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> This series adds EDAC support for Calxeda Highbank platform L2 and
-> memory ECC hardware.
-> 
-> This version is rebased current edac next tree for 3.6. Changes in
-> this version are the addition of a common edac debugfs directory and
-> coverting the highbank error injection to use debugfs.
+This series defines clock bindings for Device-Tree and adds kernel
+support using the common clock infrastructure. The last patch enables
+DT clock support for the Calxeda Highbank platform.
 
-Thanks for the patches.
+I'm posting this again to solicit further review. There has been some
+discussion[1], but no definite path forward. This series is not changed
+from the last post other than rebasing to v3.5-rc2.
 
-It looks OK on my eyes, with regards to the EDAC API usage. While this patch
-touches at the arm/devicetree stuff, most of the changes belong to EDAC, so
-I'll apply them with my SOB on my tree.
+Rob
 
-Regards,
-Mauro.
-> 
-> Rob
-> 
-> Rob Herring (3):
->    edac: create top-level debugfs directory
->    edac: add support for Calxeda highbank memory controller
->    edac: add support for Calxeda highbank L2 cache ecc
-> 
->   .../devicetree/bindings/arm/calxeda/l2ecc.txt      |   17 ++
->   .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
->   arch/arm/boot/dts/highbank.dts                     |   12 +
->   drivers/edac/Kconfig                               |   16 +-
->   drivers/edac/Makefile                              |    4 +
->   drivers/edac/edac_mc_sysfs.c                       |   23 +-
->   drivers/edac/edac_module.c                         |    3 +
->   drivers/edac/edac_module.h                         |   14 ++
->   drivers/edac/highbank_l2_edac.c                    |  149 ++++++++++++
->   drivers/edac/highbank_mc_edac.c                    |  256 ++++++++++++++++++++
->   10 files changed, 509 insertions(+), 2 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
->   create mode 100644 drivers/edac/highbank_l2_edac.c
->   create mode 100644 drivers/edac/highbank_mc_edac.c
-> 
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-May/100932.html
+
+Grant Likely (2):
+  clk: add DT clock binding support
+  clk: add DT fixed-clock binding support
+
+Rob Herring (2):
+  dt: add clock binding doc to primecell bindings
+  clk: add highbank clock support
+
+ .../devicetree/bindings/arm/primecell.txt          |    6 +
+ .../devicetree/bindings/clock/calxeda.txt          |   17 +
+ .../devicetree/bindings/clock/clock-bindings.txt   |  117 +++++++
+ .../devicetree/bindings/clock/fixed-clock.txt      |   21 ++
+ arch/arm/Kconfig                                   |    1 +
+ arch/arm/boot/dts/highbank.dts                     |   91 +++++-
+ arch/arm/mach-highbank/Makefile                    |    2 +-
+ arch/arm/mach-highbank/clock.c                     |   62 ----
+ arch/arm/mach-highbank/highbank.c                  |    7 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-fixed-rate.c                       |   23 ++
+ drivers/clk/clk-highbank.c                         |  345 ++++++++++++++++++++
+ drivers/clk/clk.c                                  |  140 ++++++++
+ drivers/clk/clkdev.c                               |   77 +++++
+ include/linux/clk-provider.h                       |   16 +
+ include/linux/clk.h                                |   19 ++
+ 16 files changed, 881 insertions(+), 64 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/clock-bindings.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/fixed-clock.txt
+ delete mode 100644 arch/arm/mach-highbank/clock.c
+ create mode 100644 drivers/clk/clk-highbank.c
+
+-- 
+1.7.9.5
