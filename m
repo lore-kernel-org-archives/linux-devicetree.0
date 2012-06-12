@@ -1,10 +1,10 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] Fix compilation warning/error in setprop_inplace.c
-Date: Tue, 12 Jun 2012 14:48:12 -0600
-Message-ID: <1339534092-27377-1-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH] Add test for re-defining an identical label
+Date: Tue, 12 Jun 2012 14:48:40 -0600
+Message-ID: <1339534120-27414-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -20,47 +20,55 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU3RlcGhlbiBXYXJyZW4gPHN3YXJyZW5AbnZpZGlhLmNvbT4KCldoZW4gY29tcGlsaW5n
-IHRoZSBjdXJyZW50IGNvZGUtYmFzZSB3aXRoIGdjYyA0LjYuMSwgdGhlIGZvbGxvd2luZyB3YXJu
-aW5nCmlzIHJhaXNlZCwgd2hpY2ggaXMgaW50ZXJwcmV0ZWQgYXMgYW4gZXJyb3I6CgpjYzE6IHdh
-cm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJyb3JzCnRlc3RzL3NldHByb3BfaW5wbGFjZS5jOiBJ
-biBmdW5jdGlvbiDigJhtYWlu4oCZOgp0ZXN0cy9zZXRwcm9wX2lucGxhY2UuYzo2MjogZXJyb3I6
-IGZvcm1hdCDigJglMDE2bGx44oCZIGV4cGVjdHMgdHlwZSDigJhsb25nIGxvbmcgdW5zaWduZWQg
-aW504oCZLCBidXQgYXJndW1lbnQgMiBoYXMgdHlwZSDigJh1aW50NjRfdOKAmQp0ZXN0cy9zZXRw
-cm9wX2lucGxhY2UuYzo2ODogZXJyb3I6IGZvcm1hdCDigJglMDE2bGx44oCZIGV4cGVjdHMgdHlw
-ZSDigJhsb25nIGxvbmcgdW5zaWduZWQgaW504oCZLCBidXQgYXJndW1lbnQgMiBoYXMgdHlwZSDi
-gJh1aW50NjRfdOKAmQoKVXNlIHByaW50ZiBmb3JtYXQgc3BlY2lmaWVycyBmcm9tIDxpbnR0eXBl
-cy5oPiB0byBzb2x2ZSB0aGlzLgoKU2lnbmVkLW9mZi1ieTogU3RlcGhlbiBXYXJyZW4gPHN3YXJy
-ZW5AbnZpZGlhLmNvbT4KLS0tCiB0ZXN0cy9zZXRwcm9wX2lucGxhY2UuYyB8ICAgIDkgKysrKyst
-LS0tCiAxIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRp
-ZmYgLS1naXQgYS90ZXN0cy9zZXRwcm9wX2lucGxhY2UuYyBiL3Rlc3RzL3NldHByb3BfaW5wbGFj
-ZS5jCmluZGV4IDMwYTFjZjMuLjgyZDg5NTEgMTAwNjQ0Ci0tLSBhL3Rlc3RzL3NldHByb3BfaW5w
-bGFjZS5jCisrKyBiL3Rlc3RzL3NldHByb3BfaW5wbGFjZS5jCkBAIC0xOCw2ICsxOCw3IEBACiAg
-KiBGb3VuZGF0aW9uLCBJbmMuLCA1MSBGcmFua2xpbiBTdCwgRmlmdGggRmxvb3IsIEJvc3Rvbiwg
-TUEgMDIxMTAtMTMwMSBVU0EKICAqLwogCisjaW5jbHVkZSA8aW50dHlwZXMuaD4KICNpbmNsdWRl
-IDxzdGRsaWIuaD4KICNpbmNsdWRlIDxzdGRpby5oPgogI2luY2x1ZGUgPHN0cmluZy5oPgpAQCAt
-NDgsNyArNDksNyBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJndltdKQogCXZlcmJvc2Vf
-cHJpbnRmKCJPbGQgaW50IHZhbHVlIHdhcyAweCUwOHhcbiIsICppbnRwKTsKIAllcnIgPSBmZHRf
-c2V0cHJvcF9pbnBsYWNlX2NlbGwoZmR0LCAwLCAicHJvcC1pbnQiLCB+VEVTVF9WQUxVRV8xKTsK
-IAlpZiAoZXJyKQotCQlGQUlMKCJGYWlsZWQgdG8gc2V0IFwicHJvcC1pbnRcIiB0byAweDA4JXg6
-ICVzIiwKKwkJRkFJTCgiRmFpbGVkIHRvIHNldCBcInByb3AtaW50XCIgdG8gMHglMDh4OiAlcyIs
-CiAJCSAgICAgflRFU1RfVkFMVUVfMSwgZmR0X3N0cmVycm9yKGVycikpOwogCWludHAgPSBjaGVj
-a19nZXRwcm9wX2NlbGwoZmR0LCAwLCAicHJvcC1pbnQiLCB+VEVTVF9WQUxVRV8xKTsKIAl2ZXJi
-b3NlX3ByaW50ZigiTmV3IGludCB2YWx1ZSBpcyAweCUwOHhcbiIsICppbnRwKTsKQEAgLTU5LDEz
-ICs2MCwxMyBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJndltdKQogCiAJaW50NjRwID0g
-Y2hlY2tfZ2V0cHJvcF82NChmZHQsIDAsICJwcm9wLWludDY0IiwgVEVTVF9WQUxVRTY0XzEpOwog
-Ci0JdmVyYm9zZV9wcmludGYoIk9sZCBpbnQ2NCB2YWx1ZSB3YXMgMHglMDE2bGx4XG4iLCAqaW50
-NjRwKTsKKwl2ZXJib3NlX3ByaW50ZigiT2xkIGludDY0IHZhbHVlIHdhcyAweCUwMTYiIFBSSXg2
-NCAiXG4iLCAqaW50NjRwKTsKIAllcnIgPSBmZHRfc2V0cHJvcF9pbnBsYWNlX3U2NChmZHQsIDAs
-ICJwcm9wLWludDY0IiwgflRFU1RfVkFMVUU2NF8xKTsKIAlpZiAoZXJyKQotCQlGQUlMKCJGYWls
-ZWQgdG8gc2V0IFwicHJvcC1pbnQ2NFwiIHRvIDB4MDE2JWxseDogJXMiLAorCQlGQUlMKCJGYWls
-ZWQgdG8gc2V0IFwicHJvcC1pbnQ2NFwiIHRvIDB4JTAxNmxseDogJXMiLAogCQkgICAgIH5URVNU
-X1ZBTFVFNjRfMSwgZmR0X3N0cmVycm9yKGVycikpOwogCWludDY0cCA9IGNoZWNrX2dldHByb3Bf
-NjQoZmR0LCAwLCAicHJvcC1pbnQ2NCIsIH5URVNUX1ZBTFVFNjRfMSk7Ci0JdmVyYm9zZV9wcmlu
-dGYoIk5ldyBpbnQ2NCB2YWx1ZSBpcyAweCUwMTZsbHhcbiIsICppbnQ2NHApOworCXZlcmJvc2Vf
-cHJpbnRmKCJOZXcgaW50NjQgdmFsdWUgaXMgMHglMDE2IiBQUkl4NjQgIlxuIiwgKmludDY0cCk7
-CiAKIAlzdHJwID0gY2hlY2tfZ2V0cHJvcChmZHQsIDAsICJwcm9wLXN0ciIsIHN0cmxlbihURVNU
-X1NUUklOR18xKSsxLAogCQkJICAgICBURVNUX1NUUklOR18xKTsKLS0gCjEuNy4wLjQKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
-Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
-cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+When merging one device tree over the top of a previous tree, it is
+possible to define a duplicate label that has the same name and points
+to the same property or node. This is currently allowed by the duplicate
+label checking code. However, alternative duplicate label checking
+algorithms might not allow this. Add an explicit test to ensure this
+capability is maintained.
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ tests/label_repeated.dts |   15 +++++++++++++++
+ tests/run_tests.sh       |    2 ++
+ 2 files changed, 17 insertions(+), 0 deletions(-)
+ create mode 100644 tests/label_repeated.dts
+
+diff --git a/tests/label_repeated.dts b/tests/label_repeated.dts
+new file mode 100644
+index 0000000..34225d3
+--- /dev/null
++++ b/tests/label_repeated.dts
+@@ -0,0 +1,15 @@
++/dts-v1/;
++
++/ {
++	l0: prop = "foo";
++
++	l1: node {
++	};
++};
++
++/ {
++	l0: prop = "foo";
++
++	l1: node {
++	};
++};
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 9a2a7d9..e0299e3 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -281,6 +281,8 @@ dtc_tests () {
+     run_dtc_test -I dts -O dtb -o multilabel.test.dtb multilabel.dts
+     run_test references multilabel.test.dtb
+ 
++    run_dtc_test -I dts -O dtb -o label_repeated.test.dtb label_repeated.dts
++
+     run_dtc_test -I dts -O dtb -o dtc_comments.test.dtb comments.dts
+     run_dtc_test -I dts -O dtb -o dtc_comments-cmp.test.dtb comments-cmp.dts
+     run_test dtbs_equal_ordered dtc_comments.test.dtb dtc_comments-cmp.test.dtb
+-- 
+1.7.0.4
