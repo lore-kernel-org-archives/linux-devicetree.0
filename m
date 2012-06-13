@@ -1,42 +1,33 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
-Date: Tue, 12 Jun 2012 16:14:38 -0700
-Message-ID: <20120612231438.GA6177@kroah.com>
-References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
- <1339159026-15837-1-git-send-email-richard.zhao@freescale.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [PATCH V3 0/2] arm/dts: Add OMAP2420 SDP support
+Date: Tue, 12 Jun 2012 19:10:45 -0500
+Message-ID: <1339546247-13865-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1339159026-15837-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Cc: Tony Lindgren <tony@atomide.com>, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 08, 2012 at 08:37:06PM +0800, Richard Zhao wrote:
-> Sometimes, the driver bindings may know what phy they use.
-> For example, when using device tree, the usb controller may have a
-> phandler pointing to usb phy.
-> 
-> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> ---
-> Changes since laster version:
-> - hcd transceiver renamed to phy
+This series fixes the OMAP2 interrupt controller binding and adds support for
+the OMAP2420H4 board. I have verified that the kernel boots with device-tree
+on this board.
 
-Ick, I see patches all over this thread, and other threads, and I have
-no idea what to apply anywhere...
+This series is based upon the linux-omap master branch (3.5-rc1).
 
-So, consider all chipidea patches dropped from my queue now, can you
-please resend them to me, with the accumulated acks and reviewed-by
-line, so that I can queue them up?
+V3: Rename OMAP2420 SDP to OMAP2420H4
+V2: Correct typo in copyright date
 
-thanks,
+Jon Hunter (2):
+  arm/dts: OMAP2: Add support for OMAP2420H4 Board
+  arm/dts: OMAP2: Fix interrupt controller binding
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/boot/dts/omap2.dtsi       |    2 ++
+ arch/arm/boot/dts/omap2420-sdp.dts |   20 ++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap2420-sdp.dts
+
+-- 
+1.7.9.5
+
