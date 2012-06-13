@@ -1,92 +1,86 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [RFC 3/4] ARM: topology: Update cpu_power according to DT information
-Date: Wed, 13 Jun 2012 11:44:45 +0200
-Message-ID: <CAKfTPtBc-KuDg_1qe04TfYS4+66qQoiHCJQbCF9gnhga5ociow@mail.gmail.com>
-References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org>
-	<1339502524-10265-4-git-send-email-vincent.guittot@linaro.org>
-	<CAORVsuWqWt0pJfewymh_ydAH61-uPsO0M7m7Gs4N3zJY=Vo9ZA@mail.gmail.com>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v5 1/7] ARM: davinci, cp_intc: Add irq domain support
+Date: Wed, 13 Jun 2012 11:50:04 +0200
+Message-ID: <4FD8624C.8010605@denx.de>
+References: <1338373143-7467-1-git-send-email-hs@denx.de>
+ <1338373143-7467-2-git-send-email-hs@denx.de> <4FC919C9.6070107@ti.com>
+ <4FD77E0F.8050907@ti.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAORVsuWqWt0pJfewymh_ydAH61-uPsO0M7m7Gs4N3zJY=Vo9ZA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean Pihet <jean.pihet@newoldbits.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, peterz@infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <4FD77E0F.8050907-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 June 2012 10:59, Jean Pihet <jean.pihet@newoldbits.com> wrote:
-> Vincent,
+Hello Nori,
+
+On 12.06.2012 19:36, Sekhar Nori wrote:
+> Hi Heiko,
 >
-> On Tue, Jun 12, 2012 at 2:02 PM, Vincent Guittot
-> <vincent.guittot@linaro.org> wrote:
->> Use cpu compatibility field and clock-frequency field of DT to
->> estimate the capacity of each core of the system
+> On 6/2/2012 1:06 AM, Sekhar Nori wrote:
+>> Hi Heiko,
 >>
->> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
->> ---
->> =A0arch/arm/kernel/topology.c | =A0122 +++++++++++++++++++++++++++++=
-+++++++++++++++
->> =A01 file changed, 122 insertions(+)
+>> On 5/30/2012 3:48 PM, Heiko Schocher wrote:
+>>> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+>>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>>> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+>>> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
+>>> Cc: Sergei Shtylyov<sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> ---
 >>
->> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
->> index 2f85a64..0c2aee4 100644
->> --- a/arch/arm/kernel/topology.c
->> +++ b/arch/arm/kernel/topology.c
->> @@ -17,6 +17,7 @@
->> =A0#include <linux/percpu.h>
->> =A0#include <linux/node.h>
->> =A0#include <linux/nodemask.h>
->> +#include <linux/of.h>
->> =A0#include <linux/sched.h>
+>> On AM18x EVM, with this patch applied and CONFIG_KEYBOARD_GPIO_POLLED=y,
+>> I get warnings of type:
 >>
->> =A0#include <asm/cputype.h>
->> @@ -47,6 +48,122 @@ void set_power_scale(unsigned int cpu, unsigned =
-long power)
->> =A0 =A0 =A0 =A0per_cpu(cpu_scale, cpu) =3D power;
->> =A0}
+>> irq 0, desc: c0372950, depth: 1, count: 0, unhandled: 0
 >>
->> +#ifdef CONFIG_OF
->> +struct cpu_efficiency {
->> + =A0 =A0 =A0 const char *compatible;
->> + =A0 =A0 =A0 unsigned long efficiency;
->> +};
->> +
->> +/*
->> + * Table of relative efficiency of each processors
->> + * The efficiency value must fit in 20bit. The final
->> + * cpu_scale value must be in the range [1:2048[.
-> Typo here.
+>> ->handle_irq():  c00552f8, handle_bad_irq+0x0/0x23c
+>>
+>> ->irq_data.chip(): c03794e8, 0xc03794e8
+>>
+>> ->action():   (null)
+>>
+>>     IRQ_NOPROBE set
+>>
+>>   IRQ_NOREQUEST set
+>>
+>>
+>> They do not come when CONFIG_KEYBOARD_GPIO_POLLED=n. I am yet to debug
+>> this, but wanted to point out now in case there is anything obvious.
 
-I realize that I have use absolute value instead of SCHED_POWER_SCALE.
-The cpu_scale value must be in the range 0 < cpu_scale < 2*SCHED_POWER_=
-SCALE
+Hups, seems I missed your EMail :-(
 
->
->> + * Processors that are not defined in the table,
->> + * use the default SCHED_POWER_SCALE value for cpu_scale.
->> + */
->> +struct cpu_efficiency table_efficiency[] =3D {
->> + =A0 =A0 =A0 {"arm,cortex-a15", 3891},
->> + =A0 =A0 =A0 {"arm,cortex-a7", =A02048},
-> How are those results measured or computed? Is this purely related to
-> the number crunching performance?
+> I debugged this a bit more and the good news for you is that spurious
+> IRQ messages have got nothing to do with your patch. Looks like the
 
-These values are based on ARM's figures which say that Cortex-A15 is
-1,9 faster than Cortex-A7 at same frequency. So the inputs are ARM's
-figures. Then, the absolute values are arbitrary with the constraint
-of being large enough for precision and small enough to make the
-computation in an unsigned long
+Good :-)
 
->
-> Also more generally what if the cores frequencies are changing?
+> spurious interrupts on interrupt line 0 were always there - just that
+> they were getting silently ignored earlier. I am still debugging what is
+> causing these spurious interrupts.
 
-Up to now, the scheduler takes into account the maximum capacity of a
-core when it checks the load balance of the system.
+Hmm.. I did not see this on the enbw_cmc board. Maybe I can try it
+on the TMDXEXP1808L board, but I must admit, that I am currently lacking
+time, because of an accident ...
 
-Regards,
-Vincent
-
->
-> Regards,
-> Jean
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
