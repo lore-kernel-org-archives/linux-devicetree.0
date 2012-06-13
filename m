@@ -1,156 +1,130 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Wed, 13 Jun 2012 08:45:19 +0200
-Message-ID: <20120613064519.GD31001@avionic-0098.mockup.avionic-design.de>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
- <1339427118-32263-8-git-send-email-thierry.reding@avionic-design.de>
- <4FD66410.7090001@wwwdotorg.org>
- <20120612062124.GE4040@avionic-0098.adnet.avionic-design.de>
- <4FD763C5.3090500@wwwdotorg.org>
- <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de>
- <4FD7A36B.9090409@wwwdotorg.org>
- <4FD7B085.1020006@firmworks.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH] of: match by compatible property first
+Date: Wed, 13 Jun 2012 09:01:39 +0200
+Message-ID: <20120613070138.GA5670@avionic-0098.mockup.avionic-design.de>
+References: <1334917312-21192-1-git-send-email-thierry.reding@avionic-design.de>
+ <4F9160DF.70308@gmail.com>
+ <20120420132839.GB25662@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FD7B085.1020006@firmworks.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============5845979034496946286=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120420132839.GB25662-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---T7mxYSe680VjQnyC
+--===============5845979034496946286==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
+Content-Disposition: inline
+
+
+--gKMricLos+KVdGMg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-* Mitch Bradley wrote:
-> On 6/12/2012 10:15 AM, Stephen Warren wrote:
-> >On 06/12/2012 11:20 AM, Thierry Reding wrote:
-> >...
-> >>I came up with the following alternative:
-> >>
-> >>	pci {
-> >>		compatible =3D "nvidia,tegra20-pcie";
-> >>		reg =3D<0x80003000 0x00000800   /* PADS registers */
-> >>		       0x80003800 0x00000200   /* AFI registers */
-> >>		       0x80004000 0x00100000   /* configuration space */
-> >>		       0x80104000 0x00100000   /* extended configuration space */
-> >>		       0x80400000 0x00010000   /* downstream I/O */
-> >>		       0x90000000 0x10000000   /* non-prefetchable memory */
-> >>		       0xa0000000 0x10000000>; /* prefetchable memory */
-> >>		interrupts =3D<0 98 0x04   /* controller interrupt */
-> >>		              0 99 0x04>; /* MSI interrupt */
-> >>		status =3D "disabled";
-> >>
-> >>		ranges =3D<0x80000000 0x80000000 0x00002000   /* 2 root ports */
-> >>			  0x80004000 0x80004000 0x00100000   /* configuration space */
-> >>			  0x80104000 0x80104000 0x00100000   /* extended configuration space=
- */
-> >>			  0x80400000 0x80400000 0x00010000   /* downstream I/O */
-> >>			  0x90000000 0x90000000 0x10000000   /* non-prefetchable memory */
-> >>			  0xa0000000 0xa0000000 0x10000000>; /* prefetchable memory */
-> >>
-> >>		#address-cells =3D<1>;
-> >>		#size-cells =3D<1>;
-> >>
-> >>		port@80000000 {
-> >>			reg =3D<0x80000000 0x00001000>;
-> >>			status =3D "disabled";
-> >>		};
-> >>
-> >>		port@80001000 {
-> >>			reg =3D<0x80001000 0x00001000>;
-> >>			status =3D "disabled";
-> >>		};
-> >>	};
-> >>
-> >>The "ranges" property can probably be cleaned up a bit, but the most
-> >>interesting part is the port@ children, which can simply be enabled in =
-board
-> >>DTS files by setting the status property to "okay". I find that somewha=
-t more
-> >>intuitive to the variant with an "enable-ports" property.
-> >>
-> >>What do you think of this?
-> >
-> >As a general concept, this kind of design seems OK to me.
-> >
-> >The "port" child nodes I think should be named "pci@..." given Mitch's
-> >comments, I think.
-> >
-> >The port nodes probably need two entries in reg, given the following in
-> >our downstream driver:
-> >
-> >>         int rp_offset =3D 0;
-> >>         int ctrl_offset =3D AFI_PEX0_CTRL;
-> >...
-> >>         for (port =3D 0; port<  MAX_PCIE_SUPPORTED_PORTS; port++) {
-> >>                 ctrl_offset +=3D (port * 8);
-> >>                 rp_offset =3D (rp_offset + 0x1000) * port;
-> >>                 if (tegra_pcie.plat_data->port_status[port])
-> >>                         tegra_pcie_add_port(port, rp_offset, ctrl_offs=
-et);
-> >>         }
-> >
-> >(which actually looks likely to be horribly buggy for port>1 and only
-> >accidentally correct for port=3D=3D1, but anyway...)
-> >
-> >But instead, I'd be tempted to make the top-level node say:
-> >
-> >	#address-cells =3D<1>;
-> >	#size-cells =3D<0>;
-> >
-> >... so that the child nodes' reg is just the port ID. The parent node
-> >can calculate the addresses/offsets of the per-port registers within the
-> >PCIe controller's register space based on the ID using code roughly like
-> >what I quoted above:
-> >
-> >	pci@0 {
-> >		reg =3D<0>;
-> >		status =3D "disabled";
-> >	};
-> >
-> >	pci@1 {
-> >		reg =3D<0>;
-> >		status =3D "disabled";
-> >	};
-> reg =3D <1> ?
+On Fri, Apr 20, 2012 at 03:28:40PM +0200, Thierry Reding wrote:
+> * Rob Herring wrote:
+> > On 04/20/2012 05:21 AM, Thierry Reding wrote:
+> [...]
+> > > +const struct of_device_id *of_match_compat(const struct of_device_id=
+ *matches,
+> > > +					   const char *compat)
+> > > +{
+> > > +	while (matches->name[0] || matches->type[0] || matches->compatible[=
+0]) {
+> >=20
+> > You are not using name or type here, so you can remove.
 >=20
-> >
-> >
-> >That would save having to put 2 entries in the reg, and perhaps remove
-> >the need for any ranges property.
+> They are still required so we don't stop early. A match table could well =
+have
+> a first entry that has name and/or type set but not compatible, followed =
+by a
+> second entry with only compatible set.
 >=20
-> ISTM that having two reg entries, specifying the rp and ctrl
-> registers, is preferable to having code to calculate the addresses.
-> That makes the code simpler and the device tree more directly
-> descriptive of the hardware layout.  The less "magic" (in this case,
-> the register address calculation), the better.
+> > >  	while (matches->name[0] || matches->type[0] || matches->compatible[=
+0]) {
+> >=20
+> > You don't need to check compatible ptr here.
+>=20
+> For similar reasons as above this check needs to stay in.
+>=20
+> >=20
+> > >  		int match =3D 1;
+> > >  		if (matches->name[0])
+> > > @@ -532,10 +558,7 @@ const struct of_device_id *of_match_node(const s=
+truct of_device_id *matches,
+> > >  		if (matches->type[0])
+> > >  			match &=3D node->type
+> > >  				&& !strcmp(matches->type, node->type);
+> > > -		if (matches->compatible[0])
+> > > -			match &=3D of_device_is_compatible(node,
+> > > -						matches->compatible);
+> > > -		if (match)
+> > > +		if (match && !matches->compatible[0])
+> > >  			return matches;
+> > >  		matches++;
+> > >  	}
+> > > diff --git a/include/linux/of.h b/include/linux/of.h
+> > > index bd52d83..23b5061 100644
+> > > --- a/include/linux/of.h
+> > > +++ b/include/linux/of.h
+> > > @@ -231,6 +231,8 @@ extern const void *of_get_property(const struct d=
+evice_node *node,
+> > > =20
+> > >  extern int of_n_addr_cells(struct device_node *np);
+> > >  extern int of_n_size_cells(struct device_node *np);
+> > > +extern const struct of_device_id *of_match_compat(
+> > > +	const struct of_device_id *matches, const char *compat);
+> >=20
+> > Why does this need to be a public function?
+>=20
+> It doesn't. I just thought it might be handy to have. I can make it stati=
+c if
+> you don't think it's useful generally.
+>=20
+> Thierry
 
-The problem with this approach is that since the control registers are
-within the AFI register range, both the reg and ranges properties of the
-parent would have to include these holes. Furthermore it means that the
-controller driver would have to remap the AFI registers in chunks, for the
-sole reason of splitting out the controle registers.
+Rob,
 
-Would it be acceptable to make an exception in this case and use the port's
-second reg entry as an offset into the AFI register range instead?
+Do you have further comments on this?
 
 Thierry
 
---T7mxYSe680VjQnyC
+--gKMricLos+KVdGMg
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iEYEARECAAYFAk/YNv8ACgkQZ+BJyKLjJp+nxwCeIETw2MF0LjWdgN3T2Gou6MfH
-IfkAn3kaoCzPbnQFlx2Yk85kIfXh6zwR
-=QoJm
+iEYEARECAAYFAk/YOtIACgkQZ+BJyKLjJp9XnwCeLll++mD3El54L22jnQlHnnKK
+HM0AoK0sJD9lz++YUhhyBO6WRgkjhf/o
+=L+4x
 -----END PGP SIGNATURE-----
 
---T7mxYSe680VjQnyC--
+--gKMricLos+KVdGMg--
+
+--===============5845979034496946286==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5845979034496946286==--
