@@ -1,20 +1,13 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Wed, 13 Jun 2012 10:20:04 -0600
-Message-ID: <4FD8BDB4.5070000@wwwdotorg.org>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
- <1339427118-32263-8-git-send-email-thierry.reding@avionic-design.de>
- <4FD66410.7090001@wwwdotorg.org>
- <20120612062124.GE4040@avionic-0098.adnet.avionic-design.de>
- <4FD763C5.3090500@wwwdotorg.org>
- <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de>
- <4FD7A36B.9090409@wwwdotorg.org>
- <20120613063422.GC31001@avionic-0098.mockup.avionic-design.de>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 02/19] fdt: Add debugging to fdtdec_get_int/addr()
+Date: Wed, 13 Jun 2012 09:19:38 -0700
+Message-ID: <1339604395-6621-3-git-send-email-sjg@chromium.org>
+References: <1339604395-6621-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120613063422.GC31001-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+In-Reply-To: <1339604395-6621-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,39 +18,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2012 12:34 AM, Thierry Reding wrote:
-> * Stephen Warren wrote:
-...
->> I think you also need a property to specify the exact port
->> layout; the Tegra20 controller supports:
->> 
->> 1 x4 port 2 x2 ports (you can choose to use only 1 of these I
->> assume)
->> 
->> So just because only 1 of the ports is enabled, doesn't imply
->> it's x4; it could still be x2.
->> 
->> Tegra30 has more options.
-> 
-> Both the upstream and downstream drivers currently hard-code this
-> to dual and 411 (I assume that means 1x4, 2x1?) configurations for
-> Tegra20 and Tegra30 respectively. Unfortunately the register
-> AFI_PCIE_CONFIG isn't documented on Tegra20 at all and for Tegra30
-> lists only the valid configurations (see 28.4.1.5 PCIe CONFIG) but
-> not the corresponding encodings.
-> 
-> Maybe a good name for the new property would be "num-lanes". I also
-> wonder if this property would be better off in the parent node,
-> which would make it easier to check for valid configurations.
-> Otherwise the code would have to collect the settings of all the
-> ports and check if the combination is valid. Then again, having
-> num-lanes in the parent with one cell for each controller isn't
-> very nice if each controller can be individually disabled.
+The new debugging shows the value of integers and addresses read
+from the device tree.
 
-Indeed, since the register that controls this is in the main register
-set rather than the per-port register set, it does seem like a good
-idea to put the property in the main node, not the per-port node.
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+
+ lib/fdtdec.c |   22 ++++++++++++++++------
+ 1 files changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index cc09e06..61056f1 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -80,11 +80,16 @@ fdt_addr_t fdtdec_get_addr(const void *blob, int node,
+ 	const fdt_addr_t *cell;
+ 	int len;
+ 
+-	debug("get_addr: %s\n", prop_name);
++	debug("%s: %s\n", __func__, prop_name);
+ 	cell = fdt_getprop(blob, node, prop_name, &len);
+ 	if (cell && (len == sizeof(fdt_addr_t) ||
+-			len == sizeof(fdt_addr_t) * 2))
+-		return fdt_addr_to_cpu(*cell);
++			len == sizeof(fdt_addr_t) * 2)) {
++		fdt_addr_t addr = fdt_addr_to_cpu(*cell);
++
++		debug("%p\n", (void *)addr);
++		return addr;
++	}
++	debug("(not found)\n");
+ 	return FDT_ADDR_T_NONE;
+ }
+ 
+@@ -94,10 +99,15 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+ 	const s32 *cell;
+ 	int len;
+ 
+-	debug("get_size: %s\n", prop_name);
++	debug("%s: %s: ", __func__, prop_name);
+ 	cell = fdt_getprop(blob, node, prop_name, &len);
+-	if (cell && len >= sizeof(s32))
+-		return fdt32_to_cpu(cell[0]);
++	if (cell && len >= sizeof(s32)) {
++		s32 val = fdt32_to_cpu(cell[0]);
++
++		debug("%#x (%d)\n", val, val);
++		return val;
++	}
++	debug("(not found)\n");
+ 	return default_val;
+ }
+ 
+-- 
+1.7.7.3
