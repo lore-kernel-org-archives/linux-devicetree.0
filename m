@@ -1,8 +1,8 @@
 From: Peter Zijlstra <peterz@infradead.org>
 Subject: Re: [RFC 3/4] ARM: topology: Update cpu_power according to DT
  information
-Date: Wed, 13 Jun 2012 15:07:36 +0200
-Message-ID: <1339592856.8980.33.camel@twins>
+Date: Wed, 13 Jun 2012 15:09:44 +0200
+Message-ID: <1339592984.8980.34.camel@twins>
 References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org>
 	 <1339502524-10265-4-git-send-email-vincent.guittot@linaro.org>
 Mime-Version: 1.0
@@ -16,7 +16,6 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-d
 List-Id: devicetree@vger.kernel.org
 
 On Tue, 2012-06-12 at 14:02 +0200, Vincent Guittot wrote:
-> +struct cpu_capacity cpu_capacity[NR_CPUS];
+> +#ifdef CONFIG_OF
 
-I know ARM isn't likely to suffer from the 4k cpu issue, but is there a
-reason to use a NR_CPUS array over a per-cpu variable?
+That must really be the worst CONFIG_ name ever..
