@@ -1,113 +1,89 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: Add empty of_property_match_string() function
-Date: Wed, 13 Jun 2012 09:02:56 +0200
-Message-ID: <20120613070256.GB5670@avionic-0098.mockup.avionic-design.de>
-References: <1334327016-8949-1-git-send-email-thierry.reding@avionic-design.de>
- <20120426190112.GA28018@avionic-0098.mockup.avionic-design.de>
- <20120427164554.2F7E33E0B4D@localhost>
- <20120427204154.GA12617@avionic-0098.mockup.avionic-design.de>
- <20120427205307.GA16099@avionic-0098.mockup.avionic-design.de>
- <20120601055920.GA15874@avionic-0098.adnet.avionic-design.de>
+From: Mitch Bradley <wmb@firmworks.com>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Tue, 12 Jun 2012 21:04:10 -1000
+Message-ID: <4FD83B6A.4020804@firmworks.com>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de> <1339427118-32263-8-git-send-email-thierry.reding@avionic-design.de> <4FD66410.7090001@wwwdotorg.org> <20120612062124.GE4040@avionic-0098.adnet.avionic-design.de> <4FD763C5.3090500@wwwdotorg.org> <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de> <4FD7943E.60302@firmworks.com> <4FD79CAE.9090006@wwwdotorg.org> <4FD79DE8.90603@firmworks.com> <20120613055437.GB31001@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3271055486421253413=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120601055920.GA15874-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20120613055437.GB31001@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 6/12/2012 7:54 PM, Thierry Reding wrote:
+> * Mitch Bradley wrote:
+>> On 6/12/2012 9:46 AM, Stephen Warren wrote:
+>>> On 06/12/2012 01:10 PM, Mitch Bradley wrote:
+>>>> On 6/12/2012 7:20 AM, Thierry Reding wrote:
+>>> ...
+>>>>> I came up with the following alternative:
+>>>>>
+>>>>> 	pci {
+>>>>> 		compatible = "nvidia,tegra20-pcie";
+>>>>> 		reg =<0x80003000 0x00000800   /* PADS registers */
+>>>>> 		       0x80003800 0x00000200   /* AFI registers */
+>>>>> 		       0x80004000 0x00100000   /* configuration space */
+>>>>> 		       0x80104000 0x00100000   /* extended configuration space */
+>>>>> 		       0x80400000 0x00010000   /* downstream I/O */
+>>>>> 		       0x90000000 0x10000000   /* non-prefetchable memory */
+>>>>> 		       0xa0000000 0x10000000>; /* prefetchable memory */
+>>>>> 		interrupts =<0 98 0x04   /* controller interrupt */
+>>>>> 		              0 99 0x04>; /* MSI interrupt */
+>>>>> 		status = "disabled";
+>>>>>
+>>>>> 		ranges =<0x80000000 0x80000000 0x00002000   /* 2 root ports */
+>>>>> 			  0x80004000 0x80004000 0x00100000   /* configuration space */
+>>>>> 			  0x80104000 0x80104000 0x00100000   /* extended configuration space */
+>>>>> 			  0x80400000 0x80400000 0x00010000   /* downstream I/O */
+>>>>> 			  0x90000000 0x90000000 0x10000000   /* non-prefetchable memory */
+>>>>> 			  0xa0000000 0xa0000000 0x10000000>; /* prefetchable memory */
+>>>>>
+>>>>> 		#address-cells =<1>;
+>>>>> 		#size-cells =<1>;
+>>>>>
+>>>>> 		port@80000000 {
+>>>>> 			reg =<0x80000000 0x00001000>;
+>>>>> 			status = "disabled";
+>>>>> 		};
+>>>>>
+>>>>> 		port@80001000 {
+>>>>> 			reg =<0x80001000 0x00001000>;
+>>>>> 			status = "disabled";
+>>>>> 		};
+>>>>> 	};
+>>>>>
+>>>>> The "ranges" property can probably be cleaned up a bit, but the most
+>>>>> interesting part is the port@ children, which can simply be enabled in board
+>>>>> DTS files by setting the status property to "okay". I find that somewhat more
+>>>>> intuitive to the variant with an "enable-ports" property.
+>>>>>
+>>>>> What do you think of this?
+>>>>
+>>>> The problem is that children of a PCI-ish bus have specific expectations
+>>>> about the parent address format - the standard 3-address-cell PCI
+>>>> addressing.  So making a PCI bus node - even if it is PCIe - with 1
+>>>> address cell is a problem.
+>>>
+>>> Couldn't you put the #address-cells=<3>   underneath each port node, and
+>>> put any PCIe devices there rather than under the main PCIe controller
+>>> node? I'm not sure how the interrupt mapping table etc. would work in
+>>> that case, but that seems to solve the addressing issue.
+>>
+>> Yes, that would work just fine, and in fact would be preferable, if
+>> a "root port" is essentially an independent PCI bus.  The parent of
+>> those root ports should not be named "pci", though, as it is not in
+>> itself a PCI bus.  It could be called "pcis".
+>
+> Yes, on Tegra each of the ports provides a separate PCI bus. How about naming
+> the parent "pcie-controller"?
 
---===============3271055486421253413==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
-Content-Disposition: inline
+That seems like a fine name.
 
-
---1LKvkjL3sHcu1TtY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 01, 2012 at 07:59:20AM +0200, Thierry Reding wrote:
-> * Thierry Reding wrote:
-> > * Thierry Reding wrote:
-> > > The latest series for the PWM subsystem is here[0]. However that vers=
-ion
-> > > doesn't contain the latest changes that require this. I haven't pushe=
-d those
-> > > changes yet because they cause the build to fail (because of these two
-> > > missing patches).
-> >=20
-> > I just pushed the latest code to the for-next branch. That's the state =
-that I
-> > was going to submit during the 3.5 merge window.
-> >=20
-> > Thierry
-> >=20
-> > > [0]: http://gitorious.org/linux-pwm/linux-pwm
->=20
-> Hi Grant,
->=20
-> Do you have any comments on this? I really want the PWM subsystem to go i=
-nto
-> 3.6, and for that to happen we need to find a solution for this. As I sta=
-ted
-> previously the empty functions are needed to compile the PWM core in !OF
-> configurations.
->=20
-> Usually this would be solved by just #ifdef'ing the corresponding code, b=
-ut
-> with the recent introduction of the config_enabled() and IS_ENABLED() mac=
-ros
-> there seems to be a move to replace #ifdef usage with those in order to h=
-ave
-> the corresponding code compile-checked in all configurations and have the
-> compiler throw away the unused code.
->=20
-> I believe that this is a good thing, but it will required these empty OF
-> functions to be added. If you don't find this an acceptable solution, ple=
-ase
-> let me know and I'll convert the OF-specific code in the PWM core to use
-> #ifdef instead.
-
-Grant, Rob,
-
-any update on this?
-
-Thierry
-
---1LKvkjL3sHcu1TtY
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk/YOyAACgkQZ+BJyKLjJp+QUQCgj2Oxhjbl8eMs90OaKdcyKd4m
-8RMAnjCIomrb36eedi6WPxmWN7fh7X5f
-=dlY1
------END PGP SIGNATURE-----
-
---1LKvkjL3sHcu1TtY--
-
---===============3271055486421253413==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3271055486421253413==--
+> IMO that reflects the nature of the device
+> better, whereas "pcis" would seem more like a "virtual" node for collecting
+> similar children.
+>
+> Thierry
