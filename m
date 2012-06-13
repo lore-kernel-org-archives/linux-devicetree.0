@@ -1,8 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 03/19] fdt: Add function to look up a phandle's register
- address
-Date: Wed, 13 Jun 2012 09:19:39 -0700
-Message-ID: <1339604395-6621-4-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 04/19] fdt: Add header guard to fdtdec.h
+Date: Wed, 13 Jun 2012 09:19:40 -0700
+Message-ID: <1339604395-6621-5-git-send-email-sjg@chromium.org>
 References: <1339604395-6621-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,61 +22,31 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a commonly-used requirement, so add a function to support it
-easily.
+This makes it easier to include this header from other headers.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 
- include/fdtdec.h |   13 +++++++++++++
- lib/fdtdec.c     |   11 +++++++++++
- 2 files changed, 24 insertions(+), 0 deletions(-)
+ include/fdtdec.h |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
 diff --git a/include/fdtdec.h b/include/fdtdec.h
-index fab577e..d7bef6c 100644
+index d7bef6c..627d077 100644
 --- a/include/fdtdec.h
 +++ b/include/fdtdec.h
-@@ -276,6 +276,19 @@ const char *fdtdec_get_compatible(enum fdt_compat_id id);
- int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name);
+@@ -19,6 +19,8 @@
+  * MA 02111-1307 USA
+  */
  
- /**
-+ * Look up a phandle and follow it to its node. Then return the register
-+ * address of that node as a pointer. This can be used to access the
-+ * peripheral directly.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @return pointer to node's register address
-+ */
-+void *fdtdec_lookup_phandle_reg(const void *blob, int node,
-+		const char *prop_name);
-+
-+/**
-  * Look up a property in a node and return its contents in an integer
-  * array of given length. The property must have at least enough data for
-  * the array (4*count bytes). It may have more, but this will be ignored.
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 61056f1..8185d8f 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -347,6 +347,17 @@ int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name)
- 	return lookup;
- }
++#ifndef __fdtdec_h
++#define __fdtdec_h
  
-+void *fdtdec_lookup_phandle_reg(const void *blob, int node,
-+		const char *prop_name)
-+{
-+	int lookup;
-+
-+	lookup = fdtdec_lookup_phandle(blob, node, prop_name);
-+	if (lookup < 0)
-+		return NULL;
-+	return (void *)fdtdec_get_addr(blob, lookup, "reg");
-+}
-+
- /**
-  * Look up a property in a node and check that it has a minimum length.
-  *
+ /*
+  * This file contains convenience functions for decoding useful and
+@@ -395,3 +397,4 @@ int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
+  */
+ const u8 *fdtdec_locate_byte_array(const void *blob, int node,
+ 			     const char *prop_name, int count);
++#endif
 -- 
 1.7.7.3
