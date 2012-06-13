@@ -1,65 +1,180 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: Where to power on the wifi device before loading the driver.
-Date: Wed, 13 Jun 2012 15:17:06 -0600
-Message-ID: <4FD90352.9090606@wwwdotorg.org>
-References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [Patch v5 05/13] usb: otg: add basic mxs phy driver support
+Date: Wed, 13 Jun 2012 23:33:12 +0200
+Message-ID: <20120613213312.GD30400@pengutronix.de>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+ <1339590863-10564-6-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>
-Cc: Stephen Warren <swarren@nvidia.com>, "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "'linux-mmc@vger.kernel.org'" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mursalin Akon <makon@nvidia.com>, Rakesh Kumar <krakesh@nvidia.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1339590863-10564-6-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2012 04:40 AM, Wei Ni wrote:
-> Hi, all
-> I'm working on the tegra30 wifi upstream issue.
+On Wed, Jun 13, 2012 at 08:34:15PM +0800, Richard Zhao wrote:
+> mxs phy is used in Freescale i.MX SoCs, for example
+> imx23, imx28, imx6Q. This patch adds the basic host
+> support.
 > 
-> The tegra30 board (Cardhu) use Broadcom 4329 as wifi device, and use brcmfmac as the wifi driver.
+> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/mxs-phy.txt |   13 ++
+>  drivers/usb/otg/Kconfig                           |    8 +
+>  drivers/usb/otg/Makefile                          |    1 +
+>  drivers/usb/otg/mxs-phy.c                         |  204 +++++++++++++++++++++
+>  4 files changed, 226 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/mxs-phy.txt
+>  create mode 100644 drivers/usb/otg/mxs-phy.c
 > 
-> In the brcmfmac init routine, it call sdio_register_driver() to register driver, if the wifi device is powered on, then the mmc driver will enumerate it, and call the probe callback routine.
-> 
-> On the Cardhu, the wifi's power is controlled by two gpios (power-gpio and reset-gpio), the default state is power-off. So we need to power on it before calling sdio_register_driver(), if not, the mmc driver can't enumerate it, and will not call the probe routine.
-> This power on sequence is: 
-> set power-gpio to 1 ;
-> mdelay(100) ;
-> set reset-gpio to 1 ;
-> mdelay(200);
-> 
-> My question is where to power on the wifi. We may have three places to power on it:
-> 1. power on it in the brcmfmac driver before calling sdio_register_driver(). But I think this power sequence is special for tegra30 cardhu, it's not good to add it in the generic wifi driver, because different board may use the different way to power on the wifi.
-> 2. power on it in the mmc driver. In our tegra SD driver, it has power-gpios property, which allow the slot to be powered. But this power is for mmc slot, could we add this wifi power sequence in the tegra SD driver?
-> 3. hard-coded into DT. Set these gpios in the DT, something like pinmux settings, but in this way, it's not good to put the mdelay() value in the DT.
-> 
-> I have no good idea for it, does anyone has suggestion?
+> diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+> new file mode 100644
+> index 0000000..5835b27
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+> @@ -0,0 +1,13 @@
+> +* Freescale MXS USB Phy Device
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx23-usbphy"
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain phy interrupt
+> +
+> +Example:
+> +usbphy1: usbphy@020c9000 {
+> +	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
+> +	reg = <0x020c9000 0x1000>;
+> +	interrupts = <0 44 0x04>;
+> +};
+> diff --git a/drivers/usb/otg/Kconfig b/drivers/usb/otg/Kconfig
+> index 5c87db0..3a9bc44 100644
+> --- a/drivers/usb/otg/Kconfig
+> +++ b/drivers/usb/otg/Kconfig
+> @@ -116,6 +116,14 @@ config FSL_USB2_OTG
+>  	help
+>  	  Enable this to support Freescale USB OTG transceiver.
+>  
+> +config USB_MXS_PHY
+> +	tristate "Freescale MXS USB PHY support"
+> +	select USB_OTG_UTILS
+> +	help
+> +	  Enable this to support the Freescale MXS USB PHY.
+> +
+> +	  MXS Phy is used by some of the i.MX SoCs, for example imx23/28/6x.
+> +
+>  config USB_MV_OTG
+>  	tristate "Marvell USB OTG support"
+>  	depends on USB_EHCI_MV && USB_MV_UDC && USB_SUSPEND
+> diff --git a/drivers/usb/otg/Makefile b/drivers/usb/otg/Makefile
+> index 41aa509..a844b8d 100644
+> --- a/drivers/usb/otg/Makefile
+> +++ b/drivers/usb/otg/Makefile
+> @@ -20,4 +20,5 @@ obj-$(CONFIG_USB_MSM_OTG)	+= msm_otg.o
+>  obj-$(CONFIG_AB8500_USB)	+= ab8500-usb.o
+>  fsl_usb2_otg-objs		:= fsl_otg.o otg_fsm.o
+>  obj-$(CONFIG_FSL_USB2_OTG)	+= fsl_usb2_otg.o
+> +obj-$(CONFIG_USB_MXS_PHY)	+= mxs-phy.o
+>  obj-$(CONFIG_USB_MV_OTG)	+= mv_otg.o
+> diff --git a/drivers/usb/otg/mxs-phy.c b/drivers/usb/otg/mxs-phy.c
+> new file mode 100644
+> index 0000000..a55aaed
+> --- /dev/null
+> +++ b/drivers/usb/otg/mxs-phy.c
+> @@ -0,0 +1,204 @@
+> +/*
+> + * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> + * on behalf of DENX Software Engineering GmbH
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +#include <linux/usb/otg.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +
+> +#define DRIVER_NAME "mxs_phy"
+> +
+> +#define HW_USBPHY_PWD				0x00
+> +#define HW_USBPHY_CTRL				0x30
+> +#define HW_USBPHY_CTRL_SET			0x34
+> +#define HW_USBPHY_CTRL_CLR			0x38
+> +
+> +#define BM_USBPHY_CTRL_SFTRST			BIT(31)
+> +#define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+> +#define BM_USBPHY_CTRL_ENUTMILEVEL3		BIT(15)
+> +#define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
+> +#define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
+> +
+> +struct mxs_phy {
+> +	struct usb_phy phy;
+> +	struct clk *clk;
+> +	int connected:1;
+> +};
+> +
+> +#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+> +
+> +static void mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> +{
+> +	void __iomem *base = mxs_phy->phy.io_priv;
+> +
+> +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE, base + HW_USBPHY_CTRL_CLR);
+> +
+> +	/* Reset USBPHY module */
+> +	writel_relaxed(BM_USBPHY_CTRL_SFTRST, base + HW_USBPHY_CTRL_SET);
+> +	udelay(10);
+> +
+> +	/* Remove CLKGATE and SFTRST */
+> +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE | BM_USBPHY_CTRL_SFTRST,
+> +			base + HW_USBPHY_CTRL_CLR);
+> +	udelay(10);
 
-The core of the issue is that:
+Is stmp_reset_block() suitable for what you want to do here?
 
-* Tegra30 support is via device tree.
-* We have an SDIO bus, and the WiFi device attached to that bus is
-enumerable.
-* Since the WiFi device is enumerable, no node exists in the DT to
-represent it.
-* However, the driver for the WiFi device needs certain information,
-such as the reset GPIO ID and perhaps power GPIO.
+> +	base = devm_request_and_ioremap(&pdev->dev, res);
+> +	if (!base)
+> +		return -EBUSY;
+> +
+> +	clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		dev_err(&pdev->dev, "can't get the clock!");
 
-For the power GPIO, it seems reasonable to either use the existing Tegra
-SD controller's power-gpios DT property, or replace that property with a
-real regulator binding. The SD driver would then control this. Still,
-that approach would mean the WiFi driver wouldn't be able to control
-power to the device directly, which might not be a good thing.
+Please add the return value to these kind of messages.
 
-However, I'm not sure that the reset GPIO is also something that should
-be controlled by the SD card driver; it seems like it's much more
-closely related to the WiFi device/driver.
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	mxs_phy = devm_kzalloc(&pdev->dev, sizeof(*mxs_phy), GFP_KERNEL);
+> +	if (!mxs_phy) {
+> +		dev_err(&pdev->dev, "Failed to allocate USB PHY structure!\n");
 
-I wonder if the power and reset GPIO shouldn't be represented as a
-combined custom regulator type, which knows how to sequence multiple GPIOs.
+This message is rather useless. It is really not expected for kzalloc
+to fail. If it fails here you really have problems elsewhere and this
+message won't help you debugging it.
 
-Perhaps SDIO "client" devices also need a way to communicate with their
-"host port" to obtain services such as power and reset control?
+Sascha
 
-This is all very similar to the WiFi rfkill discussion we have re: the
-Toshiba AC100 a little while back, although that was USB rather than SDIO.
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
