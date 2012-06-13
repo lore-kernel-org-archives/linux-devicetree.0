@@ -1,136 +1,93 @@
-From: Mauro Carvalho Chehab <mchehab@redhat.com>
-Subject: Re: [PATCH v2 0/3] EDAC support for Calxeda Highbank
-Date: Wed, 13 Jun 2012 12:36:22 -0300
-Message-ID: <4FD8B376.5030006@redhat.com>
-References: <1339468334-9927-1-git-send-email-robherring2@gmail.com> <4FD7430B.6010005@redhat.com> <4FD8AA3C.6090100@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: match by compatible property first
+Date: Wed, 13 Jun 2012 10:37:53 -0500
+Message-ID: <4FD8B3D1.1090706@gmail.com>
+References: <1334917312-21192-1-git-send-email-thierry.reding@avionic-design.de>
+ <4F9160DF.70308@gmail.com>
+ <20120420132839.GB25662@avionic-0098.adnet.avionic-design.de>
+ <20120613070138.GA5670@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FD8AA3C.6090100@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120613070138.GA5670-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-
-Em 13-06-2012 11:57, Rob Herring escreveu:
-> Mauro,
-> 
-> On 06/12/2012 08:24 AM, Mauro Carvalho Chehab wrote:
->> Hi Rob,
->>
->> Em 11-06-2012 23:32, Rob Herring escreveu:
->>> From: Rob Herring <rob.herring@calxeda.com>
+On 06/13/2012 02:01 AM, Thierry Reding wrote:
+> On Fri, Apr 20, 2012 at 03:28:40PM +0200, Thierry Reding wrote:
+>> * Rob Herring wrote:
+>>> On 04/20/2012 05:21 AM, Thierry Reding wrote:
+>> [...]
+>>>> +const struct of_device_id *of_match_compat(const struct of_device_id *matches,
+>>>> +					   const char *compat)
+>>>> +{
+>>>> +	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
 >>>
->>> This series adds EDAC support for Calxeda Highbank platform L2 and
->>> memory ECC hardware.
+>>> You are not using name or type here, so you can remove.
+>>
+>> They are still required so we don't stop early. A match table could well have
+>> a first entry that has name and/or type set but not compatible, followed by a
+>> second entry with only compatible set.
+>>
+>>>>  	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
 >>>
->>> This version is rebased current edac next tree for 3.6. Changes in
->>> this version are the addition of a common edac debugfs directory and
->>> coverting the highbank error injection to use debugfs.
+>>> You don't need to check compatible ptr here.
 >>
->> Thanks for the patches.
->>
->> It looks OK on my eyes, with regards to the EDAC API usage. While this patch
->> touches at the arm/devicetree stuff, most of the changes belong to EDAC, so
->> I'll apply them with my SOB on my tree.
->>
-> 
-> I found a build error when EDAC_DEBUG is turned off.
-> 
-> drivers/edac/highbank_mc_edac.c: In function 'highbank_mc_probe':
-> drivers/edac/highbank_mc_edac.c:215:9: error: 'struct mem_ctl_info' has no member named 'debugfs'
-> drivers/edac/highbank_mc_edac.c:216:50: error: 'struct mem_ctl_info' has no member named 'debugfs'
-> drivers/edac/highbank_mc_edac.c:218:10: error: 'highbank_mc_debug_inject_fops' undeclared (first use in this function)
-> 
-> 
-> Do you prefer I respin the patch or do you want a follow on patch?
+>> For similar reasons as above this check needs to stay in.
 
-Both approaches work for me. As such patch fixes a compilation bug, fixing the existing
-patch is preferred.
+Yes, you're right.
 
-> This is what the fix looks like:
-> 
-> diff --git a/drivers/edac/highbank_mc_edac.c b/drivers/edac/highbank_mc_edac.c
-> index d00dc0b..3185961 100644
-> --- a/drivers/edac/highbank_mc_edac.c
-> +++ b/drivers/edac/highbank_mc_edac.c
-> @@ -124,6 +124,22 @@ static const struct file_operations highbank_mc_debug_inject_fops = {
->          .write = highbank_mc_err_inject_write,
->          .llseek = generic_file_llseek,
->   };
-> +
-> +static int __devinit highbank_mc_create_debugfs_nodes(struct mem_ctl_info *mci)
-> +{
-> +       if (!mci->debugfs)
-> +               return -ENODEV;
-> +
-> +       debugfs_create_file("inject_ctrl", S_IWUSR, mci->debugfs, mci,
-> +                           &highbank_mc_debug_inject_fops);
-> +
-> +       return 0;
-> +}
-> +#else
-> +static int __devinit highbank_mc_create_debugfs_nodes(struct mem_ctl_info *mci)
-> +{
-> +       return -ENODEV;
-> +}
->   #endif
->   
->   static int __devinit highbank_mc_probe(struct platform_device *pdev)
-> @@ -212,10 +228,7 @@ static int __devinit highbank_mc_probe(struct platform_device *pdev)
->          if (res < 0)
->                  goto err;
->   
-> -       if (mci->debugfs)
-> -               debugfs_create_file("inject_ctrl", S_IWUSR, mci->debugfs,
-> -                                   mci,
-> -                                   &highbank_mc_debug_inject_fops);
-> +       highbank_mc_create_debugfs_nodes(mci);
-
-I would just declare the function as void, as you're not using the returned argument.
-
->   
->          devres_close_group(&pdev->dev, NULL);
->          return 0;
-> 
-> 
-> Rob
-> 
->> Regards,
->> Mauro.
->>>
->>> Rob
->>>
->>> Rob Herring (3):
->>>     edac: create top-level debugfs directory
->>>     edac: add support for Calxeda highbank memory controller
->>>     edac: add support for Calxeda highbank L2 cache ecc
->>>
->>>    .../devicetree/bindings/arm/calxeda/l2ecc.txt      |   17 ++
->>>    .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
->>>    arch/arm/boot/dts/highbank.dts                     |   12 +
->>>    drivers/edac/Kconfig                               |   16 +-
->>>    drivers/edac/Makefile                              |    4 +
->>>    drivers/edac/edac_mc_sysfs.c                       |   23 +-
->>>    drivers/edac/edac_module.c                         |    3 +
->>>    drivers/edac/edac_module.h                         |   14 ++
->>>    drivers/edac/highbank_l2_edac.c                    |  149 ++++++++++++
->>>    drivers/edac/highbank_mc_edac.c                    |  256 ++++++++++++++++++++
->>>    10 files changed, 509 insertions(+), 2 deletions(-)
->>>    create mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
->>>    create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
->>>    create mode 100644 drivers/edac/highbank_l2_edac.c
->>>    create mode 100644 drivers/edac/highbank_mc_edac.c
->>>
 >>
+>>>
+>>>>  		int match = 1;
+>>>>  		if (matches->name[0])
+>>>> @@ -532,10 +558,7 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
+>>>>  		if (matches->type[0])
+>>>>  			match &= node->type
+>>>>  				&& !strcmp(matches->type, node->type);
+>>>> -		if (matches->compatible[0])
+>>>> -			match &= of_device_is_compatible(node,
+>>>> -						matches->compatible);
+>>>> -		if (match)
+>>>> +		if (match && !matches->compatible[0])
+>>>>  			return matches;
+>>>>  		matches++;
+>>>>  	}
+>>>> diff --git a/include/linux/of.h b/include/linux/of.h
+>>>> index bd52d83..23b5061 100644
+>>>> --- a/include/linux/of.h
+>>>> +++ b/include/linux/of.h
+>>>> @@ -231,6 +231,8 @@ extern const void *of_get_property(const struct device_node *node,
+>>>>  
+>>>>  extern int of_n_addr_cells(struct device_node *np);
+>>>>  extern int of_n_size_cells(struct device_node *np);
+>>>> +extern const struct of_device_id *of_match_compat(
+>>>> +	const struct of_device_id *matches, const char *compat);
+>>>
+>>> Why does this need to be a public function?
 >>
+>> It doesn't. I just thought it might be handy to have. I can make it static if
+>> you don't think it's useful generally.
+>>
+>> Thierry
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-edac" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Rob,
 > 
+> Do you have further comments on this?
+
+Only that I still think of_match_compat should be static. Please respin
+and I'll apply it.
+
+Rob
