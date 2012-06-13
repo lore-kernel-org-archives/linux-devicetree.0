@@ -1,47 +1,29 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 0/4] DT clock bindings
-Date: Wed, 13 Jun 2012 13:09:36 -0500
-Message-ID: <4FD8D760.3070406@gmail.com>
-References: <1339512111-11172-1-git-send-email-robherring2@gmail.com> <20120613152658.GE32111@tbergstrom-lnx.Nvidia.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [Patch v5 02/13] USB: move transceiver from ehci_hcd and ohci_hcd
+ to hcd and rename it as phy
+Date: Wed, 13 Jun 2012 14:17:55 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1206131417140.1401-100000@iolanthe.rowland.org>
+References: <1339590863-10564-3-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120613152658.GE32111@tbergstrom-lnx.Nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1339590863-10564-3-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Peter,
+On Wed, 13 Jun 2012, Richard Zhao wrote:
 
-On 06/13/2012 10:26 AM, Peter De Schrijver wrote:
-> On Tue, Jun 12, 2012 at 04:41:47PM +0200, Rob Herring wrote:
->> From: Rob Herring <rob.herring@calxeda.com>
->>
->> This series defines clock bindings for Device-Tree and adds kernel
->> support using the common clock infrastructure. The last patch enables
->> DT clock support for the Calxeda Highbank platform.
->>
->> I'm posting this again to solicit further review. There has been some
->> discussion[1], but no definite path forward. This series is not changed
->> from the last post other than rebasing to v3.5-rc2.
->>
->> Rob
->>
->> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-May/100932.html
->>
+>  - to decrease redundant since both ehci_hcd and ohci_hcd have the same variable
+>  - it helps access phy in usb core code
+>  - phy is more meaningful than transceiver
 > 
-> How would this binding work for clocks which can take a spinlock pointer as a
-> init parameter (eg. clk-gate).
+> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Other than fixed clocks, this makes no attempt at generic bindings.
-There is still per clock init required which can allocate a spinlock if
-necessary. If you look at the highbank code, it would be trivial to
-initialize spinlocks as needed.
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 
-Rob
-
-> Cheers,
-> 
-> Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
