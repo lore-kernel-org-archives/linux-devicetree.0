@@ -1,171 +1,170 @@
 From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [Patch v5 05/13] usb: otg: add basic mxs phy driver support
-Date: Wed, 13 Jun 2012 23:33:12 +0200
-Message-ID: <20120613213312.GD30400@pengutronix.de>
+Subject: Re: [Patch v5 06/13] usb: chipidea: add imx platform driver
+Date: Wed, 13 Jun 2012 23:46:22 +0200
+Message-ID: <20120613214622.GE30400@pengutronix.de>
 References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
- <1339590863-10564-6-git-send-email-richard.zhao@freescale.com>
+ <1339590863-10564-7-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1339590863-10564-6-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1339590863-10564-7-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2012 at 08:34:15PM +0800, Richard Zhao wrote:
-> mxs phy is used in Freescale i.MX SoCs, for example
-> imx23, imx28, imx6Q. This patch adds the basic host
-> support.
+On Wed, Jun 13, 2012 at 08:34:16PM +0800, Richard Zhao wrote:
+> This patch supports only the host-mode functionality so far.
 > 
 > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 > Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/usb/mxs-phy.txt |   13 ++
->  drivers/usb/otg/Kconfig                           |    8 +
->  drivers/usb/otg/Makefile                          |    1 +
->  drivers/usb/otg/mxs-phy.c                         |  204 +++++++++++++++++++++
->  4 files changed, 226 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mxs-phy.txt
->  create mode 100644 drivers/usb/otg/mxs-phy.c
+>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |   20 +++
+>  drivers/usb/chipidea/Makefile                      |    3 +
+>  drivers/usb/chipidea/ci13xxx_imx.c                 |  189 ++++++++++++++++++++
+>  3 files changed, 212 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>  create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
 > new file mode 100644
-> index 0000000..5835b27
+> index 0000000..beb75d6
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> @@ -0,0 +1,13 @@
-> +* Freescale MXS USB Phy Device
+> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> @@ -0,0 +1,20 @@
+> +* Freescale i.MX ci13xxx usb controllers
 > +
 > +Required properties:
-> +- compatible: Should be "fsl,imx23-usbphy"
+> +- compatible: Should be "fsl,imx31-usb"
 > +- reg: Should contain registers location and length
-> +- interrupts: Should contain phy interrupt
+> +- interrupts: Should contain controller interrupt
 > +
-> +Example:
-> +usbphy1: usbphy@020c9000 {
-> +	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
-> +	reg = <0x020c9000 0x1000>;
-> +	interrupts = <0 44 0x04>;
+> +Optional properties:
+> +- fsl,usbphy: phandler of usb phy that connects to the only one port
+> +- fsl,hub-reset-gpios: gpio used to reset on-board usb hub
+> +- fsl,vbus-power-gpios: gpio used to set vbus power of the only one port
+> +
+> +Examples:
+> +usb@02184000 { /* USB OTG */
+> +	compatible = "fsl,imx6q-usb", "fsl,imx31-usb";
+
+The i.MX27 also has this core. As it's older that's probably the right
+fallback instead of i.MX31.
+
+> +	reg = <0x02184000 0x200>;
+> +	interrupts = <0 43 0x04>;
+> +	fsl,usbphy = <&usbphy1>;
+> +	fsl,vbus-power-gpios = <&gpio3 22 0>;
 > +};
-> diff --git a/drivers/usb/otg/Kconfig b/drivers/usb/otg/Kconfig
-> index 5c87db0..3a9bc44 100644
-> --- a/drivers/usb/otg/Kconfig
-> +++ b/drivers/usb/otg/Kconfig
-> @@ -116,6 +116,14 @@ config FSL_USB2_OTG
->  	help
->  	  Enable this to support Freescale USB OTG transceiver.
+> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+> index b69900a..5c66d9c 100644
+> --- a/drivers/usb/chipidea/Makefile
+> +++ b/drivers/usb/chipidea/Makefile
+> @@ -14,3 +14,6 @@ ifneq ($(CONFIG_PCI),)
+>  	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_pci.o
+>  endif
 >  
-> +config USB_MXS_PHY
-> +	tristate "Freescale MXS USB PHY support"
-> +	select USB_OTG_UTILS
-> +	help
-> +	  Enable this to support the Freescale MXS USB PHY.
+> +ifneq ($(CONFIG_OF_DEVICE),)
+> +	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_imx.o
+> +endif
 > +
-> +	  MXS Phy is used by some of the i.MX SoCs, for example imx23/28/6x.
-> +
->  config USB_MV_OTG
->  	tristate "Marvell USB OTG support"
->  	depends on USB_EHCI_MV && USB_MV_UDC && USB_SUSPEND
-> diff --git a/drivers/usb/otg/Makefile b/drivers/usb/otg/Makefile
-> index 41aa509..a844b8d 100644
-> --- a/drivers/usb/otg/Makefile
-> +++ b/drivers/usb/otg/Makefile
-> @@ -20,4 +20,5 @@ obj-$(CONFIG_USB_MSM_OTG)	+= msm_otg.o
->  obj-$(CONFIG_AB8500_USB)	+= ab8500-usb.o
->  fsl_usb2_otg-objs		:= fsl_otg.o otg_fsm.o
->  obj-$(CONFIG_FSL_USB2_OTG)	+= fsl_usb2_otg.o
-> +obj-$(CONFIG_USB_MXS_PHY)	+= mxs-phy.o
->  obj-$(CONFIG_USB_MV_OTG)	+= mv_otg.o
-> diff --git a/drivers/usb/otg/mxs-phy.c b/drivers/usb/otg/mxs-phy.c
-> new file mode 100644
-> index 0000000..a55aaed
-> --- /dev/null
-> +++ b/drivers/usb/otg/mxs-phy.c
-> @@ -0,0 +1,204 @@
-> +/*
-> + * Copyright 2012 Freescale Semiconductor, Inc.
-> + * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> + * on behalf of DENX Software Engineering GmbH
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/usb/otg.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +
-> +#define DRIVER_NAME "mxs_phy"
-> +
-> +#define HW_USBPHY_PWD				0x00
-> +#define HW_USBPHY_CTRL				0x30
-> +#define HW_USBPHY_CTRL_SET			0x34
-> +#define HW_USBPHY_CTRL_CLR			0x38
-> +
-> +#define BM_USBPHY_CTRL_SFTRST			BIT(31)
-> +#define BM_USBPHY_CTRL_CLKGATE			BIT(30)
-> +#define BM_USBPHY_CTRL_ENUTMILEVEL3		BIT(15)
-> +#define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
-> +#define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
-> +
-> +struct mxs_phy {
-> +	struct usb_phy phy;
-> +	struct clk *clk;
-> +	int connected:1;
-> +};
-> +
-> +#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-> +
-> +static void mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> +static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
 > +{
-> +	void __iomem *base = mxs_phy->phy.io_priv;
+> +	struct ci13xxx_imx_data *data;
+> +	struct platform_device *plat_ci, *phy_pdev;
+> +	struct device_node *phy_np;
+> +	struct resource *res;
+> +	struct regulator *reg_vbus;
+> +	int ret;
 > +
-> +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE, base + HW_USBPHY_CTRL_CLR);
-> +
-> +	/* Reset USBPHY module */
-> +	writel_relaxed(BM_USBPHY_CTRL_SFTRST, base + HW_USBPHY_CTRL_SET);
-> +	udelay(10);
-> +
-> +	/* Remove CLKGATE and SFTRST */
-> +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE | BM_USBPHY_CTRL_SFTRST,
-> +			base + HW_USBPHY_CTRL_CLR);
-> +	udelay(10);
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data) {
+> +		dev_err(&pdev->dev, "Failed to allocate CI13xxx-IMX data!\n");
 
-Is stmp_reset_block() suitable for what you want to do here?
+Same as in the other patch: This message contains no useful information.
 
-> +	base = devm_request_and_ioremap(&pdev->dev, res);
-> +	if (!base)
-> +		return -EBUSY;
-> +
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(clk)) {
-> +		dev_err(&pdev->dev, "can't get the clock!");
-
-Please add the return value to these kind of messages.
-
-> +		return PTR_ERR(clk);
+> +		return -ENOMEM;
 > +	}
 > +
-> +	mxs_phy = devm_kzalloc(&pdev->dev, sizeof(*mxs_phy), GFP_KERNEL);
-> +	if (!mxs_phy) {
-> +		dev_err(&pdev->dev, "Failed to allocate USB PHY structure!\n");
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Can't get device resources!\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	data->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(data->clk)) {
+> +		dev_err(&pdev->dev, "Failed to get clock!\n");
+> +		return PTR_ERR(data->clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(data->clk);
 
-This message is rather useless. It is really not expected for kzalloc
-to fail. If it fails here you really have problems elsewhere and this
-message won't help you debugging it.
+You forgot to undo this is the error path.
+
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to prepare or enable clock!\n");
+> +		return ret;
+> +	}
+> +
+> +	phy_np = of_parse_phandle(pdev->dev.of_node, "fsl,usbphy", 0);
+> +	if (phy_np) {
+
+Ok, we maybe can do without a phy on some devices, but if we have one...
+
+> +		data->phy_np = phy_np;
+> +		phy_pdev = of_find_device_by_node(phy_np);
+> +		if (phy_pdev) {
+
+... shouldn't it be an error if we do not find the device?
+
+> +			struct usb_phy *phy;
+> +			phy = pdev_to_phy(phy_pdev);
+> +			if (phy &&
+> +			    try_module_get(phy_pdev->dev.driver->owner)) {
+> +				usb_phy_init(phy);
+> +				data->phy = phy;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* we only support host now, so enable vbus here */
+> +	reg_vbus = devm_regulator_get(&pdev->dev, "vbus");
+> +	if (!IS_ERR(reg_vbus)) {
+> +		ret = regulator_enable(reg_vbus);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"Failed to enable vbus regulator!\n");
+> +			goto put_np;
+> +		}
+> +		data->reg_vbus = reg_vbus;
+> +	} else
+> +		reg_vbus = NULL;
+
+If you have braces in one path of a if/else add them to the other path
+aswell.
+
+> +
+> +	ci13xxx_imx_platdata.phy = data->phy;
+> +
+> +	if (!pdev->dev.dma_mask) {
+> +		pdev->dev.dma_mask = devm_kzalloc(&pdev->dev,
+> +				      sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
+> +		if (!pdev->dev.dma_mask) {
+> +			ret = -ENOMEM;
+> +			dev_err(&pdev->dev, "Failed to alloc dma_mask!\n");
+> +			goto err;
+> +		}
+> +		*pdev->dev.dma_mask = DMA_BIT_MASK(32);
+> +		dma_set_coherent_mask(&pdev->dev, *pdev->dev.dma_mask);
+> +	}
+
+Do you need this? I assume not.
 
 Sascha
 
