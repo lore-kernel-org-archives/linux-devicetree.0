@@ -1,7 +1,8 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 02/19] fdt: Add debugging to fdtdec_get_int/addr()
-Date: Wed, 13 Jun 2012 09:19:38 -0700
-Message-ID: <1339604395-6621-3-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 03/19] fdt: Add function to look up a phandle's register
+ address
+Date: Wed, 13 Jun 2012 09:19:39 -0700
+Message-ID: <1339604395-6621-4-git-send-email-sjg@chromium.org>
 References: <1339604395-6621-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,57 +23,61 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The new debugging shows the value of integers and addresses read
-from the device tree.
+This is a commonly-used requirement, so add a function to support it
+easily.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 
- lib/fdtdec.c |   22 ++++++++++++++++------
- 1 files changed, 16 insertions(+), 6 deletions(-)
+ include/fdtdec.h |   13 +++++++++++++
+ lib/fdtdec.c     |   11 +++++++++++
+ 2 files changed, 24 insertions(+), 0 deletions(-)
 
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index fab577e..d7bef6c 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -276,6 +276,19 @@ const char *fdtdec_get_compatible(enum fdt_compat_id id);
+ int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name);
+ 
+ /**
++ * Look up a phandle and follow it to its node. Then return the register
++ * address of that node as a pointer. This can be used to access the
++ * peripheral directly.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @return pointer to node's register address
++ */
++void *fdtdec_lookup_phandle_reg(const void *blob, int node,
++		const char *prop_name);
++
++/**
+  * Look up a property in a node and return its contents in an integer
+  * array of given length. The property must have at least enough data for
+  * the array (4*count bytes). It may have more, but this will be ignored.
 diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index cc09e06..61056f1 100644
+index 61056f1..8185d8f 100644
 --- a/lib/fdtdec.c
 +++ b/lib/fdtdec.c
-@@ -80,11 +80,16 @@ fdt_addr_t fdtdec_get_addr(const void *blob, int node,
- 	const fdt_addr_t *cell;
- 	int len;
- 
--	debug("get_addr: %s\n", prop_name);
-+	debug("%s: %s\n", __func__, prop_name);
- 	cell = fdt_getprop(blob, node, prop_name, &len);
- 	if (cell && (len == sizeof(fdt_addr_t) ||
--			len == sizeof(fdt_addr_t) * 2))
--		return fdt_addr_to_cpu(*cell);
-+			len == sizeof(fdt_addr_t) * 2)) {
-+		fdt_addr_t addr = fdt_addr_to_cpu(*cell);
-+
-+		debug("%p\n", (void *)addr);
-+		return addr;
-+	}
-+	debug("(not found)\n");
- 	return FDT_ADDR_T_NONE;
+@@ -347,6 +347,17 @@ int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name)
+ 	return lookup;
  }
  
-@@ -94,10 +99,15 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
- 	const s32 *cell;
- 	int len;
- 
--	debug("get_size: %s\n", prop_name);
-+	debug("%s: %s: ", __func__, prop_name);
- 	cell = fdt_getprop(blob, node, prop_name, &len);
--	if (cell && len >= sizeof(s32))
--		return fdt32_to_cpu(cell[0]);
-+	if (cell && len >= sizeof(s32)) {
-+		s32 val = fdt32_to_cpu(cell[0]);
++void *fdtdec_lookup_phandle_reg(const void *blob, int node,
++		const char *prop_name)
++{
++	int lookup;
 +
-+		debug("%#x (%d)\n", val, val);
-+		return val;
-+	}
-+	debug("(not found)\n");
- 	return default_val;
- }
- 
++	lookup = fdtdec_lookup_phandle(blob, node, prop_name);
++	if (lookup < 0)
++		return NULL;
++	return (void *)fdtdec_get_addr(blob, lookup, "reg");
++}
++
+ /**
+  * Look up a property in a node and check that it has a minimum length.
+  *
 -- 
 1.7.7.3
