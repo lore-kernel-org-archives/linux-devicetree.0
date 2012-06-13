@@ -1,122 +1,79 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Wed, 13 Jun 2012 10:42:06 +0200
-Message-ID: <20120613084206.GA9607@avionic-0098.mockup.avionic-design.de>
-References: <4FD763C5.3090500@wwwdotorg.org>
- <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de>
- <4FD7A36B.9090409@wwwdotorg.org>
- <4FD7B085.1020006@firmworks.com>
- <20120613064519.GD31001@avionic-0098.mockup.avionic-design.de>
- <4FD84133.4060401@firmworks.com>
- <20120613075232.GA6139@avionic-0098.mockup.avionic-design.de>
- <4FD849CF.4030009@firmworks.com>
- <20120613081910.GB6528@avionic-0098.mockup.avionic-design.de>
- <4FD85127.8050301@firmworks.com>
+From: Jean Pihet <jean.pihet@newoldbits.com>
+Subject: Re: [RFC 1/4] ARM: topology: Add arch_scale_freq_power function
+Date: Wed, 13 Jun 2012 10:50:59 +0200
+Message-ID: <CAORVsuWGE3=8DWRMG0Fq2+CGt9i7__JnfUnOAjbZgGcvhfVK5g@mail.gmail.com>
+References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org>
+	<1339502524-10265-2-git-send-email-vincent.guittot@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FD85127.8050301@firmworks.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1339502524-10265-2-git-send-email-vincent.guittot@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, peterz@infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Vincent,
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 12, 2012 at 2:02 PM, Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+> Add infrastructure to be able to modify the cpu_power of each core
+>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+> =A0arch/arm/include/asm/topology.h | =A0 =A02 ++
+> =A0arch/arm/kernel/topology.c =A0 =A0 =A0| =A0 36 +++++++++++++++++++=
+++++++++++++++++-
+> =A02 files changed, 37 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/t=
+opology.h
+> index 58b8b84..78e4c85 100644
+> --- a/arch/arm/include/asm/topology.h
+> +++ b/arch/arm/include/asm/topology.h
+> @@ -27,11 +27,13 @@ void init_cpu_topology(void);
+> =A0void store_cpu_topology(unsigned int cpuid);
+> =A0const struct cpumask *cpu_coregroup_mask(int cpu);
+>
+> +void set_power_scale(unsigned int cpu, unsigned long power);
+> =A0#else
+>
+> =A0static inline void init_cpu_topology(void) { }
+> =A0static inline void store_cpu_topology(unsigned int cpuid) { }
+>
+> +static inline void set_power_scale(unsigned int cpu, unsigned long p=
+ower) { }
+> =A0#endif
+>
+> =A0#include <asm-generic/topology.h>
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index 8200dea..00301a7 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -22,6 +22,35 @@
+> =A0#include <asm/cputype.h>
+> =A0#include <asm/topology.h>
+>
+> +/*
+> + * cpu power scale management
+> + */
+> +
+> +/*
+> + * cpu power table
+> + * This per cpu data structure describes the relative capacity of ea=
+ch core.
+> + * On a heteregenous system, cores don't have the same computation c=
+apacity
+> + * and we reflect that difference in the cpu_power field so the sche=
+duler can
+> + * take this difference into account for load balance. A per cpu str=
+ucture is
+> + * preferred because each cpu is mainly using its own cpu_power even=
+ it's not
+> + * always true because of nohz_idle_balance
+The end of the comment is unclear IMO; Can you give more details on
+the relation between cpu_power and nohz_idle_balance?
 
-On Tue, Jun 12, 2012 at 10:36:55PM -1000, Mitch Bradley wrote:
-> On 6/12/2012 10:19 PM, Thierry Reding wrote:
-> >On Tue, Jun 12, 2012 at 10:05:35PM -1000, Mitch Bradley wrote:
-> >>On 6/12/2012 9:52 PM, Thierry Reding wrote:
-> >>>I think the configuration spaces and downstream I/O ranges need to be =
-in the
-> >>>pcie-controller's reg property because they are remapped and used by t=
-he
-> >>>controller driver, not by the individual ports.
-> >>>
-> >>>That's probably not really necessary but rather a result of how the dr=
-iver
-> >>>was written. Perhaps the driver should handle them differently instead,
-> >>>listing the regions in the ranges property of the parent and listing t=
-he
-> >>>corresponding partitions in the ranges properties of the pci child nod=
-es.
-> >>>
-> >>>Like in the following, where the ranges property of the ports partitio=
-n the
-> >>>ranges passed from the parent evenly:
-> >>>
-> >>>	pcie-controller {
-> >>>		compatible =3D "nvidia,tegra20-pcie";
-> >>>		reg =3D<0x80003000 0x00000800   /* PADS registers */
-> >>>		       0x80003800 0x00000200>; /* AFI registers */
-> >>>		interrupts =3D<0 98 0x04   /* controller interrupt */
-> >>>			      0 99 0x04>; /* MSI interrupt */
-> >>>		status =3D "disabled";
-> >>>
-> >>>		ranges =3D<0x80000000 0x80000000 0x00002000   /* 2 root ports */
-> >>>			  0x80004000 0x80004000 0x00100000   /* configuration space */
-> >>>			  0x80104000 0x80100000 0x00100000   /* extended configuration spac=
-e */
-> >>>			  0x80400000 0x80400000 0x00010000   /* downstream I/O */
-> >>>			  0x90000000 0x90000000 0x10000000   /* non-prefetchable memory */
-> >>>			  0xa0000000 0xa0000000 0x10000000>; /* prefetchable memory */
-> >>>
-> >>>		#address-cells =3D<1>;
-> >>>		#size-cells =3D<1>;
-> >>>
-> >>>		pci@80000000 {
-> >>>			reg =3D<0x80000000 0x00001000>;
-> >>>			status =3D "disabled";
-> >>>
-> >>>			#address-cells =3D<3>;
-> >>>			#size-cells =3D<2>;
-> >>>
-> >>>			ranges =3D<0x80400000 0x80400000 0x00008000   /* I/O */
-> >>>				  0x90000000 0x90000000 0x08000000   /* non-prefetchable memory */
-> >>>				  0xa0000000 0xa0000000 0x08000000>; /* prefetchable memory */
-> >>
-> >>You are on the right track here, but the format of the child-address
-> >>portion of the above ranges property is incorrect.  Since the child
-> >>address space is the PCI address space, the child-address portion
-> >>needs to be 3 cells.  It's not a linear address but rather a triple.
-> >>The first cell identifies the address type (config, I/O, memory..)
-> >>and the second and third cells are offsets within that subspace.
-> >>The second and third cells will typically be 0.  The PCI binding has
-> >>details.
->=20
-> Also, the size field in ranges is specified according to the child
-> address space, so there must be 2 size cells in the ranges at this
-> level.  Each ranges entry at this level is:
->=20
-> <child_address_space, child_address_high, child_address_low,
-> parent_address, child_size_high, child_size_low>
->=20
-> The above should be:
->=20
-> 			ranges =3D<0x81000000 0 0  0x80400000  0 0x00008000   /* I/O */
-> 				 0x82000000 0 0  0x90000000  0 0x08000000   /* non-prefetchable memor=
-y */
-> 				 0xc2000000 0 0  0xa0000000  0 0x08000000>; /* prefetchable memory */
-
-Okay, I think I'm beginning to understand. Thanks.
-
-Thierry
-
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk/YUl4ACgkQZ+BJyKLjJp8eagCfabQxPZ4R6G6lxx8YtNjDkkul
-apQAoKMutp2++vsN0qDgr86gYeEWg0PG
-=MedJ
------END PGP SIGNATURE-----
-
---azLHFNyN32YCQGCU--
+Regards,
+Jean
