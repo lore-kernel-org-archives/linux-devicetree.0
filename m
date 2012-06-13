@@ -1,51 +1,176 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
-Date: Wed, 13 Jun 2012 14:23:04 +0800
-Message-ID: <20120613062031.GB22680@b20223-02.ap.freescale.net>
-References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
- <1339159026-15837-1-git-send-email-richard.zhao@freescale.com>
- <20120612231438.GA6177@kroah.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Wed, 13 Jun 2012 08:34:22 +0200
+Message-ID: <20120613063422.GC31001@avionic-0098.mockup.avionic-design.de>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
+ <1339427118-32263-8-git-send-email-thierry.reding@avionic-design.de>
+ <4FD66410.7090001@wwwdotorg.org>
+ <20120612062124.GE4040@avionic-0098.adnet.avionic-design.de>
+ <4FD763C5.3090500@wwwdotorg.org>
+ <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de>
+ <4FD7A36B.9090409@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="z4+8/lEcDcG5Ke9S"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120612231438.GA6177-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+In-Reply-To: <4FD7A36B.9090409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2012 at 04:14:38PM -0700, Greg KH wrote:
-> On Fri, Jun 08, 2012 at 08:37:06PM +0800, Richard Zhao wrote:
-> > Sometimes, the driver bindings may know what phy they use.
-> > For example, when using device tree, the usb controller may have a
-> > phandler pointing to usb phy.
-> > 
-> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > ---
-> > Changes since laster version:
-> > - hcd transceiver renamed to phy
-> 
-> Ick, I see patches all over this thread, and other threads, and I have
-> no idea what to apply anywhere...
-I thought it only need small fix, but the fix became bigger and bigger.
-> 
-> So, consider all chipidea patches dropped from my queue now, can you
-> please resend them to me, with the accumulated acks and reviewed-by
-> line, so that I can queue them up?
-I'll send out a new version series.
 
-Thanks for review.
-Richard
-> 
-> thanks,
-> 
-> greg k-h
-> 
+--z4+8/lEcDcG5Ke9S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* Stephen Warren wrote:
+> On 06/12/2012 11:20 AM, Thierry Reding wrote:
+> ...
+> > I came up with the following alternative:
+> >=20
+> > 	pci {
+> > 		compatible =3D "nvidia,tegra20-pcie";
+> > 		reg =3D <0x80003000 0x00000800   /* PADS registers */
+> > 		       0x80003800 0x00000200   /* AFI registers */
+> > 		       0x80004000 0x00100000   /* configuration space */
+> > 		       0x80104000 0x00100000   /* extended configuration space */
+> > 		       0x80400000 0x00010000   /* downstream I/O */
+> > 		       0x90000000 0x10000000   /* non-prefetchable memory */
+> > 		       0xa0000000 0x10000000>; /* prefetchable memory */
+> > 		interrupts =3D <0 98 0x04   /* controller interrupt */
+> > 		              0 99 0x04>; /* MSI interrupt */
+> > 		status =3D "disabled";
+> >=20
+> > 		ranges =3D <0x80000000 0x80000000 0x00002000   /* 2 root ports */
+> > 			  0x80004000 0x80004000 0x00100000   /* configuration space */
+> > 			  0x80104000 0x80104000 0x00100000   /* extended configuration space=
+ */
+> > 			  0x80400000 0x80400000 0x00010000   /* downstream I/O */
+> > 			  0x90000000 0x90000000 0x10000000   /* non-prefetchable memory */
+> > 			  0xa0000000 0xa0000000 0x10000000>; /* prefetchable memory */
+> >=20
+> > 		#address-cells =3D <1>;
+> > 		#size-cells =3D <1>;
+> >=20
+> > 		port@80000000 {
+> > 			reg =3D <0x80000000 0x00001000>;
+> > 			status =3D "disabled";
+> > 		};
+> >=20
+> > 		port@80001000 {
+> > 			reg =3D <0x80001000 0x00001000>;
+> > 			status =3D "disabled";
+> > 		};
+> > 	};
+> >=20
+> > The "ranges" property can probably be cleaned up a bit, but the most
+> > interesting part is the port@ children, which can simply be enabled in =
+board
+> > DTS files by setting the status property to "okay". I find that somewha=
+t more
+> > intuitive to the variant with an "enable-ports" property.
+> >=20
+> > What do you think of this?
+>=20
+> As a general concept, this kind of design seems OK to me.
+>=20
+> The "port" child nodes I think should be named "pci@..." given Mitch's
+> comments, I think.
+>=20
+> The port nodes probably need two entries in reg, given the following in
+> our downstream driver:
+>=20
+> >         int rp_offset =3D 0;
+> >         int ctrl_offset =3D AFI_PEX0_CTRL;
+> ...
+> >         for (port =3D 0; port < MAX_PCIE_SUPPORTED_PORTS; port++) {
+> >                 ctrl_offset +=3D (port * 8);
+> >                 rp_offset =3D (rp_offset + 0x1000) * port;
+> >                 if (tegra_pcie.plat_data->port_status[port])
+> >                         tegra_pcie_add_port(port, rp_offset, ctrl_offse=
+t);
+> >         }
+>=20
+> (which actually looks likely to be horribly buggy for port>1 and only
+> accidentally correct for port=3D=3D1, but anyway...)
+
+Yeah, I currently have code that gets the port index and the reset register
+offset (ctrl_offset above) from the port address. It feels rather hackish,
+though.
+
+> But instead, I'd be tempted to make the top-level node say:
+>=20
+> 	#address-cells =3D <1>;
+> 	#size-cells =3D <0>;
+>=20
+> ... so that the child nodes' reg is just the port ID. The parent node
+> can calculate the addresses/offsets of the per-port registers within the
+> PCIe controller's register space based on the ID using code roughly like
+> what I quoted above:
+>=20
+> 	pci@0 {
+> 		reg =3D <0>;
+> 		status =3D "disabled";
+> 	};
+>=20
+> 	pci@1 {
+> 		reg =3D <0>;
+> 		status =3D "disabled";
+> 	};
+>=20
+> That would save having to put 2 entries in the reg, and perhaps remove
+> the need for any ranges property.
+>=20
+> I think you also need a property to specify the exact port layout; the
+> Tegra20 controller supports:
+>=20
+> 1 x4 port
+> 2 x2 ports (you can choose to use only 1 of these I assume)
+>=20
+> So just because only 1 of the ports is enabled, doesn't imply it's x4;
+> it could still be x2.
+>=20
+> Tegra30 has more options.
+
+Both the upstream and downstream drivers currently hard-code this to dual a=
+nd
+411 (I assume that means 1x4, 2x1?) configurations for Tegra20 and Tegra30
+respectively. Unfortunately the register AFI_PCIE_CONFIG isn't documented on
+Tegra20 at all and for Tegra30 lists only the valid configurations (see
+28.4.1.5 PCIe CONFIG) but not the corresponding encodings.
+
+Maybe a good name for the new property would be "num-lanes". I also wonder =
+if
+this property would be better off in the parent node, which would make it
+easier to check for valid configurations. Otherwise the code would have to
+collect the settings of all the ports and check if the combination is valid.
+Then again, having num-lanes in the parent with one cell for each controller
+isn't very nice if each controller can be individually disabled.
+
+One other thing: in addition to the device tree binding, this will all have=
+ to
+be represented in the platform data as well to support the legacy board
+definitions currently in the tree. But instead of adding all of these chang=
+es
+to the patch that converts the code to a driver, I'm thinking it might be
+better to split these additions off into one or more separate patches. Do y=
+ou
+have any objections?
+
+Thierry
+
+--z4+8/lEcDcG5Ke9S
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk/YNG4ACgkQZ+BJyKLjJp/CTACeOqvpFDgcIv5ngk3kKDHk59uR
+/rUAn1asCjK2yW4mnNRJhKvkM4NU6jJh
+=J+yo
+-----END PGP SIGNATURE-----
+
+--z4+8/lEcDcG5Ke9S--
