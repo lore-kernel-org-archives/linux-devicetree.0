@@ -1,40 +1,28 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [RFC 3/4] ARM: topology: Update cpu_power according to DT information
-Date: Wed, 13 Jun 2012 16:31:19 +0200
-Message-ID: <CAKfTPtAhWrH8M3z-+13iKz4FjNd8LQDJOfOGKcKUx7jLXvtz+g@mail.gmail.com>
-References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org>
-	<1339502524-10265-4-git-send-email-vincent.guittot@linaro.org>
-	<CAORVsuWqWt0pJfewymh_ydAH61-uPsO0M7m7Gs4N3zJY=Vo9ZA@mail.gmail.com>
-	<CAKfTPtBc-KuDg_1qe04TfYS4+66qQoiHCJQbCF9gnhga5ociow@mail.gmail.com>
-	<CAP245DXEOGLe1jq2Wj0rNW5qea63UyJu2jOvwV65Y4B9LLoQtg@mail.gmail.com>
-	<1339591666.8980.26.camel@twins>
-	<CAKfTPtCyV389OTrun5Oyn8RCsDagza95wdmWr=r9poMiYrU0Mg@mail.gmail.com>
-	<1339594368.8980.41.camel@twins>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [RFC 3/4] ARM: topology: Update cpu_power according to DT
+ information
+Date: Wed, 13 Jun 2012 10:42:06 -0400 (EDT)
+Message-ID: <alpine.LFD.2.02.1206131038060.23555@xanadu.home>
+References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org> <1339502524-10265-4-git-send-email-vincent.guittot@linaro.org> <1339592984.8980.34.camel@twins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1339594368.8980.41.camel@twins>
+In-Reply-To: <1339592984.8980.34.camel@twins>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>, Jean Pihet <jean.pihet@newoldbits.com>, linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On 13 June 2012 15:32, Peter Zijlstra <peterz@infradead.org> wrote:
-> On Wed, 2012-06-13 at 15:29 +0200, Vincent Guittot wrote:
->> In fact, there is 2 tracks, one for a power aware scheduler and one
->> for setting the capacity of each core of a big.LITTLE system. This
->> patch is for the latter and is not directly link to the power because
->> the default/performance mode of the scheduler should also take
->> advantage of this information
->
-> Fair enough.. can you include a little blurp in the changelog on how
-> this affects the capacity stuff for big.little and if that works as
-> desired due to these patches?
+On Wed, 13 Jun 2012, Peter Zijlstra wrote:
 
-OK, I will add explanations about how this affect the cpu_power field
-and the load balance of a big.LITTLE system, what is enhanced with
-this modification and what is not.
+> On Tue, 2012-06-12 at 14:02 +0200, Vincent Guittot wrote:
+> > +#ifdef CONFIG_OF
+> 
+> That must really be the worst CONFIG_ name ever..
+
+Indeed!  We must corner Grant to do a s/CONFIG_OF/CONFIG_DEVICE_TREE/
+on the whole tree and send the patch to Linus.  He just managed to 
+chicken away from doing it so far.
 
 
->
->
+Nicolas
