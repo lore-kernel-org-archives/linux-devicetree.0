@@ -1,130 +1,103 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [Patch v5 13/13] ARM: dts: imx28-evk: add usb devices
-Date: Wed, 13 Jun 2012 20:34:23 +0800
-Message-ID: <1339590863-10564-14-git-send-email-richard.zhao@freescale.com>
-References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [RFC 3/4] ARM: topology: Update cpu_power according to DT information
+Date: Wed, 13 Jun 2012 18:14:32 +0530
+Message-ID: <CAP245DXEOGLe1jq2Wj0rNW5qea63UyJu2jOvwV65Y4B9LLoQtg@mail.gmail.com>
+References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org>
+	<1339502524-10265-4-git-send-email-vincent.guittot@linaro.org>
+	<CAORVsuWqWt0pJfewymh_ydAH61-uPsO0M7m7Gs4N3zJY=Vo9ZA@mail.gmail.com>
+	<CAKfTPtBc-KuDg_1qe04TfYS4+66qQoiHCJQbCF9gnhga5ociow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1339590863-10564-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKfTPtBc-KuDg_1qe04TfYS4+66qQoiHCJQbCF9gnhga5ociow@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Jean Pihet <jean.pihet@newoldbits.com>, linux@arm.linux.org.uk, peterz@infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-- add usb phy devices
-- add usb controller devices
-- add usb vbus regulators
+On Wed, Jun 13, 2012 at 3:14 PM, Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+> On 13 June 2012 10:59, Jean Pihet <jean.pihet@newoldbits.com> wrote:
+>> Vincent,
+>>
+>> On Tue, Jun 12, 2012 at 2:02 PM, Vincent Guittot
+>> <vincent.guittot@linaro.org> wrote:
+>>> Use cpu compatibility field and clock-frequency field of DT to
+>>> estimate the capacity of each core of the system
+>>>
+>>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+>>> ---
+>>> =A0arch/arm/kernel/topology.c | =A0122 ++++++++++++++++++++++++++++=
+++++++++++++++++
+>>> =A01 file changed, 122 insertions(+)
+>>>
+>>> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.=
+c
+>>> index 2f85a64..0c2aee4 100644
+>>> --- a/arch/arm/kernel/topology.c
+>>> +++ b/arch/arm/kernel/topology.c
+>>> @@ -17,6 +17,7 @@
+>>> =A0#include <linux/percpu.h>
+>>> =A0#include <linux/node.h>
+>>> =A0#include <linux/nodemask.h>
+>>> +#include <linux/of.h>
+>>> =A0#include <linux/sched.h>
+>>>
+>>> =A0#include <asm/cputype.h>
+>>> @@ -47,6 +48,122 @@ void set_power_scale(unsigned int cpu, unsigned=
+ long power)
+>>> =A0 =A0 =A0 =A0per_cpu(cpu_scale, cpu) =3D power;
+>>> =A0}
+>>>
+>>> +#ifdef CONFIG_OF
+>>> +struct cpu_efficiency {
+>>> + =A0 =A0 =A0 const char *compatible;
+>>> + =A0 =A0 =A0 unsigned long efficiency;
+>>> +};
+>>> +
+>>> +/*
+>>> + * Table of relative efficiency of each processors
+>>> + * The efficiency value must fit in 20bit. The final
+>>> + * cpu_scale value must be in the range [1:2048[.
+>> Typo here.
+>
+> I realize that I have use absolute value instead of SCHED_POWER_SCALE=
+=2E
+> The cpu_scale value must be in the range 0 < cpu_scale < 2*SCHED_POWE=
+R_SCALE
+>
+>>
+>>> + * Processors that are not defined in the table,
+>>> + * use the default SCHED_POWER_SCALE value for cpu_scale.
+>>> + */
+>>> +struct cpu_efficiency table_efficiency[] =3D {
+>>> + =A0 =A0 =A0 {"arm,cortex-a15", 3891},
+>>> + =A0 =A0 =A0 {"arm,cortex-a7", =A02048},
+>> How are those results measured or computed? Is this purely related t=
+o
+>> the number crunching performance?
+>
+> These values are based on ARM's figures which say that Cortex-A15 is
+> 1,9 faster than Cortex-A7 at same frequency. So the inputs are ARM's
+> figures. Then, the absolute values are arbitrary with the constraint
+> of being large enough for precision and small enough to make the
+> computation in an unsigned long
+>
+>>
+>> Also more generally what if the cores frequencies are changing?
+>
+> Up to now, the scheduler takes into account the maximum capacity of a
+> core when it checks the load balance of the system.
 
-Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx28-evk.dts |   36 ++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx28.dtsi    |   12 ++++++++++--
- 2 files changed, 46 insertions(+), 2 deletions(-)
+Jean,
 
-diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
-index ee520a5..a06d86a 100644
---- a/arch/arm/boot/dts/imx28-evk.dts
-+++ b/arch/arm/boot/dts/imx28-evk.dts
-@@ -73,10 +73,28 @@
- 				pinctrl-0 = <&duart_pins_a>;
- 				status = "okay";
- 			};
-+
-+			usbphy0: usbphy@8007c000 {
-+				status = "okay";
-+			};
-+
-+			usbphy1: usbphy@8007e000 {
-+				status = "okay";
-+			};
- 		};
- 	};
- 
- 	ahb@80080000 {
-+		usb0: usb@80080000 {
-+			vbus-supply = <&reg_usb0_vbus>;
-+			status = "okay";
-+		};
-+
-+		usb1: usb@80090000 {
-+			vbus-supply = <&reg_usb1_vbus>;
-+			status = "okay";
-+		};
-+
- 		mac0: ethernet@800f0000 {
- 			phy-mode = "rmii";
- 			pinctrl-names = "default";
-@@ -102,6 +120,24 @@
- 			regulator-max-microvolt = <3300000>;
- 			regulator-always-on;
- 		};
-+
-+		reg_usb0_vbus: usb0_vbus {
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb0_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio3 9 0>;
-+			enable-active-high;
-+		};
-+
-+		reg_usb1_vbus: usb1_vbus {
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb1_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio3 8 0>;
-+			enable-active-high;
-+		};
- 	};
- 
- 	sound {
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 4634cb8..502ad05 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -441,11 +441,13 @@
- 			};
- 
- 			usbphy0: usbphy@8007c000 {
-+				compatible = "fsl,imx28-usbphy", "fsl,imx23-usbphy";
- 				reg = <0x8007c000 0x2000>;
- 				status = "disabled";
- 			};
- 
- 			usbphy1: usbphy@8007e000 {
-+				compatible = "fsl,imx28-usbphy", "fsl,imx23-usbphy";
- 				reg = <0x8007e000 0x2000>;
- 				status = "disabled";
- 			};
-@@ -459,13 +461,19 @@
- 		reg = <0x80080000 0x80000>;
- 		ranges;
- 
--		usbctrl0: usbctrl@80080000 {
-+		usb0: usb@80080000 {
-+			compatible = "fsl,imx28-usb", "fsl,imx31-usb";
- 			reg = <0x80080000 0x10000>;
-+			interrupts = <93>;
-+			fsl,usbphy = <&usbphy0>;
- 			status = "disabled";
- 		};
- 
--		usbctrl1: usbctrl@80090000 {
-+		usb1: usb@80090000 {
-+			compatible = "fsl,imx28-usb", "fsl,imx31-usb";
- 			reg = <0x80090000 0x10000>;
-+			interrupts = <92>;
-+			fsl,usbphy = <&usbphy1>;
- 			status = "disabled";
- 		};
- 
--- 
-1.7.9.5
+Various discussions around power-aware scheduling have amplified the
+need for the scheduler to have some knowledge of DVFS. This would then
+require the scheduler to track 'cpu_power' ( =3D max power) and perhaps
+a new variable 'current_power' that is changed by the DVFS framework.
 
+The first goal, though, is to make sure that the scheduler can handle
+different cpu_power values due to asymmetric cores.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/Amit
