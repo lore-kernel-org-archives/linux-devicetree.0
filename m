@@ -1,55 +1,46 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [RESEND PATCH V3 1/2] arm/dts: OMAP2: Add support for OMAP2420H4 Board
-Date: Tue, 12 Jun 2012 19:40:45 -0500
-Message-ID: <1339548046-27988-2-git-send-email-jon-hunter@ti.com>
-References: <1339548046-27988-1-git-send-email-jon-hunter@ti.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Fix compilation warning/error in setprop_inplace.c
+Date: Wed, 13 Jun 2012 12:31:52 +1000
+Message-ID: <20120613023152.GJ6614@truffala.fritz.box>
+References: <1339534092-27377-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1339548046-27988-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
-Cc: Tony Lindgren <tony@atomide.com>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1339534092-27377-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Simple DTS file for OMAP2420H4 board adding memory information to allow
-device-tree testing on an OMAP2420. OMAP2420H4 board has 64MB of RAM.
-
-Verified that kernel boots with DT using a simple RAMDISK file-system on
-OMAP2420H4.
-
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
- arch/arm/boot/dts/omap2420-h4.dts |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap2420-h4.dts
-
-diff --git a/arch/arm/boot/dts/omap2420-h4.dts b/arch/arm/boot/dts/omap2420-h4.dts
-new file mode 100644
-index 0000000..25b50b7
---- /dev/null
-+++ b/arch/arm/boot/dts/omap2420-h4.dts
-@@ -0,0 +1,20 @@
-+/*
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+/include/ "omap2.dtsi"
-+
-+/ {
-+	model = "TI OMAP2420 H4 board";
-+	compatible = "ti,omap2420-h4", "ti,omap2420", "ti,omap2";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x84000000>; /* 64 MB */
-+	};
-+};
--- 
-1.7.9.5
-
+T24gVHVlLCBKdW4gMTIsIDIwMTIgYXQgMDI6NDg6MTJQTSAtMDYwMCwgU3RlcGhlbiBXYXJyZW4g
+d3JvdGU6Cj4gRnJvbTogU3RlcGhlbiBXYXJyZW4gPHN3YXJyZW5AbnZpZGlhLmNvbT4KPiAKPiBX
+aGVuIGNvbXBpbGluZyB0aGUgY3VycmVudCBjb2RlLWJhc2Ugd2l0aCBnY2MgNC42LjEsIHRoZSBm
+b2xsb3dpbmcgd2FybmluZwo+IGlzIHJhaXNlZCwgd2hpY2ggaXMgaW50ZXJwcmV0ZWQgYXMgYW4g
+ZXJyb3I6Cj4gCj4gY2MxOiB3YXJuaW5ncyBiZWluZyB0cmVhdGVkIGFzIGVycm9ycwo+IHRlc3Rz
+L3NldHByb3BfaW5wbGFjZS5jOiBJbiBmdW5jdGlvbiDigJhtYWlu4oCZOgo+IHRlc3RzL3NldHBy
+b3BfaW5wbGFjZS5jOjYyOiBlcnJvcjogZm9ybWF0IOKAmCUwMTZsbHjigJkgZXhwZWN0cyB0eXBl
+IOKAmGxvbmcgbG9uZyB1bnNpZ25lZCBpbnTigJksIGJ1dCBhcmd1bWVudCAyIGhhcyB0eXBlIOKA
+mHVpbnQ2NF904oCZCj4gdGVzdHMvc2V0cHJvcF9pbnBsYWNlLmM6Njg6IGVycm9yOiBmb3JtYXQg
+4oCYJTAxNmxseOKAmSBleHBlY3RzIHR5cGUg4oCYbG9uZyBsb25nIHVuc2lnbmVkIGludOKAmSwg
+YnV0IGFyZ3VtZW50IDIgaGFzIHR5cGUg4oCYdWludDY0X3TigJkKPiAKPiBVc2UgcHJpbnRmIGZv
+cm1hdCBzcGVjaWZpZXJzIGZyb20gPGludHR5cGVzLmg+IHRvIHNvbHZlIHRoaXMuCj4gCj4gU2ln
+bmVkLW9mZi1ieTogU3RlcGhlbiBXYXJyZW4gPHN3YXJyZW5AbnZpZGlhLmNvbT4KCkFja2VkLWJ5
+OiBEYXZpZCBHaWJzb24gPGRhdmlkQGdpYnNvbi5kcm9wYmVhci5pZC5hdT4KClRoYW5rcy4KCi0t
+IApEYXZpZCBHaWJzb24JCQl8IEknbGwgaGF2ZSBteSBtdXNpYyBiYXJvcXVlLCBhbmQgbXkgY29k
+ZQpkYXZpZCBBVCBnaWJzb24uZHJvcGJlYXIuaWQuYXUJfCBtaW5pbWFsaXN0LCB0aGFuayB5b3Uu
+ICBOT1QgX3RoZV8gX290aGVyXwoJCQkJfCBfd2F5XyBfYXJvdW5kXyEKaHR0cDovL3d3dy5vemxh
+YnMub3JnL35kZ2lic29uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNz
+QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rldmlj
+ZXRyZWUtZGlzY3Vzcwo=
