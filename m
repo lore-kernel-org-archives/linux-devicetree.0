@@ -1,54 +1,40 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH] mmc: sdhci-pxa: Add device tree support
-Date: Wed, 13 Jun 2012 10:15:08 -0400
-Message-ID: <87sjdzxpqr.fsf@octavius.laptop.org>
-References: <8762aw1hcw.fsf@octavius.laptop.org>
-	<CAMj5Bkge5GwQmuz2MpDx19ymAac0WxvF-s2DN=x8U4OWTvmecw@mail.gmail.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [RFC 3/4] ARM: topology: Update cpu_power according to DT information
+Date: Wed, 13 Jun 2012 16:31:19 +0200
+Message-ID: <CAKfTPtAhWrH8M3z-+13iKz4FjNd8LQDJOfOGKcKUx7jLXvtz+g@mail.gmail.com>
+References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org>
+	<1339502524-10265-4-git-send-email-vincent.guittot@linaro.org>
+	<CAORVsuWqWt0pJfewymh_ydAH61-uPsO0M7m7Gs4N3zJY=Vo9ZA@mail.gmail.com>
+	<CAKfTPtBc-KuDg_1qe04TfYS4+66qQoiHCJQbCF9gnhga5ociow@mail.gmail.com>
+	<CAP245DXEOGLe1jq2Wj0rNW5qea63UyJu2jOvwV65Y4B9LLoQtg@mail.gmail.com>
+	<1339591666.8980.26.camel@twins>
+	<CAKfTPtCyV389OTrun5Oyn8RCsDagza95wdmWr=r9poMiYrU0Mg@mail.gmail.com>
+	<1339594368.8980.41.camel@twins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAMj5Bkge5GwQmuz2MpDx19ymAac0WxvF-s2DN=x8U4OWTvmecw@mail.gmail.com>
-	(zhangfei gao's message of "Wed, 13 Jun 2012 11:11:49 +0800")
-Sender: linux-mmc-owner@vger.kernel.org
-To: zhangfei gao <zhangfei.gao@gmail.com>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Zhangfei Gao <zhangfei.gao@marvell.com>, Philip Rakity <prakity@marvell.com>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1339594368.8980.41.camel@twins>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, Jean Pihet <jean.pihet@newoldbits.com>, linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhangfei,
-
-On Tue, Jun 12 2012, zhangfei gao wrote:
-> On Wed, Jun 13, 2012 at 3:05 AM, Chris Ball <cjb@laptop.org> wrote:
->> Tested on an OLPC XO-1.75. =C2=A0(MMP2, sdhci-pxav3, CONFIG_MACH_MMP=
-2_DT=3Dy)
->>
->> Signed-off-by: Chris Ball <cjb@laptop.org>
->> ---
->> =C2=A0.../devicetree/bindings/mmc/sdhci-pxa.txt =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0| =C2=A0 21 ++++++++
->> =C2=A0drivers/mmc/host/sdhci-pxav2.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 | =C2=A0 52 ++++++++++++++++++++
->> =C2=A0drivers/mmc/host/sdhci-pxav3.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 | =C2=A0 50 +++++++++++++++++++
->> =C2=A03 files changed, 123 insertions(+)
->> =C2=A0create mode 100644 Documentation/devicetree/bindings/mmc/sdhci=
--pxa.txt
+On 13 June 2012 15:32, Peter Zijlstra <peterz@infradead.org> wrote:
+> On Wed, 2012-06-13 at 15:29 +0200, Vincent Guittot wrote:
+>> In fact, there is 2 tracks, one for a power aware scheduler and one
+>> for setting the capacity of each core of a big.LITTLE system. This
+>> patch is for the latter and is not directly link to the power because
+>> the default/performance mode of the scheduler should also take
+>> advantage of this information
 >
-> Thanks Chris for the great help, compile error if CONFIG_OF not defin=
-ed.
+> Fair enough.. can you include a little blurp in the changelog on how
+> this affects the capacity stuff for big.little and if that works as
+> desired due to these patches?
 
-Thanks for catching this!
+OK, I will add explanations about how this affect the cpu_power field
+and the load balance of a big.LITTLE system, what is enhanced with
+this modification and what is not.
 
-How do you feel about having the compatible node say "sdhci-pxav3"
-instead of "mrvl,pxav3-mmc"?  I used the mrvl prefix because it fits
-in with the rest of your existing DT, but it seems like it would be
-better to name the driver directly.  The DTs here live inside the
-source tree, so we're not depending on anyone else's terminology.
 
-If you're okay with sdhci-pxav{2,3} in compatible, I'll include that
-in v2 of the patch with the rest of your fixes.
-
-- Chris.
---=20
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+>
+>
