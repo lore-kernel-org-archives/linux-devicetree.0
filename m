@@ -1,86 +1,40 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] ARM: davinci, cp_intc: Add irq domain support
-Date: Wed, 13 Jun 2012 11:50:04 +0200
-Message-ID: <4FD8624C.8010605@denx.de>
-References: <1338373143-7467-1-git-send-email-hs@denx.de>
- <1338373143-7467-2-git-send-email-hs@denx.de> <4FC919C9.6070107@ti.com>
- <4FD77E0F.8050907@ti.com>
-Reply-To: hs-ynQEQJNshbs@public.gmane.org
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Where to power on the wifi device before loading the driver.
+Date: Wed, 13 Jun 2012 18:40:52 +0800
+Message-ID: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <4FD77E0F.8050907-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Nori,
+Hi, all
+I'm working on the tegra30 wifi upstream issue.
 
-On 12.06.2012 19:36, Sekhar Nori wrote:
-> Hi Heiko,
->
-> On 6/2/2012 1:06 AM, Sekhar Nori wrote:
->> Hi Heiko,
->>
->> On 5/30/2012 3:48 PM, Heiko Schocher wrote:
->>> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
->>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
->>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
->>> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
->>> Cc: Sergei Shtylyov<sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
->>>
->>> ---
->>
->> On AM18x EVM, with this patch applied and CONFIG_KEYBOARD_GPIO_POLLED=y,
->> I get warnings of type:
->>
->> irq 0, desc: c0372950, depth: 1, count: 0, unhandled: 0
->>
->> ->handle_irq():  c00552f8, handle_bad_irq+0x0/0x23c
->>
->> ->irq_data.chip(): c03794e8, 0xc03794e8
->>
->> ->action():   (null)
->>
->>     IRQ_NOPROBE set
->>
->>   IRQ_NOREQUEST set
->>
->>
->> They do not come when CONFIG_KEYBOARD_GPIO_POLLED=n. I am yet to debug
->> this, but wanted to point out now in case there is anything obvious.
+The tegra30 board (Cardhu) use Broadcom 4329 as wifi device, and use brcmfmac as the wifi driver.
 
-Hups, seems I missed your EMail :-(
+In the brcmfmac init routine, it call sdio_register_driver() to register driver, if the wifi device is powered on, then the mmc driver will enumerate it, and call the probe callback routine.
 
-> I debugged this a bit more and the good news for you is that spurious
-> IRQ messages have got nothing to do with your patch. Looks like the
+On the Cardhu, the wifi's power is controlled by two gpios (power-gpio and reset-gpio), the default state is power-off. So we need to power on it before calling sdio_register_driver(), if not, the mmc driver can't enumerate it, and will not call the probe routine.
+This power on sequence is: 
+set power-gpio to 1 ;
+mdelay(100) ;
+set reset-gpio to 1 ;
+mdelay(200);
 
-Good :-)
+My question is where to power on the wifi. We may have three places to power on it:
+1. power on it in the brcmfmac driver before calling sdio_register_driver(). But I think this power sequence is special for tegra30 cardhu, it's not good to add it in the generic wifi driver, because different board may use the different way to power on the wifi.
+2. power on it in the mmc driver. In our tegra SD driver, it has power-gpios property, which allow the slot to be powered. But this power is for mmc slot, could we add this wifi power sequence in the tegra SD driver?
+3. hard-coded into DT. Set these gpios in the DT, something like pinmux settings, but in this way, it's not good to put the mdelay() value in the DT.
 
-> spurious interrupts on interrupt line 0 were always there - just that
-> they were getting silently ignored earlier. I am still debugging what is
-> causing these spurious interrupts.
+I have no good idea for it, does anyone has suggestion?
 
-Hmm.. I did not see this on the enbw_cmc board. Maybe I can try it
-on the TMDXEXP1808L board, but I must admit, that I am currently lacking
-time, because of an accident ...
+Thanks.
+Wei.
 
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+---
+nvpublic
