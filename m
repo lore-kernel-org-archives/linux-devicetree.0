@@ -1,116 +1,51 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Wed, 13 Jun 2012 07:54:37 +0200
-Message-ID: <20120613055437.GB31001@avionic-0098.mockup.avionic-design.de>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
- <1339427118-32263-8-git-send-email-thierry.reding@avionic-design.de>
- <4FD66410.7090001@wwwdotorg.org>
- <20120612062124.GE4040@avionic-0098.adnet.avionic-design.de>
- <4FD763C5.3090500@wwwdotorg.org>
- <20120612172041.GA28010@avionic-0098.adnet.avionic-design.de>
- <4FD7943E.60302@firmworks.com>
- <4FD79CAE.9090006@wwwdotorg.org>
- <4FD79DE8.90603@firmworks.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
+Date: Wed, 13 Jun 2012 14:23:04 +0800
+Message-ID: <20120613062031.GB22680@b20223-02.ap.freescale.net>
+References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
+ <1339159026-15837-1-git-send-email-richard.zhao@freescale.com>
+ <20120612231438.GA6177@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4FD79DE8.90603-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20120612231438.GA6177-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 12, 2012 at 04:14:38PM -0700, Greg KH wrote:
+> On Fri, Jun 08, 2012 at 08:37:06PM +0800, Richard Zhao wrote:
+> > Sometimes, the driver bindings may know what phy they use.
+> > For example, when using device tree, the usb controller may have a
+> > phandler pointing to usb phy.
+> > 
+> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> > Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > ---
+> > Changes since laster version:
+> > - hcd transceiver renamed to phy
+> 
+> Ick, I see patches all over this thread, and other threads, and I have
+> no idea what to apply anywhere...
+I thought it only need small fix, but the fix became bigger and bigger.
+> 
+> So, consider all chipidea patches dropped from my queue now, can you
+> please resend them to me, with the accumulated acks and reviewed-by
+> line, so that I can queue them up?
+I'll send out a new version series.
 
---7ZAtKRhVyVSsbBD2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for review.
+Richard
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-* Mitch Bradley wrote:
-> On 6/12/2012 9:46 AM, Stephen Warren wrote:
-> >On 06/12/2012 01:10 PM, Mitch Bradley wrote:
-> >>On 6/12/2012 7:20 AM, Thierry Reding wrote:
-> >...
-> >>>I came up with the following alternative:
-> >>>
-> >>>	pci {
-> >>>		compatible =3D "nvidia,tegra20-pcie";
-> >>>		reg =3D<0x80003000 0x00000800   /* PADS registers */
-> >>>		       0x80003800 0x00000200   /* AFI registers */
-> >>>		       0x80004000 0x00100000   /* configuration space */
-> >>>		       0x80104000 0x00100000   /* extended configuration space */
-> >>>		       0x80400000 0x00010000   /* downstream I/O */
-> >>>		       0x90000000 0x10000000   /* non-prefetchable memory */
-> >>>		       0xa0000000 0x10000000>; /* prefetchable memory */
-> >>>		interrupts =3D<0 98 0x04   /* controller interrupt */
-> >>>		              0 99 0x04>; /* MSI interrupt */
-> >>>		status =3D "disabled";
-> >>>
-> >>>		ranges =3D<0x80000000 0x80000000 0x00002000   /* 2 root ports */
-> >>>			  0x80004000 0x80004000 0x00100000   /* configuration space */
-> >>>			  0x80104000 0x80104000 0x00100000   /* extended configuration spac=
-e */
-> >>>			  0x80400000 0x80400000 0x00010000   /* downstream I/O */
-> >>>			  0x90000000 0x90000000 0x10000000   /* non-prefetchable memory */
-> >>>			  0xa0000000 0xa0000000 0x10000000>; /* prefetchable memory */
-> >>>
-> >>>		#address-cells =3D<1>;
-> >>>		#size-cells =3D<1>;
-> >>>
-> >>>		port@80000000 {
-> >>>			reg =3D<0x80000000 0x00001000>;
-> >>>			status =3D "disabled";
-> >>>		};
-> >>>
-> >>>		port@80001000 {
-> >>>			reg =3D<0x80001000 0x00001000>;
-> >>>			status =3D "disabled";
-> >>>		};
-> >>>	};
-> >>>
-> >>>The "ranges" property can probably be cleaned up a bit, but the most
-> >>>interesting part is the port@ children, which can simply be enabled in=
- board
-> >>>DTS files by setting the status property to "okay". I find that somewh=
-at more
-> >>>intuitive to the variant with an "enable-ports" property.
-> >>>
-> >>>What do you think of this?
-> >>
-> >>The problem is that children of a PCI-ish bus have specific expectations
-> >>about the parent address format - the standard 3-address-cell PCI
-> >>addressing.  So making a PCI bus node - even if it is PCIe - with 1
-> >>address cell is a problem.
-> >
-> >Couldn't you put the #address-cells=3D<3>  underneath each port node, and
-> >put any PCIe devices there rather than under the main PCIe controller
-> >node? I'm not sure how the interrupt mapping table etc. would work in
-> >that case, but that seems to solve the addressing issue.
->=20
-> Yes, that would work just fine, and in fact would be preferable, if
-> a "root port" is essentially an independent PCI bus.  The parent of
-> those root ports should not be named "pci", though, as it is not in
-> itself a PCI bus.  It could be called "pcis".
-
-Yes, on Tegra each of the ports provides a separate PCI bus. How about nami=
-ng
-the parent "pcie-controller"? IMO that reflects the nature of the device
-better, whereas "pcis" would seem more like a "virtual" node for collecting
-similar children.
-
-Thierry
-
---7ZAtKRhVyVSsbBD2
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk/YKx0ACgkQZ+BJyKLjJp/JYwCgpXG48eCe74WLWujfZGQSnQ4K
-Gl8AnRbUqD8u/XLAwS0V+lIkcN2gbIG9
-=pqcY
------END PGP SIGNATURE-----
-
---7ZAtKRhVyVSsbBD2--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
