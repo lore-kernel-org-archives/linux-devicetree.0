@@ -1,44 +1,41 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [RFC 1/4] ARM: topology: Add arch_scale_freq_power function
-Date: Wed, 13 Jun 2012 12:30:57 -0700
-Message-ID: <1339615857.28729.6.camel@joe2Laptop>
-References: <1339502524-10265-1-git-send-email-vincent.guittot@linaro.org>
-	 <1339502524-10265-2-git-send-email-vincent.guittot@linaro.org>
-	 <1339591969.8980.30.camel@twins> <20120613192740.GZ5878@dm>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Wed, 13 Jun 2012 20:21:08 +0000
+Message-ID: <201206132021.09774.arnd@arndb.de>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de> <4FD84133.4060401@firmworks.com> <20120613075232.GA6139@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120613192740.GZ5878@dm>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Whitcroft <apw@canonical.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Vincent Guittot <vincent.guittot@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120613075232.GA6139-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-06-13 at 20:27 +0100, Andy Whitcroft wrote:
-> On Wed, Jun 13, 2012 at 02:52:49PM +0200, Peter Zijlstra wrote:
-> > On Tue, 2012-06-12 at 14:02 +0200, Vincent Guittot wrote:
-> > >         }
-> > >         smp_wmb();
-> > >  } 
-> > 
-> > You know what.. we should make checkpatch report an error for memory
-> > barriers that don't have a comment. 
-> > 
-> > I know this isn't added by this patch, but every time I see something
-> > like it I cry a little.
+On Wednesday 13 June 2012, Thierry Reding wrote:
+>                 pci@80000000 {
+>                         reg = <0x80000000 0x00001000>;
+>                         status = "disabled";
 > 
-> Actually if it was a new line, it would have been reported, at least in
-> theory:
+>                         #address-cells = <3>;
+>                         #size-cells = <2>;
 > 
->     # check for memory barriers without a comment.
-> 		    if ($line =~
->     /\b(mb|rmb|wmb|read_barrier_depends|smp_mb|smp_rmb|smp_wmb|smp_read_barrier_depends)\(/)
->     {
-> 	if (!ctx_has_comment($first_line, $linenr)) {
-> 	    CHK("MEMORY_BARRIER",
-> 		"memory barrier without comment\n" . $herecurr);
-> 	}
->     }
+>                         ranges = <0x80400000 0x80400000 0x00008000   /* I/O */
+>                                   0x90000000 0x90000000 0x08000000   /* non-prefetchable memory */
+>                                   0xa0000000 0xa0000000 0x08000000>; /* prefetchable memory */
+> 
+>                         nvidia,ctrl-offset = <0x0>;
+>                         nvidia,num-lanes = <2>;
+>                 };
+> 
 
-Maybe promote that CHK to a WARN.
+I believe you will need an "interrupt-map" property here, to map the host
+interrupts to the INTA-INTD lines of the attached devices.
+
+I'm not sure whether we want to have a device_type="pciex" property here.
+powerpc and sparc seem to use that information, to distinguish a pcie
+bus from pci or cardbus.
+
+	Arnd
