@@ -1,93 +1,87 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: match by compatible property first
-Date: Wed, 13 Jun 2012 10:37:53 -0500
-Message-ID: <4FD8B3D1.1090706@gmail.com>
-References: <1334917312-21192-1-git-send-email-thierry.reding@avionic-design.de>
- <4F9160DF.70308@gmail.com>
- <20120420132839.GB25662@avionic-0098.adnet.avionic-design.de>
- <20120613070138.GA5670@avionic-0098.mockup.avionic-design.de>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
+Date: Wed, 13 Jun 2012 18:00:38 +0200
+Message-ID: <201206131800.38622.marex@denx.de>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com> <4FD8AD42.6010702@gmail.com> <20120613152841.GA23590@richard-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120613070138.GA5670-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120613152841.GA23590@richard-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2012 02:01 AM, Thierry Reding wrote:
-> On Fri, Apr 20, 2012 at 03:28:40PM +0200, Thierry Reding wrote:
->> * Rob Herring wrote:
->>> On 04/20/2012 05:21 AM, Thierry Reding wrote:
->> [...]
->>>> +const struct of_device_id *of_match_compat(const struct of_device_id *matches,
->>>> +					   const char *compat)
->>>> +{
->>>> +	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
->>>
->>> You are not using name or type here, so you can remove.
->>
->> They are still required so we don't stop early. A match table could well have
->> a first entry that has name and/or type set but not compatible, followed by a
->> second entry with only compatible set.
->>
->>>>  	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
->>>
->>> You don't need to check compatible ptr here.
->>
->> For similar reasons as above this check needs to stay in.
+Dear Richard Zhao,
 
-Yes, you're right.
-
->>
->>>
->>>>  		int match = 1;
->>>>  		if (matches->name[0])
->>>> @@ -532,10 +558,7 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
->>>>  		if (matches->type[0])
->>>>  			match &= node->type
->>>>  				&& !strcmp(matches->type, node->type);
->>>> -		if (matches->compatible[0])
->>>> -			match &= of_device_is_compatible(node,
->>>> -						matches->compatible);
->>>> -		if (match)
->>>> +		if (match && !matches->compatible[0])
->>>>  			return matches;
->>>>  		matches++;
->>>>  	}
->>>> diff --git a/include/linux/of.h b/include/linux/of.h
->>>> index bd52d83..23b5061 100644
->>>> --- a/include/linux/of.h
->>>> +++ b/include/linux/of.h
->>>> @@ -231,6 +231,8 @@ extern const void *of_get_property(const struct device_node *node,
->>>>  
->>>>  extern int of_n_addr_cells(struct device_node *np);
->>>>  extern int of_n_size_cells(struct device_node *np);
->>>> +extern const struct of_device_id *of_match_compat(
->>>> +	const struct of_device_id *matches, const char *compat);
->>>
->>> Why does this need to be a public function?
->>
->> It doesn't. I just thought it might be handy to have. I can make it static if
->> you don't think it's useful generally.
->>
->> Thierry
+> On Wed, Jun 13, 2012 at 10:09:54AM -0500, Rob Herring wrote:
+> > On 06/13/2012 07:34 AM, Richard Zhao wrote:
+> > > Sometimes, boards have gpios that don't own by any driver or owner
+> > > by a generic driver that don't like hacks. Such gpios is normally
+> > > output and need setup once on boot. So I introduce the config-on-boot
+> > > gpios.
+> > > 
+> > > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > > ---
+> > > 
+> > >  .../devicetree/bindings/arm/config-on-boot.txt     |   12 +++++++
+> > >  arch/arm/boot/dts/imx6q-sabrelite.dts              |    7 ++++
+> > >  arch/arm/mach-imx/mach-imx6q.c                     |   35
+> > >  ++++++++++++++++++++ 3 files changed, 54 insertions(+)
+> > >  create mode 100644
+> > >  Documentation/devicetree/bindings/arm/config-on-boot.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/arm/config-on-boot.txt
+> > > b/Documentation/devicetree/bindings/arm/config-on-boot.txt new file
+> > > mode 100644
+> > > index 0000000..f98ed74
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/arm/config-on-boot.txt
+> > > @@ -0,0 +1,12 @@
+> > > +* Configure on Boot
+> > > +
+> > > +Node name: config-on-boot
+> > > +  It must be in root node. config-on-boot means to describe settings
+> > > that needs +  to be set one time on boot but aren't owned by any
+> > > driver, or the owned driver +  is too generic to handle such settings.
+> > > For example, usb hub uses generic +  driver in usb core code, a
+> > > on-board usb may need deassert reset pin.
+> > 
+> > NAK. This is not a h/w description
 > 
-> Rob,
+> It's misc things, but is hw description.
 > 
-> Do you have further comments on this?
+> > and should be solved within the
+> > kernel or bootloader. Either fix this in u-boot,
+> 
+> Kernel might be better not to depend on uboot.
 
-Only that I still think of_match_compat should be static. Please respin
-and I'll apply it.
+And we don't want to polute uboot either, so this is a good move.
 
-Rob
+> > the platform code, or
+> 
+> How do I get gpio in platfrom code without dts description?
+
+Write a driver that does the GPIO setup in some generic way? Wasn't there 
+something about this stuff going on? Shawn, you had some comments /wrt the M28 
+DTS. This might be what you meant?
+
+> > make the generic driver support this in a generic way.
+> 
+> It's called just after populate devices. It's hard for generic driver to
+> decide when it's called.
+> 
+> Thanks
+> Richard
+
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
