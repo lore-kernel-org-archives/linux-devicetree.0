@@ -1,119 +1,170 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 14 Jun 2012 16:52:10 -0500
-Message-ID: <4FDA5D0A.1040105@ti.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <4FBAA64A.200@wwwdotorg.org> <4FD24CC3.50700@ti.com> <201206090004.10086.arnd@arndb.de> <Pine.LNX.4.64.1206141537190.30810@axis700.grange>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree based
+ pinctrl driver
+Date: Thu, 14 Jun 2012 17:12:13 -0600
+Message-ID: <4FDA6FCD.1020605@wwwdotorg.org>
+References: <20120611135826.GB12766@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1206141537190.30810@axis700.grange>
-Sender: linux-omap-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120611135826.GB12766-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 06/14/2012 10:17 AM, Guennadi Liakhovetski wrote:
-> Hi all
+On 06/11/2012 07:58 AM, Tony Lindgren wrote:
+> Add one-register-per-pin type device tree based pinctrl driver.
 > 
-> Sorry for jumping in so late in the game. But I think, the model, to which 
-> this discussion is slowly converging, is not very well suitable for the 
-> shdma DMACs, present on SH and ARM sh-mobile SoCs. I might be wrong and 
-> the model is indeed suitable, in which case I'd be grateful, if someone 
-> could explain, how this model could be used for shdma. Below I'll try to 
-> describe main properties of shdma served DMACs, I've done this a couple of 
-> times before during various dmaengine related discussions. Let's see how 
-> we can use this model for these SoCs.
-> 
-> On Sat, 9 Jun 2012, Arnd Bergmann wrote:
-> 
->> On Friday 08 June 2012, Jon Hunter wrote:
-> 
-> [snip]
-> 
->>> It seems to me we were pretty close on alignment. In fact, I was quite
->>> happy with Steven's 2nd to last proposal of  ...
->>>
->>> simple 1 req:
->>> dmas = <0 &dmac1 xxx>;
->>>
->>> simple 2 req:
->>> dmas = <0 &dmac1 xxx 1 &dmac1 yyy>;
->>>
->>> multiple dmacs:
->>> dmas = <0 &dmac1 xxx 0 &dmac2 zzz 1 &dmac1 yyy>;
-> 
-> A typical sh-mobile SoC contains several DMAC instances of several 
-> sub-types, all served by the same driver. Let's take sh7372 to be 
-> specific (see arch/arm/mach-shmobile/setup-sh7372.c for details). On 
-> sh7372 we've got 3 generic DMAC instances and 2 dedicated USB DMACs.
-> 
-> Generic DMACs have 6 physical channels each, USB DMACs 2.
+> Currently this driver only works on omap2+ series of processors,
+> where there is either an 8 or 16-bit padconf register for each pin.
+> Support for other similar pinmux controllers can be added.
 
-For OMAP we also have dedicated DMAC for the USB controllers. However,
-these DMAC are very much integrated into the USB controller itself.
-Hence, in the of OMAP we would only be using the binding really to
-handle the generic DMAC. However, I would not like to think that this is
-limited to only generic DMAC.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-omap2plus.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-omap2plus.txt
 
-> Generic DMACs can perform memory-to-memory DMA, USB DMACs cannot.
-> 
-> Generic DMACs can serve any slave (peripheral) request line on any their 
-> physical channel, USB DMACs only serve fixed USB controller instances. To 
-> configure (connect) a certain physical DMA channel to s specific 
-> peripheral request line, a certain value has to be written to a 
-> configuration register of that physical DMA channel.
+I'm not sure why you'd need an explicit OMAP2 binding document or
+compatible values if it just uses the plain pinctrl-single binding
+unmodified.
 
-Do you still need to specify a request line for the USB DMACs or are
-these fixed? In other words, what purpose would the DMA binding serve
-for the USB DMACs?
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
 
-> To add to complexity, on other SoCs (e.g., SuperH sh7724) some of generic 
-> DMACs (DMAC0) have external DMA request pins, others don't.
+> +- pinctrl-single,function-off : function off mode for disabled state
 
-OMAP also has this. To me an request line going to an external pin can
-be handled in the same way as one going to a internal peripheral.
-However, what happens to that pin externally is a different story.
+Might that not vary per register? Admittedly, Tegra isn't something that
+could be covered by pinctrl-single, but the safe/off/non-conflicting mux
+selection values for Tegra certainly are not all the same value.
 
-> I'm sure there's more to that, but that's about the scope, that's 
-> currently supported or wants to be supported by the driver.
-> 
-> Currently we do the slave-switching in the following way: platform data 
-> for each DMAC instance references a table of supported peripherals with 
-> their IDs and configuration register values. Each peripheral, that wishes 
-> to use DMA, provides its slave ID to the DMAC driver, by which it checks, 
-> whether this peripheral is supported and, if so, finds its configuration, 
-> picks up the next free channel and configures it.
-> 
-> So, with the above in mind, IIUC, the above DT binding proposal would 
-> require us to reference all 3 generic DMAC instances in each slave dmas 
-> property? 
+> +- pinctrl-single,pinconf-mask : mask of allowed pinconf bits
+> +
+> +This driver uses the common pinctrl bindings as specified in the
+> +pinctrl-bindings.txt document in this directory.
+> +
+> +The pinctrl register offsets and default values are specified as pairs
 
-You could if you wanted to have the ability to select 1 out of the 3.
-However, I would not say it is a hard requirement. You could just
-provide one. Or you could list all 3, but use some form of match
-variable to indicate a default DMAC for a given peripheral.
+Why "default values" not just "values"; they can only be "default" if
+you're talking about something that can be changed by some other
+optional mechanism, which I don't believe is the case here.
 
-> Even if we assume, that for this specific case we don't have to 
-> map each physical channel, because so far they are "mostly" all equal on 
-> each DMAC instance. Mostly, because external DMA request lines on sh7724 
-> can only be used with channels 0 and 1 out of 6 of DMAC0... What we 
-> certainly don't want to do is specify fixed physical DMA channels or even 
-> controller instances in slave DMA bindings.
+> +using pinctrl-single,pins. For example, setting uart2_rx pin on omap2plus
+> +can be done with:
+> +
+> +	pinctrl-single,pins = <0xdc 0x118>;
+> +
+> +Where 0xdc is the offset from the pinctrl ioremapped area for the
 
-You could just use the binding to return a handle to one DMAC and then
-just request a channel. I don't see that the binding would require you
-to specify fixed channels.
+"ioremapped area" is a Linux-specific term. "register base address"
+would be more generic.
 
-> To me it looks like the above proposal would only very suboptimally be 
-> usable with sh-mobile SoCs...
+> +uart2_rx register, and 0x118 contains the desired default value for
+> +for the pin setting it to INPUT_PULLUP | MODE0. See the uart example and
 
-I guess I don't see that, but then again I am not familiar with the all
-the details of the SH devices.
+Any mention of "uart2_rx" or "setting it to INPUT_PULLUP | MODE0" is
+OMAP-specific; I'd say "0xdc" and just delete "setting it ...".
 
-However, thinking about it some more, if a DMAC is this generic, what
-information do you want the binding to provide?
+> +static board pins example below for more information.
+> +
+> +If you are concerned about the boot time, set up the static pins in
+> +the bootloader, and only set up selected pins as device tree entries.
 
-Cheers
-Jon
+I'm not sure if it's really appropriate to state that kind of thing in a
+DT binding document.
+
+> +This driver assumes that there is only one register for each pin. If you
+> +have some pins with more complicated configuration,
+
+OK ...
+
+> you can set up a separate
+> +hardware specific driver for those pins.
+
+But for that, it seems more correct to say that pinctrl-single simply
+isn't an appropriate model for your HW.
+
+> +Note that this driver tries to avoid understanding pin and function
+> +names because of the extra bloat they would cause especially in the
+> +omap2plus case. This driver just sets what is specified for the board
+
+Again, I'd remove reference to any specific SoC from a generic binding.
+
+> +in the .dts file. Further user space debugging tools can be developed
+> +to decipher the pin and function names using debugfs.
+> +
+> +Example:
+> +
+> +/* SoC common file, such as omap4.dtsi */
+
+But just to be clear, having an example for a specific SoC seems fine to
+me; just not the generic descriptive text.
+
+I don't see anywhere that describes how the function-mask and
+pinconf-mask properties interact with the values in pinctrl-single,pins
+property; are both masks OR'd together, then AND'd with the pins values,
+then written to the registers? If so, why have 2 masks?
+
+> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+
+> +struct pcs_device {
+
+> +	struct pinctrl_desc *desc;
+
+Why not make that a struct rather than a pointer. That way, you wouldn't
+have to dynamically allocate it separately. It's always needed.
+
+> +static int __devinit pcs_probe(struct platform_device *pdev)
+
+> +	ret = of_address_to_resource(pdev->dev.of_node, 0, &res);
+
+It's much more common to use platform_get_resource(); doesn't calling
+of_address_to_resource() duplicate all the work that the OF core already
+did to set up the platform resource structures?
+
+> +	ret = pcs_register(pcs);
+
+Why not just inline that function here; it's not shared with anything.
+
+> +static int __devexit pcs_remove(struct platform_device *pdev)
+
+> +	platform_set_drvdata(pdev, NULL);
+
+There's no need to explicitly clear that; nothing should be using that
+value when the device is removed, so the value shouldn't matter.
+
+> +static struct of_device_id pcs_of_match[] __devinitdata = {
+> +	{ .compatible = DRIVER_NAME, },
+> +	{ .compatible = "ti,omap2420-padconf", },
+> +	{ .compatible = "ti,omap2430-padconf", },
+> +	{ .compatible = "ti,omap3-padconf", },
+> +	{ .compatible = "ti,omap4-padconf", },
+> +	{ },
+> +};
+
+Shouldn't that contain just one entry for "pinctrl-single", and no others?
+
+> +MODULE_LICENSE("GPL");
+
+The license header implies that should be "GPL v2" not just "GPL" (which
+means GPLv2+)
+
+One final comment: A little while before Linaro Connect in San
+Francisco, we were all having difficulty coming up with any kind of DT
+binding for pinctrl. I had suggested the possibility of creating a
+binding which just said "write value X to register Y, write value P to
+register Q, ...". This was rejected at connect, because a raw list of
+register writes didn't document anything or describe semantics - it was
+too much of a binary blob. This driver seems to be doing almost the
+exact same thing. In order to avoid that assertion, it'd need to truly
+have individual representations of which pins exist, which pingroups
+exist, which functions exist, and which functions can be selected onto
+which pins/pingroups. That would be a radically different binding. I
+wonder what's changed such that this kind of driver wasn't acceptable
+then, but is now?
