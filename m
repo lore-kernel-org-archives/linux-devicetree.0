@@ -1,78 +1,59 @@
 From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [Patch v5 05/13] usb: otg: add basic mxs phy driver support
-Date: Thu, 14 Jun 2012 09:12:12 +0800
-Message-ID: <20120614011211.GB29684@b20223-02.ap.freescale.net>
+Subject: Re: [Patch v5 06/13] usb: chipidea: add imx platform driver
+Date: Thu, 14 Jun 2012 09:21:41 +0800
+Message-ID: <20120614012141.GC29684@b20223-02.ap.freescale.net>
 References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
- <1339590863-10564-6-git-send-email-richard.zhao@freescale.com>
- <20120613213312.GD30400@pengutronix.de>
- <201206132356.16093.marex@denx.de>
+ <1339590863-10564-7-git-send-email-richard.zhao@freescale.com>
+ <20120613214622.GE30400@pengutronix.de>
+ <201206132357.35099.marex@denx.de>
+ <20120613220700.GI30400@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201206132356.16093.marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <20120613220700.GI30400-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2012 at 11:56:15PM +0200, Marek Vasut wrote:
-> Dear Sascha Hauer,
-> 
-> > On Wed, Jun 13, 2012 at 08:34:15PM +0800, Richard Zhao wrote:
-> > > mxs phy is used in Freescale i.MX SoCs, for example
-> > > imx23, imx28, imx6Q. This patch adds the basic host
-> > > support.
+On Thu, Jun 14, 2012 at 12:07:00AM +0200, Sascha Hauer wrote:
+> On Wed, Jun 13, 2012 at 11:57:34PM +0200, Marek Vasut wrote:
+> > Dear Sascha Hauer,
+> > 
+> > > > +
+> > > > +	if (!pdev->dev.dma_mask) {
+> > > > +		pdev->dev.dma_mask = devm_kzalloc(&pdev->dev,
+> > > > +				      sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
+> > > > +		if (!pdev->dev.dma_mask) {
+> > > > +			ret = -ENOMEM;
+> > > > +			dev_err(&pdev->dev, "Failed to alloc dma_mask!\n");
+> > > > +			goto err;
+> > > > +		}
+> > > > +		*pdev->dev.dma_mask = DMA_BIT_MASK(32);
+> > > > +		dma_set_coherent_mask(&pdev->dev, *pdev->dev.dma_mask);
+> > > > +	}
 > > > 
-> > > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > > Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> [...]
+> > > Do you need this? I assume not.
+> > 
+> > Ain't this the dma mask crap without which the usb stuff won't work?
 > 
-> > > +	/* Remove CLKGATE and SFTRST */
-> > > +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE | BM_USBPHY_CTRL_SFTRST,
-> > > +			base + HW_USBPHY_CTRL_CLR);
-> > > +	udelay(10);
-> > 
-> > Is stmp_reset_block() suitable for what you want to do here?
-> 
-> IIRC it is.
-Thanks.
-> 
-> > > +	base = devm_request_and_ioremap(&pdev->dev, res);
-> > > +	if (!base)
-> > > +		return -EBUSY;
-> > > +
-> > > +	clk = devm_clk_get(&pdev->dev, NULL);
-> > > +	if (IS_ERR(clk)) {
-> > > +		dev_err(&pdev->dev, "can't get the clock!");
-> > 
-> > Please add the return value to these kind of messages.
-Make sense.
-> > 
-> > > +		return PTR_ERR(clk);
-> > > +	}
-> > > +
-> > > +	mxs_phy = devm_kzalloc(&pdev->dev, sizeof(*mxs_phy), GFP_KERNEL);
-> > > +	if (!mxs_phy) {
-> > > +		dev_err(&pdev->dev, "Failed to allocate USB PHY structure!\n");
-> > 
-> > This message is rather useless. It is really not expected for kzalloc
-> > to fail. If it fails here you really have problems elsewhere and this
-> > message won't help you debugging it.
-At least it shows the point it fails and people can look back what code
-has been run.
+> Yes, the device needs this, but afaik the of platform code will set this
+> for you. You only have to do this manually for devices which you
+> allocate yourself.
+Unfortunately, devices device tree populated don't set dma_mask.
+It always hit if (!pdev->dev.dma_mask). I'm not the only one suffer it.
 
 Thanks
 Richard
 > 
-> It's not useless, but it'll hardly ever be displayed if you run out of memory so 
-> badly this kzalloc() will fail.
+> Sascha
 > 
-> > Sascha
-> 
-> Best regards,
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 > 
 
 --
