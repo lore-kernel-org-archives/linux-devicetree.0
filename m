@@ -1,74 +1,35 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Thu, 14 Jun 2012 10:37:19 +0200
-Message-ID: <20120614083719.GC31283@avionic-0098.mockup.avionic-design.de>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
- <4FD84133.4060401@firmworks.com>
- <20120613075232.GA6139@avionic-0098.mockup.avionic-design.de>
- <201206132021.09774.arnd@arndb.de>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v3 0/4] DT clock bindings
+Date: Thu, 14 Jun 2012 16:49:06 +0800
+Message-ID: <20120614084904.GF31565@S2101-09.ap.freescale.net>
+References: <1339512111-11172-1-git-send-email-robherring2@gmail.com>
+ <20120612154735.GB19410@gmail.com>
+ <4FD76CF6.8090801@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201206132021.09774.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <4FD76CF6.8090801@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mike Turquette <mturquette@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, s.hauer@pengutronix.de, sboyd@codeaurora.org, Grant Likely <grant.likely@secretlab.ca>, skannan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 12, 2012 at 11:23:18AM -0500, Rob Herring wrote:
+> Right. This is why I have reposted and copied those whom commented on my
+> pull request. I think at least some of Saravana's concerns boiled down
+> to not requiring using DT clock bindings and not requiring driver
+> changes to move to DT bindings. Both of these are met with this series.
+> A platform can still use clkdev tables for binding clocks to devices and
+> does not have to use DT for clocks. Drivers generally should not require
+> any changes that I'm aware of, but if there are any concrete examples
+> I'd like to know.
+> 
+> Yes, I think this should go thru you.
+> 
+I still have a little doubt about how this binding will best work for
+imx clock.  I'm trying to cook a RFC patch discussing.
 
---H8ygTp4AXg6deix2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 13, 2012 at 08:21:08PM +0000, Arnd Bergmann wrote:
-> On Wednesday 13 June 2012, Thierry Reding wrote:
-> >                 pci@80000000 {
-> >                         reg =3D <0x80000000 0x00001000>;
-> >                         status =3D "disabled";
-> >=20
-> >                         #address-cells =3D <3>;
-> >                         #size-cells =3D <2>;
-> >=20
-> >                         ranges =3D <0x80400000 0x80400000 0x00008000   =
-/* I/O */
-> >                                   0x90000000 0x90000000 0x08000000   /*=
- non-prefetchable memory */
-> >                                   0xa0000000 0xa0000000 0x08000000>; /*=
- prefetchable memory */
-> >=20
-> >                         nvidia,ctrl-offset =3D <0x0>;
-> >                         nvidia,num-lanes =3D <2>;
-> >                 };
-> >=20
->=20
-> I believe you will need an "interrupt-map" property here, to map the host
-> interrupts to the INTA-INTD lines of the attached devices.
-
-Legacy interrupts are something I cannot test at all because I have no
-hardware that supports them.
-
-> I'm not sure whether we want to have a device_type=3D"pciex" property her=
-e.
-> powerpc and sparc seem to use that information, to distinguish a pcie
-> bus from pci or cardbus.
-
-That'd be rather useless information given that the Tegra is unlikely to
-support either PCI or CardBus at some point.
-
-Thierry
-
---H8ygTp4AXg6deix2
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk/Zor8ACgkQZ+BJyKLjJp+9UwCcDLwTTLw84cHnOn37DxC4j8q1
-Bh4An2ctjh/D0DqiKZIjol9LwunkqWtt
-=X0ge
------END PGP SIGNATURE-----
-
---H8ygTp4AXg6deix2--
+-- 
+Regards,
+Shawn
