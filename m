@@ -1,56 +1,47 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
-Date: Thu, 14 Jun 2012 08:46:24 -0700
-Message-ID: <20120614154624.GF17140@kroah.com>
-References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
- <1339159026-15837-1-git-send-email-richard.zhao@freescale.com>
- <20120612231438.GA6177@kroah.com>
- <8762au8h46.fsf@ashishki-desk.ger.corp.intel.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Where to power on the wifi device before loading the driver.
+Date: Thu, 14 Jun 2012 09:54:22 -0600
+Message-ID: <4FDA092E.10301@wwwdotorg.org>
+References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com> <4FD90352.9090606@wwwdotorg.org> <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de> <20120614121234.GC3913@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8762au8h46.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120614121234.GC3913-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2012 at 10:52:57AM +0300, Alexander Shishkin wrote:
-> Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> writes:
+On 06/14/2012 06:12 AM, Mark Brown wrote:
+> On Thu, Jun 14, 2012 at 08:31:20AM +0200, Thierry Reding wrote:
+>> On Wed, Jun 13, 2012 at 03:17:06PM -0600, Stephen Warren wrote:
 > 
-> > On Fri, Jun 08, 2012 at 08:37:06PM +0800, Richard Zhao wrote:
-> >> Sometimes, the driver bindings may know what phy they use.
-> >> For example, when using device tree, the usb controller may have a
-> >> phandler pointing to usb phy.
-> >> 
-> >> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> >> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> >> ---
-> >> Changes since laster version:
-> >> - hcd transceiver renamed to phy
-> >
-> > Ick, I see patches all over this thread, and other threads, and I have
-> > no idea what to apply anywhere...
-> >
-> > So, consider all chipidea patches dropped from my queue now, can you
-> > please resend them to me, with the accumulated acks and reviewed-by
-> > line, so that I can queue them up?
+>>> The core of the issue is that:
 > 
-> So will you pick these patches to your tree or should I apply them to
-> mine or what is the plan? I kind of have a tree [1] for chipidea stuff
-> where I have been collecting patches, to send a pull request to you for
-> 3.6.
+>>> * Tegra30 support is via device tree. * We have an SDIO bus,
+>>> and the WiFi device attached to that bus is enumerable. * Since
+>>> the WiFi device is enumerable, no node exists in the DT to 
+>>> represent it. * However, the driver for the WiFi device needs
+>>> certain information, such as the reset GPIO ID and perhaps
+>>> power GPIO.
+> 
+>> PCI devices are also enumerable and yet they can be matched up
+>> with nodes in the device tree. Perhaps something similar could be
+>> added for the SDIO bus?
+> 
+> This seems to make the most sense - pushing this through the
+> regulator API is just a bodge.
 
-I do not accept pull requests for this code, sorry, I need patches in
-email.  You and Richard work it out how you are going to handle this and
-then, send me patches that you both agree on.
+Yes, that seems reasonable.
 
-thanks,
+Presumably the power GPIO should be a fixed regulator though, since it
+is a power control not just a plain old GPIO? That said, the current
+driver apparently deals with this as a GPIO already.
 
-greg k-h
+The reset GPIO can separately/directly controlled by the WiFi driver
+though.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
