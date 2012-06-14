@@ -1,145 +1,56 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 14 Jun 2012 10:39:16 -0500
-Message-ID: <4FDA05A4.5090301@ti.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206090004.10086.arnd@arndb.de> <4FD914F6.6000402@ti.com> <201206141148.20371.arnd@arndb.de>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
+Date: Thu, 14 Jun 2012 08:46:24 -0700
+Message-ID: <20120614154624.GF17140@kroah.com>
+References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
+ <1339159026-15837-1-git-send-email-richard.zhao@freescale.com>
+ <20120612231438.GA6177@kroah.com>
+ <8762au8h46.fsf@ashishki-desk.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201206141148.20371.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Jassi Brar <jaswinder.singh@linaro.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8762au8h46.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 14, 2012 at 10:52:57AM +0300, Alexander Shishkin wrote:
+> Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> writes:
+> 
+> > On Fri, Jun 08, 2012 at 08:37:06PM +0800, Richard Zhao wrote:
+> >> Sometimes, the driver bindings may know what phy they use.
+> >> For example, when using device tree, the usb controller may have a
+> >> phandler pointing to usb phy.
+> >> 
+> >> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> >> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> >> ---
+> >> Changes since laster version:
+> >> - hcd transceiver renamed to phy
+> >
+> > Ick, I see patches all over this thread, and other threads, and I have
+> > no idea what to apply anywhere...
+> >
+> > So, consider all chipidea patches dropped from my queue now, can you
+> > please resend them to me, with the accumulated acks and reviewed-by
+> > line, so that I can queue them up?
+> 
+> So will you pick these patches to your tree or should I apply them to
+> mine or what is the plan? I kind of have a tree [1] for chipidea stuff
+> where I have been collecting patches, to send a pull request to you for
+> 3.6.
 
-On 06/14/2012 06:48 AM, Arnd Bergmann wrote:
-> On Wednesday 13 June 2012, Jon Hunter wrote:
-> 
->>> As I said previously, I think just encoding the direction but not
->>> the client specific ID (meaning we would have to disambiguate
->>> the more complex cases that Stephen mentioned using a dma-names
->>> property) would be the best because it keeps the common case simple,
->>> but I could live with other things going in there too.
->>
->> Ok, so you are saying that there are some DMA controllers where there is
->> no channel/request ID and only a direction is needed? So an even simpler
->> case than what I had imagined.
-> 
-> No, that was not the case I was thinking about.
+I do not accept pull requests for this code, sorry, I need patches in
+email.  You and Richard work it out how you are going to handle this and
+then, send me patches that you both agree on.
 
-Ok, good because that would be the most simple dma controller I have
-heard about ;-)
+thanks,
 
->> So in that case, I don't see why the first cell after the phandle could
->> not be an index which could be either a direction or request-id and then
->> the next cell after that be a secondary match variable.
->>
->> So simple case with just a index (either req-id or direction) ...
->>
->> dmas = <&dmac0 index>
->>
->> More complex case ...
->>
->> dmas = <&dmac0 index match>
->>
->> For example, for OMAP index = req-id and match = direction ...
->>
->> dmas = <&dmac0 req-id direction>
->>
->> Or am I way off the page?
-> 
-> The intention was instead to remove the need for the /index/ in those
-> cases, because having a client-specific index in here makes it inconsistent
-> with other similar bindings (reg, interrupts, gpios, ...) that people
-> are familiar with. They use an implicit index by counting the
-> fields in the respective properties.
-
-So maybe "index" was not the right term to use here. What I meant was
-that this is really the req/chan-id associated with this device. It is
-not an arbitrary index that in turn gets resolved into the req-id. So in
-other words, just like gpio where you have the gpio number, here you
-have the dma req-id.
-
-> The existing method we have for avoiding index numbers is to use
-> named fields, like
-> 
-> 	dmas = <&dmac0 matchA>, <dmac1 matchB>, <dmac2 matchC>;
-> 	dma-names = "rx", "rx", "tx";
-> 
-> This is similar to how we use named interrupt and mmio resources, but
-> it requires that we always request the dma lines by name, which is
-> slightly more complex than we might want it to be.
-
-Ok, but how do you get the req-id from the above binding? Doesn't it
-need to be stored there somewhere even for the most simplest case? Or
-are you saying that in this case you are just returning a name and the
-dma driver resolves that into a req-id?
-
-> Because the vast majority of cases just use a single channel, or one
-> channel per direction, my idea was to encode the direction in the
-> dmas property, which lets us request a dma channel by direction from
-> the driver side, without explicitly encoding the name.
-
-Yes, thats fine and so the direction is really the match criteria in
-this case.
-
-> This would let us handle the following cases very easily:
-> 
-> 1. one read-write channel
-> 
-> 	dmas = <&dmac 0x3 match>;
-
-Where 0x3 is the req-id? Just to confirm ;-)
-
-Why not have match after the phandle to be consistent with the simple
-example using name fields above?
-
-> 2. a choice of two read-write channels:
-> 
-> 	dmas = <&dmacA 0x3 matchA>, <&dmacB 0x3 matchB>;
-> 
-> 3. one read-channel, one write channel:
-> 
-> 	dmas = <&dmac 0x1 match-read>, <&dmac 0x2 match-write>;
-> 
-> 4. a choice of two read channels and one write channel:
-> 
-> 	dmas = <&dmacA 0x1 match-readA>, <&dmacA 0x2 match-write> 
-> 			<&dmacB match-readB>;
-> 
-> And only the cases where we have more multiple channels that differ
-> in more aspects would require named properties:
-> 
-> 5. two different channels
-> 
-> 	dmas = <&dmac 0x3 match-rwdata>, <&dmac 0x1 match-status>;
-> 	dma-names = "rwdata", "status";
-> 
-> 6. same as 5, but with a choice of channels:
-> 
-> 	dmas = <&dmacA 0x3 match-rwdataA>, <&dmacA 0x1 match-status>;
-> 		<dmacB 0x3 match-rwdataB>;
-> 	dma-names = "rwdata", "status", "rwdata";
-> 
-> 
-> With a definition like that, we can implement a very simple device
-> driver interface for the common cases, and a slightly more complex
-> one for the more complex cases:
-> 
-> 1. chan = of_dma_request_channel(dev->of_node, 0);
-> 2. chan = of_dma_request_channel(dev->of_node, 0);
-> 3. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
->    txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
-> 4. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
->    txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
-> 5. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
->    auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
-> 6. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
->    auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
-
-Yes, that looks good to me.
-
-Cheers
-Jon
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
