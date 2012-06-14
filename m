@@ -1,97 +1,119 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Where to power on the wifi device before loading the driver.
-Date: Thu, 14 Jun 2012 19:44:07 +0800
-Message-ID: <6B4D417B830BC44B8026029FD256F7F1C377BFFE8B@HKMAIL01.nvidia.com>
-References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
- <4FD90352.9090606@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C377BFFE8A@HKMAIL01.nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Thu, 14 Jun 2012 11:48:19 +0000
+Message-ID: <201206141148.20371.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206090004.10086.arnd@arndb.de> <4FD914F6.6000402@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6B4D417B830BC44B8026029FD256F7F1C377BFFE8A-Q4EWCATADntDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FD914F6.6000402@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Jassi Brar <jaswinder.singh@linaro.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2012 at 19:27:50, Wei Ni wrote:
->On Thu, Jun 14, 2012 at 05:17:06, Stephen Warren wrote:
->>On 06/13/2012 04:40 AM, Wei Ni wrote:
->>> Hi, all
->>> I'm working on the tegra30 wifi upstream issue.
->>>
->>> The tegra30 board (Cardhu) use Broadcom 4329 as wifi device, and use brcmfmac as the wifi driver.
->>>
->>> In the brcmfmac init routine, it call sdio_register_driver() to 
->>> register driver, if the wifi device
->is powered on, then the mmc driver will enumerate it, and call the probe callback routine.
->>>
->>> On the Cardhu, the wifi's power is controlled by two gpios 
->>> (power-gpio and reset-gpio), the default state is power-off. So we 
->>> need to power on it before
->calling sdio_register_driver(), if not, the mmc driver can't enumerate 
->it, and will not call the probe routine.
->>> This power on sequence is:
->>> set power-gpio to 1 ;
->>> mdelay(100) ;
->>> set reset-gpio to 1 ;
->>> mdelay(200);
->>>
->>> My question is where to power on the wifi. We may have three places to power on it:
->>> 1. power on it in the brcmfmac driver before calling 
->>> sdio_register_driver(). But I think this power sequence is special 
->>> for tegra30 cardhu, it's not
->good to add it in the generic wifi driver, because different board may 
->use the different way to power on the wifi.
->>> 2. power on it in the mmc driver. In our tegra SD driver, it has 
->>> power-gpios property, which allow the slot to be powered. But this 
->>> power is for mmc slot, could we
->add this wifi power sequence in the tegra SD driver?
->>> 3. hard-coded into DT. Set these gpios in the DT, something like 
->>> pinmux settings, but in this way,
->it's not good to put the mdelay() value in the DT.
->>>
->>> I have no good idea for it, does anyone has suggestion?
->>
->>The core of the issue is that:
->>
->>* Tegra30 support is via device tree.
->>* We have an SDIO bus, and the WiFi device attached to that bus is enumerable.
->>* Since the WiFi device is enumerable, no node exists in the DT to represent it.
->>* However, the driver for the WiFi device needs certain information, 
->>such as the reset GPIO ID and perhaps power GPIO.
->>
->>For the power GPIO, it seems reasonable to either use the existing 
->>Tegra SD controller's power-gpios DT property, or replace that 
->>property with a real regulator binding. The SD driver would then control this.
->>Still, that approach would mean the WiFi driver wouldn't be able to 
->>control power to the device
->directly, which might not be a good thing.
->>
->>However, I'm not sure that the reset GPIO is also something that 
->>should be controlled by the SD card driver; it seems like it's much 
->>more closely related to the WiFi
->device/driver.
->>
->>I wonder if the power and reset GPIO shouldn't be represented as a 
->>combined custom regulator type, which knows how to sequence multiple GPIOs.
->>
->>Perhaps SDIO "client" devices also need a way to communicate with 
->>their "host port" to obtain services such as power and reset control?
->>
->>This is all very similar to the WiFi rfkill discussion we have re: the 
->>Toshiba AC100 a little while back, although that was USB rather than SDIO.
->
->In the rfkill-gpio, it already have the reset-gpio and shutdown-gpio.
->I test it, add a device node in the DT to pass the gpio properties.
->It will use these gpios to power up/off , but its default power sequence is different with the 4329.
->It block==0, it mean power up, it will set reset-gpio first, then set power-gpio next.
->I think it should set power-gpio first, is it right?
->
-I test with the rfkill-gpio's default power sequence just now, it also can power up the device.
-It seems we can use this rfkill-gpio driver.
+On Wednesday 13 June 2012, Jon Hunter wrote:
 
----
-nvpublic
+> > As I said previously, I think just encoding the direction but not
+> > the client specific ID (meaning we would have to disambiguate
+> > the more complex cases that Stephen mentioned using a dma-names
+> > property) would be the best because it keeps the common case simple,
+> > but I could live with other things going in there too.
+> 
+> Ok, so you are saying that there are some DMA controllers where there is
+> no channel/request ID and only a direction is needed? So an even simpler
+> case than what I had imagined.
+
+No, that was not the case I was thinking about.
+
+> So in that case, I don't see why the first cell after the phandle could
+> not be an index which could be either a direction or request-id and then
+> the next cell after that be a secondary match variable.
+> 
+> So simple case with just a index (either req-id or direction) ...
+> 
+> dmas = <&dmac0 index>
+> 
+> More complex case ...
+> 
+> dmas = <&dmac0 index match>
+> 
+> For example, for OMAP index = req-id and match = direction ...
+> 
+> dmas = <&dmac0 req-id direction>
+> 
+> Or am I way off the page?
+
+The intention was instead to remove the need for the /index/ in those
+cases, because having a client-specific index in here makes it inconsistent
+with other similar bindings (reg, interrupts, gpios, ...) that people
+are familiar with. They use an implicit index by counting the
+fields in the respective properties.
+
+The existing method we have for avoiding index numbers is to use
+named fields, like
+
+	dmas = <&dmac0 matchA>, <dmac1 matchB>, <dmac2 matchC>;
+	dma-names = "rx", "rx", "tx";
+
+This is similar to how we use named interrupt and mmio resources, but
+it requires that we always request the dma lines by name, which is
+slightly more complex than we might want it to be.
+
+Because the vast majority of cases just use a single channel, or one
+channel per direction, my idea was to encode the direction in the
+dmas property, which lets us request a dma channel by direction from
+the driver side, without explicitly encoding the name.
+
+This would let us handle the following cases very easily:
+
+1. one read-write channel
+
+	dmas = <&dmac 0x3 match>;
+
+2. a choice of two read-write channels:
+
+	dmas = <&dmacA 0x3 matchA>, <&dmacB 0x3 matchB>;
+
+3. one read-channel, one write channel:
+
+	dmas = <&dmac 0x1 match-read>, <&dmac 0x2 match-write>;
+
+4. a choice of two read channels and one write channel:
+
+	dmas = <&dmacA 0x1 match-readA>, <&dmacA 0x2 match-write> 
+			<&dmacB match-readB>;
+
+And only the cases where we have more multiple channels that differ
+in more aspects would require named properties:
+
+5. two different channels
+
+	dmas = <&dmac 0x3 match-rwdata>, <&dmac 0x1 match-status>;
+	dma-names = "rwdata", "status";
+
+6. same as 5, but with a choice of channels:
+
+	dmas = <&dmacA 0x3 match-rwdataA>, <&dmacA 0x1 match-status>;
+		<dmacB 0x3 match-rwdataB>;
+	dma-names = "rwdata", "status", "rwdata";
+
+
+With a definition like that, we can implement a very simple device
+driver interface for the common cases, and a slightly more complex
+one for the more complex cases:
+
+1. chan = of_dma_request_channel(dev->of_node, 0);
+2. chan = of_dma_request_channel(dev->of_node, 0);
+3. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
+   txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
+4. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
+   txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
+5. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
+   auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
+6. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
+   auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
+
+	Arnd
