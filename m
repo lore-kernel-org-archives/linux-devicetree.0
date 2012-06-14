@@ -1,41 +1,61 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 5/9] ARM: kirkwood: use devicetree for orion-spi
-Date: Thu, 14 Jun 2012 10:54:15 +0000
-Message-ID: <201206141054.16223.arnd@arndb.de>
-References: <1339324322-29388-6-git-send-email-andrew@lunn.ch>
- <201206132110.31011.arnd@arndb.de> <20120614093135.GE4799@lunn.ch>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Thu, 14 Jun 2012 11:06:48 +0000
+Message-ID: <201206141106.49142.arnd@arndb.de>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de> <201206141025.09325.arnd@arndb.de> <20120614103127.GA15904@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120614093135.GE4799-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, Michael Walle <micheal-QKn5cuLxLXY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20120614103127.GA15904@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jesse Barnes <jbarnes@virtuousgeek.org>, Rob Herring <rob.herring@calxeda.com>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 June 2012, Andrew Lunn wrote:
-> We either have auxdata and clean clock code, or no auxdata and messy
-> clock code with lots of aliases.
+On Thursday 14 June 2012, Thierry Reding wrote:
+> On Thu, Jun 14, 2012 at 10:25:09AM +0000, Arnd Bergmann wrote:
+> > On Thursday 14 June 2012, Thierry Reding wrote:
+> > > > 
+> > > > I believe you will need an "interrupt-map" property here, to map the host
+> > > > interrupts to the INTA-INTD lines of the attached devices.
+> > >
+> > > Legacy interrupts are something I cannot test at all because I have no
+> > > hardware that supports them.
+> > 
+> > Hmm, I thought all PCIe hardware has to support them when you do not
+> > enable MSI. What hardware do you have then?
 > 
-> The auxdata is also not limited to the name of the clocks. It allows
-> me to diff the kernel log for a DT boot and a none DT boot of the same
-> box and see they are identical. I've found a few typo's that way, and
-> not been hindered by noise of the devices changing name is useful.
-> 
-> Once we have the clock tree described in DT, then i think it makes
-> sense to remove these auxdata entries.
-> 
+> The TEC (Tamonten Evaluation Carrier) has an FPGA which is connected to one
+> of the Tegra PCIe ports and it only supports MSIs.
 
-Ok, fair enough.
+Ah, I see. FPGA based devices often have incomplete PCI support so that
+explains why you can't test it. The board also appears to have a
+PCIe mini port though, so anything that you could plug in there should
+also support LSI interrupts.
+
+> > > > I'm not sure whether we want to have a device_type="pciex" property here.
+> > > > powerpc and sparc seem to use that information, to distinguish a pcie
+> > > > bus from pci or cardbus.
+> > > 
+> > > That'd be rather useless information given that the Tegra is unlikely to
+> > > support either PCI or CardBus at some point.
+> > 
+> > But the generic code does not know that.
+> 
+> True. Still there's not much generic code on ARM, so maybe it'd be better to
+> add it along with the corresponding code?
+
+I hope we can make the PCI host probing architecture independent one day,
+instead of each architecture implementing their own. I'd say better put
+that property in there so we don't have to change it in case the future
+generic code will need it. It is part of the binding at
+http://www.openfirmware.org/1275/bindings/pci/pci-express.txt after all.
+
+Note that we should generally not make /code/ be written with the
+anticipation of a future extension, but anything that concerns interfaces
+to code outside of the kernel (firmware or user space) is best written
+in a conservative way to allow later changes.
 
 	Arnd
