@@ -1,117 +1,91 @@
-From: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: Re: [PATCH] mmc: sdhci-pxa: Add device tree support
-Date: Thu, 14 Jun 2012 02:15:23 +0000
-Message-ID: <e89a8ff1c3b8b41f0104c26545d9@google.com>
-References: <87sjdzxpqr.fsf@octavius.laptop.org>
+From: Wei Ni <wni@nvidia.com>
+Subject: RE: Where to power on the wifi device before loading the driver.
+Date: Thu, 14 Jun 2012 12:17:26 +0800
+Message-ID: <6B4D417B830BC44B8026029FD256F7F1C377BFFE89@HKMAIL01.nvidia.com>
+References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
+ <4FD8CED9.6030901@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3627717907685580079=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <87sjdzxpqr.fsf-DGHOrqG7t0YzNDMTQreKSUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philip Rakity <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, zhangfei gao <zhangfei.gao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <4FD8CED9.6030901@broadcom.com>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Franky Lin' <frankyl@broadcom.com>
+Cc: Stephen Warren <swarren@nvidia.com>, "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "'linux-mmc@vger.kernel.org'" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mursalin Akon <makon@nvidia.com>, Rakesh Kumar <krakesh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
---===============3627717907685580079==
-Content-Type: multipart/alternative; boundary=e89a8ff1c3b8b41ef304c26545d6
+Hi, Franky
 
---e89a8ff1c3b8b41ef304c26545d6
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed; delsp=yes
+On Thu, Jun 14, 2012 at 01:33:13, Franky Lin wrote:
+>Hi Wei,
+>
+>On 06/13/2012 03:40 AM, Wei Ni wrote:
+>> In the brcmfmac init routine, it call sdio_register_driver() to=20
+>> register driver, if the wifi device is powered on, then the mmc
+>> driver will enumerate it, and call the probe callback routine.
+>>
+>> On the Cardhu, the wifi's power is controlled by two gpios=20
+>> (power-gpio and reset-gpio), the default state is power-off.
+>> So we need to power on it before calling sdio_register_driver(),
+>> if not, the mmc driver can't enumerate it, and will not call
+>> the probe routine.
+>> This power on sequence is:
+>> set power-gpio to 1 ;
+>> mdelay(100) ;
+>> set reset-gpio to 1 ;
+>> mdelay(200);
+>>
+>> My question is where to power on the wifi. We may have three places=20
+>> to power on it:
+>> 1. power on it in the brcmfmac driver before calling
+>> sdio_register_driver(). But I think this power sequence is special f=
+or=20
+>> tegra30 cardhu, it's not good to add it in the generic wifi driver,=20
+>> because different board may use the different way to power on the wi=
+fi.
+>> 2. power on it in the mmc driver. In our tegra SD driver, it has=20
+>> power-gpios property, which allow the slot to be powered. But this p=
+ower is=20
+>> for mmc slot, could we add this wifi power sequence in the tegra SD =
+driver?
+>> 3. hard-coded into DT. Set these gpios in the DT, something like=20
+>> pinmux settings, but in this way, it's not good to put the mdelay() =
+value
+>> in the DT.
+>
+>We introduced oob interrupt support in 3.5 [1]. We are using a virtual=
+=20
+>platform device to retrieve board specific oob interrupt GPIO setting.
+>You should be able to implement the power control in this way as well.
+>Brcmfmac gets the GPIOs through platform device interface, powers up=20
+>the chip and triggers a card detection. Then 4329 should be enumerated=
+=20
+>by MMC stack. The reason we didn't implement this is the card detectio=
+n.
+>Some design doesn't have hardware card detection since the WiFi chip i=
+s=20
+>already on board. And the current MMC stack doesn't have virtual card=20
+>detection interface.
 
-On , Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org> wrote:
-> Hi Zhangfei,
+Wei: Yes, in OOB mode, it's easy to add a device node in the DT, to pas=
+s
+the gpio property to brcmfmac driver. But the NO-OOB mode doesn=92t use=
+ the
+virtual platform device, so we can't pass the gpio to driver. We need t=
+o find
+a way to support these two mode both.
+Could we use the virtual platform device both for OOB and NO-OOB mode? =
+so that
+we can implement power control in these two mode, and we can add a flag=
+s to
+control if need to power on or not.
+BTW, does that power on sequence is generally for 4329?
+
+>
+>Franky
+>
+>[1]: http://www.spinics.net/lists/linux-wireless/msg89335.html
 
 
 
-> On Tue, Jun 12 2012, zhangfei gao wrote:
-
-> > On Wed, Jun 13, 2012 at 3:05 AM, Chris Ball cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org> wrote:
-
-
-> How do you feel about having the compatible node say "sdhci-pxav3"
-> instead of "mrvl,pxav3-mmc"? I used the mrvl prefix because it fits
-> in with the rest of your existing DT, but it seems like it would be
-> better to name the driver directly. The DTs here live inside the
-> source tree, so we're not depending on anyone else's terminology.
-
-> If you're okay with sdhci-pxav{2,3} in compatible, I'll include that
-> in v2 of the patch with the rest of your fixes.
-
-Compatible node could be "mrvl,pxav3-mmc" or "mrvl,sdhci-pxav3". It's
-depend on your choice. I prefer to use vendor name in compatible property.
-And we could avoid naming conflict.
-
-+ if (of_find_property(np, "non-removable", NULL))
-+ pdata->flags |= PXA_FLAG_CARD_PERMANENT;
-+
-+ of_property_read_u32(np, "bus-width", &bus_width);
-+ if (bus_width == 8)
-+ pdata->flags |= PXA_FLAG_SD_8_BIT_CAPABLE_SLOT;
-+
-+ of_property_read_u32(np, "clk-delay-cycles", &clk_delay_cycles);
-+ if (clk_delay_cycles > 0)
-+ pdata->clk_delay_cycles = clk_delay_cycles;
-+
-
-These properties should be "mrvl,non-removable", "mrvl,bus-width",
-"mrvl,clk-delay-cycles". Since it's mentioned in
-Documentations/devicetree/booting-without-of.txt. "It is recommended
-that if you add any "custom" property whose name may clash with
-standard defined ones, you prefix them with your vendor name and
-a comma."
-
---e89a8ff1c3b8b41ef304c26545d6
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On , Chris Ball &lt;cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org&gt; wrote:<br />&gt; Hi Zhangfei,<br />&=
-gt; <br />&gt; <br />&gt; <br />&gt; On Tue, Jun 12 2012, zhangfei gao wrot=
-e:<br />&gt; <br />&gt; &gt; On Wed, Jun 13, 2012 at 3:05 AM, Chris Ball cj=
-b@laptop.org&gt; wrote:<br />&gt; <br />&gt; <br />&gt; How do you feel abo=
-ut having the compatible node say &quot;sdhci-pxav3&quot;<br />&gt; instead=
- of &quot;mrvl,pxav3-mmc&quot;? =A0I used the mrvl prefix because it fits<b=
-r />&gt; in with the rest of your existing DT, but it seems like it would b=
-e<br />&gt; better to name the driver directly. =A0The DTs here live inside=
- the<br />&gt; source tree, so we&#39;re not depending on anyone else&#39;s=
- terminology.<br />&gt; <br />&gt; If you&#39;re okay with sdhci-pxav{2,3} =
-in compatible, I&#39;ll include that<br />&gt; in v2 of the patch with the =
-rest of your fixes.<br />&gt; <br />Compatible node could be &quot;mrvl,pxa=
-v3-mmc&quot; or &quot;mrvl,sdhci-pxav3&quot;. It&#39;s <br />depend on your=
- choice. I prefer to use vendor name in compatible property.<br />And we co=
-uld avoid naming conflict.<br /><br />+       if (of_find_property(np, &quo=
-t;non-removable&quot;, NULL))<br />+               pdata-&gt;flags |=3D PXA=
-_FLAG_CARD_PERMANENT;<br />+<br />+       of_property_read_u32(np, &quot;bu=
-s-width&quot;, &bus_width);<br />+       if (bus_width =3D=3D 8)<br />+    =
-           pdata-&gt;flags |=3D PXA_FLAG_SD_8_BIT_CAPABLE_SLOT;<br />+<br /=
->+       of_property_read_u32(np, &quot;clk-delay-cycles&quot;, &clk_delay_=
-cycles);<br />+       if (clk_delay_cycles &gt; 0)<br />+               pda=
-ta-&gt;clk_delay_cycles =3D clk_delay_cycles;<br />+<br /><br />These prope=
-rties should be &quot;mrvl,non-removable&quot;, &quot;mrvl,bus-width&quot;,=
- <br />&quot;mrvl,clk-delay-cycles&quot;.  Since it&#39;s mentioned in <br =
-/>Documentations/devicetree/booting-without-of.txt. &quot;It is recommended=
- <br />that if you add any &quot;custom&quot; property whose name may clash=
- with <br />standard defined ones, you prefix them with your vendor name an=
-d <br />a comma.&quot;
---e89a8ff1c3b8b41ef304c26545d6--
-
---===============3627717907685580079==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3627717907685580079==--
