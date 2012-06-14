@@ -1,16 +1,13 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Subject: RE: [PATCH v6 00/17] Add PWM framework and device tree support
-Date: Thu, 14 Jun 2012 13:36:48 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EA21C02@DBDE01.ent.ti.com>
-References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
- <1BAFE6F6C881BF42822005164F1491C33EA21A9F@DBDE01.ent.ti.com>
- <20120614125329.GA7678@avionic-0098.mockup.avionic-design.de>
+From: David Jander <david.jander@protonic.nl>
+Subject: Re: [RFC] i.MX DRM devicetree binding
+Date: Thu, 14 Jun 2012 16:10:16 +0200
+Message-ID: <20120614161016.20c79038@archvile>
+References: <20120614130756.GS30400@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120614125329.GA7678@avionic-0098.mockup.avionic-design.de>
-Content-Language: en-US
+In-Reply-To: <20120614130756.GS30400@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,67 +17,198 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Matthias Kaehlcke <matthias@kaehlcke.net>, Lars-Peter Clausen <lars@metafoo.de>, Sascha Hauer <s.hauer@pengutronix.de>, Mike Frysinger <vapier@gentoo.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Mitch Bradley <wmb@firmworks.com>, Bernhard Walle <walle@corscience.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Eric Miao <eric.y.miao@gmail.com>, Ryan Mallon <rmallon@gmail.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Richard Purdie <rpurdie@rpsys.net>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, Kurt Van Dijck <kurt.van.dijc>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Matt Sealey <matt@genesi-usa.com>, devicetree-discuss@lists.ozlabs.org, DRI Development <dri-devel@lists.freedesktop.org>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Ahmed Ammar <aammar@genesi-usa.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2012 at 18:23:29, Thierry Reding wrote:
-> On Thu, Jun 14, 2012 at 12:47:13PM +0000, Hebbar, Gururaja wrote:
-> > On Tue, Apr 10, 2012 at 20:36:23, Thierry Reding wrote:
-> > > This patch series adds very rudimentary device-tree support for PWM
-> > > devices. With all of these patches applied (plus one board-specific
-> > > patch that is not included), I'm able to control the backlight on the
-> > > device I'm working on using the sysfs interface provided by the pwm-bl
-> > > driver and the backlight class.
-> > > 
-> > > This series is based on Sascha Hauer's series of patches[0] to add a
-> > > generic PWM framework. The first patch in this series is taken from
-> > > Sascha's branch, while the second patch enables each PWM chip to provide
-> > > multiple PWM devices (the Blackfin and PXA drivers have been ported to
-> > > the framework for reference). Currently a global namespace is still
-> > > provided to keep backwards-compatibility with the legacy PWM API. In
-> > > order to achieve this, the number of global PWM devices is limited to
-> > > 1024. However, patch 2 introduces per-chip indexing of PWM devices in
-> > > the core and patch 4 adds an API to request a PWM device using a lookup
-> > > table registered by board setup code. They are supposed to eventually
-> > > replace pwm_request() and allow to get rid of the global namespace. The
-> > > device tree support code does not use the global namespace.
-> > > 
-> > ..snip..
-> > ..snip..
-> > 
-> > > 
-> > > The whole series is based on the linux-next tree from 20120405. I think
-> > > I've addressed all of the concerns raised in the first five versions. I
-> > > have also pushed this version of the series to the PWM subsystem
-> > > repository[1].
-> > > 
-> > > Thierry
-> > > 
-> > > [0]: http://git.pengutronix.de/?p=imx/linux-2.6.git;a=shortlog;h=refs/heads/pwmlib
-> > > [1]: http://gitorious.org/linux-pwm/linux-pwm/trees/pwm-v6
-> > > 
+On Thu, 14 Jun 2012 15:07:56 +0200
+Sascha Hauer <s.hauer@pengutronix.de> wrote:
 
-..snip..
-..snip..
-
-> > > 
-> > 
-> > I am planning to add PWM support in Linux for TI AM335x SOC. 
-> > I am taking your new PWM framework as reference.
-> > 
-> > I see a lot of ack's for the patches. I see that you are maintaining these patches in a separate repo.
-> > However, I couldn't find any of these 
-> > patches in the mainline kernel (including recent 3.5-rc2). 
-> > Do you have any plans for pushing this again to mainline kernel. 
+> Hi All,
 > 
-> Yes, as a matter of fact I'm in the process of getting the series ready for
-> inclusion into linux-next. I expect them to go into 3.6.
+> The following is an attempt to come up with a devicetree binding for
+> DRM graphics on i.MX SoCs. I'm posting this seperate from the actual
+> code to not bury this in big patches.
 > 
-> Thierry
+> The bindings should cover most of the problems we had while implementing
+> the possible IPU <-> (LVDS, HDMI, parallel) Display connections.
 > 
+> Contrary to some other devicetree bindings I have seen we decided not
+> to make the displays subnodes of the graphics unit because the (LVDS,
+> HDMI) encoders are outside the graphics units and also on i.MX6 there
+> are 2 IPUs and displays can be muxed between these IPUs.
 
-Thanks. Eagerly looking forward to it.
+Sounds great!
 
-Thanks & Regards, 
-Gururaja
+> Comments and suggestions welcome.
+
+Here you are:
+
+> Sascha
+> 
+> 8<--------------------------------------
+> 
+> DRM i.MX: Add devicetree binding documentation
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  .../devicetree/bindings/drm/fsl-imx-drm.txt        |  126 ++++++++++++++++++++
+>  1 file changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/drm/fsl-imx-drm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/drm/fsl-imx-drm.txt b/Documentation/devicetree/bindings/drm/fsl-imx-drm.txt
+> new file mode 100644
+> index 0000000..6766e03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/drm/fsl-imx-drm.txt
+> @@ -0,0 +1,126 @@
+> +Freescale i.MX IPUv3
+> +====================
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,<chip>-ipu"
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +- interrupts: Should contain sync interrupt and error interrupt,
+> +  in this order.
+> +- #crtc-cells: 1, See below
+> +
+> +example:
+> +
+> +ipu: ipu@18000000 {
+> +	#crtc-cells = <1>;
+> +	compatible = "fsl,imx53-ipu";
+> +	reg = <0x18000000 0x080000000>;
+> +	interrupts = <11 10>;
+> +};
+> +
+> +Freescale i.MX LCDC controller
+> +==============================
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,<chip>-lcdc"
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +- interrupts: Should contain interrupt
+> +- #crtc-cells: 0, See below
+> +
+> +example:
+> +
+> +lcdc: lcdc@10021000 {
+> +	#crtc-cells = <0>;
+> +	compatible = "fsl,imx27-lcdc", "fsl,imx21-lcdc";
+> +	reg = <0x10021000 0x4000>;
+> +	interrupts = <61>;
+> +};
+> +
+> +Parallel display support
+> +========================
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx-parallel-display"
+> +- crtc: the crtc this display is connected to, see below
+> +Optional properties:
+> +- interface_pix_fmt: How this display is connected to the
+> +  crtc. Currently supported types: "rgb24", "rgb565"
+> +- edid: verbatim EDID data block describing attached display.
+
+I never really understood why one should put EDID data in a device-tree. It
+carries a lot of irrelevant information and is in a quite hostile format. The
+only reason it exists actually is historically grown "intelligency" built into
+VESA compatible CRT monitors for PC's.... what do _we_ have to do with that?
+There isn't even a decent tool to generate this data on linux.
+On top of that, the examples I have seen of EDID blobs in device-trees so far
+are just plain wrong and even contain device id's from "Samsung SyncMaster"
+and other such stuff that IMHO has no place here.
+
+But we need an alternative way of communicating timing parameters. Can't we
+use something more ad-hoc, like the data one would give to DRM_MODE() in
+drm_crtc.h?
+
+> +- ddc: phandle describing the i2c bus handling the display data
+> +  channel
+> +
+> +example:
+> +
+> +display@di0 {
+> +	compatible = "fsl,imx-parallel-display";
+> +	edid = [edid-data];
+> +	crtc = <&ipu 0>;
+> +	interface_pix_fmt = "rgb24";
+> +};
+> +
+> +LVDS display bridge (LDB)
+> +=========================
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,<chip>-ldb"
+> +- channel0-crtcs, channel1-crtcs: the crtcs the ldb is connected to, see
+> +  below
+> +Optional properties:
+> +- channel0-edid, channel1-edid: verbatim EDID data blocks describing the
+> +  displays attached to channel0 and channel1.
+> +- channel0-ddc, channel1-ddc: phandles describing the i2c busses handling
+> +  the display data channels for channel0 and channel1.
+
+Same rant here... missing a humane way of specifying timing data.
+
+> +
+> +lvds@53fa8008 {
+> +	compatible = "fsl,imx6q-ldb";
+> +	channel0-edid = [edid-data];
+> +	channel1-ddc = <&i2c0>;
+> +	channel0-crtcs = <&ipu0 0>, <&ipu0 1>, <&ipu1 0>, <&ipu1 1>;
+> +	channel1-crtcs = <&ipu0 0>, <&ipu0 1>, <&ipu1 0>, <&ipu1 1>;
+> +};
+> +
+> +Specifying CRTCs connected to display output devices
+> +====================================================
+> +
+> +Display output device nodes should specify which CRTCs they can be
+> +connected to in their crtcs property, containing a 'crtc-list':
+> +
+> +	crtc-list ::= <single-crtc> [crtc-list]
+> +	single-crtc ::= <crtc-phandle> <crtc-specifier>
+> +	crtc-phandle : phandle to device node providing the crtc
+> +	crtc-specifier : Array of #crtc-cells specifying specific crtc
+> +			 (controller specific, 1 on imx-ipuv3)
+> +
+> +In the following example, two image processing units ipu0 and ipu1
+> +provide two CRTCs each, indexed with a single cell. The hdmi connector
+> +can be connected to either CRTC of ipu1, and the lvds connector is
+> +fixed to the second CRTC of ipu0.
+> +
+> +	ipu0: ipu0 {
+> +		#crtc-cells = <1>;
+> +	};
+> +	ipu1: ipu1 {
+> +		#crtc-cells = <1>;
+> +	};
+> +	[...]
+> +	hdmi: hdmi {
+> +		ddc = <&i2c2>;
+> +		crtcs = <&ipu1 0 &ipu1 1>;
+> +	};
+> +	lvds: lvds {
+> +		edid = [edid-data];
+> +		crtcs = <&ipu0 1>;
+> +	};
+> +
+> +Note that the crtc-specifier length is controller dependent. A simple
+> +lcdc controller with a single CRTC should use #crtc-cells = <0>:
+> +
+> +	lcdc: lcdc {
+> +		#crtc-cells = <0>;
+> +	};
+> +	[...]
+> +	parallel-display {
+> +		crtcs = <&lcdc>
+> +	};
+> +
+
+Best regards,
+
+-- 
+David Jander
+Protonic Holland.
