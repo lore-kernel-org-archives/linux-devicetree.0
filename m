@@ -1,61 +1,86 @@
-From: "Jayachandran C." <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH 2/4] i2c: i2c-ocores: Use reg-shift property
-Date: Thu, 14 Jun 2012 18:53:55 +0530
-Message-ID: <20120614132355.GB28001@jayachandranc.netlogicmicro.com>
-References: <1338910868-12318-1-git-send-email-jayachandranc@netlogicmicro.com>
- <1338910868-12318-3-git-send-email-jayachandranc@netlogicmicro.com>
- <87aa0ejaj3.fsf@macbook.be.48ers.dk>
- <20120608122651.GD26948@jayachandranc.netlogicmicro.com>
+From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Subject: RE: [PATCH v6 00/17] Add PWM framework and device tree support
+Date: Thu, 14 Jun 2012 13:36:48 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EA21C02@DBDE01.ent.ti.com>
+References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
+ <1BAFE6F6C881BF42822005164F1491C33EA21A9F@DBDE01.ent.ti.com>
+ <20120614125329.GA7678@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120608122651.GD26948-l4W0uAg2RDvWG0bvociYJ/An/qbn1+6FOui0OUZsNXA@public.gmane.org>
-Content-Disposition: inline
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120614125329.GA7678@avionic-0098.mockup.avionic-design.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Matthias Kaehlcke <matthias@kaehlcke.net>, Lars-Peter Clausen <lars@metafoo.de>, Sascha Hauer <s.hauer@pengutronix.de>, Mike Frysinger <vapier@gentoo.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Mitch Bradley <wmb@firmworks.com>, Bernhard Walle <walle@corscience.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Eric Miao <eric.y.miao@gmail.com>, Ryan Mallon <rmallon@gmail.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Richard Purdie <rpurdie@rpsys.net>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, Kurt Van Dijck <kurt.van.dijc>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 08, 2012 at 05:56:51PM +0530, Jayachandran C. wrote:
-> On Fri, Jun 08, 2012 at 01:41:36PM +0200, Peter Korsgaard wrote:
-> > >>>>> "J" == Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org> writes:
+On Thu, Jun 14, 2012 at 18:23:29, Thierry Reding wrote:
+> On Thu, Jun 14, 2012 at 12:47:13PM +0000, Hebbar, Gururaja wrote:
+> > On Tue, Apr 10, 2012 at 20:36:23, Thierry Reding wrote:
+> > > This patch series adds very rudimentary device-tree support for PWM
+> > > devices. With all of these patches applied (plus one board-specific
+> > > patch that is not included), I'm able to control the backlight on the
+> > > device I'm working on using the sysfs interface provided by the pwm-bl
+> > > driver and the backlight class.
+> > > 
+> > > This series is based on Sascha Hauer's series of patches[0] to add a
+> > > generic PWM framework. The first patch in this series is taken from
+> > > Sascha's branch, while the second patch enables each PWM chip to provide
+> > > multiple PWM devices (the Blackfin and PXA drivers have been ported to
+> > > the framework for reference). Currently a global namespace is still
+> > > provided to keep backwards-compatibility with the legacy PWM API. In
+> > > order to achieve this, the number of global PWM devices is limited to
+> > > 1024. However, patch 2 introduces per-chip indexing of PWM devices in
+> > > the core and patch 4 adds an API to request a PWM device using a lookup
+> > > table registered by board setup code. They are supposed to eventually
+> > > replace pwm_request() and allow to get rid of the global namespace. The
+> > > device tree support code does not use the global namespace.
+> > > 
+> > ..snip..
+> > ..snip..
 > > 
-> >  J> From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >  J> Deprecate 'regstep' property and use the standard 'reg-shift' property
-> >  J> for register offset shifts. 'regstep' will still be supported as an
-> >  J> optional property, but will give a warning when used.
-> > 
-> > ..
-> >  
-> >  J>  struct ocores_i2c_platform_data {
-> >  J> -	u32 regstep;   /* distance between registers */
-> >  J> -	u32 clock_khz; /* input clock in kHz */
-> >  J> -	u8 num_devices; /* number of devices in the devices list */
-> >  J> +	u32 reg_shift;		/* register offset shift value */
-> >  J> +	u32 clock_khz;		/* input clock in kHz */
-> >  J> +	u8 num_devices;		/* number of devices in the devices list */
-> >  J>  	struct i2c_board_info const *devices; /* devices connected to the bus */
-> >  J>  };
-> > 
-> > Why not just keep this change to the dt bindings, instead of risking
-> > breaking stuff for platform drivers as well? There's no conceptual
-> > reason why reg_shift is any better than regstep.
-> 
-> This is to keep the names and meanings of platform property and DT
-> property same. Having two ways (setting regstep in platform code or
-> setting 'reg-shift' in DT) of specifying the same parameter is not
-> a nice.
-> 
-> There is only one user of this API in the whole kernel tree, which
-> is fixed as part of the patchset.
-> 
-> Also we make sure that we do not break existing DTBs by still accepting
-> 'regstep' property.
+> > > 
+> > > The whole series is based on the linux-next tree from 20120405. I think
+> > > I've addressed all of the concerns raised in the first five versions. I
+> > > have also pushed this version of the series to the PWM subsystem
+> > > repository[1].
+> > > 
+> > > Thierry
+> > > 
+> > > [0]: http://git.pengutronix.de/?p=imx/linux-2.6.git;a=shortlog;h=refs/heads/pwmlib
+> > > [1]: http://gitorious.org/linux-pwm/linux-pwm/trees/pwm-v6
+> > > 
 
-Any further comments on this patchset? If the changes are fine, an Acked-by
-would be really aeppreciated.
+..snip..
+..snip..
 
-Thanks,
-JC.
+> > > 
+> > 
+> > I am planning to add PWM support in Linux for TI AM335x SOC. 
+> > I am taking your new PWM framework as reference.
+> > 
+> > I see a lot of ack's for the patches. I see that you are maintaining these patches in a separate repo.
+> > However, I couldn't find any of these 
+> > patches in the mainline kernel (including recent 3.5-rc2). 
+> > Do you have any plans for pushing this again to mainline kernel. 
+> 
+> Yes, as a matter of fact I'm in the process of getting the series ready for
+> inclusion into linux-next. I expect them to go into 3.6.
+> 
+> Thierry
+> 
+
+Thanks. Eagerly looking forward to it.
+
+Thanks & Regards, 
+Gururaja
