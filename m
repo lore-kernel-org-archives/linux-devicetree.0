@@ -1,198 +1,117 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [Patch v5 06/13] usb: chipidea: add imx platform driver
-Date: Thu, 14 Jun 2012 09:56:32 +0800
-Message-ID: <20120614015631.GF29684@b20223-02.ap.freescale.net>
-References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
- <1339590863-10564-7-git-send-email-richard.zhao@freescale.com>
- <20120613214622.GE30400@pengutronix.de>
+From: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: Re: [PATCH] mmc: sdhci-pxa: Add device tree support
+Date: Thu, 14 Jun 2012 02:15:23 +0000
+Message-ID: <e89a8ff1c3b8b41f0104c26545d9@google.com>
+References: <87sjdzxpqr.fsf@octavius.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120613214622.GE30400-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3627717907685580079=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <87sjdzxpqr.fsf-DGHOrqG7t0YzNDMTQreKSUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philip Rakity <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, zhangfei gao <zhangfei.gao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2012 at 11:46:22PM +0200, Sascha Hauer wrote:
-> On Wed, Jun 13, 2012 at 08:34:16PM +0800, Richard Zhao wrote:
-> > This patch supports only the host-mode functionality so far.
-> > 
-> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/usb/ci13xxx-imx.txt        |   20 +++
-> >  drivers/usb/chipidea/Makefile                      |    3 +
-> >  drivers/usb/chipidea/ci13xxx_imx.c                 |  189 ++++++++++++++++++++
-> >  3 files changed, 212 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> >  create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> > new file mode 100644
-> > index 0000000..beb75d6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> > @@ -0,0 +1,20 @@
-> > +* Freescale i.MX ci13xxx usb controllers
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,imx31-usb"
-> > +- reg: Should contain registers location and length
-> > +- interrupts: Should contain controller interrupt
-> > +
-> > +Optional properties:
-> > +- fsl,usbphy: phandler of usb phy that connects to the only one port
-> > +- fsl,hub-reset-gpios: gpio used to reset on-board usb hub
-> > +- fsl,vbus-power-gpios: gpio used to set vbus power of the only one port
-> > +
-> > +Examples:
-> > +usb@02184000 { /* USB OTG */
-> > +	compatible = "fsl,imx6q-usb", "fsl,imx31-usb";
-> 
-> The i.MX27 also has this core. As it's older that's probably the right
-> fallback instead of i.MX31.
-hmm.., I'll check the history and change it if it's correct.
-> 
-> > +	reg = <0x02184000 0x200>;
-> > +	interrupts = <0 43 0x04>;
-> > +	fsl,usbphy = <&usbphy1>;
-> > +	fsl,vbus-power-gpios = <&gpio3 22 0>;
-> > +};
-> > diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-> > index b69900a..5c66d9c 100644
-> > --- a/drivers/usb/chipidea/Makefile
-> > +++ b/drivers/usb/chipidea/Makefile
-> > @@ -14,3 +14,6 @@ ifneq ($(CONFIG_PCI),)
-> >  	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_pci.o
-> >  endif
-> >  
-> > +ifneq ($(CONFIG_OF_DEVICE),)
-> > +	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_imx.o
-> > +endif
-> > +
-> > +static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
-> > +{
-> > +	struct ci13xxx_imx_data *data;
-> > +	struct platform_device *plat_ci, *phy_pdev;
-> > +	struct device_node *phy_np;
-> > +	struct resource *res;
-> > +	struct regulator *reg_vbus;
-> > +	int ret;
-> > +
-> > +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> > +	if (!data) {
-> > +		dev_err(&pdev->dev, "Failed to allocate CI13xxx-IMX data!\n");
-> 
-> Same as in the other patch: This message contains no useful information.
-> 
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	if (!res) {
-> > +		dev_err(&pdev->dev, "Can't get device resources!\n");
-> > +		return -ENOENT;
-> > +	}
-> > +
-> > +	data->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(data->clk)) {
-> > +		dev_err(&pdev->dev, "Failed to get clock!\n");
-> > +		return PTR_ERR(data->clk);
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(data->clk);
-> 
-> You forgot to undo this is the error path.
-Nice catch.
-> 
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Failed to prepare or enable clock!\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	phy_np = of_parse_phandle(pdev->dev.of_node, "fsl,usbphy", 0);
-> > +	if (phy_np) {
-> 
-> Ok, we maybe can do without a phy on some devices, but if we have one...
-Some phy maybe passed by usb_set_transceiver. It's handled by chipidea
-udc driver.
-> 
-> > +		data->phy_np = phy_np;
-> > +		phy_pdev = of_find_device_by_node(phy_np);
-> > +		if (phy_pdev) {
-> 
-> ... shouldn't it be an error if we do not find the device?
-Same reason as above. We still have chance to pass phy
-by usb_set_transceiver.
-> 
-> > +			struct usb_phy *phy;
-> > +			phy = pdev_to_phy(phy_pdev);
-> > +			if (phy &&
-> > +			    try_module_get(phy_pdev->dev.driver->owner)) {
-> > +				usb_phy_init(phy);
-> > +				data->phy = phy;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	/* we only support host now, so enable vbus here */
-> > +	reg_vbus = devm_regulator_get(&pdev->dev, "vbus");
-> > +	if (!IS_ERR(reg_vbus)) {
-> > +		ret = regulator_enable(reg_vbus);
-> > +		if (ret) {
-> > +			dev_err(&pdev->dev,
-> > +				"Failed to enable vbus regulator!\n");
-> > +			goto put_np;
-> > +		}
-> > +		data->reg_vbus = reg_vbus;
-> > +	} else
-> > +		reg_vbus = NULL;
-> 
-> If you have braces in one path of a if/else add them to the other path
-> aswell.
-I just tried it didn't cause warning of checkpatch. I'll change it.
-> 
-> > +
-> > +	ci13xxx_imx_platdata.phy = data->phy;
-> > +
-> > +	if (!pdev->dev.dma_mask) {
-> > +		pdev->dev.dma_mask = devm_kzalloc(&pdev->dev,
-> > +				      sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
-> > +		if (!pdev->dev.dma_mask) {
-> > +			ret = -ENOMEM;
-> > +			dev_err(&pdev->dev, "Failed to alloc dma_mask!\n");
-> > +			goto err;
-> > +		}
-> > +		*pdev->dev.dma_mask = DMA_BIT_MASK(32);
-> > +		dma_set_coherent_mask(&pdev->dev, *pdev->dev.dma_mask);
-> > +	}
-> 
-> Do you need this? I assume not.
-DT didn't set dma_mask when populate devices.
+--===============3627717907685580079==
+Content-Type: multipart/alternative; boundary=e89a8ff1c3b8b41ef304c26545d6
 
-Thanks
-Richard
-> 
-> Sascha
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--e89a8ff1c3b8b41ef304c26545d6
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed; delsp=yes
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On , Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org> wrote:
+> Hi Zhangfei,
+
+
+
+> On Tue, Jun 12 2012, zhangfei gao wrote:
+
+> > On Wed, Jun 13, 2012 at 3:05 AM, Chris Ball cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org> wrote:
+
+
+> How do you feel about having the compatible node say "sdhci-pxav3"
+> instead of "mrvl,pxav3-mmc"? I used the mrvl prefix because it fits
+> in with the rest of your existing DT, but it seems like it would be
+> better to name the driver directly. The DTs here live inside the
+> source tree, so we're not depending on anyone else's terminology.
+
+> If you're okay with sdhci-pxav{2,3} in compatible, I'll include that
+> in v2 of the patch with the rest of your fixes.
+
+Compatible node could be "mrvl,pxav3-mmc" or "mrvl,sdhci-pxav3". It's
+depend on your choice. I prefer to use vendor name in compatible property.
+And we could avoid naming conflict.
+
++ if (of_find_property(np, "non-removable", NULL))
++ pdata->flags |= PXA_FLAG_CARD_PERMANENT;
++
++ of_property_read_u32(np, "bus-width", &bus_width);
++ if (bus_width == 8)
++ pdata->flags |= PXA_FLAG_SD_8_BIT_CAPABLE_SLOT;
++
++ of_property_read_u32(np, "clk-delay-cycles", &clk_delay_cycles);
++ if (clk_delay_cycles > 0)
++ pdata->clk_delay_cycles = clk_delay_cycles;
++
+
+These properties should be "mrvl,non-removable", "mrvl,bus-width",
+"mrvl,clk-delay-cycles". Since it's mentioned in
+Documentations/devicetree/booting-without-of.txt. "It is recommended
+that if you add any "custom" property whose name may clash with
+standard defined ones, you prefix them with your vendor name and
+a comma."
+
+--e89a8ff1c3b8b41ef304c26545d6
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On , Chris Ball &lt;cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org&gt; wrote:<br />&gt; Hi Zhangfei,<br />&=
+gt; <br />&gt; <br />&gt; <br />&gt; On Tue, Jun 12 2012, zhangfei gao wrot=
+e:<br />&gt; <br />&gt; &gt; On Wed, Jun 13, 2012 at 3:05 AM, Chris Ball cj=
+b@laptop.org&gt; wrote:<br />&gt; <br />&gt; <br />&gt; How do you feel abo=
+ut having the compatible node say &quot;sdhci-pxav3&quot;<br />&gt; instead=
+ of &quot;mrvl,pxav3-mmc&quot;? =A0I used the mrvl prefix because it fits<b=
+r />&gt; in with the rest of your existing DT, but it seems like it would b=
+e<br />&gt; better to name the driver directly. =A0The DTs here live inside=
+ the<br />&gt; source tree, so we&#39;re not depending on anyone else&#39;s=
+ terminology.<br />&gt; <br />&gt; If you&#39;re okay with sdhci-pxav{2,3} =
+in compatible, I&#39;ll include that<br />&gt; in v2 of the patch with the =
+rest of your fixes.<br />&gt; <br />Compatible node could be &quot;mrvl,pxa=
+v3-mmc&quot; or &quot;mrvl,sdhci-pxav3&quot;. It&#39;s <br />depend on your=
+ choice. I prefer to use vendor name in compatible property.<br />And we co=
+uld avoid naming conflict.<br /><br />+       if (of_find_property(np, &quo=
+t;non-removable&quot;, NULL))<br />+               pdata-&gt;flags |=3D PXA=
+_FLAG_CARD_PERMANENT;<br />+<br />+       of_property_read_u32(np, &quot;bu=
+s-width&quot;, &bus_width);<br />+       if (bus_width =3D=3D 8)<br />+    =
+           pdata-&gt;flags |=3D PXA_FLAG_SD_8_BIT_CAPABLE_SLOT;<br />+<br /=
+>+       of_property_read_u32(np, &quot;clk-delay-cycles&quot;, &clk_delay_=
+cycles);<br />+       if (clk_delay_cycles &gt; 0)<br />+               pda=
+ta-&gt;clk_delay_cycles =3D clk_delay_cycles;<br />+<br /><br />These prope=
+rties should be &quot;mrvl,non-removable&quot;, &quot;mrvl,bus-width&quot;,=
+ <br />&quot;mrvl,clk-delay-cycles&quot;.  Since it&#39;s mentioned in <br =
+/>Documentations/devicetree/booting-without-of.txt. &quot;It is recommended=
+ <br />that if you add any &quot;custom&quot; property whose name may clash=
+ with <br />standard defined ones, you prefix them with your vendor name an=
+d <br />a comma.&quot;
+--e89a8ff1c3b8b41ef304c26545d6--
+
+--===============3627717907685580079==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3627717907685580079==--
