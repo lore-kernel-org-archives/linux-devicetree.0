@@ -1,111 +1,165 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v6 00/17] Add PWM framework and device tree support
-Date: Thu, 14 Jun 2012 14:53:29 +0200
-Message-ID: <20120614125329.GA7678@avionic-0098.mockup.avionic-design.de>
-References: <1334070400-25013-1-git-send-email-thierry.reding@avionic-design.de>
- <1BAFE6F6C881BF42822005164F1491C33EA21A9F@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1BAFE6F6C881BF42822005164F1491C33EA21A9F-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Bernhard Walle <walle-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kurt Van Dijck <kurt>
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Subject: [PATCH] SPI: at25: Parse dt settings
+Date: Thu, 14 Jun 2012 09:59:23 -0300
+Message-ID: <1339678763-14509-1-git-send-email-aletes.xgr@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <w.sang@pengutronix.de>, Chris Wright <chrisw@sous-sol.org>, Ivo Sieben <meltedpianoman@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Roland Stigge <stigge@antcom.de>
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This adds dt support to the at25 eeprom driver.
 
---W/nzBZO5zC0uMSeA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Tested-by: Roland Stigge <stigge@antcom.de>
+---
+ Documentation/devicetree/bindings/misc/at25.txt |   21 ++++++++
+ drivers/misc/eeprom/at25.c                      |   61 +++++++++++++++++------
+ 2 files changed, 66 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/at25.txt
 
-On Thu, Jun 14, 2012 at 12:47:13PM +0000, Hebbar, Gururaja wrote:
-> On Tue, Apr 10, 2012 at 20:36:23, Thierry Reding wrote:
-> > This patch series adds very rudimentary device-tree support for PWM
-> > devices. With all of these patches applied (plus one board-specific
-> > patch that is not included), I'm able to control the backlight on the
-> > device I'm working on using the sysfs interface provided by the pwm-bl
-> > driver and the backlight class.
-> >=20
-> > This series is based on Sascha Hauer's series of patches[0] to add a
-> > generic PWM framework. The first patch in this series is taken from
-> > Sascha's branch, while the second patch enables each PWM chip to provide
-> > multiple PWM devices (the Blackfin and PXA drivers have been ported to
-> > the framework for reference). Currently a global namespace is still
-> > provided to keep backwards-compatibility with the legacy PWM API. In
-> > order to achieve this, the number of global PWM devices is limited to
-> > 1024. However, patch 2 introduces per-chip indexing of PWM devices in
-> > the core and patch 4 adds an API to request a PWM device using a lookup
-> > table registered by board setup code. They are supposed to eventually
-> > replace pwm_request() and allow to get rid of the global namespace. The
-> > device tree support code does not use the global namespace.
-> >=20
-> ..snip..
-> ..snip..
->=20
-> >=20
-> > The whole series is based on the linux-next tree from 20120405. I think
-> > I've addressed all of the concerns raised in the first five versions. I
-> > have also pushed this version of the series to the PWM subsystem
-> > repository[1].
-> >=20
-> > Thierry
-> >=20
-> > [0]: http://git.pengutronix.de/?p=3Dimx/linux-2.6.git;a=3Dshortlog;h=3D=
-refs/heads/pwmlib
-> > [1]: http://gitorious.org/linux-pwm/linux-pwm/trees/pwm-v6
-> >=20
-> > Sascha Hauer (4):
-> >   pwm: Add PWM framework support
-> >   ARM i.MX: Move i.MX pwm driver to pwm framework
-> >   ARM Samsung: Move s3c pwm driver to pwm framework
-> >   ARM vt8500: Move vt8500 pwm driver to pwm framework
-> >=20
-> > Shawn Guo (1):
-> >   pwm: add pwm-mxs support
-> >=20
-> > Simon Que (1):
-> >   ARM: tegra: Fix PWM clock programming
-> >=20
-> > Thierry Reding (11):
-> >   pwm: Allow chips to support multiple PWMs
-> >   pwm: Add debugfs interface
-> >   pwm: Add table-based lookup for static mappings
-> >   pwm: Add device tree support
-> >   ARM: tegra: Provide clock for only one PWM controller
-> >   pwm: Add NVIDIA Tegra SoC support
-> >   pwm: tegra: Add device tree support
-> >   pwm: Move Blackfin PWM driver to PWM framework
-> >   pwm: Move PXA PWM driver to PWM framework
-> >   pwm-backlight: Add rudimentary device tree support
-> >   pwm: Take over maintainership of the PWM subsystem
-> >=20
->=20
-> I am planning to add PWM support in Linux for TI AM335x SOC.=20
-> I am taking your new PWM framework as reference.
->=20
-> I see a lot of ack's for the patches. I see that you are maintaining thes=
-e patches in a separate repo.
-> However, I couldn't find any of these=20
-> patches in the mainline kernel (including recent 3.5-rc2).=20
-> Do you have any plans for pushing this again to mainline kernel.=20
-
-Yes, as a matter of fact I'm in the process of getting the series ready for
-inclusion into linux-next. I expect them to go into 3.6.
-
-Thierry
-
---W/nzBZO5zC0uMSeA
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk/Z3skACgkQZ+BJyKLjJp/7YACgoc6oW+Nz/HnFwgMUlrVyL+34
-DCcAn0FN91MkK+s53sgxSbuZxr+AHacP
-=qQCE
------END PGP SIGNATURE-----
-
---W/nzBZO5zC0uMSeA--
+diff --git a/Documentation/devicetree/bindings/misc/at25.txt b/Documentation/devicetree/bindings/misc/at25.txt
+new file mode 100644
+index 0000000..ab3c327
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/at25.txt
+@@ -0,0 +1,21 @@
++Atmel AT25 eeprom
++
++Required properties:
++- compatible : "atmel,at25".
++- reg : chip select number
++- spi-max-frequency : max spi frequency to use
++
++- at25,byte-len : total eeprom size in bytes
++- at25,addr-mode : addr-mode flags, as defined in include/linux/spi/eeprom.h
++- at25,page-size : size of the eeprom page
++
++Examples:
++at25@0 {
++	compatible = "atmel,at25";
++	reg = <0>
++	spi-max-frequency = <5000000>;
++
++	at25,byte-len = <0x8000>;
++	at25,addr-mode = <2>;
++	at25,page-size = <64>;
++};
+diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
+index 0842c29..25003d6 100644
+--- a/drivers/misc/eeprom/at25.c
++++ b/drivers/misc/eeprom/at25.c
+@@ -19,7 +19,7 @@
+ 
+ #include <linux/spi/spi.h>
+ #include <linux/spi/eeprom.h>
+-
++#include <linux/of.h>
+ 
+ /*
+  * NOTE: this is an *EEPROM* driver.  The vagaries of product naming
+@@ -305,25 +305,54 @@ static ssize_t at25_mem_write(struct memory_accessor *mem, const char *buf,
+ static int at25_probe(struct spi_device *spi)
+ {
+ 	struct at25_data	*at25 = NULL;
+-	const struct spi_eeprom *chip;
++	struct spi_eeprom	chip;
++	struct device_node	*np = spi->dev.of_node;
+ 	int			err;
+ 	int			sr;
+ 	int			addrlen;
+ 
+ 	/* Chip description */
+-	chip = spi->dev.platform_data;
+-	if (!chip) {
+-		dev_dbg(&spi->dev, "no chip description\n");
+-		err = -ENODEV;
+-		goto fail;
+-	}
++	if (!spi->dev.platform_data) {
++		if (np) {
++			u32 val;
++
++			memset(&chip, 0, sizeof(chip));
++			strncpy(chip.name, np->name, 10);
++
++			err = of_property_read_u32(np, "at25,byte-len", &val);
++			if (err) {
++				dev_dbg(&spi->dev, "invalid chip dt description\n");
++				goto fail;
++			}
++			chip.byte_len = val;
++
++			err = of_property_read_u32(np, "at25,addr-mode", &val);
++			if (err) {
++				dev_dbg(&spi->dev, "invalid chip dt description\n");
++				goto fail;
++			}
++			chip.flags = (u16)val;
++
++			err = of_property_read_u32(np, "at25,page-size", &val);
++			if (err) {
++				dev_dbg(&spi->dev, "invalid chip dt description\n");
++				goto fail;
++			}
++			chip.page_size = (u16)val;
++		} else {
++			dev_dbg(&spi->dev, "no chip description\n");
++			err = -ENODEV;
++			goto fail;
++		}
++	} else
++		chip = *(struct spi_eeprom *)spi->dev.platform_data;
+ 
+ 	/* For now we only support 8/16/24 bit addressing */
+-	if (chip->flags & EE_ADDR1)
++	if (chip.flags & EE_ADDR1)
+ 		addrlen = 1;
+-	else if (chip->flags & EE_ADDR2)
++	else if (chip.flags & EE_ADDR2)
+ 		addrlen = 2;
+-	else if (chip->flags & EE_ADDR3)
++	else if (chip.flags & EE_ADDR3)
+ 		addrlen = 3;
+ 	else {
+ 		dev_dbg(&spi->dev, "unsupported address type\n");
+@@ -348,7 +377,7 @@ static int at25_probe(struct spi_device *spi)
+ 	}
+ 
+ 	mutex_init(&at25->lock);
+-	at25->chip = *chip;
++	at25->chip = chip;
+ 	at25->spi = spi_dev_get(spi);
+ 	dev_set_drvdata(&spi->dev, at25);
+ 	at25->addrlen = addrlen;
+@@ -369,7 +398,7 @@ static int at25_probe(struct spi_device *spi)
+ 	at25->mem.read = at25_mem_read;
+ 
+ 	at25->bin.size = at25->chip.byte_len;
+-	if (!(chip->flags & EE_READONLY)) {
++	if (!(chip.flags & EE_READONLY)) {
+ 		at25->bin.write = at25_bin_write;
+ 		at25->bin.attr.mode |= S_IWUSR;
+ 		at25->mem.write = at25_mem_write;
+@@ -379,8 +408,8 @@ static int at25_probe(struct spi_device *spi)
+ 	if (err)
+ 		goto fail;
+ 
+-	if (chip->setup)
+-		chip->setup(&at25->mem, chip->context);
++	if (chip.setup)
++		chip.setup(&at25->mem, chip.context);
+ 
+ 	dev_info(&spi->dev, "%Zd %s %s eeprom%s, pagesize %u\n",
+ 		(at25->bin.size < 1024)
+@@ -388,7 +417,7 @@ static int at25_probe(struct spi_device *spi)
+ 			: (at25->bin.size / 1024),
+ 		(at25->bin.size < 1024) ? "Byte" : "KByte",
+ 		at25->chip.name,
+-		(chip->flags & EE_READONLY) ? " (readonly)" : "",
++		(chip.flags & EE_READONLY) ? " (readonly)" : "",
+ 		at25->chip.page_size);
+ 	return 0;
+ fail:
+-- 
+1.7.10
