@@ -1,331 +1,191 @@
-From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: [PATCH] spi/pl022: add devicetree support
-Date: Thu, 14 Jun 2012 10:07:11 -0300
-Message-ID: <1339679231-14576-1-git-send-email-aletes.xgr@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, Roland Stigge <stigge@antcom.de>
-Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [RFC] i.MX DRM devicetree binding
+Date: Thu, 14 Jun 2012 15:07:56 +0200
+Message-ID: <20120614130756.GS30400@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: David Jander <david.jander@protonic.nl>, devicetree-discuss@lists.ozlabs.org, DRI Development <dri-devel@lists.freedesktop.org>, kernel@pengutronix.de, Ahmed Ammar <aammar@genesi-usa.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the chipselect array and cur_cs properties to pl022 main structure
+Hi All,
 
-Add a wrapper function to decide if the cs should be controlled by the
-cs_control callback or the chipselect gpio
+The following is an attempt to come up with a devicetree binding for
+DRM graphics on i.MX SoCs. I'm posting this seperate from the actual
+code to not bury this in big patches.
 
-Populate chipselect property from cs-gpios
+The bindings should cover most of the problems we had while implementing
+the possible IPU <-> (LVDS, HDMI, parallel) Display connections.
 
-Populate master->dev.of_node, so the spi bus can find child spi
-devices and register them
+Contrary to some other devicetree bindings I have seen we decided not
+to make the displays subnodes of the graphics unit because the (LVDS,
+HDMI) encoders are outside the graphics units and also on i.MX6 there
+are 2 IPUs and displays can be muxed between these IPUs.
 
-At pl022 setup, fill chip_data structure from dt nodes, if not provided
-by platform.
+Comments and suggestions welcome.
 
-Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Tested-by: Roland Stigge <stigge@antcom.de>
+Sascha
+
+8<--------------------------------------
+
+DRM i.MX: Add devicetree binding documentation
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- .../devicetree/bindings/spi/spi_pl022.txt          |   15 +++
- drivers/spi/spi-pl022.c                            |  117 ++++++++++++++++----
- 2 files changed, 112 insertions(+), 20 deletions(-)
+ .../devicetree/bindings/drm/fsl-imx-drm.txt        |  126 ++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/drm/fsl-imx-drm.txt
 
-diff --git a/Documentation/devicetree/bindings/spi/spi_pl022.txt b/Documentation/devicetree/bindings/spi/spi_pl022.txt
-index 306ec3f..b089ec7 100644
---- a/Documentation/devicetree/bindings/spi/spi_pl022.txt
-+++ b/Documentation/devicetree/bindings/spi/spi_pl022.txt
-@@ -6,7 +6,22 @@ Required properties:
- - interrupts : Should contain SPI controller interrupt
- 
- Optional properties:
-+- pl022,num-chipselects : total number of chipselects
- - cs-gpios : should specify GPIOs used for chipselects.
-   The gpios will be referred to as reg = <index> in the SPI child nodes.
-   If unspecified, a single SPI device without a chip select can be used.
- 
-+SPI slave nodes must be children of the SPI master node and can
-+contain the following properties.
-+See include/linux/amba/pl022.h for more details
+diff --git a/Documentation/devicetree/bindings/drm/fsl-imx-drm.txt b/Documentation/devicetree/bindings/drm/fsl-imx-drm.txt
+new file mode 100644
+index 0000000..6766e03
+--- /dev/null
++++ b/Documentation/devicetree/bindings/drm/fsl-imx-drm.txt
+@@ -0,0 +1,126 @@
++Freescale i.MX IPUv3
++====================
 +
-+- pl022,hierarchy : master or slave interface
-+- pl022,interface : interface type
-+- pl022,slave-tx-disable : disconnect tx line in slave mode
-+- pl022,com-mode : polling, interrupt or dma
-+- pl022,rx-level-trig : Rx FIFO watermark level
-+- pl022,tx-level-trig : Tx FIFO watermark level
-+- pl022,ctrl-len : Microwire interface: Control length
-+- pl022,wait-state : Microwire interface: Wait state
-+- pl022,duplex : Microwire interface: Full/Half duplex
++Required properties:
++- compatible: Should be "fsl,<chip>-ipu"
++- reg: should be register base and length as documented in the
++  datasheet
++- interrupts: Should contain sync interrupt and error interrupt,
++  in this order.
++- #crtc-cells: 1, See below
 +
-diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
-index 400ae21..50d1644 100644
---- a/drivers/spi/spi-pl022.c
-+++ b/drivers/spi/spi-pl022.c
-@@ -40,6 +40,8 @@
- #include <linux/dma-mapping.h>
- #include <linux/scatterlist.h>
- #include <linux/pm_runtime.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
- 
- /*
-  * This macro is used to define some register default values.
-@@ -389,6 +391,8 @@ struct pl022 {
- 	char				*dummypage;
- 	bool				dma_running;
- #endif
-+	int cur_cs;
-+	int chipselect[0];
- };
- 
- /**
-@@ -433,6 +437,14 @@ static void null_cs_control(u32 command)
- 	pr_debug("pl022: dummy chip select control, CS=0x%x\n", command);
- }
- 
-+static void pl022_cs_control(struct pl022 *pl022, u32 command)
-+{
-+	if (gpio_is_valid(pl022->cur_cs))
-+		gpio_set_value(pl022->cur_cs, command);
-+	else
-+		pl022->cur_chip->cs_control(command);
-+}
++example:
 +
- /**
-  * giveback - current spi_message is over, schedule next message and call
-  * callback of this message. Assumes that caller already
-@@ -479,7 +491,7 @@ static void giveback(struct pl022 *pl022)
- 		if (next_msg && next_msg->spi != pl022->cur_msg->spi)
- 			next_msg = NULL;
- 		if (!next_msg || pl022->cur_msg->state == STATE_ERROR)
--			pl022->cur_chip->cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		else
- 			pl022->next_msg_cs_active = true;
- 
-@@ -813,8 +825,7 @@ static void dma_callback(void *data)
- 	/* Update total bytes transferred */
- 	msg->actual_length += pl022->cur_transfer->len;
- 	if (pl022->cur_transfer->cs_change)
--		pl022->cur_chip->
--			cs_control(SSP_CHIP_DESELECT);
-+		pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 
- 	/* Move to next transfer */
- 	msg->state = next_transfer(pl022);
-@@ -1247,8 +1258,7 @@ static irqreturn_t pl022_interrupt_handler(int irq, void *dev_id)
- 		/* Update total bytes transferred */
- 		msg->actual_length += pl022->cur_transfer->len;
- 		if (pl022->cur_transfer->cs_change)
--			pl022->cur_chip->
--				cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		/* Move to next transfer */
- 		msg->state = next_transfer(pl022);
- 		tasklet_schedule(&pl022->pump_transfers);
-@@ -1333,7 +1343,7 @@ static void pump_transfers(unsigned long data)
- 
- 		/* Reselect chip select only if cs_change was requested */
- 		if (previous->cs_change)
--			pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 	} else {
- 		/* STATE_START */
- 		message->state = STATE_RUNNING;
-@@ -1372,7 +1382,7 @@ static void do_interrupt_dma_transfer(struct pl022 *pl022)
- 
- 	/* Enable target chip, if not already active */
- 	if (!pl022->next_msg_cs_active)
--		pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+		pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 
- 	if (set_up_next_transfer(pl022, pl022->cur_transfer)) {
- 		/* Error path */
-@@ -1424,12 +1434,12 @@ static void do_polling_transfer(struct pl022 *pl022)
- 			if (previous->delay_usecs)
- 				udelay(previous->delay_usecs);
- 			if (previous->cs_change)
--				pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+				pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 		} else {
- 			/* STATE_START */
- 			message->state = STATE_RUNNING;
- 			if (!pl022->next_msg_cs_active)
--				pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+				pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 		}
- 
- 		/* Configuration Changing Per Transfer */
-@@ -1461,7 +1471,7 @@ static void do_polling_transfer(struct pl022 *pl022)
- 		/* Update total byte transferred */
- 		message->actual_length += pl022->cur_transfer->len;
- 		if (pl022->cur_transfer->cs_change)
--			pl022->cur_chip->cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		/* Move to next transfer */
- 		message->state = next_transfer(pl022);
- 	}
-@@ -1490,6 +1500,7 @@ static int pl022_transfer_one_message(struct spi_master *master,
- 
- 	/* Setup the SPI using the per chip configuration */
- 	pl022->cur_chip = spi_get_ctldata(msg->spi);
-+	pl022->cur_cs = pl022->chipselect[msg->spi->chip_select];
- 
- 	restore_state(pl022);
- 	flush(pl022);
-@@ -1733,7 +1744,7 @@ static int calculate_effective_freq(struct pl022 *pl022, int freq, struct
-  * A piece of default chip info unless the platform
-  * supplies it.
-  */
--static const struct pl022_config_chip pl022_default_chip_info = {
-+static struct pl022_config_chip pl022_default_chip_info = {
- 	.com_mode = POLLING_TRANSFER,
- 	.iface = SSP_INTERFACE_MOTOROLA_SPI,
- 	.hierarchy = SSP_SLAVE,
-@@ -1761,12 +1772,14 @@ static const struct pl022_config_chip pl022_default_chip_info = {
- static int pl022_setup(struct spi_device *spi)
- {
- 	struct pl022_config_chip const *chip_info;
-+	struct pl022_config_chip chip_info_dt;
- 	struct chip_data *chip;
- 	struct ssp_clock_params clk_freq = { .cpsdvsr = 0, .scr = 0};
- 	int status = 0;
- 	struct pl022 *pl022 = spi_master_get_devdata(spi->master);
- 	unsigned int bits = spi->bits_per_word;
- 	u32 tmp;
-+	struct device_node *np = spi->dev.of_node;
- 
- 	if (!spi->max_speed_hz)
- 		return -EINVAL;
-@@ -1789,10 +1802,36 @@ static int pl022_setup(struct spi_device *spi)
- 	chip_info = spi->controller_data;
- 
- 	if (chip_info == NULL) {
--		chip_info = &pl022_default_chip_info;
--		/* spi_board_info.controller_data not is supplied */
--		dev_dbg(&spi->dev,
--			"using default controller_data settings\n");
-+		if (np) {
-+			chip_info_dt = pl022_default_chip_info;
++ipu: ipu@18000000 {
++	#crtc-cells = <1>;
++	compatible = "fsl,imx53-ipu";
++	reg = <0x18000000 0x080000000>;
++	interrupts = <11 10>;
++};
 +
-+			of_property_read_u32(np, "pl022,hierarchy",
-+				&chip_info_dt.hierarchy);
-+			of_property_read_u32(np, "pl022,interface",
-+				&chip_info_dt.iface);
-+			chip_info_dt.slave_tx_disable =
-+				of_property_read_bool(np,
-+					"pl022,slave-tx-disable");
-+			of_property_read_u32(np, "pl022,com-mode",
-+				&chip_info_dt.com_mode);
-+			of_property_read_u32(np, "pl022,rx-level-trig",
-+				&chip_info_dt.rx_lev_trig);
-+			of_property_read_u32(np, "pl022,tx-level-trig",
-+				&chip_info_dt.tx_lev_trig);
-+			of_property_read_u32(np, "pl022,ctrl-len",
-+				&chip_info_dt.ctrl_len);
-+			of_property_read_u32(np, "pl022,wait-state",
-+				&chip_info_dt.wait_state);
-+			of_property_read_u32(np, "pl022,duplex",
-+				&chip_info_dt.duplex);
++Freescale i.MX LCDC controller
++==============================
 +
-+			chip_info = &chip_info_dt;
-+		} else {
-+			chip_info = &pl022_default_chip_info;
-+			/* spi_board_info.controller_data not is supplied */
-+			dev_dbg(&spi->dev,
-+				"using default controller_data settings\n");
-+		}
- 	} else
- 		dev_dbg(&spi->dev,
- 			"using user supplied controller_data settings\n");
-@@ -1835,8 +1874,9 @@ static int pl022_setup(struct spi_device *spi)
- 	chip->xfer_type = chip_info->com_mode;
- 	if (!chip_info->cs_control) {
- 		chip->cs_control = null_cs_control;
--		dev_warn(&spi->dev,
--			 "chip select function is NULL for this chip\n");
-+		if (!gpio_is_valid(pl022->chipselect[spi->chip_select]))
-+			dev_warn(&spi->dev,
-+				 "chip select function is NULL for this chip\n");
- 	} else
- 		chip->cs_control = chip_info->cs_control;
- 
-@@ -1988,7 +2028,8 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 	struct pl022_ssp_controller *platform_info = adev->dev.platform_data;
- 	struct spi_master *master;
- 	struct pl022 *pl022 = NULL;	/*Data for this driver */
--	int status = 0;
-+	struct device_node *np = adev->dev.of_node;
-+	int status = 0, i, num_cs;
- 
- 	dev_info(&adev->dev,
- 		 "ARM PL022 driver, device ID: 0x%08x\n", adev->periphid);
-@@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 		goto err_no_pdata;
- 	}
- 
-+	num_cs = platform_info->num_chipselect;
-+#ifdef CONFIG_OF
-+	of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
-+#endif
++Required properties:
++- compatible: Should be "fsl,<chip>-lcdc"
++- reg: should be register base and length as documented in the
++  datasheet
++- interrupts: Should contain interrupt
++- #crtc-cells: 0, See below
 +
- 	/* Allocate master with space for data */
--	master = spi_alloc_master(dev, sizeof(struct pl022));
-+	master = spi_alloc_master(dev,
-+		sizeof(struct pl022) + sizeof(int) * num_cs);
- 	if (master == NULL) {
- 		dev_err(&adev->dev, "probe - cannot alloc SPI master\n");
- 		status = -ENOMEM;
-@@ -2017,13 +2064,40 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 	 * on this board
- 	 */
- 	master->bus_num = platform_info->bus_id;
--	master->num_chipselect = platform_info->num_chipselect;
-+	master->num_chipselect = num_cs;
- 	master->cleanup = pl022_cleanup;
- 	master->setup = pl022_setup;
- 	master->prepare_transfer_hardware = pl022_prepare_transfer_hardware;
- 	master->transfer_one_message = pl022_transfer_one_message;
- 	master->unprepare_transfer_hardware = pl022_unprepare_transfer_hardware;
- 	master->rt = platform_info->rt;
-+	master->dev.of_node = dev->of_node;
++example:
 +
-+#ifdef CONFIG_OF
-+	for (i = 0; i < num_cs; i++) {
-+		int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
++lcdc: lcdc@10021000 {
++	#crtc-cells = <0>;
++	compatible = "fsl,imx27-lcdc", "fsl,imx21-lcdc";
++	reg = <0x10021000 0x4000>;
++	interrupts = <61>;
++};
 +
-+		if (cs_gpio == -ENODEV) {
-+			status = -EPROBE_DEFER;
-+			goto err_no_gpio;
-+		}
++Parallel display support
++========================
 +
-+		pl022->chipselect[i] = cs_gpio;
++Required properties:
++- compatible: Should be "fsl,imx-parallel-display"
++- crtc: the crtc this display is connected to, see below
++Optional properties:
++- interface_pix_fmt: How this display is connected to the
++  crtc. Currently supported types: "rgb24", "rgb565"
++- edid: verbatim EDID data block describing attached display.
++- ddc: phandle describing the i2c bus handling the display data
++  channel
 +
-+		if (gpio_is_valid(cs_gpio)) {
-+			if (gpio_request(cs_gpio, "ssp-pl022"))
-+				dev_err(&adev->dev,
-+					"could not request %d gpio\n", cs_gpio);
-+			else if (gpio_direction_output(cs_gpio, 1))
-+				dev_err(&adev->dev,
-+					"could set gpio %d as output\n",
-+					cs_gpio);
-+		}
-+	}
-+#else
-+	for (i = 0; i < num_cs; i++)
-+		pl022->chipselect[i] = -EINVAL;
-+#endif
- 
- 	/*
- 	 * Supports mode 0-3, loopback, and active low CS. Transfers are
-@@ -2130,6 +2204,9 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
-  err_no_ioremap:
- 	amba_release_regions(adev);
-  err_no_ioregion:
-+ #ifdef CONFIG_OF
-+ err_no_gpio:
-+ #endif
- 	spi_master_put(master);
-  err_no_master:
-  err_no_pdata:
++example:
++
++display@di0 {
++	compatible = "fsl,imx-parallel-display";
++	edid = [edid-data];
++	crtc = <&ipu 0>;
++	interface_pix_fmt = "rgb24";
++};
++
++LVDS display bridge (LDB)
++=========================
++
++Required properties:
++- compatible: Should be "fsl,<chip>-ldb"
++- channel0-crtcs, channel1-crtcs: the crtcs the ldb is connected to, see
++  below
++Optional properties:
++- channel0-edid, channel1-edid: verbatim EDID data blocks describing the
++  displays attached to channel0 and channel1.
++- channel0-ddc, channel1-ddc: phandles describing the i2c busses handling
++  the display data channels for channel0 and channel1.
++
++lvds@53fa8008 {
++	compatible = "fsl,imx6q-ldb";
++	channel0-edid = [edid-data];
++	channel1-ddc = <&i2c0>;
++	channel0-crtcs = <&ipu0 0>, <&ipu0 1>, <&ipu1 0>, <&ipu1 1>;
++	channel1-crtcs = <&ipu0 0>, <&ipu0 1>, <&ipu1 0>, <&ipu1 1>;
++};
++
++Specifying CRTCs connected to display output devices
++====================================================
++
++Display output device nodes should specify which CRTCs they can be
++connected to in their crtcs property, containing a 'crtc-list':
++
++	crtc-list ::= <single-crtc> [crtc-list]
++	single-crtc ::= <crtc-phandle> <crtc-specifier>
++	crtc-phandle : phandle to device node providing the crtc
++	crtc-specifier : Array of #crtc-cells specifying specific crtc
++			 (controller specific, 1 on imx-ipuv3)
++
++In the following example, two image processing units ipu0 and ipu1
++provide two CRTCs each, indexed with a single cell. The hdmi connector
++can be connected to either CRTC of ipu1, and the lvds connector is
++fixed to the second CRTC of ipu0.
++
++	ipu0: ipu0 {
++		#crtc-cells = <1>;
++	};
++	ipu1: ipu1 {
++		#crtc-cells = <1>;
++	};
++	[...]
++	hdmi: hdmi {
++		ddc = <&i2c2>;
++		crtcs = <&ipu1 0 &ipu1 1>;
++	};
++	lvds: lvds {
++		edid = [edid-data];
++		crtcs = <&ipu0 1>;
++	};
++
++Note that the crtc-specifier length is controller dependent. A simple
++lcdc controller with a single CRTC should use #crtc-cells = <0>:
++
++	lcdc: lcdc {
++		#crtc-cells = <0>;
++	};
++	[...]
++	parallel-display {
++		crtcs = <&lcdc>
++	};
++
 -- 
 1.7.10
 
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
