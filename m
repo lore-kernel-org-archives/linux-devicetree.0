@@ -1,119 +1,71 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 14 Jun 2012 11:48:19 +0000
-Message-ID: <201206141148.20371.arnd@arndb.de>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206090004.10086.arnd@arndb.de> <4FD914F6.6000402@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: Kirkwood: Add interrupt controller support for
+ DT boards
+Date: Thu, 14 Jun 2012 11:55:56 +0000
+Message-ID: <201206141155.56289.arnd@arndb.de>
+References: <1339324322-29388-2-git-send-email-andrew@lunn.ch>
+ <201206140812.34399.arnd@arndb.de> <20120614091858.GD4799@lunn.ch>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FD914F6.6000402@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Jassi Brar <jaswinder.singh@linaro.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120614091858.GD4799-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 June 2012, Jon Hunter wrote:
-
-> > As I said previously, I think just encoding the direction but not
-> > the client specific ID (meaning we would have to disambiguate
-> > the more complex cases that Stephen mentioned using a dma-names
-> > property) would be the best because it keeps the common case simple,
-> > but I could live with other things going in there too.
+On Thursday 14 June 2012, Andrew Lunn wrote:
+> > I think if you compute the number of interrupts in the domain from the number of
+> > registers that are described in the device tree, call orion_irq_init()
+> > based on those registers, and use irq domains for the gpio stuff as Rob suggested,
+> > this init_irq function can become completely generic to all orion platforms.
 > 
-> Ok, so you are saying that there are some DMA controllers where there is
-> no channel/request ID and only a direction is needed? So an even simpler
-> case than what I had imagined.
+> I'm reworking the GPIO stuff at the moment, moving it to use IRQ
+> domains for its interrupts. That code will be generic to all Orion
+> platforms. I'm modeling the code on the AT91 GPIO handler, since that
+> has a similar structure, one hardware interrupt for a number of GPIO
+> lines, which is in software demultiplexed and triggers secondary level
+> interrupts. The major difference is that AT91 has one hardware
+> interrupt for a GPIO chip with 32 lines, where as Orion has 4 hardware
+> interrupt lines, so maybe four interrupt domains, for one GPIO chip
+> with 32 lines.
 
-No, that was not the case I was thinking about.
+My guess is that you're still better off with a single interrupt domain
+for 32 lines, or even for all the gpio lines, but I'm sure you can
+find a solution that works best for you.
 
-> So in that case, I don't see why the first cell after the phandle could
-> not be an index which could be either a direction or request-id and then
-> the next cell after that be a secondary match variable.
-> 
-> So simple case with just a index (either req-id or direction) ...
-> 
-> dmas = <&dmac0 index>
-> 
-> More complex case ...
-> 
-> dmas = <&dmac0 index match>
-> 
-> For example, for OMAP index = req-id and match = direction ...
-> 
-> dmas = <&dmac0 req-id direction>
-> 
-> Or am I way off the page?
+> Non-GPIO interrupts are more of a problem. Underneath it uses the
+> generic-chip interrupt code. The patchset to add _domain versions of
+> these calls is stalled. So i think for the moment, we need to stay
+> with the domain bolted on top, until generic-chip gets domain
+> support. I would also expect that generic-chip also gets a common DT
+> binding which any SoC can use.
 
-The intention was instead to remove the need for the /index/ in those
-cases, because having a client-specific index in here makes it inconsistent
-with other similar bindings (reg, interrupts, gpios, ...) that people
-are familiar with. They use an implicit index by counting the
-fields in the respective properties.
+I suggested that before, and the comments I got back then were that
+we should treat the generic irq chip more like a library and keep
+the device tree binding at a higher level. If I understood things right,
+that means we would just have one plat-orion (or mach-mvebu later)
+irq chip abstraction that handles the DT binding and the irq domains
+itself but uses the generic irq chip code to implement the actual
+irq handling.
 
-The existing method we have for avoiding index numbers is to use
-named fields, like
+> My aim at the moment is to get something which works well enough that
+> we can add DT support to other drivers. Without interrupts, we are not
+> going to get very far. We can later rip it out what i create now and
+> replace it once generic-chip becomes domain and DT aware, and there
+> should be no effect on other drivers.
 
-	dmas = <&dmac0 matchA>, <dmac1 matchB>, <dmac2 matchC>;
-	dma-names = "rx", "rx", "tx";
-
-This is similar to how we use named interrupt and mmio resources, but
-it requires that we always request the dma lines by name, which is
-slightly more complex than we might want it to be.
-
-Because the vast majority of cases just use a single channel, or one
-channel per direction, my idea was to encode the direction in the
-dmas property, which lets us request a dma channel by direction from
-the driver side, without explicitly encoding the name.
-
-This would let us handle the following cases very easily:
-
-1. one read-write channel
-
-	dmas = <&dmac 0x3 match>;
-
-2. a choice of two read-write channels:
-
-	dmas = <&dmacA 0x3 matchA>, <&dmacB 0x3 matchB>;
-
-3. one read-channel, one write channel:
-
-	dmas = <&dmac 0x1 match-read>, <&dmac 0x2 match-write>;
-
-4. a choice of two read channels and one write channel:
-
-	dmas = <&dmacA 0x1 match-readA>, <&dmacA 0x2 match-write> 
-			<&dmacB match-readB>;
-
-And only the cases where we have more multiple channels that differ
-in more aspects would require named properties:
-
-5. two different channels
-
-	dmas = <&dmac 0x3 match-rwdata>, <&dmac 0x1 match-status>;
-	dma-names = "rwdata", "status";
-
-6. same as 5, but with a choice of channels:
-
-	dmas = <&dmacA 0x3 match-rwdataA>, <&dmacA 0x1 match-status>;
-		<dmacB 0x3 match-rwdataB>;
-	dma-names = "rwdata", "status", "rwdata";
-
-
-With a definition like that, we can implement a very simple device
-driver interface for the common cases, and a slightly more complex
-one for the more complex cases:
-
-1. chan = of_dma_request_channel(dev->of_node, 0);
-2. chan = of_dma_request_channel(dev->of_node, 0);
-3. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
-   txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
-4. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
-   txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
-5. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
-   auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
-6. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
-   auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
+Right. I just want to ensure that we don't need to change the bindings
+in incompatible ways.
 
 	Arnd
