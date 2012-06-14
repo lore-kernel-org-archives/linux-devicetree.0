@@ -1,98 +1,49 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: [PATCH v2] of: match by compatible property first
-Date: Thu, 14 Jun 2012 09:12:35 +0200
-Message-ID: <1339657955-20760-1-git-send-email-thierry.reding@avionic-design.de>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
+Date: Thu, 14 Jun 2012 10:52:57 +0300
+Message-ID: <8762au8h46.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com> <1339159026-15837-1-git-send-email-richard.zhao@freescale.com> <20120612231438.GA6177@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120612231438.GA6177-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When matching devices against an OF device ID table, the first string of
-the compatible property that is listed in the table should match,
-regardless of its position in the table.
+Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> writes:
 
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> On Fri, Jun 08, 2012 at 08:37:06PM +0800, Richard Zhao wrote:
+>> Sometimes, the driver bindings may know what phy they use.
+>> For example, when using device tree, the usb controller may have a
+>> phandler pointing to usb phy.
+>> 
+>> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+>> ---
+>> Changes since laster version:
+>> - hcd transceiver renamed to phy
+>
+> Ick, I see patches all over this thread, and other threads, and I have
+> no idea what to apply anywhere...
+>
+> So, consider all chipidea patches dropped from my queue now, can you
+> please resend them to me, with the accumulated acks and reviewed-by
+> line, so that I can queue them up?
 
----
-Changes in v2:
-- don't export of_match_compat() function
+So will you pick these patches to your tree or should I apply them to
+mine or what is the plan? I kind of have a tree [1] for chipidea stuff
+where I have been collecting patches, to send a pull request to you for
+3.6.
 
- drivers/of/base.c |   30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+[1] git://github.com/virtuoso/linux-ci.git ci
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 91c1fb4..7cd5e8a 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -511,6 +511,22 @@ out:
- }
- EXPORT_SYMBOL(of_find_node_with_property);
- 
-+static const struct of_device_id *of_match_compat(const struct of_device_id *matches,
-+						  const char *compat)
-+{
-+	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
-+		const char *cp = matches->compatible;
-+		int len = strlen(cp);
-+
-+		if (len > 0 && of_compat_cmp(compat, cp, len) == 0)
-+			return matches;
-+
-+		matches++;
-+	}
-+
-+	return NULL;
-+}
-+
- /**
-  * of_match_node - Tell if an device_node has a matching of_match structure
-  *	@matches:	array of of device match structures to search in
-@@ -521,9 +537,18 @@ EXPORT_SYMBOL(of_find_node_with_property);
- const struct of_device_id *of_match_node(const struct of_device_id *matches,
- 					 const struct device_node *node)
- {
-+	struct property *prop;
-+	const char *cp;
-+
- 	if (!matches)
- 		return NULL;
- 
-+	of_property_for_each_string(node, "compatible", prop, cp) {
-+		const struct of_device_id *match = of_match_compat(matches, cp);
-+		if (match)
-+			return match;
-+	}
-+
- 	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
- 		int match = 1;
- 		if (matches->name[0])
-@@ -532,10 +557,7 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
- 		if (matches->type[0])
- 			match &= node->type
- 				&& !strcmp(matches->type, node->type);
--		if (matches->compatible[0])
--			match &= of_device_is_compatible(node,
--						matches->compatible);
--		if (match)
-+		if (match && !matches->compatible[0])
- 			return matches;
- 		matches++;
- 	}
--- 
-1.7.10.4
+Regards,
+--
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
