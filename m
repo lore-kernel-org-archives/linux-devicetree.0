@@ -1,110 +1,32 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Wed, 13 Jun 2012 17:32:22 -0500
-Message-ID: <4FD914F6.6000402@ti.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <4FBAA64A.200@wwwdotorg.org> <4FD24CC3.50700@ti.com> <201206090004.10086.arnd@arndb.de>
+From: Chen Peter-B29397 <B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [Patch v5 09/13] ARM: imx6q: add usbphy clocks
+Date: Thu, 14 Jun 2012 00:15:25 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A649803BE0ADB@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+ <1339590863-10564-10-git-send-email-richard.zhao@freescale.com>,<20120613215406.GF30400@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201206090004.10086.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Jassi Brar <jaswinder.singh@linaro.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120613215406.GF30400-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Frank-B20596 <B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Estevam Fabio-R49496 <r49496-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+>Could you recheck with your hardware guys which input clocks
+> this device really has. On earlier i.MX there are up to three
+> clocks this module needs. Sooner or later we want to use this driver on
+> the other i.MX aswell, and then we'll need support for the other clocks
+> here, no matter if they are software controllable on i.MX6 or not.
 
-On 06/08/2012 07:04 PM, Arnd Bergmann wrote:
-> On Friday 08 June 2012, Jon Hunter wrote:
->> On 05/21/2012 03:32 PM, Stephen Warren wrote:
->>> On 05/21/2012 12:18 PM, Arnd Bergmann wrote:
->>>> On Monday 21 May 2012, Stephen Warren wrote:
->>>>>
->>>>> If so, that seems a little odd; you have to request a DMA channel for
->>>>> "TX", but then end up having the common code check all the entries in
->>>>> the dmas property since it can't know which are TX, and then have the
->>>>> wrong ones almost accidentally fail, since the DMAC will then determine
->>>>> that it can't support TX on the RX DMA request IDs.
->>>>
->>>> I think the direction must be encoded in a way that does not depend on
->>>> the binding for the specific controller. There are two ways I can see
->>>> how we might do it:
->>>>
->>>> 1. have separate property names for tx and rx channels, and probably
->>>>    one for combined rx/tx channels
->>>
->>>> 2. define the second cell in each channel specifier to be the direction
->>>>    in a predefined format, followed by the other (controller specific)
->>>>    attributes, if any.
->>>
->>> In this option, lets say bit 0 is 0==TX, 1==RX (or perhaps 2 bits if
->>> combined TX/RX is needed)
->>>
->>> Then, we could reserve say bits 7:1 as client DMA request ID.
->>>
->>> And then have bits 31:8 as DMAC specific data.
->>>
->>> Wouldn't that allow us to have our cake and eat it?
->>
->> Sorry for not responding sooner.
->>
->> It seems to me we were pretty close on alignment. In fact, I was quite
->> happy with Steven's 2nd to last proposal of  ...
->>
->> simple 1 req:
->> dmas = <0 &dmac1 xxx>;
->>
->> simple 2 req:
->> dmas = <0 &dmac1 xxx 1 &dmac1 yyy>;
->>
->> multiple dmacs:
->> dmas = <0 &dmac1 xxx 0 &dmac2 zzz 1 &dmac1 yyy>;
->>
->> Arnd, I know that you had some concerns. However, in the above case I
->> would expect that the 3rd parameter be optional and it can be some sort
->> of match variable. In other words, we don't care how the 32-bits are
->> encoded or what they represent but they would be used appropriately by
->> the xlate function being used. So the xlate and this "match" variable
->> would have to speak the same language.
-> 
-> I would at least put the &dmac part first to be consistent with other
-> bindings that refer to some node. That controller should then be
-> able to specify the number of additional cells used to describe the
-> dma request. We can define that the first cell after the controller
-> phandle is always the same thing, e.g. the direction (in/out/inout)
-> or a client-specific ID or a combination of that with other predefined
-> bits that are not dependent on dma controller specifics.
+Only two clocks are needed for i.mx6, one is AHB clock usb gate which
+is used to visit registers, and other is PHY clock which is used to data transfer.
 
-I agree with putting the &dmac phandle first, that makes sense.
-
-> As I said previously, I think just encoding the direction but not
-> the client specific ID (meaning we would have to disambiguate
-> the more complex cases that Stephen mentioned using a dma-names
-> property) would be the best because it keeps the common case simple,
-> but I could live with other things going in there too.
-
-Ok, so you are saying that there are some DMA controllers where there is
-no channel/request ID and only a direction is needed? So an even simpler
-case than what I had imagined.
-
-So in that case, I don't see why the first cell after the phandle could
-not be an index which could be either a direction or request-id and then
-the next cell after that be a secondary match variable.
-
-So simple case with just a index (either req-id or direction) ...
-
-dmas = <&dmac0 index>
-
-More complex case ...
-
-dmas = <&dmac0 index match>
-
-For example, for OMAP index = req-id and match = direction ...
-
-dmas = <&dmac0 req-id direction>
-
-Or am I way off the page?
-
-Cheers
-Jon
+The i.mx23, i.mx28 and i.mx6q use FSL Internal PHY, it doesn't need serial clock. 
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
