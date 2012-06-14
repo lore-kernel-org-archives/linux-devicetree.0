@@ -1,36 +1,62 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 14 Jun 2012 10:15:49 +0530
-Message-ID: <CAJe_ZhfVu46pOfAQMgj-MxHyZFP6th9XmWNDE_bQc9MbLsFzEA@mail.gmail.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	<4FBAA64A.200@wwwdotorg.org>
-	<4FD24CC3.50700@ti.com>
-	<201206090004.10086.arnd@arndb.de>
-	<4FD914F6.6000402@ti.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 1/2] of: Add Semtech Corp. vendor prefix
+Date: Thu, 14 Jun 2012 07:39:29 +0200
+Message-ID: <20120614053929.GA19140@avionic-0098.mockup.avionic-design.de>
+References: <1334229613-678-1-git-send-email-thierry.reding@avionic-design.de>
+ <4FD8DC95.1020404@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FD914F6.6000402@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FD8DC95.1020404@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 14 June 2012 04:02, Jon Hunter <jon-hunter@ti.com> wrote:
-> On 06/08/2012 07:04 PM, Arnd Bergmann wrote:
->
->> As I said previously, I think just encoding the direction but not
->> the client specific ID (meaning we would have to disambiguate
->> the more complex cases that Stephen mentioned using a dma-names
->> property) would be the best because it keeps the common case simple,
->> but I could live with other things going in there too.
->
-> Ok, so you are saying that there are some DMA controllers where there is
-> no channel/request ID and only a direction is needed? So an even simpler
-> case than what I had imagined.
->
-I am curious to know which DMA controllers don't need any client ID ?
-unless it is Mem->Mem (for which even specifying direction is
-meaningless).
-Rather, I think specifying direction is even lesser useful, since
-usually the client's ID imply the (bi/uni)direction.
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 13, 2012 at 01:31:49PM -0500, Rob Herring wrote:
+> On 04/12/2012 06:20 AM, Thierry Reding wrote:
+> > This commit adds a device tree vendor prefix for Semtech Corp.
+> >=20
+> > Cc: Grant Likely <grant.likely@secretlab.ca>
+> > Cc: Rob Herring <rob.herring@calxeda.com>
+> > Cc: devicetree-discuss@lists.ozlabs.org
+> > Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
+cumentation/devicetree/bindings/vendor-prefixes.txt
+> > index 6b6e465..19af408 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > @@ -44,6 +44,7 @@ simtek
+> >  sirf	SiRF Technology, Inc.
+> >  st	STMicroelectronics
+> >  stericsson	ST-Ericsson
+> > +sx	Semtech Corp.
+>=20
+> This should be smtc to match stock ticker.
+
+Okay.
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAk/ZeREACgkQZ+BJyKLjJp/NZACcDsRKm9bNypJx9/Ve5TOjWAjj
+75oAoI6w8Rt9ThWlmK26fyhGTM9sHeb0
+=hY7/
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
