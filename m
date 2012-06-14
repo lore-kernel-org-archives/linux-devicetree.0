@@ -1,80 +1,81 @@
 From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [Patch v5 03/13] USB: notify phy when root hub port connect change
-Date: Thu, 14 Jun 2012 08:36:53 +0800
-Message-ID: <20120614003653.GA29684@b20223-02.ap.freescale.net>
-References: <1339590863-10564-4-git-send-email-richard.zhao@freescale.com>
- <Pine.LNX.4.44L0.1206131418290.1401-100000@iolanthe.rowland.org>
+Subject: Re: [Patch v5 05/13] usb: otg: add basic mxs phy driver support
+Date: Thu, 14 Jun 2012 09:12:12 +0800
+Message-ID: <20120614011211.GB29684@b20223-02.ap.freescale.net>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+ <1339590863-10564-6-git-send-email-richard.zhao@freescale.com>
+ <20120613213312.GD30400@pengutronix.de>
+ <201206132356.16093.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1206131418290.1401-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: marex-ynQEQJNshbs@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <201206132356.16093.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2012 at 02:25:17PM -0400, Alan Stern wrote:
-> On Wed, 13 Jun 2012, Richard Zhao wrote:
+On Wed, Jun 13, 2012 at 11:56:15PM +0200, Marek Vasut wrote:
+> Dear Sascha Hauer,
 > 
-> > Phy may need to change settings when port connect change.
-> > 
-> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  drivers/usb/core/hub.c |    8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> > index 04fb834..e1a6d31 100644
-> > --- a/drivers/usb/core/hub.c
-> > +++ b/drivers/usb/core/hub.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/usb.h>
-> >  #include <linux/usbdevice_fs.h>
-> >  #include <linux/usb/hcd.h>
-> > +#include <linux/usb/otg.h>
-> >  #include <linux/usb/quirks.h>
-> >  #include <linux/kthread.h>
-> >  #include <linux/mutex.h>
-> > @@ -4034,6 +4035,13 @@ static void hub_port_connect_change(struct usb_hub *hub, int port1,
-> >  		}
-> >  	}
-> >  
-> > +	if (unlikely(hcd->phy && !hdev->level)) {
+> > On Wed, Jun 13, 2012 at 08:34:15PM +0800, Richard Zhao wrote:
+> > > mxs phy is used in Freescale i.MX SoCs, for example
+> > > imx23, imx28, imx6Q. This patch adds the basic host
+> > > support.
+> > > 
+> > > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> > > Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> [...]
 > 
-> This is okay, but it's more common to test for root hubs with 
-> "!hdev->parent".
-So it will be like:
-if (unlikely(hcd->phy && !hdev->parent)) {
-
-And,
-I didn't check (portchange & USB_PORT_STAT_C_CONNECTION), because if
-the device is connected on boot, there'll be no USB_PORT_STAT_C_CONNECTION.
-Is it acceptable?
+> > > +	/* Remove CLKGATE and SFTRST */
+> > > +	writel_relaxed(BM_USBPHY_CTRL_CLKGATE | BM_USBPHY_CTRL_SFTRST,
+> > > +			base + HW_USBPHY_CTRL_CLR);
+> > > +	udelay(10);
+> > 
+> > Is stmp_reset_block() suitable for what you want to do here?
+> 
+> IIRC it is.
+Thanks.
+> 
+> > > +	base = devm_request_and_ioremap(&pdev->dev, res);
+> > > +	if (!base)
+> > > +		return -EBUSY;
+> > > +
+> > > +	clk = devm_clk_get(&pdev->dev, NULL);
+> > > +	if (IS_ERR(clk)) {
+> > > +		dev_err(&pdev->dev, "can't get the clock!");
+> > 
+> > Please add the return value to these kind of messages.
+Make sense.
+> > 
+> > > +		return PTR_ERR(clk);
+> > > +	}
+> > > +
+> > > +	mxs_phy = devm_kzalloc(&pdev->dev, sizeof(*mxs_phy), GFP_KERNEL);
+> > > +	if (!mxs_phy) {
+> > > +		dev_err(&pdev->dev, "Failed to allocate USB PHY structure!\n");
+> > 
+> > This message is rather useless. It is really not expected for kzalloc
+> > to fail. If it fails here you really have problems elsewhere and this
+> > message won't help you debugging it.
+At least it shows the point it fails and people can look back what code
+has been run.
 
 Thanks
 Richard
+> 
+> It's not useless, but it'll hardly ever be displayed if you run out of memory so 
+> badly this kzalloc() will fail.
+> 
+> > Sascha
+> 
+> Best regards,
+> 
 
-> > +		if (portstatus & USB_PORT_STAT_CONNECTION)
-> > +			usb_phy_notify_connect(hcd->phy, port1);
-> > +		else
-> > +			usb_phy_notify_disconnect(hcd->phy, port1);
-> > +	}
-> > +
-> >  	/* Return now if debouncing failed or nothing is connected or
-> >  	 * the device was "removed".
-> >  	 */
-> 
-> Alan Stern
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
