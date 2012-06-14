@@ -1,91 +1,36 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: RE: Where to power on the wifi device before loading the driver.
-Date: Thu, 14 Jun 2012 12:17:26 +0800
-Message-ID: <6B4D417B830BC44B8026029FD256F7F1C377BFFE89@HKMAIL01.nvidia.com>
-References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
- <4FD8CED9.6030901@broadcom.com>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Thu, 14 Jun 2012 10:15:49 +0530
+Message-ID: <CAJe_ZhfVu46pOfAQMgj-MxHyZFP6th9XmWNDE_bQc9MbLsFzEA@mail.gmail.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	<4FBAA64A.200@wwwdotorg.org>
+	<4FD24CC3.50700@ti.com>
+	<201206090004.10086.arnd@arndb.de>
+	<4FD914F6.6000402@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <4FD8CED9.6030901@broadcom.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: 'Franky Lin' <frankyl@broadcom.com>
-Cc: Stephen Warren <swarren@nvidia.com>, "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "'linux-mmc@vger.kernel.org'" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mursalin Akon <makon@nvidia.com>, Rakesh Kumar <krakesh@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FD914F6.6000402@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Franky
-
-On Thu, Jun 14, 2012 at 01:33:13, Franky Lin wrote:
->Hi Wei,
+On 14 June 2012 04:02, Jon Hunter <jon-hunter@ti.com> wrote:
+> On 06/08/2012 07:04 PM, Arnd Bergmann wrote:
 >
->On 06/13/2012 03:40 AM, Wei Ni wrote:
->> In the brcmfmac init routine, it call sdio_register_driver() to=20
->> register driver, if the wifi device is powered on, then the mmc
->> driver will enumerate it, and call the probe callback routine.
->>
->> On the Cardhu, the wifi's power is controlled by two gpios=20
->> (power-gpio and reset-gpio), the default state is power-off.
->> So we need to power on it before calling sdio_register_driver(),
->> if not, the mmc driver can't enumerate it, and will not call
->> the probe routine.
->> This power on sequence is:
->> set power-gpio to 1 ;
->> mdelay(100) ;
->> set reset-gpio to 1 ;
->> mdelay(200);
->>
->> My question is where to power on the wifi. We may have three places=20
->> to power on it:
->> 1. power on it in the brcmfmac driver before calling
->> sdio_register_driver(). But I think this power sequence is special f=
-or=20
->> tegra30 cardhu, it's not good to add it in the generic wifi driver,=20
->> because different board may use the different way to power on the wi=
-fi.
->> 2. power on it in the mmc driver. In our tegra SD driver, it has=20
->> power-gpios property, which allow the slot to be powered. But this p=
-ower is=20
->> for mmc slot, could we add this wifi power sequence in the tegra SD =
-driver?
->> 3. hard-coded into DT. Set these gpios in the DT, something like=20
->> pinmux settings, but in this way, it's not good to put the mdelay() =
-value
->> in the DT.
+>> As I said previously, I think just encoding the direction but not
+>> the client specific ID (meaning we would have to disambiguate
+>> the more complex cases that Stephen mentioned using a dma-names
+>> property) would be the best because it keeps the common case simple,
+>> but I could live with other things going in there too.
 >
->We introduced oob interrupt support in 3.5 [1]. We are using a virtual=
-=20
->platform device to retrieve board specific oob interrupt GPIO setting.
->You should be able to implement the power control in this way as well.
->Brcmfmac gets the GPIOs through platform device interface, powers up=20
->the chip and triggers a card detection. Then 4329 should be enumerated=
-=20
->by MMC stack. The reason we didn't implement this is the card detectio=
-n.
->Some design doesn't have hardware card detection since the WiFi chip i=
-s=20
->already on board. And the current MMC stack doesn't have virtual card=20
->detection interface.
-
-Wei: Yes, in OOB mode, it's easy to add a device node in the DT, to pas=
-s
-the gpio property to brcmfmac driver. But the NO-OOB mode doesn=92t use=
- the
-virtual platform device, so we can't pass the gpio to driver. We need t=
-o find
-a way to support these two mode both.
-Could we use the virtual platform device both for OOB and NO-OOB mode? =
-so that
-we can implement power control in these two mode, and we can add a flag=
-s to
-control if need to power on or not.
-BTW, does that power on sequence is generally for 4329?
-
+> Ok, so you are saying that there are some DMA controllers where there is
+> no channel/request ID and only a direction is needed? So an even simpler
+> case than what I had imagined.
 >
->Franky
->
->[1]: http://www.spinics.net/lists/linux-wireless/msg89335.html
-
-
-
+I am curious to know which DMA controllers don't need any client ID ?
+unless it is Mem->Mem (for which even specifying direction is
+meaningless).
+Rather, I think specifying direction is even lesser useful, since
+usually the client's ID imply the (bi/uni)direction.
