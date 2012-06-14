@@ -1,87 +1,98 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: Where to power on the wifi device before loading the driver.
-Date: Thu, 14 Jun 2012 08:31:20 +0200
-Message-ID: <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de>
-References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
- <4FD90352.9090606@wwwdotorg.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH v2] of: match by compatible property first
+Date: Thu, 14 Jun 2012 09:12:35 +0200
+Message-ID: <1339657955-20760-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FD90352.9090606@wwwdotorg.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Wei Ni <wni@nvidia.com>, Mursalin Akon <makon@nvidia.com>, "'linux-mmc@vger.kernel.org'" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rakesh Kumar <krakesh@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+When matching devices against an OF device ID table, the first string of
+the compatible property that is listed in the table should match,
+regardless of its position in the table.
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 
-On Wed, Jun 13, 2012 at 03:17:06PM -0600, Stephen Warren wrote:
-> On 06/13/2012 04:40 AM, Wei Ni wrote:
-> > Hi, all
-> > I'm working on the tegra30 wifi upstream issue.
-> >=20
-> > The tegra30 board (Cardhu) use Broadcom 4329 as wifi device, and use br=
-cmfmac as the wifi driver.
-> >=20
-> > In the brcmfmac init routine, it call sdio_register_driver() to registe=
-r driver, if the wifi device is powered on, then the mmc driver will enumer=
-ate it, and call the probe callback routine.
-> >=20
-> > On the Cardhu, the wifi's power is controlled by two gpios (power-gpio =
-and reset-gpio), the default state is power-off. So we need to power on it =
-before calling sdio_register_driver(), if not, the mmc driver can't enumera=
-te it, and will not call the probe routine.
-> > This power on sequence is:=20
-> > set power-gpio to 1 ;
-> > mdelay(100) ;
-> > set reset-gpio to 1 ;
-> > mdelay(200);
-> >=20
-> > My question is where to power on the wifi. We may have three places to =
-power on it:
-> > 1. power on it in the brcmfmac driver before calling sdio_register_driv=
-er(). But I think this power sequence is special for tegra30 cardhu, it's n=
-ot good to add it in the generic wifi driver, because different board may u=
-se the different way to power on the wifi.
-> > 2. power on it in the mmc driver. In our tegra SD driver, it has power-=
-gpios property, which allow the slot to be powered. But this power is for m=
-mc slot, could we add this wifi power sequence in the tegra SD driver?
-> > 3. hard-coded into DT. Set these gpios in the DT, something like pinmux=
- settings, but in this way, it's not good to put the mdelay() value in the =
-DT.
-> >=20
-> > I have no good idea for it, does anyone has suggestion?
->=20
-> The core of the issue is that:
->=20
-> * Tegra30 support is via device tree.
-> * We have an SDIO bus, and the WiFi device attached to that bus is
-> enumerable.
-> * Since the WiFi device is enumerable, no node exists in the DT to
-> represent it.
-> * However, the driver for the WiFi device needs certain information,
-> such as the reset GPIO ID and perhaps power GPIO.
+---
+Changes in v2:
+- don't export of_match_compat() function
 
-PCI devices are also enumerable and yet they can be matched up with nodes in
-the device tree. Perhaps something similar could be added for the SDIO bus?
+ drivers/of/base.c |   30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
 
-Thierry
-
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk/ZhTgACgkQZ+BJyKLjJp88uQCgkjDTLq4PyPRa8IqlfJDbJHdP
-sHoAoK8a2JRjCjNc+RDMQbODI5Fbnhcx
-=xT51
------END PGP SIGNATURE-----
-
---HlL+5n6rz5pIUxbD--
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 91c1fb4..7cd5e8a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -511,6 +511,22 @@ out:
+ }
+ EXPORT_SYMBOL(of_find_node_with_property);
+ 
++static const struct of_device_id *of_match_compat(const struct of_device_id *matches,
++						  const char *compat)
++{
++	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
++		const char *cp = matches->compatible;
++		int len = strlen(cp);
++
++		if (len > 0 && of_compat_cmp(compat, cp, len) == 0)
++			return matches;
++
++		matches++;
++	}
++
++	return NULL;
++}
++
+ /**
+  * of_match_node - Tell if an device_node has a matching of_match structure
+  *	@matches:	array of of device match structures to search in
+@@ -521,9 +537,18 @@ EXPORT_SYMBOL(of_find_node_with_property);
+ const struct of_device_id *of_match_node(const struct of_device_id *matches,
+ 					 const struct device_node *node)
+ {
++	struct property *prop;
++	const char *cp;
++
+ 	if (!matches)
+ 		return NULL;
+ 
++	of_property_for_each_string(node, "compatible", prop, cp) {
++		const struct of_device_id *match = of_match_compat(matches, cp);
++		if (match)
++			return match;
++	}
++
+ 	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+ 		int match = 1;
+ 		if (matches->name[0])
+@@ -532,10 +557,7 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
+ 		if (matches->type[0])
+ 			match &= node->type
+ 				&& !strcmp(matches->type, node->type);
+-		if (matches->compatible[0])
+-			match &= of_device_is_compatible(node,
+-						matches->compatible);
+-		if (match)
++		if (match && !matches->compatible[0])
+ 			return matches;
+ 		matches++;
+ 	}
+-- 
+1.7.10.4
