@@ -1,44 +1,37 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 5/9] ARM: kirkwood: use devicetree for orion-spi
-Date: Thu, 14 Jun 2012 11:31:35 +0200
-Message-ID: <20120614093135.GE4799@lunn.ch>
-References: <1339324322-29388-6-git-send-email-andrew@lunn.ch>
- <201206132110.31011.arnd@arndb.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Thu, 14 Jun 2012 10:25:09 +0000
+Message-ID: <201206141025.09325.arnd@arndb.de>
+References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de> <201206132021.09774.arnd@arndb.de> <20120614083719.GC31283@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201206132110.31011.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, Michael Walle <micheal-QKn5cuLxLXY@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20120614083719.GC31283@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jesse Barnes <jbarnes@virtuousgeek.org>, Rob Herring <rob.herring@calxeda.com>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2012 at 09:10:30PM +0000, Arnd Bergmann wrote:
-> On Sunday 10 June 2012, Andrew Lunn wrote:
-> > @@ -26,6 +26,11 @@ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
-> >         { }
-> >  };
-> >  
-> > +struct of_dev_auxdata kirkwood_auxdata_lookup[] __initdata = {
-> > +       OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
-> > +       {},
-> > +};
-> > +
-> >  static void __init kirkwood_dt_init(void)
-> >  {
+On Thursday 14 June 2012, Thierry Reding wrote:
+> > 
+> > I believe you will need an "interrupt-map" property here, to map the host
+> > interrupts to the INTA-INTD lines of the attached devices.
+>
+> Legacy interrupts are something I cannot test at all because I have no
+> hardware that supports them.
+
+Hmm, I thought all PCIe hardware has to support them when you do not
+enable MSI. What hardware do you have then?
+
+> > I'm not sure whether we want to have a device_type="pciex" property here.
+> > powerpc and sparc seem to use that information, to distinguish a pcie
+> > bus from pci or cardbus.
 > 
-> How about instead adding the clkdev for "f1010600.spi" so you don't need the auxdata?
+> That'd be rather useless information given that the Tegra is unlikely to
+> support either PCI or CardBus at some point.
 
-We either have auxdata and clean clock code, or no auxdata and messy
-clock code with lots of aliases.
+But the generic code does not know that.
 
-The auxdata is also not limited to the name of the clocks. It allows
-me to diff the kernel log for a DT boot and a none DT boot of the same
-box and see they are identical. I've found a few typo's that way, and
-not been hindered by noise of the devices changing name is useful.
-
-Once we have the clock tree described in DT, then i think it makes
-sense to remove these auxdata entries.
-
-      Andrew
+	Arnd
