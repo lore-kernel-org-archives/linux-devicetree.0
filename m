@@ -1,110 +1,251 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 15 Jun 2012 11:18:53 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1206151107480.11729@axis700.grange>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
- <Pine.LNX.4.64.1206141537190.30810@axis700.grange> <4FDA5D0A.1040105@ti.com>
- <201206150900.50866.arnd@arndb.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree
+ based pinctrl driver
+Date: Fri, 15 Jun 2012 02:49:39 -0700
+Message-ID: <20120615094938.GQ12766@atomide.com>
+References: <20120611135826.GB12766@atomide.com>
+ <4FDA6FCD.1020605@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201206150900.50866.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FDA6FCD.1020605@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd
+Hi,
 
-On Fri, 15 Jun 2012, Arnd Bergmann wrote:
-
-> On Thursday 14 June 2012, Jon Hunter wrote:
-> 
-> > > Generic DMACs can perform memory-to-memory DMA, USB DMACs cannot.
-> > > 
-> > > Generic DMACs can serve any slave (peripheral) request line on any their 
-> > > physical channel, USB DMACs only serve fixed USB controller instances. To 
-> > > configure (connect) a certain physical DMA channel to s specific 
-> > > peripheral request line, a certain value has to be written to a 
-> > > configuration register of that physical DMA channel.
+* Stephen Warren <swarren@wwwdotorg.org> [120614 16:16]:
+> On 06/11/2012 07:58 AM, Tony Lindgren wrote:
+> > Add one-register-per-pin type device tree based pinctrl driver.
 > > 
-> > Do you still need to specify a request line for the USB DMACs or are
-> > these fixed? In other words, what purpose would the DMA binding serve
-> > for the USB DMACs?
+> > Currently this driver only works on omap2+ series of processors,
+> > where there is either an 8 or 16-bit padconf register for each pin.
+> > Support for other similar pinmux controllers can be added.
 > 
-> If I understood Guennadi right, the DMA engines are the same kind as the
-> other ones, so we really want to use the same bindings for each instance.
-
-Exactly, at least they are compatible and are presently handles by the 
-same dma-engine driver. There are some differences in the register layout, 
-I think, which we might need to handle at some point, maybe by specifying 
-different "compatible" identifiers or by some other means.
-
-> > > To add to complexity, on other SoCs (e.g., SuperH sh7724) some of generic 
-> > > DMACs (DMAC0) have external DMA request pins, others don't.
-> > 
-> > OMAP also has this. To me an request line going to an external pin can
-> > be handled in the same way as one going to a internal peripheral.
-> > However, what happens to that pin externally is a different story.
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-omap2plus.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-omap2plus.txt
 > 
-> Right, I don't see a problem here with any of the proposed binding.
+> I'm not sure why you'd need an explicit OMAP2 binding document or
+> compatible values if it just uses the plain pinctrl-single binding
+> unmodified.
+
+Hmm I thought that's what you wanted with your earlier comments at [1]:
+
+* Stephen Warren <swarren@wwwdotorg.org> [120504 12:27]:
+>
+> If this is truly intended to be generic, I would not document any of the
+> ti compatible values here. Instead, I'd create a binding document for
+> the TI controllers that basically just says "this uses the bindings in
+> pinctrl-simple.txt, with the following additions", and list the
+> compatible values as an addition.
+
+Care to clarify a bit what you had in mind there?
+ 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
 > 
-> > > I'm sure there's more to that, but that's about the scope, that's 
-> > > currently supported or wants to be supported by the driver.
-> > > 
-> > > Currently we do the slave-switching in the following way: platform data 
-> > > for each DMAC instance references a table of supported peripherals with 
-> > > their IDs and configuration register values. Each peripheral, that wishes 
-> > > to use DMA, provides its slave ID to the DMAC driver, by which it checks, 
-> > > whether this peripheral is supported and, if so, finds its configuration, 
-> > > picks up the next free channel and configures it.
-> > > 
-> > > So, with the above in mind, IIUC, the above DT binding proposal would 
-> > > require us to reference all 3 generic DMAC instances in each slave dmas 
-> > > property? 
-> > 
-> > You could if you wanted to have the ability to select 1 out of the 3.
-> > However, I would not say it is a hard requirement. You could just
-> > provide one. Or you could list all 3, but use some form of match
-> > variable to indicate a default DMAC for a given peripheral.
+> > +- pinctrl-single,function-off : function off mode for disabled state
 > 
-> Right. From the description above, it seems that shmobile is actually
-> simpler than some of the others because the slave ID is always the
-> same for each of the controllers.
+> Might that not vary per register? Admittedly, Tegra isn't something that
+> could be covered by pinctrl-single, but the safe/off/non-conflicting mux
+> selection values for Tegra certainly are not all the same value.
 
-Exactly.
+Yeah it might be best to remove function-off, and just rely on alternative
+pin modes for setting this up in a register specific way. For example,
+omaps don't have clearly defined off mode, there is safe mode for most
+registers, but not all of them.
+ 
+> > +- pinctrl-single,pinconf-mask : mask of allowed pinconf bits
+> > +
+> > +This driver uses the common pinctrl bindings as specified in the
+> > +pinctrl-bindings.txt document in this directory.
+> > +
+> > +The pinctrl register offsets and default values are specified as pairs
+> 
+> Why "default values" not just "values"; they can only be "default" if
+> you're talking about something that can be changed by some other
+> optional mechanism, which I don't believe is the case here.
 
-> In the common case, you could have one device connected to the third
-> slave ID of the first controller but the fifth slave ID of the
-> second controller. In this case, you really have to specify each
-> controller with its slave ID separately, even if that means a lot
-> of duplicate data for shmobile.
+Sure let's do that.
+ 
+> > +using pinctrl-single,pins. For example, setting uart2_rx pin on omap2plus
+> > +can be done with:
+> > +
+> > +	pinctrl-single,pins = <0xdc 0x118>;
+> > +
+> > +Where 0xdc is the offset from the pinctrl ioremapped area for the
+> 
+> "ioremapped area" is a Linux-specific term. "register base address"
+> would be more generic.
 
-So, you don't think it's worth making a short-cut possible to specify a 
-DMAC type instead of each instance phandle? It really would mean __a lot__ 
-of duplication - with 3 generic controllers on (some) current chips and 
-possibly more on those, that I'm not aware about.
+OK
+ 
+> > +uart2_rx register, and 0x118 contains the desired default value for
+> > +for the pin setting it to INPUT_PULLUP | MODE0. See the uart example and
+> 
+> Any mention of "uart2_rx" or "setting it to INPUT_PULLUP | MODE0" is
+> OMAP-specific; I'd say "0xdc" and just delete "setting it ...".
 
-> I'm not sure I understand what the "configuration register values"
-> above are.
+Alright, I'll make it anonymous.
+ 
+> > +static board pins example below for more information.
+> > +
+> > +If you are concerned about the boot time, set up the static pins in
+> > +the bootloader, and only set up selected pins as device tree entries.
+> 
+> I'm not sure if it's really appropriate to state that kind of thing in a
+> DT binding document.
 
-As I explained in an earlier mail, those include transfer size and other 
-parameters, but cannot be completely calculated in device drivers, because 
-they also vary between SoCs.
+Sure, I can move that to comments in the driver.
+ 
+> > +This driver assumes that there is only one register for each pin. If you
+> > +have some pins with more complicated configuration,
+> 
+> OK ...
+> 
+> > you can set up a separate
+> > +hardware specific driver for those pins.
+> 
+> But for that, it seems more correct to say that pinctrl-single simply
+> isn't an appropriate model for your HW.
 
-> Most likely, those should all be part of the slave ID,
-> which would then span multiple 32-bit values in the "dmas" property.
+It is possible to create a wrapper pinctrl driver that requests pins from
+pinctrl-single and adds functionality to handle the extra registers.
+Let's say you have 200 similar registers, and only few have additional
+configuration registers. You may still want to handle the basic configuration
+using this driver. But I can move that to the driver comments too.
 
-Yes, we could do that.
+> > +Note that this driver tries to avoid understanding pin and function
+> > +names because of the extra bloat they would cause especially in the
+> > +omap2plus case. This driver just sets what is specified for the board
+> 
+> Again, I'd remove reference to any specific SoC from a generic binding.
 
-> Conveniently, that also takes care of removing the DMAC platform data.
+OK
+ 
+> > +in the .dts file. Further user space debugging tools can be developed
+> > +to decipher the pin and function names using debugfs.
+> > +
+> > +Example:
+> > +
+> > +/* SoC common file, such as omap4.dtsi */
+> 
+> But just to be clear, having an example for a specific SoC seems fine to
+> me; just not the generic descriptive text.
 
-Right, my only concern so far is a huge redundancy, that accepting and 
-using the proposed scheme would incur.
+Sure.
+ 
+> I don't see anywhere that describes how the function-mask and
+> pinconf-mask properties interact with the values in pinctrl-single,pins
+> property; are both masks OR'd together, then AND'd with the pins values,
+> then written to the registers? If so, why have 2 masks?
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+I'll add some more documentation. The reason why I set two masks is
+if the driver wants to modify settings with pin_config_set. I'll do some
+testing on that, let's see if it's actually needed.
+ 
+> > diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+> 
+> > +struct pcs_device {
+> 
+> > +	struct pinctrl_desc *desc;
+> 
+> Why not make that a struct rather than a pointer. That way, you wouldn't
+> have to dynamically allocate it separately. It's always needed.
+
+Good point, will check.
+ 
+> > +static int __devinit pcs_probe(struct platform_device *pdev)
+> 
+> > +	ret = of_address_to_resource(pdev->dev.of_node, 0, &res);
+> 
+> It's much more common to use platform_get_resource(); doesn't calling
+> of_address_to_resource() duplicate all the work that the OF core already
+> did to set up the platform resource structures?
+
+OK sounds right.
+ 
+> > +	ret = pcs_register(pcs);
+> 
+> Why not just inline that function here; it's not shared with anything.
+
+Yeah good point, pcs_register is pretty minimal now, no need to have
+it as a separate function any longer.
+ 
+> > +static int __devexit pcs_remove(struct platform_device *pdev)
+> 
+> > +	platform_set_drvdata(pdev, NULL);
+> 
+> There's no need to explicitly clear that; nothing should be using that
+> value when the device is removed, so the value shouldn't matter.
+
+Will check if that's needed. There are certainly quite a few calls like
+that in the kernel.
+ 
+> > +static struct of_device_id pcs_of_match[] __devinitdata = {
+> > +	{ .compatible = DRIVER_NAME, },
+> > +	{ .compatible = "ti,omap2420-padconf", },
+> > +	{ .compatible = "ti,omap2430-padconf", },
+> > +	{ .compatible = "ti,omap3-padconf", },
+> > +	{ .compatible = "ti,omap4-padconf", },
+> > +	{ },
+> > +};
+> 
+> Shouldn't that contain just one entry for "pinctrl-single", and no others?
+
+It's best to describe the hardware in case we need to set up some hardware
+specific things in the driver.
+ 
+> > +MODULE_LICENSE("GPL");
+> 
+> The license header implies that should be "GPL v2" not just "GPL" (which
+> means GPLv2+)
+
+Sure, that's what it says at top of the file.
+ 
+> One final comment: A little while before Linaro Connect in San
+> Francisco, we were all having difficulty coming up with any kind of DT
+> binding for pinctrl. I had suggested the possibility of creating a
+> binding which just said "write value X to register Y, write value P to
+> register Q, ...". This was rejected at connect, because a raw list of
+> register writes didn't document anything or describe semantics - it was
+> too much of a binary blob. This driver seems to be doing almost the
+> exact same thing. In order to avoid that assertion, it'd need to truly
+> have individual representations of which pins exist, which pingroups
+> exist, which functions exist, and which functions can be selected onto
+> which pins/pingroups. That would be a radically different binding. I
+> wonder what's changed such that this kind of driver wasn't acceptable
+> then, but is now?
+
+Well that's why I had two bindings earlier: The current binding for the
+bulk pins that's faster to parse, and a more verbose binding for drivers that
+allows naming the functions.
+
+In your previous comments at [1] you seemed to prefer this current binding
+based on the "Why not only allow (1)?" comment. Maybe you had something else
+in mind, care to clarify that a bit too?
+
+Using either binding is fine with me, this is just faster to parse.
+
+For your question regarding pins, pingroups and functions, the logic in
+this driver is following:
+
+1. The pin names are package specific, and not needed in the kernel except
+   for debugging. And that can be done with user space tools using debugfs.
+
+2. The pingroup names can be the names of devices requesting the pins in
+   this case. Trying to define any other pingroup names would be artificial
+   and would have too many permutations at least in the omap case to list.
+
+3. The pin functions and pinconf values become readable if we ever get
+   the .dts preprocessing patches merged. If we want to further define
+   function names, then using binding 2 at [1] would need to be used. But
+   again, kernel does not need to know the function names, those too can
+   be debugged with user space tools via debugfs.
+
+Regards,
+
+Tony
+
+[1] http://article.gmane.org/gmane.linux.kernel/1291838
