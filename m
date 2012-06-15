@@ -1,132 +1,37 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree based
- pinctrl driver
-Date: Fri, 15 Jun 2012 10:17:04 -0600
-Message-ID: <4FDB6000.5080703@wwwdotorg.org>
-References: <20120611135826.GB12766@atomide.com> <4FDA6FCD.1020605@wwwdotorg.org> <20120615094938.GQ12766@atomide.com>
+From: "Franky Lin" <frankyl@broadcom.com>
+Subject: Re: Where to power on the wifi device before loading the
+ driver.
+Date: Fri, 15 Jun 2012 09:24:41 -0700
+Message-ID: <4FDB61C9.9020505@broadcom.com>
+References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
+ <4FD90352.9090606@wwwdotorg.org>
+ <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de>
+ <20120614121234.GC3913@opensource.wolfsonmicro.com>
+ <4FDA092E.10301@wwwdotorg.org>
+ <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120615094938.GQ12766@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wei Ni <wni@nvidia.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Mursalin Akon <makon@nvidia.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "'linux-mmc@vger.kernel.org'" <linux-mmc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rakesh Kumar <krakesh@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/15/2012 03:49 AM, Tony Lindgren wrote:
+On 06/14/2012 11:09 PM, Wei Ni wrote:
+> I talked with Franky, this power sequence is generally for 4329, so it mean this sequence can be put into the wifi driver.
 
-(Arnd, Grant, Rob, CC'ing you mainly re: the very last set of comments
-in this email; can you take a look at Tony's patch and comment on the
-binding)
+Hold on. It's generally for 4329. But fullmac supports 4329/4330 along 
+with USB dongle chips. Also more chips are incoming. I dont think it's a 
+good idea to add *this* power sequence into brcmfmac.
 
-> * Stephen Warren <swarren@wwwdotorg.org> [120614 16:16]:
->> On 06/11/2012 07:58 AM, Tony Lindgren wrote:
->>> Add one-register-per-pin type device tree based pinctrl driver.
->>>
->>> Currently this driver only works on omap2+ series of processors,
->>> where there is either an 8 or 16-bit padconf register for each pin.
->>> Support for other similar pinmux controllers can be added.
->>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-omap2plus.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-omap2plus.txt
->>
->> I'm not sure why you'd need an explicit OMAP2 binding document or
->> compatible values if it just uses the plain pinctrl-single binding
->> unmodified.
-> 
-> Hmm I thought that's what you wanted with your earlier comments at [1]:
-> 
-> * Stephen Warren <swarren@wwwdotorg.org> [120504 12:27]:
->>
->> If this is truly intended to be generic, I would not document any of the
->> ti compatible values here. Instead, I'd create a binding document for
->> the TI controllers that basically just says "this uses the bindings in
->> pinctrl-simple.txt, with the following additions", and list the
->> compatible values as an addition.
-> 
-> Care to clarify a bit what you had in mind there?
-
-Basically I meant:
-
-1) Remove anything TI-/OMAP-specific from the generic binding document
-
-2) For any TI-/OMAP-specific additions, create a binding document that
-describes those separately to the generic binding documentation.
-
-However, given that there are no TI-/OMAP-specific additions; OMAP2 just
-uses the base generic bindings exactly as defined, I don't think you
-actually need to create an TI-/OMAP-specific document, since there's
-nothing for it to document.
-
->>> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-
->>> +static struct of_device_id pcs_of_match[] __devinitdata = {
->>> +	{ .compatible = DRIVER_NAME, },
->>> +	{ .compatible = "ti,omap2420-padconf", },
->>> +	{ .compatible = "ti,omap2430-padconf", },
->>> +	{ .compatible = "ti,omap3-padconf", },
->>> +	{ .compatible = "ti,omap4-padconf", },
->>> +	{ },
->>> +};
->>
->> Shouldn't that contain just one entry for "pinctrl-single", and no others?
-> 
-> It's best to describe the hardware in case we need to set up some hardware
-> specific things in the driver.
-
-There's a difference between the (set of) compatible value(s) that
-appears in the .dts file, and the compatible value(s) that the driver
-binds to.
-
-Since this driver is purely implementing the pinctrl-single binding, I
-believe only that should be listed in the driver's of_match table.
-
-However, since the .dts file is describing HW that is both a specific
-OMAP instance, and compatible with pinctrl-single, the .dts file can
-certainly list both. If in the future, the driver ever needs to
-specifically know the difference between the specific OMAP versions, or
-OMAP-vs-something-else, the compatible value will be there already in
-the .dts file, so this will all work. However, I'd argue that if the
-driver has to ever know that, it's probably not appropriate to say it's
-compatible with pinctrl-single any more...
-
->> One final comment: A little while before Linaro Connect in San
->> Francisco, we were all having difficulty coming up with any kind of DT
->> binding for pinctrl. I had suggested the possibility of creating a
->> binding which just said "write value X to register Y, write value P to
->> register Q, ...". This was rejected at connect, because a raw list of
->> register writes didn't document anything or describe semantics - it was
->> too much of a binary blob. This driver seems to be doing almost the
->> exact same thing. In order to avoid that assertion, it'd need to truly
->> have individual representations of which pins exist, which pingroups
->> exist, which functions exist, and which functions can be selected onto
->> which pins/pingroups. That would be a radically different binding. I
->> wonder what's changed such that this kind of driver wasn't acceptable
->> then, but is now?
-> 
-> Well that's why I had two bindings earlier: The current binding for the
-> bulk pins that's faster to parse, and a more verbose binding for drivers that
-> allows naming the functions.
-> 
-> In your previous comments at [1] you seemed to prefer this current binding
-> based on the "Why not only allow (1)?" comment. Maybe you had something else
-> in mind, care to clarify that a bit too?
-
-Well, first I thought about semantics vs. just banging a register list a
-tiny bit more, and remembered the previous discussion.
-
-But my comment at [1] wasn't so much about "why not just have a raw
-register list", but more regarding why support two different
-representations within the same binding; it wasn't really clear to me
-from reading the original email what the difference between the two
-representations; why have two representations, why/when-to use one vs.
-the other, that the difference was about providing a "semantic" list of
-pins/pingroups/functions vs. providing a "raw" register list.
-
-IIRC, the pushback on a raw "bang these registers" representation came
-from Grant and/or Arnd. It'd be a good idea if they (and indeed Rob)
-could comment on this binding proposal. If they're OK with this kind of
-pretty raw representation, I'm not going to object, but I have a feeling
-they might not like it?
-
-> [1] http://article.gmane.org/gmane.linux.kernel/1291838
+Franky
