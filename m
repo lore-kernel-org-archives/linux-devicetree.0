@@ -1,82 +1,85 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 15 Jun 2012 11:27:24 +0000
-Message-ID: <201206151127.24386.arnd@arndb.de>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206150900.50866.arnd@arndb.de> <Pine.LNX.4.64.1206151107480.11729@axis700.grange>
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [RESEND/PATCHv5 2/2] arm/dts: omap4-sdp: Add keypad data
+Date: Fri, 15 Jun 2012 20:28:56 +0530
+Message-ID: <CAKdam57V3Ko0QxuXQRrUn6zDaPop=kHtS2NcuS2FKm9zWrsWEg@mail.gmail.com>
+References: <1339152780-25301-1-git-send-email-sourav.poddar@ti.com>
+	<1339152780-25301-2-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1206151107480.11729@axis700.grange>
-Sender: linux-omap-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1339152780-25301-2-git-send-email-sourav.poddar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, Dmitry Torokhov <dtor@mail.ru>
+Cc: linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, sourav.poddar@ti.com, Andrew Morton <akpm@linux-foundation.org>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 June 2012, Guennadi Liakhovetski wrote:
-> > In the common case, you could have one device connected to the third
-> > slave ID of the first controller but the fifth slave ID of the
-> > second controller. In this case, you really have to specify each
-> > controller with its slave ID separately, even if that means a lot
-> > of duplicate data for shmobile.
-> 
-> So, you don't think it's worth making a short-cut possible to specify a 
-> DMAC type instead of each instance phandle? It really would mean __a lot__ 
-> of duplication - with 3 generic controllers on (some) current chips and 
-> possibly more on those, that I'm not aware about.
-
-It's certainly possible to make that short-cut, but I'm not convinced
-if it's worth it. One thing you can do is create a meta-device for
-all of the identical DMA controllers, and refer to that one from the
-devices, but make it a separate device node from the actual controllers,
-of which you can have more than one. This makes the binding for your
-dma controller more complex but reduces the amount of data required
-in the other device nodes.
-
-In case of sh7372, this could look something like
-
-	dma: dmac-mux {
-		compatible = "renesas,sh-dma-mux";
-		#dma-cells = <4>; /* slave-id, addr, chcr, mid-rid */
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges;
-
-		dmae@0xfe008020{
-			compatible = "renesas,sh-dma";
-			reg = <0xfe008020 0xfe00828f
-				0xfe009000 0xfe00900b>
-			interrupts = <0x20c0 0x2000 0x2020 0x2040 0x2060 0x2080 0x20a0>;
-		};
-
-		dmae@0xfe018020{
-			compatible = "renesas,sh-dma";
-			reg = <0xfe018020 0xfe01828f
-				0xfe019000 0xfe01900b>
-			interrupts = <0x21c0 0x2100 0x2120 0x2140 0x2160 0x2180 0x21a0>;
-		};
-
-		dmae@0xfe028020{
-			compatible = "renesas,sh-dma";
-			reg = <0xfe028020 0xfe02828f
-				0xfe029000 0xfe02900b>
-			interrupts = <0x22c0 0x2200 0x2220 0x2240 0x2260 0x2280 0x22a0>;
-		};
-	};
-
-This way, a slave would refer to the dmac-mux node and while
-the device driver binds to the child nodes.
-
-> > I'm not sure I understand what the "configuration register values"
-> > above are.
-> 
-> As I explained in an earlier mail, those include transfer size and other 
-> parameters, but cannot be completely calculated in device drivers, because 
-> they also vary between SoCs.
-
-Yes, but they can be part of the device tree source, because when writing
-that, you know both the requirements of the device and the capabilities
-of the controller.
-
-	Arnd
+SGkgQWxsLAoKT24gRnJpLCBKdW4gOCwgMjAxMiBhdCA0OjIzIFBNLCBTb3VyYXYgUG9kZGFyIDxz
+b3VyYXYucG9kZGFyQHRpLmNvbT4gd3JvdGU6Cj4KPiBBZGQga2V5cGFkIGRhdGEgbm9kZSBpbiBv
+bWFwNCBkZXZpY2UgdHJlZSBmaWxlLgo+IEFsc28gZmlsbCB0aGUgZGV2aWNlIHRyZWUgYmluZGlu
+ZyBwYXJhbWV0ZXJzCj4gd2l0aCB0aGUgcmVxdWlyZWQgdmFsdWUgaW4gIm9tYXA0LXNkcCIgZHRz
+IGZpbGUuCj4KPiBUZXN0ZWQgb24gb21hcDQ0MzAgc2RwIHdpdGggZG1pdHJ5J3MgJ25leHQnIGJy
+YW5jaC4KPgo+IENjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPgo+
+IENjOiBCZW5vaXQgQ291c3NvbiA8Yi1jb3Vzc29uQHRpLmNvbT4KPiBDYzogUm9iIEhlcnJpbmcg
+PHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tPgo+IENjOiBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2Vs
+eUBzZWNyZXRsYWIuY2E+Cj4gQ2M6IEZlbGlwZSBCYWxiaSA8YmFsYmlAdGkuY29tPgo+IENjOiBE
+bWl0cnkgVG9yb2tob3YgPGR0b3JAbWFpbC5ydT4KPiBTaWduZWQtb2ZmLWJ5OiBTb3VyYXYgUG9k
+ZGFyIDxzb3VyYXYucG9kZGFyQHRpLmNvbT4KPiAtLS0KPiCgYXJjaC9hcm0vYm9vdC9kdHMvb21h
+cDQtc2RwLmR0cyB8IKAgNjMKPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPiCgYXJjaC9hcm0vYm9vdC9kdHMvb21hcDQuZHRzaSCgIKB8IKAgoDUgKysrCj4goDIgZmls
+ZXMgY2hhbmdlZCwgNjggaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwNC1zZHAuZHRzCj4gYi9hcmNoL2FybS9ib290L2R0
+cy9vbWFwNC1zZHAuZHRzCj4gaW5kZXggNjNjNmIyYi4uMGM5YjNiZiAxMDA2NDQKPiAtLS0gYS9h
+cmNoL2FybS9ib290L2R0cy9vbWFwNC1zZHAuZHRzCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+b21hcDQtc2RwLmR0cwo+IEBAIC0xNyw0ICsxNyw2NyBAQAo+IKAgoCCgIKAgoCCgIKAgoGRldmlj
+ZV90eXBlID0gIm1lbW9yeSI7Cj4goCCgIKAgoCCgIKAgoCCgcmVnID0gPDB4ODAwMDAwMDAgMHg0
+MDAwMDAwMD47IC8qIDEgR0IgKi8KPiCgIKAgoCCgfTsKPiArCj4gKyCgIKAgoCBrZXlwYWRANGFl
+MWMwMDAgewo+ICsgoCCgIKAgoCCgIKAgoCBrZXlwYWQsbnVtLXJvd3MgPSA8OD47Cj4gKyCgIKAg
+oCCgIKAgoCCgIGtleXBhZCxudW0tY29sdW1ucyA9IDw4PjsKPiArIKAgoCCgIKAgoCCgIKAgbGlu
+dXgsa2V5bWFwID0gPCAweDAwMDAwMDEyCj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMDAx
+MDAxMwo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDAwMjAwMTQKPiArIKAgoCCgIKAgoCCg
+IKAgoCCgIKAgoCAweDAwMDMwMDY2Cj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMDA0MDAz
+Zgo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDAwNjAwMTcKPiArIKAgoCCgIKAgoCCgIKAg
+oCCgIKAgoCAweDAwMDcwMDJhCj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMTAwMDAyMAo+
+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDEwMTAwMjEKPiArIKAgoCCgIKAgoCCgIKAgoCCg
+IKAgoCAweDAxMDIwMDIyCj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMTAzMDA1NAo+ICsg
+oCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDEwNDAwNDAKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAg
+oCAweDAxMDYwMDI1Cj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMTA3MDAxYwo+ICsgoCCg
+IKAgoCCgIKAgoCCgIKAgoCCgIDB4MDIwMDAwMmQKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAw
+eDAyMDEwMDJlCj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMjAyMDAyZgo+ICsgoCCgIKAg
+oCCgIKAgoCCgIKAgoCCgIDB4MDIwMzAwNmIKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDAy
+MDQwMDQxCj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMjA2MDAzNAo+ICsgoCCgIKAgoCCg
+IKAgoCCgIKAgoCCgIDB4MDIwNzAwM2EKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDAzMDAw
+MDJjCj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMzAxMDA0ZQo+ICsgoCCgIKAgoCCgIKAg
+oCCgIKAgoCCgIDB4MDMwMjAwMzAKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDAzMDMwMDNi
+Cj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwMzA0MDA0Mgo+ICsgoCCgIKAgoCCgIKAgoCCg
+IKAgoCCgIDB4MDMwNjAwMTgKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDAzMDcwMDM5Cj4g
+KyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwNDAwMDAxMQo+ICsgoCCgIKAgoCCgIKAgoCCgIKAg
+oCCgIDB4MDQwMTAwMTUKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDA0MDIwMDE2Cj4gKyCg
+IKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgwNDAzMDAzYwo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCg
+IDB4MDQwNDAwNzMKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDA0MDYwMDI2Cj4gKyCgIKAg
+oCCgIKAgoCCgIKAgoCCgIKAgMHgwNDA3MDA2OQo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4
+MDUwMDAwMWYKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDA1MDEwMDIzCj4gKyCgIKAgoCCg
+IKAgoCCgIKAgoCCgIKAgMHgwNTAyMDAyNAo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDUw
+MzAwM2QKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDA1MDQwMDQzCj4gKyCgIKAgoCCgIKAg
+oCCgIKAgoCCgIKAgMHgwNTA1MDA3Mgo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDUwNjAw
+MzIKPiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDA1MDcwMDZhCj4gKyCgIKAgoCCgIKAgoCCg
+IKAgoCCgIKAgMHgwNjAwMDAxMAo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDYwMTAwMWUK
+PiArIKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDA2MDIwMDMxCj4gKyCgIKAgoCCgIKAgoCCgIKAg
+oCCgIKAgMHgwNjAzMDA1Ywo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDYwNDAwMGUKPiAr
+IKAgoCCgIKAgoCCgIKAgoCCgIKAgoCAweDA2MDYwMDE5Cj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCg
+IKAgMHgwNjA3MDA2Nwo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDcwMDAwOTQKPiArIKAg
+oCCgIKAgoCCgIKAgoCCgIKAgoCAweDA3MDEwMDk1Cj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAg
+MHgwNzAyMDBjYQo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDcwMzAwY2IKPiArIKAgoCCg
+IKAgoCCgIKAgoCCgIKAgoCAweDA3MDQwMDNlCj4gKyCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgMHgw
+NzA2MDE2MAo+ICsgoCCgIKAgoCCgIKAgoCCgIKAgoCCgIDB4MDcwNzAwNmMgPjsKPiArIKAgoCCg
+IKAgoCCgIKAgbGludXgsaW5wdXQtbm8tYXV0b3JlcGVhdDsKPiArIKAgoCCgIH07Cj4goH07Cj4g
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA0LmR0c2kgYi9hcmNoL2FybS9ib290
+L2R0cy9vbWFwNC5kdHNpCj4gaW5kZXggM2QzNTU1OS4uZTBmNjc4YSAxMDA2NDQKPiAtLS0gYS9h
+cmNoL2FybS9ib290L2R0cy9vbWFwNC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21h
+cDQuZHRzaQo+IEBAIC0xNTYsNCArMTU2LDkgQEAKPiCgIKAgoCCgIKAgoCCgIKAgoCCgIKAgoHRp
+LGh3bW9kcyA9ICJpMmM0IjsKPiCgIKAgoCCgIKAgoCCgIKB9Owo+IKAgoCCgIKB9Owo+ICsKPiAr
+IKAgoCCgIGtleXBhZEA0YWUxYzAwMCB7Cj4gKyCgIKAgoCCgIKAgoCCgIGNvbXBhdGlibGUgPSAi
+dGksb21hcDQta2V5cGFkIjsKPiArIKAgoCCgIKAgoCCgIKAgdGksaHdtb2RzID0gImtiZCI7Cj4g
+KyCgIKAgoCB9Owo+IKB9Owo+IC0tCj4gMS43LjEKPgpHZW50bGUgUGluZyBvbiB0aGlzLi4KCn5T
+b3VyYXYK
