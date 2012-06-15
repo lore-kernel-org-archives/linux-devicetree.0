@@ -1,50 +1,49 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 1/4] clk: add DT clock binding support
-Date: Thu, 14 Jun 2012 23:32:53 -0500
-Message-ID: <4FDABAF5.3090201@gmail.com>
-References: <1339512111-11172-1-git-send-email-robherring2@gmail.com> <1339512111-11172-2-git-send-email-robherring2@gmail.com> <20120615031747.GG31565@S2101-09.ap.freescale.net>
+From: Wei Ni <wni@nvidia.com>
+Subject: RE: Where to power on the wifi device before loading the driver.
+Date: Fri, 15 Jun 2012 14:09:41 +0800
+Message-ID: <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
+References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
+ <4FD90352.9090606@wwwdotorg.org>
+ <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de>
+ <20120614121234.GC3913@opensource.wolfsonmicro.com>
+ <4FDA092E.10301@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120615031747.GG31565@S2101-09.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, mturquette@linaro.org, sboyd@codeaurora.org, skannan@codeaurora.org, s.hauer@pengutronix.de, Sascha Hauer <kernel@pengutronix.de>, Mike Turquette <mturquette@ti.com>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <4FDA092E.10301@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Stephen Warren' <swarren@wwwdotorg.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "'frankyl@broadcom.com'" <frankyl@broadcom.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Mursalin Akon <makon@nvidia.com>, "'linux-mmc@vger.kernel.org'" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rakesh Kumar <krakesh@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/14/2012 10:17 PM, Shawn Guo wrote:
-> On Tue, Jun 12, 2012 at 09:41:48AM -0500, Rob Herring wrote:
->> +struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
->> +{
->> +	struct of_clk_provider *provider;
->> +	struct clk *clk = NULL;
-> 
-> Both clk and clkdev treat NULL as a valid clock and return ERR_PTR for
-> error case, while all the codes in this patch just return NULL for
-> error and check (clk != NULL) for valid clock.
+On Thu, Jun 14, 2012 at 23:54:22, Stephen Warren wrote:
+>>>> The core of the issue is that:
+>>
+>>>> * Tegra30 support is via device tree. * We have an SDIO bus, and 
+>>>> the WiFi device attached to that bus is enumerable. * Since the 
+>>>> WiFi device is enumerable, no node exists in the DT to represent 
+>>>> it. * However, the driver for the WiFi device needs certain 
+>>>> information, such as the reset GPIO ID and perhaps power GPIO.
+>>
+>>> PCI devices are also enumerable and yet they can be matched up with 
+>>> nodes in the device tree. Perhaps something similar could be added 
+>>> for the SDIO bus?
+>>
+>> This seems to make the most sense - pushing this through the 
+>> regulator API is just a bodge.
+>
+>Yes, that seems reasonable.
+>
+>Presumably the power GPIO should be a fixed regulator though, since it 
+>is a power control not just a plain old GPIO? That said, the current driver apparently deals with this as a GPIO already.
+>
+>The reset GPIO can separately/directly controlled by the WiFi driver though.
 
-Because Grant hates ERR_PTR... :)
+I talked with Franky, this power sequence is generally for 4329, so it mean this sequence can be put into the wifi driver.
+We can use the virtual platform device both for OOB and non OOB.
+I will send out patches later.
 
-> 
-> Should we force the consistent behavior between DT and non-DT on this?
-
-Yes, I agree and will change it.
-
-Rob
-
-> 
->> +
->> +	/* Check if we have such a provider in our array */
->> +	mutex_lock(&of_clk_lock);
->> +	list_for_each_entry(provider, &of_clk_providers, link) {
->> +		if (provider->node == clkspec->np)
->> +			clk = provider->get(clkspec, provider->data);
->> +		if (clk)
->> +			break;
->> +	}
->> +	mutex_unlock(&of_clk_lock);
->> +
->> +	return clk;
->> +}
-> 
+---
+nvpublic
