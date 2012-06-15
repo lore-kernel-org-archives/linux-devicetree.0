@@ -1,52 +1,60 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 07/19] tegra: fdt: Add LCD definitions for
-	Tegra
-Date: Thu, 14 Jun 2012 17:32:45 -0600
-Message-ID: <4FDA749D.2030201@wwwdotorg.org>
-References: <1339604395-6621-1-git-send-email-sjg@chromium.org>
-	<1339604395-6621-8-git-send-email-sjg@chromium.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [GIT PULL] DT fixes for 3.5
+Date: Thu, 14 Jun 2012 20:39:45 -0500
+Message-ID: <4FDA9261.2070208@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1339604395-6621-8-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@freescale.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2012 10:19 AM, Simon Glass wrote:
-> Add LCD definitions and also a proposed binding for LCD displays.
-> 
-> The PWFM is in progress on the device-tree-discuss list, so only a
-> very basic binding is offered here.
+Grant,
 
-I believe we have settled on a final representation, it just hasn't been
-added into linux-next yet. See:
+Please pull. Mainly some documentation updates and 2 fixes:
 
-http://gitorious.org/linux-pwm/linux-pwm/commit/d3ce73e5dc86646a6302f2b0f7dd40e8c552fa04
+- An export symbol fix for of_platform_populate from Stephen W.
+- A fix for the order compatible entries are matched to ensure the
+first compatible string is matched when there are multiple matches.
 
-> I am not sure if it is better to have the lcd within the display
-> controller as with i2c/spi, or a separate node. From a hardware point
-> of view the LCD is certainly connected to the display controller, so
-> perhaps this version makes most sense. We could have a stand-alone
-> top-level lcd node with a phandle pointing to the display controller,
-> but these doesn't seem to be an obvious advantage to that approach.
+Rob
 
-Equally, there's been extensive discussion re: how to represent the
-NVIDIA display controller in DT. I strongly believe that U-Boot
-shouldn't go ahead in isolation with a binding that's completely
-unrelated to what's happening in the kernel. Please can you take what
-Thierry is working on for the kernel, and/or contribute to that binding
-etc., so we don't end up with multiple ways of doing the same thing.
-Part of the whole point of DT is to have a single way of representing HW
-that multiple OSs (or perhaps bootloaders) cna use. If everyone just
-goes and does their own thing, we've lost.
+The following changes since commit cfaf025112d3856637ff34a767ef785ef5cf2ca9:
+
+  Linux 3.5-rc2 (2012-06-08 18:40:09 -0700)
+
+are available in the git repository at:
+
+  git://sources.calxeda.com/kernel/linux.git fixes-for-grant
+
+for you to fetch changes up to 107a84e61cdd3406c842a0e4be7efffd3a05dba6:
+
+  of: match by compatible property first (2012-06-14 20:29:40 -0500)
+
+----------------------------------------------------------------
+Fabio Estevam (5):
+      dt: fsl-imx-cspi.txt: Fix comment about GPIOs used for chip selects
+      dt: fsl-imx-esdhc.txt: Fix gpio number assignment
+      dt: fsl-mma8450.txt: Add missing 'reg' description
+      dt: fsl-fec.txt: Fix gpio number assignment
+      dt: mc13xxx.txt: Fix gpio number assignment
+
+Stephen Warren (1):
+      of: export of_platform_populate()
+
+Thierry Reding (2):
+      of: Add Avionic Design vendor prefix
+      of: match by compatible property first
+
+ .../devicetree/bindings/input/fsl-mma8450.txt      |    1 +
+ Documentation/devicetree/bindings/mfd/mc13xxx.txt  |    4 +--
+ .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |    4 +--
+ Documentation/devicetree/bindings/net/fsl-fec.txt  |    2 +-
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |    4 +--
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/of/base.c                                  |   30
++++++++++++++++++---
+ drivers/of/platform.c                              |    1 +
+ 8 files changed, 36 insertions(+), 11 deletions(-)
