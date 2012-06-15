@@ -1,60 +1,67 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] DT fixes for 3.5
-Date: Thu, 14 Jun 2012 20:39:45 -0500
-Message-ID: <4FDA9261.2070208@gmail.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
+Date: Fri, 15 Jun 2012 10:46:26 +0800
+Message-ID: <20120615024625.GA26563@b20223-02.ap.freescale.net>
+References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com>
+ <1339159026-15837-1-git-send-email-richard.zhao@freescale.com>
+ <20120612231438.GA6177@kroah.com>
+ <8762au8h46.fsf@ashishki-desk.ger.corp.intel.com>
+ <20120614154624.GF17140@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@freescale.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120614154624.GF17140-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+On Thu, Jun 14, 2012 at 08:46:24AM -0700, Greg KH wrote:
+> On Thu, Jun 14, 2012 at 10:52:57AM +0300, Alexander Shishkin wrote:
+> > Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> writes:
+> > 
+> > > On Fri, Jun 08, 2012 at 08:37:06PM +0800, Richard Zhao wrote:
+> > >> Sometimes, the driver bindings may know what phy they use.
+> > >> For example, when using device tree, the usb controller may have a
+> > >> phandler pointing to usb phy.
+> > >> 
+> > >> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > >> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> > >> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > >> ---
+> > >> Changes since laster version:
+> > >> - hcd transceiver renamed to phy
+> > >
+> > > Ick, I see patches all over this thread, and other threads, and I have
+> > > no idea what to apply anywhere...
+> > >
+> > > So, consider all chipidea patches dropped from my queue now, can you
+> > > please resend them to me, with the accumulated acks and reviewed-by
+> > > line, so that I can queue them up?
+> > 
+> > So will you pick these patches to your tree or should I apply them to
+> > mine or what is the plan? I kind of have a tree [1] for chipidea stuff
+> > where I have been collecting patches, to send a pull request to you for
+> > 3.6.
+> 
+> I do not accept pull requests for this code, sorry, I need patches in
+> email.  You and Richard work it out how you are going to handle this and
+> then, send me patches that you both agree on.
+So, Alex, Could you send out patch you queued? And I'll send out v6
+patch series which depends on that. Is it ok for driver part?
 
-Please pull. Mainly some documentation updates and 2 fixes:
+For arm platform part, it may need further discussion.
 
-- An export symbol fix for of_platform_populate from Stephen W.
-- A fix for the order compatible entries are matched to ensure the
-first compatible string is matched when there are multiple matches.
+Thanks
+Richard
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Rob
-
-The following changes since commit cfaf025112d3856637ff34a767ef785ef5cf2ca9:
-
-  Linux 3.5-rc2 (2012-06-08 18:40:09 -0700)
-
-are available in the git repository at:
-
-  git://sources.calxeda.com/kernel/linux.git fixes-for-grant
-
-for you to fetch changes up to 107a84e61cdd3406c842a0e4be7efffd3a05dba6:
-
-  of: match by compatible property first (2012-06-14 20:29:40 -0500)
-
-----------------------------------------------------------------
-Fabio Estevam (5):
-      dt: fsl-imx-cspi.txt: Fix comment about GPIOs used for chip selects
-      dt: fsl-imx-esdhc.txt: Fix gpio number assignment
-      dt: fsl-mma8450.txt: Add missing 'reg' description
-      dt: fsl-fec.txt: Fix gpio number assignment
-      dt: mc13xxx.txt: Fix gpio number assignment
-
-Stephen Warren (1):
-      of: export of_platform_populate()
-
-Thierry Reding (2):
-      of: Add Avionic Design vendor prefix
-      of: match by compatible property first
-
- .../devicetree/bindings/input/fsl-mma8450.txt      |    1 +
- Documentation/devicetree/bindings/mfd/mc13xxx.txt  |    4 +--
- .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |    4 +--
- Documentation/devicetree/bindings/net/fsl-fec.txt  |    2 +-
- .../devicetree/bindings/spi/fsl-imx-cspi.txt       |    4 +--
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/of/base.c                                  |   30
-+++++++++++++++++---
- drivers/of/platform.c                              |    1 +
- 8 files changed, 36 insertions(+), 11 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
