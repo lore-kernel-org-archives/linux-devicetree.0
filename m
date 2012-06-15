@@ -1,205 +1,50 @@
-From: Vinh Huu Tuong Nguyen <vhtnguyen@apm.com>
-Subject: RE: [PATCH] powerpc/44x: Support OCM(On Chip Memory) for APM821xx SoC
- and Bluestone board
-Date: Fri, 15 Jun 2012 10:19:28 +0700
-Message-ID: <6fdd89bf8de637de13a4ed9d0b5b839c@mail.gmail.com>
-References: <1336362768-31326-1-git-send-email-vhtnguyen@apm.com> <CA+5PVA7vnLvqwsDAboR4s-QCLWSDm34N2tE+sFiBMsE2f=qYEg@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 1/4] clk: add DT clock binding support
+Date: Thu, 14 Jun 2012 23:32:53 -0500
+Message-ID: <4FDABAF5.3090201@gmail.com>
+References: <1339512111-11172-1-git-send-email-robherring2@gmail.com> <1339512111-11172-2-git-send-email-robherring2@gmail.com> <20120615031747.GG31565@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+5PVA7vnLvqwsDAboR4s-QCLWSDm34N2tE+sFiBMsE2f=qYEg@mail.gmail.com>
+In-Reply-To: <20120615031747.GG31565@S2101-09.ap.freescale.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Boyer <jwboyer@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Matt Porter <mporter@kernel.crashing.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Duc Dang <dhdang@apm.com>, "David S. Miller" <davem@davemloft.net>, Kumar Gala <galak@kernel.crashing.org>, Li Yang <leoli@freescale.com>, Anatolij Gustschin <agust@denx.de>, Liu Gang <Gang.Liu@freescale.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, mturquette@linaro.org, sboyd@codeaurora.org, skannan@codeaurora.org, s.hauer@pengutronix.de, Sascha Hauer <kernel@pengutronix.de>, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Josh Boyer [mailto:jwboyer@gmail.com]
-> Sent: Friday, June 15, 2012 12:47 AM
-> To: Vinh Nguyen Huu Tuong
-> Cc: Benjamin Herrenschmidt; Paul Mackerras; Matt Porter; Grant Likely=
-;
-> Rob Herring; Duc Dang; David S. Miller; Kumar Gala; Li Yang; Ashish
-> Kalra; Anatolij Gustschin; Liu Gang; linuxppc-dev@lists.ozlabs.org;
-> linux-kernel@vger.kernel.org; devicetree-discuss@lists.ozlabs.org
-> Subject: Re: [PATCH] powerpc/44x: Support OCM(On Chip Memory) for
-> APM821xx SoC and Bluestone board
->
-> On Sun, May 6, 2012 at 11:52 PM, Vinh Nguyen Huu Tuong
-> <vhtnguyen@apm.com> wrote:
-> > This patch consists of:
-> > - Add driver for OCM component
-> > - Export OCM Information at /sys/class/ocm/ocminfo
->
-> Again, apologies for the delay.  Aside from the incorrect sysfs usage=
- I
-> pointed out in my other reply, I have just a few comments/questions
-> below.
-[Vinh Nguyen] You're welcome. About the files on sysfs, the first place=
- of
-ocm is in procfs, but procfs is deprecated and replaced by sysfs, then =
-I
-decided to move it to sysfs. With your comments, I think I can move it =
-to
-debugfs.
->
-> > diff --git a/arch/powerpc/boot/dts/bluestone.dts
-> > b/arch/powerpc/boot/dts/bluestone.dts
-> > index 7bda373..2687c11 100644
-> > --- a/arch/powerpc/boot/dts/bluestone.dts
-> > +++ b/arch/powerpc/boot/dts/bluestone.dts
-> > @@ -107,6 +107,14 @@
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0interrupt-parent =3D <&UIC0>;
-> > =A0 =A0 =A0 =A0};
-> >
-> > + =A0 =A0 =A0 OCM1: ocm@400040000 {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ibm,ocm";
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 status =3D "ok";
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 cell-index =3D <1>;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* configured in U-Boot */
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <4 0x00040000 0x8000>; /* 32K=
- */
-> > + =A0 =A0 =A0 };
-> > +
-> > =A0 =A0 =A0 =A0SDR0: sdr {
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "ibm,sdr-apm821xx";
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dcr-reg =3D <0x00e 0x002>; diff --gi=
-t
-> > a/arch/powerpc/include/asm/ppc4xx_ocm.h
-> > b/arch/powerpc/include/asm/ppc4xx_ocm.h
-> > new file mode 100644
-> > index 0000000..ff7f386
-> > --- /dev/null
-> > +++ b/arch/powerpc/include/asm/ppc4xx_ocm.h
-> > @@ -0,0 +1,47 @@
-> > +/*
-> > + * PowerPC 4xx OCM memory allocation support
-> > + *
-> > + * (C) Copyright 2009, Applied Micro Circuits Corporation
-> > + * Victor Gallardo (vgallardo@amcc.com)
-> > + *
-> > + * See file CREDITS for list of people who contributed to this
-> > + * project.
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License as
-> > + * published by the Free Software Foundation; either version 2 of
-> > + * the License, or (at your option) any later version.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public Licen=
-se
-> > + * along with this program; if not, write to the Free Software
-> > + * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-> > + * MA 02111-1307 USA
-> > + */
-> > +
-> > +#ifndef __ASM_POWERPC_PPC4xx_OCM_H__
-> > +#define __ASM_POWERPC_PPC4xx_OCM_H__
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +#define OCM_NON_CACHED 0
-> > +#define OCM_CACHED =A0 =A0 1
-> > +
-> > +#if defined(CONFIG_PPC4xx_OCM)
-> > +
-> > +void *ocm_alloc(phys_addr_t *phys, int size, int align,
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 int flags, const char *owner); vo=
-id ocm_free(const
-> > +void *virt);
-> > +
-> > +#else
-> > +
-> > +#define ocm_alloc(phys, size, align, flags, owner) =A0 =A0 NULL #d=
-efine
-> > +ocm_free(addr) ((void)0)
-> > +
-> > +#endif /* CONFIG_PPC4xx_OCM */
-> > +
-> > +#endif =A0/* __ASM_POWERPC_PPC4xx_OCM_H__ */
->
-> I don't see any users of this header included in the patch.  I'm goin=
-g
-> to guess that follow-on drivers/users are queued once this is in the
-> tree?  Also, you might want to name these 'ppc4xx_ocm_alloc' or
-> similar.  The concept of OCM isn't limited to ppc4xx or even SoCs, so
-> just using 'ocm' in the global kernel namespace might not be great.
->
-[Vinh Nguyen] With our plan, the next submit of IBM NEW EMAC will use i=
-t
-for speedup. About the naming convention, I will change as your comment=
-s.
+On 06/14/2012 10:17 PM, Shawn Guo wrote:
+> On Tue, Jun 12, 2012 at 09:41:48AM -0500, Rob Herring wrote:
+>> +struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
+>> +{
+>> +	struct of_clk_provider *provider;
+>> +	struct clk *clk = NULL;
+> 
+> Both clk and clkdev treat NULL as a valid clock and return ERR_PTR for
+> error case, while all the codes in this patch just return NULL for
+> error and check (clk != NULL) for valid clock.
 
-> > diff --git a/arch/powerpc/sysdev/ppc4xx_ocm.c
-> > b/arch/powerpc/sysdev/ppc4xx_ocm.c
-> > new file mode 100644
-> > index 0000000..ba3e450
-> > --- /dev/null
-> > +++ b/arch/powerpc/sysdev/ppc4xx_ocm.c
-> > @@ -0,0 +1,420 @@
-> > +#include <linux/kernel.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/proc_fs.h>
->
-> Why do you need proc_fs.h?
-[Vinh Nguyen] I will remove it.
->
-> > +#include <linux/seq_file.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/dma-mapping.h>
-> > +#include <linux/list.h>
-> > +#include <asm/uaccess.h>
-> > +#include <asm/prom.h>
-> > +#include <asm/dcr.h>
-> > +#include <asm/rheap.h>
-> > +#include <asm/mmu.h>
-> > +#include <asm/ppc4xx_ocm.h>
-> > +#include <linux/export.h>
-> > +
-> > +#define OCM_DISABLED =A0 0
-> > +#define OCM_ENABLED =A0 =A0 =A0 =A0 =A0 =A01
-> > +
-> > +struct ocm_block {
-> > + =A0 =A0 =A0 struct list_head =A0 =A0 =A0 =A0list;
-> > + =A0 =A0 =A0 void __iomem =A0 =A0 =A0 =A0 =A0 =A0*addr;
-> > + =A0 =A0 =A0 int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 size;
-> > + =A0 =A0 =A0 const char =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-*owner; };
-> > +
-> > +/* non-cached or cached region */
-> > +struct ocm_region {
-> > + =A0 =A0 =A0 phys_addr_t =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p=
-hys;
-> > + =A0 =A0 =A0 void __iomem =A0 =A0 =A0 =A0 =A0 =A0*virt;
-> > +
-> > + =A0 =A0 =A0 int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 memtotal;
-> > + =A0 =A0 =A0 int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 memfree;
-> > +
-> > + =A0 =A0 =A0 rh_info_t =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- *rh;
-> > + =A0 =A0 =A0 struct list_head =A0 =A0 =A0 =A0list;
-> > +};
->
-> There's some interesting whitespace usage in these struct definitions=
-=2E
-[Vinh Nguyen] I'll check again and remove them. I used the scripts chec=
-k
-in kernel but it can't remove them all.
->
-> josh
+Because Grant hates ERR_PTR... :)
 
-I'll update the patch soon but I need send out to internal review first
-before sending out to community. It takes one or two week, please be
-patient for the next review.
+> 
+> Should we force the consistent behavior between DT and non-DT on this?
 
-Best regards,
-Vinh Nguyen
+Yes, I agree and will change it.
+
+Rob
+
+> 
+>> +
+>> +	/* Check if we have such a provider in our array */
+>> +	mutex_lock(&of_clk_lock);
+>> +	list_for_each_entry(provider, &of_clk_providers, link) {
+>> +		if (provider->node == clkspec->np)
+>> +			clk = provider->get(clkspec, provider->data);
+>> +		if (clk)
+>> +			break;
+>> +	}
+>> +	mutex_unlock(&of_clk_lock);
+>> +
+>> +	return clk;
+>> +}
+> 
