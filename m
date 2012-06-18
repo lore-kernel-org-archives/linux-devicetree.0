@@ -1,46 +1,118 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] leds: Add DT support for leds-pca9532
-Date: Sun, 17 Jun 2012 12:02:55 -0600
-Message-ID: <4FDE1BCF.60109@wwwdotorg.org>
-References: <1339855851-9171-1-git-send-email-stigge@antcom.de> <4FDCA0FC.5000409@wwwdotorg.org> <4FDDC4A9.1040706@antcom.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree
+ based pinctrl driver
+Date: Sun, 17 Jun 2012 22:50:36 -0700
+Message-ID: <20120618055036.GU12766@atomide.com>
+References: <20120611135826.GB12766@atomide.com>
+ <4FDA6FCD.1020605@wwwdotorg.org>
+ <20120615094938.GQ12766@atomide.com>
+ <4FDB6000.5080703@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FDDC4A9.1040706@antcom.de>
+Content-Disposition: inline
+In-Reply-To: <4FDB6000.5080703@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: riku.voipio@iki.fi, bryan.wu@canonical.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, aletes.xgr@gmail.com, linux-arm-kernel@lists.infradead.org, Thierry Reding <thierry.reding@avionic-design.de>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2012 05:51 AM, Roland Stigge wrote:
-> Hi,
+* Stephen Warren <swarren@wwwdotorg.org> [120615 09:21]:
+> On 06/15/2012 03:49 AM, Tony Lindgren wrote:
 > 
-> On 16/06/12 17:06, Stephen Warren wrote:
->>> +- nxp,typecodes: groups of 2 bits for each of the 16 pins:
->>> +  0: None
->>> +  1: LED
->>> +  2: Beep
->>> +  3: GPIO
->>> +- nxp,statecodes: groups of 2 bits for each of the 16 pins:
->>> +  0: off
->>> +  1: on
->>> +  2: pwm0
->>> +  3: pwm1
->>> +
->>> +Optional properties:
->>> +- nxp,psc: array of 2 numbers: PSC values for the two PWM channels (see datasheet)
->>> +- nxp,pwm: array of 2 numbers: PWM values for the two PWM channels (see datasheet)
->>
->> Shouldn't that all be exposed using a combination of the pinctrl
->> bindings that are in 3.5, and the PWM bindings that should be coming in 3.6?
-> 
-> Thanks for the note! I found a pwm tree that should have this at
-> 
-> http://gitorious.org/linux-pwm/linux-pwm
-> 
-> but it gives me server errors. Is there a place where I can have a look?
+> (Arnd, Grant, Rob, CC'ing you mainly re: the very last set of comments
+> in this email; can you take a look at Tony's patch and comment on the
+> binding)
 
-That URL (with http:// replace with git://) did work for me. It seemed a
-little slow at first, but did work without issue. I Cc'd Thierry in case
-there's any other location available.
+Yes please take a look.
+ 
+> > Care to clarify a bit what you had in mind there?
+> 
+> Basically I meant:
+> 
+> 1) Remove anything TI-/OMAP-specific from the generic binding document
+> 
+> 2) For any TI-/OMAP-specific additions, create a binding document that
+> describes those separately to the generic binding documentation.
+> 
+> However, given that there are no TI-/OMAP-specific additions; OMAP2 just
+> uses the base generic bindings exactly as defined, I don't think you
+> actually need to create an TI-/OMAP-specific document, since there's
+> nothing for it to document.
+
+OK so basically you just want the pinctrl-single binding document to be
+generic. Yes I'll do that.
+ 
+> > It's best to describe the hardware in case we need to set up some hardware
+> > specific things in the driver.
+> 
+> There's a difference between the (set of) compatible value(s) that
+> appears in the .dts file, and the compatible value(s) that the driver
+> binds to.
+> 
+> Since this driver is purely implementing the pinctrl-single binding, I
+> believe only that should be listed in the driver's of_match table.
+> 
+> However, since the .dts file is describing HW that is both a specific
+> OMAP instance, and compatible with pinctrl-single, the .dts file can
+> certainly list both. If in the future, the driver ever needs to
+> specifically know the difference between the specific OMAP versions, or
+> OMAP-vs-something-else, the compatible value will be there already in
+> the .dts file, so this will all work. However, I'd argue that if the
+> driver has to ever know that, it's probably not appropriate to say it's
+> compatible with pinctrl-single any more...
+
+Yes OK I see what you mean now. Sounds good to me, and if/when we need
+some hardware specific things, we'll add specific parsing for the other
+compatible values.
+ 
+> >> One final comment: A little while before Linaro Connect in San
+> >> Francisco, we were all having difficulty coming up with any kind of DT
+> >> binding for pinctrl. I had suggested the possibility of creating a
+> >> binding which just said "write value X to register Y, write value P to
+> >> register Q, ...". This was rejected at connect, because a raw list of
+> >> register writes didn't document anything or describe semantics - it was
+> >> too much of a binary blob. This driver seems to be doing almost the
+> >> exact same thing. In order to avoid that assertion, it'd need to truly
+> >> have individual representations of which pins exist, which pingroups
+> >> exist, which functions exist, and which functions can be selected onto
+> >> which pins/pingroups. That would be a radically different binding. I
+> >> wonder what's changed such that this kind of driver wasn't acceptable
+> >> then, but is now?
+> > 
+> > Well that's why I had two bindings earlier: The current binding for the
+> > bulk pins that's faster to parse, and a more verbose binding for drivers that
+> > allows naming the functions.
+> > 
+> > In your previous comments at [1] you seemed to prefer this current binding
+> > based on the "Why not only allow (1)?" comment. Maybe you had something else
+> > in mind, care to clarify that a bit too?
+> 
+> Well, first I thought about semantics vs. just banging a register list a
+> tiny bit more, and remembered the previous discussion.
+> 
+> But my comment at [1] wasn't so much about "why not just have a raw
+> register list", but more regarding why support two different
+> representations within the same binding; it wasn't really clear to me
+> from reading the original email what the difference between the two
+> representations; why have two representations, why/when-to use one vs.
+> the other, that the difference was about providing a "semantic" list of
+> pins/pingroups/functions vs. providing a "raw" register list.
+
+I too would prefer more verbose .dts files. Unfortunately the parsing of
+several hundred board specific pins adds quite a bit of overhead.
+ 
+> IIRC, the pushback on a raw "bang these registers" representation came
+> from Grant and/or Arnd. It'd be a good idea if they (and indeed Rob)
+> could comment on this binding proposal. If they're OK with this kind of
+> pretty raw representation, I'm not going to object, but I have a feeling
+> they might not like it?
+
+Yes let's see if anybody has better ideas.
+
+Regards,
+
+Tony
+
+ 
+> > [1] http://article.gmane.org/gmane.linux.kernel/1291838
