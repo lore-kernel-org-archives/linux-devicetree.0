@@ -1,57 +1,61 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Where to power on the wifi device before loading the driver.
-Date: Mon, 18 Jun 2012 09:01:45 -0600
-Message-ID: <4FDF42D9.2050305@wwwdotorg.org>
-References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com> <4FD90352.9090606@wwwdotorg.org> <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de> <20120614121234.GC3913@opensource.wolfsonmicro.com> <4FDA092E.10301@wwwdotorg.org> <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com> <4FDB5976.20809@wwwdotorg.org> <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com> <96C9D994977DD0439FB6D3FE3B13DD907DE14CB4DF@BGMAIL01.nvidia.com> <96C9D994977DD0439FB6D3FE3B13DD907DE14CB4E8@BGMAIL01.nvidia.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch v5 00/13] add imx usb driver for mx28/6x
+Date: Mon, 18 Jun 2012 14:10:45 -0300
+Message-ID: <CAOMZO5BXsPtwC2CTt6Z-DjZUYhrWMKDkr2QnFoAKb-aLc1XsNA@mail.gmail.com>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <96C9D994977DD0439FB6D3FE3B13DD907DE14CB4E8-kdsAE/FnitNDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1339590863-10564-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2012 02:03 AM, Laxman Dewangan wrote:
-> Rakesh Kumar wrote at Monday, June 18, 2012 1:11 PM:
-> > Stephen Warren wrote:
-> >> Now if this means adding a child node under the SDIO controller
-> >> to represent the attached device, and storing any settings
-> >> required by that device in that child node, that's probably a
-> >> reasonable basic approach.
-> >>
-> >> BTW, which GPIO is the power GPIO; is it WF_EN on the schematic?
-> >> That seems reasonable to represent as a GPIO rather than a
-> >> regulator since it connects directly into the WiFi device as a
-> >> GPIO, and its use within the WiFi device can indeed be governed
-> >> purely internally to the WiFi driver/HW. However, if this is some
-> >> GPIO that controls the power to e.g. VBAT3V3_IN_WF, VDDIO_WF, or
-> >> other power supply to the WiFi card, then it'd be better
-> >> represented as a regulator, since the control point is outside the
-> >> WiFi device.
-> > 
-> > Tegra uses two GPIO (WF_EN and WF_RST) to power on and reset bcm4329
-> > card. In case of bcm4329, these two lines are shorted. Tegra does
-> > not control VBAT3V3_IN_WF, VDDIO_WF, or other power supply to the
-> > WiFi card based on these GPIO. Uses of these GPIO are internal to
-> > WiFi HW.  It is reasonable to represent as a GPU rather than
-> > regulator.
+Hi Richard,
+
+On Wed, Jun 13, 2012 at 9:34 AM, Richard Zhao
+<richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> The work is based on =C2=A0ci13xxx rework done by Alexander Shishkin.
 >
-> If it is for power then it has to go via regulator. It does not make
-> sense to directly control the gpio inside the wifi driver.
+> Status:
+> =C2=A0- this version only support host
+> =C2=A0- usbotg controler works at host role
+>
+> Changes since last version:
+> =C2=A0- collect ack received.
+>
+> Richard Zhao (13):
+> =C2=A0usb: otg: add notify_connect/notify_disconnect callback
+> =C2=A0USB: move transceiver from ehci_hcd and ohci_hcd to hcd and ren=
+ame it
+> =C2=A0 =C2=A0as phy
+> =C2=A0USB: notify phy when root hub port connect change
+> =C2=A0usb: chipidea: permit driver bindings pass phy pointer
+> =C2=A0usb: otg: add basic mxs phy driver support
+> =C2=A0usb: chipidea: add imx platform driver
+> =C2=A0ARM: imx6q: correct device name of usbphy and usb controller cl=
+ock
+> =C2=A0 =C2=A0export
+> =C2=A0ARM: imx6q: add config-on-boot gpios
+> =C2=A0ARM: imx6q: add usbphy clocks
+> =C2=A0ARM: imx6q: disable usb charger detector
+> =C2=A0ARM: dts: imx6q-sabrelite: add usb devices
+> =C2=A0ARM: mxs: clk_register_clkdev mx28 usb clocks
+> =C2=A0ARM: dts: imx28-evk: add usb devices
 
-As far as the board goes, WF_EN is just a GPIO signal to the WiFi card;
-it doesn't gate power to the card. If it gates power inside the card,
-that's an internal implementation detail of the card, and something I'd
-be fine with the driver knowing directly, and hence I'm OK with
-representing this as a GPIO rather than a regulator - that's what it is
-externally to the WiFi device.
+I am trying your patch series on a mx28evk and I am not able to have
+my USB pen drive detected.
 
-(BTW everyone, many of the emails in this thread are awfully formatted -
-top-posted and not word-wrapped. It's very hard to read them... I tried
-to reformat everything and fix it in this email)
+I tried enabling all the required config options in .config.
+
+Could you please share your .config?
+
+Thanks,
+
+=46abio Estevam
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
