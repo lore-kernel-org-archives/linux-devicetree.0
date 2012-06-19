@@ -1,63 +1,73 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Where to power on the wifi device before loading the driver.
-Date: Tue, 19 Jun 2012 17:44:00 +0800
-Message-ID: <6B4D417B830BC44B8026029FD256F7F1C6EE2DD626@HKMAIL01.nvidia.com>
-References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
- <4FD90352.9090606@wwwdotorg.org>
- <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de>
- <20120614121234.GC3913@opensource.wolfsonmicro.com>
- <4FDA092E.10301@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
- <4FDB5976.20809@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com>
- <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com>
- <20120619091719.GZ3974@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/2] regulator: support for regulator match by
+ regulator-compatible
+Date: Tue, 19 Jun 2012 11:43:18 +0100
+Message-ID: <20120619104254.GD3974@opensource.wolfsonmicro.com>
+References: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com>
+ <1340085087-6608-2-git-send-email-ldewangan@nvidia.com>
+ <20120619093211.GB3974@opensource.wolfsonmicro.com>
+ <4FE04788.5040008@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120619091719.GZ3974-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Content-Language: en-US
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Mark Brown' <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: 'Philip Rakity' <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="p//XFgTqeVWI1epd"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FE04788.5040008@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "lrg@ti.com" <lrg@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2012 at 17:17:19, Mark Brown wrote:
->* PGP Signed by an unknown key
->
->On Tue, Jun 19, 2012 at 12:25:58PM +0800, Wei Ni wrote:
->
->As Stephen previously said please fix your mail formatting - word 
->wrapping within paragraphs is important!
->
->> On Tue, Jun 19, 2012 at 09:23:35, Philip Rakity wrote:
->> >Why can't you use the regulator notify to get called back on power 
->> >or voltage change options to plumb in the manipulation of the gpio. 
->> >I can imagine you might need to add a notify call in core.c if you 
->> >need to assert the gpio before power is applied
->>
->> Yes, we can use the regulator notify, but the Tegra30 support is via 
->> device tree, I think there have no special board file to run the call 
->> back.
->
->You can mix board files with device tree for cases where device tree is 
->not yet up to the job, though the goal should be to come up with a way of expressing things in device tree.
 
-I think we wish to use the device tree to handle these gpios, pass them to the related driver to assert them.
-If we mix the board files, we even can set these gpio directly, not use the notify. But I think this is not a goog way.
+--p//XFgTqeVWI1epd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Wei.
----
-nvpublic
+On Tue, Jun 19, 2012 at 03:04:00PM +0530, Laxman Dewangan wrote:
 
->
->* Unknown Key
->* 0x6E30FDDD
+> Agree. Currently following regulators are using this (based on grep)
+> mfd/tps6586x.c
+> regulator/ab8500.c
+> regulator/db8500-prcmu.c
+> and regulator/tps65910.
 
+That looks about right.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If the related change in tps65910 is fine and there is no more
+> concern/feedback on the approach then I can create a series of patch
+> to modify the other regulator and related dts file to follow the
+> same.
+
+> If you want, I can make the new changes as part of this series or
+> can start with new series.
+
+> I like to go with new series patch for other change once this is accepted.
+
+I've no concerns with the interface or the code itself other than the
+usability issue with partial deployment so if you could do the updates
+for the other drivers that'd be great.  I'll hold off on applying this
+until we've got everything else updated.
+
+--p//XFgTqeVWI1epd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP4Fe2AAoJEBus8iNuMP3dlT8P/1S+Unnb6vNDeyfiRD6+e5wl
+XaYllUIX6i/++H4/D5bdCU50tAbRadH2AXAMjEmtIk/boUn03s2jIIPvVC6neGOh
+q2+8USJqarKSDHgGwc/uqEVPuuFcUG1PSdFbn3U9o5PdTB+r4qF2mnmSSCseeohr
+zW/aWiiA7pgGJcs7L1aKMUC9gdq7BT675/GUy5RGAnZphFdXEJg5D2hI9LGL+lh+
+mLEQiD0bdi0wjplagvu5hlDG136VhwuKiOhV1ujYRz70jEGrVoJogT0hzSuZ4Ec7
+7a0IoH9qaun8TNrQMpL+iLFXhwulCn1Ca6D7nQBQE7tFetRmLbaTXM/EgX3ZOS1a
+Z/CRr3T/48GLRTsh4oIRYcm8/pKIMJKPirQ986JX38CdreLAcjpMNfoDHiXBS3SP
+bLNIVYm+dAV1ZaeSAEGaAea4uV9EDFFczMOyAq0sjQ9j9NB2YPmb0XoX63MNSKjW
+XIt9jrdmieLPVpN1AmN5r/v9e1oFk+fu1vfhoLSYtS1RM/WtOrZH84xHSxEj1zUy
+R+Mf9iscDvqMuEYWAU4tTE8tL9AhTN0coStdCLRtT24luofSRCKWvYC1Robpmr9F
+RIuTNRpM1LnCkfYlNrUFDxpLt/sot3fXaw6Dwnh5iqTJ2kTOp71uNYzIag4ML0ck
+O3Ejg0U0wcOz30ww6Nbs
+=fAsv
+-----END PGP SIGNATURE-----
+
+--p//XFgTqeVWI1epd--
