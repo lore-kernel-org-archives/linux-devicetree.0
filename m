@@ -1,60 +1,33 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V2 2/3] regulator: dt: add policy to have property
- "regulator-compatible"
-Date: Tue, 19 Jun 2012 19:06:47 +0100
-Message-ID: <20120619180647.GP3974@opensource.wolfsonmicro.com>
-References: <1340116099-17629-1-git-send-email-ldewangan@nvidia.com>
- <1340116099-17629-3-git-send-email-ldewangan@nvidia.com>
- <4FE0BA5C.9020405@wwwdotorg.org>
- <20120619175354.GO3974@opensource.wolfsonmicro.com>
- <4FE0BEEF.4060100@wwwdotorg.org>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch v5 00/13] add imx usb driver for mx28/6x
+Date: Tue, 19 Jun 2012 15:34:37 -0300
+Message-ID: <CAOMZO5CSy2rOVdv2N7K6ShDS1FKc1JMsDPoyY3TTFNURpFFjvw@mail.gmail.com>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+	<CAOMZO5BXsPtwC2CTt6Z-DjZUYhrWMKDkr2QnFoAKb-aLc1XsNA@mail.gmail.com>
+	<201206181913.06886.marex@denx.de>
+	<CAOMZO5DF+CH+qe+VKc4vefkj05aXOtn0nVZK9vx+0kakP_em1A@mail.gmail.com>
+	<20120619061414.GD21951@S2101-09.ap.freescale.net>
+	<CAOMZO5A+eWXsz5_HGzUMJBDKnADrMeWPec7XvX+EMPJMtqWcng@mail.gmail.com>
+	<20120619123813.GG21951@S2101-09.ap.freescale.net>
+	<CAOMZO5CcC7G8RfG9N60OfU-Ca0EcL+qoQi00KSgxFyJ7Ry1oOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="utew04vv9FCWZJ01"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FE0BEEF.4060100@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, linus.walleij@linaro.org, lrg@ti.com, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5CcC7G8RfG9N60OfU-Ca0EcL+qoQi00KSgxFyJ7Ry1oOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 19, 2012 at 10:54 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
---utew04vv9FCWZJ01
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Excellent! It works fine now ;-)
 
-On Tue, Jun 19, 2012 at 12:03:27PM -0600, Stephen Warren wrote:
+In case someone wants to try this USB patch series:
+https://github.com/Freescale/linux-mainline/commits/patches-3.5-rc3
 
-> So while as you say regulator.txt might not mandate that this be the
-> only method of handling multiple child nodes, shouldn't it document
-> this method as /a/ method in a central location to avoid all the
-> bindings that make use of this feature from duplicating the documentation?
-
-Sure, but I'd expect some reference in the individual binding documents
-to the mechanism being used for a given device (which seems to be what
-Laxman has here).
-
---utew04vv9FCWZJ01
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP4L9HAAoJEBus8iNuMP3d6aYP/itUra1AnnMIVLMdBgkQj6HS
-TDMG93Mg2ZS3PxkNHj4S434fk9V3X/v3/flR+z/FVn0HL+WLNE1+2QCUIoOiIBUs
-qUOjEKZuqxzcYhOW9RSGokhO+kLtGSOoio6fbUIMaFhG7nOW+2JdiHNe7PhRJ/gB
-/kOSqiE097vhMJSCF05aWGrr1rWHEPckBQNZtmWURgEfGqaJU1VUKgWOfMu4rWwm
-X5SfSoMKUsHFztVcVF8FSeP1e5KdoVolWAt8taLcYjXJhIJ69r0KX1/rejIDYm2A
-9F2CYV2E/vy/73ev5K4O+9MBhnGuK5thW2q4iXGDk/u6jY7f/BdmFzncBA2ArZ+L
-L1GOIgDP8OCgIehf85cxzl1HCdfrIt2+Peda7tVBeq6SsxH4Ys3MiJYAcehp5llq
-XA472bf3NawfO7Evl1uqBd5ZThXSm4PwywMw2/xgW+J9u6KLWVs/O6MBJ+C8m1N/
-vqndb7KNQWR0xi7SQVOoL+Lr3NzdE7YRiFu/uezbxw+y41mWH/nvf/gomMhRRDua
-ya5AyTi00Aa5cDu/OZjNqj42N0YUR9+M4iNJngtEG3kdUSKAXOymeoNHdhUZbck4
-6+oVv7A2Y6E8zwRYNhC2gCo93TEy0I/PvmgwvX5y5icVm+yaGwiCoru+FL/fz5z4
-+CW/QOZD9riVY/zJZXJw
-=F6fE
------END PGP SIGNATURE-----
-
---utew04vv9FCWZJ01--
+I also added all the required USB select options into mxs_defconfig.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
