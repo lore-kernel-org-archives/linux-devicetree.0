@@ -1,53 +1,66 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/2] regulator: support for regulator match by regulator-compatible
-Date: Tue, 19 Jun 2012 17:36:09 +0530
-Message-ID: <4FE06B31.3050306@nvidia.com>
-References: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com> <1340085087-6608-2-git-send-email-ldewangan@nvidia.com> <20120619093211.GB3974@opensource.wolfsonmicro.com> <4FE04788.5040008@nvidia.com> <20120619104254.GD3974@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/2] regulator: support for regulator match by
+ regulator-compatible
+Date: Tue, 19 Jun 2012 13:18:20 +0100
+Message-ID: <20120619121819.GN3974@opensource.wolfsonmicro.com>
+References: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com>
+ <1340085087-6608-2-git-send-email-ldewangan@nvidia.com>
+ <20120619093211.GB3974@opensource.wolfsonmicro.com>
+ <4FE04788.5040008@nvidia.com>
+ <20120619104254.GD3974@opensource.wolfsonmicro.com>
+ <4FE06B31.3050306@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="y8OL7jWO5wDKNv+B"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120619104254.GD3974@opensource.wolfsonmicro.com>
+Content-Disposition: inline
+In-Reply-To: <4FE06B31.3050306@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
 Cc: "lrg@ti.com" <lrg@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 19 June 2012 04:13 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Tue, Jun 19, 2012 at 03:04:00PM +0530, Laxman Dewangan wrote:
->
->> Agree. Currently following regulators are using this (based on grep)
->> mfd/tps6586x.c
->> regulator/ab8500.c
->> regulator/db8500-prcmu.c
->> and regulator/tps65910.
->
-> I've no concerns with the interface or the code itself other than the
-> usability issue with partial deployment so if you could do the updates
-> for the other drivers that'd be great.  I'll hold off on applying this
-> until we've got everything else updated.
 
-Mark,
-Just thinking on optimizing the changes require, we can do it in 3 
-patches only:
-- In place of adding new api of_regulator_match_by_compatible(), we can 
-modify the existing of_regulator_match() itself  to look for 
-regulator-compatible for matching. This can be done in first patch.
-- Need not to change the .c files, here just change the documentation of 
-these regulator dt binding. All can be done in second patch.
-- Change the dts file to have this policy and seeing only on 
-arm/boot/dts/db8500.dtsi for ab8500 and db8500-prcmu. So it will be 
-third patch .
+--y8OL7jWO5wDKNv+B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-We will not need any change on above c files as the api is not going to 
-change.
+On Tue, Jun 19, 2012 at 05:36:09PM +0530, Laxman Dewangan wrote:
 
-Require your opinion.
+> Just thinking on optimizing the changes require, we can do it in 3
+> patches only:
+> - In place of adding new api of_regulator_match_by_compatible(), we
+> can modify the existing of_regulator_match() itself  to look for
+> regulator-compatible for matching. This can be done in first patch.
+> - Need not to change the .c files, here just change the
+> documentation of these regulator dt binding. All can be done in
+> second patch.
+> - Change the dts file to have this policy and seeing only on
+> arm/boot/dts/db8500.dtsi for ab8500 and db8500-prcmu. So it will be
+> third patch .
 
+This seems fine.
 
+--y8OL7jWO5wDKNv+B
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
+iQIcBAEBAgAGBQJP4G4BAAoJEBus8iNuMP3di2wP+gPcdiSrsEOgBmlO11CRoSFP
+biciYMTZuoeoF6gOowT1IJmXUdVZVfOC2KcD8q2+pnzi42arSReSkVzuEHGpHQ4s
+Csntb2nyX1gjrnGAGiePvZ31RNKRJ9zS7o8f65ENcq8asXIMCW8GFjtINutmJKl9
+OADjZunggXabDDbNHqyQwLA5LS5p/P2h6OlCXi4eYyQSliLot2eNv8TE3gN7QOeh
+FtfKhNqvKVmIyU6GUtOnDp+22GLiDY8PKMowzfJuBapzV5XezxchsI0fPkIPxXwN
+/50qMz83m5yjSVWTmNTVu4MIBBwXfkjyar7ztd3zDgfxrL/bejp+FaTmbcCOfIOq
+ofOVLtSbcvDaFzwmde6vQjH2ORy/9zpfYn8rHM32UiFC+h8O3s9+PdvEzHo0atPP
+Bu2T2IfOcgo5pZlsyl2FHsTnvPb/Ce94ob/nx9wjWJmneQffdTGqNfA/FWhC6tq7
+Txc5zUj4o2ycb77zFHaL8hY6f1Dh1ZZyIzpyFzmuRDY7qu2/NOXxRA3jH423xF+b
+Vm+TqmWfmNxgXAxyrw6Ul0abXXNXXeTWUO2HTayOOyGSa6CG48INYpceSF4Xv3jy
+R77hMsu6lFa3/I+wSKkDdm64P4hUtACMXAqkEmhWjiU5bfrAQvvkJbBO35+pavGX
+SZNLDyuMoQliV6AnFmwy
+=hDCx
+-----END PGP SIGNATURE-----
 
-
+--y8OL7jWO5wDKNv+B--
