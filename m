@@ -1,66 +1,46 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/2] regulator: support for regulator match by
- regulator-compatible
-Date: Tue, 19 Jun 2012 13:18:20 +0100
-Message-ID: <20120619121819.GN3974@opensource.wolfsonmicro.com>
-References: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com>
- <1340085087-6608-2-git-send-email-ldewangan@nvidia.com>
- <20120619093211.GB3974@opensource.wolfsonmicro.com>
- <4FE04788.5040008@nvidia.com>
- <20120619104254.GD3974@opensource.wolfsonmicro.com>
- <4FE06B31.3050306@nvidia.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch v5 00/13] add imx usb driver for mx28/6x
+Date: Tue, 19 Jun 2012 09:24:51 -0300
+Message-ID: <CAOMZO5A+eWXsz5_HGzUMJBDKnADrMeWPec7XvX+EMPJMtqWcng@mail.gmail.com>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+	<CAOMZO5BXsPtwC2CTt6Z-DjZUYhrWMKDkr2QnFoAKb-aLc1XsNA@mail.gmail.com>
+	<201206181913.06886.marex@denx.de>
+	<CAOMZO5DF+CH+qe+VKc4vefkj05aXOtn0nVZK9vx+0kakP_em1A@mail.gmail.com>
+	<20120619061414.GD21951@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y8OL7jWO5wDKNv+B"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FE06B31.3050306@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "lrg@ti.com" <lrg@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120619061414.GD21951-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Shawn,
 
---y8OL7jWO5wDKNv+B
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Jun 19, 2012 at 3:14 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-On Tue, Jun 19, 2012 at 05:36:09PM +0530, Laxman Dewangan wrote:
+>> Attached my .config file.
+>>
+> You haven't enabled the following two in your .config.
+>
+> CONFIG_USB_CHIPIDEA
+> CONFIG_USB_CHIPIDEA_HOST
 
-> Just thinking on optimizing the changes require, we can do it in 3
-> patches only:
-> - In place of adding new api of_regulator_match_by_compatible(), we
-> can modify the existing of_regulator_match() itself  to look for
-> regulator-compatible for matching. This can be done in first patch.
-> - Need not to change the .c files, here just change the
-> documentation of these regulator dt binding. All can be done in
-> second patch.
-> - Change the dts file to have this policy and seeing only on
-> arm/boot/dts/db8500.dtsi for ab8500 and db8500-prcmu. So it will be
-> third patch .
+Please check my config file again:
 
-This seems fine.
+It does have:
 
---y8OL7jWO5wDKNv+B
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+CONFIG_USB_CHIPIDEA=y
+CONFIG_USB_CHIPIDEA_HOST=y
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Can someone confirm that this patch series works on a mx28evk? If it
+does, please send me the .config that works.
 
-iQIcBAEBAgAGBQJP4G4BAAoJEBus8iNuMP3di2wP+gPcdiSrsEOgBmlO11CRoSFP
-biciYMTZuoeoF6gOowT1IJmXUdVZVfOC2KcD8q2+pnzi42arSReSkVzuEHGpHQ4s
-Csntb2nyX1gjrnGAGiePvZ31RNKRJ9zS7o8f65ENcq8asXIMCW8GFjtINutmJKl9
-OADjZunggXabDDbNHqyQwLA5LS5p/P2h6OlCXi4eYyQSliLot2eNv8TE3gN7QOeh
-FtfKhNqvKVmIyU6GUtOnDp+22GLiDY8PKMowzfJuBapzV5XezxchsI0fPkIPxXwN
-/50qMz83m5yjSVWTmNTVu4MIBBwXfkjyar7ztd3zDgfxrL/bejp+FaTmbcCOfIOq
-ofOVLtSbcvDaFzwmde6vQjH2ORy/9zpfYn8rHM32UiFC+h8O3s9+PdvEzHo0atPP
-Bu2T2IfOcgo5pZlsyl2FHsTnvPb/Ce94ob/nx9wjWJmneQffdTGqNfA/FWhC6tq7
-Txc5zUj4o2ycb77zFHaL8hY6f1Dh1ZZyIzpyFzmuRDY7qu2/NOXxRA3jH423xF+b
-Vm+TqmWfmNxgXAxyrw6Ul0abXXNXXeTWUO2HTayOOyGSa6CG48INYpceSF4Xv3jy
-R77hMsu6lFa3/I+wSKkDdm64P4hUtACMXAqkEmhWjiU5bfrAQvvkJbBO35+pavGX
-SZNLDyuMoQliV6AnFmwy
-=hDCx
------END PGP SIGNATURE-----
+Thanks,
 
---y8OL7jWO5wDKNv+B--
+Fabio Estevam
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
