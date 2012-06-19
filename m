@@ -1,1232 +1,348 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree
- based pinctrl driver
-Date: Tue, 19 Jun 2012 06:56:01 -0700
-Message-ID: <20120619135600.GX12766@atomide.com>
-References: <20120611135826.GB12766@atomide.com>
- <4FDA6FCD.1020605@wwwdotorg.org>
- <20120615094938.GQ12766@atomide.com>
- <4FDB6000.5080703@wwwdotorg.org>
- <20120618055036.GU12766@atomide.com>
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [RESEND/PATCHv5 1/2] drivers: input: keypad: Add device tree support
+Date: Tue, 19 Jun 2012 19:55:44 +0530
+Message-ID: <CAKdam56W025H_0MKMcX_7h61n7FQ7ZEbAG_SYWOU5Tj=nRDbEQ@mail.gmail.com>
+References: <1339152780-25301-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120618055036.GU12766@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1339152780-25301-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, sourav.poddar@ti.com, Andrew Morton <akpm@linux-foundation.org>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Dmitry Torokhov <dtor@mail.ru>, Randy Dunlap <rdunlap@xenotime.net>, lo <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
++cc linux-omap
 
-Below is the pinctrl-single patch updated with hopefully all the Stephen's
-comments addressed. The binding still needs to be looked at, see relevant
-parts of the discussion below.
-
-* Tony Lindgren <tony@atomide.com> [120617 22:55]:
-> * Stephen Warren <swarren@wwwdotorg.org> [120615 09:21]:
-> > On 06/15/2012 03:49 AM, Tony Lindgren wrote:
-> > 
-> > (Arnd, Grant, Rob, CC'ing you mainly re: the very last set of comments
-> > in this email; can you take a look at Tony's patch and comment on the
-> > binding)
-> 
-> Yes please take a look.
->  
-> > >> One final comment: A little while before Linaro Connect in San
-> > >> Francisco, we were all having difficulty coming up with any kind of DT
-> > >> binding for pinctrl. I had suggested the possibility of creating a
-> > >> binding which just said "write value X to register Y, write value P to
-> > >> register Q, ...". This was rejected at connect, because a raw list of
-> > >> register writes didn't document anything or describe semantics - it was
-> > >> too much of a binary blob. This driver seems to be doing almost the
-> > >> exact same thing. In order to avoid that assertion, it'd need to truly
-> > >> have individual representations of which pins exist, which pingroups
-> > >> exist, which functions exist, and which functions can be selected onto
-> > >> which pins/pingroups. That would be a radically different binding. I
-> > >> wonder what's changed such that this kind of driver wasn't acceptable
-> > >> then, but is now?
-> > > 
-> > > Well that's why I had two bindings earlier: The current binding for the
-> > > bulk pins that's faster to parse, and a more verbose binding for drivers that
-> > > allows naming the functions.
-> > > 
-> > > In your previous comments at [1] you seemed to prefer this current binding
-> > > based on the "Why not only allow (1)?" comment. Maybe you had something else
-> > > in mind, care to clarify that a bit too?
-> > 
-> > Well, first I thought about semantics vs. just banging a register list a
-> > tiny bit more, and remembered the previous discussion.
-> > 
-> > But my comment at [1] wasn't so much about "why not just have a raw
-> > register list", but more regarding why support two different
-> > representations within the same binding; it wasn't really clear to me
-> > from reading the original email what the difference between the two
-> > representations; why have two representations, why/when-to use one vs.
-> > the other, that the difference was about providing a "semantic" list of
-> > pins/pingroups/functions vs. providing a "raw" register list.
-> 
-> I too would prefer more verbose .dts files. Unfortunately the parsing of
-> several hundred board specific pins adds quite a bit of overhead.
->  
-> > IIRC, the pushback on a raw "bang these registers" representation came
-> > from Grant and/or Arnd. It'd be a good idea if they (and indeed Rob)
-> > could comment on this binding proposal. If they're OK with this kind of
-> > pretty raw representation, I'm not going to object, but I have a feeling
-> > they might not like it?
-> 
-> Yes let's see if anybody has better ideas.
-> 
-> Regards,
-> 
-> Tony
-> 
->  
-> > > [1] http://article.gmane.org/gmane.linux.kernel/1291838
-
-
-From: Tony Lindgren <tony@atomide.com>
-Date: Wed, 6 Jun 2012 04:18:18 -0700
-Subject: [PATCH] pinctrl: Add one-register-per-pin type device tree based pinctrl driver
-
-Add one-register-per-pin type device tree based pinctrl driver.
-
-Currently this driver only works on omap2+ series of processors,
-where there is either an 8 or 16-bit padconf register for each pin.
-Support for other similar pinmux controllers can be added.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-new file mode 100644
-index 0000000..929254c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-@@ -0,0 +1,106 @@
-+One-register-per-pin type device tree based pinctrl driver
-+
-+Required properties:
-+- compatible : "pinctrl-single"
-+
-+- reg : offset and length of the register set for the mux registers
-+
-+- pinctrl-single,register-width : pinmux register access width in bits
-+
-+- pinctrl-single,function-mask : mask of allowed pinmux function bits
-+  in the pinmux register
-+
-+- pinctrl-single,pinconf-mask : mask of allowed pinconf bits in the
-+  pinmux register; this gets combined with pinconf mask but is a separate
-+  mask to allow the option of setting pinconf separatately from the
-+  function
-+
-+- pinctrl-single,function-off : function off mode for disabled state if
-+  available and same for all registers; if not, use a value larger than
-+  function-mask to ignore disabling of registers
-+
-+This driver assumes that there is only one register for each pin,
-+and uses the common pinctrl bindings as specified in the pinctrl-bindings.txt
-+document in this directory.
-+
-+The pinctrl register offsets and default values are specified as pairs
-+using pinctrl-single,pins. For example, setting a pin for a device
-+could be done with:
-+
-+	pinctrl-single,pins = <0xdc 0x118>;
-+
-+Where 0xdc is the offset from the pinctrl register base address for the
-+device pinctrl register, and 0x118 contains the desired value of the
-+pinctrl register. See the device example and static board pins example
-+below for more information.
-+
-+This driver tries to avoid understanding pin and function names because of
-+the extra bloat they would cause especially in the case of a large number
-+of pins. This driver just sets what is specified for the board in the .dts file.
-+Further user space debugging tools can be developed to decipher the pin and
-+function names using debugfs.
-+
-+Example:
-+
-+/* SoC common file */
-+
-+/* first controller instance for pins in core domain */
-+pmx_core: pinmux@4a100040 {
-+	compatible = "pinctrl-single";
-+	reg = <0x4a100040 0x0196>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-single,register-width = <16>;
-+	pinctrl-single,function-mask = <0x7>;
-+	pinctrl-single,function-off = <0xffffffff>;
-+	pinctrl-single,pinconf-mask = <0xfff8>;
-+};
-+
-+/* second controller instance for pins in wkup domain */
-+pmx_wkup: pinmux@4a31e040 {
-+	compatible = "pinctrl-single;
-+	reg = <0x4a31e040 0x0038>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-single,register-width = <16>;
-+	pinctrl-single,function-mask = <0x7>;
-+	pinctrl-single,function-off = <0xffffffff>;
-+	pinctrl-single,pinconf-mask = <0xfff8>;
-+};
-+
-+
-+/* board specific .dts file */
-+
-+&pmx_core {
-+
-+	/*
-+	 * map all board specific static pins enabled by the pinctrl driver
-+	 * itself during the boot (or just set them up in the bootloader)
-+	 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&board_pins>;
-+
-+	board_pins: pinmux_board_pins {
-+		pinctrl-single,pins = <
-+			0x6c 0xf	/* csi21_dx3 OUTPUT | MODE7 */
-+			0x6e 0xf	/* csi21_dy3 OUTPUT | MODE7 */
-+			0x70 0xf	/* csi21_dx4 OUTPUT | MODE7 */
-+			0x72 0xf	/* csi21_dy4 OUTPUT | MODE7 */
-+		>;
-+	};
-+
-+	/* map uart2 pins */
-+	uart2_pins: pinmux_uart2_pins {
-+		pinctrl-single,pins = <
-+			0xd8 0x118	/* uart2_cts INPUT_PULLUP | MODE0 */
-+			0xda 0		/* uart2_rts OUTPUT | MODE0 */
-+			0xdc 0x118	/* uart2_rx INPUT_PULLUP | MODE0 */
-+			0xde 0		/* uart2_tx OUTPUT | MODE0 */
-+		>;
-+	};
-+};
-+
-+&uart2 {
-+       pinctrl-names = "default";
-+       pinctrl-0 = <&uart2_pins>;
-+};
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index c6e6ae0..8071a31 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -102,6 +102,14 @@ config PINCTRL_PXA910
- 	select PINCTRL_PXA3xx
- 	select PINCONF
- 
-+config PINCTRL_SINGLE
-+	tristate "One-register-per-pin type device tree based pinctrl driver"
-+	depends on OF
-+	select PINMUX
-+	select PINCONF
-+	help
-+	  This selects the device tree based generic pinctrl driver.
-+
- config PINCTRL_SIRF
- 	bool "CSR SiRFprimaII pin controller driver"
- 	depends on ARCH_PRIMA2
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 8c07437..f40b1f8 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_PINCTRL_NOMADIK)	+= pinctrl-nomadik.o
- obj-$(CONFIG_PINCTRL_DB8500)	+= pinctrl-nomadik-db8500.o
- obj-$(CONFIG_PINCTRL_PXA168)	+= pinctrl-pxa168.o
- obj-$(CONFIG_PINCTRL_PXA910)	+= pinctrl-pxa910.o
-+obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
- obj-$(CONFIG_PINCTRL_SIRF)	+= pinctrl-sirf.o
- obj-$(CONFIG_PINCTRL_TEGRA)	+= pinctrl-tegra.o
- obj-$(CONFIG_PINCTRL_TEGRA20)	+= pinctrl-tegra20.o
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-new file mode 100644
-index 0000000..76e83fb
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -0,0 +1,983 @@
-+/*
-+ * Generic device tree based pinctrl driver for one register per pin
-+ * type pinmux controllers
-+ *
-+ * Copyright (C) 2012 Texas Instruments, Inc.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/err.h>
-+#include <linux/list.h>
-+
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
-+
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "core.h"
-+
-+#define DRIVER_NAME			"pinctrl-single"
-+#define PCS_MUX_NAME			"pinctrl-single,pins"
-+#define PCS_REG_NAME_LEN		((sizeof(unsigned long) * 2) + 1)
-+
-+/**
-+ * struct pcs_pingroup - pingroups for a function
-+ * @np:		pingroup device node pointer
-+ * @name:	pingroup name
-+ * @gpins:	array of the pins in the group
-+ * @ngpins:	number of pins in the group
-+ * @node:	list node
-+ */
-+struct pcs_pingroup {
-+	struct device_node *np;
-+	const char *name;
-+	int *gpins;
-+	int ngpins;
-+	struct list_head node;
-+};
-+
-+/**
-+ * struct pcs_func_vals - mux function register offset and value pair
-+ * @reg:	register virtual address
-+ * @val:	register value
-+ */
-+struct pcs_func_vals {
-+	void __iomem *reg;
-+	unsigned val;
-+};
-+
-+/**
-+ * struct pcs_function - pinctrl function
-+ * @name:	pinctrl function name
-+ * @vals:	register and vals array
-+ * @nvals:	number of entries in vals array
-+ * @pgnames:	array of pingroup names the function uses
-+ * @npgnames:	number of pingroup names the function uses
-+ * @node:	list node
-+ */
-+struct pcs_function {
-+	const char *name;
-+	struct pcs_func_vals *vals;
-+	unsigned nvals;
-+	const char **pgnames;
-+	int npgnames;
-+	struct list_head node;
-+};
-+
-+/**
-+ * struct pcs_data - wrapper for data needed by pinctrl framework
-+ * @pa:		pindesc array
-+ * @cur:	index to current element
-+ *
-+ * REVISIT: We should be able to drop this eventually by adding
-+ * support for registering pins individually in the pinctrl
-+ * framework for those drivers that don't need a static array.
-+ */
-+struct pcs_data {
-+	struct pinctrl_pin_desc *pa;
-+	int cur;
-+};
-+
-+/**
-+ * struct pcs_name - register name for a pin
-+ * @name:	name of the pinctrl register
-+ *
-+ * REVISIT: We may want to make names optional in the pinctrl
-+ * framework as some drivers may not care about pin names to
-+ * avoid kernel bloat. The pin names can be deciphered by user
-+ * space tools using debugfs based on the register address and
-+ * SoC packaging information.
-+ */
-+struct pcs_name {
-+	char name[PCS_REG_NAME_LEN];
-+};
-+
-+/**
-+ * struct pcs_device - mux device instance
-+ * @res:	resources
-+ * @base:	virtual address of the controller
-+ * @size:	size of the ioremapped area
-+ * @dev:	device entry
-+ * @pctl:	pin controller device
-+ * @mutex:	mutex protecting the lists
-+ * @width:	bits per mux register
-+ * @fmask:	function register mask
-+ * @fshift:	function register shift
-+ * @foff:	value to turn mux off
-+ * @cmask:	pinconf mask, separate from fmask to allow pin_config_set
-+ * @fmax:	max number of functions in fmask
-+ * @names:	array of register names for pins
-+ * @pins:	physical pins on the SoC
-+ * @pgtree:	pingroup index radix tree
-+ * @ftree:	function index radix tree
-+ * @pingroups:	list of pingroups
-+ * @functions:	list of functions
-+ * @ngroups:	number of pingroups
-+ * @nfuncs:	number of functions
-+ * @desc:	pin controller descriptor
-+ * @read:	register read function to use
-+ * @write:	register write function to use
-+ */
-+struct pcs_device {
-+	struct resource *res;
-+	void __iomem *base;
-+	unsigned size;
-+	struct device *dev;
-+	struct pinctrl_dev *pctl;
-+	struct mutex mutex;
-+	unsigned width;
-+	unsigned fmask;
-+	unsigned fshift;
-+	unsigned foff;
-+	unsigned cmask;
-+	unsigned fmax;
-+	struct pcs_name *names;
-+	struct pcs_data pins;
-+	struct radix_tree_root pgtree;
-+	struct radix_tree_root ftree;
-+	struct list_head pingroups;
-+	struct list_head functions;
-+	unsigned ngroups;
-+	unsigned nfuncs;
-+	struct pinctrl_desc desc;
-+	unsigned (*read)(void __iomem *reg);
-+	void (*write)(unsigned val, void __iomem *reg);
-+};
-+
-+/*
-+ * REVISIT: Reads and writes could eventually use regmap or something
-+ * generic. But at least on omaps, some mux registers are performance
-+ * critical as they may need to be remuxed every time before and after
-+ * idle. Adding tests for register access width for every read and
-+ * write like regmap is doing is not desired, and caching the registers
-+ * does not help in this case.
-+ */
-+
-+static unsigned __maybe_unused pcs_readb(void __iomem *reg)
-+{
-+	return readb(reg);
-+}
-+
-+static unsigned __maybe_unused pcs_readw(void __iomem *reg)
-+{
-+	return readw(reg);
-+}
-+
-+static unsigned __maybe_unused pcs_readl(void __iomem *reg)
-+{
-+	return readl(reg);
-+}
-+
-+static void __maybe_unused pcs_writeb(unsigned val, void __iomem *reg)
-+{
-+	writeb(val, reg);
-+}
-+
-+static void __maybe_unused pcs_writew(unsigned val, void __iomem *reg)
-+{
-+	writew(val, reg);
-+}
-+
-+static void __maybe_unused pcs_writel(unsigned val, void __iomem *reg)
-+{
-+	writel(val, reg);
-+}
-+
-+static int pcs_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct pcs_device *pcs;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pcs->ngroups;
-+}
-+
-+static const char *pcs_get_group_name(struct pinctrl_dev *pctldev,
-+					unsigned gselector)
-+{
-+	struct pcs_device *pcs;
-+	struct pcs_pingroup *group;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+	group = radix_tree_lookup(&pcs->pgtree, gselector);
-+	if (!group) {
-+		dev_err(pcs->dev, "%s could not find pingroup%i\n",
-+			__func__, gselector);
-+		return NULL;
-+	}
-+
-+	return group->name;
-+}
-+
-+static int pcs_get_group_pins(struct pinctrl_dev *pctldev,
-+					unsigned gselector,
-+					const unsigned **pins,
-+					unsigned *npins)
-+{
-+	struct pcs_device *pcs;
-+	struct pcs_pingroup *group;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+	group = radix_tree_lookup(&pcs->pgtree, gselector);
-+	if (!group) {
-+		dev_err(pcs->dev, "%s could not find pingroup%i\n",
-+			__func__, gselector);
-+		return -EINVAL;
-+	}
-+
-+	*pins = group->gpins;
-+	*npins = group->ngpins;
-+
-+	return 0;
-+}
-+
-+static void pcs_pin_dbg_show(struct pinctrl_dev *pctldev,
-+					struct seq_file *s,
-+					unsigned offset)
-+{
-+	seq_printf(s, " " DRIVER_NAME);
-+}
-+
-+static void pcs_dt_free_map(struct pinctrl_dev *pctldev,
-+				struct pinctrl_map *map, unsigned num_maps)
-+{
-+	struct pcs_device *pcs;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+	devm_kfree(pcs->dev, map);
-+}
-+
-+static int pcs_dt_node_to_map(struct pinctrl_dev *pctldev,
-+				struct device_node *np_config,
-+				struct pinctrl_map **map, unsigned *num_maps);
-+
-+static struct pinctrl_ops pcs_pinctrl_ops = {
-+	.get_groups_count = pcs_get_groups_count,
-+	.get_group_name = pcs_get_group_name,
-+	.get_group_pins = pcs_get_group_pins,
-+	.pin_dbg_show = pcs_pin_dbg_show,
-+	.dt_node_to_map = pcs_dt_node_to_map,
-+	.dt_free_map = pcs_dt_free_map,
-+};
-+
-+static int pcs_get_functions_count(struct pinctrl_dev *pctldev)
-+{
-+	struct pcs_device *pcs;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pcs->nfuncs;
-+}
-+
-+static const char *pcs_get_function_name(struct pinctrl_dev *pctldev,
-+						unsigned fselector)
-+{
-+	struct pcs_device *pcs;
-+	struct pcs_function *func;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+	func = radix_tree_lookup(&pcs->ftree, fselector);
-+	if (!func) {
-+		dev_err(pcs->dev, "%s could not find function%i\n",
-+			__func__, fselector);
-+		return NULL;
-+	}
-+
-+	return func->name;
-+}
-+
-+static int pcs_get_function_groups(struct pinctrl_dev *pctldev,
-+					unsigned fselector,
-+					const char * const **groups,
-+					unsigned * const ngroups)
-+{
-+	struct pcs_device *pcs;
-+	struct pcs_function *func;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+	func = radix_tree_lookup(&pcs->ftree, fselector);
-+	if (!func) {
-+		dev_err(pcs->dev, "%s could not find function%i\n",
-+			__func__, fselector);
-+		return -EINVAL;
-+	}
-+	*groups = func->pgnames;
-+	*ngroups = func->npgnames;
-+
-+	return 0;
-+}
-+
-+static int pcs_enable(struct pinctrl_dev *pctldev, unsigned fselector,
-+	unsigned group)
-+{
-+	struct pcs_device *pcs;
-+	struct pcs_function *func;
-+	int i;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+	func = radix_tree_lookup(&pcs->ftree, fselector);
-+	if (!func)
-+		return -EINVAL;
-+
-+	dev_dbg(pcs->dev, "enabling %s function%i\n",
-+		func->name, fselector);
-+
-+	for (i = 0; i < func->nvals; i++) {
-+		struct pcs_func_vals *vals;
-+		unsigned val;
-+
-+		vals = &func->vals[i];
-+		val = pcs->read(vals->reg);
-+		val &= ~(pcs->cmask | pcs->fmask);
-+		val |= vals->val;
-+		pcs->write(val, vals->reg);
-+	}
-+
-+	return 0;
-+}
-+
-+static void pcs_disable(struct pinctrl_dev *pctldev, unsigned fselector,
-+					unsigned group)
-+{
-+	struct pcs_device *pcs;
-+	struct pcs_function *func;
-+	int i;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+	func = radix_tree_lookup(&pcs->ftree, fselector);
-+	if (!func) {
-+		dev_err(pcs->dev, "%s could not find function%i\n",
-+			__func__, fselector);
-+		return;
-+	}
-+
-+	/*
-+	 * Do not touch pinconf if function-off is larger than function-mask.
-+	 * Some hardware does not have clearly defined disable function, so we
-+	 * just ignore disable for those cases. For pin specific off modes,
-+	 * use alternate named states as described in pinctrl-bindings.txt.
-+	 */
-+	if ((pcs->foff << pcs->fshift) > pcs->fshift) {
-+		dev_dbg(pcs->dev, "ignoring disable for %s function%i\n",
-+			func->name, fselector);
-+		return;
-+	}
-+
-+	dev_dbg(pcs->dev, "disabling function%i %s\n",
-+		fselector, func->name);
-+
-+	for (i = 0; i < func->nvals; i++) {
-+		struct pcs_func_vals *vals;
-+		unsigned val;
-+
-+		vals = &func->vals[i];
-+		val = pcs->read(vals->reg);
-+		val &= ~(pcs->cmask | pcs->fmask);
-+		val |= pcs->foff << pcs->fshift;
-+		pcs->write(val, vals->reg);
-+	}
-+}
-+
-+static int pcs_request_gpio(struct pinctrl_dev *pctldev,
-+			struct pinctrl_gpio_range *range, unsigned offset)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static struct pinmux_ops pcs_pinmux_ops = {
-+	.get_functions_count = pcs_get_functions_count,
-+	.get_function_name = pcs_get_function_name,
-+	.get_function_groups = pcs_get_function_groups,
-+	.enable = pcs_enable,
-+	.disable = pcs_disable,
-+	.gpio_request_enable = pcs_request_gpio,
-+};
-+
-+static int pcs_pinconf_get(struct pinctrl_dev *pctldev,
-+				unsigned pin, unsigned long *config)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static int pcs_pinconf_set(struct pinctrl_dev *pctldev,
-+				unsigned pin, unsigned long config)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static int pcs_pinconf_group_get(struct pinctrl_dev *pctldev,
-+				unsigned group, unsigned long *config)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static int pcs_pinconf_group_set(struct pinctrl_dev *pctldev,
-+				unsigned group, unsigned long config)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static void pcs_pinconf_dbg_show(struct pinctrl_dev *pctldev,
-+				struct seq_file *s, unsigned offset)
-+{
-+}
-+
-+static void pcs_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
-+				struct seq_file *s, unsigned selector)
-+{
-+}
-+
-+static struct pinconf_ops pcs_pinconf_ops = {
-+	.pin_config_get = pcs_pinconf_get,
-+	.pin_config_set = pcs_pinconf_set,
-+	.pin_config_group_get = pcs_pinconf_group_get,
-+	.pin_config_group_set = pcs_pinconf_group_set,
-+	.pin_config_dbg_show = pcs_pinconf_dbg_show,
-+	.pin_config_group_dbg_show = pcs_pinconf_group_dbg_show,
-+};
-+
-+/**
-+ * pcs_add_pin() - add a pin to the static per controller pin array
-+ * @pcs: pcs driver instance
-+ * @offset: register offset from base
-+ */
-+static int __devinit pcs_add_pin(struct pcs_device *pcs, unsigned offset)
-+{
-+	struct pinctrl_pin_desc *pin;
-+	struct pcs_name *pn;
-+	int i;
-+
-+	i = pcs->pins.cur;
-+	if (i >= pcs->desc.npins) {
-+		dev_err(pcs->dev, "too many pins, max %i\n",
-+			pcs->desc.npins);
-+		return -ENOMEM;
-+	}
-+
-+	pin = &pcs->pins.pa[i];
-+	pn = &pcs->names[i];
-+	sprintf(pn->name, "%lx",
-+		(unsigned long)pcs->res->start + offset);
-+	pin->name = pn->name;
-+	pin->number = i;
-+	pcs->pins.cur++;
-+
-+	return i;
-+}
-+
-+/**
-+ * pcs_allocate_pin_table() - adds all the pins for the pinctrl driver
-+ * @pcs: pcs driver instance
-+ *
-+ * In case of errors, resources are freed in pcs_free_resources.
-+ *
-+ * If your hardware needs holes in the address space, then just set
-+ * up multiple driver instances.
-+ */
-+static int __devinit pcs_allocate_pin_table(struct pcs_device *pcs)
-+{
-+	int mux_bytes, nr_pins, i;
-+
-+	mux_bytes = pcs->width / BITS_PER_BYTE;
-+	nr_pins = pcs->size / mux_bytes;
-+
-+	dev_dbg(pcs->dev, "allocating %i pins\n", nr_pins);
-+	pcs->pins.pa = devm_kzalloc(pcs->dev,
-+				sizeof(*pcs->pins.pa) * nr_pins,
-+				GFP_KERNEL);
-+	if (!pcs->pins.pa)
-+		return -ENOMEM;
-+
-+	pcs->names = devm_kzalloc(pcs->dev,
-+				sizeof(struct pcs_name) * nr_pins,
-+				GFP_KERNEL);
-+	if (!pcs->names)
-+		return -ENOMEM;
-+
-+	pcs->desc.pins = pcs->pins.pa;
-+	pcs->desc.npins = nr_pins;
-+
-+	for (i = 0; i < pcs->desc.npins; i++) {
-+		unsigned offset;
-+		int res;
-+
-+		offset = i * mux_bytes;
-+		res = pcs_add_pin(pcs, offset);
-+		if (res < 0) {
-+			dev_err(pcs->dev, "error adding pins: %i\n", res);
-+			return res;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * pcs_add_function() - adds a new function to the function list
-+ * @pcs: pcs driver instance
-+ * @np: device node of the mux entry
-+ * @name: name of the function
-+ * @vals: array of mux register value pairs used by the function
-+ * @nvals: number of mux register value pairs
-+ * @pgnames: array of pingroup names for the function
-+ * @npgnames: number of pingroup names
-+ */
-+static struct pcs_function *pcs_add_function(struct pcs_device *pcs,
-+					struct device_node *np,
-+					const char *name,
-+					struct pcs_func_vals *vals,
-+					unsigned nvals,
-+					const char **pgnames,
-+					unsigned npgnames)
-+{
-+	struct pcs_function *function;
-+
-+	function = devm_kzalloc(pcs->dev, sizeof(*function), GFP_KERNEL);
-+	if (!function)
-+		return NULL;
-+
-+	function->name = name;
-+	function->vals = vals;
-+	function->nvals = nvals;
-+	function->pgnames = pgnames;
-+	function->npgnames = npgnames;
-+
-+	mutex_lock(&pcs->mutex);
-+	list_add_tail(&function->node, &pcs->functions);
-+	radix_tree_insert(&pcs->ftree, pcs->nfuncs, function);
-+	pcs->nfuncs++;
-+	mutex_unlock(&pcs->mutex);
-+
-+	return function;
-+}
-+
-+static void pcs_remove_function(struct pcs_device *pcs,
-+				struct pcs_function *function)
-+{
-+	int i;
-+
-+	mutex_lock(&pcs->mutex);
-+	for (i = 0; i < pcs->nfuncs; i++) {
-+		struct pcs_function *found;
-+
-+		found = radix_tree_lookup(&pcs->ftree, i);
-+		if (found == function)
-+			radix_tree_delete(&pcs->ftree, i);
-+	}
-+	list_del(&function->node);
-+	mutex_unlock(&pcs->mutex);
-+}
-+
-+/**
-+ * pcs_add_pingroup() - add a pingroup to the pingroup list
-+ * @pcs: pcs driver instance
-+ * @np: device node of the mux entry
-+ * @name: name of the pingroup
-+ * @gpins: array of the pins that belong to the group
-+ * @ngpins: number of pins in the group
-+ */
-+static int pcs_add_pingroup(struct pcs_device *pcs,
-+					struct device_node *np,
-+					const char *name,
-+					int *gpins,
-+					int ngpins)
-+{
-+	struct pcs_pingroup *pingroup;
-+
-+	pingroup = devm_kzalloc(pcs->dev, sizeof(*pingroup), GFP_KERNEL);
-+	if (!pingroup)
-+		return -ENOMEM;
-+
-+	pingroup->name = name;
-+	pingroup->np = np;
-+	pingroup->gpins = gpins;
-+	pingroup->ngpins = ngpins;
-+
-+	mutex_lock(&pcs->mutex);
-+	list_add_tail(&pingroup->node, &pcs->pingroups);
-+	radix_tree_insert(&pcs->pgtree, pcs->ngroups, pingroup);
-+	pcs->ngroups++;
-+	mutex_unlock(&pcs->mutex);
-+
-+	return 0;
-+}
-+
-+/**
-+ * pcs_get_pin_by_offset() - get a pin index based on the register offset
-+ * @pcs: pcs driver instance
-+ * @offset: register offset from the base
-+ *
-+ * Note that this is OK as long as the pins are in a static array.
-+ */
-+static int pcs_get_pin_by_offset(struct pcs_device *pcs, unsigned offset)
-+{
-+	unsigned index;
-+
-+	if (offset >= pcs->size) {
-+		dev_err(pcs->dev, "mux offset out of range: 0x%x (0x%x)\n",
-+			offset, pcs->size);
-+		return -EINVAL;
-+	}
-+
-+	index = offset / (pcs->width / BITS_PER_BYTE);
-+
-+	return index;
-+}
-+
-+/**
-+ * smux_parse_one_pinctrl_entry() - parses a device tree mux entry
-+ * @pcs: pinctrl driver instance
-+ * @np: device node of the mux entry
-+ * @map: map entry
-+ * @pgnames: pingroup names
-+ *
-+ * Note that this currently supports only sets of one register + value.
-+ *
-+ * If you are concerned about the boot time, set up the static pins in
-+ * the bootloader, and only set up selected pins as device tree entries.
-+ */
-+static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
-+						struct device_node *np,
-+						struct pinctrl_map **map,
-+						const char **pgnames)
-+{
-+	struct pcs_func_vals *vals;
-+	const __be32 *mux;
-+	int size, rows, *pins, index = 0, found = 0, res = -ENOMEM;
-+	struct pcs_function *function;
-+
-+	mux = of_get_property(np, PCS_MUX_NAME, &size);
-+	if ((!mux) || (size < sizeof(*mux) * 2)) {
-+		dev_err(pcs->dev, "bad data for mux %s\n",
-+			np->name);
-+		return -EINVAL;
-+	}
-+
-+	size /= sizeof(*mux);	/* Number of elements in array */
-+	rows = size / 2;	/* Each row is a key value pair */
-+
-+	vals = devm_kzalloc(pcs->dev, sizeof(*vals) * rows, GFP_KERNEL);
-+	if (!vals)
-+		return -ENOMEM;
-+
-+	pins = devm_kzalloc(pcs->dev, sizeof(*pins) * rows, GFP_KERNEL);
-+	if (!pins)
-+		goto free_vals;
-+
-+	while (index < size) {
-+		unsigned offset, val;
-+		int pin;
-+
-+		offset = be32_to_cpup(mux + index++);
-+		val = be32_to_cpup(mux + index++);
-+		vals[found].reg = pcs->base + offset;
-+		vals[found].val = val;
-+
-+		pin = pcs_get_pin_by_offset(pcs, offset);
-+		if (pin < 0) {
-+			dev_err(pcs->dev,
-+				"could not add functions for %s %ux\n",
-+				np->name, offset);
-+			break;
-+		}
-+		pins[found++] = pin;
-+	}
-+
-+	pgnames[0] = np->name;
-+	function = pcs_add_function(pcs, np, np->name, vals, found, pgnames, 1);
-+	if (!function)
-+		goto free_pins;
-+
-+	res = pcs_add_pingroup(pcs, np, np->name, pins, found);
-+	if (res < 0)
-+		goto free_function;
-+
-+	(*map)->type = PIN_MAP_TYPE_MUX_GROUP;
-+	(*map)->data.mux.group = np->name;
-+	(*map)->data.mux.function = np->name;
-+
-+	return 0;
-+
-+free_function:
-+	pcs_remove_function(pcs, function);
-+
-+free_pins:
-+	devm_kfree(pcs->dev, pins);
-+
-+free_vals:
-+	devm_kfree(pcs->dev, vals);
-+
-+	return res;
-+}
-+/**
-+ * pcs_dt_node_to_map() - allocates and parses pinctrl maps
-+ * @pctldev: pinctrl instance
-+ * @np_config: device tree pinmux entry
-+ * @map: array of map entries
-+ * @num_maps: number of maps
-+ */
-+static int pcs_dt_node_to_map(struct pinctrl_dev *pctldev,
-+				struct device_node *np_config,
-+				struct pinctrl_map **map, unsigned *num_maps)
-+{
-+	struct pcs_device *pcs;
-+	const char **pgnames;
-+	int ret;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*map = devm_kzalloc(pcs->dev, sizeof(**map), GFP_KERNEL);
-+	if (!map)
-+		return -ENOMEM;
-+
-+	*num_maps = 0;
-+
-+	pgnames = devm_kzalloc(pcs->dev, sizeof(*pgnames), GFP_KERNEL);
-+	if (!pgnames) {
-+		ret = -ENOMEM;
-+		goto free_map;
-+	}
-+
-+	ret = pcs_parse_one_pinctrl_entry(pcs, np_config, map, pgnames);
-+	if (ret < 0) {
-+		dev_err(pcs->dev, "no pins entries for %s\n",
-+			np_config->name);
-+		goto free_pgnames;
-+	}
-+	*num_maps = 1;
-+
-+	return 0;
-+
-+free_pgnames:
-+	devm_kfree(pcs->dev, pgnames);
-+free_map:
-+	devm_kfree(pcs->dev, *map);
-+
-+	return ret;
-+}
-+
-+/**
-+ * pcs_free_funcs() - free memory used by functions
-+ * @pcs: pcs driver instance
-+ */
-+static void pcs_free_funcs(struct pcs_device *pcs)
-+{
-+	struct list_head *pos, *tmp;
-+	int i;
-+
-+	mutex_lock(&pcs->mutex);
-+	for (i = 0; i < pcs->nfuncs; i++) {
-+		struct pcs_function *func;
-+
-+		func = radix_tree_lookup(&pcs->ftree, i);
-+		if (!func)
-+			continue;
-+		radix_tree_delete(&pcs->ftree, i);
-+	}
-+	list_for_each_safe(pos, tmp, &pcs->functions) {
-+		struct pcs_function *function;
-+
-+		function = list_entry(pos, struct pcs_function, node);
-+		list_del(&function->node);
-+	}
-+	mutex_unlock(&pcs->mutex);
-+}
-+
-+/**
-+ * pcs_free_pingroups() - free memory used by pingroups
-+ * @pcs: pcs driver instance
-+ */
-+static void pcs_free_pingroups(struct pcs_device *pcs)
-+{
-+	struct list_head *pos, *tmp;
-+	int i;
-+
-+	mutex_lock(&pcs->mutex);
-+	for (i = 0; i < pcs->ngroups; i++) {
-+		struct pcs_pingroup *pingroup;
-+
-+		pingroup = radix_tree_lookup(&pcs->pgtree, i);
-+		if (!pingroup)
-+			continue;
-+		radix_tree_delete(&pcs->pgtree, i);
-+	}
-+	list_for_each_safe(pos, tmp, &pcs->pingroups) {
-+		struct pcs_pingroup *pingroup;
-+
-+		pingroup = list_entry(pos, struct pcs_pingroup, node);
-+		list_del(&pingroup->node);
-+	}
-+	mutex_unlock(&pcs->mutex);
-+}
-+
-+/**
-+ * pcs_free_resources() - free memory used by this driver
-+ * @pcs: pcs driver instance
-+ */
-+static void pcs_free_resources(struct pcs_device *pcs)
-+{
-+	if (pcs->pctl)
-+		pinctrl_unregister(pcs->pctl);
-+
-+	pcs_free_funcs(pcs);
-+	pcs_free_pingroups(pcs);
-+}
-+
-+#define PCS_GET_PROP_U32(name, reg, err)				\
-+	do {								\
-+		ret = of_property_read_u32(np, name, reg);		\
-+		if (ret) {						\
-+			dev_err(pcs->dev, err);				\
-+			return ret;					\
-+		}							\
-+	} while (0);
-+
-+static struct of_device_id pcs_of_match[];
-+
-+static int __devinit pcs_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	const struct of_device_id *match;
-+	struct resource *res;
-+	struct pcs_device *pcs;
-+	int ret;
-+
-+	match = of_match_device(pcs_of_match, &pdev->dev);
-+	if (!match)
-+		return -EINVAL;
-+
-+	pcs = devm_kzalloc(&pdev->dev, sizeof(*pcs), GFP_KERNEL);
-+	if (!pcs) {
-+		dev_err(&pdev->dev, "could not allocate\n");
-+		return -ENOMEM;
-+	}
-+	pcs->dev = &pdev->dev;
-+	mutex_init(&pcs->mutex);
-+	INIT_LIST_HEAD(&pcs->pingroups);
-+	INIT_LIST_HEAD(&pcs->functions);
-+
-+	PCS_GET_PROP_U32("pinctrl-single,register-width", &pcs->width,
-+			 "register width not specified\n");
-+
-+	PCS_GET_PROP_U32("pinctrl-single,function-mask", &pcs->fmask,
-+			 "function register mask not specified\n");
-+	pcs->fshift = ffs(pcs->fmask) - 1;
-+	pcs->fmax = pcs->fmask >> pcs->fshift;
-+
-+	PCS_GET_PROP_U32("pinctrl-single,function-off", &pcs->foff,
-+			 "function off mode not specified\n");
-+
-+	PCS_GET_PROP_U32("pinctrl-single,pinconf-mask", &pcs->cmask,
-+			 "pinconf mask not specified\n");
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(pcs->dev, "could not get resource\n");
-+		return -ENODEV;
-+	}
-+
-+	pcs->res = devm_request_mem_region(pcs->dev, res->start,
-+			resource_size(res), DRIVER_NAME);
-+	if (!pcs->res) {
-+		dev_err(pcs->dev, "could not get mem_region\n");
-+		return -EBUSY;
-+	}
-+
-+	pcs->size = resource_size(pcs->res);
-+	pcs->base = devm_ioremap(pcs->dev, pcs->res->start, pcs->size);
-+	if (!pcs->base) {
-+		dev_err(pcs->dev, "could not ioremap\n");
-+		return -ENODEV;
-+	}
-+
-+	INIT_RADIX_TREE(&pcs->pgtree, GFP_KERNEL);
-+	INIT_RADIX_TREE(&pcs->ftree, GFP_KERNEL);
-+	platform_set_drvdata(pdev, pcs);
-+
-+	switch (pcs->width) {
-+	case 8:
-+		pcs->read = pcs_readb;
-+		pcs->write = pcs_writeb;
-+		break;
-+	case 16:
-+		pcs->read = pcs_readw;
-+		pcs->write = pcs_writew;
-+		break;
-+	case 32:
-+		pcs->read = pcs_readl;
-+		pcs->write = pcs_writel;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	pcs->desc.name = DRIVER_NAME;
-+	pcs->desc.pctlops = &pcs_pinctrl_ops;
-+	pcs->desc.pmxops = &pcs_pinmux_ops;
-+	pcs->desc.confops = &pcs_pinconf_ops;
-+	pcs->desc.owner = THIS_MODULE;
-+
-+	ret = pcs_allocate_pin_table(pcs);
-+	if (ret < 0)
-+		goto free;
-+
-+	pcs->pctl = pinctrl_register(&pcs->desc, pcs->dev, pcs);
-+	if (!pcs->pctl) {
-+		dev_err(pcs->dev, "could not register single pinctrl driver\n");
-+		ret = -EINVAL;
-+		goto free;
-+	}
-+
-+	dev_info(pcs->dev, "%i pins at pa %p size %u\n",
-+		 pcs->desc.npins, pcs->base, pcs->size);
-+
-+	return 0;
-+
-+free:
-+	pcs_free_resources(pcs);
-+
-+	return ret;
-+}
-+
-+static int __devexit pcs_remove(struct platform_device *pdev)
-+{
-+	struct pcs_device *pcs = platform_get_drvdata(pdev);
-+
-+	if (!pcs)
-+		return 0;
-+
-+	pcs_free_resources(pcs);
-+
-+	return 0;
-+}
-+
-+static struct of_device_id pcs_of_match[] __devinitdata = {
-+	{ .compatible = DRIVER_NAME, },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, pcs_of_match);
-+
-+static struct platform_driver pcs_driver = {
-+	.probe		= pcs_probe,
-+	.remove		= __devexit_p(pcs_remove),
-+	.driver = {
-+		.owner		= THIS_MODULE,
-+		.name		= DRIVER_NAME,
-+		.of_match_table	= pcs_of_match,
-+	},
-+};
-+
-+module_platform_driver(pcs_driver);
-+
-+MODULE_AUTHOR("Tony Lindgren <tony@atomide.com>");
-+MODULE_DESCRIPTION("One-register-per-pin type device tree based pinctrl driver");
-+MODULE_LICENSE("GPL v2");
+On Fri, Jun 8, 2012 at 4:22 PM, Sourav Poddar <sourav.poddar@ti.com> wr=
+ote:
+> Update the Documentation with omap4 keypad device tree
+> binding information.
+> Add device tree support for omap4 keypad driver.
+>
+> Tested on omap4430 sdp.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Felipe Balbi <balbi@ti.com>
+> Cc: Dmitry Torokhov <dtor@mail.ru>
+> Cc: Randy Dunlap <rdunlap@xenotime.net>
+> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> ---
+> changes since v4:
+> - Developed it on top of dmitry's 'next' branch due to
+> dependency on generic "matrix_keypad_build_keymap" api
+> patches queued in that branch
+> - Adapted the driver to fill "keymap" in device tree
+> using "matrix_keypad_build_keymap" api defined in
+> drivers/input/matrix-keymap.c
+> =A0.../devicetree/bindings/input/omap-keypad.txt =A0 =A0 =A0| =A0 31 =
+++++++
+> =A0drivers/input/keyboard/omap4-keypad.c =A0 =A0 =A0 =A0 =A0 =A0 =A0|=
+ =A0108 +++++++++++++++-----
+> =A02 files changed, 111 insertions(+), 28 deletions(-)
+> =A0create mode 100644 Documentation/devicetree/bindings/input/omap-ke=
+ypad.txt
+>
+> diff --git a/Documentation/devicetree/bindings/input/omap-keypad.txt =
+b/Documentation/devicetree/bindings/input/omap-keypad.txt
+> new file mode 100644
+> index 0000000..722425b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/omap-keypad.txt
+> @@ -0,0 +1,31 @@
+> +* TI's Keypad Controller device tree bindings
+> +
+> +TI's Keypad controller is used to interface a SoC with a matrix-type
+> +keypad device. The keypad controller supports multiple row and colum=
+n lines.
+> +A key can be placed at each intersection of a unique row and a uniqu=
+e column.
+> +The keypad controller can sense a key-press and key-release and repo=
+rt the
+> +event using a interrupt to the cpu.
+> +
+> +Required SoC Specific Properties:
+> +- compatible: should be one of the following
+> + =A0 - "ti,omap4-keypad": For controllers compatible with omap4 keyp=
+ad
+> + =A0 =A0 =A0controller.
+> +
+> +Required Board Specific Properties, in addition to those specified b=
+y
+> +the shared matrix-keyboard bindings:
+> +- keypad,num-rows: Number of row lines connected to the keypad
+> + =A0controller.
+> +
+> +- keypad,num-columns: Number of column lines connected to the
+> + =A0keypad controller.
+> +
+> +Optional Properties specific to linux:
+> +- linux,keypad-no-autorepeat: do no enable autorepeat feature.
+> +
+> +Example:
+> + =A0 =A0 =A0 =A0keypad@4ae1c000{
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "ti,omap4-keypad";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0keypad,num-rows =3D <2>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0keypad,num-columns =3D <8>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 linux,keypad-no-autorepeat;
+> + =A0 =A0 =A0 };
+> diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/ke=
+yboard/omap4-keypad.c
+> index aed5f69..d5a2d1a 100644
+> --- a/drivers/input/keyboard/omap4-keypad.c
+> +++ b/drivers/input/keyboard/omap4-keypad.c
+> @@ -27,6 +27,7 @@
+> =A0#include <linux/platform_device.h>
+> =A0#include <linux/errno.h>
+> =A0#include <linux/io.h>
+> +#include <linux/of.h>
+> =A0#include <linux/input.h>
+> =A0#include <linux/slab.h>
+> =A0#include <linux/pm_runtime.h>
+> @@ -75,6 +76,7 @@ enum {
+>
+> =A0struct omap4_keypad {
+> =A0 =A0 =A0 =A0struct input_dev *input;
+> + =A0 =A0 =A0 struct matrix_keymap_data *keymap_data;
+>
+> =A0 =A0 =A0 =A0void __iomem *base;
+> =A0 =A0 =A0 =A0unsigned int irq;
+> @@ -84,6 +86,7 @@ struct omap4_keypad {
+> =A0 =A0 =A0 =A0u32 reg_offset;
+> =A0 =A0 =A0 =A0u32 irqreg_offset;
+> =A0 =A0 =A0 =A0unsigned int row_shift;
+> + =A0 =A0 =A0 bool no_autorepeat;
+> =A0 =A0 =A0 =A0unsigned char key_state[8];
+> =A0 =A0 =A0 =A0unsigned short keymap[];
+> =A0};
+> @@ -208,25 +211,74 @@ static void omap4_keypad_close(struct input_dev=
+ *input)
+> =A0 =A0 =A0 =A0pm_runtime_put_sync(input->dev.parent);
+> =A0}
+>
+> +static struct omap4_keypad *omap_keypad_parse_dt(struct device *dev,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 uint32_=
+t rows, uint32_t cols,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct =
+input_dev *input_dev)
+> +{
+> + =A0 =A0 =A0 struct device_node *np =3D dev->of_node;
+> + =A0 =A0 =A0 struct platform_device *pdev =3D to_platform_device(dev=
+);
+> + =A0 =A0 =A0 struct omap4_keypad *keypad_data =3D platform_get_drvda=
+ta(pdev);
+> + =A0 =A0 =A0 int error;
+> +
+> + =A0 =A0 =A0 error =3D matrix_keypad_build_keymap(NULL, "linux,keyma=
+p",
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 rows, c=
+ols, keypad_data->keymap, input_dev);
+> + =A0 =A0 =A0 if (error) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&pdev->dev, "failed to build ke=
+ymap\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 input_free_device(input_dev);
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 if (of_get_property(np, "linux,input-no-autorepeat", NU=
+LL))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad_data->no_autorepeat =3D true;
+> +
+> + =A0 =A0 =A0 return keypad_data;
+> +}
+> +
+> =A0static int __devinit omap4_keypad_probe(struct platform_device *pd=
+ev)
+> =A0{
+> + =A0 =A0 =A0 struct device *dev =3D &pdev->dev;
+> + =A0 =A0 =A0 struct device_node *np =3D dev->of_node;
+> =A0 =A0 =A0 =A0const struct omap4_keypad_platform_data *pdata;
+> =A0 =A0 =A0 =A0struct omap4_keypad *keypad_data;
+> =A0 =A0 =A0 =A0struct input_dev *input_dev;
+> =A0 =A0 =A0 =A0struct resource *res;
+> =A0 =A0 =A0 =A0resource_size_t size;
+> - =A0 =A0 =A0 unsigned int row_shift, max_keys;
+> + =A0 =A0 =A0 unsigned int row_shift =3D 0, max_keys =3D 0;
+> + =A0 =A0 =A0 uint32_t num_rows =3D 0, num_cols =3D 0;
+> =A0 =A0 =A0 =A0int rev;
+> =A0 =A0 =A0 =A0int irq;
+> =A0 =A0 =A0 =A0int error;
+>
+> =A0 =A0 =A0 =A0/* platform data */
+> =A0 =A0 =A0 =A0pdata =3D pdev->dev.platform_data;
+> - =A0 =A0 =A0 if (!pdata) {
+> + =A0 =A0 =A0 if (np) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 of_property_read_u32(np, "keypad,num-ro=
+ws", &num_rows);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 of_property_read_u32(np, "keypad,num-co=
+lumns", &num_cols);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!num_rows || !num_cols) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&pdev->dev, "nu=
+mber of keypad rows/columns not specified\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 } else if (pdata) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 num_rows =3D pdata->rows;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 num_cols =3D pdata->cols;
+> + =A0 =A0 =A0 } else {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(&pdev->dev, "no platform data =
+defined\n");
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> =A0 =A0 =A0 =A0}
+>
+> + =A0 =A0 =A0 row_shift =3D get_count_order(num_cols);
+> + =A0 =A0 =A0 max_keys =3D num_rows << row_shift;
+> +
+> + =A0 =A0 =A0 keypad_data =3D devm_kzalloc(dev, sizeof(struct omap4_k=
+eypad) +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 max_keys * sizeof(keypa=
+d_data->keymap[0]),
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 GFP_KER=
+NEL);
+> +
+> + =A0 =A0 =A0 if (!keypad_data) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&pdev->dev, "keypad_data memory=
+ allocation failed\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 platform_set_drvdata(pdev, keypad_data);
+> +
+> =A0 =A0 =A0 =A0res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0)=
+;
+> =A0 =A0 =A0 =A0if (!res) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(&pdev->dev, "no base address s=
+pecified\n");
+> @@ -239,22 +291,6 @@ static int __devinit omap4_keypad_probe(struct p=
+latform_device *pdev)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+> =A0 =A0 =A0 =A0}
+>
+> - =A0 =A0 =A0 if (!pdata->keymap_data) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&pdev->dev, "no keymap data def=
+ined\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+> - =A0 =A0 =A0 }
+> -
+> - =A0 =A0 =A0 row_shift =3D get_count_order(pdata->cols);
+> - =A0 =A0 =A0 max_keys =3D pdata->rows << row_shift;
+> -
+> - =A0 =A0 =A0 keypad_data =3D kzalloc(sizeof(struct omap4_keypad) +
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 max_key=
+s * sizeof(keypad_data->keymap[0]),
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 GFP_KERNEL)=
+;
+> - =A0 =A0 =A0 if (!keypad_data) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&pdev->dev, "keypad_data memory=
+ allocation failed\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+> - =A0 =A0 =A0 }
+> -
+> =A0 =A0 =A0 =A0size =3D resource_size(res);
+>
+> =A0 =A0 =A0 =A0res =3D request_mem_region(res->start, size, pdev->nam=
+e);
+> @@ -271,10 +307,10 @@ static int __devinit omap4_keypad_probe(struct =
+platform_device *pdev)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto err_release_mem;
+> =A0 =A0 =A0 =A0}
+>
+> + =A0 =A0 =A0 keypad_data->rows =3D num_rows;
+> + =A0 =A0 =A0 keypad_data->cols =3D num_cols;
+> =A0 =A0 =A0 =A0keypad_data->irq =3D irq;
+> =A0 =A0 =A0 =A0keypad_data->row_shift =3D row_shift;
+> - =A0 =A0 =A0 keypad_data->rows =3D pdata->rows;
+> - =A0 =A0 =A0 keypad_data->cols =3D pdata->cols;
+>
+> =A0 =A0 =A0 =A0/*
+> =A0 =A0 =A0 =A0* Enable clocks for the keypad module so that we can r=
+ead
+> @@ -322,15 +358,25 @@ static int __devinit omap4_keypad_probe(struct =
+platform_device *pdev)
+> =A0 =A0 =A0 =A0input_dev->open =3D omap4_keypad_open;
+> =A0 =A0 =A0 =A0input_dev->close =3D omap4_keypad_close;
+>
+> - =A0 =A0 =A0 error =3D matrix_keypad_build_keymap(pdata->keymap_data=
+, NULL,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0pdata->rows, pdata->cols,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0keypad_data->keymap, input_dev);
+> - =A0 =A0 =A0 if (error) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&pdev->dev, "failed to build ke=
+ymap\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_free_input;
+> + =A0 =A0 =A0 if (np) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad_data =3D omap_keypad_parse_dt(&p=
+dev->dev,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad_=
+data->rows, keypad_data->cols,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 input_d=
+ev);
+> + =A0 =A0 =A0 } else {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad_data->keymap_data =3D
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 (struct matrix_keymap_d=
+ata *)pdata->keymap_data;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 error =3D matrix_keypad_build_keymap(ke=
+ypad_data->keymap_data,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 NULL, k=
+eypad_data->rows, keypad_data->cols,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad_=
+data->keymap, input_dev);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (error) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&pdev->dev, "fa=
+iled to build keymap\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_free_input;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> =A0 =A0 =A0 =A0}
+>
+> - =A0 =A0 =A0 __set_bit(EV_REP, input_dev->evbit);
+> + =A0 =A0 =A0 if (!keypad_data->no_autorepeat)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 __set_bit(EV_REP, input_dev->evbit);
+> +
+> =A0 =A0 =A0 =A0input_set_capability(input_dev, EV_MSC, MSC_SCAN);
+>
+> =A0 =A0 =A0 =A0input_set_drvdata(input_dev, keypad_data);
+> @@ -351,7 +397,6 @@ static int __devinit omap4_keypad_probe(struct pl=
+atform_device *pdev)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto err_pm_disable;
+> =A0 =A0 =A0 =A0}
+>
+> - =A0 =A0 =A0 platform_set_drvdata(pdev, keypad_data);
+> =A0 =A0 =A0 =A0return 0;
+>
+> =A0err_pm_disable:
+> @@ -392,12 +437,19 @@ static int __devexit omap4_keypad_remove(struct=
+ platform_device *pdev)
+> =A0 =A0 =A0 =A0return 0;
+> =A0}
+>
+> +static const struct of_device_id omap_keypad_dt_match[] =3D {
+> + =A0 =A0 =A0 { .compatible =3D "ti,omap4-keypad" },
+> + =A0 =A0 =A0 {},
+> +};
+> +MODULE_DEVICE_TABLE(of, omap_keypad_dt_match);
+> +
+> =A0static struct platform_driver omap4_keypad_driver =3D {
+> =A0 =A0 =A0 =A0.probe =A0 =A0 =A0 =A0 =A0=3D omap4_keypad_probe,
+> =A0 =A0 =A0 =A0.remove =A0 =A0 =A0 =A0 =3D __devexit_p(omap4_keypad_r=
+emove),
+> =A0 =A0 =A0 =A0.driver =A0 =A0 =A0 =A0 =3D {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.name =A0 =3D "omap4-keypad",
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.owner =A0=3D THIS_MODULE,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D of_match_ptr(omap_k=
+eypad_dt_match),
+> =A0 =A0 =A0 =A0},
+> =A0};
+> =A0module_platform_driver(omap4_keypad_driver);
+> --
+> 1.7.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
