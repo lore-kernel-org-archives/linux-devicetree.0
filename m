@@ -1,78 +1,57 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: Where to power on the wifi device before loading the driver.
-Date: Tue, 19 Jun 2012 10:17:19 +0100
-Message-ID: <20120619091719.GZ3974@opensource.wolfsonmicro.com>
-References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
- <4FD90352.9090606@wwwdotorg.org>
- <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de>
- <20120614121234.GC3913@opensource.wolfsonmicro.com>
- <4FDA092E.10301@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
- <4FDB5976.20809@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com>
- <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/2] regulator: support for regulator match by
+ regulator-compatible
+Date: Tue, 19 Jun 2012 10:32:11 +0100
+Message-ID: <20120619093211.GB3974@opensource.wolfsonmicro.com>
+References: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com>
+ <1340085087-6608-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6ysXqiu0yoUmUNJB"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="AdjLlRqdF7kYRNze"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622-Q4EWCATADntDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: 'Philip Rakity' <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1340085087-6608-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, swarren@wwwdotorg.org, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---6ysXqiu0yoUmUNJB
+--AdjLlRqdF7kYRNze
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 19, 2012 at 12:25:58PM +0800, Wei Ni wrote:
+On Tue, Jun 19, 2012 at 11:21:26AM +0530, Laxman Dewangan wrote:
+> Add API to match the chip regulator's id by the
+> property of "regulator-compatible" on regulator node.
 
-As Stephen previously said please fix your mail formatting - word
-wrapping within paragraphs is important!
+We shouldn't have two different methods for doing this, we should
+standardise this over all regulator drivers (or at the very least those
+using the existing framework code) - having the old framework in place
+will at best be confusing for authors of new drivers.  We either need to
+make it clear which framework to use or (ideally) remove the old
+framework.
 
-> On Tue, Jun 19, 2012 at 09:23:35, Philip Rakity wrote:
-> >Why can't you use the regulator notify to get called back on power or=20
-> >voltage change options to plumb in the manipulation of the gpio. I can=
-=20
-> >imagine you might need to add a notify call in core.c if you need to=20
-> >assert the gpio before power is applied
->=20
-> Yes, we can use the regulator notify, but the Tegra30 support is via
-> device tree, I think there have no special board file to run the call
-> back.
-
-You can mix board files with device tree for cases where device tree is
-not yet up to the job, though the goal should be to come up with a way
-of expressing things in device tree.
-
---6ysXqiu0yoUmUNJB
+--AdjLlRqdF7kYRNze
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP4ENIAAoJEBus8iNuMP3dV3AQAJZ5EfiY0JeT/Y42cpJBJwGG
-qzabJ1J3K7ky0rIFa+F/vrDJcISCtADNqyd+Qs2igokZjAz5BsTdSqMUa+tS2APn
-DxWpYg0vxmmXp6QfJcVaqzQlDqawZ7ZwEKV4nwq0Ux6IvHLnkuHZMPKJs90GiXiV
-IVjCbe/m1stYARcxvkbc23Y5RVQR6PJ9tubdyXxW+F1qV99ofTALWuXH29e8h8fg
-/aRLNAKzktoyxxnNaNSlqxXINPggkIzr/BLVIdAwGCdF0oiDgg44wN8EQvY0DZtX
-P5xvdeC12UG0SsBli1zft/buuOWdzYas+pdC4C7v84+baiQs1MxtAbefixaIZLH3
-kH59UtwFSxLuXvF/MJZPrZw2/8wYh1eleBp86Ye0Ipzn//mImhUZ8/4h0xGU95lr
-BB1OQG9HfUZoftnsES8Ri6+fAIEBdmn2dStwuiBO/n7hqdEh1r+NNhN5do1x8VJ/
-nLfqNyE9uOVBVHI+0BE1G5+veO/agc+XYZNY+rCP7PZYgBpnMoz2bJFUU7WP16MQ
-b9CFxjPXfY9hlBv3mrg82oXQLnAaSaTjyzrA5/hW9kRJgl4S1g4ZE8efLA3BVqnS
-PClOE7VrMiynW/RUK+w1SfsLKDaJipTXGE/FvKQzAduhlbmzMHimpKEvg7z3BFwD
-VZUTtD1P0zK1YZqadjDl
-=D/TS
+iQIcBAEBAgAGBQJP4EcUAAoJEBus8iNuMP3ddBgQAIP/CSU4PJMaAxsE0lqevXYc
+FlbpUTkl1Go4U2zO5RLyaOtsfTfNOHeoPWDxM758tg2Mb07Eh6++o4VpLQk+F8te
+YBYRFGSw/IMrT0+OsPtBhLXWKobnvpznkQkEWvQoOwm+pXHarM5to7UqhCbgdzRB
+FMOXqbQZlNU6a9Xdql+X4XkLD74nvYSip86Pnxs7hAlAiYpBA/LpzzOaxQeUnsz0
+wTbSnLXu5orv2q5EYMhpobavgUij3FbACK5cBMisZr8aMDAPMeARAU98kPdD3tlS
+oxgwSUsrN3WYMw74oxV6DbXa7eq7YrvoOnTEf09TdIc3OSasnGyQ1tlD2jU5GP45
+35N4o7nO3jQ8eGVcK+v2expPQbc6vTh2byyt/z+uASO5rqqA04hDacma5o/H2XCd
+wllHUw/n7+DpSHgoLVmRENbrRma5np2IPkryZ3w8W+g41/+2GAjFSWpisPY5+Rq3
+Tg6efWOCmQgddovDHOYVd6+3rh1B5vd3bbDbYvE6D4omrDps8fxDdDSaza4+tuUE
+4XCwkMfZ+nlmK9QPqYB5smFhDsQirR1CISamrp3lgWLPf+cKGZrbIkOOPmtZATOI
+iFRPo3nVxXiTUyG3OPXU/QtvJ21Q2mAVMKnSDQApZPwRRnr61C4avbgj0wv2oPST
+v40Gq2hv2sRcM9niOqkL
+=mK79
 -----END PGP SIGNATURE-----
 
---6ysXqiu0yoUmUNJB--
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--AdjLlRqdF7kYRNze--
