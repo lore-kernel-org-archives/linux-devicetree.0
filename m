@@ -1,125 +1,41 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 1/2] regulator: support for regulator match by regulator-compatible
-Date: Tue, 19 Jun 2012 11:21:26 +0530
-Message-ID: <1340085087-6608-2-git-send-email-ldewangan@nvidia.com>
-References: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Patch v5 00/13] add imx usb driver for mx28/6x
+Date: Tue, 19 Jun 2012 14:14:16 +0800
+Message-ID: <20120619061414.GD21951@S2101-09.ap.freescale.net>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+ <CAOMZO5BXsPtwC2CTt6Z-DjZUYhrWMKDkr2QnFoAKb-aLc1XsNA@mail.gmail.com>
+ <201206181913.06886.marex@denx.de>
+ <CAOMZO5DF+CH+qe+VKc4vefkj05aXOtn0nVZK9vx+0kakP_em1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, swarren@wwwdotorg.org
-Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5DF+CH+qe+VKc4vefkj05aXOtn0nVZK9vx+0kakP_em1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add API to match the chip regulator's id by the
-property of "regulator-compatible" on regulator node.
+On Mon, Jun 18, 2012 at 02:25:20PM -0300, Fabio Estevam wrote:
+> Nothing shows up in the console after connecting the stick.
+> 
+> Attached my .config file.
+> 
+You haven't enabled the following two in your .config.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- drivers/regulator/of_regulator.c       |   61 ++++++++++++++++++++++++++++++++
- include/linux/regulator/of_regulator.h |   13 +++++++
- 2 files changed, 74 insertions(+), 0 deletions(-)
+CONFIG_USB_CHIPIDEA
+CONFIG_USB_CHIPIDEA_HOST
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index e2a7310..3dc9be1 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -136,3 +136,64 @@ int of_regulator_match(struct device *dev, struct device_node *node,
- 	return count;
- }
- EXPORT_SYMBOL_GPL(of_regulator_match);
-+
-+/**
-+ * of_regulator_match_by_compatible - extract regulator init data when
-+ * regulator-compatible matches.
-+ * @dev: device requesting the data
-+ * @node: parent device node of the regulators
-+ * @matches: match table for the regulators
-+ * @num_matches: number of entries in match table
-+ *
-+ * This function uses a match table specified by the regulator
-+ * driver and looks up the corresponding init data in the device
-+ * tree if regulator-compatible matches. Note that the match
-+ * table is modified in place.
-+ *
-+ * Returns the number of matches found or a negative error code on failure.
-+ */
-+int of_regulator_match_by_compatible(struct device *dev,
-+			struct device_node *node,
-+			struct of_regulator_match *matches,
-+			unsigned int num_matches)
-+{
-+	unsigned int count = 0;
-+	unsigned int i;
-+	const char *regulator_comp;
-+	struct device_node *child;
-+
-+	if (!dev || !node)
-+		return -EINVAL;
-+
-+	for_each_child_of_node(node, child) {
-+		regulator_comp = of_get_property(child,
-+					"regulator-compatible", NULL);
-+		if (!regulator_comp) {
-+			dev_err(dev, "regulator-compatible is missing for node %s\n",
-+				child->name);
-+			continue;
-+		}
-+		for (i = 0; i < num_matches; i++) {
-+			struct of_regulator_match *match = &matches[i];
-+			if (match->of_node)
-+				continue;
-+
-+			if (strcmp(match->name, regulator_comp))
-+				continue;
-+
-+			match->init_data =
-+				of_get_regulator_init_data(dev, child);
-+			if (!match->init_data) {
-+				dev_err(dev,
-+					"failed to parse DT for regulator %s\n",
-+					child->name);
-+				return -EINVAL;
-+			}
-+			match->of_node = child;
-+			count++;
-+		}
-+	}
-+
-+	return count;
-+}
-+EXPORT_SYMBOL_GPL(of_regulator_match_by_compatible);
-diff --git a/include/linux/regulator/of_regulator.h b/include/linux/regulator/of_regulator.h
-index f921796..e3469a0 100644
---- a/include/linux/regulator/of_regulator.h
-+++ b/include/linux/regulator/of_regulator.h
-@@ -20,6 +20,11 @@ extern struct regulator_init_data
- extern int of_regulator_match(struct device *dev, struct device_node *node,
- 			      struct of_regulator_match *matches,
- 			      unsigned int num_matches);
-+extern int of_regulator_match_by_compatible(struct device *dev,
-+			struct device_node *node,
-+			struct of_regulator_match *matches,
-+			unsigned int num_matches);
-+
- #else
- static inline struct regulator_init_data
- 	*of_get_regulator_init_data(struct device *dev,
-@@ -35,6 +40,14 @@ static inline int of_regulator_match(struct device *dev,
- {
- 	return 0;
- }
-+
-+static inline int of_regulator_match_by_compatible(struct device *dev,
-+			struct device_node *node,
-+			struct of_regulator_match *matches,
-+			unsigned int num_matches)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_OF */
- 
- #endif /* __LINUX_OF_REG_H */
 -- 
-1.7.1.1
+Regards,
+Shawn
