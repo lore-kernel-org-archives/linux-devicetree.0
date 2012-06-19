@@ -1,70 +1,61 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2 3/3] ARM: dts: db8500: add node property "regulator-compatible"
- regulator node
-Date: Tue, 19 Jun 2012 11:32:13 -0600
-Message-ID: <4FE0B79D.4090201@wwwdotorg.org>
-References: <1340116099-17629-1-git-send-email-ldewangan@nvidia.com> <1340116099-17629-4-git-send-email-ldewangan@nvidia.com> <4FE0A546.1010707@linaro.org>
+Subject: Re: [PATCH V2 1/3] regulator: dt: regulator match by regulator-compatible
+Date: Tue, 19 Jun 2012 11:39:05 -0600
+Message-ID: <4FE0B939.9080702@wwwdotorg.org>
+References: <1340116099-17629-1-git-send-email-ldewangan@nvidia.com> <1340116099-17629-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4FE0A546.1010707@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, linus.walleij@linaro.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1340116099-17629-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, linus.walleij@linaro.org, lrg@ti.com, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/2012 10:13 AM, Lee Jones wrote:
-> On 19/06/12 15:28, Laxman Dewangan wrote:
->> Device's regulator matches their hardware counterparts with the
->> property "regulator-compatible" of each child regulator node in
->> place of the child node.
->> Add the property "regulator-compatible" for each regulator with
->> their name.
->>
->> Signed-off-by: Laxman Dewangan<ldewangan@nvidia.com>
->> ---
->> Changes from V1:
->>   - This is new change in V2.
->>
->>   arch/arm/boot/dts/db8500.dtsi |  128
->> +++++++++++++++++++++++++++++++----------
->>   1 files changed, 97 insertions(+), 31 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/db8500.dtsi
->> b/arch/arm/boot/dts/db8500.dtsi
->> index 4ad5160..9548f80 100644
->> --- a/arch/arm/boot/dts/db8500.dtsi
->> +++ b/arch/arm/boot/dts/db8500.dtsi
->> @@ -203,107 +203,149 @@
->>
->>               db8500-prcmu-regulators {
->>                   compatible = "stericsson,db8500-prcmu-regulator";
->> +                #address-cells =<1>;
->> +                #size-cells =<0>;
-> 
-> Why are these and the reg properties required?
+On 06/19/2012 08:28 AM, Laxman Dewangan wrote:
+> Match the device's regulators with the property of
+> "regulator-compatible" of each regulator node.
 
-DT nodes should be named after the type of object they describe (e.g.
-"regulator") rather than the name of the object they're describing (e.g.
-"vape").
+> diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
 
-Once you've made that change, you end up with many nodes with the same
-name in the same parent, so you need to make their names unique. You do
-this by adding a "unit address" to each of them - "@0", "@1", ... But,
-in order to be "allowed" to use such a unit address, you need a reg
-property that matches the unit address, and #address-cells/#size-cells
-in the parent node.
+>  /**
+> - * of_regulator_match - extract regulator init data
+> + * of_regulator_match - extract regulator init data when node
+> + * property "regulator-compatible" matches with the regulator name.
+>   * @dev: device requesting the data
+>   * @node: parent device node of the regulators
+>   * @matches: match table for the regulators
+>   * @num_matches: number of entries in match table
+>   *
+>   * This function uses a match table specified by the regulator driver and
+> - * looks up the corresponding init data in the device tree. Note that the
+> - * match table is modified in place.
+> + * looks up the corresponding init data in the device tree  if
+> + * regulator-compatible matches. Note that the match table is modified
+> + * in place.
+>   *
+>   * Returns the number of matches found or a negative error code on failure.
+>   */
 
->>                   // DB8500_REGULATOR_VAPE
->> -                db8500_vape_reg: db8500_vape {
->> +                db8500_vape_reg: regulator@0 {
->> +                    reg =<0>;
+I don't think you actually need to modify any of the documentation; the
+function is still doing the exact same thing and it's an implementation
+detail really that it's doing it based on the regulator-compatible
+property rather than the node name now.
 
-Laxman, you need a space after the = sign for all these added reg
-properties, and #address-cells/#size-cells above.
+Still, that's just a nit-pick, so I'm OK either way.
 
->> +                    regulator-compatible = "db8500_vape";
->>                       regulator-name = "db8500-vape";
->>                       regulator-always-on;
->>                   };
+> @@ -110,27 +112,39 @@ int of_regulator_match(struct device *dev, struct device_node *node,
+...
+> +	for_each_child_of_node(node, child) {
+...
+> +		for (i = 0; i < num_matches; i++) {
+...
+> +			match->of_node = child;
+> +			count++;
+
+You may as well "break;" here to avoid checking all the other match
+table entries, which hopefully don't have duplicate names...
+
+But, that's also pretty minor, so:
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
