@@ -1,57 +1,43 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/2] regulator: support for regulator match by
- regulator-compatible
-Date: Tue, 19 Jun 2012 10:32:11 +0100
-Message-ID: <20120619093211.GB3974@opensource.wolfsonmicro.com>
-References: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com>
- <1340085087-6608-2-git-send-email-ldewangan@nvidia.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] regulator: support for regulator match by regulator-compatible
+Date: Tue, 19 Jun 2012 15:04:00 +0530
+Message-ID: <4FE04788.5040008@nvidia.com>
+References: <1340085087-6608-1-git-send-email-ldewangan@nvidia.com> <1340085087-6608-2-git-send-email-ldewangan@nvidia.com> <20120619093211.GB3974@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AdjLlRqdF7kYRNze"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1340085087-6608-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, swarren@wwwdotorg.org, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120619093211.GB3974@opensource.wolfsonmicro.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "lrg@ti.com" <lrg@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 19 June 2012 03:02 PM, Mark Brown wrote:
+> * PGP Signed by an unknown key
+>
+> On Tue, Jun 19, 2012 at 11:21:26AM +0530, Laxman Dewangan wrote:
+>> Add API to match the chip regulator's id by the
+>> property of "regulator-compatible" on regulator node.
+> We shouldn't have two different methods for doing this, we should
+> standardise this over all regulator drivers (or at the very least those
+> using the existing framework code) - having the old framework in place
+> will at best be confusing for authors of new drivers.  We either need to
+> make it clear which framework to use or (ideally) remove the old
+> framework.
 
---AdjLlRqdF7kYRNze
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Agree. Currently following regulators are using this (based on grep)
+mfd/tps6586x.c
+regulator/ab8500.c
+regulator/db8500-prcmu.c
+and regulator/tps65910.
 
-On Tue, Jun 19, 2012 at 11:21:26AM +0530, Laxman Dewangan wrote:
-> Add API to match the chip regulator's id by the
-> property of "regulator-compatible" on regulator node.
+If the related change in tps65910 is fine and there is no more 
+concern/feedback on the approach then I can create a series of patch to 
+modify the other regulator and related dts file to follow the same.
 
-We shouldn't have two different methods for doing this, we should
-standardise this over all regulator drivers (or at the very least those
-using the existing framework code) - having the old framework in place
-will at best be confusing for authors of new drivers.  We either need to
-make it clear which framework to use or (ideally) remove the old
-framework.
+If you want, I can make the new changes as part of this series or can 
+start with new series.
 
---AdjLlRqdF7kYRNze
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I like to go with new series patch for other change once this is accepted.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP4EcUAAoJEBus8iNuMP3ddBgQAIP/CSU4PJMaAxsE0lqevXYc
-FlbpUTkl1Go4U2zO5RLyaOtsfTfNOHeoPWDxM758tg2Mb07Eh6++o4VpLQk+F8te
-YBYRFGSw/IMrT0+OsPtBhLXWKobnvpznkQkEWvQoOwm+pXHarM5to7UqhCbgdzRB
-FMOXqbQZlNU6a9Xdql+X4XkLD74nvYSip86Pnxs7hAlAiYpBA/LpzzOaxQeUnsz0
-wTbSnLXu5orv2q5EYMhpobavgUij3FbACK5cBMisZr8aMDAPMeARAU98kPdD3tlS
-oxgwSUsrN3WYMw74oxV6DbXa7eq7YrvoOnTEf09TdIc3OSasnGyQ1tlD2jU5GP45
-35N4o7nO3jQ8eGVcK+v2expPQbc6vTh2byyt/z+uASO5rqqA04hDacma5o/H2XCd
-wllHUw/n7+DpSHgoLVmRENbrRma5np2IPkryZ3w8W+g41/+2GAjFSWpisPY5+Rq3
-Tg6efWOCmQgddovDHOYVd6+3rh1B5vd3bbDbYvE6D4omrDps8fxDdDSaza4+tuUE
-4XCwkMfZ+nlmK9QPqYB5smFhDsQirR1CISamrp3lgWLPf+cKGZrbIkOOPmtZATOI
-iFRPo3nVxXiTUyG3OPXU/QtvJ21Q2mAVMKnSDQApZPwRRnr61C4avbgj0wv2oPST
-v40Gq2hv2sRcM9niOqkL
-=mK79
------END PGP SIGNATURE-----
-
---AdjLlRqdF7kYRNze--
