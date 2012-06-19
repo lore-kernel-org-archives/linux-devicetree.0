@@ -1,43 +1,80 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch v5 00/13] add imx usb driver for mx28/6x
-Date: Mon, 18 Jun 2012 23:17:24 -0300
-Message-ID: <CAOMZO5Ap_KYM7uYebqOaCzpTzH2kcCFR6BTWX9GMKxsXoxCOew@mail.gmail.com>
-References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
-	<F281D0F91ED19E4D8E63A7504E8A649803BE2DE2@039-SN2MPN1-023.039d.mgd.msft.net>
-	<CAOMZO5C7KaxO_X23Ur9YwHEoAvCPf4emxMzH4mmrFX6=de5GZA@mail.gmail.com>
-	<201206190407.31524.marex@denx.de>
+From: Wei Ni <wni@nvidia.com>
+Subject: RE: Where to power on the wifi device before loading the driver.
+Date: Tue, 19 Jun 2012 12:25:58 +0800
+Message-ID: <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com>
+References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
+ <4FD90352.9090606@wwwdotorg.org>
+ <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de>
+ <20120614121234.GC3913@opensource.wolfsonmicro.com>
+ <4FDA092E.10301@wwwdotorg.org>
+ <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
+ <4FDB5976.20809@wwwdotorg.org>,<6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com>
+ <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201206190407.31524.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Chen Peter-B29397 <B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Frank-B20596 <B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Estevam Fabio-R49496 <r49496-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Philip Rakity' <prakity@marvell.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, Rakesh Kumar <krakesh@nvidia.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, "'frankyl@broadcom.com'" <frankyl@broadcom.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mursalin Akon <makon@nvidia.com>, "'linux-mmc@vger.kernel.org'" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2012 at 11:07 PM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
+On Tue, Jun 19, 2012 at 09:23:35, Philip Rakity wrote:
+>Why can't you use the regulator notify to get called back on power or 
+>voltage change options to plumb in the manipulation of the gpio. I can 
+>imagine you might need to add a notify call in core.c if you need to 
+>assert the gpio before power is applied
 
->> What should be done in addition to Richard's patch in order to get USB
->> host to work on mx28evk?
+Yes, we can use the regulator notify, but the Tegra30 support is via device tree, I think there have no special board file to run the call back.
+
 >
-> Ah right, you need to toggle the power supply (vbus) GPIO.
+>
+>________________________________________
+>From: linux-mmc-owner@vger.kernel.org [linux-mmc-owner@vger.kernel.org] 
+>On Behalf Of Wei Ni [wni@nvidia.com]
+>Sent: Sunday, June 17, 2012 11:20 PM
+>To: 'Stephen Warren'; Rakesh Kumar
+>Cc: Mark Brown; 'frankyl@broadcom.com'; Thierry Reding; Mursalin Akon; 
+>'linux-mmc@vger.kernel.org'; devicetree-discuss@lists.ozlabs.org; 
+>'linux-wireless@vger.kernel.org'; linux-tegra@vger.kernel.org; 
+>linux-arm-kernel@lists.infradead.org
+>Subject: RE: Where to power on the wifi device before loading the driver.
+>
+>On Fri, Jun 15, 2012 at 23:49:10, Stephen Warren wrote:
+>>> I talked with Franky, this power sequence is generally for 4329, so 
+>>> it mean this sequence can be put into the wifi driver.
+>>> We can use the virtual platform device both for OOB and non OOB.
+>>> I will send out patches later.
+>>
+>>Can you please expand on what a "virtual platform device" is; device 
+>>tree typically represents real
+>hardware rather than anything "virtual".
+>
+>The "virtual platform device" is created before the real wifi device, 
+>so that it can pass the gpios to the driver, and power up the device before calling sdio_register_driver.
+>But as Franky said, this power sequence is only generally for 4329, not 
+>for the USB dongle chips. So it's not a good idea to add this "power up" in brcmfmac.
+>
+>>
+>>Now if this means adding a child node under the SDIO controller to 
+>>represent the attached device, and
+>storing any settings required by that device in that child node, that's 
+>probably a reasonable basic approach.
+>>
+>>BTW, which GPIO is the power GPIO; is it WF_EN on the schematic? That 
+>>seems reasonable to represent
+>as a GPIO rather than a regulator since it connects directly into the 
+>WiFi device as a GPIO, and its use within the WiFi device can indeed be 
+>governed purely internally to the WiFi driver/HW. However, if this is some GPIO that controls the power to e.g.
+>>VBAT3V3_IN_WF, VDDIO_WF, or other power supply to the WiFi card, then 
+>>it'd be better represented as a
+>regulator, since the control point is outside the WiFi device.
+>
+>I think Rakesh may can answer this.
+>
+>Wei.
+>---
+>nvpublic
 
-Toggle it where?
-
-I see the following:
-
-reg_usb0_vbus: usb0_vbus {
-compatible = "regulator-fixed";
-regulator-name = "usb0_vbus";
-regulator-min-microvolt = <5000000>;
-regulator-max-microvolt = <5000000>;
-gpio = <&gpio3 9 0>;
-enable-active-high;
-
-So the gpio3_9 will turn on the vbus.
-
-What is missing?
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
