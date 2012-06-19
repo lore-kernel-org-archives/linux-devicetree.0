@@ -1,41 +1,36 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
-Date: Tue, 19 Jun 2012 20:36:14 -0300
-Message-ID: <CAOMZO5AxnOCqajCS39bpjo-86FXSV9C8fMPrhmRXH=OndfXuVQ@mail.gmail.com>
+Subject: Re: [Patch v5 11/13] ARM: dts: imx6q-sabrelite: add usb devices
+Date: Tue, 19 Jun 2012 20:39:57 -0300
+Message-ID: <CAOMZO5AzxAt_mVEFCXJL8e7kqBCwGgHtMB7N3Rxfc2phNRXCyg@mail.gmail.com>
 References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
-	<1339590863-10564-9-git-send-email-richard.zhao@freescale.com>
+	<1339590863-10564-12-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1339590863-10564-9-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1339590863-10564-12-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTMsIDIwMTIgYXQgOTozNCBBTSwgUmljaGFyZCBaaGFvCjxyaWNoYXJkLnpo
-YW9AZnJlZXNjYWxlLmNvbT4gd3JvdGU6Cgo+ICtzdGF0aWMgdm9pZCBfX2luaXQgaW14NnFfY29u
-ZmlnX29uX2Jvb3Qodm9pZCkKPiArewo+ICsgwqAgwqAgwqAgc3RydWN0IGRldmljZV9ub2RlICpu
-cDsKPiArIMKgIMKgIMKgIHN0cnVjdCBwcm9wZXJ0eSAqcHA7Cj4gKyDCoCDCoCDCoCBpbnQgY250
-LCBsZW4sIGk7Cj4gKyDCoCDCoCDCoCBpbnQgZ3BpbzsKPiArCj4gKyDCoCDCoCDCoCBucCA9IG9m
-X2ZpbmRfbm9kZV9ieV9wYXRoKCIvY29uZmlnLW9uLWJvb3QiKTsKPiArIMKgIMKgIMKgIGlmICgh
-bnApCj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZXR1cm47Cj4gKyDCoCDCoCDCoCBjbnQgPSBv
-Zl9ncGlvX25hbWVkX2NvdW50KG5wLCAib3V0cHV0LWdwaW9zIik7Cj4gKyDCoCDCoCDCoCBwcCA9
-IG9mX2ZpbmRfcHJvcGVydHkobnAsICJvdXRwdXQtZ3Bpby12YWx1ZXMiLCAmbGVuKTsKPiArIMKg
-IMKgIMKgIGlmICghcHAgfHwgY250ICE9IGxlbiAvIHNpemVvZih1MzIpKSB7Cj4gKyDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCBwcl9lcnIoIkludmFsaWQgY29uZmlnLW9uLWJvb3QgZ3Bpb3MhXG4iKTsK
-PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIG9mX25vZGVfcHV0KG5wKTsKPiArIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIHJldHVybjsKPiArIMKgIMKgIMKgIH0KPiArIMKgIMKgIMKgIGZvciAoaSA9IDA7
-IGkgPCBjbnQ7IGkrKykgewo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZ3BpbyA9IG9mX2dldF9u
-YW1lZF9ncGlvKG5wLCAib3V0cHV0LWdwaW9zIiwgaSk7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCBpZiAoZ3Bpb19pc192YWxpZChncGlvKSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIGdwaW9fcmVxdWVzdF9vbmUoZ3BpbywgR1BJT0ZfT1VUX0lOSVRfSElHSCwKPiArIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICJj
-b25maWctb24tYm9vdCIpOwo+ICsgwqAgwqAgwqAgfQo+ICsKPiArIMKgIMKgIMKgIG9mX25vZGVf
-cHV0KG5wKTsKPiArfQoKQ291bGRuJ3QgdGhpcyBmdW5jdGlvbiBiZSBtYWRlIGdlbmVyaWMgYW5k
-IHB1dCBvdXRzaWRlIG9mIG1hY2gtaW14NnEuYwpzbyB0aGF0IG90aGVyIHBsYXRmb3JtcyBjb3Vs
-ZCB1c2UgaXQ/CgpJIG5lZWQgdGhlIHNhbWUgZm9yIG14cy4K
+Richard/Shawn,
+
+On Wed, Jun 13, 2012 at 9:34 AM, Richard Zhao
+<richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 iomuxc@020e0000 {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pinctrl-names =3D "default";
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pinctrl-0 =3D <&pinctrl_gpio_hog>;
+
+I would like to use this same concept on mxs, which does not have a
+"iomuxc" driver like imx6.
+
+To which driver should I glue the 'pinctrl-0 =3D <&pinctrl_gpio_hog>;' =
+ on mxs?
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
