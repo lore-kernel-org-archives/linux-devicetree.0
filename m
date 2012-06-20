@@ -1,90 +1,88 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by regulator-compatible
-Date: Wed, 20 Jun 2012 15:01:15 -0600
-Message-ID: <4FE23A1B.2000809@wwwdotorg.org>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <201206201924.09618.arnd@arndb.de> <20120620194609.GA4037@opensource.wolfsonmicro.com> <201206202040.52291.arnd@arndb.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
+ regulator-compatible
+Date: Thu, 21 Jun 2012 00:15:47 +0100
+Message-ID: <20120620231546.GB4037@opensource.wolfsonmicro.com>
+References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
+ <201206201924.09618.arnd@arndb.de>
+ <20120620194609.GA4037@opensource.wolfsonmicro.com>
+ <201206202040.52291.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
 Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <201206202040.52291.arnd@arndb.de>
 Sender: linux-doc-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2012 02:40 PM, Arnd Bergmann wrote:
-> On Wednesday 20 June 2012, Mark Brown wrote:
->> On Wed, Jun 20, 2012 at 07:24:09PM +0000, Arnd Bergmann wrote:
->>
->>> 1. What is it that the new property can express that cannot already
->>> be expressed by using the phandle.
->>
->> As well as being able to refer to the object from within the device tree
->> we also need to be able to tell what the object represents - we have a
->> bunch of regulators in an array under a node for a PMIC and we want to
->> know which regulator on the physical device each array entry corresponds
->> to.  Previously this was being done by parsing the phandle name but that
->> means we can't have more than one device with the same set of names.
-> 
-> I see.
-> 
+
+--XF85m9dhOBO43t/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 20, 2012 at 08:40:52PM +0000, Arnd Bergmann wrote:
+
 > But that sounds more like what the "reg" property does than what
 > the "compatible" property does for other devices. In other words, you
 > want to know which instance you are describing, not what kind of
 > object it is.
 
-Yes.
+No, it's describing the kind of object.  This stuff is for devices which
+throw a bunch of irregular regulators down on a chip with no particular
+similarity with each other.
 
 > For a "compatible" property, I would expect two objects that have
 > the same register-level interface but are responsible for different
 > physical objects to have the same "compatible" values, but here
 > you specifically need distinct "regulator-compatible" values.
 
-I'd originally suggested "regulator-id" instead of
-"regulator-compatible" in order to avoid any association with the
-pre-existing "compatible" property. Mark didn't like that, although I
-don't think I quite understood why.
+There's nothing stopping a driver drilling down deeper with other data
+once it's worked out what it's talking about, if it wants to read an
+additional id value or base register that's absolutely fine and probably
+even a good idea.  The problem is that for a lot of hardware there's
+just a bunch of random irregular devices.
 
->>> 2. Why is it called "regulator-compatible"? If it's similar to the
->>> "compatible" property, don't you have to have a binding for each
->>> possible string? If it's not related to the "compatible" property,
->>> why is it named in a similar way?
->>
->> Yes, there are bindings defined already for all the relevant devices.
->> Elsewhere in the binding document you'll see a list of all the
->> regulators on the PMIC and the names by which the device tree binding
->> knows them.
-> 
-> Ah, so we just change the way how the binding refers to those names,
-> rather than the individual strings.
-> 
 > It makes much more sense now, so please let's make sure that explanation
 > ends up in the changelog.
-> 
-> I still have two more questions: 
-> 
-> * In case of tps65910, the individual regulators are all numbered, so
-> the driver can find them by their "reg" property. Should we still
-> mandate the use of the "regulator-compatible" property? It sounds
-> to me that we could better make it an optional property in those
-> cases.
 
-The problem is that dtc has no named constants. Using raw integers
-instead of names would make the .dts file rather unreadable. The issue
-is much more accute for regulators than say GPIOs or IRQs because
-there's likely no relative order to the set of regulators defined by the
-documentation, unlike for GPIOs/IRQs where the integer (often) is the
-object's primary ID.
+To be honest I just don't care, the old code hasn't been around for long
+enough or widely adopted enough for anyone to care and it's just more
+brain cycles gone.
 
 > * What is the difference between "regulator-name" and
 > "regulator-compatible"? Those are the same most of the time
 > in the patches, so can't we just make sure they are always the
 > same, and drop the confusingly named "regulator-compatible" one?
 
-regulator-compatible is the name of the regulator within the chip; the
-HW sub-module say.
+As the binding documentation says the former is a display name for use
+so people can tell what the software is talking about, for example the
+name the supply has in the schematic.  It's completely up to the user
+and the regulator driver can't use it for anything except printing so it
+needs something else to help it figure out what it's working with.
 
-regulator-name is the board-/system-level name of the regulator. Perhaps
-a signal name from the schematic, or maybe function name like "SD card
-supply".
+--XF85m9dhOBO43t/C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP4lmcAAoJEBus8iNuMP3dZLsP/0xUaKATocQynuWA32+80mPb
+fy2rzkM3XKQBCFug7GVvTuy/VtDkcu5f8XwnVMppRqz/MNEK5KmnroL2FZRRa0kC
+oVCdB9gnHUxTv+YIALXhvYsLlaH7Fclhz5NdpWJv9hFAtMf44MPYnzUbdIv12gs9
+FuF0KFTTCciLmqpaumKCIu9qaxMFMZlegO+BemfC04XmzLGOqUBTt2fNvQQhUC18
+gOlaZ+Zry5G03Dx7OgXXc6IO+Y9ZD8b2miFasFsF+XJ/2JGR/HI0enTQ2tXgoUkl
+EbYf9+6DJLxWHCJQwrNc0AHUf8FqXaZV3zKamKZeF2jE2QIiyZLv6W8JEexXhHq0
+hG+ZhMpEefnboGdP9eA5+zwzgNZ7y+VEUv7qQ1DefY7x1LhUt1hrb0ImTy1Bc3Yt
+HVKUo1gbovYggx5HJpifFgTVk9/H+Fnv1MSReIx/XJANh/WBwGkPYuSp+A/FD4ai
+iQM8z0yjNU0GFU9qJ4/y6xuQDMN44Ll3UqfjQtvi70lvmti5mQKYwLIYs3+uiwm6
+uvyhAnB3eCr4bWscjW5+zYiFwWT7C8/u1jb6gZJSTJTmsZdVO8mtRQkhNdi0iECY
+9LSrz4T0KWrdJcVFV/bOLTHbEhISr08zGJfphFrn4Kc0dg2IBWuBLWCQ/kW3T1+o
+Ib5MDD+qMwyxDfKQR9KJ
+=ILu2
+-----END PGP SIGNATURE-----
+
+--XF85m9dhOBO43t/C--
