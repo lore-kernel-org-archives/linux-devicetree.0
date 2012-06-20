@@ -1,70 +1,145 @@
-From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
-Date: Wed, 20 Jun 2012 07:41:11 +0800
-Message-ID: <c29d9643-0962-46e7-b726-cebdac7d9a67@email.android.com>
-References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com> <1339590863-10564-9-git-send-email-richard.zhao@freescale.com> <CAOMZO5AxnOCqajCS39bpjo-86FXSV9C8fMPrhmRXH=OndfXuVQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Where to power on the wifi device before loading the driver.
+Date: Tue, 19 Jun 2012 18:01:54 -0600
+Message-ID: <4FE112F2.7000506@wwwdotorg.org>
+References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com> <4FD90352.9090606@wwwdotorg.org> <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de> <20120614121234.GC3913@opensource.wolfsonmicro.com> <4FDA092E.10301@wwwdotorg.org> <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com> <4FDB5976.20809@wwwdotorg.org> <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com> <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com> <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com> <20120619091719.GZ3974@opensource.wolfsonmicro.com> <6B4D417B830BC44B8026029FD256F7F1C6EE2DD626@HKMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5AxnOCqajCS39bpjo-86FXSV9C8fMPrhmRXH=OndfXuVQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6B4D417B830BC44B8026029FD256F7F1C6EE2DD626-Q4EWCATADntDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: 'Mark Brown' <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, 'Philip Rakity' <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/19/2012 03:44 AM, Wei Ni wrote:
+> On Tue, Jun 19, 2012 at 17:17:19, Mark Brown wrote:
+>> * PGP Signed by an unknown key
+>>
+>> On Tue, Jun 19, 2012 at 12:25:58PM +0800, Wei Ni wrote:
+>>
+>> As Stephen previously said please fix your mail formatting - word 
+>> wrapping within paragraphs is important!
+>>
+>>> On Tue, Jun 19, 2012 at 09:23:35, Philip Rakity wrote:
+>>>> Why can't you use the regulator notify to get called back on power 
+>>>> or voltage change options to plumb in the manipulation of the gpio. 
+>>>> I can imagine you might need to add a notify call in core.c if you 
+>>>> need to assert the gpio before power is applied
+>>>
+>>> Yes, we can use the regulator notify, but the Tegra30 support is via 
+>>> device tree, I think there have no special board file to run the call 
+>>> back.
+>>
+>> You can mix board files with device tree for cases where device tree is 
+>> not yet up to the job, though the goal should be to come up with a way of expressing things in device tree.
+> 
+> I think we wish to use the device tree to handle these gpios, pass them to the related driver to assert them.
+> If we mix the board files, we even can set these gpio directly, not use the notify. But I think this is not a goog way.
 
+Yes, I would definitely not want to add this to a board file; there is
+no board file for Cardhu, and we're getting close to deleting all the
+board files that are left for other boards.
 
-=46abio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+I think what we need is some way of matching a DT node to a device even
+when that device was instantiated through some probing mechanism such as
+SDIO or USB (and I've heard hints that one can already do this for PCI;
+I should investigate).
 
->On Wed, Jun 13, 2012 at 9:34 AM, Richard Zhao
-><richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->
->> +static void __init imx6q_config_on_boot(void)
->> +{
->> + =C2=A0 =C2=A0 =C2=A0 struct device_node *np;
->> + =C2=A0 =C2=A0 =C2=A0 struct property *pp;
->> + =C2=A0 =C2=A0 =C2=A0 int cnt, len, i;
->> + =C2=A0 =C2=A0 =C2=A0 int gpio;
->> +
->> + =C2=A0 =C2=A0 =C2=A0 np =3D of_find_node_by_path("/config-on-boot"=
-);
->> + =C2=A0 =C2=A0 =C2=A0 if (!np)
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
->> + =C2=A0 =C2=A0 =C2=A0 cnt =3D of_gpio_named_count(np, "output-gpios=
-");
->> + =C2=A0 =C2=A0 =C2=A0 pp =3D of_find_property(np, "output-gpio-valu=
-es", &len);
->> + =C2=A0 =C2=A0 =C2=A0 if (!pp || cnt !=3D len / sizeof(u32)) {
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err("Invalid c=
-onfig-on-boot gpios!\n");
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 of_node_put(np);
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
->> + =C2=A0 =C2=A0 =C2=A0 }
->> + =C2=A0 =C2=A0 =C2=A0 for (i =3D 0; i < cnt; i++) {
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 gpio =3D of_get_n=
-amed_gpio(np, "output-gpios", i);
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (gpio_is_valid=
-(gpio))
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH,
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 "con=
-fig-on-boot");
->> + =C2=A0 =C2=A0 =C2=A0 }
->> +
->> + =C2=A0 =C2=A0 =C2=A0 of_node_put(np);
->> +}
->
->Couldn't this function be made generic and put outside of mach-imx6q.c
->so that other platforms could use it?
->
->I need the same for mxs.
-Yes, it is common. But it must be called after populate devices.  Rob d=
-idn't agree the way yet.
---=20
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, we start off with the plain SDHCI controller node:
+
+sdhci@78000000 {
+	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
+	reg = <0x78000000 0x200>;
+	interrupts = <0 14 0x04>;
+};
+
+Then, we add a child node to represent the device that's attached:
+
+sdhci@78000000 {
+	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
+	reg = <0x78000000 0x200>;
+	interrupts = <0 14 0x04>;
+
+	sdio-device {
+		reset-gpios = <...>;
+		enable-gpios = <...>;
+	};
+};
+
+When the SDHCI controller/core instantiates the child device it finds on
+the HW bus, it initializes that struct device's of_node with a pointer
+to the sdio-device node above. From there, the child device can get DT
+properties such as GPIOs in the usual way.
+
+However, there are still some issues that need thought here; what if (as
+is I believe the case on Cardhu) we can in fact plug in multiple
+different types of device into the socket? Might we end up with
+something like:
+
+sdhci@78000000 {
+	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
+	reg = <0x78000000 0x200>;
+	interrupts = <0 14 0x04>;
+
+	sdio-device-option@0 {
+		compatible = "broadcom,bcm4239";
+		reset-gpios = <...>;
+		enable-gpios = <...>;
+	};
+
+	sdio-device-option@1 {
+		compatible = "broadcom,bcm4330";
+		reset-gpios = <...>;
+		enable-gpios = <...>;
+	};
+};
+
+and match on compatible value?
+
+But in this case, at least some of the data those two drivers want from
+that node is the same; the 2 GPIOs that control the reset and enable
+signals. Do we just make the bindings for those two devices happen to
+share the same properties so that we can get away with just one node
+irrespective of what device type has been found? What we're really
+modeling is the card slot, and the services it provides, so perhaps we
+should really end up with:
+
+sdhci@78000000 {
+	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
+	reg = <0x78000000 0x200>;
+	interrupts = <0 14 0x04>;
+
+	socket {
+		reset-gpios = <...>;
+		enable-gpios = <...>;
+
+		sdio-device-option@0 {
+			compatible = "broadcom,bcm4239";
+		};
+
+		sdio-device-option@1 {
+			compatible = "broadcom,bcm4330";
+		};
+	};
+};
+
+Where somehow the WiFi drivers can obtain the reset/enable service from
+the socket that hosts them, but still have nodes for the attached device
+itself in case any additional driver-specific configuration is needed.
+
+That sounds somewhat similar to the virtual platform device that was
+mentioned earlier in this thread by Broadcom, although I'm not sure
+whether explicitly modeling it as a platform device makes sense, rather
+than the socket providing services to the WiFi module, not necessarily
+through a device.
+
+Unfortunately, it should be noted that the WiFi device socket on Cardhu
+apparently isn't some standardized thing (like PCIe) but something
+rather more custom, although there are apparently devices available to
+plug into it from multiple module vendors which contain WiFi chips from
+multiple chip vendors.
+
+Anyway, these are just some quick thoughts on the topic - obviously more
+flesh is needed.
