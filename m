@@ -1,162 +1,219 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Where to power on the wifi device before loading the driver.
-Date: Wed, 20 Jun 2012 19:28:50 +0800
-Message-ID: <6B4D417B830BC44B8026029FD256F7F1C6EE2DD629@HKMAIL01.nvidia.com>
-References: <6B4D417B830BC44B8026029FD256F7F1C377BFFE88@HKMAIL01.nvidia.com>
- <4FD90352.9090606@wwwdotorg.org>
- <20120614063120.GA20167@avionic-0098.mockup.avionic-design.de>
- <20120614121234.GC3913@opensource.wolfsonmicro.com>
- <4FDA092E.10301@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
- <4FDB5976.20809@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com>
- <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com>
- <20120619091719.GZ3974@opensource.wolfsonmicro.com>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD626@HKMAIL01.nvidia.com>
- <4FE112F2.7000506@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FE112F2.7000506-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: 'Mark Brown' <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, 'Philip Rakity' <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Subject: [PATCH RESEND] input: gpio_keys_polled: convert to dt
+Date: Wed, 20 Jun 2012 08:34:21 -0300
+Message-ID: <1340192062-10565-1-git-send-email-aletes.xgr@gmail.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, JJ Ding <dgdunix@gmail.com>, Roland Stigge <stigge@antcom.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2012 at 08:01:54, Stephen Warren wrote:
->On 06/19/2012 03:44 AM, Wei Ni wrote:
->> On Tue, Jun 19, 2012 at 17:17:19, Mark Brown wrote:
->>> * PGP Signed by an unknown key
->>>
->>> On Tue, Jun 19, 2012 at 12:25:58PM +0800, Wei Ni wrote:
->>>
->>> As Stephen previously said please fix your mail formatting - word 
->>> wrapping within paragraphs is important!
->>>
->>>> On Tue, Jun 19, 2012 at 09:23:35, Philip Rakity wrote:
->>>>> Why can't you use the regulator notify to get called back on power 
->>>>> or voltage change options to plumb in the manipulation of the gpio.
->>>>> I can imagine you might need to add a notify call in core.c if you 
->>>>> need to assert the gpio before power is applied
->>>>
->>>> Yes, we can use the regulator notify, but the Tegra30 support is 
->>>> via device tree, I think there have no special board file to run 
->>>> the call back.
->>>
->>> You can mix board files with device tree for cases where device tree 
->>> is not yet up to the job, though the goal should be to come up with 
->>> a way of expressing things in
->device tree.
->>
->> I think we wish to use the device tree to handle these gpios, pass 
->> them to the related driver to
->assert them.
->> If we mix the board files, we even can set these gpio directly, not 
->> use the notify. But I think this
->is not a goog way.
->
->Yes, I would definitely not want to add this to a board file; there is 
->no board file for Cardhu, and we're getting close to deleting all the board files that are left for other boards.
->
->I think what we need is some way of matching a DT node to a device even 
->when that device was instantiated through some probing mechanism such 
->as SDIO or USB (and I've heard hints that one can already do this for PCI; I should investigate).
->
->So, we start off with the plain SDHCI controller node:
->
->sdhci@78000000 {
->	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
->	reg = <0x78000000 0x200>;
->	interrupts = <0 14 0x04>;
->};
->
->Then, we add a child node to represent the device that's attached:
->
->sdhci@78000000 {
->	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
->	reg = <0x78000000 0x200>;
->	interrupts = <0 14 0x04>;
->
->	sdio-device {
->		reset-gpios = <...>;
->		enable-gpios = <...>;
->	};
->};
->
->When the SDHCI controller/core instantiates the child device it finds 
->on the HW bus, it initializes that struct device's of_node with a 
->pointer to the sdio-device node above. From there, the child device can get DT properties such as GPIOs in the usual way.
->
->However, there are still some issues that need thought here; what if 
->(as is I believe the case on
->Cardhu) we can in fact plug in multiple different types of device into 
->the socket? Might we end up with something like:
->
->sdhci@78000000 {
->	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
->	reg = <0x78000000 0x200>;
->	interrupts = <0 14 0x04>;
->
->	sdio-device-option@0 {
->		compatible = "broadcom,bcm4239";
->		reset-gpios = <...>;
->		enable-gpios = <...>;
->	};
->
->	sdio-device-option@1 {
->		compatible = "broadcom,bcm4330";
->		reset-gpios = <...>;
->		enable-gpios = <...>;
->	};
->};
->
->and match on compatible value?
->
->But in this case, at least some of the data those two drivers want from 
->that node is the same; the 2 GPIOs that control the reset and enable 
->signals. Do we just make the bindings for those two devices happen to 
->share the same properties so that we can get away with just one node 
->irrespective of what device type has been found? What we're really modeling is the card slot, and the services it provides, so perhaps we should really end up with:
->
->sdhci@78000000 {
->	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
->	reg = <0x78000000 0x200>;
->	interrupts = <0 14 0x04>;
->
->	socket {
->		reset-gpios = <...>;
->		enable-gpios = <...>;
->
->		sdio-device-option@0 {
->			compatible = "broadcom,bcm4239";
->		};
->
->		sdio-device-option@1 {
->			compatible = "broadcom,bcm4330";
->		};
->	};
->};
->
->Where somehow the WiFi drivers can obtain the reset/enable service from 
->the socket that hosts them, but still have nodes for the attached 
->device itself in case any additional driver-specific configuration is needed.
->
->That sounds somewhat similar to the virtual platform device that was 
->mentioned earlier in this thread by Broadcom, although I'm not sure 
->whether explicitly modeling it as a platform device makes sense, rather than the socket providing services to the WiFi module, not necessarily through a device.
->
->Unfortunately, it should be noted that the WiFi device socket on Cardhu 
->apparently isn't some standardized thing (like PCIe) but something 
->rather more custom, although there are apparently devices available to 
->plug into it from multiple module vendors which contain WiFi chips from multiple chip vendors.
->
->Anyway, these are just some quick thoughts on the topic - obviously more flesh is needed.
+Add device tree support to gpio_keys_polled.c
 
-Stephen, as Rakesh said that in case of bcm4329, the two GPIO (WF_EN and WF_RST) are shorted. So I think we can simply to use the power-gpios properity in the SD driver, just use one gpio.
-I test it in this way, it runs ok, the bcm4329 can be powered up. We can use this option.
-
+Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Tested-by: Roland Stigge <stigge@antcom.de>
 ---
-nvpublic
+ drivers/input/keyboard/gpio_keys_polled.c |  121 +++++++++++++++++++++++++++--
+ 1 file changed, 113 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index 20c8ab1..a64b361 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -25,6 +25,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio_keys.h>
++#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
+ 
+ #define DRV_NAME	"gpio-keys-polled"
+ 
+@@ -38,7 +40,7 @@ struct gpio_keys_button_data {
+ struct gpio_keys_polled_dev {
+ 	struct input_polled_dev *poll_dev;
+ 	struct device *dev;
+-	struct gpio_keys_platform_data *pdata;
++	struct gpio_keys_platform_data pdata;
+ 	struct gpio_keys_button_data data[0];
+ };
+ 
+@@ -67,11 +69,11 @@ static void gpio_keys_polled_check_state(struct input_dev *input,
+ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+ {
+ 	struct gpio_keys_polled_dev *bdev = dev->private;
+-	struct gpio_keys_platform_data *pdata = bdev->pdata;
++	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+ 	struct input_dev *input = dev->input;
+ 	int i;
+ 
+-	for (i = 0; i < bdev->pdata->nbuttons; i++) {
++	for (i = 0; i < pdata->nbuttons; i++) {
+ 		struct gpio_keys_button_data *bdata = &bdev->data[i];
+ 
+ 		if (bdata->count < bdata->threshold)
+@@ -85,7 +87,7 @@ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+ static void gpio_keys_polled_open(struct input_polled_dev *dev)
+ {
+ 	struct gpio_keys_polled_dev *bdev = dev->private;
+-	struct gpio_keys_platform_data *pdata = bdev->pdata;
++	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+ 
+ 	if (pdata->enable)
+ 		pdata->enable(bdev->dev);
+@@ -94,23 +96,125 @@ static void gpio_keys_polled_open(struct input_polled_dev *dev)
+ static void gpio_keys_polled_close(struct input_polled_dev *dev)
+ {
+ 	struct gpio_keys_polled_dev *bdev = dev->private;
+-	struct gpio_keys_platform_data *pdata = bdev->pdata;
++	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+ 
+ 	if (pdata->disable)
+ 		pdata->disable(bdev->dev);
+ }
++#ifdef CONFIG_OF
++static int gpio_keys_polled_get_devtree_pdata(struct device *dev,
++			    struct gpio_keys_platform_data *pdata)
++{
++	struct device_node *node, *pp;
++	int i;
++	struct gpio_keys_button *buttons;
++	u32 reg;
++
++	node = dev->of_node;
++	if (node == NULL)
++		return -ENODEV;
++
++	memset(pdata, 0, sizeof *pdata);
++
++	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
++
++	if (of_property_read_u32(node, "poll-interval", &reg) == 0)
++		pdata->poll_interval = reg;
++
++	/* First count the subnodes */
++	pdata->nbuttons = 0;
++	pp = NULL;
++	while ((pp = of_get_next_child(node, pp)))
++		pdata->nbuttons++;
++
++	if (pdata->nbuttons == 0)
++		return -ENODEV;
++
++	buttons = kzalloc(pdata->nbuttons * (sizeof *buttons), GFP_KERNEL);
++	if (!buttons)
++		return -ENOMEM;
++
++	pp = NULL;
++	i = 0;
++	while ((pp = of_get_next_child(node, pp))) {
++		enum of_gpio_flags flags;
++
++		if (!of_find_property(pp, "gpios", NULL)) {
++			pdata->nbuttons--;
++			dev_warn(dev, "Found button without gpios\n");
++			continue;
++		}
++		buttons[i].gpio = of_get_gpio_flags(pp, 0, &flags);
++		buttons[i].active_low = flags & OF_GPIO_ACTIVE_LOW;
++
++		if (of_property_read_u32(pp, "linux,code", &reg)) {
++			dev_err(dev, "Button without keycode: 0x%x\n", buttons[i].gpio);
++			goto out_fail;
++		}
++		buttons[i].code = reg;
++
++		buttons[i].desc = of_get_property(pp, "label", NULL);
++
++		if (of_property_read_u32(pp, "linux,input-type", &reg) == 0)
++			buttons[i].type = reg;
++		else
++			buttons[i].type = EV_KEY;
++
++		buttons[i].wakeup = !!of_get_property(pp, "gpio-key,wakeup", NULL);
++
++		if (of_property_read_u32(pp, "debounce-interval", &reg) == 0)
++			buttons[i].debounce_interval = reg;
++		else
++			buttons[i].debounce_interval = 5;
++
++		i++;
++	}
++
++	pdata->buttons = buttons;
++
++	return 0;
++
++out_fail:
++	kfree(buttons);
++	return -ENODEV;
++}
++
++static struct of_device_id gpio_keys_polled_of_match[] = {
++	{ .compatible = "gpio-keys-polled", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
++#else
++
++static int gpio_keys_polled_get_devtree_pdata(struct device *dev,
++			    struct gpio_keys_platform_data *altp)
++{
++	return -ENODEV;
++}
++
++#define gpio_keys_polled_of_match NULL
++
++#endif
+ 
+ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_keys_platform_data *pdata = pdev->dev.platform_data;
+ 	struct device *dev = &pdev->dev;
++	struct gpio_keys_platform_data alt_pdata;
+ 	struct gpio_keys_polled_dev *bdev;
+ 	struct input_polled_dev *poll_dev;
+ 	struct input_dev *input;
+ 	int error;
+ 	int i;
+ 
+-	if (!pdata || !pdata->poll_interval)
++	if (!pdata) {
++	    error = gpio_keys_polled_get_devtree_pdata(dev, &alt_pdata);
++		if (error)
++			return error;
++		pdata = &alt_pdata;
++	}
++
++	if (!pdata->poll_interval)
+ 		return -EINVAL;
+ 
+ 	bdev = kzalloc(sizeof(struct gpio_keys_polled_dev) +
+@@ -184,7 +288,7 @@ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
+ 
+ 	bdev->poll_dev = poll_dev;
+ 	bdev->dev = dev;
+-	bdev->pdata = pdata;
++	bdev->pdata = *pdata;
+ 	platform_set_drvdata(pdev, bdev);
+ 
+ 	error = input_register_polled_device(poll_dev);
+@@ -217,7 +321,7 @@ err_free_bdev:
+ static int __devexit gpio_keys_polled_remove(struct platform_device *pdev)
+ {
+ 	struct gpio_keys_polled_dev *bdev = platform_get_drvdata(pdev);
+-	struct gpio_keys_platform_data *pdata = bdev->pdata;
++	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+ 	int i;
+ 
+ 	input_unregister_polled_device(bdev->poll_dev);
+@@ -239,6 +343,7 @@ static struct platform_driver gpio_keys_polled_driver = {
+ 	.driver	= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = gpio_keys_polled_of_match,
+ 	},
+ };
+ module_platform_driver(gpio_keys_polled_driver);
+-- 
+1.7.10
+
