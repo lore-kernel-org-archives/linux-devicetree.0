@@ -1,46 +1,57 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by regulator-compatible
-Date: Wed, 20 Jun 2012 13:51:27 -0600
-Message-ID: <4FE229BF.4080109@wwwdotorg.org>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <1340194987-23654-3-git-send-email-ldewangan@nvidia.com> <201206201924.09618.arnd@arndb.de> <20120620194609.GA4037@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Wed, 20 Jun 2012 19:57:38 +0000
+Message-ID: <201206201957.39343.arnd@arndb.de>
+References: <4FD84133.4060401@firmworks.com> <20120619133001.GB24138@avionic-0098.mockup.avionic-design.de> <4FE0EFBB.6090206@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120620194609.GA4037@opensource.wolfsonmicro.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <4FE0EFBB.6090206@firmworks.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2012 01:46 PM, Mark Brown wrote:
-> On Wed, Jun 20, 2012 at 07:24:09PM +0000, Arnd Bergmann wrote:
-> 
->> 1. What is it that the new property can express that cannot
->> already be expressed by using the phandle.
-> 
-> As well as being able to refer to the object from within the device
-> tree we also need to be able to tell what the object represents -
-> we have a bunch of regulators in an array under a node for a PMIC
-> and we want to know which regulator on the physical device each
-> array entry corresponds to.  Previously this was being done by
-> parsing the phandle name but that
+On Tuesday 19 June 2012, Mitch Bradley wrote:
 
-s/phandle name/node name/ in that line I think.
-
-At least, I don't think it's common to refer to nodes as phandles;
-phandles are usually the values used at "client" sites to refer to
-nodes IIUC.
-
-> means we can't have more than one device with the same set of
-> names.
+> Version A - 3 address cells:  In this version, the intermediate address 
+> space has 3 cells:  port#, address type, offset.  Address type is
+>    0 : root port
+>    1 : config space
+>    2 : extended config space
+>    3 : I/O
+>    4 : non-prefetchable memory
+>    5 : prefetchable memory.
 > 
->> 2. Why is it called "regulator-compatible"? If it's similar to
->> the "compatible" property, don't you have to have a binding for
->> each possible string? If it's not related to the "compatible"
->> property, why is it named in a similar way?
-> 
-> Yes, there are bindings defined already for all the relevant
-> devices. Elsewhere in the binding document you'll see a list of all
-> the regulators on the PMIC and the names by which the device tree
-> binding knows them.
+> The third cell "offset" is necessary so that the size field has a number 
+> space that can include it.
+
+I agree with Stephen that this is a clever way to encode all the address spaces,
+very nice!
+
+> Version B - 2 address cells:  In this first version, the intermediate
+> address space has 2 cells:  port#, offset.  The address type (I/O, mem,
+> etc) is the high digit of in the offset:
+>     Offset 0....... : Root port
+>     Offset 1....... : config
+>     Offset 2....... : extended config
+>     Offset 3....... : I/O
+>     Offset 4....... : non-prefetchable memory
+>     Offset 5....... : prefetchable memory.
+
+This is similar to how the PCI binding works internally, but I find that
+a bit confusing as well, so given those two choices, I'd prefer the first
+one.
+   
+> Version C - 2 address cells, 0 size cells (!) : In this version we hide the size component in 
+> the intermediate space.  I don't know if that will actually work, but my guess is that it
+> probably would.  The intermediate address space is like version A with the omission of the
+> offset field.  The intermediate address just specifies the port number and the address type.
+
+My guess is that it doesn't work with the current Linux code that transforms
+the addresses. I've just recently seen the code complain about any platform
+device whose parent has #size-cells=0.
+
+	Arnd
