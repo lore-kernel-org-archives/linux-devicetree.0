@@ -1,62 +1,68 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V2 0/3] regulator: dt: add policy to match regulator with
- prop "regulator-compatible"
-Date: Wed, 20 Jun 2012 11:00:58 +0100
-Message-ID: <20120620100058.GD3978@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V2 3/3] ARM: dts: db8500: add node property
+ "regulator-compatible" regulator node
+Date: Wed, 20 Jun 2012 11:06:31 +0100
+Message-ID: <20120620100631.GE3978@opensource.wolfsonmicro.com>
 References: <1340116099-17629-1-git-send-email-ldewangan@nvidia.com>
- <CACRpkdYSLiLZwVwY1tU9PWGTx2EGP6OykeXE5rtwRKAHror-Yg@mail.gmail.com>
+ <1340116099-17629-4-git-send-email-ldewangan@nvidia.com>
+ <4FE0A546.1010707@linaro.org>
+ <4FE0B79D.4090201@wwwdotorg.org>
+ <4FE1772A.2010806@linaro.org>
+ <4FE17E24.8050702@nvidia.com>
+ <4FE18371.2020602@linaro.org>
+ <4FE1877C.4090103@nvidia.com>
+ <4FE19036.1060008@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8nsIa27JVQLqB7/C"
+	protocol="application/pgp-signature"; boundary="LSp5EJdfMPwZcMS1"
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYSLiLZwVwY1tU9PWGTx2EGP6OykeXE5rtwRKAHror-Yg@mail.gmail.com>
+In-Reply-To: <4FE19036.1060008@linaro.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, lrg@ti.com, lee.jones@linaro.org, swarren@wwwdotorg.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "arnd@arndb.de" <arnd@arndb.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---8nsIa27JVQLqB7/C
+--LSp5EJdfMPwZcMS1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jun 20, 2012 at 10:59:32AM +0200, Linus Walleij wrote:
+On Wed, Jun 20, 2012 at 09:56:22AM +0100, Lee Jones wrote:
 
-> If I had today deployed the device trees generated prior to this patch,
-> and try to boot kernels after this patch with the same device tree,
-> would they still work as expected?
+> >Are you OK to have the first patch with adding property
 
-> I don't know it it's an issue right now, but at some point we need to
-> realize that people will expect old device trees to work on newer
-> kernels.
+...
 
-I don't think anyone's taking that idea terribly seriously right now for
-ARM, lots of the core SoC bindings are still in flux or not there.
+> Yes I'm fine with it.
 
-Even for PowerPC where this has apparently been achieved I've still had
-to push back on new mandatory properties being added :/
+So is that an ack?
 
---8nsIa27JVQLqB7/C
+> It's only the unnecessary reg and *-size properties I'm opposed to.
+
+My understanding is that they're required by DT policies in the same way
+that some of the other verbiage is.
+
+--LSp5EJdfMPwZcMS1
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP4Z9SAAoJEBus8iNuMP3d2zQP/AtTmTv5hFGdA7J6W6zduBe9
-A80Z2vxlMn77rV+WMtY6UjD1LG03A49Q1xK60mzWUS6Y3FT/xA20zWsdRUFGnLTJ
-xTQv/RVN4KQ8xo0i9tRKxHqLcJMvVssXjC3CFtu1WqnGO50qkJ7qqQdT/hiNJ3wn
-T2HnShE6i4/L90/XRi/U9ZG3UkOsoxg/Itd5/4LzfpOWzprZcSbSwGHHe7qIAgsu
-deBwZySdozRQfFhpPn9PutP5U8Npkbly5QBt8oMSuZwzqnYoFp+W92ZjPogCc5OF
-MWoiUNPrt+n6P+utZnRQhkgE0XIcut9FGAQImYESX/ieBSZGQKHVL1/zX6ifHTFK
-5SQSf5r3VyD+QzVfRrr0KbPKo0NksaqlLuHGQApIEcDoB/UWTq22iFZr6qB6WspN
-zjaDRDA4tWIjXPPMgpDE4N7tymoQRNtZM5Gdo4iJ/KfAReTV/iczQWBVzV5J/tl1
-V1cu8/3Tapi2sCmiz0RGRxeWS4DJmNiu9hBP5b9lMTBiPp3W/ruTq8X9ZKT8ySiA
-391qmVVikcEjAWf+L2MQFhM1g+DK3YJYVNKhdjGZud0Cq4rF/MG8lbHavtBPIdOX
-MkPZOb8+8PH8CamHm6/EQtc6rrcYx72DF+iBkLoKBJXBzUc1Mqlw+xaKBgdzdPqT
-X1eiMysIeEcUYqmbQ8E4
-=WphM
+iQIcBAEBAgAGBQJP4aCTAAoJEBus8iNuMP3dFmkQAI2YR4TUUUyWjyQpYaRWFXUE
+m8eTJtR0YWJQ/nrTHKgc4B29pukneWzn7XjONrKYkFV/eDKEuVrKFrObwblN0LVw
+9y48vjJUGcvrdS9QBX0l8gKa8jVOYr7JTo6fKPOY1ahisEKTs/genJxGR3lV/jH0
+SJtPR2Rs9EkkVO/JX6Nx3aYUNOkPnZOlTgy0Le+NIPpAqkRvoiuj3LgJ2YUgNYRQ
+2GSp23auK/GGW2PsDtuU1cvR3IAkHPc4ukHBz0CSzzzZhNHf1AGBrVJbfc8vv02E
+BP1nUqmxR5s7W350IB3MfYOJyVe0eXbVJrQgtoXg+vijs3tYDTuhHFa0g982Fn2q
+c4ky/WG6y/9SvfjARj3DQDuptvZidq/dQRtS4DNUngTzmVCl/E3wAvmwYFSAVuXi
+CpqbfdcJmRV+m76fiWuYlFfRi7DNnZgpjuVkEYkXVCM0no4ePqyI3h6+nq1EQhqE
+KHPdLuEs6qih+fTwIkon35xeeHqdWhVC68C04088QjqoBkQIVGjy9QIhz3eWemA+
+yot/LviFKULvHgTwyTkkznGu9JTKBB7r+g6G5W/gVB/TA3YPEByUE0zLHe281x7W
+LlPWIeQZvLgO1FMAh0PYiJDNz/P10QGYI4iE5fXcIGXNqLohgxOOb1Hg0D+NqGHP
+v5HCEJDyvEQXvik43mgo
+=Qmyf
 -----END PGP SIGNATURE-----
 
---8nsIa27JVQLqB7/C--
+--LSp5EJdfMPwZcMS1--
