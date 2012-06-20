@@ -1,51 +1,60 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>
 Subject: Re: [PATCH v2 5/5] sched: cpu_power: enable ARCH_POWER
-Date: Wed, 20 Jun 2012 11:11:04 +0200
-Message-ID: <CAKfTPtAdSMJ1RnDPDYZZ378QW9DUCKLA+oC3TWJD7v5KAkFitA@mail.gmail.com>
+Date: Wed, 20 Jun 2012 11:19:39 +0200
+Message-ID: <1340183979.21745.78.camel@twins>
 References: <1340094536-20873-1-git-send-email-vincent.guittot@linaro.org>
-	<1340094536-20873-6-git-send-email-vincent.guittot@linaro.org>
-	<20120619090110.GA1692@zhy>
+ <1340094536-20873-6-git-send-email-vincent.guittot@linaro.org>
+ <20120619090110.GA1692@zhy>
+ <CAKfTPtAdSMJ1RnDPDYZZ378QW9DUCKLA+oC3TWJD7v5KAkFitA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120619090110.GA1692@zhy>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Zhang <yong.zhang0@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKfTPtAdSMJ1RnDPDYZZ378QW9DUCKLA+oC3TWJD7v5KAkFitA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Yong Zhang <yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 June 2012 11:01, Yong Zhang <yong.zhang0@gmail.com> wrote:
-> On Tue, Jun 19, 2012 at 10:28:56AM +0200, Vincent Guittot wrote:
->> Heteregeneous ARM platform uses arch_scale_freq_power function
->> to reflect the relative capacity of each core
->>
->> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
->> ---
->> =A0kernel/sched/features.h | =A0 =A02 +-
->> =A01 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/sched/features.h b/kernel/sched/features.h
->> index de00a48..d98ae90 100644
->> --- a/kernel/sched/features.h
->> +++ b/kernel/sched/features.h
->> @@ -42,7 +42,7 @@ SCHED_FEAT(CACHE_HOT_BUDDY, true)
->> =A0/*
->> =A0 * Use arch dependent cpu power functions
->> =A0 */
->> -SCHED_FEAT(ARCH_POWER, false)
->> +SCHED_FEAT(ARCH_POWER, true)
->
-> Hmmm...seems we can remove this knob completely.
->
+On Wed, 2012-06-20 at 11:11 +0200, Vincent Guittot wrote:
+> On 19 June 2012 11:01, Yong Zhang <yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Tue, Jun 19, 2012 at 10:28:56AM +0200, Vincent Guittot wrote:
+> >> Heteregeneous ARM platform uses arch_scale_freq_power function
+> >> to reflect the relative capacity of each core
+> >>
+> >> Signed-off-by: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>  kernel/sched/features.h |    2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/kernel/sched/features.h b/kernel/sched/features.h
+> >> index de00a48..d98ae90 100644
+> >> --- a/kernel/sched/features.h
+> >> +++ b/kernel/sched/features.h
+> >> @@ -42,7 +42,7 @@ SCHED_FEAT(CACHE_HOT_BUDDY, true)
+> >>  /*
+> >>   * Use arch dependent cpu power functions
+> >>   */
+> >> -SCHED_FEAT(ARCH_POWER, false)
+> >> +SCHED_FEAT(ARCH_POWER, true)
+> >
+> > Hmmm...seems we can remove this knob completely.
+> >
+> 
+> Peter,
+> 
+> Do you prefer to keep it or remove it completely ?
 
-Peter,
-
-Do you prefer to keep it or remove it completely ?
-
-Thanks
-
-> __weak arch_scale_smt_power() is doing all the trick.
->
-> Thanks,
-> Yong
+I prefer to keep it, the 'we can remove it' is true for all feature
+bits, they should never be twiddled in normal circumstances, its a debug
+feature. As such it makes sense to allow disabling the arch cpu-power
+fiddling.
