@@ -1,47 +1,230 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V2 3/3] ARM: dts: db8500: add node property "regulator-compatible"
- regulator node
-Date: Wed, 20 Jun 2012 12:37:50 +0100
-Message-ID: <4FE1B60E.4020500@linaro.org>
-References: <1340116099-17629-1-git-send-email-ldewangan@nvidia.com> <1340116099-17629-4-git-send-email-ldewangan@nvidia.com> <4FE0A546.1010707@linaro.org> <4FE0B79D.4090201@wwwdotorg.org> <4FE1772A.2010806@linaro.org> <4FE17E24.8050702@nvidia.com> <4FE18371.2020602@linaro.org> <4FE1877C.4090103@nvidia.com> <4FE19036.1060008@linaro.org> <20120620100631.GE3978@opensource.wolfsonmicro.com> <4FE1B31C.6030100@linaro.org> <4FE1B3A6.6090600@nvidia.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3 1/3] ARM: dts: db8500: add property "regulator-compatible" regulator node
+Date: Wed, 20 Jun 2012 17:53:05 +0530
+Message-ID: <1340194987-23654-2-git-send-email-ldewangan@nvidia.com>
+References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4FE1B3A6.6090600@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "arnd@arndb.de" <arnd@arndb.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, arnd@arndb.de, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20/06/12 12:27, Laxman Dewangan wrote:
-> On Wednesday 20 June 2012 04:55 PM, Lee Jones wrote:
->> On 20/06/12 11:06, Mark Brown wrote:
->>> On Wed, Jun 20, 2012 at 09:56:22AM +0100, Lee Jones wrote:
->>>
->>>>> Are you OK to have the first patch with adding property
->>> ...
->>>
->>>> Yes I'm fine with it.
->>> So is that an ack?
->> Sure why not. Although, Linus Walleij has the final say.
->>
->> Acked-by: Lee Jones<lee.jones@linaro.org>
->>
->
-> I am going to send the new patch having "regulator-compatible" on eac=
-h
-> child node only for db8500.dtsi, and removing all other changes.
+Device's regulator matches their hardware counterparts with the
+property "regulator-compatible" of each child regulator node in
+place of the child node name.
+Add the property "regulator-compatible" for each regulator with
+their hardware counterpart's name.
 
-That's fine. Keep me CC'ed on other related correspondence and I'll mak=
-e=20
-any other necessary changes with regards to node naming at a later date=
-=2E
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V2:
+- Adding the regulator-compatible for each regulator child node.
+- Remove the renaming of the child node.
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-M: +44 77 88 633 515
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+ arch/arm/boot/dts/db8500.dtsi |   30 ++++++++++++++++++++++++++++++
+ 1 files changed, 30 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/db8500.dtsi b/arch/arm/boot/dts/db8500.dtsi
+index 4ad5160..ec2be92 100644
+--- a/arch/arm/boot/dts/db8500.dtsi
++++ b/arch/arm/boot/dts/db8500.dtsi
+@@ -206,62 +206,74 @@
+ 
+ 				// DB8500_REGULATOR_VAPE
+ 				db8500_vape_reg: db8500_vape {
++					regulator-compatible = "db8500_vape";
+ 					regulator-name = "db8500-vape";
+ 					regulator-always-on;
+ 				};
+ 
+ 				// DB8500_REGULATOR_VARM
+ 				db8500_varm_reg: db8500_varm {
++					regulator-compatible = "db8500_varm";
+ 					regulator-name = "db8500-varm";
+ 				};
+ 
+ 				// DB8500_REGULATOR_VMODEM
+ 				db8500_vmodem_reg: db8500_vmodem {
++					regulator-compatible = "db8500_vmodem";
+ 					regulator-name = "db8500-vmodem";
+ 				};
+ 
+ 				// DB8500_REGULATOR_VPLL
+ 				db8500_vpll_reg: db8500_vpll {
++					regulator-compatible = "db8500_vpll";
+ 					regulator-name = "db8500-vpll";
+ 				};
+ 
+ 				// DB8500_REGULATOR_VSMPS1
+ 				db8500_vsmps1_reg: db8500_vsmps1 {
++					regulator-compatible = "db8500_vsmps1";
+ 					regulator-name = "db8500-vsmps1";
+ 				};
+ 
+ 				// DB8500_REGULATOR_VSMPS2
+ 				db8500_vsmps2_reg: db8500_vsmps2 {
++					regulator-compatible = "db8500_vsmps2";
+ 					regulator-name = "db8500-vsmps2";
+ 				};
+ 
+ 				// DB8500_REGULATOR_VSMPS3
+ 				db8500_vsmps3_reg: db8500_vsmps3 {
++					regulator-compatible = "db8500_vsmps3";
+ 					regulator-name = "db8500-vsmps3";
+ 				};
+ 
+ 				// DB8500_REGULATOR_VRF1
+ 				db8500_vrf1_reg: db8500_vrf1 {
++					regulator-compatible = "db8500_vrf1";
+ 					regulator-name = "db8500-vrf1";
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_SVAMMDSP
+ 				db8500_sva_mmdsp_reg: db8500_sva_mmdsp {
++					regulator-compatible = "db8500_sva_mmdsp";
+ 					regulator-name = "db8500-sva-mmdsp";
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_SVAMMDSPRET
+ 				db8500_sva_mmdsp_ret_reg: db8500_sva_mmdsp_ret {
++					regulator-compatible = "db8500_sva_mmdsp_ret";
+ 					regulator-name = "db8500-sva-mmdsp-ret";
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_SVAPIPE
+ 				db8500_sva_pipe_reg: db8500_sva_pipe {
++					regulator-compatible = "db8500_sva_pipe";
+ 					regulator-name = "db8500_sva_pipe";
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_SIAMMDSP
+ 				db8500_sia_mmdsp_reg: db8500_sia_mmdsp {
++					regulator-compatible = "db8500_sia_mmdsp";
+ 					regulator-name = "db8500_sia_mmdsp";
+ 				};
+ 
+@@ -272,38 +284,45 @@
+ 
+ 				// DB8500_REGULATOR_SWITCH_SIAPIPE
+ 				db8500_sia_pipe_reg: db8500_sia_pipe {
++					regulator-compatible = "db8500_sia_pipe";
+ 					regulator-name = "db8500-sia-pipe";
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_SGA
+ 				db8500_sga_reg: db8500_sga {
++					regulator-compatible = "db8500_sga";
+ 					regulator-name = "db8500-sga";
+ 					vin-supply = <&db8500_vape_reg>;
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_B2R2_MCDE
+ 				db8500_b2r2_mcde_reg: db8500_b2r2_mcde {
++					regulator-compatible = "db8500_b2r2_mcde";
+ 					regulator-name = "db8500-b2r2-mcde";
+ 					vin-supply = <&db8500_vape_reg>;
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_ESRAM12
+ 				db8500_esram12_reg: db8500_esram12 {
++					regulator-compatible = "db8500_esram12";
+ 					regulator-name = "db8500-esram12";
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_ESRAM12RET
+ 				db8500_esram12_ret_reg: db8500_esram12_ret {
++					regulator-compatible = "db8500_esram12_ret";
+ 					regulator-name = "db8500-esram12-ret";
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_ESRAM34
+ 				db8500_esram34_reg: db8500_esram34 {
++					regulator-compatible = "db8500_esram34";
+ 					regulator-name = "db8500-esram34";
+ 				};
+ 
+ 				// DB8500_REGULATOR_SWITCH_ESRAM34RET
+ 				db8500_esram34_ret_reg: db8500_esram34_ret {
++					regulator-compatible = "db8500_esram34_ret";
+ 					regulator-name = "db8500-esram34-ret";
+ 				};
+ 			};
+@@ -318,6 +337,7 @@
+ 
+ 					// supplies to the display/camera
+ 					ab8500_ldo_aux1_reg: ab8500_ldo_aux1 {
++						regulator-compatible = "ab8500_ldo_aux1";
+ 						regulator-name = "V-DISPLAY";
+ 						regulator-min-microvolt = <2500000>;
+ 						regulator-max-microvolt = <2900000>;
+@@ -328,6 +348,7 @@
+ 
+ 					// supplies to the on-board eMMC
+ 					ab8500_ldo_aux2_reg: ab8500_ldo_aux2 {
++						regulator-compatible = "ab8500_ldo_aux2";
+ 						regulator-name = "V-eMMC1";
+ 						regulator-min-microvolt = <1100000>;
+ 						regulator-max-microvolt = <3300000>;
+@@ -335,6 +356,7 @@
+ 
+ 					// supply for VAUX3; SDcard slots
+ 					ab8500_ldo_aux3_reg: ab8500_ldo_aux3 {
++						regulator-compatible = "ab8500_ldo_aux3";
+ 						regulator-name = "V-MMC-SD";
+ 						regulator-min-microvolt = <1100000>;
+ 						regulator-max-microvolt = <3300000>;
+@@ -342,41 +364,49 @@
+ 
+ 					// supply for v-intcore12; VINTCORE12 LDO
+ 					ab8500_ldo_initcore_reg: ab8500_ldo_initcore {
++						regulator-compatible = "ab8500_ldo_initcore";
+ 						regulator-name = "V-INTCORE";
+ 					};
+ 
+ 					// supply for tvout; gpadc; TVOUT LDO
+ 					ab8500_ldo_tvout_reg: ab8500_ldo_tvout {
++						regulator-compatible = "ab8500_ldo_tvout";
+ 						regulator-name = "V-TVOUT";
+ 					};
+ 
+ 					// supply for ab8500-usb; USB LDO
+ 					ab8500_ldo_usb_reg: ab8500_ldo_usb {
++						regulator-compatible = "ab8500_ldo_usb";
+ 						regulator-name = "dummy";
+ 					};
+ 
+ 					// supply for ab8500-vaudio; VAUDIO LDO
+ 					ab8500_ldo_audio_reg: ab8500_ldo_audio {
++						regulator-compatible = "ab8500_ldo_audio";
+ 						regulator-name = "V-AUD";
+ 					};
+ 
+ 					// supply for v-anamic1 VAMic1-LDO
+ 					ab8500_ldo_anamic1_reg: ab8500_ldo_anamic1 {
++						regulator-compatible = "ab8500_ldo_anamic1";
+ 						regulator-name = "V-AMIC1";
+ 					};
+ 
+ 					// supply for v-amic2; VAMIC2 LDO; reuse constants for AMIC1
+ 					ab8500_ldo_amamic2_reg: ab8500_ldo_amamic2 {
++						regulator-compatible = "ab8500_ldo_amamic2";
+ 						regulator-name = "V-AMIC2";
+ 					};
+ 
+ 					// supply for v-dmic; VDMIC LDO
+ 					ab8500_ldo_dmic_reg: ab8500_ldo_dmic {
++						regulator-compatible = "ab8500_ldo_dmic";
+ 						regulator-name = "V-DMIC";
+ 					};
+ 
+ 					// supply for U8500 CSI/DSI; VANA LDO
+ 					ab8500_ldo_ana_reg: ab8500_ldo_ana {
++						regulator-compatible = "ab8500_ldo_ana";
+ 						regulator-name = "V-CSI/DSI";
+ 					};
+ 				};
+-- 
+1.7.1.1
