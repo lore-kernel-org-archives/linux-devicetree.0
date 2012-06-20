@@ -1,68 +1,69 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V2 3/3] ARM: dts: db8500: add node property
- "regulator-compatible" regulator node
-Date: Wed, 20 Jun 2012 11:06:31 +0100
-Message-ID: <20120620100631.GE3978@opensource.wolfsonmicro.com>
-References: <1340116099-17629-1-git-send-email-ldewangan@nvidia.com>
- <1340116099-17629-4-git-send-email-ldewangan@nvidia.com>
- <4FE0A546.1010707@linaro.org>
- <4FE0B79D.4090201@wwwdotorg.org>
- <4FE1772A.2010806@linaro.org>
- <4FE17E24.8050702@nvidia.com>
- <4FE18371.2020602@linaro.org>
- <4FE1877C.4090103@nvidia.com>
- <4FE19036.1060008@linaro.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: Where to power on the wifi device before loading the driver.
+Date: Wed, 20 Jun 2012 11:47:44 +0100
+Message-ID: <20120620104744.GK3978@opensource.wolfsonmicro.com>
+References: <20120614121234.GC3913@opensource.wolfsonmicro.com>
+ <4FDA092E.10301@wwwdotorg.org>
+ <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
+ <4FDB5976.20809@wwwdotorg.org>
+ <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com>
+ <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
+ <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com>
+ <20120619091719.GZ3974@opensource.wolfsonmicro.com>
+ <6B4D417B830BC44B8026029FD256F7F1C6EE2DD626@HKMAIL01.nvidia.com>
+ <4FE112F2.7000506@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LSp5EJdfMPwZcMS1"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="F55Y67F01HNW3AgB"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4FE19036.1060008@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "arnd@arndb.de" <arnd@arndb.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <4FE112F2.7000506-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, 'Philip Rakity' <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---LSp5EJdfMPwZcMS1
+--F55Y67F01HNW3AgB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jun 20, 2012 at 09:56:22AM +0100, Lee Jones wrote:
+On Tue, Jun 19, 2012 at 06:01:54PM -0600, Stephen Warren wrote:
 
-> >Are you OK to have the first patch with adding property
+> Unfortunately, it should be noted that the WiFi device socket on Cardhu
+> apparently isn't some standardized thing (like PCIe) but something
+> rather more custom, although there are apparently devices available to
+> plug into it from multiple module vendors which contain WiFi chips from
+> multiple chip vendors.
 
-...
+Right, and indeed someone may decide to plug in something that isn't a
+WiFi device at all but some other SDIO attached device with totally
+different uses for those GPIOs.  Really these boards are an example of
+the sort of thing I was talking about with modular reference systems,
+though a simpler case as given what's brought out you probably can just
+do something like list all the options that are there and allow hotplug
+to sort things out.
 
-> Yes I'm fine with it.
-
-So is that an ack?
-
-> It's only the unnecessary reg and *-size properties I'm opposed to.
-
-My understanding is that they're required by DT policies in the same way
-that some of the other verbiage is.
-
---LSp5EJdfMPwZcMS1
+--F55Y67F01HNW3AgB
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP4aCTAAoJEBus8iNuMP3dFmkQAI2YR4TUUUyWjyQpYaRWFXUE
-m8eTJtR0YWJQ/nrTHKgc4B29pukneWzn7XjONrKYkFV/eDKEuVrKFrObwblN0LVw
-9y48vjJUGcvrdS9QBX0l8gKa8jVOYr7JTo6fKPOY1ahisEKTs/genJxGR3lV/jH0
-SJtPR2Rs9EkkVO/JX6Nx3aYUNOkPnZOlTgy0Le+NIPpAqkRvoiuj3LgJ2YUgNYRQ
-2GSp23auK/GGW2PsDtuU1cvR3IAkHPc4ukHBz0CSzzzZhNHf1AGBrVJbfc8vv02E
-BP1nUqmxR5s7W350IB3MfYOJyVe0eXbVJrQgtoXg+vijs3tYDTuhHFa0g982Fn2q
-c4ky/WG6y/9SvfjARj3DQDuptvZidq/dQRtS4DNUngTzmVCl/E3wAvmwYFSAVuXi
-CpqbfdcJmRV+m76fiWuYlFfRi7DNnZgpjuVkEYkXVCM0no4ePqyI3h6+nq1EQhqE
-KHPdLuEs6qih+fTwIkon35xeeHqdWhVC68C04088QjqoBkQIVGjy9QIhz3eWemA+
-yot/LviFKULvHgTwyTkkznGu9JTKBB7r+g6G5W/gVB/TA3YPEByUE0zLHe281x7W
-LlPWIeQZvLgO1FMAh0PYiJDNz/P10QGYI4iE5fXcIGXNqLohgxOOb1Hg0D+NqGHP
-v5HCEJDyvEQXvik43mgo
-=Qmyf
+iQIcBAEBAgAGBQJP4apGAAoJEBus8iNuMP3dfD0P/2Xtd5aTLHDWOxvbicUix1CW
+v+mfFEHoglO0I8GcC7QWEibEStlIlXDdXQ63CZLPia08XiCqyb9ls57ZWppTTpY8
+CH049NpfmHRMHkPe865wYf62TcQd5oQf7qGVjEU6GF8WP/6Wajc+HwTUmhRGAarN
+cuLNP4lF2qKqJAVORe5bLUdgChtNLSn0XQCReyC9aVtWJ7VrNZv+BLe55a5jAZpM
+9Io+wIo+z40X3xVqAaNhdk2ZkEE+l2Ytd8bju8u1xl4gTMx2hS3g/Nyn2uHxng8R
+HQgYvHX9hybf9njdbIgWAHm+6fz3JPE/Jass7iQ6V2+iqnX2HvEkbtaLBtxCTKc+
+k2XdW4/IggN195pr3HMWU7ssjpkvrXwxi49dqWzvY0yCWGUSDaw8CKy6kGGtKvvd
+W1TAVxmLlz6r4CcS0t9v2UF19bswuy8z22TKRIRsh3EO23X1OY/DTk0tMS16in3U
+CcdvsXFPwa+xolqSkFGUf98Y3dr3G7q7zNF3EoebiXrsung7/lRo1psMFjasV6ur
+5aluaQ4cvtYgdVAJf5hKmiAankNhvIAGK0HLnZNhK3Al/3jh/KML0WPZQAukXO4B
+Cm8yVf2N5w9KW3NGajbVl5/AoyZZgU2sOl4jVKLPniWddZpTqj0DuGXNlg3qW26F
+/j0HH7ZJPXBuLCBHM6rI
+=RgVm
 -----END PGP SIGNATURE-----
 
---LSp5EJdfMPwZcMS1--
+--F55Y67F01HNW3AgB--
