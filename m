@@ -1,69 +1,204 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: Where to power on the wifi device before loading the driver.
-Date: Wed, 20 Jun 2012 11:47:44 +0100
-Message-ID: <20120620104744.GK3978@opensource.wolfsonmicro.com>
-References: <20120614121234.GC3913@opensource.wolfsonmicro.com>
- <4FDA092E.10301@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
- <4FDB5976.20809@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com>
- <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com>
- <20120619091719.GZ3974@opensource.wolfsonmicro.com>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD626@HKMAIL01.nvidia.com>
- <4FE112F2.7000506@wwwdotorg.org>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Bindings for SMC/HVC firmware interfaces on ARM (Re: [RFC PATCH]
+ ARM: Make a compile trustzone conditionally)
+Date: Wed, 20 Jun 2012 11:51:17 +0100
+Message-ID: <20120620105116.GA2179@linaro.org>
+References: <20120611051502.GA24030@july>
+ <CAOesGMgGQMwQTUy2g-XSYFrQ-p+x9g2q8kAd-ZYq=TBgVFu0Zw@mail.gmail.com>
+ <CAH9JG2X=15G6wDX5SGJkDEVohkQQkzfBoL3Qv7HVuBUMqYnwRg@mail.gmail.com>
+ <201206181410.39267.arnd@arndb.de>
+ <4FE125C6.3030401@codeaurora.org>
+ <20120620094334.GA32666@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="F55Y67F01HNW3AgB"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4FE112F2.7000506-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, 'Philip Rakity' <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+In-Reply-To: <20120620094334.GA32666-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 20, 2012 at 10:43:34AM +0100, Will Deacon wrote:
+> Hi Stephen,
+> 
+> On Wed, Jun 20, 2012 at 02:22:14AM +0100, Stephen Boyd wrote:
+> > On 06/18/12 07:10, Arnd Bergmann wrote:
+> > > Instead of checking for trustzone_enabled() in each place where
+> > > we call into smc, we can have a generic implementation that
+> > > we call for the disabled case, and provide a vendor specific
+> > > version of that struct with functions that call into smp 
+> > > where necessary.
+> > >
+> > 
+> > What if we tried to read the SCR.NS bit to determine if we're running in
+> > secure state or not? It looks like reading SCR is UNDEFINED (i.e. causes
+> > an undefined instruction exception) if we're running in the non-secure
+> > state so I propose we set up an undef hook that traps the SCR access and
+> > lies about the value of the NS bit to indicate we're non-secure.
+> > Basically this:
+> 
+> Well, I can't resist reviewing the code, but I don't think we should be
+> trying to detect this (see below).
+> 
+> > static int scr_trap(struct pt_regs *regs, unsigned int instr)
+> > {
+> >         int reg = (instr >> 12) & 15;
+> >         if (reg == 15)
+> >                 return 1;
+> 
+> Eek -- surely GCC won't allocate PC for the destination register?!
+> 
+> >         regs->uregs[reg] = BIT(0); /* Trapped = non-secure */
+> >         regs->ARM_pc += 4;
+> >         return 0;
+> > }
+> > 
+> > static struct undef_hook scr_hook = {
+> >         .instr_mask     = 0x0fff0fff,
+> >         .instr_val      = 0x0e110f11,
+> >         .fn             = scr_trap,
+> > };
 
---F55Y67F01HNW3AgB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+(you'd also need to handle the Thumb case; I digress...)
 
-On Tue, Jun 19, 2012 at 06:01:54PM -0600, Stephen Warren wrote:
+> > 
+> > int in_secure_state(void)
+> > {
+> >         unsigned int scr;
+> > 
+> > 	register_undef_hook(&scr_hook);
+> > 
+> >         asm volatile(
+> >         "       mrc p15, 0, %0, c1, c1, 0\n"
+> >         : "=r" (scr)
+> >         :
+> >         : "cc");
+> 
+> I don't think you need this clobber either.
+> > It seems to mostly work, although I haven't figured out what you do
+> > about the hypervisor case when the hypervisor has disabled the smc
+> > instruction entirely (SCR.SCD=1). At that point I throw up my hands.
+> > Maybe Will has some idea.
+> 
+> I think this is part of a bigger problem, which is about how we know where
+> we live in the privilege hierarchy and what we have sitting above us. We
+> have exactly the same issue with hypervisors and the hvc instruction.
+> 
+> Rather than try to probe the instruction (which by itself isn't enough,
+> since we can't guarantee that the exception will be handled by the upper
+> layers) I would personally prefer to see this described in the device tree.
+> We could have a simple property in the CPU node that says what the interface
+> looks like:
+> 
+> 	smc-interface = "samsung, exynos";
+> 
+> or whatever you need to identify the interface uniquely. You could have a
+> corresponding entry for hvc-interface (and something like KVM could pass
+> its version to the guest for paravirualisation). If the property is missing,
+> then we take that to mean that the instruction shouldn't be executed on that
+> core -- it may be undefined or there may not be anything to pick up the
+> exception.
 
-> Unfortunately, it should be noted that the WiFi device socket on Cardhu
-> apparently isn't some standardized thing (like PCIe) but something
-> rather more custom, although there are apparently devices available to
-> plug into it from multiple module vendors which contain WiFi chips from
-> multiple chip vendors.
+I concur.
 
-Right, and indeed someone may decide to plug in something that isn't a
-WiFi device at all but some other SDIO attached device with totally
-different uses for those GPIOs.  Really these boards are an example of
-the sort of thing I was talking about with modular reference systems,
-though a simpler case as given what's brought out you probably can just
-do something like list all the options that are there and allow hotplug
-to sort things out.
+The firmware is the only thing that really knows what's there,
+and in reality there's no safe way to probe.  Even if we know we're in the
+Normal World, we have no idea what's on the other side of SMC.  One
+firmware's "probe" call may be another firmware's "halt and catch fire"
+call.
 
---F55Y67F01HNW3AgB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+So DT bindings permitting the firmware to tell us what's there make a lot
+of sense.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP4apGAAoJEBus8iNuMP3dfD0P/2Xtd5aTLHDWOxvbicUix1CW
-v+mfFEHoglO0I8GcC7QWEibEStlIlXDdXQ63CZLPia08XiCqyb9ls57ZWppTTpY8
-CH049NpfmHRMHkPe865wYf62TcQd5oQf7qGVjEU6GF8WP/6Wajc+HwTUmhRGAarN
-cuLNP4lF2qKqJAVORe5bLUdgChtNLSn0XQCReyC9aVtWJ7VrNZv+BLe55a5jAZpM
-9Io+wIo+z40X3xVqAaNhdk2ZkEE+l2Ytd8bju8u1xl4gTMx2hS3g/Nyn2uHxng8R
-HQgYvHX9hybf9njdbIgWAHm+6fz3JPE/Jass7iQ6V2+iqnX2HvEkbtaLBtxCTKc+
-k2XdW4/IggN195pr3HMWU7ssjpkvrXwxi49dqWzvY0yCWGUSDaw8CKy6kGGtKvvd
-W1TAVxmLlz6r4CcS0t9v2UF19bswuy8z22TKRIRsh3EO23X1OY/DTk0tMS16in3U
-CcdvsXFPwa+xolqSkFGUf98Y3dr3G7q7zNF3EoebiXrsung7/lRo1psMFjasV6ur
-5aluaQ4cvtYgdVAJf5hKmiAankNhvIAGK0HLnZNhK3Al/3jh/KML0WPZQAukXO4B
-Cm8yVf2N5w9KW3NGajbVl5/AoyZZgU2sOl4jVKLPniWddZpTqj0DuGXNlg3qW26F
-/j0HH7ZJPXBuLCBHM6rI
-=RgVm
------END PGP SIGNATURE-----
+Fleshing this out a bit...
 
---F55Y67F01HNW3AgB--
+Since the SMC and HVC instructions are features of the architecture, it may
+make sense for the names to be:
+
+	arm,smc = "vendor,interface-name";
+	arm,hvc = "vendor,interface-name";
+
+Some platforms may not fully service SMC on all CPUs, so there might be a
+need to set this per CPU node.  This can be topologically determined, so
+you might have:
+
+	cluster@0 {
+		arm,smc = "vendor,platform-basic-firmware";
+		
+		cpu@0 {
+			arm,smc = "vendor,platform-fancy-firmware";
+		};
+
+		cpu@1 {
+			// no arm,smc property
+		};
+
+		cpu@2 {
+			// no arm,smc property
+		};
+
+		// ...
+	}
+
+The set of supported SMC calls on a CPU would then be determined by the
+list of all strings on arm,smc properties on that CPU node and its
+ancestors.
+
+If the arm,smc or arm,hvc property is absent at all levels of the
+topology, this does not mean that there is nothing there, but it does
+mean that nothing is known about what's there.  Platform code would fall
+back to the legacy case in that situation.
+
+
+If additional properties are needed, like version or capability info,
+we could have nodes instead:
+
+	cluster@0 {
+		arm,smc {
+			basic-firmware {
+				compatible = "vendor,platform-basic-firmware";
+			};
+		}
+
+		cpu@0 {
+			arm,smc {
+				fancy-firmware {
+					compatible = "vendor,platform-fancy-firmware";
+					version = <1 12>;
+					capabilities = "whizz", "bang", "kapow";
+				};
+
+				common-firmware {
+					compatible = "standards-body,common-firmware";
+					version = <1 0>;
+				}
+			};
+		};
+
+		// ...
+	};
+
+...or something equally esoteric.
+
+(If node names like "arm,smc" are acceptable ... we could have something
+else if not.)
+
+It would be up to the platform's code handling "vendor,platform-fancy-
+firmware" etc. to know about and deal with the precise calling
+conventions for that firmware, though if there are generic firmware
+interfaces someday, then those nodes' support code could be shared.
+
+Cheers
+---Dave
