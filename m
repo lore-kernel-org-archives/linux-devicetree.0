@@ -1,64 +1,71 @@
-From: Mitch Bradley <wmb@firmworks.com>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Wed, 20 Jun 2012 10:19:30 -1000
-Message-ID: <4FE23052.3020702@firmworks.com>
-References: <4FD84133.4060401@firmworks.com> <20120619133001.GB24138@avionic-0098.mockup.avionic-design.de> <4FE0EFBB.6090206@firmworks.com> <201206201957.39343.arnd@arndb.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by regulator-compatible
+Date: Wed, 20 Jun 2012 20:40:52 +0000
+Message-ID: <201206202040.52291.arnd@arndb.de>
+References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <201206201924.09618.arnd@arndb.de> <20120620194609.GA4037@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201206201957.39343.arnd@arndb.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120620194609.GA4037@opensource.wolfsonmicro.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/20/2012 9:57 AM, Arnd Bergmann wrote:
-> On Tuesday 19 June 2012, Mitch Bradley wrote:
->
->> Version A - 3 address cells:  In this version, the intermediate address
->> space has 3 cells:  port#, address type, offset.  Address type is
->>     0 : root port
->>     1 : config space
->>     2 : extended config space
->>     3 : I/O
->>     4 : non-prefetchable memory
->>     5 : prefetchable memory.
->>
->> The third cell "offset" is necessary so that the size field has a number
->> space that can include it.
->
-> I agree with Stephen that this is a clever way to encode all the address spaces,
-> very nice!
->
->> Version B - 2 address cells:  In this first version, the intermediate
->> address space has 2 cells:  port#, offset.  The address type (I/O, mem,
->> etc) is the high digit of in the offset:
->>      Offset 0....... : Root port
->>      Offset 1....... : config
->>      Offset 2....... : extended config
->>      Offset 3....... : I/O
->>      Offset 4....... : non-prefetchable memory
->>      Offset 5....... : prefetchable memory.
->
-> This is similar to how the PCI binding works internally, but I find that
-> a bit confusing as well, so given those two choices, I'd prefer the first
-> one.
+On Wednesday 20 June 2012, Mark Brown wrote:
+> On Wed, Jun 20, 2012 at 07:24:09PM +0000, Arnd Bergmann wrote:
+> 
+> > 1. What is it that the new property can express that cannot already
+> > be expressed by using the phandle.
+> 
+> As well as being able to refer to the object from within the device tree
+> we also need to be able to tell what the object represents - we have a
+> bunch of regulators in an array under a node for a PMIC and we want to
+> know which regulator on the physical device each array entry corresponds
+> to.  Previously this was being done by parsing the phandle name but that
+> means we can't have more than one device with the same set of names.
 
-Yeah, version A is my preference too.  It's straightforward and clear.  
-I did the other two
-versions mostly to explore the possibility space.
+I see.
 
->
->     
->> Version C - 2 address cells, 0 size cells (!) : In this version we hide the size component in
->> the intermediate space.  I don't know if that will actually work, but my guess is that it
->> probably would.  The intermediate address space is like version A with the omission of the
->> offset field.  The intermediate address just specifies the port number and the address type.
->
-> My guess is that it doesn't work with the current Linux code that transforms
-> the addresses. I've just recently seen the code complain about any platform
-> device whose parent has #size-cells=0.
->
-> 	Arnd
->
+But that sounds more like what the "reg" property does than what
+the "compatible" property does for other devices. In other words, you
+want to know which instance you are describing, not what kind of
+object it is.
+
+For a "compatible" property, I would expect two objects that have
+the same register-level interface but are responsible for different
+physical objects to have the same "compatible" values, but here
+you specifically need distinct "regulator-compatible" values.
+ 
+> > 2. Why is it called "regulator-compatible"? If it's similar to the
+> > "compatible" property, don't you have to have a binding for each
+> > possible string? If it's not related to the "compatible" property,
+> > why is it named in a similar way?
+> 
+> Yes, there are bindings defined already for all the relevant devices.
+> Elsewhere in the binding document you'll see a list of all the
+> regulators on the PMIC and the names by which the device tree binding
+> knows them.
+
+Ah, so we just change the way how the binding refers to those names,
+rather than the individual strings.
+
+It makes much more sense now, so please let's make sure that explanation
+ends up in the changelog.
+
+I still have two more questions: 
+
+* In case of tps65910, the individual regulators are all numbered, so
+the driver can find them by their "reg" property. Should we still
+mandate the use of the "regulator-compatible" property? It sounds
+to me that we could better make it an optional property in those
+cases.
+
+* What is the difference between "regulator-name" and
+"regulator-compatible"? Those are the same most of the time
+in the patches, so can't we just make sure they are always the
+same, and drop the confusingly named "regulator-compatible" one?
+
+	Arnd
