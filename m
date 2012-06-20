@@ -1,76 +1,140 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
-Date: Wed, 20 Jun 2012 09:41:26 -0600
-Message-ID: <4FE1EF26.9080401@wwwdotorg.org>
-References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com> <1339590863-10564-9-git-send-email-richard.zhao@freescale.com> <4FD8AD42.6010702@gmail.com> <20120613152841.GA23590@richard-laptop> <4FD8C4DB.4020908@gmail.com> <20120614013343.GD29684@b20223-02.ap.freescale.net> <4FE1DE53.4070202@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2 3/3] ARM: dts: db8500: add node property "regulator-compatible"
+ regulator node
+Date: Wed, 20 Jun 2012 10:14:37 -0600
+Message-ID: <4FE1F6ED.6060406@wwwdotorg.org>
+References: <1340116099-17629-1-git-send-email-ldewangan@nvidia.com> <1340116099-17629-4-git-send-email-ldewangan@nvidia.com> <4FE0A546.1010707@linaro.org> <4FE0B79D.4090201@wwwdotorg.org> <4FE1772A.2010806@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FE1DE53.4070202-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <4FE1772A.2010806@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, linus.walleij@linaro.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2012 08:29 AM, Rob Herring wrote:
-> On 06/13/2012 08:33 PM, Richard Zhao wrote:
->> On Wed, Jun 13, 2012 at 11:50:35AM -0500, Rob Herring wrote:
->>> On 06/13/2012 10:28 AM, Richard Zhao wrote:
->>>> On Wed, Jun 13, 2012 at 10:09:54AM -0500, Rob Herring wrote:
->>>>> On 06/13/2012 07:34 AM, Richard Zhao wrote:
->>>>>> Sometimes, boards have gpios that don't own by any driver or owner
->>>>>> by a generic driver that don't like hacks. Such gpios is normally
->>>>>> output and need setup once on boot. So I introduce the config-on-boot
->>>>>> gpios.
-...
->>>>>> diff --git a/Documentation/devicetree/bindings/arm/config-on-boot.txt b/Documentation/devicetree/bindings/arm/config-on-boot.txt
-...
->>>>>> +Node name: config-on-boot
->>>>>> +  It must be in root node. config-on-boot means to describe settings that needs
->>>>>> +  to be set one time on boot but aren't owned by any driver, or the owned driver
->>>>>> +  is too generic to handle such settings. For example, usb hub uses generic
->>>>>> +  driver in usb core code, a on-board usb may need deassert reset pin.
->>>>>
->>>>> NAK. This is not a h/w description
-...
->>> You need to describe that you have a hub on the usb bus and add the gpio
->>> line to that node. Just like PCI is probe-able, you still need DT nodes
->>> sometimes for cases like this.
+On 06/20/2012 01:09 AM, Lee Jones wrote:
+> On 19/06/12 18:32, Stephen Warren wrote:
+>> On 06/19/2012 10:13 AM, Lee Jones wrote:
+>>> >  On 19/06/12 15:28, Laxman Dewangan wrote:
+>>>> >>  Device's regulator matches their hardware counterparts with the
+>>>> >>  property "regulator-compatible" of each child regulator node in
+>>>> >>  place of the child node.
+>>>> >>  Add the property "regulator-compatible" for each regulator with
+>>>> >>  their name.
+>>>> >>
+>>>> >>  Signed-off-by: Laxman Dewangan<ldewangan@nvidia.com>
+>>>> >>  ---
+>>>> >>  Changes from V1:
+>>>> >>     - This is new change in V2.
+>>>> >>
+>>>> >>     arch/arm/boot/dts/db8500.dtsi |  128
+>>>> >>  +++++++++++++++++++++++++++++++----------
+>>>> >>     1 files changed, 97 insertions(+), 31 deletions(-)
+>>>> >>
+>>>> >>  diff --git a/arch/arm/boot/dts/db8500.dtsi
+>>>> >>  b/arch/arm/boot/dts/db8500.dtsi
+>>>> >>  index 4ad5160..9548f80 100644
+>>>> >>  --- a/arch/arm/boot/dts/db8500.dtsi
+>>>> >>  +++ b/arch/arm/boot/dts/db8500.dtsi
+>>>> >>  @@ -203,107 +203,149 @@
+>>>> >>
+>>>> >>                 db8500-prcmu-regulators {
+>>>> >>                     compatible =
+>>>> "stericsson,db8500-prcmu-regulator";
+>>>> >>  +                #address-cells =<1>;
+>>>> >>  +                #size-cells =<0>;
+>>> >
+>>> >  Why are these and the reg properties required?
 >>
->> PCI has dev id and may add quirks. But for embedded, I don't know how
->> to connect a of node to a hub device enumerated by usb core code. And
->> it may also pollute the usb core code.
+>> DT nodes should be named after the type of object they describe (e.g.
+>> "regulator") rather than the name of the object they're describing (e.g.
+>> "vape").
+>>
+>> Once you've made that change, you end up with many nodes with the same
+>> name in the same parent, so you need to make their names unique. You do
+>> this by adding a "unit address" to each of them - "@0", "@1", ... But,
+>> in order to be "allowed" to use such a unit address, you need a reg
+>> property that matches the unit address, and #address-cells/#size-cells
+>> in the parent node.
 > 
-> USB also uses device and manufacturer ids. One of the main reasons for
-> putting pci devices into dts is to describe out of band signals just
-> like this.
+> I don't like it. By doing this you are preventing any regulator from
+> being registered by of_platform_populate().
+
+That isn't true.
+
+The binding for a regulator chip can choose to either use one of two
+schemes to identify which regulator the child nodes apply to:
+
+1) Use the regulator-compatible property, and the Linux driver would use
+of_regulator_match() to parse the DT.
+
+2) Use the compatible property, and the Linux driver would use
+of_platform_populate().
+
+Now, the binding does need to choose the identification scheme up-front,
+but simply so that there's a single way to write the binding for the
+device; nothing to do with the driver code to parse it.
+
+Note that the way the existing db8500.dtsi regulator binding is defined
+already has chosen option (1) above, since there's no compatible
+property within each regulator node.
+
+> Also, the nodes are already
+> placed under an identifying node "db8500-prcmu-regulators", so we know
+> they are regulators, making the regulator@x, the reg property and the
+> *-cells properties unnecessary cruft.
+
+What we "know" isn't the issue here; DT is defined such that node names
+are supposed to encode the class of device. That's a rule that was
+accidentally overlooked here, and we're hoping to correct that.
+
+> I'd prefer to have the second label removed and just to call the
+> regulators by their correct name. The property names become functionally
+> redundant after the previous patch has been applied in any case.
 > 
-> Creating a binding and support code for full usb bus topology would be a
-> lot of work which is why I propose a simpler approach below.
+> Something like this:
 > 
->>> A simpler approach would be to just add
->>> the gpio to the ehci controller node, but that's not exactly correct.
->> That's exactly why this patch comes out.
-> 
-> I mean just something like "fsl,hub-reset-gpios" in the ehci device
-> node. It's at least under a usb node. Whether the ehci driver handles
-> this or you just have a separate piece of code to find this property and
-> setup the gpio is up to you.
+>>              db8500-prcmu-regulators {
+>>                  compatible = "stericsson,db8500-prcmu-regulator";
+>>
+>>                  // DB8500_REGULATOR_VAPE
+>> -                db8500_vape_reg: db8500_vape {
+>> +                db8500_vape {
+>> +                    regulator-compatible = "db8500_vape";
+>>                      regulator-name = "db8500-vape";
+>>                      regulator-always-on;
+>>                  };
 
-I haven't been following the thread, but just noticed it. Very similar
-things (DT nodes for probed devices) are coming up quite a bit recently,
-for example:
+The node name isn't a label. However, you can in fact remove the label
+if you want. Instead of referencing the label in the client node:
 
-Re: Where to power on the wifi device before loading the driver.
-http://www.spinics.net/lists/arm-kernel/msg180368.html
+	foo = <&db8500_vape_reg ...>;
 
-dt: rfkill-gpio: add bindings documentation
-http://www.spinics.net/lists/linux-tegra/msg03977.html
+you can reference the path to the node:
 
-I wonder if there's any kind of infra-structure or standardized bindings
-that would be useful here?
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	foo = <&{/soc-u9500/prcmu@80157000/db8500-prcmu-regulators\
+/db8500_vape}>;
+
+However, that's quite unwieldy, hence why labels are typically used to
+provide a more succinct name. Also, when the nodes are named according
+the to DT rules, the last name component is something like
+"regulator@0", so isn't very readable.
+
+> It's also a shame we can't do anything about the regulator-name, or
+> regulator-compatible property naming conventions. They are almost always
+> going to be either extremely similar or even the same. Seems like a bit
+> of a wasted property to me at this point.
+
+The two properties name different things:
+
+regulator-compatible names the regulator HW unit within the chip. This
+should be invariant across all boards that use this chip; it's something
+defined internally to the chip and/or the chip's
+documentation/specification. An example might be "LDO1".
+
+regulator-name defines what the regulator is used for in a particular
+scenario. This may be the signal name on a particular board's schematic
+or similar function name. Examples might be "SDMMC3_VDDIO" or "SD slot
+power".
