@@ -1,50 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by regulator-compatible
-Date: Wed, 20 Jun 2012 19:24:09 +0000
-Message-ID: <201206201924.09618.arnd@arndb.de>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <1340194987-23654-3-git-send-email-ldewangan@nvidia.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: export of_platform_populate()
+Date: Wed, 20 Jun 2012 14:32:53 -0500
+Message-ID: <4FE22565.3050807@gmail.com>
+References: <1339113456-27089-1-git-send-email-swarren@wwwdotorg.org> <4FD60030.8090700@gmail.com> <4FE20FB8.1020601@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1340194987-23654-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FE20FB8.1020601@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 20 June 2012, Laxman Dewangan wrote:
-> Match the device's regulators with the property of
-> "regulator-compatible" of each regulator node.
+On 06/20/2012 01:00 PM, Stephen Warren wrote:
+> On 06/11/2012 08:26 AM, Rob Herring wrote:
+>> On 06/07/2012 06:57 PM, Stephen Warren wrote:
+>>> From: Stephen Warren <swarren@nvidia.com>
+>>>
+>>> Without this, modules can't use this API, leading to build failures.
+>>>
+>>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+>>> ---
+>>
+>> Applied for 3.5.
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-> ---
-> Changes from V1:
-> - In place of adding new api, modify the existing api of_regulator_match() to
-> look regulator-compatible for matching.
+> Thanks.
 > 
-> Changes from V2:
-> - Add break if the regualtor match found.
+> Do you know when it will show up in linux-next and/or 3.5 itself? The
+> patch hasn't rebased out of my local tree yet.
 
+Unless I missed it, Grant has not yet pulled my pull request with this.
+I'm just the maillist patch monkey. :)
 
-I've read the entire series a few times and I still can't figure out
-why you're doing it. *Please* describe what the change is good for,
-now what you are doing in it.
-
-All I can tell from the patch and/or description right now is that
-you are adding a third identifier next the phandle and the
-"regulalator-name", but not why this is a good idea.
-
-Specifically, please explain these two things in the changelog:
-
-1. What is it that the new property can express that cannot already
-be expressed by using the phandle.
-
-2. Why is it called "regulator-compatible"? If it's similar to the
-"compatible" property, don't you have to have a binding for each
-possible string? If it's not related to the "compatible" property,
-why is it named in a similar way?
-
-	Arnd
+Rob
