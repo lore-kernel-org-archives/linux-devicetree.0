@@ -1,30 +1,32 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] of: export of_platform_populate()
-Date: Wed, 20 Jun 2012 12:00:24 -0600
-Message-ID: <4FE20FB8.1020601@wwwdotorg.org>
-References: <1339113456-27089-1-git-send-email-swarren@wwwdotorg.org> <4FD60030.8090700@gmail.com>
+Subject: Re: [PATCH V3 1/3] ARM: dts: db8500: add property "regulator-compatible"
+ regulator node
+Date: Wed, 20 Jun 2012 12:48:41 -0600
+Message-ID: <4FE21B09.5000901@wwwdotorg.org>
+References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <1340194987-23654-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FD60030.8090700@gmail.com>
+In-Reply-To: <1340194987-23654-2-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, arnd@arndb.de, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2012 08:26 AM, Rob Herring wrote:
-> On 06/07/2012 06:57 PM, Stephen Warren wrote:
->> From: Stephen Warren <swarren@nvidia.com>
->>
->> Without this, modules can't use this API, leading to build failures.
->>
->> Signed-off-by: Stephen Warren <swarren@nvidia.com>
->> ---
+On 06/20/2012 06:23 AM, Laxman Dewangan wrote:
+> Device's regulator matches their hardware counterparts with the
+> property "regulator-compatible" of each child regulator node in
+> place of the child node name.
+> Add the property "regulator-compatible" for each regulator with
+> their hardware counterpart's name.
 > 
-> Applied for 3.5.
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-Thanks.
+This change is correct as far as it goes, so:
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
 
-Do you know when it will show up in linux-next and/or 3.5 itself? The
-patch hasn't rebased out of my local tree yet.
+That said, the DT still should be modified to match the rules of correct
+DT formatting. That was a pre-existing issue though, so it's OK if that
+doesn't happen in this patch, and I'm happy leaving that to the
+maintainers of this file.
