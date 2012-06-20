@@ -1,42 +1,102 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v3 0/5] ARM: topology: set the capacity of each cores for big.LITTLE
-Date: Wed, 20 Jun 2012 17:19:17 +0200
-Message-ID: <1340205562-7653-1-git-send-email-vincent.guittot@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org
-Cc: linux@arm.linux.org.uk, a.p.zijlstra@chello.nl, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, namhyung@kernel.org, jean.pihet@newoldbits.com, Vincent Guittot <vincent.guittot@linaro.org>
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 1/5] ARM: topology: Add arch_scale_freq_power function
+Date: Wed, 20 Jun 2012 17:19:18 +0200
+Message-ID: <1340205562-7653-2-git-send-email-vincent.guittot@linaro.org>
+References: <1340205562-7653-1-git-send-email-vincent.guittot@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <1340205562-7653-1-git-send-email-vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset creates an arch_scale_freq_power function for ARM, which is used 
-to set the relative capacity of each core of a big.LITTLE system. It also removes
-the broken power estimation of x86.
+Add infrastructure to be able to modify the cpu_power of each core
 
-Modification since v2:
- - set_power_scale function becomes static
- - Rework loop in update_siblings_masks
- - Remove useless code in parse_dt_topology
+Signed-off-by: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/kernel/topology.c |   38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
-Modification since v1:
- - Add and update explanation about the use of the table and the range of the value 
- - Remove the use of NR_CPUS and use nr_cpu_ids instead
- - Remove broken power estimation of x86
-
-Peter Zijlstra (1):
-  sched, x86: Remove broken power estimation
-
-Vincent Guittot (4):
-  ARM: topology: Add arch_scale_freq_power function
-  ARM: topology: factorize the update of sibling masks
-  ARM: topology: Update cpu_power according to DT information
-  sched: cpu_power: enable ARCH_POWER
-
- arch/arm/kernel/topology.c   |  209 +++++++++++++++++++++++++++++++++++++-----
- arch/x86/kernel/cpu/Makefile |    2 +-
- arch/x86/kernel/cpu/sched.c  |   55 -----------
- kernel/sched/features.h      |    2 +-
- 4 files changed, 189 insertions(+), 79 deletions(-)
- delete mode 100644 arch/x86/kernel/cpu/sched.c
-
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index 8200dea..51f23b3 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -22,6 +22,37 @@
+ #include <asm/cputype.h>
+ #include <asm/topology.h>
+ 
++/*
++ * cpu power scale management
++ */
++
++/*
++ * cpu power table
++ * This per cpu data structure describes the relative capacity of each core.
++ * On a heteregenous system, cores don't have the same computation capacity
++ * and we reflect that difference in the cpu_power field so the scheduler can
++ * take this difference into account during load balance. A per cpu structure
++ * is preferred because each CPU updates its own cpu_power field during the
++ * load balance except for idle cores. One idle core is selected to run the
++ * rebalance_domains for all idle cores and the cpu_power can be updated
++ * during this sequence.
++ */
++static DEFINE_PER_CPU(unsigned long, cpu_scale);
++
++unsigned long arch_scale_freq_power(struct sched_domain *sd, int cpu)
++{
++	return per_cpu(cpu_scale, cpu);
++}
++
++static void set_power_scale(unsigned int cpu, unsigned long power)
++{
++	per_cpu(cpu_scale, cpu) = power;
++}
++
++/*
++ * cpu topology management
++ */
++
+ #define MPIDR_SMP_BITMASK (0x3 << 30)
+ #define MPIDR_SMP_VALUE (0x2 << 30)
+ 
+@@ -41,6 +72,9 @@
+ #define MPIDR_LEVEL2_MASK 0xFF
+ #define MPIDR_LEVEL2_SHIFT 16
+ 
++/*
++ * cpu topology table
++ */
+ struct cputopo_arm cpu_topology[NR_CPUS];
+ 
+ const struct cpumask *cpu_coregroup_mask(int cpu)
+@@ -134,7 +168,7 @@ void init_cpu_topology(void)
+ {
+ 	unsigned int cpu;
+ 
+-	/* init core mask */
++	/* init core mask and power*/
+ 	for_each_possible_cpu(cpu) {
+ 		struct cputopo_arm *cpu_topo = &(cpu_topology[cpu]);
+ 
+@@ -143,6 +177,8 @@ void init_cpu_topology(void)
+ 		cpu_topo->socket_id = -1;
+ 		cpumask_clear(&cpu_topo->core_sibling);
+ 		cpumask_clear(&cpu_topo->thread_sibling);
++
++		set_power_scale(cpu, SCHED_POWER_SCALE);
+ 	}
+ 	smp_wmb();
+ }
 -- 
 1.7.9.5
