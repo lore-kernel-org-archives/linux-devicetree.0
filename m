@@ -1,234 +1,42 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Bindings for SMC/HVC firmware interfaces on ARM (Re: [RFC PATCH]
- ARM: Make a compile trustzone conditionally)
-Date: Wed, 20 Jun 2012 10:14:01 -0500
-Message-ID: <4FE1E8B9.2020200@gmail.com>
-References: <20120611051502.GA24030@july>
- <CAOesGMgGQMwQTUy2g-XSYFrQ-p+x9g2q8kAd-ZYq=TBgVFu0Zw@mail.gmail.com>
- <CAH9JG2X=15G6wDX5SGJkDEVohkQQkzfBoL3Qv7HVuBUMqYnwRg@mail.gmail.com>
- <201206181410.39267.arnd@arndb.de> <4FE125C6.3030401@codeaurora.org>
- <20120620094334.GA32666@mudshark.cambridge.arm.com>
- <20120620105116.GA2179@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120620105116.GA2179-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v3 0/5] ARM: topology: set the capacity of each cores for big.LITTLE
+Date: Wed, 20 Jun 2012 17:19:17 +0200
+Message-ID: <1340205562-7653-1-git-send-email-vincent.guittot@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux@arm.linux.org.uk, a.p.zijlstra@chello.nl, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, namhyung@kernel.org, jean.pihet@newoldbits.com, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2012 05:51 AM, Dave Martin wrote:
-> On Wed, Jun 20, 2012 at 10:43:34AM +0100, Will Deacon wrote:
->> Hi Stephen,
->>
->> On Wed, Jun 20, 2012 at 02:22:14AM +0100, Stephen Boyd wrote:
->>> On 06/18/12 07:10, Arnd Bergmann wrote:
->>>> Instead of checking for trustzone_enabled() in each place where
->>>> we call into smc, we can have a generic implementation that
->>>> we call for the disabled case, and provide a vendor specific
->>>> version of that struct with functions that call into smp 
->>>> where necessary.
->>>>
->>>
->>> What if we tried to read the SCR.NS bit to determine if we're running in
->>> secure state or not? It looks like reading SCR is UNDEFINED (i.e. causes
->>> an undefined instruction exception) if we're running in the non-secure
->>> state so I propose we set up an undef hook that traps the SCR access and
->>> lies about the value of the NS bit to indicate we're non-secure.
->>> Basically this:
->>
->> Well, I can't resist reviewing the code, but I don't think we should be
->> trying to detect this (see below).
->>
->>> static int scr_trap(struct pt_regs *regs, unsigned int instr)
->>> {
->>>         int reg = (instr >> 12) & 15;
->>>         if (reg == 15)
->>>                 return 1;
->>
->> Eek -- surely GCC won't allocate PC for the destination register?!
->>
->>>         regs->uregs[reg] = BIT(0); /* Trapped = non-secure */
->>>         regs->ARM_pc += 4;
->>>         return 0;
->>> }
->>>
->>> static struct undef_hook scr_hook = {
->>>         .instr_mask     = 0x0fff0fff,
->>>         .instr_val      = 0x0e110f11,
->>>         .fn             = scr_trap,
->>> };
-> 
-> (you'd also need to handle the Thumb case; I digress...)
-> 
->>>
->>> int in_secure_state(void)
->>> {
->>>         unsigned int scr;
->>>
->>> 	register_undef_hook(&scr_hook);
->>>
->>>         asm volatile(
->>>         "       mrc p15, 0, %0, c1, c1, 0\n"
->>>         : "=r" (scr)
->>>         :
->>>         : "cc");
->>
->> I don't think you need this clobber either.
->>> It seems to mostly work, although I haven't figured out what you do
->>> about the hypervisor case when the hypervisor has disabled the smc
->>> instruction entirely (SCR.SCD=1). At that point I throw up my hands.
->>> Maybe Will has some idea.
+This patchset creates an arch_scale_freq_power function for ARM, which is used 
+to set the relative capacity of each core of a big.LITTLE system. It also removes
+the broken power estimation of x86.
 
-Perhaps there are other registers with fewer/different bits in
-non-secure mode. IIRC, the A9 GIC has different secure and non-secure
-enable bits in a mirrored register. This wouldn't be the best choice
-given it is A9 specific and in the GIC.
+Modification since v2:
+ - set_power_scale function becomes static
+ - Rework loop in update_siblings_masks
+ - Remove useless code in parse_dt_topology
 
->>
->> I think this is part of a bigger problem, which is about how we know where
->> we live in the privilege hierarchy and what we have sitting above us. We
->> have exactly the same issue with hypervisors and the hvc instruction.
->>
->> Rather than try to probe the instruction (which by itself isn't enough,
->> since we can't guarantee that the exception will be handled by the upper
->> layers) I would personally prefer to see this described in the device tree.
->> We could have a simple property in the CPU node that says what the interface
->> looks like:
->>
->> 	smc-interface = "samsung, exynos";
+Modification since v1:
+ - Add and update explanation about the use of the table and the range of the value 
+ - Remove the use of NR_CPUS and use nr_cpu_ids instead
+ - Remove broken power estimation of x86
 
-You already know you're on samsung,exynos, so you minimally only need to
-know non-secure or secure. Presence of the property can indicate
-non-secure mode and then the value can be something meaningful to that
-platform like version.
+Peter Zijlstra (1):
+  sched, x86: Remove broken power estimation
 
->>
->> or whatever you need to identify the interface uniquely. You could have a
->> corresponding entry for hvc-interface (and something like KVM could pass
->> its version to the guest for paravirualisation). If the property is missing,
->> then we take that to mean that the instruction shouldn't be executed on that
->> core -- it may be undefined or there may not be anything to pick up the
->> exception.
-> 
-> I concur.
-> 
-> The firmware is the only thing that really knows what's there,
-> and in reality there's no safe way to probe.  Even if we know we're in the
-> Normal World, we have no idea what's on the other side of SMC.  One
-> firmware's "probe" call may be another firmware's "halt and catch fire"
-> call.
+Vincent Guittot (4):
+  ARM: topology: Add arch_scale_freq_power function
+  ARM: topology: factorize the update of sibling masks
+  ARM: topology: Update cpu_power according to DT information
+  sched: cpu_power: enable ARCH_POWER
 
-That reminds me. I need to go write the halt and catch fire call.
+ arch/arm/kernel/topology.c   |  209 +++++++++++++++++++++++++++++++++++++-----
+ arch/x86/kernel/cpu/Makefile |    2 +-
+ arch/x86/kernel/cpu/sched.c  |   55 -----------
+ kernel/sched/features.h      |    2 +-
+ 4 files changed, 189 insertions(+), 79 deletions(-)
+ delete mode 100644 arch/x86/kernel/cpu/sched.c
 
-> 
-> So DT bindings permitting the firmware to tell us what's there make a lot
-> of sense.
-> 
-> 
-> Fleshing this out a bit...
-> 
-> Since the SMC and HVC instructions are features of the architecture, it may
-> make sense for the names to be:
-> 
-> 	arm,smc = "vendor,interface-name";
-> 	arm,hvc = "vendor,interface-name";
-> 
-> Some platforms may not fully service SMC on all CPUs, so there might be a
-> need to set this per CPU node.  This can be topologically determined, so
-> you might have:
-
-You would know this by knowing the type of firmware.
-
-> 
-> 	cluster@0 {
-> 		arm,smc = "vendor,platform-basic-firmware";
-> 		
-> 		cpu@0 {
-> 			arm,smc = "vendor,platform-fancy-firmware";
-> 		};
-> 
-> 		cpu@1 {
-> 			// no arm,smc property
-> 		};
-> 
-> 		cpu@2 {
-> 			// no arm,smc property
-> 		};
-> 
-> 		// ...
-> 	}
-> 
-> The set of supported SMC calls on a CPU would then be determined by the
-> list of all strings on arm,smc properties on that CPU node and its
-> ancestors.
-> 
-> If the arm,smc or arm,hvc property is absent at all levels of the
-> topology, this does not mean that there is nothing there, but it does
-> mean that nothing is known about what's there.  Platform code would fall
-> back to the legacy case in that situation.
-> 
-> 
-> If additional properties are needed, like version or capability info,
-> we could have nodes instead:
-> 
-> 	cluster@0 {
-> 		arm,smc {
-> 			basic-firmware {
-> 				compatible = "vendor,platform-basic-firmware";
-> 			};
-> 		}
-> 
-> 		cpu@0 {
-> 			arm,smc {
-> 				fancy-firmware {
-> 					compatible = "vendor,platform-fancy-firmware";
-> 					version = <1 12>;
-> 					capabilities = "whizz", "bang", "kapow";
-> 				};
-> 
-> 				common-firmware {
-> 					compatible = "standards-body,common-firmware";
-> 					version = <1 0>;
-> 				}
-> 			};
-> 		};
-> 
-> 		// ...
-> 	};
-> 
-> ...or something equally esoteric.
-> 
-
-This seems overly complex. While all of these conditions could happen,
-what is reality?
-
-I hope this smc mess is getting standardized for v8...
-
-Rob
-
-> (If node names like "arm,smc" are acceptable ... we could have something
-> else if not.)
-> 
-> It would be up to the platform's code handling "vendor,platform-fancy-
-> firmware" etc. to know about and deal with the precise calling
-> conventions for that firmware, though if there are generic firmware
-> interfaces someday, then those nodes' support code could be shared.
-> 
-> Cheers
-> ---Dave
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+-- 
+1.7.9.5
