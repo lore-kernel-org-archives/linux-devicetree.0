@@ -1,66 +1,201 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RESEND PATCH V3 2/2] arm/dts: OMAP2: Fix interrupt controller
- binding
-Date: Wed, 20 Jun 2012 06:10:22 -0700
-Message-ID: <20120620131022.GH12766@atomide.com>
-References: <1339548046-27988-1-git-send-email-jon-hunter@ti.com>
- <1339548046-27988-3-git-send-email-jon-hunter@ti.com>
+From: Dong Aisheng <aisheng.dong@freescale.com>
+Subject: Re: [PATCH 1/1] of: reform prom_update_property function
+Date: Wed, 20 Jun 2012 21:53:38 +0800
+Message-ID: <20120620135337.GM10387@shlinux2.ap.freescale.net>
+References: <1340171647-2815-1-git-send-email-b29396@freescale.com>
+ <4FE1CB2C.5040208@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1339548046-27988-3-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <4FE1CB2C.5040208@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@kernel.crashing.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-* Jon Hunter <jon-hunter@ti.com> [120612 17:45]:
-> When booting with device-tree on an OMAP2420H4, the kernel is hanging when
-> initialising the interrupts and following kernel dumps is seen ...
+On Wed, Jun 20, 2012 at 09:07:56PM +0800, Rob Herring wrote:
+> On 06/20/2012 12:54 AM, Dong Aisheng wrote:
+> > From: Dong Aisheng <dong.aisheng@linaro.org>
+> > 
+> > prom_update_property() currently fails if the property doesn't
+> > actually exist yet which isn't what we want. Change to add-or-update
+> > instead of update-only, then we can remove a lot duplicated lines.
+> > 
+> > Suggested-by: Grant Likely <grant.likely@secretlab.ca>
+> > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> > ---
 > 
-> [    0.000000] ------------[ cut here ]------------
-> [    0.000000] WARNING: at arch/arm/mach-omap2/irq.c:271 omap_intc_of_init+0x50/0xb4()
-> [    0.000000] unable to get intc registers
-> [    0.000000] Modules linked in:
-> [    0.000000] [<c001befc>] (unwind_backtrace+0x0/0xf4) from [<c0040c34>] (warn_slowpath_common+0x4c/0x64)
-> [    0.000000] [<c0040c34>] (warn_slowpath_common+0x4c/0x64) from [<c0040ce0>] (warn_slowpath_fmt+0x30/0x40)
-> [    0.000000] [<c0040ce0>] (warn_slowpath_fmt+0x30/0x40) from [<c066b8a4>] (omap_intc_of_init+0x50/0xb4)
-> [    0.000000] [<c066b8a4>] (omap_intc_of_init+0x50/0xb4) from [<c0688b70>] (of_irq_init+0x144/0x288)
-> [    0.000000] [<c0688b70>] (of_irq_init+0x144/0x288) from [<c0663294>] (init_IRQ+0x14/0x1c)
-> [    0.000000] [<c0663294>] (init_IRQ+0x14/0x1c) from [<c06607fc>] (start_kernel+0x198/0x304)
-> [    0.000000] [<c06607fc>] (start_kernel+0x198/0x304) from [<80008044>] (0x80008044)
-> [    0.000000] ---[ end trace 1b75b31a2719ed1c ]---
-> [    0.000000] of_irq_init: children remain, but no parents
+> Looks fine, but you need to cc powerpc maintainers.
 > 
-> The OMAP2 interrupt controller binding is missing the number of interrupts and
-> interrupt controller register address. Adding these fixes the problem.
+Sorry, i missed that.
+Thanks for reminder.
 
-Thanks this is a good one, applying into fixes.
-
-Tony
+Regards
+Dong Aisheng
 
 > 
-> This is based upon latest linux-omap master (3.5-rc1) git tree.
+> >  arch/powerpc/platforms/85xx/p1022_ds.c    |    8 +-------
+> >  arch/powerpc/platforms/pseries/mobility.c |    8 +-------
+> >  arch/powerpc/platforms/pseries/reconfig.c |   13 +++----------
+> >  drivers/of/base.c                         |   15 +++++++++++----
+> >  fs/proc/proc_devtree.c                    |    5 +++++
+> >  include/linux/of.h                        |    3 +--
+> >  6 files changed, 22 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/platforms/85xx/p1022_ds.c b/arch/powerpc/platforms/85xx/p1022_ds.c
+> > index f700c81..d66631c 100644
+> > --- a/arch/powerpc/platforms/85xx/p1022_ds.c
+> > +++ b/arch/powerpc/platforms/85xx/p1022_ds.c
+> > @@ -348,13 +348,7 @@ void __init p1022_ds_pic_init(void)
+> >   */
+> >  static void __init disable_one_node(struct device_node *np, struct property *new)
+> >  {
+> > -	struct property *old;
+> > -
+> > -	old = of_find_property(np, new->name, NULL);
+> > -	if (old)
+> > -		prom_update_property(np, new, old);
+> > -	else
+> > -		prom_add_property(np, new);
+> > +	prom_update_property(np, new);
+> >  }
+> >  
+> >  /* TRUE if there is a "video=fslfb" command-line parameter. */
+> > diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+> > index 029a562..dd30b12 100644
+> > --- a/arch/powerpc/platforms/pseries/mobility.c
+> > +++ b/arch/powerpc/platforms/pseries/mobility.c
+> > @@ -67,7 +67,6 @@ static int update_dt_property(struct device_node *dn, struct property **prop,
+> >  			      const char *name, u32 vd, char *value)
+> >  {
+> >  	struct property *new_prop = *prop;
+> > -	struct property *old_prop;
+> >  	int more = 0;
+> >  
+> >  	/* A negative 'vd' value indicates that only part of the new property
+> > @@ -117,12 +116,7 @@ static int update_dt_property(struct device_node *dn, struct property **prop,
+> >  	}
+> >  
+> >  	if (!more) {
+> > -		old_prop = of_find_property(dn, new_prop->name, NULL);
+> > -		if (old_prop)
+> > -			prom_update_property(dn, new_prop, old_prop);
+> > -		else
+> > -			prom_add_property(dn, new_prop);
+> > -
+> > +		prom_update_property(dn, new_prop);
+> >  		new_prop = NULL;
+> >  	}
+> >  
+> > diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
+> > index 7b3bf76..4c92f1c 100644
+> > --- a/arch/powerpc/platforms/pseries/reconfig.c
+> > +++ b/arch/powerpc/platforms/pseries/reconfig.c
+> > @@ -432,7 +432,7 @@ static int do_update_property(char *buf, size_t bufsize)
+> >  	unsigned char *value;
+> >  	char *name, *end, *next_prop;
+> >  	int rc, length;
+> > -	struct property *newprop, *oldprop;
+> > +	struct property *newprop;
+> >  	buf = parse_node(buf, bufsize, &np);
+> >  	end = buf + bufsize;
+> >  
+> > @@ -450,18 +450,11 @@ static int do_update_property(char *buf, size_t bufsize)
+> >  	if (!strcmp(name, "slb-size") || !strcmp(name, "ibm,slb-size"))
+> >  		slb_set_size(*(int *)value);
+> >  
+> > -	oldprop = of_find_property(np, name,NULL);
+> > -	if (!oldprop) {
+> > -		if (strlen(name))
+> > -			return prom_add_property(np, newprop);
+> > -		return -ENODEV;
+> > -	}
+> > -
+> >  	upd_value.node = np;
+> >  	upd_value.property = newprop;
+> >  	pSeries_reconfig_notify(PSERIES_UPDATE_PROPERTY, &upd_value);
+> >  
+> > -	rc = prom_update_property(np, newprop, oldprop);
+> > +	rc = prom_update_property(np, newprop);
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > @@ -486,7 +479,7 @@ static int do_update_property(char *buf, size_t bufsize)
+> >  
+> >  		rc = pSeries_reconfig_notify(action, value);
+> >  		if (rc) {
+> > -			prom_update_property(np, oldprop, newprop);
+> > +			prom_update_property(np, newprop);
+> >  			return rc;
+> >  		}
+> >  	}
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index d9bfd49..a14f109 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -1051,7 +1051,8 @@ int prom_remove_property(struct device_node *np, struct property *prop)
+> >  }
+> >  
+> >  /*
+> > - * prom_update_property - Update a property in a node.
+> > + * prom_update_property - Update a property in a node, if the property does
+> > + * not exist, add it.
+> >   *
+> >   * Note that we don't actually remove it, since we have given out
+> >   * who-knows-how-many pointers to the data using get-property.
+> > @@ -1059,13 +1060,19 @@ int prom_remove_property(struct device_node *np, struct property *prop)
+> >   * and add the new property to the property list
+> >   */
+> >  int prom_update_property(struct device_node *np,
+> > -			 struct property *newprop,
+> > -			 struct property *oldprop)
+> > +			 struct property *newprop)
+> >  {
+> > -	struct property **next;
+> > +	struct property **next, *oldprop;
+> >  	unsigned long flags;
+> >  	int found = 0;
+> >  
+> > +	if (!newprop->name)
+> > +		return -EINVAL;
+> > +
+> > +	oldprop = of_find_property(np, newprop->name, NULL);
+> > +	if (!oldprop)
+> > +		return prom_add_property(np, newprop);
+> > +
+> >  	write_lock_irqsave(&devtree_lock, flags);
+> >  	next = &np->properties;
+> >  	while (*next) {
+> > diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
+> > index 927cbd1..df7dd08 100644
+> > --- a/fs/proc/proc_devtree.c
+> > +++ b/fs/proc/proc_devtree.c
+> > @@ -101,6 +101,11 @@ void proc_device_tree_update_prop(struct proc_dir_entry *pde,
+> >  {
+> >  	struct proc_dir_entry *ent;
+> >  
+> > +	if (!oldprop) {
+> > +		proc_device_tree_add_prop(pde, newprop);
+> > +		return;
+> > +	}
+> > +
+> >  	for (ent = pde->subdir; ent != NULL; ent = ent->next)
+> >  		if (ent->data == oldprop)
+> >  			break;
+> > diff --git a/include/linux/of.h b/include/linux/of.h
+> > index 2ec1083..b27c871 100644
+> > --- a/include/linux/of.h
+> > +++ b/include/linux/of.h
+> > @@ -260,8 +260,7 @@ extern int of_machine_is_compatible(const char *compat);
+> >  extern int prom_add_property(struct device_node* np, struct property* prop);
+> >  extern int prom_remove_property(struct device_node *np, struct property *prop);
+> >  extern int prom_update_property(struct device_node *np,
+> > -				struct property *newprop,
+> > -				struct property *oldprop);
+> > +				struct property *newprop);
+> >  
+> >  #if defined(CONFIG_OF_DYNAMIC)
+> >  /* For updating the device tree at runtime */
 > 
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> ---
->  arch/arm/boot/dts/omap2.dtsi |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
-> index f2ab4ea..581cb08 100644
-> --- a/arch/arm/boot/dts/omap2.dtsi
-> +++ b/arch/arm/boot/dts/omap2.dtsi
-> @@ -44,6 +44,8 @@
->  			compatible = "ti,omap2-intc";
->  			interrupt-controller;
->  			#interrupt-cells = <1>;
-> +			ti,intc-size = <96>;
-> +			reg = <0x480FE000 0x1000>;
->  		};
->  
->  		uart1: serial@4806a000 {
-> -- 
-> 1.7.9.5
 > 
