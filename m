@@ -1,88 +1,87 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
  regulator-compatible
-Date: Thu, 21 Jun 2012 00:15:47 +0100
-Message-ID: <20120620231546.GB4037@opensource.wolfsonmicro.com>
+Date: Thu, 21 Jun 2012 00:35:08 +0100
+Message-ID: <20120620233507.GC4037@opensource.wolfsonmicro.com>
 References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
  <201206201924.09618.arnd@arndb.de>
  <20120620194609.GA4037@opensource.wolfsonmicro.com>
  <201206202040.52291.arnd@arndb.de>
+ <4FE23A1B.2000809@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
+	protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201206202040.52291.arnd@arndb.de>
+In-Reply-To: <4FE23A1B.2000809@wwwdotorg.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---XF85m9dhOBO43t/C
+--Pk6IbRAofICFmK5e
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jun 20, 2012 at 08:40:52PM +0000, Arnd Bergmann wrote:
+On Wed, Jun 20, 2012 at 03:01:15PM -0600, Stephen Warren wrote:
+> On 06/20/2012 02:40 PM, Arnd Bergmann wrote:
 
-> But that sounds more like what the "reg" property does than what
-> the "compatible" property does for other devices. In other words, you
-> want to know which instance you are describing, not what kind of
-> object it is.
+> > For a "compatible" property, I would expect two objects that have
+> > the same register-level interface but are responsible for different
+> > physical objects to have the same "compatible" values, but here
+> > you specifically need distinct "regulator-compatible" values.
 
-No, it's describing the kind of object.  This stuff is for devices which
-throw a bunch of irregular regulators down on a chip with no particular
-similarity with each other.
+> I'd originally suggested "regulator-id" instead of
+> "regulator-compatible" in order to avoid any association with the
+> pre-existing "compatible" property. Mark didn't like that, although I
+> don't think I quite understood why.
 
-> For a "compatible" property, I would expect two objects that have
-> the same register-level interface but are responsible for different
-> physical objects to have the same "compatible" values, but here
-> you specifically need distinct "regulator-compatible" values.
+Like I said we already have names (and we have IDs inside the API as
+well) and it also seems better to make the "which thing is this?"
+property have the same name as the more generic "which thing is this?"
+property.  I did mention the fact that drivers could read additional
+properties to further identify the regulator if they were so moved.
 
-There's nothing stopping a driver drilling down deeper with other data
-once it's worked out what it's talking about, if it wants to read an
-additional id value or base register that's absolutely fine and probably
-even a good idea.  The problem is that for a lot of hardware there's
-just a bunch of random irregular devices.
+Ideally we'd just be able to have either named nodes directly in the
+parent or be able to have arrays function as a hash, really this is
+trying to simulate a hash.
 
-> It makes much more sense now, so please let's make sure that explanation
-> ends up in the changelog.
+> The problem is that dtc has no named constants. Using raw integers
+> instead of names would make the .dts file rather unreadable. The issue
+> is much more accute for regulators than say GPIOs or IRQs because
+> there's likely no relative order to the set of regulators defined by the
+> documentation, unlike for GPIOs/IRQs where the integer (often) is the
+> object's primary ID.
 
-To be honest I just don't care, the old code hasn't been around for long
-enough or widely adopted enough for anyone to care and it's just more
-brain cycles gone.
+Well, there are actually a lot of chips which do provide useful indexes
+- for example the wm831x devices just have a bunch of DCDCs and a bunch
+of LDOs which can usefully be referred to as DCDCn or LDOn.  They will
+hopefully not need to use this interface.  It's just that there's also a
+large class of devices we need to cater for which don't have any such
+regularity in their register map, this biding
+mechanism is for them.
 
-> * What is the difference between "regulator-name" and
-> "regulator-compatible"? Those are the same most of the time
-> in the patches, so can't we just make sure they are always the
-> same, and drop the confusingly named "regulator-compatible" one?
-
-As the binding documentation says the former is a display name for use
-so people can tell what the software is talking about, for example the
-name the supply has in the schematic.  It's completely up to the user
-and the regulator driver can't use it for anything except printing so it
-needs something else to help it figure out what it's working with.
-
---XF85m9dhOBO43t/C
+--Pk6IbRAofICFmK5e
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP4lmcAAoJEBus8iNuMP3dZLsP/0xUaKATocQynuWA32+80mPb
-fy2rzkM3XKQBCFug7GVvTuy/VtDkcu5f8XwnVMppRqz/MNEK5KmnroL2FZRRa0kC
-oVCdB9gnHUxTv+YIALXhvYsLlaH7Fclhz5NdpWJv9hFAtMf44MPYnzUbdIv12gs9
-FuF0KFTTCciLmqpaumKCIu9qaxMFMZlegO+BemfC04XmzLGOqUBTt2fNvQQhUC18
-gOlaZ+Zry5G03Dx7OgXXc6IO+Y9ZD8b2miFasFsF+XJ/2JGR/HI0enTQ2tXgoUkl
-EbYf9+6DJLxWHCJQwrNc0AHUf8FqXaZV3zKamKZeF2jE2QIiyZLv6W8JEexXhHq0
-hG+ZhMpEefnboGdP9eA5+zwzgNZ7y+VEUv7qQ1DefY7x1LhUt1hrb0ImTy1Bc3Yt
-HVKUo1gbovYggx5HJpifFgTVk9/H+Fnv1MSReIx/XJANh/WBwGkPYuSp+A/FD4ai
-iQM8z0yjNU0GFU9qJ4/y6xuQDMN44Ll3UqfjQtvi70lvmti5mQKYwLIYs3+uiwm6
-uvyhAnB3eCr4bWscjW5+zYiFwWT7C8/u1jb6gZJSTJTmsZdVO8mtRQkhNdi0iECY
-9LSrz4T0KWrdJcVFV/bOLTHbEhISr08zGJfphFrn4Kc0dg2IBWuBLWCQ/kW3T1+o
-Ib5MDD+qMwyxDfKQR9KJ
-=ILu2
+iQIcBAEBAgAGBQJP4l4kAAoJEBus8iNuMP3dHu4P/2uxiFe4GwlkAr2LbaKjlj9S
+49GAM7eeEH5rhltuQUSTxNRoERhpNols/9nR3JYRU1AWmX/upsPMCVZy01HHehzs
+UxWSgQUTcsjKdQb3OEjzriqvAUPlgSCrrjFNArq52NAwTN/eNas8OspAUHgEt+as
+5G2OUp9RmOIyPZQ0/meFtjRDuPuYgAcf+FHTwCd44gJBDEeDuXcAtJw3gZIv9iyb
+Z88k4AGLn0tLYtxgrvLeD3cpNKYMWUQPse8txcwvcNaSmtWQXT4ir4z0ah2pGCwR
+QUDLZKh84mVmW3lLzSoJidO3so8mMbr7vGzakCq6DiJsF/1kmj293A2I30T890fW
+Ep9I2l5QaVpyPSVR+DyHVO0DL6ZECpjAbERLmgcKG7iveeHYNrJ358P7BKhJbyuV
+0mVS/B78Dz+znh8BAO6RlUwdVyU/709FLA5SWqqMk+vMkfSM9XdWasfQu4+HhjCC
+dCk7XxjjerjLBAUxrqm1a0bHKgZlA43g0FtRbNIuxLCnQfuoAi9ejbtEjoWQDi2k
+UczsxJNWjwT0mKCem7MtZM81EBpRLZ7BzGbJUurGIpHqgWz8XLqjRVb0P2Azv+F6
+MbLilxG5MZl9dUR9m2Yh7RYTsmMgF6dJ8MhN4rI0mPwBYbEqdEWFJfNuonJ9M+UT
+6e3G2nDScBtHssxu2Xd1
+=QdQn
 -----END PGP SIGNATURE-----
 
---XF85m9dhOBO43t/C--
+--Pk6IbRAofICFmK5e--
