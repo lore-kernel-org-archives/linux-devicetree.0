@@ -1,66 +1,50 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v6 00/14] add imx usb driver based on Greg next tree
-Date: Thu, 21 Jun 2012 09:24:39 +0200
-Message-ID: <4FE2CC37.8010202@pengutronix.de>
-References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH v3 0/4] DT clock bindings
+Date: Thu, 21 Jun 2012 03:27:00 -0400
+Message-ID: <87bokd15x7.fsf@octavius.laptop.org>
+References: <1339512111-11172-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig4AA2AB4A5710565BCBADFCDE"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1340260875-21934-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1339512111-11172-1-git-send-email-robherring2@gmail.com> (Rob
+	Herring's message of "Tue, 12 Jun 2012 09:41:47 -0500")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, s.hauer@pengutronix.de, sboyd@codeaurora.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, skannan@codeaurora.org, shawn.guo@linaro.org, Mitch Bradley <wmb@laptop.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig4AA2AB4A5710565BCBADFCDE
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Rob,
 
-On 06/21/2012 08:41 AM, Richard Zhao wrote:
-> The work is based on  ci13xxx rework done by Alexander Shishkin.
->=20
-> To let Greg pick up, I also added patches Alex queued that I depends on=
-=2E
-> Patch #1 - #9 : It can also be found at
-> http://github.com/virtuoso/linux-ci.git ci
->=20
-> This patch series can also be found at:
-> https://github.com/riczhao/kernel-imx/commits/topics/usb-driver
->=20
-> Status:
->   - this version only support host
->   - usbotg controler works at host role
+On Tue, Jun 12 2012, Rob Herring wrote:
+> This series defines clock bindings for Device-Tree and adds kernel
+> support using the common clock infrastructure. The last patch enables
+> DT clock support for the Calxeda Highbank platform.
+>
+> I'm posting this again to solicit further review. There has been some
+> discussion[1], but no definite path forward. This series is not changed
+> from the last post other than rebasing to v3.5-rc2.
 
-I'm interested in usb device support on mx28, what has to be implemented
-to get it working?
+This is a very useful patchset, thanks!  Mitch Bradley and I have been
+hooking up the mach-mmp ARM subarchitecture to it and we needed to
+make a few changes, mainly because mach-mmp doesn't use COMMON_CLK.
+The changes are:
 
-Regards, Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+1) Remove the COMMON_CLK dependency that the of_clk_* functions have by
+   moving them into a new file, drivers/clk/clk-of.c.  The OF functions
+   in drivers/clk/clk.c aren't dependent on anything else in clk.c
+   (since you pass them a struct clk) so they can be moved out easily.
+   The of_clk_* entries in clk-provider.h move to clk.h.
 
+2) Use alloc_bootmem() instead of kzalloc() in of_clk_add_provider(),
+   because we need to set up clocks during .init_early on ARM (which
+   happens pre-slab) so that they are available for platform init.
 
---------------enig4AA2AB4A5710565BCBADFCDE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+I'll send our patches in a reply to this mail.  Are you okay with these
+changes, and would you like to include them in your patchset?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+Thanks very much,
 
-iEYEARECAAYFAk/izDcACgkQjTAFq1RaXHNvOwCcCC0VOcj2zfNpOvMZuqsKTmL3
-IGAAnAkW57eJs1CYPT7eKoaIHpjBRq0o
-=GJnP
------END PGP SIGNATURE-----
-
---------------enig4AA2AB4A5710565BCBADFCDE--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
