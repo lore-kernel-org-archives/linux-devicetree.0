@@ -1,62 +1,33 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4] usb: chipidea: permit driver bindings pass phy pointer
-Date: Thu, 21 Jun 2012 09:44:14 +0300
-Message-ID: <87bokdyxj5.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1337912665-16615-3-git-send-email-richard.zhao@freescale.com> <1339159026-15837-1-git-send-email-richard.zhao@freescale.com> <20120612231438.GA6177@kroah.com> <8762au8h46.fsf@ashishki-desk.ger.corp.intel.com> <20120614154624.GF17140@kroah.com> <20120615024625.GA26563@b20223-02.ap.freescale.net> <20120621055048.GA1582@b20223-02.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120621055048.GA1582-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+From: Michal Simek <monstr@monstr.eu>
+Subject: [PATCH] watchdog: xilinx: Read clock frequency directly from DT node
+Date: Thu, 21 Jun 2012 08:45:40 +0200
+Message-ID: <1340261140-10166-1-git-send-email-monstr@monstr.eu>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-watchdog@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Wim Van Sebroeck <wim@iguana.be>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Michal Simek <monstr@monstr.eu>
 List-Id: devicetree@vger.kernel.org
 
-Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+Do not use clock-frequency property from parent node.
+Use it from watchdog node.
 
-> On Fri, Jun 15, 2012 at 10:46:26AM +0800, Richard Zhao wrote:
->> On Thu, Jun 14, 2012 at 08:46:24AM -0700, Greg KH wrote:
->> > On Thu, Jun 14, 2012 at 10:52:57AM +0300, Alexander Shishkin wrote:
->> > > Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> writes:
->> > > 
->> > > > On Fri, Jun 08, 2012 at 08:37:06PM +0800, Richard Zhao wrote:
->> > > >> Sometimes, the driver bindings may know what phy they use.
->> > > >> For example, when using device tree, the usb controller may have a
->> > > >> phandler pointing to usb phy.
->> > > >> 
->> > > >> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> > > >> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->> > > >> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
->> > > >> ---
->> > > >> Changes since laster version:
->> > > >> - hcd transceiver renamed to phy
->> > > >
->> > > > Ick, I see patches all over this thread, and other threads, and I have
->> > > > no idea what to apply anywhere...
->> > > >
->> > > > So, consider all chipidea patches dropped from my queue now, can you
->> > > > please resend them to me, with the accumulated acks and reviewed-by
->> > > > line, so that I can queue them up?
->> > > 
->> > > So will you pick these patches to your tree or should I apply them to
->> > > mine or what is the plan? I kind of have a tree [1] for chipidea stuff
->> > > where I have been collecting patches, to send a pull request to you for
->> > > 3.6.
->> > 
->> > I do not accept pull requests for this code, sorry, I need patches in
->> > email.  You and Richard work it out how you are going to handle this and
->> > then, send me patches that you both agree on.
->> So, Alex, Could you send out patch you queued? And I'll send out v6
->> patch series which depends on that. Is it ok for driver part?
-> All right, I'll send out all.
+Signed-off-by: Michal Simek <monstr@monstr.eu>
+---
+ drivers/watchdog/of_xilinx_wdt.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Yes, I think it's easiest if you send everything this time. Please make
-sure to rebase it on usb-next first, though.
-
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+index 55d2f66..294fb4e 100644
+--- a/drivers/watchdog/of_xilinx_wdt.c
++++ b/drivers/watchdog/of_xilinx_wdt.c
+@@ -297,7 +297,7 @@ static int __devinit xwdt_probe(struct platform_device *pdev)
+ 
+ 	no_timeout = 0;
+ 
+-	pfreq = (u32 *)of_get_property(pdev->dev.of_node->parent,
++	pfreq = (u32 *)of_get_property(pdev->dev.of_node,
+ 					"clock-frequency", NULL);
+ 
+ 	if (pfreq == NULL) {
+-- 
+1.7.0.4
