@@ -1,33 +1,43 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by regulator-compatible
-Date: Thu, 21 Jun 2012 11:31:36 -0600
-Message-ID: <4FE35A78.60003@wwwdotorg.org>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <201206211450.35713.arnd@arndb.de> <20120621161459.GY4037@opensource.wolfsonmicro.com> <201206211717.46142.arnd@arndb.de>
+From: Mike Turquette <mturquette@ti.com>
+Subject: Re: [PATCH v3 0/4] DT clock bindings
+Date: Thu, 21 Jun 2012 10:54:43 -0700
+Message-ID: <20120621175443.GL4402@gmail.com>
+References: <1339512111-11172-1-git-send-email-robherring2@gmail.com>
+ <87bokd15x7.fsf@octavius.laptop.org>
+ <4FE33723.3040403@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201206211717.46142.arnd@arndb.de>
+Content-Disposition: inline
+In-Reply-To: <4FE33723.3040403@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Chris Ball <cjb@laptop.org>, Mitch Bradley <wmb@laptop.org>, mturquette@linaro.org, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, skannan@codeaurora.org, Olof Johansson <olof@lixom.net>, shawn.guo@linaro.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2012 11:17 AM, Arnd Bergmann wrote:
-> On Thursday 21 June 2012, Mark Brown wrote:
-...
->> I'm also not sure if the tooling works well for allowing people to
->> include standard DTs for chips and add new properties to nodes for the
->> board specific configuration, though I think I've seen a few things
->> which suggested that was dealt with reasonably well.
+On 20120621-10:00, Rob Herring wrote:
+> On 06/21/2012 02:27 AM, Chris Ball wrote:
+> > 
+> > 2) Use alloc_bootmem() instead of kzalloc() in of_clk_add_provider(),
+> >    because we need to set up clocks during .init_early on ARM (which
+> >    happens pre-slab) so that they are available for platform init.
 > 
-> It should never be necessary to add board-specific properties in the
-> nodes that describe the SoC specific bits. What I was referring to
-> is just moving the data that currently resides in the regulator
-> driver into DT.
+> This depends on 1 as the common clock code would have the same issue.
+> Generally, the first place clocks are needed is the timer init. At that
+> point, you can call kzalloc. This is where all the clock init used to be
+> done until init_early was added and some platforms have moved their
+> clock init. I don't think there was really ever much reason to move it
+> other than to make the timer init function only deal with timer setup.
+> 
 
-I guess I must be misunderstanding that comment - there are many many
-examples of boards adding properties to nodes that describe the SoC. For
-example, the GPIOs used by SDHCI controllers, board-specific max clock
-rates for SDHCI or I2C controllers, pinmux configuration properties, to
-name just a few.
+Hi Rob,
+
+Just FYI I've been looking at using alloc_bootmem in the common clk code
+as a way to get rid of the static initialization stuff (which only
+existed due to very early initialization of timers).
+
+The suggested change above to of_clk_add_provider would jive well with
+my change to the common clk code.
+
+Regards,
+Mike
