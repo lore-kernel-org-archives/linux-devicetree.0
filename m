@@ -1,41 +1,93 @@
-From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: Re: [PATCH] SPI: at25: Parse dt settings
-Date: Thu, 21 Jun 2012 08:10:53 -0300
-Message-ID: <CAAAP30G6zE5UmVMPPDGpwzHXG5zN3ZZfJ9u4W2TM1B5ccF50Lw@mail.gmail.com>
-References: <1339678763-14509-1-git-send-email-aletes.xgr@gmail.com>
-	<CAMSQXEHOtgk7wRRqOdpMaTvpxFd1Cpom=BG65GheY6Z4p2Jc3A@mail.gmail.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Thu, 21 Jun 2012 13:21:47 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1206211250190.3513@axis700.grange>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+ <201206150900.50866.arnd@arndb.de> <Pine.LNX.4.64.1206151107480.11729@axis700.grange>
+ <201206151127.24386.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMSQXEHOtgk7wRRqOdpMaTvpxFd1Cpom=BG65GheY6Z4p2Jc3A@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ivo Sieben <meltedpianoman@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <w.sang@pengutronix.de>, Chris Wright <chrisw@sous-sol.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Roland Stigge <stigge@antcom.de>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201206151127.24386.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2012 at 6:49 AM, Ivo Sieben <meltedpianoman@gmail.com> =
-wrote:
-> One small remark:
-> In case of platform_data, the "if (!chip)" check has been removed and
-> is now only handled in the device tree initialization.
-> Maybe add this check to the platform initialization as well:
->
-> } else {
-> =A0 =A0 =A0 =A0if (!spi->dev.platform_data) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_dbg(&spi->dev, "no chip descriptio=
-n\n");
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0err =3D -ENODEV;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto fail;
-> =A0 =A0 =A0 =A0}
-> =A0 =A0 =A0 =A0chip =3D =A0*(struct spi_eeprom *)spi->dev.platform_da=
-ta;
-> }
+Hi Arnd
 
-Thanks for finding that out. I will fix that case.
+Sorry for a delayed reply, we had to discuss this your idea internally 
+first before replying.
 
-This patch was already merged to gregh/char-misc:
-http://git.kernel.org/?p=3Dlinux/kernel/git/gregkh/char-misc.git;a=3Dsh=
-ortlog;h=3Drefs/heads/char-misc-next
+On Fri, 15 Jun 2012, Arnd Bergmann wrote:
 
-I will implement a patch to fix this against the original one.
+> On Friday 15 June 2012, Guennadi Liakhovetski wrote:
+> > > In the common case, you could have one device connected to the third
+> > > slave ID of the first controller but the fifth slave ID of the
+> > > second controller. In this case, you really have to specify each
+> > > controller with its slave ID separately, even if that means a lot
+> > > of duplicate data for shmobile.
+> > 
+> > So, you don't think it's worth making a short-cut possible to specify a 
+> > DMAC type instead of each instance phandle? It really would mean __a lot__ 
+> > of duplication - with 3 generic controllers on (some) current chips and 
+> > possibly more on those, that I'm not aware about.
+> 
+> It's certainly possible to make that short-cut, but I'm not convinced
+> if it's worth it. One thing you can do is create a meta-device for
+> all of the identical DMA controllers, and refer to that one from the
+> devices, but make it a separate device node from the actual controllers,
+> of which you can have more than one. This makes the binding for your
+> dma controller more complex but reduces the amount of data required
+> in the other device nodes.
+> 
+> In case of sh7372, this could look something like
+> 
+> 	dma: dmac-mux {
+> 		compatible = "renesas,sh-dma-mux";
+> 		#dma-cells = <4>; /* slave-id, addr, chcr, mid-rid */
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 		ranges;
+> 
+> 		dmae@0xfe008020{
+> 			compatible = "renesas,sh-dma";
+> 			reg = <0xfe008020 0xfe00828f
+> 				0xfe009000 0xfe00900b>
+> 			interrupts = <0x20c0 0x2000 0x2020 0x2040 0x2060 0x2080 0x20a0>;
+> 		};
+> 
+> 		dmae@0xfe018020{
+> 			compatible = "renesas,sh-dma";
+> 			reg = <0xfe018020 0xfe01828f
+> 				0xfe019000 0xfe01900b>
+> 			interrupts = <0x21c0 0x2100 0x2120 0x2140 0x2160 0x2180 0x21a0>;
+> 		};
+> 
+> 		dmae@0xfe028020{
+> 			compatible = "renesas,sh-dma";
+> 			reg = <0xfe028020 0xfe02828f
+> 				0xfe029000 0xfe02900b>
+> 			interrupts = <0x22c0 0x2200 0x2220 0x2240 0x2260 0x2280 0x22a0>;
+> 		};
+> 	};
+> 
+> This way, a slave would refer to the dmac-mux node and while
+> the device driver binds to the child nodes.
+
+Indeed, this solution should be good enough, thanks! I'm not sure, whether 
+making this multiplexing available requires any additional code to the 
+generic DMA DT binding implementation. If it does - please, let's make 
+this a part of the implementation.
+
+It is also important to provide a flexible multiple channel per device 
+configuration support to let slave drivers distinguish between different 
+DMA channels, that they get back from the API. But I think this is a part 
+of the current proposal and is being taken care of.
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
