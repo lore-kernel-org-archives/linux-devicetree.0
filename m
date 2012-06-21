@@ -1,93 +1,51 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 21 Jun 2012 13:21:47 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1206211250190.3513@axis700.grange>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
- <201206150900.50866.arnd@arndb.de> <Pine.LNX.4.64.1206151107480.11729@axis700.grange>
- <201206151127.24386.arnd@arndb.de>
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Subject: Re: [PATCH RESEND] input: gpio_keys_polled: convert to dt
+Date: Thu, 21 Jun 2012 08:37:18 -0300
+Message-ID: <CAAAP30GsU1wy87QJjcctpu-=uYH6O0XEikMs5GeGDsz-gvwsZQ@mail.gmail.com>
+References: <1340192062-10565-1-git-send-email-aletes.xgr@gmail.com>
+	<20120621091833.GH2193@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201206151127.24386.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20120621091833.GH2193@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, JJ Ding <dgdunix@gmail.com>, Roland Stigge <stigge@antcom.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd
+On Thu, Jun 21, 2012 at 6:18 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>> @@ -38,7 +40,7 @@ struct gpio_keys_button_data {
+>> =A0struct gpio_keys_polled_dev {
+>> =A0 =A0 =A0 struct input_polled_dev *poll_dev;
+>> =A0 =A0 =A0 struct device *dev;
+>> - =A0 =A0 struct gpio_keys_platform_data *pdata;
+>> + =A0 =A0 struct gpio_keys_platform_data pdata;
+>
+> I am not sure why this change is needed. Also it seems that the drive=
+r
+> leaks DT-created pdata on unload.
 
-Sorry for a delayed reply, we had to discuss this your idea internally 
-first before replying.
+Pdata is now a member of gpio_keys_polled_dev now and that one is
+kzalloc'ed at probe and kfree'd at the removal and errors. I see no
+leaks there.
 
-On Fri, 15 Jun 2012, Arnd Bergmann wrote:
+I could kzalloc and kfree gpio_keys_polled_dev independently instead,
+to avoid all those pointer changes if you think it's better.
 
-> On Friday 15 June 2012, Guennadi Liakhovetski wrote:
-> > > In the common case, you could have one device connected to the third
-> > > slave ID of the first controller but the fifth slave ID of the
-> > > second controller. In this case, you really have to specify each
-> > > controller with its slave ID separately, even if that means a lot
-> > > of duplicate data for shmobile.
-> > 
-> > So, you don't think it's worth making a short-cut possible to specify a 
-> > DMAC type instead of each instance phandle? It really would mean __a lot__ 
-> > of duplication - with 3 generic controllers on (some) current chips and 
-> > possibly more on those, that I'm not aware about.
-> 
-> It's certainly possible to make that short-cut, but I'm not convinced
-> if it's worth it. One thing you can do is create a meta-device for
-> all of the identical DMA controllers, and refer to that one from the
-> devices, but make it a separate device node from the actual controllers,
-> of which you can have more than one. This makes the binding for your
-> dma controller more complex but reduces the amount of data required
-> in the other device nodes.
-> 
-> In case of sh7372, this could look something like
-> 
-> 	dma: dmac-mux {
-> 		compatible = "renesas,sh-dma-mux";
-> 		#dma-cells = <4>; /* slave-id, addr, chcr, mid-rid */
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 		ranges;
-> 
-> 		dmae@0xfe008020{
-> 			compatible = "renesas,sh-dma";
-> 			reg = <0xfe008020 0xfe00828f
-> 				0xfe009000 0xfe00900b>
-> 			interrupts = <0x20c0 0x2000 0x2020 0x2040 0x2060 0x2080 0x20a0>;
-> 		};
-> 
-> 		dmae@0xfe018020{
-> 			compatible = "renesas,sh-dma";
-> 			reg = <0xfe018020 0xfe01828f
-> 				0xfe019000 0xfe01900b>
-> 			interrupts = <0x21c0 0x2100 0x2120 0x2140 0x2160 0x2180 0x21a0>;
-> 		};
-> 
-> 		dmae@0xfe028020{
-> 			compatible = "renesas,sh-dma";
-> 			reg = <0xfe028020 0xfe02828f
-> 				0xfe029000 0xfe02900b>
-> 			interrupts = <0x22c0 0x2200 0x2220 0x2240 0x2260 0x2280 0x22a0>;
-> 		};
-> 	};
-> 
-> This way, a slave would refer to the dmac-mux node and while
-> the device driver binds to the child nodes.
+This is mostly a clone from the dt handling in gpio_keys, and
+comparing both now,
+I see that it will leak on pdata->buttons, so I will fix that.
 
-Indeed, this solution should be good enough, thanks! I'm not sure, whether 
-making this multiplexing available requires any additional code to the 
-generic DMA DT binding implementation. If it does - please, let's make 
-this a part of the implementation.
+>> +
+>> +#define gpio_keys_polled_of_match NULL
+>
+> Please use of_match_ptr() instead.
 
-It is also important to provide a flexible multiple channel per device 
-configuration support to let slave drivers distinguish between different 
-DMA channels, that they get back from the API. But I think this is a part 
-of the current proposal and is being taken care of.
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Thanks for the suggestion, I will implement that.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
