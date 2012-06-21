@@ -1,60 +1,90 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V2 0/3] regulator: dt: add policy to match regulator with
- prop "regulator-compatible"
-Date: Thu, 21 Jun 2012 10:53:04 +0100
-Message-ID: <20120621095304.GN4037@opensource.wolfsonmicro.com>
-References: <1340116099-17629-1-git-send-email-ldewangan@nvidia.com>
- <CACRpkdYSLiLZwVwY1tU9PWGTx2EGP6OykeXE5rtwRKAHror-Yg@mail.gmail.com>
- <20120620100058.GD3978@opensource.wolfsonmicro.com>
- <4FE1F918.1040909@wwwdotorg.org>
+From: Ivo Sieben <meltedpianoman@gmail.com>
+Subject: Re: [PATCH] SPI: at25: Parse dt settings
+Date: Thu, 21 Jun 2012 11:49:13 +0200
+Message-ID: <CAMSQXEHOtgk7wRRqOdpMaTvpxFd1Cpom=BG65GheY6Z4p2Jc3A@mail.gmail.com>
+References: <1339678763-14509-1-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Ll0BBk1HBk/f94B0"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FE1F918.1040909@wwwdotorg.org>
+In-Reply-To: <1339678763-14509-1-git-send-email-aletes.xgr@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, lrg@ti.com, lee.jones@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <w.sang@pengutronix.de>, Chris Wright <chrisw@sous-sol.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---Ll0BBk1HBk/f94B0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+2012/6/14 Alexandre Pereira da Silva <aletes.xgr@gmail.com>:
+> @@ -305,25 +305,54 @@ static ssize_t at25_mem_write(struct memory_acc=
+essor *mem, const char *buf,
+> + =A0 =A0 =A0 if (!spi->dev.platform_data) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (np) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 u32 val;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 memset(&chip, 0, sizeof=
+(chip));
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 strncpy(chip.name, np->=
+name, 10);
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 err =3D of_property_rea=
+d_u32(np, "at25,byte-len", &val);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (err) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_dbg=
+(&spi->dev, "invalid chip dt description\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto fa=
+il;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 chip.byte_len =3D val;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 err =3D of_property_rea=
+d_u32(np, "at25,addr-mode", &val);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (err) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_dbg=
+(&spi->dev, "invalid chip dt description\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto fa=
+il;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 chip.flags =3D (u16)val=
+;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 err =3D of_property_rea=
+d_u32(np, "at25,page-size", &val);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (err) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_dbg=
+(&spi->dev, "invalid chip dt description\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto fa=
+il;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 chip.page_size =3D (u16=
+)val;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 } else {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_dbg(&spi->dev, "no =
+chip description\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 err =3D -ENODEV;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto fail;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> + =A0 =A0 =A0 } else
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 chip =3D *(struct spi_eeprom *)spi->dev=
+=2Eplatform_data;
 
-On Wed, Jun 20, 2012 at 10:23:52AM -0600, Stephen Warren wrote:
+One small remark:
+In case of platform_data, the "if (!chip)" check has been removed and
+is now only handled in the device tree initialization.
+Maybe add this check to the platform initialization as well:
 
-> Related to this, I wonder if we need some scheme to tag individual
-> bindings as under-development vs. final, and some way to promote
-> bindings between those states (a bindings review board?!). Do binding
+} else {
+        if (!spi->dev.platform_data) {
+                dev_dbg(&spi->dev, "no chip description\n");
+                err =3D -ENODEV;
+                goto fail;
+        }
+        chip =3D  *(struct spi_eeprom *)spi->dev.platform_data;
+}
 
-Part of the trouble with this, and the reason why it doesn't really work
-for sysfs, is that people generally don't think there's a problem with
-the bindings until they run into it or until someone new comes along and
-reviews them.  Apart from the OMAP hwmod thing generally we aren't doing
-anything that's not supposed to last.
+=46urthermore looks good to me...
+(Note: I am not familiar with device trees, so I cannot judge that
+part of this patch)
 
---Ll0BBk1HBk/f94B0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP4u75AAoJEBus8iNuMP3dtSwP/2Gt8hBG9EzKbPGwnowrBXQO
-IHEhxpGY0xp5WCmZoyk8Q5/Maf4v9bJn8pd9wsO3unu9/sjxY8EQoRWKmLUJP2Rn
-/Xy85Ws3+fUjmKusNrJxjf4A5syfvO3q+wTkEgEY5MW0EI9ZVB0aDY4+aGs0XnYm
-nRvJXXQNPBNR20pqcVCVwdZS59tkTdGK8aejzNmZdgE5D7/WLzHClgu2YDkqQ41G
-wbPNNV1Jd9KUGNhq9bzUyloyyJWVCi/GbknsP8VjzJF6DrnnD0h3As5hcIj3kE4/
-BMzwCpZZM9gWvVwj/yjnzaUa+F6DzCenofMwcKqUOU/CS8hFPS6snO6qiR9TvKEE
-AvG3vrk+vg/wObG4mTuCPO0LHt6SkQNNfECOSr/jZBZs8V5peEM/35v7v5e/8gMV
-wbWNgcuUwR2PGpwiqZgSZpg9L0+m63WVBZQJkxetikBv0OLgWN6eYH+rVrL2T3yp
-8Ol5+jjTiOvM7JlKMSyfpcx0nP6fN0gSTZOOWMHpghMq1vV3BcbIZxydRS1v2zBP
-wUjT1jTlf3YslG95Q1UKcGXLGQSZ5ovc3vVdffLHdc0bemQUCS6Bpk8gD6BtJ/G1
-Wry72EGGRfBjVLYogGI0Qls3mdAP7aXMZpn/OQovO4cZC3pUsPGjQHXR/DD6FW1t
-onS3zP12zwJXKopRjlFF
-=+9Ew
------END PGP SIGNATURE-----
-
---Ll0BBk1HBk/f94B0--
+Regards,
+Ivo Sieben
