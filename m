@@ -1,67 +1,125 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
- regulator-compatible
-Date: Thu, 21 Jun 2012 23:52:31 +0100
-Message-ID: <20120621225231.GB4037@opensource.wolfsonmicro.com>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
- <201206211717.46142.arnd@arndb.de>
- <4FE35A78.60003@wwwdotorg.org>
- <201206212103.29517.arnd@arndb.de>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [RFC] ARM: OMAP: Remove nodes dynamically at runtime
+Date: Thu, 21 Jun 2012 18:50:00 -0500
+Message-ID: <4FE3B328.8060805@ti.com>
+References: <4FE372CA.7020008@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mBuDz+cd8w/hvK2v"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201206212103.29517.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FE372CA.7020008@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: device-tree <devicetree-discuss@lists.ozlabs.org>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
 
---mBuDz+cd8w/hvK2v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 06/21/2012 02:15 PM, Jon Hunter wrote:
+> Hi all,
+> 
+> I am in the process of adding a device-tree binding for OMAP timers and
+> I have encountered a scenario where ideally it would be useful to remove
+> a device-tree node at runtime.
+> 
+> The scenario is this ...
+> 
+> 1. OMAP3 devices may or may not have security features enabled. Security
+>    enabled devices are known as high-secure (HS) and devices without 
+>    security are known as general purpose (GP).
+> 2. For OMAP3 devices there are 12 general purpose timers available.
+> 3. On secure devices the 12th timer is reserved for secure usage and so
+>    cannot be used by the kernel, where as for a GP device it is available.
+> 4. We can detect the OMAP device type, secure or GP, at runtime via an
+>    on-chip register.
+> 5. Today, when not using DT, we do not register the 12th timer as a linux
+>    device if the device is secure.
+> 
+> When migrating the timers to DT, I need a way to prevent this 12th timer
+> from being registered as a device on a secure device. The options I have
+> considered are ...
+> 
+> a. Have separate a omap3.dtsi for GP and secure devices or place the
+>    node for the 12th timer in a omap3-gp.dtsi that is only used for
+>    boards with GP devices. The downside of this is that for boards
+>    that can support GP and secure device (such as the omap3 SDP) we
+>    require a separate dtb blob.
+> 
+> b. Remove the timer node dynamically at runtime using the
+>    of_node_detach() API. In this solution we define a "ti,timer-secure"
+>    property that the 12th timer on omap3 devices would have and at
+>    runtime if we are a secure omap3 device, we search the timer nodes
+>    for any nodes with this property and remove them.
+> 
+> Option B, seems to be the better option but requires me to enable 
+> CONFIG_OF_DYNAMIC for all omap devices and I was not sure if there is any
+> downside to doing so. Enabling this feature does not seem to add much code
+> as far as I can tell, however, I  wanted to get some feedback before
+> proposing this. Also if there are any other options I should consider then
+> please let me know.
+> 
+> For option B, the timer node would look like ...
+> 
+> +               timer12: timer@48304000 {
+> +                       compatible = "ti,omap3-timer";
+> +                       ti,hwmods = "timer12";
+> +                       ti,timer-alwon;
+> +                       ti,timer-secure;
+> +               };
+> 
+> I would then add the following function to the omap timer code to search
+> for any timers with the "ti,timer-secure" on a secure device and enable
+> the OF_DYNAMIC option. Right now it is only timer 12 on OMAP3 that
+> requires this, but I have made the function generic so that it could
+> handle other devices (but none exist today that I am aware of).
+> 
+> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
+> index 8c22a8e..5e38946 100644
+> --- a/arch/arm/mach-omap2/timer.c
+> +++ b/arch/arm/mach-omap2/timer.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/clocksource.h>
+>  #include <linux/clockchips.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+>  
+>  #include <asm/mach/time.h>
+>  #include <plat/dmtimer.h>
+> @@ -482,6 +483,35 @@ static int __init omap2_dm_timer_init(void)
+>  }
+>  arch_initcall(omap2_dm_timer_init);
+>  
+> +static struct of_device_id omap3_timer_match[] __initdata = {
+> +       { .compatible = "ti,omap3-timer", },
+> +       { }
+> +};
+> +
+> +/**
+> + * omap_dmtimer_init - initialisation function when device tree is used
+> + *
+> + * For secure OMAP3 devices, timers with property "ti,timer-secure" cannot
+> + * be used by the kernel as they are reserved. Therefore, to prevent the
+> + * kernel registering these devices remove them dynamically from the device
+> + * tree on boot.
+> + */
+> +void __init omap_dmtimer_init(void)
+> +{
+> +       struct device_node *np;
+> +
+> +       if (!cpu_is_omap34xx())
+> +               return;
+> +
+> +       /* If we are a secure device, remove any secure timer nodes */
+> +       if ((omap_type() == OMAP2_DEVICE_TYPE_GP)) {
 
-On Thu, Jun 21, 2012 at 09:03:29PM +0000, Arnd Bergmann wrote:
+Oops! Bug in the above code. Meant to be ...
 
-> The board specific settings on the other hand are about what to
-> put into those registers and what voltage to use. From all I can
-> tell, those settings belong into the node that actually uses the
-> regulator, not the node that defines it.
+	 if (omap_type() != OMAP2_DEVICE_TYPE_GP)
+> +               for_each_matching_node(np, omap3_timer_match) {
+> +                       if (of_get_property(np, "ti,timer-secure", NULL))
+> +                               of_detach_node(np);
+> +               }
+> +       }
+> +}
 
-This doesn't work.  Each regulator may be used by multiple consumers,
-the configuration is for the supply as a whole not for an individual
-user.  The main service the API is providing is arbitration between
-multiple consumers and the physical capabilities of the board.
-
-Due to the fact that the binding of the device has to be done by the
-board you'd need to replace the regulator-compatible value with a
-phandle pointing to whatever nodes the .dtsi defines (and which would
-need to include some string as well so we can bind code to it).  And of
-course if anyone wants to use the device on a non-DT architecture we'd
-need to replicate everything in code anyway.
-
---mBuDz+cd8w/hvK2v
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP46WoAAoJEBus8iNuMP3dK+IP/3SSfLIKAiMuCb0sbxgMMXqS
-fVtfNSjNOQSWCratur6ma2TOS3nbwtIHk6x3E31t/V85rGZ/uOzFP6EdwaJh9f0B
-NTB/xtd7MVWmm2XRWNfnGGqTcq4ZXXL1HImTm1J+oI1q6KgMvmIja63fO9Zh1GQP
-jNmPvNIzejEPIZmcW8Px4sP4G6BQ8KNo03PIAk+0IFcsZqIYuV0aG3h3VOKVbFXn
-Cli8T2DHybxlgw80MpE2FeLVooNdxtHqM0L2VCAcDoXqGUu9cWjVuX9VeQDi83cg
-jfwnKw9p9D23VRIeGJlUpDrGYmSWoBkJiPC9QWDg4tDg0XtqTYuySaqFz5IBnVp7
-gTN62VCIVD1ABd1eNKKhoMz6HyVnMP3gTTsp729CcWkbq2QqxFn1fzyJt1pSJV/D
-tOjsp/shAZNu9AHZmiNSbR/oK1tWqo61V7+54mweHsjXMWnrK2mSnaUoD2qCVysK
-cTK7aWKi3mq+HiG+NUqs0+HMj01dYeJS333A0YGKNLXJ7NPgOv0rVwwvRArfpVD+
-Zd2eUxLq/oKMaYy0gOjZUhnDKh/+m7zZriLYrHxiPgOQ/FgpSGQLYuWruokYpgDk
-Q2VKT9/pA76EXL+DzJ6EU5hbuP0wwc8dCZ7RhYRRHyYTtAescls5sF71YkGXUIGB
-nycXNjzuWOJ6xrlmBt2E
-=lzOV
------END PGP SIGNATURE-----
-
---mBuDz+cd8w/hvK2v--
+Cheers
+Jon
