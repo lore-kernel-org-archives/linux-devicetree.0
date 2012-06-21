@@ -1,77 +1,67 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
  regulator-compatible
-Date: Thu, 21 Jun 2012 23:36:33 +0100
-Message-ID: <20120621223632.GA4037@opensource.wolfsonmicro.com>
+Date: Thu, 21 Jun 2012 23:52:31 +0100
+Message-ID: <20120621225231.GB4037@opensource.wolfsonmicro.com>
 References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
- <201206211450.35713.arnd@arndb.de>
- <20120621161459.GY4037@opensource.wolfsonmicro.com>
  <201206211717.46142.arnd@arndb.de>
- <20120621194544.GZ4037@opensource.wolfsonmicro.com>
- <4FE397E5.1070707@firmworks.com>
+ <4FE35A78.60003@wwwdotorg.org>
+ <201206212103.29517.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hk/xWDG3xnLTY+FR"
+	protocol="application/pgp-signature"; boundary="mBuDz+cd8w/hvK2v"
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4FE397E5.1070707@firmworks.com>
+In-Reply-To: <201206212103.29517.arnd@arndb.de>
 Sender: linux-doc-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, Laxman Dewangan <ldewangan@nvidia.com>, lee.jones@linaro.org, lrg@ti.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---hk/xWDG3xnLTY+FR
+--mBuDz+cd8w/hvK2v
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jun 21, 2012 at 11:53:41AM -1000, Mitch Bradley wrote:
+On Thu, Jun 21, 2012 at 09:03:29PM +0000, Arnd Bergmann wrote:
 
-Whatever mail program you're using appears to be generating HTML mails
-and isn't doing an awesome job at formatting them, the plain text
-version is mangled too with most peculiar word wrapping which is quite
-hard to read.  I've reflowed.
+> The board specific settings on the other hand are about what to
+> put into those registers and what voltage to use. From all I can
+> tell, those settings belong into the node that actually uses the
+> regulator, not the node that defines it.
 
-> On 6/21/2012 9:45 AM, Mark Brown wrote:
-> >On Thu, Jun 21, 2012 at 05:17:45PM +0000, Arnd Bergmann wrote:
-> >>On Thursday 21 June 2012, Mark Brown wrote:
+This doesn't work.  Each regulator may be used by multiple consumers,
+the configuration is for the supply as a whole not for an individual
+user.  The main service the API is providing is arbitration between
+multiple consumers and the physical capabilities of the board.
 
-> >>>I'm not that big a fan of moving all the data into device tree as it
-> >>>means that you need even more parsing code and you need to update the
-> >>>device trees for every board out there every time you want to add
-> >>>support for a new feature which doesn't seem like a win.
+Due to the fact that the binding of the device has to be done by the
+board you'd need to replace the regulator-compatible value with a
+phandle pointing to whatever nodes the .dtsi defines (and which would
+need to include some string as well so we can bind code to it).  And of
+course if anyone wants to use the device on a non-DT architecture we'd
+need to replicate everything in code anyway.
 
-> Maybe I'm missing something, but in general it's not necessary to
-> update old device trees to support new features.  The trick is to
-> define a new property that describes the new possibility.  Absence of
-> that property implies that the default - the thing that used to happen
-> across the board, before the feature existed - applies.
-
-Which is not a success in terms of deploying the new support, or indeed
-in terms of deploying bugfixes.  It increases the overall complexity of
-the system and I'm having a hard time getting at all excited about any
-benefits.
-
---hk/xWDG3xnLTY+FR
+--mBuDz+cd8w/hvK2v
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP46HoAAoJEBus8iNuMP3dQDMP/j1W4ktbFyGq0xgJWlp/7mT6
-HE9gK/E6DiGNNK9sNvfxuN/JF4sDrPFtCjTc/7Uib+PT61RVPoFej17sxA5FZSG6
-jxuhfluMBZ1s3zDjFH9qKUhnqea77Uhkz+shF33aYHILDGBv/wrftcvsluQ6Bzdt
-H3rsmb9wajLywfy9+6ZgVXHCj1xmTQfAS85Fhc09QcVlDK/xYIPHQ9GQgYb7EV5K
-OQQhULAEkLk6OQB0SLOsBAz9xrRFqbdF9oHJCIuAeXQcvWXEVwdT0SuZHUg2G3Of
-UXUPj7mOAY28emrZXAJ3lh34t2ZStA3tGMEVJcXSMSTVJ/8AbzmsdeoIoyFujEr0
-z5mZPXNEsicAmKN44FbQDyxbnq1++OlL3GCD7+pgcDFbGQYbQncNxgz9zLvzGRTR
-sOvfukDYsG+0SSCme88b8zRng24pqOT0U7avsoVl2y6lJv9+LVTkuyX5QYO8Qd7w
-pI3CqoKvci+lECgkh/1yZ2DSGfE6hRqKb5+LOuoci0tuPPRAK+bHVzwOgqIh5UvF
-NnV9dRxvfI7++Aa5N2FikavUTGxPEIm7N9X1IWeor37PzkVWNMujaqu2NhNogy6q
-IPQ76vqycuZ+cjoj5NEj3ySOEeg/t2f+4KP3fXuqVu5fgQ9T+lMKDrm6nQk3A6rf
-OAhPs6vMXF8cKMB8Anwg
-=Fwmn
+iQIcBAEBAgAGBQJP46WoAAoJEBus8iNuMP3dK+IP/3SSfLIKAiMuCb0sbxgMMXqS
+fVtfNSjNOQSWCratur6ma2TOS3nbwtIHk6x3E31t/V85rGZ/uOzFP6EdwaJh9f0B
+NTB/xtd7MVWmm2XRWNfnGGqTcq4ZXXL1HImTm1J+oI1q6KgMvmIja63fO9Zh1GQP
+jNmPvNIzejEPIZmcW8Px4sP4G6BQ8KNo03PIAk+0IFcsZqIYuV0aG3h3VOKVbFXn
+Cli8T2DHybxlgw80MpE2FeLVooNdxtHqM0L2VCAcDoXqGUu9cWjVuX9VeQDi83cg
+jfwnKw9p9D23VRIeGJlUpDrGYmSWoBkJiPC9QWDg4tDg0XtqTYuySaqFz5IBnVp7
+gTN62VCIVD1ABd1eNKKhoMz6HyVnMP3gTTsp729CcWkbq2QqxFn1fzyJt1pSJV/D
+tOjsp/shAZNu9AHZmiNSbR/oK1tWqo61V7+54mweHsjXMWnrK2mSnaUoD2qCVysK
+cTK7aWKi3mq+HiG+NUqs0+HMj01dYeJS333A0YGKNLXJ7NPgOv0rVwwvRArfpVD+
+Zd2eUxLq/oKMaYy0gOjZUhnDKh/+m7zZriLYrHxiPgOQ/FgpSGQLYuWruokYpgDk
+Q2VKT9/pA76EXL+DzJ6EU5hbuP0wwc8dCZ7RhYRRHyYTtAescls5sF71YkGXUIGB
+nycXNjzuWOJ6xrlmBt2E
+=lzOV
 -----END PGP SIGNATURE-----
 
---hk/xWDG3xnLTY+FR--
+--mBuDz+cd8w/hvK2v--
