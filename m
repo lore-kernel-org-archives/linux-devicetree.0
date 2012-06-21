@@ -1,43 +1,39 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by regulator-compatible
-Date: Thu, 21 Jun 2012 21:03:29 +0000
-Message-ID: <201206212103.29517.arnd@arndb.de>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <201206211717.46142.arnd@arndb.de> <4FE35A78.60003@wwwdotorg.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
+Date: Thu, 21 Jun 2012 16:32:26 -0500
+Message-ID: <4FE392EA.7060103@gmail.com>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com> <1339590863-10564-9-git-send-email-richard.zhao@freescale.com> <4FD8AD42.6010702@gmail.com> <20120613152841.GA23590@richard-laptop> <4FD8C4DB.4020908@gmail.com> <20120614013343.GD29684@b20223-02.ap.freescale.net> <4FE1DE53.4070202@gmail.com> <20120620150502.GG2253@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4FE35A78.60003@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120620150502.GG2253-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 June 2012, Stephen Warren wrote:
-> > It should never be necessary to add board-specific properties in the
-> > nodes that describe the SoC specific bits. What I was referring to
-> > is just moving the data that currently resides in the regulator
-> > driver into DT.
-> 
-> I guess I must be misunderstanding that comment - there are many many
-> examples of boards adding properties to nodes that describe the SoC. For
-> example, the GPIOs used by SDHCI controllers, board-specific max clock
-> rates for SDHCI or I2C controllers, pinmux configuration properties, to
-> name just a few.
+On 06/20/2012 10:05 AM, Shawn Guo wrote:
+> On Wed, Jun 20, 2012 at 09:29:39AM -0500, Rob Herring wrote:
+>> I mean just something like "fsl,hub-reset-gpios" in the ehci device
+>> node. It's at least under a usb node. Whether the ehci driver handles
+>> this or you just have a separate piece of code to find this property and
+>> setup the gpio is up to you.
+>>
+> I ever had an argument on this.  If we have "fsl,hub-reset-gpios"
+> defined in ehci device node, it should simply be ehci driver who needs
+> to find this property and set up the gpio.  Defining the property in
+> ehci device node while having platform code to find the property just
+> seems wired to me.  That said, if it's not ehci driver who will use
+> the property, we should not define the property in in ehci device node.
 
-The difference is that configuration is board specific, but capabilities
-of the hardware are soc specific. The regulator-compatible property
-identifies just the capabilities and the location of one regulator:
+There's no requirement that 1 DT node be 1 driver. That's purely an OS
+decision and it's usually simpler that way. But if it it's just a one
+time thing at boot, then its fine for the platform code to handle it.
 
-Look at struct ab8500_regulator_info, everything in there describes
-the soc: min/max voltages, register banks, startup delay. Those are
-all things that we could in theory have in the .dtsi file describing
-the soc.
+Rob
 
-The board specific settings on the other hand are about what to
-put into those registers and what voltage to use. From all I can
-tell, those settings belong into the node that actually uses the
-regulator, not the node that defines it.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
