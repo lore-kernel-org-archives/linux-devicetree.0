@@ -1,71 +1,26 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 0/4] DT clock bindings
-Date: Thu, 21 Jun 2012 10:00:51 -0500
-Message-ID: <4FE33723.3040403@gmail.com>
-References: <1339512111-11172-1-git-send-email-robherring2@gmail.com> <87bokd15x7.fsf@octavius.laptop.org>
+From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 14/14] usb: chipidea: add imx platform driver
+Date: Thu, 21 Jun 2012 23:23:40 +0800
+Message-ID: <20120621152337.GA3630@richard-laptop>
+References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com>
+ <1340260875-21934-15-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87bokd15x7.fsf@octavius.laptop.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, s.hauer@pengutronix.de, sboyd@codeaurora.org, Grant Likely <grant.likely@secretlab.ca>, skannan@codeaurora.org, shawn.guo@linaro.org, Mitch Bradley <wmb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1340260875-21934-15-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+Hi Alex,
 
-On 06/21/2012 02:27 AM, Chris Ball wrote:
-> Hi Rob,
-> 
-> On Tue, Jun 12 2012, Rob Herring wrote:
->> This series defines clock bindings for Device-Tree and adds kernel
->> support using the common clock infrastructure. The last patch enables
->> DT clock support for the Calxeda Highbank platform.
->>
->> I'm posting this again to solicit further review. There has been some
->> discussion[1], but no definite path forward. This series is not changed
->> from the last post other than rebasing to v3.5-rc2.
-> 
-> This is a very useful patchset, thanks!  Mitch Bradley and I have been
-> hooking up the mach-mmp ARM subarchitecture to it and we needed to
-> make a few changes, mainly because mach-mmp doesn't use COMMON_CLK.
-> The changes are:
-> 
-> 1) Remove the COMMON_CLK dependency that the of_clk_* functions have by
->    moving them into a new file, drivers/clk/clk-of.c.  The OF functions
->    in drivers/clk/clk.c aren't dependent on anything else in clk.c
->    (since you pass them a struct clk) so they can be moved out easily.
->    The of_clk_* entries in clk-provider.h move to clk.h.
+Could you Ack the patch if everything is ok?
 
-Well, if you look at prior versions, it was separate being in
-drivers/of/. I'm not sure we want to encourage/allow not converting to
-COMMON_CLK. I would consider not using COMMON_CLK is deprecated. Having
-a single definition of struct clk is the primary reason for COMMON_CLK.
-What is the reason for not converting mmp to COMMON_CLK? It appears to
-be a pretty trivial clock implementation, and will be required for
-multi-platform kernels.
-
-> 
-> 2) Use alloc_bootmem() instead of kzalloc() in of_clk_add_provider(),
->    because we need to set up clocks during .init_early on ARM (which
->    happens pre-slab) so that they are available for platform init.
-
-This depends on 1 as the common clock code would have the same issue.
-Generally, the first place clocks are needed is the timer init. At that
-point, you can call kzalloc. This is where all the clock init used to be
-done until init_early was added and some platforms have moved their
-clock init. I don't think there was really ever much reason to move it
-other than to make the timer init function only deal with timer setup.
-
-Is alloc_bootmem available on all arches? There's 3 occurrences in
-drivers/* which tells me that is the wrong thing to do.
-
-Rob
-
-> I'll send our patches in a reply to this mail.  Are you okay with these
-> changes, and would you like to include them in your patchset?
-> 
-> Thanks very much,
-> 
-> - Chris.
+Thanks
+Richard
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
