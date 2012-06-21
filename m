@@ -1,97 +1,77 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
-Date: Thu, 21 Jun 2012 16:22:26 -0600
-Message-ID: <4FE39EA2.8050809@wwwdotorg.org>
-References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
- <1339590863-10564-9-git-send-email-richard.zhao@freescale.com>
- <4FD8AD42.6010702@gmail.com> <20120613152841.GA23590@richard-laptop>
- <4FD8C4DB.4020908@gmail.com>
- <20120614013343.GD29684@b20223-02.ap.freescale.net>
- <4FE1DE53.4070202@gmail.com> <4FE1EF26.9080401@wwwdotorg.org>
- <F281D0F91ED19E4D8E63A7504E8A649803BE3E73@039-SN2MPN1-023.039d.mgd.msft.net>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
+ regulator-compatible
+Date: Thu, 21 Jun 2012 23:36:33 +0100
+Message-ID: <20120621223632.GA4037@opensource.wolfsonmicro.com>
+References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
+ <201206211450.35713.arnd@arndb.de>
+ <20120621161459.GY4037@opensource.wolfsonmicro.com>
+ <201206211717.46142.arnd@arndb.de>
+ <20120621194544.GZ4037@opensource.wolfsonmicro.com>
+ <4FE397E5.1070707@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <F281D0F91ED19E4D8E63A7504E8A649803BE3E73-RL0Hj/+nBVDtkydW1Tv2Dq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Chen Peter-B29397 <B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, Li Frank-B20596 <B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Estevam Fabio-R49496 <r49496-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hk/xWDG3xnLTY+FR"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FE397E5.1070707@firmworks.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, Laxman Dewangan <ldewangan@nvidia.com>, lee.jones@linaro.org, lrg@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2012 07:32 PM, Chen Peter-B29397 wrote:
->  
->> I haven't been following the thread, but just noticed it. Very similar
->> things (DT nodes for probed devices) are coming up quite a bit recently,
->> for example:
->>
->> Re: Where to power on the wifi device before loading the driver.
->> http://www.spinics.net/lists/arm-kernel/msg180368.html
->>
->> dt: rfkill-gpio: add bindings documentation
->> http://www.spinics.net/lists/linux-tegra/msg03977.html
->>
->> I wonder if there's any kind of infra-structure or standardized bindings
->> that would be useful here?
-> 
-> Hi Stephen,
-> For your suggestion: 
-> 
-> sdhci@78000000 {
-> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
-> 	reg = <0x78000000 0x200>;
-> 	interrupts = <0 14 0x04>;
-> 
-> 	sdio-device {
-> 		reset-gpios = <...>;
-> 		enable-gpios = <...>;
-> 	};
-> };
-> 
-> I have a question, if reset-gpio or enable-gpio is not set, how bus (sd or usb) know
-> it is a sdio device as the wifi is not powered on at the time, it will not response host's
-> command,  the hub at usb bus is the same.
 
-That's a good point. We need those properties to be part of the device
-that controls the port/slot/connector, not the thing that plugs into it.
-Having each such binding and driver implement this themselves might not
-be a good idea though. Perhaps we can standardize on a mechanism for
-this; something vaguely like rfkill, but for arbitrary types of devices
-connected to ports.
+--hk/xWDG3xnLTY+FR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For USB at least, where the power/reset/... GPIOs might affect just one
-port on a hub rather than the root USB host controller, the issue of
-representing these properties on a dynamically probed device still
-applies. Something like:
+On Thu, Jun 21, 2012 at 11:53:41AM -1000, Mitch Bradley wrote:
 
-ehci {
-    /* The following node is dynamically detected, although the hub
-     * IC is physically soldered onto the board
-     */
-    hub {
-        hub { /* also dynamic */
-            port@2 {
-                child-supply = <&regulator>;
-                reset-gpios = <&gpio 0 0>;
-            };
-        };
-    };
-};
+Whatever mail program you're using appears to be generating HTML mails
+and isn't doing an awesome job at formatting them, the plain text
+version is mangled too with most peculiar word wrapping which is quite
+hard to read.  I've reflowed.
 
-But without knowing what might be connected to port@2, how do we know
-how to sequence the power supply and reset GPIOs according to its
-requirements? I guess this is part of the specification of the port
-itself though, not the attached device, since anything that is allowed
-to plug in must conform to whatever sequencing the port is designed to
-give. If the connected device is known, the port@2 node in DT can encode
-whatever sequencing requirements are associated with the known connected
-device.
+> On 6/21/2012 9:45 AM, Mark Brown wrote:
+> >On Thu, Jun 21, 2012 at 05:17:45PM +0000, Arnd Bergmann wrote:
+> >>On Thursday 21 June 2012, Mark Brown wrote:
+
+> >>>I'm not that big a fan of moving all the data into device tree as it
+> >>>means that you need even more parsing code and you need to update the
+> >>>device trees for every board out there every time you want to add
+> >>>support for a new feature which doesn't seem like a win.
+
+> Maybe I'm missing something, but in general it's not necessary to
+> update old device trees to support new features.  The trick is to
+> define a new property that describes the new possibility.  Absence of
+> that property implies that the default - the thing that used to happen
+> across the board, before the feature existed - applies.
+
+Which is not a success in terms of deploying the new support, or indeed
+in terms of deploying bugfixes.  It increases the overall complexity of
+the system and I'm having a hard time getting at all excited about any
+benefits.
+
+--hk/xWDG3xnLTY+FR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP46HoAAoJEBus8iNuMP3dQDMP/j1W4ktbFyGq0xgJWlp/7mT6
+HE9gK/E6DiGNNK9sNvfxuN/JF4sDrPFtCjTc/7Uib+PT61RVPoFej17sxA5FZSG6
+jxuhfluMBZ1s3zDjFH9qKUhnqea77Uhkz+shF33aYHILDGBv/wrftcvsluQ6Bzdt
+H3rsmb9wajLywfy9+6ZgVXHCj1xmTQfAS85Fhc09QcVlDK/xYIPHQ9GQgYb7EV5K
+OQQhULAEkLk6OQB0SLOsBAz9xrRFqbdF9oHJCIuAeXQcvWXEVwdT0SuZHUg2G3Of
+UXUPj7mOAY28emrZXAJ3lh34t2ZStA3tGMEVJcXSMSTVJ/8AbzmsdeoIoyFujEr0
+z5mZPXNEsicAmKN44FbQDyxbnq1++OlL3GCD7+pgcDFbGQYbQncNxgz9zLvzGRTR
+sOvfukDYsG+0SSCme88b8zRng24pqOT0U7avsoVl2y6lJv9+LVTkuyX5QYO8Qd7w
+pI3CqoKvci+lECgkh/1yZ2DSGfE6hRqKb5+LOuoci0tuPPRAK+bHVzwOgqIh5UvF
+NnV9dRxvfI7++Aa5N2FikavUTGxPEIm7N9X1IWeor37PzkVWNMujaqu2NhNogy6q
+IPQ76vqycuZ+cjoj5NEj3ySOEeg/t2f+4KP3fXuqVu5fgQ9T+lMKDrm6nQk3A6rf
+OAhPs6vMXF8cKMB8Anwg
+=Fwmn
+-----END PGP SIGNATURE-----
+
+--hk/xWDG3xnLTY+FR--
