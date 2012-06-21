@@ -1,17 +1,17 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
- regulator-compatible
-Date: Thu, 21 Jun 2012 11:53:41 -1000
-Message-ID: <4FE397E5.1070707@firmworks.com>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
- <201206211450.35713.arnd@arndb.de>
- <20120621161459.GY4037@opensource.wolfsonmicro.com>
- <201206211717.46142.arnd@arndb.de>
- <20120621194544.GZ4037@opensource.wolfsonmicro.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree based
+ pinctrl driver
+Date: Thu, 21 Jun 2012 16:13:26 -0600
+Message-ID: <4FE39C86.5070901@wwwdotorg.org>
+References: <20120611135826.GB12766@atomide.com>
+ <4FDA6FCD.1020605@wwwdotorg.org> <20120615094938.GQ12766@atomide.com>
+ <4FDB6000.5080703@wwwdotorg.org> <20120618055036.GU12766@atomide.com>
+ <20120619135600.GX12766@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0055521992608488652=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120621194544.GZ4037-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <20120619135600.GX12766-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,194 +22,100 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============0055521992608488652==
-Content-Type: multipart/alternative;
- boundary="------------010402090608010900090204"
+On 06/19/2012 07:56 AM, Tony Lindgren wrote:
+> Hi,
+> 
+> Below is the pinctrl-single patch updated with hopefully all the Stephen's
+> comments addressed. The binding still needs to be looked at, see relevant
+> parts of the discussion below.
+...
+> From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Date: Wed, 6 Jun 2012 04:18:18 -0700
+> Subject: [PATCH] pinctrl: Add one-register-per-pin type device tree based pinctrl driver
+> 
+> Add one-register-per-pin type device tree based pinctrl driver.
+> 
+> Currently this driver only works on omap2+ series of processors,
+> where there is either an 8 or 16-bit padconf register for each pin.
+> Support for other similar pinmux controllers can be added.
+> 
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> new file mode 100644
+> index 0000000..929254c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> @@ -0,0 +1,106 @@
+> +One-register-per-pin type device tree based pinctrl driver
+> +
+> +Required properties:
+> +- compatible : "pinctrl-single"
+> +
+> +- reg : offset and length of the register set for the mux registers
+> +
+> +- pinctrl-single,register-width : pinmux register access width in bits
+> +
+> +- pinctrl-single,function-mask : mask of allowed pinmux function bits
+> +  in the pinmux register
+> +
+> +- pinctrl-single,pinconf-mask : mask of allowed pinconf bits in the
+> +  pinmux register; this gets combined with pinconf mask but is a separate
+> +  mask to allow the option of setting pinconf separatately from the
+> +  function
 
-This is a multi-part message in MIME format.
---------------010402090608010900090204
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Given that this binding doesn't allow describing pin configuration at
+present, I would simply remove all mention of that property in the
+binding documentation. It can be added back if/when that feature is
+added. Any future driver using this binding can refuse to allow pin
+configuration if that property is missing.
 
-On 6/21/2012 9:45 AM, Mark Brown wrote:
-> On Thu, Jun 21, 2012 at 05:17:45PM +0000, Arnd Bergmann wrote:
->> On Thursday 21 June 2012, Mark Brown wrote:
->
->>> I'm not that big a fan of moving all the data into device tree as it
->>> means that you need even more parsing code and you need to update the
->>> device trees for every board out there every time you want to add
->>> support for a new feature which doesn't seem like a win.
+> +- pinctrl-single,function-off : function off mode for disabled state if
+> +  available and same for all registers; if not, use a value larger than
+> +  function-mask to ignore disabling of registers
 
+Rather than requiring an invalid value in this property, shouldn't the
+lack of a valid function-off value be represented by the property not
+being present in the DT?
 
-Maybe I'm missing something, but in general it's not necessary to update 
-old device
-trees to support new features.  The trick is to define a new property 
-that describes
-the new possibility.  Absence of that property implies that the default 
-- the thing
-that used to happen across the board, before the feature existed - applies.
+> +This driver assumes that there is only one register for each pin,
+> +and uses the common pinctrl bindings as specified in the pinctrl-bindings.txt
+> +document in this directory.
 
->>>   Right now with
->>> the DT kept in the kernel it's not so bad but if we ever do start
->>> distributing it separately it becomes more of an issue.
->
->> Right. It's certainly a trade-off. If a company makes 100 SoCs that
->> all have similar-but-different regulators, then it should be clear
->> win to have the driver be very abstract and fed with DT data for
->> configuragtion.
->
-> Well, nobody does that anyway but even if they were it doesn't help
-> non-DT systems at all, nor does it help when we need to go and add new
-> properties to every existing device tree using the device.  We've got
-> far more architectures don't use DT than do...
->
->>> I'm also not sure if the tooling works well for allowing people to
->>> include standard DTs for chips and add new properties to nodes for the
->>> board specific configuration, though I think I've seen a few things
->>> which suggested that was dealt with reasonably well.
->
->> It should never be necessary to add board-specific properties in the
->> nodes that describe the SoC specific bits. What I was referring to
->> is just moving the data that currently resides in the regulator
->> driver into DT.
->
-> How would this work given that we also need to put system specific
-> configuration for the same devices into DT?  As Stephen says it doesn't
-> seem to match what we're currently doing.
->
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+At this point in the file, I think you need to mention that you're
+switching from describing the top-level device node to describing pin
+configuration nodes.
 
+> +The pinctrl register offsets and default values are specified as pairs
 
---------------010402090608010900090204
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+I thought we were going to remove "default" here?
 
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <div class="moz-cite-prefix"><tt>On 6/21/2012 9:45 AM, Mark Brown
-        wrote:<br>
-      </tt></div>
-    <blockquote
-      cite="mid:20120621194544.GZ4037-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org"
-      type="cite">
-      <pre wrap=""><tt>On Thu, Jun 21, 2012 at 05:17:45PM +0000, Arnd Bergmann wrote:
-</tt></pre>
-      <blockquote type="cite">
-        <pre wrap=""><tt>On Thursday 21 June 2012, Mark Brown wrote:
-</tt></pre>
-      </blockquote>
-      <pre wrap=""><tt>
-</tt></pre>
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <pre wrap=""><tt>I'm not that big a fan of moving all the data into device tree as it
-means that you need even more parsing code and you need to update the
-device trees for every board out there every time you want to add
-support for a new feature which doesn't seem like a win. </tt></pre>
-        </blockquote>
-      </blockquote>
-    </blockquote>
-    <br>
-    <br>
-    Maybe I'm missing something, but in general it's not necessary to
-    update old device<br>
-    trees to support new features.&nbsp; The trick is to define a new
-    property that describes<br>
-    the new possibility.&nbsp; Absence of that property implies that the
-    default - the thing<br>
-    that used to happen across the board, before the feature existed -
-    applies.<br>
-    <br>
-    <blockquote
-      cite="mid:20120621194544.GZ4037-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org"
-      type="cite">
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <pre wrap=""><tt> Right now with
-the DT kept in the kernel it's not so bad but if we ever do start
-distributing it separately it becomes more of an issue.
-</tt></pre>
-        </blockquote>
-      </blockquote>
-      <pre wrap=""><tt>
-</tt></pre>
-      <blockquote type="cite">
-        <pre wrap=""><tt>Right. It's certainly a trade-off. If a company makes 100 SoCs that
-all have similar-but-different regulators, then it should be clear
-win to have the driver be very abstract and fed with DT data for
-configuragtion.
-</tt></pre>
-      </blockquote>
-      <pre wrap=""><tt>
-Well, nobody does that anyway but even if they were it doesn't help
-non-DT systems at all, nor does it help when we need to go and add new
-properties to every existing device tree using the device.  We've got
-far more architectures don't use DT than do...
+> +using pinctrl-single,pins. For example, setting a pin for a device
+> +could be done with:
+> +
+> +	pinctrl-single,pins = <0xdc 0x118>;
+> +
+> +Where 0xdc is the offset from the pinctrl register base address for the
+> +device pinctrl register, and 0x118 contains the desired value of the
+> +pinctrl register. See the device example and static board pins example
+> +below for more information.
 
-</tt></pre>
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <pre wrap=""><tt>I'm also not sure if the tooling works well for allowing people to
-include standard DTs for chips and add new properties to nodes for the
-board specific configuration, though I think I've seen a few things
-which suggested that was dealt with reasonably well.
-</tt></pre>
-        </blockquote>
-      </blockquote>
-      <pre wrap=""><tt>
-</tt></pre>
-      <blockquote type="cite">
-        <pre wrap=""><tt>It should never be necessary to add board-specific properties in the
-nodes that describe the SoC specific bits. What I was referring to
-is just moving the data that currently resides in the regulator
-driver into DT.
-</tt></pre>
-      </blockquote>
-      <pre wrap=""><tt>
-How would this work given that we also need to put system specific
-configuration for the same devices into DT?  As Stephen says it doesn't
-seem to match what we're currently doing.
-</tt></pre>
-      <tt><br>
-      </tt>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <tt><br>
-      </tt>
-      <pre wrap=""><tt>_______________________________________________
-devicetree-discuss mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org">devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org</a>
-<a class="moz-txt-link-freetext" href="https://lists.ozlabs.org/listinfo/devicetree-discuss">https://lists.ozlabs.org/listinfo/devicetree-discuss</a>
-</tt></pre>
-    </blockquote>
-    <tt><br>
-    </tt>
-  </body>
-</html>
+There should be some explanation only the portion of this value covered
+by the pinctrl-single,function-mask value is updated in the register.
 
---------------010402090608010900090204--
+> +This driver tries to avoid understanding pin and function names because of
+> +the extra bloat they would cause especially in the case of a large number
+> +of pins. This driver just sets what is specified for the board in the .dts file.
+> +Further user space debugging tools can be developed to decipher the pin and
+> +function names using debugfs.
 
---===============0055521992608488652==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+There shouldn't be any discussion of a driver here; the binding is a HW
+description.
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+> +Example:
 
---===============0055521992608488652==--
+I only reviewed the binding document, not the code.
