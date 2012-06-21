@@ -1,42 +1,37 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6 00/14] add imx usb driver based on Greg next tree
-Date: Thu, 21 Jun 2012 16:52:47 +0800
-Message-ID: <20120621085246.GC1582@b20223-02.ap.freescale.net>
-References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com>
- <4FE2CC37.8010202@pengutronix.de>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH RESEND v4] input: keyboard: Add keys driver for the
+ LPC32xx SoC
+Date: Thu, 21 Jun 2012 01:56:23 -0700
+Message-ID: <20120621085623.GF2193@core.coreip.homeip.net>
+References: <1339443891-15197-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4FE2CC37.8010202-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+In-Reply-To: <1339443891-15197-1-git-send-email-stigge@antcom.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2012 at 09:24:39AM +0200, Marc Kleine-Budde wrote:
-> On 06/21/2012 08:41 AM, Richard Zhao wrote:
-> > The work is based on  ci13xxx rework done by Alexander Shishkin.
-> > 
-> > To let Greg pick up, I also added patches Alex queued that I depends on.
-> > Patch #1 - #9 : It can also be found at
-> > http://github.com/virtuoso/linux-ci.git ci
-> > 
-> > This patch series can also be found at:
-> > https://github.com/riczhao/kernel-imx/commits/topics/usb-driver
-> > 
-> > Status:
-> >   - this version only support host
-> >   - usbotg controler works at host role
+On Mon, Jun 11, 2012 at 09:44:51PM +0200, Roland Stigge wrote:
+> This patch adds a driver for the key scan interface of the LPC32xx SoC
 > 
-> I'm interested in usb device support on mx28, what has to be implemented
-> to get it working?
-I don't have patch yet, but on the plan.
+> Signed-off-by: Roland Stigge <stigge@antcom.de>
+> For the DT binding: Acked-by: Rob Herring <rob.herring@calxeda.con>
 
-Thanks
-Richard
+Not a real review, just a quick question - if th driver is DT-only now
+do we need to have the platform data or it would make more sense to read
+DT-bindings and fill the main device structure directly?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+
+> +
+> +	matrix_keypad_build_keymap(NULL, NULL, kscandat->kscancfg->matrix_sz,
+> +				   kscandat->kscancfg->matrix_sz,
+> +				   kscandat->kscancfg->keymap, kscandat->input);
+
+This function may fail now.
+
+-- 
+Dmitry
