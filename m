@@ -1,61 +1,105 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
- regulator-compatible
-Date: Thu, 21 Jun 2012 00:37:14 +0100
-Message-ID: <20120620233714.GD4037@opensource.wolfsonmicro.com>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
- <1340194987-23654-3-git-send-email-ldewangan@nvidia.com>
- <201206201924.09618.arnd@arndb.de>
- <20120620194609.GA4037@opensource.wolfsonmicro.com>
- <4FE229BF.4080109@wwwdotorg.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v3 2/5] ARM: topology: factorize the update of sibling masks
+Date: Thu, 21 Jun 2012 09:01:09 +0900
+Message-ID: <87txy5fs8q.fsf@sejong.aot.lge.com>
+References: <1340205562-7653-1-git-send-email-vincent.guittot@linaro.org>
+	<1340205562-7653-3-git-send-email-vincent.guittot@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vni90+aGYgRvsTuO"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FE229BF.4080109@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Laxman Dewangan <ldewangan@nvidia.com>, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1340205562-7653-3-git-send-email-vincent.guittot@linaro.org>
+	(Vincent Guittot's message of "Wed, 20 Jun 2012 17:19:19 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, a.p.zijlstra@chello.nl, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, jean.pihet@newoldbits.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 20 Jun 2012 17:19:19 +0200, Vincent Guittot wrote:
+> This factorization has also been proposed in another patchset that has not been
+> merged yet:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/080873.html
+> So, this patch could be dropped depending of the state of the other one.
+>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 
---vni90+aGYgRvsTuO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
-On Wed, Jun 20, 2012 at 01:51:27PM -0600, Stephen Warren wrote:
 
-> At least, I don't think it's common to refer to nodes as phandles;
-> phandles are usually the values used at "client" sites to refer to
-> nodes IIUC.
-
-Right, I always think of the phandle as being the label (which is
-present at both ends of the link - the client refers to the handle the
-node provdes.  Though now I think about it I suppose it might be
-Hungarian with the node having a handle and the client having a
-phandle...
-
---vni90+aGYgRvsTuO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP4l6jAAoJEBus8iNuMP3dUfAQAIea3c18F4APsF1IRUrtZ0+G
-HwmqSgz79fhZ6WN6xDQVs2GzqAaisqelA0cqy2tkgdrSoM9P3zaQ4nRNBW9FuYMF
-Mo7C1PbHPllN0xgmFSTvhTxCd5yNE9XEFkJi+e0KLQJrxHdcpCfbFp9lk4zrQJJ4
-Tf7QbDhk4f29nmuU7wSy2IHWuBUXJ9IWwBaih4iyTUhRMZegDGnw9kpHLqzZBZzI
-e6QgRag+g3dO6nTpGTGgjnxjcWpXNVmfQ9VoPGKKOxuptaNW0It2Shkg2xZHSX09
-ZVc7bcwZj6xubTOkrTJZahXjROSdHP1OCsDbxRlFJVYYBLC67NkplRglyJ/xCt4o
-gavnlWYxTfvUywHWgj0ChbxGr4eWJxU3O+ymFSGH3rSl9lHe2Yc8JQn5OltHK/jL
-8n3Tl2KeGA/i3HLKb/85wWtkjHDUl5RonIQA2TryhNgPPwYJ97Wr60FDFnCR6kD6
-d9+8qmlFgTKMGD1CI+bax0kgsOZ98mNJkiXfUBpq0r2wNtmp6my10V5fIFmcFrnf
-GGKu2+vxmvqzAzNVR4GVsgZUMoGl/hy3ppsgx9AC9rOcPJvO9n6ufBpJC5FR7lfV
-AxO0T75JNznxPh/xrsi2f4L9W78f/f04MUcdPpnpaBRA5u45LoM1zKUPaFYDghiX
-9WNV/Zq98T6Fvk21VUXi
-=ED36
------END PGP SIGNATURE-----
-
---vni90+aGYgRvsTuO--
+> ---
+>  arch/arm/kernel/topology.c |   48 +++++++++++++++++++++++++-------------------
+>  1 file changed, 27 insertions(+), 21 deletions(-)
+>
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index 51f23b3..eb5fc81 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -82,6 +82,32 @@ const struct cpumask *cpu_coregroup_mask(int cpu)
+>  	return &cpu_topology[cpu].core_sibling;
+>  }
+>  
+> +void update_siblings_masks(unsigned int cpuid)
+> +{
+> +	struct cputopo_arm *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
+> +	int cpu;
+> +
+> +	/* update core and thread sibling masks */
+> +	for_each_possible_cpu(cpu) {
+> +		cpu_topo = &cpu_topology[cpu];
+> +
+> +		if (cpuid_topo->socket_id != cpu_topo->socket_id)
+> +			continue;
+> +
+> +		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
+> +		if (cpu != cpuid)
+> +			cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
+> +
+> +		if (cpuid_topo->core_id != cpu_topo->core_id)
+> +			continue;
+> +
+> +		cpumask_set_cpu(cpuid, &cpu_topo->thread_sibling);
+> +		if (cpu != cpuid)
+> +			cpumask_set_cpu(cpu, &cpuid_topo->thread_sibling);
+> +	}
+> +	smp_wmb();
+> +}
+> +
+>  /*
+>   * store_cpu_topology is called at boot when only one cpu is running
+>   * and with the mutex cpu_hotplug.lock locked, when several cpus have booted,
+> @@ -91,7 +117,6 @@ void store_cpu_topology(unsigned int cpuid)
+>  {
+>  	struct cputopo_arm *cpuid_topo = &cpu_topology[cpuid];
+>  	unsigned int mpidr;
+> -	unsigned int cpu;
+>  
+>  	/* If the cpu topology has been already set, just return */
+>  	if (cpuid_topo->core_id != -1)
+> @@ -133,26 +158,7 @@ void store_cpu_topology(unsigned int cpuid)
+>  		cpuid_topo->socket_id = -1;
+>  	}
+>  
+> -	/* update core and thread sibling masks */
+> -	for_each_possible_cpu(cpu) {
+> -		struct cputopo_arm *cpu_topo = &cpu_topology[cpu];
+> -
+> -		if (cpuid_topo->socket_id == cpu_topo->socket_id) {
+> -			cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
+> -			if (cpu != cpuid)
+> -				cpumask_set_cpu(cpu,
+> -					&cpuid_topo->core_sibling);
+> -
+> -			if (cpuid_topo->core_id == cpu_topo->core_id) {
+> -				cpumask_set_cpu(cpuid,
+> -					&cpu_topo->thread_sibling);
+> -				if (cpu != cpuid)
+> -					cpumask_set_cpu(cpu,
+> -						&cpuid_topo->thread_sibling);
+> -			}
+> -		}
+> -	}
+> -	smp_wmb();
+> +	update_siblings_masks(cpuid);
+>  
+>  	printk(KERN_INFO "CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
+>  		cpuid, cpu_topology[cpuid].thread_id,
