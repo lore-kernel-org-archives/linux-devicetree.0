@@ -1,68 +1,78 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
 Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
  regulator-compatible
-Date: Fri, 22 Jun 2012 09:42:29 +0100
-Message-ID: <20120622084228.GD4037@opensource.wolfsonmicro.com>
+Date: Fri, 22 Jun 2012 10:59:09 +0200
+Message-ID: <20120622085909.GA24121@avionic-0098.mockup.avionic-design.de>
 References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
  <1340194987-23654-3-git-send-email-ldewangan@nvidia.com>
  <201206201924.09618.arnd@arndb.de>
  <20120620194609.GA4037@opensource.wolfsonmicro.com>
  <20120622061314.GA15627@avionic-0098.adnet.avionic-design.de>
+ <20120622084228.GD4037@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3cI6DWK3Xt33P8nt"
+	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120622061314.GA15627@avionic-0098.adnet.avionic-design.de>
+In-Reply-To: <20120622084228.GD4037@opensource.wolfsonmicro.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Cc: Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, Laxman Dewangan <ldewangan@nvidia.com>, lee.jones@linaro.org, lrg@ti.com, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
 
---3cI6DWK3Xt33P8nt
+--gKMricLos+KVdGMg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 22, 2012 at 08:13:14AM +0200, Thierry Reding wrote:
-> On Wed, Jun 20, 2012 at 08:46:10PM +0100, Mark Brown wrote:
+On Fri, Jun 22, 2012 at 09:42:29AM +0100, Mark Brown wrote:
+> On Fri, Jun 22, 2012 at 08:13:14AM +0200, Thierry Reding wrote:
+> > On Wed, Jun 20, 2012 at 08:46:10PM +0100, Mark Brown wrote:
+>=20
+> > > As well as being able to refer to the object from within the device t=
+ree
+> > > we also need to be able to tell what the object represents - we have a
+> > > bunch of regulators in an array under a node for a PMIC and we want to
+> > > know which regulator on the physical device each array entry correspo=
+nds
+> > > to.  Previously this was being done by parsing the phandle name but t=
+hat
+> > > means we can't have more than one device with the same set of names.
+>=20
+> > I thought the reason was that matching the node names up with the
+> > regulator names was considered bad practice. As Stephen already noticed,
+> > the matching is done by node name, not phandle. Correct me if I'm wrong,
+> > but you can have more than one device with the children have the same
+> > names.
+>=20
+> We're talking about consumers here, not the regulator driver finding its
+> own regulators.
 
-> > As well as being able to refer to the object from within the device tree
-> > we also need to be able to tell what the object represents - we have a
-> > bunch of regulators in an array under a node for a PMIC and we want to
-> > know which regulator on the physical device each array entry corresponds
-> > to.  Previously this was being done by parsing the phandle name but that
-> > means we can't have more than one device with the same set of names.
+No we're not. of_regulator_match() isn't used by consumers but by
+regulator drivers to parse the DT.
 
-> I thought the reason was that matching the node names up with the
-> regulator names was considered bad practice. As Stephen already noticed,
-> the matching is done by node name, not phandle. Correct me if I'm wrong,
-> but you can have more than one device with the children have the same
-> names.
+Thierry
 
-We're talking about consumers here, not the regulator driver finding its
-own regulators.
-
---3cI6DWK3Xt33P8nt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP5C+sAAoJEBus8iNuMP3dzpUP+wT8+2K8fV7TVtX95qPlg6/T
-6JiMUUe9DPmSQa/iLcIENHDQ3RJq0P9Byvot18CBezYmFJw0V6ixS09YVruRB01i
-r/KA9oUms2Qf3GVfGIAayjgeUUTdjek/8ZUT5jD36TU+BG+JRD9cDJNgKmR76Xqd
-cBommSSku1bi+Y/2rzP/2RCl+npDY5tpXi4t7mFe551ontEXYWC4U2dY7wdDH/K0
-xRvqt20G31hnwQkMpMInC2l2KKGI3InvLjp//rkAOTXvKI5hB43Bb6Myk0cNrpH/
-G6DGyGxpSxd+uZPN9wRV8vA7L/cejS/2hin1dFAHt3/av6luGtDjnUGbnUnIo4sE
-12KfLEagCfczgyZSrVdK9aYhRk8FIcQ9eQducU8ZMVg1D8al8Zp6YMmkGIp1TAYC
-iNokv4nDWF+4fxsLz7EO63GwrjLHPgvrbVu+NI8FF/krOIYx+yEQVnB/xMdMHwao
-W6CEotFlmUhfvI33NGXyIGLOsmsY3xvmFvyGe9/Fys8Jp5E8W1yXi7t8iNDLZooK
-W/zBzHKRUjh/y9ITA9ZA9FyIy07DqMkbpqpq/Yt0Pr3/xUkmQP7kA+iy7sCrmsw7
-3Y5Q/HlWO3RK25Q7U+2u3pmA9YDwSoC0yhaoUgwJJ3WndJcqWhb7qdteLDMak7qi
-aaAtpGrR2qlS9tZdwmF+
-=zkqS
+iQIcBAEBAgAGBQJP5DPdAAoJEN0jrNd/PrOha60P/ikoWaqHl+rPk11BuQC3RPFe
+YB65YSvguLbedZIDLWilEWq/Th3z8A44vLbj9esMEA0A0AiiDgL5Jfmn+Vm/mof2
+uuY63lXwOkfZGoE3CwfrAiBw1SezynU5SoqN4hzWBrX7ZyM+p0vmCQLFviZV5Ulw
+82UNgtPcSwrKmdgr7AoeECPOvHQHQTlxiJ11WfueNNs7vr8VLluQ4zPyaILPiMcO
+by+l7M9FVPyuIK3Zu/rRbflBdCtPjYlEMMdi5TNpzZoxUteklFtFHpULwY18LJ0T
+sFcuopt8eIXlcmyxw7g43YOLBvmKL8gJ5TnOwbyzNP7lL7dNMNTlyK4CSFfUyuJN
+hv2hoTSzFmFw/KmLxjOOSARYc3aY6nzQ4quV6jPn4ffK3DI4+DXdAquZr05Altb2
+onhhc42nPN9cWC9ZjZXUJul9Fi3pbuvmFNU3Q0cQRjwGGOO/b04D6BTqa7iIJnCO
+0ASuTQIW1HCekbJu1LUsqqyU13Z8MtgpcHh79cylTKoZELkl8XqhIiAHz52gtZ4K
+0E7qHDuGX+t+knXC9S8yAiuRCIGizlbp+16q7VnPbvOaMSaakuFwACU98kHl3hDX
++pOh/XvyOzeStzU0gz3qcyIAg2ibJOcc8E1AgYenguCBjDlAtDZ82Q1z1N5bWsK7
+ErWZHsYWlMlZZAzQiYy+
+=eLev
 -----END PGP SIGNATURE-----
 
---3cI6DWK3Xt33P8nt--
+--gKMricLos+KVdGMg--
