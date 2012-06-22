@@ -1,251 +1,265 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
+From: Bjorn Helgaas <bhelgaas@google.com>
 Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Fri, 22 Jun 2012 13:04:03 +0200
-Message-ID: <20120622110403.GA15710@avionic-0098.mockup.avionic-design.de>
-References: <4FD849CF.4030009@firmworks.com>
- <20120613081910.GB6528@avionic-0098.mockup.avionic-design.de>
- <4FD85127.8050301@firmworks.com>
- <20120614091905.GA9081@avionic-0098.mockup.avionic-design.de>
- <4FDA2DDA.1030704@wwwdotorg.org>
- <20120614192903.GA2212@avionic-0098.mockup.avionic-design.de>
- <4FDA40A0.4030206@wwwdotorg.org>
- <20120615061236.GA4081@avionic-0098.mockup.avionic-design.de>
+Date: Fri, 22 Jun 2012 05:46:52 -0600
+Message-ID: <CAErSpo6vHn3p96o7DSdL28cjapk2UnQ4ZVJ1oH6ksxbqD=Hh-g@mail.gmail.com>
+References: <4FD85127.8050301@firmworks.com> <20120614091905.GA9081@avionic-0098.mockup.avionic-design.de>
+ <4FDA2DDA.1030704@wwwdotorg.org> <20120614192903.GA2212@avionic-0098.mockup.avionic-design.de>
+ <4FDA40A0.4030206@wwwdotorg.org> <20120615061236.GA4081@avionic-0098.mockup.avionic-design.de>
  <20120619133001.GB24138@avionic-0098.mockup.avionic-design.de>
- <4FE0EFBB.6090206@firmworks.com>
+ <4FE0EFBB.6090206@firmworks.com> <20120621064722.GA1122@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo6Bpfqm-0yGiBOXEhF4kD3PTDYvWVr0babLZ4GkBLXJiA@mail.gmail.com> <20120622110038.GA15212@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FE0EFBB.6090206@firmworks.com>
+In-Reply-To: <20120622110038.GA15212@avionic-0098.mockup.avionic-design.de>
 Sender: linux-pci-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Mitch Bradley <wmb@firmworks.com>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 22, 2012 at 5:00 AM, Thierry Reding
+<thierry.reding@avionic-design.de> wrote:
+> On Fri, Jun 22, 2012 at 04:18:05AM -0600, Bjorn Helgaas wrote:
+>> On Thu, Jun 21, 2012 at 12:47 AM, Thierry Reding
+>> <thierry.reding@avionic-design.de> wrote:
+>> > On Tue, Jun 19, 2012 at 11:31:39AM -1000, Mitch Bradley wrote:
+>>
+>> >> Version A - 3 address cells: =A0In this version, the intermediate
+>> >> address space has 3 cells: =A0port#, address type, offset. =A0Add=
+ress
+>> >> type is
+>> >> =A0 0 : root port
+>> >> =A0 1 : config space
+>> >> =A0 2 : extended config space
+>> >> =A0 3 : I/O
+>> >> =A0 4 : non-prefetchable memory
+>> >> =A0 5 : prefetchable memory.
+>> >>
+>> >> The third cell "offset" is necessary so that the size field has a
+>> >> number space that can include it.
+>> >>
+>> >> =A0 =A0 =A0 pcie-controller {
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "nvidia,tegra20-pcie";
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x80003000 0x00000800 =A0 /*=
+ PADS registers */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A00x80003800 0x00000200>=
+; /* extended configuration space */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D <0 98 0x04 =A0 /* cont=
+roller interrupt */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0 99 0x04=
+>; /* MSI interrupt */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 status =3D "disabled";
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 ranges =3D <0 0 0 =A00x80000000 0x000=
+01000 =A0 /* Root port 0 */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0 1 0 =A00x800040=
+00 0x00080000 =A0 /* Port 0 config space */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0 2 0 =A00x801040=
+00 0x00080000 =A0 /* Port 0 ext config space *
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0 3 0 =A00x804000=
+00 0x00008000 =A0 /* Port 0 downstream I/O */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0 4 0 =A00x900000=
+00 0x08000000 =A0 /* Port 0 non-prefetchable memory */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0 5 0 =A00xa00000=
+00 0x08000000 =A0 /* Port 0 prefetchable memory */
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1 0 0 =A00x800010=
+00 0x00001000 =A0 /* Root port 1 */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1 1 0 =A00x800040=
+00 0x00080000 =A0 /* Port 1 config space */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1 2 0 =A00x801840=
+00 0x00080000 =A0 /* Port 1 ext config space */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1 3 0 =A00x804080=
+00 0x00010000 =A0 /* Port 1 downstream I/O */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1 4 0 =A00x980000=
+00 0x08000000 =A0 /* Port 1 non-prefetchable memory */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1 5 0 =A00xa00000=
+00 0x08000000>; /* Port 1 prefetchable memory */
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <3>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <1>;
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 pci@0 {
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0 0 0 0x1000=
+>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 status =3D "disabled"=
+;
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <3=
+>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <2>;
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ranges =3D <0x8000000=
+0 0 0 =A00 1 0 =A00 0x00080000 =A0 /* config */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0=
+x90000000 0 0 =A00 2 0 =A00 0x00080000 =A0 /* extended config */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0=
+x81000000 0 0 =A00 3 0 =A00 0x00008000 =A0 /* I/O */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0=
+x82000000 0 0 =A00 4 0 =A00 0x08000000 =A0 /* non-prefetchable memory *=
+/
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0=
+xc2000000 0 0 =A00 5 0 =A00 0x08000000>; /* prefetchable memory */
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 nvidia,ctrl-offset =3D=
+ <0x110>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 nvidia,num-lanes =3D =
+<2>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>> >>
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 pci@1 {
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <1 0 0 0x1000=
+>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 status =3D "disabled"=
+;
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <3=
+>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <2>;
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ranges =3D <0x8000000=
+0 0 0 =A01 1 0 =A00 0x00080000 =A0 /* config */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0=
+x90000000 0 0 =A01 2 0 =A00 0x00080000 =A0 /* extended config */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0=
+x81000000 0 0 =A01 3 0 =A00 0x00008000 =A0 /* I/O */
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0=
+x82000000 0 0 =A01 4 0 =A00 0x08000000 =A0 /* non-prefetchable memory *=
+/
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0=
+xc2000000 0 0 =A01 5 0 =A00 0x08000000>; /* prefetchable memory */
+>> >>
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 nvidia,ctrl-offset =3D=
+ <0x118>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 nvidia,num-lanes =3D =
+<2>;
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+>>
+>> I'm not familiar with device tree, so pardon me if these are stupid
+>> questions. =A0These seem to be describing PCI host bridges.
+>
+> Yes, correct.
+>
+>> I assume some of these ranges describe MMIO, prefetchable MMIO, and
+>> I/O port apertures that the bridge forwards to the PCI bus.
+>
+> Yes.
+>
+>> Is there provision for any address offset applied by the bridge when
+>> it forwards downstream? =A0(Maybe these bridges don't apply any offs=
+et?)
+>> =A0"0xa0000000 0x08000000" appears for both ports 0 and 1 prefetchab=
+le
+>> memory; I don't know if that's an error, an indication that each
+>> bridge applies a different offset, or that both bridges forward the
+>> same aperture (I hope not the latter, because Linux can't really dea=
+l
+>> with that).
+>
+> That seems to be a typo. It should have been 0xa8000000 in the second
+> case. The PCIe controller has registers that are programmed with the
+> aperture for the configuration and extended configuration spaces, as
+> well as the downstream I/O, prefetchable and non-prefetchable memory
+> regions.
+>
+> The configuration spaces aren't actually forwarded by the bridges, bu=
+t
+> are handled only by the controller.
 
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right.  The host bridge (controller) would convert memory accesses on
+the upstream side into PCI config accesses on its downstream PCI
+interface.
 
-On Tue, Jun 19, 2012 at 11:31:39AM -1000, Mitch Bradley wrote:
-> On 6/19/2012 3:30 AM, Thierry Reding wrote:
-> >On Fri, Jun 15, 2012 at 08:12:36AM +0200, Thierry Reding wrote:
-> >>On Thu, Jun 14, 2012 at 01:50:56PM -0600, Stephen Warren wrote:
-> >>>On 06/14/2012 01:29 PM, Thierry Reding wrote:
-> >>>>On Thu, Jun 14, 2012 at 12:30:50PM -0600, Stephen Warren wrote:
-> >>>>>On 06/14/2012 03:19 AM, Thierry Reding wrote:
-> >>>...
-> >>>>>>#address-cells =3D <1>; #size-cells =3D <1>;
-> >>>>>>
-> >>>>>>pci@80000000 {
-> >>>>>
-> >>>>>I'm still not convinced that using the address of the port's
-> >>>>>registers is the correct way to represent each port. The port
-> >>>>>index seems much more useful.
-> >>>>>
-> >>>>>The main reason here is that there are a lot of registers that
-> >>>>>contain fields for each port - far more than the combination of
-> >>>>>this node's reg and ctrl-offset (which I assume is an address
-> >>>>>offset for just one example of this issue) properties can
-> >>>>>describe. The bit position and bit stride of these fields isn't
-> >>>>>necessarily the same in each register. Do we want a property like
-> >>>>>ctrl-offset for every single type of field in every single shared
-> >>>>>register that describes the location of the relevant data, or
-> >>>>>just a single "port ID" bit that can be applied to anything?
-> >>>>>
-> >>>>>(Perhaps this isn't so obvious looking at the TRM since it
-> >>>>>doesn't document all registers, and I'm also looking at the
-> >>>>>Tegra30 documentation too, which might be more exposed to this -
-> >>>>>I haven't correlated all the documentation sources to be sure
-> >>>>>though)
-> >>>>
-> >>>>I agree that maybe adding properties for each bit position or
-> >>>>register offset may not work out too well. But I think it still
-> >>>>makes sense to use the base address of the port's registers (see
-> >>>>below). We could of course add some code to determine the index
-> >>>>from the base address at initialization time and reuse the index
-> >>>>where appropriate.
-> >>>
-> >>>To me, working back from address to ID then using the ID to calculate
-> >>>some other addresses seems far more icky than just calculating all the
-> >>>addresses based off of one ID. But, I suppose this doesn't make a huge
-> >>>practical difference.
-> >>
-> >>This really depends on the device vs. no device decision below. If we c=
-an
-> >>make it work without needing an extra device for it, then using the ind=
-ex
-> >>is certainly better. However, if we instantiate devices from the DT, th=
-en
-> >>we have the address anyway and adding the index as a property would be
-> >>redundant and error prone (what happens if somebody sets the index of t=
-he
-> >>port at address 0x80000000 to 2?).
-> >
-> >An additional problem with this is that we'd have to add the following
-> >to the pcie-controller node:
-> >
-> >	#address-cells =3D <1>;
-> >	#size-cells =3D <0>;
-> >
-> >This will conflict with the "ranges" property, because suddenly we can
-> >no longer map the regions properly. Maybe Mitch can comment on whether
-> >this is possible or not?
-> >
-> >To make it clearer what I'm talking about, here's the DT snippet again
-> >(with the compatible property removed from the pci@ nodes because they
-> >are no longer probed by a driver, the "simple-bus" removed from the
-> >pcie-controller node's compatible property removed and its #address-
-> >and #size-cells properties adjusted as described above).
-> >
-> >	pcie-controller {
-> >		compatible =3D "nvidia,tegra20-pcie";
-> >		reg =3D <0x80003000 0x00000800   /* PADS registers */
-> >		       0x80003800 0x00000200   /* AFI registers */
-> >		       0x80004000 0x00100000   /* configuration space */
-> >		       0x80104000 0x00100000>; /* extended configuration space */
-> >		interrupts =3D <0 98 0x04   /* controller interrupt */
-> >			      0 99 0x04>; /* MSI interrupt */
-> >		status =3D "disabled";
-> >
-> >		ranges =3D <0x80000000 0x80000000 0x00002000   /* 2 root ports */
-> >			  0x80400000 0x80400000 0x00010000   /* downstream I/O */
-> >			  0x90000000 0x90000000 0x10000000   /* non-prefetchable memory */
-> >			  0xa0000000 0xa0000000 0x10000000>; /* prefetchable memory */
-> >
-> >		#address-cells =3D <1>;
-> >		#size-cells =3D <0>;
-> >
-> >		pci@0 {
-> >			reg =3D <2>;
-> >			status =3D "disabled";
-> >
-> >			#address-cells =3D <3>;
-> >			#size-cells =3D <2>;
-> >
-> >			ranges =3D <0x81000000 0 0 0x80400000 0 0x00008000   /* I/O */
-> >				  0x82000000 0 0 0x90000000 0 0x08000000   /* non-prefetchable memor=
-y */
-> >				  0xc2000000 0 0 0xa0000000 0 0x08000000>; /* prefetchable memory */
-> >
-> >			nvidia,ctrl-offset =3D <0x110>;
-> >			nvidia,num-lanes =3D <2>;
-> >		};
-> >
-> >		pci@1 {
-> >			reg =3D <1>;
-> >			status =3D "disabled";
-> >
-> >			#address-cells =3D <3>;
-> >			#size-cells =3D <2>;
-> >
-> >			ranges =3D <0x81000000 0 0 0x80408000 0 0x00008000   /* I/O */
-> >				  0x82000000 0 0 0x98000000 0 0x08000000   /* non-prefetchable memor=
-y */
-> >				  0xc2000000 0 0 0xa8000000 0 0x08000000>; /* prefetchable memory */
-> >
-> >			nvidia,ctrl-offset =3D <0x118>;
-> >			nvidia,num-lanes =3D <2>;
-> >		};
-> >	};
-> >
-> >AIUI none of the ranges properties are valid anymore, because the bus
-> >represented by pcie-controller no longer reflects the truth, namely that
-> >it translates the CPU address space to the PCI address space.
-> >
->=20
-> I think you can use a small-integer port number as an address by
-> defining the intermediate address space properly, and using
-> appropriate ranges above and below.  Here's a swag at how that would
-> look.
->=20
-> I present three versions, using different choices for the
-> intermediate address space encoding.  The intermediate address space
-> may seem somewhat artificial, in that it decouples the "linear pass
-> through of ranges" between the lower PCI address space and the upper
-> CPU address space.  But in another sense, it accurately reflects
-> that fact that the bus bridge "slices and dices" that linear address
-> space into non-contiguous pieces.
->=20
-> Note that I'm also fixing a problem that I neglected to mention
-> earlier - namely the fact that config space is part of the child PCI
-> address space so it must be passed through.
->=20
-> Version A - 3 address cells:  In this version, the intermediate
-> address space has 3 cells:  port#, address type, offset.  Address
-> type is
->   0 : root port
->   1 : config space
->   2 : extended config space
->   3 : I/O
->   4 : non-prefetchable memory
->   5 : prefetchable memory.
->=20
-> The third cell "offset" is necessary so that the size field has a
-> number space that can include it.
->=20
-> 	pcie-controller {
-> 		compatible =3D "nvidia,tegra20-pcie";
-> 		reg =3D <0x80003000 0x00000800   /* PADS registers */
-> 		       0x80003800 0x00000200>; /* extended configuration space */
-> 		interrupts =3D <0 98 0x04   /* controller interrupt */
-> 			      0 99 0x04>; /* MSI interrupt */
-> 		status =3D "disabled";
->=20
-> 		ranges =3D <0 0 0  0x80000000 0x00001000   /* Root port 0 */
-> 			  0 1 0  0x80004000 0x00080000   /* Port 0 config space */
-> 			  0 2 0  0x80104000 0x00080000   /* Port 0 ext config space *
-> 			  0 3 0  0x80400000 0x00008000   /* Port 0 downstream I/O */
-> 			  0 4 0  0x90000000 0x08000000   /* Port 0 non-prefetchable memory */
-> 			  0 5 0  0xa0000000 0x08000000   /* Port 0 prefetchable memory */
->=20
-> 			  1 0 0  0x80001000 0x00001000   /* Root port 1 */
-> 			  1 1 0  0x80004000 0x00080000   /* Port 1 config space */
-> 			  1 2 0  0x80184000 0x00080000   /* Port 1 ext config space */
-> 			  1 3 0  0x80408000 0x00010000   /* Port 1 downstream I/O */
-> 			  1 4 0  0x98000000 0x08000000   /* Port 1 non-prefetchable memory */
-> 			  1 5 0  0xa0000000 0x08000000>; /* Port 1 prefetchable memory */
->=20
-> 		#address-cells =3D <3>;
-> 		#size-cells =3D <1>;
->=20
-> 		pci@0 {
-> 			reg =3D <0 0 0 0x1000>;
-[...]
-> 		};
->=20
-> 		pci@1 {
-> 			reg =3D <1 0 0 0x1000>;
-[...]
-> 		};
+> The other apertures are programmed
+> into the bridges using standard PCI registers.
 
-It seems like this isn't working properly. For some reason both the reg
-property of pci@0 and pci@1 are translated to the same parent address
-0x80000000. I'll have to investigate where exactly this goes wrong.
+If you're talking about programming host bridge apertures, there are
+no "standard PCI registers" to do that.  The programming model of the
+host bridge itself is not part of the PCI spec.  PCI-to-PCI bridge
+apertures *are* specified by the PCI Bridge spec, so those are
+standard.
 
-Thierry
+>> Is the bus number aperture included somewhere? =A0How do we know wha=
+t
+>> bus numbers are available for allocation under each bridge?
+>
+> Not yet. I don't think DT imposes a bus number allocation on PCI
+> bridges. However the matching of DT nodes to PCI bridges is done base=
+d
+> on the bus number. For that you provide a bus-ranges property which
+> defines the bus aperture of the given PCI bridge. The DT matching cod=
+e
+> compares the first cell of this property with the primary bus number =
+of
+> the bridge.
 
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature
+I don't fully understand this, but I can tell you that things don't
+work very well if we don't know the aperture.  We can make
+assumptions, like the root bus is 00, and then enumerate everything
+reachable from there.  But then all we know is the largest bus number
+actually reachable from bus 00, which is usually smaller then the end
+of the aperture.  We don't know how many unused bus numbers there are
+in the aperture, so we can't safely allocate any for hot-added
+devices.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+> This is in fact somewhat counter-productive because it requires you t=
+o
+> hard-code the PCI hierarchy within the DT and you loose a lot of the
+> probing functionality. This is not much of an issue for typical PCI
+> endpoints (like network cards) but becomes a problem if you have a PC=
+I
+> endpoint that implements an I2C bus and you want to match I2C slaves =
+on
+> that bus to device nodes so that the kernel can parse and instantiate
+> them properly. I guess in the latter cases hard-coding the PCI tree i=
+n
+> DT is not actually a drawback, though.
+>
+>> I see mention of config space. =A0Is some of that referring to the E=
+CAM
+>> as in 7.2.2 of the PCIe spec v3.0 (what we refer to as MMCONFIG on
+>> x86)?
+>
+> I only have access to the PCIe 2.0 specification, but it seems to
+> contain the same 7.2.2 section. In fact it looks as though this
+> particular controller indeed implements something similar to ECAM. Th=
+e
+> address mapping is a little different, though:
+>
+> =A0 =A0 =A0 =A0A[(16 + n - 1):16]: bus number
+> =A0 =A0 =A0 =A0A[15:11]: device number
+> =A0 =A0 =A0 =A0A[10:8]: function number
+> =A0 =A0 =A0 =A0A[7:2]: register number
+> =A0 =A0 =A0 =A0A[1:0]: unused
+>
+> That information comes directly from the driver and I have no access =
+to
+> the corresponding documentation. It seems like the extended
+> configuration space is accessed using the same mapping but starting a=
+t a
+> different base address.
+>
+> But now that you mention it, maybe the driver code is buggy here, and
+> the controller indeed implements ECAM. Furthermore it also seems like
+> the current code doesn't work for the extended configuration space
+> because while the correct offset into the extended configuration spac=
+e
+> is chosen, the access to registers is done using the same mapping as
+> above, so instead of the 12 (10) bits required for the register numbe=
+r
+> only 8 (6) are in fact used.
+>
+> I wonder whether anyone's actually tested this.
+>
+> Stephen: can you try to find out whether the Tegra PCIe controller
+> indeed implements ECAM, or if this scheme is actually just a propriet=
+ary
+> variant?
 
-iQIcBAEBAgAGBQJP5FEjAAoJEN0jrNd/PrOhUYgP/36eNNJwJvm8Td2+kWQuK/wO
-+V0nM6zWXuK6T2nf+pHxB5Z1SAST7HqpElnPO3YC2aiDOFG0s904sfwtcOJHgdgY
-onBTud0uUAwfRxZNo6fuPxlDnQLuOtSSgAea2IjtuzuF7MM+ObRgNiBspS6u8XOD
-6tvZAftZ1hC7jileYrXRtp5/qP+BATmd4GGSE7B7s2K5o411tLd+SUCQ5g3kC0bp
-m/QJXLhmaKsrb/Z3F0CpKuoC1ZUbbJCHcYWRwq2sK2UfakITFMFMBSarUrA/JM/J
-58BPf7ZSFTgoSOCJMNhD4PHQxPuKroTr/SesA1qr4KfrEC+fnZ47h4wzQx6tRZ3B
-dxgv0EoaaaPLZengrxwlGjfyHLeJtcO1jLQf04KgWnjmMTZjOjEhsSQyKUFuaUJP
-YF1HOBL+RZAsYNDydkkOm0oDEIChN2k1ynEd3uY6U0UK8O6HHi5ysMLaOWMhdota
-SMDM6V5xms3Cnh/5+iPu0G0IN2mqavMpu01EiT7PynNvtGKukej0sZYiTx6K+58v
-CL8wiA2uOCDMa7nTcYaMlc49LS8hKo4XrwwqvoKxXxE6pKgoB43hBdWUDywTU4JC
-vWBZ5ZA002TG4C2SjnqPOSD5Ca1teFdiDqTVC+ldgv0DuGRoUxm1xEHCDqgwoiVs
-0XGvPH7sEAfdOy/zbLk2
-=HbqG
------END PGP SIGNATURE-----
-
---PEIAKu/WMn1b1Hv9--
+It'd be a real shame if they made up a proprietary scheme when ECAM
+seems to be required by the spec.  I'm interested because the current
+MMCONFIG code seems unnecessarily x86-specific, and I expect every
+arch with PCIe would want to use ECAM, so maybe there's some chance
+for a generic implementation.
