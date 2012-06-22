@@ -1,77 +1,94 @@
 From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] of: fix a few typos in the binding documentation
-Date: Fri, 22 Jun 2012 07:49:42 +0200
-Message-ID: <20120622054942.GI5642@pengutronix.de>
-References: <1335171443-15371-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20120518142148.GC3710@pengutronix.de>
+Subject: Re: [PATCH] spi/imx: make devtype_data member point to const data
+Date: Fri, 22 Jun 2012 07:50:46 +0200
+Message-ID: <20120622055046.GJ5642@pengutronix.de>
+References: <1335171381-24869-1-git-send-email-u.kleine-koenig@pengutronix.de>
+	<1337629775-9166-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120518142148.GC3710-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
-Cc: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <1337629775-9166-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Randy,
+Hi Grant,
 
-expanding the audience a bit ...
+On Mon, May 21, 2012 at 09:49:35PM +0200, Uwe Kleine-K=F6nig wrote:
+> This is only cosmetic for now. In case that
+> =
 
-On Fri, May 18, 2012 at 04:21:48PM +0200, Uwe Kleine-K=F6nig wrote:
-> On Mon, Apr 23, 2012 at 10:57:23AM +0200, Uwe Kleine-K=F6nig wrote:
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mtd/atmel-nand.txt |    2 +-
-> >  Documentation/devicetree/bindings/mtd/partition.txt  |    2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > =
+> 	http://mid.gmane.org/1335171381-24869-1-git-send-email-u.kleine-koenig@p=
+engutronix.de
+> =
 
-> > diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Doc=
-umentation/devicetree/bindings/mtd/atmel-nand.txt
-> > index a200695..0c1bccd 100644
-> > --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> > @@ -3,7 +3,7 @@ Atmel NAND flash
-> >  Required properties:
-> >  - compatible : "atmel,at91rm9200-nand".
-> >  - reg : should specify localbus address and size used for the chip,
-> > -	and if availlable the ECC.
-> > +	and if available the ECC.
-> >  - atmel,nand-addr-offset : offset for the address latch.
-> >  - atmel,nand-cmd-offset : offset for the command latch.
-> >  - #address-cells, #size-cells : Must be present if the device has sub-=
-nodes
-> > diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Docu=
-mentation/devicetree/bindings/mtd/partition.txt
-> > index f114ce1..6e1f61f 100644
-> > --- a/Documentation/devicetree/bindings/mtd/partition.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/partition.txt
-> > @@ -35,4 +35,4 @@ flash@0 {
-> >  	uimage@100000 {
-> >  		reg =3D <0x0100000 0x200000>;
-> >  	};
-> > -];
-> > +};
-> this patch didn't appear in next yet (looking at next-20120518). Do you
-> have concerns? Or do you think someone else should take and/or ack the
-> patch?
+> will be applied, it fixes a warning
+> =
+
+> 	drivers/spi/spi-imx.c: In function spi_imx_probe:
+> 	drivers/spi/spi-imx.c:814:24: warning: assignment discards const qualifi=
+er from pointer target type [enabled by default]
+> =
+
+> though.
+> =
+
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ping
 
 Best regards
 Uwe
 
+> ---
+>  drivers/spi/spi-imx.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> =
+
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index 570f220..37b3a26 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -95,7 +95,7 @@ struct spi_imx_data {
+>  	const void *tx_buf;
+>  	unsigned int txfifo; /* number of words pushed in tx FIFO */
+>  =
+
+> -	struct spi_imx_devtype_data *devtype_data;
+> +	const struct spi_imx_devtype_data *devtype_data;
+>  	int chipselect[0];
+>  };
+>  =
+
+> -- =
+
+> 1.7.10
+> =
+
+> =
+
+
 -- =
 
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+---------------------------------------------------------------------------=
+---
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and =
+
+threat landscape has changed and how IT managers can respond. Discussions =
+
+will include endpoint security, mobile security and the latest in malware =
+
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
