@@ -1,125 +1,113 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC] ARM: OMAP: Remove nodes dynamically at runtime
-Date: Thu, 21 Jun 2012 18:50:00 -0500
-Message-ID: <4FE3B328.8060805@ti.com>
-References: <4FE372CA.7020008@ti.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 1/1] of: reform prom_update_property function
+Date: Fri, 22 Jun 2012 10:01:24 +1000
+Message-ID: <1340323284.16104.4.camel@pasglop>
+References: <1340171647-2815-1-git-send-email-b29396@freescale.com>
+	 <4FE1CB2C.5040208@gmail.com> <1340237796.28143.207.camel@pasglop>
+	 <20120621093702.GE21231@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FE372CA.7020008@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: device-tree <devicetree-discuss@lists.ozlabs.org>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120621093702.GE21231@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@freescale.com>
+Cc: Rob Herring <robherring2@gmail.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 06/21/2012 02:15 PM, Jon Hunter wrote:
-> Hi all,
+On Thu, 2012-06-21 at 17:37 +0800, Dong Aisheng wrote:
+> Maybe we could change it as as follows.
+> It looks then the code follow is the same as before.
+> Do you think if it's ok?
 > 
-> I am in the process of adding a device-tree binding for OMAP timers and
-> I have encountered a scenario where ideally it would be useful to remove
-> a device-tree node at runtime.
+> diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
+> index 7b3bf76..4c237f4 100644
+> --- a/arch/powerpc/platforms/pseries/reconfig.c
+> +++ b/arch/powerpc/platforms/pseries/reconfig.c
+> @@ -443,6 +443,9 @@ static int do_update_property(char *buf, size_t bufsize)
+>         if (!next_prop)
+>                 return -EINVAL;
 > 
-> The scenario is this ...
-> 
-> 1. OMAP3 devices may or may not have security features enabled. Security
->    enabled devices are known as high-secure (HS) and devices without 
->    security are known as general purpose (GP).
-> 2. For OMAP3 devices there are 12 general purpose timers available.
-> 3. On secure devices the 12th timer is reserved for secure usage and so
->    cannot be used by the kernel, where as for a GP device it is available.
-> 4. We can detect the OMAP device type, secure or GP, at runtime via an
->    on-chip register.
-> 5. Today, when not using DT, we do not register the 12th timer as a linux
->    device if the device is secure.
-> 
-> When migrating the timers to DT, I need a way to prevent this 12th timer
-> from being registered as a device on a secure device. The options I have
-> considered are ...
-> 
-> a. Have separate a omap3.dtsi for GP and secure devices or place the
->    node for the 12th timer in a omap3-gp.dtsi that is only used for
->    boards with GP devices. The downside of this is that for boards
->    that can support GP and secure device (such as the omap3 SDP) we
->    require a separate dtb blob.
-> 
-> b. Remove the timer node dynamically at runtime using the
->    of_node_detach() API. In this solution we define a "ti,timer-secure"
->    property that the 12th timer on omap3 devices would have and at
->    runtime if we are a secure omap3 device, we search the timer nodes
->    for any nodes with this property and remove them.
-> 
-> Option B, seems to be the better option but requires me to enable 
-> CONFIG_OF_DYNAMIC for all omap devices and I was not sure if there is any
-> downside to doing so. Enabling this feature does not seem to add much code
-> as far as I can tell, however, I  wanted to get some feedback before
-> proposing this. Also if there are any other options I should consider then
-> please let me know.
-> 
-> For option B, the timer node would look like ...
-> 
-> +               timer12: timer@48304000 {
-> +                       compatible = "ti,omap3-timer";
-> +                       ti,hwmods = "timer12";
-> +                       ti,timer-alwon;
-> +                       ti,timer-secure;
-> +               };
-> 
-> I would then add the following function to the omap timer code to search
-> for any timers with the "ti,timer-secure" on a secure device and enable
-> the OF_DYNAMIC option. Right now it is only timer 12 on OMAP3 that
-> requires this, but I have made the function generic so that it could
-> handle other devices (but none exist today that I am aware of).
-> 
-> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
-> index 8c22a8e..5e38946 100644
-> --- a/arch/arm/mach-omap2/timer.c
-> +++ b/arch/arm/mach-omap2/timer.c
-> @@ -36,6 +36,7 @@
->  #include <linux/clocksource.h>
->  #include <linux/clockchips.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  
->  #include <asm/mach/time.h>
->  #include <plat/dmtimer.h>
-> @@ -482,6 +483,35 @@ static int __init omap2_dm_timer_init(void)
->  }
->  arch_initcall(omap2_dm_timer_init);
->  
-> +static struct of_device_id omap3_timer_match[] __initdata = {
-> +       { .compatible = "ti,omap3-timer", },
-> +       { }
-> +};
+> +       if (!strlen(name)
+> +               return -ENODEV;
 > +
-> +/**
-> + * omap_dmtimer_init - initialisation function when device tree is used
-> + *
-> + * For secure OMAP3 devices, timers with property "ti,timer-secure" cannot
-> + * be used by the kernel as they are reserved. Therefore, to prevent the
-> + * kernel registering these devices remove them dynamically from the device
-> + * tree on boot.
-> + */
-> +void __init omap_dmtimer_init(void)
-> +{
-> +       struct device_node *np;
-> +
-> +       if (!cpu_is_omap34xx())
-> +               return;
-> +
-> +       /* If we are a secure device, remove any secure timer nodes */
-> +       if ((omap_type() == OMAP2_DEVICE_TYPE_GP)) {
+>         newprop = new_property(name, length, value, NULL);
+>         if (!newprop)
+>                 return -ENOMEM;
+> @@ -450,13 +453,6 @@ static int do_update_property(char *buf, size_t bufsize)
+>         if (!strcmp(name, "slb-size") || !strcmp(name, "ibm,slb-size"))
+>                 slb_set_size(*(int *)value);
+> 
+> -       oldprop = of_find_property(np, name,NULL);
+> -       if (!oldprop) {
+> -               if (strlen(name))
+> -                       return prom_add_property(np, newprop);
+> -               return -ENODEV;
+> -       }
 
-Oops! Bug in the above code. Meant to be ...
+No:
 
-	 if (omap_type() != OMAP2_DEVICE_TYPE_GP)
-> +               for_each_matching_node(np, omap3_timer_match) {
-> +                       if (of_get_property(np, "ti,timer-secure", NULL))
-> +                               of_detach_node(np);
-> +               }
-> +       }
-> +}
+IE. Old code did:
 
-Cheers
-Jon
+	if (property doesn't exist) {
+		if (has a name)
+			create_it()
+		return -ENODEV;
+	}
+
+What you propose is:
+
+	if (!has_a_name)
+		return -ENODEV;
+
+Not at all the same semantic.
+
+ .../...
+ 
+> > IE. The allocation of the "old" property isn't disposed of. It can't
+> > because today we don't know whether any of those pointers was
+> > dynamically allocated or not. IE they could point to the fdt
+
+> Hmm, i did not see static allocated property before.
+> Where can we see an exist case?
+
+Almost all your property names and values. They are pointers to the
+original fdt block, so you can't free them. But dynamically added
+propreties will have kmalloc'ed pointers which should be freed. We need
+to add flags to indicate that if we want to avoid leaking memory in very
+dynamic environments.
+
+> If we really have this issue, it seems of_node_release also has the same issue,
+> since it frees the property without distinguish whether the property is allocated
+> dynamically.
+
+Well, actually we do have a flag:
+
+        if (!of_node_check_flag(node, OF_DYNAMIC))
+                return;
+
+So we use that. Good. So if update property uses that flag it should be
+able to know when to free or not. I forgot we had that :-)
+
+> > string list, data block, or could be bootmem ... or could be
+> > actual kernel memory.
+> > 
+> > We might want to extend the struct property to contain indications of
+> > the allocation type so we can kfree dynamic properties properly.
+> > 
+> I wonder the simplest way may be not allow static allocated property, like dt
+> node does i guess.
+
+No way. We generate the device-tree way before we have an allocator
+available.
+
+> > But then there's the question of the lifetime of a property... since
+> > they aren't reference counted like nodes are.
+> > 
+> Yes, that's a real exist problem.
+> 
+> Anyway, i guess we could do that work of this problem in another patch
+> rather than have to in this patch series.
+
+Cheers,
+Ben.
