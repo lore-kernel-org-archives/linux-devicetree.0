@@ -1,120 +1,33 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 09/10] arm/dts: omap: Add usb_otg and glue data
-Date: Fri, 22 Jun 2012 19:02:18 +0530
-Message-ID: <1340371939-23572-10-git-send-email-kishon@ti.com>
-References: <1340371939-23572-1-git-send-email-kishon@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Fri, 22 Jun 2012 13:48:39 +0000
+Message-ID: <201206221348.39346.arnd@arndb.de>
+References: <20120613081910.GB6528@avionic-0098.mockup.avionic-design.de> <20120622110403.GA15710@avionic-0098.mockup.avionic-design.de> <20120622132253.GA30704@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340371939-23572-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, kishon@ti.com, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, hvaibhav@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120622132253.GA30704-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add usb otg data node in omap4/omap3 device tree file. Also update
-the node with board specific setting in omapx-<board>.dts file.
+On Friday 22 June 2012, Thierry Reding wrote:
+> > It seems like this isn't working properly. For some reason both the reg
+> > property of pci@0 and pci@1 are translated to the same parent address
+> > 0x80000000. I'll have to investigate where exactly this goes wrong.
+> 
+> So it turns out that while of_read_number() can actually read any number
+> of cells, only the two least significant are kept because it returns a
+> u64. Since of_bus_default_map() uses of_read_number() the addresses
+> <0 0 0> and <1 0 0> are in fact the same. I'm not sure how best to solve
+> this. I'm not aware of a 128 bit integer type in the kernel, so I guess
+> the better alternative would be to fix of_bus_default_map() to cope with
+> #address-cells > 2 properly.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/omap3-beagle.dts |    6 ++++++
- arch/arm/boot/dts/omap3-evm.dts    |    6 ++++++
- arch/arm/boot/dts/omap3.dtsi       |    8 ++++++++
- arch/arm/boot/dts/omap4-panda.dts  |    6 ++++++
- arch/arm/boot/dts/omap4-sdp.dts    |    6 ++++++
- arch/arm/boot/dts/omap4.dtsi       |    8 ++++++++
- 6 files changed, 40 insertions(+), 0 deletions(-)
+of_translate_address should get it right. Which codes uses of_read_number()?
+Can it be converted to use of_translate_address()?
 
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index 5b4506c..f3d7076 100644
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -67,3 +67,9 @@
- &mmc3 {
- 	status = "disable";
- };
-+
-+&usb_otg_hs {
-+	interface_type = <0>;
-+	mode = <3>;
-+	power = <50>;
-+};
-diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
-index 2eee16e..8963b3d 100644
---- a/arch/arm/boot/dts/omap3-evm.dts
-+++ b/arch/arm/boot/dts/omap3-evm.dts
-@@ -18,3 +18,9 @@
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
- };
-+
-+&usb_otg_hs {
-+	interface_type = <0>;
-+	mode = <3>;
-+	power = <50>;
-+};
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 99474fa..2f565d6 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -215,5 +215,13 @@
- 			compatible = "ti,omap3-hsmmc";
- 			ti,hwmods = "mmc3";
- 		};
-+
-+		usb_otg_hs: usb_otg_hs@4a0ab000 {
-+			compatible = "ti,musb-omap2430";
-+			ti,hwmods = "usb_otg_hs";
-+			multipoint = <1>;
-+			num_eps = <16>;
-+			ram_bits = <12>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index 1efe0c5..0825fa7 100644
---- a/arch/arm/boot/dts/omap4-panda.dts
-+++ b/arch/arm/boot/dts/omap4-panda.dts
-@@ -89,3 +89,9 @@
- 	ti,non-removable;
- 	bus-width = <4>;
- };
-+
-+&usb_otg_hs {
-+	interface_type = <1>;
-+	mode = <3>;
-+	power = <50>;
-+};
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index d08c4d1..5244d51 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -158,3 +158,9 @@
- 	bus-width = <4>;
- 	ti,non-removable;
- };
-+
-+&usb_otg_hs {
-+	interface_type = <1>;
-+	mode = <3>;
-+	power = <50>;
-+};
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index e670394..dca0133 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -296,5 +296,13 @@
- 				reg = <0x4a0ad080 0x58>;
- 			};
- 		};
-+
-+		usb_otg_hs: usb_otg_hs@4a0ab000 {
-+			compatible = "ti,musb-omap2430";
-+			ti,hwmods = "usb_otg_hs";
-+			multipoint = <1>;
-+			num_eps = <16>;
-+			ram_bits = <12>;
-+		};
- 	};
- };
--- 
-1.7.5.4
+	Arnd
