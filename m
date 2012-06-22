@@ -1,87 +1,27 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH RESEND] of: add const to struct of_device_id.data
-Date: Fri, 22 Jun 2012 17:26:22 +0000
-Message-ID: <201206221726.22285.arnd@arndb.de>
-References: <1335171381-24869-1-git-send-email-u.kleine-koenig@pengutronix.de> <20120607102014.GI22191@pengutronix.de> <20120622055613.GL5642@pengutronix.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Fri, 22 Jun 2012 11:28:15 -0600
+Message-ID: <4FE4AB2F.8090402@wwwdotorg.org>
+References: <4FD85127.8050301@firmworks.com> <20120614091905.GA9081@avionic-0098.mockup.avionic-design.de> <4FDA2DDA.1030704@wwwdotorg.org> <20120614192903.GA2212@avionic-0098.mockup.avionic-design.de> <4FDA40A0.4030206@wwwdotorg.org> <20120615061236.GA4081@avionic-0098.mockup.avionic-design.de> <20120619133001.GB24138@avionic-0098.mockup.avionic-design.de> <4FE0EFBB.6090206@firmworks.com> <20120621064722.GA1122@avionic-0098.mockup.avionic-design.de> <CAErSpo6Bpfqm-0yGiBOXEhF4kD3PTDYvWVr0babLZ4GkBLXJiA@mail.gmail.com> <20120622110038.GA15212@avionic-0098.mockup.avionic-design.de> <4FE4A4B3.9010200@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120622055613.GL5642@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, kernel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <4FE4A4B3.9010200@wwwdotorg.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Mitch Bradley <wmb@firmworks.com>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 June 2012, Uwe Kleine-K=F6nig wrote:
-> On Thu, Jun 07, 2012 at 12:20:14PM +0200, Uwe Kleine-K=F6nig wrote:
-> > Drivers should never need to modify the data of a device id. So it =
-can
-> > be const which in turn allows more consts in the driver.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> > (Cc +=3D lkml + Grant)
-> >=20
-> > Hello,
-> >=20
-> > this might introduce warnings in drivers that access the data membe=
-r
-> > without using const, so this is definitly merge window material if =
-it is
-> > considered at all.
->
-> ping
+On 06/22/2012 11:00 AM, Stephen Warren wrote:
+> On 06/22/2012 05:00 AM, Thierry Reding wrote:
+> ...
+>> Stephen: can you try to find out whether the Tegra PCIe controller 
+>> indeed implements ECAM, or if this scheme is actually just a
+>> proprietary variant?
+> 
+> Sure. I have added this request to the bug I filed requesting more
+> complete PCIe host documentation.
 
-Sorry for the delayed response. I think the approach is right, but I
-am a bit worried about adding warnings for legit code.
-
-A quick test with the defconfigs gave me this error for prima2_defconfi=
-g
-and kzm9g_defconfig:
-
-/home/arnd/linux-arm/arch/arm/mm/cache-l2x0.c: In function 'l2x0_of_ini=
-t':
-/home/arnd/linux-arm/arch/arm/mm/cache-l2x0.c:573:7: error: assignment =
-discards 'const' qualifier from pointer target type [-Werror]
-
-and this one with at91sam9263_defconfig:
-/home/arnd/linux-arm/drivers/misc/atmel_tclib.c: In function 'tc_probe'=
-:
-/home/arnd/linux-arm/drivers/misc/atmel_tclib.c:170:19: error: assignme=
-nt discards 'const' qualifier from pointer target type [-Werror]
-
-I haven't checked all the defconfigs yet, but I think we should at leas=
-t
-make sure they build fine before applying your patch.
-
-	Arnd
-
-8<---
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 2a8e380..577baf7 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -554,7 +554,7 @@ static const struct of_device_id l2x0_ids[] __initc=
-onst =3D {
- int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
- {
- 	struct device_node *np;
--	struct l2x0_of_data *data;
-+	const struct l2x0_of_data *data;
- 	struct resource res;
-=20
- 	np =3D of_find_matching_node(NULL, l2x0_ids);
-diff --git a/include/linux/atmel_tc.h b/include/linux/atmel_tc.h
-index 1d14b1dc..89a931b 100644
---- a/include/linux/atmel_tc.h
-+++ b/include/linux/atmel_tc.h
-@@ -63,7 +63,7 @@ struct atmel_tc {
- 	struct platform_device	*pdev;
- 	struct resource		*iomem;
- 	void __iomem		*regs;
--	struct atmel_tcb_config	*tcb_config;
-+	const struct atmel_tcb_config *tcb_config;
- 	int			irq[3];
- 	struct clk		*clk[3];
- 	struct list_head	node;
+I've received unofficial confirmation that we do indeed implement a
+non-standard/non-ECAM mapping, and what's in our driver matches our HW.
