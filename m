@@ -1,39 +1,79 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Fri, 22 Jun 2012 21:08:34 +0000
-Message-ID: <201206222108.35094.arnd@arndb.de>
-References: <4FDA2DDA.1030704@wwwdotorg.org> <201206221653.31817.arnd@arndb.de> <CAErSpo5dj99iHW0WNEABPR1OO2yS=BwNezOivu6_7Go8sKyjsQ@mail.gmail.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 22 Jun 2012 17:52:08 -0500
+Message-ID: <4FE4F718.3080204@ti.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206090004.10086.arnd@arndb.de> <4FD914F6.6000402@ti.com> <201206141148.20371.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAErSpo5dj99iHW0WNEABPR1OO2yS=BwNezOivu6_7Go8sKyjsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201206141148.20371.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Jassi Brar <jaswinder.singh@linaro.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 June 2012, Bjorn Helgaas wrote:
-> 
-> On Fri, Jun 22, 2012 at 10:53 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Friday 22 June 2012, Bjorn Helgaas wrote:
-> >> The requirement (if there is one) isn't anything related to PC-ness.
-> >> I just don't understand how things can actually work if two host
-> >> bridges both claim the same bus number.  If we do a config read to
-> >> that bus, both bridges should claim it and turn it into config cycles
-> >> on their respective root buses, and we should get two responses.  I
-> >> would expect the second response to cause an "unexpected response"
-> >> machine check or similar.
-> >
-> > But each PCI domain has its own config space, so if you do a config
-> > read for one bus, it's always relative to the domain.
-> 
-> Oh, I see!  I totally missed the fact that each host bridge was in its
-> own domain.  If each has its own domain, then the bus number aperture
-> can certainly be [bus 00-ff] and there's no problem.
+Hi Arnd,
 
-Right. On my side, it took me a while to figure out that you can
-actually have multiple root ports in one domain ;-)
+On 06/14/2012 06:48 AM, Arnd Bergmann wrote:
 
-	Arnd
+[snip]
+
+> This would let us handle the following cases very easily:
+> 
+> 1. one read-write channel
+> 
+> 	dmas = <&dmac 0x3 match>;
+> 
+> 2. a choice of two read-write channels:
+> 
+> 	dmas = <&dmacA 0x3 matchA>, <&dmacB 0x3 matchB>;
+> 
+> 3. one read-channel, one write channel:
+> 
+> 	dmas = <&dmac 0x1 match-read>, <&dmac 0x2 match-write>;
+> 
+> 4. a choice of two read channels and one write channel:
+> 
+> 	dmas = <&dmacA 0x1 match-readA>, <&dmacA 0x2 match-write> 
+> 			<&dmacB match-readB>;
+> 
+> And only the cases where we have more multiple channels that differ
+> in more aspects would require named properties:
+> 
+> 5. two different channels
+> 
+> 	dmas = <&dmac 0x3 match-rwdata>, <&dmac 0x1 match-status>;
+> 	dma-names = "rwdata", "status";
+> 
+> 6. same as 5, but with a choice of channels:
+> 
+> 	dmas = <&dmacA 0x3 match-rwdataA>, <&dmacA 0x1 match-status>;
+> 		<dmacB 0x3 match-rwdataB>;
+> 	dma-names = "rwdata", "status", "rwdata";
+> 
+> 
+> With a definition like that, we can implement a very simple device
+> driver interface for the common cases, and a slightly more complex
+> one for the more complex cases:
+> 
+> 1. chan = of_dma_request_channel(dev->of_node, 0);
+> 2. chan = of_dma_request_channel(dev->of_node, 0);
+> 3. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
+>    txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
+> 4. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
+>    txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
+> 5. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
+>    auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
+> 6. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
+>    auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
+
+In the above examples, did you imply that the of_dma_request_channel()
+function would return a type of "struct dma_chan" and so be calling
+dma_request_channel() underneath?
+
+I am been prototyping something, but wanted to make sure I am completely
+aligned on this :-)
+
+Cheers
+Jon
