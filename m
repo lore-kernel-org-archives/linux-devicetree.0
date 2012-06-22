@@ -1,16 +1,21 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
- regulator-compatible
-Date: Fri, 22 Jun 2012 08:13:14 +0200
-Message-ID: <20120622061314.GA15627@avionic-0098.adnet.avionic-design.de>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
- <1340194987-23654-3-git-send-email-ldewangan@nvidia.com>
- <201206201924.09618.arnd@arndb.de>
- <20120620194609.GA4037@opensource.wolfsonmicro.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree
+ based pinctrl driver
+Date: Fri, 22 Jun 2012 01:39:56 -0700
+Message-ID: <20120622083955.GZ12766@atomide.com>
+References: <20120611135826.GB12766@atomide.com>
+ <4FDA6FCD.1020605@wwwdotorg.org>
+ <20120615094938.GQ12766@atomide.com>
+ <4FDB6000.5080703@wwwdotorg.org>
+ <20120618055036.GU12766@atomide.com>
+ <20120619135600.GX12766@atomide.com>
+ <4FE39C86.5070901@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6020754180291486120=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120620194609.GA4037-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4FE39C86.5070901-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,75 +26,104 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============6020754180291486120==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Content-Disposition: inline
+* Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> [120621 15:17]:
+> On 06/19/2012 07:56 AM, Tony Lindgren wrote:
+> > +
+> > +- pinctrl-single,pinconf-mask : mask of allowed pinconf bits in the
+> > +  pinmux register; this gets combined with pinconf mask but is a separate
+> > +  mask to allow the option of setting pinconf separatately from the
+> > +  function
+> 
+> Given that this binding doesn't allow describing pin configuration at
+> present, I would simply remove all mention of that property in the
+> binding documentation. It can be added back if/when that feature is
+> added. Any future driver using this binding can refuse to allow pin
+> configuration if that property is missing.
 
+It might be better to just add support for pin_config_get/set to avoid
+changing the binding later:
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ static int pcs_pinconf_get(struct pinctrl_dev *pctldev,
+                                unsigned pin, unsigned long *config)
+ {
+-	return -ENOTSUPP;
++	struct pcs_device *pcs;
++	void __iomem *reg;
++	int res;
++
++	pcs = pinctrl_dev_get_drvdata(pctldev);
++	res = pcs_pin_to_reg(pcs, pin, &reg);
++	if (res)
++		return res;
++
++	return pcs->read(reg) & pcs->cmask;
+ }
 
-On Wed, Jun 20, 2012 at 08:46:10PM +0100, Mark Brown wrote:
-> On Wed, Jun 20, 2012 at 07:24:09PM +0000, Arnd Bergmann wrote:
->=20
-> > 1. What is it that the new property can express that cannot already
-> > be expressed by using the phandle.
->=20
-> As well as being able to refer to the object from within the device tree
-> we also need to be able to tell what the object represents - we have a
-> bunch of regulators in an array under a node for a PMIC and we want to
-> know which regulator on the physical device each array entry corresponds
-> to.  Previously this was being done by parsing the phandle name but that
-> means we can't have more than one device with the same set of names.
+A have not done that yet as currently the pcs_pin_to_reg() would need to be
+sorted out in somewhat clean manner.
+ 
+> > +- pinctrl-single,function-off : function off mode for disabled state if
+> > +  available and same for all registers; if not, use a value larger than
+> > +  function-mask to ignore disabling of registers
+> 
+> Rather than requiring an invalid value in this property, shouldn't the
+> lack of a valid function-off value be represented by the property not
+> being present in the DT?
 
-I thought the reason was that matching the node names up with the
-regulator names was considered bad practice. As Stephen already noticed,
-the matching is done by node name, not phandle. Correct me if I'm wrong,
-but you can have more than one device with the children have the same
-names.
+Heh good point :) Will change.
+ 
+> > +This driver assumes that there is only one register for each pin,
+> > +and uses the common pinctrl bindings as specified in the pinctrl-bindings.txt
+> > +document in this directory.
+> 
+> At this point in the file, I think you need to mention that you're
+> switching from describing the top-level device node to describing pin
+> configuration nodes.
 
-Thierry
+Will add.
+ 
+> > +The pinctrl register offsets and default values are specified as pairs
+> 
+> I thought we were going to remove "default" here?
 
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature
+Oops, looks like one was left, will remove.
+ 
+> > +using pinctrl-single,pins. For example, setting a pin for a device
+> > +could be done with:
+> > +
+> > +	pinctrl-single,pins = <0xdc 0x118>;
+> > +
+> > +Where 0xdc is the offset from the pinctrl register base address for the
+> > +device pinctrl register, and 0x118 contains the desired value of the
+> > +pinctrl register. See the device example and static board pins example
+> > +below for more information.
+> 
+> There should be some explanation only the portion of this value covered
+> by the pinctrl-single,function-mask value is updated in the register.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+OK
+ 
+> > +This driver tries to avoid understanding pin and function names because of
+> > +the extra bloat they would cause especially in the case of a large number
+> > +of pins. This driver just sets what is specified for the board in the .dts file.
+> > +Further user space debugging tools can be developed to decipher the pin and
+> > +function names using debugfs.
+> 
+> There shouldn't be any discussion of a driver here; the binding is a HW
+> description.
 
-iQIcBAEBAgAGBQJP5Az6AAoJEN0jrNd/PrOheHkQAIaIK+A24GJcH4rPatPpVx57
-L/SipiL1qo8qoL8ulMjsxaCibXzRlN6GVsvQDWea1Dm4AYxEDvbwklC7pU6dTzT5
-vGkTod1OfHvn0ba2XDD96QodYV9tC/SGyjXgucGOyfq6OJNsCtfGtGqQv7OF8K/U
-JEZtSkusj3bc0PZmv371hvtUoJLlPXSrtQYk1btL+OPfygFKox16Nndb3NFpvaIo
-joMAgg/Y7TABRoABAyp3CUlKDQ9pmx1CgCmtIYSA+eE/KRQVdecQqRtV2jv8I9zt
-gqYxs5wnUF/ylLjIt8VyqLD2AyHu82YjJCeWmdofVMCp53ZYmd9MEGERPUFimp8o
-ZISadrZ3Nt4txpo+P172ldAPvfCpKYNnHnwnGLbTJUAz9V4loUHVKSZjyKLvpMO4
-ezcsegAgeR0RsfVd2ky5/4nOtnyQOuAAIRtzhxWqlvxhb6aNRZ+kjyTjKtuGPCEC
-QcNPfo/39g2/pZLrAj9AExScvYFQ4WNuhGRZ9vxD9fJXgxx6iP0R71CYK8DGFmyK
-IbAcRLDleToMd68H2nrg9+6GfUCpH9kZEWue+m8iVFSqmGQqbrNfD02lGha1xQMx
-aVUINOMUZGkpYuzn50+qzVPwI01djA+zby72L9AqpA3RvzUcrTifyoQpnBir+ir+
-WD4xjsx8H0qo8rYmsYmt
-=nm1n
------END PGP SIGNATURE-----
+Will move that to the driver comments.
+ 
+> > +Example:
+> 
+> I only reviewed the binding document, not the code.
 
---mP3DRpeJDSE+ciuQ--
+Thanks,
 
---===============6020754180291486120==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6020754180291486120==--
+Tony
