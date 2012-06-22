@@ -1,58 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
-Date: Fri, 22 Jun 2012 13:03:21 +0000
-Message-ID: <201206221303.21985.arnd@arndb.de>
-References: <4FDA2DDA.1030704@wwwdotorg.org> <CAErSpo6vHn3p96o7DSdL28cjapk2UnQ4ZVJ1oH6ksxbqD=Hh-g@mail.gmail.com> <20120622124311.GA21606@avionic-0098.mockup.avionic-design.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH v2 0/2] omap: add ocp2scp as a misc driver
+Date: Fri, 22 Jun 2012 18:45:40 +0530
+Message-ID: <1340370942-23201-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20120622124311.GA21606@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Mitch Bradley <wmb@firmworks.com>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, gregkh@linuxfoundation.org, kishon@ti.com, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 June 2012, Thierry Reding wrote:
-> On Fri, Jun 22, 2012 at 05:46:52AM -0600, Bjorn Helgaas wrote:
-> > On Fri, Jun 22, 2012 at 5:00 AM, Thierry Reding
-> > <thierry.reding@avionic-design.de> wrote:
-> > >> Is the bus number aperture included somewhere?  How do we know what
-> > >> bus numbers are available for allocation under each bridge?
-> > >
-> > > Not yet. I don't think DT imposes a bus number allocation on PCI
-> > > bridges. However the matching of DT nodes to PCI bridges is done based
-> > > on the bus number. For that you provide a bus-ranges property which
-> > > defines the bus aperture of the given PCI bridge. The DT matching code
-> > > compares the first cell of this property with the primary bus number of
-> > > the bridge.
-> > 
-> > I don't fully understand this, but I can tell you that things don't
-> > work very well if we don't know the aperture.  We can make
-> > assumptions, like the root bus is 00, and then enumerate everything
-> > reachable from there.  But then all we know is the largest bus number
-> > actually reachable from bus 00, which is usually smaller then the end
-> > of the aperture.  We don't know how many unused bus numbers there are
-> > in the aperture, so we can't safely allocate any for hot-added
-> > devices.
+This patch series is done as a preparatory step for adding phy drivers
+for dwc3 and musb.
 
-I believe the assumption today is that all bus numbers are ok on each
-root port, which is usually the case. There was something about a Power
-Mac that faked a single PCI bus number space across both an AGP and
-a PCIe domain in pmac_pci_fixup_u4_of_node(), but I think that is the
-exception.
+This series adds a new driver for ocp2scp (only dt) to which phy
+drivers are connected.
 
-Is there any requirement to use a bus aperture on non-PC hardware?
- 
-> I think DT support for PCI is lacking in a lot of areas. PowerPC seems
-> to be the only architecture actively setting up busses according to the
-> bus-range property specified in the DT. All other architectures seem to
-> not pre-allocate bus apertures and go with the default instead. From
-> what you say that means hot-plugging is out. Although I don't think the
-> Tegra PCIe controller even supports hot-plugging.
+Since currently there is no generic way to create a child device along
+with doing a pm_runtime_enable (the exact requirement for ocp2scp), i'm
+sending this second rfc patch with only dt support. If we can figure out
+a way to do that generically this patch series can be dropped and I'll
+send a patch only for adding dt data.
 
-If the default is allowing any bus numbers, and that matches the
-hardware capabilities, I think hot-plugging would work.
+*arm: omap: hwmod: make *phy_48m* as the main_clk of ocp2scp* and
+*arm: omap: remove ocp2scp_usb_phy_ick clock node* patches are removed
+from the series as Benoit is planning to take it up in his series.
 
-	Arnd
+This series was developed on
+http://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-next
+
+and [RFC PATCH 00/11] OMAP System Control Module (There is no direct
+dependencies with this patch series).
+
+However to test this patch series, the following patch series is needed
+[PATCH v7 0/3] usb: multi-phy support
+[PATCH v3 0/5] usb: musb: cleanup
+[RFC PATCH 00/11] OMAP System Control Module
+[RFC PATCH 00/10] omap: musb: Add device tree support (To be sent)
+
+Kishon Vijay Abraham I (2):
+  drivers: misc: omap: add a new driver for ocp2scp
+  arm/dts: omap4: Add ocp2scp data
+
+ .../devicetree/bindings/misc/omap-ocp2scp.txt      |    9 ++
+ arch/arm/boot/dts/omap4.dtsi                       |    7 ++
+ drivers/misc/Kconfig                               |    8 ++
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/omap-ocp2scp.c                        |   96 ++++++++++++++++++++
+ 5 files changed, 121 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/omap-ocp2scp.txt
+ create mode 100644 drivers/misc/omap-ocp2scp.c
+
+-- 
+1.7.5.4
