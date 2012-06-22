@@ -1,67 +1,68 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] ARM: tegra: harmony: Initialize regulators from
- DT
-Date: Fri, 22 Jun 2012 08:06:57 +0200
-Message-ID: <20120622060657.GA15213@avionic-0098.adnet.avionic-design.de>
-References: <1339427118-32263-1-git-send-email-thierry.reding@avionic-design.de>
- <1339427118-32263-9-git-send-email-thierry.reding@avionic-design.de>
- <4FE3815C.8030505@wwwdotorg.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
+ regulator-compatible
+Date: Fri, 22 Jun 2012 09:42:29 +0100
+Message-ID: <20120622084228.GD4037@opensource.wolfsonmicro.com>
+References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
+ <1340194987-23654-3-git-send-email-ldewangan@nvidia.com>
+ <201206201924.09618.arnd@arndb.de>
+ <20120620194609.GA4037@opensource.wolfsonmicro.com>
+ <20120622061314.GA15627@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="3cI6DWK3Xt33P8nt"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4FE3815C.8030505-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <20120622061314.GA15627@avionic-0098.adnet.avionic-design.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, Laxman Dewangan <ldewangan@nvidia.com>, lee.jones@linaro.org, lrg@ti.com, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
 
---WIyZ46R2i8wDzkSu
+--3cI6DWK3Xt33P8nt
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 21, 2012 at 02:17:32PM -0600, Stephen Warren wrote:
-> On 06/11/2012 09:05 AM, Thierry Reding wrote:
-> > Device tree support for the TPS6586x PMU used on Harmony has recently
-> > been added. This commit adds the required device tree nodes to probe the
-> > PMU from the device tree.
->=20
-> > diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/te=
-gra-harmony.dts
->=20
-> > +		tps6586x@34 {
-> > +			compatible =3D "ti,tps6586x";
-> > +			reg =3D <0x34>;
-> > +			interrupts =3D <0 88 0x4>;
->=20
-> I believe that should be interrupt 86 not 88.
+On Fri, Jun 22, 2012 at 08:13:14AM +0200, Thierry Reding wrote:
+> On Wed, Jun 20, 2012 at 08:46:10PM +0100, Mark Brown wrote:
 
-Yes, you're absolutely correct.
+> > As well as being able to refer to the object from within the device tree
+> > we also need to be able to tell what the object represents - we have a
+> > bunch of regulators in an array under a node for a PMIC and we want to
+> > know which regulator on the physical device each array entry corresponds
+> > to.  Previously this was being done by parsing the phandle name but that
+> > means we can't have more than one device with the same set of names.
 
-Thierry
+> I thought the reason was that matching the node names up with the
+> regulator names was considered bad practice. As Stephen already noticed,
+> the matching is done by node name, not phandle. Correct me if I'm wrong,
+> but you can have more than one device with the children have the same
+> names.
 
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature
+We're talking about consumers here, not the regulator driver finding its
+own regulators.
+
+--3cI6DWK3Xt33P8nt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP5AuBAAoJEN0jrNd/PrOhqVoQAJErzxQ2EbOzIBdTW1+AX91n
-Oe5Y0gkjUBzBCbzqsgurvcXWOv8MxGLrSy3rBA+Zlf9pAiROBXQ4vdymVFLTnbh5
-Zuj7aUxDKGeKwYzChBVVHLqc05pn5snEl/rVN/30w+9z3fv0f8OSGn1x9Ppn4vWN
-cJUS0SRZ5GQRo7qidgcuKkYeIeenwf1bYZ0fczMO07S8x8BkzD+iVN2fVx49DtWm
-Nw3A71ajsBYdZs82C0G1vQomvJJNsi8Sg1IKBAZ9/kn8DC+dbiMZXZaLi2YMFS3X
-9Wzd913HDNn9ItJQmOvI2NzHGQkV/4GEk1fTD6BvlpgPBBtqJ80r0c6c0pXnUguD
-+7+dGoGRiBgPuGLzFuGKLAsusTqzFRvso3evqZFJxamQRJqXWGO1QuUY3cW0DVWj
-NfjwdDmFNg7yiR0dgNcu7BZDegKGp8qyiIRvHxAlu1qRkYVQMBj2K8f5s3zeXxev
-DK5FvN7TSVE8opIjnamZrsCw7OUFjZH6PKDRy/wd/ULL4aRfsEWlxZGRaW5Y7nJw
-WiNkP5BVQhZqEpqhfBIyKd8GBBOayRLsmrfnK9UP8x/D+z8BiP69ADPPUjP36e4z
-S/NZA8hrJs7u54nYu5t3h4DNS4BGAbKWPSUaVKFDiV6pvGguI/7jhyb2FHk+CUAW
-6ioOczican+2SbYSk4ch
-=S7s2
+iQIcBAEBAgAGBQJP5C+sAAoJEBus8iNuMP3dzpUP+wT8+2K8fV7TVtX95qPlg6/T
+6JiMUUe9DPmSQa/iLcIENHDQ3RJq0P9Byvot18CBezYmFJw0V6ixS09YVruRB01i
+r/KA9oUms2Qf3GVfGIAayjgeUUTdjek/8ZUT5jD36TU+BG+JRD9cDJNgKmR76Xqd
+cBommSSku1bi+Y/2rzP/2RCl+npDY5tpXi4t7mFe551ontEXYWC4U2dY7wdDH/K0
+xRvqt20G31hnwQkMpMInC2l2KKGI3InvLjp//rkAOTXvKI5hB43Bb6Myk0cNrpH/
+G6DGyGxpSxd+uZPN9wRV8vA7L/cejS/2hin1dFAHt3/av6luGtDjnUGbnUnIo4sE
+12KfLEagCfczgyZSrVdK9aYhRk8FIcQ9eQducU8ZMVg1D8al8Zp6YMmkGIp1TAYC
+iNokv4nDWF+4fxsLz7EO63GwrjLHPgvrbVu+NI8FF/krOIYx+yEQVnB/xMdMHwao
+W6CEotFlmUhfvI33NGXyIGLOsmsY3xvmFvyGe9/Fys8Jp5E8W1yXi7t8iNDLZooK
+W/zBzHKRUjh/y9ITA9ZA9FyIy07DqMkbpqpq/Yt0Pr3/xUkmQP7kA+iy7sCrmsw7
+3Y5Q/HlWO3RK25Q7U+2u3pmA9YDwSoC0yhaoUgwJJ3WndJcqWhb7qdteLDMak7qi
+aaAtpGrR2qlS9tZdwmF+
+=zkqS
 -----END PGP SIGNATURE-----
 
---WIyZ46R2i8wDzkSu--
+--3cI6DWK3Xt33P8nt--
