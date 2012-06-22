@@ -1,113 +1,73 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 1/1] of: reform prom_update_property function
-Date: Fri, 22 Jun 2012 10:01:24 +1000
-Message-ID: <1340323284.16104.4.camel@pasglop>
-References: <1340171647-2815-1-git-send-email-b29396@freescale.com>
-	 <4FE1CB2C.5040208@gmail.com> <1340237796.28143.207.camel@pasglop>
-	 <20120621093702.GE21231@shlinux2.ap.freescale.net>
+From: Chen Peter-B29397 <B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
+Date: Fri, 22 Jun 2012 00:03:20 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A649803BE45CD@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+ <1339590863-10564-9-git-send-email-richard.zhao@freescale.com>
+ <4FD8AD42.6010702@gmail.com> <20120613152841.GA23590@richard-laptop>
+ <4FD8C4DB.4020908@gmail.com>
+ <20120614013343.GD29684@b20223-02.ap.freescale.net>
+ <4FE1DE53.4070202@gmail.com> <4FE1EF26.9080401@wwwdotorg.org>
+ <F281D0F91ED19E4D8E63A7504E8A649803BE3E73@039-SN2MPN1-023.039d.mgd.msft.net>
+ <4FE39EA2.8050809@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120621093702.GE21231@shlinux2.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: Rob Herring <robherring2@gmail.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4FE39EA2.8050809-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, Li Frank-B20596 <B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Estevam Fabio-R49496 <r49496-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2012-06-21 at 17:37 +0800, Dong Aisheng wrote:
-> Maybe we could change it as as follows.
-> It looks then the code follow is the same as before.
-> Do you think if it's ok?
-> 
-> diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-> index 7b3bf76..4c237f4 100644
-> --- a/arch/powerpc/platforms/pseries/reconfig.c
-> +++ b/arch/powerpc/platforms/pseries/reconfig.c
-> @@ -443,6 +443,9 @@ static int do_update_property(char *buf, size_t bufsize)
->         if (!next_prop)
->                 return -EINVAL;
-> 
-> +       if (!strlen(name)
-> +               return -ENODEV;
-> +
->         newprop = new_property(name, length, value, NULL);
->         if (!newprop)
->                 return -ENOMEM;
-> @@ -450,13 +453,6 @@ static int do_update_property(char *buf, size_t bufsize)
->         if (!strcmp(name, "slb-size") || !strcmp(name, "ibm,slb-size"))
->                 slb_set_size(*(int *)value);
-> 
-> -       oldprop = of_find_property(np, name,NULL);
-> -       if (!oldprop) {
-> -               if (strlen(name))
-> -                       return prom_add_property(np, newprop);
-> -               return -ENODEV;
-> -       }
-
-No:
-
-IE. Old code did:
-
-	if (property doesn't exist) {
-		if (has a name)
-			create_it()
-		return -ENODEV;
-	}
-
-What you propose is:
-
-	if (!has_a_name)
-		return -ENODEV;
-
-Not at all the same semantic.
-
- .../...
  
-> > IE. The allocation of the "old" property isn't disposed of. It can't
-> > because today we don't know whether any of those pointers was
-> > dynamically allocated or not. IE they could point to the fdt
-
-> Hmm, i did not see static allocated property before.
-> Where can we see an exist case?
-
-Almost all your property names and values. They are pointers to the
-original fdt block, so you can't free them. But dynamically added
-propreties will have kmalloc'ed pointers which should be freed. We need
-to add flags to indicate that if we want to avoid leaking memory in very
-dynamic environments.
-
-> If we really have this issue, it seems of_node_release also has the same issue,
-> since it frees the property without distinguish whether the property is allocated
-> dynamically.
-
-Well, actually we do have a flag:
-
-        if (!of_node_check_flag(node, OF_DYNAMIC))
-                return;
-
-So we use that. Good. So if update property uses that flag it should be
-able to know when to free or not. I forgot we had that :-)
-
-> > string list, data block, or could be bootmem ... or could be
-> > actual kernel memory.
-> > 
-> > We might want to extend the struct property to contain indications of
-> > the allocation type so we can kfree dynamic properties properly.
-> > 
-> I wonder the simplest way may be not allow static allocated property, like dt
-> node does i guess.
-
-No way. We generate the device-tree way before we have an allocator
-available.
-
-> > But then there's the question of the lifetime of a property... since
-> > they aren't reference counted like nodes are.
-> > 
-> Yes, that's a real exist problem.
 > 
-> Anyway, i guess we could do that work of this problem in another patch
-> rather than have to in this patch series.
+> That's a good point. We need those properties to be part of the device
+> that controls the port/slot/connector, not the thing that plugs into it.
+> Having each such binding and driver implement this themselves might not
+> be a good idea though. Perhaps we can standardize on a mechanism for
+> this; something vaguely like rfkill, but for arbitrary types of devices
+> connected to ports.
+> 
+> For USB at least, where the power/reset/... GPIOs might affect just one
+> port on a hub rather than the root USB host controller, the issue of
+> representing these properties on a dynamically probed device still
+> applies. Something like:
+> 
+> ehci {
+>     /* The following node is dynamically detected, although the hub
+>      * IC is physically soldered onto the board
+>      */
+>     hub {
+>         hub { /* also dynamic */
+>             port@2 {
+>                 child-supply = <&regulator>;
+>                 reset-gpios = <&gpio 0 0>;
+>             };
+>         };
+>     };
+> };
+> 
+> But without knowing what might be connected to port@2, how do we know
+> how to sequence the power supply and reset GPIOs according to its
+> requirements? I guess this is part of the specification of the port
+> itself though, not the attached device, since anything that is allowed
+> to plug in must conform to whatever sequencing the port is designed to
+> give. If the connected device is known, the port@2 node in DT can encode
+> whatever sequencing requirements are associated with the known connected
+> device.
 
-Cheers,
-Ben.
+In fact, for specific usb/sdio interface device, there should be a specific interface 
+class driver for it, the best place is at that class driver, like wifi or 3g driver,
+as it is chip/device specific.
+
+But the generic 3G and HUB devices are special, there is only one common driver
+for each of them (drivers/usb/core/hub.c & drivers/serial/option.c)   
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
