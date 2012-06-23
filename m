@@ -1,51 +1,35 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] mtd/m25p80: add device tree probe support
-Date: Sat, 23 Jun 2012 04:15:18 +0200
-Message-ID: <201206230415.18833.marex@denx.de>
-References: <1311601063-16581-1-git-send-email-shawn.guo@linaro.org>
- <4E31B713.1030901@free.fr> <20110728214521.GA4674@ponder.secretlab.ca>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH v2 1/2] drivers: misc: omap: add a new driver for
+ ocp2scp
+Date: Fri, 22 Jun 2012 21:44:45 -0700
+Message-ID: <20120623044445.GA2993@kroah.com>
+References: <1340370942-23201-1-git-send-email-kishon@ti.com>
+ <1340370942-23201-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110728214521.GA4674-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1340370942-23201-2-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Grant Likely,
+On Fri, Jun 22, 2012 at 06:45:41PM +0530, Kishon Vijay Abraham I wrote:
+> Adds a new driver _ocp2scp_.
 
-> On Thu, Jul 28, 2011 at 09:22:59PM +0200, manu wrote:
-> > Dear Grant, Shawn,
-> > I don't this patch is required as m25p** serial flashes are
-> > supported already with generic OF/SPI and OF/MTD schemes.
-> > I have successfully used it myself on an unmodified 2.6.36.3 vanilla
-> > kernel on a xilinx/powerpc platform with a m25p32 part from STM.
-> > You will find attached the corresponding working defconfig + dts
-> > files (appart from partitions which I didn't managed to configure
-> > properly...).
-> > Best Regards,
-> > 
-> > Manuel
+That's not what you called this driver in the patch below :(
+
+> This driver takes the responsibility of creating
+> all the devices that is connected to OCP2SCP. In the case of OMAP4, USB2PHY
+> is connected to ocp2scp.
 > 
-> There is a heuristic which allows spi and i2c devices to get bound
-> without a match table, which is why it works for you, but there is no
-> guarantee that the heuristic will continue to exist in the long term.
-> This is still probably the right thing to do.
-> 
-> g.
+> This also includes device tree support for ocp2scp driver and
+> the documentation with device tree binding information is updated.
 
-So is there any particular reason why this wasn't applied?
+Can't this live where the scp drivers live?  Actually, where is that at?
+Do we have scp drivers?
 
-Best regards,
-Marek Vasut
+thanks,
+
+greg k-h
