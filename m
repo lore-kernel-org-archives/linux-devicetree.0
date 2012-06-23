@@ -1,35 +1,35 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v2 1/2] drivers: misc: omap: add a new driver for
- ocp2scp
-Date: Fri, 22 Jun 2012 21:44:45 -0700
-Message-ID: <20120623044445.GA2993@kroah.com>
-References: <1340370942-23201-1-git-send-email-kishon@ti.com>
- <1340370942-23201-2-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1340370942-23201-2-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com
+From: Marek Vasut <marex@denx.de>
+Subject: [PATCH] LED: Fix missing semicolon in OF documentation
+Date: Sat, 23 Jun 2012 20:41:17 +0200
+Message-ID: <1340476877-2704-1-git-send-email-marex@denx.de>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-doc@vger.kernel.org
+Cc: Marek Vasut <marex@denx.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2012 at 06:45:41PM +0530, Kishon Vijay Abraham I wrote:
-> Adds a new driver _ocp2scp_.
+Trivial fix
 
-That's not what you called this driver in the patch below :(
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+---
+ Documentation/devicetree/bindings/gpio/led.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> This driver takes the responsibility of creating
-> all the devices that is connected to OCP2SCP. In the case of OMAP4, USB2PHY
-> is connected to ocp2scp.
-> 
-> This also includes device tree support for ocp2scp driver and
-> the documentation with device tree binding information is updated.
+diff --git a/Documentation/devicetree/bindings/gpio/led.txt b/Documentation/devicetree/bindings/gpio/led.txt
+index fd2bd56..9bb308a 100644
+--- a/Documentation/devicetree/bindings/gpio/led.txt
++++ b/Documentation/devicetree/bindings/gpio/led.txt
+@@ -55,4 +55,4 @@ run-control {
+ 		gpios = <&mpc8572 7 0>;
+ 		default-state = "on";
+ 	};
+-}
++};
+-- 
+1.7.10
 
-Can't this live where the scp drivers live?  Actually, where is that at?
-Do we have scp drivers?
-
-thanks,
-
-greg k-h
