@@ -1,81 +1,51 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH 3/4] netdev/phy/of: Add more methods for binding PHY devices to drivers.
-Date: Fri, 22 Jun 2012 17:24:15 -0700
-Message-ID: <1340411056-18988-4-git-send-email-ddaney.cavm@gmail.com>
-References: <1340411056-18988-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340411056-18988-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, David Daney <david.daney@cavium.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] mtd/m25p80: add device tree probe support
+Date: Sat, 23 Jun 2012 04:15:18 +0200
+Message-ID: <201206230415.18833.marex@denx.de>
+References: <1311601063-16581-1-git-send-email-shawn.guo@linaro.org>
+ <4E31B713.1030901@free.fr> <20110728214521.GA4674@ponder.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110728214521.GA4674-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+Dear Grant Likely,
 
-Allow PHY drivers to supply their own device matching function
-(match_phy_device()), or to be matched OF compatible properties.
+> On Thu, Jul 28, 2011 at 09:22:59PM +0200, manu wrote:
+> > Dear Grant, Shawn,
+> > I don't this patch is required as m25p** serial flashes are
+> > supported already with generic OF/SPI and OF/MTD schemes.
+> > I have successfully used it myself on an unmodified 2.6.36.3 vanilla
+> > kernel on a xilinx/powerpc platform with a m25p32 part from STM.
+> > You will find attached the corresponding working defconfig + dts
+> > files (appart from partitions which I didn't managed to configure
+> > properly...).
+> > Best Regards,
+> > 
+> > Manuel
+> 
+> There is a heuristic which allows spi and i2c devices to get bound
+> without a match table, which is why it works for you, but there is no
+> guarantee that the heuristic will continue to exist in the long term.
+> This is still probably the right thing to do.
+> 
+> g.
 
-PHYs following IEEE802.3 clause 45 have more than one device
-identifier constants, which breaks the default device matching code.
-Other 10G PHYs don't follow the standard manufacturer/device
-identifier register layout standards, but they do use the standard
-MDIO bus protocols for register access.  Both of these require
-adjustments to the PHY driver to device matching code.
+So is there any particular reason why this wasn't applied?
 
-If the there is an of_node associated with such a PHY, we can match it
-to its driver using the "compatible" properties, just as we do with
-certain platform devices.  If the "compatible" property match fails,
-first check if there is a driver supplied matching function, and if
-not fall back to the existing identifier matching rules.
-
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- drivers/net/phy/mdio_bus.c |    7 +++++++
- include/linux/phy.h        |    7 +++++++
- 2 files changed, 14 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 31470b0..9a283b4 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -25,6 +25,7 @@
- #include <linux/init.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-+#include <linux/of_device.h>
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
-@@ -308,6 +309,12 @@ static int mdio_bus_match(struct device *dev, struct device_driver *drv)
- 	struct phy_device *phydev = to_phy_device(dev);
- 	struct phy_driver *phydrv = to_phy_driver(drv);
- 
-+	if (of_driver_match_device(dev, drv))
-+		return 1;
-+
-+	if (phydrv->match_phy_device)
-+		return phydrv->match_phy_device(phydev);
-+
- 	return ((phydrv->phy_id & phydrv->phy_id_mask) ==
- 		(phydev->phy_id & phydrv->phy_id_mask));
- }
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 92d53ee..bbd9e7f 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -434,6 +434,13 @@ struct phy_driver {
- 	/* Handles ethtool queries for hardware time stamping. */
- 	int (*ts_info)(struct phy_device *phydev, struct ethtool_ts_info *ti);
- 
-+	/*
-+	 * Returns true if this is a suitable driver for the given
-+	 * phydev.  If NULL, matching is based on phy_id and
-+	 * phy_id_mask.
-+	 */
-+	int (*match_phy_device)(struct phy_device *phydev);
-+
- 	/* Handles SIOCSHWTSTAMP ioctl for hardware time stamping. */
- 	int  (*hwtstamp)(struct phy_device *phydev, struct ifreq *ifr);
- 
--- 
-1.7.2.3
+Best regards,
+Marek Vasut
