@@ -1,292 +1,281 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v7 13/14] usb: otg: add basic mxs phy driver support
-Date: Mon, 25 Jun 2012 14:56:30 +0800
-Message-ID: <1340607391-16380-14-git-send-email-richard.zhao@freescale.com>
-References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v6] input: keyboard: Add keys driver for the LPC32xx SoC
+Date: Mon, 25 Jun 2012 00:06:14 -0700
+Message-ID: <20120625070614.GA13876@core.coreip.homeip.net>
+References: <1340549078-8973-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1340607391-16380-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1340549078-8973-1-git-send-email-stigge@antcom.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, aletes.xgr@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-mxs phy is used in Freescale i.MX SoCs, for example
-imx23, imx28, imx6Q. This patch adds the basic host
-support.
+HI Roland,
 
-Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Tested-by: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/mxs-phy.txt |   13 ++
- drivers/usb/otg/Kconfig                           |    9 +
- drivers/usb/otg/Makefile                          |    1 +
- drivers/usb/otg/mxs-phy.c                         |  197 +++++++++++++++++++++
- 4 files changed, 220 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mxs-phy.txt
- create mode 100644 drivers/usb/otg/mxs-phy.c
+On Sun, Jun 24, 2012 at 04:44:38PM +0200, Roland Stigge wrote:
+> This patch adds a driver for the key scan interface of the LPC32xx SoC
+> 
+> Signed-off-by: Roland Stigge <stigge@antcom.de>
+> 
 
-diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-new file mode 100644
-index 0000000..5835b27
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-@@ -0,0 +1,13 @@
-+* Freescale MXS USB Phy Device
-+
-+Required properties:
-+- compatible: Should be "fsl,imx23-usbphy"
-+- reg: Should contain registers location and length
-+- interrupts: Should contain phy interrupt
-+
-+Example:
-+usbphy1: usbphy@020c9000 {
-+	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
-+	reg = <0x020c9000 0x1000>;
-+	interrupts = <0 44 0x04>;
-+};
-diff --git a/drivers/usb/otg/Kconfig b/drivers/usb/otg/Kconfig
-index 5c87db0..669eb32 100644
---- a/drivers/usb/otg/Kconfig
-+++ b/drivers/usb/otg/Kconfig
-@@ -116,6 +116,15 @@ config FSL_USB2_OTG
- 	help
- 	  Enable this to support Freescale USB OTG transceiver.
- 
-+config USB_MXS_PHY
-+	tristate "Freescale MXS USB PHY support"
-+	select STMP_DEVICE
-+	select USB_OTG_UTILS
-+	help
-+	  Enable this to support the Freescale MXS USB PHY.
-+
-+	  MXS Phy is used by some of the i.MX SoCs, for example imx23/28/6x.
-+
- config USB_MV_OTG
- 	tristate "Marvell USB OTG support"
- 	depends on USB_EHCI_MV && USB_MV_UDC && USB_SUSPEND
-diff --git a/drivers/usb/otg/Makefile b/drivers/usb/otg/Makefile
-index 41aa509..a844b8d 100644
---- a/drivers/usb/otg/Makefile
-+++ b/drivers/usb/otg/Makefile
-@@ -20,4 +20,5 @@ obj-$(CONFIG_USB_MSM_OTG)	+= msm_otg.o
- obj-$(CONFIG_AB8500_USB)	+= ab8500-usb.o
- fsl_usb2_otg-objs		:= fsl_otg.o otg_fsm.o
- obj-$(CONFIG_FSL_USB2_OTG)	+= fsl_usb2_otg.o
-+obj-$(CONFIG_USB_MXS_PHY)	+= mxs-phy.o
- obj-$(CONFIG_USB_MV_OTG)	+= mv_otg.o
-diff --git a/drivers/usb/otg/mxs-phy.c b/drivers/usb/otg/mxs-phy.c
-new file mode 100644
-index 0000000..d64c1fe
---- /dev/null
-+++ b/drivers/usb/otg/mxs-phy.c
-@@ -0,0 +1,197 @@
-+/*
-+ * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-+ * on behalf of DENX Software Engineering GmbH
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+#include <linux/usb/otg.h>
-+#include <linux/stmp_device.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+
-+#define DRIVER_NAME "mxs_phy"
-+
-+#define HW_USBPHY_PWD				0x00
-+#define HW_USBPHY_CTRL				0x30
-+#define HW_USBPHY_CTRL_SET			0x34
-+#define HW_USBPHY_CTRL_CLR			0x38
-+
-+#define BM_USBPHY_CTRL_SFTRST			BIT(31)
-+#define BM_USBPHY_CTRL_CLKGATE			BIT(30)
-+#define BM_USBPHY_CTRL_ENUTMILEVEL3		BIT(15)
-+#define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
-+#define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
-+
-+struct mxs_phy {
-+	struct usb_phy phy;
-+	struct clk *clk;
-+	int connected:1;
-+};
-+
-+#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-+
-+static void mxs_phy_hw_init(struct mxs_phy *mxs_phy)
-+{
-+	void __iomem *base = mxs_phy->phy.io_priv;
-+
-+	stmp_reset_block(base + HW_USBPHY_CTRL);
-+
-+	/* Power up the PHY */
-+	writel_relaxed(0, base + HW_USBPHY_PWD);
-+
-+	/* enable FS/LS device */
-+	writel_relaxed(BM_USBPHY_CTRL_ENUTMILEVEL2 |
-+			BM_USBPHY_CTRL_ENUTMILEVEL3,
-+			base + HW_USBPHY_CTRL_SET);
-+}
-+
-+static int mxs_phy_init(struct usb_phy *phy)
-+{
-+	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
-+
-+	clk_prepare_enable(mxs_phy->clk);
-+	mxs_phy_hw_init(mxs_phy);
-+
-+	return 0;
-+}
-+
-+static void mxs_phy_shutdown(struct usb_phy *phy)
-+{
-+	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
-+
-+	writel_relaxed(BM_USBPHY_CTRL_CLKGATE,
-+			phy->io_priv + HW_USBPHY_CTRL_SET);
-+
-+	clk_disable_unprepare(mxs_phy->clk);
-+}
-+
-+static int mxs_phy_on_connect(struct usb_phy *phy, int port)
-+{
-+	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
-+
-+	dev_dbg(phy->dev, "Connect on port %d\n", port);
-+
-+	if (mxs_phy->connected)
-+		return 0;
-+	mxs_phy_hw_init(to_mxs_phy(phy));
-+	writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-+			phy->io_priv + HW_USBPHY_CTRL_SET);
-+	mxs_phy->connected = 1;
-+
-+	return 0;
-+}
-+
-+static int mxs_phy_on_disconnect(struct usb_phy *phy, int port)
-+{
-+	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
-+
-+	dev_dbg(phy->dev, "Disconnect on port %d\n", port);
-+
-+	if (!mxs_phy->connected)
-+		return 0;
-+	writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-+			phy->io_priv + HW_USBPHY_CTRL_CLR);
-+	mxs_phy->connected = 0;
-+
-+	return 0;
-+}
-+
-+static int mxs_phy_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	void __iomem *base;
-+	struct clk *clk;
-+	struct mxs_phy *mxs_phy;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "can't get device resources\n");
-+		return -ENOENT;
-+	}
-+
-+	base = devm_request_and_ioremap(&pdev->dev, res);
-+	if (!base)
-+		return -EBUSY;
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk)) {
-+		dev_err(&pdev->dev,
-+			"can't get the clock, err=%ld", PTR_ERR(clk));
-+		return PTR_ERR(clk);
-+	}
-+
-+	mxs_phy = devm_kzalloc(&pdev->dev, sizeof(*mxs_phy), GFP_KERNEL);
-+	if (!mxs_phy) {
-+		dev_err(&pdev->dev, "Failed to allocate USB PHY structure!\n");
-+		return -ENOMEM;
-+	}
-+
-+	mxs_phy->phy.io_priv		= base;
-+	mxs_phy->phy.dev		= &pdev->dev;
-+	mxs_phy->phy.label		= DRIVER_NAME;
-+	mxs_phy->phy.init		= mxs_phy_init;
-+	mxs_phy->phy.shutdown		= mxs_phy_shutdown;
-+	mxs_phy->phy.notify_connect	= mxs_phy_on_connect;
-+	mxs_phy->phy.notify_disconnect	= mxs_phy_on_disconnect;
-+
-+	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
-+
-+	mxs_phy->clk = clk;
-+
-+	platform_set_drvdata(pdev, &mxs_phy->phy);
-+
-+	return 0;
-+}
-+
-+static int __devexit mxs_phy_remove(struct platform_device *pdev)
-+{
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mxs_phy_dt_ids[] = {
-+	{ .compatible = "fsl,imx23-usbphy", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-+
-+static struct platform_driver mxs_phy_driver = {
-+	.probe = mxs_phy_probe,
-+	.remove = __devexit_p(mxs_phy_remove),
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.owner	= THIS_MODULE,
-+		.of_match_table = mxs_phy_dt_ids,
-+	 },
-+};
-+
-+static int __init mxs_phy_module_init(void)
-+{
-+	return platform_driver_register(&mxs_phy_driver);
-+}
-+postcore_initcall(mxs_phy_module_init);
-+
-+static void __exit mxs_phy_module_exit(void)
-+{
-+	platform_driver_unregister(&mxs_phy_driver);
-+}
-+module_exit(mxs_phy_module_exit);
-+
-+MODULE_ALIAS("platform:mxs-usb-phy");
-+MODULE_AUTHOR("Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>");
-+MODULE_AUTHOR("Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>");
-+MODULE_DESCRIPTION("Freescale MXS USB PHY driver");
-+MODULE_LICENSE("GPL");
+This looks _very_ good, I just have a couple more comments:
+
+> +
+> +static int lpc32xx_kscan_open(struct input_dev *dev)
+> +{
+> +	struct lpc32xx_kscan_drv *kscandat = input_get_drvdata(dev);
+> +
+> +	return clk_prepare_enable(kscandat->clk);
+
+Don't you need to clear IRQ here, the same way you do it in resume?
+
+> +}
+> +
+> +static void lpc32xx_kscan_close(struct input_dev *dev)
+> +{
+> +	struct lpc32xx_kscan_drv *kscandat = input_get_drvdata(dev);
+> +
+> +	clk_disable_unprepare(kscandat->clk);
+
+And same here.
+
+> +}
+> +
+> +int lpc32xx_parse_dt(struct platform_device *pdev)
+
+Static? Also why don't you pass kscandat instead of platform device?
+> +{
+> +	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
+> +	struct device_node *np = pdev->dev.of_node;
+> +	u32 rows, columns;
+> +
+> +	of_property_read_u32(np, "keypad,num-rows", &rows);
+> +	of_property_read_u32(np, "keypad,num-columns", &columns);
+> +	if (!rows || rows != columns) {
+> +		dev_err(&pdev->dev,
+> +			"rows and columns must be specified and be equal!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	kscandat->matrix_sz = rows;
+> +	kscandat->row_shift = get_count_order(columns);
+> +
+> +	of_property_read_u32(np, "nxp,debounce-delay-ms", &kscandat->deb_clks);
+> +	of_property_read_u32(np, "nxp,scan-delay-ms", &kscandat->scan_delay);
+> +	if (!kscandat->deb_clks || !kscandat->scan_delay) {
+> +		dev_err(&pdev->dev, "debounce or scan delay not specified\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	kscandat->keymap = kzalloc(sizeof(kscandat->keymap[0]) *
+> +				(rows << kscandat->row_shift), GFP_KERNEL);
+> +	if (!kscandat->keymap) {
+> +		dev_err(&pdev->dev, "could not allocate memory for keymap\n");
+> +		return -ENOMEM;
+> +	}
+
+I think this allocation belongs to the probe().
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int __devinit lpc32xx_kscan_probe(struct platform_device *pdev)
+> +{
+> +	struct lpc32xx_kscan_drv *kscandat;
+> +	struct resource *res;
+> +	int error;
+> +	int irq;
+> +
+> +	kscandat = kzalloc(sizeof(struct lpc32xx_kscan_drv), GFP_KERNEL);
+> +	if (!kscandat) {
+> +		dev_err(&pdev->dev, "failed to allocate memory\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "failed to get platform I/O memory\n");
+> +		error = -EBUSY;
+> +		goto out1;
+> +	}
+> +
+> +	res = request_mem_region(res->start, resource_size(res), pdev->name);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "failed to request I/O memory\n");
+> +		error = -EBUSY;
+> +		goto out1;
+> +	}
+> +	kscandat->io_p_start = res->start;
+> +	kscandat->io_p_size = resource_size(res);
+> +
+> +	kscandat->kscan_base = ioremap(res->start, resource_size(res));
+> +	if (!kscandat->kscan_base) {
+> +		dev_err(&pdev->dev, "failed to remap I/O memory\n");
+> +		error = -EBUSY;
+> +		goto out2;
+> +	}
+> +
+> +	/* Get the key scanner clock */
+> +	kscandat->clk = clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(kscandat->clk)) {
+> +		dev_err(&pdev->dev, "failed to get clock\n");
+> +		error = PTR_ERR(kscandat->clk);
+> +		goto out3;
+> +	}
+> +	clk_enable(kscandat->clk);
+
+Why not clk_prepare_enable()? Also I think you need to move it down, to
+where you actually write to the device's registers.
+
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if ((irq < 0) || (irq >= NR_IRQS)) {
+> +		dev_err(&pdev->dev, "failed to get platform irq\n");
+> +		error = -EINVAL;
+> +		goto out4;
+> +	}
+> +	error = request_irq(irq, lpc32xx_kscan_irq, 0, pdev->name, kscandat);
+> +	if (error) {
+> +		dev_err(&pdev->dev, "failed to request irq\n");
+> +		goto out4;
+> +	}
+> +
+> +	kscandat->input = input_allocate_device();
+> +	if (kscandat->input == NULL) {
+> +		dev_err(&pdev->dev, "failed to allocate device\n");
+> +		error = -ENOMEM;
+> +		goto out5;
+> +	}
+
+This might be too late - IRQ is alreday registered and clock is enabled
+- what is to stop interrupts to be delivered? I'd allocate the input
+device together with kscandat structure.
+
+> +
+> +	platform_set_drvdata(pdev, kscandat);
+> +
+> +	error = lpc32xx_parse_dt(pdev);
+> +	if (error) {
+> +		dev_err(&pdev->dev, "failed to parse device tree\n");
+> +		goto out6;
+> +	}
+> +
+> +	/* Setup key input */
+> +	kscandat->input->evbit[0]	= BIT_MASK(EV_KEY);
+> +	kscandat->input->name		= pdev->name;
+> +	kscandat->input->phys		= "matrix-keys/input0";
+> +	kscandat->input->id.vendor	= 0x0001;
+> +	kscandat->input->id.product	= 0x0001;
+> +	kscandat->input->id.version	= 0x0100;
+> +	kscandat->input->open		= lpc32xx_kscan_open;
+> +	kscandat->input->close		= lpc32xx_kscan_close;
+> +	kscandat->input->dev.parent	= &pdev->dev;
+> +
+> +	error = matrix_keypad_build_keymap(NULL, NULL, kscandat->matrix_sz,
+> +					   kscandat->matrix_sz,
+> +					   kscandat->keymap, kscandat->input);
+> +	if (error) {
+> +		dev_err(&pdev->dev, "failed to build keymap\n");
+> +		goto out6;
+> +	}
+> +
+> +	input_set_drvdata(kscandat->input, kscandat);
+> +	input_set_capability(kscandat->input, EV_MSC, MSC_SCAN);
+> +
+> +	error = input_register_device(kscandat->input);
+> +	if (error) {
+> +		dev_err(&pdev->dev, "failed to register input device\n");
+> +		goto out6;
+> +	}
+> +
+
+I think this needs to be done before you register input device as as
+soon as it is registered it may be used.
+
+> +	/* Configure the key scanner */
+> +	writel(kscandat->deb_clks, LPC32XX_KS_DEB(kscandat->kscan_base));
+> +	writel(kscandat->scan_delay, LPC32XX_KS_SCAN_CTL(kscandat->kscan_base));
+> +	writel(LPC32XX_KSCAN_FTST_USE32K_CLK,
+> +	       LPC32XX_KS_FAST_TST(kscandat->kscan_base));
+> +	writel(kscandat->matrix_sz,
+> +	       LPC32XX_KS_MATRIX_DIM(kscandat->kscan_base));
+> +	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
+> +	clk_disable(kscandat->clk);
+
+clk_disable_unprepare()?
+
+> +	return 0;
+> +
+> +out6:
+> +	input_free_device(kscandat->input);
+> +out5:
+> +	free_irq(irq, pdev);
+> +out4:
+> +	clk_disable(kscandat->clk);
+> +	clk_put(kscandat->clk);
+> +out3:
+> +	iounmap(kscandat->kscan_base);
+> +out2:
+> +	release_mem_region(kscandat->io_p_start, kscandat->io_p_size);
+> +out1:
+> +	kfree(kscandat);
+> +
+> +	return error;
+> +}
+> +
+> +static int __devexit lpc32xx_kscan_remove(struct platform_device *pdev)
+> +{
+> +	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
+> +
+> +	input_unregister_device(kscandat->input);
+
+Are we certain it is safe to free input device before freeing IRQ? I see
+we have close(), still I'd feel safer if you swapper unregister and
+free_irq().
+
+> +	free_irq(platform_get_irq(pdev, 0), pdev);
+> +	clk_put(kscandat->clk);
+> +	iounmap(kscandat->kscan_base);
+> +	release_mem_region(kscandat->io_p_start, kscandat->io_p_size);
+> +	kfree(kscandat);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int lpc32xx_kscan_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
+> +
+> +	/* Clear IRQ and disable clock */
+> +	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
+> +	clk_disable_unprepare(kscandat->clk);
+> +
+
+This may race with open()/close(). You need to take input_dev->mutex and
+avoid touching the device if it sis not opened (users == 0).
+
+> +	return 0;
+> +}
+> +
+> +static int lpc32xx_kscan_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
+> +
+> +	/* Enable clock and clear IRQ */
+> +	clk_prepare_enable(kscandat->clk);
+> +	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
+> +
+
+Same here.
+
+Thanks!
+
 -- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
