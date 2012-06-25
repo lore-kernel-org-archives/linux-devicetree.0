@@ -1,209 +1,54 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v2 1/1] of: reform prom_update_property function
-Date: Mon, 25 Jun 2012 16:46:38 +1000
-Message-ID: <1340606798.16104.142.camel@pasglop>
-References: <1340605714-25206-1-git-send-email-b29396@freescale.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v7 02/14] usb: chipidea: drop useless arch-check
+Date: Mon, 25 Jun 2012 14:56:19 +0800
+Message-ID: <1340607391-16380-3-git-send-email-richard.zhao@freescale.com>
+References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340605714-25206-1-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, galak@kernel.crashing.org, paulus@samba.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1340607391-16380-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2012-06-25 at 14:28 +0800, Dong Aisheng wrote:
-> From: Dong Aisheng <dong.aisheng@linaro.org>
-> 
-> prom_update_property() currently fails if the property doesn't
-> actually exist yet which isn't what we want. Change to add-or-update
-> instead of update-only, then we can remove a lot duplicated lines.
-> 
-> Suggested-by: Grant Likely <grant.likely@secretlab.ca>
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> ---
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 
-Grand, should I merge that via the powerpc tree or will you take care of
-it ?
+msm glue layer compiles on all arches just
+fine. Let's drop the unnecessary ARCH check
+so we have easier compile tests.
 
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ drivers/usb/chipidea/Makefile |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Cheers,
-Ben.
+diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+index cc34937..b69900a 100644
+--- a/drivers/usb/chipidea/Makefile
++++ b/drivers/usb/chipidea/Makefile
+@@ -5,10 +5,12 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_UDC)	+= udc.o
+ ci_hdrc-$(CONFIG_USB_CHIPIDEA_HOST)	+= host.o
+ ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
+ 
++# Glue/Bridge layers go here
++
++obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_msm.o
++
++# PCI doesn't provide stubs, need to check
+ ifneq ($(CONFIG_PCI),)
+ 	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_pci.o
+ endif
+ 
+-ifneq ($(CONFIG_ARCH_MSM),)
+-	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_msm.o
+-endif
+-- 
+1.7.9.5
 
-> ChangeLog v1->v2:
-> * keep reconfig.c behavior the same as before after changes
-> ---
->  arch/powerpc/platforms/85xx/p1022_ds.c    |    8 +-------
->  arch/powerpc/platforms/pseries/mobility.c |    8 +-------
->  arch/powerpc/platforms/pseries/reconfig.c |   16 ++++++----------
->  drivers/of/base.c                         |   15 +++++++++++----
->  fs/proc/proc_devtree.c                    |    5 +++++
->  include/linux/of.h                        |    3 +--
->  6 files changed, 25 insertions(+), 30 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/85xx/p1022_ds.c b/arch/powerpc/platforms/85xx/p1022_ds.c
-> index f700c81..d66631c 100644
-> --- a/arch/powerpc/platforms/85xx/p1022_ds.c
-> +++ b/arch/powerpc/platforms/85xx/p1022_ds.c
-> @@ -348,13 +348,7 @@ void __init p1022_ds_pic_init(void)
->   */
->  static void __init disable_one_node(struct device_node *np, struct property *new)
->  {
-> -	struct property *old;
-> -
-> -	old = of_find_property(np, new->name, NULL);
-> -	if (old)
-> -		prom_update_property(np, new, old);
-> -	else
-> -		prom_add_property(np, new);
-> +	prom_update_property(np, new);
->  }
->  
->  /* TRUE if there is a "video=fslfb" command-line parameter. */
-> diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-> index 029a562..dd30b12 100644
-> --- a/arch/powerpc/platforms/pseries/mobility.c
-> +++ b/arch/powerpc/platforms/pseries/mobility.c
-> @@ -67,7 +67,6 @@ static int update_dt_property(struct device_node *dn, struct property **prop,
->  			      const char *name, u32 vd, char *value)
->  {
->  	struct property *new_prop = *prop;
-> -	struct property *old_prop;
->  	int more = 0;
->  
->  	/* A negative 'vd' value indicates that only part of the new property
-> @@ -117,12 +116,7 @@ static int update_dt_property(struct device_node *dn, struct property **prop,
->  	}
->  
->  	if (!more) {
-> -		old_prop = of_find_property(dn, new_prop->name, NULL);
-> -		if (old_prop)
-> -			prom_update_property(dn, new_prop, old_prop);
-> -		else
-> -			prom_add_property(dn, new_prop);
-> -
-> +		prom_update_property(dn, new_prop);
->  		new_prop = NULL;
->  	}
->  
-> diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-> index 7b3bf76..db1b7b1 100644
-> --- a/arch/powerpc/platforms/pseries/reconfig.c
-> +++ b/arch/powerpc/platforms/pseries/reconfig.c
-> @@ -432,7 +432,7 @@ static int do_update_property(char *buf, size_t bufsize)
->  	unsigned char *value;
->  	char *name, *end, *next_prop;
->  	int rc, length;
-> -	struct property *newprop, *oldprop;
-> +	struct property *newprop;
->  	buf = parse_node(buf, bufsize, &np);
->  	end = buf + bufsize;
->  
-> @@ -443,6 +443,9 @@ static int do_update_property(char *buf, size_t bufsize)
->  	if (!next_prop)
->  		return -EINVAL;
->  
-> +	if (!strlen(name)
-> +		return -ENODEV;
-> +
->  	newprop = new_property(name, length, value, NULL);
->  	if (!newprop)
->  		return -ENOMEM;
-> @@ -450,18 +453,11 @@ static int do_update_property(char *buf, size_t bufsize)
->  	if (!strcmp(name, "slb-size") || !strcmp(name, "ibm,slb-size"))
->  		slb_set_size(*(int *)value);
->  
-> -	oldprop = of_find_property(np, name,NULL);
-> -	if (!oldprop) {
-> -		if (strlen(name))
-> -			return prom_add_property(np, newprop);
-> -		return -ENODEV;
-> -	}
-> -
->  	upd_value.node = np;
->  	upd_value.property = newprop;
->  	pSeries_reconfig_notify(PSERIES_UPDATE_PROPERTY, &upd_value);
->  
-> -	rc = prom_update_property(np, newprop, oldprop);
-> +	rc = prom_update_property(np, newprop);
->  	if (rc)
->  		return rc;
->  
-> @@ -486,7 +482,7 @@ static int do_update_property(char *buf, size_t bufsize)
->  
->  		rc = pSeries_reconfig_notify(action, value);
->  		if (rc) {
-> -			prom_update_property(np, oldprop, newprop);
-> +			prom_update_property(np, newprop);
->  			return rc;
->  		}
->  	}
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d9bfd49..a14f109 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1051,7 +1051,8 @@ int prom_remove_property(struct device_node *np, struct property *prop)
->  }
->  
->  /*
-> - * prom_update_property - Update a property in a node.
-> + * prom_update_property - Update a property in a node, if the property does
-> + * not exist, add it.
->   *
->   * Note that we don't actually remove it, since we have given out
->   * who-knows-how-many pointers to the data using get-property.
-> @@ -1059,13 +1060,19 @@ int prom_remove_property(struct device_node *np, struct property *prop)
->   * and add the new property to the property list
->   */
->  int prom_update_property(struct device_node *np,
-> -			 struct property *newprop,
-> -			 struct property *oldprop)
-> +			 struct property *newprop)
->  {
-> -	struct property **next;
-> +	struct property **next, *oldprop;
->  	unsigned long flags;
->  	int found = 0;
->  
-> +	if (!newprop->name)
-> +		return -EINVAL;
-> +
-> +	oldprop = of_find_property(np, newprop->name, NULL);
-> +	if (!oldprop)
-> +		return prom_add_property(np, newprop);
-> +
->  	write_lock_irqsave(&devtree_lock, flags);
->  	next = &np->properties;
->  	while (*next) {
-> diff --git a/fs/proc/proc_devtree.c b/fs/proc/proc_devtree.c
-> index 927cbd1..df7dd08 100644
-> --- a/fs/proc/proc_devtree.c
-> +++ b/fs/proc/proc_devtree.c
-> @@ -101,6 +101,11 @@ void proc_device_tree_update_prop(struct proc_dir_entry *pde,
->  {
->  	struct proc_dir_entry *ent;
->  
-> +	if (!oldprop) {
-> +		proc_device_tree_add_prop(pde, newprop);
-> +		return;
-> +	}
-> +
->  	for (ent = pde->subdir; ent != NULL; ent = ent->next)
->  		if (ent->data == oldprop)
->  			break;
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 2ec1083..b27c871 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -260,8 +260,7 @@ extern int of_machine_is_compatible(const char *compat);
->  extern int prom_add_property(struct device_node* np, struct property* prop);
->  extern int prom_remove_property(struct device_node *np, struct property *prop);
->  extern int prom_update_property(struct device_node *np,
-> -				struct property *newprop,
-> -				struct property *oldprop);
-> +				struct property *newprop);
->  
->  #if defined(CONFIG_OF_DYNAMIC)
->  /* For updating the device tree at runtime */
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
