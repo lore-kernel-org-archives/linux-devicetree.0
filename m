@@ -1,66 +1,113 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] mtd/m25p80: add device tree probe support
-Date: Mon, 25 Jun 2012 18:50:10 +0200
-Message-ID: <201206251850.10839.marex@denx.de>
-References: <1311601063-16581-1-git-send-email-shawn.guo@linaro.org>
- <201206251801.22385.marex@denx.de>
- <20120625161506.GH2342@S2101-09.ap.freescale.net>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Mon, 25 Jun 2012 11:51:05 -0500
+Message-ID: <4FE896F9.2020806@ti.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206090004.10086.arnd@arndb.de> <4FD914F6.6000402@ti.com> <201206141148.20371.arnd@arndb.de> <4FE4F718.3080204@ti.com> <20120622231222.GB2426@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120625161506.GH2342-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120622231222.GB2426@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Jassi Brar <jaswinder.singh@linaro.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, dan.j.williams@intel.com, vinod.koul@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Shawn Guo,
+Hi Russell,
 
-> On Mon, Jun 25, 2012 at 06:01:22PM +0200, Marek Vasut wrote:
-> > Dear Shawn Guo,
-> > 
-> > > On Sat, Jun 23, 2012 at 04:15:18AM +0200, Marek Vasut wrote:
-> > > > So is there any particular reason why this wasn't applied?
-> > > 
-> > > Let me remind Artem by resending the patch tomorrow.
-> > 
-> > Actually ... the SPI does have the heuristics to probe this chip without
-> > the patch. But there was this discussion about them eventually being
-> > removed. That was a point raised by you I think. Is that still valid?
+On 06/22/2012 06:12 PM, Russell King - ARM Linux wrote:
+> Before this goes much further... one fairly obvious and important point
+> must be made.
 > 
-> That was a point raised by Grant.  IIRC, the reason I made the patch
-> is my system does not probe the device without the patch.  I can
-> retest, and if it's true that the patch is not necessarily needed,
-> I will probably let it be.
+> You're designing an API here.  You're designing it *WITHOUT* involving
+> the two most important people in its design that there are.  The
+> DMA engine maintainers.  Is this how we go about designing APIs - behind
+> maintainers backs and then presenting it to the maintainers as a fait
+> accompli?
 
-116                         ssp2: ssp@80014000 {
-117                                 #address-cells = <1>;
-118                                 #size-cells = <0>;
-119                                 compatible = "fsl,imx28-spi";
-120                                 pinctrl-names = "default";
-121                                 pinctrl-0 = <&spi2_pins_a>;
-122                                 status = "okay";
-123 
-124                                 flash: m25p80@0 {
-125                                         #address-cells = <1>;
-126                                         #size-cells = <1>;
-127                                         compatible = "m25p80";
-128                                         spi-max-frequency = <25000000>;
-129                                         reg = <0>;
-130                                 };
-131                         };
+Absolutely not, this was not the intent and your point is well
+understood. I have added Dan and Vinod, and will ensure that he is added
+in future.
 
-I use this + my SPI patches I submitted recently.
+> There's 86 messages in this thread, none of which have been copied to
+> them in any way.  Why aren't they involved?
 
-Best regards,
-Marek Vasut
+Initially this binding was not dma-engine centric. However, I should
+have included them in this version from the beginning as I had evolved
+it in that direction.
+
+Dan, Vinod, in this thread we have been discussing the addition of a
+generic device-tree binding for DMA controllers. In the below, we were
+discussing the addition of a device-tree API, which would work as a
+wrapper to the dma-engine dma_request_channel() API. I apologise for
+adding you late into the discussion. If you have any questions/comments
+let me know.
+
+Jon
+
+> On Fri, Jun 22, 2012 at 05:52:08PM -0500, Jon Hunter wrote:
+>> Hi Arnd,
+>>
+>> On 06/14/2012 06:48 AM, Arnd Bergmann wrote:
+>>
+>> [snip]
+>>
+>>> This would let us handle the following cases very easily:
+>>>
+>>> 1. one read-write channel
+>>>
+>>> 	dmas = <&dmac 0x3 match>;
+>>>
+>>> 2. a choice of two read-write channels:
+>>>
+>>> 	dmas = <&dmacA 0x3 matchA>, <&dmacB 0x3 matchB>;
+>>>
+>>> 3. one read-channel, one write channel:
+>>>
+>>> 	dmas = <&dmac 0x1 match-read>, <&dmac 0x2 match-write>;
+>>>
+>>> 4. a choice of two read channels and one write channel:
+>>>
+>>> 	dmas = <&dmacA 0x1 match-readA>, <&dmacA 0x2 match-write> 
+>>> 			<&dmacB match-readB>;
+>>>
+>>> And only the cases where we have more multiple channels that differ
+>>> in more aspects would require named properties:
+>>>
+>>> 5. two different channels
+>>>
+>>> 	dmas = <&dmac 0x3 match-rwdata>, <&dmac 0x1 match-status>;
+>>> 	dma-names = "rwdata", "status";
+>>>
+>>> 6. same as 5, but with a choice of channels:
+>>>
+>>> 	dmas = <&dmacA 0x3 match-rwdataA>, <&dmacA 0x1 match-status>;
+>>> 		<dmacB 0x3 match-rwdataB>;
+>>> 	dma-names = "rwdata", "status", "rwdata";
+>>>
+>>>
+>>> With a definition like that, we can implement a very simple device
+>>> driver interface for the common cases, and a slightly more complex
+>>> one for the more complex cases:
+>>>
+>>> 1. chan = of_dma_request_channel(dev->of_node, 0);
+>>> 2. chan = of_dma_request_channel(dev->of_node, 0);
+>>> 3. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
+>>>    txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
+>>> 4. rxchan = of_dma_request_channel(dev->of_node, DMA_MEM_TO_DEV);
+>>>    txchan = of_dma_request_channel(dev->of_node, DMA_DEV_TO_MEM);
+>>> 5. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
+>>>    auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
+>>> 6. chan = of_dma_request_named_channel(dev->of_node, "rwdata", 0);
+>>>    auxchan = of_dma_request_named_channel(dev->of_node, "status", DMA_DEV_TO_MEM);
+>>
+>> In the above examples, did you imply that the of_dma_request_channel()
+>> function would return a type of "struct dma_chan" and so be calling
+>> dma_request_channel() underneath?
+>>
+>> I am been prototyping something, but wanted to make sure I am completely
+>> aligned on this :-)
+>>
+>> Cheers
+>> Jon
+
