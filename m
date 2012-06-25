@@ -1,67 +1,111 @@
-From: "Michal Nazarewicz" <mina86@mina86.com>
-Subject: Re: [RFC 2/2] usb: gadget: composite: parse dt overrides
-Date: Mon, 25 Jun 2012 23:30:36 +0200
-Message-ID: <op.wgg91aya3l0zgt@mpn-glaptop>
-References: <1340655832-30447-1-git-send-email-aletes.xgr@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 1/4] netdev/phy: Handle IEEE802.3 clause 45 Ethernet
+ PHYs
+Date: Mon, 25 Jun 2012 15:34:40 -0700 (PDT)
+Message-ID: <20120625.153440.17010814246237639.davem@davemloft.net>
+References: <1340411056-18988-1-git-send-email-ddaney.cavm@gmail.com>
+	<1340411056-18988-2-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed	delsp=yes
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340655832-30447-1-git-send-email-aletes.xgr@gmail.com>
+In-Reply-To: <1340411056-18988-2-git-send-email-ddaney.cavm@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+To: ddaney.cavm@gmail.com
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, david.daney@cavium.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jun 2012 22:23:52 +0200, Alexandre Pereira da Silva <aletes.=
-xgr@gmail.com> wrote:
-> Grab the devicetree node properties to override VendorId, ProductId,
-> bcdDevice, Manucacturer, Product and SerialNumber
->
-> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+From: David Daney <ddaney.cavm@gmail.com>
+Date: Fri, 22 Jun 2012 17:24:13 -0700
 
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
+> From: David Daney <david.daney@cavium.com>
+> 
+> The IEEE802.3 clause 45 MDIO bus protocol allows for directly
+> addressing PHY registers using a 21 bit address, and is used by many
+> 10G Ethernet PHYS.  Already existing is the ability of MDIO bus
+> drivers to use clause 45, with the MII_ADDR_C45 flag.  Here we add
+> struct phy_c45_device_ids to hold the device identifier registers
+> present in clause 45. struct phy_device gets a couple of new fields:
+> c45_ids to hold the identifiers and is_c45 to signal that it is clause
+> 45.
+> 
+> Normally the MII_ADDR_C45 flag is ORed with the register address to
+> indicate a clause 45 transaction.  Here we also use this flag in the
+> *device* address passed to get_phy_device() to indicate that probing
+> should be done with clause 45 transactions.
+> 
+> EXPORT phy_device_create() so that the follow-on patch to of_mdio.c
+> can use it to create phy devices for PHYs, that have non-standard
+> device identifier registers, based on the device tree bindings.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-> @@ -1470,6 +1472,35 @@ static int composite_bind(struct usb_gadget *g=
-adget)
-> 	cdev->desc =3D *composite->dev;
->+	/* grab overrides from devicetree */
-> +	if (np) {
-> +		u32 reg;
-> +
-> +		if (!idVendor &&
-> +			of_property_read_u32(np, "vendor_id", &reg) =3D=3D 0)
-> +			idVendor =3D reg;
-> +
-> +		if (!idProduct &&
-> +			of_property_read_u32(np, "product_id", &reg) =3D=3D 0)
-> +			idProduct =3D reg;
-> +
-> +		if (!bcdDevice &&
-> +			of_property_read_u32(np, "bcd_device", &reg) =3D=3D 0)
-> +			bcdDevice =3D reg;
-> +
-> +		if (!iManufacturer)
-> +			of_property_read_string(np, "manufacturer",
-> +				&iManufacturer);
-> +
-> +		if (!iProduct)
-> +			of_property_read_string(np, "product",
-> +				&iProduct);
-> +
-> +		if (!iSerialNumber)
-> +			of_property_read_string(np, "serial_number",
-> +				&iSerialNumber);
-> +	}
-> +
->  	/* standardized runtime overrides for device ID data */
->  	if (idVendor)
->  		cdev->desc.idVendor =3D cpu_to_le16(idVendor);
+I see no value in having two ways to say that clause-45 transactions
+should be used.
 
+Either make it a PHY device attribute, or specify it in the address
+in the register accesses, but not both.
 
---=20
-Best regards,                                         _     _
-=2Eo. | Liege of Serenely Enlightened Majesty of      o' \,=3D./ `o
-=2E.o | Computer Science,  Micha=C5=82 =E2=80=9Cmina86=E2=80=9D Nazarew=
-icz    (o o)
-ooo +----<email/xmpp: mpn@google.com>--------------ooO--(_)--Ooo--
+Also your patch is full of coding style errors, I simply couldn't
+stomache applying this even if I agreed with the substance of the
+changes:
+
+> +	     i < ARRAY_SIZE(c45_ids->device_ids) &&
+> +		     c45_ids->devices_in_package == 0;
+
+c45_ids on the second line should line up with the initial 'i'
+on the first line.
+
+> +		c45_ids->devices_in_package = (phy_reg & 0xffff) << 16;
+> +
+> +
+> +		reg_addr = MII_ADDR_C45 | i << 16 | 5;
+
+There is not reason in the world to have two empty lines there, it
+looks awful.
+
+> +		/*
+> +		 * If mostly Fs, there is no device there,
+> +		 * let's get out of here.
+> +		 */
+
+Format comments:
+
+	/* Like
+	 * this.
+	 */
+
+Not.
+
+	/*
+	 * Like
+	 * this.
+	 */
+
+> +		c45_ids->device_ids[i] = (phy_reg & 0xffff) << 16;
+> +
+> +
+> +		reg_addr = MII_ADDR_C45 | i << 16 | MII_PHYSID2;
+
+Two empty lines.  This is extremely irritating, it looks like you
+had some kind of debugging code here and then were very lazy about
+removing it.
+
+> +/*
+> + * Or MII_ADDR_C45 into regnum for read/write on mii_bus to enable the
+> + * 21 bit IEEE 802.3ae clause 45 addressing mode used by 10GIGE phy
+> + * chips.  Also may be ORed into the device address in
+> + * get_phy_device().
+> + */
+
+Comment formatting.
+
+> +/*
+> + * phy_c45_device_ids: 802.3-c45 Device Identifiers
+> + *
+> + * devices_in_package: Bit vector of devices present.
+> + * device_ids: The device identifer for each present device.
+> + */
+
+If you're going to list the struct members use the correct kerneldoc
+format to do so.
