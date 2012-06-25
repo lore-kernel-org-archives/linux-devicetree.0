@@ -1,219 +1,49 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6 07/14] USB: Chipidea: add unified
- ci13xxx_{add,remove}_device for platform drivers
-Date: Mon, 25 Jun 2012 11:08:24 +0800
-Message-ID: <20120625030823.GC4384@b20223-02.ap.freescale.net>
-References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com>
- <1340260875-21934-8-git-send-email-richard.zhao@freescale.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Fix compilation warning/error in setprop_inplace.c
+Date: Mon, 25 Jun 2012 12:56:48 +1000
+Message-ID: <20120625025648.GB24695@truffala.fritz.box>
+References: <1339534092-27377-1-git-send-email-swarren@wwwdotorg.org>
+ <20120613023152.GJ6614@truffala.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1340260875-21934-8-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+In-Reply-To: <20120613023152.GJ6614-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2012 at 02:41:08PM +0800, Richard Zhao wrote:
-> Platform drivers do the similar things to add/remove ci13xxx device, so
-> create a unified one.
-> 
-> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  drivers/usb/chipidea/ci13xxx_msm.c |   34 ++++++----------------------
->  drivers/usb/chipidea/ci13xxx_pci.c |   34 +++++-----------------------
->  drivers/usb/chipidea/core.c        |   43 ++++++++++++++++++++++++++++++++++++
->  include/linux/usb/chipidea.h       |    7 ++++++
->  4 files changed, 63 insertions(+), 55 deletions(-)
-> 
-> diff --git a/drivers/usb/chipidea/ci13xxx_msm.c b/drivers/usb/chipidea/ci13xxx_msm.c
-> index a7dd9f1..92bfe36 100644
-> --- a/drivers/usb/chipidea/ci13xxx_msm.c
-> +++ b/drivers/usb/chipidea/ci13xxx_msm.c
-> @@ -58,50 +58,30 @@ static struct ci13xxx_platform_data ci13xxx_msm_platdata = {
->  static int __devinit ci13xxx_msm_probe(struct platform_device *pdev)
->  {
->  	struct platform_device *plat_ci;
-> -	int ret;
->  
->  	dev_dbg(&pdev->dev, "ci13xxx_msm_probe\n");
->  
-> -	plat_ci = platform_device_alloc("ci_hdrc", -1);
-> -	if (!plat_ci) {
-> -		dev_err(&pdev->dev, "can't allocate ci_hdrc platform device\n");
-> -		return -ENOMEM;
-> +	plat_ci = ci13xxx_add_device(&pdev->dev,
-> +				pdev->resource, pdev->num_resources,
-> +				&ci13xxx_msm_platdata);
-> +	if (IS_ERR(plat_ci)) {
-> +		dev_err(&pdev->dev, "ci13xxx_add_device failed!\n");
-> +		return PTR_ERR(plat_ci);
->  	}
->  
-> -	ret = platform_device_add_resources(plat_ci, pdev->resource,
-> -					    pdev->num_resources);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "can't add resources to platform device\n");
-> -		goto put_platform;
-> -	}
-> -
-> -	ret = platform_device_add_data(plat_ci, &ci13xxx_msm_platdata,
-> -				       sizeof(ci13xxx_msm_platdata));
-> -	if (ret)
-> -		goto put_platform;
-> -
-> -	ret = platform_device_add(plat_ci);
-> -	if (ret)
-> -		goto put_platform;
-> -
->  	platform_set_drvdata(pdev, plat_ci);
->  
->  	pm_runtime_no_callbacks(&pdev->dev);
->  	pm_runtime_enable(&pdev->dev);
->  
->  	return 0;
-> -
-> -put_platform:
-> -	platform_device_put(plat_ci);
-> -
-> -	return ret;
->  }
->  
->  static int __devexit ci13xxx_msm_remove(struct platform_device *pdev)
->  {
->  	struct platform_device *plat_ci = platform_get_drvdata(pdev);
->  
-> -	platform_device_unregister(plat_ci);
-> +	ci13xxx_remove_device(plat_ci);
->  
->  	return 0;
->  }
-> diff --git a/drivers/usb/chipidea/ci13xxx_pci.c b/drivers/usb/chipidea/ci13xxx_pci.c
-> index cdcac3a..918e149 100644
-> --- a/drivers/usb/chipidea/ci13xxx_pci.c
-> +++ b/drivers/usb/chipidea/ci13xxx_pci.c
-> @@ -75,13 +75,6 @@ static int __devinit ci13xxx_pci_probe(struct pci_dev *pdev,
->  	pci_set_master(pdev);
->  	pci_try_set_mwi(pdev);
->  
-> -	plat_ci = platform_device_alloc("ci_hdrc", -1);
-> -	if (!plat_ci) {
-> -		dev_err(&pdev->dev, "can't allocate ci_hdrc platform device\n");
-> -		retval = -ENOMEM;
-> -		goto disable_device;
-> -	}
-> -
->  	memset(res, 0, sizeof(res));
->  	res[0].start	= pci_resource_start(pdev, 0);
->  	res[0].end	= pci_resource_end(pdev, 0);
-> @@ -89,32 +82,17 @@ static int __devinit ci13xxx_pci_probe(struct pci_dev *pdev,
->  	res[1].start	= pdev->irq;
->  	res[1].flags	= IORESOURCE_IRQ;
->  
-> -	retval = platform_device_add_resources(plat_ci, res, nres);
-> -	if (retval) {
-> -		dev_err(&pdev->dev, "can't add resources to platform device\n");
-> -		goto put_platform;
-> +	plat_ci = ci13xxx_add_device(&pdev->dev, res, nres, platdata);
-> +	if (IS_ERR(plat_ci)) {
-> +		dev_err(&pdev->dev, "ci13xxx_add_device failed!\n");
-> +		retval = PTR_ERR(plat_ci);
-> +		goto disable_device;
->  	}
->  
-> -	retval = platform_device_add_data(plat_ci, platdata, sizeof(*platdata));
-> -	if (retval)
-> -		goto put_platform;
-> -
-> -	dma_set_coherent_mask(&plat_ci->dev, pdev->dev.coherent_dma_mask);
-> -	plat_ci->dev.dma_mask = pdev->dev.dma_mask;
-> -	plat_ci->dev.dma_parms = pdev->dev.dma_parms;
-> -	plat_ci->dev.parent = &pdev->dev;
-> -
->  	pci_set_drvdata(pdev, plat_ci);
->  
-> -	retval = platform_device_add(plat_ci);
-> -	if (retval)
-> -		goto put_platform;
-> -
->  	return 0;
->  
-> - put_platform:
-> -	pci_set_drvdata(pdev, NULL);
-> -	platform_device_put(plat_ci);
->   disable_device:
->  	pci_disable_device(pdev);
->   done:
-> @@ -133,7 +111,7 @@ static void __devexit ci13xxx_pci_remove(struct pci_dev *pdev)
->  {
->  	struct platform_device *plat_ci = pci_get_drvdata(pdev);
->  
-> -	platform_device_unregister(plat_ci);
-> +	ci13xxx_remove_device(plat_ci);
->  	pci_set_drvdata(pdev, NULL);
->  	pci_disable_device(pdev);
->  }
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> index 9a883bd..8eccd1b 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -332,6 +332,49 @@ static irqreturn_t ci_irq(int irq, void *data)
->  	return ci->role == CI_ROLE_END ? ret : ci_role(ci)->irq(ci);
->  }
->  
-> +struct platform_device *ci13xxx_add_device(struct device *dev,
-> +			struct resource *res, int nres,
-> +			struct ci13xxx_platform_data *platdata)
-> +{
-> +	struct platform_device *pdev;
-> +	int ret;
-> +
-> +	/* FIXME: find a way to choose id */
-> +	pdev = platform_device_alloc("ci_hdrc", -1);
-> +	if (!pdev)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	pdev->dev.parent = dev;
-> +	pdev->dev.dma_mask = dev->dma_mask;
-> +	pdev->dev.dma_parms = dev->dma_parms;
-> +	dma_set_coherent_mask(&pdev->dev, dev->coherent_dma_mask);
-> +
-> +	ret = platform_device_add_resources(pdev, res, nres);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = platform_device_add_data(pdev, platdata, sizeof(*platdata));
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = platform_device_add(pdev);
-> +	if (ret)
-> +		goto err;
-> +
-> +	return pdev;
-> +
-> +err:
-> +	platform_device_put(pdev);
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(ci13xxx_add_device);
-> +
-> +void ci13xxx_remove_device(struct platform_device *pdev)
-> +{
-> +	platform_device_put(pdev);
-It's supposed to be
-	platform_device_unregister(pdev);
-
-Thanks
-Richard
-> +}
-> +EXPORT_SYMBOL_GPL(ci13xxx_remove_device);
- 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBKdW4gMTMsIDIwMTIgYXQgMTI6MzE6NTJQTSArMTAwMCwgRGF2aWQgR2lic29uIHdy
+b3RlOgo+IE9uIFR1ZSwgSnVuIDEyLCAyMDEyIGF0IDAyOjQ4OjEyUE0gLTA2MDAsIFN0ZXBoZW4g
+V2FycmVuIHdyb3RlOgo+ID4gRnJvbTogU3RlcGhlbiBXYXJyZW4gPHN3YXJyZW5AbnZpZGlhLmNv
+bT4KPiA+IAo+ID4gV2hlbiBjb21waWxpbmcgdGhlIGN1cnJlbnQgY29kZS1iYXNlIHdpdGggZ2Nj
+IDQuNi4xLCB0aGUgZm9sbG93aW5nIHdhcm5pbmcKPiA+IGlzIHJhaXNlZCwgd2hpY2ggaXMgaW50
+ZXJwcmV0ZWQgYXMgYW4gZXJyb3I6Cj4gPiAKPiA+IGNjMTogd2FybmluZ3MgYmVpbmcgdHJlYXRl
+ZCBhcyBlcnJvcnMKPiA+IHRlc3RzL3NldHByb3BfaW5wbGFjZS5jOiBJbiBmdW5jdGlvbiDigJht
+YWlu4oCZOgo+ID4gdGVzdHMvc2V0cHJvcF9pbnBsYWNlLmM6NjI6IGVycm9yOiBmb3JtYXQg4oCY
+JTAxNmxseOKAmSBleHBlY3RzIHR5cGUg4oCYbG9uZyBsb25nIHVuc2lnbmVkIGludOKAmSwgYnV0
+IGFyZ3VtZW50IDIgaGFzIHR5cGUg4oCYdWludDY0X3TigJkKPiA+IHRlc3RzL3NldHByb3BfaW5w
+bGFjZS5jOjY4OiBlcnJvcjogZm9ybWF0IOKAmCUwMTZsbHjigJkgZXhwZWN0cyB0eXBlIOKAmGxv
+bmcgbG9uZyB1bnNpZ25lZCBpbnTigJksIGJ1dCBhcmd1bWVudCAyIGhhcyB0eXBlIOKAmHVpbnQ2
+NF904oCZCj4gPiAKPiA+IFVzZSBwcmludGYgZm9ybWF0IHNwZWNpZmllcnMgZnJvbSA8aW50dHlw
+ZXMuaD4gdG8gc29sdmUgdGhpcy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogU3RlcGhlbiBXYXJy
+ZW4gPHN3YXJyZW5AbnZpZGlhLmNvbT4KPiAKPiBBY2tlZC1ieTogRGF2aWQgR2lic29uIDxkYXZp
+ZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+CgpKb24/CgpQbGVhc2UgYXBwbHkuLi4KCgotLSAKRGF2
+aWQgR2lic29uCQkJfCBJJ2xsIGhhdmUgbXkgbXVzaWMgYmFyb3F1ZSwgYW5kIG15IGNvZGUKZGF2
+aWQgQVQgZ2lic29uLmRyb3BiZWFyLmlkLmF1CXwgbWluaW1hbGlzdCwgdGhhbmsgeW91LiAgTk9U
+IF90aGVfIF9vdGhlcl8KCQkJCXwgX3dheV8gX2Fyb3VuZF8hCmh0dHA6Ly93d3cub3psYWJzLm9y
+Zy9+ZGdpYnNvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0
+cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVl
+LWRpc2N1c3MK
