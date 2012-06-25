@@ -1,61 +1,31 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH RESEND] input: gpio_keys_polled: convert to dt
-Date: Mon, 25 Jun 2012 01:03:48 -0700
-Message-ID: <20120625080348.GI13876@core.coreip.homeip.net>
-References: <1340192062-10565-1-git-send-email-aletes.xgr@gmail.com>
- <20120621091833.GH2193@core.coreip.homeip.net>
- <CAAAP30GsU1wy87QJjcctpu-=uYH6O0XEikMs5GeGDsz-gvwsZQ@mail.gmail.com>
+From: Roland Stigge <stigge@antcom.de>
+Subject: Re: [PATCH v6] input: keyboard: Add keys driver for the LPC32xx SoC
+Date: Mon, 25 Jun 2012 11:32:13 +0200
+Message-ID: <4FE8301D.9050108@antcom.de>
+References: <1340549078-8973-1-git-send-email-stigge@antcom.de> <20120625070614.GA13876@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAAP30GsU1wy87QJjcctpu-=uYH6O0XEikMs5GeGDsz-gvwsZQ@mail.gmail.com>
+In-Reply-To: <20120625070614.GA13876@core.coreip.homeip.net>
 Sender: linux-input-owner@vger.kernel.org
-To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, JJ Ding <dgdunix@gmail.com>, Roland Stigge <stigge@antcom.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, aletes.xgr@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2012 at 08:37:18AM -0300, Alexandre Pereira da Silva wr=
-ote:
-> On Thu, Jun 21, 2012 at 6:18 AM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >> @@ -38,7 +40,7 @@ struct gpio_keys_button_data {
-> >> =A0struct gpio_keys_polled_dev {
-> >> =A0 =A0 =A0 struct input_polled_dev *poll_dev;
-> >> =A0 =A0 =A0 struct device *dev;
-> >> - =A0 =A0 struct gpio_keys_platform_data *pdata;
-> >> + =A0 =A0 struct gpio_keys_platform_data pdata;
-> >
-> > I am not sure why this change is needed. Also it seems that the dri=
-ver
-> > leaks DT-created pdata on unload.
->=20
-> Pdata is now a member of gpio_keys_polled_dev now and that one is
-> kzalloc'ed at probe and kfree'd at the removal and errors. I see no
-> leaks there.
+Hi Dmitry!
 
-Ah, I missed that you used on-stack instance to hold parsed DT data...
+On 06/25/2012 09:06 AM, Dmitry Torokhov wrote:
+> On Sun, Jun 24, 2012 at 04:44:38PM +0200, Roland Stigge wrote:
+>> This patch adds a driver for the key scan interface of the LPC32xx SoC
+>>
+>> Signed-off-by: Roland Stigge <stigge@antcom.de>
+>>
+> 
+> This looks _very_ good, I just have a couple more comments:
 
->=20
-> I could kzalloc and kfree gpio_keys_polled_dev independently instead,
-> to avoid all those pointer changes if you think it's better.
->=20
-> This is mostly a clone from the dt handling in gpio_keys, and
-> comparing both now,
-> I see that it will leak on pdata->buttons, so I will fix that.
->=20
-> >> +
-> >> +#define gpio_keys_polled_of_match NULL
-> >
-> > Please use of_match_ptr() instead.
->=20
-> Thanks for the suggestion, I will implement that.
+Thanks for reviewing!
 
---=20
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think I'm addressing all of those points in my v7 patch.
+
+Roland
