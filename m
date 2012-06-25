@@ -1,38 +1,76 @@
-From: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC 1/2] usb: gadget: lpc32xx_udc: Propagate devicetree information
-Date: Mon, 25 Jun 2012 17:21:43 -0300
-Message-ID: <1340655704-30398-2-git-send-email-aletes.xgr@gmail.com>
-References: <1340655704-30398-1-git-send-email-aletes.xgr@gmail.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1340655704-30398-1-git-send-email-aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Subject: [RFC 2/2] usb: gadget: composite: parse dt overrides
+Date: Mon, 25 Jun 2012 17:23:52 -0300
+Message-ID: <1340655832-30447-1-git-send-email-aletes.xgr@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Fills the gadget.dev.of_node, so gadget drivers can use devicetree nodes
+Grab the devicetree node properties to override VendorId, ProductId,
+bcdDevice, Manucacturer, Product and SerialNumber
 
-Signed-off-by: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 ---
- drivers/usb/gadget/lpc32xx_udc.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/composite.c |   31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/usb/gadget/lpc32xx_udc.c b/drivers/usb/gadget/lpc32xx_udc.c
-index 93a901b..551c0e9 100644
---- a/drivers/usb/gadget/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/lpc32xx_udc.c
-@@ -3005,6 +3005,7 @@ static int lpc32xx_start(struct usb_gadget_driver *driver,
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 390749b..f3b480e 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -17,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/device.h>
+ #include <linux/utsname.h>
++#include <linux/of.h>
  
- 	udc->driver = driver;
- 	udc->gadget.dev.driver = &driver->driver;
-+	udc->gadget.dev.of_node = udc->dev->of_node;
- 	udc->enabled = 1;
- 	udc->selfpowered = 1;
- 	udc->vbus = 0;
+ #include <linux/usb/composite.h>
+ #include <asm/unaligned.h>
+@@ -1423,6 +1424,7 @@ static int composite_bind(struct usb_gadget *gadget)
+ {
+ 	struct usb_composite_dev	*cdev;
+ 	int				status = -ENOMEM;
++	struct device_node		*np = gadget->dev.of_node;
+ 
+ 	cdev = kzalloc(sizeof *cdev, GFP_KERNEL);
+ 	if (!cdev)
+@@ -1470,6 +1472,35 @@ static int composite_bind(struct usb_gadget *gadget)
+ 
+ 	cdev->desc = *composite->dev;
+ 
++	/* grab overrides from devicetree */
++	if (np) {
++		u32 reg;
++
++		if (!idVendor &&
++			of_property_read_u32(np, "vendor_id", &reg) == 0)
++			idVendor = reg;
++
++		if (!idProduct &&
++			of_property_read_u32(np, "product_id", &reg) == 0)
++			idProduct = reg;
++
++		if (!bcdDevice &&
++			of_property_read_u32(np, "bcd_device", &reg) == 0)
++			bcdDevice = reg;
++
++		if (!iManufacturer)
++			of_property_read_string(np, "manufacturer",
++				&iManufacturer);
++
++		if (!iProduct)
++			of_property_read_string(np, "product",
++				&iProduct);
++
++		if (!iSerialNumber)
++			of_property_read_string(np, "serial_number",
++				&iSerialNumber);
++	}
++
+ 	/* standardized runtime overrides for device ID data */
+ 	if (idVendor)
+ 		cdev->desc.idVendor = cpu_to_le16(idVendor);
 -- 
 1.7.10
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
