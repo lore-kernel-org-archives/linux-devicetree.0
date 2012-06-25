@@ -1,94 +1,33 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC 2/2] usb: gadget: composite: parse dt overrides
-Date: Mon, 25 Jun 2012 18:49:31 -0500
-Message-ID: <4FE8F90B.2010303@gmail.com>
-References: <1340655832-30447-1-git-send-email-aletes.xgr@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 1/4] netdev/phy: Handle IEEE802.3 clause 45 Ethernet
+ PHYs
+Date: Mon, 25 Jun 2012 16:50:51 -0700 (PDT)
+Message-ID: <20120625.165051.1449022290472192376.davem@davemloft.net>
+References: <4FE8F01B.2020207@gmail.com>
+        <20120625.163355.2058784474741116830.davem@davemloft.net>
+        <4FE8F8D8.1050009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340655832-30447-1-git-send-email-aletes.xgr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <4FE8F8D8.1050009@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: ddaney.cavm@gmail.com
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, david.daney@cavium.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2012 03:23 PM, Alexandre Pereira da Silva wrote:
-> Grab the devicetree node properties to override VendorId, ProductId,
-> bcdDevice, Manucacturer, Product and SerialNumber
-> 
-> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-> ---
->  drivers/usb/gadget/composite.c |   31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
+From: David Daney <ddaney.cavm@gmail.com>
+Date: Mon, 25 Jun 2012 16:48:40 -0700
 
-Are these bindings documented? I think they should be less generic.
-Perhaps prefixed with 'usb-'.
+> Therefore, I am going to propose that we add a 'flags' parameter to
+> get_phy_device() and change the (two) callers.
 
-> 
-> diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-> index 390749b..f3b480e 100644
-> --- a/drivers/usb/gadget/composite.c
-> +++ b/drivers/usb/gadget/composite.c
-> @@ -17,6 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/device.h>
->  #include <linux/utsname.h>
-> +#include <linux/of.h>
->  
->  #include <linux/usb/composite.h>
->  #include <asm/unaligned.h>
-> @@ -1423,6 +1424,7 @@ static int composite_bind(struct usb_gadget *gadget)
->  {
->  	struct usb_composite_dev	*cdev;
->  	int				status = -ENOMEM;
-> +	struct device_node		*np = gadget->dev.of_node;
->  
->  	cdev = kzalloc(sizeof *cdev, GFP_KERNEL);
->  	if (!cdev)
-> @@ -1470,6 +1472,35 @@ static int composite_bind(struct usb_gadget *gadget)
->  
->  	cdev->desc = *composite->dev;
->  
-> +	/* grab overrides from devicetree */
-
-Reading the code, it looks more like the DT entries are defaults rather
-than overrides.
-
-> +	if (np) {
-> +		u32 reg;
-> +
-> +		if (!idVendor &&
-> +			of_property_read_u32(np, "vendor_id", &reg) == 0)
-> +			idVendor = reg;
-
-if (!idVendor)
-	of_property_read_u32(np, "vendor_id", &idVendor);
-
-Rob
-
-> +
-> +		if (!idProduct &&
-> +			of_property_read_u32(np, "product_id", &reg) == 0)
-> +			idProduct = reg;
-> +
-> +		if (!bcdDevice &&
-> +			of_property_read_u32(np, "bcd_device", &reg) == 0)
-> +			bcdDevice = reg;
-> +
-> +		if (!iManufacturer)
-> +			of_property_read_string(np, "manufacturer",
-> +				&iManufacturer);
-> +
-> +		if (!iProduct)
-> +			of_property_read_string(np, "product",
-> +				&iProduct);
-> +
-> +		if (!iSerialNumber)
-> +			of_property_read_string(np, "serial_number",
-> +				&iSerialNumber);
-> +	}
-> +
->  	/* standardized runtime overrides for device ID data */
->  	if (idVendor)
->  		cdev->desc.idVendor = cpu_to_le16(idVendor);
+Since there is only one flag, make it simply a bool for now.
