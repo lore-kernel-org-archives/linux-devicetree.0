@@ -1,69 +1,79 @@
 From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v7 04/14] usb: chipidea: msm: add remove method
-Date: Mon, 25 Jun 2012 14:56:21 +0800
-Message-ID: <1340607391-16380-5-git-send-email-richard.zhao@freescale.com>
-References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com>
+Subject: [PATCH v7 00/14] add imx usb driver based on Greg next tree
+Date: Mon, 25 Jun 2012 14:56:17 +0800
+Message-ID: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1340607391-16380-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+The work is based on  ci13xxx rework done by Alexander Shishkin.
 
-allow this driver to be removed too.
+To let Greg pick up, I also added patches Alex queued that I depends on.
+Patch #1 - #9 : It can also be found at
+http://github.com/virtuoso/linux-ci.git ci
 
-Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/usb/chipidea/ci13xxx_msm.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+This patch series can also be found at:
+https://github.com/riczhao/kernel-imx/commits/topics/usb-driver
 
-diff --git a/drivers/usb/chipidea/ci13xxx_msm.c b/drivers/usb/chipidea/ci13xxx_msm.c
-index 8d438b8..68512d4 100644
---- a/drivers/usb/chipidea/ci13xxx_msm.c
-+++ b/drivers/usb/chipidea/ci13xxx_msm.c
-@@ -84,6 +84,8 @@ static int __devinit ci13xxx_msm_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto put_platform;
- 
-+	platform_set_drvdata(pdev, plat_ci);
-+
- 	pm_runtime_no_callbacks(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-@@ -95,16 +97,22 @@ put_platform:
- 	return ret;
- }
- 
-+static int __devexit ci13xxx_msm_remove(struct platform_device *pdev)
-+{
-+	struct platform_device *plat_ci = platform_get_drvdata(pdev);
-+
-+	platform_device_unregister(plat_ci);
-+
-+	return 0;
-+}
-+
- static struct platform_driver ci13xxx_msm_driver = {
- 	.probe = ci13xxx_msm_probe,
-+	.remove = __devexit_p(ci13xxx_msm_remove),
- 	.driver = { .name = "msm_hsusb", },
- };
--MODULE_ALIAS("platform:msm_hsusb");
- 
--static int __init ci13xxx_msm_init(void)
--{
--	return platform_driver_register(&ci13xxx_msm_driver);
--}
--module_init(ci13xxx_msm_init);
-+module_platform_driver(ci13xxx_msm_driver);
- 
-+MODULE_ALIAS("platform:msm_hsusb");
- MODULE_LICENSE("GPL v2");
+Status:
+  - this version only support host
+  - usbotg controler works at host role
+
+Changes since last version:
+ - use platform_device_unregister in ci13xxx_remove_device
+ - fix build error of udc driver
+
+Alexander Shishkin (1):
+  usb: chipidea: remove unneeded NULL check
+
+Felipe Balbi (3):
+  usb: chipidea: drop useless arch-check
+  usb: chipidea: msm: add missing section annotation
+  usb: chipidea: msm: add remove method
+
+Richard Zhao (10):
+  USB: Chipidea: rename struct ci13xxx_udc_driver to struct
+    ci13xxx_platform_data
+  USB: Chipidea: rename struct ci13xxx variables from udc to ci
+  USB: Chipidea: add unified ci13xxx_{add,remove}_device for platform
+    drivers
+  USB: Chipidea: add ci13xxx device id management
+  usb: chipidea: select USB_EHCI_ROOT_HUB_TT in USB_CHIPIDEA_HOST of
+    Kconfig
+  usb: otg: add notify_connect/notify_disconnect callback
+  USB: notify phy when root hub port connect change
+  usb: chipidea: permit driver bindings pass phy pointer
+  usb: otg: add basic mxs phy driver support
+  usb: chipidea: add imx platform driver
+
+ .../devicetree/bindings/usb/ci13xxx-imx.txt        |   20 +
+ Documentation/devicetree/bindings/usb/mxs-phy.txt  |   13 +
+ drivers/usb/chipidea/Kconfig                       |    1 +
+ drivers/usb/chipidea/Makefile                      |    9 +-
+ drivers/usb/chipidea/ci.h                          |   32 +-
+ drivers/usb/chipidea/ci13xxx_imx.c                 |  197 ++++++
+ drivers/usb/chipidea/ci13xxx_msm.c                 |   62 +-
+ drivers/usb/chipidea/ci13xxx_pci.c                 |   52 +-
+ drivers/usb/chipidea/core.c                        |   70 ++-
+ drivers/usb/chipidea/debug.c                       |  146 ++---
+ drivers/usb/chipidea/host.c                        |    3 +-
+ drivers/usb/chipidea/udc.c                         |  636 ++++++++++----------
+ drivers/usb/core/hub.c                             |    8 +
+ drivers/usb/otg/Kconfig                            |    9 +
+ drivers/usb/otg/Makefile                           |    1 +
+ drivers/usb/otg/mxs-phy.c                          |  197 ++++++
+ include/linux/usb/chipidea.h                       |   14 +-
+ include/linux/usb/otg.h                            |   21 +
+ 18 files changed, 1000 insertions(+), 491 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/mxs-phy.txt
+ create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
+ create mode 100644 drivers/usb/otg/mxs-phy.c
+
 -- 
 1.7.9.5
 
