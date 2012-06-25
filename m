@@ -1,41 +1,251 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH 1/3] regulator: tps65217: Add device tree support
-Date: Mon, 25 Jun 2012 12:28:15 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13E9DFA80@DBDE01.ent.ti.com>
-References: <1340625878-32336-1-git-send-email-anilkumar@ti.com>
- <1340625878-32336-2-git-send-email-anilkumar@ti.com>
- <20120625121220.GA30406@opensource.wolfsonmicro.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH RESEND] input: gpio_keys_polled: convert to dt
+Date: Mon, 25 Jun 2012 07:43:08 -0500
+Message-ID: <4FE85CDC.1090604@gmail.com>
+References: <1340192062-10565-1-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120625121220.GA30406@opensource.wolfsonmicro.com>
-Content-Language: en-US
+In-Reply-To: <1340192062-10565-1-git-send-email-aletes.xgr@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "Girdwood, Liam" <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, JJ Ding <dgdunix@gmail.com>, Roland Stigge <stigge@antcom.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-Thanks for quick reply.
-
-On Mon, Jun 25, 2012 at 17:42:20, Mark Brown wrote:
-> On Mon, Jun 25, 2012 at 05:34:36PM +0530, AnilKumar Ch wrote:
-> > This commit adds device tree support for tps65217 pmic. And usage
-> > details are added to device tree documentation.
-> > 
-> > Driver is tested by using kernel module with regulator set and get
-> > APIs.
+On 06/20/2012 06:34 AM, Alexandre Pereira da Silva wrote:
+> Add device tree support to gpio_keys_polled.c
 > 
-> This needs to be updated for the patches Laxman recently posted for the
-> regulator-compatible property (which are currently blocked on review
-> from the ST Ericcsson guys but I'll probably apply them in the next
-> couple of days if I don't hear back from them).
+> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+> Tested-by: Roland Stigge <stigge@antcom.de>
+> ---
+>  drivers/input/keyboard/gpio_keys_polled.c |  121 +++++++++++++++++++++++++++--
+>  1 file changed, 113 insertions(+), 8 deletions(-)
+
+Needs binding documentation.
+
 > 
+> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+> index 20c8ab1..a64b361 100644
+> --- a/drivers/input/keyboard/gpio_keys_polled.c
+> +++ b/drivers/input/keyboard/gpio_keys_polled.c
+> @@ -25,6 +25,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/gpio.h>
+>  #include <linux/gpio_keys.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_gpio.h>
+>  
+>  #define DRV_NAME	"gpio-keys-polled"
+>  
+> @@ -38,7 +40,7 @@ struct gpio_keys_button_data {
+>  struct gpio_keys_polled_dev {
+>  	struct input_polled_dev *poll_dev;
+>  	struct device *dev;
+> -	struct gpio_keys_platform_data *pdata;
+> +	struct gpio_keys_platform_data pdata;
+>  	struct gpio_keys_button_data data[0];
+>  };
+>  
+> @@ -67,11 +69,11 @@ static void gpio_keys_polled_check_state(struct input_dev *input,
+>  static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+>  {
+>  	struct gpio_keys_polled_dev *bdev = dev->private;
+> -	struct gpio_keys_platform_data *pdata = bdev->pdata;
+> +	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+>  	struct input_dev *input = dev->input;
+>  	int i;
+>  
+> -	for (i = 0; i < bdev->pdata->nbuttons; i++) {
+> +	for (i = 0; i < pdata->nbuttons; i++) {
+>  		struct gpio_keys_button_data *bdata = &bdev->data[i];
+>  
+>  		if (bdata->count < bdata->threshold)
+> @@ -85,7 +87,7 @@ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+>  static void gpio_keys_polled_open(struct input_polled_dev *dev)
+>  {
+>  	struct gpio_keys_polled_dev *bdev = dev->private;
+> -	struct gpio_keys_platform_data *pdata = bdev->pdata;
+> +	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+>  
+>  	if (pdata->enable)
+>  		pdata->enable(bdev->dev);
+> @@ -94,23 +96,125 @@ static void gpio_keys_polled_open(struct input_polled_dev *dev)
+>  static void gpio_keys_polled_close(struct input_polled_dev *dev)
+>  {
+>  	struct gpio_keys_polled_dev *bdev = dev->private;
+> -	struct gpio_keys_platform_data *pdata = bdev->pdata;
+> +	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+>  
+>  	if (pdata->disable)
+>  		pdata->disable(bdev->dev);
+>  }
+> +#ifdef CONFIG_OF
+> +static int gpio_keys_polled_get_devtree_pdata(struct device *dev,
+> +			    struct gpio_keys_platform_data *pdata)
+> +{
+> +	struct device_node *node, *pp;
+> +	int i;
+> +	struct gpio_keys_button *buttons;
+> +	u32 reg;
+> +
+> +	node = dev->of_node;
+> +	if (node == NULL)
+> +		return -ENODEV;
+> +
+> +	memset(pdata, 0, sizeof *pdata);
 
-In that case, I will resubmit the patches once "regulator-compatible
-property" patches are pushed to "linux-next".
+parentheses around *pdata.
 
-Thanks
-AnilKumar
+> +
+> +	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
+> +
+> +	if (of_property_read_u32(node, "poll-interval", &reg) == 0)
+> +		pdata->poll_interval = reg;
+
+You can just do this instead of the if:
+
+of_property_read_u32(node, "poll-interval", &pdata->poll_interval);
+
+
+> +
+> +	/* First count the subnodes */
+> +	pdata->nbuttons = 0;
+
+You already to this to 0.
+
+> +	pp = NULL;
+> +	while ((pp = of_get_next_child(node, pp)))
+> +		pdata->nbuttons++;
+
+of_get_child_count()
+
+> +
+> +	if (pdata->nbuttons == 0)
+> +		return -ENODEV;
+> +
+> +	buttons = kzalloc(pdata->nbuttons * (sizeof *buttons), GFP_KERNEL);
+> +	if (!buttons)
+> +		return -ENOMEM;
+> +
+> +	pp = NULL;
+> +	i = 0;
+> +	while ((pp = of_get_next_child(node, pp))) {
+
+for_each_child_of_node
+
+> +		enum of_gpio_flags flags;
+> +
+> +		if (!of_find_property(pp, "gpios", NULL)) {
+> +			pdata->nbuttons--;
+> +			dev_warn(dev, "Found button without gpios\n");
+> +			continue;
+> +		}
+> +		buttons[i].gpio = of_get_gpio_flags(pp, 0, &flags);
+> +		buttons[i].active_low = flags & OF_GPIO_ACTIVE_LOW;
+> +
+> +		if (of_property_read_u32(pp, "linux,code", &reg)) {
+> +			dev_err(dev, "Button without keycode: 0x%x\n", buttons[i].gpio);
+> +			goto out_fail;
+> +		}
+> +		buttons[i].code = reg;
+> +
+> +		buttons[i].desc = of_get_property(pp, "label", NULL);
+> +
+> +		if (of_property_read_u32(pp, "linux,input-type", &reg) == 0)
+> +			buttons[i].type = reg;
+> +		else
+> +			buttons[i].type = EV_KEY;
+
+if (of_property_read_u32(pp, "linux,input-type", &buttons[i].type))
+	buttons[i].type = EV_KEY;
+
+> +
+> +		buttons[i].wakeup = !!of_get_property(pp, "gpio-key,wakeup", NULL);
+> +
+> +		if (of_property_read_u32(pp, "debounce-interval", &reg) == 0)
+> +			buttons[i].debounce_interval = reg;
+> +		else
+> +			buttons[i].debounce_interval = 5;
+
+ditto
+
+> +
+> +		i++;
+> +	}
+> +
+> +	pdata->buttons = buttons;
+> +
+> +	return 0;
+> +
+> +out_fail:
+> +	kfree(buttons);
+> +	return -ENODEV;
+> +}
+> +
+> +static struct of_device_id gpio_keys_polled_of_match[] = {
+> +	{ .compatible = "gpio-keys-polled", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
+> +#else
+> +
+> +static int gpio_keys_polled_get_devtree_pdata(struct device *dev,
+> +			    struct gpio_keys_platform_data *altp)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +#define gpio_keys_polled_of_match NULL
+> +
+> +#endif
+>  
+>  static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
+>  {
+>  	struct gpio_keys_platform_data *pdata = pdev->dev.platform_data;
+>  	struct device *dev = &pdev->dev;
+> +	struct gpio_keys_platform_data alt_pdata;
+>  	struct gpio_keys_polled_dev *bdev;
+>  	struct input_polled_dev *poll_dev;
+>  	struct input_dev *input;
+>  	int error;
+>  	int i;
+>  
+> -	if (!pdata || !pdata->poll_interval)
+> +	if (!pdata) {
+> +	    error = gpio_keys_polled_get_devtree_pdata(dev, &alt_pdata);
+> +		if (error)
+> +			return error;
+> +		pdata = &alt_pdata;
+> +	}
+> +
+> +	if (!pdata->poll_interval)
+>  		return -EINVAL;
+>  
+>  	bdev = kzalloc(sizeof(struct gpio_keys_polled_dev) +
+> @@ -184,7 +288,7 @@ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
+>  
+>  	bdev->poll_dev = poll_dev;
+>  	bdev->dev = dev;
+> -	bdev->pdata = pdata;
+> +	bdev->pdata = *pdata;
+>  	platform_set_drvdata(pdev, bdev);
+>  
+>  	error = input_register_polled_device(poll_dev);
+> @@ -217,7 +321,7 @@ err_free_bdev:
+>  static int __devexit gpio_keys_polled_remove(struct platform_device *pdev)
+>  {
+>  	struct gpio_keys_polled_dev *bdev = platform_get_drvdata(pdev);
+> -	struct gpio_keys_platform_data *pdata = bdev->pdata;
+> +	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+>  	int i;
+>  
+>  	input_unregister_polled_device(bdev->poll_dev);
+> @@ -239,6 +343,7 @@ static struct platform_driver gpio_keys_polled_driver = {
+>  	.driver	= {
+>  		.name	= DRV_NAME,
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = gpio_keys_polled_of_match,
+>  	},
+>  };
+>  module_platform_driver(gpio_keys_polled_driver);
