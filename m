@@ -1,94 +1,49 @@
-From: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 2/2] usb: gadget: composite: parse dt overrides
-Date: Mon, 25 Jun 2012 22:12:58 -0300
-Message-ID: <CAAAP30Gad9-NjBq+b9R9qEw1tT-gEvsYCUPXAE5V74ANk_LnTA@mail.gmail.com>
-References: <1340655832-30447-1-git-send-email-aletes.xgr@gmail.com>
-	<4FE8F90B.2010303@gmail.com>
+From: Chen Peter-B29397 <B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
+Date: Tue, 26 Jun 2012 02:05:05 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A649803BE6A92@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+ <1339590863-10564-9-git-send-email-richard.zhao@freescale.com>
+ <4FD8AD42.6010702@gmail.com> <20120613152841.GA23590@richard-laptop>
+ <4FD8C4DB.4020908@gmail.com>
+ <20120614013343.GD29684@b20223-02.ap.freescale.net>
+ <4FE1DE53.4070202@gmail.com> <4FE1EF26.9080401@wwwdotorg.org>
+ <F281D0F91ED19E4D8E63A7504E8A649803BE3E73@039-SN2MPN1-023.039d.mgd.msft.net>
+ <4FE39EA2.8050809@wwwdotorg.org>
+ <F281D0F91ED19E4D8E63A7504E8A649803BE45CD@039-SN2MPN1-023.039d.mgd.msft.net>
+ <4FE8871B.7060408@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FE8F90B.2010303-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <4FE8871B.7060408-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Language: en-US
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, Li Frank-B20596 <B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Estevam Fabio-R49496 <r49496-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2012 at 8:49 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> On 06/25/2012 03:23 PM, Alexandre Pereira da Silva wrote:
->> Grab the devicetree node properties to override VendorId, ProductId,
->> bcdDevice, Manucacturer, Product and SerialNumber
->>
->> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> =A0drivers/usb/gadget/composite.c | =A0 31 +++++++++++++++++++++++++=
-++++++
->> =A01 file changed, 31 insertions(+)
->
-> Are these bindings documented? I think they should be less generic.
-> Perhaps prefixed with 'usb-'.
+ 
+> 
+> But like you said, there's no way to tell what's attached to a USB or
+> SDIO port before probing it, at least if the port is at all
+> user-accessible. The class driver for the host-side of the port (USB hub
+> or SDIO controller) would be the one that needs to implement this, not
+> the class driver for the thing that could be plugged in (WiFi or 3G
+> device).
+> 
+Agree, I did not consider the situation that the class driver is loaded as 
+module and only be loaded when that kinds of device (wifi/3g) has found
+(through udev).
 
-Not yet, I will in the final series. This was just to see it had big
-issues because the final one needs to change lots of files.
-I will add some prefix to them.
+Maybe we have to add misc control (power/reset) for devices at sd or usb 
+controller driver's probe, and those gpio are belonged to controller's.  
 
-About the documentation, should I include it in all of the controllers
-bindings or should I add a common file to describe the gadget drivers
-binding?
+> > But the generic 3G and HUB devices are special, there is only one
+> common driver
+> > for each of them (drivers/usb/core/hub.c & drivers/serial/option.c)
 
->>
->> diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/com=
-posite.c
->> index 390749b..f3b480e 100644
->> --- a/drivers/usb/gadget/composite.c
->> +++ b/drivers/usb/gadget/composite.c
->> @@ -17,6 +17,7 @@
->> =A0#include <linux/module.h>
->> =A0#include <linux/device.h>
->> =A0#include <linux/utsname.h>
->> +#include <linux/of.h>
->>
->> =A0#include <linux/usb/composite.h>
->> =A0#include <asm/unaligned.h>
->> @@ -1423,6 +1424,7 @@ static int composite_bind(struct usb_gadget *g=
-adget)
->> =A0{
->> =A0 =A0 =A0 struct usb_composite_dev =A0 =A0 =A0 =A0*cdev;
->> =A0 =A0 =A0 int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 status =3D -ENOMEM;
->> + =A0 =A0 struct device_node =A0 =A0 =A0 =A0 =A0 =A0 =A0*np =3D gadg=
-et->dev.of_node;
->>
->> =A0 =A0 =A0 cdev =3D kzalloc(sizeof *cdev, GFP_KERNEL);
->> =A0 =A0 =A0 if (!cdev)
->> @@ -1470,6 +1472,35 @@ static int composite_bind(struct usb_gadget *=
-gadget)
->>
->> =A0 =A0 =A0 cdev->desc =3D *composite->dev;
->>
->> + =A0 =A0 /* grab overrides from devicetree */
->
-> Reading the code, it looks more like the DT entries are defaults rath=
-er
-> than overrides.
 
-Actually, it's mixed. The DT overrides the hard coded defaults. And
-module parameters can override both. I think the safest path is to
-keep them like this, so a DT would not break existing code.
-
->> + =A0 =A0 if (np) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 u32 reg;
->> +
->> + =A0 =A0 =A0 =A0 =A0 =A0 if (!idVendor &&
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 of_property_read_u32(np, "=
-vendor_id", &reg) =3D=3D 0)
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 idVendor =3D reg;
->
-> if (!idVendor)
-> =A0 =A0 =A0 =A0of_property_read_u32(np, "vendor_id", &idVendor);
->
-> Rob
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
