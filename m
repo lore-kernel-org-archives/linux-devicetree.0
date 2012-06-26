@@ -1,150 +1,53 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Where to power on the wifi device before loading the driver.
-Date: Tue, 26 Jun 2012 10:53:27 -0600
-Message-ID: <4FE9E907.6050803@wwwdotorg.org>
-References: <20120614121234.GC3913@opensource.wolfsonmicro.com>
- <4FDA092E.10301@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
- <4FDB5976.20809@wwwdotorg.org>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com>
- <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com>
- <20120619091719.GZ3974@opensource.wolfsonmicro.com>
- <6B4D417B830BC44B8026029FD256F7F1C6EE2DD626@HKMAIL01.nvidia.com>
- <4FE112F2.7000506@wwwdotorg.org>
- <20120626085605.GA6047@shlinux2.ap.freescale.net>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree based
+ pinctrl driver
+Date: Tue, 26 Jun 2012 11:05:48 -0600
+Message-ID: <4FE9EBEC.9040208@wwwdotorg.org>
+References: <20120611135826.GB12766@atomide.com> <4FDA6FCD.1020605@wwwdotorg.org> <20120615094938.GQ12766@atomide.com> <4FDB6000.5080703@wwwdotorg.org> <20120618055036.GU12766@atomide.com> <20120619135600.GX12766@atomide.com> <4FE39C86.5070901@wwwdotorg.org> <20120622083955.GZ12766@atomide.com> <4FE4AC40.8080400@wwwdotorg.org> <20120626134319.GA3483@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120626085605.GA6047-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, b29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "'linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Philip Rakity' <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Li Frank-B20596 <B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, ARM kernel mailing list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Estevam Fabio-R49496 <r49496-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Mark Brown' <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>'linu
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120626134319.GA3483@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-(I'm adding everyone on thread "ARM: imx6q: add config-on-boot gpios" to
-the CC of this similar thread. Sorry if you think that's spam.)
-
-On 06/26/2012 02:56 AM, Dong Aisheng wrote:
-> On Tue, Jun 19, 2012 at 06:01:54PM -0600, Stephen Warren wrote:
+On 06/26/2012 07:43 AM, Tony Lindgren wrote:
 ...
->> I think what we need is some way of matching a DT node to a device even
->> when that device was instantiated through some probing mechanism such as
->> SDIO or USB (and I've heard hints that one can already do this for PCI;
->> I should investigate).
->>
->> So, we start off with the plain SDHCI controller node:
->>
->> sdhci@78000000 {
->> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
->> 	reg = <0x78000000 0x200>;
->> 	interrupts = <0 14 0x04>;
->> };
->>
->> Then, we add a child node to represent the device that's attached:
->>
->> sdhci@78000000 {
->> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
->> 	reg = <0x78000000 0x200>;
->> 	interrupts = <0 14 0x04>;
->>
->> 	sdio-device {
->> 		reset-gpios = <...>;
->> 		enable-gpios = <...>;
->> 	};
->> };
->>
->> When the SDHCI controller/core instantiates the child device it finds on
->> the HW bus, it initializes that struct device's of_node with a pointer
->> to the sdio-device node above. From there, the child device can get DT
->> properties such as GPIOs in the usual way.
->>
->> However, there are still some issues that need thought here; what if (as
->> is I believe the case on Cardhu) we can in fact plug in multiple
->> different types of device into the socket? Might we end up with
->> something like:
->>
->> sdhci@78000000 {
->> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
->> 	reg = <0x78000000 0x200>;
->> 	interrupts = <0 14 0x04>;
->>
->> 	sdio-device-option@0 {
->> 		compatible = "broadcom,bcm4239";
->> 		reset-gpios = <...>;
->> 		enable-gpios = <...>;
->> 	};
->>
->> 	sdio-device-option@1 {
->> 		compatible = "broadcom,bcm4330";
->> 		reset-gpios = <...>;
->> 		enable-gpios = <...>;
->> 	};
->> };
->>
->> and match on compatible value?
->>
-> I like this idea.
-> We may extend the sdio_device_id to contain a compatible string,
-> then sdio core is responsible to pass the corresponding device node to the
-> sdio function driver once a match device found, this is sdio function independent.
-> The sdio function driver then are responsible to parse the device node to
-> fetch the needed information like reset-gpios and enable-gpios to do correct
-> initialization sequence.
+> Subject: [PATCH] pinctrl: Add one-register-per-pin type device tree based pinctrl driver
 > 
-> However, one known question for this model is that some WiFi may need reset the chip
-> via gpio first before being able to be enumerated.
+> Add one-register-per-pin type device tree based pinctrl driver.
+> 
+> This driver has been tested on omap2+ series of processors,
+> where there is either an 8 or 16-bit padconf register for each pin.
+> Support for other similar pinmux controllers can be added.
 
-Yes, that's exactly the issue that makes the above binding incorrect.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
 
-In another thread on a very similar topic, I proposed a binding that
-would address this issue:
+> +/* board specific .dts file */
+> +
+> +&pmx_core {
 
-http://www.spinics.net/lists/linux-usb/msg66013.html
+> +	board_pins: pinmux_board_pins {
+> +		pinctrl-single,pins = <
+> +			0x6c 0xf	/* csi21_dx3 OUTPUT | MODE7 */
+> +			0x6e 0xf	/* csi21_dy3 OUTPUT | MODE7 */
+> +			0x70 0xf	/* csi21_dx4 OUTPUT | MODE7 */
+> +			0x72 0xf	/* csi21_dy4 OUTPUT | MODE7 */
 
-> sdhci@78000000 {
-> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
-> 	reg = <0x78000000 0x200>;
-> 	interrupts = <0 14 0x04>;
->
-> 	sdio-device {
-> 		reset-gpios = <...>;
-> 		enable-gpios = <...>;
-> 	};
-> };
+If you're removing the pinconf mask, I think the comments in the example
+should reflect just setting a particular mux function, and remove any
+references to pinconf settings in that field. While the binding can be
+abused to do that, I think the docs shouldn't encourage it:-)
 
-> ehci {
->     /* The following node is dynamically detected, although the hub
->      * IC is physically soldered onto the board
->      */
->     hub {
->         hub { /* also dynamic */
->             port@2 {
->                 child-supply = <&regulator>;
->                 reset-gpios = <&gpio 0 0>;
->             };
->         };
->     };
-> }
+Other than that, the binding looks reasonable to me, given what it's
+intended to do.
 
-Presumably something similar could be set up with platform data.
-
-Basically, the SD controller or USB host/hub node contains a child that
-represents the socket/port/... that needs some services provided to it
-(power, reset de-asserted, even clocks). The services provided by that
-node are set up before enumeration, so that the device will respond to
-enumeration. Hopefully, the DT representation of this socket/port/..
-could be shared across arbitrary types of controller (so both SD and
-USB) and the driver the "implements" that node would be common code that
-SD and USB call into, rather than having them both re-implement it from
-scratch.
+However, I'd still like Grant and Rob (and any other DT experts) to
+explicitly sign off on this binding, because it's doing exactly
+something that was rejected at Linaro Connect in February (albeit the
+binding is slightly more oriented at specifically being for pinmux
+rather than a fully general "blast in these register values", but that
+distinction seems minor to me).
