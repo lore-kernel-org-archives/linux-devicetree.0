@@ -1,11 +1,11 @@
 From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: [PATCH 1/5] usb: gadget: lpc32xx_udc: Propagate devicetree to gadget drivers
-Date: Tue, 26 Jun 2012 11:27:09 -0300
-Message-ID: <1340720833-781-2-git-send-email-aletes.xgr@gmail.com>
+Subject: [PATCH 2/5] usb: gadget: s3c-hsotg: Propagate devicetree to gadget drivers
+Date: Tue, 26 Jun 2012 11:27:10 -0300
+Message-ID: <1340720833-781-3-git-send-email-aletes.xgr@gmail.com>
 References: <1340720833-781-1-git-send-email-aletes.xgr@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1340720833-781-1-git-send-email-aletes.xgr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Li Yang <leoli@freescale.com>, Alexandre Pereira da Silva <aletes.xgr@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
@@ -13,20 +13,21 @@ Fill dev.of_node of gadget drivers, so they can use devicetree
 
 Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 ---
- drivers/usb/gadget/lpc32xx_udc.c |    1 +
+ drivers/usb/gadget/s3c-hsotg.c |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/gadget/lpc32xx_udc.c b/drivers/usb/gadget/lpc32xx_udc.c
-index 93a901b..551c0e9 100644
---- a/drivers/usb/gadget/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/lpc32xx_udc.c
-@@ -3005,6 +3005,7 @@ static int lpc32xx_start(struct usb_gadget_driver *driver,
+diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+index f4abb0e..fed2f28 100644
+--- a/drivers/usb/gadget/s3c-hsotg.c
++++ b/drivers/usb/gadget/s3c-hsotg.c
+@@ -2954,6 +2954,7 @@ static int s3c_hsotg_udc_start(struct usb_gadget *gadget,
+ 	driver->driver.bus = NULL;
+ 	hsotg->driver = driver;
+ 	hsotg->gadget.dev.driver = &driver->driver;
++	hsotg->gadget.dev.of_node = hsotg->dev->of_node;
+ 	hsotg->gadget.dev.dma_mask = hsotg->dev->dma_mask;
+ 	hsotg->gadget.speed = USB_SPEED_UNKNOWN;
  
- 	udc->driver = driver;
- 	udc->gadget.dev.driver = &driver->driver;
-+	udc->gadget.dev.of_node = udc->dev->of_node;
- 	udc->enabled = 1;
- 	udc->selfpowered = 1;
- 	udc->vbus = 0;
 -- 
 1.7.10
+
