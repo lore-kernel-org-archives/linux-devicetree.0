@@ -1,34 +1,120 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v6 00/14] add imx usb driver based on Greg next tree
-Date: Tue, 26 Jun 2012 14:25:13 +0200
-Message-ID: <201206261425.14058.marex@denx.de>
-References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com> <CAOMZO5BEVrPrgZ7E5xUE-_3zXb317mzqoZXaxXw1SNACuRzOPw@mail.gmail.com> <20120626023754.GJ2342@S2101-09.ap.freescale.net>
+From: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Tegra DRM device tree bindings
+Date: Tue, 26 Jun 2012 16:01:05 +0300
+Message-ID: <4FE9B291.2020305@nvidia.com>
+References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120626023754.GJ2342-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120626105513.GA9552-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Shawn Guo,
+On 26.06.2012 13:55, Thierry Reding wrote:
 
-> On Mon, Jun 25, 2012 at 01:18:22PM -0300, Fabio Estevam wrote:
-> > Any suggestions as to how to make the driver work on mx23?
+> 	host1x {
+> 		compatible = "nvidia,tegra20-host1x", "simple-bus";
+> 		reg = <0x50000000 0x00024000>;
+> 		interrupts = <0 64 0x04   /* cop syncpt */
+> 			      0 65 0x04   /* mpcore syncpt */
+> 			      0 66 0x04   /* cop general */
+> 			      0 67 0x04>; /* mpcore general */
+
+
+We're only interested in interrupts 65 and 67. The COP interrupts are
+not routed to CPU. I guess we could just delete those lines here.
+
 > 
-> I won't be able to test it on my imx23-evk board, because the board
-> design is somehow odd on vbus supply, which probably requires a board
-> rework.
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 
+> 		ranges = <0x54000000 0x54000000 0x04000000>;
 
-We should be able to hack around the olinuxino. I just got the card image from 
-Tsvetan.
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm a newbie on device trees, so I need to ask. Why isn't host1x
+register space covered by "ranges" property?
+
+> 
+> 		status = "disabled";
+> 
+> 		gart = <&gart>;
+> 
+> 		/* video-encoding/decoding */
+> 		mpe {
+> 			reg = <0x54040000 0x00040000>;
+> 			interrupts = <0 68 0x04>;
+> 			status = "disabled";
+> 		};
+
+
+The client device interrupts are not very interesting, so they could be
+left out, too. Display controller related are probably an exception to this.
+
+(...)
+
+Otherwise the proposal looked good.
+
+We also assign certain host1x common resources per device by convention,
+f.ex. sync points, channels etc. We currently encode that information in
+the device node (3D uses sync point number X, 2D uses numbers Y and Z).
+The information is not actually describing hardware, as it just
+describes the convention, so I'm not sure if device tree is the proper
+place for it.
+
+> This really isn't anything new but merely brings the Tegra DRM binding
+> in sync with other devices in tegra20.dtsi (disable devices by default,
+> leave out unit addresses for unique nodes). The only actual change is
+> that host1x clients are now children of the host1x node. The children
+> are instantiated by the initial call to of_platform_populate() since the
+> host1x node is also marked compatible with "simple-bus".
+
+>
+
+> An alternative would be to call of_platform_populate() from the host1x
+> driver. This has the advantage that it could integrate better with the
+> host1x bus implementation that Terje is working on, but it also needs
+> additional code to tear down the devices when the host1x driver is
+> unloaded because a module reload would try to create duplicate devices
+> otherwise.
+
+
+Yes, we already have a bus_type for nvhost, and we have nvhost_device
+and nvhost_driver that device from device and device_driver
+respectively. They all accommodate some host1x client device common
+behavior and data that we need to store. We use the bus_type also to
+match each device and driver together, but the matching is version
+sensitive. For example, Tegra2 3D needs different driver than Tegra3 3D.
+
+> The rgb node is something that I don't quite know how to handle yet.
+> Since it is really part of the display controller and uses its register
+> space, it isn't quite correct to represent it as a separate device. But
+> we will need a separate node to make it available as a connector, which
+> will become more obvious below.
+
+
+I'm not familiar enough with display controller to be able to comment.
+
+> Perhaps the ranges property can also be used to remap the reg properties
+> of the child nodes so that they can be specified as an offset into the
+> host1x aperture instead of an address in the CPU address space. But
+> that's just a minor issue because the OF code should be able to handle
+> it transparently.
+
+
+Either way is fine for me. The full addresses are more familiar to me as
+we tend to use them internally.
+
+> Basically this turns on the first display controller and the RGB/LVDS
+> output and hooks up a static EDID block with the LVDS output. There is
+> also a carveout property which might be a better replacement for the
+> "crippled" GART on Tegra20. Alternatively the CMA might work just as
+> well instead.
+
+
+We use carveout for Tegra2. Memory management is a big question mark
+still for tegradrm that I'm trying to find a solution for.
+
+Terje
