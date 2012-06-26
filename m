@@ -1,150 +1,127 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Tegra DRM device tree bindings
-Date: Tue, 26 Jun 2012 12:10:42 -0600
-Message-ID: <4FE9FB22.1090902@wwwdotorg.org>
-References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 5/5] usb: gadget: composite: parse dt overrides
+Date: Tue, 26 Jun 2012 13:43:03 -0500
+Message-ID: <4FEA02B7.3030801@gmail.com>
+References: <1340720833-781-1-git-send-email-aletes.xgr@gmail.com> <1340720833-781-6-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120626105513.GA9552-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1340720833-781-6-git-send-email-aletes.xgr@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Li Yang <leoli@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/2012 04:55 AM, Thierry Reding wrote:
-> Hi,
+On 06/26/2012 09:27 AM, Alexandre Pereira da Silva wrote:
+> Grab the devicetree node properties to override VendorId, ProductId,
+> bcdDevice, Manucacturer, Product and SerialNumber
+
+I'm still confused about what is the order of priority for the 2
+possible sources of these values. The way it is written, the DT value is
+a default, not an override.
+
+Rob
+
 > 
-> while I haven't got much time to work on the actual code right now, I
-> think it might still be useful if we could get the device tree binding
-> to a point where everybody is happy with it. That'll also save me some
-> time once I get to writing the code because I won't have to redo it over
-> again. =)
+> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/usb/gadget.txt |   20 +++++++++++
+>  drivers/usb/gadget/composite.c                   |   39 ++++++++++++++++++++++
+>  2 files changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/gadget.txt
 > 
-> So here's the current proposal:
-> 
-> 	host1x {
-> 		compatible = "nvidia,tegra20-host1x", "simple-bus";
-> 		reg = <0x50000000 0x00024000>;
-> 		interrupts = <0 64 0x04   /* cop syncpt */
-> 			      0 65 0x04   /* mpcore syncpt */
-> 			      0 66 0x04   /* cop general */
-> 			      0 67 0x04>; /* mpcore general */
-> 
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 
-> 		ranges = <0x54000000 0x54000000 0x04000000>;
-> 
-> 		status = "disabled";
-
-The idea behind status="disabled" is that some HW only makes sense to
-use on particular boards. This concept really only applies to HW modules
-that drive external interfaces on the SoC, which in turn the board can
-choose whether to connect anything to (or whether to even connect to any
-external pins using the pinmux, or not).
-
-As such, I don't think it makes sense to set status="disabled" on
-host1x, nor many other internal-only engines such as say mpe, epp, i2sp,
-gr2d, gr3d, dc1, dc2.
-
-However it does make sense for the output resources rgb, hdmi, tvo, dsi.
-
-> 		/* outputs */
-> 		rgb {
-> 			compatible = "nvidia,tegra20-rgb";
-> 			status = "disabled";
-> 		};
-...
-> The rgb node is something that I don't quite know how to handle yet.
-> Since it is really part of the display controller and uses its register
-> space, it isn't quite correct to represent it as a separate device. But
-> we will need a separate node to make it available as a connector, which
-> will become more obvious below.
-
-Are you referring to the DC_COM_PIN_OUTPUT* registers? Sorry, I'm not at
-all familiar with our display HW yet.
-
-Some possible solutions spring to mind:
-
-a) The output nodes don't have to be direct children of host1x. Instead,
-each DC could have an rgb child node that represents its own individual
-output capability.
-
-b) If the RGB-related registers in DC are completely independent of any
-other DC registers and grouped together well enough, we can just carve a
-chunk out of the DC register space and give that to the RGB node instead:
-
-i.e. not:
-
-> 		dc1: dc@54200000 {
-> 			compatible = "nvidia,tegra20-dc";
-> 			reg = <0x54200000 0x00040000>;
-> 			interrupts = <0 73 0x04>;
-> 			status = "disabled";
-> 		};
-
-
-but something more like (the completely made up example):
-
-    dc1: dc@54200000 {
-        compatible = "nvidia,tegra20-dc";
-        reg = <0x54200000 0x00020000 0x54203000 0x10000>;
-        interrupts = <0 73 0x04>;
-        status = "disabled";
-    };
-
-    rgb {
-        compatible = "nvidia,tegra20-rgb";
-        reg = <0x54220000 0x00010000>;
-        status = "disabled";
-    };
-
-c) The rgb node could simply reference the dc nodes using a phandle, and
-call into the dc driver to obtain RGB configuration services from it:
-
-    rgb {
-        compatible = "nvidia,tegra20-rgb";
-        status = "disabled";
-        nvidia,dcs = <&dc1 &dc2>;
-    };
-
-By the way, if the RGB registers are in the DC, aren't there two
-separate RGB outputs. Certainly the TRM implies that both DCs can be
-driving LCDs, by reducing the width of the LCD signals that each DC uses
-(lower bits-per-pixel, or perhaps DDR encoding on the data lines).
-
-> Board DTS files could then extend this with board-specific requirements
-> and connectors. The following describes the Medcom Wide:
-
-> 	connectors {
-> 		#address-cells = <1>;
-> 		#size-cells = <0>;
-> 
-> 	};
-
-The connector seems to be a property of the individual output resources.
-I'd expect to see the connector configuration be a child of the outputs
-that a particular board had enabled; something more like:
-
-    host1x {
-        rgb {
-            status = "okay";
-
-            connector@0 {
-                nvidia,edid = /incbin/("tegra-medcom.edid");
-            };
-        };
-        hdmi {
-            status = "okay";
-
-            connector@0 {
-                nvidia,ddc-i2c-bus = <&tegra_i2c1>;
-            };
-        };
-    };
-
-Perhaps even completely omit the connector node, and put the properties
-directly within the rgb/hdmi node itself. After all the HDMI output
-really is the connector as far as Tegra goes.
+> diff --git a/Documentation/devicetree/bindings/usb/gadget.txt b/Documentation/devicetree/bindings/usb/gadget.txt
+> new file mode 100644
+> index 0000000..93388d3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/gadget.txt
+> @@ -0,0 +1,20 @@
+> +Usb Gadget DeviceTree bindings
+> +
+> +These optional properties inside the usb device controller node are used to
+> +change some of the gadget drivers configuration:
+> +- vendor-id: Usb vendor id
+> +- product-id: Usb product id
+> +- release: Version of this device
+> +- vendor: Textual description of the vendor
+> +- device: Textual description of this device
+> +- serial: Textual representation of the device's serial number
+> +
+> +Binding Example:
+> +	usbd@31020000 {
+> +		vendor-id = <0x0525>;
+> +		product-id = <0xa4a6>;
+> +		release = <1>;
+> +		vendor = "Some Corp";
+> +		device = "Test Device";
+> +		serial = "12345";
+> +	};
+> diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+> index 390749b..b39aef4 100644
+> --- a/drivers/usb/gadget/composite.c
+> +++ b/drivers/usb/gadget/composite.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/device.h>
+>  #include <linux/utsname.h>
+> +#include <linux/of.h>
+>  
+>  #include <linux/usb/composite.h>
+>  #include <asm/unaligned.h>
+> @@ -1419,10 +1420,44 @@ static u8 override_id(struct usb_composite_dev *cdev, u8 *desc)
+>  	return *desc;
+>  }
+>  
+> +static void composite_parse_dt(struct usb_composite_dev *cdev,
+> +	struct device_node *np)
+> +{
+> +	u32 reg;
+> +
+> +	if (!idVendor && of_property_read_u32(np, "vendor-id", &reg) == 0)
+> +		idVendor = reg;
+> +
+> +	if (!idProduct && of_property_read_u32(np, "product-id", &reg) == 0)
+> +		idProduct = reg;
+> +
+> +	if (!bcdDevice && of_property_read_u32(np, "release", &reg) == 0)
+> +		bcdDevice = reg;
+> +
+> +	if (!iManufacturer)
+> +		if (of_property_read_string(np, "vendor",
+> +			&composite->iManufacturer) == 0)
+> +			cdev->manufacturer_override = override_id(cdev,
+> +				&cdev->desc.iManufacturer);
+> +
+> +	if (!iProduct)
+> +		if (of_property_read_string(np, "device",
+> +			&composite->iProduct) == 0)
+> +			cdev->product_override = override_id(cdev,
+> +				&cdev->desc.iProduct);
+> +
+> +	if (!iSerialNumber)
+> +		if (of_property_read_string(np, "serial",
+> +			&composite->iSerialNumber) == 0)
+> +			cdev->serial_override = override_id(cdev,
+> +				&cdev->desc.iSerialNumber);
+> +}
+> +
+>  static int composite_bind(struct usb_gadget *gadget)
+>  {
+>  	struct usb_composite_dev	*cdev;
+>  	int				status = -ENOMEM;
+> +	struct device_node		*np = gadget->dev.of_node;
+>  
+>  	cdev = kzalloc(sizeof *cdev, GFP_KERNEL);
+>  	if (!cdev)
+> @@ -1470,6 +1505,10 @@ static int composite_bind(struct usb_gadget *gadget)
+>  
+>  	cdev->desc = *composite->dev;
+>  
+> +	/* grab overrides from devicetree */
+> +	if (np)
+> +		composite_parse_dt(cdev, np);
+> +
+>  	/* standardized runtime overrides for device ID data */
+>  	if (idVendor)
+>  		cdev->desc.idVendor = cpu_to_le16(idVendor);
