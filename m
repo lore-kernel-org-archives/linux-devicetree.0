@@ -1,92 +1,150 @@
-From: Vinod Koul <vinod.koul@linux.intel.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Tue, 26 Jun 2012 23:20:19 +0530
-Message-ID: <1340733019.1562.242.camel@vkoul-udesk3>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	 <201206252030.56025.arnd@arndb.de> <1340703613.1562.202.camel@vkoul-udesk3>
-	 <201206261459.40766.arnd@arndb.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Tegra DRM device tree bindings
+Date: Tue, 26 Jun 2012 12:10:42 -0600
+Message-ID: <4FE9FB22.1090902@wwwdotorg.org>
+References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201206261459.40766.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120626105513.GA9552-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jon Mayo <jmayo-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2012-06-26 at 14:59 +0000, Arnd Bergmann wrote:
-> On Tuesday 26 June 2012, Vinod Koul wrote:
-> > Today, we just ask for a channel with specific mask. Further filtering
-> > is done in filter function as we request a channel, not a specific one.
-> > In most slave cases, we need a specific channel from a specific
-> > controller, and that is where DT can play a role. In addition to DMA
-> > resources for dma and client driver, I would expect DT to provide the
-> > channel mapping information, which is anyway known only by platform.
+On 06/26/2012 04:55 AM, Thierry Reding wrote:
+> Hi,
 > 
-> Can you describe what you mean by "channel mapping information"?
-> Is that not what we pass into the filter function?
-Today many dmaengine drivers have a filter function which is exported
-and then used by clients to filter out the channel. That is not a right
-way to do, so any future plan which is based on filter is not correct.
-IMHO dmaengine driver should *not* know anything about mapping. By
-mapping I refer to platform information which tells me which client can
-use which channel from which dmac.
-If the dmaengine hardware has mux then we have flexible mapping, other
-cases would be where request lines are hard wired, so mapping is pretty
-much static.
-This information if provided to dmaengine can result in dmaengine doing
-proper allocation of dma channels.
-One of the proposals we discussed sometime back:
-https://lkml.org/lkml/2012/3/8/26
-
-> > That should be a dmaengine binding and not client or controller
-> > specific. For different platforms this information can come from DT or
-> > something else.
-> > Then, once a channel is requested dmaengine knows what to provide.
-> > And as you see the filter becomes redundant.
+> while I haven't got much time to work on the actual code right now, I
+> think it might still be useful if we could get the device tree binding
+> to a point where everybody is happy with it. That'll also save me some
+> time once I get to writing the code because I won't have to redo it over
+> again. =)
 > 
-> But what code interprets the channel mapping then?
-only dmaengine. In this case the mapping comes from DT.
-
-> I think encoding a description for a dma request in a single number is
-> the last thing we want to do here. We've tried that with IRQ and GPIO
-> numbers and it got us into a huge mess that will need a long time to
-> get out of.
-No i wasn't thinking of a number. The mapping shouldn't be a global
-number at all, though that is a very easy but not very scalable
-solution.
-We need to take care of 1:1 mapping of client and channels as well as
-many:1  cases as well. A single global number cannot represent that
-properly.
-
-My idea is platform gives this information to dmaengine. Clients and
-dmaengine driver do not worry about it. That also paves way for arch
-independent clients and drivers.
+> So here's the current proposal:
 > 
-> Some platforms actually use IORESOURCE_DMA, which was useful to describe
-> ISA DMA channels, for encoding some form of channel or request number,
-> but this causes all sorts of problems. These are almost exclusively
-> used by those platforms that don't have a dmaengine driver yet, so I'd
-> hope that we can remove this as we convert those platforms over to
-> dmaengine and device tree.
+> 	host1x {
+> 		compatible = "nvidia,tegra20-host1x", "simple-bus";
+> 		reg = <0x50000000 0x00024000>;
+> 		interrupts = <0 64 0x04   /* cop syncpt */
+> 			      0 65 0x04   /* mpcore syncpt */
+> 			      0 66 0x04   /* cop general */
+> 			      0 67 0x04>; /* mpcore general */
 > 
-> The representation in device tree as we have it now is a combination of
-> a pointer to the dmaengine and a description of the request line in it,
-> typically a single small integer number local to the dmaengine. We should
-> not try to make that a global integer number again that just serves the
-> purpose of looking up the dmaengine and local number again.
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
 > 
-> IMHO no device driver should be bothered with any artificial resource
-> information, but instead I want all the DT parsing to happen in the
-> dmaengine code (or some wrapper around it) where it gets used. The only
-> thing that a device driver needs to know is that it wants to use a
-> channel based on what is described in the device tree.
-Sure, but I would expect the clients and dmacs to find information about
-their devices from DT?
-dmaengine should get only mapping information used for allocating
-channel to client.
+> 		ranges = <0x54000000 0x54000000 0x04000000>;
+> 
+> 		status = "disabled";
 
--- 
-~Vinod
+The idea behind status="disabled" is that some HW only makes sense to
+use on particular boards. This concept really only applies to HW modules
+that drive external interfaces on the SoC, which in turn the board can
+choose whether to connect anything to (or whether to even connect to any
+external pins using the pinmux, or not).
 
+As such, I don't think it makes sense to set status="disabled" on
+host1x, nor many other internal-only engines such as say mpe, epp, i2sp,
+gr2d, gr3d, dc1, dc2.
+
+However it does make sense for the output resources rgb, hdmi, tvo, dsi.
+
+> 		/* outputs */
+> 		rgb {
+> 			compatible = "nvidia,tegra20-rgb";
+> 			status = "disabled";
+> 		};
+...
+> The rgb node is something that I don't quite know how to handle yet.
+> Since it is really part of the display controller and uses its register
+> space, it isn't quite correct to represent it as a separate device. But
+> we will need a separate node to make it available as a connector, which
+> will become more obvious below.
+
+Are you referring to the DC_COM_PIN_OUTPUT* registers? Sorry, I'm not at
+all familiar with our display HW yet.
+
+Some possible solutions spring to mind:
+
+a) The output nodes don't have to be direct children of host1x. Instead,
+each DC could have an rgb child node that represents its own individual
+output capability.
+
+b) If the RGB-related registers in DC are completely independent of any
+other DC registers and grouped together well enough, we can just carve a
+chunk out of the DC register space and give that to the RGB node instead:
+
+i.e. not:
+
+> 		dc1: dc@54200000 {
+> 			compatible = "nvidia,tegra20-dc";
+> 			reg = <0x54200000 0x00040000>;
+> 			interrupts = <0 73 0x04>;
+> 			status = "disabled";
+> 		};
+
+
+but something more like (the completely made up example):
+
+    dc1: dc@54200000 {
+        compatible = "nvidia,tegra20-dc";
+        reg = <0x54200000 0x00020000 0x54203000 0x10000>;
+        interrupts = <0 73 0x04>;
+        status = "disabled";
+    };
+
+    rgb {
+        compatible = "nvidia,tegra20-rgb";
+        reg = <0x54220000 0x00010000>;
+        status = "disabled";
+    };
+
+c) The rgb node could simply reference the dc nodes using a phandle, and
+call into the dc driver to obtain RGB configuration services from it:
+
+    rgb {
+        compatible = "nvidia,tegra20-rgb";
+        status = "disabled";
+        nvidia,dcs = <&dc1 &dc2>;
+    };
+
+By the way, if the RGB registers are in the DC, aren't there two
+separate RGB outputs. Certainly the TRM implies that both DCs can be
+driving LCDs, by reducing the width of the LCD signals that each DC uses
+(lower bits-per-pixel, or perhaps DDR encoding on the data lines).
+
+> Board DTS files could then extend this with board-specific requirements
+> and connectors. The following describes the Medcom Wide:
+
+> 	connectors {
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 
+> 	};
+
+The connector seems to be a property of the individual output resources.
+I'd expect to see the connector configuration be a child of the outputs
+that a particular board had enabled; something more like:
+
+    host1x {
+        rgb {
+            status = "okay";
+
+            connector@0 {
+                nvidia,edid = /incbin/("tegra-medcom.edid");
+            };
+        };
+        hdmi {
+            status = "okay";
+
+            connector@0 {
+                nvidia,ddc-i2c-bus = <&tegra_i2c1>;
+            };
+        };
+    };
+
+Perhaps even completely omit the connector node, and put the properties
+directly within the rgb/hdmi node itself. After all the HDMI output
+really is the connector as far as Tegra goes.
