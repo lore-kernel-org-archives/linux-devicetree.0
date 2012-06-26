@@ -1,388 +1,127 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3] edac: add support for Calxeda highbank memory controller
-Date: Tue, 26 Jun 2012 08:45:25 -0500
-Message-ID: <4FE9BCF5.4090109@gmail.com>
-References: <1339468334-9927-3-git-send-email-robherring2@gmail.com> <1339606915-7521-1-git-send-email-robherring2@gmail.com>
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Subject: Re: [PATCH v2] spi/pl022: add devicetree support
+Date: Tue, 26 Jun 2012 10:49:27 -0300
+Message-ID: <CAAAP30HU8jyFFgzo39RozrOGvpSwVZRUkKsbJVe_ffEu27K-Fw@mail.gmail.com>
+References: <1340658390-29569-1-git-send-email-aletes.xgr@gmail.com>
+	<20120626060936.GA12229@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1339606915-7521-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: mchehab@redhat.com
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120626060936.GA12229@avionic-0098.adnet.avionic-design.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Roland Stigge <stigge@antcom.de>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-Mauro,
+On Tue, Jun 26, 2012 at 3:09 AM, Thierry Reding
+<thierry.reding@avionic-design.de> wrote:
+> On Mon, Jun 25, 2012 at 06:06:28PM -0300, Alexandre Pereira da Silva =
+wrote:
+> [...]
+>> diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
+> [...]
+>> @@ -1733,7 +1744,7 @@ static int calculate_effective_freq(struct pl0=
+22 *pl022, int freq, struct
+>> =A0 * A piece of default chip info unless the platform
+>> =A0 * supplies it.
+>> =A0 */
+>> -static const struct pl022_config_chip pl022_default_chip_info =3D {
+>> +static struct pl022_config_chip pl022_default_chip_info =3D {
+>> =A0 =A0 =A0 .com_mode =3D POLLING_TRANSFER,
+>> =A0 =A0 =A0 .iface =3D SSP_INTERFACE_MOTOROLA_SPI,
+>> =A0 =A0 =A0 .hierarchy =3D SSP_SLAVE,
+>
+> What's the reason for removing the const? You're only reading data fr=
+om
+> the structure.
 
-On 06/13/2012 12:01 PM, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Add support for memory controller on Calxeda Highbank platforms. Highbank
-> platforms support a single 4GB mini-DIMM with 1-bit correction and 2-bit
-> detection.
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> ---
-> v3: fix compile when EDAC_DEBUG is disabled
+I are right. I will remove this change. It was a left-over from an
+older version.
 
-Ping. linux-next is broken for highbank without this fix.
+> [...]
+>> @@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const s=
+truct amba_id *id)
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_no_pdata;
+>> =A0 =A0 =A0 }
+>>
+>> + =A0 =A0 num_cs =3D platform_info->num_chipselect;
+>> +#ifdef CONFIG_OF
+>> + =A0 =A0 of_property_read_u32(np, "pl022,num-chipselects", &num_cs)=
+;
+>> +#endif
+>
+> This...
+>
+> [...]
+>> @@ -2017,13 +2064,40 @@ pl022_probe(struct amba_device *adev, const =
+struct amba_id *id)
+>> =A0 =A0 =A0 =A0* on this board
+>> =A0 =A0 =A0 =A0*/
+>> =A0 =A0 =A0 master->bus_num =3D platform_info->bus_id;
+>> - =A0 =A0 master->num_chipselect =3D platform_info->num_chipselect;
+>> + =A0 =A0 master->num_chipselect =3D num_cs;
+>> =A0 =A0 =A0 master->cleanup =3D pl022_cleanup;
+>> =A0 =A0 =A0 master->setup =3D pl022_setup;
+>> =A0 =A0 =A0 master->prepare_transfer_hardware =3D pl022_prepare_tran=
+sfer_hardware;
+>> =A0 =A0 =A0 master->transfer_one_message =3D pl022_transfer_one_mess=
+age;
+>> =A0 =A0 =A0 master->unprepare_transfer_hardware =3D pl022_unprepare_=
+transfer_hardware;
+>> =A0 =A0 =A0 master->rt =3D platform_info->rt;
+>> + =A0 =A0 master->dev.of_node =3D dev->of_node;
+>> +
+>> +#ifdef CONFIG_OF
+>> + =A0 =A0 for (i =3D 0; i < num_cs; i++) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 int cs_gpio =3D of_get_named_gpio(np, "cs-=
+gpios", i);
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 if (cs_gpio =3D=3D -EPROBE_DEFER) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 status =3D -EPROBE_DEFER;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_no_gpio;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 }
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 pl022->chipselect[i] =3D cs_gpio;
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 if (gpio_is_valid(cs_gpio)) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (gpio_request(cs_gpio, =
+"ssp-pl022"))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&a=
+dev->dev,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 "could not request %d gpio\n", cs_gpio);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 else if (gpio_direction_ou=
+tput(cs_gpio, 1))
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(&a=
+dev->dev,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 "could set gpio %d as output\n",
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 cs_gpio);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 }
+>> + =A0 =A0 }
+>> +#else
+>> + =A0 =A0 for (i =3D 0; i < num_cs; i++)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 pl022->chipselect[i] =3D -EINVAL;
+>> +#endif
+>
+> ... and this would be good candidates for IS_ENABLED(CONFIG_OF).
+>
+>>
+>> =A0 =A0 =A0 /*
+>> =A0 =A0 =A0 =A0* Supports mode 0-3, loopback, and active low CS. Tra=
+nsfers are
+>> @@ -2130,6 +2204,9 @@ pl022_probe(struct amba_device *adev, const st=
+ruct amba_id *id)
+>> =A0 err_no_ioremap:
+>> =A0 =A0 =A0 amba_release_regions(adev);
+>> =A0 err_no_ioregion:
+>> + #ifdef CONFIG_OF
+>> + err_no_gpio:
+>> + #endif
+>
+> If you use the IS_ENABLED() macro, then you no longer need these eith=
+er.
 
-Regards,
-Rob
-
-> 
->  .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
->  arch/arm/boot/dts/highbank.dts                     |    6 +
->  drivers/edac/Kconfig                               |    9 +-
->  drivers/edac/Makefile                              |    2 +
->  drivers/edac/highbank_mc_edac.c                    |  264 ++++++++++++++++++++
->  5 files changed, 297 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
->  create mode 100644 drivers/edac/highbank_mc_edac.c
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt b/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
-> new file mode 100644
-> index 0000000..5c74a0b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
-> @@ -0,0 +1,17 @@
-> +Calxeda DDR memory controller
-> +
-> +Properties:
-> +- compatible : Should be "calxeda,hb-ddr-ctrl"
-> +- reg : Address and size for DDR controller registers.
-> +- interrupts : Interrupt for DDR controller.
-> +
-> +Example:
-> +
-> +	memory-controller@fff00000 {
-> +		compatible = "calxeda,hb-ddr-ctrl";
-> +		reg = <0xfff00000 0x1000>;
-> +		interrupts = <0 91 4>;
-> +	};
-> +
-> +
-> +
-> diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
-> index 83e7229..d4b4941 100644
-> --- a/arch/arm/boot/dts/highbank.dts
-> +++ b/arch/arm/boot/dts/highbank.dts
-> @@ -118,6 +118,12 @@
->  			interrupts = <0 90 4>;
->  		};
->  
-> +		memory-controller@fff00000 {
-> +			compatible = "calxeda,hb-ddr-ctrl";
-> +			reg = <0xfff00000 0x1000>;
-> +			interrupts = <0 91 4>;
-> +		};
-> +
->  		ipc@fff20000 {
->  			compatible = "arm,pl320", "arm,primecell";
->  			reg = <0xfff20000 0x1000>;
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 3b3f84f..f7efa8b 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -7,7 +7,7 @@
->  menuconfig EDAC
->  	bool "EDAC (Error Detection And Correction) reporting"
->  	depends on HAS_IOMEM
-> -	depends on X86 || PPC || TILE
-> +	depends on X86 || PPC || TILE || ARM
->  	help
->  	  EDAC is designed to report errors in the core system.
->  	  These are low-level errors that are reported in the CPU or
-> @@ -302,4 +302,11 @@ config EDAC_TILE
->  	  Support for error detection and correction on the
->  	  Tilera memory controller.
->  
-> +config EDAC_HIGHBANK_MC
-> +	tristate "Highbank Memory Controller"
-> +	depends on EDAC_MM_EDAC && ARCH_HIGHBANK
-> +	help
-> +	  Support for error detection and correction on the
-> +	  Calxeda Highbank memory controller.
-> +
->  endif # EDAC
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index 196a63d..44f2044 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -55,3 +55,5 @@ obj-$(CONFIG_EDAC_AMD8111)		+= amd8111_edac.o
->  obj-$(CONFIG_EDAC_AMD8131)		+= amd8131_edac.o
->  
->  obj-$(CONFIG_EDAC_TILE)			+= tile_edac.o
-> +
-> +obj-$(CONFIG_EDAC_HIGHBANK_MC)	+= highbank_mc_edac.o
-> diff --git a/drivers/edac/highbank_mc_edac.c b/drivers/edac/highbank_mc_edac.c
-> new file mode 100644
-> index 0000000..c769f47
-> --- /dev/null
-> +++ b/drivers/edac/highbank_mc_edac.c
-> @@ -0,0 +1,264 @@
-> +/*
-> + * Copyright 2011-2012 Calxeda, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#include <linux/types.h>
-> +#include <linux/kernel.h>
-> +#include <linux/ctype.h>
-> +#include <linux/edac.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "edac_core.h"
-> +#include "edac_module.h"
-> +
-> +/* DDR Ctrlr Error Registers */
-> +#define HB_DDR_ECC_OPT			0x128
-> +#define HB_DDR_ECC_U_ERR_ADDR		0x130
-> +#define HB_DDR_ECC_U_ERR_STAT		0x134
-> +#define HB_DDR_ECC_U_ERR_DATAL		0x138
-> +#define HB_DDR_ECC_U_ERR_DATAH		0x13c
-> +#define HB_DDR_ECC_C_ERR_ADDR		0x140
-> +#define HB_DDR_ECC_C_ERR_STAT		0x144
-> +#define HB_DDR_ECC_C_ERR_DATAL		0x148
-> +#define HB_DDR_ECC_C_ERR_DATAH		0x14c
-> +#define HB_DDR_ECC_INT_STATUS		0x180
-> +#define HB_DDR_ECC_INT_ACK		0x184
-> +#define HB_DDR_ECC_U_ERR_ID		0x424
-> +#define HB_DDR_ECC_C_ERR_ID		0x428
-> +
-> +#define HB_DDR_ECC_INT_STAT_CE		0x8
-> +#define HB_DDR_ECC_INT_STAT_DOUBLE_CE	0x10
-> +#define HB_DDR_ECC_INT_STAT_UE		0x20
-> +#define HB_DDR_ECC_INT_STAT_DOUBLE_UE	0x40
-> +
-> +#define HB_DDR_ECC_OPT_MODE_MASK	0x3
-> +#define HB_DDR_ECC_OPT_FWC		0x100
-> +#define HB_DDR_ECC_OPT_XOR_SHIFT	16
-> +
-> +struct hb_mc_drvdata {
-> +	void __iomem *mc_vbase;
-> +};
-> +
-> +static irqreturn_t highbank_mc_err_handler(int irq, void *dev_id)
-> +{
-> +	struct mem_ctl_info *mci = dev_id;
-> +	struct hb_mc_drvdata *drvdata = mci->pvt_info;
-> +	u32 status, err_addr;
-> +
-> +	/* Read the interrupt status register */
-> +	status = readl(drvdata->mc_vbase + HB_DDR_ECC_INT_STATUS);
-> +
-> +	if (status & HB_DDR_ECC_INT_STAT_UE) {
-> +		err_addr = readl(drvdata->mc_vbase + HB_DDR_ECC_U_ERR_ADDR);
-> +		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci, 1,
-> +				     err_addr >> PAGE_SHIFT,
-> +				     err_addr & ~PAGE_MASK, 0,
-> +				     0, 0, -1,
-> +				     mci->ctl_name, "");
-> +	}
-> +	if (status & HB_DDR_ECC_INT_STAT_CE) {
-> +		u32 syndrome = readl(drvdata->mc_vbase + HB_DDR_ECC_C_ERR_STAT);
-> +		syndrome = (syndrome >> 8) & 0xff;
-> +		err_addr = readl(drvdata->mc_vbase + HB_DDR_ECC_C_ERR_ADDR);
-> +		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, 1,
-> +				     err_addr >> PAGE_SHIFT,
-> +				     err_addr & ~PAGE_MASK, syndrome,
-> +				     0, 0, -1,
-> +				     mci->ctl_name, "");
-> +	}
-> +
-> +	/* clear the error, clears the interrupt */
-> +	writel(status, drvdata->mc_vbase + HB_DDR_ECC_INT_ACK);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +#ifdef CONFIG_EDAC_DEBUG
-> +static ssize_t highbank_mc_err_inject_write(struct file *file,
-> +				      const char __user *data,
-> +				      size_t count, loff_t *ppos)
-> +{
-> +	struct mem_ctl_info *mci = file->private_data;
-> +	struct hb_mc_drvdata *pdata = mci->pvt_info;
-> +	char buf[32];
-> +	size_t buf_size;
-> +	u32 reg;
-> +	u8 synd;
-> +
-> +	buf_size = min(count, (sizeof(buf)-1));
-> +	if (copy_from_user(buf, data, buf_size))
-> +		return -EFAULT;
-> +	buf[buf_size] = 0;
-> +
-> +	if (!kstrtou8(buf, 16, &synd)) {
-> +		reg = readl(pdata->mc_vbase + HB_DDR_ECC_OPT);
-> +		reg &= HB_DDR_ECC_OPT_MODE_MASK;
-> +		reg |= (synd << HB_DDR_ECC_OPT_XOR_SHIFT) | HB_DDR_ECC_OPT_FWC;
-> +		writel(reg, pdata->mc_vbase + HB_DDR_ECC_OPT);
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static int debugfs_open(struct inode *inode, struct file *file)
-> +{
-> +	file->private_data = inode->i_private;
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations highbank_mc_debug_inject_fops = {
-> +	.open = debugfs_open,
-> +	.write = highbank_mc_err_inject_write,
-> +	.llseek = generic_file_llseek,
-> +};
-> +
-> +static void __devinit highbank_mc_create_debugfs_nodes(struct mem_ctl_info *mci)
-> +{
-> +	if (mci->debugfs)
-> +		debugfs_create_file("inject_ctrl", S_IWUSR, mci->debugfs, mci,
-> +				    &highbank_mc_debug_inject_fops);
-> +;
-> +}
-> +#else
-> +static void __devinit highbank_mc_create_debugfs_nodes(struct mem_ctl_info *mci)
-> +{}
-> +#endif
-> +
-> +static int __devinit highbank_mc_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_mc_layer layers[2];
-> +	struct mem_ctl_info *mci;
-> +	struct hb_mc_drvdata *drvdata;
-> +	struct dimm_info *dimm;
-> +	struct resource *r;
-> +	u32 control;
-> +	int irq;
-> +	int res = 0;
-> +
-> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-> +	layers[0].size = 1;
-> +	layers[0].is_virt_csrow = true;
-> +	layers[1].type = EDAC_MC_LAYER_CHANNEL;
-> +	layers[1].size = 1;
-> +	layers[1].is_virt_csrow = false;
-> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-> +			    sizeof(struct hb_mc_drvdata));
-> +	if (!mci)
-> +		return -ENOMEM;
-> +
-> +	mci->pdev = &pdev->dev;
-> +	drvdata = mci->pvt_info;
-> +	platform_set_drvdata(pdev, mci);
-> +
-> +	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!r) {
-> +		dev_err(&pdev->dev, "Unable to get mem resource\n");
-> +		res = -ENODEV;
-> +		goto err;
-> +	}
-> +
-> +	if (!devm_request_mem_region(&pdev->dev, r->start,
-> +				     resource_size(r), dev_name(&pdev->dev))) {
-> +		dev_err(&pdev->dev, "Error while requesting mem region\n");
-> +		res = -EBUSY;
-> +		goto err;
-> +	}
-> +
-> +	drvdata->mc_vbase = devm_ioremap(&pdev->dev,
-> +					  r->start, resource_size(r));
-> +	if (!drvdata->mc_vbase) {
-> +		dev_err(&pdev->dev, "Unable to map regs\n");
-> +		res = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	control = readl(drvdata->mc_vbase + HB_DDR_ECC_OPT) & 0x3;
-> +	if (!control || (control == 0x2)) {
-> +		dev_err(&pdev->dev, "No ECC present, or ECC disabled\n");
-> +		res = -ENODEV;
-> +		goto err;
-> +	}
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	res = devm_request_irq(&pdev->dev, irq, highbank_mc_err_handler,
-> +			       0, dev_name(&pdev->dev), mci);
-> +	if (res < 0) {
-> +		dev_err(&pdev->dev, "Unable to request irq %d\n", irq);
-> +		goto err;
-> +	}
-> +
-> +	mci->mtype_cap = MEM_FLAG_DDR3;
-> +	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-> +	mci->edac_cap = EDAC_FLAG_SECDED;
-> +	mci->mod_name = dev_name(&pdev->dev);
-> +	mci->mod_ver = "1";
-> +	mci->ctl_name = dev_name(&pdev->dev);
-> +	mci->scrub_mode = SCRUB_SW_SRC;
-> +
-> +	/* Only a single 4GB DIMM is supported */
-> +	dimm = *mci->dimms;
-> +	dimm->nr_pages = (~0UL >> PAGE_SHIFT) + 1;
-> +	dimm->grain = 8;
-> +	dimm->dtype = DEV_X8;
-> +	dimm->mtype = MEM_DDR3;
-> +	dimm->edac_mode = EDAC_SECDED;
-> +
-> +	res = edac_mc_add_mc(mci);
-> +	if (res < 0)
-> +		goto err;
-> +
-> +	highbank_mc_create_debugfs_nodes(mci);
-> +
-> +	devres_close_group(&pdev->dev, NULL);
-> +	return 0;
-> +err:
-> +	devres_release_group(&pdev->dev, NULL);
-> +	edac_mc_free(mci);
-> +	return res;
-> +}
-> +
-> +static int highbank_mc_remove(struct platform_device *pdev)
-> +{
-> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-> +
-> +	edac_mc_del_mc(&pdev->dev);
-> +	edac_mc_free(mci);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id hb_ddr_ctrl_of_match[] = {
-> +	{ .compatible = "calxeda,hb-ddr-ctrl", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, hb_ddr_ctrl_of_match);
-> +
-> +static struct platform_driver highbank_mc_edac_driver = {
-> +	.probe = highbank_mc_probe,
-> +	.remove = highbank_mc_remove,
-> +	.driver = {
-> +		.name = "hb_mc_edac",
-> +		.of_match_table = hb_ddr_ctrl_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(highbank_mc_edac_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Calxeda, Inc.");
-> +MODULE_DESCRIPTION("EDAC Driver for Calxeda Highbank");
+Thanks for the suggestion, looks cleaner.
