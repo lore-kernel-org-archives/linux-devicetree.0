@@ -1,157 +1,136 @@
-From: Mitch Bradley <wmb@firmworks.com>
-Subject: Re: [RFC 2/2] usb: gadget: composite: parse dt overrides
-Date: Mon, 25 Jun 2012 19:38:43 -1000
-Message-ID: <4FE94AE3.9010000@firmworks.com>
-References: <1340655832-30447-1-git-send-email-aletes.xgr@gmail.com> <4FE8F90B.2010303@gmail.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2] spi/pl022: add devicetree support
+Date: Tue, 26 Jun 2012 08:09:36 +0200
+Message-ID: <20120626060936.GA12229@avionic-0098.adnet.avionic-design.de>
+References: <1340658390-29569-1-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FE8F90B.2010303@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1340658390-29569-1-git-send-email-aletes.xgr@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Cc: Roland Stigge <stigge@antcom.de>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-On 6/25/2012 1:49 PM, Rob Herring wrote:
-> On 06/25/2012 03:23 PM, Alexandre Pereira da Silva wrote:
->> Grab the devicetree node properties to override VendorId, ProductId,
->> bcdDevice, Manucacturer, Product and SerialNumber
->>
->> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
->> ---
->>   drivers/usb/gadget/composite.c |   31 +++++++++++++++++++++++++++++++
->>   1 file changed, 31 insertions(+)
->
-> Are these bindings documented? I think they should be less generic.
-> Perhaps prefixed with 'usb-'.
 
-There is precedent for the following properties in the USB node, namely 
-the device tree that has been used on OLPC systems for the past several 
-years.  Also, I think that Sun machines from the same timeframe use the 
-same property names, based on the fact that Sun is using my USB 2.0 OFW 
-driver code.
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Here's a listing of the properties of a representative USB child device, 
-in this case a USB FLASH drive.
+On Mon, Jun 25, 2012 at 06:06:28PM -0300, Alexandre Pereira da Silva wrote:
+[...]
+> diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
+[...]
+> @@ -1733,7 +1744,7 @@ static int calculate_effective_freq(struct pl022 *p=
+l022, int freq, struct
+>   * A piece of default chip info unless the platform
+>   * supplies it.
+>   */
+> -static const struct pl022_config_chip pl022_default_chip_info =3D {
+> +static struct pl022_config_chip pl022_default_chip_info =3D {
+>  	.com_mode =3D POLLING_TRANSFER,
+>  	.iface =3D SSP_INTERFACE_MOTOROLA_SPI,
+>  	.hierarchy =3D SSP_SLAVE,
 
-configuration#           00000001
-bulk-out-size            00000200
-bulk-out-pipe            00000001
-bulk-in-size             00000200
-bulk-in-pipe             00000001
-serial$                  200435137016ae938861
-device$                  Cruzer Mini
-vendor$                  SanDisk Corporation
-compatible               usb781,5150.20
-                          usb781,5150
-                          usbif781,class8.6.50
-                          usbif781,class8.6
-                          usbif781,class8
-                          usbif,class8.6.50
-                          usbif,class8.6
-                          usbif,class8
-                          usb,device
-vendor-id                00000781
-device-id                00005150
-release                  00000020
-name                     scsi
-class                    00000008
-subclass                 00000006
-protocol                 00000050
-high-speed
-assigned-address         00000002
-reg                      00000003 00000000
-#size-cells              00000000
-#address-cells           00000001
+What's the reason for removing the const? You're only reading data from
+the structure.
 
-Note that:
+[...]
+> @@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct=
+ amba_id *id)
+>  		goto err_no_pdata;
+>  	}
+> =20
+> +	num_cs =3D platform_info->num_chipselect;
+> +#ifdef CONFIG_OF
+> +	of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
+> +#endif
 
-a) The separator in "vendor-id" is hyphen, not underscore, in keeping 
-with the established property naming convention (except for the 
-unfortunate "device_type").
+This...
 
-b) There is no "usb," prefix, since the presence of this in a device 
-node that is a child of a USB bus implicitly identifies the kind of ID. 
-  "vendor-id" and "device-id" in PCI bus child devices is similarly 
-un-prefixed.
+[...]
+> @@ -2017,13 +2064,40 @@ pl022_probe(struct amba_device *adev, const struc=
+t amba_id *id)
+>  	 * on this board
+>  	 */
+>  	master->bus_num =3D platform_info->bus_id;
+> -	master->num_chipselect =3D platform_info->num_chipselect;
+> +	master->num_chipselect =3D num_cs;
+>  	master->cleanup =3D pl022_cleanup;
+>  	master->setup =3D pl022_setup;
+>  	master->prepare_transfer_hardware =3D pl022_prepare_transfer_hardware;
+>  	master->transfer_one_message =3D pl022_transfer_one_message;
+>  	master->unprepare_transfer_hardware =3D pl022_unprepare_transfer_hardwa=
+re;
+>  	master->rt =3D platform_info->rt;
+> +	master->dev.of_node =3D dev->of_node;
+> +
+> +#ifdef CONFIG_OF
+> +	for (i =3D 0; i < num_cs; i++) {
+> +		int cs_gpio =3D of_get_named_gpio(np, "cs-gpios", i);
+> +
+> +		if (cs_gpio =3D=3D -EPROBE_DEFER) {
+> +			status =3D -EPROBE_DEFER;
+> +			goto err_no_gpio;
+> +		}
+> +
+> +		pl022->chipselect[i] =3D cs_gpio;
+> +
+> +		if (gpio_is_valid(cs_gpio)) {
+> +			if (gpio_request(cs_gpio, "ssp-pl022"))
+> +				dev_err(&adev->dev,
+> +					"could not request %d gpio\n", cs_gpio);
+> +			else if (gpio_direction_output(cs_gpio, 1))
+> +				dev_err(&adev->dev,
+> +					"could set gpio %d as output\n",
+> +					cs_gpio);
+> +		}
+> +	}
+> +#else
+> +	for (i =3D 0; i < num_cs; i++)
+> +		pl022->chipselect[i] =3D -EINVAL;
+> +#endif
 
-c) Some of these property names are defined in 
-http://www.openfirmware.org/ofwg/bindings/usb/usb-1_0.ps
+=2E.. and this would be good candidates for IS_ENABLED(CONFIG_OF).
 
+> =20
+>  	/*
+>  	 * Supports mode 0-3, loopback, and active low CS. Transfers are
+> @@ -2130,6 +2204,9 @@ pl022_probe(struct amba_device *adev, const struct =
+amba_id *id)
+>   err_no_ioremap:
+>  	amba_release_regions(adev);
+>   err_no_ioregion:
+> + #ifdef CONFIG_OF
+> + err_no_gpio:
+> + #endif
 
+If you use the IS_ENABLED() macro, then you no longer need these either.
 
+Thierry
 
->
->>
->> diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
->> index 390749b..f3b480e 100644
->> --- a/drivers/usb/gadget/composite.c
->> +++ b/drivers/usb/gadget/composite.c
->> @@ -17,6 +17,7 @@
->>   #include <linux/module.h>
->>   #include <linux/device.h>
->>   #include <linux/utsname.h>
->> +#include <linux/of.h>
->>
->>   #include <linux/usb/composite.h>
->>   #include <asm/unaligned.h>
->> @@ -1423,6 +1424,7 @@ static int composite_bind(struct usb_gadget *gadget)
->>   {
->>   	struct usb_composite_dev	*cdev;
->>   	int				status = -ENOMEM;
->> +	struct device_node		*np = gadget->dev.of_node;
->>
->>   	cdev = kzalloc(sizeof *cdev, GFP_KERNEL);
->>   	if (!cdev)
->> @@ -1470,6 +1472,35 @@ static int composite_bind(struct usb_gadget *gadget)
->>
->>   	cdev->desc = *composite->dev;
->>
->> +	/* grab overrides from devicetree */
->
-> Reading the code, it looks more like the DT entries are defaults rather
-> than overrides.
->
->> +	if (np) {
->> +		u32 reg;
->> +
->> +		if (!idVendor &&
->> +			of_property_read_u32(np, "vendor_id", &reg) == 0)
->> +			idVendor = reg;
->
-> if (!idVendor)
-> 	of_property_read_u32(np, "vendor_id", &idVendor);
->
-> Rob
->
->> +
->> +		if (!idProduct &&
->> +			of_property_read_u32(np, "product_id", &reg) == 0)
->> +			idProduct = reg;
->> +
->> +		if (!bcdDevice &&
->> +			of_property_read_u32(np, "bcd_device", &reg) == 0)
->> +			bcdDevice = reg;
->> +
->> +		if (!iManufacturer)
->> +			of_property_read_string(np, "manufacturer",
->> +				&iManufacturer);
->> +
->> +		if (!iProduct)
->> +			of_property_read_string(np, "product",
->> +				&iProduct);
->> +
->> +		if (!iSerialNumber)
->> +			of_property_read_string(np, "serial_number",
->> +				&iSerialNumber);
->> +	}
->> +
->>   	/* standardized runtime overrides for device ID data */
->>   	if (idVendor)
->>   		cdev->desc.idVendor = cpu_to_le16(idVendor);
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIbBAEBAgAGBQJP6VIgAAoJEN0jrNd/PrOh+hEP9jKvRys0+misWJJvA8OThxtU
+WGnVTSHA/NzrOsiSAX7C0ZoCzo7iWk7xqPGRvblLFlwE8OiZNyc/34oa/s31OVr3
+4zgIQgQlXwncZHMuxn2CDUDQKC3IDgekg5ytelNcE8zjl6ZucqA9uQWvYJM3FCt2
+fBdY5wpQGVdSiPECbn2HW244wVq7caIOmsSHPvCecKKK/uF4sOjgECMi/5AbGeyP
+TH8uwLU2L8J9j6Reji7pNTaiK2SCLsKjbSY7pUpC+A6bG/LT78smFupmEYwwaXvU
+wPyAffoGa7HnSBb24u2pz2Rc2SMKvXOL/jkTy4KMpyk86wVvOR25gZ7hYT0HwPn8
+7ivjhP3XQXHYaPYLEnVkBpyUaBlvZKeZijAZSAA7+GudBL72Mkx86/RUicrMkvvC
+4n6DRrN5MejqigBQIaUL6nGBN2J1G+1IAFs+zrxvM1y1eBD6smDsWx0USQ2b0qCQ
+uMiR+RSeI0/EbTxYyzRujAVp1TOnhCVbcTpNVUyjC7Q2WUavfc4/PlRZpQlTQi0S
+BMKeyW9VjnWpYPxty87kHKFdsdnIwOpqM4Mz7/INBuPuN9aJmmdQlwkesd/HkPxl
+9MOhotMxrWkLhSwj4ULdhqL+JYjaekDzTMj//1krI8GPOXtYY+ilqcetQzjfETbz
+32XQ/ICxFOegtyuVuDY=
+=oyZ0
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
