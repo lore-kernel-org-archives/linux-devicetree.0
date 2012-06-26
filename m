@@ -1,53 +1,86 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree based
- pinctrl driver
-Date: Tue, 26 Jun 2012 11:05:48 -0600
-Message-ID: <4FE9EBEC.9040208@wwwdotorg.org>
-References: <20120611135826.GB12766@atomide.com> <4FDA6FCD.1020605@wwwdotorg.org> <20120615094938.GQ12766@atomide.com> <4FDB6000.5080703@wwwdotorg.org> <20120618055036.GU12766@atomide.com> <20120619135600.GX12766@atomide.com> <4FE39C86.5070901@wwwdotorg.org> <20120622083955.GZ12766@atomide.com> <4FE4AC40.8080400@wwwdotorg.org> <20120626134319.GA3483@atomide.com>
+Subject: Re: [PATCH v2 07/10] ARM: tegra: pcie: Add device tree support
+Date: Tue, 26 Jun 2012 11:22:32 -0600
+Message-ID: <4FE9EFD8.6010608@wwwdotorg.org>
+References: <20120614192903.GA2212@avionic-0098.mockup.avionic-design.de> <4FDA40A0.4030206@wwwdotorg.org> <20120615061236.GA4081@avionic-0098.mockup.avionic-design.de> <20120619133001.GB24138@avionic-0098.mockup.avionic-design.de> <4FE0EFBB.6090206@firmworks.com> <20120621064722.GA1122@avionic-0098.mockup.avionic-design.de> <CAErSpo6Bpfqm-0yGiBOXEhF4kD3PTDYvWVr0babLZ4GkBLXJiA@mail.gmail.com> <20120622110038.GA15212@avionic-0098.mockup.avionic-design.de> <4FE4A4B3.9010200@wwwdotorg.org> <4FE4AB2F.8090402@wwwdotorg.org> <20120625063456.GB11469@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120626134319.GA3483@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20120625063456.GB11469@avionic-0098.adnet.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Mitch Bradley <wmb@firmworks.com>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/2012 07:43 AM, Tony Lindgren wrote:
-...
-> Subject: [PATCH] pinctrl: Add one-register-per-pin type device tree based pinctrl driver
+On 06/25/2012 12:34 AM, Thierry Reding wrote:
+> On Fri, Jun 22, 2012 at 11:28:15AM -0600, Stephen Warren wrote:
+>> On 06/22/2012 11:00 AM, Stephen Warren wrote:
+>>> On 06/22/2012 05:00 AM, Thierry Reding wrote: ...
+>>>> Stephen: can you try to find out whether the Tegra PCIe
+>>>> controller indeed implements ECAM, or if this scheme is
+>>>> actually just a proprietary variant?
+>>> 
+>>> Sure. I have added this request to the bug I filed requesting
+>>> more complete PCIe host documentation.
+>> 
+>> I've received unofficial confirmation that we do indeed implement
+>> a non-standard/non-ECAM mapping, and what's in our driver matches
+>> our HW.
 > 
-> Add one-register-per-pin type device tree based pinctrl driver.
-> 
-> This driver has been tested on omap2+ series of processors,
-> where there is either an 8 or 16-bit padconf register for each pin.
-> Support for other similar pinmux controllers can be added.
+> What I don't quite see yet is how the extended configuration space
+> is supposed to work with the current driver. The PCIE_CONF_* macros
+> don't provide for registers >= 256. Passing a value higher than
+> that will mess with the device function field.
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+The current downstream driver is incorrect for that case. We should be
+updating it (at least, I filed a bug to do this).
 
-> +/* board specific .dts file */
-> +
-> +&pmx_core {
+Here's how the HW works (I believe this information should be in some
+future version of the TRM):
 
-> +	board_pins: pinmux_board_pins {
-> +		pinctrl-single,pins = <
-> +			0x6c 0xf	/* csi21_dx3 OUTPUT | MODE7 */
-> +			0x6e 0xf	/* csi21_dy3 OUTPUT | MODE7 */
-> +			0x70 0xf	/* csi21_dx4 OUTPUT | MODE7 */
-> +			0x72 0xf	/* csi21_dy4 OUTPUT | MODE7 */
+There are 3 address spaces:
 
-If you're removing the pinconf mask, I think the comments in the example
-should reflect just setting a particular mux function, and remove any
-references to pinconf settings in that field. While the binding can be
-abused to do that, I think the docs shouldn't encourage it:-)
+* The CPU bus.
 
-Other than that, the binding looks reasonable to me, given what it's
-intended to do.
+* An internal (to the PCIe controller) 40-bit address space.
+Apparently the layout is HyperTransport-based. Whether HT defines
+this, or whether our HW engineers are referring to our particular
+implementation of HT, I'm not sure.
 
-However, I'd still like Grant and Rob (and any other DT experts) to
-explicitly sign off on this binding, because it's doing exactly
-something that was rejected at Linaro Connect in February (albeit the
-binding is slightly more oriented at specifically being for pinmux
-rather than a fully general "blast in these register values", but that
-distinction seems minor to me).
+* The PCIe external bus.
+
+Accesses from the CPU to the PCIe controller's 1GB aperture are mapped
+into the 40-bit bus using the BAR configurations in the PCIe
+controller; I believe this is what tegra_pcie_setup_translations() is
+configuring in our downstream driver.
+
+Accesses are then mapped from this 40-bit bus to the external 32-bit
+bus, I believe using a hard-coded mapping, which I believe may be
+inherited from (our implementation of?) HyperTransport
+
+For config and extended config accesses the mapping from the internal
+to external bus is as follows:
+
+In the case of PCICFG space,
+addr[39:28]=12'hFDF,
+addr[27:24]=4'hE means type 0 and addr[27:24]=4'hF means type 1,
+addr[23:16]=bus number
+addr[15:11]=device number
+addr[10:8]=function number
+addr[7:0]=register number
+
+In the case of EXTCFG space,
+addr[39:32]=8'hFE,
+addr[31:28]=4'h0 means type 0 and addr[31:28]=4'h1 means type 1,
+addr[27:24]=upper register number (i.e. register number[11:8])
+addr[23:16]=bus number
+addr[15:11]=device number
+addr[10:8]=function number
+addr[7:0]=register number (i.e. register number[7:0])
+
+(in actual fact, the HW matches the top 16 or 12 bits to determine
+config/ext-config and transaction type, so the top two fields in the
+lists above should really be considered merged)
+
+I hope this helps!
