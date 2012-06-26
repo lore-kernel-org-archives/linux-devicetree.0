@@ -1,50 +1,74 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v7 09/14] usb: chipidea: select USB_EHCI_ROOT_HUB_TT in USB_CHIPIDEA_HOST of Kconfig
-Date: Tue, 26 Jun 2012 23:58:19 +0200
-Message-ID: <201206262358.19347.marex@denx.de>
-References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com> <1340607391-16380-10-git-send-email-richard.zhao@freescale.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] of: Fix null pointer related warnings in base.c file
+Date: Tue, 26 Jun 2012 17:33:27 -0500
+Message-ID: <4FEA38B7.7060603@gmail.com>
+References: <1338808505-2028-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1340607391-16380-10-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1338808505-2028-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Richard Zhao,
-
-> ci13xxx host needs Root Hub Transaction Translators.
+On 06/04/2012 06:15 AM, Sachin Kamat wrote:
+> Fixes the following sparse warnings:
+> drivers/of/base.c:176:41: warning: Using plain integer as NULL pointer
+> drivers/of/base.c:178:37: warning: Using plain integer as NULL pointer
+> drivers/of/base.c:500:49: warning: Using plain integer as NULL pointer
 > 
-> Reported-by: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Sorry for the delay.
 
 > ---
->  drivers/usb/chipidea/Kconfig |    1 +
->  1 file changed, 1 insertion(+)
+>  drivers/of/base.c |    6 +++---
+>  1 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
-> index fd36dc8..8337fb5 100644
-> --- a/drivers/usb/chipidea/Kconfig
-> +++ b/drivers/usb/chipidea/Kconfig
-> @@ -20,6 +20,7 @@ config USB_CHIPIDEA_UDC
-> 
->  config USB_CHIPIDEA_HOST
->  	bool "ChipIdea host controller"
-> +	select USB_EHCI_ROOT_HUB_TT
->  	help
->  	  Say Y here to enable host controller functionality of the
->  	  ChipIdea driver.
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d9bfd49..2031aa1 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -173,9 +173,9 @@ struct property *of_find_property(const struct device_node *np,
+>  		return NULL;
+>  
+>  	read_lock(&devtree_lock);
+> -	for (pp = np->properties; pp != 0; pp = pp->next) {
+> +	for (pp = np->properties; pp != NULL; pp = pp->next) {
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about just "pp"
+
+>  		if (of_prop_cmp(pp->name, name) == 0) {
+> -			if (lenp != 0)
+> +			if (lenp != NULL)
+
+and "if (lenp)"
+
+>  				*lenp = pp->length;
+>  			break;
+>  		}
+> @@ -497,7 +497,7 @@ struct device_node *of_find_node_with_property(struct device_node *from,
+>  	read_lock(&devtree_lock);
+>  	np = from ? from->allnext : allnodes;
+>  	for (; np; np = np->allnext) {
+> -		for (pp = np->properties; pp != 0; pp = pp->next) {
+> +		for (pp = np->properties; pp != NULL; pp = pp->next) {
+
+ditto
+
+Rob
+
+>  			if (of_prop_cmp(pp->name, prop_name) == 0) {
+>  				of_node_get(np);
+>  				goto out;
