@@ -1,12 +1,15 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Early printk baudrate initialization DTS description
-Date: Tue, 26 Jun 2012 13:16:42 +0200
-Message-ID: <4FE99A1A.4040908@monstr.eu>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] mtd/m25p80: add device tree probe support
+Date: Tue, 26 Jun 2012 13:47:01 +0200
+Message-ID: <201206261347.01995.marex@denx.de>
+References: <1311601063-16581-1-git-send-email-shawn.guo@linaro.org>
+ <201206251850.10839.marex@denx.de>
+ <20120626081546.GB4928@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120626081546.GB4928-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,62 +20,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dear Shawn Guo,
 
-we are trying to solve one problem with early printk initialization
-on Microblaze uart16550. I have also checked arm bootup code and
-the situation is the same there (NOTE: This IP is possible to use on Zynq too).
+> On Mon, Jun 25, 2012 at 06:50:10PM +0200, Marek Vasut wrote:
+> > 116                         ssp2: ssp@80014000 {
+> > 117                                 #address-cells = <1>;
+> > 118                                 #size-cells = <0>;
+> > 119                                 compatible = "fsl,imx28-spi";
+> > 120                                 pinctrl-names = "default";
+> > 121                                 pinctrl-0 = <&spi2_pins_a>;
+> > 122                                 status = "okay";
+> > 123
+> > 124                                 flash: m25p80@0 {
+> > 125                                         #address-cells = <1>;
+> > 126                                         #size-cells = <1>;
+> > 127                                         compatible = "m25p80";
+> > 128                                         spi-max-frequency =
+> > <25000000>; 129                                         reg = <0>;
+> > 130                                 };
+> > 131                         };
+> > 
+> > I use this + my SPI patches I submitted recently.
+> 
+> I do not have the flash on my imx28-evk board, but I just tested on
+> imx6q-sabrelite, and yes, it can be probed without the patch.  I'm
+> fine then.
 
-The problem is about baudrate initialization. Current code just expect
-that early console is initialized by previous bootloader/firmware (in our case u-boot).
-But if there is not initialization and directly elf is loaded there is no initialization
-done and kernel bootlog is shown when regular serial driver is probed.
+Good, let's discard this patch and close this issue :-)
 
-I have create a solution which add baudrate initialization to Microblaze early printk code.
-And also two options how to load baudrate setting from device-tree.
-
-Code expects that early console is specified in chosen node.
-
-chosen {
-	linux,stdout-path = "/axi@0/serial@40400000";
-} ;
-
-Code finds out which IP it is and based on that initialize early printk driver.
-Baudrate setting is counted from clock-frequency and current-speed defined directly in uart node.
-
-RS232_Uart_1: serial@40400000 {
-	clock-frequency = <50000000>;
-	compatible = "xlnx,axi-uart16550-1.01.a", "xlnx,xps-uart16550-2.00.a", "ns16550a";
-	current-speed = <115200>;
-	device_type = "serial";
-	reg = < 0x40400000 0x10000 >;
-	reg-offset = <0x1000>;
-	reg-shift = <2>;
-	...irq, etc
-} ;
-
-This was the first version which is working but using current-speed is probably not the best solution.
-
-I have also create version where baudrate is directly specified in chosen node. Clock frequency is still
-loaded directly from the node.
-
-chosen {
-	linux,stdout-path = "/axi@0/serial@40400000,115200";
-} ;
-
-What solution is more compatible with device-tree?
-
-
-Thanks for you comments,
-Michal
-
-
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+Best regards,
+Marek Vasut
