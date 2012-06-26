@@ -1,86 +1,175 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH 7/9] I2C: MV64XXX: Add Device Tree support
-Date: Tue, 26 Jun 2012 15:03:56 +0100
-Message-ID: <4FE9C14C.2030804@codethink.co.uk>
-References: <1339324322-29388-8-git-send-email-andrew@lunn.ch>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC 2/2] usb: gadget: composite: parse dt overrides
+Date: Tue, 26 Jun 2012 09:04:34 -0500
+Message-ID: <4FE9C172.5060306@gmail.com>
+References: <1340655832-30447-1-git-send-email-aletes.xgr@gmail.com> <4FE8F90B.2010303@gmail.com> <4FE94AE3.9010000@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1339324322-29388-8-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, machael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FE94AE3.9010000@firmworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/12 11:31, Andrew Lunn wrote:
-> Extends the driver to get properties from device tree. Also extend the
-> kirkwood DT support to supply the needed properties.
->
-> Signed-off-by: Andrew Lunn<andrew-g2DYL2Zd6BY@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/i2c/mrvl-i2c.txt |   35 +++++++++++++++++-
->   arch/arm/boot/dts/kirkwood.dtsi                    |   13 +++++++
->   arch/arm/mach-kirkwood/board-dt.c                  |    2 ++
->   drivers/i2c/busses/i2c-mv64xxx.c                   |   38 +++++++++++++++++---
->   4 files changed, 82 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt b/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
-> index b891ee2..89ef899 100644
-> --- a/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
-> +++ b/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
-> @@ -1,4 +1,4 @@
-> -* I2C
-> +* Marvell MMP I2C controller
->
->   Required properties :
->
-> @@ -32,3 +32,36 @@ Examples:
->   		interrupts =<58>;
->   	};
->
-> +* Marvell MV64XXX I2C controller
-> +
-> +Required properties :
-> +
-> + - reg         : Offset and length of the register set for the device
-> + - compatible  : should be "marvell,mv64xxx-i2c"
-> + - interrupts  : the interrupt number
-> + - frequency-m : m factor in baud rate calculation
-> +
-> +Recommended properties :
-> +
-> + - frequency-n : n factor in baud rate calculation
-> + - timeout-ms  : How long to wait for a transaction to complete
-> +
-> +Baud Rate:
-> +
-> +The baud rate is calculated thus:
-> +
-> +Fscl =          Ftclk
-> +       ------------------------------------------
-> +                                (frequency-n + 1)
-> +       10 *(frequency-m + 1) * 2
-> +
-> +Examples:
+On 06/26/2012 12:38 AM, Mitch Bradley wrote:
+> On 6/25/2012 1:49 PM, Rob Herring wrote:
+>> On 06/25/2012 03:23 PM, Alexandre Pereira da Silva wrote:
+>>> Grab the devicetree node properties to override VendorId, ProductId,
+>>> bcdDevice, Manucacturer, Product and SerialNumber
+>>>
+>>> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+>>> ---
+>>>   drivers/usb/gadget/composite.c |   31 +++++++++++++++++++++++++++++++
+>>>   1 file changed, 31 insertions(+)
+>>
+>> Are these bindings documented? I think they should be less generic.
+>> Perhaps prefixed with 'usb-'.
+> 
+> There is precedent for the following properties in the USB node, namely
+> the device tree that has been used on OLPC systems for the past several
+> years.  Also, I think that Sun machines from the same timeframe use the
+> same property names, based on the fact that Sun is using my USB 2.0 OFW
+> driver code.
 
-I'd really rather see this calculated at run-time, given some
-systems can quite easily change their clocks.
+Thanks, I wasn't aware of that.
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+> Here's a listing of the properties of a representative USB child device,
+> in this case a USB FLASH drive.
+> 
+> configuration#           00000001
+> bulk-out-size            00000200
+> bulk-out-pipe            00000001
+> bulk-in-size             00000200
+> bulk-in-pipe             00000001
+> serial$                  200435137016ae938861
+> device$                  Cruzer Mini
+> vendor$                  SanDisk Corporation
+> compatible               usb781,5150.20
+>                          usb781,5150
+>                          usbif781,class8.6.50
+>                          usbif781,class8.6
+>                          usbif781,class8
+>                          usbif,class8.6.50
+>                          usbif,class8.6
+>                          usbif,class8
+>                          usb,device
+> vendor-id                00000781
+> device-id                00005150
+> release                  00000020
+> name                     scsi
+> class                    00000008
+> subclass                 00000006
+> protocol                 00000050
+> high-speed
+> assigned-address         00000002
+> reg                      00000003 00000000
+> #size-cells              00000000
+> #address-cells           00000001
+> 
+> Note that:
+> 
+> a) The separator in "vendor-id" is hyphen, not underscore, in keeping
+> with the established property naming convention (except for the
+> unfortunate "device_type").
+> 
+> b) There is no "usb," prefix, since the presence of this in a device
+> node that is a child of a USB bus implicitly identifies the kind of ID.
+>  "vendor-id" and "device-id" in PCI bus child devices is similarly
+> un-prefixed.
 
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Okay.
+
+> c) Some of these property names are defined in
+> http://www.openfirmware.org/ofwg/bindings/usb/usb-1_0.ps
+> 
+
+We should refer back to this as appropriate, but document what is not
+standard. Having an example is useful as well. The original doc was
+about describing a device to the host. This case is describing the
+device to the device. Perhaps these are the same, but if there are
+differences we need to capture that.
+
+Rob
+
+> 
+> 
+> 
+>>
+>>>
+>>> diff --git a/drivers/usb/gadget/composite.c
+>>> b/drivers/usb/gadget/composite.c
+>>> index 390749b..f3b480e 100644
+>>> --- a/drivers/usb/gadget/composite.c
+>>> +++ b/drivers/usb/gadget/composite.c
+>>> @@ -17,6 +17,7 @@
+>>>   #include <linux/module.h>
+>>>   #include <linux/device.h>
+>>>   #include <linux/utsname.h>
+>>> +#include <linux/of.h>
+>>>
+>>>   #include <linux/usb/composite.h>
+>>>   #include <asm/unaligned.h>
+>>> @@ -1423,6 +1424,7 @@ static int composite_bind(struct usb_gadget
+>>> *gadget)
+>>>   {
+>>>       struct usb_composite_dev    *cdev;
+>>>       int                status = -ENOMEM;
+>>> +    struct device_node        *np = gadget->dev.of_node;
+>>>
+>>>       cdev = kzalloc(sizeof *cdev, GFP_KERNEL);
+>>>       if (!cdev)
+>>> @@ -1470,6 +1472,35 @@ static int composite_bind(struct usb_gadget
+>>> *gadget)
+>>>
+>>>       cdev->desc = *composite->dev;
+>>>
+>>> +    /* grab overrides from devicetree */
+>>
+>> Reading the code, it looks more like the DT entries are defaults rather
+>> than overrides.
+>>
+>>> +    if (np) {
+>>> +        u32 reg;
+>>> +
+>>> +        if (!idVendor &&
+>>> +            of_property_read_u32(np, "vendor_id", &reg) == 0)
+>>> +            idVendor = reg;
+>>
+>> if (!idVendor)
+>>     of_property_read_u32(np, "vendor_id", &idVendor);
+>>
+>> Rob
+>>
+>>> +
+>>> +        if (!idProduct &&
+>>> +            of_property_read_u32(np, "product_id", &reg) == 0)
+>>> +            idProduct = reg;
+>>> +
+>>> +        if (!bcdDevice &&
+>>> +            of_property_read_u32(np, "bcd_device", &reg) == 0)
+>>> +            bcdDevice = reg;
+>>> +
+>>> +        if (!iManufacturer)
+>>> +            of_property_read_string(np, "manufacturer",
+>>> +                &iManufacturer);
+>>> +
+>>> +        if (!iProduct)
+>>> +            of_property_read_string(np, "product",
+>>> +                &iProduct);
+>>> +
+>>> +        if (!iSerialNumber)
+>>> +            of_property_read_string(np, "serial_number",
+>>> +                &iSerialNumber);
+>>> +    }
+>>> +
+>>>       /* standardized runtime overrides for device ID data */
+>>>       if (idVendor)
+>>>           cdev->desc.idVendor = cpu_to_le16(idVendor);
+>> _______________________________________________
+>> devicetree-discuss mailing list
+>> devicetree-discuss@lists.ozlabs.org
+>> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>>
+> 
