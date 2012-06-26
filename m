@@ -1,63 +1,32 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by
- regulator-compatible
-Date: Tue, 26 Jun 2012 10:12:35 +0100
-Message-ID: <20120626091235.GJ30406@opensource.wolfsonmicro.com>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com>
- <1340194987-23654-3-git-send-email-ldewangan@nvidia.com>
- <201206201924.09618.arnd@arndb.de>
- <20120620194609.GA4037@opensource.wolfsonmicro.com>
- <20120622061314.GA15627@avionic-0098.adnet.avionic-design.de>
- <20120622084228.GD4037@opensource.wolfsonmicro.com>
- <20120622085909.GA24121@avionic-0098.mockup.avionic-design.de>
- <20120622091238.GF4037@opensource.wolfsonmicro.com>
- <4FE97AA9.7060805@nvidia.com>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v6 13/14] usb: otg: add basic mxs phy driver support
+Date: Tue, 26 Jun 2012 12:15:23 +0300
+Message-ID: <87fw9iv3h0.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com> <1340260875-21934-14-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zOcTNEe3AzgCmdo9"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FE97AA9.7060805@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lrg@ti.com" <lrg@ti.com>, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1340260875-21934-14-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
 
---zOcTNEe3AzgCmdo9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +config USB_MXS_PHY
+> +	tristate "Freescale MXS USB PHY support"
+> +	select STMP_DEVICE
+> +	select USB_OTG_UTILS
 
-On Tue, Jun 26, 2012 at 02:32:33PM +0530, Laxman Dewangan wrote:
+There should also be a dependency on ARM (or maybe even ARCH_MXS),
+because you're using writel_relaxed() here, which only exists on arm and
+sh4 and enabling it on other architectures breaks compilation.
 
-> I have not seen much oppose on this series as such and if you are OK
-> on this then can we apply?
-> If it need to buy some ACK from different stack holder then we can ask them.
-
-I've been waiting for the ST Ericsson guys who are already CCed.  I
-generally give people who I expect might review at least a week to do so
-before I get bored and apply anyway.
-
---zOcTNEe3AzgCmdo9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP6XzoAAoJEBus8iNuMP3dBM8P/1NJe+Toa8fV8wOM5YvRcuYf
-r2uqdOzKmxWiGIf2GzTKRQa1ElpAdnr1kw8AD5fVbJzH4gw3QDhUVOfezGbhvbM+
-se7Nk9F2KgQqyDMXOxN8E59kKONFDVAi9Uh9+D1ETFCmXKBHjV+cjde/rysEwVZp
-LW3kCsjsGvEnfB0imG5soY8XQUA1jMNYK9ISuIDE5F7p2BRdUDA7nJ8CUV4mouvE
-7OcYEuyleF8gZYfse3pMiVsW8Fvh+4bDC8eE/F+YOszvfOmB/0vR3QipW5JTmqae
-YFKO22p6EBY9nt/A/UuvvpXerFQpPqGXUBdZjl48QmG4l4L6TYjbSU0S25+b4vck
-X2P6g89Kc5poDUlg9NKCyQWZmaJFjOutyCeRJH1fli+gv4jZBEXNRkarvGa6+vgx
-SoZZkS41moMBpEH0r1R6QSq8izw4GEpmFswgR/r5/B6ibToeMZVi+yoz1sbLlpYr
-LRVBYrjRjZxcI138xEYdkphfFMBFIaS0RbEDIyb12/wp+hk8wOTjl1/zLvbB726a
-z0WaldTB8HXovipsBUbzJI8qWmVeb+cvr+m9UM+YijX3Vlhg6352phUuJL67GMrW
-5VwCt0XFmyQFr0IeuGKcaUhZZREmstm4GCkHW4Tfe4j9M1MRC+gjEB5ldo0E3/Ac
-sXfuiRxsMSFLYF3UCf0E
-=H2Xb
------END PGP SIGNATURE-----
-
---zOcTNEe3AzgCmdo9--
+Regards,
+--
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
