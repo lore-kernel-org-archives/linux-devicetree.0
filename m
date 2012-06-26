@@ -1,17 +1,11 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mtd/m25p80: add device tree probe support
-Date: Tue, 26 Jun 2012 16:15:49 +0800
-Message-ID: <20120626081546.GB4928@S2101-09.ap.freescale.net>
-References: <1311601063-16581-1-git-send-email-shawn.guo@linaro.org>
- <201206251801.22385.marex@denx.de>
- <20120625161506.GH2342@S2101-09.ap.freescale.net>
- <201206251850.10839.marex@denx.de>
+Subject: [PATCH v3] rtc: stmp3xxx: Add simple binding for the stmp3xxx-rtc
+Date: Tue, 26 Jun 2012 16:35:26 +0800
+Message-ID: <1340699726-7852-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201206251850.10839.marex-ynQEQJNshbs@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,34 +16,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <artem.bityutskiy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2012 at 06:50:10PM +0200, Marek Vasut wrote:
-> 116                         ssp2: ssp@80014000 {
-> 117                                 #address-cells = <1>;
-> 118                                 #size-cells = <0>;
-> 119                                 compatible = "fsl,imx28-spi";
-> 120                                 pinctrl-names = "default";
-> 121                                 pinctrl-0 = <&spi2_pins_a>;
-> 122                                 status = "okay";
-> 123 
-> 124                                 flash: m25p80@0 {
-> 125                                         #address-cells = <1>;
-> 126                                         #size-cells = <1>;
-> 127                                         compatible = "m25p80";
-> 128                                         spi-max-frequency = <25000000>;
-> 129                                         reg = <0>;
-> 130                                 };
-> 131                         };
-> 
-> I use this + my SPI patches I submitted recently.
-> 
-I do not have the flash on my imx28-evk board, but I just tested on
-imx6q-sabrelite, and yes, it can be probed without the patch.  I'm
-fine then.
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
+Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+Changes since v2:
+
+* Back out the dts changes from the patch, so that it could be merged
+  through rtc tree if that's the case.
+
+* The first interrupt has to be rtc alarm interrupt, and that's the
+  only one that driver tries to get.  Fix binding document for that.
+
+ .../devicetree/bindings/rtc/stmp3xxx-rtc.txt       |   16 ++++++++++++++++
+ drivers/rtc/rtc-stmp3xxx.c                         |    8 ++++++++
+ 2 files changed, 24 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
+new file mode 100644
+index 0000000..b800070
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
+@@ -0,0 +1,16 @@
++* STMP3xxx/i.MX28 Time Clock controller
++
++Required properties:
++- compatible: should be one of the following.
++    * "fsl,stmp3xxx-rtc"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: rtc alarm interrupt
++
++Example:
++
++rtc@80056000 {
++	compatible = "fsl,imx28-rtc", "fsl,stmp3xxx-rtc";
++	reg = <0x80056000 2000>;
++	interrupts = <29>;
++};
+diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
+index 1028786..739ef556 100644
+--- a/drivers/rtc/rtc-stmp3xxx.c
++++ b/drivers/rtc/rtc-stmp3xxx.c
+@@ -25,6 +25,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/rtc.h>
+ #include <linux/slab.h>
++#include <linux/of_device.h>
+ 
+ #include <mach/common.h>
+ 
+@@ -265,6 +266,12 @@ static int stmp3xxx_rtc_resume(struct platform_device *dev)
+ #define stmp3xxx_rtc_resume	NULL
+ #endif
+ 
++static const struct of_device_id rtc_dt_ids[] = {
++	{ .compatible = "fsl,stmp3xxx-rtc", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, rtc_dt_ids);
++
+ static struct platform_driver stmp3xxx_rtcdrv = {
+ 	.probe		= stmp3xxx_rtc_probe,
+ 	.remove		= stmp3xxx_rtc_remove,
+@@ -273,6 +280,7 @@ static struct platform_driver stmp3xxx_rtcdrv = {
+ 	.driver		= {
+ 		.name	= "stmp3xxx-rtc",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = rtc_dt_ids,
+ 	},
+ };
+ 
 -- 
-Regards,
-Shawn
+1.7.5.4
