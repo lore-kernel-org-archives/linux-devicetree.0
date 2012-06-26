@@ -1,136 +1,66 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2] spi/pl022: add devicetree support
-Date: Tue, 26 Jun 2012 08:09:36 +0200
-Message-ID: <20120626060936.GA12229@avionic-0098.adnet.avionic-design.de>
-References: <1340658390-29569-1-git-send-email-aletes.xgr@gmail.com>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v5 1/7] ARM: davinci, cp_intc: Add irq domain support
+Date: Tue, 26 Jun 2012 08:54:05 +0200
+Message-ID: <4FE95C8D.4000505@denx.de>
+References: <1338373143-7467-1-git-send-email-hs@denx.de>
+ <1338373143-7467-2-git-send-email-hs@denx.de> <4FE89CCB.4090609@ti.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1340658390-29569-1-git-send-email-aletes.xgr@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Cc: Roland Stigge <stigge@antcom.de>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, spi-devel-general@lists.sourceforge.net
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <4FE89CCB.4090609-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Sekhar,
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 25.06.2012 19:15, Sekhar Nori wrote:
+> Hi Heiko,
+>
+> On 5/30/2012 3:48 PM, Heiko Schocher wrote:
+>> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
+>> Cc: Sergei Shtylyov<sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+>>
+>> ---
+>
+> Applying this patch with two changes:
+>
+> 1) select IRQ_DOMAIN for CP_INTC arch/arm/mach-davinci/Kconfig. Without
+> this build breaks.
+>
+> 2) Add some commit description. For future, please have some commit
+> description on all patches.
 
-On Mon, Jun 25, 2012 at 06:06:28PM -0300, Alexandre Pereira da Silva wrote:
-[...]
-> diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
-[...]
-> @@ -1733,7 +1744,7 @@ static int calculate_effective_freq(struct pl022 *p=
-l022, int freq, struct
->   * A piece of default chip info unless the platform
->   * supplies it.
->   */
-> -static const struct pl022_config_chip pl022_default_chip_info =3D {
-> +static struct pl022_config_chip pl022_default_chip_info =3D {
->  	.com_mode =3D POLLING_TRANSFER,
->  	.iface =3D SSP_INTERFACE_MOTOROLA_SPI,
->  	.hierarchy =3D SSP_SLAVE,
+Ok.
 
-What's the reason for removing the const? You're only reading data from
-the structure.
+> I boot tested this on AM18x EVM. Also tested that GPIO interrupts are
+> not broken.
 
-[...]
-> @@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct=
- amba_id *id)
->  		goto err_no_pdata;
->  	}
-> =20
-> +	num_cs =3D platform_info->num_chipselect;
-> +#ifdef CONFIG_OF
-> +	of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
-> +#endif
+Thanks!
 
-This...
+BTW: What is with the "rest" of the patches in this patchset? I got no
+      more comments for them.
 
-[...]
-> @@ -2017,13 +2064,40 @@ pl022_probe(struct amba_device *adev, const struc=
-t amba_id *id)
->  	 * on this board
->  	 */
->  	master->bus_num =3D platform_info->bus_id;
-> -	master->num_chipselect =3D platform_info->num_chipselect;
-> +	master->num_chipselect =3D num_cs;
->  	master->cleanup =3D pl022_cleanup;
->  	master->setup =3D pl022_setup;
->  	master->prepare_transfer_hardware =3D pl022_prepare_transfer_hardware;
->  	master->transfer_one_message =3D pl022_transfer_one_message;
->  	master->unprepare_transfer_hardware =3D pl022_unprepare_transfer_hardwa=
-re;
->  	master->rt =3D platform_info->rt;
-> +	master->dev.of_node =3D dev->of_node;
-> +
-> +#ifdef CONFIG_OF
-> +	for (i =3D 0; i < num_cs; i++) {
-> +		int cs_gpio =3D of_get_named_gpio(np, "cs-gpios", i);
-> +
-> +		if (cs_gpio =3D=3D -EPROBE_DEFER) {
-> +			status =3D -EPROBE_DEFER;
-> +			goto err_no_gpio;
-> +		}
-> +
-> +		pl022->chipselect[i] =3D cs_gpio;
-> +
-> +		if (gpio_is_valid(cs_gpio)) {
-> +			if (gpio_request(cs_gpio, "ssp-pl022"))
-> +				dev_err(&adev->dev,
-> +					"could not request %d gpio\n", cs_gpio);
-> +			else if (gpio_direction_output(cs_gpio, 1))
-> +				dev_err(&adev->dev,
-> +					"could set gpio %d as output\n",
-> +					cs_gpio);
-> +		}
-> +	}
-> +#else
-> +	for (i =3D 0; i < num_cs; i++)
-> +		pl022->chipselect[i] =3D -EINVAL;
-> +#endif
-
-=2E.. and this would be good candidates for IS_ENABLED(CONFIG_OF).
-
-> =20
->  	/*
->  	 * Supports mode 0-3, loopback, and active low CS. Transfers are
-> @@ -2130,6 +2204,9 @@ pl022_probe(struct amba_device *adev, const struct =
-amba_id *id)
->   err_no_ioremap:
->  	amba_release_regions(adev);
->   err_no_ioregion:
-> + #ifdef CONFIG_OF
-> + err_no_gpio:
-> + #endif
-
-If you use the IS_ENABLED() macro, then you no longer need these either.
-
-Thierry
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIbBAEBAgAGBQJP6VIgAAoJEN0jrNd/PrOh+hEP9jKvRys0+misWJJvA8OThxtU
-WGnVTSHA/NzrOsiSAX7C0ZoCzo7iWk7xqPGRvblLFlwE8OiZNyc/34oa/s31OVr3
-4zgIQgQlXwncZHMuxn2CDUDQKC3IDgekg5ytelNcE8zjl6ZucqA9uQWvYJM3FCt2
-fBdY5wpQGVdSiPECbn2HW244wVq7caIOmsSHPvCecKKK/uF4sOjgECMi/5AbGeyP
-TH8uwLU2L8J9j6Reji7pNTaiK2SCLsKjbSY7pUpC+A6bG/LT78smFupmEYwwaXvU
-wPyAffoGa7HnSBb24u2pz2Rc2SMKvXOL/jkTy4KMpyk86wVvOR25gZ7hYT0HwPn8
-7ivjhP3XQXHYaPYLEnVkBpyUaBlvZKeZijAZSAA7+GudBL72Mkx86/RUicrMkvvC
-4n6DRrN5MejqigBQIaUL6nGBN2J1G+1IAFs+zrxvM1y1eBD6smDsWx0USQ2b0qCQ
-uMiR+RSeI0/EbTxYyzRujAVp1TOnhCVbcTpNVUyjC7Q2WUavfc4/PlRZpQlTQi0S
-BMKeyW9VjnWpYPxty87kHKFdsdnIwOpqM4Mz7/INBuPuN9aJmmdQlwkesd/HkPxl
-9MOhotMxrWkLhSwj4ULdhqL+JYjaekDzTMj//1krI8GPOXtYY+ilqcetQzjfETbz
-32XQ/ICxFOegtyuVuDY=
-=oyZ0
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
