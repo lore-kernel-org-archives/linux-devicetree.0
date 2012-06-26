@@ -1,142 +1,173 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Tue, 26 Jun 2012 20:27:47 +0000
-Message-ID: <201206262027.47817.arnd@arndb.de>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206261459.40766.arnd@arndb.de> <1340733019.1562.242.camel@vkoul-udesk3>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Where to power on the wifi device before loading the driver.
+Date: Tue, 26 Jun 2012 16:26:04 -0500
+Message-ID: <4FEA28EC.2080906@gmail.com>
+References: <20120614121234.GC3913@opensource.wolfsonmicro.com>
+ <4FDA092E.10301@wwwdotorg.org>
+ <6B4D417B830BC44B8026029FD256F7F1C377BFFE8D@HKMAIL01.nvidia.com>
+ <4FDB5976.20809@wwwdotorg.org>
+ <6B4D417B830BC44B8026029FD256F7F1C6EE2DD61F@HKMAIL01.nvidia.com>
+ <43E4817426ED174AA81263BCECB4351D138E8ACD6B@sc-vexch3.marvell.com>
+ <6B4D417B830BC44B8026029FD256F7F1C6EE2DD622@HKMAIL01.nvidia.com>
+ <20120619091719.GZ3974@opensource.wolfsonmicro.com>
+ <6B4D417B830BC44B8026029FD256F7F1C6EE2DD626@HKMAIL01.nvidia.com>
+ <4FE112F2.7000506@wwwdotorg.org>
+ <20120626085605.GA6047@shlinux2.ap.freescale.net>
+ <4FE9E907.6050803@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1340733019.1562.242.camel@vkoul-udesk3>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Vinod Koul <vinod.koul@linux.intel.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FE9E907.6050803-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "'linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, b29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mursalin Akon <makon-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, 'Philip Rakity' <prakity-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Li Frank-B20596 <B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "'frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rakesh Kumar <krakesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Estevam Fabio-R49496 <r49496-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Mark Brown' <broonie@opensour>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 26 June 2012, Vinod Koul wrote:
-> On Tue, 2012-06-26 at 14:59 +0000, Arnd Bergmann wrote:
-> > On Tuesday 26 June 2012, Vinod Koul wrote:
-> > > Today, we just ask for a channel with specific mask. Further filtering
-> > > is done in filter function as we request a channel, not a specific one.
-> > > In most slave cases, we need a specific channel from a specific
-> > > controller, and that is where DT can play a role. In addition to DMA
-> > > resources for dma and client driver, I would expect DT to provide the
-> > > channel mapping information, which is anyway known only by platform.
-> > 
-> > Can you describe what you mean by "channel mapping information"?
-> > Is that not what we pass into the filter function?
->
-> Today many dmaengine drivers have a filter function which is exported
-> and then used by clients to filter out the channel. That is not a right
-> way to do, so any future plan which is based on filter is not correct.
-
-I agree that exporting a filter function from the dmaengine driver is
-very wrong and should not be done because it requires that the device
-driver knows which engine is used and that is contrary to the idea
-of having an abstraction layer.
-
-We were talking about using a filter function because that would be
-easy to do without changing the core dmaengine code. However, in the
-proposal, there would actually just be a single filter function that
-gets used by all drivers that have DT bindings, and it can be
-completely encapsulated in the of_dma_request_channel() function
-so it does not have to be a global symbol.
-
-If we instead modify the dmaengine code itself to know about DT
-rather than wrapping around it, we would not need this filter
-function, but we should still have a probe() function that is
-called by dmaengine code to interpret the data that is specific
-to one dmaengine driver.
-
-> IMHO dmaengine driver should *not* know anything about mapping. By
-> mapping I refer to platform information which tells me which client can
-> use which channel from which dmac.
-
-Agreed too. That information shoudd be part of the slave device-node
-in DT, as I have argued in this thread already. The slave device driver
-does not need to care about the format or the contents of it,
-but we need some code to interpret the contents. From all I can tell,
-the structure of this data cannot be completely generic because of
-all the special cases, so the code to interpret it would live in the
-probe() function I mentioned about that the dmaengine driver provides.
-
-> > I think encoding a description for a dma request in a single number is
-> > the last thing we want to do here. We've tried that with IRQ and GPIO
-> > numbers and it got us into a huge mess that will need a long time to
-> > get out of.
-> No i wasn't thinking of a number. The mapping shouldn't be a global
-> number at all, though that is a very easy but not very scalable
-> solution.
-> We need to take care of 1:1 mapping of client and channels as well as
-> many:1  cases as well. A single global number cannot represent that
-> properly.
+On 06/26/2012 11:53 AM, Stephen Warren wrote:
+> (I'm adding everyone on thread "ARM: imx6q: add config-on-boot gpios" to
+> the CC of this similar thread. Sorry if you think that's spam.)
 > 
-> My idea is platform gives this information to dmaengine. Clients and
-> dmaengine driver do not worry about it. That also paves way for arch
-> independent clients and drivers.
+> On 06/26/2012 02:56 AM, Dong Aisheng wrote:
+>> On Tue, Jun 19, 2012 at 06:01:54PM -0600, Stephen Warren wrote:
+> ...
+>>> I think what we need is some way of matching a DT node to a device even
+>>> when that device was instantiated through some probing mechanism such as
+>>> SDIO or USB (and I've heard hints that one can already do this for PCI;
+>>> I should investigate).
+>>>
+>>> So, we start off with the plain SDHCI controller node:
+>>>
+>>> sdhci@78000000 {
+>>> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
+>>> 	reg = <0x78000000 0x200>;
+>>> 	interrupts = <0 14 0x04>;
+>>> };
+>>>
+>>> Then, we add a child node to represent the device that's attached:
+>>>
+>>> sdhci@78000000 {
+>>> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
+>>> 	reg = <0x78000000 0x200>;
+>>> 	interrupts = <0 14 0x04>;
+>>>
+>>> 	sdio-device {
+>>> 		reset-gpios = <...>;
+>>> 		enable-gpios = <...>;
+>>> 	};
+>>> };
+>>>
+>>> When the SDHCI controller/core instantiates the child device it finds on
+>>> the HW bus, it initializes that struct device's of_node with a pointer
+>>> to the sdio-device node above. From there, the child device can get DT
+>>> properties such as GPIOs in the usual way.
+>>>
+>>> However, there are still some issues that need thought here; what if (as
+>>> is I believe the case on Cardhu) we can in fact plug in multiple
+>>> different types of device into the socket? Might we end up with
+>>> something like:
+>>>
+>>> sdhci@78000000 {
+>>> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
+>>> 	reg = <0x78000000 0x200>;
+>>> 	interrupts = <0 14 0x04>;
+>>>
+>>> 	sdio-device-option@0 {
+>>> 		compatible = "broadcom,bcm4239";
+>>> 		reset-gpios = <...>;
+>>> 		enable-gpios = <...>;
+>>> 	};
+>>>
+>>> 	sdio-device-option@1 {
+>>> 		compatible = "broadcom,bcm4330";
+>>> 		reset-gpios = <...>;
+>>> 		enable-gpios = <...>;
+>>> 	};
+>>> };
+>>>
+>>> and match on compatible value?
+>>>
+>> I like this idea.
+>> We may extend the sdio_device_id to contain a compatible string,
+>> then sdio core is responsible to pass the corresponding device node to the
+>> sdio function driver once a match device found, this is sdio function independent.
+>> The sdio function driver then are responsible to parse the device node to
+>> fetch the needed information like reset-gpios and enable-gpios to do correct
+>> initialization sequence.
+>>
+>> However, one known question for this model is that some WiFi may need reset the chip
+>> via gpio first before being able to be enumerated.
+> 
+> Yes, that's exactly the issue that makes the above binding incorrect.
+> 
+> In another thread on a very similar topic, I proposed a binding that
+> would address this issue:
+> 
+> http://www.spinics.net/lists/linux-usb/msg66013.html
+> 
+>> sdhci@78000000 {
+>> 	compatible = "nvidia,tegra30-sdhci", "nvidia,tegra20-sdhci";
+>> 	reg = <0x78000000 0x200>;
+>> 	interrupts = <0 14 0x04>;
+>>
+>> 	sdio-device {
+>> 		reset-gpios = <...>;
+>> 		enable-gpios = <...>;
+>> 	};
 
-IMO the platform should have no part in this. I absolutely want to
-get rid of any platform-specific hardcoded tables in the kernel for
-stuff that can easily be run-time detected from the device tree.
-There are cases where hard-coding in the kernel is easier, but I don't
-think this is one of them.
+These are really no different than CD and WP on gpio lines. So I don't
+think a child node is even necessary. They are really properties of the
+host controller as you have to know how to handle them before enumeration.
 
-> > Some platforms actually use IORESOURCE_DMA, which was useful to describe
-> > ISA DMA channels, for encoding some form of channel or request number,
-> > but this causes all sorts of problems. These are almost exclusively
-> > used by those platforms that don't have a dmaengine driver yet, so I'd
-> > hope that we can remove this as we convert those platforms over to
-> > dmaengine and device tree.
-> > 
-> > The representation in device tree as we have it now is a combination of
-> > a pointer to the dmaengine and a description of the request line in it,
-> > typically a single small integer number local to the dmaengine. We should
-> > not try to make that a global integer number again that just serves the
-> > purpose of looking up the dmaengine and local number again.
-> > 
-> > IMHO no device driver should be bothered with any artificial resource
-> > information, but instead I want all the DT parsing to happen in the
-> > dmaengine code (or some wrapper around it) where it gets used. The only
-> > thing that a device driver needs to know is that it wants to use a
-> > channel based on what is described in the device tree.
-> Sure, but I would expect the clients and dmacs to find information about
-> their devices from DT?
-> dmaengine should get only mapping information used for allocating
-> channel to client.
+One question is do the gpios have strict timing or ordering
+requirements. If so then that would be difficult to describe generically.
 
-Let's take a look at a concrete example. The
-arch/arm/mach-ux500/board-mop500-sdi.c file defines dma channel
-configuration for the mmc devices on the ux500 platform that looks
-like
+>> };
+> 
+>> ehci {
+>>     /* The following node is dynamically detected, although the hub
+>>      * IC is physically soldered onto the board
+>>      */
+>>     hub {
+>>         hub { /* also dynamic */
+>>             port@2 {
+>>                 child-supply = <&regulator>;
+>>                 reset-gpios = <&gpio 0 0>;
+>>             };
+>>         };
+>>     };
+>> }
+> 
 
-static struct stedma40_chan_cfg mop500_sdi2_dma_cfg_tx = {
-        .mode = STEDMA40_MODE_LOGICAL,
-        .dir = STEDMA40_MEM_TO_PERIPH,
-        .src_dev_type = STEDMA40_DEV_SRC_MEMORY,
-        .dst_dev_type = DB8500_DMA_DEV28_SD_MM2_TX,
-        .src_info.data_width = STEDMA40_WORD_WIDTH,
-        .dst_info.data_width = STEDMA40_WORD_WIDTH,
-};
+Considering the same enumeration ordering requirement as above and that
+this is probably limited to a single hub/device on the root hub, I think
+the simple solution of just adding the gpio's to the ehci node and
+handling in the ehci driver is sufficient.
 
-I want to move this information to the device tree in a way that the
-device driver does not have to care about it. With the proposed
-binding, this would mean we get an mmci device node with a property
-containing something like
+> Presumably something similar could be set up with platform data.
+> 
+> Basically, the SD controller or USB host/hub node contains a child that
+> represents the socket/port/... that needs some services provided to it
+> (power, reset de-asserted, even clocks). The services provided by that
+> node are set up before enumeration, so that the device will respond to
+> enumeration. Hopefully, the DT representation of this socket/port/..
+> could be shared across arbitrary types of controller (so both SD and
+> USB) and the driver the "implements" that node would be common code that
+> SD and USB call into, rather than having them both re-implement it from
+> scratch.
 
-	dma-requests = <&dma40  /* pointer to dma engine */
-			0x01    /* logical, mem to dev */
-			28      /* DEV28_SD_MM2_TX */
-			32>,	/* 32 bit width */
-		       <&dma40 0x02 32 32>; /* dev to mem channel */ 
+While I think this can be handled generically with SD and USB drivers,
+I'm not so sure there would be benefit across them. It is just getting a
+gpio and toggling it. But really that's a detail that doesn't matter
+until we're closer to an implementation...
 
-The fact that this dmaengine driver requires two cells (request number
-and data width) should only be known to the code that deals with that
-one driver and that should interpret those two cells, while the first
-two cells (pointer to dma-engine and direction) can be handled
-by the common dmaengine layer.
-
-In order to do that, we need some code in the dmaengine driver that
-gets the property data as its argument.
-
-	Arnd
+Rob
