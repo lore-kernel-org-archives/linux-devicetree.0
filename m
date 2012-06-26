@@ -1,31 +1,68 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 00/14] add imx usb driver based on Greg next tree
-Date: Tue, 26 Jun 2012 10:37:56 +0800
-Message-ID: <20120626023754.GJ2342@S2101-09.ap.freescale.net>
-References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com>
- <CAOMZO5BEVrPrgZ7E5xUE-_3zXb317mzqoZXaxXw1SNACuRzOPw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5BEVrPrgZ7E5xUE-_3zXb317mzqoZXaxXw1SNACuRzOPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+From: Olof Johansson <olof@lixom.net>
+Subject: [PATCH] gpio: samsung: add flags specifier to device-tree binding
+Date: Mon, 25 Jun 2012 21:18:21 -0700
+Message-ID: <1340684301-16836-1-git-send-email-olof@lixom.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@stericsson.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, samsung-soc@vger.kernel.org, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2012 at 01:18:22PM -0300, Fabio Estevam wrote:
-> Any suggestions as to how to make the driver work on mx23?
-> 
-I won't be able to test it on my imx23-evk board, because the board
-design is somehow odd on vbus supply, which probably requires a board
-rework.
+This adds a flags field to the gpio specifier for Samsung. I didn't
+want to add yet another field in the already quite long specifier, so
+I decided to compress it together with the Pull Up/Down settings instead.
 
+This is needed to, for example, have a gpio-keys input that is active low.
+
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ Documentation/devicetree/bindings/gpio/gpio-samsung.txt | 9 +++++----
+ drivers/gpio/gpio-samsung.c                             | 5 ++++-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+index 8f50fe5..c873e80 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+@@ -11,14 +11,15 @@ Required properties:
+      <[phandle of the gpio controller node]
+       [pin number within the gpio controller]
+       [mux function]
+-      [pull up/down]
++      [flags and pull up/down]
+       [drive strength]>
+ 
+   Values for gpio specifier:
+   - Pin number: is a value between 0 to 7.
+-  - Pull Up/Down: 0 - Pull Up/Down Disabled.
+-                  1 - Pull Down Enabled.
+-                  3 - Pull Up Enabled.
++  - Flags and Pull Up/Down: 0 - Pull Up/Down Disabled.
++                            1 - Pull Down Enabled.
++                            3 - Pull Up Enabled.
++          Bit 16 (0x00010000) - Input is active low.
+   - Drive Strength: 0 - 1x,
+                     1 - 3x,
+                     2 - 2x,
+diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
+index b6453d0..92f7b2b 100644
+--- a/drivers/gpio/gpio-samsung.c
++++ b/drivers/gpio/gpio-samsung.c
+@@ -2681,11 +2681,14 @@ static int exynos_gpio_xlate(struct gpio_chip *gc,
+ 
+ 	if (s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(gpiospec->args[1])))
+ 		pr_warn("gpio_xlate: failed to set pin function\n");
+-	if (s3c_gpio_setpull(pin, gpiospec->args[2]))
++	if (s3c_gpio_setpull(pin, gpiospec->args[2] & 0xffff))
+ 		pr_warn("gpio_xlate: failed to set pin pull up/down\n");
+ 	if (s5p_gpio_set_drvstr(pin, gpiospec->args[3]))
+ 		pr_warn("gpio_xlate: failed to set pin drive strength\n");
+ 
++	if (flags)
++		*flags = gpiospec->args[2] >> 16;
++
+ 	return gpiospec->args[0];
+ }
+ 
 -- 
-Regards,
-Shawn
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.10.1.488.g05fbf7a
