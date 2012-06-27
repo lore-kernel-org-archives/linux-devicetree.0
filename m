@@ -1,31 +1,68 @@
 From: Roland Stigge <stigge@antcom.de>
-Subject: Re: [PATCH v7] MTD: LPC32xx SLC NAND driver
-Date: Wed, 27 Jun 2012 17:26:17 +0200
-Message-ID: <4FEB2619.8020000@antcom.de>
-References: <1339064536-20553-1-git-send-email-stigge@antcom.de>  <1340794007.29342.50.camel@sauron.fi.intel.com>  <4FEAF90B.5030809@antcom.de> <1340800392.1799.17.camel@sauron.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340800392.1799.17.camel@sauron.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dedekind1@gmail.com
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
+Subject: [PATCH 2/4] mtd: lpc32xx_slc: Make wp gpio optional
+Date: Wed, 27 Jun 2012 17:51:13 +0200
+Message-ID: <1340812275-1197-2-git-send-email-stigge@antcom.de>
+References: <1340812275-1197-1-git-send-email-stigge@antcom.de>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1340812275-1197-1-git-send-email-stigge@antcom.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: dedekind1@gmail.com, linux-mtd@lists.infradead.org, aletes.xgr@gmail.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
+Cc: Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2012 02:33 PM, Artem Bityutskiy wrote:
-> On Wed, 2012-06-27 at 14:14 +0200, Roland Stigge wrote:
->> Thanks for the note! I'm sending an incremental patch. There was 
->> actually only one place in the two functions that could fail
->> (return code of lpc32xx_xfer()).
-> 
-> Could you please check the MCL patch as well and re-send it against
-> the l2 tree?
-> 
-> I've squashed your change into the driver and pushed out, thanks!
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 
-Yes, thanks!
+This patch supports missing wp gpio.
 
-Will post an updated MLC against l2-mtd later today.
+Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Signed-off-by: Roland Stigge <stigge@antcom.de>
+---
+ drivers/mtd/nand/lpc32xx_slc.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Roland
+diff --git a/drivers/mtd/nand/lpc32xx_slc.c b/drivers/mtd/nand/lpc32xx_slc.c
+index b27b3b3..ab72aca 100644
+--- a/drivers/mtd/nand/lpc32xx_slc.c
++++ b/drivers/mtd/nand/lpc32xx_slc.c
+@@ -192,7 +192,7 @@ struct lpc32xx_nand_cfg_slc {
+ 	u32     rhold;
+ 	u32     rsetup;
+ 	bool    use_bbt;
+-	unsigned wp_gpio;
++	int     wp_gpio;
+ 	struct mtd_partition *parts;
+ 	unsigned num_parts;
+ };
+@@ -295,7 +295,8 @@ static int lpc32xx_nand_device_ready(struct mtd_info *mtd)
+  */
+ static void lpc32xx_wp_enable(struct lpc32xx_nand_host *host)
+ {
+-	gpio_set_value(host->ncfg->wp_gpio, 0);
++	if (gpio_is_valid(host->ncfg->wp_gpio))
++		gpio_set_value(host->ncfg->wp_gpio, 0);
+ }
+ 
+ /*
+@@ -303,7 +304,8 @@ static void lpc32xx_wp_enable(struct lpc32xx_nand_host *host)
+  */
+ static void lpc32xx_wp_disable(struct lpc32xx_nand_host *host)
+ {
+-	gpio_set_value(host->ncfg->wp_gpio, 1);
++	if (gpio_is_valid(host->ncfg->wp_gpio))
++		gpio_set_value(host->ncfg->wp_gpio, 1);
+ }
+ 
+ /*
+@@ -819,7 +821,8 @@ static int __devinit lpc32xx_nand_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "Missing platform data\n");
+ 		return -ENOENT;
+ 	}
+-	if (gpio_request(host->ncfg->wp_gpio, "NAND WP")) {
++	if (gpio_is_valid(host->ncfg->wp_gpio) &&
++			gpio_request(host->ncfg->wp_gpio, "NAND WP")) {
+ 		dev_err(&pdev->dev, "GPIO not available\n");
+ 		return -EBUSY;
+ 	}
+-- 
+1.7.10.4
+
