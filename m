@@ -1,79 +1,454 @@
-From: Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Tegra DRM device tree bindings
-Date: Wed, 27 Jun 2012 13:28:01 +0800
-Message-ID: <23B010BBA481A74B98487467C29BA57BF2361DA44C@HKMAIL01.nvidia.com>
-References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
- <20120626160224.40ba10a26e3dd3a56b1f312c@nvidia.com>
- <20120626140033.GC1115@avionic-0098.mockup.avionic-design.de>
- <23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com>
- <4FEA6E09.30800@nvidia.com>
- <23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>
- <4FEA7472.7050201@nvidia.com>
- <20120627051418.GB7177@avionic-0098.mockup.avionic-design.de>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v7 08/14] USB: Chipidea: add ci13xxx device id management
+Date: Wed, 27 Jun 2012 13:42:32 +0800
+Message-ID: <20120627054231.GA21750@b20223-02.ap.freescale.net>
+References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com>
+ <1340607391-16380-9-git-send-email-richard.zhao@freescale.com>
+ <4FE833EB.3050503@pengutronix.de>
+ <513f64cb-8eac-4e51-81f7-e3824d96d870@email.android.com>
+ <4FE83AA9.6030507@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120627051418.GB7177-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4FE83AA9.6030507-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> On Tue, Jun 26, 2012 at 08:48:18PM -0600, Stephen Warren wrote:
-> > On 06/26/2012 08:32 PM, Mark Zhang wrote:
-> > >> On 06/26/2012 07:46 PM, Mark Zhang wrote:
-> > >>>>> On Tue, 26 Jun 2012 12:55:13 +0200 Thierry Reding
-> > >>>>> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> > >> ...
-> > >>>> I'm not sure I understand how information about the carveout
-> > >>>> would be obtained from the IOMMU API, though.
-> > >>>
-> > >>> I think that can be similar with current gart implementation. Define
-> carveout as:
-> > >>>
-> > >>> carveout {
-> > >>>         compatible = "nvidia,tegra20-carveout";
-> > >>>         size = <0x10000000>;
-> > >>> };
-> > >>>
-> > >>> Then create a file such like "tegra-carveout.c" to get these
-> > >>> definitions and
-> > >> register itself as platform device's iommu instance.
-> > >>
-> > >> The carveout isn't a HW object, so it doesn't seem appropriate to
-> > >> define a DT node to represent it.
-> > >
-> > > Yes. But I think it's better to export the size of carveout as a configurable item.
-> > > So we need to define this somewhere. How about define carveout as a
-> property of gart?
-> >
-> > There already exists a way of preventing Linux from using certain
-> > chunks of memory; the /memreserve/ syntax. From a brief look at the
-> > dtc source, it looks like /memreserve/ entries can have labels, which
-> > implies that a property in the GART node could refer to the
-> > /memreserve/ entry by phandle in order to know what memory regions to use.
+On Mon, Jun 25, 2012 at 12:17:13PM +0200, Marc Kleine-Budde wrote:
+> On 06/25/2012 12:03 PM, Richard Zhao wrote:
+> > Could you use my USB test branch? 
 > 
-> Wasn't the whole point of using a carveout supposed to be a replacement for the
-> GART? As such I'd think the carveout should rather be a property of the host1x
-> device.
+> Same result:
 > 
-> AIUI what we want to do is have a large contiguous region of memory that a
-> central component (host1x) manages as a pool from which clients (DRM, V4L, ...)
-> can allocate buffers as needed. Since all of this memory will be contiguous
-> anyway there isn't much use for the GART anymore.
+> ci_hdrc ci_hdrc.0: remove, state 1
+> usb usb1: USB disconnect, device number 1
+> ci_hdrc ci_hdrc.0: USB bus 1 deregistered
+> Unable to handle kernel NULL pointer dereference at virtual address 0000006c
+> pgd = c6ba4000
+> [0000006c] *pgd=46a68831, *pte=00000000, *ppte=00000000
+> Internal error: Oops: 17 [#1] PREEMPT ARM
+> Modules linked in: ci13xxx_imx(-) ci_hdrc imx_usbmisc
+> CPU: 0    Not tainted  (3.5.0-rc4-00058-g01710ef #85)
+> PC is at ida_remove+0xa0/0x110
+> LR is at ida_simple_remove+0x30/0x60
+> pc : [<c0154294>]    lr : [<c01544f4>]    psr: a0000093
+> sp : c6b9fed0  ip : 80000000  fp : 0023f008
+> r10: d9a22647  r9 : c6b9e000  r8 : 08421085
+> r7 : 00000001  r6 : 0000034b  r5 : bf00de34  r4 : 00000000
+> r3 : c6a7f0c0  r2 : 001bb89f  r1 : 6b6b6b6b  r0 : 00000068
+> Flags: NzCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment user
+> Control: 0005317f  Table: 46ba4000  DAC: 00000015
+> Process rmmod (pid: 142, stack limit = 0xc6b9e270)
+> Stack: (0xc6b9fed0 to 0xc6ba0000)
+> fec0:                                     c6b9e000 20000013 6b6b6b6b bf00de34
+> fee0: c6b9e000 c0009408 00000000 c01544f4 c082a3b0 c7865980 bf019634 bf01901c
+> ff00: bf019000 c7865988 bf019634 c018dad8 c018dac4 c018c5e0 bf019634 c7865988
+> ff20: c78659bc c018cdbc c6a86360 bf019688 bf019634 c0e690d0 0023f0b8 c018c438
+> ff40: bf019688 c6b9e000 00000000 c004c56c c75352a8 33316963 5f787878 00786d69
+> ff60: 0023f008 c00a5088 c7812138 c6a4a388 00000000 c782c908 c6a4a388 c0088648
+> ff80: 00000003 c782c908 c6b9e000 00088730 00002002 00000001 0023f088 beea3e5c
+> ffa0: 00000081 c0009260 00000001 0023f088 0023f0b8 00000800 b6f4c65c beea3c00
+> ffc0: 00000001 0023f088 beea3e5c 00000081 0023f088 00000000 00000800 0023f008
+> ffe0: b6f10bc0 beea3c04 b6f8a5f8 b6f10bcc 60000010 0023f0b8 00000000 00000000
+> [<c0154294>] (ida_remove+0xa0/0x110) from [<c01544f4>] (ida_simple_remove+0x30/0x60)
+> [<c01544f4>] (ida_simple_remove+0x30/0x60) from [<bf01901c>] (ci13xxx_imx_remove+0x1c/0x84 [ci13xxx_imx])
+> [<bf01901c>] (ci13xxx_imx_remove+0x1c/0x84 [ci13xxx_imx]) from [<c018dad8>] (platform_drv_remove+0x14/0x18)
+> [<c018dad8>] (platform_drv_remove+0x14/0x18) from [<c018c5e0>] (__device_release_driver+0x58/0xa8)
+> [<c018c5e0>] (__device_release_driver+0x58/0xa8) from [<c018cdbc>] (driver_detach+0xcc/0xd8)
+> [<c018cdbc>] (driver_detach+0xcc/0xd8) from [<c018c438>] (bus_remove_driver+0x7c/0xc0)
+> [<c018c438>] (bus_remove_driver+0x7c/0xc0) from [<c004c56c>] (sys_delete_module+0x180/0x23c)
+> [<c004c56c>] (sys_delete_module+0x180/0x23c) from [<c0009260>] (ret_fast_syscall+0x0/0x2c)
+> Code: e0416286 e5904004 e1a002c6 e0840100 (e5908004)
+> ---[ end trace 74ff20eb0c5179ff ]---
+> note: rmmod[142] exited with preempt_count 1
+> Segmentation fault
+Sorry, I can not reproduce your issue. My defconfig is 
+CONFIG_EXPERIMENTAL=y
+# CONFIG_LOCALVERSION_AUTO is not set
+CONFIG_SYSVIPC=y
+CONFIG_POSIX_MQUEUE=y
+CONFIG_BSD_PROCESS_ACCT=y
+CONFIG_NO_HZ=y
+CONFIG_HIGH_RES_TIMERS=y
+CONFIG_IKCONFIG=y
+CONFIG_IKCONFIG_PROC=y
+CONFIG_CGROUPS=y
+CONFIG_CPUSETS=y
+CONFIG_NAMESPACES=y
+# CONFIG_UTS_NS is not set
+# CONFIG_IPC_NS is not set
+# CONFIG_PID_NS is not set
+# CONFIG_NET_NS is not set
+CONFIG_RELAY=y
+CONFIG_BLK_DEV_INITRD=y
+CONFIG_RD_BZIP2=y
+CONFIG_RD_LZMA=y
+CONFIG_RD_XZ=y
+CONFIG_RD_LZO=y
+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+CONFIG_EXPERT=y
+CONFIG_SYSCTL_SYSCALL=y
+CONFIG_KALLSYMS_ALL=y
+# CONFIG_COMPAT_BRK is not set
+CONFIG_SLAB=y
+CONFIG_PROFILING=y
+CONFIG_OPROFILE=y
+CONFIG_MODULES=y
+CONFIG_MODULE_FORCE_LOAD=y
+CONFIG_MODULE_UNLOAD=y
+CONFIG_MODULE_FORCE_UNLOAD=y
+CONFIG_MODVERSIONS=y
+CONFIG_MODULE_SRCVERSION_ALL=y
+CONFIG_PARTITION_ADVANCED=y
+CONFIG_ARCH_MXC=y
+# CONFIG_MACH_MX31ADS is not set
+# CONFIG_MACH_BUG is not set
+CONFIG_SOC_IMX6Q=y
+CONFIG_MXC_PWM=y
+CONFIG_ARM_THUMBEE=y
+CONFIG_ARM_ERRATA_720789=y
+CONFIG_SMP=y
+CONFIG_SCHED_MC=y
+CONFIG_SCHED_SMT=y
+CONFIG_PREEMPT=y
+CONFIG_AEABI=y
+CONFIG_HIGHMEM=y
+CONFIG_COMPACTION=y
+CONFIG_KSM=y
+CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
+CONFIG_UACCESS_WITH_MEMCPY=y
+CONFIG_SECCOMP=y
+CONFIG_CC_STACKPROTECTOR=y
+CONFIG_ZBOOT_ROM_TEXT=0x0
+CONFIG_ZBOOT_ROM_BSS=0x0
+CONFIG_ARM_APPENDED_DTB=y
+CONFIG_ARM_ATAG_DTB_COMPAT=y
+CONFIG_KEXEC=y
+CONFIG_CRASH_DUMP=y
+CONFIG_CPU_IDLE=y
+CONFIG_VFP=y
+CONFIG_NEON=y
+CONFIG_BINFMT_AOUT=m
+CONFIG_BINFMT_MISC=m
+CONFIG_PM_RUNTIME=y
+CONFIG_PM_DEBUG=y
+CONFIG_PM_ADVANCED_DEBUG=y
+CONFIG_NET=y
+CONFIG_PACKET=y
+CONFIG_UNIX=y
+CONFIG_XFRM_USER=y
+CONFIG_NET_KEY=y
+CONFIG_NET_KEY_MIGRATE=y
+CONFIG_INET=y
+CONFIG_IP_MULTICAST=y
+CONFIG_IP_PNP=y
+CONFIG_IP_PNP_DHCP=y
+CONFIG_IP_PNP_BOOTP=y
+CONFIG_IP_PNP_RARP=y
+CONFIG_SYN_COOKIES=y
+# CONFIG_INET_LRO is not set
+CONFIG_IPV6=y
+CONFIG_NETLABEL=y
+CONFIG_NETFILTER=y
+CONFIG_CAN=m
+CONFIG_BT=m
+CONFIG_BT_HCIUART=m
+CONFIG_BT_HCIUART_H4=y
+CONFIG_BT_HCIUART_BCSP=y
+CONFIG_BT_HCIUART_LL=y
+CONFIG_BT_HCIBCM203X=m
+CONFIG_BT_HCIBPA10X=m
+CONFIG_CFG80211=m
+CONFIG_WIRELESS_EXT_SYSFS=y
+CONFIG_MAC80211=m
+CONFIG_MAC80211_RC_PID=y
+CONFIG_MAC80211_RC_DEFAULT_PID=y
+CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+CONFIG_DEVTMPFS=y
+CONFIG_DEVTMPFS_MOUNT=y
+CONFIG_CMA=y
+CONFIG_CONNECTOR=y
+CONFIG_MTD=y
+CONFIG_MTD_CHAR=y
+CONFIG_MTD_BLOCK=y
+CONFIG_MTD_OOPS=y
+CONFIG_MTD_CFI=y
+CONFIG_MTD_CFI_INTELEXT=y
+CONFIG_MTD_M25P80=y
+CONFIG_MTD_SST25L=y
+CONFIG_MTD_NAND=y
+CONFIG_MTD_ONENAND=y
+CONFIG_MTD_ONENAND_VERIFY_WRITE=y
+CONFIG_MTD_UBI=m
+CONFIG_PROC_DEVICETREE=y
+CONFIG_BLK_DEV_LOOP=y
+CONFIG_BLK_DEV_RAM=y
+CONFIG_BLK_DEV_RAM_SIZE=65536
+CONFIG_BLK_DEV_SD=y
+CONFIG_SCSI_MULTI_LUN=y
+CONFIG_SCSI_SCAN_ASYNC=y
+CONFIG_ATA=y
+# CONFIG_SATA_PMP is not set
+CONFIG_SATA_AHCI_PLATFORM=y
+CONFIG_PATA_IMX=m
+CONFIG_PATA_PLATFORM=m
+CONFIG_PATA_OF_PLATFORM=m
+CONFIG_MD=y
+CONFIG_BLK_DEV_DM=y
+CONFIG_NETDEVICES=y
+# CONFIG_NET_VENDOR_BROADCOM is not set
+# CONFIG_NET_VENDOR_CHELSIO is not set
+# CONFIG_NET_VENDOR_FARADAY is not set
+# CONFIG_NET_VENDOR_INTEL is not set
+# CONFIG_NET_VENDOR_MARVELL is not set
+# CONFIG_NET_VENDOR_MICREL is not set
+# CONFIG_NET_VENDOR_MICROCHIP is not set
+# CONFIG_NET_VENDOR_NATSEMI is not set
+# CONFIG_NET_VENDOR_SEEQ is not set
+# CONFIG_NET_VENDOR_SMSC is not set
+# CONFIG_NET_VENDOR_STMICRO is not set
+CONFIG_SMSC_PHY=y
+CONFIG_USB_USBNET=y
+CONFIG_USB_NET_SMSC95XX=y
+CONFIG_USB_ALI_M5632=y
+CONFIG_USB_AN2720=y
+CONFIG_USB_EPSON2888=y
+CONFIG_USB_KC2190=y
+CONFIG_LIBERTAS_THINFIRM=m
+CONFIG_LIBERTAS_THINFIRM_USB=m
+CONFIG_AT76C50X_USB=m
+CONFIG_USB_ZD1201=m
+CONFIG_USB_NET_RNDIS_WLAN=m
+CONFIG_RTL8187=m
+CONFIG_MAC80211_HWSIM=m
+CONFIG_ATH_COMMON=m
+CONFIG_CARL9170=m
+CONFIG_B43=m
+CONFIG_B43_PHY_N=y
+CONFIG_B43LEGACY=m
+CONFIG_HOSTAP=y
+CONFIG_HOSTAP_FIRMWARE=y
+CONFIG_HOSTAP_FIRMWARE_NVRAM=y
+CONFIG_LIBERTAS=m
+CONFIG_LIBERTAS_USB=m
+CONFIG_LIBERTAS_SDIO=m
+CONFIG_LIBERTAS_SPI=m
+CONFIG_P54_COMMON=m
+CONFIG_P54_USB=m
+CONFIG_P54_SPI=m
+CONFIG_RT2X00=m
+CONFIG_RT2500USB=m
+CONFIG_RT73USB=m
+CONFIG_RT2800USB=m
+CONFIG_RT2800USB_RT53XX=y
+CONFIG_RT2800USB_UNKNOWN=y
+CONFIG_RTL8192CU=m
+CONFIG_ZD1211RW=m
+CONFIG_MWIFIEX=m
+CONFIG_MWIFIEX_SDIO=m
+CONFIG_INPUT_MOUSEDEV=m
+CONFIG_INPUT_JOYDEV=y
+CONFIG_INPUT_EVDEV=y
+CONFIG_KEYBOARD_GPIO=y
+CONFIG_MOUSE_PS2=m
+CONFIG_INPUT_TOUCHSCREEN=y
+CONFIG_INPUT_MISC=y
+CONFIG_INPUT_UINPUT=y
+CONFIG_VT_HW_CONSOLE_BINDING=y
+# CONFIG_LEGACY_PTYS is not set
+# CONFIG_DEVKMEM is not set
+CONFIG_SERIAL_8250=m
+CONFIG_SERIAL_8250_NR_UARTS=32
+CONFIG_SERIAL_8250_EXTENDED=y
+CONFIG_SERIAL_8250_MANY_PORTS=y
+CONFIG_SERIAL_8250_SHARE_IRQ=y
+CONFIG_SERIAL_8250_DETECT_IRQ=y
+CONFIG_SERIAL_8250_RSA=y
+CONFIG_SERIAL_IMX=y
+CONFIG_SERIAL_IMX_CONSOLE=y
+CONFIG_I2C=y
+CONFIG_I2C_CHARDEV=y
+CONFIG_I2C_MUX=m
+CONFIG_I2C_MUX_GPIO=m
+CONFIG_I2C_MUX_PCA9541=m
+CONFIG_I2C_MUX_PCA954x=m
+CONFIG_I2C_DESIGNWARE_PLATFORM=m
+CONFIG_I2C_GPIO=m
+CONFIG_I2C_IMX=y
+CONFIG_I2C_OCORES=m
+CONFIG_I2C_PCA_PLATFORM=m
+CONFIG_I2C_SIMTEC=m
+CONFIG_I2C_XILINX=m
+CONFIG_I2C_DIOLAN_U2C=m
+CONFIG_I2C_PARPORT_LIGHT=m
+CONFIG_I2C_TAOS_EVM=m
+CONFIG_I2C_TINY_USB=m
+CONFIG_I2C_STUB=m
+CONFIG_SPI=y
+CONFIG_SPI_ALTERA=m
+CONFIG_SPI_GPIO=m
+CONFIG_SPI_IMX=y
+CONFIG_SPI_OC_TINY=m
+CONFIG_SPI_XILINX=m
+CONFIG_SPI_DESIGNWARE=m
+CONFIG_SPI_DW_MMIO=m
+CONFIG_SPI_SPIDEV=m
+CONFIG_SPI_TLE62X0=m
+CONFIG_DEBUG_GPIO=y
+CONFIG_GPIO_SYSFS=y
+CONFIG_W1=y
+CONFIG_W1_MASTER_MXC=y
+CONFIG_POWER_SUPPLY=y
+CONFIG_HWMON=m
+CONFIG_THERMAL=y
+CONFIG_WATCHDOG=y
+CONFIG_MFD_ANATOP=y
+CONFIG_REGULATOR=y
+CONFIG_REGULATOR_FIXED_VOLTAGE=y
+CONFIG_REGULATOR_VIRTUAL_CONSUMER=y
+CONFIG_REGULATOR_GPIO=y
+CONFIG_REGULATOR_ANATOP=y
+CONFIG_MEDIA_SUPPORT=y
+CONFIG_VIDEO_DEV=y
+CONFIG_RC_CORE=m
+CONFIG_RC_ATI_REMOTE=m
+CONFIG_IR_IMON=m
+CONFIG_IR_MCEUSB=m
+CONFIG_IR_REDRAT3=m
+CONFIG_IR_STREAMZAP=m
+CONFIG_RC_LOOPBACK=m
+CONFIG_USB_VIDEO_CLASS=m
+CONFIG_FB=y
+CONFIG_FB_MODE_HELPERS=y
+CONFIG_BACKLIGHT_LCD_SUPPORT=y
+CONFIG_LCD_CLASS_DEVICE=y
+CONFIG_BACKLIGHT_CLASS_DEVICE=y
+CONFIG_BACKLIGHT_PWM=y
+CONFIG_FRAMEBUFFER_CONSOLE=y
+CONFIG_SOUND=y
+CONFIG_SND=y
+CONFIG_SND_MIXER_OSS=m
+CONFIG_SND_PCM_OSS=m
+CONFIG_SND_VERBOSE_PRINTK=y
+CONFIG_SND_DEBUG=y
+# CONFIG_SND_DRIVERS is not set
+# CONFIG_SND_ARM is not set
+# CONFIG_SND_SPI is not set
+# CONFIG_SND_USB is not set
+CONFIG_SND_SOC=y
+CONFIG_SND_IMX_SOC=y
+CONFIG_SND_SOC_IMX_SGTL5000=y
+# CONFIG_USB_HID is not set
+CONFIG_USB=y
+CONFIG_USB_DEBUG=y
+CONFIG_USB_MON=y
+# CONFIG_USB_EHCI_TT_NEWSCHED is not set
+CONFIG_USB_CHIPIDEA=m
+CONFIG_USB_CHIPIDEA_HOST=y
+CONFIG_USB_CHIPIDEA_DEBUG=y
+CONFIG_USB_STORAGE=y
+CONFIG_USB_LIBUSUAL=y
+CONFIG_USB_GADGET=y
+CONFIG_USB_MXS_PHY=y
+CONFIG_MMC=y
+CONFIG_SDIO_UART=y
+CONFIG_MMC_SDHCI=y
+CONFIG_MMC_SDHCI_PLTFM=y
+CONFIG_MMC_SDHCI_ESDHC_IMX=y
+CONFIG_MMC_MXC=y
+CONFIG_LEDS_CLASS=y
+CONFIG_LEDS_GPIO=y
+CONFIG_LEDS_PWM=m
+CONFIG_LEDS_REGULATOR=m
+CONFIG_LEDS_TRIGGER_TIMER=m
+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+CONFIG_LEDS_TRIGGER_BACKLIGHT=m
+CONFIG_LEDS_TRIGGER_GPIO=m
+CONFIG_LEDS_TRIGGER_DEFAULT_ON=m
+CONFIG_RTC_CLASS=y
+CONFIG_DMADEVICES=y
+CONFIG_IMX_SDMA=y
+CONFIG_COMMON_CLK_DEBUG=y
+CONFIG_PM_DEVFREQ=y
+CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
+CONFIG_DEVFREQ_GOV_PERFORMANCE=y
+CONFIG_DEVFREQ_GOV_POWERSAVE=y
+CONFIG_DEVFREQ_GOV_USERSPACE=y
+CONFIG_EXT2_FS=y
+CONFIG_EXT3_FS=y
+CONFIG_EXT4_FS=y
+CONFIG_BTRFS_FS=y
+CONFIG_ISO9660_FS=m
+CONFIG_JOLIET=y
+CONFIG_ZISOFS=y
+CONFIG_MSDOS_FS=y
+CONFIG_VFAT_FS=y
+CONFIG_TMPFS=y
+CONFIG_TMPFS_POSIX_ACL=y
+CONFIG_JFFS2_FS=m
+CONFIG_JFFS2_SUMMARY=y
+CONFIG_JFFS2_FS_XATTR=y
+CONFIG_JFFS2_COMPRESSION_OPTIONS=y
+CONFIG_JFFS2_LZO=y
+CONFIG_JFFS2_RUBIN=y
+CONFIG_UBIFS_FS=m
+CONFIG_CRAMFS=y
+CONFIG_NFS_FS=y
+CONFIG_NFS_V3_ACL=y
+CONFIG_NFS_V4=y
+CONFIG_ROOT_NFS=y
+CONFIG_NLS_CODEPAGE_437=y
+CONFIG_NLS_ISO8859_1=y
+CONFIG_PRINTK_TIME=y
+CONFIG_MAGIC_SYSRQ=y
+CONFIG_DETECT_HUNG_TASK=y
+CONFIG_SCHEDSTATS=y
+CONFIG_TIMER_STATS=y
+CONFIG_DEBUG_INFO=y
+CONFIG_DEBUG_MEMORY_INIT=y
+CONFIG_FUNCTION_TRACER=y
+CONFIG_STRICT_DEVMEM=y
+CONFIG_DEBUG_USER=y
+CONFIG_DEBUG_LL=y
+CONFIG_EARLY_PRINTK=y
+CONFIG_SECURITY=y
+CONFIG_LSM_MMAP_MIN_ADDR=0
+CONFIG_SECURITY_SELINUX=y
+CONFIG_SECURITY_SMACK=y
+CONFIG_SECURITY_APPARMOR=y
+CONFIG_DEFAULT_SECURITY_APPARMOR=y
+CONFIG_CRYPTO_CBC=m
+CONFIG_CRYPTO_SHA256=m
+CONFIG_CRYPTO_BLOWFISH=m
+CONFIG_CRYPTO_SERPENT=m
+CONFIG_CRYPTO_TWOFISH=m
+CONFIG_CRYPTO_DEFLATE=y
+CONFIG_CRYPTO_LZO=y
+# CONFIG_CRYPTO_ANSI_CPRNG is not set
+CONFIG_CRC_CCITT=y
+CONFIG_CRC_T10DIF=y
+CONFIG_CRC_ITU_T=y
+CONFIG_CRC7=y
+
+
+Thanks
+Richard
+> 
+> Marc
+> 
+> -- 
+> Pengutronix e.K.                  | Marc Kleine-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 > 
 
-I have the same understanding. We don't need GART anymore if carveout is enabled.
-I'm thinking that why we need to define a property and reference to global 
-/memreserve/ in GART or HOST1X node?
-We can just define a label for /memreserve/, so we can distinguish these memory 
-reservations already in codes.
 
-> But maybe I'm misunderstanding.
-> 
-> Thierry
-> 
-> * Unknown Key
-> * 0x7F3EB3A1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
