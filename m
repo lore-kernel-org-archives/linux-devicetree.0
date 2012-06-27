@@ -1,122 +1,105 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v7] MTD: LPC32xx SLC NAND driver
-Date: Wed, 27 Jun 2012 13:46:47 +0300
-Message-ID: <1340794007.29342.50.camel@sauron.fi.intel.com>
-References: <1339064536-20553-1-git-send-email-stigge@antcom.de>
-Reply-To: dedekind1@gmail.com
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH 2/4] can: flexcan: add hardware controller version support
+Date: Wed, 27 Jun 2012 12:57:55 +0200
+Message-ID: <4FEAE733.8060401@grandegger.com>
+References: <1340785161-3598-1-git-send-email-jason77.wang@gmail.com> <1340785161-3598-2-git-send-email-jason77.wang@gmail.com> <1340785161-3598-3-git-send-email-jason77.wang@gmail.com> <4FEAC3EF.3060606@pengutronix.de> <4FEACAAB.1000002@grandegger.com> <4FEAD5CF.9070601@grandegger.com> <4FEAD7B8.2000601@pengutronix.de> <4FEADCB8.80306@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-agi+MRH9evovqYYqw4oW"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1339064536-20553-1-git-send-email-stigge@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <4FEADCB8.80306@gmail.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Hui Wang <jason77.wang@gmail.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, davem@davemloft.net, shawn.guo@linaro.org, linux-can@vger.kernel.org, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/27/2012 12:13 PM, Hui Wang wrote:
+> Marc Kleine-Budde wrote:
+>> On 06/27/2012 11:43 AM, Wolfgang Grandegger wrote:
+>>  
+>>> Hi Marc,
+>>>
+>>> On 06/27/2012 10:56 AM, Wolfgang Grandegger wrote:
+>>>    
+>>>> On 06/27/2012 10:27 AM, Marc Kleine-Budde wrote:
+>>>>      
+>>>>> On 06/27/2012 10:19 AM, Hui Wang wrote:
+>>>>>        
+>>>>>> At least in the i.MX series, the flexcan contrller divides into ver_3
+>>>>>> and ver_10, current driver is for ver_3 controller.
+>>>>>>
+>>>>>> i.MX6 has ver_10 controller, it has more reigsters than ver_3 has.
+>>>>>> The rxfgmask (Rx FIFO Global Mask) register is one of the new added.
+>>>>>> Its reset value is 0xffffffff, this means ID Filter Table must be
+>>>>>> checked when receive a packet, but the driver is designed to accept
+>>>>>> everything during the chip start, we need to clear this register to
+>>>>>> follow this design.
+>>>>>>
+>>>>>> Add a hw_ver entry in the device tree, this can let us distinguish
+>>>>>> which version the controller is, if we don't set value to this entry,
+>>>>>> the hw_ver is 3 by default, this is backward compatible for existing
+>>>>>> platforms like powerpc and imx35.
+>>>>>>           
+>>>>> Is it possible to read this value from the hardware?
+>>>>> Another possibility would be to introduce a new compatible device
+>>>>> in the
+>>>>> device tree.
+>>>>>         
+>>>> I vote for the latter. IIRC, in the past we already had some discussion
+>>>> on how to handle version dependent Flexcan hardware, e.g. by using
+>>>> flexcan-vX.X or being expicit using fsl,p1010-flexcan. Search for "Add
+>>>> support for powerpc" in the netdev mailing list. I added the
+>>>> devicetree-discuss ml for that reason.
+>>>>       
+>>> I looked up the threads and found:
+>>>
+>>>   http://marc.info/?w=4&r=1&s=Fix+up+fsl-flexcan+device+tree+bi&q=t
+>>>
+>>> In the Flexcan driver we currently only have:
+>>>
+>>>   static struct of_device_id flexcan_of_match[] = {
+>>>         {
+>>>                 .compatible = "fsl,p1010-flexcan",
+>>>         },
+>>>         {},
+>>>   };
+>>>
+>>> What compatible string do they actually use for the i.MX6Q board? Shawn
+>>> or Hui? We need to fix that. From the discussion mentioned above I think
+>>>     
+> Currently i modified the can1 DT entry in the  imx6q.dtsi like this:
+>            flexcan@02090000 { /* CAN1 */
+>                reg = <0x02090000 0x4000>;
+>                interrupts = <0 110 0x04>;
+>                hw-version = <10>;
+>            };
+> 
+> and the DT entry in the imx6q-sabrelite.dts like this:
+>            flexcan@02090000 { /* CAN1 */
+>                compatible = "fsl,imx6q-flexcan", "fsl,p1010-flexcan";
+>                phy-en-gpio = <&gpio1 4 0>;
+>                phy-stby-gpio = <&gpio1 2 0>;
+>                pinctrl-names = "default";
+>                pinctrl-0 = <&pinctrl_flexcan1_1>;
+>            };
+> if we don't use hw-version entry and use flexcan-v10, do you mean we use
+> strcmp or strxxx to decide controller version?
 
---=-agi+MRH9evovqYYqw4oW
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Yes, that could be done wuth that syntax, but ...
 
-On Thu, 2012-06-07 at 12:22 +0200, Roland Stigge wrote:
-> This patch adds support for the SLC NAND controller inside the LPC32xx So=
-C.
->=20
-> Signed-off-by: Roland Stigge <stigge@antcom.de>
+> Regards,
+> Hui.
+>>> "fsl,flexcan-v10" would be acceptable. Unfortunately, we do not known
+>>>     
+>>
+>> As far as I understand the DT, the name should be something like
+>>
+>> "fsl,${OLDEST_SOCK_THAT_HAS_THIS_VERSION_OF_FLEXCAN}-flexcan".
 
-Now the write_page and write_page_raw functions return an error code,
-see this commit in the l2 tree:
+... the above string is indeed the prefered one, even if I think it's
+much less transparent. You should then define the .data field of "struct
+of_device_id" to set the hw version.
 
-http://git.infradead.org/users/dedekind/l2-mtd.git/commit/49c8d9ab3b7073266=
-5249f2d993f734378ebbba9
+Wolfgang.
 
-I've amended your SLC driver, see below the diff. But I think it could
-return the real return code becuse it can fail - could you please take a
-look and send an incremental patch?
-
-Please, base your work on top of the l2-mtd tree:
-git://git.infradead.org/users/dedekind/l2-mtd.git
-
-Thanks!
-
-diff --git a/drivers/mtd/nand/lpc32xx_slc.c b/drivers/mtd/nand/lpc32xx_slc.=
-c
-index 796e37b..7e2e78d 100644
---- a/drivers/mtd/nand/lpc32xx_slc.c
-+++ b/drivers/mtd/nand/lpc32xx_slc.c
-@@ -673,9 +673,9 @@ static int lpc32xx_nand_read_page_raw_syndrome(struct m=
-td_info *mtd,
-  * Write the data and OOB data to the device, use ECC with the data,
-  * disable ECC for the OOB data
-  */
--static void lpc32xx_nand_write_page_syndrome(struct mtd_info *mtd,
--                                            struct nand_chip *chip,
--                                            const u8 *buf, int oob_require=
-d)
-+static int lpc32xx_nand_write_page_syndrome(struct mtd_info *mtd,
-+                                           struct nand_chip *chip,
-+                                           const u8 *buf, int oob_required=
-)
- {
-        struct lpc32xx_nand_host *host =3D chip->priv;
-        u8 *pb =3D chip->oob_poi + chip->ecc.layout->eccpos[0];
-@@ -691,20 +691,22 @@ static void lpc32xx_nand_write_page_syndrome(struct m=
-td_info *mtd,
-=20
-        /* Write ECC data to device */
-        chip->write_buf(mtd, chip->oob_poi, mtd->oobsize);
-+       return 0;
- }
-=20
- /*
-  * Write the data and OOB data to the device, no ECC correction with the
-  * data or OOB data
-  */
--static void lpc32xx_nand_write_page_raw_syndrome(struct mtd_info *mtd,
--                                                struct nand_chip *chip,
--                                                const u8 *buf,
--                                                int oob_required)
-+static int lpc32xx_nand_write_page_raw_syndrome(struct mtd_info *mtd,
-+                                               struct nand_chip *chip,
-+                                               const u8 *buf,
-+                                               int oob_required)
- {
-        /* Raw writes can just use the FIFO interface */
-        chip->write_buf(mtd, buf, chip->ecc.size * chip->ecc.steps);
-        chip->write_buf(mtd, chip->oob_poi, mtd->oobsize);
-+       return 0;
- }
-=20
- static bool lpc32xx_dma_filter(struct dma_chan *chan, void *param)
-
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-agi+MRH9evovqYYqw4oW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJP6uSXAAoJECmIfjd9wqK0czYQAMkP5FNnN/B+qIwsdWX6+ea2
-djtf95zk0KJ7Nla/0N3IwOY1vJJ8RNod6H1e7wxX1N7RV3rl9UJMqN445AwfXlt9
-MMgMZwE2jj67POH00OjROIfZvOEg1URBBUY7CDfaW0830wAPofgTPUc/v96uVmSQ
-wdzkXprLN9aRGJs7mua7x4BKf0Fe8DZAIl2znt9sOyUbSUmun8jTzFsnemqlI8Yi
-8GabZJhpBuZXjNwi3HkKZLoXOaxbaUrFQswabnyQZxUxLeAWXZ/lc2/hRDiRaKqA
-yzR1YZim+lDz2Jg89TBUUdVdrcDfn/+jUlIxnMMXFn7BZ+qaIiKPjjllNcFckoIY
-ouAIMRwcYuFvW99KNE/xXdCXAbXImVwH34lm5Jl9tA1oA50hI4SN4vHuP1hTro67
-9LYbWdJU8DhHZGDnUYGHRw2wVJAeiBRWp/gIZrrPaXLRpFlNnzOkbamiZoC3Zw8D
-KxwCYQ92oywiEx7DDmj8fUrzd6Op/wT30Aey/sFJUrzlBzkrz8IkaZUPOJxHbFYT
-0fh7PnJ5D2dGWP4GRNZKhukhkea5qjNRaDQtFMiKdpx2OZWcKrv8JtVJSfLtNjdF
-CC3Vydt+V3S3RxjIc3dQ+lFti+5QOAal12SqK/Qgblwp3751cPlkgIgcznJR4NGM
-xWev6Q5/RLoULGmx5Gzx
-=nM4M
------END PGP SIGNATURE-----
-
---=-agi+MRH9evovqYYqw4oW--
 
