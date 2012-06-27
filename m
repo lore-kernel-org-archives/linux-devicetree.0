@@ -1,37 +1,34 @@
 From: Roland Stigge <stigge@antcom.de>
-Subject: [PATCH 3/4] mtd: lpc32xx_slc: Use of_get_named_gpio()
-Date: Wed, 27 Jun 2012 17:51:14 +0200
-Message-ID: <1340812275-1197-3-git-send-email-stigge@antcom.de>
-References: <1340812275-1197-1-git-send-email-stigge@antcom.de>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1340812275-1197-1-git-send-email-stigge@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
+Subject: [PATCH 1/4] mtd: lpc32xx_slc: Select AMBA_PL08X in Kconfig
+Date: Wed, 27 Jun 2012 17:51:12 +0200
+Message-ID: <1340812275-1197-1-git-send-email-stigge@antcom.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dedekind1@gmail.com, linux-mtd@lists.infradead.org, aletes.xgr@gmail.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
 Cc: Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch makes the lpc32xx_slc driver use of_get_named_gpio() instead of
-of_get_named_gpio_flags() whose flags are discarded anyway.
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 
+Since this driver depends on the amba pl08x dma driver, select it in Kconfig.
+
+Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 Signed-off-by: Roland Stigge <stigge@antcom.de>
-Acked-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 ---
- drivers/mtd/nand/lpc32xx_slc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mtd/nand/lpc32xx_slc.c b/drivers/mtd/nand/lpc32xx_slc.c
-index ab72aca..4e8db3a 100644
---- a/drivers/mtd/nand/lpc32xx_slc.c
-+++ b/drivers/mtd/nand/lpc32xx_slc.c
-@@ -770,7 +770,7 @@ static struct lpc32xx_nand_cfg_slc *lpc32xx_parse_dt(struct device *dev)
- 	}
- 
- 	pdata->use_bbt = of_get_nand_on_flash_bbt(np);
--	pdata->wp_gpio = of_get_named_gpio_flags(np, "gpios", 0, NULL);
-+	pdata->wp_gpio = of_get_named_gpio(np, "gpios", 0);
- 
- 	return pdata;
- }
+diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+index de69978..a9e8b73 100644
+--- a/drivers/mtd/nand/Kconfig
++++ b/drivers/mtd/nand/Kconfig
+@@ -417,6 +417,7 @@ config MTD_NAND_PXA3xx
+ config MTD_NAND_SLC_LPC32XX
+ 	tristate "NXP LPC32xx SLC Controller"
+ 	depends on ARCH_LPC32XX
++	select AMBA_PL08X
+ 	help
+ 	  Enables support for NXP's LPC32XX SLC (i.e. for Single Level Cell
+ 	  chips) NAND controller. This is the default for the PHYTEC 3250
 -- 
 1.7.10.4
-
