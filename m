@@ -1,89 +1,182 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 2/4] can: flexcan: add hardware controller version support
-Date: Wed, 27 Jun 2012 12:24:40 +0200
-Message-ID: <4FEADF68.7070702@pengutronix.de>
-References: <1340785161-3598-1-git-send-email-jason77.wang@gmail.com> <1340785161-3598-2-git-send-email-jason77.wang@gmail.com> <1340785161-3598-3-git-send-email-jason77.wang@gmail.com> <4FEAC3EF.3060606@pengutronix.de> <4FEACAAB.1000002@grandegger.com> <4FEAD5CF.9070601@grandegger.com> <4FEAD7B8.2000601@pengutronix.de> <4FEADCB8.80306@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree
+ based pinctrl driver
+Date: Wed, 27 Jun 2012 03:28:52 -0700
+Message-ID: <20120627102851.GC3483@atomide.com>
+References: <4FDA6FCD.1020605@wwwdotorg.org>
+ <20120615094938.GQ12766@atomide.com>
+ <4FDB6000.5080703@wwwdotorg.org>
+ <20120618055036.GU12766@atomide.com>
+ <20120619135600.GX12766@atomide.com>
+ <4FE39C86.5070901@wwwdotorg.org>
+ <20120622083955.GZ12766@atomide.com>
+ <4FE4AC40.8080400@wwwdotorg.org>
+ <20120626134319.GA3483@atomide.com>
+ <4FE9EBEC.9040208@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enigC6F813B7048059330D615F82"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <4FEADCB8.80306@gmail.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Hui Wang <jason77.wang@gmail.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, davem@davemloft.net, shawn.guo@linaro.org, linux-can@vger.kernel.org, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4FE9EBEC.9040208@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enigC6F813B7048059330D615F82
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+* Stephen Warren <swarren@wwwdotorg.org> [120626 10:10]:
+> On 06/26/2012 07:43 AM, Tony Lindgren wrote:
+> ...
+> > Subject: [PATCH] pinctrl: Add one-register-per-pin type device tree based pinctrl driver
+> > 
+> > Add one-register-per-pin type device tree based pinctrl driver.
+> > 
+> > This driver has been tested on omap2+ series of processors,
+> > where there is either an 8 or 16-bit padconf register for each pin.
+> > Support for other similar pinmux controllers can be added.
+> 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> 
+> > +/* board specific .dts file */
+> > +
+> > +&pmx_core {
+> 
+> > +	board_pins: pinmux_board_pins {
+> > +		pinctrl-single,pins = <
+> > +			0x6c 0xf	/* csi21_dx3 OUTPUT | MODE7 */
+> > +			0x6e 0xf	/* csi21_dy3 OUTPUT | MODE7 */
+> > +			0x70 0xf	/* csi21_dx4 OUTPUT | MODE7 */
+> > +			0x72 0xf	/* csi21_dy4 OUTPUT | MODE7 */
+> 
+> If you're removing the pinconf mask, I think the comments in the example
+> should reflect just setting a particular mux function, and remove any
+> references to pinconf settings in that field. While the binding can be
+>  abused to do that, I think the docs shouldn't encourage it:-)
 
-On 06/27/2012 12:13 PM, Hui Wang wrote:
-[...]
+I can certainly leave it out of the binding doc :)
 
->>> What compatible string do they actually use for the i.MX6Q board? Sha=
-wn
->>> or Hui? We need to fix that. From the discussion mentioned above I th=
-ink
->>>    =20
-> Currently i modified the can1 DT entry in the  imx6q.dtsi like this:
->            flexcan@02090000 { /* CAN1 */
->                reg =3D <0x02090000 0x4000>;
->                interrupts =3D <0 110 0x04>;
->                hw-version =3D <10>;
-                 ^^^^^^^^^^^^^^^^^^
+The pinconf part is essential for the driver to work at least in
+the omap2/3/4 cases though, so as long as people are OK with that it
+works for me. If people don't like this, then it's probably best to
+just add back the separate pinconf mask.
 
-remove
+> Other than that, the binding looks reasonable to me, given what it's
+> intended to do.
+> 
+> However, I'd still like Grant and Rob (and any other DT experts) to
+> explicitly sign off on this binding, because it's doing exactly
+> something that was rejected at Linaro Connect in February (albeit the
+> binding is slightly more oriented at specifically being for pinmux
+> rather than a fully general "blast in these register values", but that
+> distinction seems minor to me).
 
->            };
->=20
-> and the DT entry in the imx6q-sabrelite.dts like this:
->            flexcan@02090000 { /* CAN1 */
->                compatible =3D "fsl,imx6q-flexcan", "fsl,p1010-flexcan";=
+Just for the record, another alternative I thought about is to
+describe mux register bits a bit like the suggested clock framework
+binding does.
 
-                                                   ^^^^^^^^^^^^^^^^^^^
+The problem trying to define named pin states is that we need to
+add new column for any pinconf value that may be orred together
+with other pinconf values.
 
-If imx6q is the first sock with this core "fsl,imx6q-flexcan" is the
-official name. "fsl,p1010-flexcan" will be removed. The compatible
-should go into the imx6q.dtsi
+Currently there are pinconf settings for active pin states and off
+mode pin states. And there is wake-up enable setting. So that would
+be a total of five columns already per pin with the offset and mux
+function.. Then if something new gets added, let's say signal
+strength, we'll be needing yet another column.
 
->                phy-en-gpio =3D <&gpio1 4 0>;
->                phy-stby-gpio =3D <&gpio1 2 0>;
->                pinctrl-names =3D "default";
->                pinctrl-0 =3D <&pinctrl_flexcan1_1>;
->            };
-> if we don't use hw-version entry and use flexcan-v10, do you mean we us=
-e
-> strcmp or strxxx to decide controller version?
+To me it seem we should rather count on the preprocessor to handle
+cases like this eventually. Otherwise we'll end up with bloated DT
+data that becomes slow to parse.
 
-No, have a look at the flexcan_of_match. The struct of_device_id has a
-data pointer that can point to some arbitrary data. Define a struct
-flexcan_devtype_data which has, for now, a hardware revision member.
-Have a look at the imx-spi[1] driver.
+The analogy here that I think is closest to this binding is the
+keymap binding. In this case the mux data is basically just a map
+of few hundred board specific pin settings.
 
-Marc
+Just for an example, below is what it would look like for omaps
+using names to map out the register bits. There are eight functions
+for each register. Then there are four active pinconf settings,
+and six off mode pinconf settings that make sense. And then there's
+the wakeup enable setting.
 
-[1] http://lxr.free-electrons.com/source/drivers/spi/spi-imx.c
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Regards,
 
+Tony
 
---------------enigC6F813B7048059330D615F82
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+pmx_core: pinmux@4a100040 {
+	compatible = "pinctrl-single";
+	reg = <0x4a100040 0x0196>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-single,register-width = <16>;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+	/* 8 available pinmux functions */
+	mode0: pinctrl_mode0 {
+		pinctrl-single,function = <0>;
+		pinctrl-single,mask = <0x7>;
+	};
 
-iEYEARECAAYFAk/q324ACgkQjTAFq1RaXHNy0wCdFtWjygEOH8btA4V6Olzpo80v
-trcAnik5qPYNIpVchEFq4QTaRyZkV/eL
-=Cbdf
------END PGP SIGNATURE-----
+	mode1: pinctrl_mode1 {
+		pinctrl-single,function = <0x1>;
+		pinctrl-single,mask = <0x7>;
+	};
 
---------------enigC6F813B7048059330D615F82--
+	mode2: pinctrl_mode2 {
+		pinctrl-single,function = <0x2>;
+		pinctrl-single,mask = <0x7>;
+	};
+	...
+	mode7: pinctrl_mode7 {
+		pinctrl-single,function = <0x7>;
+		pinctrl-single,mask = <0x7>;
+	};
+
+	/* 4 active state pinconf settings */
+	pin_output: pinctrl_pin_output {
+		pinctrl-single,pinconf = <0>;
+		pinctrl-single,mask = <0x1f8>;
+	};
+
+	pin_input: pinctrl_pin_input {
+		pinctrl-single,pinconf = <0x20>;
+		pinctrl-single,mask = <0x1f8>;
+	};
+
+	pin_input_pullup: pinctrl_pin_input_pullup {
+		pinctrl-single,pinconf = <0x23>;
+		pinctrl-single,mask = <0x1f8>;
+	};
+
+	pin_input_pulldown: pinctrl_pin_input_pulldown {
+		pinctrl-single,pinconf = <0x21>;
+		pinctrl-single,mask = <0x1f8>;
+	};
+
+	/* 5 off mode pinconf settings */
+	pin_off_none: pinctrl_pin_off_none {
+		pinctrl-single,pinconf = <0>;
+		pinctrl-single,mask = <0x7e00>;
+	};
+
+	pin_off_output_high: pinctrl_pin_off_output_high {
+		pinctrl-single,pinconf = 0xb;
+		pinctrl-single,mask = <0x7e00>;
+	}
+	...
+
+	/* wake-up capability */
+	pin_off_wakeup_ena: pinctrl_pin_off_wakeup_ena {
+		pinctrl-single,pinconf = 0xb;
+		pinctrl-single,mask = <0x8000>;
+	}
+
+};
+
+&pmx_core {
+	uart2_pins: pinmux_uart2_pins {
+		pinctrl-single,pins = <
+			0xd8 &mode0 &pin_input_pullup &off_mode_none 0
+			0xda &mode0 &pin_output &off_mode_none 0
+			0xdc &mode0 &pin_input_pullup &off_mode_none &pin_off_wakeup_ena
+			0xde &mode0 &pin_output &off_mode_none 0
+		>;
+	};
+};
