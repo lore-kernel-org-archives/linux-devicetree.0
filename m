@@ -1,13 +1,13 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] Add test for re-defining an identical label
-Date: Wed, 27 Jun 2012 15:38:41 -0600
-Message-ID: <4FEB7D61.2020004@wwwdotorg.org>
-References: <1339534120-27414-1-git-send-email-swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2] dtc: Add ability to delete nodes and properties
+Date: Wed, 27 Jun 2012 15:39:46 -0600
+Message-ID: <4FEB7DA2.1080900@wwwdotorg.org>
+References: <1339542620-24590-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1339534120-27414-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1339542620-24590-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,14 +22,32 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2012 02:48 PM, Stephen Warren wrote:
+On 06/12/2012 05:10 PM, Stephen Warren wrote:
 > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> When merging one device tree over the top of a previous tree, it is
-> possible to define a duplicate label that has the same name and points
-> to the same property or node. This is currently allowed by the duplicate
-> label checking code. However, alternative duplicate label checking
-> algorithms might not allow this. Add an explicit test to ensure this
-> capability is maintained.
+> dtc currently allows the contents of properties to be changed, and the
+> contents of nodes to be added to. There are situations where removing
+> properties or nodes may be useful. This change implements the following
+> syntax to do that:
+> 
+>     / {
+>         propname /delprop/;
+>         nodename /delnode/;
+>     };
+> 
+> or:
+> 
+>     &noderef /delnode/;
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2: Implemented in a significantly different fashion: Rather than actually
+> deleting nodes/properties as the DT is parsed, simply mark them deleted,
+> and skip deleted nodes during later processing. This allows implementation
+> without needing rework of various error-checks, such as duplicate labels.
 
-David, Jon, does this look like a reasonable test to add?
+David, does this address your concerns with the previous version?
+
+I suppose the diff is a little large. Perhaps for_each_child() should
+always exclude deleted children, and a new macro be introduced for the
+locations that want deleted children too?
