@@ -1,160 +1,118 @@
-From: Vinod Koul <vinod.koul@linux.intel.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Wed, 27 Jun 2012 19:15:08 +0530
-Message-ID: <1340804708.1562.253.camel@vkoul-udesk3>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	 <201206261459.40766.arnd@arndb.de> <1340733019.1562.242.camel@vkoul-udesk3>
-	 <201206262027.47817.arnd@arndb.de>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: Tegra DRM device tree bindings
+Date: Wed, 27 Jun 2012 16:08:10 +0200
+Message-ID: <20120627140809.GD19319@avionic-0098.mockup.avionic-design.de>
+References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
+ <20120626160224.40ba10a26e3dd3a56b1f312c@nvidia.com>
+ <20120626140033.GC1115@avionic-0098.mockup.avionic-design.de>
+ <23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com>
+ <4FEA6E09.30800@nvidia.com>
+ <23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>
+ <4FEA7472.7050201@nvidia.com>
+ <20120627051418.GB7177@avionic-0098.mockup.avionic-design.de>
+ <20120627155907.871b2a506374b7db14c202c4@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201206262027.47817.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TybLhxa8M7aNoW+V"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120627155907.871b2a506374b7db14c202c4-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2012-06-26 at 20:27 +0000, Arnd Bergmann wrote:
-> On Tuesday 26 June 2012, Vinod Koul wrote:
-> > On Tue, 2012-06-26 at 14:59 +0000, Arnd Bergmann wrote:
-> > > On Tuesday 26 June 2012, Vinod Koul wrote:
-> > > > Today, we just ask for a channel with specific mask. Further filtering
-> > > > is done in filter function as we request a channel, not a specific one.
-> > > > In most slave cases, we need a specific channel from a specific
-> > > > controller, and that is where DT can play a role. In addition to DMA
-> > > > resources for dma and client driver, I would expect DT to provide the
-> > > > channel mapping information, which is anyway known only by platform.
-> > > 
-> > > Can you describe what you mean by "channel mapping information"?
-> > > Is that not what we pass into the filter function?
-> >
-> > Today many dmaengine drivers have a filter function which is exported
-> > and then used by clients to filter out the channel. That is not a right
-> > way to do, so any future plan which is based on filter is not correct.
-> 
-> I agree that exporting a filter function from the dmaengine driver is
-> very wrong and should not be done because it requires that the device
-> driver knows which engine is used and that is contrary to the idea
-> of having an abstraction layer.
-> 
-> We were talking about using a filter function because that would be
-> easy to do without changing the core dmaengine code. However, in the
-> proposal, there would actually just be a single filter function that
-> gets used by all drivers that have DT bindings, and it can be
-> completely encapsulated in the of_dma_request_channel() function
-> so it does not have to be a global symbol.
-I kind of like this idea.
-> 
-> If we instead modify the dmaengine code itself to know about DT
-> rather than wrapping around it, we would not need this filter
-> function, but we should still have a probe() function that is
-> called by dmaengine code to interpret the data that is specific
-> to one dmaengine driver.
-I was hoping we can have dmaengine binding, that way dmaengine core code
-knows about what to do when some client requests a channel.
-> 
-> > IMHO dmaengine driver should *not* know anything about mapping. By
-> > mapping I refer to platform information which tells me which client can
-> > use which channel from which dmac.
-> 
-> Agreed too. That information shoudd be part of the slave device-node
-> in DT, as I have argued in this thread already. The slave device driver
-> does not need to care about the format or the contents of it,
-> but we need some code to interpret the contents. From all I can tell,
-> the structure of this data cannot be completely generic because of
-> all the special cases, so the code to interpret it would live in the
-> probe() function I mentioned about that the dmaengine driver provides.
-rather than slave driver, why dont we keep this binding within
-dmaengine. That would make slave and clients completely independent.
-> 
-> > > I think encoding a description for a dma request in a single number is
-> > > the last thing we want to do here. We've tried that with IRQ and GPIO
-> > > numbers and it got us into a huge mess that will need a long time to
-> > > get out of.
-> > No i wasn't thinking of a number. The mapping shouldn't be a global
-> > number at all, though that is a very easy but not very scalable
-> > solution.
-> > We need to take care of 1:1 mapping of client and channels as well as
-> > many:1  cases as well. A single global number cannot represent that
-> > properly.
-> > 
-> > My idea is platform gives this information to dmaengine. Clients and
-> > dmaengine driver do not worry about it. That also paves way for arch
-> > independent clients and drivers.
-> 
-> IMO the platform should have no part in this. I absolutely want to
-> get rid of any platform-specific hardcoded tables in the kernel for
-> stuff that can easily be run-time detected from the device tree.
-> There are cases where hard-coding in the kernel is easier, but I don't
-> think this is one of them.
-Again, you got me wrong. We don't want any hardcoded table is kernel.
-The information in table should come from whatever way that platform can
-give me. For your case it should be DT.
-We can have the map of which client can use which channel as DT binding
-of dmaengine core. So dmaengine can easily arbitrate about channel
-requests. Again this mapping information is not some even linux
-independent
-> 
-> > > Some platforms actually use IORESOURCE_DMA, which was useful to describe
-> > > ISA DMA channels, for encoding some form of channel or request number,
-> > > but this causes all sorts of problems. These are almost exclusively
-> > > used by those platforms that don't have a dmaengine driver yet, so I'd
-> > > hope that we can remove this as we convert those platforms over to
-> > > dmaengine and device tree.
-> > > 
-> > > The representation in device tree as we have it now is a combination of
-> > > a pointer to the dmaengine and a description of the request line in it,
-> > > typically a single small integer number local to the dmaengine. We should
-> > > not try to make that a global integer number again that just serves the
-> > > purpose of looking up the dmaengine and local number again.
-> > > 
-> > > IMHO no device driver should be bothered with any artificial resource
-> > > information, but instead I want all the DT parsing to happen in the
-> > > dmaengine code (or some wrapper around it) where it gets used. The only
-> > > thing that a device driver needs to know is that it wants to use a
-> > > channel based on what is described in the device tree.
-> > Sure, but I would expect the clients and dmacs to find information about
-> > their devices from DT?
-> > dmaengine should get only mapping information used for allocating
-> > channel to client.
-> 
-> Let's take a look at a concrete example. The
-> arch/arm/mach-ux500/board-mop500-sdi.c file defines dma channel
-> configuration for the mmc devices on the ux500 platform that looks
-> like
-> 
-> static struct stedma40_chan_cfg mop500_sdi2_dma_cfg_tx = {
->         .mode = STEDMA40_MODE_LOGICAL,
->         .dir = STEDMA40_MEM_TO_PERIPH,
->         .src_dev_type = STEDMA40_DEV_SRC_MEMORY,
->         .dst_dev_type = DB8500_DMA_DEV28_SD_MM2_TX,
->         .src_info.data_width = STEDMA40_WORD_WIDTH,
->         .dst_info.data_width = STEDMA40_WORD_WIDTH,
-> };
-> 
-> I want to move this information to the device tree in a way that the
-> device driver does not have to care about it. With the proposed
-> binding, this would mean we get an mmci device node with a property
-> containing something like
-> 
-> 	dma-requests = <&dma40  /* pointer to dma engine */
-> 			0x01    /* logical, mem to dev */
-> 			28      /* DEV28_SD_MM2_TX */
-> 			32>,	/* 32 bit width */
-> 		       <&dma40 0x02 32 32>; /* dev to mem channel */ 
-> 
-> The fact that this dmaengine driver requires two cells (request number
-> and data width) should only be known to the code that deals with that
-> one driver and that should interpret those two cells, while the first
-> two cells (pointer to dma-engine and direction) can be handled
-> by the common dmaengine layer.
-> 
-> In order to do that, we need some code in the dmaengine driver that
-> gets the property data as its argument.
-Yes but not thru the slave drivers. 
 
+--TybLhxa8M7aNoW+V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-~Vinod
+On Wed, Jun 27, 2012 at 03:59:07PM +0300, Hiroshi Doyu wrote:
+> On Wed, 27 Jun 2012 07:14:18 +0200
+> Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+>=20
+> > * PGP Signed by an unknown key
+> >=20
+> > On Tue, Jun 26, 2012 at 08:48:18PM -0600, Stephen Warren wrote:
+> > > On 06/26/2012 08:32 PM, Mark Zhang wrote:
+> > > >> On 06/26/2012 07:46 PM, Mark Zhang wrote:
+> > > >>>>> On Tue, 26 Jun 2012 12:55:13 +0200
+> > > >>>>> Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> > > >> ...
+> > > >>>> I'm not sure I understand how information about the carveout wou=
+ld be
+> > > >>>> obtained from the IOMMU API, though.
+> > > >>>
+> > > >>> I think that can be similar with current gart implementation. Def=
+ine carveout as:
+> > > >>>
+> > > >>> carveout {
+> > > >>>         compatible =3D "nvidia,tegra20-carveout";
+> > > >>>         size =3D <0x10000000>;
+> > > >>> };
+> > > >>>
+> > > >>> Then create a file such like "tegra-carveout.c" to get these defi=
+nitions and
+> > > >> register itself as platform device's iommu instance.
+> > > >>
+> > > >> The carveout isn't a HW object, so it doesn't seem appropriate to =
+define a DT
+> > > >> node to represent it.
+> > > >=20
+> > > > Yes. But I think it's better to export the size of carveout as a co=
+nfigurable item.
+> > > > So we need to define this somewhere. How about define carveout as a=
+ property of gart?
+> > >=20
+> > > There already exists a way of preventing Linux from using certain chu=
+nks
+> > > of memory; the /memreserve/ syntax. From a brief look at the dtc sour=
+ce,
+> > > it looks like /memreserve/ entries can have labels, which implies tha=
+t a
+> > > property in the GART node could refer to the /memreserve/ entry by
+> > > phandle in order to know what memory regions to use.
+> >=20
+> > Wasn't the whole point of using a carveout supposed to be a replacement
+> > for the GART?
+>=20
+> Mostly agree. IIUC, we use both carveout/gart allocated buffers in
+> android/tegra2.
+>=20
+> >As such I'd think the carveout should rather be a property
+> > of the host1x device.
+>=20
+> Rather than introducing a new property, how about using
+> "coherent_pool=3D??M" in the kernel command line if necessary? I think
+> that this carveout size depends on the system usage/load.
 
+I was hoping that we could get away with using the CMA and perhaps
+initialize it based on device tree content. I agree that the carveout
+size depends on the use-case, but I still think it makes sense to
+specify it on a per-board basis.
+
+Thierry
+
+--TybLhxa8M7aNoW+V
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP6xPJAAoJEN0jrNd/PrOhJ3oP/0mw+fMmdGd/2X+zEHYFw28B
+TUxZl8giqBaPPpCPQMlZVgPQB10MKiXaR7qOHPu9FQd93n3zOSpD7PPZcpq56nOW
+ZF10T6rPbP1a52coRAyhO+qALxpikazNo5E9kcaHnHA7mTF0dbBhvMS0F3U4SBU0
+OOaWs7mc+ketFvr4Eff1FIO/OUX83hzQD0OVQeWfDGOnlG752ibJYJ5DDkgHmEby
+Ly/NN8heuY/Omw0pF4o98zCGRc/auRZrJjm5Byp1UCquZJcgK+d1qcVto92tfFO7
+WqNYrRk6JdX/+Qc5R2uSBl/1ti75ETLJQhf2dfUWck+K9HaJ5U4A6p9AdVrWdTCT
+WGsqA6EnRyJimCKIxnZ0Zl/PjnQf0R8u3h6i9EZvJuqHqCFYvzn/VYb0z3iE78+K
+LKBjFdU0CbXP+ZTalToRudU8y6OabYXw+AxqBF9ZBW0rRt3cSQohWaltIExhLAbz
+jvG7TboNl+YDiwq95odvXw88Fr+zehSp5FQOnFD3zbkMlRlph0Lbx47KrrddOiEJ
+FhCLFrs+oh8u75rJR9O3NdeK+nJyWHopOC9ANDEn2GpbNsAgMM3+zwnZ0pGlgMsu
+jMaMtCOvL8UhhTiwZwA19wDl1SlWPrfvy5KBiDYBej7oRwnIx/n9bDeIMXT4lGP9
+gihbgdHlpftuZXydgjH5
+=tHnW
+-----END PGP SIGNATURE-----
+
+--TybLhxa8M7aNoW+V--
