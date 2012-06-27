@@ -1,69 +1,41 @@
-From: Rob Herring <robherring2@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [GIT PULL] DT fixes for 3.5
-Date: Tue, 26 Jun 2012 18:38:18 -0500
-Message-ID: <4FEA47EA.3000804@gmail.com>
-References: <4FDA9261.2070208@gmail.com>
+Date: Tue, 26 Jun 2012 18:34:17 -0600
+Message-ID: <4FEA5509.7040000@wwwdotorg.org>
+References: <4FDA9261.2070208@gmail.com> <4FEA47EA.3000804@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FDA9261.2070208@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@freescale.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FEA47EA.3000804-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/14/2012 08:39 PM, Rob Herring wrote:
-> Grant,
+On 06/26/2012 05:38 PM, Rob Herring wrote:
+> On 06/14/2012 08:39 PM, Rob Herring wrote:
+>> Grant,
+>>
+>> Please pull. Mainly some documentation updates and 2 fixes:
+>>
+>> - An export symbol fix for of_platform_populate from Stephen W.
+>> - A fix for the order compatible entries are matched to ensure the
+>> first compatible string is matched when there are multiple matches.
+>>
 > 
-> Please pull. Mainly some documentation updates and 2 fixes:
-> 
-> - An export symbol fix for of_platform_populate from Stephen W.
-> - A fix for the order compatible entries are matched to ensure the
-> first compatible string is matched when there are multiple matches.
-> 
+> Ping. If you don't want to pull these for 3.5, can you please pull for
+> next and 3.6.
 
-Ping. If you don't want to pull these for 3.5, can you please pull for
-next and 3.6.
-
-Rob
-
-> Rob
-> 
-> The following changes since commit cfaf025112d3856637ff34a767ef785ef5cf2ca9:
-> 
->   Linux 3.5-rc2 (2012-06-08 18:40:09 -0700)
-> 
-> are available in the git repository at:
-> 
->   git://sources.calxeda.com/kernel/linux.git fixes-for-grant
-> 
-> for you to fetch changes up to 107a84e61cdd3406c842a0e4be7efffd3a05dba6:
-> 
->   of: match by compatible property first (2012-06-14 20:29:40 -0500)
-> 
-> ----------------------------------------------------------------
-> Fabio Estevam (5):
->       dt: fsl-imx-cspi.txt: Fix comment about GPIOs used for chip selects
->       dt: fsl-imx-esdhc.txt: Fix gpio number assignment
->       dt: fsl-mma8450.txt: Add missing 'reg' description
->       dt: fsl-fec.txt: Fix gpio number assignment
->       dt: mc13xxx.txt: Fix gpio number assignment
-> 
-> Stephen Warren (1):
->       of: export of_platform_populate()
-> 
-> Thierry Reding (2):
->       of: Add Avionic Design vendor prefix
->       of: match by compatible property first
-> 
->  .../devicetree/bindings/input/fsl-mma8450.txt      |    1 +
->  Documentation/devicetree/bindings/mfd/mc13xxx.txt  |    4 +--
->  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |    4 +--
->  Documentation/devicetree/bindings/net/fsl-fec.txt  |    2 +-
->  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |    4 +--
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  drivers/of/base.c                                  |   30
-> +++++++++++++++++---
->  drivers/of/platform.c                              |    1 +
->  8 files changed, 36 insertions(+), 11 deletions(-)
+The of_platform_populate() patch of mine is needed in 3.5 to solve a
+build problem there, if the Tegra AHUB driver is built as a module
+(which admittedly it isn't in tegra_defconfig, but anyway).
