@@ -1,70 +1,110 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH 2/4] can: flexcan: add hardware controller version support
-Date: Wed, 27 Jun 2012 11:43:43 +0200
-Message-ID: <4FEAD5CF.9070601@grandegger.com>
-References: <1340785161-3598-1-git-send-email-jason77.wang@gmail.com> <1340785161-3598-2-git-send-email-jason77.wang@gmail.com> <1340785161-3598-3-git-send-email-jason77.wang@gmail.com> <4FEAC3EF.3060606@pengutronix.de> <4FEACAAB.1000002@grandegger.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v7 14/14] usb: chipidea: add imx platform driver
+Date: Wed, 27 Jun 2012 11:46:07 +0200
+Message-ID: <4FEAD65F.5010106@pengutronix.de>
+References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com> <1340607391-16380-15-git-send-email-richard.zhao@freescale.com> <4FE83E96.5090004@pengutronix.de> <20120627062005.GB21750@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <4FEACAAB.1000002@grandegger.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Hui Wang <jason77.wang@gmail.com>, davem@davemloft.net, shawn.guo@linaro.org, linux-can@vger.kernel.org, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enigAA0446319B7B6020E7898B02"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120627062005.GB21750-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enigAA0446319B7B6020E7898B02
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 06/27/2012 10:56 AM, Wolfgang Grandegger wrote:
-> On 06/27/2012 10:27 AM, Marc Kleine-Budde wrote:
->> On 06/27/2012 10:19 AM, Hui Wang wrote:
->>> At least in the i.MX series, the flexcan contrller divides into ver_3
->>> and ver_10, current driver is for ver_3 controller.
+On 06/27/2012 08:20 AM, Richard Zhao wrote:
+> On Mon, Jun 25, 2012 at 12:33:58PM +0200, Marc Kleine-Budde wrote:
+>> On 06/25/2012 08:56 AM, Richard Zhao wrote:
+>>> This patch supports only the host-mode functionality so far.
 >>>
->>> i.MX6 has ver_10 controller, it has more reigsters than ver_3 has.
->>> The rxfgmask (Rx FIFO Global Mask) register is one of the new added.
->>> Its reset value is 0xffffffff, this means ID Filter Table must be
->>> checked when receive a packet, but the driver is designed to accept
->>> everything during the chip start, we need to clear this register to
->>> follow this design.
+>>> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>>> Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>> Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+>>> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>>> Tested-by: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |   20 ++
+>>>  drivers/usb/chipidea/Makefile                      |    3 +
+>>>  drivers/usb/chipidea/ci13xxx_imx.c                 |  197 ++++++++++=
+++++++++++
+>>>  3 files changed, 220 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx=
+=2Etxt
+>>>  create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
 >>>
->>> Add a hw_ver entry in the device tree, this can let us distinguish
->>> which version the controller is, if we don't set value to this entry,
->>> the hw_ver is 3 by default, this is backward compatible for existing
->>> platforms like powerpc and imx35.
+>>> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/=
+Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>>> new file mode 100644
+>>> index 0000000..8bcd071
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>>> @@ -0,0 +1,20 @@
+>>> +* Freescale i.MX ci13xxx usb controllers
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be "fsl,imx27-usb"
+>>> +- reg: Should contain registers location and length
+>>> +- interrupts: Should contain controller interrupt
+>>> +
+>>> +Optional properties:
+>>> +- fsl,usbphy: phandler of usb phy that connects to the only one port=
+
 >>
->> Is it possible to read this value from the hardware?
->> Another possibility would be to introduce a new compatible device in the
->> device tree.
-> 
-> I vote for the latter. IIRC, in the past we already had some discussion
-> on how to handle version dependent Flexcan hardware, e.g. by using
-> flexcan-vX.X or being expicit using fsl,p1010-flexcan. Search for "Add
-> support for powerpc" in the netdev mailing list. I added the
-> devicetree-discuss ml for that reason.
+>>> +- fsl,hub-reset-gpios: gpio used to reset on-board usb hub
+>>> +- fsl,vbus-power-gpios: gpio used to set vbus power of the only one =
+port
+>>
+>> These two properties are not implemented, are they?
+>> vbus is handled via a fixed regulator.
+> I forgot to update the doc.
+>>
+>> Further I'm looking into the phy and otg implementation. I think the
+>> handling of the regulator should go into mxs-phy.c, not into the
+>> ci13xxx_imx.c
+> Normally, we don't put it in phy driver. For example, most host driver
+> don't call phy drivers.
 
-I looked up the threads and found:
+Yes, I've noticed that otg support is ... a bit messy in the linux
+kernel. There are some drivers that implement a otg state machine.
 
-  http://marc.info/?w=4&r=1&s=Fix+up+fsl-flexcan+device+tree+bi&q=t
+However, I have the udc on mx28 somewhat working. It's still a hack
+since I have to implement an otg driver for this, but the host part
+doesn't do otg so far...and unplug is not detected correctly.
 
-In the Flexcan driver we currently only have:
+cheers, Marc
 
-  static struct of_device_id flexcan_of_match[] = {
-        {
-                .compatible = "fsl,p1010-flexcan",
-        },
-        {},
-  };
-
-What compatible string do they actually use for the i.MX6Q board? Shawn
-or Hui? We need to fix that. From the discussion mentioned above I think
-"fsl,flexcan-v10" would be acceptable. Unfortunately, we do not known
-the internal version of the Flexcan controllers used in the various
-PowerPC and ARM SOCs. We already realized some differences with
-interrupts and bus error handling between i.MX28 and i.MX35. Would be
-nice if someone (from Freescale?) could finally clarify that.
-
-Wolfgang.
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
+--------------enigAA0446319B7B6020E7898B02
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+
+iEYEARECAAYFAk/q1mIACgkQjTAFq1RaXHPhBQCdE/UmLuGm9z3ay9Z/B7m1swRW
+fO0AnjF/rBcu2IGxZHRdWpGjU336S5+0
+=Kyce
+-----END PGP SIGNATURE-----
+
+--------------enigAA0446319B7B6020E7898B02--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
