@@ -1,74 +1,95 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH, RFC] displaymodes in devicetree
-Date: Wed, 27 Jun 2012 18:22:38 +0200
-Message-ID: <20120627162238.GS1623@pengutronix.de>
-References: <20120627124313.GI1623@pengutronix.de>
- <4FEB31CC.2060705@firmworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4FEB31CC.2060705-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v2 2/4] netdev/phy/of: Handle IEEE802.3 clause 45 Ethernet PHYs in of_mdiobus_register()
+Date: Wed, 27 Jun 2012 10:33:36 -0700
+Message-ID: <1340818418-10382-3-git-send-email-ddaney.cavm@gmail.com>
+References: <1340818418-10382-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1340818418-10382-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2012 at 06:16:12AM -1000, Mitch Bradley wrote:
-> On 6/27/2012 2:43 AM, Sascha Hauer wrote:
-> >Hi All,
-> >
-> >I'd like to have a possibility to describe fixed display modes in the
-> >devicetree. This topic has been discussed before here:
-> >
-> >https://lists.ozlabs.org/pipermail/linuxppc-dev/2010-February/080683.html
-> >
-> >The result at that time was that EDID data should be considered to use
-> >as this is a format that already exists. I want to come back to this
-> >topic since:
-> >
-> >- EDID data is a binary format and as such quite inconvenient to handle.
-> >   There exist several tools to parse EDID data, but I'm not aware of any
-> >   (open source) tool which can generate EDID data.
-> >- EDID blobs are hard to modify and hard to review in patches.
-> >- EDID is designed to describe multiple modes, but fixed displays
-> >   usually only support a single fixed mode.
-> >
-> >There are several ways of describing the mode, for this patch I chose to
-> >use the format (and naming) used by the Linux Framebuffer Layer as this
-> >is the only description which does not allow for inconsistent modes. I
-> >added the most common flags like [v|h]sync_active_high. Others can be
-> >added, but these flags are pretty much agreed upon and won't be
-> >superseeded with other flags. The mode from the devicetree can be
-> >converted to the most common modes used in Linux, struct fb_videomode
-> >and struct drm_display_mode.
-> >
-> >Comments welcome
-> 
-> 
-> I like the general approach and the set of names.  The separators
-> inside the names should be hyphen (-) not underscore (_), following
-> the usual device tree convention.  The rationale for that convention
-> is to follow natural-language usage, not the identifier constraints
-> of programming languages based on algebraic expressions.
+From: David Daney <david.daney@cavium.com>
 
-Good to hear that this is the convention for devicetree, I like
-hyphens better aswell. Will change.
+Define two new "compatible" values for Ethernet
+PHYs. "ethernet-phy-ieee802.3-c22" and "ethernet-phy-ieee802.3-c45"
+are used to indicate a PHY uses the corresponding protocol.
 
-Sascha
+If a PHY is "compatible" with "ethernet-phy-ieee802.3-c45", we
+indicate this so that get_phy_device() can properly probe the device.
 
+If get_phy_device() fails, it was probably due to failing the probe of
+the PHY identifier registers.  Since we have the device tree telling
+us the PHY exists, go ahead and add it anyhow with a phy_id of zero.
+There may be a driver match based on the "compatible" property.
+
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ Documentation/devicetree/bindings/net/phy.txt |   12 +++++++++++-
+ drivers/of/of_mdio.c                          |   16 ++++++++++++----
+ 2 files changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index bb8c742..7cd18fb 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -14,10 +14,20 @@ Required properties:
+  - linux,phandle :  phandle for this node; likely referenced by an
+    ethernet controller node.
+ 
++Optional Properties:
++
++- compatible: Compatible list, may contain
++  "ethernet-phy-ieee802.3-c22" or "ethernet-phy-ieee802.3-c45" for
++  PHYs that implement IEEE802.3 clause 22 or IEEE802.3 clause 45
++  specifications. If neither of these are specified, the default is to
++  assume clause 22. The compatible list may also contain other
++  elements.
++
+ Example:
+ 
+ ethernet-phy@0 {
+-	linux,phandle = <2452000>
++	compatible = "ethernet-phy-ieee802.3-c22";
++	linux,phandle = <2452000>;
+ 	interrupt-parent = <40000>;
+ 	interrupts = <35 1>;
+ 	reg = <0>;
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 6c24cad..8e6c25f 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -57,6 +57,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 		const __be32 *paddr;
+ 		u32 addr;
+ 		int len;
++		bool is_c45;
+ 
+ 		/* A PHY must have a reg property in the range [0-31] */
+ 		paddr = of_get_property(child, "reg", &len);
+@@ -79,11 +80,18 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 				mdio->irq[addr] = PHY_POLL;
+ 		}
+ 
+-		phy = get_phy_device(mdio, addr, false);
++		is_c45 = of_device_is_compatible(child,
++						 "ethernet-phy-ieee802.3-c45");
++		phy = get_phy_device(mdio, addr, is_c45);
++
+ 		if (!phy || IS_ERR(phy)) {
+-			dev_err(&mdio->dev, "error probing PHY at address %i\n",
+-				addr);
+-			continue;
++			phy = phy_device_create(mdio, addr, 0, false, NULL);
++			if (!phy || IS_ERR(phy)) {
++				dev_err(&mdio->dev,
++					"error creating PHY at address %i\n",
++					addr);
++				continue;
++			}
+ 		}
+ 
+ 		/* Associate the OF node with the device structure so it
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.2.3
