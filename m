@@ -1,57 +1,55 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Tegra DRM device tree bindings
-Date: Wed, 27 Jun 2012 15:50:47 +0300
-Message-ID: <20120627155047.50ff473b732808ec6687366f@nvidia.com>
-References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
-	<20120626160224.40ba10a26e3dd3a56b1f312c@nvidia.com>
-	<20120626140033.GC1115@avionic-0098.mockup.avionic-design.de>
-	<23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com>
-	<4FEA6E09.30800@nvidia.com>
-	<23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>
-	<4FEA7472.7050201@nvidia.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 0/4] DT clock bindings
+Date: Wed, 27 Jun 2012 07:54:11 -0500
+Message-ID: <4FEB0273.9050707@gmail.com>
+References: <1339512111-11172-1-git-send-email-robherring2@gmail.com> <87bokd15x7.fsf@octavius.laptop.org> <4FE33723.3040403@gmail.com> <20120621175443.GL4402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FEA7472.7050201-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120621175443.GL4402@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@ti.com>
+Cc: Chris Ball <cjb@laptop.org>, Mitch Bradley <wmb@laptop.org>, mturquette@linaro.org, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, skannan@codeaurora.org, Olof Johansson <olof@lixom.net>, shawn.guo@linaro.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Jun 2012 04:48:18 +0200
-Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-
-> On 06/26/2012 08:32 PM, Mark Zhang wrote:
-> >> On 06/26/2012 07:46 PM, Mark Zhang wrote:
-> >>>>> On Tue, 26 Jun 2012 12:55:13 +0200
-> >>>>> Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> >> ...
-> >>>> I'm not sure I understand how information about the carveout would be
-> >>>> obtained from the IOMMU API, though.
-> >>>
-> >>> I think that can be similar with current gart implementation. Define carveout as:
-> >>>
-> >>> carveout {
-> >>>         compatible = "nvidia,tegra20-carveout";
-> >>>         size = <0x10000000>;
-> >>> };
-> >>>
-> >>> Then create a file such like "tegra-carveout.c" to get these definitions and
-> >> register itself as platform device's iommu instance.
-> >>
-> >> The carveout isn't a HW object, so it doesn't seem appropriate to define a DT
-> >> node to represent it.
-> > 
-> > Yes. But I think it's better to export the size of carveout as a configurable item.
-> > So we need to define this somewhere. How about define carveout as a property of gart?
+On 06/21/2012 12:54 PM, Mike Turquette wrote:
+> On 20120621-10:00, Rob Herring wrote:
+>> On 06/21/2012 02:27 AM, Chris Ball wrote:
+>>>
+>>> 2) Use alloc_bootmem() instead of kzalloc() in of_clk_add_provider(),
+>>>    because we need to set up clocks during .init_early on ARM (which
+>>>    happens pre-slab) so that they are available for platform init.
+>>
+>> This depends on 1 as the common clock code would have the same issue.
+>> Generally, the first place clocks are needed is the timer init. At that
+>> point, you can call kzalloc. This is where all the clock init used to be
+>> done until init_early was added and some platforms have moved their
+>> clock init. I don't think there was really ever much reason to move it
+>> other than to make the timer init function only deal with timer setup.
+>>
 > 
-> There already exists a way of preventing Linux from using certain chunks
-> of memory; the /memreserve/ syntax. From a brief look at the dtc source,
-> it looks like /memreserve/ entries can have labels, which implies that a
-> property in the GART node could refer to the /memreserve/ entry by
-> phandle in order to know what memory regions to use.
+> Hi Rob,
+> 
+> Just FYI I've been looking at using alloc_bootmem in the common clk code
+> as a way to get rid of the static initialization stuff (which only
+> existed due to very early initialization of timers).
 
-I think that we don't need the starting address for carveout but we
-need its size. carveout memory is just anonymous physically
-continguous buffer.
+The slab is up at the time timers are initialized. The only real problem
+is mixing clock init into the timer init functions and clk init in
+init_early is cleaner in that regard.
+
+> The suggested change above to of_clk_add_provider would jive well with
+> my change to the common clk code.
+
+Are you planning this for 3.6? If not, then this can be addressed at the
+time the clk framework supports bootmem.
+
+I'm not so sure more users of bootmem are desired. There seems to be
+some effort/desire to remove it:
+
+http://lists.linux-foundation.org/pipermail/ksummit-2012-discuss/2012-June/000562.html
+https://lkml.org/lkml/2012/3/13/586
+http://lists.infradead.org/pipermail/linux-arm-kernel/2011-December/074886.html
+
+Rob
