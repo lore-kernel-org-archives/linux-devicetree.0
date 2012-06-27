@@ -1,62 +1,79 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v7] MTD: LPC32xx SLC NAND driver
-Date: Wed, 27 Jun 2012 15:33:12 +0300
-Message-ID: <1340800392.1799.17.camel@sauron.fi.intel.com>
-References: <1339064536-20553-1-git-send-email-stigge@antcom.de>
-	 <1340794007.29342.50.camel@sauron.fi.intel.com>
-	 <4FEAF90B.5030809@antcom.de>
-Reply-To: dedekind1@gmail.com
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v7 06/14] USB: Chipidea: rename struct ci13xxx variables
+ from udc to ci
+Date: Wed, 27 Jun 2012 14:42:31 +0200
+Message-ID: <4FEAFFB7.7010906@pengutronix.de>
+References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com> <1340607391-16380-7-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-oqvf5mSleOX1IBuVKUVG"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4FEAF90B.5030809@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enigC0B037C9AC5C86D93815A551"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1340607391-16380-7-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---=-oqvf5mSleOX1IBuVKUVG
-Content-Type: text/plain; charset="UTF-8"
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enigC0B037C9AC5C86D93815A551
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2012-06-27 at 14:14 +0200, Roland Stigge wrote:
-> Thanks for the note! I'm sending an incremental patch. There was
-> actually only one place in the two functions that could fail (return
-> code of lpc32xx_xfer()).
+On 06/25/2012 08:56 AM, Richard Zhao wrote:
+> struct ci13xxx represent the controller, which may be device or host,
+> so name its variables as ci.
+>=20
+> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Could you please check the MCL patch as well and re-send it against the
-l2 tree?
+nitpick: search-replace problem
 
-I've squashed your change into the driver and pushed out, thanks!
+> --- a/drivers/usb/chipidea/udc.c
+> +++ b/drivers/usb/chipidea/udc.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * udc.c - ChipIdea UDC driver
+> + * ci.c - ChipIdea UDC driver
+      ^^^^
+
+:)
+
+>   *
+>   * Copyright (C) 2008 Chipidea - MIPS Technologies, Inc. All rights re=
+served.
+>   *
+> @@ -66,11 +66,11 @@ static inline int hw_ep_bit(int num, int dir)
+>  	return num + (dir ? 16 : 0);
+>  }
+> =20
+
+Marc
 
 --=20
-Best Regards,
-Artem Bityutskiy
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
---=-oqvf5mSleOX1IBuVKUVG
+
+--------------enigC0B037C9AC5C86D93815A551
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
 
-iQIcBAABAgAGBQJP6v2IAAoJECmIfjd9wqK0n70QAL5Sls7HIG0WTZbOpXb+tB6N
-zUgy+7ysX+ey/dvYFgXdjkcvEm7q5hlmnHF3QySwQFLgzqGwwTmWGebmxbWtXMhG
-wQz7U8f2FUSA85Q8x3/Qk7Oa3E+11UARCb94zzcoWnTira+rWpEKx1Iiw+V5wQcx
-OXxH1JX3GHOW5jyZlzWbchrdbm3BTUsZb0M1xBnRfKTb7T3INxNGHliCFOSvo7Ea
-MvKynEDoKj3X3vQdHbKXpj6s3tSHSME5/lNN+sC7VXU9xboQ5WG7tNHFrsUdcULH
-3b5fXB+SZ1Ew6GSb354qt1x/DL+bbjKpRwBqKBY5LwYCeye6ihk8ffIu+sq8sh/g
-fqTKtqkBuGxK8dWIFYTMkwXqS7FxJsxCk7ZnKU9efsg3RMdmTZgU7tnGW9zjNpf8
-YPeHkeJNiA0EeDYvh2rilkLIeJNfGpyl8wOCC1VOP6T5ViB0/Sqv7L1/KgF27RL8
-RHF7Z6b4XnKmxaJ9iBFgRos59h8bVQ9167mRFIf5N4AuQkdzRxzyUjwumgqwJgHt
-ufdWIcolSkLi93u2LBS51J1igc89HwxcJBo7+hxvcN3VfACASzE+SvGBBUPgk1C2
-IQMo+COkmmxLyVfk15I1xLYhl+KjalTgqx54+zErXw/jYmr6TFLCiPiWG731F0aL
-YVkspinXRSbPUcDn4ZLt
-=v4bj
+iEYEARECAAYFAk/q/7oACgkQjTAFq1RaXHPMYgCfUeytFGDYD+ij/pY+L4WcatYZ
+58QAn1W/xHJeOuO9w46XcYwQXtGyDb1l
+=c3UP
 -----END PGP SIGNATURE-----
 
---=-oqvf5mSleOX1IBuVKUVG--
-
+--------------enigC0B037C9AC5C86D93815A551--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
