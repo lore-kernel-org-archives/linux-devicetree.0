@@ -1,79 +1,72 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v7 08/14] USB: Chipidea: add ci13xxx device id management
-Date: Wed, 27 Jun 2012 14:02:57 +0200
-Message-ID: <4FEAF671.80508@pengutronix.de>
-References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com> <4FE83AA9.6030507@pengutronix.de> <20120627054231.GA21750@b20223-02.ap.freescale.net> <201206271349.45641.marex@denx.de>
+From: Mauro Carvalho Chehab <mchehab@redhat.com>
+Subject: Re: [PATCH v3] edac: add support for Calxeda highbank memory controller
+Date: Wed, 27 Jun 2012 09:13:20 -0300
+Message-ID: <4FEAF8E0.3080307@redhat.com>
+References: <1339468334-9927-3-git-send-email-robherring2@gmail.com> <1339606915-7521-1-git-send-email-robherring2@gmail.com> <4FE9BCF5.4090109@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig6599C67FD9326CF03183DFF8"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201206271349.45641.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FE9BCF5.4090109@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig6599C67FD9326CF03183DFF8
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Em 26-06-2012 10:45, Rob Herring escreveu:
+> Mauro,
+> 
+> On 06/13/2012 12:01 PM, Rob Herring wrote:
+>> From: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Add support for memory controller on Calxeda Highbank platforms. Highbank
+>> platforms support a single 4GB mini-DIMM with 1-bit correction and 2-bit
+>> detection.
+>>
+>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+>> ---
+>> v3: fix compile when EDAC_DEBUG is disabled
+> 
+> Ping. linux-next is broken for highbank without this fix.
 
-On 06/27/2012 01:49 PM, Marek Vasut wrote:
-> Dear Richard Zhao,
->=20
->> On Mon, Jun 25, 2012 at 12:17:13PM +0200, Marc Kleine-Budde wrote:
->>> On 06/25/2012 12:03 PM, Richard Zhao wrote:
->>>> Could you use my USB test branch?
->>>
->>> Same result:
->>>
->>> ci_hdrc ci_hdrc.0: remove, state 1
->>> usb usb1: USB disconnect, device number 1
->>> ci_hdrc ci_hdrc.0: USB bus 1 deregistered
->>> Unable to handle kernel NULL pointer dereference at virtual address
->>> 0000006c pgd =3D c6ba4000
->>> [0000006c] *pgd=3D46a68831, *pte=3D00000000, *ppte=3D00000000
->>> Internal error: Oops: 17 [#1] PREEMPT ARM
->>> Modules linked in: ci13xxx_imx(-) ci_hdrc imx_usbmisc
->>> CPU: 0    Not tainted  (3.5.0-rc4-00058-g01710ef #85)
->=20
-> Dumb question -- you use the same base revision of kernel, right?
+Patch replaced and merged on my trees (with a minor change, see below).
 
-Yes, I used v3.5-rc4 as baseline, add some mx28 specific patches (nand,
-etc...), then I merged in Richard's use tree. In the above oops, as the
-asked, the USB test branch.
+-next should likely get the fix tomorrow.
 
-In original oops I used
-https://github.com/riczhao/kernel-imx/commits/topics/usb-driver
+Thanks,
+Mauro.
 
-Maybe it's some other part of the system that confuses the ida_* stuff.
+>>   .../devicetree/bindings/arm/calxeda/mem-ctrlr.txt  |   17 ++
+>>   arch/arm/boot/dts/highbank.dts                     |    6 +
+>>   drivers/edac/Kconfig                               |    9 +-
+>>   drivers/edac/Makefile                              |    2 +
+>>   drivers/edac/highbank_mc_edac.c                    |  264 ++++++++++++++++++++
+>>   5 files changed, 297 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
+>>   create mode 100644 drivers/edac/highbank_mc_edac.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt b/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
+>> new file mode 100644
+>> index 0000000..5c74a0b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
+>> @@ -0,0 +1,17 @@
+>> +Calxeda DDR memory controller
+>> +
+>> +Properties:
+>> +- compatible : Should be "calxeda,hb-ddr-ctrl"
+>> +- reg : Address and size for DDR controller registers.
+>> +- interrupts : Interrupt for DDR controller.
+>> +
+>> +Example:
+>> +
+>> +	memory-controller@fff00000 {
+>> +		compatible = "calxeda,hb-ddr-ctrl";
+>> +		reg = <0xfff00000 0x1000>;
+>> +		interrupts = <0 91 4>;
+>> +	};
+>> +
+>> +
+>> +
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---------------enig6599C67FD9326CF03183DFF8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
-
-iEYEARECAAYFAk/q9nEACgkQjTAFq1RaXHMtjACfUG8Myba1edu3mMj4/iEWKT2j
-+OIAn1W3zLNVhUmqWB6klaqQShyRFb5S
-=GYiZ
------END PGP SIGNATURE-----
-
---------------enig6599C67FD9326CF03183DFF8--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There are some extra blank likes at the end of this file. I removed them.
