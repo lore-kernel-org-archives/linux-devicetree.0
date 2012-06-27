@@ -1,126 +1,295 @@
-From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Subject: Re: Tegra DRM device tree bindings
-Date: Wed, 27 Jun 2012 17:59:55 +0200
-Message-ID: <1340812795.1350.7.camel@antimon>
-References: <20120626160224.40ba10a26e3dd3a56b1f312c@nvidia.com>
-	<20120626140033.GC1115@avionic-0098.mockup.avionic-design.de>
-	<23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com>
-	<4FEA6E09.30800@nvidia.com>
-	<23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>
-	<4FEA7472.7050201@nvidia.com>
-	<20120627051418.GB7177@avionic-0098.mockup.avionic-design.de>
-	<20120627155907.871b2a506374b7db14c202c4@nvidia.com>
-	<20120627140809.GD19319@avionic-0098.mockup.avionic-design.de>
-	<20120627172914.30a2ccfd1344161ca7724722@nvidia.com>
-	<20120627144414.GA20681@avionic-0098.mockup.avionic-design.de>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH, RFC] displaymodes in devicetree
+Date: Wed, 27 Jun 2012 06:16:12 -1000
+Message-ID: <4FEB31CC.2060705@firmworks.com>
+References: <20120627124313.GI1623@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20120627144414.GA20681-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120627124313.GI1623-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 27.06.2012, 16:44 +0200 schrieb Thierry Reding:
-> On Wed, Jun 27, 2012 at 05:29:14PM +0300, Hiroshi Doyu wrote:
-> > On Wed, 27 Jun 2012 16:08:10 +0200
-> > Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> > 
-> > > * PGP Signed by an unknown key
-> > > 
-> > > On Wed, Jun 27, 2012 at 03:59:07PM +0300, Hiroshi Doyu wrote:
-> > > > On Wed, 27 Jun 2012 07:14:18 +0200
-> > > > Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> > > > 
-> > > > > > Old Signed by an unknown key
-> > > > > 
-> > > > > On Tue, Jun 26, 2012 at 08:48:18PM -0600, Stephen Warren wrote:
-> > > > > > On 06/26/2012 08:32 PM, Mark Zhang wrote:
-> > > > > > >> On 06/26/2012 07:46 PM, Mark Zhang wrote:
-> > > > > > >>>>> On Tue, 26 Jun 2012 12:55:13 +0200
-> > > > > > >>>>> Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> > > > > > >> ...
-> > > > > > >>>> I'm not sure I understand how information about the carveout would be
-> > > > > > >>>> obtained from the IOMMU API, though.
-> > > > > > >>>
-> > > > > > >>> I think that can be similar with current gart implementation. Define carveout as:
-> > > > > > >>>
-> > > > > > >>> carveout {
-> > > > > > >>>         compatible = "nvidia,tegra20-carveout";
-> > > > > > >>>         size = <0x10000000>;
-> > > > > > >>> };
-> > > > > > >>>
-> > > > > > >>> Then create a file such like "tegra-carveout.c" to get these definitions and
-> > > > > > >> register itself as platform device's iommu instance.
-> > > > > > >>
-> > > > > > >> The carveout isn't a HW object, so it doesn't seem appropriate to define a DT
-> > > > > > >> node to represent it.
-> > > > > > > 
-> > > > > > > Yes. But I think it's better to export the size of carveout as a configurable item.
-> > > > > > > So we need to define this somewhere. How about define carveout as a property of gart?
-> > > > > > 
-> > > > > > There already exists a way of preventing Linux from using certain chunks
-> > > > > > of memory; the /memreserve/ syntax. From a brief look at the dtc source,
-> > > > > > it looks like /memreserve/ entries can have labels, which implies that a
-> > > > > > property in the GART node could refer to the /memreserve/ entry by
-> > > > > > phandle in order to know what memory regions to use.
-> > > > > 
-> > > > > Wasn't the whole point of using a carveout supposed to be a replacement
-> > > > > for the GART?
-> > > > 
-> > > > Mostly agree. IIUC, we use both carveout/gart allocated buffers in
-> > > > android/tegra2.
-> > > > 
-> > > > >As such I'd think the carveout should rather be a property
-> > > > > of the host1x device.
-> > > > 
-> > > > Rather than introducing a new property, how about using
-> > > > "coherent_pool=??M" in the kernel command line if necessary? I think
-> > > > that this carveout size depends on the system usage/load.
-> > > 
-> > > I was hoping that we could get away with using the CMA and perhaps
-> > > initialize it based on device tree content. I agree that the carveout
-> > > size depends on the use-case, but I still think it makes sense to
-> > > specify it on a per-board basis.
-> > 
-> > DRM driver doesn't know if it uses CMA or not, because DRM only uses
-> > DMA API.
-> 
-> So how is the DRM supposed to allocate buffers? Does it call the
-> dma_alloc_from_contiguous() function to do that? I can see how it is
-> used by arm_dma_ops but how does it end up in the driver?
-> 
-As I said before the DMA API is not a good fit for graphics drivers.
-Most of the DMA buffers used by graphics cores are long lived and big,
-so we need a special pool to alloc from to avoid eating all contiguous
-address space, as DMA API does not provide shrinker callbacks for
-clients using large amount of memory.
+On 6/27/2012 2:43 AM, Sascha Hauer wrote:
+> Hi All,
+>
+> I'd like to have a possibility to describe fixed display modes in the
+> devicetree. This topic has been discussed before here:
+>
+> https://lists.ozlabs.org/pipermail/linuxppc-dev/2010-February/080683.html
+>
+> The result at that time was that EDID data should be considered to use
+> as this is a format that already exists. I want to come back to this
+> topic since:
+>
+> - EDID data is a binary format and as such quite inconvenient to handle.
+>    There exist several tools to parse EDID data, but I'm not aware of any
+>    (open source) tool which can generate EDID data.
+> - EDID blobs are hard to modify and hard to review in patches.
+> - EDID is designed to describe multiple modes, but fixed displays
+>    usually only support a single fixed mode.
+>
+> There are several ways of describing the mode, for this patch I chose to
+> use the format (and naming) used by the Linux Framebuffer Layer as this
+> is the only description which does not allow for inconsistent modes. I
+> added the most common flags like [v|h]sync_active_high. Others can be
+> added, but these flags are pretty much agreed upon and won't be
+> superseeded with other flags. The mode from the devicetree can be
+> converted to the most common modes used in Linux, struct fb_videomode
+> and struct drm_display_mode.
+>
+> Comments welcome
 
-> > I think that "coherent_pool" can be used only when the amount of
-> > contiguous memory is short in your system. Otherwise even unnecessary.
-> > 
-> > Could you explain a bit more why you want carveout size on per-board basis?
-> 
-> In the ideal case I would want to not have a carveout size at all.
-> However there may be situations where you need to make sure some driver
-> can allocate a given amount of memory. Having to specify this using a
-> kernel command-line parameter is cumbersome because it may require
-> changes to the bootloader or whatever. So if you know that a particular
-> board always needs 128 MiB of carveout, then it makes sense to specify
-> it on a per-board basis.
 
-If we go with CMA, this is a non-issue, as CMA allows to use the contig
-area for normal allocations and only purges them if it really needs the
-space for contig allocs.
-> 
-> Thierry
+I like the general approach and the set of names.  The separators inside 
+the names should be hyphen (-) not underscore (_), following the usual 
+device tree convention.  The rationale for that convention is to follow 
+natural-language usage, not the identifier constraints of programming 
+languages based on algebraic expressions.
+
+
+>
+> Sascha
+>
+>
+> 8<--------------------------------------------
+>
+> of: Add videomode helper
+>
+> This patch adds a helper function for parsing videomodes from the devicetree.
+> The videomode is returned either as a struct drm_display_mode or a
+> struct fb_videomode.
+>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>   .../devicetree/bindings/video/displaymode          |   40 ++++++++
+>   drivers/of/Kconfig                                 |    5 +
+>   drivers/of/Makefile                                |    1 +
+>   drivers/of/of_videomode.c                          |  108 ++++++++++++++++++++
+>   include/linux/of_videomode.h                       |   19 ++++
+>   5 files changed, 173 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/video/displaymode
+>   create mode 100644 drivers/of/of_videomode.c
+>   create mode 100644 include/linux/of_videomode.h
+>
+> diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
+> new file mode 100644
+> index 0000000..303cfc8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/displaymode
+> @@ -0,0 +1,40 @@
+> +videomode bindings
+> +==================
+> +
+> +Required properties:
+> + - xres, yres: Display resolution
+> + - left_margin, right_margin, hsync_len: Horizontal Display timing parameters
+> +   in pixels
+> +   upper_margin, lower_margin, vsync_len: Vertical display timing parameters in
+> +   lines
+> + - clock: displayclock in Hz
+> +
+> +Optional properties:
+> + - width_mm, height_mm: Display dimensions in mm
+> + - hsync_active_high (bool): Hsync pulse is active high
+> + - vsync_active_high (bool): Vsync pulse is active high
+> + - interlaced (bool): This is an interlaced mode
+> + - doublescan (bool): This is a doublescan mode
+> +
+> +There are different ways of describing a display mode. The devicetree representation
+> +corresponds to the one used by the Linux Framebuffer framework described here in
+> +Documentation/fb/framebuffer.txt. This representation has been chosen because it's
+> +the only format which does not allow for inconsistent parameters.Unlike the Framebuffer
+> +framework the devicetree has the clock in Hz instead of ps.
+> +
+> +Example:
+> +
+> +	display@0 {
+> +		/* 1920x1080p24 */
+> +		clock = <52000000>;
+> +		xres = <1920>;
+> +		yres = <1080>;
+> +		left_margin = <25>;
+> +		right_margin = <25>;
+> +		hsync_len = <25>;
+> +		lower_margin = <2>;
+> +		upper_margin = <2>;
+> +		vsync_len = <2>;
+> +		hsync_active_high;
+> +	};
+> +
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index dfba3e6..a3acaa3 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -83,4 +83,9 @@ config OF_MTD
+>   	depends on MTD
+>   	def_bool y
+>
+> +config OF_VIDEOMODE
+> +	def_bool y
+> +	help
+> +	  helper to parse videomodes from the devicetree
+> +
+>   endmenu # OF
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index e027f44..80e6db3 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -11,3 +11,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>   obj-$(CONFIG_OF_PCI)	+= of_pci.o
+>   obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+>   obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+> +obj-$(CONFIG_OF_VIDEOMODE)	+= of_videomode.o
+> diff --git a/drivers/of/of_videomode.c b/drivers/of/of_videomode.c
+> new file mode 100644
+> index 0000000..859aefb
+> --- /dev/null
+> +++ b/drivers/of/of_videomode.c
+> @@ -0,0 +1,108 @@
+> +/*
+> + * OF helpers for parsing display modes
+> + *
+> + * Copyright (c) 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +#include <linux/of.h>
+> +#include <linux/fb.h>
+> +#include <linux/export.h>
+> +#include <drm/drmP.h>
+> +#include <drm/drm_crtc.h>
+> +
+> +int of_get_video_mode(struct device_node *np, struct drm_display_mode *dmode,
+> +		struct fb_videomode *fbmode)
+> +{
+> +	int ret = 0;
+> +	u32 left_margin, xres, right_margin, hsync_len;
+> +	u32 upper_margin, yres, lower_margin, vsync_len;
+> +	u32 width_mm = 0, height_mm = 0;
+> +	u32 clock;
+> +	bool hah = false, vah = false, interlaced = false, doublescan = false;
+> +
+> +	if (!np)
+> +		return -EINVAL;
+> +
+> +	ret |= of_property_read_u32(np, "left_margin", &left_margin);
+> +	ret |= of_property_read_u32(np, "xres", &xres);
+> +	ret |= of_property_read_u32(np, "right_margin", &right_margin);
+> +	ret |= of_property_read_u32(np, "hsync_len", &hsync_len);
+> +	ret |= of_property_read_u32(np, "upper_margin", &upper_margin);
+> +	ret |= of_property_read_u32(np, "yres", &yres);
+> +	ret |= of_property_read_u32(np, "lower_margin", &lower_margin);
+> +	ret |= of_property_read_u32(np, "vsync_len", &vsync_len);
+> +	ret |= of_property_read_u32(np, "clock", &clock);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	of_property_read_u32(np, "width_mm", &width_mm);
+> +	of_property_read_u32(np, "height_mm", &height_mm);
+> +
+> +	hah = of_property_read_bool(np, "hsync_active_high");
+> +	vah = of_property_read_bool(np, "vsync_active_high");
+> +	interlaced = of_property_read_bool(np, "interlaced");
+> +	doublescan = of_property_read_bool(np, "doublescan");
+> +
+> +	if (dmode) {
+> +		memset(dmode, 0, sizeof(*dmode));
+> +
+> +		dmode->hdisplay = xres;
+> +		dmode->hsync_start = xres + right_margin;
+> +		dmode->hsync_end = xres + right_margin + hsync_len;
+> +		dmode->htotal = xres + right_margin + hsync_len + left_margin;
+> +
+> +		dmode->vdisplay = yres;
+> +		dmode->vsync_start = yres + lower_margin;
+> +		dmode->vsync_end = yres + lower_margin + vsync_len;
+> +		dmode->vtotal = yres + lower_margin + vsync_len + upper_margin;
+> +
+> +		dmode->width_mm = width_mm;
+> +		dmode->height_mm = height_mm;
+> +
+> +		dmode->clock = clock / 1000;
+> +
+> +		if (hah)
+> +			dmode->flags |= DRM_MODE_FLAG_PHSYNC;
+> +		else
+> +			dmode->flags |= DRM_MODE_FLAG_NHSYNC;
+> +		if (vah)
+> +			dmode->flags |= DRM_MODE_FLAG_PVSYNC;
+> +		else
+> +			dmode->flags |= DRM_MODE_FLAG_NVSYNC;
+> +		if (interlaced)
+> +			dmode->flags |= DRM_MODE_FLAG_INTERLACE;
+> +		if (doublescan)
+> +			dmode->flags |= DRM_MODE_FLAG_DBLSCAN;
+> +
+> +		drm_mode_set_name(dmode);
+> +	}
+> +
+> +	if (fbmode) {
+> +		memset(fbmode, 0, sizeof(*fbmode));
+> +
+> +		fbmode->xres = xres;
+> +		fbmode->left_margin = left_margin;
+> +		fbmode->right_margin = right_margin;
+> +		fbmode->hsync_len = hsync_len;
+> +
+> +		fbmode->yres = yres;
+> +		fbmode->upper_margin = upper_margin;
+> +		fbmode->lower_margin = lower_margin;
+> +		fbmode->vsync_len = vsync_len;
+> +
+> +		fbmode->pixclock = KHZ2PICOS(clock / 1000);
+> +
+> +		if (hah)
+> +			fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> +		if (vah)
+> +			fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> +		if (interlaced)
+> +			fbmode->vmode |= FB_VMODE_INTERLACED;
+> +		if (doublescan)
+> +			fbmode->vmode |= FB_VMODE_DOUBLE;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_video_mode);
+> diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
+> new file mode 100644
+> index 0000000..a988429
+> --- /dev/null
+> +++ b/include/linux/of_videomode.h
+> @@ -0,0 +1,19 @@
+> +/*
+> + * Copyright 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * OF helpers for videomodes.
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_OF_VIDEOMODE_H
+> +#define __LINUX_OF_VIDEOMODE_H
+> +
+> +struct device_node;
+> +struct fb_videomode;
+> +struct drm_display_mode;
+> +
+> +int of_get_video_mode(struct device_node *np, struct drm_display_mode *dmode,
+> +		struct fb_videomode *fbmode);
+> +
+> +#endif /* __LINUX_OF_VIDEOMODE_H */
+>
