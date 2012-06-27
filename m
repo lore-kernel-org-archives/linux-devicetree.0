@@ -1,46 +1,45 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] watchdog: xilinx: Read clock frequency directly from
- DT node
-Date: Wed, 27 Jun 2012 09:04:54 +0200
-Message-ID: <4FEAB096.30103@monstr.eu>
-References: <1340261140-10166-1-git-send-email-monstr@monstr.eu>
- <20120626191023.GI735@spo001.leaseweb.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH 2/4] can: flexcan: add hardware controller version support
+Date: Wed, 27 Jun 2012 10:56:11 +0200
+Message-ID: <4FEACAAB.1000002@grandegger.com>
+References: <1340785161-3598-1-git-send-email-jason77.wang@gmail.com> <1340785161-3598-2-git-send-email-jason77.wang@gmail.com> <1340785161-3598-3-git-send-email-jason77.wang@gmail.com> <4FEAC3EF.3060606@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120626191023.GI735-1F/o1hAF34+bEvaWgpTR7kEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <4FEAC3EF.3060606@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Hui Wang <jason77.wang@gmail.com>, davem@davemloft.net, shawn.guo@linaro.org, linux-can@vger.kernel.org, Devicetree Discussions <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/2012 09:10 PM, Wim Van Sebroeck wrote:
-> Hi Michal,
->
->> Do not use clock-frequency property from parent node.
->> Use it from watchdog node.
+On 06/27/2012 10:27 AM, Marc Kleine-Budde wrote:
+> On 06/27/2012 10:19 AM, Hui Wang wrote:
+>> At least in the i.MX series, the flexcan contrller divides into ver_3
+>> and ver_10, current driver is for ver_3 controller.
 >>
->> Signed-off-by: Michal Simek<monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
->
-> Added to linux-watchdog-next.
+>> i.MX6 has ver_10 controller, it has more reigsters than ver_3 has.
+>> The rxfgmask (Rx FIFO Global Mask) register is one of the new added.
+>> Its reset value is 0xffffffff, this means ID Filter Table must be
+>> checked when receive a packet, but the driver is designed to accept
+>> everything during the chip start, we need to clear this register to
+>> follow this design.
+>>
+>> Add a hw_ver entry in the device tree, this can let us distinguish
+>> which version the controller is, if we don't set value to this entry,
+>> the hw_ver is 3 by default, this is backward compatible for existing
+>> platforms like powerpc and imx35.
+> 
+> Is it possible to read this value from the hardware?
+> Another possibility would be to introduce a new compatible device in the
+> device tree.
 
-Thanks,
-Michal
+I vote for the latter. IIRC, in the past we already had some discussion
+on how to handle version dependent Flexcan hardware, e.g. by using
+flexcan-vX.X or being expicit using fsl,p1010-flexcan. Search for "Add
+support for powerpc" in the netdev mailing list. I added the
+devicetree-discuss ml for that reason.
+
+Wolfgang.
 
 
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
