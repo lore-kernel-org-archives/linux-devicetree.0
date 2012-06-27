@@ -1,52 +1,41 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Tegra DRM device tree bindings
-Date: Wed, 27 Jun 2012 12:02:46 -0600
-Message-ID: <4FEB4AC6.2060909@wwwdotorg.org>
-References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
-	<20120626160224.40ba10a26e3dd3a56b1f312c@nvidia.com>
-	<20120626140033.GC1115@avionic-0098.mockup.avionic-design.de>
-	<20120627154400.d9d7db67128404079d98ab39@nvidia.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/4] mtd: lpc32xx_slc: Select AMBA_PL08X in Kconfig
+Date: Wed, 27 Jun 2012 20:15:42 +0100
+Message-ID: <20120627191542.GC25319@n2100.arm.linux.org.uk>
+References: <1340812275-1197-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20120627154400.d9d7db67128404079d98ab39-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1340812275-1197-1-git-send-email-stigge@antcom.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: dedekind1@gmail.com, linux-mtd@lists.infradead.org, aletes.xgr@gmail.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2012 06:44 AM, Hiroshi Doyu wrote:
-...
-> I think that there are 2 cases:
+On Wed, Jun 27, 2012 at 05:51:12PM +0200, Roland Stigge wrote:
+> From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 > 
->   (1) discontiguous memory with IOMMU
->   (2) contiguous memory without IOMMU(called "carveout" in general?)
-...
-> For (2), although memory is mostly anonymous one, we may need to know
-> how much to allocate, where we only need "size". This size is not from
-> h/w feature, but it depends on the system load/usage. So I think that
-> this size can be passed from kernel command line? For exmaple, we can
-> specify how much contiguous memory is necessary with putting
-> "coherent_pool=??M" in the kernel command line as below:
+> Since this driver depends on the amba pl08x dma driver, select it in Kconfig.
 > 
-> 	coherent_pool=nn[KMG]	[ARM,KNL]
-> 			Sets the size of memory pool for coherent, atomic dma
-> 			allocations.
+> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+> Signed-off-by: Roland Stigge <stigge@antcom.de>
+> ---
+>  drivers/mtd/nand/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+> index de69978..a9e8b73 100644
+> --- a/drivers/mtd/nand/Kconfig
+> +++ b/drivers/mtd/nand/Kconfig
+> @@ -417,6 +417,7 @@ config MTD_NAND_PXA3xx
+>  config MTD_NAND_SLC_LPC32XX
+>  	tristate "NXP LPC32xx SLC Controller"
+>  	depends on ARCH_LPC32XX
+> +	select AMBA_PL08X
+>  	help
+>  	  Enables support for NXP's LPC32XX SLC (i.e. for Single Level Cell
+>  	  chips) NAND controller. This is the default for the PHYTEC 3250
 
-I guess if that's the standard way of initializing CMA, then that's fine.
-
-It'd be nice if there was a way to specify that from the DT too; that
-way the user/distro/bootloader constructing the kernel command-line
-wouldn't have to remember to add "random" (potentially
-Tegra-/board-specific) extra arguments onto the command-line; the Tegra
-command-line in the upstream kernel is quite clean right now, especially
-compare to the enormous number of options we require downstream:-(
+Surely not?  Drivers using DMA engine really should not depend on any
+particular DMA engine implementation.
