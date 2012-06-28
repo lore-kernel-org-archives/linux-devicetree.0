@@ -1,14 +1,17 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: #size-cells = <0> in a bus node, and kernel messages complaining
- about this
-Date: Wed, 27 Jun 2012 14:57:04 -1000
-Message-ID: <4FEBABE0.2050503@firmworks.com>
-References: <4FEB7A8E.1090409@wwwdotorg.org>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v7 06/14] USB: Chipidea: rename struct ci13xxx variables
+ from udc to ci
+Date: Thu, 28 Jun 2012 09:59:03 +0800
+Message-ID: <20120628015902.GA14953@b20223-02.ap.freescale.net>
+References: <1340607391-16380-1-git-send-email-richard.zhao@freescale.com>
+ <1340607391-16380-7-git-send-email-richard.zhao@freescale.com>
+ <4FEAFFB7.7010906@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FEB7A8E.1090409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4FEAFFB7.7010906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,69 +22,48 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: marex-ynQEQJNshbs@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/27/2012 11:26 AM, Stephen Warren wrote:
-> I believe I've seen the following construct bandied about as the correct
-> way of representing a bunch of nodes that have the same name (since they
-> represent the same type of object) within device-tree.
->
-> 	regulators {
-> 		compatible = "simple-bus";
-> 		#address-cells = <1>;
-> 		#size-cells = <0>;
->
-> 		regulator@0 {
-> 			compatible = "regulator-fixed";
-> 			reg = <0>;
-> ...
-> 		};
->
-> 		regulator@1 {
-> 			compatible = "regulator-fixed";
-> 			reg = <1>;
-> ...
-> 		};
-> 	};
->
-> However, when the kernel parses that, it issues messages such as:
->
-> prom_parse: Bad cell count for /regulators/regulator@0
-> prom_parse: Bad cell count for /regulators/regulator@1
+On Wed, Jun 27, 2012 at 02:42:31PM +0200, Marc Kleine-Budde wrote:
+> On 06/25/2012 08:56 AM, Richard Zhao wrote:
+> > struct ci13xxx represent the controller, which may be device or host,
+> > so name its variables as ci.
+> > 
+> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
+> nitpick: search-replace problem
+> 
+> > --- a/drivers/usb/chipidea/udc.c
+> > +++ b/drivers/usb/chipidea/udc.c
+> > @@ -1,5 +1,5 @@
+> >  /*
+> > - * udc.c - ChipIdea UDC driver
+> > + * ci.c - ChipIdea UDC driver
+>       ^^^^
+Nice catch!
 
-The message comes from __of_translate_address(), which has the comment:
-
-  * Note: We consider that crossing any level with #size-cells == 0 to mean
-  * that translation is impossible (that is we are not dealing with a value
-  * that can be mapped to a cpu physical address). This is not really specified
-  * that way, but this is traditionally the way IBM at least do things
-
-So it seems that the problem only occurs if something tries to translate
-the regulator's "reg" address to a CPU address.  Is that possible/meaningful
-in your case?
-
-I ran into a problem like this recently.  If I recall correctly, the root cause 
-was that some code that I "inherited" was using of_address_to_resource() to 
-process a "reg" property in a case where the "reg" was not memory-mappable.
-I changed the code to use "of_get_address()" instead.
-
-of_address_to_resource() calls of_get_address(), and then proceeds to convert 
-the bus-relative address to a CPU address.
-
->
-> The message is issued when #size-cells==0. Is the response simply "don't
-> do that", and so I should set #size-cells=1, and add a fake size cell in
-> the reg property too?
->
-> Given the number of hits on '#size-cells = <0>' in the kernel source
-> tree, it seems like I must be missing something here; it's quite widely
-> used. I guess the warning is probably only emitted when the node with
-> #size-cells=0 is a bus, and so the children are enumerated to
-> instantiated devices; perhaps that's why this hasn't been raised before?
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
+Thanks
+Richard
+> 
+> :)
+> 
+> >   *
+> >   * Copyright (C) 2008 Chipidea - MIPS Technologies, Inc. All rights reserved.
+> >   *
+> > @@ -66,11 +66,11 @@ static inline int hw_ep_bit(int num, int dir)
+> >  	return num + (dir ? 16 : 0);
+> >  }
+> >  
+> 
+> Marc
+> 
+> -- 
+> Pengutronix e.K.                  | Marc Kleine-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
