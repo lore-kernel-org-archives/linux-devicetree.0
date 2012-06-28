@@ -1,70 +1,46 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: RF231 transceiver on at91sam9g20ek board
-Date: Thu, 28 Jun 2012 17:08:25 +0200
-Message-ID: <4FEC7369.3050003@atmel.com>
-References: <CAJmB2rDxv45OP4otn7rmQcpzCvLujKm0j9_OqNW6PoyHuarTLw@mail.gmail.com>
- <201206221834.41869.arnd@arndb.de>
- <CAJmB2rBcRuNe0QfEGoJN1rQnRnr33gyE=nLt3Az=mGEWuR7mCg@mail.gmail.com>
- <201206281430.21916.arnd@arndb.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Tegra DRM device tree bindings
+Date: Thu, 28 Jun 2012 10:46:58 -0600
+Message-ID: <4FEC8A82.9090202@wwwdotorg.org>
+References: <20120626160224.40ba10a26e3dd3a56b1f312c@nvidia.com> <20120626140033.GC1115@avionic-0098.mockup.avionic-design.de> <23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com> <4FEA6E09.30800@nvidia.com> <23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com> <4FEA7472.7050201@nvidia.com> <20120627051418.GB7177@avionic-0098.mockup.avionic-design.de> <20120627155907.871b2a506374b7db14c202c4@nvidia.com> <20120627140809.GD19319@avionic-0098.mockup.avionic-design.de> <20120627172914.30a2ccfd1344161ca7724722@nvidia.com> <20120627144414.GA20681@avionic-0098.mockup.avionic-design.de> <20120628091853.d4c3d85749f9d41a5dfafd28@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201206281430.21916.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Alexander Smirnov <alex.bluesman.smirnov@gmail.com>, plagnioj@jcrosoft.com
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux@maxim.org.za, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120628091853.d4c3d85749f9d41a5dfafd28-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/28/2012 04:30 PM, Arnd Bergmann :
-> On Thursday 28 June 2012, Alexander Smirnov wrote:
->>>
->>> It might not be the problem you are faced with but note that at91
->>> is moving towards probing all devices using the device tree, so
->>> starting with linux-3.4 you should be defining the device in the
->>> at91sam9g20ek.dts file for your board and use the generic
->>> board-dt.c file. The platform_data gets replaced with
->>> calls to of_get_gpio() in that case.
->>
->> Thank you for the reply!
->>
->> Are you going to add SPI section to the device tree in the nearest
->> future or I can do it by myself and send you the patch? The reason is
->> that this week I merged at86rf230 driver to the 'net-next' tree, but
->> it won't work without platform data.
+On 06/28/2012 12:18 AM, Hiroshi Doyu wrote:
+> On Wed, 27 Jun 2012 16:44:14 +0200
+> Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
 > 
-> Jean-Christophe or Nicolas might now what the status is for atmel-spi.
-> It seems like it would be trivial to just add the compatible string in
-> the atmel-spi driver, which would let us probe all of its child devices
-> using DT.
+>>> I think that "coherent_pool" can be used only when the amount of
+>>> contiguous memory is short in your system. Otherwise even unnecessary.
+>>>
+>>> Could you explain a bit more why you want carveout size on per-board basis?
+>>
+>> In the ideal case I would want to not have a carveout size at all.
+>> However there may be situations where you need to make sure some driver
+>> can allocate a given amount of memory. Having to specify this using a
+>> kernel command-line parameter is cumbersome because it may require
+>> changes to the bootloader or whatever. So if you know that a particular
+>> board always needs 128 MiB of carveout, then it makes sense to specify
+>> it on a per-board basis.
+> 
+> Hm...I could understand somewhat;) but DT can also specify "bootargs"
+> in dts file, which can support per-board-wide spec too, like the above
+> sum of carveout needed from all drivers. I just want to avoid
+> introducing a new parameter additionaly if we can make use of the
+> existing mechanism.
 
-Dear Alexander,
-
-There has been an attempt to move the spi-atmel.c driver to device tree.
-You can check the status of the discussion in by searching the message
-subjects:
-
-[PATCH 1/4 v4] of_spi: add generic binding support to specify cs gpio
-[PATCH 1/4 v5] of_spi: add generic binding support to specify cs gpio
-
-I guess that you can take these patches as examples for moving to device
-tree on your AT91 based board (beware you should set pin muxing in your
-bootloader).
-
-There is a "work in progress" snapshot of this work in at91 git tree/branch:
-git://github.com/at91linux/linux-at91.git   ghnew/j/for-3.5-wip
-
-commit: 5f31f2573e7e9369500118e1b8fd026392fc0982
-commit: 93fd57e73502656a139879518b397711cc305c6a
-
-Best regards,
--- 
-Nicolas Ferre
+The bootargs in the DT file is usually provided by (over-written by) the
+bootloader. If we start requiring lots of random kernel command-line
+arguments, that makes it more effort for the user of the bootloader
+(e.g. distribution bootloader scripts, etc.) to create the kernel
+command-line. I'd prefer to avoid that as much as possible. That said,
+using a standardized command-line option that is (or will be) used by
+all (ARM?) SoCs for the same purpose is reasonable, because there's
+commonality there.
