@@ -1,7 +1,7 @@
 From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v8 02/14] usb: chipidea: drop useless arch-check
-Date: Thu, 28 Jun 2012 11:37:19 +0800
-Message-ID: <1340854652-24717-3-git-send-email-richard.zhao@freescale.com>
+Subject: [PATCH v8 01/14] usb: chipidea: remove unneeded NULL check
+Date: Thu, 28 Jun 2012 11:37:18 +0800
+Message-ID: <1340854652-24717-2-git-send-email-richard.zhao@freescale.com>
 References: <1340854652-24717-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,45 +12,29 @@ To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCv
 Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-msm glue layer compiles on all arches just
-fine. Let's drop the unnecessary ARCH check
-so we have easier compile tests.
+As reported by Dan Carpenter, there is a NULL check in udc_start() that
+follows a dereference of the pointer that's being checked. However, at
+that point udc pointer shouldn't ever be NULL and if it is, the dereference
+should cause an oops.
 
-Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Reported-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 ---
- drivers/usb/chipidea/Makefile |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/chipidea/udc.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-index cc34937..b69900a 100644
---- a/drivers/usb/chipidea/Makefile
-+++ b/drivers/usb/chipidea/Makefile
-@@ -5,10 +5,12 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_UDC)	+= udc.o
- ci_hdrc-$(CONFIG_USB_CHIPIDEA_HOST)	+= host.o
- ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
+diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+index 51f9694..cdb9212 100644
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -1647,9 +1647,6 @@ static int udc_start(struct ci13xxx *udc)
+ 	struct device *dev = udc->dev;
+ 	int retval = 0;
  
-+# Glue/Bridge layers go here
-+
-+obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_msm.o
-+
-+# PCI doesn't provide stubs, need to check
- ifneq ($(CONFIG_PCI),)
- 	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_pci.o
- endif
- 
--ifneq ($(CONFIG_ARCH_MSM),)
--	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_msm.o
--endif
--- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-	if (!udc)
+-		return -EINVAL;
