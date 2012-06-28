@@ -1,51 +1,40 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Tegra DRM device tree bindings
-Date: Thu, 28 Jun 2012 09:37:53 +0300
-Message-ID: <20120628093753.545e0649fc84413837a5dca4@nvidia.com>
-References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
-	<20120626160224.40ba10a26e3dd3a56b1f312c@nvidia.com>
-	<20120626140033.GC1115@avionic-0098.mockup.avionic-design.de>
-	<20120627154400.d9d7db67128404079d98ab39@nvidia.com>
-	<4FEB4AC6.2060909@wwwdotorg.org>
+From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: Remoteproc device-tree node description proposal
+Date: Thu, 28 Jun 2012 10:54:55 +0300
+Message-ID: <CAK=WgbbA2+oJARCEAgChct8rQ+s5=-cbR1esMPNekun3=ReGEA@mail.gmail.com>
+References: <4FEA974F.9050908@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FEB4AC6.2060909-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FEA974F.9050908-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Jun 2012 20:02:46 +0200
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+On Wed, Jun 27, 2012 at 8:17 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+> Ohad: What properties are required by TI to describe firmware?
+> I would like to add together all requirements and create any formal
+> remoteproc description.
 
-> On 06/27/2012 06:44 AM, Hiroshi Doyu wrote:
-> ...
-> > I think that there are 2 cases:
-> > 
-> >   (1) discontiguous memory with IOMMU
-> >   (2) contiguous memory without IOMMU(called "carveout" in general?)
-> ...
-> > For (2), although memory is mostly anonymous one, we may need to know
-> > how much to allocate, where we only need "size". This size is not from
-> > h/w feature, but it depends on the system load/usage. So I think that
-> > this size can be passed from kernel command line? For exmaple, we can
-> > specify how much contiguous memory is necessary with putting
-> > "coherent_pool=??M" in the kernel command line as below:
-> > 
-> > 	coherent_pool=nn[KMG]	[ARM,KNL]
-> > 			Sets the size of memory pool for coherent, atomic dma
-> > 			allocations.
-> 
-> I guess if that's the standard way of initializing CMA, then that's fine.
-> 
-> It'd be nice if there was a way to specify that from the DT too; that
-> way the user/distro/bootloader constructing the kernel command-line
-> wouldn't have to remember to add "random" (potentially
-> Tegra-/board-specific) extra arguments onto the command-line; the Tegra
-> command-line in the upstream kernel is quite clean right now, especially
-> compare to the enormous number of options we require downstream:-(
+I'm not so sure about this.
 
-DT can specify the kernel command-line as "bootargs" in a dts file,
-which can be modified after extracted on memory by bootloader.
+The low level remoteproc driver is platform specific and may look
+completely different on different platforms..
+
+I suggest you go ahead and add DTS remoteproc support for your
+platform, and when TI or others will get to it too, we will see if any
+commonality is in place.
+
+Thanks,
+Ohad.
