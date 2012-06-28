@@ -1,40 +1,33 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: Remoteproc device-tree node description proposal
-Date: Thu, 28 Jun 2012 10:54:55 +0300
-Message-ID: <CAK=WgbbA2+oJARCEAgChct8rQ+s5=-cbR1esMPNekun3=ReGEA@mail.gmail.com>
-References: <4FEA974F.9050908@monstr.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FEA974F.9050908-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+From: Johan Hovold <jhovold@gmail.com>
+Subject: [PATCH 0/2] mfd: tps65910: add support for enabling external 32-kHz oscillator
+Date: Thu, 28 Jun 2012 12:20:20 +0200
+Message-ID: <1340878822-28444-1-git-send-email-jhovold@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Johan Hovold <jhovold@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2012 at 8:17 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> Ohad: What properties are required by TI to describe firmware?
-> I would like to add together all requirements and create any formal
-> remoteproc description.
+These patches (against v3.5-rc4) add support for enabling the external 32-kHz
+oscillator input in tps6591x devices. Depending on boot-mode, the internal
+RC-oscillator may be used by default and the external crystal-oscillator input
+must be enabled by clearing a flag in the device-control register.
 
-I'm not so sure about this.
-
-The low level remoteproc driver is platform specific and may look
-completely different on different platforms..
-
-I suggest you go ahead and add DTS remoteproc support for your
-platform, and when TI or others will get to it too, we will see if any
-commonality is in place.
+These patches are needed in order to get an accurate system clock on boards
+such as the Craneboard.
 
 Thanks,
-Ohad.
+Johan
+
+Johan Hovold (2):
+  mfd: tps65910: add support for enabling external 32-kHz oscillator
+  mfd: tps65910: add device-tree entry to enable external 32-kHz
+    oscillator
+
+ Documentation/devicetree/bindings/mfd/tps65910.txt |    4 ++-
+ drivers/mfd/tps65910.c                             |   24 +++++++++++++++++++-
+ include/linux/mfd/tps65910.h                       |    1 +
+ 3 files changed, 27 insertions(+), 2 deletions(-)
+
+-- 
+1.7.8.6
