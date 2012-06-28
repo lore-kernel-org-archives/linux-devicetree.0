@@ -1,77 +1,43 @@
 From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v8 00/14] add imx usb driver based on Greg next tree
-Date: Thu, 28 Jun 2012 11:37:17 +0800
-Message-ID: <1340854652-24717-1-git-send-email-richard.zhao@freescale.com>
+Subject: [PATCH v8 03/14] usb: chipidea: msm: add missing section annotation
+Date: Thu, 28 Jun 2012 11:37:20 +0800
+Message-ID: <1340854652-24717-4-git-send-email-richard.zhao@freescale.com>
+References: <1340854652-24717-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1340854652-24717-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The work is based on  ci13xxx rework done by Alexander Shishkin.
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 
-To let Greg pick up, I also added patches Alex queued that I depends on.
+No functional changes, it will just free up some
+code if we don't have hotplug.
 
-This patch series can also be found at:
-https://github.com/riczhao/kernel-imx/commits/topics/usb-driver
+Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+---
+ drivers/usb/chipidea/ci13xxx_msm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Status:
-  - this version only support host
-  - usbotg controler works at host role
-
-Changes since last version:
- - mxs_phy: remove connected check
- - search/repleace fix
-
-Alexander Shishkin (1):
-  usb: chipidea: remove unneeded NULL check
-
-Felipe Balbi (3):
-  usb: chipidea: drop useless arch-check
-  usb: chipidea: msm: add missing section annotation
-  usb: chipidea: msm: add remove method
-
-Richard Zhao (10):
-  USB: Chipidea: rename struct ci13xxx_udc_driver to struct
-    ci13xxx_platform_data
-  USB: Chipidea: rename struct ci13xxx variables from udc to ci
-  USB: Chipidea: add unified ci13xxx_{add,remove}_device for platform
-    drivers
-  USB: Chipidea: add ci13xxx device id management
-  usb: chipidea: select USB_EHCI_ROOT_HUB_TT in USB_CHIPIDEA_HOST of
-    Kconfig
-  usb: otg: add notify_connect/notify_disconnect callback
-  USB: notify phy when root hub port connect change
-  usb: chipidea: permit driver bindings pass phy pointer
-  usb: otg: add basic mxs phy driver support
-  usb: chipidea: add imx platform driver
-
- .../devicetree/bindings/usb/ci13xxx-imx.txt        |   17 +
- Documentation/devicetree/bindings/usb/mxs-phy.txt  |   13 +
- drivers/usb/chipidea/Kconfig                       |    1 +
- drivers/usb/chipidea/Makefile                      |    9 +-
- drivers/usb/chipidea/ci.h                          |   32 +-
- drivers/usb/chipidea/ci13xxx_imx.c                 |  197 ++++++
- drivers/usb/chipidea/ci13xxx_msm.c                 |   63 +-
- drivers/usb/chipidea/ci13xxx_pci.c                 |   52 +-
- drivers/usb/chipidea/core.c                        |   70 ++-
- drivers/usb/chipidea/debug.c                       |  146 ++---
- drivers/usb/chipidea/host.c                        |    3 +-
- drivers/usb/chipidea/udc.c                         |  634 ++++++++++----------
- drivers/usb/core/hub.c                             |    8 +
- drivers/usb/otg/Kconfig                            |   10 +
- drivers/usb/otg/Makefile                           |    1 +
- drivers/usb/otg/mxs-phy.c                          |  190 ++++++
- include/linux/usb/chipidea.h                       |   14 +-
- include/linux/usb/otg.h                            |   21 +
- 18 files changed, 991 insertions(+), 490 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
- create mode 100644 Documentation/devicetree/bindings/usb/mxs-phy.txt
- create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
- create mode 100644 drivers/usb/otg/mxs-phy.c
-
+diff --git a/drivers/usb/chipidea/ci13xxx_msm.c b/drivers/usb/chipidea/ci13xxx_msm.c
+index 958069e..8d438b8 100644
+--- a/drivers/usb/chipidea/ci13xxx_msm.c
++++ b/drivers/usb/chipidea/ci13xxx_msm.c
+@@ -55,7 +55,7 @@ static struct ci13xxx_udc_driver ci13xxx_msm_udc_driver = {
+ 	.notify_event		= ci13xxx_msm_notify_event,
+ };
+ 
+-static int ci13xxx_msm_probe(struct platform_device *pdev)
++static int __devinit ci13xxx_msm_probe(struct platform_device *pdev)
+ {
+ 	struct platform_device *plat_ci;
+ 	int ret;
 -- 
 1.7.9.5
 
