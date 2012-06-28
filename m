@@ -1,78 +1,94 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: Re: [PATCH v2 0/4] netdev/phy: 10G PHY support.
-Date: Thu, 28 Jun 2012 10:05:52 -0700
-Message-ID: <4FEC8EF0.6080408@gmail.com>
-References: <1340818418-10382-1-git-send-email-ddaney.cavm@gmail.com> <20120627.212941.485325944406335522.davem@davemloft.net>
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Subject: Re: Tegra DRM device tree bindings
+Date: Thu, 28 Jun 2012 19:19:52 +0200
+Message-ID: <1340903992.1348.27.camel@antimon>
+References: <23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com>
+	<4FEA6E09.30800@nvidia.com>
+	<23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>
+	<4FEA7472.7050201@nvidia.com>
+	<20120627051418.GB7177@avionic-0098.mockup.avionic-design.de>
+	<20120627155907.871b2a506374b7db14c202c4@nvidia.com>
+	<20120627140809.GD19319@avionic-0098.mockup.avionic-design.de>
+	<20120627172914.30a2ccfd1344161ca7724722@nvidia.com>
+	<20120627144414.GA20681@avionic-0098.mockup.avionic-design.de>
+	<1340812795.1350.7.camel@antimon>
+	<20120628111253.GC15137@avionic-0098.mockup.avionic-design.de>
+	<4FEC8B91.6010107@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-7;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120627.212941.485325944406335522.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, afleming@gmail.com, david.daney@cavium.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4FEC8B91.6010107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2012 09:29 PM, David Miller wrote:
-> From: David Daney<ddaney.cavm@gmail.com>
-> Date: Wed, 27 Jun 2012 10:33:34 -0700
->
->> From: David Daney<david.daney@cavium.com>
->>
->> The only non-cosmetic change from v1 is to pass an additional argume=
-nt
->> to get_phy_device() that indicates that the PHY uses 802.3 clause 45
->> signaling, previously I had been using a high order bit of the addr
->> parameter for this.
->>
->> There are also changes from v1 in the code and comment formatting.
->> These should now be closer to what David Miller prefers.
->
-> Applied, but I had to add the following warning fixup:
+Am Donnerstag, den 28.06.2012, 10:51 -0600 schrieb Stephen Warren:
+> On 06/28/2012 05:12 AM, Thierry Reding wrote:
+> > On Wed, Jun 27, 2012 at 05:59:55PM +0200, Lucas Stach wrote:
+> >> Am Mittwoch, den 27.06.2012, 16:44 +0200 schrieb Thierry Reding:
+> ...
+> >>> In the ideal case I would want to not have a carveout size at
+> >>> all. However there may be situations where you need to make
+> >>> sure some driver can allocate a given amount of memory. Having
+> >>> to specify this using a kernel command-line parameter is
+> >>> cumbersome because it may require changes to the bootloader or
+> >>> whatever. So if you know that a particular board always needs
+> >>> 128 MiB of carveout, then it makes sense to specify it on a
+> >>> per-board basis.
+> >> 
+> >> If we go with CMA, this is a non-issue, as CMA allows to use the
+> >> contig area for normal allocations and only purges them if it
+> >> really needs the space for contig allocs.
+> > 
+> > CMA certainly sounds like the most simple approach. While it may
+> > not be suited for 3D graphics or multimedia processing later on, I
+> > think we could use it at a starting point to get basic framebuffer
+> > and X support up and running. We can always move to something more
+> > advanced like TTM later.
+> 
+> I thought the whole purpose of CMA was to act as the infra-structure
+> to provide buffers to 3D, camera, etc. in particular allowing sharing
+> of buffers between them. In other words, isn't CMA the memory manager?
+> If there's some deficiency with CMA for 3D graphics, it seems like
+> that should be raised with those designing CMA. Or, am I way off base
+> with my expectations of CMA?
+> 
+CMA is just a way of providing large contiguous address space blocks in
+a dynamic fashion. The problem CMA solves is: we have a system with
+relatively low amounts of sysmem (like 512MB), now to ensure we can
+always get large contiguous buffers for use by GPU or VIDEO blocks, we
+need to set aside a relatively large contiguous pool (like 128MB). So we
+are stealing 128MB of memory from the system while we may or may not use
+it, which is bad.
+Now CMA allows to say: I may need 128MB of contig space, but the system
+is free to use it as normal memory as long as I don't really need it. If
+the space is really needed, CMA purges pages from the area and may even
+swap them out. So yes CMA is a memory allocator for contig memory.
 
-Thank You.
+TTM though solves more advanced matters, like buffer synchronisation
+between 3D and 2D block of hardware or syncing buffer access between GPU
+and CPU.
+One of the most interesting things of TTM is the ability to purge the
+GPU DMA buffers to scattered sysmem or even swap them out, if they are
+not currently used by the GPU. It then makes sure to move them in the
+contig space again when the GPU really needs them and fix up the GPU
+command stream with the new buffer address.
 
->
-> --------------------
-> phy: Fix warning in get_phy_device().
->
-> drivers/net/phy/phy_device.c: In function =A1get_phy_device=A2:
-> drivers/net/phy/phy_device.c:340:14: warning: =A1phy_id=A2 may be use=
-d uninitialized in this function [-Wmaybe-uninitialized]
->
-> GCC can't see that when we return zero we always initialize
-> phy_id and that's the only path where we use it.
->
-> Initialize phy_id to zero to shut it up.
->
+IMHO the best solution would be to use CMA as a flexible replacement of
+the static carveout area and put TTM on top of this to solve the needs
+of graphics drivers. We certainly don't want to reinvent the wheel
+inside CMA. We have solutions for all those things in the kernel right
+now, we just have to glue them together in a sane way.
 
-=46WIW: I was testing with GCC-4.6.3 and saw no such warnings.
-
-David Daney
-
-
-> Signed-off-by: David S. Miller<davem@davemloft.net>
-> ---
->   drivers/net/phy/phy_device.c |    4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_devic=
-e.c
-> index ef4cdee..47e02e7 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -327,9 +327,9 @@ static int get_phy_id(struct mii_bus *bus, int ad=
-dr, u32 *phy_id,
->    */
->   struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bo=
-ol is_c45)
->   {
-> -	struct phy_device *dev =3D NULL;
-> -	u32 phy_id;
->   	struct phy_c45_device_ids c45_ids =3D {0};
-> +	struct phy_device *dev =3D NULL;
-> +	u32 phy_id =3D 0;
->   	int r;
->
->   	r =3D get_phy_id(bus, addr,&phy_id, is_c45,&c45_ids);
+Thanks,
+Lucas
