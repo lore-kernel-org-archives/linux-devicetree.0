@@ -1,14 +1,11 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] Allow simple cross-compilation of library
-Date: Thu, 28 Jun 2012 13:07:14 +1000
-Message-ID: <20120628030714.GA10546@truffala.fritz.box>
-References: <E1SjsCv-0006dk-SV@jdl.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] bindings: update imx and mxs #gpio-cells
+Date: Thu, 28 Jun 2012 11:15:37 +0800
+Message-ID: <1340853337-4406-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1SjsCv-0006dk-SV-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,62 +16,55 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Christoffer Dall <c.dall-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hui Wang <jason77.wang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2012 at 08:22:57AM -0500, Jon Loeliger wrote:
-> 
-> [ Forwarded to devicetree dev list for comment. --jdl ]
+The of_get_named_gpio_flags can retrieve the second cell of
+gpio-specifier as the "flags".  The imx and mxs gpio driver do not
+have their own .xlate callback, which means of_gpio_simple_xlate is
+used and it's a 1:1 mapping between gpio controller flags and Linux
+"enum of_gpio_flags".
 
-Yeah, I guess that makes sense.
+Update imx and mxs bindings document to make it clear.
 
-> 
-> 
-> ------- Forwarded Message
-> 
-> Subject: [PATCH] Allow simple cross-compilation of library
-> To: jdl-CYoMK+44s/E@public.gmane.org
-> From: Christoffer Dall <c.dall-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>
-> Date: Tue, 05 Jun 2012 13:09:59 -0400
-> Message-ID: <20120605170959.12774.39782.stgit@ubuntu>
-> 
-> 
-> This is extremely useful when cross-compiling the library to be
-> linked with cross-compiled QEMU.
-> 
-> Signed-off-by: Christoffer Dall <c.dall-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>
-> - ---
->  Makefile |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Makefile b/Makefile
-> index 1169e6c..efa79c1 100644
-> - --- a/Makefile
-> +++ b/Makefile
-> @@ -15,6 +15,10 @@ EXTRAVERSION =
->  LOCAL_VERSION =
->  CONFIG_LOCALVERSION =
->  
-> +CC=${CROSS_COMPILE}gcc
-> +LD=${CROSS_COMPILE}ld
-> +AS=${CROSS_COMPILE}as
-> +
->  CPPFLAGS = -I libfdt -I .
->  WARNINGS = -Werror -Wall -Wpointer-arith -Wcast-qual -Wnested-externs \
->  	-Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls
-> 
-> 
-> ------- End of Forwarded Message
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/gpio/fsl-imx-gpio.txt      |    5 +++--
+ .../devicetree/bindings/gpio/gpio-mxs.txt          |    5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
+index 4363ae4..5f360e7 100644
+--- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
+@@ -8,8 +8,9 @@ Required properties:
+   by low 16 pins and the second one is for high 16 pins.
+ - gpio-controller : Marks the device node as a gpio controller.
+ - #gpio-cells : Should be two.  The first cell is the pin number and
+-  the second cell is used to specify optional parameters (currently
+-  unused).
++  the second cell is used to specify the gpio polarity:
++      0 = active high
++      1 = active low
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.txt b/Documentation/devicetree/bindings/gpio/gpio-mxs.txt
+index 0c35673..1e677a4 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mxs.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.txt
+@@ -13,8 +13,9 @@ Required properties for GPIO node:
+ - interrupts : Should be the port interrupt shared by all 32 pins.
+ - gpio-controller : Marks the device node as a gpio controller.
+ - #gpio-cells : Should be two.  The first cell is the pin number and
+-  the second cell is used to specify optional parameters (currently
+-  unused).
++  the second cell is used to specify the gpio polarity:
++      0 = active high
++      1 = active low
+ - interrupt-controller: Marks the device node as an interrupt controller.
+ - #interrupt-cells : Should be 2.  The first cell is the GPIO number.
+   The second cell bits[3:0] is used to specify trigger type and level flags:
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.5.4
