@@ -1,255 +1,231 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode" property
- to device tree bindings
-Date: Fri, 29 Jun 2012 09:47:03 +0200
-Message-ID: <4FED5D77.3050009@pengutronix.de>
-References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de> <1340891629-13145-4-git-send-email-mkl@pengutronix.de> <20120629014352.GA28923@b20223-02.ap.freescale.net>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode"
+ property to device tree bindings
+Date: Fri, 29 Jun 2012 16:45:10 +0800
+Message-ID: <20120629084509.GB28923@b20223-02.ap.freescale.net>
+References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de>
+ <1340891629-13145-4-git-send-email-mkl@pengutronix.de>
+ <20120629014352.GA28923@b20223-02.ap.freescale.net>
+ <4FED5D77.3050009@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig4B4F636FAFD9133A94A29B25"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120629014352.GA28923-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4FED5D77.3050009-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig4B4F636FAFD9133A94A29B25
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 29, 2012 at 09:47:03AM +0200, Marc Kleine-Budde wrote:
+> 
+> Cc'ed Devicetree Discussions
+> 
+> On 06/29/2012 03:43 AM, Richard Zhao wrote:
+> > On Thu, Jun 28, 2012 at 03:53:48PM +0200, Marc Kleine-Budde wrote:
+> >> This patch allows the device tree to limit the chipidea to host or
+> >> peripheral mode only.
+> >>
+> >> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> ---
+> >>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |    3 ++
+> >>  drivers/usb/chipidea/ci13xxx_imx.c                 |    3 ++
+> >>  drivers/usb/chipidea/core.c                        |   41 +++++++++++++++++---
+> >>  include/linux/usb/chipidea.h                       |    9 +++++
+> >>  4 files changed, 50 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> >> index 5a0ad66..67f97f56 100644
+> >> --- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> >> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> >> @@ -4,6 +4,8 @@ Required properties:
+> >>  - compatible: Should be "fsl,imx27-usb"
+> >>  - reg: Should contain registers location and length
+> >>  - interrupts: Should contain controller interrupt
+> >> +- dr_mode: indicates the working mode for compatible controllers. Can
+> >> +  be "host", "peripheral", or "otg". Defaults to "otg" if not defined.
+> 
+> > By default, it should be decided by capability registers. Only bad hw
+> > design needs such settings. So, why not name it as force-xxx? If it's
+> > not specific to imx, it doesn't needs to has prefix "fsl,".
+> 
+> It's not a bad hardware design if you don't route or enable all ports a
+> soc offers. In modern socs you cannot enable all ports anyway.
+I'm not sure about your case, but generally, it's not about ports.
+It's about ID pin. If ID pin is not connect correctly, we may need to
+force it to host or device working mode. The 'force" here means it
+won't follow the capability registers and ID pin.
+> 
+> The property isn't prefixed with "fsl,", it's just "dr_mode".
+> 
+> Why not "force-xxx"? I had a look at Documentation/devicetree/bindings/usb:
+> 
+> tegra-usb.txt:
+> >   - dr_mode : dual role mode. Indicates the working mode for
+> >    nvidia,tegra20-ehci compatible controllers.  Can be "host", "peripheral",
+> >    or "otg".  Default to "host" if not defined for backward compatibility.
+> >       host means this is a host controller
+> >       peripheral means it is device controller
+> >       otg means it can operate as either ("on the go")
+> 
+> fsl-usb.txt:
+> >  - dr_mode : indicates the working mode for "fsl-usb2-dr" compatible
+> >    controllers.  Can be "host", "peripheral", or "otg".  Default to
+> >    "host" if not defined for backward compatibility.
+> > 
+> 
+> So why invent something new, if there seems to be a pattern?
+I'm not sure they mean the same things, because the default value is
+different. Event if they're same, why not make them all with sensible
+name?
+> 
+> >>  
+> >>  Optional properties:
+> >>  - fsl,usbphy: phandler of usb phy that connects to the only one port
+> >> @@ -14,4 +16,5 @@ usb@02184000 { /* USB OTG */
+> >>  	reg = <0x02184000 0x200>;
+> >>  	interrupts = <0 43 0x04>;
+> >>  	fsl,usbphy = <&usbphy1>;
+> >> +	dr_mode= "otg";
+> >>  };
+> >> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
+> >> index efae2be..8e926fb 100644
+> >> --- a/drivers/usb/chipidea/ci13xxx_imx.c
+> >> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
+> >> @@ -120,6 +120,9 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
+> >>  		*pdev->dev.dma_mask = DMA_BIT_MASK(32);
+> >>  		dma_set_coherent_mask(&pdev->dev, *pdev->dev.dma_mask);
+> >>  	}
+> >> +
+> >> +	ci13xxx_get_dr_mode(pdev->dev.of_node, &ci13xxx_imx_platdata);
+> >> +
+> >>  	plat_ci = ci13xxx_add_device(&pdev->dev,
+> >>  				pdev->resource, pdev->num_resources,
+> >>  				&ci13xxx_imx_platdata);
+> >> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> >> index 1083585..aa8b1856 100644
+> >> --- a/drivers/usb/chipidea/core.c
+> >> +++ b/drivers/usb/chipidea/core.c
+> >> @@ -63,6 +63,8 @@
+> >>  #include <linux/kernel.h>
+> >>  #include <linux/slab.h>
+> >>  #include <linux/pm_runtime.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_platform.h>
+> >>  #include <linux/usb/ch9.h>
+> >>  #include <linux/usb/gadget.h>
+> >>  #include <linux/usb/otg.h>
+> >> @@ -386,6 +388,23 @@ void ci13xxx_remove_device(struct platform_device *pdev)
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(ci13xxx_remove_device);
+> >>  
+> >> +void ci13xxx_get_dr_mode(struct device_node *of_node, struct ci13xxx_platform_data *pdata)
+> >> +{
+> >> +	const unsigned char *dr_mode;
+> >> +
+> >> +	dr_mode = of_get_property(of_node, "dr_mode", NULL);
+> >> +	if (!dr_mode)
+> >> +		return;
+> >> +
+> >> +	if (!strcmp(dr_mode, "host"))
+> >> +		pdata->flags |= CI13XXX_DR_MODE_HOST;
+> >> +	else if (!strcmp(dr_mode, "peripheral"))
+> >> +		pdata->flags |= CI13XXX_DR_MODE_PERIPHERAL;
+> >> +	else if (!strcmp(dr_mode, "otg"))
+> >> +		pdata->flags |= CI13XXX_DR_MODE_OTG;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(ci13xxx_get_dr_mode);
+> 
+> > If you make the property name generic, this function is not specific to
+> > chipidea. IMHO, the function is simple, if we do it in individual
+> > drivers, it's ok too.
+> 
+> The property name is generic, it's just "dr_mode", but the function is
+> chipidea specific, because it's working on the ci13xxx_platform_data.
+You may return some common flag.
+> 
+> >> +
+> >>  static int __devinit ci_hdrc_probe(struct platform_device *pdev)
+> >>  {
+> >>  	struct device	*dev = &pdev->dev;
+> >> @@ -446,13 +465,23 @@ static int __devinit ci_hdrc_probe(struct platform_device *pdev)
+> >>  	}
+> >>  
+> >>  	/* initialize role(s) before the interrupt is requested */
+> >> -	ret = ci_hdrc_host_init(ci);
+> >> -	if (ret)
+> >> -		dev_info(dev, "doesn't support host\n");
+> >> +	/* default to otg */
+> >> +	if (!(ci->platdata->flags & CI13XXX_DR_MODE_MASK))
+> >> +		ci->platdata->flags |= CI13XXX_DR_MODE_OTG;
+> >> +
+> >> +	if (ci->platdata->flags &
+> >> +	    (CI13XXX_DR_MODE_HOST | CI13XXX_DR_MODE_OTG)) {
+> >> +		ret = ci_hdrc_host_init(ci);
+> >> +		if (ret)
+> >> +			dev_info(dev, "doesn't support host\n");
+> >> +	}
+> >>  
+> >> -	ret = ci_hdrc_gadget_init(ci);
+> >> -	if (ret)
+> >> -		dev_info(dev, "doesn't support gadget\n");
+> >> +	if (ci->platdata->flags &
+> >> +	    (CI13XXX_DR_MODE_PERIPHERAL | CI13XXX_DR_MODE_OTG)) {
+> >> +		ret = ci_hdrc_gadget_init(ci);
+> >> +		if (ret)
+> >> +			dev_info(dev, "doesn't support gadget\n");
+> >> +	}
+> >>  
+> >>  	if (!ci->roles[CI_ROLE_HOST] && !ci->roles[CI_ROLE_GADGET]) {
+> >>  		dev_err(dev, "no supported roles\n");
+> >> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> >> index 544825d..29ad908 100644
+> >> --- a/include/linux/usb/chipidea.h
+> >> +++ b/include/linux/usb/chipidea.h
+> >> @@ -19,6 +19,12 @@ struct ci13xxx_platform_data {
+> >>  #define CI13XXX_REQUIRE_TRANSCEIVER	BIT(1)
+> >>  #define CI13XXX_PULLUP_ON_VBUS		BIT(2)
+> >>  #define CI13XXX_DISABLE_STREAMING	BIT(3)
+> >> +#define CI13XXX_DR_MODE_HOST		BIT(4)
+> >> +#define CI13XXX_DR_MODE_PERIPHERAL	BIT(5)
+> >> +#define CI13XXX_DR_MODE_OTG		BIT(6)
+> > All we need is CI13XXX_DR_FORCE_HOST and CI13XXX_DR_FORCE_DEVICE.
+> 
+> Okay.
+> 
+> > 
+> > Thanks
+> > Richard
+> >> +#define CI13XXX_DR_MODE_MASK \
+> >> +	(CI13XXX_DR_MODE_HOST | CI13XXX_DR_MODE_PERIPHERAL | \
+> >> +	 CI13XXX_DR_MODE_OTG)
+> >>  
+> >>  #define CI13XXX_CONTROLLER_RESET_EVENT		0
+> >>  #define CI13XXX_CONTROLLER_STOPPED_EVENT	1
+> >> @@ -35,4 +41,7 @@ struct platform_device *ci13xxx_add_device(struct device *dev,
+> >>  /* Remove ci13xxx device */
+> >>  void ci13xxx_remove_device(struct platform_device *pdev);
+> >>  
+> >> +/* Parse of-tree "dr_mode" property */
+> >> +void ci13xxx_get_dr_mode(struct device_node *of_node, struct ci13xxx_platform_data *pdata);
+> >> +
+> >>  #endif
+> >> -- 
+> >> 1.7.10
+> >>
+> >>
+> > 
+> 
+> Marc
+> -- 
+> Pengutronix e.K.                  | Marc Kleine-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
 
 
-Cc'ed Devicetree Discussions
 
-On 06/29/2012 03:43 AM, Richard Zhao wrote:
-> On Thu, Jun 28, 2012 at 03:53:48PM +0200, Marc Kleine-Budde wrote:
->> This patch allows the device tree to limit the chipidea to host or
->> peripheral mode only.
->>
->> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |    3 ++
->>  drivers/usb/chipidea/ci13xxx_imx.c                 |    3 ++
->>  drivers/usb/chipidea/core.c                        |   41 +++++++++++=
-++++++---
->>  include/linux/usb/chipidea.h                       |    9 +++++
->>  4 files changed, 50 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/D=
-ocumentation/devicetree/bindings/usb/ci13xxx-imx.txt
->> index 5a0ad66..67f97f56 100644
->> --- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
->> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
->> @@ -4,6 +4,8 @@ Required properties:
->>  - compatible: Should be "fsl,imx27-usb"
->>  - reg: Should contain registers location and length
->>  - interrupts: Should contain controller interrupt
->> +- dr_mode: indicates the working mode for compatible controllers. Can=
-
->> +  be "host", "peripheral", or "otg". Defaults to "otg" if not defined=
-=2E
-
-> By default, it should be decided by capability registers. Only bad hw
-> design needs such settings. So, why not name it as force-xxx? If it's
-> not specific to imx, it doesn't needs to has prefix "fsl,".
-
-It's not a bad hardware design if you don't route or enable all ports a
-soc offers. In modern socs you cannot enable all ports anyway.
-
-The property isn't prefixed with "fsl,", it's just "dr_mode".
-
-Why not "force-xxx"? I had a look at Documentation/devicetree/bindings/us=
-b:
-
-tegra-usb.txt:
->   - dr_mode : dual role mode. Indicates the working mode for
->    nvidia,tegra20-ehci compatible controllers.  Can be "host", "periphe=
-ral",
->    or "otg".  Default to "host" if not defined for backward compatibili=
-ty.
->       host means this is a host controller
->       peripheral means it is device controller
->       otg means it can operate as either ("on the go")
-
-fsl-usb.txt:
->  - dr_mode : indicates the working mode for "fsl-usb2-dr" compatible
->    controllers.  Can be "host", "peripheral", or "otg".  Default to
->    "host" if not defined for backward compatibility.
->=20
-
-So why invent something new, if there seems to be a pattern?
-
->> =20
->>  Optional properties:
->>  - fsl,usbphy: phandler of usb phy that connects to the only one port
->> @@ -14,4 +16,5 @@ usb@02184000 { /* USB OTG */
->>  	reg =3D <0x02184000 0x200>;
->>  	interrupts =3D <0 43 0x04>;
->>  	fsl,usbphy =3D <&usbphy1>;
->> +	dr_mode=3D "otg";
->>  };
->> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea=
-/ci13xxx_imx.c
->> index efae2be..8e926fb 100644
->> --- a/drivers/usb/chipidea/ci13xxx_imx.c
->> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
->> @@ -120,6 +120,9 @@ static int __devinit ci13xxx_imx_probe(struct plat=
-form_device *pdev)
->>  		*pdev->dev.dma_mask =3D DMA_BIT_MASK(32);
->>  		dma_set_coherent_mask(&pdev->dev, *pdev->dev.dma_mask);
->>  	}
->> +
->> +	ci13xxx_get_dr_mode(pdev->dev.of_node, &ci13xxx_imx_platdata);
->> +
->>  	plat_ci =3D ci13xxx_add_device(&pdev->dev,
->>  				pdev->resource, pdev->num_resources,
->>  				&ci13xxx_imx_platdata);
->> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c=
-
->> index 1083585..aa8b1856 100644
->> --- a/drivers/usb/chipidea/core.c
->> +++ b/drivers/usb/chipidea/core.c
->> @@ -63,6 +63,8 @@
->>  #include <linux/kernel.h>
->>  #include <linux/slab.h>
->>  #include <linux/pm_runtime.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->>  #include <linux/usb/ch9.h>
->>  #include <linux/usb/gadget.h>
->>  #include <linux/usb/otg.h>
->> @@ -386,6 +388,23 @@ void ci13xxx_remove_device(struct platform_device=
- *pdev)
->>  }
->>  EXPORT_SYMBOL_GPL(ci13xxx_remove_device);
->> =20
->> +void ci13xxx_get_dr_mode(struct device_node *of_node, struct ci13xxx_=
-platform_data *pdata)
->> +{
->> +	const unsigned char *dr_mode;
->> +
->> +	dr_mode =3D of_get_property(of_node, "dr_mode", NULL);
->> +	if (!dr_mode)
->> +		return;
->> +
->> +	if (!strcmp(dr_mode, "host"))
->> +		pdata->flags |=3D CI13XXX_DR_MODE_HOST;
->> +	else if (!strcmp(dr_mode, "peripheral"))
->> +		pdata->flags |=3D CI13XXX_DR_MODE_PERIPHERAL;
->> +	else if (!strcmp(dr_mode, "otg"))
->> +		pdata->flags |=3D CI13XXX_DR_MODE_OTG;
->> +}
->> +EXPORT_SYMBOL_GPL(ci13xxx_get_dr_mode);
-
-> If you make the property name generic, this function is not specific to=
-
-> chipidea. IMHO, the function is simple, if we do it in individual
-> drivers, it's ok too.
-
-The property name is generic, it's just "dr_mode", but the function is
-chipidea specific, because it's working on the ci13xxx_platform_data.
-
->> +
->>  static int __devinit ci_hdrc_probe(struct platform_device *pdev)
->>  {
->>  	struct device	*dev =3D &pdev->dev;
->> @@ -446,13 +465,23 @@ static int __devinit ci_hdrc_probe(struct platfo=
-rm_device *pdev)
->>  	}
->> =20
->>  	/* initialize role(s) before the interrupt is requested */
->> -	ret =3D ci_hdrc_host_init(ci);
->> -	if (ret)
->> -		dev_info(dev, "doesn't support host\n");
->> +	/* default to otg */
->> +	if (!(ci->platdata->flags & CI13XXX_DR_MODE_MASK))
->> +		ci->platdata->flags |=3D CI13XXX_DR_MODE_OTG;
->> +
->> +	if (ci->platdata->flags &
->> +	    (CI13XXX_DR_MODE_HOST | CI13XXX_DR_MODE_OTG)) {
->> +		ret =3D ci_hdrc_host_init(ci);
->> +		if (ret)
->> +			dev_info(dev, "doesn't support host\n");
->> +	}
->> =20
->> -	ret =3D ci_hdrc_gadget_init(ci);
->> -	if (ret)
->> -		dev_info(dev, "doesn't support gadget\n");
->> +	if (ci->platdata->flags &
->> +	    (CI13XXX_DR_MODE_PERIPHERAL | CI13XXX_DR_MODE_OTG)) {
->> +		ret =3D ci_hdrc_gadget_init(ci);
->> +		if (ret)
->> +			dev_info(dev, "doesn't support gadget\n");
->> +	}
->> =20
->>  	if (!ci->roles[CI_ROLE_HOST] && !ci->roles[CI_ROLE_GADGET]) {
->>  		dev_err(dev, "no supported roles\n");
->> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea=
-=2Eh
->> index 544825d..29ad908 100644
->> --- a/include/linux/usb/chipidea.h
->> +++ b/include/linux/usb/chipidea.h
->> @@ -19,6 +19,12 @@ struct ci13xxx_platform_data {
->>  #define CI13XXX_REQUIRE_TRANSCEIVER	BIT(1)
->>  #define CI13XXX_PULLUP_ON_VBUS		BIT(2)
->>  #define CI13XXX_DISABLE_STREAMING	BIT(3)
->> +#define CI13XXX_DR_MODE_HOST		BIT(4)
->> +#define CI13XXX_DR_MODE_PERIPHERAL	BIT(5)
->> +#define CI13XXX_DR_MODE_OTG		BIT(6)
-> All we need is CI13XXX_DR_FORCE_HOST and CI13XXX_DR_FORCE_DEVICE.
-
-Okay.
-
->=20
-> Thanks
-> Richard
->> +#define CI13XXX_DR_MODE_MASK \
->> +	(CI13XXX_DR_MODE_HOST | CI13XXX_DR_MODE_PERIPHERAL | \
->> +	 CI13XXX_DR_MODE_OTG)
->> =20
->>  #define CI13XXX_CONTROLLER_RESET_EVENT		0
->>  #define CI13XXX_CONTROLLER_STOPPED_EVENT	1
->> @@ -35,4 +41,7 @@ struct platform_device *ci13xxx_add_device(struct de=
-vice *dev,
->>  /* Remove ci13xxx device */
->>  void ci13xxx_remove_device(struct platform_device *pdev);
->> =20
->> +/* Parse of-tree "dr_mode" property */
->> +void ci13xxx_get_dr_mode(struct device_node *of_node, struct ci13xxx_=
-platform_data *pdata);
->> +
->>  #endif
->> --=20
->> 1.7.10
->>
->>
->=20
-
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---------------enig4B4F636FAFD9133A94A29B25
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
-
-iEYEARECAAYFAk/tXXwACgkQjTAFq1RaXHMcvwCfQNddY9qVgWWBL7WwvMa9bpOz
-BwwAnix9emJtzYcN7ADLynIFogbkIGnK
-=SMoB
------END PGP SIGNATURE-----
-
---------------enig4B4F636FAFD9133A94A29B25--
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
