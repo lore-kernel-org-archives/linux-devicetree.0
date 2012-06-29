@@ -1,128 +1,81 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode" property
- to device tree bindings
-Date: Fri, 29 Jun 2012 11:29:03 +0200
-Message-ID: <4FED755F.6080302@pengutronix.de>
-References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de> <1340891629-13145-4-git-send-email-mkl@pengutronix.de> <20120629014352.GA28923@b20223-02.ap.freescale.net> <4FED5D77.3050009@pengutronix.de> <20120629084509.GB28923@b20223-02.ap.freescale.net>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v8 00/14] add imx usb driver based on Greg next tree
+Date: Fri, 29 Jun 2012 17:48:48 +0800
+Message-ID: <1340963342-28735-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig7E65C65E24FF87E6762D65E8"
+Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120629084509.GB28923-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig7E65C65E24FF87E6762D65E8
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+The work is based on  ci13xxx rework done by Alexander Shishkin.
 
-On 06/29/2012 10:45 AM, Richard Zhao wrote:
-> On Fri, Jun 29, 2012 at 09:47:03AM +0200, Marc Kleine-Budde wrote:
->>
->> Cc'ed Devicetree Discussions
->>
->> On 06/29/2012 03:43 AM, Richard Zhao wrote:
->>> On Thu, Jun 28, 2012 at 03:53:48PM +0200, Marc Kleine-Budde wrote:
->>>> This patch allows the device tree to limit the chipidea to host or
->>>> peripheral mode only.
->>>>
->>>> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |    3 ++
->>>>  drivers/usb/chipidea/ci13xxx_imx.c                 |    3 ++
->>>>  drivers/usb/chipidea/core.c                        |   41 +++++++++=
-++++++++---
->>>>  include/linux/usb/chipidea.h                       |    9 +++++
->>>>  4 files changed, 50 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b=
-/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
->>>> index 5a0ad66..67f97f56 100644
->>>> --- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
->>>> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
->>>> @@ -4,6 +4,8 @@ Required properties:
->>>>  - compatible: Should be "fsl,imx27-usb"
->>>>  - reg: Should contain registers location and length
->>>>  - interrupts: Should contain controller interrupt
->>>> +- dr_mode: indicates the working mode for compatible controllers. C=
-an
->>>> +  be "host", "peripheral", or "otg". Defaults to "otg" if not defin=
-ed.
->>
->>> By default, it should be decided by capability registers. Only bad hw=
+To let Greg pick up, I also added patches Alex queued that I depends on.
 
->>> design needs such settings. So, why not name it as force-xxx? If it's=
+This patch series can also be found at:
+https://github.com/riczhao/kernel-imx/commits/topics/usb-driver
 
->>> not specific to imx, it doesn't needs to has prefix "fsl,".
->>
->> It's not a bad hardware design if you don't route or enable all ports =
-a
->> soc offers. In modern socs you cannot enable all ports anyway.
-> I'm not sure about your case, but generally, it's not about ports.
-> It's about ID pin. If ID pin is not connect correctly, we may need to
-> force it to host or device working mode. The 'force" here means it
-> won't follow the capability registers and ID pin.
+Status:
+  - this version only support host
+  - usbotg controler works at host role
 
-The device tree is used to describe the hardware. How would you describe
-a system, which has just a USB device connector? And the hardware guys
-used the not needed id-pin for a LED?
+Changes since last version:
+ - mxs_phy: fix build warnings
+ - ci13xxx_imx: add pm_runtime_disable at exit path
 
->> The property isn't prefixed with "fsl,", it's just "dr_mode".
->>
->> Why not "force-xxx"? I had a look at Documentation/devicetree/bindings=
-/usb:
->>
->> tegra-usb.txt:
->>>   - dr_mode : dual role mode. Indicates the working mode for
->>>    nvidia,tegra20-ehci compatible controllers.  Can be "host", "perip=
-heral",
->>>    or "otg".  Default to "host" if not defined for backward compatibi=
-lity.
->>>       host means this is a host controller
->>>       peripheral means it is device controller
->>>       otg means it can operate as either ("on the go")
->>
->> fsl-usb.txt:
->>>  - dr_mode : indicates the working mode for "fsl-usb2-dr" compatible
->>>    controllers.  Can be "host", "peripheral", or "otg".  Default to
->>>    "host" if not defined for backward compatibility.
->>>
->>
->> So why invent something new, if there seems to be a pattern?
-> I'm not sure they mean the same things, because the default value is
-> different. Event if they're same, why not make them all with sensible
-> name?
+Alexander Shishkin (1):
+  usb: chipidea: remove unneeded NULL check
 
-Sensible name sounds good. Devicetree Discussions, we need an official
-name for the property and its values :)
+Felipe Balbi (3):
+  usb: chipidea: drop useless arch-check
+  usb: chipidea: msm: add missing section annotation
+  usb: chipidea: msm: add remove method
 
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Richard Zhao (10):
+  USB: Chipidea: rename struct ci13xxx_udc_driver to struct
+    ci13xxx_platform_data
+  USB: Chipidea: rename struct ci13xxx variables from udc to ci
+  USB: Chipidea: add unified ci13xxx_{add,remove}_device for platform
+    drivers
+  USB: Chipidea: add ci13xxx device id management
+  usb: chipidea: select USB_EHCI_ROOT_HUB_TT in USB_CHIPIDEA_HOST of
+    Kconfig
+  usb: otg: add notify_connect/notify_disconnect callback
+  USB: notify phy when root hub port connect change
+  usb: chipidea: permit driver bindings pass phy pointer
+  usb: otg: add basic mxs phy driver support
+  usb: chipidea: add imx platform driver
+
+ .../devicetree/bindings/usb/ci13xxx-imx.txt        |   18 +
+ Documentation/devicetree/bindings/usb/mxs-phy.txt  |   13 +
+ drivers/usb/chipidea/Kconfig                       |    1 +
+ drivers/usb/chipidea/Makefile                      |    9 +-
+ drivers/usb/chipidea/ci.h                          |   32 +-
+ drivers/usb/chipidea/ci13xxx_imx.c                 |  198 ++++++
+ drivers/usb/chipidea/ci13xxx_msm.c                 |   63 +-
+ drivers/usb/chipidea/ci13xxx_pci.c                 |   52 +-
+ drivers/usb/chipidea/core.c                        |   70 ++-
+ drivers/usb/chipidea/debug.c                       |  146 ++---
+ drivers/usb/chipidea/host.c                        |    3 +-
+ drivers/usb/chipidea/udc.c                         |  634 ++++++++++----------
+ drivers/usb/core/hub.c                             |    8 +
+ drivers/usb/otg/Kconfig                            |   10 +
+ drivers/usb/otg/Makefile                           |    1 +
+ drivers/usb/otg/mxs-phy.c                          |  186 ++++++
+ include/linux/usb/chipidea.h                       |   14 +-
+ include/linux/usb/otg.h                            |   21 +
+ 18 files changed, 989 insertions(+), 490 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/mxs-phy.txt
+ create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
+ create mode 100644 drivers/usb/otg/mxs-phy.c
+
+-- 
+1.7.9.5
 
 
---------------enig7E65C65E24FF87E6762D65E8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
-
-iEYEARECAAYFAk/tdV8ACgkQjTAFq1RaXHMtCwCfcfzM86Whp6yCWxfIFPmC4Jka
-xpAAn3GrPpnug6hM5QcjZ6FgyycPBUPR
-=VciA
------END PGP SIGNATURE-----
-
---------------enig7E65C65E24FF87E6762D65E8--
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
