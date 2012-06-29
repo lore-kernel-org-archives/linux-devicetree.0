@@ -1,93 +1,58 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v10] MTD: LPC32xx MLC NAND driver
-Date: Fri, 29 Jun 2012 15:37:14 +0300
-Message-ID: <1340973434.3070.168.camel@sauron.fi.intel.com>
-References: <1340834129-15545-1-git-send-email-stigge@antcom.de>
-Reply-To: dedekind1@gmail.com
+From: Alexander Smirnov <alex.bluesman.smirnov@gmail.com>
+Subject: Re: RF231 transceiver on at91sam9g20ek board
+Date: Fri, 29 Jun 2012 16:53:01 +0400
+Message-ID: <CAJmB2rBpa=iK6yhd3=CikampfypU+4MaUfM-GQMLZhN7QNUteA@mail.gmail.com>
+References: <CAJmB2rDxv45OP4otn7rmQcpzCvLujKm0j9_OqNW6PoyHuarTLw@mail.gmail.com>
+ <201206221834.41869.arnd@arndb.de>
+ <CAJmB2rBcRuNe0QfEGoJN1rQnRnr33gyE=nLt3Az=mGEWuR7mCg@mail.gmail.com>
+ <201206281430.21916.arnd@arndb.de> <4FEC7369.3050003@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-7TXNPLOt3GGaK5PgQkkW"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1340834129-15545-1-git-send-email-stigge@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk, Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4FEC7369.3050003@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, linux@maxim.org.za
 List-Id: devicetree@vger.kernel.org
 
+> Dear Alexander,
+>
+> There has been an attempt to move the spi-atmel.c driver to device tree.
+> You can check the status of the discussion in by searching the message
+> subjects:
+>
+> [PATCH 1/4 v4] of_spi: add generic binding support to specify cs gpio
+> [PATCH 1/4 v5] of_spi: add generic binding support to specify cs gpio
+>
+> I guess that you can take these patches as examples for moving to device
+> tree on your AT91 based board (beware you should set pin muxing in your
+> bootloader).
+>
+> There is a "work in progress" snapshot of this work in at91 git tree/bran=
+ch:
+> git://github.com/at91linux/linux-at91.git =A0 ghnew/j/for-3.5-wip
+>
+> commit: 5f31f2573e7e9369500118e1b8fd026392fc0982
+> commit: 93fd57e73502656a139879518b397711cc305c6a
 
---=-7TXNPLOt3GGaK5PgQkkW
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Dear at91 team,
 
-On Wed, 2012-06-27 at 23:55 +0200, Roland Stigge wrote:
-> This patch adds a driver for the MLC NAND controller of the LPC32xx SoC.
->=20
-> Signed-off-by: Roland Stigge <stigge@antcom.de>
-> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-> ---
+thank you very much for the hints!
 
-Aiaiai complains like this about your patch, please, take a look:
+Alex
 
----------------------------------------------------------------------------=
------
-
-Successfully built configuration "arm-lpc32xx_defconfig,arm,arm-unknown-lin=
-ux-gnueabi-", results:
-
---- before_patching.log
-+++ after_patching.log
-@@ @@
-+drivers/mtd/nand/lpc32xx_mlc.c: In function 'lpc32xx_nand_probe':
-+drivers/mtd/nand/lpc32xx_mlc.c:679:10: warning: variable 'sr' set but not =
-used [-Wunused-but-set-variable]
-+drivers/mtd/nand/lpc32xx_mlc.c:561:24: error: bad constant expression [spa=
-rse]
-
----------------------------------------------------------------------------=
------
-
-checkpatch.pl has some complaints:
-
----------------------------------------------------------------------------=
------
-
-checkpatch.pl results for patch "[PATCH] MTD: LPC32xx MLC NAND driver"
-
-ERROR:INITIALISED_STATIC: do not initialise statics to 0 or NULL
-#339: FILE: drivers/mtd/nand/lpc32xx_mlc.c:224:
-+static int use_dma =3D 0;
-
-total: 1 errors, 0 warnings, 1004 lines checked
-
----------------------------------------------------------------------------=
------
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-7TXNPLOt3GGaK5PgQkkW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJP7aF6AAoJECmIfjd9wqK0uK0QANHL+nDb/HHhOgJHSMYuqUHa
-6eVlnK1U6wde8BDLy3fDPKokLW85HjzVth54qvlZ2nra57mg+5xv32TtZNyhCjfA
-xau50pFDx2ifkSkHHv1y/KSB4E84lMUa/sPUFpJ8ojuxrQ8YRfPmQEEl6eO9CaxX
-qKcnGnGjrMXTNNqSl7BGbsCX5blc6/6IQxWRTMIg9vZ7tO7VTdJTwvFPzcsbsbBk
-NcivLZvBZUDLaMj9Q0XgXMbWUbFVSPQ5aqCG3YCjijl/v/1SBp3hZ/QfAdY//Cyk
-2T4sI6ZtNjwiB7ZRwOXdYBMcpBjETGHAnhfq3TTLcWPOxrcPZ8/DQKTMlQ3nFogm
-kYEIvtF6v5nl0YBUjHtggYvqQcN7sWupk7pU47J9M682ZlJNuMQO6PnvgouKagyz
-K3Owg5HmllqSh8xwb34UFnqQhnmhSA4RczTfTlpeeGXna45Wb7vmGY91HXQS1GIb
-ewJ6jPlAZDbJg9jpbgc0msJ6WbA146BBh0DMSYWb8sVv5NMVeDMGi8icDUqEOqpk
-BbbK9IreZK0nxtXK/FRmGexdYuqdWeLclRgXm3G5GJIxL0I9QIXDOKDmiH90Go3u
-pjeNmc6qzNxYOc2HI26UB8iAboq53T6skCOy+nKYTxC1HXehgclkWw7NaGEbUGmx
-cO+ULa+Jpa/w7G2kOnPl
-=o0wx
------END PGP SIGNATURE-----
-
---=-7TXNPLOt3GGaK5PgQkkW--
-
+>
+> Best regards,
+> --
+> Nicolas Ferre
+>
+>
