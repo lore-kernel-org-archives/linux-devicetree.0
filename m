@@ -1,139 +1,97 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC] ARM: OMAP: Remove nodes dynamically at runtime
-Date: Thu, 28 Jun 2012 19:14:46 -0500
-Message-ID: <4FECF376.3010001@ti.com>
-References: <4FE372CA.7020008@ti.com> <4FE3B328.8060805@ti.com>
+From: Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: Tegra DRM device tree bindings
+Date: Fri, 29 Jun 2012 09:17:42 +0800
+Message-ID: <23B010BBA481A74B98487467C29BA57BF23653B6B4@HKMAIL01.nvidia.com>
+References: <23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com>
+	 <4FEA6E09.30800@nvidia.com>
+	 <23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>
+	 <4FEA7472.7050201@nvidia.com>
+	 <20120627051418.GB7177@avionic-0098.mockup.avionic-design.de>
+	 <20120627155907.871b2a506374b7db14c202c4@nvidia.com>
+	 <20120627140809.GD19319@avionic-0098.mockup.avionic-design.de>
+	 <20120627172914.30a2ccfd1344161ca7724722@nvidia.com>
+	 <20120627144414.GA20681@avionic-0098.mockup.avionic-design.de>
+	 <1340812795.1350.7.camel@antimon>
+	 <20120628111253.GC15137@avionic-0098.mockup.avionic-design.de>
+	 <4FEC8B91.6010107@wwwdotorg.org> <1340903992.1348.27.camel@antimon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4FE3B328.8060805@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: device-tree <devicetree-discuss@lists.ozlabs.org>, robherring2@gmail.com, Grant Likely <grant.likely@secretlab.ca>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1340903992.1348.27.camel@antimon>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Grant,
-
-Benoit suggested that I ask your opinion on the below.
-
-Basically, I am trying to understand if there is any reason not to
-enable OF_DYNAMIC. More details below on the exact scenario I am trying
-to solve. OF_DYNAMIC seems to provide a good solution for me.
-
-Thanks
-Jon
-
-On 06/21/2012 06:50 PM, Jon Hunter wrote:
-> 
-> On 06/21/2012 02:15 PM, Jon Hunter wrote:
->> Hi all,
->>
->> I am in the process of adding a device-tree binding for OMAP timers and
->> I have encountered a scenario where ideally it would be useful to remove
->> a device-tree node at runtime.
->>
->> The scenario is this ...
->>
->> 1. OMAP3 devices may or may not have security features enabled. Security
->>    enabled devices are known as high-secure (HS) and devices without 
->>    security are known as general purpose (GP).
->> 2. For OMAP3 devices there are 12 general purpose timers available.
->> 3. On secure devices the 12th timer is reserved for secure usage and so
->>    cannot be used by the kernel, where as for a GP device it is available.
->> 4. We can detect the OMAP device type, secure or GP, at runtime via an
->>    on-chip register.
->> 5. Today, when not using DT, we do not register the 12th timer as a linux
->>    device if the device is secure.
->>
->> When migrating the timers to DT, I need a way to prevent this 12th timer
->> from being registered as a device on a secure device. The options I have
->> considered are ...
->>
->> a. Have separate a omap3.dtsi for GP and secure devices or place the
->>    node for the 12th timer in a omap3-gp.dtsi that is only used for
->>    boards with GP devices. The downside of this is that for boards
->>    that can support GP and secure device (such as the omap3 SDP) we
->>    require a separate dtb blob.
->>
->> b. Remove the timer node dynamically at runtime using the
->>    of_node_detach() API. In this solution we define a "ti,timer-secure"
->>    property that the 12th timer on omap3 devices would have and at
->>    runtime if we are a secure omap3 device, we search the timer nodes
->>    for any nodes with this property and remove them.
->>
->> Option B, seems to be the better option but requires me to enable 
->> CONFIG_OF_DYNAMIC for all omap devices and I was not sure if there is any
->> downside to doing so. Enabling this feature does not seem to add much code
->> as far as I can tell, however, I  wanted to get some feedback before
->> proposing this. Also if there are any other options I should consider then
->> please let me know.
->>
->> For option B, the timer node would look like ...
->>
->> +               timer12: timer@48304000 {
->> +                       compatible = "ti,omap3-timer";
->> +                       ti,hwmods = "timer12";
->> +                       ti,timer-alwon;
->> +                       ti,timer-secure;
->> +               };
->>
->> I would then add the following function to the omap timer code to search
->> for any timers with the "ti,timer-secure" on a secure device and enable
->> the OF_DYNAMIC option. Right now it is only timer 12 on OMAP3 that
->> requires this, but I have made the function generic so that it could
->> handle other devices (but none exist today that I am aware of).
->>
->> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
->> index 8c22a8e..5e38946 100644
->> --- a/arch/arm/mach-omap2/timer.c
->> +++ b/arch/arm/mach-omap2/timer.c
->> @@ -36,6 +36,7 @@
->>  #include <linux/clocksource.h>
->>  #include <linux/clockchips.h>
->>  #include <linux/slab.h>
->> +#include <linux/of.h>
->>  
->>  #include <asm/mach/time.h>
->>  #include <plat/dmtimer.h>
->> @@ -482,6 +483,35 @@ static int __init omap2_dm_timer_init(void)
->>  }
->>  arch_initcall(omap2_dm_timer_init);
->>  
->> +static struct of_device_id omap3_timer_match[] __initdata = {
->> +       { .compatible = "ti,omap3-timer", },
->> +       { }
->> +};
->> +
->> +/**
->> + * omap_dmtimer_init - initialisation function when device tree is used
->> + *
->> + * For secure OMAP3 devices, timers with property "ti,timer-secure" cannot
->> + * be used by the kernel as they are reserved. Therefore, to prevent the
->> + * kernel registering these devices remove them dynamically from the device
->> + * tree on boot.
->> + */
->> +void __init omap_dmtimer_init(void)
->> +{
->> +       struct device_node *np;
->> +
->> +       if (!cpu_is_omap34xx())
->> +               return;
->> +
->> +       /* If we are a secure device, remove any secure timer nodes */
->> +       if ((omap_type() == OMAP2_DEVICE_TYPE_GP)) {
-> 
-> Oops! Bug in the above code. Meant to be ...
-> 
-> 	 if (omap_type() != OMAP2_DEVICE_TYPE_GP)
->> +               for_each_matching_node(np, omap3_timer_match) {
->> +                       if (of_get_property(np, "ti,timer-secure", NULL))
->> +                               of_detach_node(np);
->> +               }
->> +       }
->> +}
-> 
-> Cheers
-> Jon
-> 
-
+PiBBbSBEb25uZXJzdGFnLCBkZW4gMjguMDYuMjAxMiwgMTA6NTEgLTA2MDAgc2NocmllYiBTdGVw
+aGVuIFdhcnJlbjoNCj4gPiBPbiAwNi8yOC8yMDEyIDA1OjEyIEFNLCBUaGllcnJ5IFJlZGluZyB3
+cm90ZToNCj4gPiA+IE9uIFdlZCwgSnVuIDI3LCAyMDEyIGF0IDA1OjU5OjU1UE0gKzAyMDAsIEx1
+Y2FzIFN0YWNoIHdyb3RlOg0KPiA+ID4+IEFtIE1pdHR3b2NoLCBkZW4gMjcuMDYuMjAxMiwgMTY6
+NDQgKzAyMDAgc2NocmllYiBUaGllcnJ5IFJlZGluZzoNCj4gPiAuLi4NCj4gPiA+Pj4gSW4gdGhl
+IGlkZWFsIGNhc2UgSSB3b3VsZCB3YW50IHRvIG5vdCBoYXZlIGEgY2FydmVvdXQgc2l6ZSBhdCBh
+bGwuDQo+ID4gPj4+IEhvd2V2ZXIgdGhlcmUgbWF5IGJlIHNpdHVhdGlvbnMgd2hlcmUgeW91IG5l
+ZWQgdG8gbWFrZSBzdXJlIHNvbWUNCj4gPiA+Pj4gZHJpdmVyIGNhbiBhbGxvY2F0ZSBhIGdpdmVu
+IGFtb3VudCBvZiBtZW1vcnkuIEhhdmluZyB0byBzcGVjaWZ5DQo+ID4gPj4+IHRoaXMgdXNpbmcg
+YSBrZXJuZWwgY29tbWFuZC1saW5lIHBhcmFtZXRlciBpcyBjdW1iZXJzb21lIGJlY2F1c2UNCj4g
+PiA+Pj4gaXQgbWF5IHJlcXVpcmUgY2hhbmdlcyB0byB0aGUgYm9vdGxvYWRlciBvciB3aGF0ZXZl
+ci4gU28gaWYgeW91DQo+ID4gPj4+IGtub3cgdGhhdCBhIHBhcnRpY3VsYXIgYm9hcmQgYWx3YXlz
+IG5lZWRzDQo+ID4gPj4+IDEyOCBNaUIgb2YgY2FydmVvdXQsIHRoZW4gaXQgbWFrZXMgc2Vuc2Ug
+dG8gc3BlY2lmeSBpdCBvbiBhDQo+ID4gPj4+IHBlci1ib2FyZCBiYXNpcy4NCj4gPiA+Pg0KPiA+
+ID4+IElmIHdlIGdvIHdpdGggQ01BLCB0aGlzIGlzIGEgbm9uLWlzc3VlLCBhcyBDTUEgYWxsb3dz
+IHRvIHVzZSB0aGUNCj4gPiA+PiBjb250aWcgYXJlYSBmb3Igbm9ybWFsIGFsbG9jYXRpb25zIGFu
+ZCBvbmx5IHB1cmdlcyB0aGVtIGlmIGl0DQo+ID4gPj4gcmVhbGx5IG5lZWRzIHRoZSBzcGFjZSBm
+b3IgY29udGlnIGFsbG9jcy4NCj4gPiA+DQo+ID4gPiBDTUEgY2VydGFpbmx5IHNvdW5kcyBsaWtl
+IHRoZSBtb3N0IHNpbXBsZSBhcHByb2FjaC4gV2hpbGUgaXQgbWF5IG5vdA0KPiA+ID4gYmUgc3Vp
+dGVkIGZvciAzRCBncmFwaGljcyBvciBtdWx0aW1lZGlhIHByb2Nlc3NpbmcgbGF0ZXIgb24sIEkg
+dGhpbmsNCj4gPiA+IHdlIGNvdWxkIHVzZSBpdCBhdCBhIHN0YXJ0aW5nIHBvaW50IHRvIGdldCBi
+YXNpYyBmcmFtZWJ1ZmZlciBhbmQgWA0KPiA+ID4gc3VwcG9ydCB1cCBhbmQgcnVubmluZy4gV2Ug
+Y2FuIGFsd2F5cyBtb3ZlIHRvIHNvbWV0aGluZyBtb3JlDQo+ID4gPiBhZHZhbmNlZCBsaWtlIFRU
+TSBsYXRlci4NCj4gPg0KPiA+IEkgdGhvdWdodCB0aGUgd2hvbGUgcHVycG9zZSBvZiBDTUEgd2Fz
+IHRvIGFjdCBhcyB0aGUgaW5mcmEtc3RydWN0dXJlDQo+ID4gdG8gcHJvdmlkZSBidWZmZXJzIHRv
+IDNELCBjYW1lcmEsIGV0Yy4gaW4gcGFydGljdWxhciBhbGxvd2luZyBzaGFyaW5nDQo+ID4gb2Yg
+YnVmZmVycyBiZXR3ZWVuIHRoZW0uIEluIG90aGVyIHdvcmRzLCBpc24ndCBDTUEgdGhlIG1lbW9y
+eSBtYW5hZ2VyPw0KPiA+IElmIHRoZXJlJ3Mgc29tZSBkZWZpY2llbmN5IHdpdGggQ01BIGZvciAz
+RCBncmFwaGljcywgaXQgc2VlbXMgbGlrZQ0KPiA+IHRoYXQgc2hvdWxkIGJlIHJhaXNlZCB3aXRo
+IHRob3NlIGRlc2lnbmluZyBDTUEuIE9yLCBhbSBJIHdheSBvZmYgYmFzZQ0KPiA+IHdpdGggbXkg
+ZXhwZWN0YXRpb25zIG9mIENNQT8NCj4gPg0KPiBDTUEgaXMganVzdCBhIHdheSBvZiBwcm92aWRp
+bmcgbGFyZ2UgY29udGlndW91cyBhZGRyZXNzIHNwYWNlIGJsb2NrcyBpbiBhIGR5bmFtaWMNCj4g
+ZmFzaGlvbi4gVGhlIHByb2JsZW0gQ01BIHNvbHZlcyBpczogd2UgaGF2ZSBhIHN5c3RlbSB3aXRo
+IHJlbGF0aXZlbHkgbG93DQo+IGFtb3VudHMgb2Ygc3lzbWVtIChsaWtlIDUxMk1CKSwgbm93IHRv
+IGVuc3VyZSB3ZSBjYW4gYWx3YXlzIGdldCBsYXJnZQ0KPiBjb250aWd1b3VzIGJ1ZmZlcnMgZm9y
+IHVzZSBieSBHUFUgb3IgVklERU8gYmxvY2tzLCB3ZSBuZWVkIHRvIHNldCBhc2lkZSBhDQo+IHJl
+bGF0aXZlbHkgbGFyZ2UgY29udGlndW91cyBwb29sIChsaWtlIDEyOE1CKS4gU28gd2UgYXJlIHN0
+ZWFsaW5nIDEyOE1CIG9mDQo+IG1lbW9yeSBmcm9tIHRoZSBzeXN0ZW0gd2hpbGUgd2UgbWF5IG9y
+IG1heSBub3QgdXNlIGl0LCB3aGljaCBpcyBiYWQuDQo+IE5vdyBDTUEgYWxsb3dzIHRvIHNheTog
+SSBtYXkgbmVlZCAxMjhNQiBvZiBjb250aWcgc3BhY2UsIGJ1dCB0aGUgc3lzdGVtIGlzIGZyZWUN
+Cj4gdG8gdXNlIGl0IGFzIG5vcm1hbCBtZW1vcnkgYXMgbG9uZyBhcyBJIGRvbid0IHJlYWxseSBu
+ZWVkIGl0LiBJZiB0aGUgc3BhY2UgaXMgcmVhbGx5DQo+IG5lZWRlZCwgQ01BIHB1cmdlcyBwYWdl
+cyBmcm9tIHRoZSBhcmVhIGFuZCBtYXkgZXZlbiBzd2FwIHRoZW0gb3V0LiBTbyB5ZXMNCj4gQ01B
+IGlzIGEgbWVtb3J5IGFsbG9jYXRvciBmb3IgY29udGlnIG1lbW9yeS4NCj4gDQo+IFRUTSB0aG91
+Z2ggc29sdmVzIG1vcmUgYWR2YW5jZWQgbWF0dGVycywgbGlrZSBidWZmZXIgc3luY2hyb25pc2F0
+aW9uIGJldHdlZW4NCj4gM0QgYW5kIDJEIGJsb2NrIG9mIGhhcmR3YXJlIG9yIHN5bmNpbmcgYnVm
+ZmVyIGFjY2VzcyBiZXR3ZWVuIEdQVSBhbmQgQ1BVLg0KPiBPbmUgb2YgdGhlIG1vc3QgaW50ZXJl
+c3RpbmcgdGhpbmdzIG9mIFRUTSBpcyB0aGUgYWJpbGl0eSB0byBwdXJnZSB0aGUgR1BVIERNQQ0K
+PiBidWZmZXJzIHRvIHNjYXR0ZXJlZCBzeXNtZW0gb3IgZXZlbiBzd2FwIHRoZW0gb3V0LCBpZiB0
+aGV5IGFyZSBub3QgY3VycmVudGx5DQo+IHVzZWQgYnkgdGhlIEdQVS4gSXQgdGhlbiBtYWtlcyBz
+dXJlIHRvIG1vdmUgdGhlbSBpbiB0aGUgY29udGlnIHNwYWNlIGFnYWluDQo+IHdoZW4gdGhlIEdQ
+VSByZWFsbHkgbmVlZHMgdGhlbSBhbmQgZml4IHVwIHRoZSBHUFUgY29tbWFuZCBzdHJlYW0gd2l0
+aCB0aGUNCj4gbmV3IGJ1ZmZlciBhZGRyZXNzLg0KPiANCj4gSU1ITyB0aGUgYmVzdCBzb2x1dGlv
+biB3b3VsZCBiZSB0byB1c2UgQ01BIGFzIGEgZmxleGlibGUgcmVwbGFjZW1lbnQgb2YgdGhlDQo+
+IHN0YXRpYyBjYXJ2ZW91dCBhcmVhIGFuZCBwdXQgVFRNIG9uIHRvcCBvZiB0aGlzIHRvIHNvbHZl
+IHRoZSBuZWVkcyBvZiBncmFwaGljcw0KPiBkcml2ZXJzLiBXZSBjZXJ0YWlubHkgZG9uJ3Qgd2Fu
+dCB0byByZWludmVudCB0aGUgd2hlZWwgaW5zaWRlIENNQS4gV2UgaGF2ZQ0KPiBzb2x1dGlvbnMg
+Zm9yIGFsbCB0aG9zZSB0aGluZ3MgaW4gdGhlIGtlcm5lbCByaWdodCBub3csIHdlIGp1c3QgaGF2
+ZSB0byBnbHVlIHRoZW0NCj4gdG9nZXRoZXIgaW4gYSBzYW5lIHdheS4NCj4gDQoNClRoYXQgaXMg
+YSBncmVhdCBleHBsYW5hdGlvbi4gU28gY291bGQgeW91IGV4cGxhaW4gd2hhdCdzIHRoZSByZWxh
+dGlvbiBiZXR3ZWVuIElPTU1VIGFwaSANCmFuZCBUVE0ob3IgR0VNKT8gDQpUZXJqZSBzYWlkIERN
+QUJVRiBhcGkgc2l0cyBvbiB0b3Agb2YgSU9NTVUgYXBpLiBTbyBmb3Igbm9ybWFsIGRldmljZSBk
+cml2ZXJzKHN1Y2ggYXMgZHJtKSwgDQpjYW4gZm9yZ2V0IGlvbW11IGFwaXMsIGp1c3QgdXNlIGRt
+YWJ1ZiBhcGkgaXMgT0suIElmIHNvLCBJIHdhbm5hIGtub3cgZG9lcyANClRUTS9HRU0gYW5kIElP
+TU1VIGFyZSByZWxhdGVkPyBPciBUVE0vR0VNIHVzZXMgZG1hYnVmIGFwaXMgd2hpY2ggY2FsbHMg
+aW9tbXUgYXBpIA0KdG8gZG8gbWVtb3J5IGFsbG9jYXRpb24vbWFwcGluZz8NCg0KDQo+IFRoYW5r
+cywNCj4gTHVjYXMNCj4gDQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBz
+ZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC10ZWdyYSIgaW4gdGhlIGJvZHkNCj4gb2Yg
+YSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcgTW9yZSBtYWpvcmRvbW8gaW5m
+byBhdA0KPiBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg==
