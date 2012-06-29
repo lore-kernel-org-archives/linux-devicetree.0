@@ -1,32 +1,52 @@
-From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: Re: [PATCH v10] MTD: LPC32xx MLC NAND driver
-Date: Fri, 29 Jun 2012 10:13:58 -0300
-Message-ID: <CAAAP30FzY5KgYfnX7=UukZ3MTwfWaypZs+H2bNn15yKmx8VnvA@mail.gmail.com>
-References: <1340834129-15545-1-git-send-email-stigge@antcom.de>
-	<1340973434.3070.168.camel@sauron.fi.intel.com>
-	<CAAAP30HZ1Z5U44wLwSEfcaJSLmVp8AbXPTCagS31hnoCy_tf-g@mail.gmail.com>
-	<1340975067.3070.180.camel@sauron.fi.intel.com>
+From: =?UTF-8?B?VGVyamUgQmVyZ3N0csO2bQ==?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Tegra DRM device tree bindings
+Date: Fri, 29 Jun 2012 16:20:31 +0300
+Message-ID: <4FEDAB9F.5040406@nvidia.com>
+References: <23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com>  <4FEA6E09.30800@nvidia.com>  <23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>  <4FEA7472.7050201@nvidia.com>  <20120627051418.GB7177@avionic-0098.mockup.avionic-design.de>  <20120627155907.871b2a506374b7db14c202c4@nvidia.com>  <20120627140809.GD19319@avionic-0098.mockup.avionic-design.de>  <20120627172914.30a2ccfd1344161ca7724722@nvidia.com>  <20120627144414.GA20681@avionic-0098.mockup.avionic-design.de>  <1340812795.1350.7.camel@antimon>  <20120628111253.GC15137@avionic-0098.mockup.avionic-design.de>  <4FEC8B91.6010107@wwwdotorg.org> <1340903992.1348.27.camel@antimon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1340975067.3070.180.camel@sauron.fi.intel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: dedekind1@gmail.com
-Cc: Roland Stigge <stigge@antcom.de>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1340903992.1348.27.camel@antimon>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 29, 2012 at 10:04 AM, Artem Bityutskiy <dedekind1@gmail.com> wrote:
-> On Fri, 2012-06-29 at 09:56 -0300, Alexandre Pereira da Silva wrote:
->> > @@ @@
->> > +drivers/mtd/nand/lpc32xx_mlc.c: In function 'lpc32xx_nand_probe':
->> > +drivers/mtd/nand/lpc32xx_mlc.c:679:10: warning: variable 'sr' set but not used [-Wunused-but-set-variable]
->
-> gcc 4.6, aiaiai uses W=1 when building.
->
->> > +drivers/mtd/nand/lpc32xx_mlc.c:561:24: error: bad constant expression [sparse]
->
-> This is sparse, not gcc.
+On 28.06.2012 20:19, Lucas Stach wrote:
+> TTM though solves more advanced matters, like buffer synchronisation
+> between 3D and 2D block of hardware or syncing buffer access between GPU
+> and CPU.
+> One of the most interesting things of TTM is the ability to purge the
+> GPU DMA buffers to scattered sysmem or even swap them out, if they are
+> not currently used by the GPU. It then makes sure to move them in the
+> contig space again when the GPU really needs them and fix up the GPU
+> command stream with the new buffer address.
 
-Does the oob area need to be ecc protected? If not I suggest to just
-remove the read_oob and write_oob and let this to nand_base. I think
-this is too much overhead to read 6 bytes.
+We preferably should choose dma_buf as a common interface towards
+buffers. That way whatever we choose as the memory manager, all dma_buf
+aware drivers will be able to use buffers allocated by other drivers.
+
+We probably need to accommodate multiple memory managers to take care of
+legacy and new drivers. If V4L2 and DRM projects all move to dma_buf, we
+have the possibility to do zero-copy video without forcing everybody to
+use the same memory manager.
+
+As I understand, TTM is good for platforms where we have a separate
+frame buffer memory, as is the case with most of the graphics cards. In
+Tegra, graphics and CPU occupy the same memory, so I'm not sure if we
+require the level of functionality that TTM provides. I guess the level
+of functionality and the complexity that it brings is one reason why TTM
+hasn't really caught on in the ARM world.
+
+The synchronization primitives attached to TTM are slightly confusing.
+At the bottom level, it's operations which need to be synchronized
+between each other. That's the API level that we should to export from
+kernel to user space. It's then up to libdrm level (or whatever is doing
+the rendering in user space) to decide which operations it wants to have
+completed before a buffer can be reused/read/passed on to the next stage.
+
+Anyway, if we hide the memory manager behind dma_buf, we're free to muck
+around with multiple of them and see what works best.
+
+Terje
