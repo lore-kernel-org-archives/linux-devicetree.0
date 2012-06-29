@@ -1,38 +1,52 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH 1/2] of: return -ENOENT when no property
-Date: Fri, 29 Jun 2012 13:57:58 +0900
-Message-ID: <1340945879-11712-2-git-send-email-acourbot@nvidia.com>
-References: <1340945879-11712-1-git-send-email-acourbot@nvidia.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: Remoteproc device-tree node description proposal
+Date: Fri, 29 Jun 2012 07:01:00 +0200
+Message-ID: <4FED368C.1070201@monstr.eu>
+References: <4FEA974F.9050908@monstr.eu>
+ <CAK=WgbbA2+oJARCEAgChct8rQ+s5=-cbR1esMPNekun3=ReGEA@mail.gmail.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340945879-11712-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAK=WgbbA2+oJARCEAgChct8rQ+s5=-cbR1esMPNekun3=ReGEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Make of_parse_phandle_with_args return -ENOENT instead of -EINVAL when
-no matching property is found, which allows to discriminate between
-absence of property and parsing error.
+On 06/28/2012 09:54 AM, Ohad Ben-Cohen wrote:
+> On Wed, Jun 27, 2012 at 8:17 AM, Michal Simek<monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>  wrote:
+>> Ohad: What properties are required by TI to describe firmware?
+>> I would like to add together all requirements and create any formal
+>> remoteproc description.
+>
+> I'm not so sure about this.
+>
+> The low level remoteproc driver is platform specific and may look
+> completely different on different platforms..
+>
+> I suggest you go ahead and add DTS remoteproc support for your
+> platform, and when TI or others will get to it too, we will see if any
+> commonality is in place.
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
----
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ok.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 7acd785..93165b7a 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -902,7 +902,7 @@ int of_parse_phandle_with_args(struct device_node *np, const char *list_name,
- 	/* Retrieve the phandle list property */
- 	list = of_get_property(np, list_name, &size);
- 	if (!list)
--		return -EINVAL;
-+		return -ENOENT;
- 	list_end = list + size / sizeof(*list);
- 
- 	/* Loop over the phandles until all the requested entry is found */
+Thanks,
+Michal
+
+
 -- 
-1.7.11.1
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
