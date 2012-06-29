@@ -1,275 +1,139 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] of: support an enumerated-bus compatible value
-Date: Thu, 28 Jun 2012 17:05:55 -0600
-Message-ID: <1340924755-31447-1-git-send-email-swarren@wwwdotorg.org>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [RFC] ARM: OMAP: Remove nodes dynamically at runtime
+Date: Thu, 28 Jun 2012 19:14:46 -0500
+Message-ID: <4FECF376.3010001@ti.com>
+References: <4FE372CA.7020008@ti.com> <4FE3B328.8060805@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FE3B328.8060805@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: device-tree <devicetree-discuss@lists.ozlabs.org>, robherring2@gmail.com, Grant Likely <grant.likely@secretlab.ca>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi Rob, Grant,
 
-An "enumerated" bus is one that is not memory-mapped, hence hence
-typically has #address-cells=1, and #size-cells=0. Such buses would be
-used to group related non-memory-mapped nodes together, often just under
-the top-level of the device tree. The ability to group nodes into a non-
-memory-mapped subnode of the root is important, since if nodes exist to
-describe multiple entities of the same type, the nodes will have the
-same name, and hence require a unit address to differentiate them. It
-doesn't make sense to assign bogus unit addresses from the CPU's own
-address space for this purpose. An example:
+Benoit suggested that I ask your opinion on the below.
 
-	regulators {
-		compatible = "enumerated-bus";
-		#address-cells = <1>;
-		#size-cells = <0>;
+Basically, I am trying to understand if there is any reason not to
+enable OF_DYNAMIC. More details below on the exact scenario I am trying
+to solve. OF_DYNAMIC seems to provide a good solution for me.
 
-		regulator@0 {
-			compatible = "regulator-fixed";
-			reg = <0>;
-		};
+Thanks
+Jon
 
-		regulator@1 {
-			compatible = "regulator-fixed";
-			reg = <1>;
-		};
-	};
+On 06/21/2012 06:50 PM, Jon Hunter wrote:
+> 
+> On 06/21/2012 02:15 PM, Jon Hunter wrote:
+>> Hi all,
+>>
+>> I am in the process of adding a device-tree binding for OMAP timers and
+>> I have encountered a scenario where ideally it would be useful to remove
+>> a device-tree node at runtime.
+>>
+>> The scenario is this ...
+>>
+>> 1. OMAP3 devices may or may not have security features enabled. Security
+>>    enabled devices are known as high-secure (HS) and devices without 
+>>    security are known as general purpose (GP).
+>> 2. For OMAP3 devices there are 12 general purpose timers available.
+>> 3. On secure devices the 12th timer is reserved for secure usage and so
+>>    cannot be used by the kernel, where as for a GP device it is available.
+>> 4. We can detect the OMAP device type, secure or GP, at runtime via an
+>>    on-chip register.
+>> 5. Today, when not using DT, we do not register the 12th timer as a linux
+>>    device if the device is secure.
+>>
+>> When migrating the timers to DT, I need a way to prevent this 12th timer
+>> from being registered as a device on a secure device. The options I have
+>> considered are ...
+>>
+>> a. Have separate a omap3.dtsi for GP and secure devices or place the
+>>    node for the 12th timer in a omap3-gp.dtsi that is only used for
+>>    boards with GP devices. The downside of this is that for boards
+>>    that can support GP and secure device (such as the omap3 SDP) we
+>>    require a separate dtb blob.
+>>
+>> b. Remove the timer node dynamically at runtime using the
+>>    of_node_detach() API. In this solution we define a "ti,timer-secure"
+>>    property that the 12th timer on omap3 devices would have and at
+>>    runtime if we are a secure omap3 device, we search the timer nodes
+>>    for any nodes with this property and remove them.
+>>
+>> Option B, seems to be the better option but requires me to enable 
+>> CONFIG_OF_DYNAMIC for all omap devices and I was not sure if there is any
+>> downside to doing so. Enabling this feature does not seem to add much code
+>> as far as I can tell, however, I  wanted to get some feedback before
+>> proposing this. Also if there are any other options I should consider then
+>> please let me know.
+>>
+>> For option B, the timer node would look like ...
+>>
+>> +               timer12: timer@48304000 {
+>> +                       compatible = "ti,omap3-timer";
+>> +                       ti,hwmods = "timer12";
+>> +                       ti,timer-alwon;
+>> +                       ti,timer-secure;
+>> +               };
+>>
+>> I would then add the following function to the omap timer code to search
+>> for any timers with the "ti,timer-secure" on a secure device and enable
+>> the OF_DYNAMIC option. Right now it is only timer 12 on OMAP3 that
+>> requires this, but I have made the function generic so that it could
+>> handle other devices (but none exist today that I am aware of).
+>>
+>> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
+>> index 8c22a8e..5e38946 100644
+>> --- a/arch/arm/mach-omap2/timer.c
+>> +++ b/arch/arm/mach-omap2/timer.c
+>> @@ -36,6 +36,7 @@
+>>  #include <linux/clocksource.h>
+>>  #include <linux/clockchips.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/of.h>
+>>  
+>>  #include <asm/mach/time.h>
+>>  #include <plat/dmtimer.h>
+>> @@ -482,6 +483,35 @@ static int __init omap2_dm_timer_init(void)
+>>  }
+>>  arch_initcall(omap2_dm_timer_init);
+>>  
+>> +static struct of_device_id omap3_timer_match[] __initdata = {
+>> +       { .compatible = "ti,omap3-timer", },
+>> +       { }
+>> +};
+>> +
+>> +/**
+>> + * omap_dmtimer_init - initialisation function when device tree is used
+>> + *
+>> + * For secure OMAP3 devices, timers with property "ti,timer-secure" cannot
+>> + * be used by the kernel as they are reserved. Therefore, to prevent the
+>> + * kernel registering these devices remove them dynamically from the device
+>> + * tree on boot.
+>> + */
+>> +void __init omap_dmtimer_init(void)
+>> +{
+>> +       struct device_node *np;
+>> +
+>> +       if (!cpu_is_omap34xx())
+>> +               return;
+>> +
+>> +       /* If we are a secure device, remove any secure timer nodes */
+>> +       if ((omap_type() == OMAP2_DEVICE_TYPE_GP)) {
+> 
+> Oops! Bug in the above code. Meant to be ...
+> 
+> 	 if (omap_type() != OMAP2_DEVICE_TYPE_GP)
+>> +               for_each_matching_node(np, omap3_timer_match) {
+>> +                       if (of_get_property(np, "ti,timer-secure", NULL))
+>> +                               of_detach_node(np);
+>> +               }
+>> +       }
+>> +}
+> 
+> Cheers
+> Jon
+> 
 
-Finally, because such buses are not memory-mapped, we avoid creating
-any IO/memory resources for the device.
-
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/platform.c     |   79 ++++++++++++++++++++++++++++++++++----------
- include/linux/of_device.h |    2 +-
- 2 files changed, 62 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 3132ea0..3ebefa9 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -25,6 +25,7 @@
- 
- const struct of_device_id of_default_bus_match_table[] = {
- 	{ .compatible = "simple-bus", },
-+	{ .compatible = "enumerated-bus", },
- #ifdef CONFIG_ARM_AMBA
- 	{ .compatible = "arm,amba-bus", },
- #endif /* CONFIG_ARM_AMBA */
-@@ -67,16 +68,25 @@ EXPORT_SYMBOL(of_find_device_by_node);
- /**
-  * of_device_make_bus_id - Use the device node data to assign a unique name
-  * @dev: pointer to device structure that is linked to a device tree node
-+ * @enumerated: Is the parent bus of the device an "enumerated" bus?
-  *
-  * This routine will first try using either the dcr-reg or the reg property
-  * value to derive a unique name.  As a last resort it will use the node
-  * name followed by a unique number.
-+ *
-+ * An "enumerated" bus is assumed to support #size-cells=0, and not be memory-
-+ * mapped. This prevents of_translate_address() from being used on the
-+ * device's reg property; performing address translation makes no logical
-+ * sense, and fails if #size-cells=0. We use the first component of the reg
-+ * property directly to form a unique name in this case; this value is only
-+ * local to the bus, rather than typically globally unique.
-  */
--void of_device_make_bus_id(struct device *dev)
-+void of_device_make_bus_id(struct device *dev, bool enumerated)
- {
- 	static atomic_t bus_no_reg_magic;
- 	struct device_node *node = dev->of_node;
- 	const u32 *reg;
-+	const __be32 *addrp;
- 	u64 addr;
- 	int magic;
- 
-@@ -105,7 +115,15 @@ void of_device_make_bus_id(struct device *dev)
- 	 */
- 	reg = of_get_property(node, "reg", NULL);
- 	if (reg) {
--		addr = of_translate_address(node, reg);
-+		if (enumerated) {
-+			addrp = of_get_address(node, 0, NULL, NULL);
-+			if (addrp)
-+				addr = of_read_number(addrp, 1);
-+			else
-+				addr = OF_BAD_ADDR;
-+		} else {
-+			addr = of_translate_address(node, reg);
-+		}
- 		if (addr != OF_BAD_ADDR) {
- 			dev_set_name(dev, "%llx.%s",
- 				     (unsigned long long)addr, node->name);
-@@ -126,10 +144,12 @@ void of_device_make_bus_id(struct device *dev)
-  * @np: device node to assign to device
-  * @bus_id: Name to assign to the device.  May be null to use default name.
-  * @parent: Parent device.
-+ * @enumerated: Is the parent bus of the device an "enumerated" bus?
-  */
--struct platform_device *of_device_alloc(struct device_node *np,
--				  const char *bus_id,
--				  struct device *parent)
-+struct platform_device *__of_device_alloc(struct device_node *np,
-+					  const char *bus_id,
-+					  struct device *parent,
-+					  bool enumerated)
- {
- 	struct platform_device *dev;
- 	int rc, i, num_reg = 0, num_irq;
-@@ -140,8 +160,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 		return NULL;
- 
- 	/* count the io and irq resources */
--	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
--		num_reg++;
-+	if (!enumerated)
-+		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
-+			num_reg++;
- 	num_irq = of_irq_count(np);
- 
- 	/* Populate the resource table */
-@@ -170,10 +191,23 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	if (bus_id)
- 		dev_set_name(&dev->dev, "%s", bus_id);
- 	else
--		of_device_make_bus_id(&dev->dev);
-+		of_device_make_bus_id(&dev->dev, enumerated);
- 
- 	return dev;
- }
-+
-+/**
-+ * of_device_alloc - Allocate and initialize an of_device
-+ * @np: device node to assign to device
-+ * @bus_id: Name to assign to the device.  May be null to use default name.
-+ * @parent: Parent device.
-+ */
-+struct platform_device *of_device_alloc(struct device_node *np,
-+				  const char *bus_id,
-+				  struct device *parent)
-+{
-+	return __of_device_alloc(np, bus_id, parent, false);
-+}
- EXPORT_SYMBOL(of_device_alloc);
- 
- /**
-@@ -190,14 +224,15 @@ struct platform_device *of_platform_device_create_pdata(
- 					struct device_node *np,
- 					const char *bus_id,
- 					void *platform_data,
--					struct device *parent)
-+					struct device *parent,
-+					bool enumerated)
- {
- 	struct platform_device *dev;
- 
- 	if (!of_device_is_available(np))
- 		return NULL;
- 
--	dev = of_device_alloc(np, bus_id, parent);
-+	dev = __of_device_alloc(np, bus_id, parent, enumerated);
- 	if (!dev)
- 		return NULL;
- 
-@@ -234,7 +269,7 @@ struct platform_device *of_platform_device_create(struct device_node *np,
- 					    const char *bus_id,
- 					    struct device *parent)
- {
--	return of_platform_device_create_pdata(np, bus_id, NULL, parent);
-+	return of_platform_device_create_pdata(np, bus_id, NULL, parent, false);
- }
- EXPORT_SYMBOL(of_platform_device_create);
- 
-@@ -265,7 +300,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- 	if (bus_id)
- 		dev_set_name(&dev->dev, "%s", bus_id);
- 	else
--		of_device_make_bus_id(&dev->dev);
-+		of_device_make_bus_id(&dev->dev, false);
- 
- 	/* setup amba-specific device info */
- 	dev->dma_mask = ~0;
-@@ -342,7 +377,8 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
- static int of_platform_bus_create(struct device_node *bus,
- 				  const struct of_device_id *matches,
- 				  const struct of_dev_auxdata *lookup,
--				  struct device *parent, bool strict)
-+				  struct device *parent, bool strict,
-+				  bool enumerated)
- {
- 	const struct of_dev_auxdata *auxdata;
- 	struct device_node *child;
-@@ -369,13 +405,17 @@ static int of_platform_bus_create(struct device_node *bus,
- 		return 0;
- 	}
- 
--	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
-+	dev = of_platform_device_create_pdata(bus, bus_id, platform_data,
-+					      parent, enumerated);
- 	if (!dev || !of_match_node(matches, bus))
- 		return 0;
- 
-+	enumerated = of_device_is_compatible(bus, "enumerated-bus");
-+
- 	for_each_child_of_node(bus, child) {
- 		pr_debug("   create child: %s\n", child->full_name);
--		rc = of_platform_bus_create(child, matches, lookup, &dev->dev, strict);
-+		rc = of_platform_bus_create(child, matches, lookup, &dev->dev,
-+					    strict, enumerated);
- 		if (rc) {
- 			of_node_put(child);
- 			break;
-@@ -409,11 +449,13 @@ int of_platform_bus_probe(struct device_node *root,
- 
- 	/* Do a self check of bus type, if there's a match, create children */
- 	if (of_match_node(matches, root)) {
--		rc = of_platform_bus_create(root, matches, NULL, parent, false);
-+		rc = of_platform_bus_create(root, matches, NULL, parent, false,
-+					    false);
- 	} else for_each_child_of_node(root, child) {
- 		if (!of_match_node(matches, child))
- 			continue;
--		rc = of_platform_bus_create(child, matches, NULL, parent, false);
-+		rc = of_platform_bus_create(child, matches, NULL, parent, false,
-+					    false);
- 		if (rc)
- 			break;
- 	}
-@@ -454,7 +496,8 @@ int of_platform_populate(struct device_node *root,
- 		return -EINVAL;
- 
- 	for_each_child_of_node(root, child) {
--		rc = of_platform_bus_create(child, matches, lookup, parent, true);
-+		rc = of_platform_bus_create(child, matches, lookup, parent,
-+					    true, false);
- 		if (rc)
- 			break;
- 	}
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 901b743..630972e 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -12,7 +12,7 @@ struct device;
- 
- extern const struct of_device_id *of_match_device(
- 	const struct of_device_id *matches, const struct device *dev);
--extern void of_device_make_bus_id(struct device *dev);
-+extern void of_device_make_bus_id(struct device *dev, bool enumerated);
- 
- /**
-  * of_driver_match_device - Tell if a driver's of_match_table matches a device.
--- 
-1.7.0.4
