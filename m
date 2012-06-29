@@ -1,58 +1,59 @@
-From: Alexander Smirnov <alex.bluesman.smirnov@gmail.com>
-Subject: Re: RF231 transceiver on at91sam9g20ek board
-Date: Fri, 29 Jun 2012 16:53:01 +0400
-Message-ID: <CAJmB2rBpa=iK6yhd3=CikampfypU+4MaUfM-GQMLZhN7QNUteA@mail.gmail.com>
-References: <CAJmB2rDxv45OP4otn7rmQcpzCvLujKm0j9_OqNW6PoyHuarTLw@mail.gmail.com>
- <201206221834.41869.arnd@arndb.de>
- <CAJmB2rBcRuNe0QfEGoJN1rQnRnr33gyE=nLt3Az=mGEWuR7mCg@mail.gmail.com>
- <201206281430.21916.arnd@arndb.de> <4FEC7369.3050003@atmel.com>
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Subject: Re: [PATCH v10] MTD: LPC32xx MLC NAND driver
+Date: Fri, 29 Jun 2012 09:56:39 -0300
+Message-ID: <CAAAP30HZ1Z5U44wLwSEfcaJSLmVp8AbXPTCagS31hnoCy_tf-g@mail.gmail.com>
+References: <1340834129-15545-1-git-send-email-stigge@antcom.de>
+	<1340973434.3070.168.camel@sauron.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4FEC7369.3050003@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, linux@maxim.org.za
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1340973434.3070.168.camel@sauron.fi.intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: dedekind1@gmail.com
+Cc: Roland Stigge <stigge@antcom.de>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-> Dear Alexander,
+On Fri, Jun 29, 2012 at 9:37 AM, Artem Bityutskiy <dedekind1@gmail.com> wrote:
+> On Wed, 2012-06-27 at 23:55 +0200, Roland Stigge wrote:
+>> This patch adds a driver for the MLC NAND controller of the LPC32xx SoC.
+>>
+>> Signed-off-by: Roland Stigge <stigge@antcom.de>
+>> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+>> ---
 >
-> There has been an attempt to move the spi-atmel.c driver to device tree.
-> You can check the status of the discussion in by searching the message
-> subjects:
+> Aiaiai complains like this about your patch, please, take a look:
 >
-> [PATCH 1/4 v4] of_spi: add generic binding support to specify cs gpio
-> [PATCH 1/4 v5] of_spi: add generic binding support to specify cs gpio
+> --------------------------------------------------------------------------------
 >
-> I guess that you can take these patches as examples for moving to device
-> tree on your AT91 based board (beware you should set pin muxing in your
-> bootloader).
+> Successfully built configuration "arm-lpc32xx_defconfig,arm,arm-unknown-linux-gnueabi-", results:
 >
-> There is a "work in progress" snapshot of this work in at91 git tree/bran=
-ch:
-> git://github.com/at91linux/linux-at91.git =A0 ghnew/j/for-3.5-wip
->
-> commit: 5f31f2573e7e9369500118e1b8fd026392fc0982
-> commit: 93fd57e73502656a139879518b397711cc305c6a
+> --- before_patching.log
+> +++ after_patching.log
+> @@ @@
+> +drivers/mtd/nand/lpc32xx_mlc.c: In function 'lpc32xx_nand_probe':
+> +drivers/mtd/nand/lpc32xx_mlc.c:679:10: warning: variable 'sr' set but not used [-Wunused-but-set-variable]
+> +drivers/mtd/nand/lpc32xx_mlc.c:561:24: error: bad constant expression [sparse]
 
-Dear at91 team,
+This build fine here, with gcc 4.5.3
 
-thank you very much for the hints!
+Which gcc version is he using?
 
-Alex
-
+> --------------------------------------------------------------------------------
 >
-> Best regards,
+> checkpatch.pl has some complaints:
+>
+> --------------------------------------------------------------------------------
+>
+> checkpatch.pl results for patch "[PATCH] MTD: LPC32xx MLC NAND driver"
+>
+> ERROR:INITIALISED_STATIC: do not initialise statics to 0 or NULL
+> #339: FILE: drivers/mtd/nand/lpc32xx_mlc.c:224:
+> +static int use_dma = 0;
+>
+> total: 1 errors, 0 warnings, 1004 lines checked
+>
+> --------------------------------------------------------------------------------
+>
 > --
-> Nicolas Ferre
->
->
+> Best Regards,
+> Artem Bityutskiy
