@@ -1,183 +1,90 @@
-From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 14/14] usb: chipidea: add imx platform driver
-Date: Fri, 29 Jun 2012 22:53:49 +0800
-Message-ID: <20120629145347.GA2151@richard-laptop>
-References: <1340963342-28735-1-git-send-email-richard.zhao@freescale.com>
- <1340963342-28735-15-git-send-email-richard.zhao@freescale.com>
- <4FED8E42.9020400@pengutronix.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode" property
+ to device tree bindings
+Date: Fri, 29 Jun 2012 09:51:49 -0600
+Message-ID: <4FEDCF15.9040000@wwwdotorg.org>
+References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de> <1340891629-13145-4-git-send-email-mkl@pengutronix.de> <20120629014352.GA28923@b20223-02.ap.freescale.net> <4FED5D77.3050009@pengutronix.de> <20120629084509.GB28923@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4FED8E42.9020400-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20120629084509.GB28923-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 29, 2012 at 01:15:14PM +0200, Marc Kleine-Budde wrote:
-> On 06/29/2012 11:49 AM, Richard Zhao wrote:
-> > This patch supports only the host-mode functionality so far.
-> > 
-> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> > Tested-by: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/usb/ci13xxx-imx.txt        |   18 ++
-> >  drivers/usb/chipidea/Makefile                      |    3 +
-> >  drivers/usb/chipidea/ci13xxx_imx.c                 |  198 ++++++++++++++++++++
-> >  3 files changed, 219 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> >  create mode 100644 drivers/usb/chipidea/ci13xxx_imx.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> > new file mode 100644
-> > index 0000000..2c29041
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> > @@ -0,0 +1,18 @@
-> > +* Freescale i.MX ci13xxx usb controllers
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,imx27-usb"
-> > +- reg: Should contain registers location and length
-> > +- interrupts: Should contain controller interrupt
-> > +
-> > +Optional properties:
-> > +- fsl,usbphy: phandler of usb phy that connects to the only one port
-> > +- vbus-supply: regulator for vbus
-> > +
-> > +Examples:
-> > +usb@02184000 { /* USB OTG */
-> > +	compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
-> > +	reg = <0x02184000 0x200>;
-> > +	interrupts = <0 43 0x04>;
-> > +	fsl,usbphy = <&usbphy1>;
-> > +};
-> > diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-> > index b69900a..5c66d9c 100644
-> > --- a/drivers/usb/chipidea/Makefile
-> > +++ b/drivers/usb/chipidea/Makefile
-> > @@ -14,3 +14,6 @@ ifneq ($(CONFIG_PCI),)
-> >  	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_pci.o
-> >  endif
-> >  
-> > +ifneq ($(CONFIG_OF_DEVICE),)
-> > +	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_imx.o
-> > +endif
-> > diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
-> > new file mode 100644
-> > index 0000000..ef60d06
-> > --- /dev/null
-> > +++ b/drivers/usb/chipidea/ci13xxx_imx.c
-> > @@ -0,0 +1,198 @@
-> > +/*
-> > + * Copyright 2012 Freescale Semiconductor, Inc.
-> > + * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > + * on behalf of DENX Software Engineering GmbH
-> > + *
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> > + *
-> > + * http://www.opensource.org/licenses/gpl-license.html
-> > + * http://www.gnu.org/copyleft/gpl.html
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/of_gpio.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/dma-mapping.h>
-> > +#include <linux/usb/chipidea.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/regulator/consumer.h>
-> > +
-> > +#include "ci.h"
-> > +
-> > +#define pdev_to_phy(pdev) \
-> > +	((struct usb_phy *)platform_get_drvdata(pdev))
-> > +
-> > +struct ci13xxx_imx_data {
-> > +	struct device_node *phy_np;
-> > +	struct usb_phy *phy;
-> > +	struct platform_device *ci_pdev;
-> > +	struct clk *clk;
-> > +	struct regulator *reg_vbus;
-> > +};
-> > +
-> > +static struct ci13xxx_platform_data ci13xxx_imx_platdata __devinitdata  = {
-> > +	.name			= "ci13xxx_imx",
-> > +	.flags			= CI13XXX_REQUIRE_TRANSCEIVER |
-> > +				  CI13XXX_PULLUP_ON_VBUS |
-> > +				  CI13XXX_DISABLE_STREAMING,
-> > +	.capoffset		= DEF_CAPOFFSET,
-> > +};
-> > +
-> > +static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
-> > +{
-> > +	struct ci13xxx_imx_data *data;
-> > +	struct platform_device *plat_ci, *phy_pdev;
-> > +	struct device_node *phy_np;
-> > +	struct resource *res;
-> > +	struct regulator *reg_vbus;
-> > +	int ret;
-> > +
-> > +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> > +	if (!data) {
-> > +		dev_err(&pdev->dev, "Failed to allocate CI13xxx-IMX data!\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	if (!res) {
-> > +		dev_err(&pdev->dev, "Can't get device resources!\n");
-> > +		return -ENOENT;
-> > +	}
-> > +
-> > +	data->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(data->clk)) {
-> > +		dev_err(&pdev->dev,
-> > +			"Failed to get clock, err=%ld\n", PTR_ERR(data->clk));
-> > +		return PTR_ERR(data->clk);
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(data->clk);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev,
-> > +			"Failed to prepare or enable clock, err=%d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	phy_np = of_parse_phandle(pdev->dev.of_node, "fsl,usbphy", 0);
-> > +	if (phy_np) {
-> > +		data->phy_np = phy_np;
-> > +		phy_pdev = of_find_device_by_node(phy_np);
-> > +		if (phy_pdev) {
-> > +			struct usb_phy *phy;
-> > +			phy = pdev_to_phy(phy_pdev);
-> > +			if (phy &&
-> > +			    try_module_get(phy_pdev->dev.driver->owner)) {
-> > +				usb_phy_init(phy);
-> > +				data->phy = phy;
-> > +			}
-> > +		}
-> > +	}
-> 
-> what about using devm_usb_get_phy_by_phandle() as proposed in Kishon's
-> patch: "drivers: usb: otg: add device tree support to otg library".
-I won't use it until it's accepted.
+On 06/29/2012 02:45 AM, Richard Zhao wrote:
+> On Fri, Jun 29, 2012 at 09:47:03AM +0200, Marc Kleine-Budde wrote:
+>>
+>> Cc'ed Devicetree Discussions
+>>
+>> On 06/29/2012 03:43 AM, Richard Zhao wrote:
+>>> On Thu, Jun 28, 2012 at 03:53:48PM +0200, Marc Kleine-Budde wrote:
+>>>> This patch allows the device tree to limit the chipidea to host or
+>>>> peripheral mode only.
+>>>>
+>>>> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |    3 ++
+>>>>  drivers/usb/chipidea/ci13xxx_imx.c                 |    3 ++
+>>>>  drivers/usb/chipidea/core.c                        |   41 +++++++++++++++++---
+>>>>  include/linux/usb/chipidea.h                       |    9 +++++
+>>>>  4 files changed, 50 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>>>> index 5a0ad66..67f97f56 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>>>> @@ -4,6 +4,8 @@ Required properties:
+>>>>  - compatible: Should be "fsl,imx27-usb"
+>>>>  - reg: Should contain registers location and length
+>>>>  - interrupts: Should contain controller interrupt
+>>>> +- dr_mode: indicates the working mode for compatible controllers. Can
+>>>> +  be "host", "peripheral", or "otg". Defaults to "otg" if not defined.
+>>
+>>> By default, it should be decided by capability registers. Only bad hw
+>>> design needs such settings. So, why not name it as force-xxx? If it's
+>>> not specific to imx, it doesn't needs to has prefix "fsl,".
+>>
+>> It's not a bad hardware design if you don't route or enable all ports a
+>> soc offers. In modern socs you cannot enable all ports anyway.
+>
+> I'm not sure about your case, but generally, it's not about ports.
+> It's about ID pin. If ID pin is not connect correctly, we may need to
+> force it to host or device working mode. The 'force" here means it
+> won't follow the capability registers and ID pin.
+>>
+>> The property isn't prefixed with "fsl,", it's just "dr_mode".
+>>
+>> Why not "force-xxx"? I had a look at Documentation/devicetree/bindings/usb:
+>>
+>> tegra-usb.txt:
+>>>   - dr_mode : dual role mode. Indicates the working mode for
+>>>    nvidia,tegra20-ehci compatible controllers.  Can be "host", "peripheral",
+>>>    or "otg".  Default to "host" if not defined for backward compatibility.
+>>>       host means this is a host controller
+>>>       peripheral means it is device controller
+>>>       otg means it can operate as either ("on the go")
+>>
+>> fsl-usb.txt:
+>>>  - dr_mode : indicates the working mode for "fsl-usb2-dr" compatible
+>>>    controllers.  Can be "host", "peripheral", or "otg".  Default to
+>>>    "host" if not defined for backward compatibility.
+>>>
+>>
+>> So why invent something new, if there seems to be a pattern?
+>
+> I'm not sure they mean the same things, because the default value is
+> different. Event if they're same, why not make them all with sensible
+> name?
 
-Thanks
-Richard
-> 
-> Marc
-> 
+I'm not quite sure what the question is I'm being asked here.
+
+I certainly think that new bindings should follow existing precedent
+where possible for representing the same data. dr_mode is that precedent
+for a USB host's operating mode. Tegra chose to use that because of
+precedent in fsl-usb.txt IIRC.
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
