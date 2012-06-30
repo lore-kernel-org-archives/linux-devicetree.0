@@ -1,38 +1,110 @@
-From: "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [syslinux] [RFC 0/2] syslinux: Add device tree support
-Date: Fri, 29 Jun 2012 15:37:54 -0700
-Message-ID: <4FEE2E42.2000707@zytor.com>
-References: <1338478896-11417-1-git-send-email-thierry.reding@avionic-design.de>
+From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode"
+ property to device tree bindings
+Date: Sat, 30 Jun 2012 09:19:08 +0800
+Message-ID: <20120630011906.GA2489@richard-laptop>
+References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de>
+ <1340891629-13145-4-git-send-email-mkl@pengutronix.de>
+ <20120629014352.GA28923@b20223-02.ap.freescale.net>
+ <4FED5D77.3050009@pengutronix.de>
+ <20120629084509.GB28923@b20223-02.ap.freescale.net>
+ <4FEDCF15.9040000@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1338478896-11417-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: For discussion of Syslinux and tftp-hpa <syslinux-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4FEDCF15.9040000-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/31/2012 08:41 AM, Thierry Reding wrote:
-> This patch series adds support for passing a Flattened Device Tree (FDT)
-> blob to the Linux kernel. Currently, only the linux.c32 module can do so
-> and some additional checking should be done to only pass the blob if the
-> kernel supports boot protocol 2.09 or later.
+On Fri, Jun 29, 2012 at 09:51:49AM -0600, Stephen Warren wrote:
+> On 06/29/2012 02:45 AM, Richard Zhao wrote:
+> > On Fri, Jun 29, 2012 at 09:47:03AM +0200, Marc Kleine-Budde wrote:
+> >>
+> >> Cc'ed Devicetree Discussions
+> >>
+> >> On 06/29/2012 03:43 AM, Richard Zhao wrote:
+> >>> On Thu, Jun 28, 2012 at 03:53:48PM +0200, Marc Kleine-Budde wrote:
+> >>>> This patch allows the device tree to limit the chipidea to host or
+> >>>> peripheral mode only.
+> >>>>
+> >>>> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >>>> ---
+> >>>>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |    3 ++
+> >>>>  drivers/usb/chipidea/ci13xxx_imx.c                 |    3 ++
+> >>>>  drivers/usb/chipidea/core.c                        |   41 +++++++++++++++++---
+> >>>>  include/linux/usb/chipidea.h                       |    9 +++++
+> >>>>  4 files changed, 50 insertions(+), 6 deletions(-)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> >>>> index 5a0ad66..67f97f56 100644
+> >>>> --- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> >>>> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> >>>> @@ -4,6 +4,8 @@ Required properties:
+> >>>>  - compatible: Should be "fsl,imx27-usb"
+> >>>>  - reg: Should contain registers location and length
+> >>>>  - interrupts: Should contain controller interrupt
+> >>>> +- dr_mode: indicates the working mode for compatible controllers. Can
+> >>>> +  be "host", "peripheral", or "otg". Defaults to "otg" if not defined.
+> >>
+> >>> By default, it should be decided by capability registers. Only bad hw
+> >>> design needs such settings. So, why not name it as force-xxx? If it's
+> >>> not specific to imx, it doesn't needs to has prefix "fsl,".
+> >>
+> >> It's not a bad hardware design if you don't route or enable all ports a
+> >> soc offers. In modern socs you cannot enable all ports anyway.
+> >
+> > I'm not sure about your case, but generally, it's not about ports.
+> > It's about ID pin. If ID pin is not connect correctly, we may need to
+> > force it to host or device working mode. The 'force" here means it
+> > won't follow the capability registers and ID pin.
+> >>
+> >> The property isn't prefixed with "fsl,", it's just "dr_mode".
+> >>
+> >> Why not "force-xxx"? I had a look at Documentation/devicetree/bindings/usb:
+> >>
+> >> tegra-usb.txt:
+> >>>   - dr_mode : dual role mode. Indicates the working mode for
+> >>>    nvidia,tegra20-ehci compatible controllers.  Can be "host", "peripheral",
+> >>>    or "otg".  Default to "host" if not defined for backward compatibility.
+> >>>       host means this is a host controller
+> >>>       peripheral means it is device controller
+> >>>       otg means it can operate as either ("on the go")
+> >>
+> >> fsl-usb.txt:
+> >>>  - dr_mode : indicates the working mode for "fsl-usb2-dr" compatible
+> >>>    controllers.  Can be "host", "peripheral", or "otg".  Default to
+> >>>    "host" if not defined for backward compatibility.
+> >>>
+> >>
+> >> So why invent something new, if there seems to be a pattern?
+> >
+> > I'm not sure they mean the same things, because the default value is
+> > different. Event if they're same, why not make them all with sensible
+> > name?
 > 
-> Thierry
+> I'm not quite sure what the question is I'm being asked here.
+> 
+> I certainly think that new bindings should follow existing precedent
+> where possible for representing the same data. dr_mode is that precedent
+> for a USB host's operating mode. Tegra chose to use that because of
+> precedent in fsl-usb.txt IIRC.
+For imx, in most cases, we don't use dr_mode. The role is decided by
+CAP_DCCPARAMS and ID pin. For tegra and fsl-usb, it looks like the role
+is totally decided by dt property. So I suggested use force-xxx to let
+everyone know it does not follow the default action. I don't quite
+insist on the naming, because dr_mode is similar (not same).
 
-Hi there,
+Thanks
+Richard
 
-I just merged a modified/more generic version of your patch.  I would
-appreciate it if you could test it and report back.
-
-	-hpa
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
