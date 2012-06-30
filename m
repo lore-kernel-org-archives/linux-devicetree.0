@@ -1,44 +1,82 @@
-From: Roland Stigge <stigge@antcom.de>
+From: Artem Bityutskiy <dedekind1@gmail.com>
 Subject: Re: [PATCH v10] MTD: LPC32xx MLC NAND driver
-Date: Sat, 30 Jun 2012 14:32:16 +0200
-Message-ID: <4FEEF1D0.5060404@antcom.de>
-References: <1340834129-15545-1-git-send-email-stigge@antcom.de> <1340973434.3070.168.camel@sauron.fi.intel.com>
+Date: Sat, 30 Jun 2012 17:22:51 +0300
+Message-ID: <1341066171.2115.10.camel@koala>
+References: <1340834129-15545-1-git-send-email-stigge@antcom.de>
+	 <1340973434.3070.168.camel@sauron.fi.intel.com>
+	 <4FEEF1D0.5060404@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-xFB3RXy3K1uLTNY1P3zN"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1340973434.3070.168.camel@sauron.fi.intel.com>
+In-Reply-To: <4FEEF1D0.5060404@antcom.de>
 Sender: linux-doc-owner@vger.kernel.org
-To: dedekind1@gmail.com
+To: Roland Stigge <stigge@antcom.de>
 Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dwmw2@infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, linux-arm-kernel@lists.infradead.org, hechtb@googlemail.com, lars@metafoo.de, b32955@freescale.com, leiwen@marvell.com, linux@arm.linux.org.uk, Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Artem!
 
-Thanks for the notes!
+--=-xFB3RXy3K1uLTNY1P3zN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 29/06/12 14:37, Artem Bityutskiy wrote:
-> Successfully built configuration
-> "arm-lpc32xx_defconfig,arm,arm-unknown-linux-gnueabi-", results:
-> 
-> --- before_patching.log +++ after_patching.log @@ @@ 
-> +drivers/mtd/nand/lpc32xx_mlc.c: In function 'lpc32xx_nand_probe': 
-> +drivers/mtd/nand/lpc32xx_mlc.c:679:10: warning: variable 'sr' set
-> but not used [-Wunused-but-set-variable] 
-> +drivers/mtd/nand/lpc32xx_mlc.c:561:24: error: bad constant
-> expression [sparse]
+On Sat, 2012-06-30 at 14:32 +0200, Roland Stigge wrote:
+> Hi Artem!
+>=20
+> Thanks for the notes!
+>=20
+> On 29/06/12 14:37, Artem Bityutskiy wrote:
+> > Successfully built configuration
+> > "arm-lpc32xx_defconfig,arm,arm-unknown-linux-gnueabi-", results:
+> >=20
+> > --- before_patching.log +++ after_patching.log @@ @@=20
+> > +drivers/mtd/nand/lpc32xx_mlc.c: In function 'lpc32xx_nand_probe':=20
+> > +drivers/mtd/nand/lpc32xx_mlc.c:679:10: warning: variable 'sr' set
+> > but not used [-Wunused-but-set-variable]=20
+> > +drivers/mtd/nand/lpc32xx_mlc.c:561:24: error: bad constant
+> > expression [sparse]
+>=20
+> This is because sparse doesn't understand this local variable:
+>=20
+> uint8_t buf[mtd->writesize];
 
-This is because sparse doesn't understand this local variable:
+mtd->writesize is typically 2048KiB (or even larger, there are MLCs with
+4 and 8 KiB NAND page size). You cannot allocate that much on the stack,
+linux kernel stack size is very small - only 8KiB, and there are people
+who use even 4KiB stacks. So this have to be fixed.
 
-uint8_t buf[mtd->writesize];
+> The above construction is quite convenient for this case and I'd
+> prefer this to allocating another buffer dynamically.
 
-(but gcc does).
+Yes, in userspaces it is, but unfortunately in the kernel we cannot
+afford allocating that much on the stack.
 
-Are you sure we need to support sparse?
+--=20
+Best Regards,
+Artem Bityutskiy
 
-The above construction is quite convenient for this case and I'd
-prefer this to allocating another buffer dynamically.
+--=-xFB3RXy3K1uLTNY1P3zN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Thanks in advance,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Roland
+iQIcBAABAgAGBQJP7wu7AAoJECmIfjd9wqK08yAQANJrEzyK2uBqqRwRtRdmtJ9H
+pSgfhNPQzJz3h+er6hn2vhLJrBZ3bpkjR06xu7Kwv9XiJrq4vH+DGcwlCLC8ZYcj
+qcReLu7h/oj9siySTRKmoMrP+NuabqZBqXX27/1FUBFUXKVvo28ktagIxq+YBHHS
+LZWEhDNppqIA/JdFbzZduVlWz/RqmdvRc6sNFVTA5QzUbTyvY+tfgf3BJFmhqMgO
+j38BGTAgtT+ZPf/z/y75qSBvT1SVRfsO98dtkbPcF7KW803imktRH9Il+wGDU8SY
+YdBsrdP9mxh9YBP5mvXBDJzqAnfmWMMh1Cn7F4BxRK1Qa7Zz+O5D5T0IwuHugexC
+5ap6cjTthYSOyJxBF3t8uQG57MpgfEbk1bxppFNKg5X1ZaSTzTaE8SCikvVAR0Fz
+WaRfvOq2pDoQhNRHVEgIsLtw7MF143EwRUlqAzqHVb/twRjjLbl54mHWedy9mxiU
+2Wk+EY6mlKEGRs13+mQpb3WvEj5aqoteAkl4sG2Xa2NNG7IgbQBSO6huJxPKdpsg
++s134GqL17VhBxA8INS7kDwl5SWCZoVMoFZm/eaYH2QGj0altuMB3XaEf3TDjDij
+GzVQjKQcxfQxp+DgklV0oKEkKqhdTLJdJ1szD9IJcl8xFX5YwfMZwC3oia/dmSQ6
+W0WxQx7aaeAhTT9j5Spa
+=Mn+m
+-----END PGP SIGNATURE-----
+
+--=-xFB3RXy3K1uLTNY1P3zN--
+
