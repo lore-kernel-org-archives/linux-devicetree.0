@@ -1,111 +1,103 @@
-From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode"
- property to device tree bindings
-Date: Sat, 30 Jun 2012 09:40:04 +0800
-Message-ID: <20120630014002.GC2489@richard-laptop>
-References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de>
- <1340891629-13145-4-git-send-email-mkl@pengutronix.de>
- <20120629014352.GA28923@b20223-02.ap.freescale.net>
- <4FED5D77.3050009@pengutronix.de>
- <20120629084509.GB28923@b20223-02.ap.freescale.net>
- <4FED755F.6080302@pengutronix.de>
+From: "David VomLehn (dvomlehn)" <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Subject: RE: Early printk baudrate initialization DTS description
+Date: Fri, 29 Jun 2012 20:41:28 -0500
+Message-ID: <7A9214B0DEB2074FBCA688B30B04400D04C05241@XMB-RCD-208.cisco.com>
+References: <4FE99A1A.4040908@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4FED755F.6080302-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-class: urn:content-classes:message
+In-Reply-To: <4FE99A1A.4040908-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 29, 2012 at 11:29:03AM +0200, Marc Kleine-Budde wrote:
-> On 06/29/2012 10:45 AM, Richard Zhao wrote:
-> > On Fri, Jun 29, 2012 at 09:47:03AM +0200, Marc Kleine-Budde wrote:
-> >>
-> >> Cc'ed Devicetree Discussions
-> >>
-> >> On 06/29/2012 03:43 AM, Richard Zhao wrote:
-> >>> On Thu, Jun 28, 2012 at 03:53:48PM +0200, Marc Kleine-Budde wrote:
-> >>>> This patch allows the device tree to limit the chipidea to host or
-> >>>> peripheral mode only.
-> >>>>
-> >>>> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>>> ---
-> >>>>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |    3 ++
-> >>>>  drivers/usb/chipidea/ci13xxx_imx.c                 |    3 ++
-> >>>>  drivers/usb/chipidea/core.c                        |   41 +++++++++++++++++---
-> >>>>  include/linux/usb/chipidea.h                       |    9 +++++
-> >>>>  4 files changed, 50 insertions(+), 6 deletions(-)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> >>>> index 5a0ad66..67f97f56 100644
-> >>>> --- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> >>>> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-> >>>> @@ -4,6 +4,8 @@ Required properties:
-> >>>>  - compatible: Should be "fsl,imx27-usb"
-> >>>>  - reg: Should contain registers location and length
-> >>>>  - interrupts: Should contain controller interrupt
-> >>>> +- dr_mode: indicates the working mode for compatible controllers. Can
-> >>>> +  be "host", "peripheral", or "otg". Defaults to "otg" if not defined.
-> >>
-> >>> By default, it should be decided by capability registers. Only bad hw
-> >>> design needs such settings. So, why not name it as force-xxx? If it's
-> >>> not specific to imx, it doesn't needs to has prefix "fsl,".
-> >>
-> >> It's not a bad hardware design if you don't route or enable all ports a
-> >> soc offers. In modern socs you cannot enable all ports anyway.
-> > I'm not sure about your case, but generally, it's not about ports.
-> > It's about ID pin. If ID pin is not connect correctly, we may need to
-> > force it to host or device working mode. The 'force" here means it
-> > won't follow the capability registers and ID pin.
+> -----Original Message-----
+> From: devicetree-discuss [mailto:devicetree-discuss-
+> bounces+dvomlehn=cisco.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of Michal Simek
+> Sent: Tuesday, June 26, 2012 4:17 AM
+> To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: John Williams
+> Subject: Early printk baudrate initialization DTS description
 > 
-> The device tree is used to describe the hardware. How would you describe
-> a system, which has just a USB device connector? And the hardware guys
-> used the not needed id-pin for a LED?
-I see your case. Ideally, hw should pull-up or pull-down id pin. We may
-not take it as a common case. As I mentioned in another mail, we may
-interpret property in imx driver.
+> Hi,
+> 
+> we are trying to solve one problem with early printk initialization
+> on Microblaze uart16550. I have also checked arm bootup code and
+> the situation is the same there (NOTE: This IP is possible to use on
+> Zynq too).
+> 
+> The problem is about baudrate initialization. Current code just expect
+> that early console is initialized by previous bootloader/firmware (in
+> our case u-boot).
+> But if there is not initialization and directly elf is loaded there is
+> no initialization
+> done and kernel bootlog is shown when regular serial driver is probed.
+> 
+> I have create a solution which add baudrate initialization to
+> Microblaze early printk code.
+> And also two options how to load baudrate setting from device-tree.
+> 
+> Code expects that early console is specified in chosen node.
+> 
+> chosen {
+> 	linux,stdout-path = "/axi@0/serial@40400000";
+> } ;
+> 
+> Code finds out which IP it is and based on that initialize early
+printk
+> driver.
+> Baudrate setting is counted from clock-frequency and current-speed
+> defined directly in uart node.
 
-Thanks
-Richard
-> 
-> >> The property isn't prefixed with "fsl,", it's just "dr_mode".
-> >>
-> >> Why not "force-xxx"? I had a look at Documentation/devicetree/bindings/usb:
-> >>
-> >> tegra-usb.txt:
-> >>>   - dr_mode : dual role mode. Indicates the working mode for
-> >>>    nvidia,tegra20-ehci compatible controllers.  Can be "host", "peripheral",
-> >>>    or "otg".  Default to "host" if not defined for backward compatibility.
-> >>>       host means this is a host controller
-> >>>       peripheral means it is device controller
-> >>>       otg means it can operate as either ("on the go")
-> >>
-> >> fsl-usb.txt:
-> >>>  - dr_mode : indicates the working mode for "fsl-usb2-dr" compatible
-> >>>    controllers.  Can be "host", "peripheral", or "otg".  Default to
-> >>>    "host" if not defined for backward compatibility.
-> >>>
-> >>
-> >> So why invent something new, if there seems to be a pattern?
-> > I'm not sure they mean the same things, because the default value is
-> > different. Event if they're same, why not make them all with sensible
-> > name?
-> 
-> Sensible name sounds good. Devicetree Discussions, we need an official
-> name for the property and its values :)
-> 
-> Marc
-> -- 
-> Pengutronix e.K.                  | Marc Kleine-Budde           |
-> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-> 
+The terminology is not quite clear to me. Many people use the term baud
+rate when they mean the more accurate term "data rate" and I'm pretty
+sure this is what you mean, but is this different than "current-speed"?
 
+> 
+> RS232_Uart_1: serial@40400000 {
+> 	clock-frequency = <50000000>;
+> 	compatible = "xlnx,axi-uart16550-1.01.a", "xlnx,xps-uart16550-
+> 2.00.a", "ns16550a";
+> 	current-speed = <115200>;
+> 	device_type = "serial";
+> 	reg = < 0x40400000 0x10000 >;
+> 	reg-offset = <0x1000>;
+> 	reg-shift = <2>;
+> 	...irq, etc
+> } ;
+> 
+> This was the first version which is working but using current-speed is
+> probably not the best solution.
+> 
+> I have also create version where baudrate is directly specified in
+> chosen node. Clock frequency is still
+> loaded directly from the node.
+> 
+> chosen {
+> 	linux,stdout-path = "/axi@0/serial@40400000,115200";
+> } ;
+> 
+> What solution is more compatible with device-tree?
 
+Since nobody else has responded for a couple of days, I'll throw out the
+opinion that I prefer the first solution. The second solution requires
+you to do additional parsing and data validation which the device tree
+has already done for you in the first approach. It's also consistent
+with the ePAPR example in
+https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf.
+
+> Michal
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+David VL
