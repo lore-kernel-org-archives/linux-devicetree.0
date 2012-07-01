@@ -1,162 +1,102 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v3] spi/pl022: add devicetree support
-Date: Sun, 1 Jul 2012 10:39:24 +0200
-Message-ID: <20120701083923.GA29380@avionic-0098.mockup.avionic-design.de>
-References: <1340719537-627-1-git-send-email-aletes.xgr@gmail.com>
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Subject: Re: Tegra DRM device tree bindings
+Date: Sun, 01 Jul 2012 19:00:14 +0200
+Message-ID: <1341162014.1415.10.camel@antimon>
+References: <23B010BBA481A74B98487467C29BA57BF2361DA3AA@HKMAIL01.nvidia.com>
+	  <4FEA6E09.30800@nvidia.com>
+	  <23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>
+	  <4FEA7472.7050201@nvidia.com>
+	  <20120627051418.GB7177@avionic-0098.mockup.avionic-design.de>
+	  <20120627155907.871b2a506374b7db14c202c4@nvidia.com>
+	  <20120627140809.GD19319@avionic-0098.mockup.avionic-design.de>
+	  <20120627172914.30a2ccfd1344161ca7724722@nvidia.com>
+	  <20120627144414.GA20681@avionic-0098.mockup.avionic-design.de>
+	  <1340812795.1350.7.camel@antimon>
+	  <20120628111253.GC15137@avionic-0098.mockup.avionic-design.de>
+	  <4FEC8B91.6010107@wwwdotorg.org> <1340903992.1348.27.camel@antimon>
+	 <4FEDAB9F.5040406@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1340719537-627-1-git-send-email-aletes.xgr@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Cc: Roland Stigge <stigge@antcom.de>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, spi-devel-general@lists.sourceforge.net
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4FEDAB9F.5040406-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Terje =?ISO-8859-1?Q?Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 26, 2012 at 11:05:36AM -0300, Alexandre Pereira da Silva wrote:
-> Add the chipselect array and cur_cs properties to pl022 main structure
+Am Freitag, den 29.06.2012, 16:20 +0300 schrieb Terje Bergstr=C3=B6m:
+> On 28.06.2012 20:19, Lucas Stach wrote:
+> > TTM though solves more advanced matters, like buffer synchronisatio=
+n
+> > between 3D and 2D block of hardware or syncing buffer access betwee=
+n GPU
+> > and CPU.
+> > One of the most interesting things of TTM is the ability to purge t=
+he
+> > GPU DMA buffers to scattered sysmem or even swap them out, if they =
+are
+> > not currently used by the GPU. It then makes sure to move them in t=
+he
+> > contig space again when the GPU really needs them and fix up the GP=
+U
+> > command stream with the new buffer address.
 >=20
-> Add a wrapper function to decide if the cs should be controlled by the
-> cs_control callback or the chipselect gpio
+> We preferably should choose dma_buf as a common interface towards
+> buffers. That way whatever we choose as the memory manager, all dma_b=
+uf
+> aware drivers will be able to use buffers allocated by other drivers.
 >=20
-> Populate chipselect property from cs-gpios
+> We probably need to accommodate multiple memory managers to take care=
+ of
+> legacy and new drivers. If V4L2 and DRM projects all move to dma_buf,=
+ we
+> have the possibility to do zero-copy video without forcing everybody =
+to
+> use the same memory manager.
 >=20
-> Populate master->dev.of_node, so the spi bus can find child spi
-> devices and register them
+> As I understand, TTM is good for platforms where we have a separate
+> frame buffer memory, as is the case with most of the graphics cards. =
+In
+> Tegra, graphics and CPU occupy the same memory, so I'm not sure if we
+> require the level of functionality that TTM provides. I guess the lev=
+el
+> of functionality and the complexity that it brings is one reason why =
+TTM
+> hasn't really caught on in the ARM world.
 >=20
-> At pl022 setup, fill chip_data structure from dt nodes, if not provided
-> by platform.
+I understand that TTM looks like a big complex beast at first sight, bu=
+t
+trying to understand how it works avoids reinventing the wheel over and
+over again. We still have to solve problems like cache invalidation,
+synchronization and swap-out of dma buffers, which is a lot easier if w=
+e
+go with a common framework.=20
+
+> The synchronization primitives attached to TTM are slightly confusing=
+=2E
+> At the bottom level, it's operations which need to be synchronized
+> between each other. That's the API level that we should to export fro=
+m
+> kernel to user space. It's then up to libdrm level (or whatever is do=
+ing
+> the rendering in user space) to decide which operations it wants to h=
+ave
+> completed before a buffer can be reused/read/passed on to the next st=
+age.
 >=20
-> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-> Tested-by: Roland Stigge <stigge@antcom.de>
-> ---
-> Applies to v3.5-rc4
+That's exactly the level we are providing to userspace from other
+drivers using TTM like radeon or nouveau.
+
+> Anyway, if we hide the memory manager behind dma_buf, we're free to m=
+uck
+> around with multiple of them and see what works best.
 >=20
-> Changes since v2:
-> * Use IS_ENABLED instead of #ifdef
-> * Remove bogus const change
->=20
-> Changes since v1:
-> * return EPROBE_DEFFER if gpios are not initialized yet
->=20
-> Thanks Thierry Reding for reviewing and improvements suggestions
->=20
->  .../devicetree/bindings/spi/spi_pl022.txt          |   15 +++
->  drivers/spi/spi-pl022.c                            |  115 ++++++++++++++=
-++----
->  2 files changed, 111 insertions(+), 19 deletions(-)
->=20
-[...]
-> diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
-[...]
-> @@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct=
- amba_id *id)
->  		goto err_no_pdata;
->  	}
-> =20
-> +	num_cs =3D platform_info->num_chipselect;
-> +#if IS_ENABLED(CONFIG_OF)
-> +	of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
-> +#endif
-> +
+dma_buf at the current level is only a way to share buffers and does no=
+t
+provide enough information about the buffer to be useful as an
+abstraction level on top of multiple memory managers. But I agree that
+we should try to get dma_buf integration right from the start, as the
+zero-copy share a very useful thing to have.
 
-Actually this has even more advantages if you use it as a condition in
-an if expression:
-
-	if (IS_ENABLED(CONFIG_OF))
-		of_property_read_u32(...);
-
-The above will be compiled wether CONFIG_OF is enabled or not, but it
-will not be included in the final output because of the compiler's DCE
-(dead code elimination) seeing this as "if (0)". The result is that the
-source code gets much better compile coverage and errors in the
-conditional code can be caught earlier.
-
-> @@ -2017,13 +2064,40 @@ pl022_probe(struct amba_device *adev, const struc=
-t amba_id *id)
->  	 * on this board
->  	 */
->  	master->bus_num =3D platform_info->bus_id;
-> -	master->num_chipselect =3D platform_info->num_chipselect;
-> +	master->num_chipselect =3D num_cs;
->  	master->cleanup =3D pl022_cleanup;
->  	master->setup =3D pl022_setup;
->  	master->prepare_transfer_hardware =3D pl022_prepare_transfer_hardware;
->  	master->transfer_one_message =3D pl022_transfer_one_message;
->  	master->unprepare_transfer_hardware =3D pl022_unprepare_transfer_hardwa=
-re;
->  	master->rt =3D platform_info->rt;
-> +	master->dev.of_node =3D dev->of_node;
-> +
-> +#if IS_ENABLED(CONFIG_OF)
-> +	for (i =3D 0; i < num_cs; i++) {
-> +		int cs_gpio =3D of_get_named_gpio(np, "cs-gpios", i);
-> +
-> +		if (cs_gpio =3D=3D -EPROBE_DEFER) {
-> +			status =3D -EPROBE_DEFER;
-> +			goto err_no_gpio;
-> +		}
-> +
-> +		pl022->chipselect[i] =3D cs_gpio;
-> +
-> +		if (gpio_is_valid(cs_gpio)) {
-> +			if (gpio_request(cs_gpio, "ssp-pl022"))
-> +				dev_err(&adev->dev,
-> +					"could not request %d gpio\n", cs_gpio);
-> +			else if (gpio_direction_output(cs_gpio, 1))
-> +				dev_err(&adev->dev,
-> +					"could set gpio %d as output\n",
-> +					cs_gpio);
-> +		}
-> +	}
-> +#else
-> +	for (i =3D 0; i < num_cs; i++)
-> +		pl022->chipselect[i] =3D -EINVAL;
-> +#endif
-
-Same here.
-
->  	/*
->  	 * Supports mode 0-3, loopback, and active low CS. Transfers are
-> @@ -2130,6 +2204,9 @@ pl022_probe(struct amba_device *adev, const struct =
-amba_id *id)
->   err_no_ioremap:
->  	amba_release_regions(adev);
->   err_no_ioregion:
-> + #if IS_ENABLED(CONFIG_OF)
-> + err_no_gpio:
-> + #endif
-
-And here.
-
-Thierry
-
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP8Ay7AAoJEN0jrNd/PrOh0b4P/2x7oJksZ24gDtvynKsgb0rg
-LwohzrRHXfxaHddy/XJFQZwJNl407gwtwNwwbvRA2oRIp8AZRg5PkMVW3LL3XeWj
-SZ02DyXb80Snn6L+M0nDn2gLpMIJTDvSqVMtCStr8iRm1F9R3EDhNxx+Icn5dNdW
-YPWy/AMcIBUuoaiEHzbwwCI6NPh1G1sMSFSmRARXPx5W+Pha+oGpEHHWB1tk5W/T
-DtvTLjVKp1YdqYluhb8AnOPl89fLZ9/iPxbCiyat62/FzeU8ighfC6wADnDwQ2/6
-MXoN+dpvGfVoj6RRNxfSEzFf9PEtpKe72HwGp5Rb6h+SV76xh8fffmJGRjJmXrNg
-dpI45UEEfoof+Ku96wFSyeLoywvzUj2esd9ltjuCLrR7pwta6yx5SqyUM2E6rnoW
-QW9gfcA9q0lI0X8GXu6oJ5L5eR5SSdLUfyEtnq98vnut914MffLmF19BlXMZAUcX
-TITvXX1cfVhOW9qwH8nt73hOZdKqqPKXfAWMICdEBkFukFnmZmorRIVb6L/Gw45+
-+5A31WULLNXZ4cYFo7UmR0avfgLLepc5tGSqy2w+MPbxsnevz8FLZ2mzEQwbu6A3
-Q7GvkxG0V8KL0llebPLef4PAruyx8QrkhgArMMQIUeDr3Iy/YQZmY+aGWZSlSJRc
-yHGxNeJFsfBCwdZ15bbl
-=uVeC
------END PGP SIGNATURE-----
-
---azLHFNyN32YCQGCU--
+Lucas
