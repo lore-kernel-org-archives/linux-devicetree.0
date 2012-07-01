@@ -1,116 +1,162 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: Tegra DRM device tree bindings
-Date: Sat, 30 Jun 2012 20:04:13 +0200
-Message-ID: <20120630180413.GB23990@avionic-0098.adnet.avionic-design.de>
-References: <4FEA6E09.30800@nvidia.com>
-	<23B010BBA481A74B98487467C29BA57BF2361DA3C4@HKMAIL01.nvidia.com>
-	<4FEA7472.7050201@nvidia.com>
-	<20120627051418.GB7177@avionic-0098.mockup.avionic-design.de>
-	<20120627155907.871b2a506374b7db14c202c4@nvidia.com>
-	<20120627140809.GD19319@avionic-0098.mockup.avionic-design.de>
-	<20120627172914.30a2ccfd1344161ca7724722@nvidia.com>
-	<20120627144414.GA20681@avionic-0098.mockup.avionic-design.de>
-	<20120628091853.d4c3d85749f9d41a5dfafd28@nvidia.com>
-	<4FEC8A82.9090202@wwwdotorg.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v3] spi/pl022: add devicetree support
+Date: Sun, 1 Jul 2012 10:39:24 +0200
+Message-ID: <20120701083923.GA29380@avionic-0098.mockup.avionic-design.de>
+References: <1340719537-627-1-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1152004875887831677=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <4FEC8A82.9090202-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1340719537-627-1-git-send-email-aletes.xgr@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Cc: Roland Stigge <stigge@antcom.de>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
 
---===============1152004875887831677==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
-Content-Disposition: inline
-
-
---3uo+9/B/ebqu+fSQ
+--azLHFNyN32YCQGCU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 28, 2012 at 10:46:58AM -0600, Stephen Warren wrote:
-> On 06/28/2012 12:18 AM, Hiroshi Doyu wrote:
-> > On Wed, 27 Jun 2012 16:44:14 +0200
-> > Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> >=20
-> >>> I think that "coherent_pool" can be used only when the amount of
-> >>> contiguous memory is short in your system. Otherwise even unnecessary.
-> >>>
-> >>> Could you explain a bit more why you want carveout size on per-board =
-basis?
-> >>
-> >> In the ideal case I would want to not have a carveout size at all.
-> >> However there may be situations where you need to make sure some driver
-> >> can allocate a given amount of memory. Having to specify this using a
-> >> kernel command-line parameter is cumbersome because it may require
-> >> changes to the bootloader or whatever. So if you know that a particular
-> >> board always needs 128 MiB of carveout, then it makes sense to specify
-> >> it on a per-board basis.
-> >=20
-> > Hm...I could understand somewhat;) but DT can also specify "bootargs"
-> > in dts file, which can support per-board-wide spec too, like the above
-> > sum of carveout needed from all drivers. I just want to avoid
-> > introducing a new parameter additionaly if we can make use of the
-> > existing mechanism.
+On Tue, Jun 26, 2012 at 11:05:36AM -0300, Alexandre Pereira da Silva wrote:
+> Add the chipselect array and cur_cs properties to pl022 main structure
 >=20
-> The bootargs in the DT file is usually provided by (over-written by) the
-> bootloader. If we start requiring lots of random kernel command-line
-> arguments, that makes it more effort for the user of the bootloader
-> (e.g. distribution bootloader scripts, etc.) to create the kernel
-> command-line. I'd prefer to avoid that as much as possible. That said,
-> using a standardized command-line option that is (or will be) used by
-> all (ARM?) SoCs for the same purpose is reasonable, because there's
-> commonality there.
+> Add a wrapper function to decide if the cs should be controlled by the
+> cs_control callback or the chipselect gpio
+>=20
+> Populate chipselect property from cs-gpios
+>=20
+> Populate master->dev.of_node, so the spi bus can find child spi
+> devices and register them
+>=20
+> At pl022 setup, fill chip_data structure from dt nodes, if not provided
+> by platform.
+>=20
+> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+> Tested-by: Roland Stigge <stigge@antcom.de>
+> ---
+> Applies to v3.5-rc4
+>=20
+> Changes since v2:
+> * Use IS_ENABLED instead of #ifdef
+> * Remove bogus const change
+>=20
+> Changes since v1:
+> * return EPROBE_DEFFER if gpios are not initialized yet
+>=20
+> Thanks Thierry Reding for reviewing and improvements suggestions
+>=20
+>  .../devicetree/bindings/spi/spi_pl022.txt          |   15 +++
+>  drivers/spi/spi-pl022.c                            |  115 ++++++++++++++=
+++----
+>  2 files changed, 111 insertions(+), 19 deletions(-)
+>=20
+[...]
+> diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
+[...]
+> @@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct=
+ amba_id *id)
+>  		goto err_no_pdata;
+>  	}
+> =20
+> +	num_cs =3D platform_info->num_chipselect;
+> +#if IS_ENABLED(CONFIG_OF)
+> +	of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
+> +#endif
+> +
 
-I propose we stick with the default CMA settings for now and see where
-we end up. No need to jump the gun.
+Actually this has even more advantages if you use it as a condition in
+an if expression:
+
+	if (IS_ENABLED(CONFIG_OF))
+		of_property_read_u32(...);
+
+The above will be compiled wether CONFIG_OF is enabled or not, but it
+will not be included in the final output because of the compiler's DCE
+(dead code elimination) seeing this as "if (0)". The result is that the
+source code gets much better compile coverage and errors in the
+conditional code can be caught earlier.
+
+> @@ -2017,13 +2064,40 @@ pl022_probe(struct amba_device *adev, const struc=
+t amba_id *id)
+>  	 * on this board
+>  	 */
+>  	master->bus_num =3D platform_info->bus_id;
+> -	master->num_chipselect =3D platform_info->num_chipselect;
+> +	master->num_chipselect =3D num_cs;
+>  	master->cleanup =3D pl022_cleanup;
+>  	master->setup =3D pl022_setup;
+>  	master->prepare_transfer_hardware =3D pl022_prepare_transfer_hardware;
+>  	master->transfer_one_message =3D pl022_transfer_one_message;
+>  	master->unprepare_transfer_hardware =3D pl022_unprepare_transfer_hardwa=
+re;
+>  	master->rt =3D platform_info->rt;
+> +	master->dev.of_node =3D dev->of_node;
+> +
+> +#if IS_ENABLED(CONFIG_OF)
+> +	for (i =3D 0; i < num_cs; i++) {
+> +		int cs_gpio =3D of_get_named_gpio(np, "cs-gpios", i);
+> +
+> +		if (cs_gpio =3D=3D -EPROBE_DEFER) {
+> +			status =3D -EPROBE_DEFER;
+> +			goto err_no_gpio;
+> +		}
+> +
+> +		pl022->chipselect[i] =3D cs_gpio;
+> +
+> +		if (gpio_is_valid(cs_gpio)) {
+> +			if (gpio_request(cs_gpio, "ssp-pl022"))
+> +				dev_err(&adev->dev,
+> +					"could not request %d gpio\n", cs_gpio);
+> +			else if (gpio_direction_output(cs_gpio, 1))
+> +				dev_err(&adev->dev,
+> +					"could set gpio %d as output\n",
+> +					cs_gpio);
+> +		}
+> +	}
+> +#else
+> +	for (i =3D 0; i < num_cs; i++)
+> +		pl022->chipselect[i] =3D -EINVAL;
+> +#endif
+
+Same here.
+
+>  	/*
+>  	 * Supports mode 0-3, loopback, and active low CS. Transfers are
+> @@ -2130,6 +2204,9 @@ pl022_probe(struct amba_device *adev, const struct =
+amba_id *id)
+>   err_no_ioremap:
+>  	amba_release_regions(adev);
+>   err_no_ioregion:
+> + #if IS_ENABLED(CONFIG_OF)
+> + err_no_gpio:
+> + #endif
+
+And here.
 
 Thierry
 
---3uo+9/B/ebqu+fSQ
+--azLHFNyN32YCQGCU
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJP7z+dAAoJEN0jrNd/PrOhOqEP/j45tHQYsH2mLF0xwfG2pyl/
-YVtTRIyAZeBXcaggibN/FC2GkX8348uReKnHRdLxfI92eROksZzQDwMHx9fIXXyz
-Dhr+NEWV9gkjN3HQ9i+uPt0pFFL5qDDmn/p08tPGdqLtFCP5TtW4hxiW1LQ2cJy9
-CgA9CyM8WHbRVTLGVofk6t8PxTwETajAHBuNyIOjaKOrV4Om6En3gP7X0ADlzjhJ
-ayA2+x30mnJMAJ+p0rbT02HPQJ509aSXUOMdZewrUUwTaD35wJmpsmFc4QOz/n0g
-pFxtqaYyvB/JDNGlFBAnqYNLC4wuDYKXilEsGQnAkCbXmYhiOWAaNtMxaXPLzbXz
-bEkbL7zPYX+pV0QqwCLjGieZyR3xQpL871/xNXX+E97Ba4k4QI3cZHbbD3KHlDv5
-55aFqhU12f1StYSMDPbiqqp49oVtfGkJVZNuzyjj3xgUz+VfQAKP51yycFZCplKF
-CTnV1IY965OOTw4tYMRN2Ik0FjVNDCXj6zB6QTV3uQQuPzpIpmYgBpL7GYMRAhUW
-u3SxBGUyGgdUC9B7sAeB6wlAxIMnuv0XFWd6gT0Fqn1yVAdB+WyviM/CYFG09QTQ
-fJsVXUU/JX1VdKkUy8TcE59cod0onrA3sfMGNdhhWSAYAnXJxiWhLd/VSQGR9IlG
-a5U36vS/bLitRmYExJ7z
-=TLUo
+iQIcBAEBAgAGBQJP8Ay7AAoJEN0jrNd/PrOh0b4P/2x7oJksZ24gDtvynKsgb0rg
+LwohzrRHXfxaHddy/XJFQZwJNl407gwtwNwwbvRA2oRIp8AZRg5PkMVW3LL3XeWj
+SZ02DyXb80Snn6L+M0nDn2gLpMIJTDvSqVMtCStr8iRm1F9R3EDhNxx+Icn5dNdW
+YPWy/AMcIBUuoaiEHzbwwCI6NPh1G1sMSFSmRARXPx5W+Pha+oGpEHHWB1tk5W/T
+DtvTLjVKp1YdqYluhb8AnOPl89fLZ9/iPxbCiyat62/FzeU8ighfC6wADnDwQ2/6
+MXoN+dpvGfVoj6RRNxfSEzFf9PEtpKe72HwGp5Rb6h+SV76xh8fffmJGRjJmXrNg
+dpI45UEEfoof+Ku96wFSyeLoywvzUj2esd9ltjuCLrR7pwta6yx5SqyUM2E6rnoW
+QW9gfcA9q0lI0X8GXu6oJ5L5eR5SSdLUfyEtnq98vnut914MffLmF19BlXMZAUcX
+TITvXX1cfVhOW9qwH8nt73hOZdKqqPKXfAWMICdEBkFukFnmZmorRIVb6L/Gw45+
++5A31WULLNXZ4cYFo7UmR0avfgLLepc5tGSqy2w+MPbxsnevz8FLZ2mzEQwbu6A3
+Q7GvkxG0V8KL0llebPLef4PAruyx8QrkhgArMMQIUeDr3Iy/YQZmY+aGWZSlSJRc
+yHGxNeJFsfBCwdZ15bbl
+=uVeC
 -----END PGP SIGNATURE-----
 
---3uo+9/B/ebqu+fSQ--
-
---===============1152004875887831677==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-iommu mailing list
-iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-https://lists.linuxfoundation.org/mailman/listinfo/iommu
---===============1152004875887831677==--
+--azLHFNyN32YCQGCU--
