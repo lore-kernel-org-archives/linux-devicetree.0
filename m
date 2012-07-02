@@ -1,13 +1,13 @@
-From: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH] of: support an enumerated-bus compatible value
-Date: Mon, 2 Jul 2012 23:44:47 +0200
-Message-ID: <6BC22F77-77D7-45DF-821A-6CA2DBADEA59@kernel.crashing.org>
+Date: Mon, 2 Jul 2012 15:45:29 -0600
+Message-ID: <CACxGe6tAfpRsEeALsHi=Y+RXjuqyCzrbwxULH-443y4OaSdLRQ@mail.gmail.com>
 References: <1340924755-31447-1-git-send-email-swarren@wwwdotorg.org>
  <4FF0A6B6.8040902@gmail.com> <4FF1C567.4060809@wwwdotorg.org>
  <4FF1D8F9.9040005@firmworks.com> <4FF1DDBD.9050106@wwwdotorg.org>
  <4FF1EA1A.9030307@firmworks.com> <4FF1F955.6030204@wwwdotorg.org>
-Mime-Version: 1.0 (Apple Message framework v753.1)
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <4FF1F955.6030204-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
@@ -25,18 +25,119 @@ To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 2, 2012 at 1:41 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 07/02/2012 12:36 PM, Mitch Bradley wrote:
+>> On 7/2/2012 7:43 AM, Stephen Warren wrote:
+>>> On 07/02/2012 11:23 AM, Mitch Bradley wrote:
+>>>> On 7/2/2012 5:59 AM, Stephen Warren wrote:
+>>>>> On 07/01/2012 01:36 PM, Rob Herring wrote:
+>>>>>> On 06/28/2012 06:05 PM, Stephen Warren wrote:
+>>>>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>>>
+>>>>>>> An "enumerated" bus is one that is not memory-mapped, hence hence
+>>>>>>> typically has #address-cells=1, and #size-cells=0. Such buses
+>>>>>>> would be
+>>>>>>> used to group related non-memory-mapped nodes together, often just
+>>>>>>> under
+>>>>>>> the top-level of the device tree. The ability to group nodes into a
+>>>>>>> non-
+>>>>>>> memory-mapped subnode of the root is important, since if nodes
+>>>>>>> exist to
+>>>>>>> describe multiple entities of the same type, the nodes will have the
+>>>>>>> same name, and hence require a unit address to differentiate them. It
+>>>>>>> doesn't make sense to assign bogus unit addresses from the CPU's own
+>>>>>>> address space for this purpose. An example:
+>>>>>>>
+>>>>>>>      regulators {
+>>>>>>>          compatible = "enumerated-bus";
+>>>>>>>          #address-cells = <1>;
+>>>>>>>          #size-cells = <0>;
+>>>>>>>
+>>>>>>>          regulator@0 {
+>>>>>>>              compatible = "regulator-fixed";
+>>>>>>>              reg = <0>;
+>>>>>>>          };
+>>>>>>>
+>>>>>>>          regulator@1 {
+>>>>>>>              compatible = "regulator-fixed";
+>>>>>>>              reg = <1>;
+>>>>>>>          };
+>>>>>>>      };
+>>>>>>>
+>>>>>>> Finally, because such buses are not memory-mapped, we avoid creating
+>>>>>>> any IO/memory resources for the device.
+>>>>>>
+>>>>>> This seems like a work-around to use reg instead of using cell-index
+>>>>>> (which is discouraged). reg in this case is really not a hardware
+>>>>>> description. Do you have an intended use or just trying to fix the
+>>>>>> error
+>>>>>> messages?
+>>>>>
+>>>>> I'm not familiar with cell-index; can you please describe it some more.
+>>>>> Looking at some existing files in arch/powerpc/boot/dts, it looks like
+>>>>> something that exists alongside reg rather than replacing it, so I
+>>>>> don't
+>>>>> see how it'd solve the problem.
+>>>>>
+>>>>> The portion of .dts file quoted above is the use-case. In more general
+>>>>> terms, I need to add a bunch of non-memory-mapped devices to DT. There
+>>>>> are multiple devices of a given type. The DT node names should be named
+>>>>> after the class of device not the instance, and hence all get named the
+>>>>> same. Hence, I need a unit address to differentiate the node names.
+>>>>> Hence I need to use the reg property in order that the unit address
+>>>>> matches the reg property. Is there some other way of solving these
+>>>>> requirements other than using a unit address to make the node names
+>>>>> unique?
+>>>>
+>>>> One of Rob's objections was that, in this case, the reg property is not
+>>>> a hardware description.  That's an interesting point.  If in fact
+>>>> numerous such devices exist, there must be some mechanism for software
+>>>> to choose which device to talk to, typically a number.  Is that the case
+>>>> for these devices?  If so, that number is a perfectly valid "reg"
+>>>> property value.  If not, how does software choose to talk to a specific
+>>>> device?
+>>>
+>>> Yes, the reg value is purely a unique ID that exists to satisfy DT
+>>> semantics.
+>>>
+>>> These regulators will eventually be referenced by phandles from the
+>>> drivers that use them, just like interrupts/GPIOs/... I just haven't
+>>> hooked up any clients that do so yet.
+>>
+>> I'm still confused.  Are you saying that the regulators cannot be
+>> controlled by software?
+>
+> They can in general be controlled by SW yes.
+>
+> Given regulator@0 above, assuming it's labelled reg0, another device
+> node might contain:
+>
+> vin-supply = <&reg0>;
+>
+> the driver would then do roughtly:
+>
+> struct regulator *r = regulator_get(dev, "vin");
+> regulator_enable(r);
+> ...
+> regulator_disable(r);
+>
+> which would end up toggling the GPIO that controls the regulator (the
+> property that defines the GPIO was omitted from the DT examples above
+> for brevity).
+>
 > But don't get too hung up on regulators; there are plenty of other
 > devices that can exist in DT that aren't memory-mapped; GPIO-keys,
 > aggregate sound complexes, perhaps WiFi/rfkill nodes, etc. All are
 > affected by the same DT representation issue.
 
-So what is the issue?  You have some node (the "bus node") under which
-you have the "regulator@0", "frobnicator@1" etc. nodes.  You refer to
-these device nodes by phandle always, you cannot programmatically
-control those devices (otherwise, they should be child node of a *real*
-bus node).  The bus node does not represent any device at all, and no
-device driver can ever do anything with it; it should not have a
-"compatible" property either.
+Okay, fair enough.  I've done this myself for an audio complex.  The
+only reason I push back on this is that the platform_bus_type does end
+up being used as a catch-all without necessarily a lot of thought.
+(read as: I'm not saying no; but rather make sure you've got a solid
+argument)
 
+g.
 
-Segher
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
