@@ -1,130 +1,104 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] of: support an enumerated-bus compatible value
-Date: Mon, 02 Jul 2012 13:41:09 -0600
-Message-ID: <4FF1F955.6030204@wwwdotorg.org>
-References: <1340924755-31447-1-git-send-email-swarren@wwwdotorg.org>
- <4FF0A6B6.8040902@gmail.com> <4FF1C567.4060809@wwwdotorg.org>
- <4FF1D8F9.9040005@firmworks.com> <4FF1DDBD.9050106@wwwdotorg.org>
- <4FF1EA1A.9030307@firmworks.com>
+Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode" property
+ to device tree bindings
+Date: Mon, 02 Jul 2012 14:04:12 -0600
+Message-ID: <4FF1FEBC.3040107@wwwdotorg.org>
+References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de> <1340891629-13145-4-git-send-email-mkl@pengutronix.de> <20120629014352.GA28923@b20223-02.ap.freescale.net> <4FED5D77.3050009@pengutronix.de> <20120629084509.GB28923@b20223-02.ap.freescale.net> <4FEDCF15.9040000@wwwdotorg.org> <20120630011906.GA2489@richard-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FF1EA1A.9030307-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120630011906.GA2489@richard-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2012 12:36 PM, Mitch Bradley wrote:
-> On 7/2/2012 7:43 AM, Stephen Warren wrote:
->> On 07/02/2012 11:23 AM, Mitch Bradley wrote:
->>> On 7/2/2012 5:59 AM, Stephen Warren wrote:
->>>> On 07/01/2012 01:36 PM, Rob Herring wrote:
->>>>> On 06/28/2012 06:05 PM, Stephen Warren wrote:
->>>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>>
->>>>>> An "enumerated" bus is one that is not memory-mapped, hence hence
->>>>>> typically has #address-cells=1, and #size-cells=0. Such buses
->>>>>> would be
->>>>>> used to group related non-memory-mapped nodes together, often just
->>>>>> under
->>>>>> the top-level of the device tree. The ability to group nodes into a
->>>>>> non-
->>>>>> memory-mapped subnode of the root is important, since if nodes
->>>>>> exist to
->>>>>> describe multiple entities of the same type, the nodes will have the
->>>>>> same name, and hence require a unit address to differentiate them. It
->>>>>> doesn't make sense to assign bogus unit addresses from the CPU's own
->>>>>> address space for this purpose. An example:
->>>>>>
->>>>>>      regulators {
->>>>>>          compatible = "enumerated-bus";
->>>>>>          #address-cells = <1>;
->>>>>>          #size-cells = <0>;
->>>>>>
->>>>>>          regulator@0 {
->>>>>>              compatible = "regulator-fixed";
->>>>>>              reg = <0>;
->>>>>>          };
->>>>>>
->>>>>>          regulator@1 {
->>>>>>              compatible = "regulator-fixed";
->>>>>>              reg = <1>;
->>>>>>          };
->>>>>>      };
->>>>>>
->>>>>> Finally, because such buses are not memory-mapped, we avoid creating
->>>>>> any IO/memory resources for the device.
->>>>>
->>>>> This seems like a work-around to use reg instead of using cell-index
->>>>> (which is discouraged). reg in this case is really not a hardware
->>>>> description. Do you have an intended use or just trying to fix the
->>>>> error
->>>>> messages?
+On 06/29/2012 07:19 PM, Richard Zhao wrote:
+> On Fri, Jun 29, 2012 at 09:51:49AM -0600, Stephen Warren wrote:
+>> On 06/29/2012 02:45 AM, Richard Zhao wrote:
+>>> On Fri, Jun 29, 2012 at 09:47:03AM +0200, Marc Kleine-Budde wrote:
 >>>>
->>>> I'm not familiar with cell-index; can you please describe it some more.
->>>> Looking at some existing files in arch/powerpc/boot/dts, it looks like
->>>> something that exists alongside reg rather than replacing it, so I
->>>> don't
->>>> see how it'd solve the problem.
+>>>> Cc'ed Devicetree Discussions
 >>>>
->>>> The portion of .dts file quoted above is the use-case. In more general
->>>> terms, I need to add a bunch of non-memory-mapped devices to DT. There
->>>> are multiple devices of a given type. The DT node names should be named
->>>> after the class of device not the instance, and hence all get named the
->>>> same. Hence, I need a unit address to differentiate the node names.
->>>> Hence I need to use the reg property in order that the unit address
->>>> matches the reg property. Is there some other way of solving these
->>>> requirements other than using a unit address to make the node names
->>>> unique?
+>>>> On 06/29/2012 03:43 AM, Richard Zhao wrote:
+>>>>> On Thu, Jun 28, 2012 at 03:53:48PM +0200, Marc Kleine-Budde wrote:
+>>>>>> This patch allows the device tree to limit the chipidea to host or
+>>>>>> peripheral mode only.
+>>>>>>
+>>>>>> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |    3 ++
+>>>>>>  drivers/usb/chipidea/ci13xxx_imx.c                 |    3 ++
+>>>>>>  drivers/usb/chipidea/core.c                        |   41 +++++++++++++++++---
+>>>>>>  include/linux/usb/chipidea.h                       |    9 +++++
+>>>>>>  4 files changed, 50 insertions(+), 6 deletions(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>>>>>> index 5a0ad66..67f97f56 100644
+>>>>>> --- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+>>>>>> @@ -4,6 +4,8 @@ Required properties:
+>>>>>>  - compatible: Should be "fsl,imx27-usb"
+>>>>>>  - reg: Should contain registers location and length
+>>>>>>  - interrupts: Should contain controller interrupt
+>>>>>> +- dr_mode: indicates the working mode for compatible controllers. Can
+>>>>>> +  be "host", "peripheral", or "otg". Defaults to "otg" if not defined.
+>>>>
+>>>>> By default, it should be decided by capability registers. Only bad hw
+>>>>> design needs such settings. So, why not name it as force-xxx? If it's
+>>>>> not specific to imx, it doesn't needs to has prefix "fsl,".
+>>>>
+>>>> It's not a bad hardware design if you don't route or enable all ports a
+>>>> soc offers. In modern socs you cannot enable all ports anyway.
 >>>
->>> One of Rob's objections was that, in this case, the reg property is not
->>> a hardware description.  That's an interesting point.  If in fact
->>> numerous such devices exist, there must be some mechanism for software
->>> to choose which device to talk to, typically a number.  Is that the case
->>> for these devices?  If so, that number is a perfectly valid "reg"
->>> property value.  If not, how does software choose to talk to a specific
->>> device?
+>>> I'm not sure about your case, but generally, it's not about ports.
+>>> It's about ID pin. If ID pin is not connect correctly, we may need to
+>>> force it to host or device working mode. The 'force" here means it
+>>> won't follow the capability registers and ID pin.
+>>>>
+>>>> The property isn't prefixed with "fsl,", it's just "dr_mode".
+>>>>
+>>>> Why not "force-xxx"? I had a look at Documentation/devicetree/bindings/usb:
+>>>>
+>>>> tegra-usb.txt:
+>>>>>   - dr_mode : dual role mode. Indicates the working mode for
+>>>>>    nvidia,tegra20-ehci compatible controllers.  Can be "host", "peripheral",
+>>>>>    or "otg".  Default to "host" if not defined for backward compatibility.
+>>>>>       host means this is a host controller
+>>>>>       peripheral means it is device controller
+>>>>>       otg means it can operate as either ("on the go")
+>>>>
+>>>> fsl-usb.txt:
+>>>>>  - dr_mode : indicates the working mode for "fsl-usb2-dr" compatible
+>>>>>    controllers.  Can be "host", "peripheral", or "otg".  Default to
+>>>>>    "host" if not defined for backward compatibility.
+>>>>>
+>>>>
+>>>> So why invent something new, if there seems to be a pattern?
+>>>
+>>> I'm not sure they mean the same things, because the default value is
+>>> different. Event if they're same, why not make them all with sensible
+>>> name?
 >>
->> Yes, the reg value is purely a unique ID that exists to satisfy DT
->> semantics.
+>> I'm not quite sure what the question is I'm being asked here.
 >>
->> These regulators will eventually be referenced by phandles from the
->> drivers that use them, just like interrupts/GPIOs/... I just haven't
->> hooked up any clients that do so yet.
-> 
-> I'm still confused.  Are you saying that the regulators cannot be
-> controlled by software?
+>> I certainly think that new bindings should follow existing precedent
+>> where possible for representing the same data. dr_mode is that precedent
+>> for a USB host's operating mode. Tegra chose to use that because of
+>> precedent in fsl-usb.txt IIRC.
+>
+> For imx, in most cases, we don't use dr_mode. The role is decided by
+> CAP_DCCPARAMS and ID pin. For tegra and fsl-usb, it looks like the role
+> is totally decided by dt property. So I suggested use force-xxx to let
+> everyone know it does not follow the default action. I don't quite
+> insist on the naming, because dr_mode is similar (not same).
 
-They can in general be controlled by SW yes.
-
-Given regulator@0 above, assuming it's labelled reg0, another device
-node might contain:
-
-vin-supply = <&reg0>;
-
-the driver would then do roughtly:
-
-struct regulator *r = regulator_get(dev, "vin");
-regulator_enable(r);
-...
-regulator_disable(r);
-
-which would end up toggling the GPIO that controls the regulator (the
-property that defines the GPIO was omitted from the DT examples above
-for brevity).
-
-But don't get too hung up on regulators; there are plenty of other
-devices that can exist in DT that aren't memory-mapped; GPIO-keys,
-aggregate sound complexes, perhaps WiFi/rfkill nodes, etc. All are
-affected by the same DT representation issue.
+Hmm. I think it'd be reasonable to use dr_mode like the other bindings,
+and have the default case be decided by the ID pin when dr_mode isn't
+specified. Having different defaults for different bindings seems pretty
+reasonable to me.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
