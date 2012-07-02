@@ -1,62 +1,32 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: support an enumerated-bus compatible value
-Date: Mon, 2 Jul 2012 16:37:34 -0600
-Message-ID: <CACxGe6sexKHa65=EsLpTa9-JrSK-Ubbhz6MAmfGeSen9cHJhow@mail.gmail.com>
-References: <1340924755-31447-1-git-send-email-swarren@wwwdotorg.org>
- <4FF0A6B6.8040902@gmail.com> <4FF1C567.4060809@wwwdotorg.org>
- <CACxGe6ty5wU6Y+fuFYfBsM4HRLZaTff9EnzCP2FzmcQGOyJ=xQ@mail.gmail.com>
- <4FF22095.4030106@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 5/5] usb: gadget: composite: parse dt overrides
+Date: Mon, 02 Jul 2012 17:46:45 -0500
+Message-ID: <4FF224D5.5090602@gmail.com>
+References: <1340720833-781-1-git-send-email-aletes.xgr@gmail.com> <1340720833-781-6-git-send-email-aletes.xgr@gmail.com> <20120702073522.GE16670@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FF22095.4030106-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120702073522.GE16670@arwen.pp.htv.fi>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Li Yang <leoli@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 2, 2012 at 4:28 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 07/02/2012 03:43 PM, Grant Likely wrote:
->> On Mon, Jul 2, 2012 at 9:59 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>> On 07/01/2012 04:03 PM, Grant Likely wrote:
->>> ...
->>>> Besides; if they are enumerated, non-memory mapped devices, then is it
->>>> really appropriate to use platform_{device,driver}? I don't think it
->>>> is.
->>>
->>> Hmm, well /everything/ that gets instantiated from DT is a platform
->>> device at present, at least for the platforms and bus types we're using
->>> on Tegra and I believe all/most ARM platforms, except some small amounts
->>> of AMBA.
+On 07/02/2012 02:35 AM, Felipe Balbi wrote:
+> Hi,
+> 
+> On Tue, Jun 26, 2012 at 11:27:13AM -0300, Alexandre Pereira da Silva wrote:
+>> Grab the devicetree node properties to override VendorId, ProductId,
+>> bcdDevice, Manucacturer, Product and SerialNumber
 >>
->> Not true.  SPI devices beget spi_device, i2c devices i2c_client, etc.
->> The appropriate structure for the kind of device should always be
->> used.
->
-> Yes, that's true.
->
-> But doesn't that lend even more weight to the need for an enumerated-bus
-> bus-type/compatible value? After all, the more important issue here (at
-> least initially) is the DT representation that we're defining, rather
-> than what Linux does with it internally.
+>> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+> 
+> I need Grant's acked-by to queue this one.
+> 
 
-... another thought:  If the thing doesn't actually have any kind of
-address (like a audio complex) then it probably makes more sense to
-drop reg entirely since it is meaningless.  That may not be relevant
-for your regulartors example though.
+Grant is pretty much offline for the next 2 months, so:
 
-g.
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Rob
