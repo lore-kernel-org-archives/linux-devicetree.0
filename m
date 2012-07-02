@@ -1,41 +1,64 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] arm/dts: OMAP4: Add Variscite OMAP4 System-On-Modeule
- support
-Date: Mon, 2 Jul 2012 01:00:08 -0700
-Message-ID: <20120702080007.GB1122@atomide.com>
-References: <20120509213156.GZ5140@atomide.com>
- <1337257051-5004-1-git-send-email-uri.y@variscite.com>
- <20120606090931.GV12766@atomide.com>
- <CAHooxd7WG2BrT+dHuuETMUONjbSu3DoVyZ_VW9On-vwCn3rRaA@mail.gmail.com>
+Subject: Re: [RESEND PATCH V3 1/2] arm/dts: OMAP2: Add support for
+ OMAP2420H4 Board
+Date: Mon, 2 Jul 2012 01:10:19 -0700
+Message-ID: <20120702081018.GD1122@atomide.com>
+References: <1339548046-27988-1-git-send-email-jon-hunter@ti.com>
+ <1339548046-27988-2-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHooxd7WG2BrT+dHuuETMUONjbSu3DoVyZ_VW9On-vwCn3rRaA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Uri Yosef <uri.y@variscite.com>
-Cc: linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, oren@variscite.com, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1339548046-27988-2-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Uri Yosef <uri.y@variscite.com> [120606 05:13]:
-> CCed devicetree-discuss@lists.ozlabs.org.
+* Jon Hunter <jon-hunter@ti.com> [120612 17:45]:
+> Simple DTS file for OMAP2420H4 board adding memory information to allow
+> device-tree testing on an OMAP2420. OMAP2420H4 board has 64MB of RAM.
 > 
-> On Wed, Jun 6, 2012 at 12:09 PM, Tony Lindgren <tony@atomide.com> wrote:
-> 
-> > Hi,
-> >
-> > * Uri Yosef <uri.y@variscite.com> [120517 05:34]:
-> > > Hi Tony,
-> > >
-> > > This is the updated DTS patch for Vatiscite OMAP4 SOM support
-> >
-> > Looks OK to me, but can you please repost one more time with
-> > devicetree-discuss@lists.ozlabs.org in Cc so people have a chance
-> > to ack this patch there?
+> Verified that kernel boots with DT using a simple RAMDISK file-system on
+> OMAP2420H4.
 
-Applying into dt branch with disable updated to disabled as was
-done in for other boards.
-
-Regards,
+Thanks, applying into dt branch.
 
 Tony
+
+ 
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> ---
+>  arch/arm/boot/dts/omap2420-h4.dts |   20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/omap2420-h4.dts
+> 
+> diff --git a/arch/arm/boot/dts/omap2420-h4.dts b/arch/arm/boot/dts/omap2420-h4.dts
+> new file mode 100644
+> index 0000000..25b50b7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap2420-h4.dts
+> @@ -0,0 +1,20 @@
+> +/*
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/dts-v1/;
+> +
+> +/include/ "omap2.dtsi"
+> +
+> +/ {
+> +	model = "TI OMAP2420 H4 board";
+> +	compatible = "ti,omap2420-h4", "ti,omap2420", "ti,omap2";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x84000000>; /* 64 MB */
+> +	};
+> +};
+> -- 
+> 1.7.9.5
+> 
