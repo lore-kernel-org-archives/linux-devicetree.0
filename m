@@ -1,64 +1,152 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RESEND PATCH V3 1/2] arm/dts: OMAP2: Add support for
- OMAP2420H4 Board
-Date: Mon, 2 Jul 2012 01:10:19 -0700
-Message-ID: <20120702081018.GD1122@atomide.com>
-References: <1339548046-27988-1-git-send-email-jon-hunter@ti.com>
- <1339548046-27988-2-git-send-email-jon-hunter@ti.com>
+From: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH v3 3/5] ARM: topology: Update cpu_power according to DT
+ information
+Date: Mon, 02 Jul 2012 11:11:23 +0200
+Message-ID: <1341220283.28750.138.camel@twins>
+References: <1340205562-7653-1-git-send-email-vincent.guittot@linaro.org>
+	 <1340205562-7653-4-git-send-email-vincent.guittot@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1339548046-27988-2-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1340205562-7653-4-git-send-email-vincent.guittot@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, namhyung@kernel.org, jean.pihet@newoldbits.com
 List-Id: devicetree@vger.kernel.org
 
-* Jon Hunter <jon-hunter@ti.com> [120612 17:45]:
-> Simple DTS file for OMAP2420H4 board adding memory information to allow
-> device-tree testing on an OMAP2420. OMAP2420H4 board has 64MB of RAM.
-> 
-> Verified that kernel boots with DT using a simple RAMDISK file-system on
-> OMAP2420H4.
-
-Thanks, applying into dt branch.
-
-Tony
-
- 
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> ---
->  arch/arm/boot/dts/omap2420-h4.dts |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 arch/arm/boot/dts/omap2420-h4.dts
-> 
-> diff --git a/arch/arm/boot/dts/omap2420-h4.dts b/arch/arm/boot/dts/omap2420-h4.dts
-> new file mode 100644
-> index 0000000..25b50b7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap2420-h4.dts
-> @@ -0,0 +1,20 @@
-> +/*
-> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/dts-v1/;
-> +
-> +/include/ "omap2.dtsi"
-> +
-> +/ {
-> +	model = "TI OMAP2420 H4 board";
-> +	compatible = "ti,omap2420-h4", "ti,omap2420", "ti,omap2";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x84000000>; /* 64 MB */
-> +	};
+On Wed, 2012-06-20 at 17:19 +0200, Vincent Guittot wrote:
+> +#ifdef CONFIG_OF
+> +struct cpu_efficiency {
+> +       const char *compatible;
+> +       unsigned long efficiency;
 > +};
-> -- 
-> 1.7.9.5
-> 
+> +
+> +/*
+> + * Table of relative efficiency of each processors
+> + * The efficiency value must fit in 20bit. The final
+> + * cpu_scale value must be in the range
+> + * 0 < cpu_scale < 2*SCHED_POWER_SCALE.
+
+This wants a why.. I suspects its to do with keeping capacity on 1.
+
+> + * Processors that are not defined in the table,
+> + * use the default SCHED_POWER_SCALE value for cpu_scale.
+> + */
+> +struct cpu_efficiency table_efficiency[] = {
+> +       {"arm,cortex-a15", 3891},
+> +       {"arm,cortex-a7",  2048},
+> +       {NULL, },
+> +};
+> +
+> +struct cpu_capacity {
+> +       unsigned long hwid;
+> +       unsigned long capacity;
+> +};
+> +
+> +struct cpu_capacity *cpu_capacity;
+> +
+> +unsigned long middle_capacity = 1;
+
+It would be very nice to not have to learn to read device-tree nonsense
+to work on the scheduler, how about something like this:?
+
+/*
+ * Iterate all cpus and set the efficiency (as per table_efficiency)
+ * also calculate the middle efficiency:
+ *   (max{eff_i} - min{eff_i}) / 2
+ * This is later used to scale the cpu_power field such that an
+ * 'average' cpu is of middle power. Also see the comments near
+ * table_efficiency[] and update_cpu_power().
+ */
+
+> +static void __init parse_dt_topology(void)
+> +{
+> +       struct cpu_efficiency *cpu_eff;
+> +       struct device_node *cn = NULL;
+> +       unsigned long min_capacity = (unsigned long)(-1);
+> +       unsigned long max_capacity = 0;
+> +       unsigned long capacity = 0;
+> +       int alloc_size, cpu = 0;
+> +
+> +       alloc_size = nr_cpu_ids * sizeof(struct cpu_capacity);
+> +       cpu_capacity = (struct cpu_capacity *)kzalloc(alloc_size, GFP_NOWAIT);
+> +
+> +       while ((cn = of_find_node_by_type(cn, "cpu"))) {
+> +               const u32 *rate, *reg;
+> +               int len;
+> +
+> +               if (cpu >= num_possible_cpus())
+> +                       break;
+> +
+> +               for (cpu_eff = table_efficiency; cpu_eff->compatible; cpu_eff++)
+> +                       if (of_device_is_compatible(cn, cpu_eff->compatible))
+> +                               break;
+> +
+> +               if (cpu_eff->compatible == NULL)
+> +                       continue;
+> +
+> +               rate = of_get_property(cn, "clock-frequency", &len);
+> +               if (!rate || len != 4) {
+> +                       pr_err("%s missing clock-frequency property\n",
+> +                               cn->full_name);
+> +                       continue;
+> +               }
+> +
+> +               reg = of_get_property(cn, "reg", &len);
+> +               if (!reg || len != 4) {
+> +                       pr_err("%s missing reg property\n", cn->full_name);
+> +                       continue;
+> +               }
+> +
+> +               capacity = ((be32_to_cpup(rate)) >> 20) * cpu_eff->efficiency;
+> +
+> +               /* Save min capacity of the system */
+> +               if (capacity < min_capacity)
+> +                       min_capacity = capacity;
+> +
+> +               /* Save max capacity of the system */
+> +               if (capacity > max_capacity)
+> +                       max_capacity = capacity;
+> +
+> +               cpu_capacity[cpu].capacity = capacity;
+> +               cpu_capacity[cpu++].hwid = be32_to_cpup(reg);
+> +       }
+> +
+> +       if (cpu < num_possible_cpus())
+> +               cpu_capacity[cpu].hwid = (unsigned long)(-1);
+> +
+> +       middle_capacity = (min_capacity + max_capacity) >> 11;
+> +}
+> +
+> +void update_cpu_power(unsigned int cpu, unsigned long hwid)
+> +{
+> +       unsigned int idx = 0;
+> +
+> +       /* look for the cpu's hwid in the cpu capacity table */
+
+This smells like an O(n^2) loop.. ARM has only small cpu counts so this
+isn't an immediate issue, would still be nice to make a note of it
+though.
+
+> +       for (idx = 0; idx < num_possible_cpus(); idx++) {
+> +               if (cpu_capacity[idx].hwid == hwid)
+> +                       break;
+> +
+> +               if (cpu_capacity[idx].hwid == -1)
+> +                       return;
+> +       }
+> +
+> +       if (idx == num_possible_cpus())
+> +               return;
+> +
+> +       set_power_scale(cpu, cpu_capacity[idx].capacity / middle_capacity);
+
+OK, but there's no guarantee here you'll stay within that
+[1,2*SCHED_POWER_SCALE-1] range. This might want a comment and or
+runtime verification so that when people extend the table_efficiency[]
+wrongly we'll get notice, humm?
+
+> +       printk(KERN_INFO "CPU%u: update cpu_power %lu\n",
+> +               cpu, arch_scale_freq_power(NULL, cpu));
+> +} 
