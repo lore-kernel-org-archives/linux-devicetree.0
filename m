@@ -1,129 +1,190 @@
-From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: Re: [PATCH v3] spi/pl022: add devicetree support
-Date: Mon, 2 Jul 2012 07:32:00 -0300
-Message-ID: <CAAAP30FzMhs+o+i3CF-+TNO-yBjg=aVSOWukseqD=HhLhS37cg@mail.gmail.com>
-References: <1340719537-627-1-git-send-email-aletes.xgr@gmail.com>
-	<20120701083923.GA29380@avionic-0098.mockup.avionic-design.de>
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] ARM: topology: Update cpu_power according to DT
+ information
+Date: Mon, 2 Jul 2012 14:11:04 +0200
+Message-ID: <CAKfTPtAHvKcdgiL4xx-zBJU5DZ5YwGUbjgtoh9a1tf_C2Amg5w@mail.gmail.com>
+References: <1340205562-7653-1-git-send-email-vincent.guittot@linaro.org>
+ <1340205562-7653-4-git-send-email-vincent.guittot@linaro.org>
+ <1341220283.28750.138.camel@twins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120701083923.GA29380@avionic-0098.mockup.avionic-design.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Roland Stigge <stigge@antcom.de>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, spi-devel-general@lists.sourceforge.net
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1341220283.28750.138.camel@twins>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jean.pihet-OTs2U3NB0ngRmelmmXo44Q@public.gmane.org, yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 1, 2012 at 5:39 AM, Thierry Reding
-<thierry.reding@avionic-design.de> wrote:
-> On Tue, Jun 26, 2012 at 11:05:36AM -0300, Alexandre Pereira da Silva wrote:
->> Add the chipselect array and cur_cs properties to pl022 main structure
->>
->> Add a wrapper function to decide if the cs should be controlled by the
->> cs_control callback or the chipselect gpio
->>
->> Populate chipselect property from cs-gpios
->>
->> Populate master->dev.of_node, so the spi bus can find child spi
->> devices and register them
->>
->> At pl022 setup, fill chip_data structure from dt nodes, if not provided
->> by platform.
->>
->> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
->> Tested-by: Roland Stigge <stigge@antcom.de>
->> ---
->> Applies to v3.5-rc4
->>
->> Changes since v2:
->> * Use IS_ENABLED instead of #ifdef
->> * Remove bogus const change
->>
->> Changes since v1:
->> * return EPROBE_DEFFER if gpios are not initialized yet
->>
->> Thanks Thierry Reding for reviewing and improvements suggestions
->>
->>  .../devicetree/bindings/spi/spi_pl022.txt          |   15 +++
->>  drivers/spi/spi-pl022.c                            |  115 ++++++++++++++++----
->>  2 files changed, 111 insertions(+), 19 deletions(-)
->>
-> [...]
->> diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
-> [...]
->> @@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
->>               goto err_no_pdata;
->>       }
->>
->> +     num_cs = platform_info->num_chipselect;
->> +#if IS_ENABLED(CONFIG_OF)
->> +     of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
->> +#endif
+On 2 July 2012 11:11, Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org> wrote:
+> On Wed, 2012-06-20 at 17:19 +0200, Vincent Guittot wrote:
+>> +#ifdef CONFIG_OF
+>> +struct cpu_efficiency {
+>> +       const char *compatible;
+>> +       unsigned long efficiency;
+>> +};
 >> +
+>> +/*
+>> + * Table of relative efficiency of each processors
+>> + * The efficiency value must fit in 20bit. The final
+>> + * cpu_scale value must be in the range
+>> + * 0 < cpu_scale < 2*SCHED_POWER_SCALE.
 >
-> Actually this has even more advantages if you use it as a condition in
-> an if expression:
+> This wants a why.. I suspects its to do with keeping capacity on 1.
 >
->         if (IS_ENABLED(CONFIG_OF))
->                 of_property_read_u32(...);
->
-> The above will be compiled wether CONFIG_OF is enabled or not, but it
-> will not be included in the final output because of the compiler's DCE
-> (dead code elimination) seeing this as "if (0)". The result is that the
-> source code gets much better compile coverage and errors in the
-> conditional code can be caught earlier.
->
->> @@ -2017,13 +2064,40 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
->>        * on this board
->>        */
->>       master->bus_num = platform_info->bus_id;
->> -     master->num_chipselect = platform_info->num_chipselect;
->> +     master->num_chipselect = num_cs;
->>       master->cleanup = pl022_cleanup;
->>       master->setup = pl022_setup;
->>       master->prepare_transfer_hardware = pl022_prepare_transfer_hardware;
->>       master->transfer_one_message = pl022_transfer_one_message;
->>       master->unprepare_transfer_hardware = pl022_unprepare_transfer_hardware;
->>       master->rt = platform_info->rt;
->> +     master->dev.of_node = dev->of_node;
->> +
->> +#if IS_ENABLED(CONFIG_OF)
->> +     for (i = 0; i < num_cs; i++) {
->> +             int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
->> +
->> +             if (cs_gpio == -EPROBE_DEFER) {
->> +                     status = -EPROBE_DEFER;
->> +                     goto err_no_gpio;
->> +             }
->> +
->> +             pl022->chipselect[i] = cs_gpio;
->> +
->> +             if (gpio_is_valid(cs_gpio)) {
->> +                     if (gpio_request(cs_gpio, "ssp-pl022"))
->> +                             dev_err(&adev->dev,
->> +                                     "could not request %d gpio\n", cs_gpio);
->> +                     else if (gpio_direction_output(cs_gpio, 1))
->> +                             dev_err(&adev->dev,
->> +                                     "could set gpio %d as output\n",
->> +                                     cs_gpio);
->> +             }
->> +     }
->> +#else
->> +     for (i = 0; i < num_cs; i++)
->> +             pl022->chipselect[i] = -EINVAL;
->> +#endif
->
-> Same here.
->
->>       /*
->>        * Supports mode 0-3, loopback, and active low CS. Transfers are
->> @@ -2130,6 +2204,9 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
->>   err_no_ioremap:
->>       amba_release_regions(adev);
->>   err_no_ioregion:
->> + #if IS_ENABLED(CONFIG_OF)
->> + err_no_gpio:
->> + #endif
->
-> And here.
 
-Thanks for the hint. I will update the patch and repost later.
+Yes, that's it. Now, Regarding the div_round_closest that is used in
+the scheduler to compute the capacity, It should rather stay in the
+range
+0 < cpu_scale < 3*SCHED_POWER_SCALE/2.
+
+>> + * Processors that are not defined in the table,
+>> + * use the default SCHED_POWER_SCALE value for cpu_scale.
+>> + */
+>> +struct cpu_efficiency table_efficiency[] = {
+>> +       {"arm,cortex-a15", 3891},
+>> +       {"arm,cortex-a7",  2048},
+>> +       {NULL, },
+>> +};
+>> +
+>> +struct cpu_capacity {
+>> +       unsigned long hwid;
+>> +       unsigned long capacity;
+>> +};
+>> +
+>> +struct cpu_capacity *cpu_capacity;
+>> +
+>> +unsigned long middle_capacity = 1;
+>
+> It would be very nice to not have to learn to read device-tree nonsense
+> to work on the scheduler, how about something like this:?
+>
+> /*
+>  * Iterate all cpus and set the efficiency (as per table_efficiency)
+>  * also calculate the middle efficiency:
+>  *   (max{eff_i} - min{eff_i}) / 2
+>  * This is later used to scale the cpu_power field such that an
+>  * 'average' cpu is of middle power. Also see the comments near
+>  * table_efficiency[] and update_cpu_power().
+>  */
+>
+
+ok
+
+>> +static void __init parse_dt_topology(void)
+>> +{
+>> +       struct cpu_efficiency *cpu_eff;
+>> +       struct device_node *cn = NULL;
+>> +       unsigned long min_capacity = (unsigned long)(-1);
+>> +       unsigned long max_capacity = 0;
+>> +       unsigned long capacity = 0;
+>> +       int alloc_size, cpu = 0;
+>> +
+>> +       alloc_size = nr_cpu_ids * sizeof(struct cpu_capacity);
+>> +       cpu_capacity = (struct cpu_capacity *)kzalloc(alloc_size, GFP_NOWAIT);
+>> +
+>> +       while ((cn = of_find_node_by_type(cn, "cpu"))) {
+>> +               const u32 *rate, *reg;
+>> +               int len;
+>> +
+>> +               if (cpu >= num_possible_cpus())
+>> +                       break;
+>> +
+>> +               for (cpu_eff = table_efficiency; cpu_eff->compatible; cpu_eff++)
+>> +                       if (of_device_is_compatible(cn, cpu_eff->compatible))
+>> +                               break;
+>> +
+>> +               if (cpu_eff->compatible == NULL)
+>> +                       continue;
+>> +
+>> +               rate = of_get_property(cn, "clock-frequency", &len);
+>> +               if (!rate || len != 4) {
+>> +                       pr_err("%s missing clock-frequency property\n",
+>> +                               cn->full_name);
+>> +                       continue;
+>> +               }
+>> +
+>> +               reg = of_get_property(cn, "reg", &len);
+>> +               if (!reg || len != 4) {
+>> +                       pr_err("%s missing reg property\n", cn->full_name);
+>> +                       continue;
+>> +               }
+>> +
+>> +               capacity = ((be32_to_cpup(rate)) >> 20) * cpu_eff->efficiency;
+>> +
+>> +               /* Save min capacity of the system */
+>> +               if (capacity < min_capacity)
+>> +                       min_capacity = capacity;
+>> +
+>> +               /* Save max capacity of the system */
+>> +               if (capacity > max_capacity)
+>> +                       max_capacity = capacity;
+>> +
+>> +               cpu_capacity[cpu].capacity = capacity;
+>> +               cpu_capacity[cpu++].hwid = be32_to_cpup(reg);
+>> +       }
+>> +
+>> +       if (cpu < num_possible_cpus())
+>> +               cpu_capacity[cpu].hwid = (unsigned long)(-1);
+>> +
+>> +       middle_capacity = (min_capacity + max_capacity) >> 11;
+>> +}
+>> +
+>> +void update_cpu_power(unsigned int cpu, unsigned long hwid)
+>> +{
+>> +       unsigned int idx = 0;
+>> +
+>> +       /* look for the cpu's hwid in the cpu capacity table */
+>
+> This smells like an O(n^2) loop.. ARM has only small cpu counts so this
+> isn't an immediate issue, would still be nice to make a note of it
+> though.
+
+Yes, This function is called for each cpu. I will add a comment about
+that and also about the fact that the complete sequence is done only
+once.
+I will also add an optimization for system with identical CPUs and DT
+information
+
+>
+>> +       for (idx = 0; idx < num_possible_cpus(); idx++) {
+>> +               if (cpu_capacity[idx].hwid == hwid)
+>> +                       break;
+>> +
+>> +               if (cpu_capacity[idx].hwid == -1)
+>> +                       return;
+>> +       }
+>> +
+>> +       if (idx == num_possible_cpus())
+>> +               return;
+>> +
+>> +       set_power_scale(cpu, cpu_capacity[idx].capacity / middle_capacity);
+>
+> OK, but there's no guarantee here you'll stay within that
+> [1,2*SCHED_POWER_SCALE-1] range. This might want a comment and or
+> runtime verification so that when people extend the table_efficiency[]
+> wrongly we'll get notice, humm?
+
+I will add more comments but we can't be higher than 2047. The max
+value for a cpu_power will be :
+max / ( (min + max) / 2^11 ) which is equal to
+max / (min + max) * 2^11 so the cpu_scale is smaller than 2^11  as min
+is never equal to 0
+
+We can have a cpu_power of 0 is a CPU has 2048 times more capacity
+than another one in the system but I'm not sure that it's a realistic
+use case
+
+>
+>> +       printk(KERN_INFO "CPU%u: update cpu_power %lu\n",
+>> +               cpu, arch_scale_freq_power(NULL, cpu));
+>> +}
