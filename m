@@ -1,152 +1,96 @@
-From: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH v3 3/5] ARM: topology: Update cpu_power according to DT
- information
-Date: Mon, 02 Jul 2012 11:11:23 +0200
-Message-ID: <1341220283.28750.138.camel@twins>
-References: <1340205562-7653-1-git-send-email-vincent.guittot@linaro.org>
-	 <1340205562-7653-4-git-send-email-vincent.guittot@linaro.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 2/2] regulator: fixed: dt: support for input supply
+Date: Mon, 2 Jul 2012 15:37:25 +0530
+Message-ID: <1341223645-7817-2-git-send-email-ldewangan@nvidia.com>
+References: <1341223645-7817-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1340205562-7653-4-git-send-email-vincent.guittot@linaro.org>
+In-Reply-To: <1341223645-7817-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, namhyung@kernel.org, jean.pihet@newoldbits.com
+To: lrg@ti.com, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-06-20 at 17:19 +0200, Vincent Guittot wrote:
-> +#ifdef CONFIG_OF
-> +struct cpu_efficiency {
-> +       const char *compatible;
-> +       unsigned long efficiency;
-> +};
-> +
-> +/*
-> + * Table of relative efficiency of each processors
-> + * The efficiency value must fit in 20bit. The final
-> + * cpu_scale value must be in the range
-> + * 0 < cpu_scale < 2*SCHED_POWER_SCALE.
+Add support for input supply in DT parsing of node.
+The input supply will be provided by the property
+"vin-supply" in the regulator node.
 
-This wants a why.. I suspects its to do with keeping capacity on 1.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+ .../bindings/regulator/fixed-regulator.txt         |    2 ++
+ drivers/regulator/fixed.c                          |   12 ++++++++++--
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-> + * Processors that are not defined in the table,
-> + * use the default SCHED_POWER_SCALE value for cpu_scale.
-> + */
-> +struct cpu_efficiency table_efficiency[] = {
-> +       {"arm,cortex-a15", 3891},
-> +       {"arm,cortex-a7",  2048},
-> +       {NULL, },
-> +};
-> +
-> +struct cpu_capacity {
-> +       unsigned long hwid;
-> +       unsigned long capacity;
-> +};
-> +
-> +struct cpu_capacity *cpu_capacity;
-> +
-> +unsigned long middle_capacity = 1;
-
-It would be very nice to not have to learn to read device-tree nonsense
-to work on the scheduler, how about something like this:?
-
-/*
- * Iterate all cpus and set the efficiency (as per table_efficiency)
- * also calculate the middle efficiency:
- *   (max{eff_i} - min{eff_i}) / 2
- * This is later used to scale the cpu_power field such that an
- * 'average' cpu is of middle power. Also see the comments near
- * table_efficiency[] and update_cpu_power().
- */
-
-> +static void __init parse_dt_topology(void)
-> +{
-> +       struct cpu_efficiency *cpu_eff;
-> +       struct device_node *cn = NULL;
-> +       unsigned long min_capacity = (unsigned long)(-1);
-> +       unsigned long max_capacity = 0;
-> +       unsigned long capacity = 0;
-> +       int alloc_size, cpu = 0;
-> +
-> +       alloc_size = nr_cpu_ids * sizeof(struct cpu_capacity);
-> +       cpu_capacity = (struct cpu_capacity *)kzalloc(alloc_size, GFP_NOWAIT);
-> +
-> +       while ((cn = of_find_node_by_type(cn, "cpu"))) {
-> +               const u32 *rate, *reg;
-> +               int len;
-> +
-> +               if (cpu >= num_possible_cpus())
-> +                       break;
-> +
-> +               for (cpu_eff = table_efficiency; cpu_eff->compatible; cpu_eff++)
-> +                       if (of_device_is_compatible(cn, cpu_eff->compatible))
-> +                               break;
-> +
-> +               if (cpu_eff->compatible == NULL)
-> +                       continue;
-> +
-> +               rate = of_get_property(cn, "clock-frequency", &len);
-> +               if (!rate || len != 4) {
-> +                       pr_err("%s missing clock-frequency property\n",
-> +                               cn->full_name);
-> +                       continue;
-> +               }
-> +
-> +               reg = of_get_property(cn, "reg", &len);
-> +               if (!reg || len != 4) {
-> +                       pr_err("%s missing reg property\n", cn->full_name);
-> +                       continue;
-> +               }
-> +
-> +               capacity = ((be32_to_cpup(rate)) >> 20) * cpu_eff->efficiency;
-> +
-> +               /* Save min capacity of the system */
-> +               if (capacity < min_capacity)
-> +                       min_capacity = capacity;
-> +
-> +               /* Save max capacity of the system */
-> +               if (capacity > max_capacity)
-> +                       max_capacity = capacity;
-> +
-> +               cpu_capacity[cpu].capacity = capacity;
-> +               cpu_capacity[cpu++].hwid = be32_to_cpup(reg);
-> +       }
-> +
-> +       if (cpu < num_possible_cpus())
-> +               cpu_capacity[cpu].hwid = (unsigned long)(-1);
-> +
-> +       middle_capacity = (min_capacity + max_capacity) >> 11;
-> +}
-> +
-> +void update_cpu_power(unsigned int cpu, unsigned long hwid)
-> +{
-> +       unsigned int idx = 0;
-> +
-> +       /* look for the cpu's hwid in the cpu capacity table */
-
-This smells like an O(n^2) loop.. ARM has only small cpu counts so this
-isn't an immediate issue, would still be nice to make a note of it
-though.
-
-> +       for (idx = 0; idx < num_possible_cpus(); idx++) {
-> +               if (cpu_capacity[idx].hwid == hwid)
-> +                       break;
-> +
-> +               if (cpu_capacity[idx].hwid == -1)
-> +                       return;
-> +       }
-> +
-> +       if (idx == num_possible_cpus())
-> +               return;
-> +
-> +       set_power_scale(cpu, cpu_capacity[idx].capacity / middle_capacity);
-
-OK, but there's no guarantee here you'll stay within that
-[1,2*SCHED_POWER_SCALE-1] range. This might want a comment and or
-runtime verification so that when people extend the table_efficiency[]
-wrongly we'll get notice, humm?
-
-> +       printk(KERN_INFO "CPU%u: update cpu_power %lu\n",
-> +               cpu, arch_scale_freq_power(NULL, cpu));
-> +} 
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 2f5b6b1..4fae41d 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -10,6 +10,7 @@ Optional properties:
+ If this property is missing, the default assumed is Active low.
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
++-vin-supply: Input supply name.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+@@ -29,4 +30,5 @@ Example:
+ 		enable-active-high;
+ 		regulator-boot-on;
+ 		gpio-open-drain;
++		vin-supply = <&parent_reg>;
+ 	};
+diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+index 0a0baf3..8633e21 100644
+--- a/drivers/regulator/fixed.c
++++ b/drivers/regulator/fixed.c
+@@ -45,13 +45,14 @@ struct fixed_voltage_data {
+ /**
+  * of_get_fixed_voltage_config - extract fixed_voltage_config structure info
+  * @dev: device requesting for fixed_voltage_config
++ * @vin_supply: pointer to store whether input supply is available or not.
+  *
+  * Populates fixed_voltage_config structure by extracting data from device
+  * tree node, returns a pointer to the populated structure of NULL if memory
+  * alloc fails.
+  */
+ static struct fixed_voltage_config *
+-of_get_fixed_voltage_config(struct device *dev)
++of_get_fixed_voltage_config(struct device *dev, bool *vin_supply)
+ {
+ 	struct fixed_voltage_config *config;
+ 	struct device_node *np = dev->of_node;
+@@ -93,6 +94,9 @@ of_get_fixed_voltage_config(struct device *dev)
+ 	if (of_find_property(np, "gpio-open-drain", NULL))
+ 		config->gpio_is_open_drain = true;
+ 
++	if (of_find_property(np, "vin-supply", NULL))
++		*vin_supply = true;
++
+ 	return config;
+ }
+ 
+@@ -171,9 +175,10 @@ static int __devinit reg_fixed_voltage_probe(struct platform_device *pdev)
+ 	struct fixed_voltage_data *drvdata;
+ 	struct regulator_config cfg = { };
+ 	int ret;
++	bool vin_supply = false;
+ 
+ 	if (pdev->dev.of_node)
+-		config = of_get_fixed_voltage_config(&pdev->dev);
++		config = of_get_fixed_voltage_config(&pdev->dev , &vin_supply);
+ 	else
+ 		config = pdev->dev.platform_data;
+ 
+@@ -197,6 +202,9 @@ static int __devinit reg_fixed_voltage_probe(struct platform_device *pdev)
+ 	drvdata->desc.type = REGULATOR_VOLTAGE;
+ 	drvdata->desc.owner = THIS_MODULE;
+ 
++	if (vin_supply)
++		drvdata->desc.supply_name = "vin";
++
+ 	if (config->microvolts)
+ 		drvdata->desc.n_voltages = 1;
+ 
+-- 
+1.7.1.1
