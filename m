@@ -1,53 +1,97 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/2] regulator: fixed: use devm_* for gpio request
-Date: Mon, 2 Jul 2012 18:29:17 +0100
-Message-ID: <20120702172916.GL25093@opensource.wolfsonmicro.com>
-References: <1341223645-7817-1-git-send-email-ldewangan@nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] of: support an enumerated-bus compatible value
+Date: Mon, 02 Jul 2012 11:43:25 -0600
+Message-ID: <4FF1DDBD.9050106@wwwdotorg.org>
+References: <1340924755-31447-1-git-send-email-swarren@wwwdotorg.org>
+ <4FF0A6B6.8040902@gmail.com> <4FF1C567.4060809@wwwdotorg.org>
+ <4FF1D8F9.9040005@firmworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="w2xx78T4DcG3O+DJ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1341223645-7817-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: lrg@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FF1D8F9.9040005-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/02/2012 11:23 AM, Mitch Bradley wrote:
+> On 7/2/2012 5:59 AM, Stephen Warren wrote:
+>> On 07/01/2012 01:36 PM, Rob Herring wrote:
+>>> On 06/28/2012 06:05 PM, Stephen Warren wrote:
+>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> An "enumerated" bus is one that is not memory-mapped, hence hence
+>>>> typically has #address-cells=1, and #size-cells=0. Such buses would be
+>>>> used to group related non-memory-mapped nodes together, often just
+>>>> under
+>>>> the top-level of the device tree. The ability to group nodes into a
+>>>> non-
+>>>> memory-mapped subnode of the root is important, since if nodes exist to
+>>>> describe multiple entities of the same type, the nodes will have the
+>>>> same name, and hence require a unit address to differentiate them. It
+>>>> doesn't make sense to assign bogus unit addresses from the CPU's own
+>>>> address space for this purpose. An example:
+>>>>
+>>>>     regulators {
+>>>>         compatible = "enumerated-bus";
+>>>>         #address-cells = <1>;
+>>>>         #size-cells = <0>;
+>>>>
+>>>>         regulator@0 {
+>>>>             compatible = "regulator-fixed";
+>>>>             reg = <0>;
+>>>>         };
+>>>>
+>>>>         regulator@1 {
+>>>>             compatible = "regulator-fixed";
+>>>>             reg = <1>;
+>>>>         };
+>>>>     };
+>>>>
+>>>> Finally, because such buses are not memory-mapped, we avoid creating
+>>>> any IO/memory resources for the device.
+>>>
+>>> This seems like a work-around to use reg instead of using cell-index
+>>> (which is discouraged). reg in this case is really not a hardware
+>>> description. Do you have an intended use or just trying to fix the error
+>>> messages?
+>>
+>> I'm not familiar with cell-index; can you please describe it some more.
+>> Looking at some existing files in arch/powerpc/boot/dts, it looks like
+>> something that exists alongside reg rather than replacing it, so I don't
+>> see how it'd solve the problem.
+>>
+>> The portion of .dts file quoted above is the use-case. In more general
+>> terms, I need to add a bunch of non-memory-mapped devices to DT. There
+>> are multiple devices of a given type. The DT node names should be named
+>> after the class of device not the instance, and hence all get named the
+>> same. Hence, I need a unit address to differentiate the node names.
+>> Hence I need to use the reg property in order that the unit address
+>> matches the reg property. Is there some other way of solving these
+>> requirements other than using a unit address to make the node names
+>> unique?
+> 
+> One of Rob's objections was that, in this case, the reg property is not
+> a hardware description.  That's an interesting point.  If in fact
+> numerous such devices exist, there must be some mechanism for software
+> to choose which device to talk to, typically a number.  Is that the case
+> for these devices?  If so, that number is a perfectly valid "reg"
+> property value.  If not, how does software choose to talk to a specific
+> device?
 
---w2xx78T4DcG3O+DJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, the reg value is purely a unique ID that exists to satisfy DT
+semantics.
 
-On Mon, Jul 02, 2012 at 03:37:24PM +0530, Laxman Dewangan wrote:
-> Use devm_* version of gpio APIs gpio_request_one() for
-> requesting gpios.
-> This avoid extra code for freeing gpios.
-
-This can't be applied yet since the export for the devm version hasn't
-been applied so it won't build and also conflicts with the factoring out
-of the GPIO code to the core.
-
---w2xx78T4DcG3O+DJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP8dpmAAoJEBus8iNuMP3dbqEP/RcptpLmtXTqR1RpqKShBjXK
-HvW8ikorXxY13oT1OLAnpICcGq4qS8dMUyiizAsCJrjm9Y0zO8TP+oGFcR/FDeB/
-UkDRiI6wj1V/VFJ6ZwJu3wPX7I6huSeyCWhrNs6z4w1wFFevaqo2GBzcsznaIVJF
-cN61kQStVPMAL+BC5cQp0pAJcGHV8jcuDyQo/Cakc8xbLgDnWZXYtblD+ZsRZAbc
-TTJWz50Cmu9QrMBS9OKwsshHd9fKUHX25jS9KWWJph7Jhx3HqXYrgszIkUI/Byd/
-eOADNU6y82oTv+EacH6dwJPjUgjPS0auh0E4fHOmdLfE/cfpNbeEkiqzdBgs0isH
-PyK+KezswYwWO4UBa7mUICswGYvNlwK35w7rLMMeMtUth0xMivZSOq53GXbMRwRq
-2+3D/cPTj+2oo9DQgP1KrHjbqsKPnWOmbGlcTV7JGM7FyVpqnqwwfRqnW6Z2ArGa
-o0c/926JA+bUpLJRFck/fL+CKm+KOHHLHOO0SFDP4lbRtl0Sdckz9OT2rpJ0xu44
-t0kougfNl/5bO6vCTzhzYchwMog9yxt6TlExPejql+IIPm2DFnVXYVzcEBdUF2Ii
-M95mgJKwf1wzbfrEnlKIzP/SQbviEuAQJi8xAusAxT9YUwW1vkkhoUtePJQa0FpO
-KJ4nOYaOqZ5xSa9YyAbK
-=GAOe
------END PGP SIGNATURE-----
-
---w2xx78T4DcG3O+DJ--
+These regulators will eventually be referenced by phandles from the
+drivers that use them, just like interrupts/GPIOs/... I just haven't
+hooked up any clients that do so yet.
