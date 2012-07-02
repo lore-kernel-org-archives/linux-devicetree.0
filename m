@@ -1,15 +1,14 @@
-From: "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [syslinux] [RFC 0/2] syslinux: Add device tree support
-Date: Mon, 02 Jul 2012 06:05:06 -0700
-Message-ID: <d441e9d4-628b-4810-a784-eaa0a14cdb20@email.android.com>
-References: <1338478896-11417-1-git-send-email-thierry.reding@avionic-design.de>
- <4FEE2E42.2000707@zytor.com>
- <20120702064907.GB8683@avionic-0098.mockup.avionic-design.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] of: support an enumerated-bus compatible value
+Date: Mon, 02 Jul 2012 09:59:35 -0600
+Message-ID: <4FF1C567.4060809@wwwdotorg.org>
+References: <1340924755-31447-1-git-send-email-swarren@wwwdotorg.org>
+ <4FF0A6B6.8040902@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120702064907.GB8683-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+In-Reply-To: <4FF0A6B6.8040902-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,36 +19,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, For discussion of Syslinux and tftp-hpa <syslinux-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It should be in linux.c32 in 4.06 and directly supported in 5.00.
+On 07/01/2012 01:36 PM, Rob Herring wrote:
+> On 06/28/2012 06:05 PM, Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> An "enumerated" bus is one that is not memory-mapped, hence hence
+>> typically has #address-cells=1, and #size-cells=0. Such buses would be
+>> used to group related non-memory-mapped nodes together, often just under
+>> the top-level of the device tree. The ability to group nodes into a non-
+>> memory-mapped subnode of the root is important, since if nodes exist to
+>> describe multiple entities of the same type, the nodes will have the
+>> same name, and hence require a unit address to differentiate them. It
+>> doesn't make sense to assign bogus unit addresses from the CPU's own
+>> address space for this purpose. An example:
+>>
+>> 	regulators {
+>> 		compatible = "enumerated-bus";
+>> 		#address-cells = <1>;
+>> 		#size-cells = <0>;
+>>
+>> 		regulator@0 {
+>> 			compatible = "regulator-fixed";
+>> 			reg = <0>;
+>> 		};
+>>
+>> 		regulator@1 {
+>> 			compatible = "regulator-fixed";
+>> 			reg = <1>;
+>> 		};
+>> 	};
+>>
+>> Finally, because such buses are not memory-mapped, we avoid creating
+>> any IO/memory resources for the device.
+> 
+> This seems like a work-around to use reg instead of using cell-index
+> (which is discouraged). reg in this case is really not a hardware
+> description. Do you have an intended use or just trying to fix the error
+> messages?
 
-Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+I'm not familiar with cell-index; can you please describe it some more.
+Looking at some existing files in arch/powerpc/boot/dts, it looks like
+something that exists alongside reg rather than replacing it, so I don't
+see how it'd solve the problem.
 
->On Fri, Jun 29, 2012 at 03:37:54PM -0700, H. Peter Anvin wrote:
->> On 05/31/2012 08:41 AM, Thierry Reding wrote:
->> > This patch series adds support for passing a Flattened Device Tree
->(FDT)
->> > blob to the Linux kernel. Currently, only the linux.c32 module can
->do so
->> > and some additional checking should be done to only pass the blob
->if the
->> > kernel supports boot protocol 2.09 or later.
->> > 
->> > Thierry
->> 
->> Hi there,
->> 
->> I just merged a modified/more generic version of your patch.  I would
->> appreciate it if you could test it and report back.
->
->Tested latest master (59b77fc) and booted the system successfully. Can
->this still make it into the 5.00 release? Any chance of getting this
->directly supported by the ldlinux.sys?
->
->Thierry
+The portion of .dts file quoted above is the use-case. In more general
+terms, I need to add a bunch of non-memory-mapped devices to DT. There
+are multiple devices of a given type. The DT node names should be named
+after the class of device not the instance, and hence all get named the
+same. Hence, I need a unit address to differentiate the node names.
+Hence I need to use the reg property in order that the unit address
+matches the reg property. Is there some other way of solving these
+requirements other than using a unit address to make the node names unique?
 
--- 
-Sent from my mobile phone. Please excuse brevity and lack of formatting.
+On 07/01/2012 04:03 PM, Grant Likely wrote:
+...
+> Besides; if they are enumerated, non-memory mapped devices, then is it
+> really appropriate to use platform_{device,driver}? I don't think it
+> is.
+
+Hmm, well /everything/ that gets instantiated from DT is a platform
+device at present, at least for the platforms and bus types we're using
+on Tegra and I believe all/most ARM platforms, except some small amounts
+of AMBA. Changing that would hugely impact a ton of working code and
+just be churn in my opinion. Do we really want to invent another device
+type internal to Linux for this? Besides, doing that would be orthogonal
+to this patch; such a change would have no impact on the DT
+representation of the devices.
