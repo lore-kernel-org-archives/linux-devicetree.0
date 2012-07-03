@@ -1,57 +1,137 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/2] regulator: fixed: dt: support for input supply
-Date: Tue, 3 Jul 2012 20:17:05 +0100
-Message-ID: <20120703191704.GE29030@opensource.wolfsonmicro.com>
-References: <1341223645-7817-1-git-send-email-ldewangan@nvidia.com>
- <1341223645-7817-2-git-send-email-ldewangan@nvidia.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: davinci: cp_intc: Add OF support for TI interrupt
+	controller
+Date: Wed, 4 Jul 2012 00:46:10 +0530
+Message-ID: <1341342970-27535-1-git-send-email-nsekhar@ti.com>
+References: <4FF34360.6030501@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fblc08uBQ7kpPybH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1341223645-7817-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: lrg@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <4FF34360.6030501-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 
---fblc08uBQ7kpPybH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add a function to initialize the Common Platform Interrupt Controller
+(cp_intc) from TI used on OMAP-L1x SoCs using a device tree node.
 
-On Mon, Jul 02, 2012 at 03:37:25PM +0530, Laxman Dewangan wrote:
+Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/arm/davinci/cp-intc.txt    |   27 ++++++++++++++++++++
+ arch/arm/mach-davinci/cp_intc.c                    |   16 +++++++++---
+ arch/arm/mach-davinci/include/mach/cp_intc.h       |    1 +
+ 3 files changed, 41 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci/cp-intc.txt
 
-> +	if (vin_supply)
-> +		drvdata->desc.supply_name = "vin";
-> +
-
-This isn't great both in terms of it being conditional and the fact that
-it's only usable on DT systems as there's no non-DT way to do this.  In
-general unless we're working around some device tree issue (which should
-be *very* rare) we shouldn't be adding any DT only stuff to generic
-code, we need to be able to run Linux on non-DT systems.
-
---fblc08uBQ7kpPybH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP80UYAAoJEBus8iNuMP3dylgQAI30dX4i6cWMFpyf3p6ZxYaD
-gtUrvxWE4XYgOB97F3yjKygHWPDH/6NTfEJusgj0V21b8bcOPZzNDPDBCNwrn4A3
-BkuWz3riefvkmzlT4nqaEBXCqpvRfYLRpTYdHOrSi+G4BozXx+SRPT/yPYwc5i3k
-bNfPmOywkG3IZtOGGSdHK4YnYtoOvk4ky5miVdaA30ybbmBs3lS8nNZ2wOJEMLbq
-AlV6ucEGWTlSxI1JUEW/K+DHI/bRpAqwPSG1/o4+XO4VukBGirCiAvXpu2Sp9Xol
-H7nTE3BfbcgcEMN13U2vx8LrG6STNm2WCmtSkebTbUfBdLpLSa8Q2enUTfMMEdHu
-rFIuSG22yI9jts6BYOXotynBLscLIkKFFCprXDGRb090BTxnXD+jpm3UWk3U2SO9
-jfBOx9uhWqOWW6TXVQZVB5FB8f9CwvrlCijpUs8HLd8fe+I2NtEwJuLAARBX1TaN
-uo5sPOB6Oy9D7QIS3WY77SQe0OIcU9VFRif1KywQRMW3uPzhAMnNphqV//cKi37M
-awIO+Kh3vVJkFwR86801vs3dc4QYPnZWv9TdMnXl8rhpIu3Ql6UnTB/f61n8o1x5
-+y/oGugvQ97QPtf5t6L2judtXcgIKckCjCewvY9se3r2K3fRJYfr3i9OD3VzCyfF
-vmIBMluh+xfYYNEhW8nY
-=1dQQ
------END PGP SIGNATURE-----
-
---fblc08uBQ7kpPybH--
+diff --git a/Documentation/devicetree/bindings/arm/davinci/cp-intc.txt b/Documentation/devicetree/bindings/arm/davinci/cp-intc.txt
+new file mode 100644
+index 0000000..597e8a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/davinci/cp-intc.txt
+@@ -0,0 +1,27 @@
++* TI Common Platform Interrupt Controller
++
++Common Platform Interrupt Controller (cp_intc) is used on
++OMAP-L1x SoCs and can support several configurable number
++of interrupts.
++
++Main node required properties:
++
++- compatible : should be:
++	"ti,cp-intc"
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The type shall be a <u32> and the value shall be 1.
++
++  The cell contains the interrupt number in the range [0-128].
++- ti,intc-size: Number of interrupts handled by the interrupt controller.
++- reg: physical base address and size of the intc registers map.
++
++Example:
++
++	intc: interrupt-controller@1 {
++		compatible = "ti,cp-intc";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		ti,intc-size = <101>;
++		reg = <0xfffee000 0x2000>;
++	};
+diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+index 45d5256..006dae8 100644
+--- a/arch/arm/mach-davinci/cp_intc.c
++++ b/arch/arm/mach-davinci/cp_intc.c
+@@ -14,6 +14,9 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ 
+ #include <mach/common.h>
+ #include <mach/cp_intc.h>
+@@ -119,7 +122,7 @@ static const struct irq_domain_ops cp_intc_host_ops = {
+ 	.xlate = irq_domain_xlate_onetwocell,
+ };
+ 
+-int __init __cp_intc_init(struct device_node *node)
++int __init cp_intc_of_init(struct device_node *node, struct device_node *parent)
+ {
+ 	u32 num_irq		= davinci_soc_info.intc_irq_num;
+ 	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
+@@ -128,7 +131,14 @@ int __init __cp_intc_init(struct device_node *node)
+ 	int i, irq_base;
+ 
+ 	davinci_intc_type = DAVINCI_INTC_TYPE_CP_INTC;
+-	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
++	if (node) {
++		davinci_intc_base = of_iomap(node, 0);
++		if (of_property_read_u32(node, "ti,intc-size", &num_irq))
++			pr_warn("unable to get intc-size, default to %d\n",
++				num_irq);
++	} else {
++		davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
++	}
+ 	if (WARN_ON(!davinci_intc_base))
+ 		return -EINVAL;
+ 
+@@ -208,5 +218,5 @@ int __init __cp_intc_init(struct device_node *node)
+ 
+ void __init cp_intc_init(void)
+ {
+-	__cp_intc_init(NULL);
++	cp_intc_of_init(NULL, NULL);
+ }
+diff --git a/arch/arm/mach-davinci/include/mach/cp_intc.h b/arch/arm/mach-davinci/include/mach/cp_intc.h
+index 4e8190e..d13d8df 100644
+--- a/arch/arm/mach-davinci/include/mach/cp_intc.h
++++ b/arch/arm/mach-davinci/include/mach/cp_intc.h
+@@ -52,5 +52,6 @@
+ #define CP_INTC_VECTOR_ADDR(n)		(0x2000 + (n << 2))
+ 
+ void __init cp_intc_init(void);
++int __init cp_intc_of_init(struct device_node *, struct device_node *);
+ 
+ #endif	/* __ASM_HARDWARE_CP_INTC_H */
+-- 
+1.7.10.1
