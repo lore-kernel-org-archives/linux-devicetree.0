@@ -1,8 +1,8 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: =?utf-8?Q?Lothar_Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode"
  property to device tree bindings
-Date: Tue, 3 Jul 2012 11:00:50 +0800
-Message-ID: <20120703030049.GA3374@b20223-02.ap.freescale.net>
+Date: Tue, 3 Jul 2012 09:02:40 +0200
+Message-ID: <20466.39184.844238.739308@ipc1.ka-ro>
 References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de>
  <1340891629-13145-4-git-send-email-mkl@pengutronix.de>
  <20120629014352.GA28923@b20223-02.ap.freescale.net>
@@ -12,55 +12,59 @@ References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de>
  <20120630011906.GA2489@richard-laptop>
  <4FF1FEBC.3040107@wwwdotorg.org>
  <CAL411-oeVCsRxxHHWM4VEtbXBTK_Poyxtp0AK7K_4jEg8U1fJA@mail.gmail.com>
+ <20120703030049.GA3374@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL411-oeVCsRxxHHWM4VEtbXBTK_Poyxtp0AK7K_4jEg8U1fJA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120703030049.GA3374-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 03, 2012 at 10:22:37AM +0800, Peter Chen wrote:
-> > Hmm. I think it'd be reasonable to use dr_mode like the other bindings,
-> > and have the default case be decided by the ID pin when dr_mode isn't
-> > specified. Having different defaults for different bindings seems pretty
-> > reasonable to me.
-> 
-> As far as I know, there is no USB Spec says the ID value should be
-> used at device or host mode. At USB device and host driver, there
-> should be NO ID related things, that is to say device or host driver
-> should not care ID is grounded or floated, as ID may be grounded
-> at device mode, and high at host mode for different board design.
-> ID interrupt should only be enabled when dr_mode = otg;
-I don't quite understand your point. All the discussions are based
-on otg controllers.
-> 
-> Board design and customized usage (user may want to use only device mode
-> for otg capable port) makes what USB role will be used
-> at driver, so dr_mode at dts (or pdata->dr_mode at non-dt solution) can make
-> the decision for driver how USB role will be used.
-That's the case we need the property. But for fine otg hw design, we
-don't need the property, right?
-
-And to decide whether it's otg controller or not, the driver read the
-capability registers.
-
-Thanks
-Richard
-> 
-> Marc's patch is almost OK, but better use below logic at core.c:
-> If there is no dr_mode, it is better to indicate an error message and
-> quit probe.
-> 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpSaWNoYXJkIFpoYW8gd3JpdGVzOgo+IE9uIFR1ZSwgSnVsIDAzLCAyMDEyIGF0IDEwOjIy
+OjM3QU0gKzA4MDAsIFBldGVyIENoZW4gd3JvdGU6Cj4gPiA+IEhtbS4gSSB0aGluayBpdCdkIGJl
+IHJlYXNvbmFibGUgdG8gdXNlIGRyX21vZGUgbGlrZSB0aGUgb3RoZXIgYmluZGluZ3MsCj4gPiA+
+IGFuZCBoYXZlIHRoZSBkZWZhdWx0IGNhc2UgYmUgZGVjaWRlZCBieSB0aGUgSUQgcGluIHdoZW4g
+ZHJfbW9kZSBpc24ndAo+ID4gPiBzcGVjaWZpZWQuIEhhdmluZyBkaWZmZXJlbnQgZGVmYXVsdHMg
+Zm9yIGRpZmZlcmVudCBiaW5kaW5ncyBzZWVtcyBwcmV0dHkKPiA+ID4gcmVhc29uYWJsZSB0byBt
+ZS4KPiA+IAo+ID4gQXMgZmFyIGFzIEkga25vdywgdGhlcmUgaXMgbm8gVVNCIFNwZWMgc2F5cyB0
+aGUgSUQgdmFsdWUgc2hvdWxkIGJlCj4gPiB1c2VkIGF0IGRldmljZSBvciBob3N0IG1vZGUuIEF0
+IFVTQiBkZXZpY2UgYW5kIGhvc3QgZHJpdmVyLCB0aGVyZQo+ID4gc2hvdWxkIGJlIE5PIElEIHJl
+bGF0ZWQgdGhpbmdzLCB0aGF0IGlzIHRvIHNheSBkZXZpY2Ugb3IgaG9zdCBkcml2ZXIKPiA+IHNo
+b3VsZCBub3QgY2FyZSBJRCBpcyBncm91bmRlZCBvciBmbG9hdGVkLCBhcyBJRCBtYXkgYmUgZ3Jv
+dW5kZWQKPiA+IGF0IGRldmljZSBtb2RlLCBhbmQgaGlnaCBhdCBob3N0IG1vZGUgZm9yIGRpZmZl
+cmVudCBib2FyZCBkZXNpZ24uCj4gPiBJRCBpbnRlcnJ1cHQgc2hvdWxkIG9ubHkgYmUgZW5hYmxl
+ZCB3aGVuIGRyX21vZGUgPSBvdGc7Cj4gSSBkb24ndCBxdWl0ZSB1bmRlcnN0YW5kIHlvdXIgcG9p
+bnQuIEFsbCB0aGUgZGlzY3Vzc2lvbnMgYXJlIGJhc2VkCj4gb24gb3RnIGNvbnRyb2xsZXJzLgo+
+ID4gCj4gPiBCb2FyZCBkZXNpZ24gYW5kIGN1c3RvbWl6ZWQgdXNhZ2UgKHVzZXIgbWF5IHdhbnQg
+dG8gdXNlIG9ubHkgZGV2aWNlIG1vZGUKPiA+IGZvciBvdGcgY2FwYWJsZSBwb3J0KSBtYWtlcyB3
+aGF0IFVTQiByb2xlIHdpbGwgYmUgdXNlZAo+ID4gYXQgZHJpdmVyLCBzbyBkcl9tb2RlIGF0IGR0
+cyAob3IgcGRhdGEtPmRyX21vZGUgYXQgbm9uLWR0IHNvbHV0aW9uKSBjYW4gbWFrZQo+ID4gdGhl
+IGRlY2lzaW9uIGZvciBkcml2ZXIgaG93IFVTQiByb2xlIHdpbGwgYmUgdXNlZC4KPiBUaGF0J3Mg
+dGhlIGNhc2Ugd2UgbmVlZCB0aGUgcHJvcGVydHkuIEJ1dCBmb3IgZmluZSBvdGcgaHcgZGVzaWdu
+LCB3ZQo+IGRvbid0IG5lZWQgdGhlIHByb3BlcnR5LCByaWdodD8KPiAKPiBBbmQgdG8gZGVjaWRl
+IHdoZXRoZXIgaXQncyBvdGcgY29udHJvbGxlciBvciBub3QsIHRoZSBkcml2ZXIgcmVhZCB0aGUK
+PiBjYXBhYmlsaXR5IHJlZ2lzdGVycy4KPiAKQSB1c2VyIG1heSB3aXNoIHRvIHJlc3RyaWN0IGV2
+ZW4gYSAnZmluZSBvdGcgaHcgZGVzaWduJyB0byBiZSB1c2VkIGluCnB1cmUgaG9zdCBvciBkZXZp
+Y2UgbW9kZS4gVGhhdCdzIHdoZXJlIHRoZSBkcl9tb2RlIHByb3BlcnR5IGp1bXBzIGluLgoKCkxv
+dGhhciBXYcOfbWFubgotLSAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KCkthLVJvIGVsZWN0cm9uaWNzIEdtYkggfCBQYXNjYWxzdHJh
+w59lIDIyIHwgRCAtIDUyMDc2IEFhY2hlbgpQaG9uZTogKzQ5IDI0MDggMTQwMi0wIHwgRmF4OiAr
+NDkgMjQwOCAxNDAyLTEwCkdlc2Now6RmdHNmw7xocmVyOiBNYXR0aGlhcyBLYXVzc2VuCkhhbmRl
+bHNyZWdpc3RlcmVpbnRyYWc6IEFtdHNnZXJpY2h0IEFhY2hlbiwgSFJCIDQ5OTYKCnd3dy5rYXJv
+LWVsZWN0cm9uaWNzLmRlIHwgaW5mb0BrYXJvLWVsZWN0cm9uaWNzLmRlCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBt
+YWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9s
+aXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
