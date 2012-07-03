@@ -1,11 +1,13 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH REPOST] Add test for re-defining an identical label
-Date: Tue,  3 Jul 2012 14:09:30 -0600
-Message-ID: <1341346170-16312-1-git-send-email-swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2] dtc: Add ability to delete nodes and properties
+Date: Tue, 03 Jul 2012 14:12:08 -0600
+Message-ID: <4FF35218.4030602@wwwdotorg.org>
+References: <1339542620-24590-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1339542620-24590-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,55 +22,28 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 06/12/2012 05:10 PM, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> dtc currently allows the contents of properties to be changed, and the
+> contents of nodes to be added to. There are situations where removing
+> properties or nodes may be useful. This change implements the following
+> syntax to do that:
+> 
+>     / {
+>         propname /delprop/;
+>         nodename /delnode/;
+>     };
+> 
+> or:
+> 
+>     &noderef /delnode/;
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2: Implemented in a significantly different fashion: Rather than actually
+> deleting nodes/properties as the DT is parsed, simply mark them deleted,
+> and skip deleted nodes during later processing. This allows implementation
+> without needing rework of various error-checks, such as duplicate labels.
 
-When merging one device tree over the top of a previous tree, it is
-possible to define a duplicate label that has the same name and points
-to the same property or node. This is currently allowed by the duplicate
-label checking code. However, alternative duplicate label checking
-algorithms might not allow this. Add an explicit test to ensure this
-capability is maintained.
-
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- tests/label_repeated.dts |   15 +++++++++++++++
- tests/run_tests.sh       |    2 ++
- 2 files changed, 17 insertions(+), 0 deletions(-)
- create mode 100644 tests/label_repeated.dts
-
-diff --git a/tests/label_repeated.dts b/tests/label_repeated.dts
-new file mode 100644
-index 0000000..34225d3
---- /dev/null
-+++ b/tests/label_repeated.dts
-@@ -0,0 +1,15 @@
-+/dts-v1/;
-+
-+/ {
-+	l0: prop = "foo";
-+
-+	l1: node {
-+	};
-+};
-+
-+/ {
-+	l0: prop = "foo";
-+
-+	l1: node {
-+	};
-+};
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 9a2a7d9..e0299e3 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -281,6 +281,8 @@ dtc_tests () {
-     run_dtc_test -I dts -O dtb -o multilabel.test.dtb multilabel.dts
-     run_test references multilabel.test.dtb
- 
-+    run_dtc_test -I dts -O dtb -o label_repeated.test.dtb label_repeated.dts
-+
-     run_dtc_test -I dts -O dtb -o dtc_comments.test.dtb comments.dts
-     run_dtc_test -I dts -O dtb -o dtc_comments-cmp.test.dtb comments-cmp.dts
-     run_test dtbs_equal_ordered dtc_comments.test.dtb dtc_comments-cmp.test.dtb
--- 
-1.7.0.4
+David, Jon, does this look reasonable?
