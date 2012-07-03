@@ -1,17 +1,18 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+From: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: [PATCH] of: support an enumerated-bus compatible value
-Date: Mon, 02 Jul 2012 17:17:18 -0600
-Message-ID: <4FF22BFE.8020905@wwwdotorg.org>
+Date: Tue, 3 Jul 2012 02:27:15 +0200
+Message-ID: <FE3C6687-727E-4191-9D37-9E71EBFEF0AE@kernel.crashing.org>
 References: <1340924755-31447-1-git-send-email-swarren@wwwdotorg.org>
  <4FF0A6B6.8040902@gmail.com> <4FF1C567.4060809@wwwdotorg.org>
- <CACxGe6ty5wU6Y+fuFYfBsM4HRLZaTff9EnzCP2FzmcQGOyJ=xQ@mail.gmail.com>
- <4FF22095.4030106@wwwdotorg.org>
- <CACxGe6sexKHa65=EsLpTa9-JrSK-Ubbhz6MAmfGeSen9cHJhow@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+ <4FF1D8F9.9040005@firmworks.com> <4FF1DDBD.9050106@wwwdotorg.org>
+ <4FF1EA1A.9030307@firmworks.com> <4FF1F955.6030204@wwwdotorg.org>
+ <6BC22F77-77D7-45DF-821A-6CA2DBADEA59@kernel.crashing.org>
+ <4FF22031.3060206@wwwdotorg.org>
+Mime-Version: 1.0 (Apple Message framework v753.1)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6sexKHa65=EsLpTa9-JrSK-Ubbhz6MAmfGeSen9cHJhow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <4FF22031.3060206-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,42 +23,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2012 04:37 PM, Grant Likely wrote:
-> On Mon, Jul 2, 2012 at 4:28 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 07/02/2012 03:43 PM, Grant Likely wrote:
->>> On Mon, Jul 2, 2012 at 9:59 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>>> On 07/01/2012 04:03 PM, Grant Likely wrote:
->>>> ...
->>>>> Besides; if they are enumerated, non-memory mapped devices, then is it
->>>>> really appropriate to use platform_{device,driver}? I don't think it
->>>>> is.
->>>>
->>>> Hmm, well /everything/ that gets instantiated from DT is a platform
->>>> device at present, at least for the platforms and bus types we're using
->>>> on Tegra and I believe all/most ARM platforms, except some small amounts
->>>> of AMBA.
->>>
->>> Not true.  SPI devices beget spi_device, i2c devices i2c_client, etc.
->>> The appropriate structure for the kind of device should always be
->>> used.
->>
->> Yes, that's true.
->>
->> But doesn't that lend even more weight to the need for an enumerated-bus
->> bus-type/compatible value? After all, the more important issue here (at
->> least initially) is the DT representation that we're defining, rather
->> than what Linux does with it internally.
-> 
-> ... another thought:  If the thing doesn't actually have any kind of
-> address (like a audio complex) then it probably makes more sense to
-> drop reg entirely since it is meaningless.  That may not be relevant
-> for your regulartors example though.
+>> So what is the issue?  You have some node (the "bus node") under  
+>> which
+>> you have the "regulator@0", "frobnicator@1" etc. nodes.  You refer to
+>> these device nodes by phandle always, you cannot programmatically
+>> control those devices (otherwise, they should be child node of a  
+>> *real*
+>> bus node).  The bus node does not represent any device at all, and no
+>> device driver can ever do anything with it; it should not have a
+>> "compatible" property either.
+>
+> Without the "bus" node having a compatible property, nothing will
+> recurse into it to instantiate the devices that the child nodes
+> represent; the fact that they're reference by phandle doesn't
+> instantiate the device, just references it.
 
-I'd love to drop the reg property, but it's needed since there are
-multiple nodes with the same name, so they need to be differentiated by
-unit address, and AIUI, you can't have a unit address without a matching
-reg property.
+Why would you want to instantiate devices that you cannot address
+at all anyway?  The only driver that can know what to do with the
+device node is the driver for the device that has the phandle
+reference to it; it can instantiate it.
+
+A bus node without "compatible" is Just Fine(tm), and not unusual
+at all either; if current Linux will not work with devices under
+such a bus node, well, there's a bug to fix then :-)
+
+
+Segher
