@@ -1,24 +1,14 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode"
- property to device tree bindings
-Date: Tue, 3 Jul 2012 15:10:47 +0800
-Message-ID: <20120703071046.GB3374@b20223-02.ap.freescale.net>
-References: <1340891629-13145-4-git-send-email-mkl@pengutronix.de>
- <20120629014352.GA28923@b20223-02.ap.freescale.net>
- <4FED5D77.3050009@pengutronix.de>
- <20120629084509.GB28923@b20223-02.ap.freescale.net>
- <4FEDCF15.9040000@wwwdotorg.org>
- <20120630011906.GA2489@richard-laptop>
- <4FF1FEBC.3040107@wwwdotorg.org>
- <CAL411-oeVCsRxxHHWM4VEtbXBTK_Poyxtp0AK7K_4jEg8U1fJA@mail.gmail.com>
- <20120703030049.GA3374@b20223-02.ap.freescale.net>
- <20466.39184.844238.739308@ipc1.ka-ro>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] rtc: stmp3xxx: Add simple binding for the stmp3xxx-rtc
+Date: Tue, 3 Jul 2012 15:43:11 +0800
+Message-ID: <20120703074309.GC22705@S2101-09.ap.freescale.net>
+References: <1340699726-7852-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20466.39184.844238.739308-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
+In-Reply-To: <1340699726-7852-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -29,71 +19,98 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 03, 2012 at 09:02:40AM +0200, Lothar Wa=DFmann wrote:
-> Hi,
-> =
+Hi Alessandro,
 
-> Richard Zhao writes:
-> > On Tue, Jul 03, 2012 at 10:22:37AM +0800, Peter Chen wrote:
-> > > > Hmm. I think it'd be reasonable to use dr_mode like the other bindi=
-ngs,
-> > > > and have the default case be decided by the ID pin when dr_mode isn=
-'t
-> > > > specified. Having different defaults for different bindings seems p=
-retty
-> > > > reasonable to me.
-> > > =
+I queued this one on mxs arch tree.  Please let me know if you have
+problem with that.
 
-> > > As far as I know, there is no USB Spec says the ID value should be
-> > > used at device or host mode. At USB device and host driver, there
-> > > should be NO ID related things, that is to say device or host driver
-> > > should not care ID is grounded or floated, as ID may be grounded
-> > > at device mode, and high at host mode for different board design.
-> > > ID interrupt should only be enabled when dr_mode =3D otg;
-> > I don't quite understand your point. All the discussions are based
-> > on otg controllers.
-> > > =
+Regards,
+Shawn
 
-> > > Board design and customized usage (user may want to use only device m=
-ode
-> > > for otg capable port) makes what USB role will be used
-> > > at driver, so dr_mode at dts (or pdata->dr_mode at non-dt solution) c=
-an make
-> > > the decision for driver how USB role will be used.
-> > That's the case we need the property. But for fine otg hw design, we
-> > don't need the property, right?
-> > =
-
-> > And to decide whether it's otg controller or not, the driver read the
-> > capability registers.
-> > =
-
-> A user may wish to restrict even a 'fine otg hw design' to be used in
-> pure host or device mode. That's where the dr_mode property jumps in.
-Right, it _force_ the controller to a certain mode.
-
-Thanks
-Richard
-> =
-
-> =
-
-> Lothar Wa=DFmann
-> -- =
-
-> ___________________________________________________________
-> =
-
-> Ka-Ro electronics GmbH | Pascalstra=DFe 22 | D - 52076 Aachen
-> Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-> Gesch=E4ftsf=FChrer: Matthias Kaussen
-> Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-> =
-
-> www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
-> ___________________________________________________________
-> =
+On Tue, Jun 26, 2012 at 04:35:26PM +0800, Shawn Guo wrote:
+> From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> 
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> Changes since v2:
+> 
+> * Back out the dts changes from the patch, so that it could be merged
+>   through rtc tree if that's the case.
+> 
+> * The first interrupt has to be rtc alarm interrupt, and that's the
+>   only one that driver tries to get.  Fix binding document for that.
+> 
+>  .../devicetree/bindings/rtc/stmp3xxx-rtc.txt       |   16 ++++++++++++++++
+>  drivers/rtc/rtc-stmp3xxx.c                         |    8 ++++++++
+>  2 files changed, 24 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
+> new file mode 100644
+> index 0000000..b800070
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/stmp3xxx-rtc.txt
+> @@ -0,0 +1,16 @@
+> +* STMP3xxx/i.MX28 Time Clock controller
+> +
+> +Required properties:
+> +- compatible: should be one of the following.
+> +    * "fsl,stmp3xxx-rtc"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: rtc alarm interrupt
+> +
+> +Example:
+> +
+> +rtc@80056000 {
+> +	compatible = "fsl,imx28-rtc", "fsl,stmp3xxx-rtc";
+> +	reg = <0x80056000 2000>;
+> +	interrupts = <29>;
+> +};
+> diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
+> index 1028786..739ef556 100644
+> --- a/drivers/rtc/rtc-stmp3xxx.c
+> +++ b/drivers/rtc/rtc-stmp3xxx.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/rtc.h>
+>  #include <linux/slab.h>
+> +#include <linux/of_device.h>
+>  
+>  #include <mach/common.h>
+>  
+> @@ -265,6 +266,12 @@ static int stmp3xxx_rtc_resume(struct platform_device *dev)
+>  #define stmp3xxx_rtc_resume	NULL
+>  #endif
+>  
+> +static const struct of_device_id rtc_dt_ids[] = {
+> +	{ .compatible = "fsl,stmp3xxx-rtc", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rtc_dt_ids);
+> +
+>  static struct platform_driver stmp3xxx_rtcdrv = {
+>  	.probe		= stmp3xxx_rtc_probe,
+>  	.remove		= stmp3xxx_rtc_remove,
+> @@ -273,6 +280,7 @@ static struct platform_driver stmp3xxx_rtcdrv = {
+>  	.driver		= {
+>  		.name	= "stmp3xxx-rtc",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = rtc_dt_ids,
+>  	},
+>  };
+>  
+> -- 
+> 1.7.5.4
+> 
+> 
