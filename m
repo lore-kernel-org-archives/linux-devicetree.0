@@ -1,171 +1,57 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 2/7] ARM: davinci,
- cp_intc: Add OF support for TI interrupt controller
-Date: Wed, 4 Jul 2012 00:39:20 +0530
-Message-ID: <4FF34360.6030501@ti.com>
-References: <1338373143-7467-1-git-send-email-hs@denx.de>
- <1338373143-7467-3-git-send-email-hs@denx.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/2] regulator: fixed: dt: support for input supply
+Date: Tue, 3 Jul 2012 20:17:05 +0100
+Message-ID: <20120703191704.GE29030@opensource.wolfsonmicro.com>
+References: <1341223645-7817-1-git-send-email-ldewangan@nvidia.com>
+ <1341223645-7817-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1338373143-7467-3-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fblc08uBQ7kpPybH"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1341223645-7817-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: lrg@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
 
-On 5/30/2012 3:48 PM, Heiko Schocher wrote:
-> Add a function to initialize the Common Platform Interrupt Controller
-> (cp_intc) from TI used on OMAP-L1x SoCs using a device tree node.
-> 
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-> Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-> 
-> ---
-> - changes for v4
->   - split patch in 2 patches, one for irq_domain adaption
->     one for DT enhancement, as Nori Sekhar suggested.
->   - add comment from Grant Likely for the DT part:
->     remove if/else clause, not needed.
->     Make use of DT runtime configurable
-> 
-> - changes for v5:
->   add comments from Sergei Shtylyov:
->   - s/intc/cp_intc in commit subject
->   add comments from Grant Likely:
->   - rename compatible" prop to "ti,cp-intc"
-> 
->  .../devicetree/bindings/arm/davinci/intc.txt       |   27 ++++++++++++++++++++
->  arch/arm/mach-davinci/cp_intc.c                    |   24 ++++++++++++++++-
->  2 files changed, 49 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/davinci/intc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/intc.txt b/Documentation/devicetree/bindings/arm/davinci/intc.txt
-> new file mode 100644
-> index 0000000..597e8a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/davinci/intc.txt
+--fblc08uBQ7kpPybH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think this file is better named cp-intc.txt since there is also an
-intc (a different IP) used on DaVinci platforms.
+On Mon, Jul 02, 2012 at 03:37:25PM +0530, Laxman Dewangan wrote:
 
-> @@ -0,0 +1,27 @@
-> +* TI Common Platform Interrupt Controller
+> +	if (vin_supply)
+> +		drvdata->desc.supply_name = "vin";
 > +
-> +Common Platform Interrupt Controller (cp_intc) is used on
-> +OMAP-L1x SoCs and can support several configurable number
-> +of interrupts.
-> +
-> +Main node required properties:
-> +
-> +- compatible : should be:
-> +	"ti,cp-intc"
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source. The type shall be a <u32> and the value shall be 1.
-> +
-> +  The cell contains the interrupt number in the range [0-128].
-> +- ti,intc-size: Number of interrupts handled by the interrupt controller.
-> +- reg: physical base address and size of the intc registers map.
-> +
-> +Example:
-> +
-> +	intc: interrupt-controller@1 {
-> +		compatible = "ti,cp-intc";
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		ti,intc-size = <101>;
-> +		reg = <0xfffee000 0x2000>;
-> +	};
-> diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
-> index 45d5256..d1bef55 100644
-> --- a/arch/arm/mach-davinci/cp_intc.c
-> +++ b/arch/arm/mach-davinci/cp_intc.c
-> @@ -14,6 +14,9 @@
->  #include <linux/irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
->  
->  #include <mach/common.h>
->  #include <mach/cp_intc.h>
-> @@ -119,7 +122,7 @@ static const struct irq_domain_ops cp_intc_host_ops = {
->  	.xlate = irq_domain_xlate_onetwocell,
->  };
->  
-> -int __init __cp_intc_init(struct device_node *node)
-> +int __init __cp_intc_init(struct device_node *node, struct device_node *parent)
->  {
->  	u32 num_irq		= davinci_soc_info.intc_irq_num;
->  	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
-> @@ -129,6 +132,15 @@ int __init __cp_intc_init(struct device_node *node)
->  
->  	davinci_intc_type = DAVINCI_INTC_TYPE_CP_INTC;
 
->  	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
+This isn't great both in terms of it being conditional and the fact that
+it's only usable on DT systems as there's no non-DT way to do this.  In
+general unless we're working around some device tree issue (which should
+be *very* rare) we shouldn't be adding any DT only stuff to generic
+code, we need to be able to run Linux on non-DT systems.
 
-This line needs to be dropped because you are doing an ioremap again
-down below.
+--fblc08uBQ7kpPybH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +	if (node) {
-> +		davinci_intc_base = of_iomap(node, 0);
-> +		if (of_property_read_u32(node, "ti,intc-size", &num_irq))
-> +			pr_warn("unable to get intc-size, default to %d\n",
-> +				num_irq);
-> +	} else {
-> +		davinci_intc_base = ioremap(davinci_soc_info.intc_base,
-> +					SZ_8K);
-> +	}
->  	if (WARN_ON(!davinci_intc_base))
->  		return -EINVAL;
->  
-> @@ -206,7 +218,15 @@ int __init __cp_intc_init(struct device_node *node)
->  	return 0;
->  }
->  
-> +static struct of_device_id irq_match[] __initdata = {
-> +	{ .compatible = "ti,cp-intc", .data = __cp_intc_init, },
-> +	{ }
-> +};
-> +
->  void __init cp_intc_init(void)
->  {
-> -	__cp_intc_init(NULL);
-> +	if (!of_find_compatible_node(NULL, NULL, "ti,cp-intc"))
-> +		__cp_intc_init(NULL, NULL);
-> +	else
-> +		of_irq_init(irq_match);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-It turns out of_irq_init() does not exist on non-DT builds so this cause
-build breakage when DT is not being used. Looking around, other
-platforms are calling of_irq_init() in the generic DT board file and not
-in the interrupt controller code. See arch/arm/mach-at91/board-dt.c or
-arch/arm/mach-omap2/board-generic.c for examples. We need to adopt a
-similar strategy for DaVinci.
+iQIcBAEBAgAGBQJP80UYAAoJEBus8iNuMP3dylgQAI30dX4i6cWMFpyf3p6ZxYaD
+gtUrvxWE4XYgOB97F3yjKygHWPDH/6NTfEJusgj0V21b8bcOPZzNDPDBCNwrn4A3
+BkuWz3riefvkmzlT4nqaEBXCqpvRfYLRpTYdHOrSi+G4BozXx+SRPT/yPYwc5i3k
+bNfPmOywkG3IZtOGGSdHK4YnYtoOvk4ky5miVdaA30ybbmBs3lS8nNZ2wOJEMLbq
+AlV6ucEGWTlSxI1JUEW/K+DHI/bRpAqwPSG1/o4+XO4VukBGirCiAvXpu2Sp9Xol
+H7nTE3BfbcgcEMN13U2vx8LrG6STNm2WCmtSkebTbUfBdLpLSa8Q2enUTfMMEdHu
+rFIuSG22yI9jts6BYOXotynBLscLIkKFFCprXDGRb090BTxnXD+jpm3UWk3U2SO9
+jfBOx9uhWqOWW6TXVQZVB5FB8f9CwvrlCijpUs8HLd8fe+I2NtEwJuLAARBX1TaN
+uo5sPOB6Oy9D7QIS3WY77SQe0OIcU9VFRif1KywQRMW3uPzhAMnNphqV//cKi37M
+awIO+Kh3vVJkFwR86801vs3dc4QYPnZWv9TdMnXl8rhpIu3Ql6UnTB/f61n8o1x5
++y/oGugvQ97QPtf5t6L2judtXcgIKckCjCewvY9se3r2K3fRJYfr3i9OD3VzCyfF
+vmIBMluh+xfYYNEhW8nY
+=1dQQ
+-----END PGP SIGNATURE-----
 
-To save time, I implemented these fixes and created a new patch which I
-will send across shortly. Please have a look at that and let me know if
-it works for you. I tested the patch on AM18x EVM.
-
-Thanks,
-Sekhar
+--fblc08uBQ7kpPybH--
