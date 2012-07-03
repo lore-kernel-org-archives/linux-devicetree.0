@@ -1,47 +1,88 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] usb: chipidea: ci13xxx-imx: add "dr_mode" property
- to device tree bindings
-Date: Tue, 3 Jul 2012 10:22:37 +0800
-Message-ID: <CAL411-oeVCsRxxHHWM4VEtbXBTK_Poyxtp0AK7K_4jEg8U1fJA@mail.gmail.com>
-References: <1340891629-13145-1-git-send-email-mkl@pengutronix.de>
- <1340891629-13145-4-git-send-email-mkl@pengutronix.de> <20120629014352.GA28923@b20223-02.ap.freescale.net>
- <4FED5D77.3050009@pengutronix.de> <20120629084509.GB28923@b20223-02.ap.freescale.net>
- <4FEDCF15.9040000@wwwdotorg.org> <20120630011906.GA2489@richard-laptop> <4FF1FEBC.3040107@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 0/4] DT clock bindings
+Date: Mon, 02 Jul 2012 21:37:16 -0500
+Message-ID: <4FF25ADC.8040007@gmail.com>
+References: <1339512111-11172-1-git-send-email-robherring2@gmail.com> <87bokd15x7.fsf@octavius.laptop.org> <4FE33723.3040403@gmail.com> <20120621175443.GL4402@gmail.com> <4FEB0273.9050707@gmail.com> <CAJOA=zNFZyOXrv8cpJJYhSyR6kvHr3awDvCwR689XyOKWYCMig@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4FF1FEBC.3040107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJOA=zNFZyOXrv8cpJJYhSyR6kvHr3awDvCwR689XyOKWYCMig@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Turquette, Mike" <mturquette@ti.com>
+Cc: Chris Ball <cjb@laptop.org>, Mitch Bradley <wmb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, skannan@codeaurora.org, Olof Johansson <olof@lixom.net>, shawn.guo@linaro.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Hmm. I think it'd be reasonable to use dr_mode like the other bindings,
-> and have the default case be decided by the ID pin when dr_mode isn't
-> specified. Having different defaults for different bindings seems pretty
-> reasonable to me.
+Mike,
 
-As far as I know, there is no USB Spec says the ID value should be
-used at device or host mode. At USB device and host driver, there
-should be NO ID related things, that is to say device or host driver
-should not care ID is grounded or floated, as ID may be grounded
-at device mode, and high at host mode for different board design.
-ID interrupt should only be enabled when dr_mode = otg;
+On 07/02/2012 08:30 PM, Turquette, Mike wrote:
+> On Wed, Jun 27, 2012 at 5:54 AM, Rob Herring <robherring2@gmail.com> wrote:
+>> On 06/21/2012 12:54 PM, Mike Turquette wrote:
+>>> On 20120621-10:00, Rob Herring wrote:
+>>>> On 06/21/2012 02:27 AM, Chris Ball wrote:
+>>>>>
+>>>>> 2) Use alloc_bootmem() instead of kzalloc() in of_clk_add_provider(),
+>>>>>    because we need to set up clocks during .init_early on ARM (which
+>>>>>    happens pre-slab) so that they are available for platform init.
+>>>>
+>>>> This depends on 1 as the common clock code would have the same issue.
+>>>> Generally, the first place clocks are needed is the timer init. At that
+>>>> point, you can call kzalloc. This is where all the clock init used to be
+>>>> done until init_early was added and some platforms have moved their
+>>>> clock init. I don't think there was really ever much reason to move it
+>>>> other than to make the timer init function only deal with timer setup.
+>>>>
+>>>
+>>> Hi Rob,
+>>>
+>>> Just FYI I've been looking at using alloc_bootmem in the common clk code
+>>> as a way to get rid of the static initialization stuff (which only
+>>> existed due to very early initialization of timers).
+>>
+>> The slab is up at the time timers are initialized. The only real problem
+>> is mixing clock init into the timer init functions and clk init in
+>> init_early is cleaner in that regard.
+>>
+> 
+> Hi Rob,
+> 
+> I'm afraid I don't follow you when you say "slab is up at the time
+> timers are initialized".  On some platforms I believe that timer
+> initialization takes place before slab is ready (.early_init).
 
-Board design and customized usage (user may want to use only device mode
-for otg capable port) makes what USB role will be used
-at driver, so dr_mode at dts (or pdata->dr_mode at non-dt solution) can make
-the decision for driver how USB role will be used.
+Timers are not initialized in the .timer init hook? The clock init is
+definitely in init_early in some cases, but I don't think the actual
+timer init can be.
 
-Marc's patch is almost OK, but better use below logic at core.c:
-If there is no dr_mode, it is better to indicate an error message and
-quit probe.
+>>> The suggested change above to of_clk_add_provider would jive well with
+>>> my change to the common clk code.
+>>
+>> Are you planning this for 3.6? If not, then this can be addressed at the
+>> time the clk framework supports bootmem.
+>>
+>> I'm not so sure more users of bootmem are desired. There seems to be
+>> some effort/desire to remove it:
+>>
+>> http://lists.linux-foundation.org/pipermail/ksummit-2012-discuss/2012-June/000562.html
+>> https://lkml.org/lkml/2012/3/13/586
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2011-December/074886.html
+> 
+> So after looking at those mails it seems using memblock_alloc would be
+> a better alternative.  Did I get that right?
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Seems so, but my view is avoiding it altogether is the right way to me
+just based on how few users there are of either within drivers/.
+
+Anyway, this is all really besides the point for this series. If and
+when the clock framework supports bootmem or memblock, then the DT clk
+code can easily be adapted as part of that. It's just a matter of timing
+and if you're not planning bootmem/memblock for 3.6 we can add this later.
+
+Rob
+
+> 
+> Thanks,
+> Mike
+> 
+>>
+>> Rob
