@@ -1,43 +1,70 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC PATCH] dtc: integrate gpp
-Date: Tue, 03 Jul 2012 14:12:40 -0600
-Message-ID: <4FF35238.5090501@wwwdotorg.org>
-References: <1339786432-6435-1-git-send-email-swarren@wwwdotorg.org>
- <4FEB7DFE.3030509@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [GIT PULL] DT fixes for 3.5
+Date: Tue, 03 Jul 2012 21:40:39 -0500
+Message-ID: <4FF3AD27.5070901@gmail.com>
+References: <4FDA9261.2070208@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FEB7DFE.3030509-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FDA9261.2070208@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@freescale.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2012 03:41 PM, Stephen Warren wrote:
-> On 06/15/2012 12:53 PM, Stephen Warren wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> I figured the easiest way to get named constants into dtc would be to
->> re-use an existing C pre-processor implemntation. Surprisingly, I could
->> not find many /good/ possibilities for this. I eventually found one called
->> gpp. This patch is an extremely quick-and-dirty integration of gpp into
->> dtc in order to solicit some feedback. What do people think of this
->> approach in general?
-> 
-> David, Jon,
-> 
-> What do you think of integrating gpp (or is there some alternative that
-> would be better)? Does it seem a reasonable approach; should I work on
-> addressing the TODO items I mentioned in the patch, or give up on this?
+Linus,
 
-Are there any comments on this? Thanks.
+On 06/14/2012 08:39 PM, Rob Herring wrote:
+> Grant,
+> 
+> Please pull. Mainly some documentation updates and 2 fixes:
+> 
+> - An export symbol fix for of_platform_populate from Stephen W.
+> - A fix for the order compatible entries are matched to ensure the
+> first compatible string is matched when there are multiple matches.
+> 
+
+As Grant is offline the next month or two, can you please pull these
+fixes for device tree for 3.5.
+
+Rob
+
+> The following changes since commit cfaf025112d3856637ff34a767ef785ef5cf2ca9:
+> 
+>   Linux 3.5-rc2 (2012-06-08 18:40:09 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://sources.calxeda.com/kernel/linux.git fixes-for-grant
+> 
+> for you to fetch changes up to 107a84e61cdd3406c842a0e4be7efffd3a05dba6:
+> 
+>   of: match by compatible property first (2012-06-14 20:29:40 -0500)
+> 
+> ----------------------------------------------------------------
+> Fabio Estevam (5):
+>       dt: fsl-imx-cspi.txt: Fix comment about GPIOs used for chip selects
+>       dt: fsl-imx-esdhc.txt: Fix gpio number assignment
+>       dt: fsl-mma8450.txt: Add missing 'reg' description
+>       dt: fsl-fec.txt: Fix gpio number assignment
+>       dt: mc13xxx.txt: Fix gpio number assignment
+> 
+> Stephen Warren (1):
+>       of: export of_platform_populate()
+> 
+> Thierry Reding (2):
+>       of: Add Avionic Design vendor prefix
+>       of: match by compatible property first
+> 
+>  .../devicetree/bindings/input/fsl-mma8450.txt      |    1 +
+>  Documentation/devicetree/bindings/mfd/mc13xxx.txt  |    4 +--
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |    4 +--
+>  Documentation/devicetree/bindings/net/fsl-fec.txt  |    2 +-
+>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |    4 +--
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  drivers/of/base.c                                  |   30
+> +++++++++++++++++---
+>  drivers/of/platform.c                              |    1 +
+>  8 files changed, 36 insertions(+), 11 deletions(-)
+> 
