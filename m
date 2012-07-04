@@ -1,75 +1,41 @@
-From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2 07/12] I2C: MV64XXX: Add Device Tree support
-Date: Wed, 04 Jul 2012 21:49:33 +0200
-Message-ID: <1779200.JgQeyzoLkl@bender>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
-	<2232439.93KkEvHiYj@flexo> <20120703165839.GA1519@lunn.ch>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: SPI, GPIO, and DT maintainer ship (cry for help)
+Date: Thu, 5 Jul 2012 01:30:42 +0200
+Message-ID: <CACRpkdZ7zZzTD+vqAY82vBHnjNmLDnLWDy7NdU=mEjA1GEBP8A@mail.gmail.com>
+References: <CACxGe6tyO5u7eiq1OiPX-u439YAcQDFz3eOOGZ4bNPtwmYwNkg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20120703165839.GA1519-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6tyO5u7eiq1OiPX-u439YAcQDFz3eOOGZ4bNPtwmYwNkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Robert Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andrew,
+On Mon, Jul 2, 2012 at 2:49 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
 
-On Tuesday 03 July 2012 18:58:39 Andrew Lunn wrote:
-> On Tue, Jul 03, 2012 at 05:59:13PM +0200, Florian Fainelli wrote:
-> > Hello Andrew,
-> > 
-> > On Tuesday 03 July 2012 16:22:40 Andrew Lunn wrote:
-> > > Extends the driver to get properties from device tree. Also extend the
-> > > kirkwood DT support to supply the needed properties.
-> > > 
-> > > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> > > ---
-> > [snip]
-> > > -	if ((pd->id != 0) || !pdata)
-> > > +	if ((!pdata && !pd->dev.of_node) || (pdata && (pd->id != 0)))
-> > >  		return -ENODEV;
-> > 
-> > This is more a reminder than a real remark, but the driver here should not 
-be 
-> > limiting us to a single platform_device. In fact kirkwood55 (88F6282) has 
-two 
-> > I2C controllers for instance.
-> 
-> Yes, i don't understand this code. It looks impossible to use it using
-> platform_data with more than one controller. Any idea why its like
-> this? I didn't want to change the behavior because i don't understand
-> why its like this.
+> Since you
+> three have agreed to co-maintain those subsystems with me, can you
+> please take a look at the patches that have been posted, pick up the
+> ones that look ready to go to you, and get them into linux-next?  I
+> may even need you to send pull requests to Linus when the window opens
+> if I'm still under water.
+>
+> Also, if you have any bug fixes that need to go into v3.5, go ahead
+> and send them on to Linus directly (Rob, I think I saw a pull request
+> from you).
 
-No idea, we just stumbled over this with a colleague the other day, and just 
-removing the check made our second I2C controller work, so I don't see any 
-reason why there is such a limitation. That said, this is for a subsequent 
-patch.
+OK I'll see what I can do, sadly I'm a bit swamped too and will be
+on vacation but I'll try.
 
-> 
-> However, it should be possible to instantiate multiple I2C controllers
-> using DT. However, i've only tested it with one.
-> 
->       Andrew
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
--- 
-Florian
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Linus Walleij
