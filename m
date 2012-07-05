@@ -1,314 +1,58 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V4] regulator: dt: add policy to have property "regulator-compatible"
-Date: Thu, 5 Jul 2012 12:53:04 +0530
-Message-ID: <1341472984-1503-1-git-send-email-ldewangan@nvidia.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO
+	Controllers
+Date: Thu, 5 Jul 2012 11:02:51 +0200
+Message-ID: <20120705110251.596331e0@skate>
+References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
+	<1341325365-21393-2-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, arnd@arndb.de, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1341325365-21393-2-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the policy for regulator DT such that if device have multiple
-regulator and its binding contains a child node that describes each
-regulator then each regulator child node must have the property
-"regulator-compatible" which matches with regulator name of their
-hardware counterparts.
-Modify the DT documentation of regulator devices to reflect this
-policy.
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
-Changes from V3:
-Original patch:
-[PATCH V3 3/3] regulator: dt: add policy to have property "regulator-compatible"
-There is issue on applying the patch for error was around tps6586x.txt file.
-
-I also able to saw the issue when tried to apply locally.
-Creating new patch with same old changes and after rebase.
-I applied this patch in new branch and it applied successfully.
-
- Documentation/devicetree/bindings/mfd/tps65910.txt |   54 +++++++++++++----
- .../devicetree/bindings/regulator/regulator.txt    |    4 +
- .../devicetree/bindings/regulator/tps6586x.txt     |   60 +++++++++++++++-----
- 3 files changed, 90 insertions(+), 28 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-index 645f5ea..b51d206 100644
---- a/Documentation/devicetree/bindings/mfd/tps65910.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -17,8 +17,9 @@ Required properties:
-   device need to be present. The definition for each of these nodes is defined
-   using the standard binding for regulators found at
-   Documentation/devicetree/bindings/regulator/regulator.txt.
-+  The regulator is matched with the regulator-compatible.
- 
--  The valid names for regulators are:
-+  The valid regulator-compatible values are:
-   tps65910: vrtc, vio, vdd1, vdd2, vdd3, vdig1, vdig2, vpll, vdac, vaux1,
-             vaux2, vaux33, vmmc
-   tps65911: vrtc, vio, vdd1, vdd3, vddctrl, ldo1, ldo2, ldo3, ldo4, ldo5,
-@@ -57,73 +58,100 @@ Example:
- 		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
- 
- 		regulators {
--			vdd1_reg: vdd1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			vdd1_reg: regulator@0 {
-+				regulator-compatible = "vdd1";
-+				reg = <0>;
- 				regulator-min-microvolt = < 600000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 				regulator-boot-on;
- 				ti,regulator-ext-sleep-control = <0>;
- 			};
--			vdd2_reg: vdd2 {
-+			vdd2_reg: regulator@1 {
-+				regulator-compatible = "vdd2";
-+				reg = <1>;
- 				regulator-min-microvolt = < 600000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 				regulator-boot-on;
- 				ti,regulator-ext-sleep-control = <4>;
- 			};
--			vddctrl_reg: vddctrl {
-+			vddctrl_reg: regulator@2 {
-+				regulator-compatible = "vddctrl";
-+				reg = <2>;
- 				regulator-min-microvolt = < 600000>;
- 				regulator-max-microvolt = <1400000>;
- 				regulator-always-on;
- 				regulator-boot-on;
- 				ti,regulator-ext-sleep-control = <0>;
- 			};
--			vio_reg: vio {
-+			vio_reg: regulator@3 {
-+				regulator-compatible = "vio";
-+				reg = <3>;
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
- 				regulator-boot-on;
- 				ti,regulator-ext-sleep-control = <1>;
- 			};
--			ldo1_reg: ldo1 {
-+			ldo1_reg: regulator@4 {
-+				regulator-compatible = "ldo1";
-+				reg = <4>;
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <3300000>;
- 				ti,regulator-ext-sleep-control = <0>;
- 			};
--			ldo2_reg: ldo2 {
-+			ldo2_reg: regulator@5 {
-+				regulator-compatible = "ldo2";
-+				reg = <5>;
- 				regulator-min-microvolt = <1050000>;
- 				regulator-max-microvolt = <1050000>;
- 				ti,regulator-ext-sleep-control = <0>;
- 			};
--			ldo3_reg: ldo3 {
-+			ldo3_reg: regulator@6 {
-+				regulator-compatible = "ldo3";
-+				reg = <6>;
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <3300000>;
- 				ti,regulator-ext-sleep-control = <0>;
- 			};
--			ldo4_reg: ldo4 {
-+			ldo4_reg: regulator@7 {
-+				regulator-compatible = "ldo4";
-+				reg = <7>;
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 				ti,regulator-ext-sleep-control = <0>;
- 			};
--			ldo5_reg: ldo5 {
-+			ldo5_reg: regulator@8 {
-+				regulator-compatible = "ldo5";
-+				reg = <8>;
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <3300000>;
- 				ti,regulator-ext-sleep-control = <0>;
- 			};
--			ldo6_reg: ldo6 {
-+			ldo6_reg: regulator@9 {
-+				regulator-compatible = "ldo6";
-+				reg = <9>;
- 				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1200000>;
- 				ti,regulator-ext-sleep-control = <0>;
- 			};
--			ldo7_reg: ldo7 {
-+			ldo7_reg: regulator@10 {
-+				regulator-compatible = "ldo7";
-+				reg = <10>;
- 				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1200000>;
- 				regulator-always-on;
- 				regulator-boot-on;
- 				ti,regulator-ext-sleep-control = <1>;
- 			};
--			ldo8_reg: ldo8 {
-+			ldo8_reg: regulator@11 {
-+				regulator-compatible = "ldo8";
-+				reg = <11>;
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index bec5d57..66ece3f 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -11,6 +11,10 @@ Optional properties:
- - regulator-boot-on: bootloader/firmware enabled regulator
- - <name>-supply: phandle to the parent supply/regulator node
- - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
-+- regulator-compatible: If a regulator chip contains multiple
-+  regulators, and if the chip's binding contains a child node that
-+  describes each regulator, then this property indicates which regulator
-+  this child node is intended to configure.
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/regulator/tps6586x.txt b/Documentation/devicetree/bindings/regulator/tps6586x.txt
-index 0fcabaa..ab17ef6 100644
---- a/Documentation/devicetree/bindings/regulator/tps6586x.txt
-+++ b/Documentation/devicetree/bindings/regulator/tps6586x.txt
-@@ -6,8 +6,9 @@ Required properties:
- - interrupts: the interrupt outputs of the controller
- - #gpio-cells: number of cells to describe a GPIO
- - gpio-controller: mark the device as a GPIO controller
--- regulators: list of regulators provided by this controller, must be named
--  after their hardware counterparts: sm[0-2], ldo[0-9] and ldo_rtc
-+- regulators: list of regulators provided by this controller, must have
-+  property "regulator-compatible" to match their hardware counterparts:
-+  sm[0-2], ldo[0-9] and ldo_rtc
- 
- Each regulator is defined using the standard binding for regulators.
- 
-@@ -22,74 +23,103 @@ Example:
- 		gpio-controller;
- 
- 		regulators {
--			sm0_reg: sm0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			sm0_reg: regulator@0 {
-+				reg = <0>;
-+				regulator-compatible = "sm0";
- 				regulator-min-microvolt = < 725000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 			};
- 
--			sm1_reg: sm1 {
-+			sm1_reg: regulator@1 {
-+				reg = <1>;
-+				regulator-compatible = "sm1";
- 				regulator-min-microvolt = < 725000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 			};
- 
--			sm2_reg: sm2 {
-+			sm2_reg: regulator@2 {
-+				reg = <2>;
-+				regulator-compatible = "sm2";
- 				regulator-min-microvolt = <3000000>;
- 				regulator-max-microvolt = <4550000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 			};
- 
--			ldo0_reg: ldo0 {
-+			ldo0_reg: regulator@3 {
-+				reg = <3>;
-+				regulator-compatible = "ldo0";
- 				regulator-name = "PCIE CLK";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
- 			};
- 
--			ldo1_reg: ldo1 {
-+			ldo1_reg: regulator@4 {
-+				reg = <4>;
-+				regulator-compatible = "ldo1";
- 				regulator-min-microvolt = < 725000>;
- 				regulator-max-microvolt = <1500000>;
- 			};
- 
--			ldo2_reg: ldo2 {
-+			ldo2_reg: regulator@5 {
-+				reg = <5>;
-+				regulator-compatible = "ldo2";
- 				regulator-min-microvolt = < 725000>;
- 				regulator-max-microvolt = <1500000>;
- 			};
- 
--			ldo3_reg: ldo3 {
-+			ldo3_reg: regulator@6 {
-+				reg = <6>;
-+				regulator-compatible = "ldo3";
- 				regulator-min-microvolt = <1250000>;
- 				regulator-max-microvolt = <3300000>;
- 			};
- 
--			ldo4_reg: ldo4 {
-+			ldo4_reg: regulator@7 {
-+				reg = <7>;
-+				regulator-compatible = "ldo4";
- 				regulator-min-microvolt = <1700000>;
- 				regulator-max-microvolt = <2475000>;
- 			};
- 
--			ldo5_reg: ldo5 {
-+			ldo5_reg: regulator@8 {
-+				reg = <8>;
-+				regulator-compatible = "ldo5";
- 				regulator-min-microvolt = <1250000>;
- 				regulator-max-microvolt = <3300000>;
- 			};
- 
--			ldo6_reg: ldo6 {
-+			ldo6_reg: regulator@9 {
-+				reg = <9>;
-+				regulator-compatible = "ldo6";
- 				regulator-min-microvolt = <1250000>;
- 				regulator-max-microvolt = <3300000>;
- 			};
- 
--			ldo7_reg: ldo7 {
-+			ldo7_reg: regulator@10 {
-+				reg = <10>;
-+				regulator-compatible = "ldo7";
- 				regulator-min-microvolt = <1250000>;
- 				regulator-max-microvolt = <3300000>;
- 			};
- 
--			ldo8_reg: ldo8 {
-+			ldo8_reg: regulator@11 {
-+				reg = <11>;
-+				regulator-compatible = "ldo8";
- 				regulator-min-microvolt = <1250000>;
- 				regulator-max-microvolt = <3300000>;
- 			};
- 
--			ldo9_reg: ldo9 {
-+			ldo9_reg: regulator@12 {
-+				reg = <12>;
-+				regulator-compatible = "ldo9";
- 				regulator-min-microvolt = <1250000>;
- 				regulator-max-microvolt = <3300000>;
- 			};
--- 
-1.7.1.1
+SGVsbG8gQW5kcmV3LAoKTGUgVHVlLCAgMyBKdWwgMjAxMiAxNjoyMjozNCArMDIwMCwKQW5kcmV3
+IEx1bm4gPGFuZHJld0BsdW5uLmNoPiBhIMOpY3JpdCA6Cgo+IEJvdGggSVJRIGFuZCBHUElPIGNv
+bnRyb2xsZXJzIGNhbiBub3cgYmUgcmVwcmVzZW50ZWQgaW4gRFQuICBUaGUgSVJRCj4gY29udHJv
+bGxlcnMgYXJlIHNldHVwIGZpcnN0LCBhbmQgdGhlbiB0aGUgR1BJTyBjb250cm9sbGVycy4gSW50
+ZXJydXB0cwo+IGZvciBHUElPIGxpbmVzIGFyZSBwbGFjZWQgZGlyZWN0bHkgYWZ0ZXIgdGhlIG1h
+aW4gaW50ZXJydXB0cyBpbiB0aGUKPiBpbnRlcnJ1cHQgc3BhY2UuCj4gCj4gU2lnbmVkLW9mZi1i
+eTogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPgoKSSBoYXZlIHN0YXJ0ZWQgd29ya2luZyBv
+biBhIHBpbmN0cmwgZHJpdmVyIGZvciBtdmVidSwgd2hpY2ggd291bGQKaGFuZGxlIHBpbiBtdXhp
+bmcgKE1QUCkgKyBncGlvICsgZ3BpbyBpbnRlcnJ1cHRzLgoKU28gZmFyLCB0aGUgcGluIG11eGlu
+ZyBwYXJ0IGlzIHdvcmtpbmcgKG5lZWRzIHNvbWUgcG9saXNoaW5nLCBidXQgdGhlCmZvdW5kYXRp
+b24gaXMgaGVyZSksIHdpdGggZGV2aWNlIHRyZWUgYmluZGluZ3MuIEkgdGhpbmsgdGhlIHBpbiBt
+dXhpbmcKY291bGQgYmUgdXNlZCBmb3IgT3Jpb24gYXMgd2VsbC4KCk5vdywgSSdtIHBsYW5uaW5n
+IHRvIHN0YXJ0IHdvcmtpbmcgb24gdGhlIGdwaW8gKyBncGlvIGludGVycnVwdHMgcGFydHMKb2Yg
+dGhlIGRyaXZlciwgYW5kIEknbSB3b25kZXJpbmcgaG93IHRvIGludGVyYWN0IHdpdGggeW91ciB3
+b3JrIG9uIHRoZQptYXR0ZXIuIE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB0aGUgbmV3IHdheSBv
+ZiBkb2luZyBhIHBpbm11eCtncGlvCmRyaXZlciBpcyB0byBpbXBsZW1lbnQgaXQgaW4gZHJpdmVy
+cy9waW5jdHJsLywgd2hpY2ggSSBoYXZlIHN0YXJ0ZWQKZG9pbmcuCgpTaG91bGQgSSBjb250aW51
+ZSB3b3JraW5nIG9uIGEgZHJpdmVycy9waW5jdHJsLyBkcml2ZXIgZm9yIG12ZWJ1IGZvcgpBcm1h
+ZGEgMzcwL1hQLCBhbmQgdGhlbiB3ZSBzZWUgdG9nZXRoZXIgaWYgaXQgbWFrZXMgc2Vuc2UgdG8g
+ZXh0ZW5kIHRvCk9yaW9uLCBhbmQgaWYgc28sIHdoYXQgY2hhbmdlcyBhcmUgbmVlZGVkPwoKVGhh
+bmtzLAoKVGhvbWFzCi0tIApUaG9tYXMgUGV0YXp6b25pLCBGcmVlIEVsZWN0cm9ucwpLZXJuZWws
+IGRyaXZlcnMsIHJlYWwtdGltZSBhbmQgZW1iZWRkZWQgTGludXgKZGV2ZWxvcG1lbnQsIGNvbnN1
+bHRpbmcsIHRyYWluaW5nIGFuZCBzdXBwb3J0LgpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgot
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0KTGl2ZSBTZWN1cml0eSBWaXJ0dWFsIENvbmZlcmVuY2UKRXhj
+bHVzaXZlIGxpdmUgZXZlbnQgd2lsbCBjb3ZlciBhbGwgdGhlIHdheXMgdG9kYXkncyBzZWN1cml0
+eSBhbmQgCnRocmVhdCBsYW5kc2NhcGUgaGFzIGNoYW5nZWQgYW5kIGhvdyBJVCBtYW5hZ2VycyBj
+YW4gcmVzcG9uZC4gRGlzY3Vzc2lvbnMgCndpbGwgaW5jbHVkZSBlbmRwb2ludCBzZWN1cml0eSwg
+bW9iaWxlIHNlY3VyaXR5IGFuZCB0aGUgbGF0ZXN0IGluIG1hbHdhcmUgCnRocmVhdHMuIGh0dHA6
+Ly93d3cuYWNjZWxhY29tbS5jb20vamF3L3Nmcm5sMDQyNDIwMTIvMTE0LzUwMTIyMjYzLwpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpzcGktZGV2ZWwtZ2Vu
+ZXJhbCBtYWlsaW5nIGxpc3QKc3BpLWRldmVsLWdlbmVyYWxAbGlzdHMuc291cmNlZm9yZ2UubmV0
+Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3RpbmZvL3NwaS1kZXZlbC1n
+ZW5lcmFsCg==
