@@ -1,58 +1,57 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO
-	Controllers
-Date: Thu, 5 Jul 2012 11:02:51 +0200
-Message-ID: <20120705110251.596331e0@skate>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
-	<1341325365-21393-2-git-send-email-andrew@lunn.ch>
+From: AnilKumar Ch <anilkumar@ti.com>
+Subject: [PATCH 2/2] arm/dts: Configure pinmuxs for user leds control on Bone
+Date: Thu, 5 Jul 2012 14:43:36 +0530
+Message-ID: <1341479616-18630-3-git-send-email-anilkumar@ti.com>
+References: <1341479616-18630-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1341325365-21393-2-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1341479616-18630-1-git-send-email-anilkumar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: tony@atomide.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, AnilKumar Ch <anilkumar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQW5kcmV3LAoKTGUgVHVlLCAgMyBKdWwgMjAxMiAxNjoyMjozNCArMDIwMCwKQW5kcmV3
-IEx1bm4gPGFuZHJld0BsdW5uLmNoPiBhIMOpY3JpdCA6Cgo+IEJvdGggSVJRIGFuZCBHUElPIGNv
-bnRyb2xsZXJzIGNhbiBub3cgYmUgcmVwcmVzZW50ZWQgaW4gRFQuICBUaGUgSVJRCj4gY29udHJv
-bGxlcnMgYXJlIHNldHVwIGZpcnN0LCBhbmQgdGhlbiB0aGUgR1BJTyBjb250cm9sbGVycy4gSW50
-ZXJydXB0cwo+IGZvciBHUElPIGxpbmVzIGFyZSBwbGFjZWQgZGlyZWN0bHkgYWZ0ZXIgdGhlIG1h
-aW4gaW50ZXJydXB0cyBpbiB0aGUKPiBpbnRlcnJ1cHQgc3BhY2UuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPgoKSSBoYXZlIHN0YXJ0ZWQgd29ya2luZyBv
-biBhIHBpbmN0cmwgZHJpdmVyIGZvciBtdmVidSwgd2hpY2ggd291bGQKaGFuZGxlIHBpbiBtdXhp
-bmcgKE1QUCkgKyBncGlvICsgZ3BpbyBpbnRlcnJ1cHRzLgoKU28gZmFyLCB0aGUgcGluIG11eGlu
-ZyBwYXJ0IGlzIHdvcmtpbmcgKG5lZWRzIHNvbWUgcG9saXNoaW5nLCBidXQgdGhlCmZvdW5kYXRp
-b24gaXMgaGVyZSksIHdpdGggZGV2aWNlIHRyZWUgYmluZGluZ3MuIEkgdGhpbmsgdGhlIHBpbiBt
-dXhpbmcKY291bGQgYmUgdXNlZCBmb3IgT3Jpb24gYXMgd2VsbC4KCk5vdywgSSdtIHBsYW5uaW5n
-IHRvIHN0YXJ0IHdvcmtpbmcgb24gdGhlIGdwaW8gKyBncGlvIGludGVycnVwdHMgcGFydHMKb2Yg
-dGhlIGRyaXZlciwgYW5kIEknbSB3b25kZXJpbmcgaG93IHRvIGludGVyYWN0IHdpdGggeW91ciB3
-b3JrIG9uIHRoZQptYXR0ZXIuIE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB0aGUgbmV3IHdheSBv
-ZiBkb2luZyBhIHBpbm11eCtncGlvCmRyaXZlciBpcyB0byBpbXBsZW1lbnQgaXQgaW4gZHJpdmVy
-cy9waW5jdHJsLywgd2hpY2ggSSBoYXZlIHN0YXJ0ZWQKZG9pbmcuCgpTaG91bGQgSSBjb250aW51
-ZSB3b3JraW5nIG9uIGEgZHJpdmVycy9waW5jdHJsLyBkcml2ZXIgZm9yIG12ZWJ1IGZvcgpBcm1h
-ZGEgMzcwL1hQLCBhbmQgdGhlbiB3ZSBzZWUgdG9nZXRoZXIgaWYgaXQgbWFrZXMgc2Vuc2UgdG8g
-ZXh0ZW5kIHRvCk9yaW9uLCBhbmQgaWYgc28sIHdoYXQgY2hhbmdlcyBhcmUgbmVlZGVkPwoKVGhh
-bmtzLAoKVGhvbWFzCi0tIApUaG9tYXMgUGV0YXp6b25pLCBGcmVlIEVsZWN0cm9ucwpLZXJuZWws
-IGRyaXZlcnMsIHJlYWwtdGltZSBhbmQgZW1iZWRkZWQgTGludXgKZGV2ZWxvcG1lbnQsIGNvbnN1
-bHRpbmcsIHRyYWluaW5nIGFuZCBzdXBwb3J0LgpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgot
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0KTGl2ZSBTZWN1cml0eSBWaXJ0dWFsIENvbmZlcmVuY2UKRXhj
-bHVzaXZlIGxpdmUgZXZlbnQgd2lsbCBjb3ZlciBhbGwgdGhlIHdheXMgdG9kYXkncyBzZWN1cml0
-eSBhbmQgCnRocmVhdCBsYW5kc2NhcGUgaGFzIGNoYW5nZWQgYW5kIGhvdyBJVCBtYW5hZ2VycyBj
-YW4gcmVzcG9uZC4gRGlzY3Vzc2lvbnMgCndpbGwgaW5jbHVkZSBlbmRwb2ludCBzZWN1cml0eSwg
-bW9iaWxlIHNlY3VyaXR5IGFuZCB0aGUgbGF0ZXN0IGluIG1hbHdhcmUgCnRocmVhdHMuIGh0dHA6
-Ly93d3cuYWNjZWxhY29tbS5jb20vamF3L3Nmcm5sMDQyNDIwMTIvMTE0LzUwMTIyMjYzLwpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpzcGktZGV2ZWwtZ2Vu
-ZXJhbCBtYWlsaW5nIGxpc3QKc3BpLWRldmVsLWdlbmVyYWxAbGlzdHMuc291cmNlZm9yZ2UubmV0
-Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3RpbmZvL3NwaS1kZXZlbC1n
-ZW5lcmFsCg==
+Adds GPIO pinctrl nodes to am3358_pinmux master node to control
+user leds (USR0, USR1, USR2 and USR3) present on BeagleBone.
+
+Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+---
+ arch/arm/boot/dts/am335x-bone.dts |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+index a9af4db..c3810b7 100644
+--- a/arch/arm/boot/dts/am335x-bone.dts
++++ b/arch/arm/boot/dts/am335x-bone.dts
+@@ -18,3 +18,27 @@
+ 		reg = <0x80000000 0x10000000>; /* 256 MB */
+ 	};
+ };
++
++&am3358_pinmux {
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&userled_pins>;
++
++	userled_pins: pinmux_userled_pins {
++		gpmc_a5.gpio1_21 {
++			pinctrl-simple,cells = <0x54 0x7>;	/* OMAP_PIN_OUTPUT | OMAP_MUX_MODE7 */
++		};
++
++		gpmc_a6.gpio1_22 {
++			pinctrl-simple,cells = <0x58 0x17>;	/* OMAP_PIN_OUTPUT_PULLUP | OMAP_MUX_MODE7 */
++		};
++
++		gpmc_a7.gpio1_23 {
++			pinctrl-simple,cells = <0x5C 0x7>;	/* OMAP_PIN_OUTPUT | OMAP_MUX_MODE7 */
++		};
++
++		gpmc_a8.gpio1_24 {
++			pinctrl-simple,cells = <0x60 0x17>;	/* OMAP_PIN_OUTPUT_PULLUP | OMAP_MUX_MODE7 */
++		};
++	};
++};
+-- 
+1.7.9.5
+
