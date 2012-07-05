@@ -1,62 +1,138 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] ARM: davinci: cp_intc: Add OF support for TI interrupt
- controller
-Date: Thu, 05 Jul 2012 14:43:08 +0200
-Message-ID: <4FF58BDC.6060802@denx.de>
-References: <1341342970-27535-1-git-send-email-nsekhar@ti.com>
-Reply-To: hs-ynQEQJNshbs@public.gmane.org
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V4 REBASED] regulator: fixed: dt: support for input supply
+Date: Thu, 5 Jul 2012 18:12:01 +0530
+Message-ID: <1341492121-14049-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1341342970-27535-1-git-send-email-nsekhar-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, arnd@arndb.de, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sekhar,
+Add support for input supply in DT parsing of node.
+The input supply will be provided by the property
+"vin-supply" in the regulator node.
 
-On 03.07.2012 21:16, Sekhar Nori wrote:
-> From: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
->
-> Add a function to initialize the Common Platform Interrupt Controller
-> (cp_intc) from TI used on OMAP-L1x SoCs using a device tree node.
->
-> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
-> Cc: Sergei Shtylyov<sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
-> ---
->   .../devicetree/bindings/arm/davinci/cp-intc.txt    |   27 ++++++++++++++++++++
->   arch/arm/mach-davinci/cp_intc.c                    |   16 +++++++++---
->   arch/arm/mach-davinci/include/mach/cp_intc.h       |    1 +
->   3 files changed, 41 insertions(+), 3 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/davinci/cp-intc.txt
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V1: 
+Based on discussion on patch
+[PATCH 2/2] regulator: fixed: dt: support for input supply
+that the supply name should be passed through desc->supply_name
+in both DT and non-DT case.
+Making the change to have this.
 
-Thanks!
+Changes from V2: 
+Add input_supply in the platform data and initialzing it with
+"vin" in dt case. In non-dt case, this will be set through platform 
+data. Then making copy of this to the desc->supply_name to
+pass the input supply regulator.
 
-Tested on the enbw_cmc board.
+Changes from V3:
+There was conflict in applying patch and so rebasing this in Mark's for-next
+and sending.
 
-Sent the updated "ARM: davinci: add support for the am1808 based enbw_cmc"
-based on this patch soon.
+ .../bindings/regulator/fixed-regulator.txt         |    2 ++
+ drivers/regulator/fixed.c                          |   19 ++++++++++++++++++-
+ include/linux/regulator/fixed.h                    |    2 ++
+ 3 files changed, 22 insertions(+), 1 deletions(-)
 
-bye,
-Heiko
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 2f5b6b1..4fae41d 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -10,6 +10,7 @@ Optional properties:
+ If this property is missing, the default assumed is Active low.
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
++-vin-supply: Input supply name.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+@@ -29,4 +30,5 @@ Example:
+ 		enable-active-high;
+ 		regulator-boot-on;
+ 		gpio-open-drain;
++		vin-supply = <&parent_reg>;
+ 	};
+diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+index 1a0b17e..185468c 100644
+--- a/drivers/regulator/fixed.c
++++ b/drivers/regulator/fixed.c
+@@ -102,6 +102,9 @@ of_get_fixed_voltage_config(struct device *dev)
+ 	if (of_find_property(np, "gpio-open-drain", NULL))
+ 		config->gpio_is_open_drain = true;
+ 
++	if (of_find_property(np, "vin-supply", NULL))
++		config->input_supply = "vin";
++
+ 	return config;
+ }
+ 
+@@ -169,6 +172,17 @@ static int __devinit reg_fixed_voltage_probe(struct platform_device *pdev)
+ 
+ 	drvdata->desc.enable_time = config->startup_delay;
+ 
++	if (config->input_supply) {
++		drvdata->desc.supply_name = kstrdup(config->input_supply,
++							GFP_KERNEL);
++		if (!drvdata->desc.supply_name) {
++			dev_err(&pdev->dev,
++				"Failed to allocate input supply\n");
++			ret = -ENOMEM;
++			goto err_name;
++		}
++	}
++
+ 	if (config->microvolts)
+ 		drvdata->desc.n_voltages = 1;
+ 
+@@ -202,7 +216,7 @@ static int __devinit reg_fixed_voltage_probe(struct platform_device *pdev)
+ 	if (IS_ERR(drvdata->dev)) {
+ 		ret = PTR_ERR(drvdata->dev);
+ 		dev_err(&pdev->dev, "Failed to register regulator: %d\n", ret);
+-		goto err_name;
++		goto err_input;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, drvdata);
+@@ -212,6 +226,8 @@ static int __devinit reg_fixed_voltage_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++err_input:
++	kfree(drvdata->desc.supply_name);
+ err_name:
+ 	kfree(drvdata->desc.name);
+ err:
+@@ -223,6 +239,7 @@ static int __devexit reg_fixed_voltage_remove(struct platform_device *pdev)
+ 	struct fixed_voltage_data *drvdata = platform_get_drvdata(pdev);
+ 
+ 	regulator_unregister(drvdata->dev);
++	kfree(drvdata->desc.supply_name);
+ 	kfree(drvdata->desc.name);
+ 
+ 	return 0;
+diff --git a/include/linux/regulator/fixed.h b/include/linux/regulator/fixed.h
+index 680f24e..48918be 100644
+--- a/include/linux/regulator/fixed.h
++++ b/include/linux/regulator/fixed.h
+@@ -22,6 +22,7 @@ struct regulator_init_data;
+ /**
+  * struct fixed_voltage_config - fixed_voltage_config structure
+  * @supply_name:	Name of the regulator supply
++ * @input_supply:	Name of the input regulator supply
+  * @microvolts:		Output voltage of regulator
+  * @gpio:		GPIO to use for enable control
+  * 			set to -EINVAL if not used
+@@ -46,6 +47,7 @@ struct regulator_init_data;
+  */
+ struct fixed_voltage_config {
+ 	const char *supply_name;
++	const char *input_supply;
+ 	int microvolts;
+ 	int gpio;
+ 	unsigned startup_delay;
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+1.7.1.1
