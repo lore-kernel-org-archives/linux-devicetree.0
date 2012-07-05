@@ -1,16 +1,15 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO
- Controllers
-Date: Thu, 05 Jul 2012 08:36:53 -1000
-Message-ID: <4FF5DEC5.9030707@firmworks.com>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
- <20120705130819.GV17534@lunn.ch> <4FF5A15A.8070309@googlemail.com>
- <201207051454.24475.arnd@arndb.de>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] of: Add videomode helper
+Date: Thu, 5 Jul 2012 20:39:45 +0200
+Message-ID: <20120705183945.GV30009@pengutronix.de>
+References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
+ <4FF5A9FB.7010004@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201207051454.24475.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4FF5A9FB.7010004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,117 +20,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/5/2012 4:54 AM, Arnd Bergmann wrote:
-> On Thursday 05 July 2012, Sebastian Hesselbarth wrote:
->> Andrew,
->>
->> is it possible to group all gpio banks into one DT description?
->> For mach-dove it could be something like:
->>
->> gpio: gpio-controller {
->>          compatible = "marvell, orion-gpio";
->>          ...
->>
->>          bank0@d0400 {
->>                  reg = <0xd0400 0x40>;
->>                  ngpio = <8>;
->>                  mask-offset = <0>;
->>                  interrupts = <12>;
->>          };
->>
->>          bank1@d0400 {
->>                  reg = <0xd0400 0x40>;
->>                  ngpio = <8>;
->>                  mask-offset = <8>;
->>                  interrupts = <13>;
->>          };
->
-> This way you have multiple nodes with the same register
-> and different names, which is not how it normally works.
+On Thu, Jul 05, 2012 at 09:51:39AM -0500, Rob Herring wrote:
+> On 07/04/2012 02:56 AM, Sascha Hauer wrote:
+> > +
+> > +There are different ways of describing a display mode. The devicetree representation
+> > +corresponds to the one used by the Linux Framebuffer framework described here in
+> > +Documentation/fb/framebuffer.txt. This representation has been chosen because it's
+> > +the only format which does not allow for inconsistent parameters.Unlike the Framebuffer
+> > +framework the devicetree has the clock in Hz instead of ps.
+> 
+> This implies you are putting linux settings into DT rather than
+> describing the h/w. I'm not saying the binding is wrong, but documenting
+> it this way makes it seem so.
 
-The "mask-offset" property is really a "reg" in disguise.
+The major reason to use these values was that they do not allow for
+inconsistent values (as opposed to for example with hsync_start which you
+would have to check for hsync_start >= xres).
+I could rephrase this if it looks too much like modelled-after-Linux
+instead of modelled-after-hardware.
 
-"reg" is considerably more general than just "memory mapped
-register address".  It really means "any numeric identifier
-that makes sense in the context of a parent device".
+> 
+> One important piece missing (and IIRC linux doesn't really support) is
+> defining the pixel format of the interface.
 
-Therefore, one could say:
+I could use this aswell. I think this can be specified as additional
+properties later, right? I'm afraid this needs a lot of discussion so
+we should delay this to the next round.
 
-gpio: gpio-controller {
-          compatible = "marvell, orion-gpio";
-          reg = <0xd0400 0x40>;
-          #address-cells = <1>;
-          #size-cells = <0>;
-          ...
+> 
+> > +Example:
+> > +
+> > +	display@0 {
+> > +		/* 1920x1080p24 */
+> > +		clock = <52000000>;
+> 
+> Should this use the clock binding? You probably need both constraints
+> and clock binding though.
 
-          bank0@0 {
-                  reg = <0x0>;
-                  ngpio = <8>;
-                  mask-offset = <0>;
-                  interrupts = <12>;
-          };
+Is the clock binding suitable for this? Here we are not interested where
+the clock comes from, but instead which range is allowed.
 
-          bank1@8 {
-                  reg = <0x8>;
-                  ngpio = <8>;
-                  interrupts = <13>;
-           };
+> 
+> Often you don't know the frequency up front and/or have limited control
+> of the frequency (i.e. integer dividers). Then you have to adjust the
+> margins to get the desired refresh rate. To do that, you need to know
+> the ranges of values a panel can support. Perhaps you just assume you
+> can increase the right-margin and lower-margins as I think you will hit
+> pixel clock frequency max before any limit on margins.
 
->
->>
->> This would have the advantage that DT describes gpio-to-irq dependencies.
->> Moreover, nodes that reference gpios can do gpios = <&gpio 71 0>; instead of
->> gpios = <&gpio3 7 0>;
->
-> Is that desired?
->
-> The device tree representation should match what is in the data sheet
-> normally. If they are in a single continuous number range, then we should
-> probably have a single device node with multiple register ranges
-> rather than one device node for each 32-bit register. Looking at
-> arch/arm/plat-orion/gpio.c I think that is not actually the case though
-> and having separate banks is more logical.
->
-> Something completely different I just noticed in the original patch:
->
->> @@ -90,6 +74,27 @@ static void pmu_irq_handler(unsigned int irq, struct irq_desc *desc)
->>        }
->>   }
->>
->> +static int __initdata gpio0_irqs[4] = {
->> +     IRQ_DOVE_GPIO_0_7,
->> +     IRQ_DOVE_GPIO_8_15,
->> +     IRQ_DOVE_GPIO_16_23,
->> +     IRQ_DOVE_GPIO_24_31,
->> +};
->> +
->> +static int __initdata gpio1_irqs[4] = {
->> +     IRQ_DOVE_HIGH_GPIO,
->> +     0,
->> +     0,
->> +     0,
->> +};
->
-> I think the latter one needs to be
->
-> +static int __initdata gpio1_irqs[4] = {
-> +     IRQ_DOVE_HIGH_GPIO,
-> +     IRQ_DOVE_HIGH_GPIO,
-> +     IRQ_DOVE_HIGH_GPIO,
-> +     IRQ_DOVE_HIGH_GPIO,
-> +};
->
-> so we register all four parts to the same primary IRQ. The
-> same is true for the devicetree representation.
->
-> 	Arnd
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
+Most datasheets specify min,typ,max triplets. We could do this instead
+of using single fixed values for the margins:
+
+	left_margin = <0 10 40>;
+
+Right now we have nothing in the kernel that could handle this, but
+getting the interface to the devicetree right seems indeed important.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
