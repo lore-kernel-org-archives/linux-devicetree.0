@@ -1,66 +1,55 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 07/12] I2C: MV64XXX: Add Device Tree support
-Date: Thu, 5 Jul 2012 08:52:47 +0200
-Message-ID: <20120705065247.GL17534@lunn.ch>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
- <2232439.93KkEvHiYj@flexo> <20120703165839.GA1519@lunn.ch>
- <1779200.JgQeyzoLkl@bender>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by regulator-compatible
+Date: Thu, 05 Jul 2012 08:16:19 +0100
+Message-ID: <4FF53F43.1040308@linaro.org>
+References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <1340194987-23654-3-git-send-email-ldewangan@nvidia.com> <201206201924.09618.arnd@arndb.de> <20120620194609.GA4037@opensource.wolfsonmicro.com> <20120622061314.GA15627@avionic-0098.adnet.avionic-design.de> <20120622084228.GD4037@opensource.wolfsonmicro.com> <20120622085909.GA24121@avionic-0098.mockup.avionic-design.de> <20120622091238.GF4037@opensource.wolfsonmicro.com> <4FE97AA9.7060805@nvidia.com> <20120626091235.GJ30406@opensource.wolfsonmicro.com> <4FE98B4F.8000502@linaro.org> <CACRpkdaYG0tdxHHfQpbE_1=SZ9Grgj1-qvwYv=rxHV7nkLms4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1779200.JgQeyzoLkl@bender>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaYG0tdxHHfQpbE_1=SZ9Grgj1-qvwYv=rxHV7nkLms4w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lrg@ti.com" <lrg@ti.com>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 04, 2012 at 09:49:33PM +0200, Florian Fainelli wrote:
-> Hello Andrew,
-> 
-> On Tuesday 03 July 2012 18:58:39 Andrew Lunn wrote:
-> > On Tue, Jul 03, 2012 at 05:59:13PM +0200, Florian Fainelli wrote:
-> > > Hello Andrew,
-> > > 
-> > > On Tuesday 03 July 2012 16:22:40 Andrew Lunn wrote:
-> > > > Extends the driver to get properties from device tree. Also extend the
-> > > > kirkwood DT support to supply the needed properties.
-> > > > 
-> > > > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> > > > ---
-> > > [snip]
-> > > > -	if ((pd->id != 0) || !pdata)
-> > > > +	if ((!pdata && !pd->dev.of_node) || (pdata && (pd->id != 0)))
-> > > >  		return -ENODEV;
-> > > 
-> > > This is more a reminder than a real remark, but the driver here should not 
-> be 
-> > > limiting us to a single platform_device. In fact kirkwood55 (88F6282) has 
-> two 
-> > > I2C controllers for instance.
-> > 
-> > Yes, i don't understand this code. It looks impossible to use it using
-> > platform_data with more than one controller. Any idea why its like
-> > this? I didn't want to change the behavior because i don't understand
-> > why its like this.
-> 
-> No idea, we just stumbled over this with a colleague the other day, and just 
-> removing the check made our second I2C controller work, so I don't see any 
-> reason why there is such a limitation. That said, this is for a subsequent 
-> patch.
+On 05/07/12 00:48, Linus Walleij wrote:
+> On Tue, Jun 26, 2012 at 12:13 PM, Lee Jones <lee.jones@linaro.org> wr=
+ote:
+>> On 26/06/12 10:12, Mark Brown wrote:
+>>>
+>>> On Tue, Jun 26, 2012 at 02:32:33PM +0530, Laxman Dewangan wrote:
+>>>
+>>>> I have not seen much oppose on this series as such and if you are =
+OK
+>>>> on this then can we apply?
+>>>> If it need to buy some ACK from different stack holder then we can=
+ ask
+>>>> them.
+>>>
+>>>
+>>> I've been waiting for the ST Ericsson guys who are already CCed.  I
+>>> generally give people who I expect might review at least a week to =
+do so
+>>> before I get bored and apply anyway.
+>>
+>> You need Linus' ACK, but he is off until Monday.
+>
+> My ACK on this would be pointless since I barely grasp the issue.
+>
+> I would much more appreciate your ACK or NACK on it, it's much more
+> valuable since you've been working on this code... and this very
+> aspect of it even, I guess?
 
-If you submit a patch, please CC: me and i will ACK it, or test it
-etc, and try to sort out the merge conflicts with the DT patch.
+Very well. For the db8500.dtsi changes you have my:
 
-	Thanks
-		Andrew
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+M: +44 77 88 633 515
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
