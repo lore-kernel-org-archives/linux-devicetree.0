@@ -1,51 +1,43 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V4 REBASED] regulator: fixed: dt: support for input supply
-Date: Thu, 5 Jul 2012 13:50:17 +0100
-Message-ID: <20120705125016.GG4111@opensource.wolfsonmicro.com>
-References: <1341492121-14049-1-git-send-email-ldewangan@nvidia.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO
+ Controllers
+Date: Thu, 5 Jul 2012 14:58:01 +0200
+Message-ID: <20120705145801.4985770d@skate>
+References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
+	<1341325365-21393-2-git-send-email-andrew@lunn.ch>
+	<20120705110251.596331e0@skate>
+	<20120705094824.GO17534@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rz/qo3iW6Lu5yGf1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1341492121-14049-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, arnd@arndb.de, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120705094824.GO17534-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---rz/qo3iW6Lu5yGf1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Le Thu, 5 Jul 2012 11:48:24 +0200,
+Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> a =C3=A9crit :
 
-On Thu, Jul 05, 2012 at 06:12:01PM +0530, Laxman Dewangan wrote:
-> Add support for input supply in DT parsing of node.
-> The input supply will be provided by the property
-> "vin-supply" in the regulator node.
+> The biggest problem i had, is the interaction between generic chip
+> interrupts and irqdomain. There has been work to integrate the two,
+> but its stalled. Either the work needs restarting and completing, or
+> you need to throw away the use of generic interrupt so that you can
+> use irqdomain linear. IMHO, throwing away generic interrupt is the
+> wrong way.
 
-Applied, thanks.
+Can you expand on why you think it would be wrong to throw away the
+usage of irq_chip_generic, compared to implementing directly an
+irq_chip?
 
---rz/qo3iW6Lu5yGf1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks!
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP9Y2CAAoJEBus8iNuMP3daYcP/0QN+a3losw0ezpuYbAu9zTV
-sFdirNDYYtL6zhQLRjmEAQb1YCJVpvyBgg0Fpay4606LZ0iMDISQnqlwgicfL7Z4
-oEGlTu1Jlp8tn8FHLnd9XfGvVQCgp0fJO3CY6NA/D8is0mhUnCw3nhT/XvdpT4Gp
-I/UvvLQjXzuG/Ae0WRjntW16TJlu2Yqgw/eByAhcuU6g8rp/tWZgn8FslakG1rLi
-euUC8lzBd1lYPv9B+1OCDHINaytDLp+3zcO8q77VkqLbU8CBqWWnXMlqNdB6yoRV
-rJ2ZluxXfflq86jeq7A1veNIwwIeX3PHsKkJF2KPkDMNXQzBxXLZLMovWKsvhGcn
-cE9m0ikIIbj1I1/zD1Mw/ciK/UuPaVS+U91NZOanyp4HXm/i/By51wyzMljX0OH8
-gXVZynZIu3GyPUPfT/hWCDk+iF6x6KigGh9JThMOKandCiHwlYRGVE4k029+B8jK
-RUJPAvazTTh+KytX9HnH1hoQEpWHTweIwEZeikZyU6wfQAOlrMBJsTdx6RIN8vU7
-LVe/Ogio8wcGewUrEMKYaHVr0LYGyujhe9pdRjj20aujP19diAa3PEnXzbQAuyVx
-6FqGEO8OZFlgJYloofUCnlsmzUSDiXFFeod0O36JmzPJC2vVGaOpY2530IMyd9bq
-EnY/j1a9pNUKXQGkc0Zy
-=MXTs
------END PGP SIGNATURE-----
-
---rz/qo3iW6Lu5yGf1--
+Thomas
+--=20
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
