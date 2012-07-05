@@ -1,63 +1,71 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: SPI, GPIO, and DT maintainer ship (cry for help)
-Date: Thu, 5 Jul 2012 22:09:17 +0200
-Message-ID: <20120705200917.GA15639@pengutronix.de>
-References: <CACxGe6tyO5u7eiq1OiPX-u439YAcQDFz3eOOGZ4bNPtwmYwNkg@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: OF_DYNAMIC usage
+Date: Fri, 06 Jul 2012 06:46:50 +1000
+Message-ID: <1341521210.6330.16.camel@pasglop>
+References: <4FF586D1.2050407@monstr.eu> <4FF594AD.6000401@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6tyO5u7eiq1OiPX-u439YAcQDFz3eOOGZ4bNPtwmYwNkg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Robert Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, spi-devel-general-request@lists.sourceforge.net, devicetree-discuss <devicetree-discuss@ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FF594AD.6000401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2012-07-05 at 08:20 -0500, Rob Herring wrote:
+> On 07/05/2012 07:21 AM, Michal Simek wrote:
+> > Hi,
+> > 
+> > can someone tell me usage of OF_DYNAMIC?
+> > How this can be used by user?
+> > 
+> > Is it possible to exchange device node?
+> > Add new one, delete one, etc?
+> > 
+> > Any user guide/log will be helpful to see what I can do with it.
+> 
+> 2nd question on OF_DYNAMIC in a week... I haven't really looked at it. I
+> would suggest looking at the existing users (only powerpc iseries and
+> pseries). My concern using would be that the reference counting is not
+> correct for many drivers as of_node_get/put is a nop without OF_DYNAMIC.
+> 
+> You can also activate/deactivate nodes with the status property.
+> 
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No doc that I know of. It's used by pseries only (iseries is gone btw)
+for "DLPAR" (aka Dynamic Reconfiguration aka hotplug).
 
-Hi Grant,
+The way it works at the moment is that when something new is plugged in,
+the hypervisor talks to a proprietary crap daemon in userspace which
+talks to a special tool (that one we have the source code) which then
+obtains via some FW interfaces a "blob" of bits of device-tree to add
+(or to remove), using a phyp specific format, and echo that stuff
+into /proc/ppc64/ofdt.
 
-> I believe all three of you know that I'm in the process of moving to
-> Scotland. The house is on the market and we have flights booked for
-> the end of July.
+It's pretty fugly...
 
-That's news to me. Good luck!
+Because nodes can come and go, we thus add refcounting. There's various
+places where the refcounting is not quite right but mostly things that
+don't get plugged/unplugged, actual vio devices or PCI devices tend to
+get it right.
 
->=20
-> settled in their new school (mid August).  I need help to prepare for
-> the next merge window, and quite possibly the next window.  Since you
-> three have agreed to co-maintain those subsystems with me, can you
-> please take a look at the patches that have been posted, pick up the
-> ones that look ready to go to you, and get them into linux-next?  I
+Also we don't have good rules for properties lifetime, as it is, it's
+assumed to be the same as the node and there's no proper way to
+add/remove/modify a property "live". I would recommend at least
+something RCUish if you're going to try to be safe to delay the freeing
+of the old value in the dynamic case.
 
-Though I'd like to help out, I need to pass on this time. My resources
-simply won't allow to do the job (with the quality I envision, that is).
-I hope somebody else can jump in? If not, I can collect urgent patches,
-at least.
+There's definitely room for improvements in that area...
 
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk/19G0ACgkQD27XaX1/VRtl1gCgszMnvSuU4+7tmexsF0N2KR9Y
-T7sAnj75I1MvnFay4PaB9EQUKqo5QmCp
-=lu+T
------END PGP SIGNATURE-----
-
---uAKRQypu60I7Lcqm--
+Cheers,
+Ben.
