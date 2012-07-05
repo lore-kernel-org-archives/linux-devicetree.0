@@ -1,245 +1,52 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] devicetree: add helper inline for retrieving a node's
- full name
-Date: Thu, 05 Jul 2012 11:07:31 -0500
-Message-ID: <4FF5BBC3.6020900@gmail.com>
-References: <1339782625-28192-1-git-send-email-grant.likely@secretlab.ca>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: fix a few typos in the binding documentation
+Date: Thu, 05 Jul 2012 11:08:17 -0500
+Message-ID: <4FF5BBF1.9090204@gmail.com>
+References: <1335171443-15371-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1339782625-28192-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, Paul Mundt <lethal@linux-sh.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1335171443-15371-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
-
-On 06/15/2012 12:50 PM, Grant Likely wrote:
-> The pattern (np ? np->full_name : "<none>") is rather common in the
-> kernel, but can also make for quite long lines.  This patch adds a new
-> inline function, of_node_full_name() so that the test for a valid node
-> pointer doesn't need to be open coded at all call sites.
-> 
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Paul Mundt <lethal@linux-sh.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> ---
-
-I'm assuming you want me to apply this now, so I have.
-
-Rob
-
->  arch/microblaze/pci/pci-common.c       |    6 ++----
->  arch/powerpc/kernel/pci-common.c       |    6 ++----
->  arch/powerpc/kernel/vio.c              |    5 ++---
->  arch/powerpc/platforms/cell/iommu.c    |    3 +--
->  arch/powerpc/platforms/pseries/iommu.c |    2 +-
->  arch/sparc/kernel/of_device_64.c       |    2 +-
->  drivers/of/base.c                      |    2 +-
->  drivers/of/irq.c                       |    2 +-
->  include/linux/of.h                     |   10 ++++++++++
->  kernel/irq/irqdomain.c                 |    8 ++++----
->  10 files changed, 25 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-> index ed22bfc..ca8f6e7 100644
-> --- a/arch/microblaze/pci/pci-common.c
-> +++ b/arch/microblaze/pci/pci-common.c
-> @@ -249,8 +249,7 @@ int pci_read_irq_line(struct pci_dev *pci_dev)
->  	} else {
->  		pr_debug(" Got one, spec %d cells (0x%08x 0x%08x...) on %s\n",
->  			 oirq.size, oirq.specifier[0], oirq.specifier[1],
-> -			 oirq.controller ? oirq.controller->full_name :
-> -			 "<default>");
-> +			 of_node_full_name(oirq.controller));
->  
->  		virq = irq_create_of_mapping(oirq.controller, oirq.specifier,
->  					     oirq.size);
-> @@ -1493,8 +1492,7 @@ static void __devinit pcibios_scan_phb(struct pci_controller *hose)
->  	struct pci_bus *bus;
->  	struct device_node *node = hose->dn;
->  
-> -	pr_debug("PCI: Scanning PHB %s\n",
-> -		 node ? node->full_name : "<NO NAME>");
-> +	pr_debug("PCI: Scanning PHB %s\n", of_node_full_name(node));
->  
->  	pcibios_setup_phb_resources(hose, &resources);
->  
-> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-> index 8e78e93..886c254 100644
-> --- a/arch/powerpc/kernel/pci-common.c
-> +++ b/arch/powerpc/kernel/pci-common.c
-> @@ -248,8 +248,7 @@ static int pci_read_irq_line(struct pci_dev *pci_dev)
->  	} else {
->  		pr_debug(" Got one, spec %d cells (0x%08x 0x%08x...) on %s\n",
->  			 oirq.size, oirq.specifier[0], oirq.specifier[1],
-> -			 oirq.controller ? oirq.controller->full_name :
-> -			 "<default>");
-> +			 of_node_full_name(oirq.controller));
->  
->  		virq = irq_create_of_mapping(oirq.controller, oirq.specifier,
->  					     oirq.size);
-> @@ -1628,8 +1627,7 @@ void __devinit pcibios_scan_phb(struct pci_controller *hose)
->  	struct device_node *node = hose->dn;
->  	int mode;
->  
-> -	pr_debug("PCI: Scanning PHB %s\n",
-> -		 node ? node->full_name : "<NO NAME>");
-> +	pr_debug("PCI: Scanning PHB %s\n", of_node_full_name(node));
->  
->  	/* Get some IO space for the new PHB */
->  	pcibios_setup_phb_io_space(hose);
-> diff --git a/arch/powerpc/kernel/vio.c b/arch/powerpc/kernel/vio.c
-> index cb87301..63f72ed 100644
-> --- a/arch/powerpc/kernel/vio.c
-> +++ b/arch/powerpc/kernel/vio.c
-> @@ -1296,8 +1296,7 @@ static void __devinit vio_dev_release(struct device *dev)
->  	struct iommu_table *tbl = get_iommu_table_base(dev);
->  
->  	if (tbl)
-> -		iommu_free_table(tbl, dev->of_node ?
-> -			dev->of_node->full_name : dev_name(dev));
-> +		iommu_free_table(tbl, of_node_full_name(dev->of_node));
->  	of_node_put(dev->of_node);
->  	kfree(to_vio_dev(dev));
->  }
-> @@ -1509,7 +1508,7 @@ static ssize_t devspec_show(struct device *dev,
->  {
->  	struct device_node *of_node = dev->of_node;
->  
-> -	return sprintf(buf, "%s\n", of_node ? of_node->full_name : "none");
-> +	return sprintf(buf, "%s\n", of_node_full_name(of_node));
->  }
->  
->  static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
-> diff --git a/arch/powerpc/platforms/cell/iommu.c b/arch/powerpc/platforms/cell/iommu.c
-> index b9f509a..b673200 100644
-> --- a/arch/powerpc/platforms/cell/iommu.c
-> +++ b/arch/powerpc/platforms/cell/iommu.c
-> @@ -552,8 +552,7 @@ static struct iommu_table *cell_get_iommu_table(struct device *dev)
->  	iommu = cell_iommu_for_node(dev_to_node(dev));
->  	if (iommu == NULL || list_empty(&iommu->windows)) {
->  		printk(KERN_ERR "iommu: missing iommu for %s (node %d)\n",
-> -		       dev->of_node ? dev->of_node->full_name : "?",
-> -		       dev_to_node(dev));
-> +		       of_node_full_name(dev->of_node), dev_to_node(dev));
->  		return NULL;
->  	}
->  	window = list_entry(iommu->windows.next, struct iommu_window, list);
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 0915b1a..aab5fbc 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -1051,7 +1051,7 @@ static void pci_dma_dev_setup_pSeriesLP(struct pci_dev *dev)
->  	if (!pdn || !PCI_DN(pdn)) {
->  		printk(KERN_WARNING "pci_dma_dev_setup_pSeriesLP: "
->  		       "no DMA window found for pci dev=%s dn=%s\n",
-> -				 pci_name(dev), dn? dn->full_name : "<null>");
-> +				 pci_name(dev), of_node_full_name(dn));
->  		return;
->  	}
->  	pr_debug("  parent is %s\n", pdn->full_name);
-> diff --git a/arch/sparc/kernel/of_device_64.c b/arch/sparc/kernel/of_device_64.c
-> index 7a3be6f..7bbdc26 100644
-> --- a/arch/sparc/kernel/of_device_64.c
-> +++ b/arch/sparc/kernel/of_device_64.c
-> @@ -580,7 +580,7 @@ static unsigned int __init build_one_device_irq(struct platform_device *op,
->  				printk("%s: Apply [%s:%x] imap --> [%s:%x]\n",
->  				       op->dev.of_node->full_name,
->  				       pp->full_name, this_orig_irq,
-> -				       (iret ? iret->full_name : "NULL"), irq);
-> +				       of_node_full_name(iret), irq);
->  
->  			if (!iret)
->  				break;
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d9bfd49..9282d4c 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1173,7 +1173,7 @@ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
->  	ap->stem[stem_len] = 0;
->  	list_add_tail(&ap->link, &aliases_lookup);
->  	pr_debug("adding DT alias:%s: stem=%s id=%i node=%s\n",
-> -		 ap->alias, ap->stem, ap->id, np ? np->full_name : NULL);
-> +		 ap->alias, ap->stem, ap->id, of_node_full_name(np));
->  }
->  
->  /**
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 9cf0060..ff8ab7b 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -255,7 +255,7 @@ int of_irq_map_raw(struct device_node *parent, const __be32 *intspec,
->  
->  	skiplevel:
->  		/* Iterate again with new parent */
-> -		pr_debug(" -> new parent: %s\n", newpar ? newpar->full_name : "<>");
-> +		pr_debug(" -> new parent: %s\n", of_node_full_name(newpar));
->  		of_node_put(ipar);
->  		ipar = newpar;
->  		newpar = NULL;
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 2ec1083..1012377 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -163,6 +163,11 @@ static inline int of_node_to_nid(struct device_node *np) { return -1; }
->  #define of_node_to_nid of_node_to_nid
->  #endif
->  
-> +static inline const char* of_node_full_name(struct device_node *np)
-> +{
-> +	return np ? np->full_name : "<no-node>";
-> +}
-> +
->  extern struct device_node *of_find_node_by_name(struct device_node *from,
->  	const char *name);
->  #define for_each_node_by_name(dn, name) \
-> @@ -303,6 +308,11 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
->  
->  #else /* CONFIG_OF */
->  
-> +static inline const char* of_node_full_name(struct device_node *np)
-> +{
-> +	return "<no-node>";
-> +}
-> +
->  static inline bool of_have_populated_dt(void)
->  {
->  	return false;
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index 41c1564..38c5eb8 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -448,7 +448,7 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
->  	}
->  
->  	pr_debug("irq %lu on domain %s mapped to virtual irq %u\n",
-> -		hwirq, domain->of_node ? domain->of_node->full_name : "null", virq);
-> +		hwirq, of_node_full_name(domain->of_node), virq);
->  
->  	return virq;
->  }
-> @@ -477,7 +477,7 @@ unsigned int irq_create_of_mapping(struct device_node *controller,
->  			return intspec[0];
->  #endif
->  		pr_warning("no irq domain found for %s !\n",
-> -			   controller->full_name);
-> +			   of_node_full_name(controller));
->  		return 0;
->  	}
->  
-> @@ -725,8 +725,8 @@ static int virq_debug_show(struct seq_file *m, void *private)
->  			data = irq_desc_get_chip_data(desc);
->  			seq_printf(m, data ? "0x%p  " : "  %p  ", data);
->  
-> -			if (desc->irq_data.domain && desc->irq_data.domain->of_node)
-> -				p = desc->irq_data.domain->of_node->full_name;
-> +			if (desc->irq_data.domain)
-> +				p = of_node_full_name(desc->irq_data.domain->of_node);
->  			else
->  				p = none;
->  			seq_printf(m, "%s\n", p);
-> 
+T24gMDQvMjMvMjAxMiAwMzo1NyBBTSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6Cj4gU2lnbmVk
+LW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5k
+ZT4KPiAtLS0KCkFwcGxpZWQgZm9yIDMuNi4KClJvYgoKPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL210ZC9hdG1lbC1uYW5kLnR4dCB8ICAgIDIgKy0KPiAgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb24udHh0ICB8ICAgIDIgKy0KPiAgMiBm
+aWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50
+eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0
+Cj4gaW5kZXggYTIwMDY5NS4uMGMxYmNjZCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9hdG1lbC1uYW5kLnR4dAo+IEBAIC0zLDcgKzMsNyBA
+QCBBdG1lbCBOQU5EIGZsYXNoCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIC0gY29tcGF0aWJs
+ZSA6ICJhdG1lbCxhdDkxcm05MjAwLW5hbmQiLgo+ICAtIHJlZyA6IHNob3VsZCBzcGVjaWZ5IGxv
+Y2FsYnVzIGFkZHJlc3MgYW5kIHNpemUgdXNlZCBmb3IgdGhlIGNoaXAsCj4gLQlhbmQgaWYgYXZh
+aWxsYWJsZSB0aGUgRUNDLgo+ICsJYW5kIGlmIGF2YWlsYWJsZSB0aGUgRUNDLgo+ICAtIGF0bWVs
+LG5hbmQtYWRkci1vZmZzZXQgOiBvZmZzZXQgZm9yIHRoZSBhZGRyZXNzIGxhdGNoLgo+ICAtIGF0
+bWVsLG5hbmQtY21kLW9mZnNldCA6IG9mZnNldCBmb3IgdGhlIGNvbW1hbmQgbGF0Y2guCj4gIC0g
+I2FkZHJlc3MtY2VsbHMsICNzaXplLWNlbGxzIDogTXVzdCBiZSBwcmVzZW50IGlmIHRoZSBkZXZp
+Y2UgaGFzIHN1Yi1ub2Rlcwo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiBpbmRleCBmMTE0Y2UxLi42ZTFmNjFmIDEwMDY0NAo+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4
+dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9u
+LnR4dAo+IEBAIC0zNSw0ICszNSw0IEBAIGZsYXNoQDAgewo+ICAJdWltYWdlQDEwMDAwMCB7Cj4g
+IAkJcmVnID0gPDB4MDEwMDAwMCAweDIwMDAwMD47Cj4gIAl9Owo+IC1dOwo+ICt9Owo+IAoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUt
+ZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcK
+aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
