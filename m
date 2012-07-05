@@ -1,45 +1,59 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO
- Controllers
-Date: Thu, 5 Jul 2012 12:25:27 +0200
-Message-ID: <20120705102527.GQ17534@lunn.ch>
+From: Arnaud Patard (Rtp) <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO Controllers
+Date: Thu, 05 Jul 2012 12:38:51 +0200
+Message-ID: <87liiyijb8.fsf@lebrac.rtp-net.org>
 References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
- <1341325365-21393-2-git-send-email-andrew@lunn.ch>
- <20120705110251.596331e0@skate>
- <20120705094824.GO17534@lunn.ch>
- <20120705121029.782b5346@skate>
+	<1341325365-21393-2-git-send-email-andrew@lunn.ch>
+	<20120705110251.596331e0@skate> <20120705094824.GO17534@lunn.ch>
+	<87sjd6ikkj.fsf@lebrac.rtp-net.org> <20120705122050.2fbc2fe3@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120705121029.782b5346@skate>
+In-Reply-To: <20120705122050.2fbc2fe3@skate> (Thomas Petazzoni's message of
+	"Thu, 5 Jul 2012 12:20:50 +0200")
 Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Arnaud Patard <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> I've looked at the datasheet for the 88F6281, and the GPIO registers
-> look fairly similar with Armada 370/XP, except that:
-> 
->  * On 88F6281, there are two GPIO banks, while on Armada 370/XP it's a
->    continuous range of registers that control the GPIOs. But it can be
->    assimilated as one bank handling more than 32 GPIOs. So shouldn't be
->    a big problem to handle.
+Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
 
-The number of banks varies. Orion5x has one, Dove has three, etc.
+> Le Thu, 05 Jul 2012 12:11:40 +0200,
+> Arnaud Patard (Rtp) <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org> a =C3=A9crit :
+>
+>> > You are not the only one working in this area. Arnaud Patard said =
+he
+>> > was look at this as well.=20
+>>=20
+>> yeah, but tbh I've not made anything yet. If Thomas has already some
+>> code for it, we should try to make it "generic" so as to use it on
+>> armada xp and orion platforms.
+>
+> The MPP registers are identical on Armada XP/370 and 88F6281 (not sur=
+e
+> which other SoC datasheet I should be checking). Basically, it's just=
+ a
+> range of contiguous registers, with 4 bits per pin to select the
+> function.
 
-> 
->  * The Armada 370/XP have additional set/clear registers that allow to
->    modify the GPIO states without having to do a read/mask/write
->    sequence, which is nicer on SMP. I guess we can handle that as a
->    variant inside the driver without too much problem.
-> 
-> Marvell has given me a 88F6282 eval board, so I guess they are fine
-> with me spending some time ensuring that the new code works properly on
-> the previous platforms, especially in this case where the amount of
-> work does not seem to be enormous to keep the compatibility.
 
-That is good to hear.
+iirc, other SoCs are similar. The small exception being dove I
+guess. Dove has a 3rd gpo [the gpios are output only] bank but to be
+used as gpio require that a special bit is set and it's for all gpios o=
+f
+this bank. You'll find this bit in the "general mpp configuration
+register" if you look at the datasheet.
 
-Thanks
-	Andrew
+>
+> So my pinmux driver should simply work as is for Orion as well. The
+> only difference between platforms is the number of MPP pins that are
+> available, but this number also varies between versions of Armada XP
+> and Armada 370, so I already support this in the driver.
+>
+
+Are there some output-only gpio on armada xp/370 like on kirkwood/dove =
+?
+
+
+Arnaud
