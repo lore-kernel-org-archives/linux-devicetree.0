@@ -1,89 +1,55 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Thu, 5 Jul 2012 20:39:45 +0200
-Message-ID: <20120705183945.GV30009@pengutronix.de>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
- <4FF5A9FB.7010004@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] regulator: tps65910: add support for input supply
+Date: Thu, 05 Jul 2012 13:09:30 -0600
+Message-ID: <4FF5E66A.6010108@wwwdotorg.org>
+References: <1341497004-23537-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4FF5A9FB.7010004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1341497004-23537-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, swarren@nvidia.com, sameo@linux.intel.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2012 at 09:51:39AM -0500, Rob Herring wrote:
-> On 07/04/2012 02:56 AM, Sascha Hauer wrote:
-> > +
-> > +There are different ways of describing a display mode. The devicetree representation
-> > +corresponds to the one used by the Linux Framebuffer framework described here in
-> > +Documentation/fb/framebuffer.txt. This representation has been chosen because it's
-> > +the only format which does not allow for inconsistent parameters.Unlike the Framebuffer
-> > +framework the devicetree has the clock in Hz instead of ps.
+On 07/05/2012 08:03 AM, Laxman Dewangan wrote:
+> There is multiple voltage input pins on device which
+> takes the voltage input for different voltage regulator.
+> Support to configure the voltage input supplied by
+> different regulator for each regulators.
 > 
-> This implies you are putting linux settings into DT rather than
-> describing the h/w. I'm not saying the binding is wrong, but documenting
-> it this way makes it seem so.
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-The major reason to use these values was that they do not allow for
-inconsistent values (as opposed to for example with hsync_start which you
-would have to check for hsync_start >= xres).
-I could rephrase this if it looks too much like modelled-after-Linux
-instead of modelled-after-hardware.
+A couple nit-picky comments below:
 
-> 
-> One important piece missing (and IIRC linux doesn't really support) is
-> defining the pixel format of the interface.
+> diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
 
-I could use this aswell. I think this can be specified as additional
-properties later, right? I'm afraid this needs a lot of discussion so
-we should delay this to the next round.
+> +- vin-xxx-supply: Input voltage supply regulator.
 
-> 
-> > +Example:
-> > +
-> > +	display@0 {
-> > +		/* 1920x1080p24 */
-> > +		clock = <52000000>;
-> 
-> Should this use the clock binding? You probably need both constraints
-> and clock binding though.
+It'd be nice to name these simply xxx-supply; the "vin-" seems redundant.
 
-Is the clock binding suitable for this? Here we are not interested where
-the clock comes from, but instead which range is allowed.
+> +  Missing of these properties will be assume as there is no parent regulator
+> +  for that input pins and always powered on.
+> +  The valid input supply properties are:
+> +  tps65910:
+> +	vin-vcc7-supply: VRTC input.
+> +	vin-vccio-supply: VIO input.
+> +	vin-vcc1-supply: VDD1 input.
+> +	vin-vcc2-supply: VDD2 input.
+> +	vin-vcc6-supply: VDIG1 and VDIG2 input.
+> +	vin-vcc5-supply: VPLL and VDAC input.
+> +	vin-vcc4-supply: VAUX1 and VAUX2 input.
+> +	vin-vcc3-supply: VAUX33 and VMMC input.
+> +  tps65911:
+> +	vin-vcc7-supply: VRTC input.
+> +	vin-vcc1-supply: VDD1 input.
+> +	vin-vcc2-supply: VDD2 input.
+> +	vin-vccio-supply: VIO input.
+> +	vin-vcc6-supply: LDO1 and LDO2 input.
+> +	vin-vcc5-supply: LDO3 and LDO4 input.
+> +	vin-vcc4-supply: LDO5 input.
+> +	vin-vcc3-supply: LDO6, LDO7 and LDO8 input.
 
-> 
-> Often you don't know the frequency up front and/or have limited control
-> of the frequency (i.e. integer dividers). Then you have to adjust the
-> margins to get the desired refresh rate. To do that, you need to know
-> the ranges of values a panel can support. Perhaps you just assume you
-> can increase the right-margin and lower-margins as I think you will hit
-> pixel clock frequency max before any limit on margins.
-
-Most datasheets specify min,typ,max triplets. We could do this instead
-of using single fixed values for the margins:
-
-	left_margin = <0 10 40>;
-
-Right now we have nothing in the kernel that could handle this, but
-getting the interface to the devicetree right seems indeed important.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+It'd be nice to sort these lists of names so they appear in some
+discernible order.
