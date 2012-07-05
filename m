@@ -1,53 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO
- Controllers
-Date: Thu, 5 Jul 2012 15:47:37 +0000
-Message-ID: <201207051547.37906.arnd@arndb.de>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
- <201207051347.38887.arnd@arndb.de> <20120705135449.GZ17534@lunn.ch>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] of: address: Don't fail a lookup just because a node
+ has no reg property
+Date: Thu, 05 Jul 2012 16:50:42 +0100
+Message-ID: <4FF5B7D2.8000909@linaro.org>
+References: <1341498754-30445-1-git-send-email-lee.jones@linaro.org> <4FF5AB4D.6090500@gmail.com> <4FF5B004.4080100@linaro.org> <201207051538.37687.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120705135449.GZ17534-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201207051538.37687.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robherring2@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, STEricsson_nomadik_linux@list.st.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 July 2012, Andrew Lunn wrote:
-> > > Orion use generic chip interrupts, both for the main interrupts and
-> > > the GPIO interrupts. This does not yet support irq domain, so i have
-> > > to layer a legacy domain on top. The legacy domain needs to know the
-> > > first IRQ and the number of IRQs. For the primary IRQs that is
-> > > easy. However, GPIO IRQ is not so easy, it depends on how many primary
-> > > IRQs there are. This is not fixed. Orion5x has 32, Dove 64, kirkwood,
-> > > 64, and mv78xx0 has 96. I need to know this number when adding the
-> > > GPIO secondary IRQ legacy domain. By calling orion_gpio_of_init() in
-> > > the orion_add_irq_domain() i have this number to hand. If i used to
-> > > entries in the match table, i would have to put this number into some
-> > > global variable, or somehow ask the IRQ subsystem what the next free
-> > > IRQ number is.
-> > 
-> > But couldn't you store the number of interrupts for the primary controller
-> > in a local variable? I think the of_irq code already guarantees that
-> > the parent is probed first.
-> 
-> Sure i could. But what is the advantage of that?
+On 05/07/12 16:38, Arnd Bergmann wrote:
+> On Thursday 05 July 2012, Lee Jones wrote:
+>>>
+>>> Acked-by: Rob Herring <rob.herring@calxeda.com>
+>>>
+>>> Do you have something dependent on this or want me to apply?
+>>
+>> I have things that require this patch yes. Please apply.
+>
+> I guess Rob's question was whether you want to keep this together
+> with the patch that depends on it rather than him applying just
+> the one patch.
 
-Probably not much. I've reread the of_irq_init code again and it seems that
-the effect would be the same, perhaps appearing a little more similar to what
-the other platforms do.
+No, it's not important.
 
-Please add my Acked-by: to your patch.
+I'll send you the other patch as part of my DT pull-request.
 
-	Arnd
+I'm just waiting on Linus' Ack on a few patches and it'll be ready.
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+M: +44 77 88 633 515
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
