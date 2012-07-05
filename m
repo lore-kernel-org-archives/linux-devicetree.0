@@ -1,76 +1,86 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Thu, 5 Jul 2012 18:50:29 +0200
-Message-ID: <20120705165029.GU30009@pengutronix.de>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
- <3714247.L7zNpJpvuy@avalon>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [RFC] ARM: OMAP: Remove nodes dynamically at runtime
+Date: Thu, 5 Jul 2012 13:21:14 -0500
+Message-ID: <4FF5DB1A.5080106@ti.com>
+References: <4FE372CA.7020008@ti.com> <4FE3B328.8060805@ti.com> <4FECF376.3010001@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3714247.L7zNpJpvuy@avalon>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4FECF376.3010001@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: device-tree <devicetree-discuss@lists.ozlabs.org>, robherring2@gmail.com, Grant Likely <grant.likely@secretlab.ca>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2012 at 04:08:07PM +0200, Laurent Pinchart wrote:
-> Hi Sascha,
+Hi Rob,
+
+Thanks for the feedback. Some how our mail server appeared to filter out your
+response!
+
+> On 06/21/2012 06:50 PM, Jon Hunter wrote:
+>> 
+>> On 06/21/2012 02:15 PM, Jon Hunter wrote:
+>>> Hi all,
+>>>
+>>> I am in the process of adding a device-tree binding for OMAP timers and
+>>> I have encountered a scenario where ideally it would be useful to remove
+>>> a device-tree node at runtime.
+>>>
+>>> The scenario is this ...
+>>>
+>>> 1. OMAP3 devices may or may not have security features enabled. Security
+>>>    enabled devices are known as high-secure (HS) and devices without 
+>>>    security are known as general purpose (GP).
+>>> 2. For OMAP3 devices there are 12 general purpose timers available.
+>>> 3. On secure devices the 12th timer is reserved for secure usage and so
+>>>    cannot be used by the kernel, where as for a GP device it is available.
+>>> 4. We can detect the OMAP device type, secure or GP, at runtime via an
+>>>    on-chip register.
+>>> 5. Today, when not using DT, we do not register the 12th timer as a linux
+>>>    device if the device is secure.
+>>>
+>>> When migrating the timers to DT, I need a way to prevent this 12th timer
+>>> from being registered as a device on a secure device. The options I have
+>>> considered are ...
+>>>
+>>> a. Have separate a omap3.dtsi for GP and secure devices or place the
+>>>    node for the 12th timer in a omap3-gp.dtsi that is only used for
+>>>    boards with GP devices. The downside of this is that for boards
+>>>    that can support GP and secure device (such as the omap3 SDP) we
+>>>    require a separate dtb blob.
+>
+> That's certainly not ideal since you can distinguish which device you
+> are on. Does omap have a custom register for this because determining
+> secure vs. non-secure mode is a common problem without a standard way to
+> determine it.
+
+Yes, unfortunately the register I was referring to is a custom OMAP register. 
+
+>>>
+>>> b. Remove the timer node dynamically at runtime using the
+>>>    of_node_detach() API. In this solution we define a "ti,timer-secure"
+>>>    property that the 12th timer on omap3 devices would have and at
+>>>    runtime if we are a secure omap3 device, we search the timer nodes
+>>>    for any nodes with this property and remove them.
+>>>
+>>> Option B, seems to be the better option but requires me to enable 
+>>> CONFIG_OF_DYNAMIC for all omap devices and I was not sure if there is any
+>>> downside to doing so. Enabling this feature does not seem to add much code
+>>> as far as I can tell, however, I  wanted to get some feedback before
+>>> proposing this. Also if there are any other options I should consider then
+>>> please let me know.
+>>>
+>
+> I would wonder if of_node_get/put calls are all properly implemented.
+> They don't really matter until OF_DYNAMIC is enabled, but it would
+> affect all ARM DT platforms once we enable multi-platform support.
+>
+> Option C - have the bootloader set nodes status property to disabled.
 > 
-> Thanks for the patch.
-> 
-> > +++ b/Documentation/devicetree/bindings/video/displaymode
-> > @@ -0,0 +1,40 @@
-> > +videomode bindings
-> > +==================
-> > +
-> > +Required properties:
-> > + - xres, yres: Display resolution
-> > + - left-margin, right-margin, hsync-len: Horizontal Display timing
-> > parameters +   in pixels
-> > +   upper-margin, lower-margin, vsync-len: Vertical display timing
-> > parameters in +   lines
-> > + - clock: displayclock in Hz
-> > +
-> > +Optional properties:
-> > + - width-mm, height-mm: Display dimensions in mm
-> 
-> I've always had mixed feelings about the physical display dimension being part 
-> of the display mode. Those are properties of the panel/display instead of the 
-> mode. Storing them as part of the mode can be convenient, but we then run into 
-> consistency issues (developers have to remember in which display mode 
-> instances the values are available, and in which instances they're set to 0 
-> for instance). If we want to clean this up, this patch would be a good 
-> occasion.
+> Option D - same as C, but do it in the kernel with prom_add_property.
 
-This sounds like a display node with one or more node subnodes, like:
+Option D, sounds good to me. I will look into this.
 
-display {
-	width_mm = <>;
-	height_mm = <>;
-	mode {
-		xres = <>;
-		yres = <>;
-		...
-	};
-};
-
-Is that what you mean or are you thinking of something else?
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks
+Jon
