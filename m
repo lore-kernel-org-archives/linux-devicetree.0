@@ -1,44 +1,43 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO
- Controllers
-Date: Thu, 5 Jul 2012 15:15:22 +0200
-Message-ID: <20120705131522.GW17534@lunn.ch>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
- <1341325365-21393-2-git-send-email-andrew@lunn.ch>
- <20120705110251.596331e0@skate>
- <20120705094824.GO17534@lunn.ch>
- <20120705145801.4985770d@skate>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: OF_DYNAMIC usage
+Date: Thu, 05 Jul 2012 08:20:45 -0500
+Message-ID: <4FF594AD.6000401@gmail.com>
+References: <4FF586D1.2050407@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120705145801.4985770d@skate>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4FF586D1.2050407-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2012 at 02:58:01PM +0200, Thomas Petazzoni wrote:
-> Hello,
+On 07/05/2012 07:21 AM, Michal Simek wrote:
+> Hi,
 > 
-> Le Thu, 5 Jul 2012 11:48:24 +0200,
-> Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> a ??crit :
+> can someone tell me usage of OF_DYNAMIC?
+> How this can be used by user?
 > 
-> > The biggest problem i had, is the interaction between generic chip
-> > interrupts and irqdomain. There has been work to integrate the two,
-> > but its stalled. Either the work needs restarting and completing, or
-> > you need to throw away the use of generic interrupt so that you can
-> > use irqdomain linear. IMHO, throwing away generic interrupt is the
-> > wrong way.
+> Is it possible to exchange device node?
+> Add new one, delete one, etc?
 > 
-> Can you expand on why you think it would be wrong to throw away the
-> usage of irq_chip_generic, compared to implementing directly an
-> irq_chip?
+> Any user guide/log will be helpful to see what I can do with it.
 
-Basically you are asking, why should i use the framework when i can do
-it by hand.
+2nd question on OF_DYNAMIC in a week... I haven't really looked at it. I
+would suggest looking at the existing users (only powerpc iseries and
+pseries). My concern using would be that the reference counting is not
+correct for many drivers as of_node_get/put is a nop without OF_DYNAMIC.
 
-What are the advantages if ignoring the framework and doing it by
-hand?
+You can also activate/deactivate nodes with the status property.
 
-   Andrew
+Rob
