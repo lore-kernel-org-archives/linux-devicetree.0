@@ -1,109 +1,311 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Thu, 05 Jul 2012 16:08:07 +0200
-Message-ID: <3714247.L7zNpJpvuy@avalon>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH] regulator: tps65910: add support for input supply
+Date: Thu, 5 Jul 2012 19:33:24 +0530
+Message-ID: <1341497004-23537-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Grant Likely <grant.likely@secretlab.ca>, kernel@pengutronix.de, Mitch Bradley <wmb@firmworks.com>, Anatolij Gustschin <agust@denx.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, swarren@nvidia.com
+Cc: sameo@linux.intel.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+There is multiple voltage input pins on device which
+takes the voltage input for different voltage regulator.
+Support to configure the voltage input supplied by
+different regulator for each regulators.
 
-Thanks for the patch.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+This patch is for supporting the input supply regulators
+for different device output rails.
+The development is based on the discussion happen on patch
+[PATCH 1/3] ARM: dt: tegra: seaboard: add regulators
+excerpts for discussion are:
 
-On Wednesday 04 July 2012 09:56:35 Sascha Hauer wrote:
-> This patch adds a helper function for parsing videomodes from the
-> devicetree. The videomode can be either converted to a struct
-> drm_display_mode or a struct fb_videomode.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
-> 
-> changes since v1:
-> - use hyphens instead of underscores for property names
-> 
->  .../devicetree/bindings/video/displaymode          |   40 ++++++++
->  drivers/of/Kconfig                                 |    5 +
->  drivers/of/Makefile                                |    1 +
->  drivers/of/of_videomode.c                          |  108 +++++++++++++++++
->  include/linux/of_videomode.h                       |   19 ++++
->  5 files changed, 173 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/displaymode
->  create mode 100644 drivers/of/of_videomode.c
->  create mode 100644 include/linux/of_videomode.h
-> 
-> diff --git a/Documentation/devicetree/bindings/video/displaymode
-> b/Documentation/devicetree/bindings/video/displaymode new file mode 100644
-> index 0000000..43cc17d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/displaymode
-> @@ -0,0 +1,40 @@
-> +videomode bindings
-> +==================
-> +
-> +Required properties:
-> + - xres, yres: Display resolution
-> + - left-margin, right-margin, hsync-len: Horizontal Display timing
-> parameters +   in pixels
-> +   upper-margin, lower-margin, vsync-len: Vertical display timing
-> parameters in +   lines
-> + - clock: displayclock in Hz
-> +
-> +Optional properties:
-> + - width-mm, height-mm: Display dimensions in mm
+Laxman:
+the input to different regulator
+is from the pin of the chips and so the name should be the 
+<pin-name>-supply which should be part of chip-dt binding, not
+to the particular rail.
 
-I've always had mixed feelings about the physical display dimension being part 
-of the display mode. Those are properties of the panel/display instead of the 
-mode. Storing them as part of the mode can be convenient, but we then run into 
-consistency issues (developers have to remember in which display mode 
-instances the values are available, and in which instances they're set to 0 
-for instance). If we want to clean this up, this patch would be a good 
-occasion.
+Mark:
+More specifically, all the supplies for a device (including those
+that happen to be inputs for regulators) should be specified in
+exactly the same fashion.  This makes the binding more regular and
+means that users can just go through the schematic adding the
+mappings without worrying about what what the supply happens to
+be.
 
-> + - hsync-active-high (bool): Hsync pulse is active high
-> + - vsync-active-high (bool): Vsync pulse is active high
-> + - interlaced (bool): This is an interlaced mode
-> + - doublescan (bool): This is a doublescan mode
-> +
-> +There are different ways of describing a display mode. The devicetree
-> representation +corresponds to the one used by the Linux Framebuffer
-> framework described here in +Documentation/fb/framebuffer.txt. This
-> representation has been chosen because it's +the only format which does not
-> allow for inconsistent parameters.Unlike the Framebuffer +framework the
-> devicetree has the clock in Hz instead of ps.
-> +
-> +Example:
-> +
-> +	display@0 {
-> +		/* 1920x1080p24 */
-> +		clock = <52000000>;
-> +		xres = <1920>;
-> +		yres = <1080>;
-> +		left-margin = <25>;
-> +		right-margin = <25>;
-> +		hsync-len = <25>;
-> +		lower-margin = <2>;
-> +		upper-margin = <2>;
-> +		vsync-len = <2>;
-> +		hsync-active-high;
-> +	};
-> +
+ Documentation/devicetree/bindings/mfd/tps65910.txt |   25 ++++++++++++++
+ drivers/regulator/tps65910-regulator.c             |   36 ++++++++++++++++++++
+ include/linux/mfd/tps65910.h                       |    2 +
+ 3 files changed, 63 insertions(+), 0 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
+index b51d206..b390600 100644
+--- a/Documentation/devicetree/bindings/mfd/tps65910.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
+@@ -32,6 +32,28 @@ Optional properties:
+   comparator. (see VMBCH_VSEL in TPS65910 datasheet)
+ - ti,en-gpio-sleep: enable sleep control for gpios
+   There should be 9 entries here, one for each gpio.
++- vin-xxx-supply: Input voltage supply regulator.
++  Missing of these properties will be assume as there is no parent regulator
++  for that input pins and always powered on.
++  The valid input supply properties are:
++  tps65910:
++	vin-vcc7-supply: VRTC input.
++	vin-vccio-supply: VIO input.
++	vin-vcc1-supply: VDD1 input.
++	vin-vcc2-supply: VDD2 input.
++	vin-vcc6-supply: VDIG1 and VDIG2 input.
++	vin-vcc5-supply: VPLL and VDAC input.
++	vin-vcc4-supply: VAUX1 and VAUX2 input.
++	vin-vcc3-supply: VAUX33 and VMMC input.
++  tps65911:
++	vin-vcc7-supply: VRTC input.
++	vin-vcc1-supply: VDD1 input.
++	vin-vcc2-supply: VDD2 input.
++	vin-vccio-supply: VIO input.
++	vin-vcc6-supply: LDO1 and LDO2 input.
++	vin-vcc5-supply: LDO3 and LDO4 input.
++	vin-vcc4-supply: LDO5 input.
++	vin-vcc3-supply: LDO6, LDO7 and LDO8 input.
+ 
+ Regulator Optional properties:
+ - ti,regulator-ext-sleep-control: enable external sleep
+@@ -57,6 +79,9 @@ Example:
+ 
+ 		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
+ 
++		vin-vcc7-supply = <&reg_parent>;
++		vin-vcc1-supply = <&reg_parent>;
++
+ 		regulators {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
+index a534e08..89c0f2e 100644
+--- a/drivers/regulator/tps65910-regulator.c
++++ b/drivers/regulator/tps65910-regulator.c
+@@ -85,6 +85,7 @@ static const unsigned int VMMC_VSEL_table[] = {
+ 
+ struct tps_info {
+ 	const char *name;
++	const char *vin_name;
+ 	u8 n_voltages;
+ 	const unsigned int *voltage_table;
+ 	int enable_time_us;
+@@ -93,20 +94,24 @@ struct tps_info {
+ static struct tps_info tps65910_regs[] = {
+ 	{
+ 		.name = "vrtc",
++		.vin_name = "vin-vcc7",
+ 		.enable_time_us = 2200,
+ 	},
+ 	{
+ 		.name = "vio",
++		.vin_name = "vin-vccio",
+ 		.n_voltages = ARRAY_SIZE(VIO_VSEL_table),
+ 		.voltage_table = VIO_VSEL_table,
+ 		.enable_time_us = 350,
+ 	},
+ 	{
+ 		.name = "vdd1",
++		.vin_name = "vin-vcc1",
+ 		.enable_time_us = 350,
+ 	},
+ 	{
+ 		.name = "vdd2",
++		.vin_name = "vin-vcc2",
+ 		.enable_time_us = 350,
+ 	},
+ 	{
+@@ -117,48 +122,56 @@ static struct tps_info tps65910_regs[] = {
+ 	},
+ 	{
+ 		.name = "vdig1",
++		.vin_name = "vin-vcc6",
+ 		.n_voltages = ARRAY_SIZE(VDIG1_VSEL_table),
+ 		.voltage_table = VDIG1_VSEL_table,
+ 		.enable_time_us = 100,
+ 	},
+ 	{
+ 		.name = "vdig2",
++		.vin_name = "vin-vcc6",
+ 		.n_voltages = ARRAY_SIZE(VDIG2_VSEL_table),
+ 		.voltage_table = VDIG2_VSEL_table,
+ 		.enable_time_us = 100,
+ 	},
+ 	{
+ 		.name = "vpll",
++		.vin_name = "vin-vcc5",
+ 		.n_voltages = ARRAY_SIZE(VPLL_VSEL_table),
+ 		.voltage_table = VPLL_VSEL_table,
+ 		.enable_time_us = 100,
+ 	},
+ 	{
+ 		.name = "vdac",
++		.vin_name = "vin-vcc5",
+ 		.n_voltages = ARRAY_SIZE(VDAC_VSEL_table),
+ 		.voltage_table = VDAC_VSEL_table,
+ 		.enable_time_us = 100,
+ 	},
+ 	{
+ 		.name = "vaux1",
++		.vin_name = "vin-vcc4",
+ 		.n_voltages = ARRAY_SIZE(VAUX1_VSEL_table),
+ 		.voltage_table = VAUX1_VSEL_table,
+ 		.enable_time_us = 100,
+ 	},
+ 	{
+ 		.name = "vaux2",
++		.vin_name = "vin-vcc4",
+ 		.n_voltages = ARRAY_SIZE(VAUX2_VSEL_table),
+ 		.voltage_table = VAUX2_VSEL_table,
+ 		.enable_time_us = 100,
+ 	},
+ 	{
+ 		.name = "vaux33",
++		.vin_name = "vin-vcc3",
+ 		.n_voltages = ARRAY_SIZE(VAUX33_VSEL_table),
+ 		.voltage_table = VAUX33_VSEL_table,
+ 		.enable_time_us = 100,
+ 	},
+ 	{
+ 		.name = "vmmc",
++		.vin_name = "vin-vcc3",
+ 		.n_voltages = ARRAY_SIZE(VMMC_VSEL_table),
+ 		.voltage_table = VMMC_VSEL_table,
+ 		.enable_time_us = 100,
+@@ -168,21 +181,25 @@ static struct tps_info tps65910_regs[] = {
+ static struct tps_info tps65911_regs[] = {
+ 	{
+ 		.name = "vrtc",
++		.vin_name = "vin-vcc7",
+ 		.enable_time_us = 2200,
+ 	},
+ 	{
+ 		.name = "vio",
++		.vin_name = "vin-vccio",
+ 		.n_voltages = ARRAY_SIZE(VIO_VSEL_table),
+ 		.voltage_table = VIO_VSEL_table,
+ 		.enable_time_us = 350,
+ 	},
+ 	{
+ 		.name = "vdd1",
++		.vin_name = "vin-vcc1",
+ 		.n_voltages = 73,
+ 		.enable_time_us = 350,
+ 	},
+ 	{
+ 		.name = "vdd2",
++		.vin_name = "vin-vcc2",
+ 		.n_voltages = 73,
+ 		.enable_time_us = 350,
+ 	},
+@@ -193,41 +210,49 @@ static struct tps_info tps65911_regs[] = {
+ 	},
+ 	{
+ 		.name = "ldo1",
++		.vin_name = "vin-vcc6",
+ 		.n_voltages = 47,
+ 		.enable_time_us = 420,
+ 	},
+ 	{
+ 		.name = "ldo2",
++		.vin_name = "vin-vcc6",
+ 		.n_voltages = 47,
+ 		.enable_time_us = 420,
+ 	},
+ 	{
+ 		.name = "ldo3",
++		.vin_name = "vin-vcc5",
+ 		.n_voltages = 24,
+ 		.enable_time_us = 230,
+ 	},
+ 	{
+ 		.name = "ldo4",
++		.vin_name = "vin-vcc5",
+ 		.n_voltages = 47,
+ 		.enable_time_us = 230,
+ 	},
+ 	{
+ 		.name = "ldo5",
++		.vin_name = "vin-vcc4",
+ 		.n_voltages = 24,
+ 		.enable_time_us = 230,
+ 	},
+ 	{
+ 		.name = "ldo6",
++		.vin_name = "vin-vcc3",
+ 		.n_voltages = 24,
+ 		.enable_time_us = 230,
+ 	},
+ 	{
+ 		.name = "ldo7",
++		.vin_name = "vin-vcc3",
+ 		.n_voltages = 24,
+ 		.enable_time_us = 230,
+ 	},
+ 	{
+ 		.name = "ldo8",
++		.vin_name = "vin-vcc3",
+ 		.n_voltages = 24,
+ 		.enable_time_us = 230,
+ 	},
+@@ -1013,6 +1038,9 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
+ 	*tps65910_reg_matches = matches;
+ 
+ 	for (idx = 0; idx < count; idx++) {
++		struct tps_info *info = matches[idx].driver_data;
++		char in_supply[32]; /* 32 is max size of property name */
++
+ 		if (!matches[idx].init_data || !matches[idx].of_node)
+ 			continue;
+ 
+@@ -1023,6 +1051,13 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
+ 				"ti,regulator-ext-sleep-control", &prop);
+ 		if (!ret)
+ 			pmic_plat_data->regulator_ext_sleep_control[idx] = prop;
++
++		if (info->vin_name) {
++			snprintf(in_supply, 32, "%s-supply", info->vin_name);
++			if (of_find_property(np, in_supply, 0))
++				pmic_plat_data->input_supply[idx] =
++								info->vin_name;
++		}
+ 	}
+ 
+ 	return pmic_plat_data;
+@@ -1126,6 +1161,7 @@ static __devinit int tps65910_probe(struct platform_device *pdev)
+ 		pmic->info[i] = info;
+ 
+ 		pmic->desc[i].name = info->name;
++		pmic->desc[i].supply_name = pmic_plat_data->input_supply[i];
+ 		pmic->desc[i].id = i;
+ 		pmic->desc[i].n_voltages = info->n_voltages;
+ 		pmic->desc[i].enable_time = info->enable_time_us;
+diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
+index dd8dc0a..c5f8060 100644
+--- a/include/linux/mfd/tps65910.h
++++ b/include/linux/mfd/tps65910.h
+@@ -799,6 +799,7 @@ struct tps65910_sleep_keepon_data {
+ /**
+  * struct tps65910_board
+  * Board platform data may be used to initialize regulators.
++ * @input_supply: Name of input supply regulator.
+  */
+ 
+ struct tps65910_board {
+@@ -811,6 +812,7 @@ struct tps65910_board {
+ 	struct tps65910_sleep_keepon_data *slp_keepon;
+ 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
+ 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
++	const char *input_supply[TPS65910_NUM_REGS];
+ 	struct regulator_init_data *tps65910_pmic_init_data[TPS65910_NUM_REGS];
+ };
+ 
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.1.1
