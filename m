@@ -1,29 +1,48 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/2] of: return -ENOENT when no property
-Date: Thu, 05 Jul 2012 09:20:39 -0500
-Message-ID: <4FF5A2B7.4010401@gmail.com>
-References: <1340945879-11712-1-git-send-email-acourbot@nvidia.com> <1340945879-11712-2-git-send-email-acourbot@nvidia.com> <CACRpkdbjHCc0pud8hnjJi1AMM5XQUmS=duhSnzXO+QO29YLk0A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH] of: address: Don't fail a lookup just because a node has no reg property
+Date: Thu,  5 Jul 2012 15:32:34 +0100
+Message-ID: <1341498754-30445-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbjHCc0pud8hnjJi1AMM5XQUmS=duhSnzXO+QO29YLk0A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: STEricsson_nomadik_linux@list.st.com, linus.walleij@stericsson.com, arnd@arndb.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2012 08:26 AM, Linus Walleij wrote:
-> On Fri, Jun 29, 2012 at 6:57 AM, Alexandre Courbot <acourbot@nvidia.com> wrote:
-> 
->> Make of_parse_phandle_with_args return -ENOENT instead of -EINVAL when
->> no matching property is found, which allows to discriminate between
->> absence of property and parsing error.
->>
->> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> 
-> Rob can you take this into the DT git?
+Sometimes it doesn't make any sense for a node to have an address.
+In this case device lookup will always be unsuccessful because we
+currently assume every node will have a reg property. This patch
+changes the semantics so that the resource address and the lookup
+address will only be compared if one exists.
 
-Yes.
+Things like AUXDATA() rely on of_dev_lookup to return the lookup
+entry of a particular device in order to do things like apply
+platform_data to a device. However, this is currently broken for
+nodes which do not have a reg property, meaning that platform_data
+can not be passed in those cases.
 
-Rob
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/of/platform.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 343ad29..9600480 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -317,10 +317,9 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
+ 	for(; lookup->compatible != NULL; lookup++) {
+ 		if (!of_device_is_compatible(np, lookup->compatible))
+ 			continue;
+-		if (of_address_to_resource(np, 0, &res))
+-			continue;
+-		if (res.start != lookup->phys_addr)
+-			continue;
++		if (!of_address_to_resource(np, 0, &res))
++			if (res.start != lookup->phys_addr)
++				continue;
+ 		pr_debug("%s: devname=%s\n", np->full_name, lookup->name);
+ 		return lookup;
+ 	}
+-- 
+1.7.9.5
