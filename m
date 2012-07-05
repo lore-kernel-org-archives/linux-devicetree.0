@@ -1,311 +1,74 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH] regulator: tps65910: add support for input supply
-Date: Thu, 5 Jul 2012 19:33:24 +0530
-Message-ID: <1341497004-23537-1-git-send-email-ldewangan@nvidia.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO Controllers
+Date: Thu, 05 Jul 2012 16:14:50 +0200
+Message-ID: <4FF5A15A.8070309@googlemail.com>
+References: <1341325365-21393-1-git-send-email-andrew@lunn.ch> <1341325365-21393-2-git-send-email-andrew@lunn.ch> <201207051225.55390.arnd@arndb.de> <20120705130819.GV17534@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, swarren@nvidia.com
-Cc: sameo@linux.intel.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120705130819.GV17534-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is multiple voltage input pins on device which
-takes the voltage input for different voltage regulator.
-Support to configure the voltage input supplied by
-different regulator for each regulators.
+On 07/05/2012 03:08 PM, Andrew Lunn wrote:
+> The issue is knowing what IRQ number to use for the secondary
+> interrupts.
+>
+> Orion use generic chip interrupts, both for the main interrupts and
+> the GPIO interrupts. This does not yet support irq domain, so i have
+> to layer a legacy domain on top. The legacy domain needs to know the
+> first IRQ and the number of IRQs. For the primary IRQs that is
+> easy. However, GPIO IRQ is not so easy, it depends on how many primary
+> IRQs there are. This is not fixed. Orion5x has 32, Dove 64, kirkwood,
+> 64, and mv78xx0 has 96. I need to know this number when adding the
+> GPIO secondary IRQ legacy domain. By calling orion_gpio_of_init() in
+> the orion_add_irq_domain() i have this number to hand. If i used to
+> entries in the match table, i would have to put this number into some
+> global variable, or somehow ask the IRQ subsystem what the next free
+> IRQ number is.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
-This patch is for supporting the input supply regulators
-for different device output rails.
-The development is based on the discussion happen on patch
-[PATCH 1/3] ARM: dt: tegra: seaboard: add regulators
-excerpts for discussion are:
+Andrew,
 
-Laxman:
-the input to different regulator
-is from the pin of the chips and so the name should be the 
-<pin-name>-supply which should be part of chip-dt binding, not
-to the particular rail.
+is it possible to group all gpio banks into one DT description?
+For mach-dove it could be something like:
 
-Mark:
-More specifically, all the supplies for a device (including those
-that happen to be inputs for regulators) should be specified in
-exactly the same fashion.  This makes the binding more regular and
-means that users can just go through the schematic adding the
-mappings without worrying about what what the supply happens to
-be.
+gpio: gpio-controller {
+	compatible = "marvell, orion-gpio";
+	...
 
- Documentation/devicetree/bindings/mfd/tps65910.txt |   25 ++++++++++++++
- drivers/regulator/tps65910-regulator.c             |   36 ++++++++++++++++++++
- include/linux/mfd/tps65910.h                       |    2 +
- 3 files changed, 63 insertions(+), 0 deletions(-)
+	bank0@d0400 {
+		reg = <0xd0400 0x40>;
+		ngpio = <8>;
+		mask-offset = <0>;
+		interrupts = <12>;
+	};
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-index b51d206..b390600 100644
---- a/Documentation/devicetree/bindings/mfd/tps65910.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -32,6 +32,28 @@ Optional properties:
-   comparator. (see VMBCH_VSEL in TPS65910 datasheet)
- - ti,en-gpio-sleep: enable sleep control for gpios
-   There should be 9 entries here, one for each gpio.
-+- vin-xxx-supply: Input voltage supply regulator.
-+  Missing of these properties will be assume as there is no parent regulator
-+  for that input pins and always powered on.
-+  The valid input supply properties are:
-+  tps65910:
-+	vin-vcc7-supply: VRTC input.
-+	vin-vccio-supply: VIO input.
-+	vin-vcc1-supply: VDD1 input.
-+	vin-vcc2-supply: VDD2 input.
-+	vin-vcc6-supply: VDIG1 and VDIG2 input.
-+	vin-vcc5-supply: VPLL and VDAC input.
-+	vin-vcc4-supply: VAUX1 and VAUX2 input.
-+	vin-vcc3-supply: VAUX33 and VMMC input.
-+  tps65911:
-+	vin-vcc7-supply: VRTC input.
-+	vin-vcc1-supply: VDD1 input.
-+	vin-vcc2-supply: VDD2 input.
-+	vin-vccio-supply: VIO input.
-+	vin-vcc6-supply: LDO1 and LDO2 input.
-+	vin-vcc5-supply: LDO3 and LDO4 input.
-+	vin-vcc4-supply: LDO5 input.
-+	vin-vcc3-supply: LDO6, LDO7 and LDO8 input.
- 
- Regulator Optional properties:
- - ti,regulator-ext-sleep-control: enable external sleep
-@@ -57,6 +79,9 @@ Example:
- 
- 		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
- 
-+		vin-vcc7-supply = <&reg_parent>;
-+		vin-vcc1-supply = <&reg_parent>;
-+
- 		regulators {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
-index a534e08..89c0f2e 100644
---- a/drivers/regulator/tps65910-regulator.c
-+++ b/drivers/regulator/tps65910-regulator.c
-@@ -85,6 +85,7 @@ static const unsigned int VMMC_VSEL_table[] = {
- 
- struct tps_info {
- 	const char *name;
-+	const char *vin_name;
- 	u8 n_voltages;
- 	const unsigned int *voltage_table;
- 	int enable_time_us;
-@@ -93,20 +94,24 @@ struct tps_info {
- static struct tps_info tps65910_regs[] = {
- 	{
- 		.name = "vrtc",
-+		.vin_name = "vin-vcc7",
- 		.enable_time_us = 2200,
- 	},
- 	{
- 		.name = "vio",
-+		.vin_name = "vin-vccio",
- 		.n_voltages = ARRAY_SIZE(VIO_VSEL_table),
- 		.voltage_table = VIO_VSEL_table,
- 		.enable_time_us = 350,
- 	},
- 	{
- 		.name = "vdd1",
-+		.vin_name = "vin-vcc1",
- 		.enable_time_us = 350,
- 	},
- 	{
- 		.name = "vdd2",
-+		.vin_name = "vin-vcc2",
- 		.enable_time_us = 350,
- 	},
- 	{
-@@ -117,48 +122,56 @@ static struct tps_info tps65910_regs[] = {
- 	},
- 	{
- 		.name = "vdig1",
-+		.vin_name = "vin-vcc6",
- 		.n_voltages = ARRAY_SIZE(VDIG1_VSEL_table),
- 		.voltage_table = VDIG1_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vdig2",
-+		.vin_name = "vin-vcc6",
- 		.n_voltages = ARRAY_SIZE(VDIG2_VSEL_table),
- 		.voltage_table = VDIG2_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vpll",
-+		.vin_name = "vin-vcc5",
- 		.n_voltages = ARRAY_SIZE(VPLL_VSEL_table),
- 		.voltage_table = VPLL_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vdac",
-+		.vin_name = "vin-vcc5",
- 		.n_voltages = ARRAY_SIZE(VDAC_VSEL_table),
- 		.voltage_table = VDAC_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vaux1",
-+		.vin_name = "vin-vcc4",
- 		.n_voltages = ARRAY_SIZE(VAUX1_VSEL_table),
- 		.voltage_table = VAUX1_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vaux2",
-+		.vin_name = "vin-vcc4",
- 		.n_voltages = ARRAY_SIZE(VAUX2_VSEL_table),
- 		.voltage_table = VAUX2_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vaux33",
-+		.vin_name = "vin-vcc3",
- 		.n_voltages = ARRAY_SIZE(VAUX33_VSEL_table),
- 		.voltage_table = VAUX33_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vmmc",
-+		.vin_name = "vin-vcc3",
- 		.n_voltages = ARRAY_SIZE(VMMC_VSEL_table),
- 		.voltage_table = VMMC_VSEL_table,
- 		.enable_time_us = 100,
-@@ -168,21 +181,25 @@ static struct tps_info tps65910_regs[] = {
- static struct tps_info tps65911_regs[] = {
- 	{
- 		.name = "vrtc",
-+		.vin_name = "vin-vcc7",
- 		.enable_time_us = 2200,
- 	},
- 	{
- 		.name = "vio",
-+		.vin_name = "vin-vccio",
- 		.n_voltages = ARRAY_SIZE(VIO_VSEL_table),
- 		.voltage_table = VIO_VSEL_table,
- 		.enable_time_us = 350,
- 	},
- 	{
- 		.name = "vdd1",
-+		.vin_name = "vin-vcc1",
- 		.n_voltages = 73,
- 		.enable_time_us = 350,
- 	},
- 	{
- 		.name = "vdd2",
-+		.vin_name = "vin-vcc2",
- 		.n_voltages = 73,
- 		.enable_time_us = 350,
- 	},
-@@ -193,41 +210,49 @@ static struct tps_info tps65911_regs[] = {
- 	},
- 	{
- 		.name = "ldo1",
-+		.vin_name = "vin-vcc6",
- 		.n_voltages = 47,
- 		.enable_time_us = 420,
- 	},
- 	{
- 		.name = "ldo2",
-+		.vin_name = "vin-vcc6",
- 		.n_voltages = 47,
- 		.enable_time_us = 420,
- 	},
- 	{
- 		.name = "ldo3",
-+		.vin_name = "vin-vcc5",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo4",
-+		.vin_name = "vin-vcc5",
- 		.n_voltages = 47,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo5",
-+		.vin_name = "vin-vcc4",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo6",
-+		.vin_name = "vin-vcc3",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo7",
-+		.vin_name = "vin-vcc3",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo8",
-+		.vin_name = "vin-vcc3",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
-@@ -1013,6 +1038,9 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
- 	*tps65910_reg_matches = matches;
- 
- 	for (idx = 0; idx < count; idx++) {
-+		struct tps_info *info = matches[idx].driver_data;
-+		char in_supply[32]; /* 32 is max size of property name */
-+
- 		if (!matches[idx].init_data || !matches[idx].of_node)
- 			continue;
- 
-@@ -1023,6 +1051,13 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
- 				"ti,regulator-ext-sleep-control", &prop);
- 		if (!ret)
- 			pmic_plat_data->regulator_ext_sleep_control[idx] = prop;
-+
-+		if (info->vin_name) {
-+			snprintf(in_supply, 32, "%s-supply", info->vin_name);
-+			if (of_find_property(np, in_supply, 0))
-+				pmic_plat_data->input_supply[idx] =
-+								info->vin_name;
-+		}
- 	}
- 
- 	return pmic_plat_data;
-@@ -1126,6 +1161,7 @@ static __devinit int tps65910_probe(struct platform_device *pdev)
- 		pmic->info[i] = info;
- 
- 		pmic->desc[i].name = info->name;
-+		pmic->desc[i].supply_name = pmic_plat_data->input_supply[i];
- 		pmic->desc[i].id = i;
- 		pmic->desc[i].n_voltages = info->n_voltages;
- 		pmic->desc[i].enable_time = info->enable_time_us;
-diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
-index dd8dc0a..c5f8060 100644
---- a/include/linux/mfd/tps65910.h
-+++ b/include/linux/mfd/tps65910.h
-@@ -799,6 +799,7 @@ struct tps65910_sleep_keepon_data {
- /**
-  * struct tps65910_board
-  * Board platform data may be used to initialize regulators.
-+ * @input_supply: Name of input supply regulator.
-  */
- 
- struct tps65910_board {
-@@ -811,6 +812,7 @@ struct tps65910_board {
- 	struct tps65910_sleep_keepon_data *slp_keepon;
- 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
- 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
-+	const char *input_supply[TPS65910_NUM_REGS];
- 	struct regulator_init_data *tps65910_pmic_init_data[TPS65910_NUM_REGS];
- };
- 
--- 
-1.7.1.1
+	bank1@d0400 {
+		reg = <0xd0400 0x40>;
+		ngpio = <8>;
+		mask-offset = <8>;
+		interrupts = <13>;
+	};
+
+	...
+
+	bank4@d0420 {
+		reg = <0xd0420 0x40>;
+		ngpio = <32>;
+		interrupts = <61>;
+	};		
+
+	bank5@e8400 {
+		reg = <0xe8400 0x20>;
+		ngpio = <8>;
+		marvell,orion-gpio-output-only;
+	};		
+};
+
+This would have the advantage that DT describes gpio-to-irq dependencies.
+Moreover, nodes that reference gpios can do gpios = <&gpio 71 0>; instead of
+gpios = <&gpio3 7 0>;
+
+Sebastian
