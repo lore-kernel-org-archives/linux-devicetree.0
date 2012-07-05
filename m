@@ -1,87 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO Controllers
-Date: Thu, 5 Jul 2012 12:25:55 +0000
-Message-ID: <201207051225.55390.arnd@arndb.de>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch> <1341325365-21393-2-git-send-email-andrew@lunn.ch>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] ARM: davinci: cp_intc: Add OF support for TI interrupt
+ controller
+Date: Thu, 05 Jul 2012 14:43:08 +0200
+Message-ID: <4FF58BDC.6060802@denx.de>
+References: <1341342970-27535-1-git-send-email-nsekhar@ti.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1341325365-21393-2-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1341342970-27535-1-git-send-email-nsekhar-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 July 2012, Andrew Lunn wrote:
-> Both IRQ and GPIO controllers can now be represented in DT.  The IRQ
-> controllers are setup first, and then the GPIO controllers. Interrupts
-> for GPIO lines are placed directly after the main interrupts in the
-> interrupt space.
+Hello Sekhar,
 
-Overall looks very good.
+On 03.07.2012 21:16, Sekhar Nori wrote:
+> From: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+>
+> Add a function to initialize the Common Platform Interrupt Controller
+> (cp_intc) from TI used on OMAP-L1x SoCs using a device tree node.
+>
+> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
+> Cc: Sergei Shtylyov<sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+> ---
+>   .../devicetree/bindings/arm/davinci/cp-intc.txt    |   27 ++++++++++++++++++++
+>   arch/arm/mach-davinci/cp_intc.c                    |   16 +++++++++---
+>   arch/arm/mach-davinci/include/mach/cp_intc.h       |    1 +
+>   3 files changed, 41 insertions(+), 3 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/arm/davinci/cp-intc.txt
 
-> diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-> index 80b9a94..8927e10 100644
-> --- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-> +++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-> @@ -38,3 +38,22 @@ Example:
->  		reg-names = "mux status", "mux mask";
->  		mrvl,intc-nr-irqs = <2>;
->  	};
-> +
-> +* Marvell Orion Interrupt controller
-> +
-> +Required properties
-> +- compatible :  Should be "marvell,orion-intc".
-> +- #interrupt-cells: Specifies the number of cells needed to encode an
-> +  interrupt source. Supported value is <1>.
-> +- interrupt-controller : Declare this node to be an interrupt controller.
-> +- reg : Interrupt mask address.
+Thanks!
 
-I think you should clarify that the "reg" property can be multiple
-4-byte ranges, because that is fairly unusual.
+Tested on the enbw_cmc board.
 
-> +#ifdef CONFIG_OF
-> +static int __init orion_add_irq_domain(struct device_node *np,
-> +				       struct device_node *interrupt_parent)
-> +{
-> +	int i = 0, irq_gpio;
-> +	void __iomem *base;
-> +
-> +	do {
-> +		base = of_iomap(np, i);
-> +		if (base) {
-> +			orion_irq_init(i * 32, base);
-> +			i++;
-> +		}
-> +	} while (base);
-> +
-> +	irq_domain_add_legacy(np, i * 32, 0, 0,
-> +			      &irq_domain_simple_ops, NULL);
-> +
-> +	irq_gpio = i * 32;
-> +	orion_gpio_of_init(irq_gpio);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id orion_irq_match[] = {
-> +	{ .compatible = "marvell,orion-intc",
-> +	  .data = orion_add_irq_domain, },
-> +	{},
-> +};
-> +
-> +void __init orion_dt_init_irq(void)
-> +{
-> +	of_irq_init(orion_irq_match);
-> +}
-> +#endif
+Sent the updated "ARM: davinci: add support for the am1808 based enbw_cmc"
+based on this patch soon.
 
-I'm wondering about this one.  The other platforms usually put the secondary
-interrupt controllers into the same match table, while you call orion_gpio_of_init
-from orion_add_irq_domain. Can you explain why you do this? Does it have
-any disadvantages?
-
-	Arnd
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
