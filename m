@@ -1,55 +1,314 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 2/3] regulator: dt: regulator match by regulator-compatible
-Date: Thu, 05 Jul 2012 08:16:19 +0100
-Message-ID: <4FF53F43.1040308@linaro.org>
-References: <1340194987-23654-1-git-send-email-ldewangan@nvidia.com> <1340194987-23654-3-git-send-email-ldewangan@nvidia.com> <201206201924.09618.arnd@arndb.de> <20120620194609.GA4037@opensource.wolfsonmicro.com> <20120622061314.GA15627@avionic-0098.adnet.avionic-design.de> <20120622084228.GD4037@opensource.wolfsonmicro.com> <20120622085909.GA24121@avionic-0098.mockup.avionic-design.de> <20120622091238.GF4037@opensource.wolfsonmicro.com> <4FE97AA9.7060805@nvidia.com> <20120626091235.GJ30406@opensource.wolfsonmicro.com> <4FE98B4F.8000502@linaro.org> <CACRpkdaYG0tdxHHfQpbE_1=SZ9Grgj1-qvwYv=rxHV7nkLms4w@mail.gmail.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V4] regulator: dt: add policy to have property "regulator-compatible"
+Date: Thu, 5 Jul 2012 12:53:04 +0530
+Message-ID: <1341472984-1503-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaYG0tdxHHfQpbE_1=SZ9Grgj1-qvwYv=rxHV7nkLms4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lrg@ti.com" <lrg@ti.com>, Stephen Warren <swarren@wwwdotorg.org>
+To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, arnd@arndb.de, linus.walleij@linaro.org, lee.jones@linaro.org, swarren@wwwdotorg.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/12 00:48, Linus Walleij wrote:
-> On Tue, Jun 26, 2012 at 12:13 PM, Lee Jones <lee.jones@linaro.org> wr=
-ote:
->> On 26/06/12 10:12, Mark Brown wrote:
->>>
->>> On Tue, Jun 26, 2012 at 02:32:33PM +0530, Laxman Dewangan wrote:
->>>
->>>> I have not seen much oppose on this series as such and if you are =
-OK
->>>> on this then can we apply?
->>>> If it need to buy some ACK from different stack holder then we can=
- ask
->>>> them.
->>>
->>>
->>> I've been waiting for the ST Ericsson guys who are already CCed.  I
->>> generally give people who I expect might review at least a week to =
-do so
->>> before I get bored and apply anyway.
->>
->> You need Linus' ACK, but he is off until Monday.
->
-> My ACK on this would be pointless since I barely grasp the issue.
->
-> I would much more appreciate your ACK or NACK on it, it's much more
-> valuable since you've been working on this code... and this very
-> aspect of it even, I guess?
+Add the policy for regulator DT such that if device have multiple
+regulator and its binding contains a child node that describes each
+regulator then each regulator child node must have the property
+"regulator-compatible" which matches with regulator name of their
+hardware counterparts.
+Modify the DT documentation of regulator devices to reflect this
+policy.
 
-Very well. For the db8500.dtsi changes you have my:
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V3:
+Original patch:
+[PATCH V3 3/3] regulator: dt: add policy to have property "regulator-compatible"
+There is issue on applying the patch for error was around tps6586x.txt file.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+I also able to saw the issue when tried to apply locally.
+Creating new patch with same old changes and after rebase.
+I applied this patch in new branch and it applied successfully.
 
+ Documentation/devicetree/bindings/mfd/tps65910.txt |   54 +++++++++++++----
+ .../devicetree/bindings/regulator/regulator.txt    |    4 +
+ .../devicetree/bindings/regulator/tps6586x.txt     |   60 +++++++++++++++-----
+ 3 files changed, 90 insertions(+), 28 deletions(-)
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-M: +44 77 88 633 515
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
+index 645f5ea..b51d206 100644
+--- a/Documentation/devicetree/bindings/mfd/tps65910.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
+@@ -17,8 +17,9 @@ Required properties:
+   device need to be present. The definition for each of these nodes is defined
+   using the standard binding for regulators found at
+   Documentation/devicetree/bindings/regulator/regulator.txt.
++  The regulator is matched with the regulator-compatible.
+ 
+-  The valid names for regulators are:
++  The valid regulator-compatible values are:
+   tps65910: vrtc, vio, vdd1, vdd2, vdd3, vdig1, vdig2, vpll, vdac, vaux1,
+             vaux2, vaux33, vmmc
+   tps65911: vrtc, vio, vdd1, vdd3, vddctrl, ldo1, ldo2, ldo3, ldo4, ldo5,
+@@ -57,73 +58,100 @@ Example:
+ 		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
+ 
+ 		regulators {
+-			vdd1_reg: vdd1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			vdd1_reg: regulator@0 {
++				regulator-compatible = "vdd1";
++				reg = <0>;
+ 				regulator-min-microvolt = < 600000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				ti,regulator-ext-sleep-control = <0>;
+ 			};
+-			vdd2_reg: vdd2 {
++			vdd2_reg: regulator@1 {
++				regulator-compatible = "vdd2";
++				reg = <1>;
+ 				regulator-min-microvolt = < 600000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				ti,regulator-ext-sleep-control = <4>;
+ 			};
+-			vddctrl_reg: vddctrl {
++			vddctrl_reg: regulator@2 {
++				regulator-compatible = "vddctrl";
++				reg = <2>;
+ 				regulator-min-microvolt = < 600000>;
+ 				regulator-max-microvolt = <1400000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				ti,regulator-ext-sleep-control = <0>;
+ 			};
+-			vio_reg: vio {
++			vio_reg: regulator@3 {
++				regulator-compatible = "vio";
++				reg = <3>;
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				ti,regulator-ext-sleep-control = <1>;
+ 			};
+-			ldo1_reg: ldo1 {
++			ldo1_reg: regulator@4 {
++				regulator-compatible = "ldo1";
++				reg = <4>;
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				ti,regulator-ext-sleep-control = <0>;
+ 			};
+-			ldo2_reg: ldo2 {
++			ldo2_reg: regulator@5 {
++				regulator-compatible = "ldo2";
++				reg = <5>;
+ 				regulator-min-microvolt = <1050000>;
+ 				regulator-max-microvolt = <1050000>;
+ 				ti,regulator-ext-sleep-control = <0>;
+ 			};
+-			ldo3_reg: ldo3 {
++			ldo3_reg: regulator@6 {
++				regulator-compatible = "ldo3";
++				reg = <6>;
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				ti,regulator-ext-sleep-control = <0>;
+ 			};
+-			ldo4_reg: ldo4 {
++			ldo4_reg: regulator@7 {
++				regulator-compatible = "ldo4";
++				reg = <7>;
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 				ti,regulator-ext-sleep-control = <0>;
+ 			};
+-			ldo5_reg: ldo5 {
++			ldo5_reg: regulator@8 {
++				regulator-compatible = "ldo5";
++				reg = <8>;
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				ti,regulator-ext-sleep-control = <0>;
+ 			};
+-			ldo6_reg: ldo6 {
++			ldo6_reg: regulator@9 {
++				regulator-compatible = "ldo6";
++				reg = <9>;
+ 				regulator-min-microvolt = <1200000>;
+ 				regulator-max-microvolt = <1200000>;
+ 				ti,regulator-ext-sleep-control = <0>;
+ 			};
+-			ldo7_reg: ldo7 {
++			ldo7_reg: regulator@10 {
++				regulator-compatible = "ldo7";
++				reg = <10>;
+ 				regulator-min-microvolt = <1200000>;
+ 				regulator-max-microvolt = <1200000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				ti,regulator-ext-sleep-control = <1>;
+ 			};
+-			ldo8_reg: ldo8 {
++			ldo8_reg: regulator@11 {
++				regulator-compatible = "ldo8";
++				reg = <11>;
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index bec5d57..66ece3f 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -11,6 +11,10 @@ Optional properties:
+ - regulator-boot-on: bootloader/firmware enabled regulator
+ - <name>-supply: phandle to the parent supply/regulator node
+ - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
++- regulator-compatible: If a regulator chip contains multiple
++  regulators, and if the chip's binding contains a child node that
++  describes each regulator, then this property indicates which regulator
++  this child node is intended to configure.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/regulator/tps6586x.txt b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+index 0fcabaa..ab17ef6 100644
+--- a/Documentation/devicetree/bindings/regulator/tps6586x.txt
++++ b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+@@ -6,8 +6,9 @@ Required properties:
+ - interrupts: the interrupt outputs of the controller
+ - #gpio-cells: number of cells to describe a GPIO
+ - gpio-controller: mark the device as a GPIO controller
+-- regulators: list of regulators provided by this controller, must be named
+-  after their hardware counterparts: sm[0-2], ldo[0-9] and ldo_rtc
++- regulators: list of regulators provided by this controller, must have
++  property "regulator-compatible" to match their hardware counterparts:
++  sm[0-2], ldo[0-9] and ldo_rtc
+ 
+ Each regulator is defined using the standard binding for regulators.
+ 
+@@ -22,74 +23,103 @@ Example:
+ 		gpio-controller;
+ 
+ 		regulators {
+-			sm0_reg: sm0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			sm0_reg: regulator@0 {
++				reg = <0>;
++				regulator-compatible = "sm0";
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sm1_reg: sm1 {
++			sm1_reg: regulator@1 {
++				reg = <1>;
++				regulator-compatible = "sm1";
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sm2_reg: sm2 {
++			sm2_reg: regulator@2 {
++				reg = <2>;
++				regulator-compatible = "sm2";
+ 				regulator-min-microvolt = <3000000>;
+ 				regulator-max-microvolt = <4550000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			ldo0_reg: ldo0 {
++			ldo0_reg: regulator@3 {
++				reg = <3>;
++				regulator-compatible = "ldo0";
+ 				regulator-name = "PCIE CLK";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo1_reg: ldo1 {
++			ldo1_reg: regulator@4 {
++				reg = <4>;
++				regulator-compatible = "ldo1";
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 			};
+ 
+-			ldo2_reg: ldo2 {
++			ldo2_reg: regulator@5 {
++				reg = <5>;
++				regulator-compatible = "ldo2";
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 			};
+ 
+-			ldo3_reg: ldo3 {
++			ldo3_reg: regulator@6 {
++				reg = <6>;
++				regulator-compatible = "ldo3";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo4_reg: ldo4 {
++			ldo4_reg: regulator@7 {
++				reg = <7>;
++				regulator-compatible = "ldo4";
+ 				regulator-min-microvolt = <1700000>;
+ 				regulator-max-microvolt = <2475000>;
+ 			};
+ 
+-			ldo5_reg: ldo5 {
++			ldo5_reg: regulator@8 {
++				reg = <8>;
++				regulator-compatible = "ldo5";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo6_reg: ldo6 {
++			ldo6_reg: regulator@9 {
++				reg = <9>;
++				regulator-compatible = "ldo6";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo7_reg: ldo7 {
++			ldo7_reg: regulator@10 {
++				reg = <10>;
++				regulator-compatible = "ldo7";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo8_reg: ldo8 {
++			ldo8_reg: regulator@11 {
++				reg = <11>;
++				regulator-compatible = "ldo8";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo9_reg: ldo9 {
++			ldo9_reg: regulator@12 {
++				reg = <12>;
++				regulator-compatible = "ldo9";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+-- 
+1.7.1.1
