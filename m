@@ -1,52 +1,46 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: fix a few typos in the binding documentation
-Date: Thu, 05 Jul 2012 11:08:17 -0500
-Message-ID: <4FF5BBF1.9090204@gmail.com>
-References: <1335171443-15371-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] LED: Fix missing semicolon in OF documentation
+Date: Thu, 05 Jul 2012 11:08:49 -0500
+Message-ID: <4FF5BC11.2070901@gmail.com>
+References: <1340476877-2704-1-git-send-email-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1335171443-15371-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1340476877-2704-1-git-send-email-marex@denx.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Vasut <marex@denx.de>
+Cc: linux-doc@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMjMvMjAxMiAwMzo1NyBBTSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6Cj4gU2lnbmVk
-LW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5k
-ZT4KPiAtLS0KCkFwcGxpZWQgZm9yIDMuNi4KClJvYgoKPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL210ZC9hdG1lbC1uYW5kLnR4dCB8ICAgIDIgKy0KPiAgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb24udHh0ICB8ICAgIDIgKy0KPiAgMiBm
-aWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50
-eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0
-Cj4gaW5kZXggYTIwMDY5NS4uMGMxYmNjZCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9hdG1lbC1uYW5kLnR4dAo+IEBAIC0zLDcgKzMsNyBA
-QCBBdG1lbCBOQU5EIGZsYXNoCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIC0gY29tcGF0aWJs
-ZSA6ICJhdG1lbCxhdDkxcm05MjAwLW5hbmQiLgo+ICAtIHJlZyA6IHNob3VsZCBzcGVjaWZ5IGxv
-Y2FsYnVzIGFkZHJlc3MgYW5kIHNpemUgdXNlZCBmb3IgdGhlIGNoaXAsCj4gLQlhbmQgaWYgYXZh
-aWxsYWJsZSB0aGUgRUNDLgo+ICsJYW5kIGlmIGF2YWlsYWJsZSB0aGUgRUNDLgo+ICAtIGF0bWVs
-LG5hbmQtYWRkci1vZmZzZXQgOiBvZmZzZXQgZm9yIHRoZSBhZGRyZXNzIGxhdGNoLgo+ICAtIGF0
-bWVsLG5hbmQtY21kLW9mZnNldCA6IG9mZnNldCBmb3IgdGhlIGNvbW1hbmQgbGF0Y2guCj4gIC0g
-I2FkZHJlc3MtY2VsbHMsICNzaXplLWNlbGxzIDogTXVzdCBiZSBwcmVzZW50IGlmIHRoZSBkZXZp
-Y2UgaGFzIHN1Yi1ub2Rlcwo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiBpbmRleCBmMTE0Y2UxLi42ZTFmNjFmIDEwMDY0NAo+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4
-dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9u
-LnR4dAo+IEBAIC0zNSw0ICszNSw0IEBAIGZsYXNoQDAgewo+ICAJdWltYWdlQDEwMDAwMCB7Cj4g
-IAkJcmVnID0gPDB4MDEwMDAwMCAweDIwMDAwMD47Cj4gIAl9Owo+IC1dOwo+ICt9Owo+IAoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUt
-ZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcK
-aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On 06/23/2012 01:41 PM, Marek Vasut wrote:
+> Trivial fix
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> ---
+
+Applied for 3.6.
+
+Rob
+
+
+>  Documentation/devicetree/bindings/gpio/led.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/led.txt b/Documentation/devicetree/bindings/gpio/led.txt
+> index fd2bd56..9bb308a 100644
+> --- a/Documentation/devicetree/bindings/gpio/led.txt
+> +++ b/Documentation/devicetree/bindings/gpio/led.txt
+> @@ -55,4 +55,4 @@ run-control {
+>  		gpios = <&mpc8572 7 0>;
+>  		default-state = "on";
+>  	};
+> -}
+> +};
+> 
+
