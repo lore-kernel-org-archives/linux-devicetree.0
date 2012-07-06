@@ -1,61 +1,113 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: pinctrl-imx: add support for set bits for
- general purpose registers
-Date: Fri, 06 Jul 2012 09:52:49 -0600
-Message-ID: <4FF709D1.40903@wwwdotorg.org>
-References: <1341565763-10074-1-git-send-email-b29396@freescale.com>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+Date: Fri, 6 Jul 2012 09:17:18 -0700
+Message-ID: <20120706161718.GA26894@kroah.com>
+References: <1339148585-16947-1-git-send-email-B38951@freescale.com>
+ <4FD60FB1.7050106@gmail.com>
+ <412C8208B4A0464FA894C5F0C278CD5D01A16829@039-SN1MPN1-002.039d.mgd.msft.net>
+ <20120706042611.GA1841@kroah.com>
+ <412C8208B4A0464FA894C5F0C278CD5D01A168F2@039-SN1MPN1-002.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1341565763-10074-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <412C8208B4A0464FA894C5F0C278CD5D01A168F2@039-SN1MPN1-002.039d.mgd.msft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jia Hongtao-B38951 <B38951@freescale.com>
+Cc: Rob Herring <robherring2@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Li Yang-R58472 <r58472@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/2012 03:09 AM, Dong Aisheng wrote:
-> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Fri, Jul 06, 2012 at 06:07:43AM +0000, Jia Hongtao-B38951 wrote:
 > 
-> The General Purpose Registers (GPR) is used to select operating modes for
-> general features in the SoC, usually not related to the IOMUX itself,
-> but it does belong to IOMUX controller.
-> We simply provide an convient API for driver to call to set the general purpose
-> register bits if needed.
+> > -----Original Message-----
+> > From: Greg KH [mailto:greg@kroah.com]
+> > Sent: Friday, July 06, 2012 12:26 PM
+> > To: Jia Hongtao-B38951
+> > Cc: Rob Herring; devicetree-discuss@lists.ozlabs.org; linux-
+> > kernel@vger.kernel.org; Li Yang-R58472
+> > Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+> > 
+> > On Fri, Jul 06, 2012 at 02:05:05AM +0000, Jia Hongtao-B38951 wrote:
+> > > Hi Rob and Greg KH,
+> > >
+> > > Do you have any better idea to avoid duplication probe warning?
+> > 
+> > I have no idea what the problem is that you are trying to solve.
+> > 
+> > > > On 06/08/2012 04:43 AM, Jia Hongtao wrote:
+> > > > > We changed the pcie controller driver to platform driver so that
+> > the
+> > > > PCI
+> > > > > of platform devices need to be created earlier in the arch_initcall
+> > > > stage
+> > > > > according to the original timing of calling fsl_add_bridge(). So we
+> > do
+> > > > PCI
+> > > > > probing separately from other devices. But probing more than once
+> > could
+> > > > > cause duplication warning. We add check if the devices have already
+> > > > probed
+> > > > > before probing any devices to avoid duplication warning.
+> > 
+> > Ick, something else is going wrong here, how could you ever have the
+> > same device probed more than once?
+> > 
+> > > > > Signed-off-by: Jia Hongtao <B38951@freescale.com>
+> > > > > Signed-off-by: Li Yang <leoli@freescale.com>
+> > > > > ---
+> > > >
+> > > > Where's v1 and v2 history?
+> > > >
+> > > > >  drivers/of/platform.c |   18 ++++++++++++------
+> > > > >  1 files changed, 12 insertions(+), 6 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > > > > index a37330e..3aab01f 100644
+> > > > > --- a/drivers/of/platform.c
+> > > > > +++ b/drivers/of/platform.c
+> > > > > @@ -139,6 +139,18 @@ struct platform_device *of_device_alloc(struct
+> > > > device_node *np,
+> > > > >  	if (!dev)
+> > > > >  		return NULL;
+> > > > >
+> > > > > +	dev->dev.of_node = of_node_get(np);
+> > > > > +	if (bus_id)
+> > > > > +		dev_set_name(&dev->dev, "%s", bus_id);
+> > > > > +	else
+> > > > > +		of_device_make_bus_id(&dev->dev);
+> > > > > +
+> > > > > +	if (kset_find_obj(dev->dev.kobj.kset, kobject_name(&dev-
+> > >dev.kobj)))
+> > 
+> > Whatever you are trying to do here, odds are, it's wrong :)
+> > 
+> > What is happening that is causing the problem?  What is causing the
+> > platform core to be calling probe on a device more than once?
+> > 
+> > greg k-h
+> 
+> This is why in some cases we may probe twice:
+> Firstly, we need to probe pci controller separately. But in KVM different
+> topology of device tree is used in which pci nodes are not under root node
+> but under "simple bus". Unfortunately, of_platform_bus_probe() will probe
+> all the first level nodes under "simple bus" so pci nodes will probe again.
 
-> +static struct imx_pinctrl *imx_pinctrl;
-> +/*
-> + * Set bits for general purpose registers
-> + */
-> +void imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
-> +{
-> +	u32 reg;
-> +
-> +	/* general purpose register is 32 bits size */
-> +	WARN_ON(!imx_pinctrl || start_bit > 31 || num_bits > 32);
+Sounds like a bug :)
 
-Hmmm. It's going to be very hard to control the probe() order to ensure
-that this WARN doesn't fire all the time.
+> Two ways to solve this problem:
+> 1. All the nodes that need to be probed should just under root.
 
-I think it would be better to pass in a struct imx_pinctrl* or DT node
-to this function. The DT node for the device that's using this function
-should contain a phandle to the pinctrl device node, which it uses to
-get that handle. Or in a non-DT case, the client driver needs to be
-given the provider driver handle using some other mechanism.
+That seems reasonable.
 
-For example, look at how the Tegra30 SMMU uses services from the Tegra30
-AHB; see arch/arm/boot/dts/tegra30.dtsi node "smmu" (client) and node
-"ahb" (provider), drivers/iommu/tegra-smmu.c functions probe() (saves
-smmu->ahb) and smmu_setup_regs() (calls tegra_ahb_enable_smmu() with
-this handle) and drivers/amba/tegra-ahb.c function
-tegra_ahb_enable_smmu() (implements the deferred probe checking to
-correctly order the client/provider driver probing)
+> 2. Avoid duplication probe at runtime like this patch did.
+
+No, don't paper over the real problem in the platform core code like
+this.  Fix the real issue here instead.
+
+> I do like the first one but it's hard to changing the traditional way that
+> exist for a long time.
+
+I don't understand, why is this just showing up now?  What changed to
+cause this?  Couldn't that be the real problem here?
+
+greg k-h
