@@ -1,38 +1,71 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Tegra DRM device tree bindings
-Date: Fri, 06 Jul 2012 13:59:13 -0600
-Message-ID: <4FF74391.5040004@wwwdotorg.org>
-References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de> <20120705121506.GA23732@avionic-0098.mockup.avionic-design.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO Controllers
+Date: Fri, 6 Jul 2012 20:08:23 +0000
+Message-ID: <201207062008.23952.arnd@arndb.de>
+References: <1341325365-21393-1-git-send-email-andrew@lunn.ch> <201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120705121506.GA23732-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120705161600.GA28860-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2012 06:15 AM, Thierry Reding wrote:
-> Here's a new proposal that should address all issues collected
-> during the discussion of the previous one:
+On Thursday 05 July 2012, Andrew Lunn wrote:
+> > I think the latter one needs to be
+> > 
+> > +static int __initdata gpio1_irqs[4] = {
+> > +     IRQ_DOVE_HIGH_GPIO,
+> > +     IRQ_DOVE_HIGH_GPIO,
+> > +     IRQ_DOVE_HIGH_GPIO,
+> > +     IRQ_DOVE_HIGH_GPIO,
+> > +};
+> > 
+> > so we register all four parts to the same primary IRQ. The
+> > same is true for the devicetree representation.
 > 
-> From tegra20.dtsi:
-...
+> Nope, does not work like that.
+> 
+> It does not matter which IRQ of a GPIO chip fires. It looks at the IRQ
+> cause bits for all lines and fires off the secondary ISR as needed for
+> the whole chip. So in effect, there is a mapping IRQ->GPIO chip, not
+> IRQ->1/4 of GPIO chip. With what you suggest above, you would end up
+> with four chained interrupt handlers, all being handled by the same
+> interrupt handler for one chio, and the last three in the chain would
+> never do anything since the first one does all the work.
 
-At a quick glance, that all seems pretty reasonable now.
+Does it really?
 
-> One problem I've come across when trying to get some rudimentary
-> code working with this is that there's no longer a device which the
-> DRM driver can bind to, because the top-level device (host1x) now
-> has a separate driver.
+The handler function I'm looking at is
 
-Can't you just have the host1x driver trigger the instantiation of the
-DRM driver? In other words, the host1x node is both the plain host1x
-driver and the DRM driver. So, after initializing anything for host1x
-itself, just end host1x's probe() with something a call to
-drm_platform_init(), passing in host1x's own pdev.
 
-After all, it seems like the whole point of representing host1x in the
-DT is to expose the graphics HW, so you'd need the DRM device in that
-case.
+static void gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
+{
+        int irqoff;
+        BUG_ON(irq < IRQ_DOVE_GPIO_0_7 || irq > IRQ_DOVE_HIGH_GPIO);
+
+        irqoff = irq <= IRQ_DOVE_GPIO_16_23 ? irq - IRQ_DOVE_GPIO_0_7 :
+                3 + irq - IRQ_DOVE_GPIO_24_31;
+
+        orion_gpio_irq_handler(irqoff << 3);
+        if (irq == IRQ_DOVE_HIGH_GPIO) {
+                orion_gpio_irq_handler(40);
+                orion_gpio_irq_handler(48);
+                orion_gpio_irq_handler(56);
+        }
+}
+
+My reading of this is a manual hardwired implementation of a
+primary handler that triggers the secondary handler four times
+when it's called with a specific argument.
+
+If you want to keep that behavior, this handler cannot be
+generic across all mvebu socs, whereas registering four
+chained handlers for the same primary interrupt would have
+the same effect at a very small runtime overhead without the
+need for any special case.
+
+	Arnd
