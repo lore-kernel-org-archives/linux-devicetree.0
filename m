@@ -1,29 +1,99 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH] regulator: tps65910: add support for input supply
-Date: Fri, 6 Jul 2012 12:15:12 +0530
-Message-ID: <4FF68978.80703@nvidia.com>
-References: <1341497004-23537-1-git-send-email-ldewangan@nvidia.com> <4FF5E66A.6010108@wwwdotorg.org> <20120705191129.GQ4111@opensource.wolfsonmicro.com> <4FF5E857.7020204@wwwdotorg.org>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: OF_DYNAMIC usage
+Date: Fri, 06 Jul 2012 08:51:10 +0200
+Message-ID: <4FF68ADE.3060609@monstr.eu>
+References: <4FF586D1.2050407@monstr.eu> <4FF594AD.6000401@gmail.com>
+ <1341521210.6330.16.camel@pasglop> <4FF67F96.1040902@monstr.eu>
+ <1341555562.6330.51.camel@pasglop>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FF5E857.7020204@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lrg@ti.com" <lrg@ti.com>, Stephen Warren <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1341555562.6330.51.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 06 July 2012 12:47 AM, Stephen Warren wrote:
-> On 07/05/2012 01:11 PM, Mark Brown wrote:
->> On Thu, Jul 05, 2012 at 01:09:30PM -0600, Stephen Warren wrote:
->>> On 07/05/2012 08:03 AM, Laxman Dewangan wrote:
->>>> +- vin-xxx-supply: Input voltage supply regulator.
->>> It'd be nice to name these simply xxx-supply; the "vin-" seems
->>> redundant.
->> I suspect the pin is named vin_supply (ie, vin subscript supply) in
->> the datasheet so this is idiomatic.
-> That's certainly true on some of the PMICs we use, but not this one
-> according to the datasheet I looked at.
-As per datasheet of tps65910 and tps65911, the prefix "vin" is not 
-there. I took from the other patch discussion.
-I will remove it and then send new patch.
+On 07/06/2012 08:19 AM, Benjamin Herrenschmidt wrote:
+> On Fri, 2012-07-06 at 08:03 +0200, Michal Simek wrote:
+>>>
+>>> The way it works at the moment is that when something new is plugged in,
+>>> the hypervisor talks to a proprietary crap daemon in userspace which
+>>> talks to a special tool (that one we have the source code) which then
+>>> obtains via some FW interfaces a "blob" of bits of device-tree to add
+>>> (or to remove), using a phyp specific format, and echo that stuff
+>>> into /proc/ppc64/ofdt.
+>>
+>> Where is that source code for the special tool?
+>
+> I can dig that for you, however ...
+>
+>> Can you point me to the "phyp specific format"?
+>
+> Same deal, I don't think there's a public doc, however..
+
+Why is it in the kernel something which does not have any public documentation?
+It seems like that it is more proprietary code.
+
+
+>
+>>    From reconfig.c it looks like that there are some key words like
+>> add_node/remove_node/add_property... follow by space and node name +
+>> options which lookes like dtb format.
+>
+> Right, I would just recommend you don't do that.
+>
+> The need to "hotplug" bits of device-tree is going to be generic enough
+> that we should come up with something better and more generic than that
+> pseries stuff.
+>
+> IE. Some way to pass bits of ftb blob rather than this specific format
+> to begin with, etc...
+
+Can we discuss this a little bit more?
+
+ From my partial reconfiguration understanding is that you have partial bitstream
+which you pass through pcap(IP and driver which can do it) to specific location
+which they are known.
+
+It means you have to unplug device which is in the same location,
+load partial bitstream via pcap
+register driver and probe it.
+
+I expect that pcap driver could be aware which driver is at that location
+and is able to plug and unplug it based on description.
+
+I will ask Xilinx how this is exactly done and I hope I will get any example
+to be able to do some experiments.
+
+>
+> So I'd say just ignore the pseries stuff, I can dig the tool etc... if
+> you -really- need them but I'd rather you don't base your stuff on it,
+> just make up something better&  more generic for you. It will be useful
+> to others.
+
+My point here is just to try to understand current working version
+to get the better overview how it is done and probably working somehow.
+
+Of course some ideas how this can/should be done will be helpful.
+
+Thanks,
+Michal
+
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
