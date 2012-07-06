@@ -1,112 +1,48 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: EXYNOS5: Add gscalar device from DT
-Date: Fri, 06 Jul 2012 20:50:22 +0200
-Message-ID: <4FF7336E.4030007@gmail.com>
-References: <1341578702-10263-1-git-send-email-shaik.ameer@samsung.com> <1341578702-10263-3-git-send-email-shaik.ameer@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 6 Jul 2012 17:31:19 +0000
+Message-ID: <201207061731.20271.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201207061528.58291.arnd@arndb.de> <Pine.LNX.4.64.1207061737410.29809@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1341578702-10263-3-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, olofj@google.com, prashanth.g@samsung.com, joshi@samsung.com, ameersk@gmail.com, thomas.ab@samsung.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1207061737410.29809@axis700.grange>
+Sender: linux-omap-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Vinod Koul <vinod.koul@linux.intel.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
+On Friday 06 July 2012, Guennadi Liakhovetski wrote:
+> > > <dmaengine_core>
+> > >     for_each_channel() {
+> > >             ret = chan->device->device_alloc_chan_resources(chan, filter_arg);
+> > >             if (!ret)
+> > >                     return chan;
+> > >             else if (ret != -ENODEV)
+> > >                     return ret;
+> > >             /* -ENODEV - try the next channel */
+> > >     }
+> > > 
+> > > Which is quite similar to my above mentioned proposal. Wouldn't this both 
+> > > improve the present API and prepare it for DT?
+> > 
+> > How would the individual driver know the size of the filter_arg?
+> 
+> In exactly the same way as most dmaengine drivers do it today: they don't 
+> touch filter_arg until they're sure this is one of their channels. And 
+> this they typically do by comparing the driver pointer, e.g.:
+> 
+> bool sa11x0_dma_filter_fn(struct dma_chan *chan, void *param)
+> {
+>         if (chan->device->dev->driver == &sa11x0_dma_driver.driver) {
 
-On 07/06/2012 02:45 PM, Shaik Ameer Basha wrote:
-> Adding all 4 gscalar devices from DT device list in machine file.
+I don't understand. This already matches because we're calling the
+device_alloc_chan_resources() function of the specific device that
+matches the channel. However, we do the same for each channel, with the
+same data, but different controllers, each of which will think they match
+the channel.
 
-nit: s/gscalar/gscaler
+	Arnd
 
-The above sentence doesn't quite parse though.
-
-> Signed-off-by: Abhilash Kesavan<a.kesavan@samsung.com>
-> Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
-> Signed-off-by: Shaik Ameer Basha<shaik.ameer@samsung.com>
-> ---
->   arch/arm/boot/dts/exynos5250.dtsi      |   31 +++++++++++++++++++++++++++++++
->   arch/arm/mach-exynos/mach-exynos5-dt.c |    8 ++++++++
->   2 files changed, 39 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 4272b29..b945c00 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -23,6 +23,13 @@
->   	compatible = "samsung,exynos5250";
->   	interrupt-parent =<&gic>;
->
-> +	aliases {
-> +		gsc0 =&gsc_0;
-> +		gsc1 =&gsc_1;
-> +		gsc2 =&gsc_2;
-> +		gsc3 =&gsc_3;
-> +	};
-> +
-
-What are these aliases useful for ?
-Also I think all DT related patches should be posted to
-devicetree-discuss@lists.ozlabs.org as well.
-
->   	gic:interrupt-controller@10481000 {
->   		compatible = "arm,cortex-a9-gic";
->   		#interrupt-cells =<3>;
-> @@ -424,4 +431,28 @@
->   			#gpio-cells =<4>;
->   		};
->   	};
-> +
-> +	gsc_0:  gsc@0x13e00000 {
-> +		compatible = "samsung,exynos-gsc";
-> +		reg =<0x13e00000 0x1000>;
-> +		interrupts =<0 85 0>;
-> +	};
-> +
-> +	gsc_1:  gsc@0x13e10000 {
-> +		compatible = "samsung,exynos-gsc";
-> +		reg =<0x13e10000 0x1000>;
-> +		interrupts =<0 86 0>;
-> +	};
-> +
-> +	gsc_2:  gsc@0x13e20000 {
-> +		compatible = "samsung,exynos-gsc";
-> +		reg =<0x13e20000 0x1000>;
-> +		interrupts =<0 87 0>;
-> +	};
-> +
-> +	gsc_3:  gsc@0x13e30000 {
-> +		compatible = "samsung,exynos-gsc";
-> +		reg =<0x13e30000 0x1000>;
-> +		interrupts =<0 88 0>;
-> +	};
->   };
-> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-> index 7b1e11a..76b081c 100644
-> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-> @@ -50,6 +50,14 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
->   	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0", NULL),
->   	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA1, "dma-pl330.1", NULL),
->   	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2", NULL),
-> +	OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E00000,
-> +				"exynos-gsc.0", NULL),
-> +	OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E10000,
-> +				"exynos-gsc.1", NULL),
-> +	OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E20000,
-> +				"exynos-gsc.2", NULL),
-> +	OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E30000,
-> +				"exynos-gsc.3", NULL),
-
-It's probably better to add relevant entry at 
-arch/arm/mach-exynos/include/mach/map. It's just a one line, e.g.
-
-/* x = 0...3 */
-#define EXYNOS5_PA_GSC(x)	(0x13e00000 + ((x) * 0x10000))
-
-And use it here instead of plain numbers.
-
---
-Thanks,
-Sylwester
