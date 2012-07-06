@@ -1,318 +1,64 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2] regulator: tps65910: add support for input supply
-Date: Fri, 6 Jul 2012 14:13:12 +0530
-Message-ID: <1341564192-18154-1-git-send-email-ldewangan@nvidia.com>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 2/2] pinctrl: pinctrl-imx6q: add missed mux function for
+ USBOTG_ID
+Date: Fri, 6 Jul 2012 17:09:23 +0800
+Message-ID: <1341565763-10074-2-git-send-email-b29396@freescale.com>
+References: <1341565763-10074-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, swarren@nvidia.com
-Cc: sameo@linux.intel.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1341565763-10074-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is multiple voltage input pins on device which
-takes the voltage input for different voltage regulator.
-Support to configure the voltage input supplied by
-different regulator for each regulators.
+From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+The original pin registers table is derived from u-boot mainline,
+but somehow it was found missing some mux functions for USBOTG_ID.
+We added it at the bottom by following the exist pin function ids,
+then it will not break the exist using of pin function id in dts file.
+
+Reported-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-This patch is for supporting the input supply regulators
-for different device output rails.
-The development is based on the discussion happen on patch
-[PATCH 1/3] ARM: dt: tegra: seaboard: add regulators
-excerpts for discussion are:
+ .../bindings/pinctrl/fsl,imx6q-pinctrl.txt         |    2 ++
+ drivers/pinctrl/pinctrl-imx6q.c                    |    2 ++
+ 2 files changed, 4 insertions(+), 0 deletions(-)
 
-Laxman:
-the input to different regulator
-is from the pin of the chips and so the name should be the 
-<pin-name>-supply which should be part of chip-dt binding, not
-to the particular rail.
-
-Mark:
-More specifically, all the supplies for a device (including those
-that happen to be inputs for regulators) should be specified in
-exactly the same fashion.  This makes the binding more regular and
-means that users can just go through the schematic adding the
-mappings without worrying about what what the supply happens to
-be.
-
-Changes from V1:
-Inplace of naming input pin supply to vin-xxx-supply, name it to
-xxx-supply.
-Ordering the details of the pin-supply.
-
-Patch generated from Mark's for-next tree.
-
- Documentation/devicetree/bindings/mfd/tps65910.txt |   25 ++++++++++++++
- drivers/regulator/tps65910-regulator.c             |   36 ++++++++++++++++++++
- include/linux/mfd/tps65910.h                       |    2 +
- 3 files changed, 63 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-index b51d206..31be5a3 100644
---- a/Documentation/devicetree/bindings/mfd/tps65910.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -32,6 +32,28 @@ Optional properties:
-   comparator. (see VMBCH_VSEL in TPS65910 datasheet)
- - ti,en-gpio-sleep: enable sleep control for gpios
-   There should be 9 entries here, one for each gpio.
-+- xxx-supply: Input voltage supply regulator.
-+  Missing of these properties will be assume as there is no supply regulator
-+  for that input pins and always powered on.
-+  The valid input supply properties are:
-+  tps65910:
-+	vcc1-supply: VDD1 input.
-+	vcc2-supply: VDD2 input.
-+	vcc3-supply: VAUX33 and VMMC input.
-+	vcc4-supply: VAUX1 and VAUX2 input.
-+	vcc5-supply: VPLL and VDAC input.
-+	vcc6-supply: VDIG1 and VDIG2 input.
-+	vcc7-supply: VRTC input.
-+	vccio-supply: VIO input.
-+  tps65911:
-+	vcc1-supply: VDD1 input.
-+	vcc2-supply: VDD2 input.
-+	vcc3-supply: LDO6, LDO7 and LDO8 input.
-+	vcc4-supply: LDO5 input.
-+	vcc5-supply: LDO3 and LDO4 input.
-+	vcc6-supply: LDO1 and LDO2 input.
-+	vcc7-supply: VRTC input.
-+	vccio-supply: VIO input.
- 
- Regulator Optional properties:
- - ti,regulator-ext-sleep-control: enable external sleep
-@@ -57,6 +79,9 @@ Example:
- 
- 		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
- 
-+		vcc7-supply = <&reg_parent>;
-+		vcc1-supply = <&reg_parent>;
-+
- 		regulators {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
-index a534e08..e319d96 100644
---- a/drivers/regulator/tps65910-regulator.c
-+++ b/drivers/regulator/tps65910-regulator.c
-@@ -85,6 +85,7 @@ static const unsigned int VMMC_VSEL_table[] = {
- 
- struct tps_info {
- 	const char *name;
-+	const char *vin_name;
- 	u8 n_voltages;
- 	const unsigned int *voltage_table;
- 	int enable_time_us;
-@@ -93,20 +94,24 @@ struct tps_info {
- static struct tps_info tps65910_regs[] = {
- 	{
- 		.name = "vrtc",
-+		.vin_name = "vcc7",
- 		.enable_time_us = 2200,
- 	},
- 	{
- 		.name = "vio",
-+		.vin_name = "vccio",
- 		.n_voltages = ARRAY_SIZE(VIO_VSEL_table),
- 		.voltage_table = VIO_VSEL_table,
- 		.enable_time_us = 350,
- 	},
- 	{
- 		.name = "vdd1",
-+		.vin_name = "vcc1",
- 		.enable_time_us = 350,
- 	},
- 	{
- 		.name = "vdd2",
-+		.vin_name = "vcc2",
- 		.enable_time_us = 350,
- 	},
- 	{
-@@ -117,48 +122,56 @@ static struct tps_info tps65910_regs[] = {
- 	},
- 	{
- 		.name = "vdig1",
-+		.vin_name = "vcc6",
- 		.n_voltages = ARRAY_SIZE(VDIG1_VSEL_table),
- 		.voltage_table = VDIG1_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vdig2",
-+		.vin_name = "vcc6",
- 		.n_voltages = ARRAY_SIZE(VDIG2_VSEL_table),
- 		.voltage_table = VDIG2_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vpll",
-+		.vin_name = "vcc5",
- 		.n_voltages = ARRAY_SIZE(VPLL_VSEL_table),
- 		.voltage_table = VPLL_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vdac",
-+		.vin_name = "vcc5",
- 		.n_voltages = ARRAY_SIZE(VDAC_VSEL_table),
- 		.voltage_table = VDAC_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vaux1",
-+		.vin_name = "vcc4",
- 		.n_voltages = ARRAY_SIZE(VAUX1_VSEL_table),
- 		.voltage_table = VAUX1_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vaux2",
-+		.vin_name = "vcc4",
- 		.n_voltages = ARRAY_SIZE(VAUX2_VSEL_table),
- 		.voltage_table = VAUX2_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vaux33",
-+		.vin_name = "vcc3",
- 		.n_voltages = ARRAY_SIZE(VAUX33_VSEL_table),
- 		.voltage_table = VAUX33_VSEL_table,
- 		.enable_time_us = 100,
- 	},
- 	{
- 		.name = "vmmc",
-+		.vin_name = "vcc3",
- 		.n_voltages = ARRAY_SIZE(VMMC_VSEL_table),
- 		.voltage_table = VMMC_VSEL_table,
- 		.enable_time_us = 100,
-@@ -168,21 +181,25 @@ static struct tps_info tps65910_regs[] = {
- static struct tps_info tps65911_regs[] = {
- 	{
- 		.name = "vrtc",
-+		.vin_name = "vcc7",
- 		.enable_time_us = 2200,
- 	},
- 	{
- 		.name = "vio",
-+		.vin_name = "vccio",
- 		.n_voltages = ARRAY_SIZE(VIO_VSEL_table),
- 		.voltage_table = VIO_VSEL_table,
- 		.enable_time_us = 350,
- 	},
- 	{
- 		.name = "vdd1",
-+		.vin_name = "vcc1",
- 		.n_voltages = 73,
- 		.enable_time_us = 350,
- 	},
- 	{
- 		.name = "vdd2",
-+		.vin_name = "vcc2",
- 		.n_voltages = 73,
- 		.enable_time_us = 350,
- 	},
-@@ -193,41 +210,49 @@ static struct tps_info tps65911_regs[] = {
- 	},
- 	{
- 		.name = "ldo1",
-+		.vin_name = "vcc6",
- 		.n_voltages = 47,
- 		.enable_time_us = 420,
- 	},
- 	{
- 		.name = "ldo2",
-+		.vin_name = "vcc6",
- 		.n_voltages = 47,
- 		.enable_time_us = 420,
- 	},
- 	{
- 		.name = "ldo3",
-+		.vin_name = "vcc5",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo4",
-+		.vin_name = "vcc5",
- 		.n_voltages = 47,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo5",
-+		.vin_name = "vcc4",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo6",
-+		.vin_name = "vcc3",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo7",
-+		.vin_name = "vcc3",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
- 	{
- 		.name = "ldo8",
-+		.vin_name = "vcc3",
- 		.n_voltages = 24,
- 		.enable_time_us = 230,
- 	},
-@@ -1013,6 +1038,9 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
- 	*tps65910_reg_matches = matches;
- 
- 	for (idx = 0; idx < count; idx++) {
-+		struct tps_info *info = matches[idx].driver_data;
-+		char in_supply[32]; /* 32 is max size of property name */
-+
- 		if (!matches[idx].init_data || !matches[idx].of_node)
- 			continue;
- 
-@@ -1023,6 +1051,13 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
- 				"ti,regulator-ext-sleep-control", &prop);
- 		if (!ret)
- 			pmic_plat_data->regulator_ext_sleep_control[idx] = prop;
-+
-+		if (info->vin_name) {
-+			snprintf(in_supply, 32, "%s-supply", info->vin_name);
-+			if (of_find_property(np, in_supply, 0))
-+				pmic_plat_data->input_supply[idx] =
-+								info->vin_name;
-+		}
- 	}
- 
- 	return pmic_plat_data;
-@@ -1126,6 +1161,7 @@ static __devinit int tps65910_probe(struct platform_device *pdev)
- 		pmic->info[i] = info;
- 
- 		pmic->desc[i].name = info->name;
-+		pmic->desc[i].supply_name = pmic_plat_data->input_supply[i];
- 		pmic->desc[i].id = i;
- 		pmic->desc[i].n_voltages = info->n_voltages;
- 		pmic->desc[i].enable_time = info->enable_time_us;
-diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
-index dd8dc0a..c5f8060 100644
---- a/include/linux/mfd/tps65910.h
-+++ b/include/linux/mfd/tps65910.h
-@@ -799,6 +799,7 @@ struct tps65910_sleep_keepon_data {
- /**
-  * struct tps65910_board
-  * Board platform data may be used to initialize regulators.
-+ * @input_supply: Name of input supply regulator.
-  */
- 
- struct tps65910_board {
-@@ -811,6 +812,7 @@ struct tps65910_board {
- 	struct tps65910_sleep_keepon_data *slp_keepon;
- 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
- 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
-+	const char *input_supply[TPS65910_NUM_REGS];
- 	struct regulator_init_data *tps65910_pmic_init_data[TPS65910_NUM_REGS];
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
+index 82b43f9..a4119f6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
+@@ -1626,3 +1626,5 @@ MX6Q_PAD_SD2_DAT3__PCIE_CTRL_MUX_11		1587
+ MX6Q_PAD_SD2_DAT3__GPIO_1_12			1588
+ MX6Q_PAD_SD2_DAT3__SJC_DONE			1589
+ MX6Q_PAD_SD2_DAT3__ANATOP_TESTO_3		1590
++MX6Q_PAD_ENET_RX_ER__ANATOP_USBOTG_ID		1591
++MX6Q_PAD_GPIO_1__ANATOP_USBOTG_ID		1592
+diff --git a/drivers/pinctrl/pinctrl-imx6q.c b/drivers/pinctrl/pinctrl-imx6q.c
+index 7737d4d..e9bf71f 100644
+--- a/drivers/pinctrl/pinctrl-imx6q.c
++++ b/drivers/pinctrl/pinctrl-imx6q.c
+@@ -1950,6 +1950,8 @@ static struct imx_pin_reg imx6q_pin_regs[] = {
+ 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 5, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__GPIO_1_12 */
+ 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 6, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__SJC_DONE */
+ 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 7, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__ANATOP_TESTO_3 */
++	IMX_PIN_REG(MX6Q_PAD_ENET_RX_ER, 0x04EC, 0x01D8, 0, 0x0000, 0), /* MX6Q_PAD_ENET_RX_ER__ANATOP_USBOTG_ID */
++	IMX_PIN_REG(MX6Q_PAD_GPIO_1, 0x05F4, 0x0224, 3, 0x0000, 0), /* MX6Q_PAD_GPIO_1__ANATOP_USBOTG_ID */
  };
  
+ /* Pad names for the pinmux subsystem */
 -- 
-1.7.1.1
+1.7.0.4
