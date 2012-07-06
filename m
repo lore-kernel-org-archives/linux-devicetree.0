@@ -1,71 +1,98 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] ARM: Orion: DT support for IRQ and GPIO Controllers
-Date: Fri, 6 Jul 2012 20:08:23 +0000
-Message-ID: <201207062008.23952.arnd@arndb.de>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch> <201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 6 Jul 2012 21:57:31 +0100
+Message-ID: <20120706205731.GA31585@n2100.arm.linux.org.uk>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+ <4FE896F9.2020806@ti.com> <1340647463.1562.127.camel@vkoul-udesk3>
+ <201206252030.56025.arnd@arndb.de>
+ <Pine.LNX.4.64.1207061315470.29809@axis700.grange>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120705161600.GA28860-g2DYL2Zd6BY@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1207061315470.29809-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 July 2012, Andrew Lunn wrote:
-> > I think the latter one needs to be
-> > 
-> > +static int __initdata gpio1_irqs[4] = {
-> > +     IRQ_DOVE_HIGH_GPIO,
-> > +     IRQ_DOVE_HIGH_GPIO,
-> > +     IRQ_DOVE_HIGH_GPIO,
-> > +     IRQ_DOVE_HIGH_GPIO,
-> > +};
-> > 
-> > so we register all four parts to the same primary IRQ. The
-> > same is true for the devicetree representation.
+On Fri, Jul 06, 2012 at 01:36:32PM +0200, Guennadi Liakhovetski wrote:
+> I like this idea, but why don't we extend it to also cover the non-DT 
+> case? I.e., why don't we add the above callback (call it "match" or 
+> "filter" or anything else) to dmaengine operations and inside (the 
+> extended) dma_request_channel(), instead of calling the filter function, 
+> passed as a parameter, we loop over all registered DMAC devices and call 
+> their filter callbacks, until one of them returns true? In fact, it goes 
+> back to my earlier proposal from 
+> http://thread.gmane.org/gmane.linux.kernel/1246957
+> which I, possibly, failed to explain properly. So, the transformation 
+> chain from today's API would be (all code is approximate):
 > 
-> Nope, does not work like that.
+> (today)
 > 
-> It does not matter which IRQ of a GPIO chip fires. It looks at the IRQ
-> cause bits for all lines and fires off the secondary ISR as needed for
-> the whole chip. So in effect, there is a mapping IRQ->GPIO chip, not
-> IRQ->1/4 of GPIO chip. With what you suggest above, you would end up
-> with four chained interrupt handlers, all being handled by the same
-> interrupt handler for one chio, and the last three in the chain would
-> never do anything since the first one does all the work.
+> <client driver>
+> 	dma_request_channel(mask, filter, filter_arg);
+> 
+> <dmaengine_core>
+> 	for_each_channel() {
+> 		ret = (*filter)(chan, filter_arg);
+> 		if (ret) {
+> 			ret = chan->device->device_alloc_chan_resources(chan);
+> 			if (!ret)
+> 				return chan;
+> 			else
+> 				return NULL;
+> 		}
+> 	}
+> 
+> (can be transformed to)
+> 
+> <client driver>
+> 	dma_request_channel(mask, filter_arg);
+> 
+> <dmaengine_core>
+> 	for_each_channel() {
+> 		ret = chan->device->filter(chan, filter_arg);
+> 		if (ret) {
+> 			<same as above>
+> 		}
+> 	}
+> 
+> (which further could be simplified to)
+> 
+> <client driver>
+> 	dma_request_channel(mask, filter_arg);
+> 
+> <dmaengine_core>
+> 	for_each_channel() {
+> 		ret = chan->device->device_alloc_chan_resources(chan, filter_arg);
 
-Does it really?
+This looks like you're re-purposing a perfectly good API for something that
+it wasn't designed to do, namely providing a channel selection mechanism,
+rather than "allocating channel resources".  The hint is in the bloody
+name, please take a look sometime!
 
-The handler function I'm looking at is
+If you want to call into the DMA engine driver for channel selection,
+then create an _explicit_ API for it.  Don't bugger around with existing
+APIs.
 
+Moreover, the *big* problem that your proposal above creates is this.
+What _type_ is filter_arg?  If it's void *, then your suggestion is
+nonsense, even if you associate it with a size argument.  You have no
+idea what the bytestream that would be passed via that pointer means,
+even if the size just happens to look like it's what you expect.
 
-static void gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
-{
-        int irqoff;
-        BUG_ON(irq < IRQ_DOVE_GPIO_0_7 || irq > IRQ_DOVE_HIGH_GPIO);
-
-        irqoff = irq <= IRQ_DOVE_GPIO_16_23 ? irq - IRQ_DOVE_GPIO_0_7 :
-                3 + irq - IRQ_DOVE_GPIO_24_31;
-
-        orion_gpio_irq_handler(irqoff << 3);
-        if (irq == IRQ_DOVE_HIGH_GPIO) {
-                orion_gpio_irq_handler(40);
-                orion_gpio_irq_handler(48);
-                orion_gpio_irq_handler(56);
-        }
-}
-
-My reading of this is a manual hardwired implementation of a
-primary handler that triggers the secondary handler four times
-when it's called with a specific argument.
-
-If you want to keep that behavior, this handler cannot be
-generic across all mvebu socs, whereas registering four
-chained handlers for the same primary interrupt would have
-the same effect at a very small runtime overhead without the
-need for any special case.
-
-	Arnd
+If it's something else, then your mistake above was not defining it, so
+there's no way to evaluate your proposal given that lack of critical
+information.  And if you define it, whatever you come up with _must_
+be suitable for every single DMA engine driver we have today.
