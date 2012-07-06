@@ -1,49 +1,113 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 6 Jul 2012 22:01:30 +0100
-Message-ID: <20120706210130.GB31585@n2100.arm.linux.org.uk>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206252030.56025.arnd@arndb.de> <Pine.LNX.4.64.1207061315470.29809@axis700.grange> <201207061528.58291.arnd@arndb.de> <Pine.LNX.4.64.1207061737410.29809@axis700.grange>
+Date: Sat, 7 Jul 2012 00:49:05 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1207070019510.29809@axis700.grange>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+ <4FE896F9.2020806@ti.com> <1340647463.1562.127.camel@vkoul-udesk3>
+ <201206252030.56025.arnd@arndb.de> <Pine.LNX.4.64.1207061315470.29809@axis700.grange>
+ <20120706205731.GA31585@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1207061737410.29809@axis700.grange>
+In-Reply-To: <20120706205731.GA31585@n2100.arm.linux.org.uk>
 Sender: linux-omap-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@linux.intel.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 06, 2012 at 05:43:38PM +0200, Guennadi Liakhovetski wrote:
-> Hi Arnd
+On Fri, 6 Jul 2012, Russell King - ARM Linux wrote:
+
+> On Fri, Jul 06, 2012 at 01:36:32PM +0200, Guennadi Liakhovetski wrote:
+> > I like this idea, but why don't we extend it to also cover the non-DT 
+> > case? I.e., why don't we add the above callback (call it "match" or 
+> > "filter" or anything else) to dmaengine operations and inside (the 
+> > extended) dma_request_channel(), instead of calling the filter function, 
+> > passed as a parameter, we loop over all registered DMAC devices and call 
+> > their filter callbacks, until one of them returns true? In fact, it goes 
+> > back to my earlier proposal from 
+> > http://thread.gmane.org/gmane.linux.kernel/1246957
+> > which I, possibly, failed to explain properly. So, the transformation 
+> > chain from today's API would be (all code is approximate):
+> > 
+> > (today)
+> > 
+> > <client driver>
+> > 	dma_request_channel(mask, filter, filter_arg);
+> > 
+> > <dmaengine_core>
+> > 	for_each_channel() {
+> > 		ret = (*filter)(chan, filter_arg);
+> > 		if (ret) {
+> > 			ret = chan->device->device_alloc_chan_resources(chan);
+> > 			if (!ret)
+> > 				return chan;
+> > 			else
+> > 				return NULL;
+> > 		}
+> > 	}
+> > 
+> > (can be transformed to)
+> > 
+> > <client driver>
+> > 	dma_request_channel(mask, filter_arg);
+> > 
+> > <dmaengine_core>
+> > 	for_each_channel() {
+> > 		ret = chan->device->filter(chan, filter_arg);
+> > 		if (ret) {
+> > 			<same as above>
+> > 		}
+> > 	}
+> > 
+> > (which further could be simplified to)
+> > 
+> > <client driver>
+> > 	dma_request_channel(mask, filter_arg);
+> > 
+> > <dmaengine_core>
+> > 	for_each_channel() {
+> > 		ret = chan->device->device_alloc_chan_resources(chan, filter_arg);
 > 
-> On Fri, 6 Jul 2012, Arnd Bergmann wrote:
-> > How would the individual driver know the size of the filter_arg?
+> This looks like you're re-purposing a perfectly good API for something that
+> it wasn't designed to do, namely providing a channel selection mechanism,
+> rather than "allocating channel resources".  The hint is in the bloody
+> name, please take a look sometime!
 > 
-> In exactly the same way as most dmaengine drivers do it today: they don't 
-> touch filter_arg until they're sure this is one of their channels. And 
-> this they typically do by comparing the driver pointer, e.g.:
-> 
-> bool sa11x0_dma_filter_fn(struct dma_chan *chan, void *param)
-> {
-> 	if (chan->device->dev->driver == &sa11x0_dma_driver.driver) {
+> If you want to call into the DMA engine driver for channel selection,
+> then create an _explicit_ API for it.  Don't bugger around with existing
+> APIs.
 
-That's utter rubbish, I'm afraid.
+Sure, it's better to create a new call-back.
 
-Let's say you move that code into sa11x0's alloc_chan_resources() function.
-It will _never_ be called for a channel which isn't owned by the sa11x0
-DMA driver - look at what __dma_request_channel() does:
+> Moreover, the *big* problem that your proposal above creates is this.
+> What _type_ is filter_arg?  If it's void *, then your suggestion is
+> nonsense, even if you associate it with a size argument.  You have no
+> idea what the bytestream that would be passed via that pointer means,
+> even if the size just happens to look like it's what you expect.
 
-        list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+Right, thanks to you and Arnd, who has pointed this out too.
 
-This walks the list of DMA devices.
+Then it seems to me, that we need to introduce a notion of a mux device. 
+We could of course try to just use some strings instead, arrays of 
+acceptable DMA devices and channels, and most likely we would even be able 
+to find such an approach, that would work for all existing configurations. 
+But it still wouldn't be really fully generic, right? Whereas creating a 
+mux driver we really could cover all possible cases. DMA clients in this 
+case would always be hard wired to only one pin of such a mux, the DMA 
+device on the other side also only has to care about its physical 
+channels. The dmaengine core would then query the mux driver, where it can 
+route specific client request lines?
 
-                chan = private_candidate(mask, device, fn, fn_param);
+A separate mux is needed, because several clients can have their DMA 
+handshake lines routed to several DMAC instances, so, this muxing 
+functionality can neither reside on the client nor on the CMAC.
 
-This walks the channels _on_ _that_ dma device.  Those channels can only
-be owned by the DMA device, which is in turn owned by the driver, which
-in turn is owned by the struct driver that the above filter function
-is checking.
+Is this a right direction now? Shall I try to prototype such a DMA mux 
+API?
 
-So, all in all, this check inside chan_alloc_resources() tells you
-absolutely _nothing_ about the suitability of dereferencing your
-filter_arg data.  At all.
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
