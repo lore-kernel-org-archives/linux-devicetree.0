@@ -1,95 +1,40 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 6 Jul 2012 13:36:32 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207061315470.29809@axis700.grange>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
- <4FE896F9.2020806@ti.com> <1340647463.1562.127.camel@vkoul-udesk3>
- <201206252030.56025.arnd@arndb.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] bindings: update imx and mxs #gpio-cells
+Date: Fri, 6 Jul 2012 19:57:09 +0800
+Message-ID: <20120706115707.GD22133@S2101-09.ap.freescale.net>
+References: <1340853337-4406-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201206252030.56025.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vinod Koul <vinod.koul@linux.intel.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1340853337-4406-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hui Wang <jason77.wang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jun 2012, Arnd Bergmann wrote:
-
-[snip]
-
-> The channel data in the device tree is still in a format
-> that is specific to that dmaengine driver and interpreted
-> by it. Using the regular dma_filter_fn prototype is not
-> necessary, but it would be convenient because the dmaengine
-> code already knows how to deal with it. If we don't use this
-> method, how about adding another callback to struct dma_device
-> like
+On Thu, Jun 28, 2012 at 11:15:37AM +0800, Shawn Guo wrote:
+> The of_get_named_gpio_flags can retrieve the second cell of
+> gpio-specifier as the "flags".  The imx and mxs gpio driver do not
+> have their own .xlate callback, which means of_gpio_simple_xlate is
+> used and it's a 1:1 mapping between gpio controller flags and Linux
+> "enum of_gpio_flags".
 > 
-> bool (*device_match)(struct dma_chan *chan, struct property *req);
+> Update imx and mxs bindings document to make it clear.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I like this idea, but why don't we extend it to also cover the non-DT 
-case? I.e., why don't we add the above callback (call it "match" or 
-"filter" or anything else) to dmaengine operations and inside (the 
-extended) dma_request_channel(), instead of calling the filter function, 
-passed as a parameter, we loop over all registered DMAC devices and call 
-their filter callbacks, until one of them returns true? In fact, it goes 
-back to my earlier proposal from 
-http://thread.gmane.org/gmane.linux.kernel/1246957
-which I, possibly, failed to explain properly. So, the transformation 
-chain from today's API would be (all code is approximate):
+Queued on imx/dt tree.
 
-(today)
-
-<client driver>
-	dma_request_channel(mask, filter, filter_arg);
-
-<dmaengine_core>
-	for_each_channel() {
-		ret = (*filter)(chan, filter_arg);
-		if (ret) {
-			ret = chan->device->device_alloc_chan_resources(chan);
-			if (!ret)
-				return chan;
-			else
-				return NULL;
-		}
-	}
-
-(can be transformed to)
-
-<client driver>
-	dma_request_channel(mask, filter_arg);
-
-<dmaengine_core>
-	for_each_channel() {
-		ret = chan->device->filter(chan, filter_arg);
-		if (ret) {
-			<same as above>
-		}
-	}
-
-(which further could be simplified to)
-
-<client driver>
-	dma_request_channel(mask, filter_arg);
-
-<dmaengine_core>
-	for_each_channel() {
-		ret = chan->device->device_alloc_chan_resources(chan, filter_arg);
-		if (!ret)
-			return chan;
-		else if (ret != -ENODEV)
-			return ret;
-		/* -ENODEV - try the next channel */
-	}
-
-Which is quite similar to my above mentioned proposal. Wouldn't this both 
-improve the present API and prepare it for DT?
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Regards,
+Shawn
