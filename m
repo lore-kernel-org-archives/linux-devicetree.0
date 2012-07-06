@@ -1,52 +1,112 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V2] regulator: tps65910: add support for input supply
-Date: Fri, 6 Jul 2012 19:11:26 +0100
-Message-ID: <20120706181125.GH5437@opensource.wolfsonmicro.com>
-References: <1341564192-18154-1-git-send-email-ldewangan@nvidia.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: EXYNOS5: Add gscalar device from DT
+Date: Fri, 06 Jul 2012 20:50:22 +0200
+Message-ID: <4FF7336E.4030007@gmail.com>
+References: <1341578702-10263-1-git-send-email-shaik.ameer@samsung.com> <1341578702-10263-3-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jaoouwwPWoQSJZYp"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1341564192-18154-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, swarren@nvidia.com, sameo@linux.intel.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1341578702-10263-3-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, olofj@google.com, prashanth.g@samsung.com, joshi@samsung.com, ameersk@gmail.com, thomas.ab@samsung.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Shaik,
 
---jaoouwwPWoQSJZYp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 07/06/2012 02:45 PM, Shaik Ameer Basha wrote:
+> Adding all 4 gscalar devices from DT device list in machine file.
 
-On Fri, Jul 06, 2012 at 02:13:12PM +0530, Laxman Dewangan wrote:
-> There is multiple voltage input pins on device which
-> takes the voltage input for different voltage regulator.
-> Support to configure the voltage input supplied by
-> different regulator for each regulators.
+nit: s/gscalar/gscaler
 
-Applied, thanks.
+The above sentence doesn't quite parse though.
 
---jaoouwwPWoQSJZYp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Signed-off-by: Abhilash Kesavan<a.kesavan@samsung.com>
+> Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
+> Signed-off-by: Shaik Ameer Basha<shaik.ameer@samsung.com>
+> ---
+>   arch/arm/boot/dts/exynos5250.dtsi      |   31 +++++++++++++++++++++++++++++++
+>   arch/arm/mach-exynos/mach-exynos5-dt.c |    8 ++++++++
+>   2 files changed, 39 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 4272b29..b945c00 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -23,6 +23,13 @@
+>   	compatible = "samsung,exynos5250";
+>   	interrupt-parent =<&gic>;
+>
+> +	aliases {
+> +		gsc0 =&gsc_0;
+> +		gsc1 =&gsc_1;
+> +		gsc2 =&gsc_2;
+> +		gsc3 =&gsc_3;
+> +	};
+> +
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+What are these aliases useful for ?
+Also I think all DT related patches should be posted to
+devicetree-discuss@lists.ozlabs.org as well.
 
-iQIcBAEBAgAGBQJP9ypBAAoJEBus8iNuMP3dWwIP/jF2h6BMjXPzn9vwmvQxM5eK
-rLvyPdnyavTbCQ0jBvQiNntRVStNaA1WexmwwhFL3dtyV3yIAf2VI3MHj9PZpk17
-m79WmDGcFrnjrNpEyzNTpuFgrkv0PikNC6iusPNvNk0TrwfMtTx7G3NLc08edqIS
-KgFgozuNjWiXjmsevokFsZCJDOvZroAW15mjafA8Siunmp9I0iBO3FQairk70Xfv
-aqoK6CSEu4EdFN3B/eKILzPYYuExjJHNewyv9YVwUkpJOUT2T4iZz/XM5pJr1NYu
-BFIJc7XINHvhLZJ0qB0v3aOThjVoSLRyHDVAWyTXaRpqntp2BgRxvN720ZEMozUa
-9yxlv9NVKcuOJuge7CPCqqcxI2phBfIF5YujF3INH+p5z0o9C+vNL9lfNywB8IWR
-RLunA7edw79KUhazHJI0engPA/oaljpxHpgYg/zmIAyLFXZcn5DyMhakfbDUlvf3
-QYu84GemUD01Ol5BslvGZFIs8un3QVU/daTJ/93VTz/MH3hy/w2eISTNotTtoPN3
-WzcSFlYwVb5b+aGQLKCJog8DSNSQZV3h3s4CPWYzVl0T/U2hp32moGDsyJiUk1/j
-H01dlt+vSLXutoE0OwgDxYr7k7zgmSrPxxDFyfmeDAZmwJKJw0GpjdPFxu0m0KhR
-t+tsJOPkoRKKcJkH2Cx4
-=MPvh
------END PGP SIGNATURE-----
+>   	gic:interrupt-controller@10481000 {
+>   		compatible = "arm,cortex-a9-gic";
+>   		#interrupt-cells =<3>;
+> @@ -424,4 +431,28 @@
+>   			#gpio-cells =<4>;
+>   		};
+>   	};
+> +
+> +	gsc_0:  gsc@0x13e00000 {
+> +		compatible = "samsung,exynos-gsc";
+> +		reg =<0x13e00000 0x1000>;
+> +		interrupts =<0 85 0>;
+> +	};
+> +
+> +	gsc_1:  gsc@0x13e10000 {
+> +		compatible = "samsung,exynos-gsc";
+> +		reg =<0x13e10000 0x1000>;
+> +		interrupts =<0 86 0>;
+> +	};
+> +
+> +	gsc_2:  gsc@0x13e20000 {
+> +		compatible = "samsung,exynos-gsc";
+> +		reg =<0x13e20000 0x1000>;
+> +		interrupts =<0 87 0>;
+> +	};
+> +
+> +	gsc_3:  gsc@0x13e30000 {
+> +		compatible = "samsung,exynos-gsc";
+> +		reg =<0x13e30000 0x1000>;
+> +		interrupts =<0 88 0>;
+> +	};
+>   };
+> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> index 7b1e11a..76b081c 100644
+> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
+> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> @@ -50,6 +50,14 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
+>   	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0", NULL),
+>   	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA1, "dma-pl330.1", NULL),
+>   	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2", NULL),
+> +	OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E00000,
+> +				"exynos-gsc.0", NULL),
+> +	OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E10000,
+> +				"exynos-gsc.1", NULL),
+> +	OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E20000,
+> +				"exynos-gsc.2", NULL),
+> +	OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E30000,
+> +				"exynos-gsc.3", NULL),
 
---jaoouwwPWoQSJZYp--
+It's probably better to add relevant entry at 
+arch/arm/mach-exynos/include/mach/map. It's just a one line, e.g.
+
+/* x = 0...3 */
+#define EXYNOS5_PA_GSC(x)	(0x13e00000 + ((x) * 0x10000))
+
+And use it here instead of plain numbers.
+
+--
+Thanks,
+Sylwester
