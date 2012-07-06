@@ -1,12 +1,15 @@
-From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Subject: Re: add DT tree to linux-next
-Date: Fri, 6 Jul 2012 08:45:46 +1000
-Message-ID: <20120706084546.c93b3767c4d58ccf48b12b9c@canb.auug.org.au>
-References: <4FF5BD9B.2030902@gmail.com>
+From: Jia Hongtao-B38951 <B38951-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+Date: Fri, 6 Jul 2012 02:05:05 +0000
+Message-ID: <412C8208B4A0464FA894C5F0C278CD5D01A16829@039-SN1MPN1-002.039d.mgd.msft.net>
+References: <1339148585-16947-1-git-send-email-B38951@freescale.com>
+ <4FD60FB1.7050106@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6717122333960985568=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FF5BD9B.2030902-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <4FD60FB1.7050106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,99 +20,100 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Yang-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6717122333960985568==
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA256";
- boundary="Signature=_Fri__6_Jul_2012_08_45_46_+1000_e=SMTv/aypZyDMQT"
+Hi Rob and Greg KH,
 
---Signature=_Fri__6_Jul_2012_08_45_46_+1000_e=SMTv/aypZyDMQT
-Content-Type: text/plain; charset=US-ASCII
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do you have any better idea to avoid duplication probe warning?
 
-Hi Rob,
+Thanks.
+-Jia Hongtao.
 
-On Thu, 05 Jul 2012 11:15:23 -0500 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
->
-> Can you please add this tree to linux-next. Normally, DT has gone thru
-> Grant, but he is mostly offline for next few months.
->=20
-> git://sources.calxeda.com/kernel/linux.git for-next
-
-I have added this tree from today.  I called it dt-rh and have you listed
-as the contact.
-
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgment of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
-
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-	Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
-
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
-
-Legal Stuff:
-By participating in linux-next, your subsystem tree contributions are
-public and will be included in the linux-next trees.  You may be sent
-e-mail messages indicating errors or other issues when the
-patches/commits from your subsystem tree are merged and tested in
-linux-next.  These messages may also be cross-posted to the linux-next
-mailing list, the linux-kernel mailing list, etc.  The linux-next tree
-project and IBM (my employer) make no warranties regarding the linux-next
-project, the testing procedures, the results, the e-mails, etc.  If you
-don't agree to these ground rules, let me know and I'll remove your tree
-from participation in linux-next.
-
---Signature=_Fri__6_Jul_2012_08_45_46_+1000_e=SMTv/aypZyDMQT
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBCAAGBQJP9hkaAAoJEECxmPOUX5FEy6gQAJjh7b6bPkMXeQ8BDR2N2RiJ
-GXosLo3RKwgbvEsaz8MkmJg1B39pJeQbSq+h2ht3X6Ng6mEJdlFxpvXJjxjvmkX9
-oFgt9jrON4EdTqRxLZVgM7zt/3HFvg8lp528IdwbM3SnV9B8eCdgbBNPqwXFDmpO
-Hg17vUPQ197x0sFOpqqmBBZzMaf8M5ErKUGNaXHVt/HXPny+rlp9TpS2W+KAPOPr
-TYve2LnivcUxvI6uBlCOfWD8VSsNV3ZdYvJ8o2tEUMeLAxcCkfp4wvOEz5JyIlwK
-TZWCBDCki4ir2gyMjigmWtmfGHzIsqBci3vOj4DypXiftmJloUQszbBo2AP7MNjr
-LjnkXEunaB4RISRHf7kbF7u+mzc8T0tUbF4epGI7xHLgk1QeoXHYZQIDuRagNOUS
-YFIZfKXVLER8tx+sHKnXKFm5YoeCsYOR+ZVCoblW9VCsJNv5aPnmAZZwkUkRkt6/
-6RzU7aCzzMAzwKDQgTNZ2jbF0/HHFBs8ioX6lEWRYxAcNOqGushOvlsfgwY05vzX
-fw/+rLdZQncmKc5shaSezUhnIoUujpu8bg+uTjyvuWQkPLSTZvw8b3gm/I6ioB4b
-ILtTj16vaQ3h7r4o1EJkug5U24tWR9rVR0KvXWQv/EGt2ff9ZLtrZ58wH7U3/lJF
-XDTwNw+wkFIGmUG0F4gP
-=4DA5
------END PGP SIGNATURE-----
-
---Signature=_Fri__6_Jul_2012_08_45_46_+1000_e=SMTv/aypZyDMQT--
-
---===============6717122333960985568==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6717122333960985568==--
+> -----Original Message-----
+> From: Rob Herring [mailto:robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+> Sent: Monday, June 11, 2012 11:33 PM
+> To: Jia Hongtao-B38951
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> Greg KH
+> Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+> 
+> [adding lkml and Greg KH]
+> 
+> On 06/08/2012 04:43 AM, Jia Hongtao wrote:
+> > We changed the pcie controller driver to platform driver so that the
+> PCI
+> > of platform devices need to be created earlier in the arch_initcall
+> stage
+> > according to the original timing of calling fsl_add_bridge(). So we do
+> PCI
+> > probing separately from other devices. But probing more than once could
+> > cause duplication warning. We add check if the devices have already
+> probed
+> > before probing any devices to avoid duplication warning.
+> >
+> > Signed-off-by: Jia Hongtao <B38951-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> 
+> Where's v1 and v2 history?
+> 
+> >  drivers/of/platform.c |   18 ++++++++++++------
+> >  1 files changed, 12 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > index a37330e..3aab01f 100644
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -139,6 +139,18 @@ struct platform_device *of_device_alloc(struct
+> device_node *np,
+> >  	if (!dev)
+> >  		return NULL;
+> >
+> > +	dev->dev.of_node = of_node_get(np);
+> > +	if (bus_id)
+> > +		dev_set_name(&dev->dev, "%s", bus_id);
+> > +	else
+> > +		of_device_make_bus_id(&dev->dev);
+> > +
+> > +	if (kset_find_obj(dev->dev.kobj.kset, kobject_name(&dev->dev.kobj)))
+> {
+> 
+> Is this a fast operation? I worry that we'd be doing this for every
+> device creation. Looking at kobj's seems too low level as well.
+> 
+> Perhaps moving the warning up the call stack and making the relevant
+> functions __must_check would work.
+> 
+> Rob
+> 
+> > +		kfree(dev);
+> > +		of_node_put(np);
+> > +		return NULL;
+> > +	}
+> > +
+> >  	/* count the io and irq resources */
+> >  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+> >  		num_reg++;
+> > @@ -161,17 +173,11 @@ struct platform_device *of_device_alloc(struct
+> device_node *np,
+> >  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) !=
+> num_irq);
+> >  	}
+> >
+> > -	dev->dev.of_node = of_node_get(np);
+> >  #if defined(CONFIG_MICROBLAZE)
+> >  	dev->dev.dma_mask = &dev->archdata.dma_mask;
+> >  #endif
+> >  	dev->dev.parent = parent;
+> >
+> > -	if (bus_id)
+> > -		dev_set_name(&dev->dev, "%s", bus_id);
+> > -	else
+> > -		of_device_make_bus_id(&dev->dev);
+> > -
+> >  	return dev;
+> >  }
+> >  EXPORT_SYMBOL(of_device_alloc);
+> 
