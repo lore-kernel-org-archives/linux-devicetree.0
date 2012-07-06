@@ -1,128 +1,95 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: Early printk baudrate initialization DTS description
-Date: Fri, 06 Jul 2012 12:06:26 +0200
-Message-ID: <4FF6B8A2.2090703@monstr.eu>
-References: <4FE99A1A.4040908@monstr.eu>
- <7A9214B0DEB2074FBCA688B30B04400D04C05241@XMB-RCD-208.cisco.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 6 Jul 2012 13:36:32 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1207061315470.29809@axis700.grange>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+ <4FE896F9.2020806@ti.com> <1340647463.1562.127.camel@vkoul-udesk3>
+ <201206252030.56025.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <7A9214B0DEB2074FBCA688B30B04400D04C05241-2KNrN6/GZtCQwNoRDPPJJaBKnGwkPULj@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "David VomLehn (dvomlehn)" <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201206252030.56025.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Vinod Koul <vinod.koul@linux.intel.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/30/2012 03:41 AM, David VomLehn (dvomlehn) wrote:
->> -----Original Message-----
->> From: devicetree-discuss [mailto:devicetree-discuss-
->> bounces+dvomlehn=cisco.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of Michal Simek
->> Sent: Tuesday, June 26, 2012 4:17 AM
->> To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Cc: John Williams
->> Subject: Early printk baudrate initialization DTS description
->>
->> Hi,
->>
->> we are trying to solve one problem with early printk initialization
->> on Microblaze uart16550. I have also checked arm bootup code and
->> the situation is the same there (NOTE: This IP is possible to use on
->> Zynq too).
->>
->> The problem is about baudrate initialization. Current code just expect
->> that early console is initialized by previous bootloader/firmware (in
->> our case u-boot).
->> But if there is not initialization and directly elf is loaded there is
->> no initialization
->> done and kernel bootlog is shown when regular serial driver is probed.
->>
->> I have create a solution which add baudrate initialization to
->> Microblaze early printk code.
->> And also two options how to load baudrate setting from device-tree.
->>
->> Code expects that early console is specified in chosen node.
->>
->> chosen {
->> 	linux,stdout-path = "/axi@0/serial@40400000";
->> } ;
->>
->> Code finds out which IP it is and based on that initialize early
-> printk
->> driver.
->> Baudrate setting is counted from clock-frequency and current-speed
->> defined directly in uart node.
->
-> The terminology is not quite clear to me. Many people use the term baud
-> rate when they mean the more accurate term "data rate" and I'm pretty
-> sure this is what you mean, but is this different than "current-speed"?
+On Mon, 25 Jun 2012, Arnd Bergmann wrote:
 
-ok. Sorry not serial expert but please correct me.
+[snip]
 
-I need to read required baudrate setting (9600,...,115200, etc) which is used
-for communication(it should be numeric bits per second) and clock frequency.
-And based on the code setups baud_divisor for the baud rate generator counter.
+> The channel data in the device tree is still in a format
+> that is specific to that dmaengine driver and interpreted
+> by it. Using the regular dma_filter_fn prototype is not
+> necessary, but it would be convenient because the dmaengine
+> code already knows how to deal with it. If we don't use this
+> method, how about adding another callback to struct dma_device
+> like
+> 
+> bool (*device_match)(struct dma_chan *chan, struct property *req);
 
-And based on ePAPR.. Specifies the current speed of a serial device in bits per second.
-A boot program should set this property if it has initialized the serial device.
+I like this idea, but why don't we extend it to also cover the non-DT 
+case? I.e., why don't we add the above callback (call it "match" or 
+"filter" or anything else) to dmaengine operations and inside (the 
+extended) dma_request_channel(), instead of calling the filter function, 
+passed as a parameter, we loop over all registered DMAC devices and call 
+their filter callbacks, until one of them returns true? In fact, it goes 
+back to my earlier proposal from 
+http://thread.gmane.org/gmane.linux.kernel/1246957
+which I, possibly, failed to explain properly. So, the transformation 
+chain from today's API would be (all code is approximate):
 
->
->>
->> RS232_Uart_1: serial@40400000 {
->> 	clock-frequency =<50000000>;
->> 	compatible = "xlnx,axi-uart16550-1.01.a", "xlnx,xps-uart16550-
->> 2.00.a", "ns16550a";
->> 	current-speed =<115200>;
->> 	device_type = "serial";
->> 	reg =<  0x40400000 0x10000>;
->> 	reg-offset =<0x1000>;
->> 	reg-shift =<2>;
->> 	...irq, etc
->> } ;
->>
->> This was the first version which is working but using current-speed is
->> probably not the best solution.
->>
->> I have also create version where baudrate is directly specified in
->> chosen node. Clock frequency is still
->> loaded directly from the node.
->>
->> chosen {
->> 	linux,stdout-path = "/axi@0/serial@40400000,115200";
->> } ;
->>
->> What solution is more compatible with device-tree?
->
-> Since nobody else has responded for a couple of days, I'll throw out the
-> opinion that I prefer the first solution. The second solution requires
-> you to do additional parsing and data validation which the device tree
-> has already done for you in the first approach. It's also consistent
-> with the ePAPR example in
-> https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf.
+(today)
 
-This is done in early phase which means that I don't believe that there is
-any parsing done for the first approach too. It is simple value reading
-with no checking.
-And yes, current-speed should be used exactly for this purpose.
+<client driver>
+	dma_request_channel(mask, filter, filter_arg);
 
-Thanks,
-Michal
+<dmaengine_core>
+	for_each_channel() {
+		ret = (*filter)(chan, filter_arg);
+		if (ret) {
+			ret = chan->device->device_alloc_chan_resources(chan);
+			if (!ret)
+				return chan;
+			else
+				return NULL;
+		}
+	}
 
+(can be transformed to)
 
+<client driver>
+	dma_request_channel(mask, filter_arg);
 
+<dmaengine_core>
+	for_each_channel() {
+		ret = chan->device->filter(chan, filter_arg);
+		if (ret) {
+			<same as above>
+		}
+	}
 
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+(which further could be simplified to)
+
+<client driver>
+	dma_request_channel(mask, filter_arg);
+
+<dmaengine_core>
+	for_each_channel() {
+		ret = chan->device->device_alloc_chan_resources(chan, filter_arg);
+		if (!ret)
+			return chan;
+		else if (ret != -ENODEV)
+			return ret;
+		/* -ENODEV - try the next channel */
+	}
+
+Which is quite similar to my above mentioned proposal. Wouldn't this both 
+improve the present API and prepare it for DT?
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
