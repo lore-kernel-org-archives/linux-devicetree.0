@@ -1,43 +1,51 @@
-From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCHv2 3/3] watchdog: omap_wdt: add device tree support
-Date: Sat, 7 Jul 2012 14:07:09 +0200
-Message-ID: <20120707120709.GW735@spo001.leaseweb.com>
-References: <1338525856-4359-1-git-send-email-jgq516@gmail.com>
- <1338525856-4359-4-git-send-email-jgq516@gmail.com>
- <20120706082801.GO1122@atomide.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v8 06/14] USB: Chipidea: rename struct ci13xxx variables
+ from udc to ci
+Date: Sat, 7 Jul 2012 22:56:20 +0800
+Message-ID: <20120707145619.GA29746@b20223-02.ap.freescale.net>
+References: <1340963342-28735-1-git-send-email-richard.zhao@freescale.com>
+ <1340963342-28735-7-git-send-email-richard.zhao@freescale.com>
+ <20120706180721.GA8983@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120706082801.GO1122-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jgq516-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20120706180721.GA8983-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-> Hi Wim,
-> 
-> * jgq516-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jgq516-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [120531 20:56]:
-> > From: Xiao Jiang <jgq516-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Fri, Jul 06, 2012 at 11:07:21AM -0700, Greg KH wrote:
+> On Fri, Jun 29, 2012 at 05:48:54PM +0800, Richard Zhao wrote:
+> > struct ci13xxx represent the controller, which may be device or host,
+> > so name its variables as ci.
 > > 
-> > Add device table for omap_wdt to support dt.
+> > Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 > 
-> Care to ack this patch in the series?
+> This patch fails to apply (the 5/14 had some fuzz, but I fixed that by
+> hand.
+#5 is good. Thanks.
+> )  Odds are it's due to Felipe's other changes now in my tree.
+> Care to rediff this, and the rest of the series against the usb-next
+> branch and resend them so that I can apply them?
+I'll send out v9 REBASE.
 
-Yep.
-Acked-by: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Thanks
+Richard
+> 
+> I've applied the first 5 in this series already, so you don't have to
+> resend them.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Kind regards,
-Wim.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
