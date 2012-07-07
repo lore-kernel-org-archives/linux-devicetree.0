@@ -1,7 +1,7 @@
 From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v9 REBASE 4/9] usb: chipidea: select USB_EHCI_ROOT_HUB_TT in USB_CHIPIDEA_HOST of Kconfig
-Date: Sat, 7 Jul 2012 22:56:43 +0800
-Message-ID: <1341673008-29808-5-git-send-email-richard.zhao@freescale.com>
+Subject: [PATCH v9 REBASE 5/9] usb: otg: add notify_connect/notify_disconnect callback
+Date: Sat, 7 Jul 2012 22:56:44 +0800
+Message-ID: <1341673008-29808-6-git-send-email-richard.zhao@freescale.com>
 References: <1341673008-29808-1-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,55 @@ To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCv
 Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ci13xxx host needs Root Hub Transaction Translators.
+This let usb phy driver has a chance to change hw settings when connect
+status change.
 
-Reported-by: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Tested-by: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
 ---
- drivers/usb/chipidea/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ include/linux/usb/otg.h |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
-index fd36dc8..8337fb5 100644
---- a/drivers/usb/chipidea/Kconfig
-+++ b/drivers/usb/chipidea/Kconfig
-@@ -20,6 +20,7 @@ config USB_CHIPIDEA_UDC
+diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+index 0cb2ec2..45824be 100644
+--- a/include/linux/usb/otg.h
++++ b/include/linux/usb/otg.h
+@@ -128,6 +128,9 @@ struct usb_phy {
+ 	int	(*set_suspend)(struct usb_phy *x,
+ 				int suspend);
  
- config USB_CHIPIDEA_HOST
- 	bool "ChipIdea host controller"
-+	select USB_EHCI_ROOT_HUB_TT
- 	help
- 	  Say Y here to enable host controller functionality of the
- 	  ChipIdea driver.
++	/* notify phy connect status change */
++	int	(*notify_connect)(struct usb_phy *x, int port);
++	int	(*notify_disconnect)(struct usb_phy *x, int port);
+ };
+ 
+ 
+@@ -277,6 +280,24 @@ usb_phy_set_suspend(struct usb_phy *x, int suspend)
+ }
+ 
+ static inline int
++usb_phy_notify_connect(struct usb_phy *x, int port)
++{
++	if (x->notify_connect)
++		return x->notify_connect(x, port);
++	else
++		return 0;
++}
++
++static inline int
++usb_phy_notify_disconnect(struct usb_phy *x, int port)
++{
++	if (x->notify_disconnect)
++		return x->notify_disconnect(x, port);
++	else
++		return 0;
++}
++
++static inline int
+ otg_start_srp(struct usb_otg *otg)
+ {
+ 	if (otg && otg->start_srp)
 -- 
 1.7.9.5
 
