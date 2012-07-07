@@ -1,113 +1,38 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Sat, 7 Jul 2012 00:49:05 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207070019510.29809@axis700.grange>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
- <4FE896F9.2020806@ti.com> <1340647463.1562.127.camel@vkoul-udesk3>
- <201206252030.56025.arnd@arndb.de> <Pine.LNX.4.64.1207061315470.29809@axis700.grange>
- <20120706205731.GA31585@n2100.arm.linux.org.uk>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Where to put a large bootloader-supplied device tree on ARM ?
+Date: Fri, 06 Jul 2012 14:24:56 -1000
+Message-ID: <4FF781D8.3040206@firmworks.com>
+References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
+ <201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
+ <201207062008.23952.arnd@arndb.de> <20120706210009.GC11470@lunn.ch>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120706205731.GA31585@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@linux.intel.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120706210009.GC11470-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 6 Jul 2012, Russell King - ARM Linux wrote:
+I'm passing a flatted device tree from OLPC's bootloader (which
+is a full Open Firmware implementation) to the kernel.  If I
+put the FDT at the "traditional" address 0x100, bad things
+happen when the DT is larger than 16K.  The FDT extends past
+the 0x4000 boundary and gets overwritten by the early page tables
+which are written at that address.
 
-> On Fri, Jul 06, 2012 at 01:36:32PM +0200, Guennadi Liakhovetski wrote:
-> > I like this idea, but why don't we extend it to also cover the non-DT 
-> > case? I.e., why don't we add the above callback (call it "match" or 
-> > "filter" or anything else) to dmaengine operations and inside (the 
-> > extended) dma_request_channel(), instead of calling the filter function, 
-> > passed as a parameter, we loop over all registered DMAC devices and call 
-> > their filter callbacks, until one of them returns true? In fact, it goes 
-> > back to my earlier proposal from 
-> > http://thread.gmane.org/gmane.linux.kernel/1246957
-> > which I, possibly, failed to explain properly. So, the transformation 
-> > chain from today's API would be (all code is approximate):
-> > 
-> > (today)
-> > 
-> > <client driver>
-> > 	dma_request_channel(mask, filter, filter_arg);
-> > 
-> > <dmaengine_core>
-> > 	for_each_channel() {
-> > 		ret = (*filter)(chan, filter_arg);
-> > 		if (ret) {
-> > 			ret = chan->device->device_alloc_chan_resources(chan);
-> > 			if (!ret)
-> > 				return chan;
-> > 			else
-> > 				return NULL;
-> > 		}
-> > 	}
-> > 
-> > (can be transformed to)
-> > 
-> > <client driver>
-> > 	dma_request_channel(mask, filter_arg);
-> > 
-> > <dmaengine_core>
-> > 	for_each_channel() {
-> > 		ret = chan->device->filter(chan, filter_arg);
-> > 		if (ret) {
-> > 			<same as above>
-> > 		}
-> > 	}
-> > 
-> > (which further could be simplified to)
-> > 
-> > <client driver>
-> > 	dma_request_channel(mask, filter_arg);
-> > 
-> > <dmaengine_core>
-> > 	for_each_channel() {
-> > 		ret = chan->device->device_alloc_chan_resources(chan, filter_arg);
-> 
-> This looks like you're re-purposing a perfectly good API for something that
-> it wasn't designed to do, namely providing a channel selection mechanism,
-> rather than "allocating channel resources".  The hint is in the bloody
-> name, please take a look sometime!
-> 
-> If you want to call into the DMA engine driver for channel selection,
-> then create an _explicit_ API for it.  Don't bugger around with existing
-> APIs.
+I have found various places in memory where I can place it
+without it being overwritten, and things work, but that seems
+dodgy and likely to break randomly.
 
-Sure, it's better to create a new call-back.
-
-> Moreover, the *big* problem that your proposal above creates is this.
-> What _type_ is filter_arg?  If it's void *, then your suggestion is
-> nonsense, even if you associate it with a size argument.  You have no
-> idea what the bytestream that would be passed via that pointer means,
-> even if the size just happens to look like it's what you expect.
-
-Right, thanks to you and Arnd, who has pointed this out too.
-
-Then it seems to me, that we need to introduce a notion of a mux device. 
-We could of course try to just use some strings instead, arrays of 
-acceptable DMA devices and channels, and most likely we would even be able 
-to find such an approach, that would work for all existing configurations. 
-But it still wouldn't be really fully generic, right? Whereas creating a 
-mux driver we really could cover all possible cases. DMA clients in this 
-case would always be hard wired to only one pin of such a mux, the DMA 
-device on the other side also only has to care about its physical 
-channels. The dmaengine core would then query the mux driver, where it can 
-route specific client request lines?
-
-A separate mux is needed, because several clients can have their DMA 
-handshake lines routed to several DMAC instances, so, this muxing 
-functionality can neither reside on the client nor on the CMAC.
-
-Is this a right direction now? Shall I try to prototype such a DMA mux 
-API?
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Has there been any discussion about where large-ish FDT images
+should be located?
