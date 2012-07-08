@@ -1,114 +1,87 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 06/36] fdt: Add generic dt_memblock_reserve() function
-Date: Sat, 07 Jul 2012 16:18:06 -0500
-Message-ID: <4FF8A78E.5090709@gmail.com>
-References: <1341608777-12982-1-git-send-email-catalin.marinas@arm.com>
- <1341608777-12982-7-git-send-email-catalin.marinas@arm.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: Tegra DRM device tree bindings
+Date: Sun, 8 Jul 2012 07:53:06 +0200
+Message-ID: <20120708055306.GA5186@avionic-0098.mockup.avionic-design.de>
+References: <20120626105513.GA9552@avionic-0098.mockup.avionic-design.de>
+ <20120705121506.GA23732@avionic-0098.mockup.avionic-design.de>
+ <4FF74391.5040004@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1341608777-12982-7-git-send-email-catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4FF74391.5040004-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/2012 04:05 PM, Catalin Marinas wrote:
-> This function reserves initial_boot_params total size and reserve map.
-> 
-> Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-If you had run get_maintainers.pl you would have copied all the
-maintainers and the appropriate list (devicetree-discuss) for this patch.
+--azLHFNyN32YCQGCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is hardly generic if you aren't using it anywhere but on a new
-arch. Presumably, you can remove the arm 32-bit version, but its still
-to be debated whether 32-bit and 64-bit ARM will remain separate.
+On Fri, Jul 06, 2012 at 01:59:13PM -0600, Stephen Warren wrote:
+> On 07/05/2012 06:15 AM, Thierry Reding wrote:
+> > Here's a new proposal that should address all issues collected
+> > during the discussion of the previous one:
+> >=20
+> > From tegra20.dtsi:
+> ...
+>=20
+> At a quick glance, that all seems pretty reasonable now.
+>=20
+> > One problem I've come across when trying to get some rudimentary
+> > code working with this is that there's no longer a device which the
+> > DRM driver can bind to, because the top-level device (host1x) now
+> > has a separate driver.
+>=20
+> Can't you just have the host1x driver trigger the instantiation of the
+> DRM driver? In other words, the host1x node is both the plain host1x
+> driver and the DRM driver. So, after initializing anything for host1x
+> itself, just end host1x's probe() with something a call to
+> drm_platform_init(), passing in host1x's own pdev.
+>=20
+> After all, it seems like the whole point of representing host1x in the
+> DT is to expose the graphics HW, so you'd need the DRM device in that
+> case.
 
-It does appear that only ARM and powerpc currently handle reserve map,
-so the other DT enabled platforms will need to have something similar here.
+The reason that I've been hesitating is that host1x isn't related only
+to graphics HW but is also required to make f.e. video input work. So I
+can imagine a setup where for instance you need only video input and
+send captured data via the network. If host1x registered the DRM driver
+it would imply that setups that don't require any output would still
+have the whole DRM initialized.
 
-Rob
+I did post a proposal to solve this problem, which doesn't seem Tegra
+specific, to dri-devel last week. But if nobody else thinks it's a
+problem to use host1x then I'll just use that as the easy way out. If
+this happens to cause problems at some point in the future we can always
+address it then. If host1x is tightly coupled to DRM then I think we can
+also keep the driver with the rest of the DRM code.
 
-> ---
->  drivers/of/fdt.c       |   28 ++++++++++++++++++++++++++++
->  include/linux/of_fdt.h |    1 +
->  2 files changed, 29 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 91a375f..7e9b5b0 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -17,6 +17,7 @@
->  #include <linux/string.h>
->  #include <linux/errno.h>
->  #include <linux/slab.h>
-> +#include <linux/memblock.h>
->  
->  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->  #ifdef CONFIG_PPC
-> @@ -436,6 +437,33 @@ int __initdata dt_root_size_cells;
->  
->  struct boot_param_header *initial_boot_params;
->  
-> +void __init dt_memblock_reserve(void)
-> +{
-> +	u64 *reserve_map, base, size;
-> +
-> +	if (!initial_boot_params)
-> +		return;
-> +
-> +	/* Reserve the dtb region */
-> +	memblock_reserve(virt_to_phys(initial_boot_params),
-> +			 be32_to_cpu(initial_boot_params->totalsize));
-> +
-> +	/*
-> +	 * Process the reserve map.  This will probably overlap the initrd
-> +	 * and dtb locations which are already reserved, but overlapping
-> +	 * doesn't hurt anything
-> +	 */
-> +	reserve_map = ((void*)initial_boot_params) +
-> +			be32_to_cpu(initial_boot_params->off_mem_rsvmap);
-> +	while (1) {
-> +		base = be64_to_cpup(reserve_map++);
-> +		size = be64_to_cpup(reserve_map++);
-> +		if (!size)
-> +			break;
-> +		memblock_reserve(base, size);
-> +	}
-> +}
-> +
->  #ifdef CONFIG_OF_EARLY_FLATTREE
->  
->  /**
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index ed136ad..bf4fe1e 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -117,6 +117,7 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
->  /* Other Prototypes */
->  extern void unflatten_device_tree(void);
->  extern void early_init_devtree(void *);
-> +extern void dt_memblock_reserve(void);
->  #else /* CONFIG_OF_FLATTREE */
->  static inline void unflatten_device_tree(void) {}
->  #endif /* CONFIG_OF_FLATTREE */
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
-> 
+Thierry
+
+--azLHFNyN32YCQGCU
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP+SBCAAoJEN0jrNd/PrOh0lcP/1vd6v0+4fzbPdTGujK1c6PA
+wjTYtOONav1v1diLVXuSaJgG4v6IxLWJ1w8uCNIGltFPKkzK0YZHTkCZn28Y0syo
+M9TuoPRzy+okcowJb7JuACvbbxJVt7+tTYu8HWHVFfXlPwvG4P5ysiduWPm/NUdG
+3CRUAtlIckYPZdvb4Gh/pRFP4ahFZVC95Ox5idkRIcBaWroor/GCvTiDYxntZKEo
+tdrU99g84y/BH6qBEjunSbaTaRciMygD65BHVGb05sq4uFIH1Tc6cBXIRbUzdZcd
+Jy5P9Wjdtprms4fSrOqPiUBD0zCTvicSu5WGswPEFDKDLlPMmaLXhrj9IqoWpJNV
+fpzDO+1Z8/WDnykXRqS6aoMLDCrncEOvRqybofqAulOSiukbJTYmcw1cEKinrNQv
+MJzbFWBuP3tsnLVE+t+9AypGEPWwca9m+eytrPNNmJDbcsfgUAs0yWKScbhKoY2M
+MOo08RyLBkCuCGk0AqCs1Z7lVlhgSyEMmtyYGqgEV+ePt6J0XtDRqlyATCAhmULv
+UwPYYu2sn7xHJ+yow06mHR2jFTlod9cBW2DgTst0v7MFob2a1sEZtG0eHVFW7yt2
+FfyQQ2EAqErC60QGb/Yw1a4gA6ZdmP1Ovn/Y4T2Np0iWRM5wfHqXFi9xkNKyxNRI
+XOLWA7LJX89rfFqEfJQV
+=dJsp
+-----END PGP SIGNATURE-----
+
+--azLHFNyN32YCQGCU--
