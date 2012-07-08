@@ -1,48 +1,51 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 06/36] fdt: Add generic dt_memblock_reserve() function
-Date: Sun, 8 Jul 2012 10:43:35 +0100
-Message-ID: <20120708094335.GD3845@arm.com>
-References: <1341608777-12982-1-git-send-email-catalin.marinas@arm.com>
- <1341608777-12982-7-git-send-email-catalin.marinas@arm.com>
- <4FF8A78E.5090709@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH REPOST] Add test for re-defining an identical label
+Date: Sun, 8 Jul 2012 22:51:17 +1000
+Message-ID: <20120708125117.GA7749@truffala.fritz.box>
+References: <1341346170-16312-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4FF8A78E.5090709@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+In-Reply-To: <1341346170-16312-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 07, 2012 at 10:18:06PM +0100, Rob Herring wrote:
-> On 07/06/2012 04:05 PM, Catalin Marinas wrote:
-> > This function reserves initial_boot_params total size and reserve map.
-> > 
-> > Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Grant Likely <grant.likely@secretlab.ca>
+On Tue, Jul 03, 2012 at 02:09:30PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> If you had run get_maintainers.pl you would have copied all the
-> maintainers and the appropriate list (devicetree-discuss) for this patch.
+> When merging one device tree over the top of a previous tree, it is
+> possible to define a duplicate label that has the same name and points
+> to the same property or node. This is currently allowed by the duplicate
+> label checking code. However, alternative duplicate label checking
+> algorithms might not allow this. Add an explicit test to ensure this
+> capability is maintained.
 
-You are right. As I replied to Alan, those patches which are not
-strictly arch/aarch64 will be pushed separately and asking the
-corresponding maintainers for acked-by. I just posted them here to show
-the context. The reason I cc'ed Grant was because I discussed this with
-him during Linaro Connect.
+Sorry, I've been on leave and haven't really had brainspace to think
+about this.  I think you're right though, whatever else we do with
+stuff we do want to allow redefinition of labels as long as they
+attach to the same thing (i.e. same path, and property within that
+path when applicable).  Labels within property values do get curly if
+that property is altered, but that doesn't directly affect this test.
 
-> This is hardly generic if you aren't using it anywhere but on a new
-> arch. Presumably, you can remove the arm 32-bit version, but its still
-> to be debated whether 32-bit and 64-bit ARM will remain separate.
-> 
-> It does appear that only ARM and powerpc currently handle reserve map,
-> so the other DT enabled platforms will need to have something similar here.
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-I know for sure that arch/arm/ uses it and it is not ARM-specific code,
-so other architectures could benefit. We'll discuss this when posting
-the patch separately on devicetree-discuss.
-
-Thanks.
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
 -- 
-Catalin
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
