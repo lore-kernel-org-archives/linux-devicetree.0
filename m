@@ -1,11 +1,13 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [PATCH 1/2] Re-work level setting on checks code
-Date: Sun,  8 Jul 2012 23:25:21 +1000
-Message-ID: <1341753922-3342-1-git-send-email-david@gibson.dropbear.id.au>
+Subject: [PATCH 2/2] Allow toggling of semantic checks
+Date: Sun,  8 Jul 2012 23:25:22 +1000
+Message-ID: <1341753922-3342-2-git-send-email-david@gibson.dropbear.id.au>
+References: <1341753922-3342-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1341753922-3342-1-git-send-email-david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,330 +22,304 @@ To: jdl-CYoMK+44s/E@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently each of the semantic checks in checks.c has a "level" between
-IGNORE and ERROR.  This single level makes it awkward to implement the
-semantics we want for toggling the checks on the command line.
-
-This patch reworks the code to instead have separate boolean flags for
-warning and error.  At present having both flags set will have the same
-effect as having just the error flag set, but this can change in the
-future.
+This patch adds -W and -E options to dtc which allow toggling on and off
+of the various built in semantic checks on the tree.
 
 Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
- checks.c |  117 +++++++++++++++++++++++++++++++++-----------------------------
- dtc.h    |    1 +
- 2 files changed, 63 insertions(+), 55 deletions(-)
+ checks.c                |   84 +++++++++++++++++++++++++++++++++++++++++++++--
+ dtc.c                   |   13 +++++++-
+ dtc.h                   |    1 +
+ tests/dtc-checkfails.sh |   20 +++++++++--
+ tests/dtc-fails.sh      |   30 +++++++++++++++++
+ tests/run_tests.sh      |   12 +++++++
+ 6 files changed, 154 insertions(+), 6 deletions(-)
+ create mode 100755 tests/dtc-fails.sh
 
 diff --git a/checks.c b/checks.c
-index a662a00..3080439 100644
+index 3080439..9061237 100644
 --- a/checks.c
 +++ b/checks.c
-@@ -31,12 +31,6 @@
- #define TRACE(c, fmt, ...)	do { } while (0)
- #endif
- 
--enum checklevel {
--	IGNORE = 0,
--	WARN = 1,
--	ERROR = 2,
--};
--
- enum checkstatus {
- 	UNCHECKED = 0,
- 	PREREQ,
-@@ -57,14 +51,14 @@ struct check {
- 	node_check_fn node_fn;
- 	prop_check_fn prop_fn;
- 	void *data;
--	enum checklevel level;
-+	bool warn, error;
- 	enum checkstatus status;
- 	int inprogress;
- 	int num_prereqs;
+@@ -58,7 +58,7 @@ struct check {
  	struct check **prereq;
  };
  
--#define CHECK(nm, tfn, nfn, pfn, d, lvl, ...) \
-+#define CHECK(nm, tfn, nfn, pfn, d, w, e, ...)	       \
+-#define CHECK(nm, tfn, nfn, pfn, d, w, e, ...)	       \
++#define CHECK_ENTRY(nm, tfn, nfn, pfn, d, w, e, ...)	       \
  	static struct check *nm##_prereqs[] = { __VA_ARGS__ }; \
  	static struct check nm = { \
  		.name = #nm, \
-@@ -72,20 +66,29 @@ struct check {
- 		.node_fn = (nfn), \
- 		.prop_fn = (pfn), \
- 		.data = (d), \
--		.level = (lvl), \
-+		.warn = (w), \
-+		.error = (e), \
- 		.status = UNCHECKED, \
- 		.num_prereqs = ARRAY_SIZE(nm##_prereqs), \
+@@ -73,22 +73,30 @@ struct check {
  		.prereq = nm##_prereqs, \
  	};
--
--#define TREE_CHECK(nm, d, lvl, ...) \
--	CHECK(nm, check_##nm, NULL, NULL, d, lvl, __VA_ARGS__)
--#define NODE_CHECK(nm, d, lvl, ...) \
--	CHECK(nm, NULL, check_##nm, NULL, d, lvl, __VA_ARGS__)
--#define PROP_CHECK(nm, d, lvl, ...) \
--	CHECK(nm, NULL, NULL, check_##nm, d, lvl, __VA_ARGS__)
--#define BATCH_CHECK(nm, lvl, ...) \
--	CHECK(nm, NULL, NULL, NULL, NULL, lvl, __VA_ARGS__)
-+#define WARNING(nm, tfn, nfn, pfn, d, ...) \
-+	CHECK(nm, tfn, nfn, pfn, d, true, false, __VA_ARGS__)
-+#define ERROR(nm, tfn, nfn, pfn, d, ...) \
-+	CHECK(nm, tfn, nfn, pfn, d, false, true, __VA_ARGS__)
-+
-+#define TREE_WARNING(nm, d, ...) \
-+	WARNING(nm, check_##nm, NULL, NULL, d, __VA_ARGS__)
-+#define TREE_ERROR(nm, d, ...) \
-+	ERROR(nm, check_##nm, NULL, NULL, d, __VA_ARGS__)
-+#define NODE_WARNING(nm, d, ...) \
-+	WARNING(nm, NULL, check_##nm, NULL, d,  __VA_ARGS__)
-+#define NODE_ERROR(nm, d, ...) \
-+	ERROR(nm, NULL, check_##nm, NULL, d, __VA_ARGS__)
-+#define PROP_WARNING(nm, d, ...) \
-+	WARNING(nm, NULL, NULL, check_##nm, d, __VA_ARGS__)
-+#define PROP_ERROR(nm, d, ...) \
-+	ERROR(nm, NULL, NULL, check_##nm, d, __VA_ARGS__)
+ #define WARNING(nm, tfn, nfn, pfn, d, ...) \
+-	CHECK(nm, tfn, nfn, pfn, d, true, false, __VA_ARGS__)
++	CHECK_ENTRY(nm, tfn, nfn, pfn, d, true, false, __VA_ARGS__)
+ #define ERROR(nm, tfn, nfn, pfn, d, ...) \
+-	CHECK(nm, tfn, nfn, pfn, d, false, true, __VA_ARGS__)
++	CHECK_ENTRY(nm, tfn, nfn, pfn, d, false, true, __VA_ARGS__)
++#define CHECK(nm, tfn, nfn, pfn, d, ...) \
++	CHECK_ENTRY(nm, tfn, nfn, pfn, d, false, false, __VA_ARGS__)
+ 
+ #define TREE_WARNING(nm, d, ...) \
+ 	WARNING(nm, check_##nm, NULL, NULL, d, __VA_ARGS__)
+ #define TREE_ERROR(nm, d, ...) \
+ 	ERROR(nm, check_##nm, NULL, NULL, d, __VA_ARGS__)
++#define TREE_CHECK(nm, d, ...) \
++	CHECK(nm, check_##nm, NULL, NULL, d, __VA_ARGS__)
+ #define NODE_WARNING(nm, d, ...) \
+ 	WARNING(nm, NULL, check_##nm, NULL, d,  __VA_ARGS__)
+ #define NODE_ERROR(nm, d, ...) \
+ 	ERROR(nm, NULL, check_##nm, NULL, d, __VA_ARGS__)
++#define NODE_CHECK(nm, d, ...) \
++	CHECK(nm, NULL, check_##nm, NULL, d, __VA_ARGS__)
+ #define PROP_WARNING(nm, d, ...) \
+ 	WARNING(nm, NULL, NULL, check_##nm, d, __VA_ARGS__)
+ #define PROP_ERROR(nm, d, ...) \
+ 	ERROR(nm, NULL, NULL, check_##nm, d, __VA_ARGS__)
++#define PROP_CHECK(nm, d, ...) \
++	CHECK(nm, NULL, NULL, check_##nm, d, __VA_ARGS__)
  
  #ifdef __GNUC__
  static inline void check_msg(struct check *c, const char *fmt, ...) __attribute__((format (printf, 2, 3)));
-@@ -95,13 +98,13 @@ static inline void check_msg(struct check *c, const char *fmt, ...)
- 	va_list ap;
- 	va_start(ap, fmt);
- 
--	if ((c->level < WARN) || (c->level <= quiet))
--		return; /* Suppress message */
--
--	fprintf(stderr, "%s (%s): ",
--		(c->level == ERROR) ? "ERROR" : "Warning", c->name);
--	vfprintf(stderr, fmt, ap);
--	fprintf(stderr, "\n");
-+	if ((c->warn && (quiet < 1))
-+	    || (c->error && (quiet < 2))) {
-+		fprintf(stderr, "%s (%s): ",
-+			(c->error) ? "ERROR" : "Warning", c->name);
-+		vfprintf(stderr, fmt, ap);
-+		fprintf(stderr, "\n");
-+	}
- }
- 
- #define FAIL(c, ...) \
-@@ -167,7 +170,7 @@ static int run_check(struct check *c, struct node *dt)
- 
- out:
- 	c->inprogress = 0;
--	if ((c->status != PASSED) && (c->level == ERROR))
-+	if ((c->status != PASSED) && (c->error))
- 		error = 1;
- 	return error;
- }
-@@ -190,8 +193,10 @@ static void check_is_string(struct check *c, struct node *root,
- 		FAIL(c, "\"%s\" property in %s is not a string",
- 		     propname, node->fullpath);
- }
--#define CHECK_IS_STRING(nm, propname, lvl) \
--	CHECK(nm, NULL, check_is_string, NULL, (propname), (lvl))
-+#define WARNING_IF_NOT_STRING(nm, propname) \
-+	WARNING(nm, NULL, check_is_string, NULL, (propname))
-+#define ERROR_IF_NOT_STRING(nm, propname) \
-+	ERROR(nm, NULL, check_is_string, NULL, (propname))
- 
- static void check_is_cell(struct check *c, struct node *root,
- 			  struct node *node)
-@@ -207,8 +212,10 @@ static void check_is_cell(struct check *c, struct node *root,
- 		FAIL(c, "\"%s\" property in %s is not a single cell",
- 		     propname, node->fullpath);
- }
--#define CHECK_IS_CELL(nm, propname, lvl) \
--	CHECK(nm, NULL, check_is_cell, NULL, (propname), (lvl))
-+#define WARNING_IF_NOT_CELL(nm, propname) \
-+	WARNING(nm, NULL, check_is_cell, NULL, (propname))
-+#define ERROR_IF_NOT_CELL(nm, propname) \
-+	ERROR(nm, NULL, check_is_cell, NULL, (propname))
- 
- /*
-  * Structural check functions
-@@ -227,7 +234,7 @@ static void check_duplicate_node_names(struct check *c, struct node *dt,
- 				FAIL(c, "Duplicate node name %s",
- 				     child->fullpath);
- }
--NODE_CHECK(duplicate_node_names, NULL, ERROR);
-+NODE_ERROR(duplicate_node_names, NULL);
- 
- static void check_duplicate_property_names(struct check *c, struct node *dt,
- 					   struct node *node)
-@@ -240,7 +247,7 @@ static void check_duplicate_property_names(struct check *c, struct node *dt,
- 				FAIL(c, "Duplicate property name %s in %s",
- 				     prop->name, node->fullpath);
- }
--NODE_CHECK(duplicate_property_names, NULL, ERROR);
-+NODE_ERROR(duplicate_property_names, NULL);
- 
- #define LOWERCASE	"abcdefghijklmnopqrstuvwxyz"
- #define UPPERCASE	"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-@@ -256,7 +263,7 @@ static void check_node_name_chars(struct check *c, struct node *dt,
- 		FAIL(c, "Bad character '%c' in node %s",
- 		     node->name[n], node->fullpath);
- }
--NODE_CHECK(node_name_chars, PROPNODECHARS "@", ERROR);
-+NODE_ERROR(node_name_chars, PROPNODECHARS "@");
- 
- static void check_node_name_format(struct check *c, struct node *dt,
- 				   struct node *node)
-@@ -265,7 +272,7 @@ static void check_node_name_format(struct check *c, struct node *dt,
- 		FAIL(c, "Node %s has multiple '@' characters in name",
- 		     node->fullpath);
- }
--NODE_CHECK(node_name_format, NULL, ERROR, &node_name_chars);
-+NODE_ERROR(node_name_format, NULL, &node_name_chars);
- 
- static void check_property_name_chars(struct check *c, struct node *dt,
- 				      struct node *node, struct property *prop)
-@@ -276,7 +283,7 @@ static void check_property_name_chars(struct check *c, struct node *dt,
- 		FAIL(c, "Bad character '%c' in property name \"%s\", node %s",
- 		     prop->name[n], prop->name, node->fullpath);
- }
--PROP_CHECK(property_name_chars, PROPNODECHARS, ERROR);
-+PROP_ERROR(property_name_chars, PROPNODECHARS);
- 
- #define DESCLABEL_FMT	"%s%s%s%s%s"
- #define DESCLABEL_ARGS(node,prop,mark)		\
-@@ -331,8 +338,8 @@ static void check_duplicate_label_prop(struct check *c, struct node *dt,
- 	for_each_marker_of_type(m, LABEL)
- 		check_duplicate_label(c, dt, m->ref, node, prop, m);
- }
--CHECK(duplicate_label, NULL, check_duplicate_label_node,
--      check_duplicate_label_prop, NULL, ERROR);
-+ERROR(duplicate_label, NULL, check_duplicate_label_node,
-+      check_duplicate_label_prop, NULL);
- 
- static void check_explicit_phandles(struct check *c, struct node *root,
- 				    struct node *node, struct property *prop)
-@@ -391,7 +398,7 @@ static void check_explicit_phandles(struct check *c, struct node *root,
- 
- 	node->phandle = phandle;
- }
--PROP_CHECK(explicit_phandles, NULL, ERROR);
-+PROP_ERROR(explicit_phandles, NULL);
- 
- static void check_name_properties(struct check *c, struct node *root,
- 				  struct node *node)
-@@ -420,8 +427,8 @@ static void check_name_properties(struct check *c, struct node *root,
- 		free(prop);
- 	}
- }
--CHECK_IS_STRING(name_is_string, "name", ERROR);
--NODE_CHECK(name_properties, NULL, ERROR, &name_is_string);
-+ERROR_IF_NOT_STRING(name_is_string, "name");
-+NODE_ERROR(name_properties, NULL, &name_is_string);
- 
- /*
-  * Reference fixup functions
-@@ -448,7 +455,7 @@ static void fixup_phandle_references(struct check *c, struct node *dt,
- 		*((cell_t *)(prop->val.val + m->offset)) = cpu_to_fdt32(phandle);
- 	}
- }
--CHECK(phandle_references, NULL, NULL, fixup_phandle_references, NULL, ERROR,
-+ERROR(phandle_references, NULL, NULL, fixup_phandle_references, NULL,
-       &duplicate_node_names, &explicit_phandles);
- 
- static void fixup_path_references(struct check *c, struct node *dt,
-@@ -473,19 +480,19 @@ static void fixup_path_references(struct check *c, struct node *dt,
- 						  strlen(path) + 1);
- 	}
- }
--CHECK(path_references, NULL, NULL, fixup_path_references, NULL, ERROR,
-+ERROR(path_references, NULL, NULL, fixup_path_references, NULL,
-       &duplicate_node_names);
- 
- /*
-  * Semantic checks
+@@ -179,6 +187,13 @@ out:
+  * Utility check functions
   */
--CHECK_IS_CELL(address_cells_is_cell, "#address-cells", WARN);
--CHECK_IS_CELL(size_cells_is_cell, "#size-cells", WARN);
--CHECK_IS_CELL(interrupt_cells_is_cell, "#interrupt-cells", WARN);
-+WARNING_IF_NOT_CELL(address_cells_is_cell, "#address-cells");
-+WARNING_IF_NOT_CELL(size_cells_is_cell, "#size-cells");
-+WARNING_IF_NOT_CELL(interrupt_cells_is_cell, "#interrupt-cells");
  
--CHECK_IS_STRING(device_type_is_string, "device_type", WARN);
--CHECK_IS_STRING(model_is_string, "model", WARN);
--CHECK_IS_STRING(status_is_string, "status", WARN);
-+WARNING_IF_NOT_STRING(device_type_is_string, "device_type");
-+WARNING_IF_NOT_STRING(model_is_string, "model");
-+WARNING_IF_NOT_STRING(status_is_string, "status");
++/* A check which always fails, for testing purposes only */
++static inline void check_always_fail(struct check *c, struct node *dt)
++{
++	FAIL(c, "always_fail check");
++}
++TREE_CHECK(always_fail, NULL);
++
+ static void check_is_string(struct check *c, struct node *root,
+ 			    struct node *node)
+ {
+@@ -649,8 +664,71 @@ static struct check *check_table[] = {
  
- static void fixup_addr_size_cells(struct check *c, struct node *dt,
- 				  struct node *node)
-@@ -503,8 +510,8 @@ static void fixup_addr_size_cells(struct check *c, struct node *dt,
- 	if (prop)
- 		node->size_cells = propval_cell(prop);
+ 	&avoid_default_addr_size,
+ 	&obsolete_chosen_interrupt_controller,
++
++	&always_fail,
+ };
+ 
++static void enable_warning_error(struct check *c, bool warn, bool error)
++{
++	int i;
++
++	/* Raising level, also raise it for prereqs */
++	if ((warn && !c->warn) || (error && !c->error))
++		for (i = 0; i < c->num_prereqs; i++)
++			enable_warning_error(c->prereq[i], warn, error);
++
++	c->warn = c->warn || warn;
++	c->error = c->error || error;
++}
++
++static void disable_warning_error(struct check *c, bool warn, bool error)
++{
++	int i;
++
++	/* Lowering level, also lower it for things this is the prereq
++	 * for */
++	if ((warn && c->warn) || (error && c->error)) {
++		for (i = 0; i < ARRAY_SIZE(check_table); i++) {
++			struct check *cc = check_table[i];
++			int j;
++
++			for (j = 0; j < cc->num_prereqs; j++)
++				if (cc->prereq[j] == c)
++					disable_warning_error(cc, warn, error);
++		}
++	}
++
++	c->warn = c->warn && !warn;
++	c->error = c->error && !error;
++}
++
++void parse_checks_option(bool warn, bool error, const char *optarg)
++{
++	int i;
++	const char *name = optarg;
++	bool enable = true;
++
++	if ((strncmp(optarg, "no-", 3) == 0)
++	    || (strncmp(optarg, "no_", 3) == 0)) {
++		name = optarg + 3;
++		enable = false;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(check_table); i++) {
++		struct check *c = check_table[i];
++
++		if (streq(c->name, name)) {
++			if (enable)
++				enable_warning_error(c, warn, error);
++			else
++				disable_warning_error(c, warn, error);
++			return;
++		}
++	}
++
++	die("Unrecognized check name \"%s\"\n", name);
++}
++
+ void process_checks(int force, struct boot_info *bi)
+ {
+ 	struct node *dt = bi->dt;
+diff --git a/dtc.c b/dtc.c
+index bee5085..a375683 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -93,6 +93,9 @@ static void  __attribute__ ((noreturn)) usage(void)
+ 	fprintf(stderr, "\t\t\tlegacy - \"linux,phandle\" properties only\n");
+ 	fprintf(stderr, "\t\t\tepapr - \"phandle\" properties only\n");
+ 	fprintf(stderr, "\t\t\tboth - Both \"linux,phandle\" and \"phandle\" properties\n");
++	fprintf(stderr, "\t-W [no-]<checkname>\n");
++	fprintf(stderr, "\t-E [no-]<checkname>\n");
++	fprintf(stderr, "\t\t\tenable or disable warnings and errors\n");
+ 	exit(3);
  }
--CHECK(addr_size_cells, NULL, fixup_addr_size_cells, NULL, NULL, WARN,
--      &address_cells_is_cell, &size_cells_is_cell);
-+WARNING(addr_size_cells, NULL, fixup_addr_size_cells, NULL, NULL,
-+	&address_cells_is_cell, &size_cells_is_cell);
  
- #define node_addr_cells(n) \
- 	(((n)->addr_cells == -1) ? 2 : (n)->addr_cells)
-@@ -538,7 +545,7 @@ static void check_reg_format(struct check *c, struct node *dt,
- 		     "(#address-cells == %d, #size-cells == %d)",
- 		     node->fullpath, prop->val.len, addr_cells, size_cells);
- }
--NODE_CHECK(reg_format, NULL, WARN, &addr_size_cells);
-+NODE_WARNING(reg_format, NULL, &addr_size_cells);
+@@ -115,7 +118,7 @@ int main(int argc, char *argv[])
+ 	minsize    = 0;
+ 	padsize    = 0;
  
- static void check_ranges_format(struct check *c, struct node *dt,
- 				struct node *node)
-@@ -579,7 +586,7 @@ static void check_ranges_format(struct check *c, struct node *dt,
- 		     p_addr_cells, c_addr_cells, c_size_cells);
- 	}
- }
--NODE_CHECK(ranges_format, NULL, WARN, &addr_size_cells);
-+NODE_WARNING(ranges_format, NULL, &addr_size_cells);
+-	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:s"))
++	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:"))
+ 			!= EOF) {
+ 		switch (opt) {
+ 		case 'I':
+@@ -173,6 +176,14 @@ int main(int argc, char *argv[])
+ 			sort = 1;
+ 			break;
  
- /*
-  * Style checks
-@@ -606,7 +613,7 @@ static void check_avoid_default_addr_size(struct check *c, struct node *dt,
- 		FAIL(c, "Relying on default #size-cells value for %s",
- 		     node->fullpath);
- }
--NODE_CHECK(avoid_default_addr_size, NULL, WARN, &addr_size_cells);
-+NODE_WARNING(avoid_default_addr_size, NULL, &addr_size_cells);
- 
- static void check_obsolete_chosen_interrupt_controller(struct check *c,
- 						       struct node *dt)
-@@ -623,7 +630,7 @@ static void check_obsolete_chosen_interrupt_controller(struct check *c,
- 		FAIL(c, "/chosen has obsolete \"interrupt-controller\" "
- 		     "property");
- }
--TREE_CHECK(obsolete_chosen_interrupt_controller, NULL, WARN);
-+TREE_WARNING(obsolete_chosen_interrupt_controller, NULL);
- 
- static struct check *check_table[] = {
- 	&duplicate_node_names, &duplicate_property_names,
-@@ -653,7 +660,7 @@ void process_checks(int force, struct boot_info *bi)
- 	for (i = 0; i < ARRAY_SIZE(check_table); i++) {
- 		struct check *c = check_table[i];
- 
--		if (c->level != IGNORE)
-+		if (c->warn || c->error)
- 			error = error || run_check(c, dt);
- 	}
- 
++		case 'W':
++			parse_checks_option(true, false, optarg);
++			break;
++
++		case 'E':
++			parse_checks_option(false, true, optarg);
++			break;
++
+ 		case 'h':
+ 		default:
+ 			usage();
 diff --git a/dtc.h b/dtc.h
-index 7b4c65b..d57fbfc 100644
+index d57fbfc..7ee2d54 100644
 --- a/dtc.h
 +++ b/dtc.h
-@@ -25,6 +25,7 @@
- #include <string.h>
- #include <stdlib.h>
- #include <stdint.h>
-+#include <stdbool.h>
- #include <stdarg.h>
- #include <assert.h>
- #include <ctype.h>
+@@ -226,6 +226,7 @@ void sort_tree(struct boot_info *bi);
+ 
+ /* Checks */
+ 
++void parse_checks_option(bool warn, bool error, const char *optarg);
+ void process_checks(int force, struct boot_info *bi);
+ 
+ /* Flattened trees */
+diff --git a/tests/dtc-checkfails.sh b/tests/dtc-checkfails.sh
+index 3f77b13..76ded15 100755
+--- a/tests/dtc-checkfails.sh
++++ b/tests/dtc-checkfails.sh
+@@ -4,10 +4,20 @@
+ 
+ for x; do
+     shift
++    if [ "$x" = "-n" ]; then
++	for x; do
++	    shift
++	    if [ "$x" = "--" ]; then
++		break;
++	    fi
++	    NOCHECKS="$NOCHECKS $x"
++	done
++	break;
++    fi
+     if [ "$x" = "--" ]; then
+ 	break;
+     fi
+-    CHECKS="$CHECKS $x"
++    YESCHECKS="$YESCHECKS $x"
+ done
+ 
+ LOG=tmp.log.$$
+@@ -19,10 +29,16 @@ ret="$?"
+ 
+ FAIL_IF_SIGNAL $ret
+ 
+-for c in $CHECKS; do
++for c in $YESCHECKS; do
+     if ! grep -E "^(ERROR)|(Warning) \($c\):" $LOG > /dev/null; then
+ 	FAIL "Failed to trigger check \"$c\""
+     fi
+ done
+ 
++for c in $NOCHECKS; do
++    if grep -E "^(ERROR)|(Warning) \($c\):" $LOG > /dev/null; then
++	FAIL "Incorrectly triggered check \"$c\""
++    fi
++done
++
+ PASS
+diff --git a/tests/dtc-fails.sh b/tests/dtc-fails.sh
+new file mode 100755
+index 0000000..4ddcb27
+--- /dev/null
++++ b/tests/dtc-fails.sh
+@@ -0,0 +1,30 @@
++#! /bin/sh
++
++. ./tests.sh
++
++if [ "$1" = "-n" ]; then
++    NEG="$1"
++    shift
++fi
++
++OUTPUT="$1"
++shift
++
++verbose_run $VALGRIND "$DTC" -o "$OUTPUT" "$@"
++ret="$?"
++
++FAIL_IF_SIGNAL $ret
++
++if [ -n "$NEG" ]; then
++    if [ ! -e "$OUTPUT" ]; then
++	FAIL "Produced no output"
++    fi
++else
++    if [ -e "$OUTPUT" ]; then
++	FAIL "Incorrectly produced output"
++    fi
++fi
++
++rm -f "$OUTPUT"
++
++PASS
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 9a2a7d9..998c422 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -394,6 +394,18 @@ dtc_tests () {
+     run_sh_test dtc-checkfails.sh duplicate_label -- -I dts -O dtb reuse-label5.dts
+     run_sh_test dtc-checkfails.sh duplicate_label -- -I dts -O dtb reuse-label6.dts
+ 
++    # Check warning options
++    run_sh_test dtc-checkfails.sh address_cells_is_cell interrupt_cells_is_cell -n size_cells_is_cell -- -Wno_size_cells_is_cell -I dts -O dtb bad-ncells.dts
++    run_sh_test dtc-fails.sh -n test-warn-output.test.dtb -I dts -O dtb bad-ncells.dts
++    run_sh_test dtc-fails.sh test-error-output.test.dtb -I dts -O dtb bad-ncells.dts -Esize_cells_is_cell
++    run_sh_test dtc-checkfails.sh always_fail -- -Walways_fail -I dts -O dtb test_tree1.dts
++    run_sh_test dtc-checkfails.sh -n always_fail -- -Walways_fail -Wno_always_fail -I dts -O dtb test_tree1.dts
++    run_sh_test dtc-fails.sh test-negation-1.test.dtb -Ealways_fail -I dts -O dtb test_tree1.dts
++    run_sh_test dtc-fails.sh -n test-negation-2.test.dtb -Ealways_fail -Eno_always_fail -I dts -O dtb test_tree1.dts
++    run_sh_test dtc-fails.sh test-negation-3.test.dtb -Ealways_fail -Wno_always_fail -I dts -O dtb test_tree1.dts
++    run_sh_test dtc-fails.sh -n test-negation-4.test.dtb -Esize_cells_is_cell -Eno_size_cells_is_cell -I dts -O dtb bad-ncells.dts
++    run_sh_test dtc-checkfails.sh size_cells_is_cell -- -Esize_cells_is_cell -Eno_size_cells_is_cell -I dts -O dtb bad-ncells.dts
++
+     # Check for proper behaviour reading from stdin
+     run_dtc_test -I dts -O dtb -o stdin_dtc_tree1.test.dtb - < test_tree1.dts
+     run_wrap_test cmp stdin_dtc_tree1.test.dtb dtc_tree1.test.dtb
 -- 
 1.7.10
