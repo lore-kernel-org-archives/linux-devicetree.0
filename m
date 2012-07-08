@@ -1,235 +1,50 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Subject: [PATCH 1/1] clk: add DT support for clock gating control
-Date: Sun,  8 Jul 2012 19:15:26 +0200
-Message-ID: <1341767726-25630-1-git-send-email-sebastian.hesselbarth@googlemail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH REPOST] Add test for re-defining an identical label
+Date: Sun, 08 Jul 2012 13:44:04 -0500
+Message-ID: <E1SnwSi-0008Eq-OH@jdl.com>
+References: <1341346170-16312-1-git-send-email-swarren@wwwdotorg.org>
+ <20120708125117.GA7749@truffala.fritz.box>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20120708125117.GA7749-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for using clock gates (clk-gate) from DT based
-on Rob Herrings DT clk binding support for 3.6.
+> On Tue, Jul 03, 2012 at 02:09:30PM -0600, Stephen Warren wrote:
+> > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > 
+> > When merging one device tree over the top of a previous tree, it is
+> > possible to define a duplicate label that has the same name and points
+> > to the same property or node. This is currently allowed by the duplicate
+> > label checking code. However, alternative duplicate label checking
+> > algorithms might not allow this. Add an explicit test to ensure this
+> > capability is maintained.
+> 
+> Sorry, I've been on leave and haven't really had brainspace to think
+> about this.  I think you're right though, whatever else we do with
+> stuff we do want to allow redefinition of labels as long as they
+> attach to the same thing (i.e. same path, and property within that
+> path when applicable).  Labels within property values do get curly if
+> that property is altered, but that doesn't directly affect this test.
+> 
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-It adds a helper function to clk-gate to allocate all resources required by
-a set of individual clock gates, i.e. register base address and lock. Each
-clock gate is described as a child of the clock-gating-control in DT and
-also created by the helper function.
+Applied.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Mike Turquette <mturquette@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- .../bindings/clock/clock-gating-control.txt        |   80 +++++++++++++++++++
- drivers/clk/clk-gate.c                             |   84 ++++++++++++++++++++
- include/linux/clk-provider.h                       |    2 +
- 3 files changed, 166 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/clock-gating-control.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/clock-gating-control.txt b/Documentation/devicetree/bindings/clock/clock-gating-control.txt
-new file mode 100644
-index 0000000..05f5728
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clock-gating-control.txt
-@@ -0,0 +1,80 @@
-+Binding for simple clock gating control based on clock gate register with one
-+bit per clock gate. This is a clock consumer and also a clock provider for a
-+set of gated clocks that are described as children of this node. Each clock gate
-+is described by a bit number and polarity to control the gate.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+==Clock gating control==
-+
-+Required properties:
-+- compatible : shall be "clock-gating-control".
-+- reg : should contain the register physical address and length for
-+        the clock gating control.
-+- clocks : shared parent clock for all gated clocks.
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- #address-cells : number of cells required to describe a clock gate;
-+                   should be <2>.
-+- #size-cells : should be zero.
-+
-+Each individual clock gate bit is described as a child of the
-+corresponding gating control register with the following properties.
-+
-+Required child properties:
-+- reg : should contain the individual bit and polarity to control
-+        the clock gate. A polarity of 0 means that by setting the
-+        bit to 1 the clock passes through the clock gate while
-+	setting the bit to 0 disables the clock. Any other value
-+     	for polarity inverts the meaning of the control bit.
-+
-+Optional child properties:
-+- clocks : overrides the shared parent clock for this clock gate
-+           by the clock passed in this property.
-+- clock-output-names : from common clock binding; allows to set
-+                       a specific name for the gated clock output.
-+
-+==Example==
-+
-+	/* fixed root clock */
-+	osc: oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <166666667>;
-+	};
-+
-+	/* sata peripheral clock */
-+	sata_clk: ext-oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+	};
-+
-+	/* register-based clock gating control */
-+	gating-control@f10d0038 {
-+		compatible = "clock-gating-control";
-+		reg = <0xf10d0038 0x4>;
-+		clocks = <&osc>;
-+		#clock-cells = <0>;
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		/* USB0 clock gate on register bit 0 with inverted polarity */
-+		cg_usb0: clockgate@0 {
-+			reg = <0 1>; /* register bit 0, inverted polarity */
-+		};
-+
-+		/* PCIe0 clock gate on register bit 1 with normal polarity
-+		 * and named output clock */
-+		cg_pcie0: clockgate@1 {
-+			reg = <1 0>; /* register bit 1, normal polarity */
-+			clock-output-names = "pcie0_clk";
-+		};
-+
-+		/* SATA clock gate with different parent clock */
-+		cg_sata: clockgate@3 {
-+			reg = <3 0>; /* register bit 3, normal polarity */
-+			clocks = <&sata_clk>;
-+		};
-+	};
-diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
-index 578465e..1e88907 100644
---- a/drivers/clk/clk-gate.c
-+++ b/drivers/clk/clk-gate.c
-@@ -15,6 +15,9 @@
- #include <linux/io.h>
- #include <linux/err.h>
- #include <linux/string.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
- 
- /**
-  * DOC: basic gatable clock which can gate and ungate it's ouput
-@@ -148,3 +151,84 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
- 
- 	return clk;
- }
-+
-+#ifdef CONFIG_OF
-+/**
-+ * of_clock_gating_control_setup() - Setup function for clock gate control
-+ *   This is a helper for using clk-gate from OF device tree. It allocates
-+ *   a common lock for a base register and creates the individual clk-gates.
-+ */
-+void __init of_clock_gating_control_setup(struct device_node *np)
-+{
-+	struct device_node *child;
-+	const char *pclk_name;
-+	void __iomem *base;
-+	spinlock_t *lockp;
-+	unsigned int rnum;
-+	u64 addr;
-+
-+	pclk_name = of_clk_get_parent_name(np, 0);
-+	if (!pclk_name) {
-+		pr_debug("%s: unable to get parent clock for %s\n",
-+			__func__, np->full_name);
-+		return;
-+	}
-+
-+	lockp = kzalloc(sizeof(spinlock_t), GFP_KERNEL);
-+	if (!lockp) {
-+		pr_debug("%s: unable to allocate spinlock for %s\n",
-+			 __func__, np->full_name);
-+		return;
-+	}
-+
-+	spin_lock_init(lockp);
-+	base = of_iomap(np, 0);
-+	rnum = sizeof(resource_size_t) * 8;
-+	addr = of_translate_address(np, of_get_property(np, "reg", NULL));
-+
-+	pr_debug("create clock gate control %s\n", np->full_name);
-+
-+	for_each_child_of_node(np, child) {
-+		struct clk *cg;
-+		const char *cg_name;
-+		const char *cg_pclk_name;
-+		u32 propval[2];
-+		unsigned int rbit;
-+
-+		if (of_property_read_u32_array(child, "reg", propval, 2)) {
-+			pr_debug("%s: wrong #reg on %s\n",
-+				 __func__, child->full_name);
-+			continue;
-+		}
-+
-+		rbit = propval[0];
-+		if (rbit >= rnum) {
-+			pr_debug("%s: bit position of %s exceeds resources\n",
-+				 __func__, child->full_name);
-+			continue;
-+		}
-+
-+		cg_pclk_name = of_clk_get_parent_name(child, 0);
-+		if (!pclk_name)
-+			cg_pclk_name = pclk_name;
-+
-+		if (of_property_read_string(child, "clock-output-names",
-+					    &cg_name)) {
-+			unsigned int nlen = 4 + 16 + strlen(child->name);
-+			char *name = kzalloc(nlen+1, GFP_KERNEL);
-+			if (!name)
-+				continue;
-+			snprintf(name, nlen, "%u@%llx.%s", rbit,
-+				 (unsigned long long)addr, child->name);
-+			cg_name = name;
-+		}
-+
-+		pr_debug("  create clock gate: %s\n", cg_name);
-+
-+		cg = clk_register_gate(NULL, cg_name, cg_pclk_name, 0,
-+				       base, rbit, propval[1], lockp);
-+		if (cg)
-+			of_clk_add_provider(child, of_clk_src_simple_get, cg);
-+	}
-+}
-+#endif
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index b97f61e..499eac2 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -205,6 +205,8 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
- 		void __iomem *reg, u8 bit_idx,
- 		u8 clk_gate_flags, spinlock_t *lock);
- 
-+void of_clock_gating_control_setup(struct device_node *np);
-+
- /**
-  * struct clk_divider - adjustable divider clock
-  *
--- 
-1.7.10
-
+Thanks,
+jdl
