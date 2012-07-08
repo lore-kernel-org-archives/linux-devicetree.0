@@ -1,13 +1,14 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [PATCH 2/2] Allow toggling of semantic checks
-Date: Sun,  8 Jul 2012 23:25:22 +1000
-Message-ID: <1341753922-3342-2-git-send-email-david@gibson.dropbear.id.au>
-References: <1341753922-3342-1-git-send-email-david@gibson.dropbear.id.au>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 4/7] ARM: davinci: net: davinci_emac: add OF support
+Date: Sun, 8 Jul 2012 19:56:47 +0530
+Message-ID: <4FF998A7.50309@ti.com>
+References: <1338373143-7467-1-git-send-email-hs@denx.de>
+ <1338373143-7467-5-git-send-email-hs@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1341753922-3342-1-git-send-email-david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+In-Reply-To: <1338373143-7467-5-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,308 +19,90 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatoly Sivov <mm05-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds -W and -E options to dtc which allow toggling on and off
-of the various built in semantic checks on the tree.
+Hi Heiko,
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
----
- checks.c                |   84 +++++++++++++++++++++++++++++++++++++++++++++--
- dtc.c                   |   13 +++++++-
- dtc.h                   |    1 +
- tests/dtc-checkfails.sh |   20 +++++++++--
- tests/dtc-fails.sh      |   30 +++++++++++++++++
- tests/run_tests.sh      |   12 +++++++
- 6 files changed, 154 insertions(+), 6 deletions(-)
- create mode 100755 tests/dtc-fails.sh
+On 5/30/2012 3:49 PM, Heiko Schocher wrote:
+> add of support for the davinci_emac driver.
+> 
+> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+> Cc: Anatoly Sivov <mm05-JGs/UdohzUI@public.gmane.org>
+> 
+> ---
 
-diff --git a/checks.c b/checks.c
-index 3080439..9061237 100644
---- a/checks.c
-+++ b/checks.c
-@@ -58,7 +58,7 @@ struct check {
- 	struct check **prereq;
- };
+> +#ifdef CONFIG_OF
+> +static struct emac_platform_data
+> +	*davinci_emac_of_get_pdata(struct platform_device *pdev,
+> +	struct emac_priv *priv)
+> +{
+> +	struct device_node *np;
+> +	struct emac_platform_data *pdata = NULL;
+> +	const u8 *mac_addr;
+> +	u32 data;
+> +	int ret;
+> +
+> +	pdata = pdev->dev.platform_data;
+> +	if (!pdata) {
+> +		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +		if (!pdata)
+> +			goto nodata;
+> +	}
+> +
+> +	np = pdev->dev.of_node;
+> +	if (!np)
+> +		goto nodata;
+> +	else
+> +		pdata->version = EMAC_VERSION_2;
+> +
+> +	mac_addr = of_get_mac_address(np);
+> +	if (mac_addr)
+> +		memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
+
+I suspect that even in the DT case, many boards will continue to
+read mac address from on-board EEPROMs or from an on-chip eFUSE.
+To take care of such cases, I propose use mac address in DT data
+only if no valid address is passed through platform data. The
+attached patch does this change.
+
+If you are OK with this modification, can you please merge it and
+repost just this patch for review? Please CC David Miller
+(davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org) on your next post as he is the netdev maintainer
+and this patch needs to be merged through him or at least needs his ack.
+
+With this modification, you can add my:
+
+Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+
+Thanks,
+Sekhar
+
+---8<----
+diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
+index 645618d..6b4b0fe 100644
+--- a/drivers/net/ethernet/ti/davinci_emac.c
++++ b/drivers/net/ethernet/ti/davinci_emac.c
+@@ -1795,9 +1795,11 @@ static struct emac_platform_data
+ 	else
+ 		pdata->version = EMAC_VERSION_2;
  
--#define CHECK(nm, tfn, nfn, pfn, d, w, e, ...)	       \
-+#define CHECK_ENTRY(nm, tfn, nfn, pfn, d, w, e, ...)	       \
- 	static struct check *nm##_prereqs[] = { __VA_ARGS__ }; \
- 	static struct check nm = { \
- 		.name = #nm, \
-@@ -73,22 +73,30 @@ struct check {
- 		.prereq = nm##_prereqs, \
- 	};
- #define WARNING(nm, tfn, nfn, pfn, d, ...) \
--	CHECK(nm, tfn, nfn, pfn, d, true, false, __VA_ARGS__)
-+	CHECK_ENTRY(nm, tfn, nfn, pfn, d, true, false, __VA_ARGS__)
- #define ERROR(nm, tfn, nfn, pfn, d, ...) \
--	CHECK(nm, tfn, nfn, pfn, d, false, true, __VA_ARGS__)
-+	CHECK_ENTRY(nm, tfn, nfn, pfn, d, false, true, __VA_ARGS__)
-+#define CHECK(nm, tfn, nfn, pfn, d, ...) \
-+	CHECK_ENTRY(nm, tfn, nfn, pfn, d, false, false, __VA_ARGS__)
- 
- #define TREE_WARNING(nm, d, ...) \
- 	WARNING(nm, check_##nm, NULL, NULL, d, __VA_ARGS__)
- #define TREE_ERROR(nm, d, ...) \
- 	ERROR(nm, check_##nm, NULL, NULL, d, __VA_ARGS__)
-+#define TREE_CHECK(nm, d, ...) \
-+	CHECK(nm, check_##nm, NULL, NULL, d, __VA_ARGS__)
- #define NODE_WARNING(nm, d, ...) \
- 	WARNING(nm, NULL, check_##nm, NULL, d,  __VA_ARGS__)
- #define NODE_ERROR(nm, d, ...) \
- 	ERROR(nm, NULL, check_##nm, NULL, d, __VA_ARGS__)
-+#define NODE_CHECK(nm, d, ...) \
-+	CHECK(nm, NULL, check_##nm, NULL, d, __VA_ARGS__)
- #define PROP_WARNING(nm, d, ...) \
- 	WARNING(nm, NULL, NULL, check_##nm, d, __VA_ARGS__)
- #define PROP_ERROR(nm, d, ...) \
- 	ERROR(nm, NULL, NULL, check_##nm, d, __VA_ARGS__)
-+#define PROP_CHECK(nm, d, ...) \
-+	CHECK(nm, NULL, NULL, check_##nm, d, __VA_ARGS__)
- 
- #ifdef __GNUC__
- static inline void check_msg(struct check *c, const char *fmt, ...) __attribute__((format (printf, 2, 3)));
-@@ -179,6 +187,13 @@ out:
-  * Utility check functions
-  */
- 
-+/* A check which always fails, for testing purposes only */
-+static inline void check_always_fail(struct check *c, struct node *dt)
-+{
-+	FAIL(c, "always_fail check");
-+}
-+TREE_CHECK(always_fail, NULL);
-+
- static void check_is_string(struct check *c, struct node *root,
- 			    struct node *node)
- {
-@@ -649,8 +664,71 @@ static struct check *check_table[] = {
- 
- 	&avoid_default_addr_size,
- 	&obsolete_chosen_interrupt_controller,
-+
-+	&always_fail,
- };
- 
-+static void enable_warning_error(struct check *c, bool warn, bool error)
-+{
-+	int i;
-+
-+	/* Raising level, also raise it for prereqs */
-+	if ((warn && !c->warn) || (error && !c->error))
-+		for (i = 0; i < c->num_prereqs; i++)
-+			enable_warning_error(c->prereq[i], warn, error);
-+
-+	c->warn = c->warn || warn;
-+	c->error = c->error || error;
-+}
-+
-+static void disable_warning_error(struct check *c, bool warn, bool error)
-+{
-+	int i;
-+
-+	/* Lowering level, also lower it for things this is the prereq
-+	 * for */
-+	if ((warn && c->warn) || (error && c->error)) {
-+		for (i = 0; i < ARRAY_SIZE(check_table); i++) {
-+			struct check *cc = check_table[i];
-+			int j;
-+
-+			for (j = 0; j < cc->num_prereqs; j++)
-+				if (cc->prereq[j] == c)
-+					disable_warning_error(cc, warn, error);
-+		}
+-	mac_addr = of_get_mac_address(np);
+-	if (mac_addr)
+-		memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
++	if (!is_valid_ether_addr(pdata->mac_addr)) {
++		mac_addr = of_get_mac_address(np);
++		if (mac_addr)
++			memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
 +	}
-+
-+	c->warn = c->warn && !warn;
-+	c->error = c->error && !error;
-+}
-+
-+void parse_checks_option(bool warn, bool error, const char *optarg)
-+{
-+	int i;
-+	const char *name = optarg;
-+	bool enable = true;
-+
-+	if ((strncmp(optarg, "no-", 3) == 0)
-+	    || (strncmp(optarg, "no_", 3) == 0)) {
-+		name = optarg + 3;
-+		enable = false;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(check_table); i++) {
-+		struct check *c = check_table[i];
-+
-+		if (streq(c->name, name)) {
-+			if (enable)
-+				enable_warning_error(c, warn, error);
-+			else
-+				disable_warning_error(c, warn, error);
-+			return;
-+		}
-+	}
-+
-+	die("Unrecognized check name \"%s\"\n", name);
-+}
-+
- void process_checks(int force, struct boot_info *bi)
- {
- 	struct node *dt = bi->dt;
-diff --git a/dtc.c b/dtc.c
-index bee5085..a375683 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -93,6 +93,9 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t\t\tlegacy - \"linux,phandle\" properties only\n");
- 	fprintf(stderr, "\t\t\tepapr - \"phandle\" properties only\n");
- 	fprintf(stderr, "\t\t\tboth - Both \"linux,phandle\" and \"phandle\" properties\n");
-+	fprintf(stderr, "\t-W [no-]<checkname>\n");
-+	fprintf(stderr, "\t-E [no-]<checkname>\n");
-+	fprintf(stderr, "\t\t\tenable or disable warnings and errors\n");
- 	exit(3);
- }
  
-@@ -115,7 +118,7 @@ int main(int argc, char *argv[])
- 	minsize    = 0;
- 	padsize    = 0;
- 
--	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:s"))
-+	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:"))
- 			!= EOF) {
- 		switch (opt) {
- 		case 'I':
-@@ -173,6 +176,14 @@ int main(int argc, char *argv[])
- 			sort = 1;
- 			break;
- 
-+		case 'W':
-+			parse_checks_option(true, false, optarg);
-+			break;
-+
-+		case 'E':
-+			parse_checks_option(false, true, optarg);
-+			break;
-+
- 		case 'h':
- 		default:
- 			usage();
-diff --git a/dtc.h b/dtc.h
-index d57fbfc..7ee2d54 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -226,6 +226,7 @@ void sort_tree(struct boot_info *bi);
- 
- /* Checks */
- 
-+void parse_checks_option(bool warn, bool error, const char *optarg);
- void process_checks(int force, struct boot_info *bi);
- 
- /* Flattened trees */
-diff --git a/tests/dtc-checkfails.sh b/tests/dtc-checkfails.sh
-index 3f77b13..76ded15 100755
---- a/tests/dtc-checkfails.sh
-+++ b/tests/dtc-checkfails.sh
-@@ -4,10 +4,20 @@
- 
- for x; do
-     shift
-+    if [ "$x" = "-n" ]; then
-+	for x; do
-+	    shift
-+	    if [ "$x" = "--" ]; then
-+		break;
-+	    fi
-+	    NOCHECKS="$NOCHECKS $x"
-+	done
-+	break;
-+    fi
-     if [ "$x" = "--" ]; then
- 	break;
-     fi
--    CHECKS="$CHECKS $x"
-+    YESCHECKS="$YESCHECKS $x"
- done
- 
- LOG=tmp.log.$$
-@@ -19,10 +29,16 @@ ret="$?"
- 
- FAIL_IF_SIGNAL $ret
- 
--for c in $CHECKS; do
-+for c in $YESCHECKS; do
-     if ! grep -E "^(ERROR)|(Warning) \($c\):" $LOG > /dev/null; then
- 	FAIL "Failed to trigger check \"$c\""
-     fi
- done
- 
-+for c in $NOCHECKS; do
-+    if grep -E "^(ERROR)|(Warning) \($c\):" $LOG > /dev/null; then
-+	FAIL "Incorrectly triggered check \"$c\""
-+    fi
-+done
-+
- PASS
-diff --git a/tests/dtc-fails.sh b/tests/dtc-fails.sh
-new file mode 100755
-index 0000000..4ddcb27
---- /dev/null
-+++ b/tests/dtc-fails.sh
-@@ -0,0 +1,30 @@
-+#! /bin/sh
-+
-+. ./tests.sh
-+
-+if [ "$1" = "-n" ]; then
-+    NEG="$1"
-+    shift
-+fi
-+
-+OUTPUT="$1"
-+shift
-+
-+verbose_run $VALGRIND "$DTC" -o "$OUTPUT" "$@"
-+ret="$?"
-+
-+FAIL_IF_SIGNAL $ret
-+
-+if [ -n "$NEG" ]; then
-+    if [ ! -e "$OUTPUT" ]; then
-+	FAIL "Produced no output"
-+    fi
-+else
-+    if [ -e "$OUTPUT" ]; then
-+	FAIL "Incorrectly produced output"
-+    fi
-+fi
-+
-+rm -f "$OUTPUT"
-+
-+PASS
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 9a2a7d9..998c422 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -394,6 +394,18 @@ dtc_tests () {
-     run_sh_test dtc-checkfails.sh duplicate_label -- -I dts -O dtb reuse-label5.dts
-     run_sh_test dtc-checkfails.sh duplicate_label -- -I dts -O dtb reuse-label6.dts
- 
-+    # Check warning options
-+    run_sh_test dtc-checkfails.sh address_cells_is_cell interrupt_cells_is_cell -n size_cells_is_cell -- -Wno_size_cells_is_cell -I dts -O dtb bad-ncells.dts
-+    run_sh_test dtc-fails.sh -n test-warn-output.test.dtb -I dts -O dtb bad-ncells.dts
-+    run_sh_test dtc-fails.sh test-error-output.test.dtb -I dts -O dtb bad-ncells.dts -Esize_cells_is_cell
-+    run_sh_test dtc-checkfails.sh always_fail -- -Walways_fail -I dts -O dtb test_tree1.dts
-+    run_sh_test dtc-checkfails.sh -n always_fail -- -Walways_fail -Wno_always_fail -I dts -O dtb test_tree1.dts
-+    run_sh_test dtc-fails.sh test-negation-1.test.dtb -Ealways_fail -I dts -O dtb test_tree1.dts
-+    run_sh_test dtc-fails.sh -n test-negation-2.test.dtb -Ealways_fail -Eno_always_fail -I dts -O dtb test_tree1.dts
-+    run_sh_test dtc-fails.sh test-negation-3.test.dtb -Ealways_fail -Wno_always_fail -I dts -O dtb test_tree1.dts
-+    run_sh_test dtc-fails.sh -n test-negation-4.test.dtb -Esize_cells_is_cell -Eno_size_cells_is_cell -I dts -O dtb bad-ncells.dts
-+    run_sh_test dtc-checkfails.sh size_cells_is_cell -- -Esize_cells_is_cell -Eno_size_cells_is_cell -I dts -O dtb bad-ncells.dts
-+
-     # Check for proper behaviour reading from stdin
-     run_dtc_test -I dts -O dtb -o stdin_dtc_tree1.test.dtb - < test_tree1.dts
-     run_wrap_test cmp stdin_dtc_tree1.test.dtb dtc_tree1.test.dtb
--- 
-1.7.10
+ 	ret = of_property_read_u32(np, "ti,davinci-ctrl-reg-offset", &data);
+ 	if (!ret)
