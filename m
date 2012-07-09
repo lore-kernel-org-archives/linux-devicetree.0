@@ -1,333 +1,305 @@
 From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: [PATCH v4] spi/pl022: add devicetree support
-Date: Mon,  9 Jul 2012 15:23:25 -0300
-Message-ID: <1341858209-1692-1-git-send-email-aletes.xgr@gmail.com>
+Subject: [PATCH RESEND V2] input: gpio_keys_polled: convert to dt
+Date: Mon,  9 Jul 2012 15:31:43 -0300
+Message-ID: <1341858707-1771-1-git-send-email-aletes.xgr@gmail.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
 Sender: linux-doc-owner@vger.kernel.org
-Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tobias Klauser <tklauser@distanz.ch>, David Jander <david@protonic.nl>, JJ Ding <dgdunix@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the chipselect array and cur_cs properties to pl022 main structure
-
-Add a wrapper function to decide if the cs should be controlled by the
-cs_control callback or the chipselect gpio
-
-Populate chipselect property from cs-gpios
-
-Populate master->dev.of_node, so the spi bus can find child spi
-devices and register them
-
-At pl022 setup, fill chip_data structure from dt nodes, if not provided
-by platform.
-
 Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Tested-by: Roland Stigge <stigge@antcom.de>
+
 ---
 Applies to v3.5-rc6
 
-Changes since v3:
-* use if (IS_ENABLED(CONFIG_OF)) instead of preprocessor #ifdef so we
-  have better code build coverage
-
-Changes since v2:
-* Use IS_ENABLED instead of #ifdef
-* Remove bogus const change
-
 Changes since v1:
-return EPROBE_DEFFER if gpios are not initialized yet
+* Add biding documentation
+* Fix sizeof in memset
+* Cleanup dt properties extraction
+* Use for_each macro
+* Fix memleak on buttons
 
- .../devicetree/bindings/spi/spi_pl022.txt          |   15 +++
- drivers/spi/spi-pl022.c                            |  114 ++++++++++++++++----
- 2 files changed, 110 insertions(+), 19 deletions(-)
+Thanks Rob Herring, Dmitry Torokhov and Roland Stiege for reviewing and 
+improvements suggestions.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi_pl022.txt b/Documentation/devicetree/bindings/spi/spi_pl022.txt
-index 306ec3f..b089ec7 100644
---- a/Documentation/devicetree/bindings/spi/spi_pl022.txt
-+++ b/Documentation/devicetree/bindings/spi/spi_pl022.txt
-@@ -6,7 +6,22 @@ Required properties:
- - interrupts : Should contain SPI controller interrupt
- 
- Optional properties:
-+- pl022,num-chipselects : total number of chipselects
- - cs-gpios : should specify GPIOs used for chipselects.
-   The gpios will be referred to as reg = <index> in the SPI child nodes.
-   If unspecified, a single SPI device without a chip select can be used.
- 
-+SPI slave nodes must be children of the SPI master node and can
-+contain the following properties.
-+See include/linux/amba/pl022.h for more details
+ .../devicetree/bindings/input/gpio-keys-polled.txt |   38 ++++++
+ drivers/input/keyboard/gpio_keys_polled.c          |  131 ++++++++++++++++++--
+ 2 files changed, 158 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+
+diff --git a/Documentation/devicetree/bindings/input/gpio-keys-polled.txt b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+new file mode 100644
+index 0000000..313abef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+@@ -0,0 +1,38 @@
++Device-Tree bindings for input/gpio_keys_polled.c keyboard driver
 +
-+- pl022,hierarchy : master or slave interface
-+- pl022,interface : interface type
-+- pl022,slave-tx-disable : disconnect tx line in slave mode
-+- pl022,com-mode : polling, interrupt or dma
-+- pl022,rx-level-trig : Rx FIFO watermark level
-+- pl022,tx-level-trig : Tx FIFO watermark level
-+- pl022,ctrl-len : Microwire interface: Control length
-+- pl022,wait-state : Microwire interface: Wait state
-+- pl022,duplex : Microwire interface: Full/Half duplex
++Required properties:
++	- compatible = "gpio-keys-polled";
++	- poll-interval: Poll interval time in milliseconds
 +
-diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
-index 400ae21..d8d7d21 100644
---- a/drivers/spi/spi-pl022.c
-+++ b/drivers/spi/spi-pl022.c
-@@ -40,6 +40,8 @@
- #include <linux/dma-mapping.h>
- #include <linux/scatterlist.h>
- #include <linux/pm_runtime.h>
-+#include <linux/gpio.h>
++Optional properties:
++	- autorepeat: Boolean, Enable auto repeat feature of Linux input
++	  subsystem.
++
++Each button (key) is represented as a sub-node of "gpio-keys-polled":
++Subnode properties:
++
++	- gpios: OF device-tree gpio specification.
++	- label: Descriptive name of the key.
++	- linux,code: Keycode to emit.
++
++Optional subnode-properties:
++	- linux,input-type: Specify event type this button/key generates.
++	  If not specified defaults to <1> == EV_KEY.
++	- debounce-interval: Debouncing interval time in milliseconds.
++	  If not specified defaults to 5.
++	- gpio-key,wakeup: Boolean, button can wake-up the system.
++
++Example nodes:
++
++	gpio_keys_polled {
++			compatible = "gpio-keys-polled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			poll-interval = <100>;
++			autorepeat;
++			button@21 {
++				label = "GPIO Key UP";
++				linux,code = <103>;
++				gpios = <&gpio1 0 1>;
++			};
++			...
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index 20c8ab1..e5cb3ef 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -25,6 +25,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio_keys.h>
++#include <linux/of_platform.h>
 +#include <linux/of_gpio.h>
  
- /*
-  * This macro is used to define some register default values.
-@@ -389,6 +391,8 @@ struct pl022 {
- 	char				*dummypage;
- 	bool				dma_running;
- #endif
-+	int cur_cs;
-+	int chipselect[0];
+ #define DRV_NAME	"gpio-keys-polled"
+ 
+@@ -38,7 +40,7 @@ struct gpio_keys_button_data {
+ struct gpio_keys_polled_dev {
+ 	struct input_polled_dev *poll_dev;
+ 	struct device *dev;
+-	struct gpio_keys_platform_data *pdata;
++	struct gpio_keys_platform_data pdata;
+ 	struct gpio_keys_button_data data[0];
  };
  
- /**
-@@ -433,6 +437,14 @@ static void null_cs_control(u32 command)
- 	pr_debug("pl022: dummy chip select control, CS=0x%x\n", command);
- }
+@@ -67,11 +69,11 @@ static void gpio_keys_polled_check_state(struct input_dev *input,
+ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+ {
+ 	struct gpio_keys_polled_dev *bdev = dev->private;
+-	struct gpio_keys_platform_data *pdata = bdev->pdata;
++	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+ 	struct input_dev *input = dev->input;
+ 	int i;
  
-+static void pl022_cs_control(struct pl022 *pl022, u32 command)
+-	for (i = 0; i < bdev->pdata->nbuttons; i++) {
++	for (i = 0; i < pdata->nbuttons; i++) {
+ 		struct gpio_keys_button_data *bdata = &bdev->data[i];
+ 
+ 		if (bdata->count < bdata->threshold)
+@@ -85,7 +87,7 @@ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+ static void gpio_keys_polled_open(struct input_polled_dev *dev)
+ {
+ 	struct gpio_keys_polled_dev *bdev = dev->private;
+-	struct gpio_keys_platform_data *pdata = bdev->pdata;
++	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+ 
+ 	if (pdata->enable)
+ 		pdata->enable(bdev->dev);
+@@ -94,31 +96,125 @@ static void gpio_keys_polled_open(struct input_polled_dev *dev)
+ static void gpio_keys_polled_close(struct input_polled_dev *dev)
+ {
+ 	struct gpio_keys_polled_dev *bdev = dev->private;
+-	struct gpio_keys_platform_data *pdata = bdev->pdata;
++	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+ 
+ 	if (pdata->disable)
+ 		pdata->disable(bdev->dev);
+ }
++#ifdef CONFIG_OF
++static int gpio_keys_polled_get_devtree_pdata(struct device *dev,
++			    struct gpio_keys_platform_data *pdata)
 +{
-+	if (gpio_is_valid(pl022->cur_cs))
-+		gpio_set_value(pl022->cur_cs, command);
-+	else
-+		pl022->cur_chip->cs_control(command);
++	struct device_node *node, *pp;
++	int i;
++	struct gpio_keys_button *buttons;
++
++	node = dev->of_node;
++	if (node == NULL)
++		return -ENODEV;
++
++	memset(pdata, 0, sizeof(*pdata));
++
++	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
++
++	of_property_read_u32(node, "poll-interval", &pdata->poll_interval);
++
++	pdata->nbuttons = of_get_child_count(node);
++	if (pdata->nbuttons == 0)
++		return -ENODEV;
++
++	buttons = kzalloc(pdata->nbuttons * (sizeof *buttons), GFP_KERNEL);
++	if (!buttons)
++		return -ENOMEM;
++
++	i = 0;
++	for_each_child_of_node(node, pp) {
++		enum of_gpio_flags flags;
++
++		if (!of_find_property(pp, "gpios", NULL)) {
++			pdata->nbuttons--;
++			dev_warn(dev, "Found button without gpios\n");
++			continue;
++		}
++		buttons[i].gpio = of_get_gpio_flags(pp, 0, &flags);
++		buttons[i].active_low = flags & OF_GPIO_ACTIVE_LOW;
++
++		if (of_property_read_u32(pp, "linux,code", &buttons[i].code)) {
++			dev_err(dev, "Button without keycode: 0x%x\n",
++				buttons[i].gpio);
++			goto out_fail;
++		}
++
++		buttons[i].desc = of_get_property(pp, "label", NULL);
++
++		if (of_property_read_u32(pp, "linux,input-type",
++			&buttons[i].type))
++			buttons[i].type = EV_KEY;
++
++		buttons[i].wakeup = !!of_get_property(pp, "gpio-key,wakeup",
++			NULL);
++
++		if (of_property_read_u32(pp, "debounce-interval",
++			&buttons[i].debounce_interval))
++			buttons[i].debounce_interval = 5;
++
++		i++;
++	}
++
++	pdata->buttons = buttons;
++
++	return 0;
++
++out_fail:
++	kfree(buttons);
++	return -ENODEV;
 +}
 +
- /**
-  * giveback - current spi_message is over, schedule next message and call
-  * callback of this message. Assumes that caller already
-@@ -479,7 +491,7 @@ static void giveback(struct pl022 *pl022)
- 		if (next_msg && next_msg->spi != pl022->cur_msg->spi)
- 			next_msg = NULL;
- 		if (!next_msg || pl022->cur_msg->state == STATE_ERROR)
--			pl022->cur_chip->cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		else
- 			pl022->next_msg_cs_active = true;
++static struct of_device_id gpio_keys_polled_of_match[] = {
++	{ .compatible = "gpio-keys-polled", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
++
++#else
++
++static int gpio_keys_polled_get_devtree_pdata(struct device *dev,
++			    struct gpio_keys_platform_data *altp)
++{
++	return -ENODEV;
++}
++#endif
  
-@@ -813,8 +825,7 @@ static void dma_callback(void *data)
- 	/* Update total bytes transferred */
- 	msg->actual_length += pl022->cur_transfer->len;
- 	if (pl022->cur_transfer->cs_change)
--		pl022->cur_chip->
--			cs_control(SSP_CHIP_DESELECT);
-+		pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 
- 	/* Move to next transfer */
- 	msg->state = next_transfer(pl022);
-@@ -1247,8 +1258,7 @@ static irqreturn_t pl022_interrupt_handler(int irq, void *dev_id)
- 		/* Update total bytes transferred */
- 		msg->actual_length += pl022->cur_transfer->len;
- 		if (pl022->cur_transfer->cs_change)
--			pl022->cur_chip->
--				cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		/* Move to next transfer */
- 		msg->state = next_transfer(pl022);
- 		tasklet_schedule(&pl022->pump_transfers);
-@@ -1333,7 +1343,7 @@ static void pump_transfers(unsigned long data)
- 
- 		/* Reselect chip select only if cs_change was requested */
- 		if (previous->cs_change)
--			pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 	} else {
- 		/* STATE_START */
- 		message->state = STATE_RUNNING;
-@@ -1372,7 +1382,7 @@ static void do_interrupt_dma_transfer(struct pl022 *pl022)
- 
- 	/* Enable target chip, if not already active */
- 	if (!pl022->next_msg_cs_active)
--		pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+		pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 
- 	if (set_up_next_transfer(pl022, pl022->cur_transfer)) {
- 		/* Error path */
-@@ -1424,12 +1434,12 @@ static void do_polling_transfer(struct pl022 *pl022)
- 			if (previous->delay_usecs)
- 				udelay(previous->delay_usecs);
- 			if (previous->cs_change)
--				pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+				pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 		} else {
- 			/* STATE_START */
- 			message->state = STATE_RUNNING;
- 			if (!pl022->next_msg_cs_active)
--				pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+				pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 		}
- 
- 		/* Configuration Changing Per Transfer */
-@@ -1461,7 +1471,7 @@ static void do_polling_transfer(struct pl022 *pl022)
- 		/* Update total byte transferred */
- 		message->actual_length += pl022->cur_transfer->len;
- 		if (pl022->cur_transfer->cs_change)
--			pl022->cur_chip->cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		/* Move to next transfer */
- 		message->state = next_transfer(pl022);
- 	}
-@@ -1490,6 +1500,7 @@ static int pl022_transfer_one_message(struct spi_master *master,
- 
- 	/* Setup the SPI using the per chip configuration */
- 	pl022->cur_chip = spi_get_ctldata(msg->spi);
-+	pl022->cur_cs = pl022->chipselect[msg->spi->chip_select];
- 
- 	restore_state(pl022);
- 	flush(pl022);
-@@ -1761,12 +1772,14 @@ static const struct pl022_config_chip pl022_default_chip_info = {
- static int pl022_setup(struct spi_device *spi)
+ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
  {
- 	struct pl022_config_chip const *chip_info;
-+	struct pl022_config_chip chip_info_dt;
- 	struct chip_data *chip;
- 	struct ssp_clock_params clk_freq = { .cpsdvsr = 0, .scr = 0};
- 	int status = 0;
- 	struct pl022 *pl022 = spi_master_get_devdata(spi->master);
- 	unsigned int bits = spi->bits_per_word;
- 	u32 tmp;
-+	struct device_node *np = spi->dev.of_node;
+ 	struct gpio_keys_platform_data *pdata = pdev->dev.platform_data;
+ 	struct device *dev = &pdev->dev;
++	struct gpio_keys_platform_data alt_pdata;
+ 	struct gpio_keys_polled_dev *bdev;
+ 	struct input_polled_dev *poll_dev;
+ 	struct input_dev *input;
+ 	int error;
+ 	int i;
  
- 	if (!spi->max_speed_hz)
- 		return -EINVAL;
-@@ -1789,10 +1802,36 @@ static int pl022_setup(struct spi_device *spi)
- 	chip_info = spi->controller_data;
- 
- 	if (chip_info == NULL) {
--		chip_info = &pl022_default_chip_info;
--		/* spi_board_info.controller_data not is supplied */
--		dev_dbg(&spi->dev,
--			"using default controller_data settings\n");
-+		if (np) {
-+			chip_info_dt = pl022_default_chip_info;
+-	if (!pdata || !pdata->poll_interval)
+-		return -EINVAL;
++	if (!pdata) {
++		error = gpio_keys_polled_get_devtree_pdata(dev, &alt_pdata);
++		if (error)
++			return error;
++		pdata = &alt_pdata;
++	}
 +
-+			of_property_read_u32(np, "pl022,hierarchy",
-+				&chip_info_dt.hierarchy);
-+			of_property_read_u32(np, "pl022,interface",
-+				&chip_info_dt.iface);
-+			chip_info_dt.slave_tx_disable =
-+				of_property_read_bool(np,
-+					"pl022,slave-tx-disable");
-+			of_property_read_u32(np, "pl022,com-mode",
-+				&chip_info_dt.com_mode);
-+			of_property_read_u32(np, "pl022,rx-level-trig",
-+				&chip_info_dt.rx_lev_trig);
-+			of_property_read_u32(np, "pl022,tx-level-trig",
-+				&chip_info_dt.tx_lev_trig);
-+			of_property_read_u32(np, "pl022,ctrl-len",
-+				&chip_info_dt.ctrl_len);
-+			of_property_read_u32(np, "pl022,wait-state",
-+				&chip_info_dt.wait_state);
-+			of_property_read_u32(np, "pl022,duplex",
-+				&chip_info_dt.duplex);
-+
-+			chip_info = &chip_info_dt;
-+		} else {
-+			chip_info = &pl022_default_chip_info;
-+			/* spi_board_info.controller_data not is supplied */
-+			dev_dbg(&spi->dev,
-+				"using default controller_data settings\n");
-+		}
- 	} else
- 		dev_dbg(&spi->dev,
- 			"using user supplied controller_data settings\n");
-@@ -1835,8 +1874,9 @@ static int pl022_setup(struct spi_device *spi)
- 	chip->xfer_type = chip_info->com_mode;
- 	if (!chip_info->cs_control) {
- 		chip->cs_control = null_cs_control;
--		dev_warn(&spi->dev,
--			 "chip select function is NULL for this chip\n");
-+		if (!gpio_is_valid(pl022->chipselect[spi->chip_select]))
-+			dev_warn(&spi->dev,
-+				 "chip select function is NULL for this chip\n");
- 	} else
- 		chip->cs_control = chip_info->cs_control;
- 
-@@ -1988,7 +2028,8 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 	struct pl022_ssp_controller *platform_info = adev->dev.platform_data;
- 	struct spi_master *master;
- 	struct pl022 *pl022 = NULL;	/*Data for this driver */
--	int status = 0;
-+	struct device_node *np = adev->dev.of_node;
-+	int status = 0, i, num_cs;
- 
- 	dev_info(&adev->dev,
- 		 "ARM PL022 driver, device ID: 0x%08x\n", adev->periphid);
-@@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 		goto err_no_pdata;
- 	}
- 
-+	num_cs = platform_info->num_chipselect;
-+	if (IS_ENABLED(CONFIG_OF))
-+		of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
-+
-+
- 	/* Allocate master with space for data */
--	master = spi_alloc_master(dev, sizeof(struct pl022));
-+	master = spi_alloc_master(dev,
-+		sizeof(struct pl022) + sizeof(int) * num_cs);
- 	if (master == NULL) {
- 		dev_err(&adev->dev, "probe - cannot alloc SPI master\n");
- 		status = -ENOMEM;
-@@ -2017,13 +2064,41 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 	 * on this board
- 	 */
- 	master->bus_num = platform_info->bus_id;
--	master->num_chipselect = platform_info->num_chipselect;
-+	master->num_chipselect = num_cs;
- 	master->cleanup = pl022_cleanup;
- 	master->setup = pl022_setup;
- 	master->prepare_transfer_hardware = pl022_prepare_transfer_hardware;
- 	master->transfer_one_message = pl022_transfer_one_message;
- 	master->unprepare_transfer_hardware = pl022_unprepare_transfer_hardware;
- 	master->rt = platform_info->rt;
-+	master->dev.of_node = dev->of_node;
-+
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		for (i = 0; i < num_cs; i++) {
-+			int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
-+
-+			if (cs_gpio == -EPROBE_DEFER) {
-+				status = -EPROBE_DEFER;
-+				goto err_no_gpio;
-+			}
-+
-+			pl022->chipselect[i] = cs_gpio;
-+
-+			if (gpio_is_valid(cs_gpio)) {
-+				if (gpio_request(cs_gpio, "ssp-pl022"))
-+					dev_err(&adev->dev,
-+						"could not request %d gpio\n",
-+						cs_gpio);
-+				else if (gpio_direction_output(cs_gpio, 1))
-+					dev_err(&adev->dev,
-+						"could set gpio %d as output\n",
-+						cs_gpio);
-+			}
-+		}
-+	} else {
-+		for (i = 0; i < num_cs; i++)
-+			pl022->chipselect[i] = -EINVAL;
++	if (!pdata->poll_interval) {
++		error = -EINVAL;
++		goto err_free_buttons;
 +	}
  
- 	/*
- 	 * Supports mode 0-3, loopback, and active low CS. Transfers are
-@@ -2130,6 +2205,7 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
-  err_no_ioremap:
- 	amba_release_regions(adev);
-  err_no_ioregion:
-+ err_no_gpio:
- 	spi_master_put(master);
-  err_no_master:
-  err_no_pdata:
+ 	bdev = kzalloc(sizeof(struct gpio_keys_polled_dev) +
+ 		       pdata->nbuttons * sizeof(struct gpio_keys_button_data),
+ 		       GFP_KERNEL);
+ 	if (!bdev) {
+ 		dev_err(dev, "no memory for private data\n");
+-		return -ENOMEM;
++		error = -ENOMEM;
++		goto err_free_buttons;
+ 	}
+ 
+ 	poll_dev = input_allocate_polled_device();
+@@ -184,7 +280,7 @@ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
+ 
+ 	bdev->poll_dev = poll_dev;
+ 	bdev->dev = dev;
+-	bdev->pdata = pdata;
++	bdev->pdata = *pdata;
+ 	platform_set_drvdata(pdev, bdev);
+ 
+ 	error = input_register_polled_device(poll_dev);
+@@ -209,15 +305,19 @@ err_free_gpio:
+ 
+ err_free_bdev:
+ 	kfree(bdev);
+-
+ 	platform_set_drvdata(pdev, NULL);
++
++err_free_buttons:
++	/* If we have no platform_data, we allocated buttons dynamically. */
++	if (!pdev->dev.platform_data)
++		kfree(pdata->buttons);
+ 	return error;
+ }
+ 
+ static int __devexit gpio_keys_polled_remove(struct platform_device *pdev)
+ {
+ 	struct gpio_keys_polled_dev *bdev = platform_get_drvdata(pdev);
+-	struct gpio_keys_platform_data *pdata = bdev->pdata;
++	struct gpio_keys_platform_data *pdata = &bdev->pdata;
+ 	int i;
+ 
+ 	input_unregister_polled_device(bdev->poll_dev);
+@@ -227,6 +327,14 @@ static int __devexit gpio_keys_polled_remove(struct platform_device *pdev)
+ 
+ 	input_free_polled_device(bdev->poll_dev);
+ 
++	/*
++	 * If we had no platform_data, we allocated buttons dynamically, and
++	 * must free them here. pdata->buttons is the pointer to the
++	 * beginning of the allocated array.
++	 */
++	if (!pdev->dev.platform_data)
++		kfree(pdata->buttons);
++
+ 	kfree(bdev);
+ 	platform_set_drvdata(pdev, NULL);
+ 
+@@ -239,6 +347,7 @@ static struct platform_driver gpio_keys_polled_driver = {
+ 	.driver	= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(gpio_keys_polled_of_match),
+ 	},
+ };
+ module_platform_driver(gpio_keys_polled_driver);
 -- 
 1.7.10
 
