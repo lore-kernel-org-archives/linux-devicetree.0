@@ -1,82 +1,48 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Subject: Re: Where to put a large bootloader-supplied device tree on ARM ?
-Date: Mon, 09 Jul 2012 00:30:15 -0400 (EDT)
-Message-ID: <alpine.LFD.2.02.1207090015270.31100@xanadu.home>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
- <201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
- <201207062008.23952.arnd@arndb.de> <20120706210009.GC11470@lunn.ch>
- <4FF781D8.3040206@firmworks.com>
- <2966DB01BC317A4DA23684BA0F653415013701@xmb-aln-x08.cisco.com>
- <4FF7980E.7050705@firmworks.com>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [RFC][PATCHv2 0/3] Power sequences interpreter for pwm_backlight
+Date: Mon, 9 Jul 2012 15:08:22 +0900
+Message-ID: <1341814105-20690-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <4FF7980E.7050705-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 6 Jul 2012, Mitch Bradley wrote:
+This is a RFC since this patch largely drifted beyond its original goal
+of supporting one GPIO and one regulator for the pwm_backlight driver.
 
-> On 7/6/2012 3:23 PM, David VomLehn (dvomlehn) wrote:
-> > The kernel *must* go where it is linked, but the FDT contains only relative
-> > references and is thus free to go anywhere. The same is true of ramdisks,
-> > which
-> > are usually placed after the kernel.
+The issue to address is that backlight power sequences, which were
+implemented using board-specific callbacks so far, could not be used with
+the device tree. This series of patches adds a small power sequence 
+interpreter that allows to acquire and control regulators, GPIOs, and PWMs
+during sequences defined in the device tree. It is easy to use,
+low-footprint, and takes care of managing the resources that it acquires.
 
-The kernel must go where it is linked *only* if you are using the 
-'Image' output.  When using 'zImage' you can put the kernel anywhere in 
-memory, or in the first 128MB of RAM if CONFIG_AUTO_ZRELADDR is used.
+The implementation is working and should be complete, but documentation is
+lacking. Also since the interpreter could be used by other drivers (which
+ones?), it may make sense to have it in a better place than
+drivers/video/backlight/.
 
-> Right, but the kernel image is compressed, so after decompression it expands
-> into the area just after it.  Also, the .bss segment is in that vicinity.
+The tegra device tree nodes are just here as an example usage.
 
-To be exact, the compressed kernel moves itself out of the region where 
-the decompressed kernel will end up before doing the decompression, but 
-only if necessary.  So it is a good idea to load zImage away from the 
-decompressed kernel area to avoid this extra move and save some fraction 
-of a second on boot time.
+Alexandre Courbot (3):
+  Power sequences interpreter for device tree
+  pwm-backlight: use power sequences
+  tegra: add pwm backlight device tree nodes
 
-> There's some code in arch/arm/boot/compressed/head.S to relocate
-> device tree blobs, but it requires CONFIG_ARM_APPENDED_DTB which
-> is not recommended - arch/arm/Kconfig recommends using the
-> documented boot protocol istead .
+ .../bindings/video/backlight/pwm-backlight.txt     |  28 +-
+ arch/arm/boot/dts/tegra20-ventana.dts              |  31 +++
+ arch/arm/boot/dts/tegra20.dtsi                     |   2 +-
+ drivers/video/backlight/Makefile                   |   2 +-
+ drivers/video/backlight/power_seq.c                | 298 +++++++++++++++++++++
+ drivers/video/backlight/pwm_bl.c                   | 212 +++++++++++----
+ include/linux/power_seq.h                          |  96 +++++++
+ include/linux/pwm_backlight.h                      |  37 ++-
+ 8 files changed, 645 insertions(+), 61 deletions(-)
+ create mode 100644 drivers/video/backlight/power_seq.c
+ create mode 100644 include/linux/power_seq.h
 
-This is in case a DTB is appended to zImage.  When the DTB is detected, 
-the moving of zImage out of the decompressed area must take care of 
-moving the DTB as well.
-
-> Documentation/arm/Booting says
-> to put the dtb "in a region of memory where the kernel decompressor
-> will not overwrite it", further recommending the first 16KiB.
-> 
-> As noted, the first 16KiB loses if the dtb is too large.  And
-> "where the kernel decompressor will not overwrite it" says what
-> won't work, not what will.  It appears that the decompressor works
-> out its addresses dynamically, so there's no hard prescription even
-> for what to avoid.
-
-A good rule of thumb is to take the size of the decompressed kernel and 
-multiply this by 3.  Rounding up is also fine.  So for example if your 
-arch/arm/boot/Image is 5MB, then putting anciliary data such as a 
-ramdisk or a large DTB from 16MB into RAM or above should be fine.
-
-> For now, I'm putting the initrd at the end of memory and the dtb
-> below that.  That seems to work, but I'm unsure whether or not
-> I'm just "getting lucky".
-
-That's also perfectly fine.
-
-
-Nicolas
+-- 
+1.7.11.1
