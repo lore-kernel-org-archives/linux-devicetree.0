@@ -1,62 +1,47 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] arm/dts: am33xx wdt node
-Date: Mon, 9 Jul 2012 01:59:44 -0700
-Message-ID: <20120709085944.GC1122@atomide.com>
-References: <1341405037-16391-1-git-send-email-afzal@ti.com>
- <C8443D0743D26F4388EA172BF4E2A7A93E9A2FE9@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93E9A2FE9@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Mohammed, Afzal" <afzal@ti.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v4 0/5] ARM: topology: set the capacity of each cores for big.LITTLE
+Date: Mon,  9 Jul 2012 11:27:01 +0200
+Message-ID: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux@arm.linux.org.uk, a.p.zijlstra@chello.nl, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, namhyung@kernel.org, jean.pihet@newoldbits.com, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Mohammed, Afzal <afzal@ti.com> [120704 06:44]:
-> + Grant and device tree, watchdog lists
-> 
-> On Wed, Jul 04, 2012 at 18:00:37, Mohammed, Afzal wrote:
-> > Add am33xx wdt node.
-> > 
-> > Signed-off-by: Afzal Mohammed <afzal@ti.com>
-> > ---
-> > 
-> > Hi,
-> > 
-> > This was tested on AM335X EVM. This depends on,
-> > http://www.mail-archive.com/linux-omap@vger.kernel.org/msg69424.html
+This patchset creates an arch_scale_freq_power function for ARM, which is used 
+to set the relative capacity of each core of a big.LITTLE system. It also removes
+the broken power estimation of x86.
 
-Thanks I'll apply this into omap devel-dt branch now that we have
-an ack from Wim on the wdt changes.
+Modification since v3:
+ - Add comments
+ - Add optimization for SMP system
+ - Ensure that capacity of a CPU will be at most 1
 
-Tony
+Modification since v2:
+ - set_power_scale function becomes static
+ - Rework loop in update_siblings_masks
+ - Remove useless code in parse_dt_topology
 
-> > Regards
-> > Afzal
-> > 
-> > 
-> >  arch/arm/boot/dts/am33xx.dtsi | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> > index f46e353..08b2a5b 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -185,5 +185,10 @@
-> >  			compatible = "ti,omap3-hsmmc";
-> >  			ti,hwmods = "mmc3";
-> >  		};
-> > +
-> > +		wdt2: wdt@44e35000 {
-> > +			compatible = "ti,omap3-wdt";
-> > +			ti,hwmods = "wd_timer2";
-> > +		};
-> >  	};
-> >  };
-> > -- 
-> > 1.7.11.1
-> > 
-> > 
-> 
+Modification since v1:
+ - Add and update explanation about the use of the table and the range of the value 
+ - Remove the use of NR_CPUS and use nr_cpu_ids instead
+ - Remove broken power estimation of x86
+
+Peter Zijlstra (1):
+  sched, x86: Remove broken power estimation
+
+Vincent Guittot (4):
+  ARM: topology: Add arch_scale_freq_power function
+  ARM: topology: factorize the update of sibling masks
+  ARM: topology: Update cpu_power according to DT information
+  sched: cpu_power: enable ARCH_POWER
+
+ arch/arm/kernel/topology.c   |  239 ++++++++++++++++++++++++++++++++++++++----
+ arch/x86/kernel/cpu/Makefile |    2 +-
+ arch/x86/kernel/cpu/sched.c  |   55 ----------
+ kernel/sched/features.h      |    2 +-
+ 4 files changed, 219 insertions(+), 79 deletions(-)
+ delete mode 100644 arch/x86/kernel/cpu/sched.c
+
+-- 
+1.7.9.5
