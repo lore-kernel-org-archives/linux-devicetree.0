@@ -1,73 +1,66 @@
-From: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v4 3/5] ARM: topology: Update cpu_power according to DT information
-Date: Mon, 9 Jul 2012 18:30:01 +0530
-Message-ID: <CAMQu2gwCXwdDmu9SdLozjC5jt7iDTqm39cY1ZZ=-VqaoF5bSvg@mail.gmail.com>
-References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
- <1341826026-6504-4-git-send-email-vincent.guittot@linaro.org>
- <CAMQu2gydOEVK_fzmzkdrBwBfOq6eZG=0QfLUfFChWJu9unSn2A@mail.gmail.com> <CAKfTPtDPGPNk2h_zB=Rf2N2UABAgaDBbij5QFoZTxUTZJbTeAA@mail.gmail.com>
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH 1/2] arm/dts: Add AM33XX basic pinctrl support
+Date: Mon, 9 Jul 2012 13:37:32 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13E9F3195@DBDE01.ent.ti.com>
+References: <1341479616-18630-1-git-send-email-anilkumar@ti.com>
+ <1341479616-18630-2-git-send-email-anilkumar@ti.com>
+ <20120706082343.GN1122@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKfTPtDPGPNk2h_zB=Rf2N2UABAgaDBbij5QFoZTxUTZJbTeAA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, a.p.zijlstra@chello.nl, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, namhyung@kernel.org, jean.pihet@newoldbits.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120706082343.GN1122@atomide.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 9, 2012 at 6:02 PM, Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
-> On 9 July 2012 12:55, Shilimkar, Santosh <santosh.shilimkar@ti.com> wrote:
->> Vincent,
->> On Mon, Jul 9, 2012 at 2:57 PM, Vincent Guittot
->> <vincent.guittot@linaro.org> wrote:
->>> Use cpu compatibility field and clock-frequency field of DT to
->>> estimate the capacity of each core of the system and to update
->>> the cpu_power field accordingly.
->>> This patch enables to put more running tasks on big cores than
->>> on LITTLE ones. But this patch doesn't ensure that long running
->>> tasks will run on big cores and short ones on LITTLE cores.
->>>
->>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
->>> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
->>> ---
->>>  arch/arm/kernel/topology.c |  153 ++++++++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 153 insertions(+)
->>>
->> Sorry for not giving this comment on previous version but we should also
->> have a way to provide the big.LITTLE information without Device Tree.
->> May be a platform device/data.
->
-> Hi Santosh,
->
-> I had thought of adding such additional way to set cpu_power of
-> big.LITTLE but my conclusion was
-> -it's a new platform so it should come with DT
-> -DT is already required by other patches linked to big.LITTLE
-> (http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/080873.html)
-> -There is no device that can be easily used to get such information at
-> this early boot stage.
->
-I see. Its new processor but it is just 1 one of the IP in an entire SOC.
-As mentioned below I was talking about full SOC support including
-all the driver subsystem with DT.
+Hi Tony,
 
->>
->> I know we are moving DT way, but remember apart from core kernel
->> infrastructure, to have a complete product build with DT means all the
->> drivers must be already supporting DT which is not the case with
->> many huge driver sub-systems like USB, display subsystem, Audio etc.
->>
->> Having that support would greatly help for the SOC's which have not yet
->> reached to stage where entire SOC is DT compliant and want to use
->> big.LITTLE infrastructure.
->
-> Can't you support both type of devices on your platform ? You can move
-> your device to DT mode when it is supported ?
->
-That is what eventually people end up doing who don't have
-DT ready for entire SOC. I was trying to ask whether at least some
-method is proposed(need not be merged in mainline) to have
-the big.LITTLE information parsing without DT.
+Thanks for reviewing.
 
-Regards
-Santosh
+On Fri, Jul 06, 2012 at 13:53:44, Tony Lindgren wrote:
+> * AnilKumar Ch <anilkumar@ti.com> [120705 02:18]:
+> > Adds basic pinctrl support for AM33XX family of devices. This patch
+> > is based on the pinctrl-simple driver submitted by Tony Lindgren's
+> > here: http://lwn.net/Articles/496075/
+> > 
+> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> > ---
+> >  arch/arm/boot/dts/am33xx.dtsi |   12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > index 59509c4..85def31 100644
+> > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > @@ -40,6 +40,18 @@
+> >  		};
+> >  	};
+> >  
+> > +	am3358_pinmux: pinmux@44E10800 {
+> > +		compatible = "ti,omap4-padconf";
+> > +		reg = <0x44E10800 0x0338>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		#pinctrl-cells = <2>;
+> > +		pinctrl-simple,register-width = <32>;
+> > +		pinctrl-simple,function-mask = <0x7>;
+> > +		pinctrl-simple,function-off = <0xffffffff>;
+> > +		pinctrl-simple,pinconf-mask = <0x78>;
+> > +	};
+> > +
+> 
+> You might want to update to the latest version, which is now called
+> pinctrl-single instead of pinctrl-simple. Should be easy to update,
+> note that we're still waiting on people to comment on the binding,
+> so you might want to wait a bit before reposting so we have the
+> driver merged.
+
+In that case, I will submit the patches with respect to pinctrl-single
+after it is available in linux-next tree.
+
+Thanks
+AnilKumar
+
