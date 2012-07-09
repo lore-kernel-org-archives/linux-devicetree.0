@@ -1,66 +1,46 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH 1/2] arm/dts: Add AM33XX basic pinctrl support
-Date: Mon, 9 Jul 2012 13:37:32 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13E9F3195@DBDE01.ent.ti.com>
-References: <1341479616-18630-1-git-send-email-anilkumar@ti.com>
- <1341479616-18630-2-git-send-email-anilkumar@ti.com>
- <20120706082343.GN1122@atomide.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+Date: Mon, 09 Jul 2012 08:58:11 -0500
+Message-ID: <4FFAE373.6070905@gmail.com>
+References: <1339148585-16947-1-git-send-email-B38951@freescale.com> <4FD60FB1.7050106@gmail.com> <412C8208B4A0464FA894C5F0C278CD5D01A16829@039-SN1MPN1-002.039d.mgd.msft.net> <20120706042611.GA1841@kroah.com> <412C8208B4A0464FA894C5F0C278CD5D01A168F2@039-SN1MPN1-002.039d.mgd.msft.net> <20120706161718.GA26894@kroah.com> <412C8208B4A0464FA894C5F0C278CD5D01A1E694@039-SN1MPN1-002.039d.mgd.msft.net> <94F013E7935FF44C83EBE7784D62AD3F09354AE6@039-SN2MPN1-021.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120706082343.GN1122@atomide.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <94F013E7935FF44C83EBE7784D62AD3F09354AE6@039-SN2MPN1-021.039d.mgd.msft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Li Yang-R58472 <r58472@freescale.com>
+Cc: Jia Hongtao-B38951 <B38951@freescale.com>, Greg KH <greg@kroah.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-Thanks for reviewing.
-
-On Fri, Jul 06, 2012 at 13:53:44, Tony Lindgren wrote:
-> * AnilKumar Ch <anilkumar@ti.com> [120705 02:18]:
-> > Adds basic pinctrl support for AM33XX family of devices. This patch
-> > is based on the pinctrl-simple driver submitted by Tony Lindgren's
-> > here: http://lwn.net/Articles/496075/
-> > 
-> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> > ---
-> >  arch/arm/boot/dts/am33xx.dtsi |   12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> > index 59509c4..85def31 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -40,6 +40,18 @@
-> >  		};
-> >  	};
-> >  
-> > +	am3358_pinmux: pinmux@44E10800 {
-> > +		compatible = "ti,omap4-padconf";
-> > +		reg = <0x44E10800 0x0338>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		#pinctrl-cells = <2>;
-> > +		pinctrl-simple,register-width = <32>;
-> > +		pinctrl-simple,function-mask = <0x7>;
-> > +		pinctrl-simple,function-off = <0xffffffff>;
-> > +		pinctrl-simple,pinconf-mask = <0x78>;
-> > +	};
-> > +
+On 07/08/2012 10:46 PM, Li Yang-R58472 wrote:
+>>> I don't understand, why is this just showing up now?  What
+>>> changed to cause this?  Couldn't that be the real problem here?
+>>> 
+>> 
+>> The issue is showing up because we now probe devices twice. 
+>> Previously, we just probe devices once. But now we changed the way
+>> of pci init which makes pci controllers should be probed earlier
+>> than other devices. So we have to probe pci nodes separately. Probe
+>> more than once is the root cause of this issue.
+>> 
+>> The pci patchset I mentioned please refer to: 
+>> http://patchwork.ozlabs.org/patch/163742/
 > 
-> You might want to update to the latest version, which is now called
-> pinctrl-single instead of pinctrl-simple. Should be easy to update,
-> note that we're still waiting on people to comment on the binding,
-> so you might want to wait a bit before reposting so we have the
-> driver merged.
+> Let me try to clarify a little bit.  The of platform bus normally
+> traverse the device tree to add all the devices.  The change which
+> caused problem is that we need to probe PCIe RC devices at a earlier
+> stage of initialization.  So we added these PCIe RC devices earlier
+> than the normal device tree traversal process.  These PCIe RC devices
+> will be scanned again during the normal traversal and cause
+> duplicated devices being added.  Our proposal is to deal with
+> duplicated devices automatically and make it possible to scan the
+> device tree multiple times for devices to be added.
 
-In that case, I will submit the patches with respect to pinctrl-single
-after it is available in linux-next tree.
+What is making PCI need to be probed earlier? Perhaps deferred probe
+would work?
 
-Thanks
-AnilKumar
+Perhaps giving of_platform_populate an exclude list of compatible
+strings to skip would work.
 
+Rob
