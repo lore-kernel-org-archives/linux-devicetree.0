@@ -1,104 +1,58 @@
-From: "Shilimkar, Santosh" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] ARM: topology: Update cpu_power according to DT
-	information
-Date: Mon, 9 Jul 2012 20:58:41 +0530
-Message-ID: <CAMQu2gwhzNajqf1n=bhGTLVPqe9FLoY=jppjOA=C+U+R8XF0TQ@mail.gmail.com>
-References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
-	<1341826026-6504-4-git-send-email-vincent.guittot@linaro.org>
-	<CAMQu2gydOEVK_fzmzkdrBwBfOq6eZG=0QfLUfFChWJu9unSn2A@mail.gmail.com>
-	<CAKfTPtDPGPNk2h_zB=Rf2N2UABAgaDBbij5QFoZTxUTZJbTeAA@mail.gmail.com>
-	<CAMQu2gwCXwdDmu9SdLozjC5jt7iDTqm39cY1ZZ=-VqaoF5bSvg@mail.gmail.com>
-	<CAKfTPtCicLseyA4DnUwNWf7+jOmab4KLo8Yw=Rz1KPya+fE_-w@mail.gmail.com>
-	<CAMQu2gymVGXdnYCN4sdKgmESfDSXTvpH4uCuByAKZTFS4Lt13A@mail.gmail.com>
-	<CAKfTPtCcxg5PNqjXrz9zYwE-DDAUtdbaUuuGpGqGzOFZrk3rnw@mail.gmail.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v9 REBASE 6/9] USB: notify phy when root hub port connect
+ change
+Date: Mon, 9 Jul 2012 09:57:57 -0700
+Message-ID: <20120709165757.GA6024@kroah.com>
+References: <1341673008-29808-1-git-send-email-richard.zhao@freescale.com>
+ <1341673008-29808-7-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <CAKfTPtCcxg5PNqjXrz9zYwE-DDAUtdbaUuuGpGqGzOFZrk3rnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1341673008-29808-7-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 9, 2012 at 8:40 PM, Vincent Guittot
-<vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 9 July 2012 16:37, Shilimkar, Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
->> On Mon, Jul 9, 2012 at 8:06 PM, Vincent Guittot
->> <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On 9 July 2012 15:00, Shilimkar, Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
->>>> On Mon, Jul 9, 2012 at 6:02 PM, Vincent Guittot
->>>> <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>> On 9 July 2012 12:55, Shilimkar, Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
->>>>>> Vincent,
->>>>>> On Mon, Jul 9, 2012 at 2:57 PM, Vincent Guittot
->>>>>> <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>>> Use cpu compatibility field and clock-frequency field of DT to
->>>>>>> estimate the capacity of each core of the system and to update
->>>>>>> the cpu_power field accordingly.
->>>>>>> This patch enables to put more running tasks on big cores than
->>>>>>> on LITTLE ones. But this patch doesn't ensure that long running
->>>>>>> tasks will run on big cores and short ones on LITTLE cores.
->>>>>>>
->>>>>>> Signed-off-by: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>>> Reviewed-by: Namhyung Kim <namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>>>> ---
->>>>>>>  arch/arm/kernel/topology.c |  153 ++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>  1 file changed, 153 insertions(+)
->>>>>>>
->>>>>> Sorry for not giving this comment on previous version but we should also
->>>>>> have a way to provide the big.LITTLE information without Device Tree.
->>>>>> May be a platform device/data.
->>>>>
->>>>> Hi Santosh,
->>>>>
->>>>> I had thought of adding such additional way to set cpu_power of
->>>>> big.LITTLE but my conclusion was
->>>>> -it's a new platform so it should come with DT
->>>>> -DT is already required by other patches linked to big.LITTLE
->>>>> (http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/080873.html)
->>>>> -There is no device that can be easily used to get such information at
->>>>> this early boot stage.
->>>>>
->>>> I see. Its new processor but it is just 1 one of the IP in an entire SOC.
->>>> As mentioned below I was talking about full SOC support including
->>>> all the driver subsystem with DT.
->>>>
->>>>>>
->>>>>> I know we are moving DT way, but remember apart from core kernel
->>>>>> infrastructure, to have a complete product build with DT means all the
->>>>>> drivers must be already supporting DT which is not the case with
->>>>>> many huge driver sub-systems like USB, display subsystem, Audio etc.
->>>>>>
->>>>>> Having that support would greatly help for the SOC's which have not yet
->>>>>> reached to stage where entire SOC is DT compliant and want to use
->>>>>> big.LITTLE infrastructure.
->>>>>
->>>>> Can't you support both type of devices on your platform ? You can move
->>>>> your device to DT mode when it is supported ?
->>>>>
->>>> That is what eventually people end up doing who don't have
->>>> DT ready for entire SOC. I was trying to ask whether at least some
->>>> method is proposed(need not be merged in mainline) to have
->>>> the big.LITTLE information parsing without DT.
->>>
->>> Ok, IIUC, you need a temporary methods, which doesn't need to be
->>> merged in mainline, to set the cpu_scale field ?
->>>
->> Yep.
->
-> You could use set_power_scale in your platform code to set the
-> cpu_power of your CPUs until DT is ready for your platform.
->
-Thanks for the clarification. Will try that out.
+On Sat, Jul 07, 2012 at 10:56:45PM +0800, Richard Zhao wrote:
+> Phy may need to change settings when port connect change.
+> 
+> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Tested-by: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/usb/core/hub.c |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 4cc8dc9..2ba9d84 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/usb.h>
+>  #include <linux/usbdevice_fs.h>
+>  #include <linux/usb/hcd.h>
+> +#include <linux/usb/otg.h>
+>  #include <linux/usb/quirks.h>
+>  #include <linux/kthread.h>
+>  #include <linux/mutex.h>
+> @@ -4037,6 +4038,13 @@ static void hub_port_connect_change(struct usb_hub *hub, int port1,
+>  		}
+>  	}
+>  
+> +	if (unlikely(hcd->phy && !hdev->parent)) {
 
-Regards
-Santosh
+Why is this "unlikely"?  And why mark it as such, is this a "fast path"
+that needs the compiler to know this hint to optimize things here?
+
+Please don't use likely() or unlikely() except in places it really is
+needed, _and_ you have measured the difference.  Have you done so in
+this place?
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
