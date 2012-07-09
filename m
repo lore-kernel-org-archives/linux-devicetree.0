@@ -1,14 +1,16 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/7] arm/dts: Audio support for OMAP4 devices (SDP,
- PandaBoard)
-Date: Mon, 09 Jul 2012 14:19:33 +0200
-Message-ID: <4FFACC55.4060106@ti.com>
-References: <1339164125-32534-1-git-send-email-peter.ujfalusi@ti.com>
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] ARM: topology: Update cpu_power according to DT
+ information
+Date: Mon, 9 Jul 2012 14:32:20 +0200
+Message-ID: <CAKfTPtDPGPNk2h_zB=Rf2N2UABAgaDBbij5QFoZTxUTZJbTeAA@mail.gmail.com>
+References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
+ <1341826026-6504-4-git-send-email-vincent.guittot@linaro.org>
+ <CAMQu2gydOEVK_fzmzkdrBwBfOq6eZG=0QfLUfFChWJu9unSn2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1339164125-32534-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAMQu2gydOEVK_fzmzkdrBwBfOq6eZG=0QfLUfFChWJu9unSn2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,63 +21,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Shilimkar, Santosh" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jean.pihet-OTs2U3NB0ngRmelmmXo44Q@public.gmane.org, yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 9 July 2012 12:55, Shilimkar, Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+> Vincent,
+> On Mon, Jul 9, 2012 at 2:57 PM, Vincent Guittot
+> <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Use cpu compatibility field and clock-frequency field of DT to
+>> estimate the capacity of each core of the system and to update
+>> the cpu_power field accordingly.
+>> This patch enables to put more running tasks on big cores than
+>> on LITTLE ones. But this patch doesn't ensure that long running
+>> tasks will run on big cores and short ones on LITTLE cores.
+>>
+>> Signed-off-by: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Reviewed-by: Namhyung Kim <namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm/kernel/topology.c |  153 ++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 153 insertions(+)
+>>
+> Sorry for not giving this comment on previous version but we should also
+> have a way to provide the big.LITTLE information without Device Tree.
+> May be a platform device/data.
 
-On 06/08/2012 04:01 PM, Peter Ujfalusi wrote:
-> Hello,
-> =
+Hi Santosh,
 
-> The following series enable the audio functionality on OMAP4 based device=
-s using
-> twl6040 as audio codec.
-> =
+I had thought of adding such additional way to set cpu_power of
+big.LITTLE but my conclusion was
+-it's a new platform so it should come with DT
+-DT is already required by other patches linked to big.LITTLE
+(http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/080873.html)
+-There is no device that can be easily used to get such information at
+this early boot stage.
 
-> The series adds the needed bindings in the dts for the OMAP IPs, twl6040 =
-MFD
-> device and for the audio connection on the board.
-> =
+>
+> I know we are moving DT way, but remember apart from core kernel
+> infrastructure, to have a complete product build with DT means all the
+> drivers must be already supporting DT which is not the case with
+> many huge driver sub-systems like USB, display subsystem, Audio etc.
+>
+> Having that support would greatly help for the SOC's which have not yet
+> reached to stage where entire SOC is DT compliant and want to use
+> big.LITTLE infrastructure.
 
-> To be able to differentiate between PandaBoard and PandaBoardES (they hav=
-e a bit
-> different audio configuration) a new dts file has been created which only
-> changes the audio properties different between the two boards.
-> =
+Can't you support both type of devices on your platform ? You can move
+your device to DT mode when it is supported ?
 
-> Patches for the drivers involved and the documentation related to dts sec=
-tions
-> has been either in 3.5 or heading for 3.6.
+Regards,
+Vincent
 
-Probably this series has been overlooked, since I have not received feedback
-on it.
-Should I resend the series? Which tree should I use to rebase it?
-
-Thank you,
-P=E9ter
-
-> =
-
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (7):
->   arm/dts: omap4: Add entry for OMAP McPDM IP
->   arm/dts: omap4: Add entry for OMAP DMIC IP
->   arm/dts: omap4-sdp: Add fixed regulator to represent VBAT
->   arm/dts: omap4-sdp: Add support for twl6040
->   arm/dts: omap4-sdp: Enable audio support via device tree
->   arm/dts: omap4-panda: Audio support for PandaBoard 4430
->   arm/dts: New dts file for PandaBoardES (4460)
-> =
-
->  arch/arm/boot/dts/omap4-panda.dts   |   37 +++++++++++++++++++
->  arch/arm/boot/dts/omap4-pandaES.dts |   24 ++++++++++++
->  arch/arm/boot/dts/omap4-sdp.dts     |   68 +++++++++++++++++++++++++++++=
-++++++
->  arch/arm/boot/dts/omap4.dtsi        |   18 +++++++++
->  4 files changed, 147 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/omap4-pandaES.dts
-> =
+>
+> Regards
+> Santosh
