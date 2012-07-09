@@ -1,30 +1,81 @@
-From: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v4 3/5] ARM: topology: Update cpu_power according to DT information
-Date: Mon, 9 Jul 2012 16:34:05 +0530
-Message-ID: <CAMQu2gzEZgUfCThWHjK-pbd1Ede4n0jeO9YoV=QPWS+n7LPZ9Q@mail.gmail.com>
-References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
- <1341826026-6504-4-git-send-email-vincent.guittot@linaro.org>
- <CAMQu2gydOEVK_fzmzkdrBwBfOq6eZG=0QfLUfFChWJu9unSn2A@mail.gmail.com> <1341831612.3462.29.camel@twins>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/7] arm/dts: Audio support for OMAP4 devices (SDP,
+ PandaBoard)
+Date: Mon, 09 Jul 2012 14:19:33 +0200
+Message-ID: <4FFACC55.4060106@ti.com>
+References: <1339164125-32534-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1341831612.3462.29.camel@twins>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, namhyung@kernel.org, jean.pihet@newoldbits.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1339164125-32534-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 9, 2012 at 4:30 PM, Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
-> On Mon, 2012-07-09 at 16:25 +0530, Shilimkar, Santosh wrote:
->> Having that support would greatly help for the SOC's which have not
->> yet
->> reached to stage where entire SOC is DT compliant and want to use
->> big.LITTLE infrastructure.
->
-> Good incentive to get there though.. :-)
+Hello,
 
-Sure and I guess thats the thought process from
-Vincent too :-)
+On 06/08/2012 04:01 PM, Peter Ujfalusi wrote:
+> Hello,
+> =
 
-Regards
-Santosh
+> The following series enable the audio functionality on OMAP4 based device=
+s using
+> twl6040 as audio codec.
+> =
+
+> The series adds the needed bindings in the dts for the OMAP IPs, twl6040 =
+MFD
+> device and for the audio connection on the board.
+> =
+
+> To be able to differentiate between PandaBoard and PandaBoardES (they hav=
+e a bit
+> different audio configuration) a new dts file has been created which only
+> changes the audio properties different between the two boards.
+> =
+
+> Patches for the drivers involved and the documentation related to dts sec=
+tions
+> has been either in 3.5 or heading for 3.6.
+
+Probably this series has been overlooked, since I have not received feedback
+on it.
+Should I resend the series? Which tree should I use to rebase it?
+
+Thank you,
+P=E9ter
+
+> =
+
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (7):
+>   arm/dts: omap4: Add entry for OMAP McPDM IP
+>   arm/dts: omap4: Add entry for OMAP DMIC IP
+>   arm/dts: omap4-sdp: Add fixed regulator to represent VBAT
+>   arm/dts: omap4-sdp: Add support for twl6040
+>   arm/dts: omap4-sdp: Enable audio support via device tree
+>   arm/dts: omap4-panda: Audio support for PandaBoard 4430
+>   arm/dts: New dts file for PandaBoardES (4460)
+> =
+
+>  arch/arm/boot/dts/omap4-panda.dts   |   37 +++++++++++++++++++
+>  arch/arm/boot/dts/omap4-pandaES.dts |   24 ++++++++++++
+>  arch/arm/boot/dts/omap4-sdp.dts     |   68 +++++++++++++++++++++++++++++=
+++++++
+>  arch/arm/boot/dts/omap4.dtsi        |   18 +++++++++
+>  4 files changed, 147 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/omap4-pandaES.dts
+> =
