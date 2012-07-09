@@ -1,46 +1,80 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
-Date: Mon, 09 Jul 2012 08:58:11 -0500
-Message-ID: <4FFAE373.6070905@gmail.com>
-References: <1339148585-16947-1-git-send-email-B38951@freescale.com> <4FD60FB1.7050106@gmail.com> <412C8208B4A0464FA894C5F0C278CD5D01A16829@039-SN1MPN1-002.039d.mgd.msft.net> <20120706042611.GA1841@kroah.com> <412C8208B4A0464FA894C5F0C278CD5D01A168F2@039-SN1MPN1-002.039d.mgd.msft.net> <20120706161718.GA26894@kroah.com> <412C8208B4A0464FA894C5F0C278CD5D01A1E694@039-SN1MPN1-002.039d.mgd.msft.net> <94F013E7935FF44C83EBE7784D62AD3F09354AE6@039-SN2MPN1-021.039d.mgd.msft.net>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v4 3/5] ARM: topology: Update cpu_power according to DT information
+Date: Mon, 9 Jul 2012 16:36:10 +0200
+Message-ID: <CAKfTPtCicLseyA4DnUwNWf7+jOmab4KLo8Yw=Rz1KPya+fE_-w@mail.gmail.com>
+References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
+	<1341826026-6504-4-git-send-email-vincent.guittot@linaro.org>
+	<CAMQu2gydOEVK_fzmzkdrBwBfOq6eZG=0QfLUfFChWJu9unSn2A@mail.gmail.com>
+	<CAKfTPtDPGPNk2h_zB=Rf2N2UABAgaDBbij5QFoZTxUTZJbTeAA@mail.gmail.com>
+	<CAMQu2gwCXwdDmu9SdLozjC5jt7iDTqm39cY1ZZ=-VqaoF5bSvg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <94F013E7935FF44C83EBE7784D62AD3F09354AE6@039-SN2MPN1-021.039d.mgd.msft.net>
+In-Reply-To: <CAMQu2gwCXwdDmu9SdLozjC5jt7iDTqm39cY1ZZ=-VqaoF5bSvg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Li Yang-R58472 <r58472@freescale.com>
-Cc: Jia Hongtao-B38951 <B38951@freescale.com>, Greg KH <greg@kroah.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, a.p.zijlstra@chello.nl, grant.likely@secretlab.ca, rob.herring@calxeda.com, yong.zhang0@gmail.com, namhyung@kernel.org, jean.pihet@newoldbits.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2012 10:46 PM, Li Yang-R58472 wrote:
->>> I don't understand, why is this just showing up now?  What
->>> changed to cause this?  Couldn't that be the real problem here?
->>> 
->> 
->> The issue is showing up because we now probe devices twice. 
->> Previously, we just probe devices once. But now we changed the way
->> of pci init which makes pci controllers should be probed earlier
->> than other devices. So we have to probe pci nodes separately. Probe
->> more than once is the root cause of this issue.
->> 
->> The pci patchset I mentioned please refer to: 
->> http://patchwork.ozlabs.org/patch/163742/
-> 
-> Let me try to clarify a little bit.  The of platform bus normally
-> traverse the device tree to add all the devices.  The change which
-> caused problem is that we need to probe PCIe RC devices at a earlier
-> stage of initialization.  So we added these PCIe RC devices earlier
-> than the normal device tree traversal process.  These PCIe RC devices
-> will be scanned again during the normal traversal and cause
-> duplicated devices being added.  Our proposal is to deal with
-> duplicated devices automatically and make it possible to scan the
-> device tree multiple times for devices to be added.
+On 9 July 2012 15:00, Shilimkar, Santosh <santosh.shilimkar@ti.com> wrote:
+> On Mon, Jul 9, 2012 at 6:02 PM, Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
+>> On 9 July 2012 12:55, Shilimkar, Santosh <santosh.shilimkar@ti.com> wrote:
+>>> Vincent,
+>>> On Mon, Jul 9, 2012 at 2:57 PM, Vincent Guittot
+>>> <vincent.guittot@linaro.org> wrote:
+>>>> Use cpu compatibility field and clock-frequency field of DT to
+>>>> estimate the capacity of each core of the system and to update
+>>>> the cpu_power field accordingly.
+>>>> This patch enables to put more running tasks on big cores than
+>>>> on LITTLE ones. But this patch doesn't ensure that long running
+>>>> tasks will run on big cores and short ones on LITTLE cores.
+>>>>
+>>>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+>>>> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+>>>> ---
+>>>>  arch/arm/kernel/topology.c |  153 ++++++++++++++++++++++++++++++++++++++++++++
+>>>>  1 file changed, 153 insertions(+)
+>>>>
+>>> Sorry for not giving this comment on previous version but we should also
+>>> have a way to provide the big.LITTLE information without Device Tree.
+>>> May be a platform device/data.
+>>
+>> Hi Santosh,
+>>
+>> I had thought of adding such additional way to set cpu_power of
+>> big.LITTLE but my conclusion was
+>> -it's a new platform so it should come with DT
+>> -DT is already required by other patches linked to big.LITTLE
+>> (http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/080873.html)
+>> -There is no device that can be easily used to get such information at
+>> this early boot stage.
+>>
+> I see. Its new processor but it is just 1 one of the IP in an entire SOC.
+> As mentioned below I was talking about full SOC support including
+> all the driver subsystem with DT.
+>
+>>>
+>>> I know we are moving DT way, but remember apart from core kernel
+>>> infrastructure, to have a complete product build with DT means all the
+>>> drivers must be already supporting DT which is not the case with
+>>> many huge driver sub-systems like USB, display subsystem, Audio etc.
+>>>
+>>> Having that support would greatly help for the SOC's which have not yet
+>>> reached to stage where entire SOC is DT compliant and want to use
+>>> big.LITTLE infrastructure.
+>>
+>> Can't you support both type of devices on your platform ? You can move
+>> your device to DT mode when it is supported ?
+>>
+> That is what eventually people end up doing who don't have
+> DT ready for entire SOC. I was trying to ask whether at least some
+> method is proposed(need not be merged in mainline) to have
+> the big.LITTLE information parsing without DT.
 
-What is making PCI need to be probed earlier? Perhaps deferred probe
-would work?
+Ok, IIUC, you need a temporary methods, which doesn't need to be
+merged in mainline, to set the cpu_scale field ?
 
-Perhaps giving of_platform_populate an exclude list of compatible
-strings to skip would work.
-
-Rob
+>
+> Regards
+> Santosh
