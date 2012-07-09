@@ -1,106 +1,38 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: pinctrl-imx: add support for set bits for
- general purpose registers
-Date: Mon, 9 Jul 2012 15:10:21 +0800
-Message-ID: <20120709071019.GA28527@shlinux2.ap.freescale.net>
-References: <1341565763-10074-1-git-send-email-b29396@freescale.com>
- <4FF709D1.40903@wwwdotorg.org>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC][PATCH V2 2/3] pwm_backlight: use power sequences
+Date: Mon, 9 Jul 2012 16:48:28 +0900
+Message-ID: <4FFA8CCC.8060000@nvidia.com>
+References: <1341814105-20690-1-git-send-email-acourbot@nvidia.com> <1341814105-20690-3-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4FF709D1.40903-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liu Hui-R64343 <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1341814105-20690-3-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 06, 2012 at 11:52:49PM +0800, Stephen Warren wrote:
-> On 07/06/2012 03:09 AM, Dong Aisheng wrote:
-> > From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > 
-> > The General Purpose Registers (GPR) is used to select operating modes for
-> > general features in the SoC, usually not related to the IOMUX itself,
-> > but it does belong to IOMUX controller.
-> > We simply provide an convient API for driver to call to set the general purpose
-> > register bits if needed.
-> 
-> > +static struct imx_pinctrl *imx_pinctrl;
-> > +/*
-> > + * Set bits for general purpose registers
-> > + */
-> > +void imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
-> > +{
-> > +	u32 reg;
-> > +
-> > +	/* general purpose register is 32 bits size */
-> > +	WARN_ON(!imx_pinctrl || start_bit > 31 || num_bits > 32);
-> 
-> Hmmm. It's going to be very hard to control the probe() order to ensure
-> that this WARN doesn't fire all the time.
-> 
-Correct, if this api is used by client driver before the pinctrl driver is
-registered, the warning will show.
-To avoid it, the current pinctrl driver register priority is arch_initcall.
-But maybe you're right, this may not be so sufficient since i'm afraid there
-are still possible some devices may register earlier than pinctrl since it's not
-controlled by pinctrl driver.
-Then it's true that we need to resolve it.
+Sorry, I just noticed a mistake in this patch I made while merging 
+another one. The following also needs to be changed, otherwise the 
+power-on sequence will never be executed:
 
-> I think it would be better to pass in a struct imx_pinctrl* or DT node
-> to this function. The DT node for the device that's using this function
-> should contain a phandle to the pinctrl device node, which it uses to
-> get that handle. Or in a non-DT case, the client driver needs to be
-> given the provider driver handle using some other mechanism.
-> 
-> For example, look at how the Tegra30 SMMU uses services from the Tegra30
-> AHB; see arch/arm/boot/dts/tegra30.dtsi node "smmu" (client) and node
-> "ahb" (provider), drivers/iommu/tegra-smmu.c functions probe() (saves
-> smmu->ahb) and smmu_setup_regs() (calls tegra_ahb_enable_smmu() with
-> this handle) and drivers/amba/tegra-ahb.c function
-> tegra_ahb_enable_smmu() (implements the deferred probe checking to
-> correctly order the client/provider driver probing)
-> 
-Yes, i learned the code but i'm not sure it also fits for imx.
-I have a few concerns:
-1) i'm not sure if we really need the client to provide pinctrl device
-node as parameter to set gpr registers since there is only one pinctrl device
-for each imx soc. Client devices may also not want to care that parameter.
-2) if passing device node to the api, that means every client driver
-needs to define a phandle of pinctrl device in dts file and parsing it
-in each driver respectively.
-There're several client devices for imx6q, i'm not sure if it's worth to do that
-considering this overhead.
+diff --git a/drivers/video/backlight/pwm_bl.c 
+b/drivers/video/backlight/pwm_bl.c
+index 1a38953..4546d23 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -65,7 +98,7 @@ static int pwm_backlight_update_status(struct 
+backlight_device *bl)
+                 duty_cycle = pb->lth_brightness +
+                      (duty_cycle * (pb->period - pb->lth_brightness) / 
+max);
+                 pwm_config(pb->pwm, duty_cycle, pb->period);
+-               pwm_enable(pb->pwm);
++               pwm_backlight_on(bl);
+         }
 
-I think either passing device node or not passing, the goal is the same,
-guarantee this api to be used properly without being affected by driver
-loading sequence.
 
-If that, how about change to:
-int imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
-{
-        u32 reg;
+Apologies for the inconvenience.
 
-	if (!imx_pinctrl)
-		return -EDEFER_PROBE;
-
-        /* general purpose register is 32 bits size */
-        WARN_ON(start_bit > 31 || num_bits > 32);
-...
-}
-EXPORT_SYMBOL_GPL(imx_pinctrl_set_gpr_register);
-
-Then it looks to me it may be able to solve the same issue.
-
-Regards
-Dong Aisheng
+Alex.
