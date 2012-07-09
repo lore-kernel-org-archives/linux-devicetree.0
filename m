@@ -1,305 +1,234 @@
 From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: [PATCH RESEND V2] input: gpio_keys_polled: convert to dt
-Date: Mon,  9 Jul 2012 15:31:43 -0300
-Message-ID: <1341858707-1771-1-git-send-email-aletes.xgr@gmail.com>
+Subject: [PATCH] pwm: add lpc32xx pwm support
+Date: Mon,  9 Jul 2012 16:27:54 -0300
+Message-ID: <1341862074-9240-1-git-send-email-aletes.xgr@gmail.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
 Sender: linux-doc-owner@vger.kernel.org
-Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tobias Klauser <tklauser@distanz.ch>, David Jander <david@protonic.nl>, JJ Ding <dgdunix@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add lpc32xx soc pwm driver.
+
 Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-
 ---
-Applies to v3.5-rc6
+ .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |   12 ++
+ drivers/pwm/Kconfig                                |   11 ++
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-lpc32xx.c                          |  151 ++++++++++++++++++++
+ 4 files changed, 175 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+ create mode 100644 drivers/pwm/pwm-lpc32xx.c
 
-Changes since v1:
-* Add biding documentation
-* Fix sizeof in memset
-* Cleanup dt properties extraction
-* Use for_each macro
-* Fix memleak on buttons
-
-Thanks Rob Herring, Dmitry Torokhov and Roland Stiege for reviewing and 
-improvements suggestions.
-
- .../devicetree/bindings/input/gpio-keys-polled.txt |   38 ++++++
- drivers/input/keyboard/gpio_keys_polled.c          |  131 ++++++++++++++++++--
- 2 files changed, 158 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/gpio-keys-polled.txt
-
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys-polled.txt b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
 new file mode 100644
-index 0000000..313abef
+index 0000000..fb7b3d5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
-@@ -0,0 +1,38 @@
-+Device-Tree bindings for input/gpio_keys_polled.c keyboard driver
++++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+@@ -0,0 +1,12 @@
++LPC32XX PWM controller
 +
 +Required properties:
-+	- compatible = "gpio-keys-polled";
-+	- poll-interval: Poll interval time in milliseconds
++- compatible: should be "nxp,lpc3220-pwm"
++- reg: physical base address and length of the controller's registers
 +
-+Optional properties:
-+	- autorepeat: Boolean, Enable auto repeat feature of Linux input
-+	  subsystem.
++Example:
 +
-+Each button (key) is represented as a sub-node of "gpio-keys-polled":
-+Subnode properties:
++pwm: pwm@80064000 {
++	compatible = "nxp,lpc3220-pwm";
++	reg = <0x80064000 2000>;
++};
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 0b2800f..34086b1 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -28,6 +28,17 @@ config PWM_IMX
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-imx.
+ 
++config PWM_LPC32XX
++	tristate "LPC32XX PWM support"
++	depends on ARCH_LPC32XX
++	help
++	  Generic PWM framework driver for LPC32XX. The LPC32XX soc has two
++	  pwm channels.
 +
-+	- gpios: OF device-tree gpio specification.
-+	- label: Descriptive name of the key.
-+	- linux,code: Keycode to emit.
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-lpc32xx.
 +
-+Optional subnode-properties:
-+	- linux,input-type: Specify event type this button/key generates.
-+	  If not specified defaults to <1> == EV_KEY.
-+	- debounce-interval: Debouncing interval time in milliseconds.
-+	  If not specified defaults to 5.
-+	- gpio-key,wakeup: Boolean, button can wake-up the system.
 +
-+Example nodes:
+ config PWM_MXS
+ 	tristate "Freescale MXS PWM support"
+ 	depends on ARCH_MXS && OF
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index cec2500..5459702 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -1,6 +1,7 @@
+ obj-$(CONFIG_PWM)		+= core.o
+ obj-$(CONFIG_PWM_BFIN)		+= pwm-bfin.o
+ obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
++obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
+ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
+ obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
+ obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+diff --git a/drivers/pwm/pwm-lpc32xx.c b/drivers/pwm/pwm-lpc32xx.c
+new file mode 100644
+index 0000000..c7fa126
+--- /dev/null
++++ b/drivers/pwm/pwm-lpc32xx.c
+@@ -0,0 +1,151 @@
++/*
++ * Copyright 2012 Alexandre Pereira da Silva <aletes.xgr@gmail.com>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
 +
-+	gpio_keys_polled {
-+			compatible = "gpio-keys-polled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			poll-interval = <100>;
-+			autorepeat;
-+			button@21 {
-+				label = "GPIO Key UP";
-+				linux,code = <103>;
-+				gpios = <&gpio1 0 1>;
-+			};
-+			...
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index 20c8ab1..e5cb3ef 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -25,6 +25,8 @@
- #include <linux/platform_device.h>
- #include <linux/gpio.h>
- #include <linux/gpio_keys.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_gpio.h>
- 
- #define DRV_NAME	"gpio-keys-polled"
- 
-@@ -38,7 +40,7 @@ struct gpio_keys_button_data {
- struct gpio_keys_polled_dev {
- 	struct input_polled_dev *poll_dev;
- 	struct device *dev;
--	struct gpio_keys_platform_data *pdata;
-+	struct gpio_keys_platform_data pdata;
- 	struct gpio_keys_button_data data[0];
- };
- 
-@@ -67,11 +69,11 @@ static void gpio_keys_polled_check_state(struct input_dev *input,
- static void gpio_keys_polled_poll(struct input_polled_dev *dev)
- {
- 	struct gpio_keys_polled_dev *bdev = dev->private;
--	struct gpio_keys_platform_data *pdata = bdev->pdata;
-+	struct gpio_keys_platform_data *pdata = &bdev->pdata;
- 	struct input_dev *input = dev->input;
- 	int i;
- 
--	for (i = 0; i < bdev->pdata->nbuttons; i++) {
-+	for (i = 0; i < pdata->nbuttons; i++) {
- 		struct gpio_keys_button_data *bdata = &bdev->data[i];
- 
- 		if (bdata->count < bdata->threshold)
-@@ -85,7 +87,7 @@ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
- static void gpio_keys_polled_open(struct input_polled_dev *dev)
- {
- 	struct gpio_keys_polled_dev *bdev = dev->private;
--	struct gpio_keys_platform_data *pdata = bdev->pdata;
-+	struct gpio_keys_platform_data *pdata = &bdev->pdata;
- 
- 	if (pdata->enable)
- 		pdata->enable(bdev->dev);
-@@ -94,31 +96,125 @@ static void gpio_keys_polled_open(struct input_polled_dev *dev)
- static void gpio_keys_polled_close(struct input_polled_dev *dev)
- {
- 	struct gpio_keys_polled_dev *bdev = dev->private;
--	struct gpio_keys_platform_data *pdata = bdev->pdata;
-+	struct gpio_keys_platform_data *pdata = &bdev->pdata;
- 
- 	if (pdata->disable)
- 		pdata->disable(bdev->dev);
- }
-+#ifdef CONFIG_OF
-+static int gpio_keys_polled_get_devtree_pdata(struct device *dev,
-+			    struct gpio_keys_platform_data *pdata)
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/slab.h>
++
++struct lpc32xx_pwm_chip {
++	struct pwm_chip chip;
++	struct device *dev;
++	struct clk *clk;
++	void __iomem *base;
++};
++
++#define PWM_ENABLE (1<<31)
++#define PWM_RELOADV(x)	(((x) & 0xFF)<<8)
++#define PWM_DUTY(x)	((x) & 0xFF)
++
++#define to_lpc32xx_pwm_chip(_chip) \
++	container_of(_chip, struct lpc32xx_pwm_chip, chip)
++
++static int lpc32xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
++			  int duty_ns, int period_ns)
 +{
-+	struct device_node *node, *pp;
-+	int i;
-+	struct gpio_keys_button *buttons;
++	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
++	unsigned long long c;
++	int period_cycles, duty_cycles;
 +
-+	node = dev->of_node;
-+	if (node == NULL)
-+		return -ENODEV;
++	c = clk_get_rate(lpc32xx->clk)/256;
++	c = c * period_ns;
++	do_div(c, NSEC_PER_SEC);
 +
-+	memset(pdata, 0, sizeof(*pdata));
++	/* Handle high and low extremes */
++	if (c == 0)
++		c = 1;
++	if (c > 255)
++		c = 0; /* 0 set division by 256 */
++	period_cycles = c;
 +
-+	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
++	c = 256*duty_ns;
++	do_div(c, period_ns);
++	duty_cycles = c;
 +
-+	of_property_read_u32(node, "poll-interval", &pdata->poll_interval);
-+
-+	pdata->nbuttons = of_get_child_count(node);
-+	if (pdata->nbuttons == 0)
-+		return -ENODEV;
-+
-+	buttons = kzalloc(pdata->nbuttons * (sizeof *buttons), GFP_KERNEL);
-+	if (!buttons)
-+		return -ENOMEM;
-+
-+	i = 0;
-+	for_each_child_of_node(node, pp) {
-+		enum of_gpio_flags flags;
-+
-+		if (!of_find_property(pp, "gpios", NULL)) {
-+			pdata->nbuttons--;
-+			dev_warn(dev, "Found button without gpios\n");
-+			continue;
-+		}
-+		buttons[i].gpio = of_get_gpio_flags(pp, 0, &flags);
-+		buttons[i].active_low = flags & OF_GPIO_ACTIVE_LOW;
-+
-+		if (of_property_read_u32(pp, "linux,code", &buttons[i].code)) {
-+			dev_err(dev, "Button without keycode: 0x%x\n",
-+				buttons[i].gpio);
-+			goto out_fail;
-+		}
-+
-+		buttons[i].desc = of_get_property(pp, "label", NULL);
-+
-+		if (of_property_read_u32(pp, "linux,input-type",
-+			&buttons[i].type))
-+			buttons[i].type = EV_KEY;
-+
-+		buttons[i].wakeup = !!of_get_property(pp, "gpio-key,wakeup",
-+			NULL);
-+
-+		if (of_property_read_u32(pp, "debounce-interval",
-+			&buttons[i].debounce_interval))
-+			buttons[i].debounce_interval = 5;
-+
-+		i++;
-+	}
-+
-+	pdata->buttons = buttons;
++	writel(PWM_ENABLE | PWM_RELOADV(period_cycles) | PWM_DUTY(duty_cycles),
++		lpc32xx->base);
 +
 +	return 0;
-+
-+out_fail:
-+	kfree(buttons);
-+	return -ENODEV;
 +}
 +
-+static struct of_device_id gpio_keys_polled_of_match[] = {
-+	{ .compatible = "gpio-keys-polled", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
-+
-+#else
-+
-+static int gpio_keys_polled_get_devtree_pdata(struct device *dev,
-+			    struct gpio_keys_platform_data *altp)
++static int lpc32xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
 +{
-+	return -ENODEV;
++	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
++
++	clk_enable(lpc32xx->clk);
++	return 0;
 +}
-+#endif
- 
- static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
- {
- 	struct gpio_keys_platform_data *pdata = pdev->dev.platform_data;
- 	struct device *dev = &pdev->dev;
-+	struct gpio_keys_platform_data alt_pdata;
- 	struct gpio_keys_polled_dev *bdev;
- 	struct input_polled_dev *poll_dev;
- 	struct input_dev *input;
- 	int error;
- 	int i;
- 
--	if (!pdata || !pdata->poll_interval)
--		return -EINVAL;
-+	if (!pdata) {
-+		error = gpio_keys_polled_get_devtree_pdata(dev, &alt_pdata);
-+		if (error)
-+			return error;
-+		pdata = &alt_pdata;
++
++static void lpc32xx_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
++
++	writel(0, lpc32xx->base);
++	clk_disable(lpc32xx->clk);
++}
++
++static const struct pwm_ops lpc32xx_pwm_ops = {
++	.config = lpc32xx_pwm_config,
++	.enable = lpc32xx_pwm_enable,
++	.disable = lpc32xx_pwm_disable,
++	.owner = THIS_MODULE,
++};
++
++static int lpc32xx_pwm_probe(struct platform_device *pdev)
++{
++	struct lpc32xx_pwm_chip *lpc32xx;
++	struct resource *res;
++	int ret;
++
++	lpc32xx = devm_kzalloc(&pdev->dev, sizeof(*lpc32xx), GFP_KERNEL);
++	if (!lpc32xx)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	lpc32xx->base = devm_request_and_ioremap(&pdev->dev, res);
++	if (!lpc32xx->base)
++		return -EADDRNOTAVAIL;
++
++	lpc32xx->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(lpc32xx->clk))
++		return PTR_ERR(lpc32xx->clk);
++
++	lpc32xx->chip.dev = &pdev->dev;
++	lpc32xx->chip.ops = &lpc32xx_pwm_ops;
++	lpc32xx->chip.npwm = 1;
++
++	ret = pwmchip_add(&lpc32xx->chip);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
++		return ret;
 +	}
 +
-+	if (!pdata->poll_interval) {
-+		error = -EINVAL;
-+		goto err_free_buttons;
-+	}
- 
- 	bdev = kzalloc(sizeof(struct gpio_keys_polled_dev) +
- 		       pdata->nbuttons * sizeof(struct gpio_keys_button_data),
- 		       GFP_KERNEL);
- 	if (!bdev) {
- 		dev_err(dev, "no memory for private data\n");
--		return -ENOMEM;
-+		error = -ENOMEM;
-+		goto err_free_buttons;
- 	}
- 
- 	poll_dev = input_allocate_polled_device();
-@@ -184,7 +280,7 @@ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
- 
- 	bdev->poll_dev = poll_dev;
- 	bdev->dev = dev;
--	bdev->pdata = pdata;
-+	bdev->pdata = *pdata;
- 	platform_set_drvdata(pdev, bdev);
- 
- 	error = input_register_polled_device(poll_dev);
-@@ -209,15 +305,19 @@ err_free_gpio:
- 
- err_free_bdev:
- 	kfree(bdev);
--
- 	platform_set_drvdata(pdev, NULL);
++	lpc32xx->dev = &pdev->dev;
++	platform_set_drvdata(pdev, lpc32xx);
 +
-+err_free_buttons:
-+	/* If we have no platform_data, we allocated buttons dynamically. */
-+	if (!pdev->dev.platform_data)
-+		kfree(pdata->buttons);
- 	return error;
- }
- 
- static int __devexit gpio_keys_polled_remove(struct platform_device *pdev)
- {
- 	struct gpio_keys_polled_dev *bdev = platform_get_drvdata(pdev);
--	struct gpio_keys_platform_data *pdata = bdev->pdata;
-+	struct gpio_keys_platform_data *pdata = &bdev->pdata;
- 	int i;
- 
- 	input_unregister_polled_device(bdev->poll_dev);
-@@ -227,6 +327,14 @@ static int __devexit gpio_keys_polled_remove(struct platform_device *pdev)
- 
- 	input_free_polled_device(bdev->poll_dev);
- 
-+	/*
-+	 * If we had no platform_data, we allocated buttons dynamically, and
-+	 * must free them here. pdata->buttons is the pointer to the
-+	 * beginning of the allocated array.
-+	 */
-+	if (!pdev->dev.platform_data)
-+		kfree(pdata->buttons);
++	return 0;
++}
 +
- 	kfree(bdev);
- 	platform_set_drvdata(pdev, NULL);
- 
-@@ -239,6 +347,7 @@ static struct platform_driver gpio_keys_polled_driver = {
- 	.driver	= {
- 		.name	= DRV_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(gpio_keys_polled_of_match),
- 	},
- };
- module_platform_driver(gpio_keys_polled_driver);
++static int __devexit lpc32xx_pwm_remove(struct platform_device *pdev)
++{
++	struct lpc32xx_pwm_chip *lpc32xx = platform_get_drvdata(pdev);
++
++	pwmchip_remove(&lpc32xx->chip);
++
++	return 0;
++}
++
++static struct of_device_id lpc32xx_pwm_dt_ids[] = {
++	{ .compatible = "nxp,lpc3220-pwm", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, lpc32xx_pwm_dt_ids);
++
++static struct platform_driver lpc32xx_pwm_driver = {
++	.driver = {
++		.name = "lpc32xx-pwm",
++		.of_match_table = of_match_ptr(lpc32xx_pwm_dt_ids),
++	},
++	.probe = lpc32xx_pwm_probe,
++	.remove = __devexit_p(lpc32xx_pwm_remove),
++};
++module_platform_driver(lpc32xx_pwm_driver);
++
++MODULE_ALIAS("platform:lpc32xx-pwm");
++MODULE_AUTHOR("Alexandre Pereira da Silva <aletes.xgr@gmail.com>");
++MODULE_DESCRIPTION("LPC32XX PWM Driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.7.10
 
