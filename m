@@ -1,30 +1,117 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v9 REBASE 0/9] add imx usb driver based on Greg next tree
-Date: Mon, 9 Jul 2012 10:02:19 -0700
-Message-ID: <20120709170219.GA21319@kroah.com>
-References: <1341673008-29808-1-git-send-email-richard.zhao@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1341673008-29808-1-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Subject: [PATCH RESEND] usb: gadget: composite: parse dt values
+Date: Mon,  9 Jul 2012 15:02:20 -0300
+Message-ID: <1341856949-7572-1-git-send-email-aletes.xgr@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Nazarewicz <mina86@mina86.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 07, 2012 at 10:56:39PM +0800, Richard Zhao wrote:
-> The work is based on  ci13xxx rework done by Alexander Shishkin.
-> 
-> To let Greg pick up, I also added patches Alex queued that I depends on.
+Grab the devicetree node properties to override VendorId, ProductId,
+bcdDevice, Manucacturer, Product and SerialNumber
 
-I've applied everything but patch number 6, which I've responded to
-with some questions about it.
+Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Acked-by: Michal Nazarewicz <mina86@mina86.com>
+Acked-by: Rob Herring <rob.herring@calxeda.com>
+---
+ Documentation/devicetree/bindings/usb/gadget.txt |   20 +++++++++++
+ drivers/usb/gadget/composite.c                   |   39 ++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/gadget.txt
 
-thanks,
-
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/usb/gadget.txt b/Documentation/devicetree/bindings/usb/gadget.txt
+new file mode 100644
+index 0000000..93388d3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/gadget.txt
+@@ -0,0 +1,20 @@
++Usb Gadget DeviceTree bindings
++
++These optional properties inside the usb device controller node are used to
++change some of the gadget drivers configuration:
++- vendor-id: Usb vendor id
++- product-id: Usb product id
++- release: Version of this device
++- vendor: Textual description of the vendor
++- device: Textual description of this device
++- serial: Textual representation of the device's serial number
++
++Binding Example:
++	usbd@31020000 {
++		vendor-id = <0x0525>;
++		product-id = <0xa4a6>;
++		release = <1>;
++		vendor = "Some Corp";
++		device = "Test Device";
++		serial = "12345";
++	};
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 390749b..a02be8c 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -17,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/device.h>
+ #include <linux/utsname.h>
++#include <linux/of.h>
+ 
+ #include <linux/usb/composite.h>
+ #include <asm/unaligned.h>
+@@ -1419,10 +1420,44 @@ static u8 override_id(struct usb_composite_dev *cdev, u8 *desc)
+ 	return *desc;
+ }
+ 
++static void composite_parse_dt(struct usb_composite_dev *cdev,
++	struct device_node *np)
++{
++	u32 reg;
++
++	if (!idVendor && of_property_read_u32(np, "vendor-id", &reg) == 0)
++		idVendor = reg;
++
++	if (!idProduct && of_property_read_u32(np, "product-id", &reg) == 0)
++		idProduct = reg;
++
++	if (!bcdDevice && of_property_read_u32(np, "release", &reg) == 0)
++		bcdDevice = reg;
++
++	if (!iManufacturer)
++		if (of_property_read_string(np, "vendor",
++			&composite->iManufacturer) == 0)
++			cdev->manufacturer_override = override_id(cdev,
++				&cdev->desc.iManufacturer);
++
++	if (!iProduct)
++		if (of_property_read_string(np, "device",
++			&composite->iProduct) == 0)
++			cdev->product_override = override_id(cdev,
++				&cdev->desc.iProduct);
++
++	if (!iSerialNumber)
++		if (of_property_read_string(np, "serial",
++			&composite->iSerialNumber) == 0)
++			cdev->serial_override = override_id(cdev,
++				&cdev->desc.iSerialNumber);
++}
++
+ static int composite_bind(struct usb_gadget *gadget)
+ {
+ 	struct usb_composite_dev	*cdev;
+ 	int				status = -ENOMEM;
++	struct device_node		*np = gadget->dev.of_node;
+ 
+ 	cdev = kzalloc(sizeof *cdev, GFP_KERNEL);
+ 	if (!cdev)
+@@ -1470,6 +1505,10 @@ static int composite_bind(struct usb_gadget *gadget)
+ 
+ 	cdev->desc = *composite->dev;
+ 
++	/* grab overrides from devicetree */
++	if (np)
++		composite_parse_dt(cdev, np);
++
+ 	/* standardized runtime overrides for device ID data */
+ 	if (idVendor)
+ 		cdev->desc.idVendor = cpu_to_le16(idVendor);
+-- 
+1.7.10
