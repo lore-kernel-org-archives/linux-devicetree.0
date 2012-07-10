@@ -1,57 +1,49 @@
-From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 REBASE 6/9] USB: notify phy when root hub port connect
- change
-Date: Tue, 10 Jul 2012 22:53:04 +0800
-Message-ID: <20120710145302.GA2789@richard-laptop>
-References: <20120710014450.GF26888@b20223-02.ap.freescale.net>
- <Pine.LNX.4.44L0.1207101021580.1308-100000@iolanthe.rowland.org>
+From: Rob Herring <rob.herring@calxeda.com>
+Subject: Re: bisected regression since 3.5-rc5 - hang on boot on some sparc64
+ machines
+Date: Tue, 10 Jul 2012 10:00:41 -0500
+Message-ID: <4FFC4399.3050407@calxeda.com>
+References: <alpine.SOC.1.00.1207091627480.17307@math.ut.ee>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1207101021580.1308-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.SOC.1.00.1207091627480.17307@math.ut.ee>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Meelis Roos <mroos@linux.ee>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Linux Kernel list <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 10, 2012 at 10:24:07AM -0400, Alan Stern wrote:
-> On Tue, 10 Jul 2012, Richard Zhao wrote:
+On 07/10/2012 06:09 AM, Meelis Roos wrote:
+> A regression since 3.5-rc5 stops Sun Fire V100 and Sun Netra X1 sparc64 
+> machines from booting, hanging after enabling serial console. Several 
+> different other sparc64 systems work fine with 3.5-rc6. prtconf and full 
+> dmesg below.
 > 
-> > > > @@ -4037,6 +4038,13 @@ static void hub_port_connect_change(struct usb_hub *hub, int port1,
-> > > >  		}
-> > > >  	}
-> > > >  
-> > > > +	if (unlikely(hcd->phy && !hdev->parent)) {
-> > > 
-> > > Why is this "unlikely"?  And why mark it as such, is this a "fast path"
-> > > that needs the compiler to know this hint to optimize things here?
-> > > 
-> > > Please don't use likely() or unlikely() except in places it really is
-> > > needed, _and_ you have measured the difference.  Have you done so in
-> > > this place?
-> > It's from a comment by Alan Stern.
-> > http://www.spinics.net/lists/linux-usb/msg64987.html
+> Bisecting leads to
+> 107a84e61cdd3406c842a0e4be7efffd3a05dba6 is the first bad commit
+> commit 107a84e61cdd3406c842a0e4be7efffd3a05dba6
+> Author: Thierry Reding <thierry.reding@avionic-design.de>
+> Date:   Thu Jun 14 09:12:35 2012 +0200
 > 
-> That comment was made in a somewhat different context.  At the time 
-> the code was part of an interrupt handler; now it isn't.
-> 
-> > Actually, for my board, it's not unlikely. But for others which don't
-> > have notify_connect/disconnect, it's unlikely.
-> > 
-> > Because it's not unlikely for all boards, I prefer remove "unlikely".
-> 
-> It's no longer a big deal one way or another.  I don't care about the 
-> "unlikely" because it's on a cold path running in process context.  Go 
-> ahead and remove it.
-Ok. I'll remove it. 
+>     of: match by compatible property first
+>     
+>     When matching devices against an OF device ID table, the first string of
+>     the compatible property that is listed in the table should match,
+>     regardless of its position in the table.
+>     
+>     Cc: Grant Likely <grant.likely@secretlab.ca>
+>     Cc: Rob Herring <rob.herring@calxeda.com>
+>     Cc: devicetree-discuss@lists.ozlabs.org
+>     Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+>     Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 
-Thanks
-Richard
-> 
-> Alan Stern
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The problem is match combinations of compatible plus name and/or type
+fail to match correctly. I have a fix for this, but given how late it is
+for 3.5 I think it is best to revert this for now. There could be other
+cases that rely on the current although wrong behavior. I will post an
+updated version for 3.6.
+
+Linus, Please revert 107a84e61cdd3406c842a0e4be7efffd3a05dba6.
+
+Rob
