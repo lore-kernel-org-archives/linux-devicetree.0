@@ -1,11 +1,13 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 1/5] fdtput: Fix nit in help message
-Date: Tue, 10 Jul 2012 05:56:44 -0700
-Message-ID: <1341925008-10627-1-git-send-email-sjg@chromium.org>
+Subject: [PATCH 2/5] fdtput: Prepare to support multiple operations
+Date: Tue, 10 Jul 2012 05:56:45 -0700
+Message-ID: <1341925008-10627-2-git-send-email-sjg@chromium.org>
+References: <1341925008-10627-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1341925008-10627-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,25 +21,83 @@ Sender: "devicetree-discuss"
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There was an extra < in the help message, so fix it.
+We want to add new options to this tool. In preparation for this, add
+the concept of a current operation.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- fdtput.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ fdtput.c |   37 ++++++++++++++++++++++++++-----------
+ 1 files changed, 26 insertions(+), 11 deletions(-)
 
 diff --git a/fdtput.c b/fdtput.c
-index f6ebd24..244d1f1 100644
+index 244d1f1..eceb7f2 100644
 --- a/fdtput.c
 +++ b/fdtput.c
-@@ -162,7 +162,7 @@ static const char *usage_msg =
- 	"The command line arguments are joined together into a single value.\n"
- 	"\n"
- 	"Usage:\n"
--	"	fdtput <options> <dt file> <<node> <property> [<value>...]\n"
-+	"	fdtput <options> <dt file> <node> <property> [<value>...]\n"
- 	"Options:\n"
- 	"\t-t <type>\tType of data\n"
- 	"\t-v\t\tVerbose: display each value decoded from command line\n"
+@@ -28,7 +28,13 @@
+ 
+ #include "util.h"
+ 
++/* These are the operations we support */
++enum operation_t {
++	OPER_WRITE_PROP,		/* Write a property in a node */
++};
++
+ struct display_info {
++	enum operation_t oper;	/* operation to perform */
+ 	int type;		/* data type (s/i/u/x or 0 for default) */
+ 	int size;		/* data size (1/2/4) */
+ 	int verbose;		/* verbose output */
+@@ -143,13 +149,19 @@ static int do_fdtput(struct display_info *disp, const char *filename,
+ 	if (!blob)
+ 		return -1;
+ 
+-	/* convert the arguments into a single binary value, then store */
+-	assert(arg_count >= 2);
+-	if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
+-		store_key_value(blob, *arg, arg[1], value, len))
+-		ret = -1;
+-
+-	if (!ret)
++	switch (disp->oper) {
++	case OPER_WRITE_PROP:
++		/*
++		 * Convert the arguments into a single binary value, then
++		 * store them into the property.
++		 */
++		assert(arg_count >= 2);
++		if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
++			store_key_value(blob, *arg, arg[1], value, len))
++			ret = -1;
++		break;
++	}
++	if (ret >= 0)
+ 		ret = utilfdt_write(filename, blob);
+ 
+ 	free(blob);
+@@ -185,6 +197,7 @@ int main(int argc, char *argv[])
+ 
+ 	memset(&disp, '\0', sizeof(disp));
+ 	disp.size = -1;
++	disp.oper = OPER_WRITE_PROP;
+ 	for (;;) {
+ 		int c = getopt(argc, argv, "ht:v");
+ 		if (c == -1)
+@@ -224,10 +237,12 @@ int main(int argc, char *argv[])
+ 	argv += optind;
+ 	argc -= optind;
+ 
+-	if (argc < 1)
+-		usage("Missing node");
+-	if (argc < 2)
+-		usage("Missing property");
++	if (disp.oper == OPER_WRITE_PROP) {
++		if (argc < 1)
++			usage("Missing node");
++		if (argc < 2)
++			usage("Missing property");
++	}
+ 
+ 	if (do_fdtput(&disp, filename, argv, argc))
+ 		return 1;
 -- 
 1.7.7.3
