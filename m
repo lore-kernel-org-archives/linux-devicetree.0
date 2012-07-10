@@ -1,49 +1,242 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 REBASE 6/9] USB: notify phy when root hub port connect change
-Date: Tue, 10 Jul 2012 13:38:58 +0200
-Message-ID: <201207101338.58340.marex@denx.de>
-References: <1341673008-29808-1-git-send-email-richard.zhao@freescale.com> <201207100522.21162.marex@denx.de> <20120710112050.GH26888@b20223-02.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120710112050.GH26888-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Subject: [PATCH v2] pwm: add lpc32xx pwm support
+Date: Tue, 10 Jul 2012 08:53:32 -0300
+Message-ID: <1341921212-11953-1-git-send-email-aletes.xgr@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>, Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Richard Zhao,
+Add lpc32xx soc pwm driver.
 
-[...]
+Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+---
+Changes since v1:
+* Style fixes
+* Better error handling
+* Improved Kconfig and DT descriptions
 
-> > > --- a/drivers/usb/core/hub.c
-> > > +++ b/drivers/usb/core/hub.c
-> > > @@ -1924,6 +1924,11 @@ void usb_disconnect(struct usb_device **pdev)
-> > > 
-> > >  	 */
-> > >  	
-> > >  	device_del(&udev->dev);
-> > > 
-> > > +	if (udev->parent && !udev->parent->parent) {
-> > > +		struct usb_hcd *hcd = bus_to_hcd(udev->bus);
-> > > +		usb_phy_notify_disconnect(hcd->phy, udev->portnum);
-> > > +	}
-> > 
-> > Shouldn't that go before device_del() ?
-> 
-> Any difference?
+ .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |   17 +++
+ drivers/pwm/Kconfig                                |   11 ++
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-lpc32xx.c                          |  150 ++++++++++++++++++++
+ 4 files changed, 179 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+ create mode 100644 drivers/pwm/pwm-lpc32xx.c
 
-I was worried some corruption of other members in udev structure might happen, 
-but I'm not so sure anymore after taking deer look.
+diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+new file mode 100644
+index 0000000..e7720e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+@@ -0,0 +1,17 @@
++LPC32XX PWM controller
++
++Required properties:
++- compatible: should be "nxp,lpc3220-pwm"
++- reg: physical base address and length of the controller's registers
++
++Examples:
++
++pwm1: pwm@0x4005C000 {
++	compatible = "nxp,lpc3220-pwm";
++	reg = <0x4005C000 0x4>;
++};
++
++pwm2: pwm@0x4005C004 {
++	compatible = "nxp,lpc3220-pwm";
++	reg = <0x4005C004 0x4>;
++};
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 0b2800f..ec2ac70 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -28,6 +28,17 @@ config PWM_IMX
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-imx.
+ 
++config PWM_LPC32XX
++	tristate "LPC32XX PWM support"
++	depends on ARCH_LPC32XX
++	help
++	  Generic PWM framework driver for LPC32XX. The LPC32XX SOC has two
++	  PWM controllers.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-lpc32xx.
++
++
+ config PWM_MXS
+ 	tristate "Freescale MXS PWM support"
+ 	depends on ARCH_MXS && OF
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index cec2500..5459702 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -1,6 +1,7 @@
+ obj-$(CONFIG_PWM)		+= core.o
+ obj-$(CONFIG_PWM_BFIN)		+= pwm-bfin.o
+ obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
++obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
+ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
+ obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
+ obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+diff --git a/drivers/pwm/pwm-lpc32xx.c b/drivers/pwm/pwm-lpc32xx.c
+new file mode 100644
+index 0000000..d79f4f9
+--- /dev/null
++++ b/drivers/pwm/pwm-lpc32xx.c
+@@ -0,0 +1,150 @@
++/*
++ * Copyright 2012 Alexandre Pereira da Silva <aletes.xgr@gmail.com>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/slab.h>
++
++struct lpc32xx_pwm_chip {
++	struct pwm_chip chip;
++	struct clk *clk;
++	void __iomem *base;
++};
++
++#define PWM_ENABLE	(1 << 31)
++#define PWM_RELOADV(x)	(((x) & 0xFF) << 8)
++#define PWM_DUTY(x)	((x) & 0xFF)
++
++#define to_lpc32xx_pwm_chip(_chip) \
++	container_of(_chip, struct lpc32xx_pwm_chip, chip)
++
++static int lpc32xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
++			      int duty_ns, int period_ns)
++{
++	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
++	unsigned long long c;
++	int period_cycles, duty_cycles;
++
++	c = clk_get_rate(lpc32xx->clk) / 256;
++	c = c * period_ns;
++	do_div(c, NSEC_PER_SEC);
++
++	/* Handle high and low extremes */
++	if (c == 0)
++		c = 1;
++	if (c > 255)
++		c = 0; /* 0 set division by 256 */
++	period_cycles = c;
++
++	c = 256 * duty_ns;
++	do_div(c, period_ns);
++	duty_cycles = c;
++
++	writel(PWM_ENABLE | PWM_RELOADV(period_cycles) | PWM_DUTY(duty_cycles),
++		lpc32xx->base);
++
++	return 0;
++}
++
++static int lpc32xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
++
++	clk_enable(lpc32xx->clk);
++	return 0;
++}
++
++static void lpc32xx_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
++
++	writel(0, lpc32xx->base);
++	clk_disable(lpc32xx->clk);
++}
++
++static const struct pwm_ops lpc32xx_pwm_ops = {
++	.config = lpc32xx_pwm_config,
++	.enable = lpc32xx_pwm_enable,
++	.disable = lpc32xx_pwm_disable,
++	.owner = THIS_MODULE,
++};
++
++static int lpc32xx_pwm_probe(struct platform_device *pdev)
++{
++	struct lpc32xx_pwm_chip *lpc32xx;
++	struct resource *res;
++	int ret;
++
++	lpc32xx = devm_kzalloc(&pdev->dev, sizeof(*lpc32xx), GFP_KERNEL);
++	if (!lpc32xx)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -EINVAL;
++
++	lpc32xx->base = devm_request_and_ioremap(&pdev->dev, res);
++	if (!lpc32xx->base)
++		return -EADDRNOTAVAIL;
++
++	lpc32xx->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(lpc32xx->clk))
++		return PTR_ERR(lpc32xx->clk);
++
++	lpc32xx->chip.dev = &pdev->dev;
++	lpc32xx->chip.ops = &lpc32xx_pwm_ops;
++	lpc32xx->chip.npwm = 1;
++
++	ret = pwmchip_add(&lpc32xx->chip);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to add PWM chip, error %d\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, lpc32xx);
++
++	return 0;
++}
++
++static int __devexit lpc32xx_pwm_remove(struct platform_device *pdev)
++{
++	struct lpc32xx_pwm_chip *lpc32xx = platform_get_drvdata(pdev);
++
++	return pwmchip_remove(&lpc32xx->chip);
++}
++
++static struct of_device_id lpc32xx_pwm_dt_ids[] = {
++	{ .compatible = "nxp,lpc3220-pwm", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, lpc32xx_pwm_dt_ids);
++
++static struct platform_driver lpc32xx_pwm_driver = {
++	.driver = {
++		.name = "lpc32xx-pwm",
++		.of_match_table = of_match_ptr(lpc32xx_pwm_dt_ids),
++	},
++	.probe = lpc32xx_pwm_probe,
++	.remove = __devexit_p(lpc32xx_pwm_remove),
++};
++module_platform_driver(lpc32xx_pwm_driver);
++
++MODULE_ALIAS("platform:lpc32xx-pwm");
++MODULE_AUTHOR("Alexandre Pereira da Silva <aletes.xgr@gmail.com>");
++MODULE_DESCRIPTION("LPC32XX PWM Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+1.7.10
 
-> Thanks
-> Richard
-
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
