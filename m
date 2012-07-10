@@ -1,169 +1,45 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 5/5] fdtput: Add -p option to create subnodes along entire path
-Date: Tue, 10 Jul 2012 05:56:48 -0700
-Message-ID: <1341925008-10627-5-git-send-email-sjg@chromium.org>
-References: <1341925008-10627-1-git-send-email-sjg@chromium.org>
+From: Chandrabhanu Mahapatra <cmahapatra@ti.com>
+Subject: [PATCH 0/4] Extend TCA6424 support
+Date: Tue, 10 Jul 2012 19:01:33 +0530
+Message-ID: <cover.1341925681.git.cmahapatra@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1341925008-10627-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rob.herring@calxeda.com
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, leed.aguilar@ti.com, Chandrabhanu Mahapatra <cmahapatra@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This option mimics mkdir's -p option. It automatically creates nodes
-as needed along the path provided. If the node already exists, no
-error is given.
+Hi everyone!
+This following patch series extends support capabilities of TCA6424 through
+following patches.
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- fdtput.c           |   59 ++++++++++++++++++++++++++++++++++++++++++++++++---
- tests/run_tests.sh |   13 +++++++++++
- 2 files changed, 68 insertions(+), 4 deletions(-)
+The 1st patch adds 24 bit support for polarity inversion registers by providing
+24 bit support for invert variable.
+The 2nd patch adds 24 bit support of the variables such as irq_mask, irq_stat, etc.
+The 3rd patch extends 24 lines irq support for TCA6424.
+The 4th patch corrects the implementation of registration of device irqs using
+appropiate api's.
 
-diff --git a/fdtput.c b/fdtput.c
-index f217f1d..637d9fa 100644
---- a/fdtput.c
-+++ b/fdtput.c
-@@ -39,6 +39,7 @@ struct display_info {
- 	int type;		/* data type (s/i/u/x or 0 for default) */
- 	int size;		/* data size (1/2/4) */
- 	int verbose;		/* verbose output */
-+	int auto_path;		/* automatically create all path components */
- };
- 
- 
-@@ -151,6 +152,47 @@ static int store_key_value(void *blob, const char *node_name,
- }
- 
- /**
-+ * Create paths as needed for all components of a path
-+ *
-+ * Any components of the path that do not exist are created. Errors are
-+ * reported.
-+ *
-+ * @param blob		FDT blob to write into
-+ * @param in_path	Path to process
-+ * @return 0 if ok, -1 on error
-+ */
-+static int create_paths(void *blob, const char *in_path)
-+{
-+	const char *path = in_path;
-+	const char *sep;
-+	int node, offset = 0;
-+
-+	/* skip leading '/' */
-+	while (*path == '/')
-+		path++;
-+
-+	for (sep = path; *sep; path = sep + 1, offset = node) {
-+		/* equivalent to strchrnul(), but it requires _GNU_SOURCE */
-+		sep = strchr(path, '/');
-+		if (!sep)
-+			sep = path + strlen(path);
-+
-+		node = fdt_subnode_offset_namelen(blob, offset, path,
-+				sep - path);
-+		if (node == -FDT_ERR_NOTFOUND) {
-+			node = fdt_add_subnode_namelen(blob, offset, path,
-+						       sep - path);
-+		}
-+		if (node < 0) {
-+			report_error(path, sep - path, node);
-+			return -1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-  * Create a new node in the fdt.
-  *
-  * This will overwrite the node_name string. Any error is reported.
-@@ -208,13 +250,19 @@ static int do_fdtput(struct display_info *disp, const char *filename,
- 		 * store them into the property.
- 		 */
- 		assert(arg_count >= 2);
-+		if (disp->auto_path && create_paths(blob, *arg))
-+			return -1;
- 		if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
- 			store_key_value(blob, *arg, arg[1], value, len))
- 			ret = -1;
- 		break;
- 	case OPER_CREATE_NODE:
--		for (; ret >= 0 && arg_count--; arg++)
--			ret = create_node(blob, *arg);
-+		for (; ret >= 0 && arg_count--; arg++) {
-+			if (disp->auto_path)
-+				ret = create_paths(blob, *arg);
-+			else
-+				ret = create_node(blob, *arg);
-+		}
- 		break;
- 	}
- 	if (ret >= 0)
-@@ -234,6 +282,7 @@ static const char *usage_msg =
- 	"	fdtput -c <dt file> [<node>...]\n"
- 	"Options:\n"
- 	"\t-c\tCreate nodes if they don't already exist\n"
-+	"\t-p\tAutomatically create nodes as needed through the whole path\n"
- 	"\t-t <type>\tType of data\n"
- 	"\t-v\t\tVerbose: display each value decoded from command line\n"
- 	"\t-h\t\tPrint this help\n\n"
-@@ -257,7 +306,7 @@ int main(int argc, char *argv[])
- 	disp.size = -1;
- 	disp.oper = OPER_WRITE_PROP;
- 	for (;;) {
--		int c = getopt(argc, argv, "cht:v");
-+		int c = getopt(argc, argv, "chpt:v");
- 		if (c == -1)
- 			break;
- 
-@@ -277,7 +326,9 @@ int main(int argc, char *argv[])
- 		case 'h':
- 		case '?':
- 			usage(NULL);
--
-+		case 'p':
-+			disp.auto_path = 1;
-+			break;
- 		case 't':
- 			if (utilfdt_decode_type(optarg, &disp.type,
- 					&disp.size))
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index acec2a5..b825b81 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -552,6 +552,19 @@ fdtput_tests () {
-     run_wrap_error_test $DTPUT $dtb -c /chosen
-     run_wrap_error_test $DTPUT $dtb -c /chosen/son
- 
-+    # Automatic node creation
-+    run_wrap_test $DTPUT $dtb -cp /blackadder/the-second/turnip \
-+	/blackadder/the-second/potato
-+    run_fdtput_test 1000 $dtb /blackadder/the-second/turnip cost "" 1000
-+    run_fdtput_test "fine wine" $dtb /blackadder/the-second/potato drink \
-+	"-ts" "fine wine"
-+    run_wrap_test $DTPUT $dtb -p /you/are/drunk/sir/winston slurp -ts twice
-+    run_wrap_error_test $DTPUT $dtb -cp "$(cat $text $text)/longish"
-+
-+    # Allowed to create an existing node with -p
-+    run_wrap_test $DTPUT $dtb -cp /chosen
-+    run_wrap_test $DTPUT $dtb -cp /chosen/son
-+
-     # TODO: Add tests for verbose mode?
- }
- 
+These patches were based on mainline kernel v3.5rc6.
+
+All your comments and suggestions are welcome.
+
+Regards,
+Chandrabhanu
+
+Chandrabhanu Mahapatra (1):
+  GPIO: PCA953X: Increase size of invert variable to support 24 bit
+
+Leed Aguilar (3):
+  gpio/pca953x: increase variables size to support 24 bit of data
+  OMAP: Define TCA6424 max number of possible IRQs
+  gpio/pca953x: register the device irq using appropriate api's
+
+ arch/arm/plat-omap/include/plat/irqs.h |   11 +++++++-
+ drivers/gpio/gpio-pca953x.c            |   47 ++++++++++++++++++--------------
+ include/linux/i2c/pca953x.h            |    2 +-
+ 3 files changed, 38 insertions(+), 22 deletions(-)
+
 -- 
-1.7.7.3
+1.7.10
