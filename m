@@ -1,525 +1,433 @@
-From: Roland Stigge <stigge@antcom.de>
-Subject: [PATCH v9] input: keyboard: Add keys driver for the LPC32xx SoC
-Date: Tue, 10 Jul 2012 21:35:10 +0200
-Message-ID: <1341948910-6530-1-git-send-email-stigge@antcom.de>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, aletes.xgr@gmail.com
-Cc: Roland Stigge <stigge@antcom.de>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v9] input: keyboard: Add keys driver for the LPC32xx SoC
+Date: Tue, 10 Jul 2012 13:55:07 -0700
+Message-ID: <20120710205507.GA377@core.coreip.homeip.net>
+References: <1341948910-6530-1-git-send-email-stigge@antcom.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1341948910-6530-1-git-send-email-stigge@antcom.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, aletes.xgr@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a driver for the key scan interface of the LPC32xx SoC
+Hi Roland,
 
-Signed-off-by: Roland Stigge <stigge@antcom.de>
+On Tue, Jul 10, 2012 at 09:35:10PM +0200, Roland Stigge wrote:
+> This patch adds a driver for the key scan interface of the LPC32xx SoC
+> 
 
+Could of more things that I had in my patch but forgot to specifically
+call out:
+
+> +
+> +	/* Configure the key scanner */
+> +	clk_prepare_enable(kscandat->clk);
+
+This may fail so we should handle errors.
+
+> +	writel(kscandat->deb_clks, LPC32XX_KS_DEB(kscandat->kscan_base));
+> +	writel(kscandat->scan_delay, LPC32XX_KS_SCAN_CTL(kscandat->kscan_base));
+> +	writel(LPC32XX_KSCAN_FTST_USE32K_CLK,
+> +	       LPC32XX_KS_FAST_TST(kscandat->kscan_base));
+> +	writel(kscandat->matrix_sz,
+> +	       LPC32XX_KS_MATRIX_DIM(kscandat->kscan_base));
+> +	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
+> +	clk_disable_unprepare(kscandat->clk);
+> +
+> +	error = request_irq(irq, lpc32xx_kscan_irq, 0, pdev->name, kscandat);
+
+...
+
+> +
+> +	free_irq(platform_get_irq(pdev, 0), pdev);
+
+You are requesting IRQ with kscandat as an argument but freeing it with
+'pdev' which will fail.
+
+> +
+> +	if (kscandat->input->users) {
+> +		/* Enable clock and clear IRQ */
+> +		clk_prepare_enable(kscandat->clk);
+
+Need to handle errors here as well.
+
+Since I am partial to my rearrangement (basically I started preferring
+err_<action> style of error labels as they more explanatory than out2 or
+fail3 style of labels), could you try this version of my patch (on top
+of your v9 one). Third time is a charm maybe? :)
+
+-- 
+Dmitry
+
+Input: lpc32-xx- misc changes
+
+Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
 ---
-Applies to v3.5-rc6
 
-Changes since v8:
-* Optimized lpc32xx_mod_states() to shift "changed" word and break on 0
-* lpc32xx_parse_dt(): Return -EINVAL instead of -ENXIO
-* kfree() of keymap _after_ stopping IRQ
+ drivers/input/keyboard/lpc32xx-keys.c |  217 +++++++++++++++++----------------
+ 1 file changed, 115 insertions(+), 102 deletions(-)
 
-Changes since v7:
-* Bugfix: enable clock in open() before accessing reg
 
-Changes since v6:
-* Clear IRQ in LPC32XX_KS_IRQ register in lpc32xx_kscan_{open,close}
-* Declare lpc32xx_parse_dt() static
-* Pass kscandat to lpc32xx_parse_dt() instead of pdev
-* Moved keymap allocation to probe()
-* Use clk_prepare_enable() and clk_disable_unprepare() in probe(),
-  around actual register access
-* Do input_allocate_device() earlier, after kscandat allocation
-* Do input_register_device() last in probe()
-* suspend()/resume(): take mutex, and guard against (users == 0)
-
-Changes since v5:
-* Handle return code from matrix_keypad_build_keymap()
-* Remove platform data structure and integrate into device struct
-
-Changes since v4:
-* Remove irq from struct lpc32xx_kscan_drv
-
-Changes since v3:
-* Make driver DT-only since LPC32xx is converted to DT anyway now.
-* Use MATRIX_SCAN_CODE()
-* Use matrix_keypad_build_keymap()
-* Emit MSC_SCAN also
-* Use PTR_ERR() on error handling
-* Rename return value to error
-* Removed unnecessary '&' on initializations with function pointers
-* Use CONFIG_PM_SLEEP, dev_pm_ops, SIMPLE_DEV_PM_OPS instead of CONFIG_PM
-* Removed devm_*() management
-* Re-enabled clock for period of probe()
-
-Changes since v2:
-* Fixed case of lpc32XX_* -> lpc32xx_*
-* Removed unnecessary casts
-* Removed unnecessary unlikely()
-* Use unsigned for key bits
-* Included Russell's lpc32xx_mod_states() algorithm change suggestion
-* Replaced (res == NULL) with (!res)
-* clk_enable() -> clk_prepare_enable()
-* Moved clk_prepare_enable() and clk_disable_unprepare() to input's
-  open()/close() callbacks to save power
-* Handle clk_prepare_enable() return value appropriately
-* DT: Use "keypad,num-rows", "keypad,num-columns" and "linux,keymap" properties
-
-Changes since v1:
-* Removed devm_kfree(), lpc32XX_free_dt(), iounmap(), release_mem_region()
-* Changed __raw_writel()+__raw_readl() to writel()+readl()
-
-Thanks to Axel Lin, Russell King, Rob Herring, Shubhrajyoti and Dmitry Torokhov
-for reviewing!
-
- Documentation/devicetree/bindings/input/lpc32xx-key.txt |   28 +
- drivers/input/keyboard/Kconfig                          |   10 
- drivers/input/keyboard/Makefile                         |    1 
- drivers/input/keyboard/lpc32xx-keys.c                   |  381 ++++++++++++++++
- 4 files changed, 420 insertions(+)
-
---- /dev/null
-+++ linux-2.6/Documentation/devicetree/bindings/input/lpc32xx-key.txt
-@@ -0,0 +1,28 @@
-+NXP LPC32xx Key Scan Interface
+diff --git a/drivers/input/keyboard/lpc32xx-keys.c b/drivers/input/keyboard/lpc32xx-keys.c
+index 91b0587..dd786c8 100644
+--- a/drivers/input/keyboard/lpc32xx-keys.c
++++ b/drivers/input/keyboard/lpc32xx-keys.c
+@@ -66,22 +66,25 @@
+ struct lpc32xx_kscan_drv {
+ 	struct input_dev *input;
+ 	struct clk *clk;
++	struct resource *iores;
+ 	void __iomem *kscan_base;
+-	u8 lastkeystates[8];
+-	u32 io_p_start;
+-	u32 io_p_size;
++	unsigned int irq;
 +
-+Required Properties:
-+- compatible: Should be "nxp,lpc3220-key"
-+- reg: Physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: The interrupt number to the cpu.
-+- keypad,num-rows: Number of rows and columns, e.g. 1: 1x1, 6: 6x6
-+- keypad,num-columns: Must be equal to keypad,num-rows since LPC32xx only
-+  supports square matrices
-+- nxp,debounce-delay-ms: Debounce delay in ms
-+- nxp,scan-delay-ms: Repeated scan period in ms
-+- linux,keymap: the key-code to be reported when the key is pressed
-+  and released, see also
-+  Documentation/devicetree/bindings/input/matrix-keymap.txt
+ 	u32 matrix_sz;		/* Size of matrix in XxY, ie. 3 = 3x3 */
+-	unsigned short *keymap;	/* Pointer to key map for the scan matrix */
+ 	u32 deb_clks;		/* Debounce clocks (based on 32KHz clock) */
+ 	u32 scan_delay;		/* Scan delay (based on 32KHz clock) */
+-	int row_shift;
 +
-+Example:
-+
-+	key@40050000 {
-+		compatible = "nxp,lpc3220-key";
-+		reg = <0x40050000 0x1000>;
-+		interrupts = <54 0>;
-+		keypad,num-rows = <1>;
-+		keypad,num-columns = <1>;
-+		nxp,debounce-delay-ms = <3>;
-+		nxp,scan-delay-ms = <34>;
-+		linux,keymap = <0x00000002>;
-+	};
---- linux-2.6.orig/drivers/input/keyboard/Kconfig
-+++ linux-2.6/drivers/input/keyboard/Kconfig
-@@ -332,6 +332,16 @@ config KEYBOARD_LOCOMO
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called locomokbd.
- 
-+config KEYBOARD_LPC32XX
-+	tristate "LPC32XX matrix key scanner support"
-+	depends on ARCH_LPC32XX && OF
-+	help
-+	  Say Y here if you want to use NXP LPC32XX SoC key scanner interface,
-+	  connected to a key matrix.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called lpc32xx-keys.
-+
- config KEYBOARD_MAPLE
- 	tristate "Maple bus keyboard"
- 	depends on SH_DREAMCAST && MAPLE
---- linux-2.6.orig/drivers/input/keyboard/Makefile
-+++ linux-2.6/drivers/input/keyboard/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_KEYBOARD_LKKBD)		+= lkkbd.o
- obj-$(CONFIG_KEYBOARD_LM8323)		+= lm8323.o
- obj-$(CONFIG_KEYBOARD_LM8333)		+= lm8333.o
- obj-$(CONFIG_KEYBOARD_LOCOMO)		+= locomokbd.o
-+obj-$(CONFIG_KEYBOARD_LPC32XX)		+= lpc32xx-keys.o
- obj-$(CONFIG_KEYBOARD_MAPLE)		+= maple_keyb.o
- obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
- obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
---- /dev/null
-+++ linux-2.6/drivers/input/keyboard/lpc32xx-keys.c
-@@ -0,0 +1,381 @@
-+/*
-+ * NXP LPC32xx SoC Key Scan Interface
-+ *
-+ * Authors:
-+ *    Kevin Wells <kevin.wells@nxp.com>
-+ *    Roland Stigge <stigge@antcom.de>
-+ *
-+ * Copyright (C) 2010 NXP Semiconductors
-+ * Copyright (C) 2012 Roland Stigge
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ *
-+ * This controller supports square key matrices from 1x1 up to 8x8
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/slab.h>
-+#include <linux/irq.h>
-+#include <linux/pm.h>
-+#include <linux/platform_device.h>
-+#include <linux/input.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/input/matrix_keypad.h>
-+
-+#define DRV_NAME				"lpc32xx_keys"
-+
-+/*
-+ * Key scanner register offsets
-+ */
-+#define LPC32XX_KS_DEB(x)			((x) + 0x00)
-+#define LPC32XX_KS_STATE_COND(x)		((x) + 0x04)
-+#define LPC32XX_KS_IRQ(x)			((x) + 0x08)
-+#define LPC32XX_KS_SCAN_CTL(x)			((x) + 0x0C)
-+#define LPC32XX_KS_FAST_TST(x)			((x) + 0x10)
-+#define LPC32XX_KS_MATRIX_DIM(x)		((x) + 0x14) /* 1..8 */
-+#define LPC32XX_KS_DATA(x, y)			((x) + 0x40 + ((y) << 2))
-+
-+#define LPC32XX_KSCAN_DEB_NUM_DEB_PASS(n)	((n) & 0xFF)
-+
-+#define LPC32XX_KSCAN_SCOND_IN_IDLE		0x0
-+#define LPC32XX_KSCAN_SCOND_IN_SCANONCE		0x1
-+#define LPC32XX_KSCAN_SCOND_IN_IRQGEN		0x2
-+#define LPC32XX_KSCAN_SCOND_IN_SCAN_MATRIX	0x3
-+
-+#define LPC32XX_KSCAN_IRQ_PENDING_CLR		0x1
-+
-+#define LPC32XX_KSCAN_SCTRL_SCAN_DELAY(n)	((n) & 0xFF)
-+
-+#define LPC32XX_KSCAN_FTST_FORCESCANONCE	0x1
-+#define LPC32XX_KSCAN_FTST_USE32K_CLK		0x2
-+
-+#define LPC32XX_KSCAN_MSEL_SELECT(n)		((n) & 0xF)
-+
-+struct lpc32xx_kscan_drv {
-+	struct input_dev *input;
-+	struct clk *clk;
-+	void __iomem *kscan_base;
-+	u8 lastkeystates[8];
-+	u32 io_p_start;
-+	u32 io_p_size;
-+	u32 matrix_sz;		/* Size of matrix in XxY, ie. 3 = 3x3 */
 +	unsigned short *keymap;	/* Pointer to key map for the scan matrix */
-+	u32 deb_clks;		/* Debounce clocks (based on 32KHz clock) */
-+	u32 scan_delay;		/* Scan delay (based on 32KHz clock) */
-+	int row_shift;
-+};
++	unsigned int row_shift;
 +
-+static void lpc32xx_mod_states(struct lpc32xx_kscan_drv *kscandat, int col)
-+{
-+	u8 key;
-+	int row;
-+	unsigned changed, scancode, keycode;
-+
-+	key = readl(LPC32XX_KS_DATA(kscandat->kscan_base, col));
-+	changed = key ^ kscandat->lastkeystates[col];
-+	kscandat->lastkeystates[col] = key;
-+
-+	for (row = 0; changed; row++, changed >>= 1) {
-+		if (changed & 1) {
-+			/* Key state changed, signal an event */
-+			scancode = MATRIX_SCAN_CODE(row, col,
-+						    kscandat->row_shift);
-+			keycode = kscandat->keymap[scancode];
-+			input_event(kscandat->input, EV_MSC, MSC_SCAN,
-+				    scancode);
-+			input_report_key(kscandat->input, keycode,
-+					 key & (1 << row));
-+		}
-+	}
-+}
-+
-+static irqreturn_t lpc32xx_kscan_irq(int irq, void *dev_id)
-+{
++	u8 lastkeystates[8];
+ };
+ 
+ static void lpc32xx_mod_states(struct lpc32xx_kscan_drv *kscandat, int col)
+ {
++	struct input_dev *input = kscandat->input;
++	unsigned row, changed, scancode, keycode;
+ 	u8 key;
+-	int row;
+-	unsigned changed, scancode, keycode;
+ 
+ 	key = readl(LPC32XX_KS_DATA(kscandat->kscan_base, col));
+ 	changed = key ^ kscandat->lastkeystates[col];
+@@ -93,18 +96,16 @@ static void lpc32xx_mod_states(struct lpc32xx_kscan_drv *kscandat, int col)
+ 			scancode = MATRIX_SCAN_CODE(row, col,
+ 						    kscandat->row_shift);
+ 			keycode = kscandat->keymap[scancode];
+-			input_event(kscandat->input, EV_MSC, MSC_SCAN,
+-				    scancode);
+-			input_report_key(kscandat->input, keycode,
+-					 key & (1 << row));
++			input_event(input, EV_MSC, MSC_SCAN, scancode);
++			input_report_key(input, keycode, key & (1 << row));
+ 		}
+ 	}
+ }
+ 
+ static irqreturn_t lpc32xx_kscan_irq(int irq, void *dev_id)
+ {
+-	int i;
+ 	struct lpc32xx_kscan_drv *kscandat = dev_id;
 +	int i;
-+	struct lpc32xx_kscan_drv *kscandat = dev_id;
+ 
+ 	for (i = 0; i < kscandat->matrix_sz; i++)
+ 		lpc32xx_mod_states(kscandat, i);
+@@ -124,7 +125,9 @@ static int lpc32xx_kscan_open(struct input_dev *dev)
+ 	error = clk_prepare_enable(kscandat->clk);
+ 	if (error)
+ 		return error;
 +
-+	for (i = 0; i < kscandat->matrix_sz; i++)
-+		lpc32xx_mod_states(kscandat, i);
+ 	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
 +
-+	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
-+
-+	input_sync(kscandat->input);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int lpc32xx_kscan_open(struct input_dev *dev)
-+{
-+	struct lpc32xx_kscan_drv *kscandat = input_get_drvdata(dev);
-+	int error;
-+
-+	error = clk_prepare_enable(kscandat->clk);
-+	if (error)
-+		return error;
-+	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
-+	return 0;
-+}
-+
-+static void lpc32xx_kscan_close(struct input_dev *dev)
-+{
-+	struct lpc32xx_kscan_drv *kscandat = input_get_drvdata(dev);
-+
-+	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
-+	clk_disable_unprepare(kscandat->clk);
-+}
-+
-+static int lpc32xx_parse_dt(struct lpc32xx_kscan_drv *kscandat)
-+{
-+	struct device *dev = &kscandat->input->dev;
-+	struct device_node *np = dev->parent->of_node;
-+	u32 rows, columns;
-+
-+	of_property_read_u32(np, "keypad,num-rows", &rows);
-+	of_property_read_u32(np, "keypad,num-columns", &columns);
-+	if (!rows || rows != columns) {
-+		dev_err(dev,
-+			"rows and columns must be specified and be equal!\n");
-+		return -EINVAL;
-+	}
-+
-+	kscandat->matrix_sz = rows;
-+	kscandat->row_shift = get_count_order(columns);
-+
-+	of_property_read_u32(np, "nxp,debounce-delay-ms", &kscandat->deb_clks);
-+	of_property_read_u32(np, "nxp,scan-delay-ms", &kscandat->scan_delay);
-+	if (!kscandat->deb_clks || !kscandat->scan_delay) {
-+		dev_err(dev, "debounce or scan delay not specified\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __devinit lpc32xx_kscan_probe(struct platform_device *pdev)
-+{
-+	struct lpc32xx_kscan_drv *kscandat;
-+	struct resource *res;
-+	int error;
-+	int irq;
-+
-+	kscandat = kzalloc(sizeof(struct lpc32xx_kscan_drv), GFP_KERNEL);
-+	if (!kscandat) {
-+		dev_err(&pdev->dev, "failed to allocate memory\n");
-+		return -ENOMEM;
-+	}
-+
-+	kscandat->input = input_allocate_device();
-+	if (kscandat->input == NULL) {
-+		dev_err(&pdev->dev, "failed to allocate device\n");
-+		error = -ENOMEM;
-+		goto out1;
-+	}
-+
+ 	return 0;
+ }
+ 
+@@ -136,11 +139,11 @@ static void lpc32xx_kscan_close(struct input_dev *dev)
+ 	clk_disable_unprepare(kscandat->clk);
+ }
+ 
+-static int lpc32xx_parse_dt(struct lpc32xx_kscan_drv *kscandat)
++static int __devinit lpc32xx_parse_dt(struct device *dev,
++				      struct lpc32xx_kscan_drv *kscandat)
+ {
+-	struct device *dev = &kscandat->input->dev;
+-	struct device_node *np = dev->parent->of_node;
+-	u32 rows, columns;
++	struct device_node *np = dev->of_node;
++	u32 rows = 0, columns = 0;
+ 
+ 	of_property_read_u32(np, "keypad,num-rows", &rows);
+ 	of_property_read_u32(np, "keypad,num-columns", &columns);
+@@ -166,44 +169,89 @@ static int lpc32xx_parse_dt(struct lpc32xx_kscan_drv *kscandat)
+ static int __devinit lpc32xx_kscan_probe(struct platform_device *pdev)
+ {
+ 	struct lpc32xx_kscan_drv *kscandat;
++	struct input_dev *input;
+ 	struct resource *res;
++	size_t keymap_size;
+ 	int error;
+ 	int irq;
+ 
 +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 +	if (!res) {
 +		dev_err(&pdev->dev, "failed to get platform I/O memory\n");
-+		error = -EBUSY;
-+		goto out2;
-+	}
-+
-+	res = request_mem_region(res->start, resource_size(res), pdev->name);
-+	if (!res) {
-+		dev_err(&pdev->dev, "failed to request I/O memory\n");
-+		error = -EBUSY;
-+		goto out2;
-+	}
-+	kscandat->io_p_start = res->start;
-+	kscandat->io_p_size = resource_size(res);
-+
-+	kscandat->kscan_base = ioremap(res->start, resource_size(res));
-+	if (!kscandat->kscan_base) {
-+		dev_err(&pdev->dev, "failed to remap I/O memory\n");
-+		error = -EBUSY;
-+		goto out3;
-+	}
-+
-+	/* Get the key scanner clock */
-+	kscandat->clk = clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(kscandat->clk)) {
-+		dev_err(&pdev->dev, "failed to get clock\n");
-+		error = PTR_ERR(kscandat->clk);
-+		goto out4;
++		return -EINVAL;
 +	}
 +
 +	irq = platform_get_irq(pdev, 0);
-+	if ((irq < 0) || (irq >= NR_IRQS)) {
++	if (irq < 0 || irq >= NR_IRQS) {
 +		dev_err(&pdev->dev, "failed to get platform irq\n");
-+		error = -EINVAL;
-+		goto out5;
++		return -EINVAL;
 +	}
-+	platform_set_drvdata(pdev, kscandat);
 +
-+	/* Setup key input */
-+	kscandat->input->evbit[0]	= BIT_MASK(EV_KEY);
-+	kscandat->input->name		= pdev->name;
-+	kscandat->input->phys		= "matrix-keys/input0";
-+	kscandat->input->id.vendor	= 0x0001;
-+	kscandat->input->id.product	= 0x0001;
-+	kscandat->input->id.version	= 0x0100;
-+	kscandat->input->open		= lpc32xx_kscan_open;
-+	kscandat->input->close		= lpc32xx_kscan_close;
-+	kscandat->input->dev.parent	= &pdev->dev;
-+
-+	error = lpc32xx_parse_dt(kscandat);
+ 	kscandat = kzalloc(sizeof(struct lpc32xx_kscan_drv), GFP_KERNEL);
+ 	if (!kscandat) {
+ 		dev_err(&pdev->dev, "failed to allocate memory\n");
+ 		return -ENOMEM;
+ 	}
+ 
+-	kscandat->input = input_allocate_device();
+-	if (kscandat->input == NULL) {
+-		dev_err(&pdev->dev, "failed to allocate device\n");
++	error = lpc32xx_parse_dt(&pdev->dev, kscandat);
 +	if (error) {
 +		dev_err(&pdev->dev, "failed to parse device tree\n");
-+		goto out5;
++		goto err_free_mem;
 +	}
 +
-+	kscandat->keymap = kzalloc(sizeof(kscandat->keymap[0]) *
-+				   (kscandat->matrix_sz << kscandat->row_shift),
-+				   GFP_KERNEL);
++	keymap_size = sizeof(kscandat->keymap[0]) *
++				(kscandat->matrix_sz << kscandat->row_shift);
++	kscandat->keymap = kzalloc(keymap_size, GFP_KERNEL);
 +	if (!kscandat->keymap) {
 +		dev_err(&pdev->dev, "could not allocate memory for keymap\n");
+ 		error = -ENOMEM;
+-		goto out1;
++		goto err_free_mem;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(&pdev->dev, "failed to get platform I/O memory\n");
+-		error = -EBUSY;
+-		goto out2;
++	kscandat->input = input = input_allocate_device();
++	if (!input) {
++		dev_err(&pdev->dev, "failed to allocate input device\n");
 +		error = -ENOMEM;
-+		goto out5;
-+	}
++		goto err_free_keymap;
+ 	}
+ 
+-	res = request_mem_region(res->start, resource_size(res), pdev->name);
+-	if (!res) {
++	/* Setup key input */
++	input->name		= pdev->name;
++	input->phys		= "lpc32xx/input0";
++	input->id.vendor	= 0x0001;
++	input->id.product	= 0x0001;
++	input->id.version	= 0x0100;
++	input->open		= lpc32xx_kscan_open;
++	input->close		= lpc32xx_kscan_close;
++	input->dev.parent	= &pdev->dev;
 +
-+	error = matrix_keypad_build_keymap(NULL, NULL, kscandat->matrix_sz,
++	input_set_capability(input, EV_MSC, MSC_SCAN);
++
++	error = matrix_keypad_build_keymap(NULL, NULL,
++					   kscandat->matrix_sz,
 +					   kscandat->matrix_sz,
 +					   kscandat->keymap, kscandat->input);
 +	if (error) {
 +		dev_err(&pdev->dev, "failed to build keymap\n");
-+		goto out6;
++		goto err_free_input;
 +	}
 +
 +	input_set_drvdata(kscandat->input, kscandat);
-+	input_set_capability(kscandat->input, EV_MSC, MSC_SCAN);
 +
-+	/* Configure the key scanner */
-+	clk_prepare_enable(kscandat->clk);
-+	writel(kscandat->deb_clks, LPC32XX_KS_DEB(kscandat->kscan_base));
-+	writel(kscandat->scan_delay, LPC32XX_KS_SCAN_CTL(kscandat->kscan_base));
-+	writel(LPC32XX_KSCAN_FTST_USE32K_CLK,
-+	       LPC32XX_KS_FAST_TST(kscandat->kscan_base));
-+	writel(kscandat->matrix_sz,
-+	       LPC32XX_KS_MATRIX_DIM(kscandat->kscan_base));
-+	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
-+	clk_disable_unprepare(kscandat->clk);
++	kscandat->iores = request_mem_region(res->start, resource_size(res),
++					     pdev->name);
++	if (!kscandat->iores) {
+ 		dev_err(&pdev->dev, "failed to request I/O memory\n");
+ 		error = -EBUSY;
+-		goto out2;
++		goto err_free_input;
+ 	}
+-	kscandat->io_p_start = res->start;
+-	kscandat->io_p_size = resource_size(res);
+ 
+-	kscandat->kscan_base = ioremap(res->start, resource_size(res));
++	kscandat->kscan_base = ioremap(kscandat->iores->start,
++				       resource_size(kscandat->iores));
+ 	if (!kscandat->kscan_base) {
+ 		dev_err(&pdev->dev, "failed to remap I/O memory\n");
+ 		error = -EBUSY;
+-		goto out3;
++		goto err_release_memregion;
+ 	}
+ 
+ 	/* Get the key scanner clock */
+@@ -211,56 +259,14 @@ static int __devinit lpc32xx_kscan_probe(struct platform_device *pdev)
+ 	if (IS_ERR(kscandat->clk)) {
+ 		dev_err(&pdev->dev, "failed to get clock\n");
+ 		error = PTR_ERR(kscandat->clk);
+-		goto out4;
+-	}
+-
+-	irq = platform_get_irq(pdev, 0);
+-	if ((irq < 0) || (irq >= NR_IRQS)) {
+-		dev_err(&pdev->dev, "failed to get platform irq\n");
+-		error = -EINVAL;
+-		goto out5;
+-	}
+-	platform_set_drvdata(pdev, kscandat);
+-
+-	/* Setup key input */
+-	kscandat->input->evbit[0]	= BIT_MASK(EV_KEY);
+-	kscandat->input->name		= pdev->name;
+-	kscandat->input->phys		= "matrix-keys/input0";
+-	kscandat->input->id.vendor	= 0x0001;
+-	kscandat->input->id.product	= 0x0001;
+-	kscandat->input->id.version	= 0x0100;
+-	kscandat->input->open		= lpc32xx_kscan_open;
+-	kscandat->input->close		= lpc32xx_kscan_close;
+-	kscandat->input->dev.parent	= &pdev->dev;
+-
+-	error = lpc32xx_parse_dt(kscandat);
+-	if (error) {
+-		dev_err(&pdev->dev, "failed to parse device tree\n");
+-		goto out5;
+-	}
+-
+-	kscandat->keymap = kzalloc(sizeof(kscandat->keymap[0]) *
+-				   (kscandat->matrix_sz << kscandat->row_shift),
+-				   GFP_KERNEL);
+-	if (!kscandat->keymap) {
+-		dev_err(&pdev->dev, "could not allocate memory for keymap\n");
+-		error = -ENOMEM;
+-		goto out5;
+-	}
+-
+-	error = matrix_keypad_build_keymap(NULL, NULL, kscandat->matrix_sz,
+-					   kscandat->matrix_sz,
+-					   kscandat->keymap, kscandat->input);
+-	if (error) {
+-		dev_err(&pdev->dev, "failed to build keymap\n");
+-		goto out6;
++		goto err_unmap;
+ 	}
+ 
+-	input_set_drvdata(kscandat->input, kscandat);
+-	input_set_capability(kscandat->input, EV_MSC, MSC_SCAN);
+-
+ 	/* Configure the key scanner */
+-	clk_prepare_enable(kscandat->clk);
++	error = clk_prepare_enable(kscandat->clk);
++	if (error)
++		goto err_clk_put;
 +
-+	error = request_irq(irq, lpc32xx_kscan_irq, 0, pdev->name, kscandat);
-+	if (error) {
-+		dev_err(&pdev->dev, "failed to request irq\n");
-+		goto out6;
-+	}
-+
-+	error = input_register_device(kscandat->input);
-+	if (error) {
-+		dev_err(&pdev->dev, "failed to register input device\n");
-+		goto out7;
-+	}
-+
-+	return 0;
-+
-+out7:
-+	free_irq(irq, pdev);
-+out6:
+ 	writel(kscandat->deb_clks, LPC32XX_KS_DEB(kscandat->kscan_base));
+ 	writel(kscandat->scan_delay, LPC32XX_KS_SCAN_CTL(kscandat->kscan_base));
+ 	writel(LPC32XX_KSCAN_FTST_USE32K_CLK,
+@@ -273,30 +279,32 @@ static int __devinit lpc32xx_kscan_probe(struct platform_device *pdev)
+ 	error = request_irq(irq, lpc32xx_kscan_irq, 0, pdev->name, kscandat);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "failed to request irq\n");
+-		goto out6;
++		goto err_clk_put;
+ 	}
+ 
+ 	error = input_register_device(kscandat->input);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "failed to register input device\n");
+-		goto out7;
++		goto err_free_irq;
+ 	}
+ 
++	platform_set_drvdata(pdev, kscandat);
+ 	return 0;
+ 
+-out7:
+-	free_irq(irq, pdev);
+-out6:
+-	kfree(kscandat->keymap);
+-out5:
++err_free_irq:
++	free_irq(irq, kscandat);
++err_clk_put:
+ 	clk_put(kscandat->clk);
+-out4:
++err_unmap:
+ 	iounmap(kscandat->kscan_base);
+-out3:
+-	release_mem_region(kscandat->io_p_start, kscandat->io_p_size);
+-out2:
++err_release_memregion:
++	release_mem_region(kscandat->iores->start,
++			   resource_size(kscandat->iores));
++err_free_input:
+ 	input_free_device(kscandat->input);
+-out1:
++err_free_keymap:
 +	kfree(kscandat->keymap);
-+out5:
-+	clk_put(kscandat->clk);
-+out4:
-+	iounmap(kscandat->kscan_base);
-+out3:
-+	release_mem_region(kscandat->io_p_start, kscandat->io_p_size);
-+out2:
-+	input_free_device(kscandat->input);
-+out1:
-+	kfree(kscandat);
-+
-+	return error;
-+}
-+
-+static int __devexit lpc32xx_kscan_remove(struct platform_device *pdev)
-+{
-+	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
-+
-+	free_irq(platform_get_irq(pdev, 0), pdev);
-+	clk_put(kscandat->clk);
-+	iounmap(kscandat->kscan_base);
-+	release_mem_region(kscandat->io_p_start, kscandat->io_p_size);
-+	input_unregister_device(kscandat->input);
-+	kfree(kscandat->keymap);
-+	kfree(kscandat);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int lpc32xx_kscan_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
-+
-+	mutex_lock(&kscandat->input->mutex);
-+
-+	if (kscandat->input->users) {
-+		/* Clear IRQ and disable clock */
-+		writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
-+		clk_disable_unprepare(kscandat->clk);
-+	}
-+
-+	mutex_unlock(&kscandat->input->mutex);
-+	return 0;
-+}
-+
-+static int lpc32xx_kscan_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
-+
-+	mutex_lock(&kscandat->input->mutex);
-+
-+	if (kscandat->input->users) {
-+		/* Enable clock and clear IRQ */
-+		clk_prepare_enable(kscandat->clk);
-+		writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
-+	}
-+
-+	mutex_unlock(&kscandat->input->mutex);
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(lpc32xx_kscan_pm_ops, lpc32xx_kscan_suspend,
-+			 lpc32xx_kscan_resume);
-+
-+static const struct of_device_id lpc32xx_kscan_match[] = {
-+	{ .compatible = "nxp,lpc3220-key" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, lpc32xx_kscan_match);
-+
-+static struct platform_driver lpc32xx_kscan_driver = {
-+	.probe		= lpc32xx_kscan_probe,
-+	.remove		= __devexit_p(lpc32xx_kscan_remove),
-+	.driver		= {
-+		.name	= DRV_NAME,
-+		.owner	= THIS_MODULE,
-+		.pm	= &lpc32xx_kscan_pm_ops,
-+		.of_match_table = of_match_ptr(lpc32xx_kscan_match),
-+	}
-+};
-+
-+module_platform_driver(lpc32xx_kscan_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Kevin Wells <kevin.wells@nxp.com>");
-+MODULE_AUTHOR("Roland Stigge <stigge@antcom.de>");
-+MODULE_DESCRIPTION("Key scanner driver for LPC32XX devices");
++err_free_mem:
+ 	kfree(kscandat);
+ 
+ 	return error;
+@@ -306,10 +314,11 @@ static int __devexit lpc32xx_kscan_remove(struct platform_device *pdev)
+ {
+ 	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
+ 
+-	free_irq(platform_get_irq(pdev, 0), pdev);
++	free_irq(platform_get_irq(pdev, 0), kscandat);
+ 	clk_put(kscandat->clk);
+ 	iounmap(kscandat->kscan_base);
+-	release_mem_region(kscandat->io_p_start, kscandat->io_p_size);
++	release_mem_region(kscandat->iores->start,
++			   resource_size(kscandat->iores));
+ 	input_unregister_device(kscandat->input);
+ 	kfree(kscandat->keymap);
+ 	kfree(kscandat);
+@@ -322,16 +331,17 @@ static int lpc32xx_kscan_suspend(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
++	struct input_dev *input = kscandat->input;
+ 
+-	mutex_lock(&kscandat->input->mutex);
++	mutex_lock(&input->mutex);
+ 
+-	if (kscandat->input->users) {
++	if (input->users) {
+ 		/* Clear IRQ and disable clock */
+ 		writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
+ 		clk_disable_unprepare(kscandat->clk);
+ 	}
+ 
+-	mutex_unlock(&kscandat->input->mutex);
++	mutex_unlock(&input->mutex);
+ 	return 0;
+ }
+ 
+@@ -339,17 +349,20 @@ static int lpc32xx_kscan_resume(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct lpc32xx_kscan_drv *kscandat = platform_get_drvdata(pdev);
++	struct input_dev *input = kscandat->input;
++	int retval = 0;
+ 
+-	mutex_lock(&kscandat->input->mutex);
++	mutex_lock(&input->mutex);
+ 
+-	if (kscandat->input->users) {
++	if (input->users) {
+ 		/* Enable clock and clear IRQ */
+-		clk_prepare_enable(kscandat->clk);
+-		writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
++		retval = clk_prepare_enable(kscandat->clk);
++		if (retval == 0)
++			writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
+ 	}
+ 
+-	mutex_unlock(&kscandat->input->mutex);
+-	return 0;
++	mutex_unlock(&input->mutex);
++	return retval;
+ }
+ #endif
+ 
