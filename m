@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 3/5] fdtput: Add -c option to create nodes
-Date: Tue, 10 Jul 2012 05:56:46 -0700
-Message-ID: <1341925008-10627-3-git-send-email-sjg@chromium.org>
+Subject: [PATCH 5/5] fdtput: Add -p option to create subnodes along entire path
+Date: Tue, 10 Jul 2012 05:56:48 -0700
+Message-ID: <1341925008-10627-5-git-send-email-sjg@chromium.org>
 References: <1341925008-10627-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,140 +21,146 @@ Sender: "devicetree-discuss"
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This option allows the creation of new nodes in a dtb file. The syntax
-is:
-
-   fdtput -c <dtb_file> <node_path>
-
-The node_path contains the path of the node to be created. All path
-components up to the final one must exist already. The final one must
-not exist already.
+This option mimics mkdir's -p option. It automatically creates nodes
+as needed along the path provided. If the node already exists, no
+error is given.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- fdtput.c           |   52 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- tests/run_tests.sh |   13 +++++++++++++
- 2 files changed, 64 insertions(+), 1 deletions(-)
+ fdtput.c           |   59 ++++++++++++++++++++++++++++++++++++++++++++++++---
+ tests/run_tests.sh |   13 +++++++++++
+ 2 files changed, 68 insertions(+), 4 deletions(-)
 
 diff --git a/fdtput.c b/fdtput.c
-index eceb7f2..fc6b85e 100644
+index f217f1d..637d9fa 100644
 --- a/fdtput.c
 +++ b/fdtput.c
-@@ -31,6 +31,7 @@
- /* These are the operations we support */
- enum operation_t {
- 	OPER_WRITE_PROP,		/* Write a property in a node */
-+	OPER_CREATE_NODE,		/* Create a new node */
+@@ -39,6 +39,7 @@ struct display_info {
+ 	int type;		/* data type (s/i/u/x or 0 for default) */
+ 	int size;		/* data size (1/2/4) */
+ 	int verbose;		/* verbose output */
++	int auto_path;		/* automatically create all path components */
  };
  
- struct display_info {
-@@ -138,6 +139,46 @@ static int store_key_value(void *blob, const char *node_name,
- 	return 0;
+ 
+@@ -151,6 +152,47 @@ static int store_key_value(void *blob, const char *node_name,
  }
  
-+/**
-+ * Create a new node in the fdt.
+ /**
++ * Create paths as needed for all components of a path
 + *
-+ * This will overwrite the node_name string. Any error is reported.
-+ *
-+ * TODO: Perhaps create fdt_path_offset_namelen() so we don't need to do this.
++ * Any components of the path that do not exist are created. Errors are
++ * reported.
 + *
 + * @param blob		FDT blob to write into
-+ * @param node_name	Name of node to create
-+ * @return new node offset if found, or -1 on failure
++ * @param in_path	Path to process
++ * @return 0 if ok, -1 on error
 + */
-+static int create_node(void *blob, const char *node_name)
++static int create_paths(void *blob, const char *in_path)
 +{
-+	int node = 0;
-+	char *p;
++	const char *path = in_path;
++	const char *sep;
++	int node, offset = 0;
 +
-+	p = strrchr(node_name, '/');
-+	if (!p) {
-+		report_error(node_name, -FDT_ERR_BADPATH);
-+		return -1;
-+	}
-+	*p = '\0';
++	/* skip leading '/' */
++	while (*path == '/')
++		path++;
 +
-+	if (p > node_name) {
-+		node = fdt_path_offset(blob, node_name);
++	for (sep = path; *sep; path = sep + 1, offset = node) {
++		/* equivalent to strchrnul(), but it requires _GNU_SOURCE */
++		sep = strchr(path, '/');
++		if (!sep)
++			sep = path + strlen(path);
++
++		node = fdt_subnode_offset_namelen(blob, offset, path,
++				sep - path);
++		if (node == -FDT_ERR_NOTFOUND) {
++			node = fdt_add_subnode_namelen(blob, offset, path,
++						       sep - path);
++		}
 +		if (node < 0) {
-+			report_error(node_name, node);
++			report_error(path, sep - path, node);
 +			return -1;
 +		}
-+	}
-+
-+	node = fdt_add_subnode(blob, node, p + 1);
-+	if (node < 0) {
-+		report_error(p + 1, node);
-+		return -1;
 +	}
 +
 +	return 0;
 +}
 +
- static int do_fdtput(struct display_info *disp, const char *filename,
- 		    char **arg, int arg_count)
- {
-@@ -160,6 +201,10 @@ static int do_fdtput(struct display_info *disp, const char *filename,
++/**
+  * Create a new node in the fdt.
+  *
+  * This will overwrite the node_name string. Any error is reported.
+@@ -208,13 +250,19 @@ static int do_fdtput(struct display_info *disp, const char *filename,
+ 		 * store them into the property.
+ 		 */
+ 		assert(arg_count >= 2);
++		if (disp->auto_path && create_paths(blob, *arg))
++			return -1;
+ 		if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
  			store_key_value(blob, *arg, arg[1], value, len))
  			ret = -1;
  		break;
-+	case OPER_CREATE_NODE:
-+		for (; ret >= 0 && arg_count--; arg++)
-+			ret = create_node(blob, *arg);
-+		break;
+ 	case OPER_CREATE_NODE:
+-		for (; ret >= 0 && arg_count--; arg++)
+-			ret = create_node(blob, *arg);
++		for (; ret >= 0 && arg_count--; arg++) {
++			if (disp->auto_path)
++				ret = create_paths(blob, *arg);
++			else
++				ret = create_node(blob, *arg);
++		}
+ 		break;
  	}
  	if (ret >= 0)
- 		ret = utilfdt_write(filename, blob);
-@@ -175,7 +220,9 @@ static const char *usage_msg =
- 	"\n"
- 	"Usage:\n"
- 	"	fdtput <options> <dt file> <node> <property> [<value>...]\n"
-+	"	fdtput -c <dt file> [<node>...]\n"
+@@ -234,6 +282,7 @@ static const char *usage_msg =
+ 	"	fdtput -c <dt file> [<node>...]\n"
  	"Options:\n"
-+	"\t-c\tCreate nodes if they don't already exist\n"
+ 	"\t-c\tCreate nodes if they don't already exist\n"
++	"\t-p\tAutomatically create nodes as needed through the whole path\n"
  	"\t-t <type>\tType of data\n"
  	"\t-v\t\tVerbose: display each value decoded from command line\n"
  	"\t-h\t\tPrint this help\n\n"
-@@ -199,7 +246,7 @@ int main(int argc, char *argv[])
+@@ -257,7 +306,7 @@ int main(int argc, char *argv[])
  	disp.size = -1;
  	disp.oper = OPER_WRITE_PROP;
  	for (;;) {
--		int c = getopt(argc, argv, "ht:v");
-+		int c = getopt(argc, argv, "cht:v");
+-		int c = getopt(argc, argv, "cht:v");
++		int c = getopt(argc, argv, "chpt:v");
  		if (c == -1)
  			break;
  
-@@ -213,6 +260,9 @@ int main(int argc, char *argv[])
- 		 * - expand fdt if value doesn't fit
- 		 */
- 		switch (c) {
-+		case 'c':
-+			disp.oper = OPER_CREATE_NODE;
-+			break;
+@@ -277,7 +326,9 @@ int main(int argc, char *argv[])
  		case 'h':
  		case '?':
  			usage(NULL);
+-
++		case 'p':
++			disp.auto_path = 1;
++			break;
+ 		case 't':
+ 			if (utilfdt_decode_type(optarg, &disp.type,
+ 					&disp.size))
 diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 073a833..acec2a5 100755
+index acec2a5..b825b81 100755
 --- a/tests/run_tests.sh
 +++ b/tests/run_tests.sh
-@@ -539,6 +539,19 @@ fdtput_tests () {
-     # This should be larger than available space in the fdt
-     run_wrap_error_test $DTPUT $dtb /randomnode blob -ts "$(cat $text $text)"
+@@ -552,6 +552,19 @@ fdtput_tests () {
+     run_wrap_error_test $DTPUT $dtb -c /chosen
+     run_wrap_error_test $DTPUT $dtb -c /chosen/son
  
-+    # Start again with a fresh dtb
-+    run_dtc_test -O dtb -p $(stat -c %s $text) -o $dtb $dts
++    # Automatic node creation
++    run_wrap_test $DTPUT $dtb -cp /blackadder/the-second/turnip \
++	/blackadder/the-second/potato
++    run_fdtput_test 1000 $dtb /blackadder/the-second/turnip cost "" 1000
++    run_fdtput_test "fine wine" $dtb /blackadder/the-second/potato drink \
++	"-ts" "fine wine"
++    run_wrap_test $DTPUT $dtb -p /you/are/drunk/sir/winston slurp -ts twice
++    run_wrap_error_test $DTPUT $dtb -cp "$(cat $text $text)/longish"
 +
-+    # Node creation
-+    run_wrap_error_test $DTPUT $dtb -c /baldrick sod
-+    run_wrap_test $DTPUT $dtb -c /chosen/son /chosen/daughter
-+    run_fdtput_test "eva" $dtb /chosen/daughter name "" -ts "eva"
-+    run_fdtput_test "adam" $dtb /chosen/son name "" -ts "adam"
-+
-+    # Not allowed to create an existing node
-+    run_wrap_error_test $DTPUT $dtb -c /chosen
-+    run_wrap_error_test $DTPUT $dtb -c /chosen/son
++    # Allowed to create an existing node with -p
++    run_wrap_test $DTPUT $dtb -cp /chosen
++    run_wrap_test $DTPUT $dtb -cp /chosen/son
 +
      # TODO: Add tests for verbose mode?
  }
