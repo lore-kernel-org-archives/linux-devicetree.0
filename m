@@ -1,69 +1,95 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH] pwm: add lpc32xx pwm support
-Date: Tue, 10 Jul 2012 10:00:03 +0200
-Message-ID: <20120710080003.GA30346@avionic-0098.adnet.avionic-design.de>
-References: <1341862074-9240-1-git-send-email-aletes.xgr@gmail.com>
- <20120710064853.GA28840@avionic-0098.adnet.avionic-design.de>
- <4FFBE018.9060108@antcom.de>
+From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Subject: Re: [PATCH v1 10/11] arm/dts: omap: Add usb_otg and glue data
+Date: Tue, 10 Jul 2012 13:43:57 +0530
+Message-ID: <CAAe_U6LqF9aZLZgHQYhX6VXXB41HUNmZgXfOwe9V9VtWVe+46g@mail.gmail.com>
+References: <1340884267-28908-1-git-send-email-kishon@ti.com>
+ <1340884267-28908-11-git-send-email-kishon@ti.com>
+ <4FFBCB39.1010809@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FFBE018.9060108@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4FFBCB39.1010809@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: linux@arm.linux.org.uk, b-cousson@ti.com, linux-doc@vger.kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, hvaibhav@ti.com, balbi@ti.com, rob@landley.net, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 10, 2012 at 11:57 AM, Rajendra Nayak <rnayak@ti.com> wrote:
+> On Thursday 28 June 2012 05:21 PM, Kishon Vijay Abraham I wrote:
+>>
+>> Add usb otg data node in omap4/omap3 device tree file. Also update
+>> the node with board specific setting in omapx-<board>.dts file.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I<kishon@ti.com>
+>> ---
+>>   arch/arm/boot/dts/omap3-beagle.dts |    6 ++++++
+>>   arch/arm/boot/dts/omap3-evm.dts    |    6 ++++++
+>>   arch/arm/boot/dts/omap3.dtsi       |    8 ++++++++
+>>   arch/arm/boot/dts/omap4-panda.dts  |    6 ++++++
+>>   arch/arm/boot/dts/omap4-sdp.dts    |    6 ++++++
+>>   arch/arm/boot/dts/omap4.dtsi       |    8 ++++++++
+>>   6 files changed, 40 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap3-beagle.dts
+>> b/arch/arm/boot/dts/omap3-beagle.dts
+>> index 5b4506c..f3d7076 100644
+>> --- a/arch/arm/boot/dts/omap3-beagle.dts
+>> +++ b/arch/arm/boot/dts/omap3-beagle.dts
+>> @@ -67,3 +67,9 @@
+>>   &mmc3 {
+>>         status = "disable";
+>>   };
+>> +
+>> +&usb_otg_hs {
+>> +       interface_type =<0>;
+>> +       mode =<3>;
+>> +       power =<50>;
+>> +};
+>> diff --git a/arch/arm/boot/dts/omap3-evm.dts
+>> b/arch/arm/boot/dts/omap3-evm.dts
+>> index 2eee16e..8963b3d 100644
+>> --- a/arch/arm/boot/dts/omap3-evm.dts
+>> +++ b/arch/arm/boot/dts/omap3-evm.dts
+>> @@ -18,3 +18,9 @@
+>>                 reg =<0x80000000 0x10000000>; /* 256 MB */
+>>         };
+>>   };
+>> +
+>> +&usb_otg_hs {
+>> +       interface_type =<0>;
+>> +       mode =<3>;
+>> +       power =<50>;
+>> +};
+>> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+>> index 99474fa..2f565d6 100644
+>> --- a/arch/arm/boot/dts/omap3.dtsi
+>> +++ b/arch/arm/boot/dts/omap3.dtsi
+>> @@ -215,5 +215,13 @@
+>>                         compatible = "ti,omap3-hsmmc";
+>>                         ti,hwmods = "mmc3";
+>>                 };
+>> +
+>> +               usb_otg_hs: usb_otg_hs@4a0ab000 {
+>> +                       compatible = "ti,musb-omap2430";
+>
+>
+> this compatible doesn't seem right in omap3.dtsi. Same with
+> the below entry in omap4.dtsi.
+> See other IP blocks which are reused across OMAP2/3/4 on
+> how the compatible for those are handled.
 
-On Tue, Jul 10, 2012 at 09:56:08AM +0200, Roland Stigge wrote:
-> Hi,
->=20
-> On 07/10/2012 08:48 AM, Thierry Reding wrote:
-> >> --- /dev/null +++
-> >> b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt @@ -0,0
-> >> +1,12 @@ +LPC32XX PWM controller + +Required properties: +-
-> >> compatible: should be "nxp,lpc3220-pwm"
-> >=20
-> > Does the compatible have to be lpc3220-pwm? Can't it be lpc32xx-pwm
-> > to match the driver and binding names?
->=20
-> When creating the other NXP LPC compatible strings, we agreed on
-> taking the first LPC32xx chip, i.e., lpc3220, as prefix. (There are 4
-> of them, -20, -30, -40, -50, most of them supporting things available
-> in lpc3220.)
->=20
-> So lpc3220-pwm looks good here.
+Ok. So it should be like *ti,omap4-musb*, *ti,omap3-musb*?
 
-I see, that makes sense.
-
-Thierry
-
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP++EDAAoJEN0jrNd/PrOhXSEQAKQTTAAXEG/IVSInc3NfjW5d
-O03+DhBpKzIgivtXSrRQmrKbxKRWZZom5bgUrN/sYy29x4qFelP0J8g+lgUrCDcz
-0SG5CmshOuq5oAv8dFIHM0Mxj8lxINgy5Htvf8w/7eJFmK1HgojqbXk/Yg6R69K8
-2ynmXitT419jHTC+clw1nS3gchwvpc3SSc5pyqxsJt8PuFQKfaSD0ZNwolFg135q
-7YtozCT+AkLQ1pFnx0S7Z6mu2BbfnHsUDJRURCLVxVIxG8zduBUbBct6F84dGFRX
-9soZNqXSXKWQzm7YTgZwW0uRC9b95rkMveJBrcvdygPvVZpeE1+0gHV9lwQY2GRB
-/f8UrKElLbijW1Fvyz6TcPhESYPiW37tY1xZ+ulSdV48u7sMz18fb4ZOe/Jh2G7b
-AKgm5mlkvJ0yzA7UeSK7jm+sTErqlD3o4VbQMToUA2qsSB9VvDByiVWFnST8arz6
-gjZNR+5nToAtbEQw+dxcIx4pjyOWuKdSAAoNrnOfLTz16x96ablmnPAU2J5fwLW4
-XzmaGykOgEJYveUqoDEmORtT0uF+FCajbnABBKJt4gcDLwW7oX98kTvL7Qv8hLke
-cckiah+2EzuiT0LaaHD01Ih+Pg5gZEwZbAFgodaWkNAzenj5za1bGihQHaCCWnat
-JaGg2TP6H8btUsd8Rt4t
-=ZuHh
------END PGP SIGNATURE-----
-
---PEIAKu/WMn1b1Hv9--
+Thanks
+Kishon
