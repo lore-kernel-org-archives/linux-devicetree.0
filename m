@@ -1,48 +1,31 @@
-From: Chandrabhanu Mahapatra <cmahapatra@ti.com>
-Subject: [PATCH 4/4] gpio/pca953x: register the device irq using appropriate api's
-Date: Tue, 10 Jul 2012 19:06:19 +0530
-Message-ID: <d0bd829760aba6c8e686f3b864b3831aa6bdcaa1.1341925681.git.cmahapatra@ti.com>
-References: <cover.1341925681.git.cmahapatra@ti.com>
+From: Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v4 0/5] ARM: topology: set the capacity of each cores
+	for big.LITTLE
+Date: Tue, 10 Jul 2012 15:42:09 +0200
+Message-ID: <1341927729.3462.131.camel@twins>
+References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
+	<1341919622.3462.124.camel@twins>
+	<CAKfTPtC0BcidJ2ga9c2fdWjrEsfXH48QtSnjv0YOCv7-k3K-Ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1341925681.git.cmahapatra@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, linus.walleij@stericsson.com, rob.herring@calxeda.com
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, leed.aguilar@ti.com, Chandrabhanu Mahapatra <cmahapatra@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <CAKfTPtC0BcidJ2ga9c2fdWjrEsfXH48QtSnjv0YOCv7-k3K-Ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Leed Aguilar <leed.aguilar@ti.com>
-
-Here, the implementation of registration of requested IRQs has been corrected
-with appropiate api's. The gpio number is requested through gpio_request_one()
-API and conversion of the gpio to irq is done using the gpio_to_irq() API.
-
-Change-Id: I964145e2a280d6553ea2c05ea8049810a1983930
-Signed-off-by: Leed Aguilar <leed.aguilar@ti.com>
-Signed-off-by: Chandrabhanu Mahapatra <cmahapatra@ti.com>
----
- drivers/gpio/gpio-pca953x.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index c3ca7d8..27486da 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -509,7 +509,13 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- #endif
- 		}
- 
--		ret = request_threaded_irq(client->irq,
-+		ret = gpio_request_one(client->irq, GPIOF_IN, "pca953x");
-+		if (ret) {
-+			dev_err(&client->dev, "gpio request failure\n");
-+			goto out_failed;
-+		}
-+
-+		ret = request_threaded_irq(gpio_to_irq(client->irq),
- 					   NULL,
- 					   pca953x_irq_handler,
- 					   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
--- 
-1.7.10
+On Tue, 2012-07-10 at 14:35 +0200, Vincent Guittot wrote:
+> 
+> May be the last one which enable ARCH_POWER should also go into tip ?
+> 
+OK, I can take it.
