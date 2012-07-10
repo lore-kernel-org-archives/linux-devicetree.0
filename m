@@ -1,238 +1,57 @@
-From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: [PATCH v3] PWM: add lpc32xx PWM support
-Date: Tue, 10 Jul 2012 11:38:10 -0300
-Message-ID: <1341931090-18296-1-git-send-email-aletes.xgr@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>, Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 REBASE 6/9] USB: notify phy when root hub port connect
+ change
+Date: Tue, 10 Jul 2012 22:53:04 +0800
+Message-ID: <20120710145302.GA2789@richard-laptop>
+References: <20120710014450.GF26888@b20223-02.ap.freescale.net>
+ <Pine.LNX.4.44L0.1207101021580.1308-100000@iolanthe.rowland.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1207101021580.1308-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add lpc32xx SOC PWM driver.
+On Tue, Jul 10, 2012 at 10:24:07AM -0400, Alan Stern wrote:
+> On Tue, 10 Jul 2012, Richard Zhao wrote:
+> 
+> > > > @@ -4037,6 +4038,13 @@ static void hub_port_connect_change(struct usb_hub *hub, int port1,
+> > > >  		}
+> > > >  	}
+> > > >  
+> > > > +	if (unlikely(hcd->phy && !hdev->parent)) {
+> > > 
+> > > Why is this "unlikely"?  And why mark it as such, is this a "fast path"
+> > > that needs the compiler to know this hint to optimize things here?
+> > > 
+> > > Please don't use likely() or unlikely() except in places it really is
+> > > needed, _and_ you have measured the difference.  Have you done so in
+> > > this place?
+> > It's from a comment by Alan Stern.
+> > http://www.spinics.net/lists/linux-usb/msg64987.html
+> 
+> That comment was made in a somewhat different context.  At the time 
+> the code was part of an interrupt handler; now it isn't.
+> 
+> > Actually, for my board, it's not unlikely. But for others which don't
+> > have notify_connect/disconnect, it's unlikely.
+> > 
+> > Because it's not unlikely for all boards, I prefer remove "unlikely".
+> 
+> It's no longer a big deal one way or another.  I don't care about the 
+> "unlikely" because it's on a cold path running in process context.  Go 
+> ahead and remove it.
+Ok. I'll remove it. 
 
-Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
----
-Changes since v2:
-* Update commit message
-* Change the driver to handle the two PWM's of the SOC
-* Disable clock on removal
-
-Changes since v1:
-* Style fixes
-* Better error handling
-* Improved Kconfig and DT descriptions
-
- .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |   12 ++
- drivers/pwm/Kconfig                                |   10 ++
- drivers/pwm/Makefile                               |    1 +
- drivers/pwm/pwm-lpc32xx.c                          |  148 ++++++++++++++++++++
- 4 files changed, 171 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
- create mode 100644 drivers/pwm/pwm-lpc32xx.c
-
-diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-new file mode 100644
-index 0000000..cfe1db3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-@@ -0,0 +1,12 @@
-+LPC32XX PWM controller
-+
-+Required properties:
-+- compatible: should be "nxp,lpc3220-pwm"
-+- reg: physical base address and length of the controller's registers
-+
-+Examples:
-+
-+pwm@0x4005C000 {
-+	compatible = "nxp,lpc3220-pwm";
-+	reg = <0x4005C000 0x8>;
-+};
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 0b2800f..94e176e 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -28,6 +28,16 @@ config PWM_IMX
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx.
- 
-+config PWM_LPC32XX
-+	tristate "LPC32XX PWM support"
-+	depends on ARCH_LPC32XX
-+	help
-+	  Generic PWM framework driver for LPC32XX. The LPC32XX SOC has two
-+	  PWM controllers.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-lpc32xx.
-+
- config PWM_MXS
- 	tristate "Freescale MXS PWM support"
- 	depends on ARCH_MXS && OF
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index cec2500..5459702 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -1,6 +1,7 @@
- obj-$(CONFIG_PWM)		+= core.o
- obj-$(CONFIG_PWM_BFIN)		+= pwm-bfin.o
- obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
-+obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
- obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
- obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-diff --git a/drivers/pwm/pwm-lpc32xx.c b/drivers/pwm/pwm-lpc32xx.c
-new file mode 100644
-index 0000000..adb87f0
---- /dev/null
-+++ b/drivers/pwm/pwm-lpc32xx.c
-@@ -0,0 +1,148 @@
-+/*
-+ * Copyright 2012 Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+
-+struct lpc32xx_pwm_chip {
-+	struct pwm_chip chip;
-+	struct clk *clk;
-+	void __iomem *base;
-+};
-+
-+#define PWM_ENABLE	(1 << 31)
-+#define PWM_RELOADV(x)	(((x) & 0xFF) << 8)
-+#define PWM_DUTY(x)	((x) & 0xFF)
-+
-+#define to_lpc32xx_pwm_chip(_chip) \
-+	container_of(_chip, struct lpc32xx_pwm_chip, chip)
-+
-+static int lpc32xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      int duty_ns, int period_ns)
-+{
-+	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
-+	unsigned long long c;
-+	int period_cycles, duty_cycles;
-+
-+	c = clk_get_rate(lpc32xx->clk) / 256;
-+	c = c * period_ns;
-+	do_div(c, NSEC_PER_SEC);
-+
-+	/* Handle high and low extremes */
-+	if (c == 0)
-+		c = 1;
-+	if (c > 255)
-+		c = 0; /* 0 set division by 256 */
-+	period_cycles = c;
-+
-+	c = 256 * duty_ns;
-+	do_div(c, period_ns);
-+	duty_cycles = c;
-+
-+	writel(PWM_ENABLE | PWM_RELOADV(period_cycles) | PWM_DUTY(duty_cycles),
-+		lpc32xx->base + (pwm->hwpwm << 2));
-+
-+	return 0;
-+}
-+
-+static int lpc32xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
-+
-+	return clk_enable(lpc32xx->clk);
-+}
-+
-+static void lpc32xx_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
-+
-+	writel(0, lpc32xx->base + (pwm->hwpwm << 2));
-+	clk_disable(lpc32xx->clk);
-+}
-+
-+static const struct pwm_ops lpc32xx_pwm_ops = {
-+	.config = lpc32xx_pwm_config,
-+	.enable = lpc32xx_pwm_enable,
-+	.disable = lpc32xx_pwm_disable,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int lpc32xx_pwm_probe(struct platform_device *pdev)
-+{
-+	struct lpc32xx_pwm_chip *lpc32xx;
-+	struct resource *res;
-+	int ret;
-+
-+	lpc32xx = devm_kzalloc(&pdev->dev, sizeof(*lpc32xx), GFP_KERNEL);
-+	if (!lpc32xx)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -EINVAL;
-+
-+	lpc32xx->base = devm_request_and_ioremap(&pdev->dev, res);
-+	if (!lpc32xx->base)
-+		return -EADDRNOTAVAIL;
-+
-+	lpc32xx->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(lpc32xx->clk))
-+		return PTR_ERR(lpc32xx->clk);
-+
-+	lpc32xx->chip.dev = &pdev->dev;
-+	lpc32xx->chip.ops = &lpc32xx_pwm_ops;
-+	lpc32xx->chip.npwm = 2;
-+
-+	ret = pwmchip_add(&lpc32xx->chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to add PWM chip, error %d\n", ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, lpc32xx);
-+
-+	return 0;
-+}
-+
-+static int __devexit lpc32xx_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lpc32xx_pwm_chip *lpc32xx = platform_get_drvdata(pdev);
-+
-+	clk_disable(lpc32xx->clk);
-+	return pwmchip_remove(&lpc32xx->chip);
-+}
-+
-+static struct of_device_id lpc32xx_pwm_dt_ids[] = {
-+	{ .compatible = "nxp,lpc3220-pwm", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, lpc32xx_pwm_dt_ids);
-+
-+static struct platform_driver lpc32xx_pwm_driver = {
-+	.driver = {
-+		.name = "lpc32xx-pwm",
-+		.of_match_table = of_match_ptr(lpc32xx_pwm_dt_ids),
-+	},
-+	.probe = lpc32xx_pwm_probe,
-+	.remove = __devexit_p(lpc32xx_pwm_remove),
-+};
-+module_platform_driver(lpc32xx_pwm_driver);
-+
-+MODULE_ALIAS("platform:lpc32xx-pwm");
-+MODULE_AUTHOR("Alexandre Pereira da Silva <aletes.xgr@gmail.com>");
-+MODULE_DESCRIPTION("LPC32XX PWM Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.10
+Thanks
+Richard
+> 
+> Alan Stern
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
