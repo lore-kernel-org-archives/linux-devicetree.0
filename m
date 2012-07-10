@@ -1,286 +1,306 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
-Date: Tue, 10 Jul 2012 14:10:44 +0200
-Message-ID: <CAPnjgZ2dj5pcuGhM2_2nwwnhhcCmKhyi6jVHS7Xf1f682i_j_w@mail.gmail.com>
-References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
- <20120309014441.8236B3E0903@localhost>
- <20120309100435.GN27213@game.jcrosoft.org>
- <20120309162638.92E813E0880@localhost>
- <20120309163608.GQ27213@game.jcrosoft.org>
- <4F5E50DA.6080000@freescale.com>
- <20120313031739.GA18320@game.jcrosoft.org>
- <20120313041652.563B63E0536@localhost>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2] pwm: add lpc32xx pwm support
+Date: Tue, 10 Jul 2012 14:19:10 +0200
+Message-ID: <20120710121910.GA8959@avionic-0098.adnet.avionic-design.de>
+References: <1341921212-11953-1-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5266629284117132324=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120313041652.563B63E0536@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1341921212-11953-1-git-send-email-aletes.xgr@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Cc: Roland Stigge <stigge@antcom.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---===============5266629284117132324==
-Content-Type: multipart/alternative; boundary=e89a8fb20532bb17a104c4789e90
 
---e89a8fb20532bb17a104c4789e90
-Content-Type: text/plain; charset=ISO-8859-1
-
-Hi,
-
-On Tue, Mar 13, 2012 at 5:16 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>wrote:
-
-> On Tue, 13 Mar 2012 04:17:39 +0100, Jean-Christophe PLAGNIOL-VILLARD <
-> plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > On 14:39 Mon 12 Mar     , Scott Wood wrote:
-> > > On 03/09/2012 10:36 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > > >>>> Ugh.  so any value other than 1 returns false?  I think that will
-> surprise
-> > > >>>> most people.
-> > > >>>>
-> > > >>>> I don't like this api or binding.  If it is a bool property, then
-> why isn't
-> > > >>>> simply testing for the property existance sufficient?
-> > > >>> no if you want to disable it
-> > > >>>
-> > > >>> if a bool is define in the dtsi and want to disable it int the dts
-> > > >>>
-> > > >>> if you we can do the the invert
-> > > >>>
-> > > >>> if !0 => true
-> > > >>>
-> > > >>> is-ok;                  => true
-> > > >>> is-ok = <val != 0>;     => true
-> > > >>> is-ok = <0>;            => false
-> > > >>
-> > > >> This is a failure of the dtc tool, not the binding.  Accepting this
-> binding
-> > > >> means we have to live with it for a very long time.  It needs to be
-> fixed
-> > > >> in dtc instead so that properties can be deleted instead of only
-> modified.
-> > > > I understand your idea but today if you put and value in the
-> property it's true.
-> > > >
-> > > > So is-ok = <0>; is true also which is illogical as in any language a
-> boolean is
-> > > > true (1) or false (0). When I read the property I will understand
-> false not true
-> > >
-> > > You could say similar things about is-ok = "no" or is-ok = "" or is-ok
-> =
-> > > "I'd rather you didn't"... it's expected that violating the binding may
-> > > produce illogical results.
-> > today is most of the binding people use a number whe the want to be able
-> to
-> > delete it and it's the same in most of the promgramming language
->
-> It isn't yet a big pain point, so there isn't time pressure here.  Fixing
-> the tool
-> is the better solution, and since the kernel carries a copy of the tool we
-> don't
-> need to worry about adding a feature that isn't available by the dtc
-> packaged by
-> a distribution.
->
-> Fixing the tool is the correct thing to do.
->
-
-I just wanted to pick up on this thread. Now in the kernel, absence of a
-property indicates false, and presence indicates true. This is a kernel
-convention, nothing to do with the dtb format. I think it is useful to
-support a boolean with a non-null value which can be 0, meaning true as
-Jean-Christophe says.
-
-My reasons are:
-
-1. dtc does not have a way to delete a property and it isn't clear what
-syntax could be used there. It also seems a little brittle to delete a
-property in one place and define it in another (ordering? confusion when
-people can't work out why it has gone?). So not only can dtc not do this,
-but I'm not sure that it should.
-
-2. fdtput allows updating a property. It is pretty easy to do something
-like 'fdtput file.dtb /node propname $value' where value is 0 or 1. To use
-the current binding we need to either do:
-
-if [[ $value == 0 ]]; then
-   fdtput -d file.dtb /node propname   # new function to delete a property?
-else
-   fdtput file.dtb /node propname 1
-fi
-
-or perhaps something like:
-
-   fdtput -B file.dtb /node propname ${value}
-
-where -B is a new option meaning either create an empty property, or delete
-any property it finds, based on the value being 0 or non-zero.
-
-3. Discoverability: it is nice to be able to see the possible options, even
-if disabled. In particular, if a boolean value is true, and you later
-decide with fdtput to turn it off, you effectively remove all trace of it.
-This could be confusing for those who are looking for available options.
-
-Arguably these issues could be fixed if we introduced some sort of type
-hinting into the dtb file format, but that seems a long shot. I am not sure
-that modifying the tools to support this arguable odd 'present/absent'
-boolean binding is the right approach.
-
-So I think Jean-Christophe's idea has significant merit.
-
-Thoughts?
-
-Regards,
-Simon
-
->
-> g.
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
-
---e89a8fb20532bb17a104c4789e90
-Content-Type: text/html; charset=ISO-8859-1
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,<br><br><div class=3D"gmail_quote">On Tue, Mar 13, 2012 at 5:16 AM, Gran=
-t Likely <span dir=3D"ltr">&lt;<a href=3D"mailto:grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org"=
- target=3D"_blank">grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org</a>&gt;</span> wrote:<br><bloc=
-kquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #cc=
-c solid;padding-left:1ex">
-<div class=3D"HOEnZb"><div class=3D"h5">On Tue, 13 Mar 2012 04:17:39 +0100,=
- Jean-Christophe PLAGNIOL-VILLARD &lt;<a href=3D"mailto:plagnioj@jcrosoft.c=
-om">plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org</a>&gt; wrote:<br>
-&gt; On 14:39 Mon 12 Mar =A0 =A0 , Scott Wood wrote:<br>
-&gt; &gt; On 03/09/2012 10:36 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:<b=
-r>
-&gt; &gt; &gt;&gt;&gt;&gt; Ugh. =A0so any value other than 1 returns false?=
- =A0I think that will surprise<br>
-&gt; &gt; &gt;&gt;&gt;&gt; most people.<br>
-&gt; &gt; &gt;&gt;&gt;&gt;<br>
-&gt; &gt; &gt;&gt;&gt;&gt; I don&#39;t like this api or binding. =A0If it i=
-s a bool property, then why isn&#39;t<br>
-&gt; &gt; &gt;&gt;&gt;&gt; simply testing for the property existance suffic=
-ient?<br>
-&gt; &gt; &gt;&gt;&gt; no if you want to disable it<br>
-&gt; &gt; &gt;&gt;&gt;<br>
-&gt; &gt; &gt;&gt;&gt; if a bool is define in the dtsi and want to disable =
-it int the dts<br>
-&gt; &gt; &gt;&gt;&gt;<br>
-&gt; &gt; &gt;&gt;&gt; if you we can do the the invert<br>
-&gt; &gt; &gt;&gt;&gt;<br>
-&gt; &gt; &gt;&gt;&gt; if !0 =3D&gt; true<br>
-&gt; &gt; &gt;&gt;&gt;<br>
-&gt; &gt; &gt;&gt;&gt; is-ok; =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=3D&gt; tr=
-ue<br>
-&gt; &gt; &gt;&gt;&gt; is-ok =3D &lt;val !=3D 0&gt;; =A0 =A0 =3D&gt; true<b=
-r>
-&gt; &gt; &gt;&gt;&gt; is-ok =3D &lt;0&gt;; =A0 =A0 =A0 =A0 =A0 =A0=3D&gt; =
-false<br>
-&gt; &gt; &gt;&gt;<br>
-&gt; &gt; &gt;&gt; This is a failure of the dtc tool, not the binding. =A0A=
-ccepting this binding<br>
-&gt; &gt; &gt;&gt; means we have to live with it for a very long time. =A0I=
-t needs to be fixed<br>
-&gt; &gt; &gt;&gt; in dtc instead so that properties can be deleted instead=
- of only modified.<br>
-&gt; &gt; &gt; I understand your idea but today if you put and value in the=
- property it&#39;s true.<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; So is-ok =3D &lt;0&gt;; is true also which is illogical as i=
-n any language a boolean is<br>
-&gt; &gt; &gt; true (1) or false (0). When I read the property I will under=
-stand false not true<br>
-&gt; &gt;<br>
-&gt; &gt; You could say similar things about is-ok =3D &quot;no&quot; or is=
--ok =3D &quot;&quot; or is-ok =3D<br>
-&gt; &gt; &quot;I&#39;d rather you didn&#39;t&quot;... it&#39;s expected th=
-at violating the binding may<br>
-&gt; &gt; produce illogical results.<br>
-&gt; today is most of the binding people use a number whe the want to be ab=
-le to<br>
-&gt; delete it and it&#39;s the same in most of the promgramming language<b=
-r>
-<br>
-</div></div>It isn&#39;t yet a big pain point, so there isn&#39;t time pres=
-sure here. =A0Fixing the tool<br>
-is the better solution, and since the kernel carries a copy of the tool we =
-don&#39;t<br>
-need to worry about adding a feature that isn&#39;t available by the dtc pa=
-ckaged by<br>
-a distribution.<br>
-<br>
-Fixing the tool is the correct thing to do.<br></blockquote><div><br></div>=
-<div>I just wanted to pick up on this thread. Now in the kernel, absence of=
- a property indicates false, and presence indicates true. This is a kernel =
-convention, nothing to do with the dtb format. I think it is useful to supp=
-ort a boolean with a non-null value which can be 0, meaning true as Jean-Ch=
-ristophe says.</div>
-<div><br></div><div>My reasons are:</div><div><br></div><div>1. dtc does no=
-t have a way to delete a property and it isn&#39;t clear what syntax could =
-be used there. It also seems a little brittle to delete a property in one p=
-lace and define it in another (ordering? confusion when people can&#39;t wo=
-rk out why it has gone?). So not only can dtc not do this, but I&#39;m not =
-sure that it should.</div>
-<div><br></div><div>2. fdtput allows updating a property. It is pretty easy=
- to do something like &#39;fdtput file.dtb /node propname $value&#39; where=
- value is 0 or 1. To use the current binding we need to either do:</div>
-<div><br></div><div>if [[ $value =3D=3D 0 ]]; then</div><div>=A0 =A0fdtput =
--d file.dtb /node=A0propname =A0 # new function to delete a property?</div>=
-<div>else</div><div>=A0 =A0fdtput file.dtb /node=A0propname 1=A0</div><div>=
-fi</div><div><br>
-</div><div>or perhaps something like:</div><div><br></div><div><div>=A0 =A0=
-fdtput -B file.dtb /node=A0propname ${value} =A0=A0</div><div><br></div><di=
-v>where -B is a new option meaning either create an empty property, or dele=
-te any property it finds, based on the value being 0 or non-zero.</div>
-</div><div><br></div><div>3. Discoverability: it is nice to be able to see =
-the possible options, even if disabled. In particular, if a boolean value i=
-s true, and you later decide with fdtput to turn it off, you effectively re=
-move all trace of it. This could be confusing for those who are looking for=
- available options.</div>
-<div><br></div><div>Arguably these issues could be fixed if we introduced s=
-ome sort of type hinting into the dtb file format, but that seems a long sh=
-ot. I am not sure that modifying the tools to support this arguable odd &#3=
-9;present/absent&#39; boolean binding is the right approach.</div>
-<div><br></div><div>So I think=A0Jean-Christophe&#39;s idea has significant=
- merit.</div><div><br></div><div>Thoughts?</div><div><br></div><div>Regards=
-,</div><div>Simon=A0</div><blockquote class=3D"gmail_quote" style=3D"margin=
-:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+On Tue, Jul 10, 2012 at 08:53:32AM -0300, Alexandre Pereira da Silva wrote:
+> Add lpc32xx soc pwm driver.
 
-<div class=3D"HOEnZb"><div class=3D"h5"><br>
-g.<br>
-<br>
-_______________________________________________<br>
-devicetree-discuss mailing list<br>
-<a href=3D"mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org">devicetree-discuss@l=
-ists.ozlabs.org</a><br>
-<a href=3D"https://lists.ozlabs.org/listinfo/devicetree-discuss" target=3D"=
-_blank">https://lists.ozlabs.org/listinfo/devicetree-discuss</a><br>
-</div></div></blockquote></div><br>
+The subject and this still need fixing (soc -> SOC, pwm -> PWM).
 
---e89a8fb20532bb17a104c4789e90--
+> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+> ---
+> Changes since v1:
+> * Style fixes
+> * Better error handling
+> * Improved Kconfig and DT descriptions
+>=20
+>  .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |   17 +++
+>  drivers/pwm/Kconfig                                |   11 ++
+>  drivers/pwm/Makefile                               |    1 +
+>  drivers/pwm/pwm-lpc32xx.c                          |  150 ++++++++++++++=
+++++++
+>  4 files changed, 179 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+>  create mode 100644 drivers/pwm/pwm-lpc32xx.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Docu=
+mentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+> new file mode 100644
+> index 0000000..e7720e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+> @@ -0,0 +1,17 @@
+> +LPC32XX PWM controller
+> +
+> +Required properties:
+> +- compatible: should be "nxp,lpc3220-pwm"
+> +- reg: physical base address and length of the controller's registers
+> +
+> +Examples:
+> +
+> +pwm1: pwm@0x4005C000 {
+> +	compatible =3D "nxp,lpc3220-pwm";
+> +	reg =3D <0x4005C000 0x4>;
+> +};
+> +
+> +pwm2: pwm@0x4005C004 {
+> +	compatible =3D "nxp,lpc3220-pwm";
+> +	reg =3D <0x4005C004 0x4>;
+> +};
 
---===============5266629284117132324==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+The PWM framework can support chips with multiple PWM devices. The
+LPC32xx seems to fit this model quite nicely, so you should instead
+instantiate one device and set npwm to 2.
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 0b2800f..ec2ac70 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -28,6 +28,17 @@ config PWM_IMX
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-imx.
+> =20
+> +config PWM_LPC32XX
+> +	tristate "LPC32XX PWM support"
+> +	depends on ARCH_LPC32XX
+> +	help
+> +	  Generic PWM framework driver for LPC32XX. The LPC32XX SOC has two
+> +	  PWM controllers.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-lpc32xx.
+> +
+> +
 
---===============5266629284117132324==--
+There's a gratuitous blank line here, please remove.
+
+>  config PWM_MXS
+>  	tristate "Freescale MXS PWM support"
+>  	depends on ARCH_MXS && OF
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index cec2500..5459702 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -1,6 +1,7 @@
+>  obj-$(CONFIG_PWM)		+=3D core.o
+>  obj-$(CONFIG_PWM_BFIN)		+=3D pwm-bfin.o
+>  obj-$(CONFIG_PWM_IMX)		+=3D pwm-imx.o
+> +obj-$(CONFIG_PWM_LPC32XX)	+=3D pwm-lpc32xx.o
+>  obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
+>  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
+>  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
+> diff --git a/drivers/pwm/pwm-lpc32xx.c b/drivers/pwm/pwm-lpc32xx.c
+> new file mode 100644
+> index 0000000..d79f4f9
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-lpc32xx.c
+> @@ -0,0 +1,150 @@
+> +/*
+> + * Copyright 2012 Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/slab.h>
+> +
+> +struct lpc32xx_pwm_chip {
+> +	struct pwm_chip chip;
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +};
+> +
+> +#define PWM_ENABLE	(1 << 31)
+> +#define PWM_RELOADV(x)	(((x) & 0xFF) << 8)
+> +#define PWM_DUTY(x)	((x) & 0xFF)
+> +
+> +#define to_lpc32xx_pwm_chip(_chip) \
+> +	container_of(_chip, struct lpc32xx_pwm_chip, chip)
+> +
+> +static int lpc32xx_pwm_config(struct pwm_chip *chip, struct pwm_device *=
+pwm,
+> +			      int duty_ns, int period_ns)
+> +{
+> +	struct lpc32xx_pwm_chip *lpc32xx =3D to_lpc32xx_pwm_chip(chip);
+> +	unsigned long long c;
+> +	int period_cycles, duty_cycles;
+> +
+> +	c =3D clk_get_rate(lpc32xx->clk) / 256;
+> +	c =3D c * period_ns;
+> +	do_div(c, NSEC_PER_SEC);
+> +
+> +	/* Handle high and low extremes */
+> +	if (c =3D=3D 0)
+> +		c =3D 1;
+> +	if (c > 255)
+> +		c =3D 0; /* 0 set division by 256 */
+> +	period_cycles =3D c;
+> +
+> +	c =3D 256 * duty_ns;
+> +	do_div(c, period_ns);
+> +	duty_cycles =3D c;
+> +
+> +	writel(PWM_ENABLE | PWM_RELOADV(period_cycles) | PWM_DUTY(duty_cycles),
+> +		lpc32xx->base);
+> +
+> +	return 0;
+> +}
+
+When you convert to having more than one PWM device per chip, you can
+use pwm->hwpwm to distinguish between them. For this case this should be
+a trivial as:
+
+	writel(..., lpc32xx->base + (pwm->hwpwm << 2));
+
+> +
+> +static int lpc32xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *=
+pwm)
+> +{
+> +	struct lpc32xx_pwm_chip *lpc32xx =3D to_lpc32xx_pwm_chip(chip);
+> +
+> +	clk_enable(lpc32xx->clk);
+> +	return 0;
+> +}
+> +
+> +static void lpc32xx_pwm_disable(struct pwm_chip *chip, struct pwm_device=
+ *pwm)
+> +{
+> +	struct lpc32xx_pwm_chip *lpc32xx =3D to_lpc32xx_pwm_chip(chip);
+> +
+> +	writel(0, lpc32xx->base);
+> +	clk_disable(lpc32xx->clk);
+> +}
+> +
+> +static const struct pwm_ops lpc32xx_pwm_ops =3D {
+> +	.config =3D lpc32xx_pwm_config,
+> +	.enable =3D lpc32xx_pwm_enable,
+> +	.disable =3D lpc32xx_pwm_disable,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static int lpc32xx_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct lpc32xx_pwm_chip *lpc32xx;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	lpc32xx =3D devm_kzalloc(&pdev->dev, sizeof(*lpc32xx), GFP_KERNEL);
+> +	if (!lpc32xx)
+> +		return -ENOMEM;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	lpc32xx->base =3D devm_request_and_ioremap(&pdev->dev, res);
+> +	if (!lpc32xx->base)
+> +		return -EADDRNOTAVAIL;
+> +
+> +	lpc32xx->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(lpc32xx->clk))
+> +		return PTR_ERR(lpc32xx->clk);
+> +
+> +	lpc32xx->chip.dev =3D &pdev->dev;
+> +	lpc32xx->chip.ops =3D &lpc32xx_pwm_ops;
+> +	lpc32xx->chip.npwm =3D 1;
+
+This should be set to 2.
+
+Thierry
+
+> +	ret =3D pwmchip_add(&lpc32xx->chip);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to add PWM chip, error %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, lpc32xx);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __devexit lpc32xx_pwm_remove(struct platform_device *pdev)
+> +{
+> +	struct lpc32xx_pwm_chip *lpc32xx =3D platform_get_drvdata(pdev);
+> +
+> +	return pwmchip_remove(&lpc32xx->chip);
+> +}
+> +
+> +static struct of_device_id lpc32xx_pwm_dt_ids[] =3D {
+> +	{ .compatible =3D "nxp,lpc3220-pwm", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, lpc32xx_pwm_dt_ids);
+> +
+> +static struct platform_driver lpc32xx_pwm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "lpc32xx-pwm",
+> +		.of_match_table =3D of_match_ptr(lpc32xx_pwm_dt_ids),
+> +	},
+> +	.probe =3D lpc32xx_pwm_probe,
+> +	.remove =3D __devexit_p(lpc32xx_pwm_remove),
+> +};
+> +module_platform_driver(lpc32xx_pwm_driver);
+> +
+> +MODULE_ALIAS("platform:lpc32xx-pwm");
+> +MODULE_AUTHOR("Alexandre Pereira da Silva <aletes.xgr@gmail.com>");
+> +MODULE_DESCRIPTION("LPC32XX PWM Driver");
+> +MODULE_LICENSE("GPL v2");
+> --=20
+> 1.7.10
+>=20
+>=20
+
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP/B29AAoJEN0jrNd/PrOh29sQAJBb7Dvwzvt0rNUVMqLUC071
+MuB1lio7xYz4nn5YkPZIRZOPn4xoIYwLNEbkSJjU8w416uzc/tiz5faHNQ+pC47d
+WgviFDoVtl0LDgNa6c7GsmA00wkYlYv/gGpvH2MSNZx6DslQLN3QaO6WEh0eX3Ik
+LMuCf7DyIToHkFZTjuCBKgHzCIDut9sQef9qitNRLLGTuOK9stOd/LNu8RWVaxvc
+Gy1USWpBZUXxhcFLzXCgMISuh8j1MM02t5DhUZ7BqCsMG3pcQg/BcPHd4Sz0p0bD
+1nZATOmVPEQyG5pz0ll3qlrIf/dZIh3PIZ+lomnpK0w9eqwgXPktusim3qXceQom
+fyVmMCMvbLDb7xwlBQHxXGdTG54XmEH5+wD9uYbHS2BnjA7OP8vOU/NN5IqI1FgJ
+W0BC/KUEd/FhzSoxlBs/3aEmH8BYnlMQmrvngllRgo+WO6sgirW35U3XZpkds/8v
+mj73VDFIv5g3KHgfgmwlw5AOLOiGWymDM7wd3hvDdcCeHBf/1AqgGgYA85G0K0N2
+rmEfYpd2xxe7Esfi4jKFR7wtEoSj18SI6hWAl9BwzRqjwgTgPhjGDLTUEBgznSq4
+9jjuQai0/yQM2USQZXBjKdKWKiYHv0c8jbNNLEkHNiBHH509RRNMq0aSmHMcOUvN
+valkLoplgwDylwqQS9zS
+=VDYI
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
