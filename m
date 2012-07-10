@@ -1,68 +1,80 @@
-From: Venu Byravarasu <vbyravarasu@nvidia.com>
-Subject: RE: [PATCH v1 01/11] drivers: usb: otg: add a new driver for omap
- usb2 phy
-Date: Tue, 10 Jul 2012 12:35:38 +0530
-Message-ID: <D958900912E20642BCBC71664EFECE3E6DDAD9FFC1@BGMAIL02.nvidia.com>
+From: "Gupta, Ajay Kumar" <ajay.gupta@ti.com>
+Subject: RE: [PATCH v1 09/11] drivers: usb: musb: Add device tree support
+ for omap musb glue
+Date: Tue, 10 Jul 2012 07:14:22 +0000
+Message-ID: <47CEF8C4B26E8C44B22B028A650E0EA93EACE24C@DBDE01.ent.ti.com>
 References: <1340884267-28908-1-git-send-email-kishon@ti.com>
-	<1340884267-28908-2-git-send-email-kishon@ti.com>	<4FFBC1D0.5030506@ti.com>
-	<D958900912E20642BCBC71664EFECE3E6DDAD9FF96@BGMAIL02.nvidia.com>
- <CAAe_U6Kx8o6sHgpev3UEAou7tuNDt9iL0+hcyOVDb0WsCsSwKg@mail.gmail.com>
+ <1340884267-28908-10-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAe_U6Kx8o6sHgpev3UEAou7tuNDt9iL0+hcyOVDb0WsCsSwKg@mail.gmail.com>
+In-Reply-To: <1340884267-28908-10-git-send-email-kishon@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "b-cousson@ti.com" <b-cousson@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "balbi@ti.com" <balbi@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hvaibhav@ti.com" <hvaibhav@ti.com>
+To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Cousson, Benoit" <b-cousson@ti.com>, "Nayak, Rajendra" <rnayak@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Balbi, Felipe" <balbi@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: "Hiremath, Vaibhav" <hvaibhav@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-> Hi,
+Hi,
+>  Documentation/devicetree/bindings/usb/omap-usb.txt |   34
+> ++++++++++++-
+>  drivers/usb/musb/omap2430.c                        |   52
+> ++++++++++++++++++++
+[...]
+> +		of_property_read_u32(np, "mode", (u32 *)&pdata->mode);
+> +		of_property_read_u32(np, "interface_type",
+> +						(u32 *)&data->interface_type);
+> +		of_property_read_u32(np, "num_eps", (u32 *)&config-
+> >num_eps);
+> +		of_property_read_u32(np, "ram_bits", (u32 *)&config-
+> >ram_bits);
+> +		of_property_read_u32(np, "mode", (u32 *)&pdata->mode);
+
+'mode' has already been read so this should be dropped.
+
+Ajay
+
+> +		of_property_read_u32(np, "power", (u32 *)&pdata->power);
+> +		config->multipoint = of_property_read_bool(np,
+> "multipoint");
+> +
+> +		pdata->board_data	= data;
+> +		pdata->config		= config;
+> +	}
+> +
+>  	pdata->platform_ops		= &omap2430_ops;
 > 
-> On Tue, Jul 10, 2012 at 11:33 AM, Venu Byravarasu
-> <vbyravarasu@nvidia.com> wrote:
-> >> > +
-> >> > +#ifdef CONFIG_PM
-> >
-> > Should it not be CONFIG_PM_SLEEP instead of just CONFIG_PM?
+>  	platform_set_drvdata(pdev, glue);
+> @@ -597,12 +638,23 @@ static struct dev_pm_ops omap2430_pm_ops = {
+>  #define DEV_PM_OPS	NULL
+>  #endif
 > 
-> Why? I think we should have CONFIG_PM_SLEEP only when we have
-> *suspend*, *resume* hooks. But this driver has only *runtime_suspend*
-> and *runtime_resume* hooks.
-
-Yes, you are right. CONFIG_PM_SLEEP is not needed for runtime.
-
-> >
-> >> > +
-> >> > +static int omap_usb2_runtime_suspend(struct device *dev)
-> >> > +{
-> >> > +   struct platform_device  *pdev = to_platform_device(dev);
-> >> > +   struct omap_usb *phy = platform_get_drvdata(pdev);
-> >> > +
-> >
-> >
-> >> > +static int __init usb2_omap_init(void)
-> >> > +{
-> >> > +   return platform_driver_register(&omap_usb2_driver);
-> >> > +}
-> >> > +arch_initcall(usb2_omap_init);
-> >> > +
-> >> > +static void __exit usb2_omap_exit(void)
-> >> > +{
-> >> > +   platform_driver_unregister(&omap_usb2_driver);
-> >> > +}
-> >> > +module_exit(usb2_omap_exit);
-> >> > +
-> >
-> > Do you really need arch_initcall here?
-> > If not, then you can replace above two function calls with
-> module_platform_driver().
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id omap2430_id_table[] = {
+> +	{ .compatible = "ti,musb-omap2430" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, omap2430_id_table);
+> +#else
+> +#define omap2430_id_table NULL
+> +#endif
+> +
+>  static struct platform_driver omap2430_driver = {
+>  	.probe		= omap2430_probe,
+>  	.remove		= __devexit_p(omap2430_remove),
+>  	.driver		= {
+>  		.name	= "musb-omap2430",
+>  		.pm	= DEV_PM_OPS,
+> +		.of_match_table = omap2430_id_table,
+>  	},
+>  };
 > 
-> I indeed want it to be arch_initcall. When the module is built-in, I
-> want this module to loaded before twl6030-usb.c
-
-Should be fine.
-
-> Thanks
-> Kishon
+> --
+> 1.7.5.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
