@@ -1,78 +1,74 @@
-From: Jia Hongtao-B38951 <B38951@freescale.com>
-Subject: RE: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
-Date: Tue, 10 Jul 2012 02:29:31 +0000
-Message-ID: <412C8208B4A0464FA894C5F0C278CD5D01A209F4@039-SN1MPN1-002.039d.mgd.msft.net>
-References: <1339148585-16947-1-git-send-email-B38951@freescale.com>
- <4FD60FB1.7050106@gmail.com>
- <412C8208B4A0464FA894C5F0C278CD5D01A16829@039-SN1MPN1-002.039d.mgd.msft.net>
- <20120706042611.GA1841@kroah.com>
- <412C8208B4A0464FA894C5F0C278CD5D01A168F2@039-SN1MPN1-002.039d.mgd.msft.net>
- <20120706161718.GA26894@kroah.com>
- <412C8208B4A0464FA894C5F0C278CD5D01A1E694@039-SN1MPN1-002.039d.mgd.msft.net>
- <94F013E7935FF44C83EBE7784D62AD3F09354AE6@039-SN2MPN1-021.039d.mgd.msft.net>
- <4FFAE373.6070905@gmail.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v9 REBASE 6/9] USB: notify phy when root hub port connect
+ change
+Date: Tue, 10 Jul 2012 11:14:27 +0800
+Message-ID: <20120710031426.GG26888@b20223-02.ap.freescale.net>
+References: <1341673008-29808-1-git-send-email-richard.zhao@freescale.com>
+ <1341673008-29808-7-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FFAE373.6070905@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Li Yang-R58472 <r58472@freescale.com>
-Cc: Greg KH <greg@kroah.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1341673008-29808-7-git-send-email-richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Rob Herring [mailto:robherring2@gmail.com]
-> Sent: Monday, July 09, 2012 9:58 PM
-> To: Li Yang-R58472
-> Cc: Jia Hongtao-B38951; Greg KH; devicetree-discuss@lists.ozlabs.org;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
+On Sat, Jul 07, 2012 at 10:56:45PM +0800, Richard Zhao wrote:
+> Phy may need to change settings when port connect change.
 > 
-> On 07/08/2012 10:46 PM, Li Yang-R58472 wrote:
-> >>> I don't understand, why is this just showing up now?  What
-> >>> changed to cause this?  Couldn't that be the real problem here?
-> >>>
-> >>
-> >> The issue is showing up because we now probe devices twice.
-> >> Previously, we just probe devices once. But now we changed the way
-> >> of pci init which makes pci controllers should be probed earlier
-> >> than other devices. So we have to probe pci nodes separately. Probe
-> >> more than once is the root cause of this issue.
-> >>
-> >> The pci patchset I mentioned please refer to:
-> >> http://patchwork.ozlabs.org/patch/163742/
-> >
-> > Let me try to clarify a little bit.  The of platform bus normally
-> > traverse the device tree to add all the devices.  The change which
-> > caused problem is that we need to probe PCIe RC devices at a earlier
-> > stage of initialization.  So we added these PCIe RC devices earlier
-> > than the normal device tree traversal process.  These PCIe RC devices
-> > will be scanned again during the normal traversal and cause
-> > duplicated devices being added.  Our proposal is to deal with
-> > duplicated devices automatically and make it possible to scan the
-> > device tree multiple times for devices to be added.
+> Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Tested-by: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/usb/core/hub.c |    8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> What is making PCI need to be probed earlier? Perhaps deferred probe
-> would work?
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 4cc8dc9..2ba9d84 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/usb.h>
+>  #include <linux/usbdevice_fs.h>
+>  #include <linux/usb/hcd.h>
+> +#include <linux/usb/otg.h>
+>  #include <linux/usb/quirks.h>
+>  #include <linux/kthread.h>
+>  #include <linux/mutex.h>
+> @@ -4037,6 +4038,13 @@ static void hub_port_connect_change(struct usb_hub *hub, int port1,
+>  		}
+>  	}
+>  
+> +	if (unlikely(hcd->phy && !hdev->parent)) {
+> +		if (portstatus & USB_PORT_STAT_CONNECTION)
+> +			usb_phy_notify_connect(hcd->phy, port1);
+> +		else
+> +			usb_phy_notify_disconnect(hcd->phy, port1);
+There's another issue. When hcd is removed, notify disconnect is not
+called. Is it ok, if I remove the above two line and add below patch:
 
-Pci initialization fsl_add_bridge() should be called earlier as they used
-to be called in board specific code xx_setup_arch(). Now we put this init
-part in the probe function of pci controller to make the code infrastructure
-better. That make pci bus should be probed earlier.
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1924,6 +1924,11 @@ void usb_disconnect(struct usb_device **pdev)
+ 	 */
+ 	device_del(&udev->dev);
+ 
++	if (udev->parent && !udev->parent->parent) {
++		struct usb_hcd *hcd = bus_to_hcd(udev->bus);
++		usb_phy_notify_disconnect(hcd->phy, udev->portnum);
++	}
++
+ 	/* Free the device number and delete the parent's children[]
+ 	 * (or root_hub) pointer.
+ 	 */
 
 
-> 
-> Perhaps giving of_platform_populate an exclude list of compatible
-> strings to skip would work.
-> 
-> Rob
+Thanks
+Richard
+ 
 
-Yes, this would work and we actually already implemented this solution.
-But I think it looks hackish and will influence the other API users.
-
-Thanks.
--Jia Hongtao.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
