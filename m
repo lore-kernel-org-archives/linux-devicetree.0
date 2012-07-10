@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 2/5] fdtput: Prepare to support multiple operations
-Date: Tue, 10 Jul 2012 05:56:45 -0700
-Message-ID: <1341925008-10627-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH 4/5] fdtput: Adjust report_error() to use name, namelen params
+Date: Tue, 10 Jul 2012 05:56:47 -0700
+Message-ID: <1341925008-10627-4-git-send-email-sjg@chromium.org>
 References: <1341925008-10627-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,83 +21,83 @@ Sender: "devicetree-discuss"
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We want to add new options to this tool. In preparation for this, add
-the concept of a current operation.
+As with many fdt functions, report_error() should permit a namelen to
+be specified, thus obviating the need for nul termination in strings
+passed to it.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- fdtput.c |   37 ++++++++++++++++++++++++++-----------
- 1 files changed, 26 insertions(+), 11 deletions(-)
+ fdtput.c |   25 ++++++++++++++++++-------
+ 1 files changed, 18 insertions(+), 7 deletions(-)
 
 diff --git a/fdtput.c b/fdtput.c
-index 244d1f1..eceb7f2 100644
+index fc6b85e..f217f1d 100644
 --- a/fdtput.c
 +++ b/fdtput.c
-@@ -28,7 +28,13 @@
- 
- #include "util.h"
- 
-+/* These are the operations we support */
-+enum operation_t {
-+	OPER_WRITE_PROP,		/* Write a property in a node */
-+};
-+
- struct display_info {
-+	enum operation_t oper;	/* operation to perform */
- 	int type;		/* data type (s/i/u/x or 0 for default) */
- 	int size;		/* data size (1/2/4) */
+@@ -41,9 +41,20 @@ struct display_info {
  	int verbose;		/* verbose output */
-@@ -143,13 +149,19 @@ static int do_fdtput(struct display_info *disp, const char *filename,
- 	if (!blob)
+ };
+ 
+-static void report_error(const char *where, int err)
++
++/**
++ * Report an error with a particular node.
++ *
++ * @param name		Node name to report error on
++ * @param namelen	Length of node name, or -1 to use entire string
++ * @param err		Error number to report (-FDT_ERR_...)
++ */
++static void report_error(const char *name, int namelen, int err)
+ {
+-	fprintf(stderr, "Error at '%s': %s\n", where, fdt_strerror(err));
++	if (namelen == -1)
++		namelen = strlen(name);
++	fprintf(stderr, "Error at '%1.*s': %s\n", namelen, name,
++		fdt_strerror(err));
+ }
+ 
+ /**
+@@ -127,13 +138,13 @@ static int store_key_value(void *blob, const char *node_name,
+ 
+ 	node = fdt_path_offset(blob, node_name);
+ 	if (node < 0) {
+-		report_error(node_name, node);
++		report_error(node_name, -1, node);
  		return -1;
+ 	}
  
--	/* convert the arguments into a single binary value, then store */
--	assert(arg_count >= 2);
--	if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
--		store_key_value(blob, *arg, arg[1], value, len))
--		ret = -1;
--
--	if (!ret)
-+	switch (disp->oper) {
-+	case OPER_WRITE_PROP:
-+		/*
-+		 * Convert the arguments into a single binary value, then
-+		 * store them into the property.
-+		 */
-+		assert(arg_count >= 2);
-+		if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
-+			store_key_value(blob, *arg, arg[1], value, len))
-+			ret = -1;
-+		break;
-+	}
-+	if (ret >= 0)
- 		ret = utilfdt_write(filename, blob);
+ 	err = fdt_setprop(blob, node, property, buf, len);
+ 	if (err) {
+-		report_error(property, err);
++		report_error(property, -1, err);
+ 		return -1;
+ 	}
+ 	return 0;
+@@ -157,7 +168,7 @@ static int create_node(void *blob, const char *node_name)
  
- 	free(blob);
-@@ -185,6 +197,7 @@ int main(int argc, char *argv[])
+ 	p = strrchr(node_name, '/');
+ 	if (!p) {
+-		report_error(node_name, -FDT_ERR_BADPATH);
++		report_error(node_name, -1, -FDT_ERR_BADPATH);
+ 		return -1;
+ 	}
+ 	*p = '\0';
+@@ -165,14 +176,14 @@ static int create_node(void *blob, const char *node_name)
+ 	if (p > node_name) {
+ 		node = fdt_path_offset(blob, node_name);
+ 		if (node < 0) {
+-			report_error(node_name, node);
++			report_error(node_name, -1, node);
+ 			return -1;
+ 		}
+ 	}
  
- 	memset(&disp, '\0', sizeof(disp));
- 	disp.size = -1;
-+	disp.oper = OPER_WRITE_PROP;
- 	for (;;) {
- 		int c = getopt(argc, argv, "ht:v");
- 		if (c == -1)
-@@ -224,10 +237,12 @@ int main(int argc, char *argv[])
- 	argv += optind;
- 	argc -= optind;
+ 	node = fdt_add_subnode(blob, node, p + 1);
+ 	if (node < 0) {
+-		report_error(p + 1, node);
++		report_error(p + 1, -1, node);
+ 		return -1;
+ 	}
  
--	if (argc < 1)
--		usage("Missing node");
--	if (argc < 2)
--		usage("Missing property");
-+	if (disp.oper == OPER_WRITE_PROP) {
-+		if (argc < 1)
-+			usage("Missing node");
-+		if (argc < 2)
-+			usage("Missing property");
-+	}
- 
- 	if (do_fdtput(&disp, filename, argv, argc))
- 		return 1;
 -- 
 1.7.7.3
