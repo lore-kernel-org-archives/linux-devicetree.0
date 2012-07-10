@@ -1,12 +1,15 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: bootloader support for DTB on x86
-Date: Tue, 10 Jul 2012 14:27:26 +0200
-Message-ID: <CAPnjgZ2OwarbF+=SZkXYgszhES94Y6=-9wq+BdNHuo+PrZsYWA@mail.gmail.com>
-References: <20120522125622.GA21187@avionic-0098.mockup.avionic-design.de>
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/5] ARM: topology: set the capacity of each cores for
+ big.LITTLE
+Date: Tue, 10 Jul 2012 14:35:25 +0200
+Message-ID: <CAKfTPtC0BcidJ2ga9c2fdWjrEsfXH48QtSnjv0YOCv7-k3K-Ug@mail.gmail.com>
+References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
+ <1341919622.3462.124.camel@twins>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3476383853890534948=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120522125622.GA21187-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+In-Reply-To: <1341919622.3462.124.camel@twins>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,121 +20,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jean.pihet-OTs2U3NB0ngRmelmmXo44Q@public.gmane.org, yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============3476383853890534948==
-Content-Type: multipart/alternative; boundary=e89a8fb1ed4a72035e04c478da49
-
---e89a8fb1ed4a72035e04c478da49
-Content-Type: text/plain; charset=ISO-8859-1
-
-Hi,
-
-On Tue, May 22, 2012 at 2:56 PM, Thierry Reding <
-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-
-> Hi,
+On 10 July 2012 13:27, Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org> wrote:
+> On Mon, 2012-07-09 at 11:27 +0200, Vincent Guittot wrote:
+>> This patchset creates an arch_scale_freq_power function for ARM, which is used
+>> to set the relative capacity of each core of a big.LITTLE system. It also removes
+>> the broken power estimation of x86.
+>>
+>> Modification since v3:
+>>  - Add comments
+>>  - Add optimization for SMP system
+>>  - Ensure that capacity of a CPU will be at most 1
+>>
+>> Modification since v2:
+>>  - set_power_scale function becomes static
+>>  - Rework loop in update_siblings_masks
+>>  - Remove useless code in parse_dt_topology
+>>
+>> Modification since v1:
+>>  - Add and update explanation about the use of the table and the range of the value
+>>  - Remove the use of NR_CPUS and use nr_cpu_ids instead
+>>  - Remove broken power estimation of x86
+>>
+>> Peter Zijlstra (1):
+>>   sched, x86: Remove broken power estimation
 >
-> I was looking at booting an x86-based platform using DT. However I wasn't
-> able to find a bootloader that supports this. There also doesn't seem to
-> be a
-> method to append the DTB to the zImage (which I wouldn't want to use
-> anyway).
-> Does anybody know of a bootloader that supports this?
+> Note that this patch already made its way into tip as commit
+> bcae21d6e793a7047d38abc9ac0946c53733c1dd so it might be best to base
+> whatever tree this is supposed to fo into on something that includes
+> that.
 >
 
-Maybe U-Boot with a FIT image? Also, you should support having multiple
-device trees in the image and the boot loader selecting the correct one.
+yes
 
-I don't think we should rely on there being an initrd - what do we do if
-there isn't one?
+>> Vincent Guittot (4):
+>>   ARM: topology: Add arch_scale_freq_power function
+>>   ARM: topology: factorize the update of sibling masks
+>>   ARM: topology: Update cpu_power according to DT information
+>>   sched: cpu_power: enable ARCH_POWER
+>
+> How would you like to proceed with these patches, I'm fine with them
+> going through the ARM tree..
 
+May be the last one which enable ARCH_POWER should also go into tip ?
 
 >
-> I'm currently using syslinux (specifically extlinux) and was looking at
-> perhaps adding the support myself based on the information given in
-> Documentation/x86/boot.txt. However I'm not overly familiar with syslinux
-> code and this could prove more difficult than I anticipate.
+> In which case:
 >
-> The only x86 platforms that use DT seem to be OLPC and CE4100 and according
-> to the web the OLPC has a complete OF implementation. Does anyone know
-> which
-> bootloader the CE4100 uses?
+> Acked-by: Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>
 >
-> Thierry
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
->
-Regards,
-Simon
+> Ingo, Russell, any other preferences?
 
---e89a8fb1ed4a72035e04c478da49
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+I'm going to push the patches related to ARM into Russell's patch system
 
-Hi,<br><br><div class=3D"gmail_quote">On Tue, May 22, 2012 at 2:56 PM, Thie=
-rry Reding <span dir=3D"ltr">&lt;<a href=3D"mailto:thierry.reding@avionic-d=
-esign.de" target=3D"_blank">thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org</a>&gt;</span>=
- wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">Hi,<br>
-<br>
-I was looking at booting an x86-based platform using DT. However I wasn&#39=
-;t<br>
-able to find a bootloader that supports this. There also doesn&#39;t seem t=
-o be a<br>
-method to append the DTB to the zImage (which I wouldn&#39;t want to use an=
-yway).<br>
-Does anybody know of a bootloader that supports this?<br></blockquote><div>=
-<br></div><div>Maybe U-Boot with a FIT image? Also, you should support havi=
-ng multiple device trees in the image and the boot loader selecting the cor=
-rect one.</div>
-<div><br></div><div>I don&#39;t think we should rely on there being an init=
-rd - what do we do if there isn&#39;t one?</div><div>=A0</div><blockquote c=
-lass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;=
-padding-left:1ex">
-
-<br>
-I&#39;m currently using syslinux (specifically extlinux) and was looking at=
-<br>
-perhaps adding the support myself based on the information given in<br>
-Documentation/x86/boot.txt. However I&#39;m not overly familiar with syslin=
-ux<br>
-code and this could prove more difficult than I anticipate.<br>
-<br>
-The only x86 platforms that use DT seem to be OLPC and CE4100 and according=
-<br>
-to the web the OLPC has a complete OF implementation. Does anyone know whic=
-h<br>
-bootloader the CE4100 uses?<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
-Thierry<br>
-</font></span><br>_______________________________________________<br>
-devicetree-discuss mailing list<br>
-<a href=3D"mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org">devicetree-discuss@l=
-ists.ozlabs.org</a><br>
-<a href=3D"https://lists.ozlabs.org/listinfo/devicetree-discuss" target=3D"=
-_blank">https://lists.ozlabs.org/listinfo/devicetree-discuss</a><br>
-<br></blockquote></div><br><div>Regards,</div><div>Simon</div><div><br></di=
-v>
-
---e89a8fb1ed4a72035e04c478da49--
-
---===============3476383853890534948==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3476383853890534948==--
+Vincent
