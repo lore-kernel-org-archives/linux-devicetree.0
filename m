@@ -1,45 +1,94 @@
 From: Chandrabhanu Mahapatra <cmahapatra@ti.com>
-Subject: [PATCH 0/4] Extend TCA6424 support
-Date: Tue, 10 Jul 2012 19:01:33 +0530
-Message-ID: <cover.1341925681.git.cmahapatra@ti.com>
+Subject: [PATCH 1/4] GPIO: PCA953X: Increase size of invert variable to support 24 bit
+Date: Tue, 10 Jul 2012 19:05:37 +0530
+Message-ID: <505ac716b6c758d36471a90c2a5228cedb7217be.1341925681.git.cmahapatra@ti.com>
+References: <cover.1341925681.git.cmahapatra@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1341925681.git.cmahapatra@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rob.herring@calxeda.com
+To: grant.likely@secretlab.ca, linus.walleij@stericsson.com, rob.herring@calxeda.com
 Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, leed.aguilar@ti.com, Chandrabhanu Mahapatra <cmahapatra@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone!
-This following patch series extends support capabilities of TCA6424 through
-following patches.
+TCA6424 is a low voltage 24 bit I2C and SMBus I/O expander of pca953x family
+similar to its 16 bit predecessor TCA6416. It comes with three 8-bit active
+Input, Output, Polarity Inversion and Configuration registers each. The polarity
+of Input ports can be reversed by setting the appropiate bit in Polarity
+Inversion registers.
 
-The 1st patch adds 24 bit support for polarity inversion registers by providing
-24 bit support for invert variable.
-The 2nd patch adds 24 bit support of the variables such as irq_mask, irq_stat, etc.
-The 3rd patch extends 24 lines irq support for TCA6424.
-The 4th patch corrects the implementation of registration of device irqs using
-appropiate api's.
+The variables corresponding to Input, Output and Configuration registers have
+already been updated to support 24 bit values. This patch thus updates the
+invert variable of PCA953X platform data to support 24 bit.
 
-These patches were based on mainline kernel v3.5rc6.
+Signed-off-by: Chandrabhanu Mahapatra <cmahapatra@ti.com>
+---
+ drivers/gpio/gpio-pca953x.c |   11 ++++++-----
+ include/linux/i2c/pca953x.h |    2 +-
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-All your comments and suggestions are welcome.
-
-Regards,
-Chandrabhanu
-
-Chandrabhanu Mahapatra (1):
-  GPIO: PCA953X: Increase size of invert variable to support 24 bit
-
-Leed Aguilar (3):
-  gpio/pca953x: increase variables size to support 24 bit of data
-  OMAP: Define TCA6424 max number of possible IRQs
-  gpio/pca953x: register the device irq using appropriate api's
-
- arch/arm/plat-omap/include/plat/irqs.h |   11 +++++++-
- drivers/gpio/gpio-pca953x.c            |   47 ++++++++++++++++++--------------
- include/linux/i2c/pca953x.h            |    2 +-
- 3 files changed, 38 insertions(+), 22 deletions(-)
-
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 1c313c7..af7024f 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -564,7 +564,7 @@ static void pca953x_irq_teardown(struct pca953x_chip *chip)
+  * WARNING: This is DEPRECATED and will be removed eventually!
+  */
+ static void
+-pca953x_get_alt_pdata(struct i2c_client *client, int *gpio_base, int *invert)
++pca953x_get_alt_pdata(struct i2c_client *client, int *gpio_base, u32 *invert)
+ {
+ 	struct device_node *node;
+ 	const __be32 *val;
+@@ -592,13 +592,13 @@ pca953x_get_alt_pdata(struct i2c_client *client, int *gpio_base, int *invert)
+ }
+ #else
+ static void
+-pca953x_get_alt_pdata(struct i2c_client *client, int *gpio_base, int *invert)
++pca953x_get_alt_pdata(struct i2c_client *client, int *gpio_base, u32 *invert)
+ {
+ 	*gpio_base = -1;
+ }
+ #endif
+ 
+-static int __devinit device_pca953x_init(struct pca953x_chip *chip, int invert)
++static int __devinit device_pca953x_init(struct pca953x_chip *chip, u32 invert)
+ {
+ 	int ret;
+ 
+@@ -617,7 +617,7 @@ out:
+ 	return ret;
+ }
+ 
+-static int __devinit device_pca957x_init(struct pca953x_chip *chip, int invert)
++static int __devinit device_pca957x_init(struct pca953x_chip *chip, u32 invert)
+ {
+ 	int ret;
+ 	u32 val = 0;
+@@ -653,8 +653,9 @@ static int __devinit pca953x_probe(struct i2c_client *client,
+ {
+ 	struct pca953x_platform_data *pdata;
+ 	struct pca953x_chip *chip;
+-	int irq_base=0, invert=0;
++	int irq_base = 0;
+ 	int ret;
++	u32 invert = 0;
+ 
+ 	chip = kzalloc(sizeof(struct pca953x_chip), GFP_KERNEL);
+ 	if (chip == NULL)
+diff --git a/include/linux/i2c/pca953x.h b/include/linux/i2c/pca953x.h
+index 139ba52..3c98dd4 100644
+--- a/include/linux/i2c/pca953x.h
++++ b/include/linux/i2c/pca953x.h
+@@ -11,7 +11,7 @@ struct pca953x_platform_data {
+ 	unsigned	gpio_base;
+ 
+ 	/* initial polarity inversion setting */
+-	uint16_t	invert;
++	u32		invert;
+ 
+ 	/* interrupt base */
+ 	int		irq_base;
 -- 
 1.7.10
