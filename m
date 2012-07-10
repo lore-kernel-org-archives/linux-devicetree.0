@@ -1,12 +1,15 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH] pwm: add lpc32xx pwm support
-Date: Tue, 10 Jul 2012 08:48:53 +0200
-Message-ID: <20120710064853.GA28840@avionic-0098.adnet.avionic-design.de>
-References: <1341862074-9240-1-git-send-email-aletes.xgr@gmail.com>
+From: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v1 01/11] drivers: usb: otg: add a new driver for omap
+ usb2 phy
+Date: Tue, 10 Jul 2012 12:19:04 +0530
+Message-ID: <4FFBD060.5010903@ti.com>
+References: <1340884267-28908-1-git-send-email-kishon@ti.com>	<1340884267-28908-2-git-send-email-kishon@ti.com>	<4FFBC1D0.5030506@ti.com>
+ <CAAe_U6L9qiBMXWeS2POeBod8uASCtmqDc4DigwBx1bJ-hhaNRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4138924219096434285=="
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1341862074-9240-1-git-send-email-aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAAe_U6L9qiBMXWeS2POeBod8uASCtmqDc4DigwBx1bJ-hhaNRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,341 +20,175 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+>>
+>>> +
+>>> +static int __devinit omap_usb2_probe(struct platform_device *pdev)
+>>> +{
+>>> +       struct omap_usb                 *phy;
+>>> +       struct usb_otg                  *otg;
+>>> +       struct resource                 *res;
+>>> +
+>>> +       phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
+>>> +       if (!phy) {
+>>> +               dev_err(&pdev->dev, "unable to allocate memory for USB2
+>>> PHY\n");
+>>> +               return -ENOMEM;
+>>> +       }
+>>> +
+>>> +       otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
+>>> +       if (!otg) {
+>>> +               dev_err(&pdev->dev, "unable to allocate memory for USB
+>>> OTG\n");
+>>> +               return -ENOMEM;
+>>> +       }
+>>> +
+>>> +       phy->dev                =&pdev->dev;
+>>>
+>>> +
+>>> +       phy->phy.dev            = phy->dev;
+>>> +       phy->phy.label          = "omap-usb2";
+>>> +       phy->phy.set_suspend    = omap_usb2_suspend;
+>>> +       phy->phy.otg            = otg;
+>>> +
+>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>> +
+>>> +       phy->control_dev_conf = devm_request_and_ioremap(&pdev->dev, res);
+>>> +       if (phy->control_dev_conf == NULL) {
+>>> +               dev_err(&pdev->dev, "Failed to obtain io memory\n");
+>>> +               return -ENXIO;
+>>> +       }
+>>> +
+>>> +       phy->is_suspended       = 1;
+>>> +       omap_usb_phy_power(phy, 0);
+>>> +
+>>> +       otg->set_host           = omap_usb_set_host;
+>>> +       otg->set_peripheral     = omap_usb_set_peripheral;
+>>> +       otg->set_vbus           = omap_usb_set_vbus;
+>>> +       otg->start_srp          = omap_usb_start_srp;
+>>> +       otg->phy                =&phy->phy;
+>>>
+>>> +
+>>> +       phy->wkupclk = devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
+>>
+>>
+>> Why not just use clk_get()? What does devm_clk_get() do?
+> It just associates the clk with the device. So whenever the the driver
+> gets detached, the devres will take care to do a clk_put() of the
+> clock.
 
---===============4138924219096434285==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
-Content-Disposition: inline
+ok, makes sense.
 
+>>
+>>
+>>> +       if (IS_ERR(phy->wkupclk)) {
+>>> +               dev_err(&pdev->dev, "unable to get usb_phy_cm_clk32k\n");
+>>> +               return PTR_ERR(phy->wkupclk);
+>>> +       }
+>>> +       clk_prepare(phy->wkupclk);
+>>
+>>
+>> Ideally clk_prepare() is an extension of clk_enable() and is expected
+>> to be used that way. Not to be clubbed with clk_get(). Same with
+>> clk_unprepare(). Do you do a clk_enable()/_disable() in interrupt/
+>> atomic context?
+>
+> Currently it is called from a work queue. But Felipe wanted to remove
+> those work_queue from omap2430 glue. Then this would be called from
+> atomic context.
+> A query for you here. If pm_runtime_get_sync() is called in interrupt
+> context, will runtime resume of that device will also be called in the
+> same context?
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, it would. You also need to then tell the runtime pm framework about
+it by calling a pm_runtime_irq_safe() api I guess.
 
-On Mon, Jul 09, 2012 at 04:27:54PM -0300, Alexandre Pereira da Silva wrote:
-> Add lpc32xx soc pwm driver.
->=20
-> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |   12 ++
->  drivers/pwm/Kconfig                                |   11 ++
->  drivers/pwm/Makefile                               |    1 +
->  drivers/pwm/pwm-lpc32xx.c                          |  151 ++++++++++++++=
-++++++
->  4 files changed, 175 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
->  create mode 100644 drivers/pwm/pwm-lpc32xx.c
+regards,
+Rajendra
 
-Hi Alexandre,
-
-overall this looks good, just some comments inline. I'd very much
-appreciate an Acked-by from Roland on this.
-
-> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Docu=
-mentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> new file mode 100644
-> index 0000000..fb7b3d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> @@ -0,0 +1,12 @@
-> +LPC32XX PWM controller
-> +
-> +Required properties:
-> +- compatible: should be "nxp,lpc3220-pwm"
-
-Does the compatible have to be lpc3220-pwm? Can't it be lpc32xx-pwm to
-match the driver and binding names?
-
-> +- reg: physical base address and length of the controller's registers
-> +
-> +Example:
-> +
-> +pwm: pwm@80064000 {
-> +	compatible =3D "nxp,lpc3220-pwm";
-> +	reg =3D <0x80064000 2000>;
-
-You probably want to specify the size as 0x2000 as well.
-
-> +};
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 0b2800f..34086b1 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -28,6 +28,17 @@ config PWM_IMX
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx.
-> =20
-> +config PWM_LPC32XX
-> +	tristate "LPC32XX PWM support"
-> +	depends on ARCH_LPC32XX
-> +	help
-> +	  Generic PWM framework driver for LPC32XX. The LPC32XX soc has two
-> +	  pwm channels.
-
-Can we keep the spelling consistent here? It should be "PWM" and "SoC".
-It'd be nice if you could fix that up in the commit message as well.
-
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-lpc32xx.
-> +
-> +
->  config PWM_MXS
->  	tristate "Freescale MXS PWM support"
->  	depends on ARCH_MXS && OF
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index cec2500..5459702 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -1,6 +1,7 @@
->  obj-$(CONFIG_PWM)		+=3D core.o
->  obj-$(CONFIG_PWM_BFIN)		+=3D pwm-bfin.o
->  obj-$(CONFIG_PWM_IMX)		+=3D pwm-imx.o
-> +obj-$(CONFIG_PWM_LPC32XX)	+=3D pwm-lpc32xx.o
->  obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
->  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
->  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
-> diff --git a/drivers/pwm/pwm-lpc32xx.c b/drivers/pwm/pwm-lpc32xx.c
-> new file mode 100644
-> index 0000000..c7fa126
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-lpc32xx.c
-> @@ -0,0 +1,151 @@
-> +/*
-> + * Copyright 2012 Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/slab.h>
-> +
-> +struct lpc32xx_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct device *dev;
-
-Can you drop this field? You initialize it, but it is never used
-subsequently in the driver.
-
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +};
-> +
-> +#define PWM_ENABLE (1<<31)
-> +#define PWM_RELOADV(x)	(((x) & 0xFF)<<8)
-> +#define PWM_DUTY(x)	((x) & 0xFF)
-
-There should be spaces around <<.
-
-> +
-> +#define to_lpc32xx_pwm_chip(_chip) \
-> +	container_of(_chip, struct lpc32xx_pwm_chip, chip)
-> +
-> +static int lpc32xx_pwm_config(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> +			  int duty_ns, int period_ns)
-
-The alignment looks wrong here. It seems like you aligned properly
-before adding the "static".
-
-> +{
-> +	struct lpc32xx_pwm_chip *lpc32xx =3D to_lpc32xx_pwm_chip(chip);
-> +	unsigned long long c;
-> +	int period_cycles, duty_cycles;
-> +
-> +	c =3D clk_get_rate(lpc32xx->clk)/256;
-
-Spaces around /.
-
-> +	c =3D c * period_ns;
-> +	do_div(c, NSEC_PER_SEC);
-> +
-> +	/* Handle high and low extremes */
-> +	if (c =3D=3D 0)
-> +		c =3D 1;
-> +	if (c > 255)
-> +		c =3D 0; /* 0 set division by 256 */
-> +	period_cycles =3D c;
-> +
-> +	c =3D 256*duty_ns;
-
-Spaces around *.
-
-> +	do_div(c, period_ns);
-> +	duty_cycles =3D c;
-> +
-> +	writel(PWM_ENABLE | PWM_RELOADV(period_cycles) | PWM_DUTY(duty_cycles),
-> +		lpc32xx->base);
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpc32xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *=
-pwm)
-> +{
-> +	struct lpc32xx_pwm_chip *lpc32xx =3D to_lpc32xx_pwm_chip(chip);
-> +
-> +	clk_enable(lpc32xx->clk);
-> +	return 0;
-> +}
-> +
-> +static void lpc32xx_pwm_disable(struct pwm_chip *chip, struct pwm_device=
- *pwm)
-> +{
-> +	struct lpc32xx_pwm_chip *lpc32xx =3D to_lpc32xx_pwm_chip(chip);
-> +
-> +	writel(0, lpc32xx->base);
-> +	clk_disable(lpc32xx->clk);
-> +}
-> +
-> +static const struct pwm_ops lpc32xx_pwm_ops =3D {
-> +	.config =3D lpc32xx_pwm_config,
-> +	.enable =3D lpc32xx_pwm_enable,
-> +	.disable =3D lpc32xx_pwm_disable,
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int lpc32xx_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct lpc32xx_pwm_chip *lpc32xx;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	lpc32xx =3D devm_kzalloc(&pdev->dev, sizeof(*lpc32xx), GFP_KERNEL);
-> +	if (!lpc32xx)
-> +		return -ENOMEM;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-
-You should probably check for res !=3D NULL.
-
-> +	lpc32xx->base =3D devm_request_and_ioremap(&pdev->dev, res);
-> +	if (!lpc32xx->base)
-> +		return -EADDRNOTAVAIL;
-> +
-> +	lpc32xx->clk =3D devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(lpc32xx->clk))
-> +		return PTR_ERR(lpc32xx->clk);
-> +
-> +	lpc32xx->chip.dev =3D &pdev->dev;
-> +	lpc32xx->chip.ops =3D &lpc32xx_pwm_ops;
-> +	lpc32xx->chip.npwm =3D 1;
-
-The Kconfig help text says that the lpc32xx PWM controller has two
-channels. Why is npwm set to 1 here?
-
-> +
-> +	ret =3D pwmchip_add(&lpc32xx->chip);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
-
-You should probably separate the error code, to make it obvious what it
-is. Otherwise one might mistake this as an index. While at it, please
-make PWM uppercase.
-
-> +		return ret;
-> +	}
-> +
-> +	lpc32xx->dev =3D &pdev->dev;
-
-As I mentioned above, this is unused so it can probably be dropped.
-
-> +	platform_set_drvdata(pdev, lpc32xx);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __devexit lpc32xx_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct lpc32xx_pwm_chip *lpc32xx =3D platform_get_drvdata(pdev);
-> +
-> +	pwmchip_remove(&lpc32xx->chip);
-
-You should propagate potential errors from pwmchip_remove(). There are
-situations where it can actually fail.
-
-Thierry
-
-> +
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id lpc32xx_pwm_dt_ids[] =3D {
-> +	{ .compatible =3D "nxp,lpc3220-pwm", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, lpc32xx_pwm_dt_ids);
-> +
-> +static struct platform_driver lpc32xx_pwm_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "lpc32xx-pwm",
-> +		.of_match_table =3D of_match_ptr(lpc32xx_pwm_dt_ids),
-> +	},
-> +	.probe =3D lpc32xx_pwm_probe,
-> +	.remove =3D __devexit_p(lpc32xx_pwm_remove),
-> +};
-> +module_platform_driver(lpc32xx_pwm_driver);
-> +
-> +MODULE_ALIAS("platform:lpc32xx-pwm");
-> +MODULE_AUTHOR("Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-> +MODULE_DESCRIPTION("LPC32XX PWM Driver");
-> +MODULE_LICENSE("GPL v2");
-> --=20
-> 1.7.10
->=20
->=20
->=20
-
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP+9BVAAoJEN0jrNd/PrOhSp4P/j3kP4a+OR6sYHA1yQzYFC/d
-TNcFBd+bjnBsl5ROMdrnTeafqO9FR9l/tstEEIRuz6iaqKsnvI2wLicKOplbi4ls
-JDaZd3wYqXCfwE4mHewPn/J2HIQX/8+Qi+osA3NDQZmOug2/L+mpqarSZYmb4Neq
-oKAQsR4kaLKy9Xoa+H+l+6/9qizpYWXeWi24KkDfUsYGN1wCbxcM7bXhVztbFSKS
-NnDhpFhZ1LrAZSmPnOP44A9VKVU5oMymX9e8/WikY9XrSy61A9nkCRXyKU1xB7L6
-OevldmXPMVza0NNrRz77OR5Bes5T0rdSqKP/P0gjKIIQ8XRkEl5kulvaD209XQKs
-f1nCZcuANdzDTfzn7Q4kUiwvmipSri1jHl5TRhK8efLfByr8Ey7mz+Izao7PjG83
-ydqltwJHhdnsUSWXySVDi111W81olQKO+WoRLrIC+rE8sco/qyhxhedFzg6HMVwA
-wxUDq8N5lQsKp0WqXvNx2TmMuMaE++X09Vd8qfxgQLskg4af+cPxgM0td38Pu7z3
-9STyQx0PfXnT9QxC7l7o/HkhoN0fX4XF7L6+lYJ3fYRwfSx4pOVuJNFIvoPKUHuW
-ERIzhYsG1y82NZCqbjFMq0QmofWERStkwwidnfcTHiaMMC2y/pm73DKSZAXru5eO
-KbALJN6u/uaN0HsrjE3S
-=KJKd
------END PGP SIGNATURE-----
-
---J2SCkAp4GZ/dPZZf--
-
---===============4138924219096434285==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4138924219096434285==--
+>
+>>
+>>
+>>> +
+>>> +       usb_add_phy(&phy->phy, USB_PHY_TYPE_USB2);
+>>> +
+>>> +       platform_set_drvdata(pdev, phy);
+>>> +
+>>> +       pm_runtime_enable(phy->dev);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int __devexit omap_usb2_remove(struct platform_device *pdev)
+>>> +{
+>>> +       struct omap_usb *phy = platform_get_drvdata(pdev);
+>>> +
+>>> +       clk_unprepare(phy->wkupclk);
+>>> +       usb_remove_phy(&phy->phy);
+>>> +       platform_set_drvdata(pdev, NULL);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +#ifdef CONFIG_PM
+>>> +
+>>> +static int omap_usb2_runtime_suspend(struct device *dev)
+>>> +{
+>>> +       struct platform_device  *pdev = to_platform_device(dev);
+>>> +       struct omap_usb *phy = platform_get_drvdata(pdev);
+>>> +
+>>> +       clk_disable(phy->wkupclk);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int omap_usb2_runtime_resume(struct device *dev)
+>>> +{
+>>> +       struct platform_device  *pdev = to_platform_device(dev);
+>>> +       struct omap_usb *phy = platform_get_drvdata(pdev);
+>>> +
+>>> +       clk_enable(phy->wkupclk);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static const struct dev_pm_ops omap_usb2_pm_ops = {
+>>> +       SET_RUNTIME_PM_OPS(omap_usb2_runtime_suspend,
+>>> omap_usb2_runtime_resume,
+>>> +               NULL)
+>>> +};
+>>> +
+>>> +#define DEV_PM_OPS     (&omap_usb2_pm_ops)
+>>> +#else
+>>> +#define DEV_PM_OPS     NULL
+>>> +#endif
+>>> +
+>>> +#ifdef CONFIG_OF
+>>> +static const struct of_device_id omap_usb2_id_table[] = {
+>>> +       { .compatible = "ti,omap-usb2" },
+>>> +       {}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
+>>> +#else
+>>> +#define omap_usb2_id_table NULL;
+>>> +#endif
+>>> +
+>>> +static struct platform_driver omap_usb2_driver = {
+>>> +       .probe          = omap_usb2_probe,
+>>> +       .remove         = __devexit_p(omap_usb2_remove),
+>>> +       .driver         = {
+>>> +               .name   = "omap-usb2",
+>>> +               .owner  = THIS_MODULE,
+>>> +               .pm     = DEV_PM_OPS,
+>>> +               .of_match_table = omap_usb2_id_table,
+>>
+>>
+>> Use of_match_ptr() instead.
+>
+> Ok. And I'll remove #define omap_usb2_id_table NULL;.
+>
+> Thanks
+> Kishon
