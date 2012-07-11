@@ -1,78 +1,110 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v9] input: keyboard: Add keys driver for the LPC32xx SoC
-Date: Wed, 11 Jul 2012 00:52:35 -0700
-Message-ID: <20120711075235.GA27353@core.coreip.homeip.net>
-References: <1341948910-6530-1-git-send-email-stigge@antcom.de>
- <20120710205507.GA377@core.coreip.homeip.net>
- <4FFD2FF0.8030000@antcom.de>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v2] of: Add videomode helper
+Date: Wed, 11 Jul 2012 10:34:54 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1207111031200.18999@axis700.grange>
+References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4FFD2FF0.8030000@antcom.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: axel.lin@gmail.com, riyer@nvidia.com, michael.hennerich@analog.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kevin.wells@nxp.com, srinivas.bakki@nxp.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, aletes.xgr@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Grant Likely <grant.likely@secretlab.ca>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Mitch Bradley <wmb@firmworks.com>, Anatolij Gustschin <agust@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 11, 2012 at 09:49:04AM +0200, Roland Stigge wrote:
-> On 07/10/2012 10:55 PM, Dmitry Torokhov wrote:
-> > Hi Roland,
-> > 
-> > On Tue, Jul 10, 2012 at 09:35:10PM +0200, Roland Stigge wrote:
-> >> This patch adds a driver for the key scan interface of the LPC32xx SoC
-> >>
-> > 
-> > Could of more things that I had in my patch but forgot to specifically
-> > call out:
-> > 
-> >> +
-> >> +	/* Configure the key scanner */
-> >> +	clk_prepare_enable(kscandat->clk);
-> > 
-> > This may fail so we should handle errors.
-> > 
-> >> +	writel(kscandat->deb_clks, LPC32XX_KS_DEB(kscandat->kscan_base));
-> >> +	writel(kscandat->scan_delay, LPC32XX_KS_SCAN_CTL(kscandat->kscan_base));
-> >> +	writel(LPC32XX_KSCAN_FTST_USE32K_CLK,
-> >> +	       LPC32XX_KS_FAST_TST(kscandat->kscan_base));
-> >> +	writel(kscandat->matrix_sz,
-> >> +	       LPC32XX_KS_MATRIX_DIM(kscandat->kscan_base));
-> >> +	writel(1, LPC32XX_KS_IRQ(kscandat->kscan_base));
-> >> +	clk_disable_unprepare(kscandat->clk);
-> >> +
-> >> +	error = request_irq(irq, lpc32xx_kscan_irq, 0, pdev->name, kscandat);
-> > 
-> > ...
-> > 
-> >> +
-> >> +	free_irq(platform_get_irq(pdev, 0), pdev);
-> > 
-> > You are requesting IRQ with kscandat as an argument but freeing it with
-> > 'pdev' which will fail.
-> > 
-> >> +
-> >> +	if (kscandat->input->users) {
-> >> +		/* Enable clock and clear IRQ */
-> >> +		clk_prepare_enable(kscandat->clk);
-> > 
-> > Need to handle errors here as well.
-> > 
-> > Since I am partial to my rearrangement (basically I started preferring
-> > err_<action> style of error labels as they more explanatory than out2 or
-> > fail3 style of labels), could you try this version of my patch (on top
-> > of your v9 one). Third time is a charm maybe? :)
-> 
-> Yes, works fine!
-> 
-> Thanks!
-> 
-> Acked-by: Roland Stigge <stigge@antcom.de>
+Hi Sascha
 
-Excellent, I'll fold it up into your original v9 patch and queue for
-3.6.
+On Wed, 4 Jul 2012, Sascha Hauer wrote:
 
-Thank you for your patience.
+> This patch adds a helper function for parsing videomodes from the devicetree.
+> The videomode can be either converted to a struct drm_display_mode or a
+> struct fb_videomode.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+> 
+> changes since v1:
+> - use hyphens instead of underscores for property names
+> 
+>  .../devicetree/bindings/video/displaymode          |   40 ++++++++
+>  drivers/of/Kconfig                                 |    5 +
+>  drivers/of/Makefile                                |    1 +
+>  drivers/of/of_videomode.c                          |  108 ++++++++++++++++++++
+>  include/linux/of_videomode.h                       |   19 ++++
+>  5 files changed, 173 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/displaymode
+>  create mode 100644 drivers/of/of_videomode.c
+>  create mode 100644 include/linux/of_videomode.h
+> 
+> diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
+> new file mode 100644
+> index 0000000..43cc17d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/displaymode
+> @@ -0,0 +1,40 @@
+> +videomode bindings
+> +==================
+> +
+> +Required properties:
+> + - xres, yres: Display resolution
+> + - left-margin, right-margin, hsync-len: Horizontal Display timing parameters
+> +   in pixels
+> +   upper-margin, lower-margin, vsync-len: Vertical display timing parameters in
+> +   lines
+> + - clock: displayclock in Hz
+> +
+> +Optional properties:
+> + - width-mm, height-mm: Display dimensions in mm
+> + - hsync-active-high (bool): Hsync pulse is active high
+> + - vsync-active-high (bool): Vsync pulse is active high
 
--- 
-Dmitry
+How about
+
++ - hsync-active: Hsync pulse polarity: 1 for high, 0 for low
+
+and similar for vsync-active? Which would then become
+
+> + - interlaced (bool): This is an interlaced mode
+> + - doublescan (bool): This is a doublescan mode
+> +
+> +There are different ways of describing a display mode. The devicetree representation
+> +corresponds to the one used by the Linux Framebuffer framework described here in
+> +Documentation/fb/framebuffer.txt. This representation has been chosen because it's
+> +the only format which does not allow for inconsistent parameters.Unlike the Framebuffer
+> +framework the devicetree has the clock in Hz instead of ps.
+> +
+> +Example:
+> +
+> +	display@0 {
+> +		/* 1920x1080p24 */
+> +		clock = <52000000>;
+> +		xres = <1920>;
+> +		yres = <1080>;
+> +		left-margin = <25>;
+> +		right-margin = <25>;
+> +		hsync-len = <25>;
+> +		lower-margin = <2>;
+> +		upper-margin = <2>;
+> +		vsync-len = <2>;
+> +		hsync-active-high;
+
++		hsync-active = <1>;
+
+> +	};
+> +
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
