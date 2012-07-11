@@ -1,68 +1,98 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v2 03/19] fdt: Add function to look up a
- phandle's register address
-Date: Wed, 11 Jul 2012 07:10:39 +0200
-Message-ID: <CAPnjgZ2NXWWg9CsCQRMWaxQC5NcYcc7yrMnNiv2Mpq1_wib7Ow@mail.gmail.com>
-References: <1339604395-6621-1-git-send-email-sjg@chromium.org>
-	<1339604395-6621-4-git-send-email-sjg@chromium.org>
-	<4FDA70F5.1030303@wwwdotorg.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3] PWM: add lpc32xx PWM support
+Date: Wed, 11 Jul 2012 07:27:19 +0200
+Message-ID: <20120711052719.GA10344@avionic-0098.mockup.avionic-design.de>
+References: <1341931090-18296-1-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0866686533=="
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4FDA70F5.1030303@wwwdotorg.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Content-Type: multipart/mixed; boundary="===============4121801046797067903=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1341931090-18296-1-git-send-email-aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============0866686533==
-Content-Type: multipart/alternative; boundary=bcaec550b36c3756bb04c486de64
 
---bcaec550b36c3756bb04c486de64
-Content-Type: text/plain; charset=ISO-8859-1
+--===============4121801046797067903==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Disposition: inline
 
-Hi Stephen,
 
-On Fri, Jun 15, 2012 at 1:17 AM, Stephen Warren <swarren@wwwdotorg.org>wrote:
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On 06/13/2012 10:19 AM, Simon Glass wrote:
-> > This is a commonly-used requirement, so add a function to support it
-> > easily.
->
-> Uggh. Why would this ever be needed; shouldn't the driver for the node
-> referenced by the phandle fully control its own registers; why would any
-> other driver randomly trample on them?
->
+On Tue, Jul 10, 2012 at 11:38:10AM -0300, Alexandre Pereira da Silva wrote:
+> Add lpc32xx SOC PWM driver.
+>=20
+> Signed-off-by: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Changes since v2:
+> * Update commit message
+> * Change the driver to handle the two PWM's of the SOC
+> * Disable clock on removal
+>=20
+> Changes since v1:
+> * Style fixes
+> * Better error handling
+> * Improved Kconfig and DT descriptions
+>=20
+>  .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |   12 ++
+>  drivers/pwm/Kconfig                                |   10 ++
+>  drivers/pwm/Makefile                               |    1 +
+>  drivers/pwm/pwm-lpc32xx.c                          |  148 ++++++++++++++=
+++++++
+>  4 files changed, 171 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+>  create mode 100644 drivers/pwm/pwm-lpc32xx.c
 
-You are making assumptions. This is used for the pwm and only accessed by
-the pwm driver.
+Applied, thanks.
 
-It's basically to allow a simple and efficient way of getting access to a
-peripheral. Since the new binding you pointed me to uses a single pwm with
-multiple channels, this doesn't offer any benefit so I will punt it.
+Thierry
 
-Regards,
-Simon
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature
 
---bcaec550b36c3756bb04c486de64--
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
---===============0866686533==
+iQIcBAEBAgAGBQJP/Q63AAoJEN0jrNd/PrOhRC8QAJpVGcaSWhdCdnzwhgRivSRN
+PXCgz4IJjSjsk1VTxgYUzvdCLTFIBU2m9h4NG7WHmkGqoC8b51bz+cY6bwl34uNl
+ZTvl/ONOj/6IJc/bFGjRUKxG831BENcg73pYJTIvZAsXTWWfIzVbZlj3pWMxPLIB
+24gBOEijdPxopw2Ue7qpwwnpZlG1pgsJnqtXniudiN9Z+XMVdddl0KuCU1AfzQvS
+e0T5PtASHkFAUNpU45/IB+YVlM94SDvWNO/I1slRHKW8J1RQOFFSlhfmCl6Op5i8
+h9MErco5XG67g2favVnbGRxsSMHrj48rLtf0mhdQJlMLDbLWcTQ07/PHXxhUlY/G
+wPteUtbyAdVaOPX+3n6M8H6xCp/F4bLVUMdTLMoHoV3aD6UuD3cjeVpiVYykU2OH
+8LOVYm2DK/Xi+40JO0CZCSId+fixeaw3BBMobJyjchONXrbns5LOuSPhBXhKMxeB
+8kckuMM0FoIJgNPu2DPNvuh6QbJuDIMIlEDqHAC8benyuJec44ptGIMLpJ4plHUX
+DgbaaZpbwnNzTP5zRlGOj8S03tY+z5Olm5Rroy78/nGrumj9I735xUledEzbTYdw
+JFFmi+o6PhBe374skXDv55LUBgTTBlC9syFVVEZKJPrhfLbujn86OQ03lO+QagtK
+LUPuW2WezNDddna23Ue1
+=endm
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
+
+--===============4121801046797067903==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
 _______________________________________________
-U-Boot mailing list
-U-Boot@lists.denx.de
-http://lists.denx.de/mailman/listinfo/u-boot
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============0866686533==--
+--===============4121801046797067903==--
