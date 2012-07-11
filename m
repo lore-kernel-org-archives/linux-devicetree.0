@@ -1,122 +1,55 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: pinctrl-imx: add support for set bits for
- general purpose registers
-Date: Wed, 11 Jul 2012 19:35:36 +0800
-Message-ID: <20120711113536.GB22640@shlinux2.ap.freescale.net>
-References: <1341565763-10074-1-git-send-email-b29396@freescale.com>
- <4FF709D1.40903@wwwdotorg.org>
- <20120709071019.GA28527@shlinux2.ap.freescale.net>
- <20120711093331.GA3025@b20223-02.ap.freescale.net>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v5 5/6] spi: s3c64xx: Remove the 'set_level' callback
+ from controller data
+Date: Wed, 11 Jul 2012 12:47:17 +0100
+Message-ID: <20120711114716.GF3938@opensource.wolfsonmicro.com>
+References: <CAJuYYwSi-1nBM40SWt359W0Lr2n_yVX5tvWfOS77bmLQRt_9fw@mail.gmail.com>
+ <1342005359-748-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A9z/3b/E4MkkD+7G"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120711093331.GA3025-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liu Hui-R64343 <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1342005359-748-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 11, 2012 at 05:33:32PM +0800, Zhao Richard-B20223 wrote:
-> On Mon, Jul 09, 2012 at 03:10:21PM +0800, Dong Aisheng wrote:
-> > On Fri, Jul 06, 2012 at 11:52:49PM +0800, Stephen Warren wrote:
-> > > On 07/06/2012 03:09 AM, Dong Aisheng wrote:
-> > > > From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > > 
-> > > > The General Purpose Registers (GPR) is used to select operating modes for
-> > > > general features in the SoC, usually not related to the IOMUX itself,
-> > > > but it does belong to IOMUX controller.
-> > > > We simply provide an convient API for driver to call to set the general purpose
-> > > > register bits if needed.
-> > > 
-> > > > +static struct imx_pinctrl *imx_pinctrl;
-> > > > +/*
-> > > > + * Set bits for general purpose registers
-> > > > + */
-> > > > +void imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
-> > > > +{
-> > > > +	u32 reg;
-> > > > +
-> > > > +	/* general purpose register is 32 bits size */
-> > > > +	WARN_ON(!imx_pinctrl || start_bit > 31 || num_bits > 32);
-> > > 
-> > > Hmmm. It's going to be very hard to control the probe() order to ensure
-> > > that this WARN doesn't fire all the time.
-> > > 
-> > Correct, if this api is used by client driver before the pinctrl driver is
-> > registered, the warning will show.
-> > To avoid it, the current pinctrl driver register priority is arch_initcall.
-> +postcore_initcall is not enough. Could you use postcore_initcall? So people
-> can hack right after populate devices.
-> 
-Yes, i will change to postcore_initcall to satisfy the client devices at best.
 
-> > But maybe you're right, this may not be so sufficient since i'm afraid there
-> > are still possible some devices may register earlier than pinctrl since it's not
-> > controlled by pinctrl driver.
-> > Then it's true that we need to resolve it.
-> imx_pinctrl_set_gpr_register is SoC specific. People who use it must
-> have sense of related registers and driver loading sequence.
-> > 
-> > > I think it would be better to pass in a struct imx_pinctrl* or DT node
-> > > to this function.
-> Maybe we can do it, but why? It's kind of over-engineering.
-> 
-> > The DT node for the device that's using this function
-> > > should contain a phandle to the pinctrl device node, which it uses to
-> > > get that handle. Or in a non-DT case, the client driver needs to be
-> > > given the provider driver handle using some other mechanism.
-> > > 
-> > > For example, look at how the Tegra30 SMMU uses services from the Tegra30
-> > > AHB; see arch/arm/boot/dts/tegra30.dtsi node "smmu" (client) and node
-> > > "ahb" (provider), drivers/iommu/tegra-smmu.c functions probe() (saves
-> > > smmu->ahb) and smmu_setup_regs() (calls tegra_ahb_enable_smmu() with
-> > > this handle) and drivers/amba/tegra-ahb.c function
-> > > tegra_ahb_enable_smmu() (implements the deferred probe checking to
-> > > correctly order the client/provider driver probing)
-> > > 
-> > Yes, i learned the code but i'm not sure it also fits for imx.
-> > I have a few concerns:
-> > 1) i'm not sure if we really need the client to provide pinctrl device
-> > node as parameter to set gpr registers since there is only one pinctrl device
-> > for each imx soc. Client devices may also not want to care that parameter.
-> > 2) if passing device node to the api, that means every client driver
-> > needs to define a phandle of pinctrl device in dts file and parsing it
-> > in each driver respectively.
-> > There're several client devices for imx6q, i'm not sure if it's worth to do that
-> > considering this overhead.
-> > 
-> > I think either passing device node or not passing, the goal is the same,
-> > guarantee this api to be used properly without being affected by driver
-> > loading sequence.
-> > 
-> > If that, how about change to:
-> > int imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
-> > {
-> >         u32 reg;
-> > 
-> > 	if (!imx_pinctrl)
-> > 		return -EDEFER_PROBE;
-> > 
-> >         /* general purpose register is 32 bits size */
-> >         WARN_ON(start_bit > 31 || num_bits > 32);
-> Isn't it BUG ?
-Hmm, it seems it's not so seriously to hang kernel.
+--A9z/3b/E4MkkD+7G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Normally, people like write_register(addr, mask, value),
-> and read_register(addr, mask);
-> 
-Correct, will try it.
+On Wed, Jul 11, 2012 at 04:45:59PM +0530, Thomas Abraham wrote:
+> The set_level callback in the controller data, which is used to configure
+> the slave select line, cannot be supported when migrating the driver to
+> device tree based discovery. Since all the platforms currently use gpio
+> as the slave select line, this callback can be removed from the
+> controller data and replaced with call to gpio_set_value in the driver.
 
-Regards
-Dong Aisheng
+I don't seem to have patches 1-4?
+
+--A9z/3b/E4MkkD+7G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP/WeRAAoJEBus8iNuMP3dGwEQAJeFvttWX9MTCOa3HcGGlyiI
+ECBDv8UK64zxyeGyy1gxjSMDuPdAlszLOMvv+/Eh6H1Ge5AXvAWy2BMfb5p706OD
+v82ii5gDymdoYiSESmA7oGkEinvWYnZuNKZoU5du4ShFOVIAWvdcqBPGjVrzsl5H
+stQqXl8tmzT3BvSUhy3ey4Q7ZTU7e6rB1rCNvYBWvM+bE+ZFP2kJnYpgpfFJBtqT
+6JVgdx3WELJCYTsIw9kyCCllC5GOx8DKA7bt89ZESkxhcCojkZfMBnk+dcfSGDu/
+TkfT/iGrFBkwT3Sa9k04xFnAYIto2e4/NTgpIp1w0YiedE9Pi/UOKMGEijbrwMdD
+EjlFurIyiIjdYxcLVwpqnarZFcRgNB3uLqqWerK8thU27/NnjmEy4+QdE8fpm69a
+/KUXVLBxms+rTVb34aLOsKjGxPaBSOCg29wmHCSTFTdKp/5uOy9Ogt2oafORuyyM
+bUCv2Wie8uUdyG+8a7aEdxNbz6JOAfUADJ8y7fxb0K+sTZn0c7AnXQqpIehE89Lw
+NwZZgF+/sB4t4Xtkjfgd4lB15wT6Vd5qd8cAHE/ql+WUTYEg+rOrfOK7n1CyAipd
+uVYVhox7JTi82d0PFPb2/etLTm5vL4d27e6kCnuZVw/xH7CjphecFXP1r8X3SBIR
+bo0clLqy4JiM0Kkfdkif
+=FGys
+-----END PGP SIGNATURE-----
+
+--A9z/3b/E4MkkD+7G--
