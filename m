@@ -1,347 +1,122 @@
-From: "Poddar, Sourav" <sourav.poddar@ti.com>
-Subject: Re: [RESEND/PATCHv5 1/2] drivers: input: keypad: Add device tree support
-Date: Wed, 11 Jul 2012 16:50:39 +0530
-Message-ID: <CAKdam551a9gXJ4gWmpqpT8S33-PhS5JPr6Ok-g4rNA0yAoL3kA@mail.gmail.com>
-References: <1339152780-25301-1-git-send-email-sourav.poddar@ti.com>
-	<20120710061326.GA29257@core.coreip.homeip.net>
-	<CAKdam54gZoMEaH93FDL9D--GB=TqcSTEGz69TcZ99NdnvnQzsg@mail.gmail.com>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] pinctrl: pinctrl-imx: add support for set bits for
+ general purpose registers
+Date: Wed, 11 Jul 2012 19:35:36 +0800
+Message-ID: <20120711113536.GB22640@shlinux2.ap.freescale.net>
+References: <1341565763-10074-1-git-send-email-b29396@freescale.com>
+ <4FF709D1.40903@wwwdotorg.org>
+ <20120709071019.GA28527@shlinux2.ap.freescale.net>
+ <20120711093331.GA3025@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKdam54gZoMEaH93FDL9D--GB=TqcSTEGz69TcZ99NdnvnQzsg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Randy Dunlap <rdunlap@xenotime.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120711093331.GA3025-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liu Hui-R64343 <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+On Wed, Jul 11, 2012 at 05:33:32PM +0800, Zhao Richard-B20223 wrote:
+> On Mon, Jul 09, 2012 at 03:10:21PM +0800, Dong Aisheng wrote:
+> > On Fri, Jul 06, 2012 at 11:52:49PM +0800, Stephen Warren wrote:
+> > > On 07/06/2012 03:09 AM, Dong Aisheng wrote:
+> > > > From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > 
+> > > > The General Purpose Registers (GPR) is used to select operating modes for
+> > > > general features in the SoC, usually not related to the IOMUX itself,
+> > > > but it does belong to IOMUX controller.
+> > > > We simply provide an convient API for driver to call to set the general purpose
+> > > > register bits if needed.
+> > > 
+> > > > +static struct imx_pinctrl *imx_pinctrl;
+> > > > +/*
+> > > > + * Set bits for general purpose registers
+> > > > + */
+> > > > +void imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
+> > > > +{
+> > > > +	u32 reg;
+> > > > +
+> > > > +	/* general purpose register is 32 bits size */
+> > > > +	WARN_ON(!imx_pinctrl || start_bit > 31 || num_bits > 32);
+> > > 
+> > > Hmmm. It's going to be very hard to control the probe() order to ensure
+> > > that this WARN doesn't fire all the time.
+> > > 
+> > Correct, if this api is used by client driver before the pinctrl driver is
+> > registered, the warning will show.
+> > To avoid it, the current pinctrl driver register priority is arch_initcall.
+> +postcore_initcall is not enough. Could you use postcore_initcall? So people
+> can hack right after populate devices.
+> 
+Yes, i will change to postcore_initcall to satisfy the client devices at best.
 
-On Wed, Jul 11, 2012 at 3:15 PM, Poddar, Sourav <sourav.poddar@ti.com> wrote:
-> Hi Dmitry,
->
-> On Tue, Jul 10, 2012 at 11:43 AM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
->> Hi Sourav,
->>
->> On Fri, Jun 08, 2012 at 04:22:59PM +0530, Sourav Poddar wrote:
->>> Update the Documentation with omap4 keypad device tree
->>> binding information.
->>> Add device tree support for omap4 keypad driver.
->>>
->>> Tested on omap4430 sdp.
->>>
->>
->> Sorry for the delay, I have a few comments:
->>
->>>
->>>       /* platform data */
->>>       pdata = pdev->dev.platform_data;
->>> -     if (!pdata) {
->>> +     if (np) {
->>> +             of_property_read_u32(np, "keypad,num-rows", &num_rows);
->>> +             of_property_read_u32(np, "keypad,num-columns", &num_cols);
->>> +             if (!num_rows || !num_cols) {
->>> +                     dev_err(&pdev->dev, "number of keypad rows/columns not specified\n");
->>> +                     return -EINVAL;
->>> +             }
->>> +     } else if (pdata) {
->>> +             num_rows = pdata->rows;
->>> +             num_cols = pdata->cols;
->>> +     } else {
->>>               dev_err(&pdev->dev, "no platform data defined\n");
->>>               return -EINVAL;
->>>       }
->>>
->>
->> I believe drivers should use platform data if it is supplied and use DT
->> data if platform data is omitted. This way one can override firmware
->> data if needed.
->>
->> Does the patch below (if applied on top of your) work for you?
->>
-> Yes, the above patch works fine for me.
-> Acked-by: Sourav Poddar <sourav.poddar@ti.com>
->
-> Note, I did some mux setting changes in the bootloader for DT case.
->
-To be explicit, these was done throughout for testing. Nothing specific to your
-incremental patch.
-> Thanks,
-> Sourav
->> Thanks.
->>
->> --
->> Dmitry
->>
->> Input: omap4-keypad - misc fixes
->>
->> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> ---
->>
->>  drivers/input/keyboard/omap4-keypad.c |  152 ++++++++++++++++-----------------
->>  1 file changed, 74 insertions(+), 78 deletions(-)
->>
->>
->> diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
->> index d5a2d1a..033168e 100644
->> --- a/drivers/input/keyboard/omap4-keypad.c
->> +++ b/drivers/input/keyboard/omap4-keypad.c
->> @@ -76,7 +76,6 @@ enum {
->>
->>  struct omap4_keypad {
->>         struct input_dev *input;
->> -       struct matrix_keymap_data *keymap_data;
->>
->>         void __iomem *base;
->>         unsigned int irq;
->> @@ -88,7 +87,7 @@ struct omap4_keypad {
->>         unsigned int row_shift;
->>         bool no_autorepeat;
->>         unsigned char key_state[8];
->> -       unsigned short keymap[];
->> +       unsigned short *keymap;
->>  };
->>
->>  static int kbd_readl(struct omap4_keypad *keypad_data, u32 offset)
->> @@ -211,74 +210,52 @@ static void omap4_keypad_close(struct input_dev *input)
->>         pm_runtime_put_sync(input->dev.parent);
->>  }
->>
->> -static struct omap4_keypad *omap_keypad_parse_dt(struct device *dev,
->> -                               uint32_t rows, uint32_t cols,
->> -                               struct input_dev *input_dev)
->> +#ifdef CONFIG_OF
->> +static int __devinit omap4_keypad_parse_dt(struct device *dev,
->> +                                          struct omap4_keypad *keypad_data)
->>  {
->>         struct device_node *np = dev->of_node;
->> -       struct platform_device *pdev = to_platform_device(dev);
->> -       struct omap4_keypad *keypad_data = platform_get_drvdata(pdev);
->>         int error;
->>
->> -       error = matrix_keypad_build_keymap(NULL, "linux,keymap",
->> -                               rows, cols, keypad_data->keymap, input_dev);
->> -       if (error) {
->> -               dev_err(&pdev->dev, "failed to build keymap\n");
->> -               input_free_device(input_dev);
->> +       if (!np) {
->> +               dev_err(dev, "missing DT data");
->> +               return -EINVAL;
->> +       }
->> +
->> +       of_property_read_u32(np, "keypad,num-rows", &keypad_data->rows);
->> +       of_property_read_u32(np, "keypad,num-columns", &keypad_data->cols);
->> +       if (!keypad_data->rows || !keypad_data->cols) {
->> +               dev_err(dev, "number of keypad rows/columns not specified\n");
->> +               return -EINVAL;
->>         }
->>
->>         if (of_get_property(np, "linux,input-no-autorepeat", NULL))
->>                 keypad_data->no_autorepeat = true;
->>
->> -       return keypad_data;
->> +       return 0;
->> +}
->> +#else
->> +static inline int omap4_keypad_parse_dt(struct device *dev,
->> +                                       struct omap4_keypad *keypad_data)
->> +{
->> +       return -ENOSYS;
->>  }
->> +#endif
->>
->>  static int __devinit omap4_keypad_probe(struct platform_device *pdev)
->>  {
->> -       struct device *dev = &pdev->dev;
->> -       struct device_node *np = dev->of_node;
->> -       const struct omap4_keypad_platform_data *pdata;
->> +       const struct omap4_keypad_platform_data *pdata =
->> +                               dev_get_platdata(&pdev->dev);
->> +       const struct matrix_keymap_data *keymap_data =
->> +                               pdata ? pdata->keymap_data : NULL;
->>         struct omap4_keypad *keypad_data;
->>         struct input_dev *input_dev;
->>         struct resource *res;
->> -       resource_size_t size;
->> -       unsigned int row_shift = 0, max_keys = 0;
->> -       uint32_t num_rows = 0, num_cols = 0;
->> +       unsigned int max_keys;
->>         int rev;
->>         int irq;
->>         int error;
->>
->> -       /* platform data */
->> -       pdata = pdev->dev.platform_data;
->> -       if (np) {
->> -               of_property_read_u32(np, "keypad,num-rows", &num_rows);
->> -               of_property_read_u32(np, "keypad,num-columns", &num_cols);
->> -               if (!num_rows || !num_cols) {
->> -                       dev_err(&pdev->dev, "number of keypad rows/columns not specified\n");
->> -                       return -EINVAL;
->> -               }
->> -       } else if (pdata) {
->> -               num_rows = pdata->rows;
->> -               num_cols = pdata->cols;
->> -       } else {
->> -               dev_err(&pdev->dev, "no platform data defined\n");
->> -               return -EINVAL;
->> -       }
->> -
->> -       row_shift = get_count_order(num_cols);
->> -       max_keys = num_rows << row_shift;
->> -
->> -       keypad_data = devm_kzalloc(dev, sizeof(struct omap4_keypad) +
->> -                       max_keys * sizeof(keypad_data->keymap[0]),
->> -                               GFP_KERNEL);
->> -
->> -       if (!keypad_data) {
->> -               dev_err(&pdev->dev, "keypad_data memory allocation failed\n");
->> -               return -ENOMEM;
->> -       }
->> -
->> -       platform_set_drvdata(pdev, keypad_data);
->> -
->>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>         if (!res) {
->>                 dev_err(&pdev->dev, "no base address specified\n");
->> @@ -291,9 +268,24 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
->>                 return -EINVAL;
->>         }
->>
->> -       size = resource_size(res);
->> +       keypad_data = kzalloc(sizeof(struct omap4_keypad), GFP_KERNEL);
->> +       if (!keypad_data) {
->> +               dev_err(&pdev->dev, "keypad_data memory allocation failed\n");
->> +               return -ENOMEM;
->> +       }
->> +
->> +       keypad_data->irq = irq;
->> +
->> +       if (pdata) {
->> +               keypad_data->rows = pdata->rows;
->> +               keypad_data->cols = pdata->cols;
->> +       } else {
->> +               error = omap4_keypad_parse_dt(&pdev->dev, keypad_data);
->> +               if (error)
->> +                       return error;
->> +       }
->>
->> -       res = request_mem_region(res->start, size, pdev->name);
->> +       res = request_mem_region(res->start, resource_size(res), pdev->name);
->>         if (!res) {
->>                 dev_err(&pdev->dev, "can't request mem region\n");
->>                 error = -EBUSY;
->> @@ -307,15 +299,11 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
->>                 goto err_release_mem;
->>         }
->>
->> -       keypad_data->rows = num_rows;
->> -       keypad_data->cols = num_cols;
->> -       keypad_data->irq = irq;
->> -       keypad_data->row_shift = row_shift;
->>
->>         /*
->> -       * Enable clocks for the keypad module so that we can read
->> -       * revision register.
->> -       */
->> +        * Enable clocks for the keypad module so that we can read
->> +        * revision register.
->> +        */
->>         pm_runtime_enable(&pdev->dev);
->>         error = pm_runtime_get_sync(&pdev->dev);
->>         if (error) {
->> @@ -358,29 +346,30 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
->>         input_dev->open = omap4_keypad_open;
->>         input_dev->close = omap4_keypad_close;
->>
->> -       if (np) {
->> -               keypad_data = omap_keypad_parse_dt(&pdev->dev,
->> -                               keypad_data->rows, keypad_data->cols,
->> -                               input_dev);
->> -       } else {
->> -               keypad_data->keymap_data =
->> -                       (struct matrix_keymap_data *)pdata->keymap_data;
->> -               error = matrix_keypad_build_keymap(keypad_data->keymap_data,
->> -                               NULL, keypad_data->rows, keypad_data->cols,
->> -                               keypad_data->keymap, input_dev);
->> -               if (error) {
->> -                       dev_err(&pdev->dev, "failed to build keymap\n");
->> -                       goto err_free_input;
->> -               }
->> -       }
->> -
->> +       input_set_capability(input_dev, EV_MSC, MSC_SCAN);
->>         if (!keypad_data->no_autorepeat)
->>                 __set_bit(EV_REP, input_dev->evbit);
->>
->> -       input_set_capability(input_dev, EV_MSC, MSC_SCAN);
->> -
->>         input_set_drvdata(input_dev, keypad_data);
->>
->> +       keypad_data->row_shift = get_count_order(keypad_data->cols);
->> +       max_keys = keypad_data->rows << keypad_data->row_shift;
->> +       keypad_data->keymap = kzalloc(max_keys * sizeof(keypad_data->keymap[0]),
->> +                                     GFP_KERNEL);
->> +       if (!keypad_data->keymap) {
->> +               dev_err(&pdev->dev, "Not enough memory for keymap\n");
->> +               error = -ENOMEM;
->> +               goto err_free_input;
->> +       }
->> +
->> +       error = matrix_keypad_build_keymap(keymap_data, NULL,
->> +                                          keypad_data->rows, keypad_data->cols,
->> +                                          keypad_data->keymap, input_dev);
->> +       if (error) {
->> +               dev_err(&pdev->dev, "failed to build keymap\n");
->> +               goto err_free_keymap;
->> +       }
->> +
->>         error = request_irq(keypad_data->irq, omap4_keypad_interrupt,
->>                              IRQF_TRIGGER_RISING,
->>                              "omap4-keypad", keypad_data);
->> @@ -397,11 +386,14 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
->>                 goto err_pm_disable;
->>         }
->>
->> +       platform_set_drvdata(pdev, keypad_data);
->>         return 0;
->>
->>  err_pm_disable:
->>         pm_runtime_disable(&pdev->dev);
->>         free_irq(keypad_data->irq, keypad_data);
->> +err_free_keymap:
->> +       kfree(keypad_data->keymap);
->>  err_free_input:
->>         input_free_device(input_dev);
->>  err_pm_put_sync:
->> @@ -409,7 +401,7 @@ err_pm_put_sync:
->>  err_unmap:
->>         iounmap(keypad_data->base);
->>  err_release_mem:
->> -       release_mem_region(res->start, size);
->> +       release_mem_region(res->start, resource_size(res));
->>  err_free_keypad:
->>         kfree(keypad_data);
->>         return error;
->> @@ -431,17 +423,21 @@ static int __devexit omap4_keypad_remove(struct platform_device *pdev)
->>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>         release_mem_region(res->start, resource_size(res));
->>
->> +       kfree(keypad_data->keymap);
->>         kfree(keypad_data);
->> +
->>         platform_set_drvdata(pdev, NULL);
->>
->>         return 0;
->>  }
->>
->> +#ifdef CONFIG_OF
->>  static const struct of_device_id omap_keypad_dt_match[] = {
->>         { .compatible = "ti,omap4-keypad" },
->>         {},
->>  };
->>  MODULE_DEVICE_TABLE(of, omap_keypad_dt_match);
->> +#endif
->>
->>  static struct platform_driver omap4_keypad_driver = {
->>         .probe          = omap4_keypad_probe,
+> > But maybe you're right, this may not be so sufficient since i'm afraid there
+> > are still possible some devices may register earlier than pinctrl since it's not
+> > controlled by pinctrl driver.
+> > Then it's true that we need to resolve it.
+> imx_pinctrl_set_gpr_register is SoC specific. People who use it must
+> have sense of related registers and driver loading sequence.
+> > 
+> > > I think it would be better to pass in a struct imx_pinctrl* or DT node
+> > > to this function.
+> Maybe we can do it, but why? It's kind of over-engineering.
+> 
+> > The DT node for the device that's using this function
+> > > should contain a phandle to the pinctrl device node, which it uses to
+> > > get that handle. Or in a non-DT case, the client driver needs to be
+> > > given the provider driver handle using some other mechanism.
+> > > 
+> > > For example, look at how the Tegra30 SMMU uses services from the Tegra30
+> > > AHB; see arch/arm/boot/dts/tegra30.dtsi node "smmu" (client) and node
+> > > "ahb" (provider), drivers/iommu/tegra-smmu.c functions probe() (saves
+> > > smmu->ahb) and smmu_setup_regs() (calls tegra_ahb_enable_smmu() with
+> > > this handle) and drivers/amba/tegra-ahb.c function
+> > > tegra_ahb_enable_smmu() (implements the deferred probe checking to
+> > > correctly order the client/provider driver probing)
+> > > 
+> > Yes, i learned the code but i'm not sure it also fits for imx.
+> > I have a few concerns:
+> > 1) i'm not sure if we really need the client to provide pinctrl device
+> > node as parameter to set gpr registers since there is only one pinctrl device
+> > for each imx soc. Client devices may also not want to care that parameter.
+> > 2) if passing device node to the api, that means every client driver
+> > needs to define a phandle of pinctrl device in dts file and parsing it
+> > in each driver respectively.
+> > There're several client devices for imx6q, i'm not sure if it's worth to do that
+> > considering this overhead.
+> > 
+> > I think either passing device node or not passing, the goal is the same,
+> > guarantee this api to be used properly without being affected by driver
+> > loading sequence.
+> > 
+> > If that, how about change to:
+> > int imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
+> > {
+> >         u32 reg;
+> > 
+> > 	if (!imx_pinctrl)
+> > 		return -EDEFER_PROBE;
+> > 
+> >         /* general purpose register is 32 bits size */
+> >         WARN_ON(start_bit > 31 || num_bits > 32);
+> Isn't it BUG ?
+Hmm, it seems it's not so seriously to hang kernel.
+
+> Normally, people like write_register(addr, mask, value),
+> and read_register(addr, mask);
+> 
+Correct, will try it.
+
+Regards
+Dong Aisheng
