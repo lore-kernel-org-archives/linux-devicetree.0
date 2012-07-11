@@ -1,65 +1,38 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Wed, 11 Jul 2012 22:40:55 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207112106510.18999@axis700.grange>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
- <Pine.LNX.4.64.1207111031200.18999@axis700.grange>
- <20120711190414.GQ30009@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] GPIO: PCA953X: Increase size of invert variable to
+ support 24 bit
+Date: Thu, 12 Jul 2012 00:02:50 +0200
+Message-ID: <CACRpkdYX58zq2byvdWtLs-1ufN2gF=+1qokumjhoia+RThW=NA@mail.gmail.com>
+References: <cover.1341925681.git.cmahapatra@ti.com>
+	<505ac716b6c758d36471a90c2a5228cedb7217be.1341925681.git.cmahapatra@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120711190414.GQ30009-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <505ac716b6c758d36471a90c2a5228cedb7217be.1341925681.git.cmahapatra@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chandrabhanu Mahapatra <cmahapatra@ti.com>
+Cc: grant.likely@secretlab.ca, linus.walleij@stericsson.com, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, leed.aguilar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Jul 2012, Sascha Hauer wrote:
+On Tue, Jul 10, 2012 at 3:35 PM, Chandrabhanu Mahapatra
+<cmahapatra@ti.com> wrote:
 
-> Hi Guennadi,
-> 
-> On Wed, Jul 11, 2012 at 10:34:54AM +0200, Guennadi Liakhovetski wrote:
-> > Hi Sascha
-> > 
-> > > +
-> > > +Optional properties:
-> > > + - width-mm, height-mm: Display dimensions in mm
-> > > + - hsync-active-high (bool): Hsync pulse is active high
-> > > + - vsync-active-high (bool): Vsync pulse is active high
-> > 
-> > How about
-> > 
-> > + - hsync-active: Hsync pulse polarity: 1 for high, 0 for low
-> 
-> I am unsure if it's good to mix this with the other bool flags like:
-> 
-> > 
-> > > + - interlaced (bool): This is an interlaced mode
-> > > + - doublescan (bool): This is a doublescan mode
-> 
-> Which behave differently. 'interlaced' will be evaluated as true if
-> the property is present, no matter which value it has. This might
-> lead to confusion.
+> TCA6424 is a low voltage 24 bit I2C and SMBus I/O expander of pca953x family
+> similar to its 16 bit predecessor TCA6416. It comes with three 8-bit active
+> Input, Output, Polarity Inversion and Configuration registers each. The polarity
+> of Input ports can be reversed by setting the appropiate bit in Polarity
+> Inversion registers.
+>
+> The variables corresponding to Input, Output and Configuration registers have
+> already been updated to support 24 bit values. This patch thus updates the
+> invert variable of PCA953X platform data to support 24 bit.
+>
+> Signed-off-by: Chandrabhanu Mahapatra <cmahapatra@ti.com>
 
-I don't feel strongly either way either. I don't think it'd be confusing - 
-you have integer properties there too, and the logic in this case is not 
-"active high - yes or now," but rather "active level - logical 1 (high) or 
-0 (low)." But as I said - that was just an idea, unless someone has strong 
-arguments either way - you're the original author, it's your call:-)
+I remember this (I think). So expand to 32bit to support 24 bit,
+that looks reasonable.
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Patch applied.
+
+Thanks,
+Linus Walleij
