@@ -1,626 +1,347 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v5 6/6] spi: s3c64xx: add device tree support
-Date: Wed, 11 Jul 2012 16:47:39 +0530
-Message-ID: <1342005459-800-1-git-send-email-thomas.abraham@linaro.org>
-References: <1341930459-25223-7-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1341930459-25223-7-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
-Cc: broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jaswinder.singh@linaro.org
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [RESEND/PATCHv5 1/2] drivers: input: keypad: Add device tree support
+Date: Wed, 11 Jul 2012 16:50:39 +0530
+Message-ID: <CAKdam551a9gXJ4gWmpqpT8S33-PhS5JPr6Ok-g4rNA0yAoL3kA@mail.gmail.com>
+References: <1339152780-25301-1-git-send-email-sourav.poddar@ti.com>
+	<20120710061326.GA29257@core.coreip.homeip.net>
+	<CAKdam54gZoMEaH93FDL9D--GB=TqcSTEGz69TcZ99NdnvnQzsg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKdam54gZoMEaH93FDL9D--GB=TqcSTEGz69TcZ99NdnvnQzsg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Randy Dunlap <rdunlap@xenotime.net>
 List-Id: devicetree@vger.kernel.org
 
-Add support for device based discovery.
+Hi Dmitry,
 
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-Acked-by: Jaswinder Singh <jaswinder.singh@linaro.org>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
----
- .../devicetree/bindings/spi/spi-samsung.txt        |  113 +++++++
- drivers/spi/spi-s3c64xx.c                          |  306 +++++++++++++++++---
- 2 files changed, 379 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-samsung.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-samsung.txt b/Documentation/devicetree/bindings/spi/spi-samsung.txt
-new file mode 100644
-index 0000000..59bfc4f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-samsung.txt
-@@ -0,0 +1,113 @@
-+* Samsung SPI Controller
-+
-+The Samsung SPI controller is used to interface with various devices such as flash
-+and display controllers using the SPI communication interface.
-+
-+Required SoC Specific Properties:
-+
-+- compatible: should be one of the following.
-+    - samsung,s3c2443-spi: for s3c2443, s3c2416 and s3c2450 platforms
-+    - samsung,s3c6410-spi: for s3c6410 platforms
-+    - samsung,s5p6440-spi: for s5p6440 and s5p6450 platforms
-+    - samsung,s5pv210-spi: for s5pv210 and s5pc110 platforms
-+    - samsung,exynos4210-spi: for exynos4 and exynos5 platforms
-+
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+
-+- interrupts: The interrupt number to the cpu. The interrupt specifier format
-+  depends on the interrupt controller.
-+
-+- tx-dma-channel: The dma channel specifier for tx operations. The format of
-+  the dma specifier depends on the dma controller.
-+
-+- rx-dma-channel: The dma channel specifier for rx operations. The format of
-+  the dma specifier depends on the dma controller.
-+
-+Required Board Specific Properties:
-+
-+- #address-cells: should be 1.
-+- #size-cells: should be 0.
-+- gpios: The gpio specifier for clock, mosi and miso interface lines (in the
-+  order specified). The format of the gpio specifier depends on the gpio
-+  controller.
-+
-+Optional Board Specific Properties:
-+
-+- samsung,spi-src-clk: If the spi controller includes a internal clock mux to
-+  select the clock source for the spi bus clock, this property can be used to
-+  indicate the clock to be used for driving the spi bus clock. If not specified,
-+  the clock number 0 is used as default.
-+
-+- num-cs: Specifies the number of chip select lines supported. If
-+  not specified, the default number of chip select lines is set to 1.
-+
-+SPI Controller specific data in SPI slave nodes:
-+
-+- The spi slave nodes should provide the following information which is required
-+  by the spi controller.
-+
-+  - cs-gpio: A gpio specifier that specifies the gpio line used as
-+    the slave select line by the spi controller. The format of the gpio
-+    specifier depends on the gpio controller.
-+
-+  - samsung,spi-feedback-delay: The sampling phase shift to be applied on the
-+    miso line (to account for any lag in the miso line). The following are the
-+    valid values.
-+
-+      - 0: No phase shift.
-+      - 1: 90 degree phase shift sampling.
-+      - 2: 180 degree phase shift sampling.
-+      - 3: 270 degree phase shift sampling.
-+
-+Aliases:
-+
-+- All the SPI controller nodes should be represented in the aliases node using
-+  the following format 'spi{n}' where n is a unique number for the alias.
-+
-+
-+Example:
-+
-+- SoC Specific Portion:
-+
-+	spi_0: spi@12d20000 {
-+		compatible = "samsung,exynos4210-spi";
-+		reg = <0x12d20000 0x100>;
-+		interrupts = <0 66 0>;
-+		tx-dma-channel = <&pdma0 5>;
-+		rx-dma-channel = <&pdma0 4>;
-+	};
-+
-+- Board Specific Portion:
-+
-+	spi_0: spi@12d20000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		gpios = <&gpa2 4 2 3 0>,
-+			<&gpa2 6 2 3 0>,
-+			<&gpa2 7 2 3 0>;
-+
-+		w25q80bw@0 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "w25x80";
-+			reg = <0>;
-+			spi-max-frequency = <10000>;
-+
-+			controller-data {
-+				cs-gpio = <&gpa2 5 1 0 3>;
-+				samsung,spi-feedback-delay = <0>;
-+			};
-+
-+			partition@0 {
-+				label = "U-Boot";
-+				reg = <0x0 0x40000>;
-+				read-only;
-+			};
-+
-+			partition@40000 {
-+				label = "Kernel";
-+				reg = <0x40000 0xc0000>;
-+			};
-+		};
-+	};
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index ba5193b..6c15f05 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -28,6 +28,8 @@
- #include <linux/pm_runtime.h>
- #include <linux/spi/spi.h>
- #include <linux/gpio.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- 
- #include <mach/dma.h>
- #include <plat/s3c64xx-spi.h>
-@@ -137,6 +139,7 @@ struct s3c64xx_spi_dma_data {
- 	unsigned		ch;
- 	enum dma_data_direction direction;
- 	enum dma_ch	dmach;
-+	struct property		*dma_prop;
- };
- 
- /**
-@@ -201,6 +204,7 @@ struct s3c64xx_spi_driver_data {
- 	struct samsung_dma_ops		*ops;
- 	struct s3c64xx_spi_port_config	*port_conf;
- 	unsigned int			port_id;
-+	unsigned long			gpios[4];
- };
- 
- static struct s3c2410_dma_client s3c64xx_spi_dma_client = {
-@@ -326,7 +330,9 @@ static int acquire_dma(struct s3c64xx_spi_driver_data *sdd)
- 	req.cap = DMA_SLAVE;
- 	req.client = &s3c64xx_spi_dma_client;
- 
-+	req.dt_dmach_prop = sdd->rx_dma.dma_prop;
- 	sdd->rx_dma.ch = sdd->ops->request(sdd->rx_dma.dmach, &req);
-+	req.dt_dmach_prop = sdd->tx_dma.dma_prop;
- 	sdd->tx_dma.ch = sdd->ops->request(sdd->tx_dma.dmach, &req);
- 
- 	return 1;
-@@ -819,6 +825,48 @@ static int s3c64xx_spi_unprepare_transfer(struct spi_master *spi)
- 	return 0;
- }
- 
-+static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
-+				struct s3c64xx_spi_driver_data *sdd,
-+				struct spi_device *spi)
-+{
-+	struct s3c64xx_spi_csinfo *cs;
-+	struct device_node *slave_np, *data_np;
-+	u32 fb_delay = 0;
-+
-+	slave_np = spi->dev.of_node;
-+	if (!slave_np) {
-+		dev_err(&spi->dev, "device node not found\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	for_each_child_of_node(slave_np, data_np)
-+		if (!strcmp(data_np->name, "controller-data"))
-+			break;
-+	if (!data_np) {
-+		dev_err(&spi->dev, "child node 'controller-data' not found\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	cs = kzalloc(sizeof(*cs), GFP_KERNEL);
-+	if (!cs) {
-+		dev_err(&spi->dev, "could not allocate memory for controller"
-+					" data\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	cs->line = of_get_named_gpio(data_np, "cs-gpio", 0);
-+	if (!gpio_is_valid(cs->line)) {
-+		dev_err(&spi->dev, "chip select gpio is not specified or "
-+					"invalid\n");
-+		kfree(cs);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
-+	cs->fb_delay = fb_delay;
-+	return cs;
-+}
-+
- /*
-  * Here we only check the validity of requested configuration
-  * and save the configuration in a local data-structure.
-@@ -832,9 +880,15 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
- 	struct s3c64xx_spi_info *sci;
- 	struct spi_message *msg;
- 	unsigned long flags;
--	int err = 0;
-+	int err;
- 
--	if (cs == NULL) {
-+	sdd = spi_master_get_devdata(spi->master);
-+	if (!cs && spi->dev.of_node) {
-+		cs = s3c64xx_get_slave_ctrldata(sdd, spi);
-+		spi->controller_data = cs;
-+	}
-+
-+	if (IS_ERR_OR_NULL(cs)) {
- 		dev_err(&spi->dev, "No CS for SPI(%d)\n", spi->chip_select);
- 		return -ENODEV;
- 	}
-@@ -844,12 +898,12 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
- 		if (err) {
- 			dev_err(&spi->dev, "request for slave select gpio "
- 					"line [%d] failed\n", cs->line);
--			return -EBUSY;
-+			err = -EBUSY;
-+			goto err_gpio_req;
- 		}
- 		spi_set_ctldata(spi, cs);
- 	}
- 
--	sdd = spi_master_get_devdata(spi->master);
- 	sci = sdd->cntrlr_info;
- 
- 	spin_lock_irqsave(&sdd->lock, flags);
-@@ -860,7 +914,8 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
- 			dev_err(&spi->dev,
- 				"setup: attempt while mssg in queue!\n");
- 			spin_unlock_irqrestore(&sdd->lock, flags);
--			return -EBUSY;
-+			err = -EBUSY;
-+			goto err_msgq;
- 		}
- 	}
- 
-@@ -903,19 +958,29 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
- 		}
- 
- 		speed = clk_get_rate(sdd->src_clk) / 2 / (psr + 1);
--		if (spi->max_speed_hz >= speed)
-+		if (spi->max_speed_hz >= speed) {
- 			spi->max_speed_hz = speed;
--		else
-+		} else {
- 			err = -EINVAL;
-+			goto setup_exit;
-+		}
- 	}
- 
- 	pm_runtime_put(&sdd->pdev->dev);
-+	disable_cs(sdd, spi);
-+	return 0;
- 
- setup_exit:
--
- 	/* setup() returns with device de-selected */
- 	disable_cs(sdd, spi);
- 
-+err_msgq:
-+	gpio_free(cs->line);
-+	spi_set_ctldata(spi, NULL);
-+
-+err_gpio_req:
-+	kfree(cs);
-+
- 	return err;
- }
- 
-@@ -923,8 +988,11 @@ static void s3c64xx_spi_cleanup(struct spi_device *spi)
- {
- 	struct s3c64xx_spi_csinfo *cs = spi_get_ctldata(spi);
- 
--	if (cs)
-+	if (cs) {
- 		gpio_free(cs->line);
-+		if (spi->dev.of_node)
-+			kfree(cs);
-+	}
- 	spi_set_ctldata(spi, NULL);
- }
- 
-@@ -989,49 +1057,166 @@ static void s3c64xx_spi_hwinit(struct s3c64xx_spi_driver_data *sdd, int channel)
- 	flush_fifo(sdd);
- }
- 
-+static int __devinit s3c64xx_spi_get_dmares(
-+			struct s3c64xx_spi_driver_data *sdd, bool tx)
-+{
-+	struct platform_device *pdev = sdd->pdev;
-+	struct s3c64xx_spi_dma_data *dma_data;
-+	struct property *prop;
-+	struct resource *res;
-+	char prop_name[15], *chan_str;
-+
-+	if (tx) {
-+		dma_data = &sdd->tx_dma;
-+		dma_data->direction = DMA_TO_DEVICE;
-+		chan_str = "tx";
-+	} else {
-+		dma_data = &sdd->rx_dma;
-+		dma_data->direction = DMA_FROM_DEVICE;
-+		chan_str = "rx";
-+	}
-+
-+	if (!sdd->pdev->dev.of_node) {
-+		res = platform_get_resource(pdev, IORESOURCE_DMA, tx ? 0 : 1);
-+		if (!res) {
-+			dev_err(&pdev->dev, "Unable to get SPI-%s dma "
-+					"resource\n", chan_str);
-+			return -ENXIO;
-+		}
-+		dma_data->dmach = res->start;
-+		return 0;
-+	}
-+
-+	sprintf(prop_name, "%s-dma-channel", chan_str);
-+	prop = of_find_property(pdev->dev.of_node, prop_name, NULL);
-+	if (!prop) {
-+		dev_err(&pdev->dev, "%s dma channel property not specified\n",
-+					chan_str);
-+		return -ENXIO;
-+	}
-+
-+	dma_data->dmach = DMACH_DT_PROP;
-+	dma_data->dma_prop = prop;
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static int s3c64xx_spi_parse_dt_gpio(struct s3c64xx_spi_driver_data *sdd)
-+{
-+	struct device *dev = &sdd->pdev->dev;
-+	int idx, gpio, ret;
-+
-+	/* find gpios for mosi, miso and clock lines */
-+	for (idx = 0; idx < 3; idx++) {
-+		gpio = of_get_gpio(dev->of_node, idx);
-+		if (!gpio_is_valid(gpio)) {
-+			dev_err(dev, "invalid gpio[%d]: %d\n", idx, gpio);
-+			goto free_gpio;
-+		}
-+
-+		ret = gpio_request(gpio, "spi-bus");
-+		if (ret) {
-+			dev_err(dev, "gpio [%d] request failed\n", gpio);
-+			goto free_gpio;
-+		}
-+	}
-+	return 0;
-+
-+free_gpio:
-+	while (--idx >= 0)
-+		gpio_free(sdd->gpios[idx]);
-+	return -EINVAL;
-+}
-+
-+static void s3c64xx_spi_dt_gpio_free(struct s3c64xx_spi_driver_data *sdd)
-+{
-+	unsigned int idx;
-+	for (idx = 0; idx < 3; idx++)
-+		gpio_free(sdd->gpios[idx]);
-+}
-+
-+static struct __devinit s3c64xx_spi_info * s3c64xx_spi_parse_dt(
-+						struct device *dev)
-+{
-+	struct s3c64xx_spi_info *sci;
-+	u32 temp;
-+
-+	sci = devm_kzalloc(dev, sizeof(*sci), GFP_KERNEL);
-+	if (!sci) {
-+		dev_err(dev, "memory allocation for spi_info failed\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	if (of_property_read_u32(dev->of_node, "samsung,spi-src-clk", &temp)) {
-+		dev_warn(dev, "spi bus clock parent not specified, using "
-+				"clock at index 0 as parent\n");
-+		sci->src_clk_nr = 0;
-+	} else {
-+		sci->src_clk_nr = temp;
-+	}
-+
-+	if (of_property_read_u32(dev->of_node, "num-cs", &temp)) {
-+		dev_warn(dev, "number of chip select lines not specified, "
-+				"assuming 1 chip select line\n");
-+		sci->num_cs = 1;
-+	} else {
-+		sci->num_cs = temp;
-+	}
-+
-+	return sci;
-+}
-+#else
-+static struct s3c64xx_spi_info *s3c64xx_spi_parse_dt(struct device *dev)
-+{
-+	return dev->platform_data;
-+}
-+
-+static int s3c64xx_spi_parse_dt_gpio(struct s3c64xx_spi_driver_data *sdd)
-+{
-+	return -EINVAL;
-+}
-+
-+static void s3c64xx_spi_dt_gpio_free(struct s3c64xx_spi_driver_data *sdd)
-+{
-+}
-+#endif
-+
-+static const struct of_device_id s3c64xx_spi_dt_match[];
-+
- static inline struct s3c64xx_spi_port_config *s3c64xx_spi_get_port_config(
- 						struct platform_device *pdev)
- {
-+#ifdef CONFIG_OF
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(s3c64xx_spi_dt_match, pdev->dev.of_node);
-+		return (struct s3c64xx_spi_port_config *)match->data;
-+	}
-+#endif
- 	return (struct s3c64xx_spi_port_config *)
- 			 platform_get_device_id(pdev)->driver_data;
- }
- 
- static int __init s3c64xx_spi_probe(struct platform_device *pdev)
- {
--	struct resource	*mem_res, *dmatx_res, *dmarx_res;
-+	struct resource	*mem_res;
- 	struct s3c64xx_spi_driver_data *sdd;
--	struct s3c64xx_spi_info *sci;
-+	struct s3c64xx_spi_info *sci = pdev->dev.platform_data;
- 	struct spi_master *master;
- 	int ret, irq;
- 	char clk_name[16];
- 
--	if (pdev->id < 0) {
--		dev_err(&pdev->dev,
--				"Invalid platform device id-%d\n", pdev->id);
--		return -ENODEV;
-+	if (!sci && pdev->dev.of_node) {
-+		sci = s3c64xx_spi_parse_dt(&pdev->dev);
-+		if (IS_ERR(sci))
-+			return PTR_ERR(sci);
- 	}
- 
--	if (pdev->dev.platform_data == NULL) {
-+	if (!sci) {
- 		dev_err(&pdev->dev, "platform_data missing!\n");
- 		return -ENODEV;
- 	}
- 
--	sci = pdev->dev.platform_data;
--
--	/* Check for availability of necessary resource */
--
--	dmatx_res = platform_get_resource(pdev, IORESOURCE_DMA, 0);
--	if (dmatx_res == NULL) {
--		dev_err(&pdev->dev, "Unable to get SPI-Tx dma resource\n");
--		return -ENXIO;
--	}
--
--	dmarx_res = platform_get_resource(pdev, IORESOURCE_DMA, 1);
--	if (dmarx_res == NULL) {
--		dev_err(&pdev->dev, "Unable to get SPI-Rx dma resource\n");
--		return -ENXIO;
--	}
--
- 	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (mem_res == NULL) {
- 		dev_err(&pdev->dev, "Unable to get SPI MEM resource\n");
-@@ -1059,16 +1244,32 @@ static int __init s3c64xx_spi_probe(struct platform_device *pdev)
- 	sdd->cntrlr_info = sci;
- 	sdd->pdev = pdev;
- 	sdd->sfr_start = mem_res->start;
--	sdd->tx_dma.dmach = dmatx_res->start;
--	sdd->tx_dma.direction = DMA_MEM_TO_DEV;
--	sdd->rx_dma.dmach = dmarx_res->start;
--	sdd->rx_dma.direction = DMA_DEV_TO_MEM;
--	sdd->port_id = pdev->id;
--
-+	if (pdev->dev.of_node) {
-+		ret = of_alias_get_id(pdev->dev.of_node, "spi");
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to get alias id, "
-+						"errno %d\n", ret);
-+			goto err0;
-+		}
-+		sdd->port_id = ret;
-+	} else {
-+		sdd->port_id = pdev->id;
-+	}
-+
- 	sdd->cur_bpw = 8;
- 
-+	ret = s3c64xx_spi_get_dmares(sdd, true);
-+	if (ret)
-+		goto err0;
-+
-+	ret = s3c64xx_spi_get_dmares(sdd, false);
-+	if (ret)
-+		goto err0;
-+
-+	master->dev.of_node = pdev->dev.of_node;
- 	master->bus_num = sdd->port_id;
- 	master->setup = s3c64xx_spi_setup;
-+	master->cleanup = s3c64xx_spi_cleanup;
- 	master->prepare_transfer_hardware = s3c64xx_spi_prepare_transfer;
- 	master->transfer_one_message = s3c64xx_spi_transfer_one_message;
- 	master->unprepare_transfer_hardware = s3c64xx_spi_unprepare_transfer;
-@@ -1091,7 +1292,10 @@ static int __init s3c64xx_spi_probe(struct platform_device *pdev)
- 		goto err1;
- 	}
- 
--	if (sci->cfg_gpio == NULL || sci->cfg_gpio()) {
-+	if (!sci->cfg_gpio && pdev->dev.of_node) {
-+		if (s3c64xx_spi_parse_dt_gpio(sdd))
-+			return -EBUSY;
-+	} else if (sci->cfg_gpio == NULL || sci->cfg_gpio()) {
- 		dev_err(&pdev->dev, "Unable to config gpio\n");
- 		ret = -EBUSY;
- 		goto err2;
-@@ -1172,6 +1376,8 @@ err5:
- err4:
- 	clk_put(sdd->clk);
- err3:
-+	if (!sdd->cntrlr_info->cfg_gpio && pdev->dev.of_node)
-+		s3c64xx_spi_dt_gpio_free(sdd);
- err2:
- 	iounmap((void *) sdd->regs);
- err1:
-@@ -1203,6 +1409,9 @@ static int s3c64xx_spi_remove(struct platform_device *pdev)
- 	clk_disable(sdd->clk);
- 	clk_put(sdd->clk);
- 
-+	if (!sdd->cntrlr_info->cfg_gpio && pdev->dev.of_node)
-+		s3c64xx_spi_dt_gpio_free(sdd);
-+
- 	iounmap((void *) sdd->regs);
- 
- 	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -1227,6 +1436,9 @@ static int s3c64xx_spi_suspend(struct device *dev)
- 	clk_disable(sdd->src_clk);
- 	clk_disable(sdd->clk);
- 
-+	if (!sdd->cntrlr_info->cfg_gpio && dev->of_node)
-+		s3c64xx_spi_dt_gpio_free(sdd);
-+
- 	sdd->cur_speed = 0; /* Output Clock is stopped */
- 
- 	return 0;
-@@ -1238,7 +1450,10 @@ static int s3c64xx_spi_resume(struct device *dev)
- 	struct s3c64xx_spi_driver_data *sdd = spi_master_get_devdata(master);
- 	struct s3c64xx_spi_info *sci = sdd->cntrlr_info;
- 
--	sci->cfg_gpio();
-+	if (!sci->cfg_gpio && dev->of_node)
-+		s3c64xx_spi_parse_dt_gpio(sdd);
-+	else
-+		sci->cfg_gpio();
- 
- 	/* Enable the clock */
- 	clk_enable(sdd->src_clk);
-@@ -1346,11 +1561,22 @@ static struct platform_device_id s3c64xx_spi_driver_ids[] = {
- 	{ },
- };
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id s3c64xx_spi_dt_match[] = {
-+	{ .compatible = "samsung,exynos4210-spi",
-+			.data = (void *)&exynos4_spi_port_config,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, s3c64xx_spi_dt_match);
-+#endif /* CONFIG_OF */
-+
- static struct platform_driver s3c64xx_spi_driver = {
- 	.driver = {
- 		.name	= "s3c64xx-spi",
- 		.owner = THIS_MODULE,
- 		.pm = &s3c64xx_spi_pm,
-+		.of_match_table = of_match_ptr(s3c64xx_spi_dt_match),
- 	},
- 	.remove = s3c64xx_spi_remove,
- 	.id_table = s3c64xx_spi_driver_ids,
--- 
-1.6.6.rc2
+On Wed, Jul 11, 2012 at 3:15 PM, Poddar, Sourav <sourav.poddar@ti.com> wrote:
+> Hi Dmitry,
+>
+> On Tue, Jul 10, 2012 at 11:43 AM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>> Hi Sourav,
+>>
+>> On Fri, Jun 08, 2012 at 04:22:59PM +0530, Sourav Poddar wrote:
+>>> Update the Documentation with omap4 keypad device tree
+>>> binding information.
+>>> Add device tree support for omap4 keypad driver.
+>>>
+>>> Tested on omap4430 sdp.
+>>>
+>>
+>> Sorry for the delay, I have a few comments:
+>>
+>>>
+>>>       /* platform data */
+>>>       pdata = pdev->dev.platform_data;
+>>> -     if (!pdata) {
+>>> +     if (np) {
+>>> +             of_property_read_u32(np, "keypad,num-rows", &num_rows);
+>>> +             of_property_read_u32(np, "keypad,num-columns", &num_cols);
+>>> +             if (!num_rows || !num_cols) {
+>>> +                     dev_err(&pdev->dev, "number of keypad rows/columns not specified\n");
+>>> +                     return -EINVAL;
+>>> +             }
+>>> +     } else if (pdata) {
+>>> +             num_rows = pdata->rows;
+>>> +             num_cols = pdata->cols;
+>>> +     } else {
+>>>               dev_err(&pdev->dev, "no platform data defined\n");
+>>>               return -EINVAL;
+>>>       }
+>>>
+>>
+>> I believe drivers should use platform data if it is supplied and use DT
+>> data if platform data is omitted. This way one can override firmware
+>> data if needed.
+>>
+>> Does the patch below (if applied on top of your) work for you?
+>>
+> Yes, the above patch works fine for me.
+> Acked-by: Sourav Poddar <sourav.poddar@ti.com>
+>
+> Note, I did some mux setting changes in the bootloader for DT case.
+>
+To be explicit, these was done throughout for testing. Nothing specific to your
+incremental patch.
+> Thanks,
+> Sourav
+>> Thanks.
+>>
+>> --
+>> Dmitry
+>>
+>> Input: omap4-keypad - misc fixes
+>>
+>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> ---
+>>
+>>  drivers/input/keyboard/omap4-keypad.c |  152 ++++++++++++++++-----------------
+>>  1 file changed, 74 insertions(+), 78 deletions(-)
+>>
+>>
+>> diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
+>> index d5a2d1a..033168e 100644
+>> --- a/drivers/input/keyboard/omap4-keypad.c
+>> +++ b/drivers/input/keyboard/omap4-keypad.c
+>> @@ -76,7 +76,6 @@ enum {
+>>
+>>  struct omap4_keypad {
+>>         struct input_dev *input;
+>> -       struct matrix_keymap_data *keymap_data;
+>>
+>>         void __iomem *base;
+>>         unsigned int irq;
+>> @@ -88,7 +87,7 @@ struct omap4_keypad {
+>>         unsigned int row_shift;
+>>         bool no_autorepeat;
+>>         unsigned char key_state[8];
+>> -       unsigned short keymap[];
+>> +       unsigned short *keymap;
+>>  };
+>>
+>>  static int kbd_readl(struct omap4_keypad *keypad_data, u32 offset)
+>> @@ -211,74 +210,52 @@ static void omap4_keypad_close(struct input_dev *input)
+>>         pm_runtime_put_sync(input->dev.parent);
+>>  }
+>>
+>> -static struct omap4_keypad *omap_keypad_parse_dt(struct device *dev,
+>> -                               uint32_t rows, uint32_t cols,
+>> -                               struct input_dev *input_dev)
+>> +#ifdef CONFIG_OF
+>> +static int __devinit omap4_keypad_parse_dt(struct device *dev,
+>> +                                          struct omap4_keypad *keypad_data)
+>>  {
+>>         struct device_node *np = dev->of_node;
+>> -       struct platform_device *pdev = to_platform_device(dev);
+>> -       struct omap4_keypad *keypad_data = platform_get_drvdata(pdev);
+>>         int error;
+>>
+>> -       error = matrix_keypad_build_keymap(NULL, "linux,keymap",
+>> -                               rows, cols, keypad_data->keymap, input_dev);
+>> -       if (error) {
+>> -               dev_err(&pdev->dev, "failed to build keymap\n");
+>> -               input_free_device(input_dev);
+>> +       if (!np) {
+>> +               dev_err(dev, "missing DT data");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       of_property_read_u32(np, "keypad,num-rows", &keypad_data->rows);
+>> +       of_property_read_u32(np, "keypad,num-columns", &keypad_data->cols);
+>> +       if (!keypad_data->rows || !keypad_data->cols) {
+>> +               dev_err(dev, "number of keypad rows/columns not specified\n");
+>> +               return -EINVAL;
+>>         }
+>>
+>>         if (of_get_property(np, "linux,input-no-autorepeat", NULL))
+>>                 keypad_data->no_autorepeat = true;
+>>
+>> -       return keypad_data;
+>> +       return 0;
+>> +}
+>> +#else
+>> +static inline int omap4_keypad_parse_dt(struct device *dev,
+>> +                                       struct omap4_keypad *keypad_data)
+>> +{
+>> +       return -ENOSYS;
+>>  }
+>> +#endif
+>>
+>>  static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>>  {
+>> -       struct device *dev = &pdev->dev;
+>> -       struct device_node *np = dev->of_node;
+>> -       const struct omap4_keypad_platform_data *pdata;
+>> +       const struct omap4_keypad_platform_data *pdata =
+>> +                               dev_get_platdata(&pdev->dev);
+>> +       const struct matrix_keymap_data *keymap_data =
+>> +                               pdata ? pdata->keymap_data : NULL;
+>>         struct omap4_keypad *keypad_data;
+>>         struct input_dev *input_dev;
+>>         struct resource *res;
+>> -       resource_size_t size;
+>> -       unsigned int row_shift = 0, max_keys = 0;
+>> -       uint32_t num_rows = 0, num_cols = 0;
+>> +       unsigned int max_keys;
+>>         int rev;
+>>         int irq;
+>>         int error;
+>>
+>> -       /* platform data */
+>> -       pdata = pdev->dev.platform_data;
+>> -       if (np) {
+>> -               of_property_read_u32(np, "keypad,num-rows", &num_rows);
+>> -               of_property_read_u32(np, "keypad,num-columns", &num_cols);
+>> -               if (!num_rows || !num_cols) {
+>> -                       dev_err(&pdev->dev, "number of keypad rows/columns not specified\n");
+>> -                       return -EINVAL;
+>> -               }
+>> -       } else if (pdata) {
+>> -               num_rows = pdata->rows;
+>> -               num_cols = pdata->cols;
+>> -       } else {
+>> -               dev_err(&pdev->dev, "no platform data defined\n");
+>> -               return -EINVAL;
+>> -       }
+>> -
+>> -       row_shift = get_count_order(num_cols);
+>> -       max_keys = num_rows << row_shift;
+>> -
+>> -       keypad_data = devm_kzalloc(dev, sizeof(struct omap4_keypad) +
+>> -                       max_keys * sizeof(keypad_data->keymap[0]),
+>> -                               GFP_KERNEL);
+>> -
+>> -       if (!keypad_data) {
+>> -               dev_err(&pdev->dev, "keypad_data memory allocation failed\n");
+>> -               return -ENOMEM;
+>> -       }
+>> -
+>> -       platform_set_drvdata(pdev, keypad_data);
+>> -
+>>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>         if (!res) {
+>>                 dev_err(&pdev->dev, "no base address specified\n");
+>> @@ -291,9 +268,24 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>>                 return -EINVAL;
+>>         }
+>>
+>> -       size = resource_size(res);
+>> +       keypad_data = kzalloc(sizeof(struct omap4_keypad), GFP_KERNEL);
+>> +       if (!keypad_data) {
+>> +               dev_err(&pdev->dev, "keypad_data memory allocation failed\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       keypad_data->irq = irq;
+>> +
+>> +       if (pdata) {
+>> +               keypad_data->rows = pdata->rows;
+>> +               keypad_data->cols = pdata->cols;
+>> +       } else {
+>> +               error = omap4_keypad_parse_dt(&pdev->dev, keypad_data);
+>> +               if (error)
+>> +                       return error;
+>> +       }
+>>
+>> -       res = request_mem_region(res->start, size, pdev->name);
+>> +       res = request_mem_region(res->start, resource_size(res), pdev->name);
+>>         if (!res) {
+>>                 dev_err(&pdev->dev, "can't request mem region\n");
+>>                 error = -EBUSY;
+>> @@ -307,15 +299,11 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>>                 goto err_release_mem;
+>>         }
+>>
+>> -       keypad_data->rows = num_rows;
+>> -       keypad_data->cols = num_cols;
+>> -       keypad_data->irq = irq;
+>> -       keypad_data->row_shift = row_shift;
+>>
+>>         /*
+>> -       * Enable clocks for the keypad module so that we can read
+>> -       * revision register.
+>> -       */
+>> +        * Enable clocks for the keypad module so that we can read
+>> +        * revision register.
+>> +        */
+>>         pm_runtime_enable(&pdev->dev);
+>>         error = pm_runtime_get_sync(&pdev->dev);
+>>         if (error) {
+>> @@ -358,29 +346,30 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>>         input_dev->open = omap4_keypad_open;
+>>         input_dev->close = omap4_keypad_close;
+>>
+>> -       if (np) {
+>> -               keypad_data = omap_keypad_parse_dt(&pdev->dev,
+>> -                               keypad_data->rows, keypad_data->cols,
+>> -                               input_dev);
+>> -       } else {
+>> -               keypad_data->keymap_data =
+>> -                       (struct matrix_keymap_data *)pdata->keymap_data;
+>> -               error = matrix_keypad_build_keymap(keypad_data->keymap_data,
+>> -                               NULL, keypad_data->rows, keypad_data->cols,
+>> -                               keypad_data->keymap, input_dev);
+>> -               if (error) {
+>> -                       dev_err(&pdev->dev, "failed to build keymap\n");
+>> -                       goto err_free_input;
+>> -               }
+>> -       }
+>> -
+>> +       input_set_capability(input_dev, EV_MSC, MSC_SCAN);
+>>         if (!keypad_data->no_autorepeat)
+>>                 __set_bit(EV_REP, input_dev->evbit);
+>>
+>> -       input_set_capability(input_dev, EV_MSC, MSC_SCAN);
+>> -
+>>         input_set_drvdata(input_dev, keypad_data);
+>>
+>> +       keypad_data->row_shift = get_count_order(keypad_data->cols);
+>> +       max_keys = keypad_data->rows << keypad_data->row_shift;
+>> +       keypad_data->keymap = kzalloc(max_keys * sizeof(keypad_data->keymap[0]),
+>> +                                     GFP_KERNEL);
+>> +       if (!keypad_data->keymap) {
+>> +               dev_err(&pdev->dev, "Not enough memory for keymap\n");
+>> +               error = -ENOMEM;
+>> +               goto err_free_input;
+>> +       }
+>> +
+>> +       error = matrix_keypad_build_keymap(keymap_data, NULL,
+>> +                                          keypad_data->rows, keypad_data->cols,
+>> +                                          keypad_data->keymap, input_dev);
+>> +       if (error) {
+>> +               dev_err(&pdev->dev, "failed to build keymap\n");
+>> +               goto err_free_keymap;
+>> +       }
+>> +
+>>         error = request_irq(keypad_data->irq, omap4_keypad_interrupt,
+>>                              IRQF_TRIGGER_RISING,
+>>                              "omap4-keypad", keypad_data);
+>> @@ -397,11 +386,14 @@ static int __devinit omap4_keypad_probe(struct platform_device *pdev)
+>>                 goto err_pm_disable;
+>>         }
+>>
+>> +       platform_set_drvdata(pdev, keypad_data);
+>>         return 0;
+>>
+>>  err_pm_disable:
+>>         pm_runtime_disable(&pdev->dev);
+>>         free_irq(keypad_data->irq, keypad_data);
+>> +err_free_keymap:
+>> +       kfree(keypad_data->keymap);
+>>  err_free_input:
+>>         input_free_device(input_dev);
+>>  err_pm_put_sync:
+>> @@ -409,7 +401,7 @@ err_pm_put_sync:
+>>  err_unmap:
+>>         iounmap(keypad_data->base);
+>>  err_release_mem:
+>> -       release_mem_region(res->start, size);
+>> +       release_mem_region(res->start, resource_size(res));
+>>  err_free_keypad:
+>>         kfree(keypad_data);
+>>         return error;
+>> @@ -431,17 +423,21 @@ static int __devexit omap4_keypad_remove(struct platform_device *pdev)
+>>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>         release_mem_region(res->start, resource_size(res));
+>>
+>> +       kfree(keypad_data->keymap);
+>>         kfree(keypad_data);
+>> +
+>>         platform_set_drvdata(pdev, NULL);
+>>
+>>         return 0;
+>>  }
+>>
+>> +#ifdef CONFIG_OF
+>>  static const struct of_device_id omap_keypad_dt_match[] = {
+>>         { .compatible = "ti,omap4-keypad" },
+>>         {},
+>>  };
+>>  MODULE_DEVICE_TABLE(of, omap_keypad_dt_match);
+>> +#endif
+>>
+>>  static struct platform_driver omap4_keypad_driver = {
+>>         .probe          = omap4_keypad_probe,
