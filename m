@@ -1,110 +1,123 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Wed, 11 Jul 2012 10:34:54 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207111031200.18999@axis700.grange>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] pinctrl: pinctrl-imx: add support for set bits for
+ general purpose registers
+Date: Wed, 11 Jul 2012 17:33:32 +0800
+Message-ID: <20120711093331.GA3025@b20223-02.ap.freescale.net>
+References: <1341565763-10074-1-git-send-email-b29396@freescale.com>
+ <4FF709D1.40903@wwwdotorg.org>
+ <20120709071019.GA28527@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Grant Likely <grant.likely@secretlab.ca>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Mitch Bradley <wmb@firmworks.com>, Anatolij Gustschin <agust@denx.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120709071019.GA28527-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liu Hui-R64343 <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha
+On Mon, Jul 09, 2012 at 03:10:21PM +0800, Dong Aisheng wrote:
+> On Fri, Jul 06, 2012 at 11:52:49PM +0800, Stephen Warren wrote:
+> > On 07/06/2012 03:09 AM, Dong Aisheng wrote:
+> > > From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > 
+> > > The General Purpose Registers (GPR) is used to select operating modes for
+> > > general features in the SoC, usually not related to the IOMUX itself,
+> > > but it does belong to IOMUX controller.
+> > > We simply provide an convient API for driver to call to set the general purpose
+> > > register bits if needed.
+> > 
+> > > +static struct imx_pinctrl *imx_pinctrl;
+> > > +/*
+> > > + * Set bits for general purpose registers
+> > > + */
+> > > +void imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
+> > > +{
+> > > +	u32 reg;
+> > > +
+> > > +	/* general purpose register is 32 bits size */
+> > > +	WARN_ON(!imx_pinctrl || start_bit > 31 || num_bits > 32);
+> > 
+> > Hmmm. It's going to be very hard to control the probe() order to ensure
+> > that this WARN doesn't fire all the time.
+> > 
+> Correct, if this api is used by client driver before the pinctrl driver is
+> registered, the warning will show.
+> To avoid it, the current pinctrl driver register priority is arch_initcall.
++postcore_initcall is not enough. Could you use postcore_initcall? So people
+can hack right after populate devices.
 
-On Wed, 4 Jul 2012, Sascha Hauer wrote:
-
-> This patch adds a helper function for parsing videomodes from the devicetree.
-> The videomode can be either converted to a struct drm_display_mode or a
-> struct fb_videomode.
+> But maybe you're right, this may not be so sufficient since i'm afraid there
+> are still possible some devices may register earlier than pinctrl since it's not
+> controlled by pinctrl driver.
+> Then it's true that we need to resolve it.
+imx_pinctrl_set_gpr_register is SoC specific. People who use it must
+have sense of related registers and driver loading sequence.
 > 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
+> > I think it would be better to pass in a struct imx_pinctrl* or DT node
+> > to this function.
+Maybe we can do it, but why? It's kind of over-engineering.
+
+> The DT node for the device that's using this function
+> > should contain a phandle to the pinctrl device node, which it uses to
+> > get that handle. Or in a non-DT case, the client driver needs to be
+> > given the provider driver handle using some other mechanism.
+> > 
+> > For example, look at how the Tegra30 SMMU uses services from the Tegra30
+> > AHB; see arch/arm/boot/dts/tegra30.dtsi node "smmu" (client) and node
+> > "ahb" (provider), drivers/iommu/tegra-smmu.c functions probe() (saves
+> > smmu->ahb) and smmu_setup_regs() (calls tegra_ahb_enable_smmu() with
+> > this handle) and drivers/amba/tegra-ahb.c function
+> > tegra_ahb_enable_smmu() (implements the deferred probe checking to
+> > correctly order the client/provider driver probing)
+> > 
+> Yes, i learned the code but i'm not sure it also fits for imx.
+> I have a few concerns:
+> 1) i'm not sure if we really need the client to provide pinctrl device
+> node as parameter to set gpr registers since there is only one pinctrl device
+> for each imx soc. Client devices may also not want to care that parameter.
+> 2) if passing device node to the api, that means every client driver
+> needs to define a phandle of pinctrl device in dts file and parsing it
+> in each driver respectively.
+> There're several client devices for imx6q, i'm not sure if it's worth to do that
+> considering this overhead.
 > 
-> changes since v1:
-> - use hyphens instead of underscores for property names
+> I think either passing device node or not passing, the goal is the same,
+> guarantee this api to be used properly without being affected by driver
+> loading sequence.
 > 
->  .../devicetree/bindings/video/displaymode          |   40 ++++++++
->  drivers/of/Kconfig                                 |    5 +
->  drivers/of/Makefile                                |    1 +
->  drivers/of/of_videomode.c                          |  108 ++++++++++++++++++++
->  include/linux/of_videomode.h                       |   19 ++++
->  5 files changed, 173 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/displaymode
->  create mode 100644 drivers/of/of_videomode.c
->  create mode 100644 include/linux/of_videomode.h
+> If that, how about change to:
+> int imx_pinctrl_set_gpr_register(u8 gpr, u8 start_bit, u8 num_bits, u32 value)
+> {
+>         u32 reg;
 > 
-> diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
-> new file mode 100644
-> index 0000000..43cc17d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/displaymode
-> @@ -0,0 +1,40 @@
-> +videomode bindings
-> +==================
-> +
-> +Required properties:
-> + - xres, yres: Display resolution
-> + - left-margin, right-margin, hsync-len: Horizontal Display timing parameters
-> +   in pixels
-> +   upper-margin, lower-margin, vsync-len: Vertical display timing parameters in
-> +   lines
-> + - clock: displayclock in Hz
-> +
-> +Optional properties:
-> + - width-mm, height-mm: Display dimensions in mm
-> + - hsync-active-high (bool): Hsync pulse is active high
-> + - vsync-active-high (bool): Vsync pulse is active high
-
-How about
-
-+ - hsync-active: Hsync pulse polarity: 1 for high, 0 for low
-
-and similar for vsync-active? Which would then become
-
-> + - interlaced (bool): This is an interlaced mode
-> + - doublescan (bool): This is a doublescan mode
-> +
-> +There are different ways of describing a display mode. The devicetree representation
-> +corresponds to the one used by the Linux Framebuffer framework described here in
-> +Documentation/fb/framebuffer.txt. This representation has been chosen because it's
-> +the only format which does not allow for inconsistent parameters.Unlike the Framebuffer
-> +framework the devicetree has the clock in Hz instead of ps.
-> +
-> +Example:
-> +
-> +	display@0 {
-> +		/* 1920x1080p24 */
-> +		clock = <52000000>;
-> +		xres = <1920>;
-> +		yres = <1080>;
-> +		left-margin = <25>;
-> +		right-margin = <25>;
-> +		hsync-len = <25>;
-> +		lower-margin = <2>;
-> +		upper-margin = <2>;
-> +		vsync-len = <2>;
-> +		hsync-active-high;
-
-+		hsync-active = <1>;
-
-> +	};
-> +
+> 	if (!imx_pinctrl)
+> 		return -EDEFER_PROBE;
+> 
+>         /* general purpose register is 32 bits size */
+>         WARN_ON(start_bit > 31 || num_bits > 32);
+Isn't it BUG ?
+Normally, people like write_register(addr, mask, value),
+and read_register(addr, mask);
 
 Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Richard
+
+> ...
+> }
+> EXPORT_SYMBOL_GPL(imx_pinctrl_set_gpr_register);
+> 
+> Then it looks to me it may be able to solve the same issue.
+> 
+> Regards
+> Dong Aisheng
