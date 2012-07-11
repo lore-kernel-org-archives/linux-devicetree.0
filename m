@@ -1,76 +1,35 @@
-From: Johan Hovold <jhovold@gmail.com>
-Subject: [PATCH] mfd: add tps65910 32-kHz-crystal-input init
-Date: Wed, 11 Jul 2012 15:44:33 +0200
-Message-ID: <1342014273-31665-1-git-send-email-jhovold@gmail.com>
-References: <20120705152334.GH18200@sortiz-mobl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120705152334.GH18200@sortiz-mobl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Johan Hovold <jhovold@gmail.com>
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v2 0/2] Add device tree and clock support for Gscaler.
+Date: Wed, 11 Jul 2012 19:36:48 +0530
+Message-ID: <1342015610-19261-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, sachin.kamat@linaro.org, joshi@samsung.com, ameersk@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Replace tps65910_misc_init with a dedicated init function for the
-32-kHz-crystal input.
+This patch series adds clock support for Gscaler and device node
+ entries for Gscaler on exynos5.
 
-Signed-off-by: Johan Hovold <jhovold@gmail.com>
----
+This patch is based on Kukjin Kim's (linux-samsung) for-next branch.
+    https://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
 
-Hi Samuel,
-
-How about something like this? My thought with misc_init was that it could be
-extended should more simple initialisation like for the ck32k_xtal need to be
-done, but perhaps it's cleaner to stick with dedicated init functions
-through-out. At least for now.
-
-Thanks,
-Johan
-
-
- drivers/mfd/tps65910.c |   19 +++++++++----------
- 1 files changed, 9 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
-index 3f27ea1..1c56379 100644
---- a/drivers/mfd/tps65910.c
-+++ b/drivers/mfd/tps65910.c
-@@ -68,20 +68,19 @@ static const struct regmap_config tps65910_regmap_config = {
- 	.cache_type = REGCACHE_RBTREE,
- };
+changes since v1:
+- Addressed review comments from Sylwester Nawrocki
+    http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg11177.html
+- Addressed review comments from Sachin Kamat
+    http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg11176.html
+    http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg11178.html
  
--static int __devinit tps65910_misc_init(struct tps65910 *tps65910,
-+static int __devinit tps65910_ck32k_init(struct tps65910 *tps65910,
- 					struct tps65910_board *pmic_pdata)
- {
--	struct device *dev = tps65910->dev;
- 	int ret;
- 
--	if (pmic_pdata->en_ck32k_xtal) {
--		ret = tps65910_reg_clear_bits(tps65910,
--						TPS65910_DEVCTRL,
-+	if (!pmic_pdata->en_ck32k_xtal)
-+		return 0;
-+
-+	ret = tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
- 						DEVCTRL_CK32K_CTRL_MASK);
--		if (ret < 0) {
--			dev_err(dev, "clear ck32k_ctrl failed: %d\n", ret);
--			return ret;
--		}
-+	if (ret < 0) {
-+		dev_err(tps65910->dev, "clear ck32k_ctrl failed: %d\n", ret);
-+		return ret;
- 	}
- 
- 	return 0;
-@@ -265,7 +264,7 @@ static __devinit int tps65910_i2c_probe(struct i2c_client *i2c,
- 	init_data->irq_base = pmic_plat_data->irq_base;
- 
- 	tps65910_irq_init(tps65910, init_data->irq, init_data);
--	tps65910_misc_init(tps65910, pmic_plat_data);
-+	tps65910_ck32k_init(tps65910, pmic_plat_data);
- 	tps65910_sleepinit(tps65910, pmic_plat_data);
- 
- 	return ret;
--- 
-1.7.8.6
+
+Shaik Ameer Basha (2):
+  ARM: EXYNOS: Add clock support for Gscaler
+  ARM: EXYNOS: Add gscaler device from DT
+
+ .../devicetree/bindings/media/exynos5-gsc.txt      |   16 ++++
+ arch/arm/boot/dts/exynos5250.dtsi                  |   31 ++++++++
+ arch/arm/mach-exynos/clock-exynos5.c               |   79 ++++++++++++++++++++
+ arch/arm/mach-exynos/include/mach/map.h            |    3 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 ++
+ 5 files changed, 137 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/exynos5-gsc.txt
