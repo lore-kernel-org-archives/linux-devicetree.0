@@ -1,125 +1,58 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: EXYNOS5: Add gscalar device from DT
-Date: Wed, 11 Jul 2012 20:12:44 +0200
-Message-ID: <4FFDC21C.2030806@gmail.com>
-References: <24338044.529411342011985196.JavaMail.weblogic@epml01>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] of: Add videomode helper
+Date: Wed, 11 Jul 2012 21:04:14 +0200
+Message-ID: <20120711190414.GQ30009@pengutronix.de>
+References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
+ <Pine.LNX.4.64.1207111031200.18999@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <24338044.529411342011985196.JavaMail.weblogic@epml01>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: shaik.ameer@samsung.com
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "olofj@google.com" <olofj@google.com>, PRASHANTH GODREHAL <prashanth.g@samsung.com>, SUNIL JOSHI <joshi@samsung.com>, "ameersk@gmail.com" <ameersk@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1207111031200.18999-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
+Hi Guennadi,
 
-On 07/11/2012 03:06 PM, AMEER BASHA SHAIK wrote:
->>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
->>> b/arch/arm/boot/dts/exynos5250.dtsi
->>> index 4272b29..b945c00 100644
->>> --- a/arch/arm/boot/dts/exynos5250.dtsi
->>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->>> @@ -23,6 +23,13 @@
->>>          compatible = "samsung,exynos5250";
->>>          interrupt-parent =<&gic>;
->>>
->>> +       aliases {
->>> +               gsc0 =&gsc_0;
->>> +               gsc1 =&gsc_1;
->>> +               gsc2 =&gsc_2;
->>> +               gsc3 =&gsc_3;
->>> +       };
->>> +
->>
->>
->> What are these aliases useful for ?
+On Wed, Jul 11, 2012 at 10:34:54AM +0200, Guennadi Liakhovetski wrote:
+> Hi Sascha
 > 
-> GScaler driver uses the "of_alias_get_id()" call to retrieve the device IDs, which
-> internally uses these aliases...
-
-Yeah, just figured it out already... I didn't know then it was a preferred
-way to represent device IDs in DT. I looked at the driver's code and it
-seemed slightly incorrect to me. Let me comment on the relevant patch shortly.
-
-Would be good to have things like this documented in the GScaler bindings
-documentation. These aliases seem quite essential for the driver to work.
-
->> Also I think all DT related patches should be posted to
->> devicetree-discuss@lists.ozlabs.org as well.
->>
+> > +
+> > +Optional properties:
+> > + - width-mm, height-mm: Display dimensions in mm
+> > + - hsync-active-high (bool): Hsync pulse is active high
+> > + - vsync-active-high (bool): Vsync pulse is active high
 > 
-> I will post the v2 version of this patch to the specified mailing list.
+> How about
 > 
->>
->>>          gic:interrupt-controller@10481000 {
->>>                  compatible = "arm,cortex-a9-gic";
->>>                  #interrupt-cells =<3>;
->>> @@ -424,4 +431,28 @@
->>>                          #gpio-cells =<4>;
->>>                  };
->>>          };
->>> +
->>> +       gsc_0:  gsc@0x13e00000 {
->>> +               compatible = "samsung,exynos-gsc";
->>> +               reg =<0x13e00000 0x1000>;
->>> +               interrupts =<0 85 0>;
->>> +       };
->>> +
->>> +       gsc_1:  gsc@0x13e10000 {
->>> +               compatible = "samsung,exynos-gsc";
->>> +               reg =<0x13e10000 0x1000>;
->>> +               interrupts =<0 86 0>;
->>> +       };
->>> +
->>> +       gsc_2:  gsc@0x13e20000 {
->>> +               compatible = "samsung,exynos-gsc";
->>> +               reg =<0x13e20000 0x1000>;
->>> +               interrupts =<0 87 0>;
->>> +       };
->>> +
->>> +       gsc_3:  gsc@0x13e30000 {
->>> +               compatible = "samsung,exynos-gsc";
->>> +               reg =<0x13e30000 0x1000>;
->>> +               interrupts =<0 88 0>;
->>> +       };
->>>    };
->>> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c
->>> b/arch/arm/mach-exynos/mach-exynos5-dt.c
->>> index 7b1e11a..76b081c 100644
->>> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
->>> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
->>> @@ -50,6 +50,14 @@ static const struct of_dev_auxdata
->>> exynos5250_auxdata_lookup[] __initconst = {
->>>          OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0",
->>> NULL),
->>>          OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA1, "dma-pl330.1",
->>> NULL),
->>>          OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2",
->>> NULL),
->>> +       OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E00000,
->>> +                               "exynos-gsc.0", NULL),
->>> +       OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E10000,
->>> +                               "exynos-gsc.1", NULL),
->>> +       OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E20000,
->>> +                               "exynos-gsc.2", NULL),
->>> +       OF_DEV_AUXDATA("samsung,exynos-gsc", 0x13E30000,
->>> +                               "exynos-gsc.3", NULL),
->>
->>
->> It's probably better to add relevant entry at
->> arch/arm/mach-exynos/include/mach/map. It's just a one line, e.g.
->>
->> /* x = 0...3 */
->> #define EXYNOS5_PA_GSC(x)       (0x13e00000 + ((x) * 0x10000))
->>
->> And use it here instead of plain numbers.
+> + - hsync-active: Hsync pulse polarity: 1 for high, 0 for low
+
+I am unsure if it's good to mix this with the other bool flags like:
+
 > 
-> OK. will address these comments in v2.
+> > + - interlaced (bool): This is an interlaced mode
+> > + - doublescan (bool): This is a doublescan mode
 
-Thanks.
+Which behave differently. 'interlaced' will be evaluated as true if
+the property is present, no matter which value it has. This might
+lead to confusion.
 
---
-Regards,
-Sylwester
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
