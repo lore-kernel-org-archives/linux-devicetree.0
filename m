@@ -1,50 +1,151 @@
-From: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 06/11] arm/dts: am33xx: Add dt data for usbss
-Date: Thu, 12 Jul 2012 15:23:29 +0530
-Message-ID: <1342086814-32181-7-git-send-email-ajay.gupta@ti.com>
-References: <1342086814-32181-1-git-send-email-ajay.gupta@ti.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC][PATCH V2 3/3] tegra: add pwm backlight device tree nodes
+Date: Thu, 12 Jul 2012 12:04:56 +0200
+Message-ID: <20120712100456.GA1949@avionic-0098.adnet.avionic-design.de>
+References: <1341814105-20690-1-git-send-email-acourbot@nvidia.com>
+ <1341814105-20690-4-git-send-email-acourbot@nvidia.com>
+ <CAPnjgZ1QbjE+-tr0c01K2feUdEE2wMBfR=bKpTxnyDOJbY8+1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342086814-32181-1-git-send-email-ajay.gupta-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPnjgZ1QbjE+-tr0c01K2feUdEE2wMBfR=bKpTxnyDOJbY8+1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Added device tree data for usbss on am33xx. There are two musb controllers
-on am33xx platform so have port0_mode and port1_mode additional data.
 
-Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am33xx.dtsi |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 59509c4..b572803 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -154,5 +154,16 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c3";
- 		};
-+
-+		usb_otg_hs: usb_otg_hs@47400000 {
-+			compatible = "ti,musb-am33xx";
-+			ti,hwmods = "usb_otg_hs";
-+			multipoint = <1>;
-+			num_eps = <16>;
-+			ram_bits = <12>;
-+			port0_mode = <3>;
-+			port1_mode = <1>;
-+			power = <250>;
-+		};
- 	};
- };
--- 
-1.7.0.4
+On Thu, Jul 12, 2012 at 11:37:33AM +0200, Simon Glass wrote:
+> Hi Alex,
+>=20
+> On Mon, Jul 9, 2012 at 8:08 AM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
+rote:
+> > Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/tegra20-ventana.dts | 31 +++++++++++++++++++++++++++=
+++++
+> >  arch/arm/boot/dts/tegra20.dtsi        |  2 +-
+> >  2 files changed, 32 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/=
+tegra20-ventana.dts
+> > index be90544..c67d9e1 100644
+> > --- a/arch/arm/boot/dts/tegra20-ventana.dts
+> > +++ b/arch/arm/boot/dts/tegra20-ventana.dts
+> > @@ -317,6 +317,37 @@
+> >                 bus-width =3D <8>;
+> >         };
+> >
+>=20
+> I would like to do something similar in U-Boot for Tegra, although
+> perhaps not right away. For now I will go with something considerably
+> simpler! But if this is merged into the kernel we will move to it in
+> U-Boot. Anyway here are my comments:
+>=20
+> > +       backlight {
+> > +               compatible =3D "pwm-backlight";
+> > +               brightness-levels =3D <0 16 32 48 64 80 96 112 128 144 =
+160 176 192 208 224 240 255>;
+>=20
+> We seem to have a lot of these - should we move to a range and step size?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These actually seem to be a little bogus. The reason for introducing the
+levels was to allow calibration of these values because they in fact
+usually do not scale linearly. Instead, a linear brightness increase
+usually maps to something like a logarithmic (at best) increase of the
+duty cycle.
+
+> > +               default-brightness-level =3D <12>;
+> > +
+> > +               pwms =3D <&pwm 2 5000000>;
+> > +               pwm-names =3D "backlight";
+> > +               power-supply =3D <&backlight_reg>;
+> > +               enable-gpios =3D <&gpio 28 0>;
+> > +
+> > +               power-on-sequence =3D "REGULATOR", "power", <1>,
+> > +                                   "DELAY", <10>,
+> > +                                   "PWM", "backlight", <1>,
+> > +                                   "GPIO", "enable", <1>;
+>=20
+> So the names REGULATOR, DELAY, etc. here are looked up through some
+> existing mechanism? In general I am not a big fan of mixing strings
+> and numbers in a property. Maybe something like:
+>=20
+> power_on_sequence {
+>    step@0 {
+>       phandle =3D <&backlight_reg>;
+>       enable =3D <1>;
+>       post-delay =3D <10>;
+>    }
+>    step@1 {
+>       phandle =3D <&pwm 2 5000000>;
+>    }
+>    step@2 {
+>       phandle =3D <&gpio 28 0>;
+>       enable =3D <1>;
+>    }
+
+I actually like that a lot. What's missing from your example is a way to
+specify the type of the phandle because it cannot be safely inferred.
+Perhaps this could be done by just the property name:
+
+	power_on_sequence {
+		step@0 {
+			power-supply =3D <&backlight_reg>;
+			enable =3D <1>;
+			post-delay =3D <10>;
+		};
+		step@1 {
+			pwm =3D <&pwm 2 5000000>;
+		};
+		step@2 {
+			enable-gpios =3D <&gpio 28 0>;
+			enable =3D <1>;
+		};
+	};
+
+However I think one of the reasons for Alex to choose his particular
+representation is that people want this to be representable in the
+platform data as well, which unfortunately can't deal very well with
+this kind of situation.
+
+Usually in the kernel you have one API to obtain a resource (pwm_get(),
+regulator_get(), ...) which takes as an argument a device handle and a
+name. For device tree, that API will lookup the resource by phandle,
+while the non-DT code path typically uses a static lookup table.
+
+It's a shame that we have to keep this kind of backwards compatibility
+because it prevents these things from being represented in a logic way
+in the DT sense.
+
+Thierry
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP/qFIAAoJEN0jrNd/PrOhx8IQAKlUx6mLvkbPu7V+iX8DpWE3
+chGdHh8cSoXBS5WrW0bTPlmYMzIgSUBa64eBZVT0e7nbyrgeltY04LSPydoHlfyK
+tQYWv4i5hmD8m9zo4e0IMp85SVite+QEhFNPapCyTiL7Os3BoyX8olOxPlrPC7Rg
+NpbYItUaqRM2sEIAyTHpgVGuPSocrva9dgFWlxr8dwvfHL3qCbT9gylj1hOMhlit
+k7V6Vdg9WWu+lyboLGMbgVTmZDWqFcj51enuNnaL7UW9DPB9AMSA9jxZKtVBnffX
+xwAc4SWkNqQ2PlOBhvyZ8IcO47p8JQ423+HaNHMlPGaXZZkmnU8VSlDWYlJFFbIa
+Fzskn92DUibgvc3K8V6GHXtrpeW+ci5ng3swxj9gTNiGGF3SR42Zb+S3uERvelfG
+E8TOAzKpO5a12L6lYrrBhMVwKjl5HWjShhiyCwVkEGhcRa6dJp6eGWZ8K3y6jqCB
+T6dRaJy6Up0m3C29RSV6tbDAIP8bUq47Ko1HiTotMVB422mIRWTQFV9LI3ciogIL
+aEhRsJk8bYF8244KFsn1FAKWQz8ZnrxTpuRXP2GsEdf6LOyt5Rng1EMzYMOMAXoG
+sFO8BBdIeIDRrcy7ZourtEp9wh9S+mHOTrAwEzwcjcCZAPd+ZZxiwrJC22jZ69XZ
+gU/YMjRyIHjwV2KU6rEc
+=P1Hh
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
