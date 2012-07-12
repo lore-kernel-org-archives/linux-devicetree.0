@@ -1,21 +1,24 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V3 5/6] Avoid duplicate probe for of platform devices
-Date: Wed, 11 Jul 2012 19:01:41 +0100
-Message-ID: <20120711180141.B01733E07D1@localhost>
-References: <1339148585-16947-1-git-send-email-B38951@freescale.com>
- <4FD60FB1.7050106@gmail.com>
- <412C8208B4A0464FA894C5F0C278CD5D01A16829@039-SN1MPN1-002.039d.mgd.msft.net>
- <20120706042611.GA1841@kroah.com>
- <412C8208B4A0464FA894C5F0C278CD5D01A168F2@039-SN1MPN1-002.039d.mgd.msft.net>
- <20120706161718.GA26894@kroah.com>
- <412C8208B4A0464FA894C5F0C278CD5D01A1E694@039-SN1MPN1-002.039d.mgd.msft.net>
- <94F013E7935FF44C83EBE7784D62AD3F09354AE6@039-SN2MPN1-021.039d.mgd.msft.net>
- <20120709145831.GB3961@kroah.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
+Date: Thu, 12 Jul 2012 07:27:50 +0200
+Message-ID: <CAPnjgZ1fTVfhhBbEYjtwVxVZ9xYmLwyAkMPAiGJ7P-2odV16rg@mail.gmail.com>
+References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
+ <20120309014441.8236B3E0903@localhost>
+ <20120309100435.GN27213@game.jcrosoft.org>
+ <20120309162638.92E813E0880@localhost>
+ <20120309163608.GQ27213@game.jcrosoft.org>
+ <4F5E50DA.6080000@freescale.com>
+ <20120313031739.GA18320@game.jcrosoft.org>
+ <20120313041652.563B63E0536@localhost>
+ <CAPnjgZ2dj5pcuGhM2_2nwwnhhcCmKhyi6jVHS7Xf1f682i_j_w@mail.gmail.com>
+ <4FFC9D46.6090006@freescale.com>
+ <CAPnjgZ1D0hCZobFENTPN8Vkz04x5bXa9RviJuVcgBt66BL961Q@mail.gmail.com>
+ <4FFCB6A2.50805@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120709145831.GB3961-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <4FFCB6A2.50805-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -26,61 +29,133 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Li Yang-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jia Hongtao-B38951 <B38951-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 9 Jul 2012 07:58:31 -0700, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Jul 09, 2012 at 03:46:59AM +0000, Li Yang-R58472 wrote:
-> > > > I don't understand, why is this just showing up now?  What changed to
-> > > > cause this?  Couldn't that be the real problem here?
-> > > >
-> > > 
-> > > The issue is showing up because we now probe devices twice.
-> > > Previously, we just probe devices once. But now we changed the way of pci
-> > > init which makes pci controllers should be probed earlier than other
-> > > devices.
-> > > So we have to probe pci nodes separately. Probe more than once is the
-> > > root
-> > > cause of this issue.
-> > > 
-> > > The pci patchset I mentioned please refer to:
-> > > http://patchwork.ozlabs.org/patch/163742/
-> > 
-> > Let me try to clarify a little bit.  The of platform bus normally
-> > traverse the device tree to add all the devices.  The change which
-> > caused problem is that we need to probe PCIe RC devices at a earlier
-> > stage of initialization.
-> 
-> That sounds, wrong.
+Hi Scott,
 
-Yes, really really wrong; starting with terminology...
+On Wed, Jul 11, 2012 at 1:11 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On 07/10/2012 05:53 PM, Simon Glass wrote:
+>> Hi Scott,
+>>
+>> On Tue, Jul 10, 2012 at 11:23 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+>> <mailto:scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>> wrote:
+>>
+>>     Also note that even non-boolean properties can mean something different
+>>     when absent.  Sometimes this is a default value; sometimes, like with
+>>     "ranges", it's something that can't be expressed with any value (empty
+>>     ranges means all translations go straight through; no ranges means no
+>>     translation is possible).
+>>
+>>
+>> That's fine, but I'm not sure I understand why that relates to boolean
+>> properties, which currently mean always the same thing (false) when
+>> absent. I don't think there is any intent to change that.
+>
+> The point was this isn't the only scenario where the absence of a
+> property means something, and where you might want to delete the property.
 
-> > So we added these PCIe RC devices earlier than the normal device tree
-> > traversal process.  These PCIe RC devices will be scanned again during
-> > the normal traversal and cause duplicated devices being added.  Our
-> > proposal is to deal with duplicated devices automatically and make it
-> > possible to scan the device tree multiple times for devices to be
-> > added. 
+OK I see. We don't have that option for booleans, since absence will
+always mean false.
 
-... This isn't *probing* twice; it is *registration*.  That's cause
-confusion on this thread.
+>
+>>     > I think it is useful to
+>>     > support a boolean with a non-null value which can be 0, meaning
+>>     true as
+>>     > Jean-Christophe says.
+>>     >
+>>     > My reasons are:
+>>     >
+>>     > 1. dtc does not have a way to delete a property and it isn't clear
+>>     what
+>>     > syntax could be used there.
+>>
+>>     Surely some syntax can be created for this.  E.g. /delete-prop/ foo;
+>>
+>>
+>> Yes, in fact I saw a patch after sending this email. So for normal
+>> values to change the value we do
+>>
+>>    prop = <23>;
+>>
+>> but for booleans we must do EITHER:
+>>
+>>    bool;
+>>
+>> or
+>>
+>>    /delete-prop/ bool;
+>>
+>> depending on whether we want the make it true or false? Ick.
+>
+> Doesn't seem that bad to me except in the case you show below where
+> you're trying to do it programmatically.
+>
+>> It seems worse to me, see above. Also if we end up with symbols it will
+> *> be impossible to do something like:
+>>
+>>    bool-property = <WIBBLE_VALUE>;
+>>
+>> You will have to do:
+>>
+>> if WIBBLE_VALUE == 0
+>>   /delete-prop/ bool-property;
+>> #else
+>>   bool-property;
+>> #endif
+>>
+>> or whatever, or maybe I got that around the wrong way.... Not nice IMO.
+>
+> Yeah, that's unpleasant.
+>
+> I don't hugely object to a new boolean type for use in new bindings,
+> where <0> or absence can both be used to indicate false, as long as it's
+> clearly documented.  I'm hesitant to start doing this on existing
+> bindings, though, and in any case would like to see support for
+> property/node deletion in dtc.
 
-> Then you need to put something in your own tree scanning logic to not
-> try to register devices multiple times.  How about a simple flag in your
-> device structure instead of having to muck around in the driver core
-> internals?
+Fair enough. Jean-Christophe's patch certainly changes existing
+behaviour, and without that it might be confusing - we don't want two
+functions for reading boolean properties. The only plus is that
+(perhaps) no one expects "bool-prop = <0>" to mean true, so it might
+be safe.
 
-Right.  If you're going to create the pci bus devices early, then you
-need to explicitly inhibit creation of them later... but still; why do
-the PCI bus devices need to be registered separately from the rest of the
-devices on the simple-bus?  Why not just move *all* device registration
-earlier?
+>
+>> (any comments on point 2?)
+>
+> It's basically the same as the above, right?
 
-> 
-> Although one should seriously question the need to want to recan the bus
-> and register devices at different times of the boot process...
+Yes, and you commented above.
 
-Yes; the model they're trying to use sounds wrong.
+>
+>>     > 3. Discoverability: it is nice to be able to see the possible options,
+>>     > even if disabled.
+>>
+>>     This assumes the possible options were known in advance, or that you
+>>     don't maintain compatibility with old device trees when a new option is
+>>     added.
+>>
+>>
+>> You can still add the option with a zero value - or maybe I
+>> misunderstand what you mean.
+>
+> We normally want to work with existing device trees (which could be
+> partially produced by firmware, so changing can be unpleasant), so the
+> absence of the property is still going to be a possibility.  Plus
+> enumerating every possibility, no matter how rarely used, in every node
+> of a certain type seems excessively verbose.  It's not like these are
+> user configuration knobs.
 
-g.
+Yes agreed. The point of this is just to make it easier (I think) to
+make a boolean value false either in the source, or later using
+fdtput.
+
+So what do we need to do? Take a vote? Revisit Jean-Christophe's patch?
+
+>
+> -Scott
+>
+
+Regards,
+Simon
