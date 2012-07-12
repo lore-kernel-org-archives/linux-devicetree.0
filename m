@@ -1,13 +1,15 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 3/6] mmc: dw_mmc: lookup for optional biu and ciu clocks
-Date: Thu, 12 Jul 2012 18:24:25 +0530
-Message-ID: <1342097668-25243-4-git-send-email-thomas.abraham@linaro.org>
-References: <1342097668-25243-1-git-send-email-thomas.abraham@linaro.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 2/5] fdtput: Prepare to support multiple operations
+Date: Thu, 12 Jul 2012 22:37:45 +1000
+Message-ID: <20120712123745.GB11326@truffala.fritz.box>
+References: <1341925008-10627-1-git-send-email-sjg@chromium.org>
+ <1341925008-10627-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1342097668-25243-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1341925008-10627-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,118 +20,34 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some platforms allow for clock gating and control of bus interface unit clock
-and card interface unit clock. Add support for clock lookup of optional biu
-and ciu clocks for clock gating and clock speed determination.
+On Tue, Jul 10, 2012 at 05:56:45AM -0700, Simon Glass wrote:
+> We want to add new options to this tool. In preparation for this, add
+> the concept of a current operation.
+> 
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  fdtput.c |   37 ++++++++++++++++++++++++++-----------
+>  1 files changed, 26 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fdtput.c b/fdtput.c
+> index 244d1f1..eceb7f2 100644
+> --- a/fdtput.c
+> +++ b/fdtput.c
+> @@ -28,7 +28,13 @@
+>  
+>  #include "util.h"
+>  
+> +/* These are the operations we support */
+> +enum operation_t {
 
-Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mmc/host/dw_mmc.c  |   42 +++++++++++++++++++++++++++++++++++++++---
- include/linux/mmc/dw_mmc.h |    4 ++++
- 2 files changed, 43 insertions(+), 3 deletions(-)
+This isn't quite usual convention xxx_t usually indicates a typedef
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index cd58063..679473c 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1953,18 +1953,38 @@ int dw_mci_probe(struct dw_mci *host)
- 		return -ENODEV;
- 	}
- 
--	if (!host->pdata->bus_hz) {
-+	host->biu_clk = clk_get(host->dev, "biu");
-+	if (IS_ERR(host->biu_clk))
-+		dev_dbg(host->dev, "biu clock not available\n");
-+	else
-+		clk_prepare_enable(host->biu_clk);
-+
-+	host->ciu_clk = clk_get(host->dev, "ciu");
-+	if (IS_ERR(host->ciu_clk))
-+		dev_dbg(host->dev, "ciu clock not available\n");
-+	else
-+		clk_prepare_enable(host->ciu_clk);
-+
-+	if (IS_ERR(host->ciu_clk))
-+		host->bus_hz = host->pdata->bus_hz;
-+	else
-+		host->bus_hz = clk_get_rate(host->ciu_clk);
-+
-+	if (!host->bus_hz) {
- 		dev_err(host->dev,
- 			"Platform data must supply bus speed\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err_clk;
- 	}
- 
--	host->bus_hz = host->pdata->bus_hz;
- 	host->quirks = host->pdata->quirks;
- 
- 	spin_lock_init(&host->lock);
- 	INIT_LIST_HEAD(&host->queue);
- 
-+	host->dma_ops = host->pdata->dma_ops;
-+	dw_mci_init_dma(host);
-+
- 	/*
- 	 * Get the host data width - this assumes that HCON has been set with
- 	 * the correct values.
-@@ -2109,6 +2129,16 @@ err_dmaunmap:
- 		regulator_disable(host->vmmc);
- 		regulator_put(host->vmmc);
- 	}
-+
-+err_clk:
-+	if (!IS_ERR(host->ciu_clk)) {
-+		clk_disable_unprepare(host->ciu_clk);
-+		clk_put(host->ciu_clk);
-+	}
-+	if (!IS_ERR(host->biu_clk)) {
-+		clk_disable_unprepare(host->biu_clk);
-+		clk_put(host->biu_clk);
-+	}
- 	return ret;
- }
- EXPORT_SYMBOL(dw_mci_probe);
-@@ -2142,6 +2172,12 @@ void dw_mci_remove(struct dw_mci *host)
- 		regulator_put(host->vmmc);
- 	}
- 
-+	if (!IS_ERR(host->ciu_clk))
-+		clk_disable_unprepare(host->ciu_clk);
-+	if (!IS_ERR(host->biu_clk))
-+		clk_disable_unprepare(host->biu_clk);
-+	clk_put(host->ciu_clk);
-+	clk_put(host->biu_clk);
- }
- EXPORT_SYMBOL(dw_mci_remove);
- 
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index a37a573..787ad56 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -78,6 +78,8 @@ struct mmc_data;
-  * @data_offset: Set the offset of DATA register according to VERID.
-  * @dev: Device associated with the MMC controller.
-  * @pdata: Platform data associated with the MMC controller.
-+ * @biu_clk: Pointer to bus interface unit clock instance.
-+ * @ciu_clk: Pointer to card interface unit clock instance.
-  * @slot: Slots sharing this MMC controller.
-  * @fifo_depth: depth of FIFO.
-  * @data_shift: log2 of FIFO item size.
-@@ -158,6 +160,8 @@ struct dw_mci {
- 	u16			data_offset;
- 	struct device		*dev;
- 	struct dw_mci_board	*pdata;
-+	struct clk		*biu_clk;
-+	struct clk		*ciu_clk;
- 	struct dw_mci_slot	*slot[MAX_MCI_SLOTS];
- 
- 	/* FIFO push and pull */
 -- 
-1.6.6.rc2
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
