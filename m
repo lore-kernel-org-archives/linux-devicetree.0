@@ -1,13 +1,14 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 2/2] pinctrl: pinctrl-imx6q: add missed mux function for
- USBOTG_ID
-Date: Thu, 12 Jul 2012 17:08:00 +0800
-Message-ID: <1342084080-3145-2-git-send-email-b29396@freescale.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] pinctrl: pinctrl-imx: add support for set bits
+ for general purpose registers
+Date: Thu, 12 Jul 2012 17:31:04 +0800
+Message-ID: <20120712093103.GD21635@b20223-02.ap.freescale.net>
 References: <1342084080-3145-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <1342084080-3145-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -19,48 +20,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-The original pin registers table is derived from u-boot mainline,
-but somehow it was found missing some mux functions for USBOTG_ID.
-We added it at the bottom by following the exist pin function ids,
-then it will not break the exist using of pin function id in dts file.
-
-Reported-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2: No changes
----
- .../bindings/pinctrl/fsl,imx6q-pinctrl.txt         |    2 ++
- drivers/pinctrl/pinctrl-imx6q.c                    |    2 ++
- 2 files changed, 4 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
-index 82b43f9..a4119f6 100644
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
-@@ -1626,3 +1626,5 @@ MX6Q_PAD_SD2_DAT3__PCIE_CTRL_MUX_11		1587
- MX6Q_PAD_SD2_DAT3__GPIO_1_12			1588
- MX6Q_PAD_SD2_DAT3__SJC_DONE			1589
- MX6Q_PAD_SD2_DAT3__ANATOP_TESTO_3		1590
-+MX6Q_PAD_ENET_RX_ER__ANATOP_USBOTG_ID		1591
-+MX6Q_PAD_GPIO_1__ANATOP_USBOTG_ID		1592
-diff --git a/drivers/pinctrl/pinctrl-imx6q.c b/drivers/pinctrl/pinctrl-imx6q.c
-index 6974238..4d9bc07 100644
---- a/drivers/pinctrl/pinctrl-imx6q.c
-+++ b/drivers/pinctrl/pinctrl-imx6q.c
-@@ -1950,6 +1950,8 @@ static struct imx_pin_reg imx6q_pin_regs[] = {
- 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 5, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__GPIO_1_12 */
- 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 6, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__SJC_DONE */
- 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 7, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__ANATOP_TESTO_3 */
-+	IMX_PIN_REG(MX6Q_PAD_ENET_RX_ER, 0x04EC, 0x01D8, 0, 0x0000, 0), /* MX6Q_PAD_ENET_RX_ER__ANATOP_USBOTG_ID */
-+	IMX_PIN_REG(MX6Q_PAD_GPIO_1, 0x05F4, 0x0224, 3, 0x0000, 0), /* MX6Q_PAD_GPIO_1__ANATOP_USBOTG_ID */
- };
+On Thu, Jul 12, 2012 at 05:07:59PM +0800, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> The General Purpose Registers (GPR) is used to select operating modes for
+> general features in the SoC, usually not related to the IOMUX itself,
+> but it does belong to IOMUX controller.
+> We simply provide an convient API for driver to call to write/read the general
+> purpose register bits if needed.
+> 
+> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v1->v2:
+> * add gpr read api
+> * change api name a bit to *_write and *_read
+> * add -EPROBE_DEFER support
+> * define macros for gpr registers for imx6q
+> * change driver loadding priority to postcore_init at satisfy clients driver
+>   to use imx_pinctrl_gpr_{read | write} APIs at best
+> ---
+>  drivers/pinctrl/pinctrl-imx.c   |   29 ++++
+>  drivers/pinctrl/pinctrl-imx51.c |    2 +-
+>  drivers/pinctrl/pinctrl-imx53.c |    2 +-
+>  drivers/pinctrl/pinctrl-imx6q.c |    2 +-
+>  include/linux/fsl/imx-pinctrl.h |  340 +++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 372 insertions(+), 3 deletions(-)
+>  create mode 100644 include/linux/fsl/imx-pinctrl.h
+> 
+> diff --git a/drivers/pinctrl/pinctrl-imx.c b/drivers/pinctrl/pinctrl-imx.c
+> index 44e9726..1725e07 100644
+> --- a/drivers/pinctrl/pinctrl-imx.c
+> +++ b/drivers/pinctrl/pinctrl-imx.c
+> @@ -54,6 +54,34 @@ struct imx_pinctrl {
+>  	const struct imx_pinctrl_soc_info *info;
+>  };
+>  
+> +static struct imx_pinctrl *imx_pinctrl;
+> +/*
+> + * Set bits for general purpose registers
+> + */
+> +int imx_pinctrl_gpr_write(u8 gpr, u32 mask, u32 value)
+> +{
+> +	u32 reg;
+> +
+> +	if (!imx_pinctrl)
+> +		return -EPROBE_DEFER;
+	value &= mask;
+And add a spinlock to protect it?
  
- /* Pad names for the pinmux subsystem */
--- 
-1.7.0.4
+Thanks
+Richard
