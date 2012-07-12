@@ -1,14 +1,15 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 5/5] fdtput: Add -p option to create subnodes along entire
- path
-Date: Thu, 12 Jul 2012 08:52:51 -0700
-Message-ID: <1342108371-15616-5-git-send-email-sjg@chromium.org>
-References: <1342108371-15616-2-git-send-email-sjg@chromium.org>
+From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] pinctrl: pinctrl-imx: add support for set bits for
+ general purpose registers
+Date: Fri, 13 Jul 2012 00:12:27 +0800
+Message-ID: <CAA+hA=T5XXQK4YhEy4w2kjTQCHu0t8fsA_+fg=koCo-v=Nk6_g@mail.gmail.com>
+References: <1342093124-24658-1-git-send-email-b29396@freescale.com>
+ <20120712121636.GA2123@richard-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342108371-15616-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20120712121636.GA2123@richard-laptop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,155 +20,25 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This option mimics mkdir's -p option. It automatically creates nodes
-as needed along the path provided. If the node already exists, no
-error is given.
+On Thu, Jul 12, 2012 at 8:16 PM, Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+[...]
+>> +int imx_pinctrl_gpr_write(u8 gpr, u32 mask, u32 val)
+>> +{
+>> +     u32 reg;
+>> +
+>> +     if (!imx_pinctrl)
+>> +             return -EPROBE_DEFER;
+>> +
+>> +     spin_lock(&imx_pinctrl->gprlock);
+> spin_lock_irqsave? We don't know whether people call it in isr.
+>
+Yes, we definitely should support call it in isr.
+thanks for pointing out this.
+Will fix it in next version.
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v2:
-- Update -p help message slightly
-
- fdtput.c           |   59 ++++++++++++++++++++++++++++++++++++++++++++++++---
- tests/run_tests.sh |   13 +++++++++++
- 2 files changed, 68 insertions(+), 4 deletions(-)
-
-diff --git a/fdtput.c b/fdtput.c
-index 1f048a8..f2197f5 100644
---- a/fdtput.c
-+++ b/fdtput.c
-@@ -39,6 +39,7 @@ struct display_info {
- 	int type;		/* data type (s/i/u/x or 0 for default) */
- 	int size;		/* data size (1/2/4) */
- 	int verbose;		/* verbose output */
-+	int auto_path;		/* automatically create all path components */
- };
- 
- 
-@@ -151,6 +152,47 @@ static int store_key_value(void *blob, const char *node_name,
- }
- 
- /**
-+ * Create paths as needed for all components of a path
-+ *
-+ * Any components of the path that do not exist are created. Errors are
-+ * reported.
-+ *
-+ * @param blob		FDT blob to write into
-+ * @param in_path	Path to process
-+ * @return 0 if ok, -1 on error
-+ */
-+static int create_paths(void *blob, const char *in_path)
-+{
-+	const char *path = in_path;
-+	const char *sep;
-+	int node, offset = 0;
-+
-+	/* skip leading '/' */
-+	while (*path == '/')
-+		path++;
-+
-+	for (sep = path; *sep; path = sep + 1, offset = node) {
-+		/* equivalent to strchrnul(), but it requires _GNU_SOURCE */
-+		sep = strchr(path, '/');
-+		if (!sep)
-+			sep = path + strlen(path);
-+
-+		node = fdt_subnode_offset_namelen(blob, offset, path,
-+				sep - path);
-+		if (node == -FDT_ERR_NOTFOUND) {
-+			node = fdt_add_subnode_namelen(blob, offset, path,
-+						       sep - path);
-+		}
-+		if (node < 0) {
-+			report_error(path, sep - path, node);
-+			return -1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-  * Create a new node in the fdt.
-  *
-  * This will overwrite the node_name string. Any error is reported.
-@@ -208,13 +250,19 @@ static int do_fdtput(struct display_info *disp, const char *filename,
- 		 * store them into the property.
- 		 */
- 		assert(arg_count >= 2);
-+		if (disp->auto_path && create_paths(blob, *arg))
-+			return -1;
- 		if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
- 			store_key_value(blob, *arg, arg[1], value, len))
- 			ret = -1;
- 		break;
- 	case OPER_CREATE_NODE:
--		for (; ret >= 0 && arg_count--; arg++)
--			ret = create_node(blob, *arg);
-+		for (; ret >= 0 && arg_count--; arg++) {
-+			if (disp->auto_path)
-+				ret = create_paths(blob, *arg);
-+			else
-+				ret = create_node(blob, *arg);
-+		}
- 		break;
- 	}
- 	if (ret >= 0)
-@@ -234,6 +282,7 @@ static const char *usage_msg =
- 	"	fdtput -c <options> <dt file> [<node>...]\n"
- 	"Options:\n"
- 	"\t-c\t\tCreate nodes if they don't already exist\n"
-+	"\t-p\t\tAutomatically create nodes as needed for the node path\n"
- 	"\t-t <type>\tType of data\n"
- 	"\t-v\t\tVerbose: display each value decoded from command line\n"
- 	"\t-h\t\tPrint this help\n\n"
-@@ -257,7 +306,7 @@ int main(int argc, char *argv[])
- 	disp.size = -1;
- 	disp.oper = OPER_WRITE_PROP;
- 	for (;;) {
--		int c = getopt(argc, argv, "cht:v");
-+		int c = getopt(argc, argv, "chpt:v");
- 		if (c == -1)
- 			break;
- 
-@@ -277,7 +326,9 @@ int main(int argc, char *argv[])
- 		case 'h':
- 		case '?':
- 			usage(NULL);
--
-+		case 'p':
-+			disp.auto_path = 1;
-+			break;
- 		case 't':
- 			if (utilfdt_decode_type(optarg, &disp.type,
- 					&disp.size))
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index acec2a5..b825b81 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -552,6 +552,19 @@ fdtput_tests () {
-     run_wrap_error_test $DTPUT $dtb -c /chosen
-     run_wrap_error_test $DTPUT $dtb -c /chosen/son
- 
-+    # Automatic node creation
-+    run_wrap_test $DTPUT $dtb -cp /blackadder/the-second/turnip \
-+	/blackadder/the-second/potato
-+    run_fdtput_test 1000 $dtb /blackadder/the-second/turnip cost "" 1000
-+    run_fdtput_test "fine wine" $dtb /blackadder/the-second/potato drink \
-+	"-ts" "fine wine"
-+    run_wrap_test $DTPUT $dtb -p /you/are/drunk/sir/winston slurp -ts twice
-+    run_wrap_error_test $DTPUT $dtb -cp "$(cat $text $text)/longish"
-+
-+    # Allowed to create an existing node with -p
-+    run_wrap_test $DTPUT $dtb -cp /chosen
-+    run_wrap_test $DTPUT $dtb -cp /chosen/son
-+
-     # TODO: Add tests for verbose mode?
- }
- 
--- 
-1.7.7.3
+Regards
+Dong Aisheng
