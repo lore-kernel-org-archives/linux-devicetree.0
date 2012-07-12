@@ -1,15 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 3/5] fdtput: Add -c option to create nodes
-Date: Thu, 12 Jul 2012 22:39:19 +1000
-Message-ID: <20120712123919.GC11326@truffala.fritz.box>
+Subject: Re: [PATCH 4/5] fdtput: Adjust report_error() to use name, namelen
+ params
+Date: Thu, 12 Jul 2012 22:40:08 +1000
+Message-ID: <20120712124008.GD11326@truffala.fritz.box>
 References: <1341925008-10627-1-git-send-email-sjg@chromium.org>
- <1341925008-10627-3-git-send-email-sjg@chromium.org>
+ <1341925008-10627-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1341925008-10627-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1341925008-10627-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,19 +25,14 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 10, 2012 at 05:56:46AM -0700, Simon Glass wrote:
-> This option allows the creation of new nodes in a dtb file. The syntax
-> is:
-> 
->    fdtput -c <dtb_file> <node_path>
-> 
-> The node_path contains the path of the node to be created. All path
-> components up to the final one must exist already. The final one must
-> not exist already.
+On Tue, Jul 10, 2012 at 05:56:47AM -0700, Simon Glass wrote:
+> As with many fdt functions, report_error() should permit a namelen to
+> be specified, thus obviating the need for nul termination in strings
+> passed to it.
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Looks reasonable.
+Fair enough.
 
 Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
