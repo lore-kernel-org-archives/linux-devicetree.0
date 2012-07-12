@@ -1,51 +1,80 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v3 02/18] fdt: Add header guard to fdtdec.h
-Date: Thu, 12 Jul 2012 08:25:02 -0700
-Message-ID: <1342106718-3058-3-git-send-email-sjg@chromium.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 05/18] tegra: fdt: Add pwm binding and node
+Date: Thu, 12 Jul 2012 08:25:05 -0700
+Message-ID: <1342106718-3058-6-git-send-email-sjg@chromium.org>
 References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1342106718-3058-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342106718-3058-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This makes it easier to include this header from other headers.
+This binding will apparently soon be in linux-next. Bring it in now
+since we need to do something, and may as well try to target what
+Linux will have.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
+Changes in v3:
+- Add new commit for pwm binding and node
 
- include/fdtdec.h |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ arch/arm/dts/tegra20.dtsi                    |    7 +++++++
+ doc/device-tree-bindings/pwm/tegra20-pwm.txt |   18 ++++++++++++++++++
+ 2 files changed, 25 insertions(+), 0 deletions(-)
+ create mode 100644 doc/device-tree-bindings/pwm/tegra20-pwm.txt
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index fab577e..c30947a 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -19,6 +19,8 @@
-  * MA 02111-1307 USA
-  */
- 
-+#ifndef __fdtdec_h
-+#define __fdtdec_h
- 
- /*
-  * This file contains convenience functions for decoding useful and
-@@ -382,3 +384,4 @@ int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
-  */
- const u8 *fdtdec_locate_byte_array(const void *blob, int node,
- 			     const char *prop_name, int count);
-+#endif
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+index f95be58..e7d1688 100644
+--- a/arch/arm/dts/tegra20.dtsi
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -204,4 +204,11 @@
+ 		compatible = "nvidia,tegra20-kbc";
+ 		reg = <0x7000e200 0x0078>;
+ 	};
++
++	pwm: pwm@7000a000 {
++		compatible = "nvidia,tegra20-pwm";
++		reg = <0x7000a000 0x100>;
++		#pwm-cells = <2>;
++	};
++
+ };
+diff --git a/doc/device-tree-bindings/pwm/tegra20-pwm.txt b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
+new file mode 100644
+index 0000000..bbbeedb
+--- /dev/null
++++ b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
+@@ -0,0 +1,18 @@
++Tegra SoC PWFM controller
++
++Required properties:
++- compatible: should be one of:
++  - "nvidia,tegra20-pwm"
++  - "nvidia,tegra30-pwm"
++- reg: physical base address and length of the controller's registers
++- #pwm-cells: On Tegra the number of cells used to specify a PWM is 2. The
++  first cell specifies the per-chip index of the PWM to use and the second
++  cell is the duty cycle in nanoseconds.
++
++Example:
++
++	pwm: pwm@7000a000 {
++		compatible = "nvidia,tegra20-pwm";
++		reg = <0x7000a000 0x100>;
++		#pwm-cells = <2>;
++	};
 -- 
 1.7.7.3
