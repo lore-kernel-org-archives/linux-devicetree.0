@@ -1,58 +1,61 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v5 0/6] spi: s3c64xx: add support for device tree
-Date: Thu, 12 Jul 2012 14:02:34 +0100
-Message-ID: <20120712130234.GE3957@opensource.wolfsonmicro.com>
-References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
- <20120711174908.GP3938@opensource.wolfsonmicro.com>
- <CAJuYYwQA_x112xqOnQmwZjzoXoR-DAvT8YdB90Wm=78CH72uOg@mail.gmail.com>
- <0fae01cd600e$442ed160$cc8c7420$%kim@samsung.com>
+From: Sebastian Hesselbarh <sebastian.hesselbarth@googlemail.com>
+Subject: Re: [RESEND PATCH 1/1] clk: add DT support for clock gating control
+Date: Thu, 12 Jul 2012 15:08:30 +0200
+Message-ID: <4FFECC4E.4070001@googlemail.com>
+References: <4FFE7979.4060000@googlemail.com> <4FFEBF8A.1020700@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0fae01cd600e$442ed160$cc8c7420$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <4FFEBF8A.1020700@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/12/2012 02:14 PM, Rob Herring wrote:
+>> +Required child properties:
+>> +- reg : should contain the individual bit and polarity to control
+>> +        the clock gate. A polarity of 0 means that by setting the
+>> +        bit to 1 the clock passes through the clock gate while
+>> +    setting the bit to 0 disables the clock. Any other value
+>> +         for polarity inverts the meaning of the control bit.
+>
+> This is a bit of overloading reg to specify the polarity.
 
---GZVR6ND4mMseVXL/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well, yes it is overloading but still matches reg somehow, as the
+extra information is required to access the resource. But I agree,
+expecially wrt more-than-one-bit clk-gate (see below).
 
-On Thu, Jul 12, 2012 at 06:11:05PM +0900, Kukjin Kim wrote:
+>> +        /* SATA clock gate with different parent clock */
+>> +        cg_sata: clockgate@3 {
+>> +            reg =<3 0>; /* register bit 3, normal polarity */
+>> +            clocks =<&sata_clk>;
+>> +        };
+>
+> I'm not sure I like the node per bit. What about a bit mask for valid
+> bits and polarities. Then add a clock cell to specify the bit or index.
+>
+> i.MX has 2-bit enable fields for its leaf clocks, so how and if you
+> would support that is something to think about.
 
-> And Mark, this touches various samsung stuff in arch/arm/ so if you're ok,
-> I'd like to pick this up in samsung tree. We don't want to see conflicts...
+Yeah, I thought of "what if the clk_gate needs to be enabled with more
+than 1 bit" already. But this is a short-comming of the current clk-gate
+implementation.
 
-Well, simple conflicts aren't that big a deal...  However, Thomas
-mentioned that in order to test this he merged the SPI tree into your
-tree so perhaps there is also a dependency on the SPI tree?  If that was
-just for good practice testing then I agree that the best thing is to
-merge via your tree, otherwise we might need to think harder.
+Just to get it right, i.MX requires to set more than one bit to change
+the state of the gate for one leaf clock?
 
---GZVR6ND4mMseVXL/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+If this is true, that would require a change of the generic clk-gate
+anyway.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+I had a look at pinctrl-bindings.txt maybe this is the way to go for
+clock gating control, too. That would require clk-gate to handle an
+'active' and 'gated' state and leave it to a clock gate control to
+actually set the required bits in any registers. This would allow
+other special implementations of clock gating controllers to reuse
+clk-gate DT description. Additionally, there could be a
+simple-clock-gating-control that can set states by reg address and
+for each controlled gate a mask, enable value, and disable value.
 
-iQIcBAEBAgAGBQJP/srhAAoJEBus8iNuMP3dxxMP/ROIbrDTIBfVH+Nn/yNnbayf
-A0EDAa2zBh1z0xY3XCL3TOPL6S/9SuLvEsQFrohFSF0gjJfOJfn0y5iQEERA1BTS
-ITwA46m0I4aKowqfNZpTRrveh8qYIvNmKHODYD5dWGhdrm/0xypSSowzFrZH1lom
-pbPjUCr/v9s94XYYh5Qprs+pjuNqn9pqbWTH5nvIgHumZdRvCiJqtacZWVs3IJ4B
-vm14546Ox72Bqqpfb+ea54KJMXob0puWJNIVWVFXu8NYrSx9iR8ice2JgSbDw/22
-3HOLcP1j6kI4hYVEviF11y9o81HpZVhb64qpoE99jDp8dOu9Mi3TGvo58SOvS2ML
-ovrdLgIAZ9JKfMSg1g5t8fPN5XXAJlEsmD8W0PBEtPQcmop2vCySW1It6C7K3UKu
-oQARD/Mcp9oSbKO0LJ8st7ag9dOZBRVryfPPKzJwnQkoUtGepEW/QZvIAugGgAqL
-g6a1yB6PKDDkRHM+LVAxegqX+nL0OsnPYlH6DNpp/r88cCo3KfIQ7a0z+LFK0h7F
-acO4wWu0eaCawR8lk/rEfnkZ13Ks4rMpmFiAdYX3ceJDjwX1MApK1G/6XgM2a8Xq
-nQQaxQ0MwbJ2Aph/6y1n7FEKDuPDOmwEjzigpRClIr6liP4Z0cgnaLSg4scgddpo
-pNCcaI5umZJiIyFDxTRN
-=3YHP
------END PGP SIGNATURE-----
-
---GZVR6ND4mMseVXL/--
+Sebastian
