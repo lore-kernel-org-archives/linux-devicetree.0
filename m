@@ -1,87 +1,177 @@
-From: Hui Wang <jason77.wang@gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: pinctrl-imx: add support for set bits
- for general purpose registers
-Date: Thu, 12 Jul 2012 17:48:46 +0800
-Message-ID: <4FFE9D7E.1080302@gmail.com>
-References: <1342084080-3145-1-git-send-email-b29396@freescale.com>
+From: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Subject: [PATCH 05/11] usb: musb: dsps: add dt support
+Date: Thu, 12 Jul 2012 15:23:28 +0530
+Message-ID: <1342086814-32181-6-git-send-email-ajay.gupta@ti.com>
+References: <1342086814-32181-1-git-send-email-ajay.gupta@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1342084080-3145-1-git-send-email-b29396@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: b20223@freescale.com, linus.walleij@stericsson.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, r64343@freescale.com, shawn.guo@freescale.com, kernel@pengutronix.de, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1342086814-32181-1-git-send-email-ajay.gupta@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, Ajay Kumar Gupta <ajay.gupta@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dong Aisheng wrote:
-> From: Dong Aisheng <dong.aisheng@linaro.org>
->
-> The General Purpose Registers (GPR) is used to select operating modes for
-> general features in the SoC, usually not related to the IOMUX itself,
-> but it does belong to IOMUX controller.
-> We simply provide an convient API for driver to call to write/read the general
-> purpose register bits if needed.
->
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> ---
-> ChangeLog v1->v2:
-> * add gpr read api
-> * change api name a bit to *_write and *_read
-> * add -EPROBE_DEFER support
-> * define macros for gpr registers for imx6q
-> * change driver loadding priority to postcore_init at satisfy clients driver
->   to use imx_pinctrl_gpr_{read | write} APIs at best
-> ---
->  drivers/pinctrl/pinctrl-imx.c   |   29 ++++
->  drivers/pinctrl/pinctrl-imx51.c |    2 +-
->  drivers/pinctrl/pinctrl-imx53.c |    2 +-
->  drivers/pinctrl/pinctrl-imx6q.c |    2 +-
->  include/linux/fsl/imx-pinctrl.h |  340 +++++++++++++++++++++++++++++++++++++++
->  5 files changed, 372 insertions(+), 3 deletions(-)
->  create mode 100644 include/linux/fsl/imx-pinctrl.h
->
-> diff --git a/drivers/pinctrl/pinctrl-imx.c b/drivers/pinctrl/pinctrl-imx.c
-> index 44e9726..1725e07 100644
-> --- a/drivers/pinctrl/pinctrl-imx.c
-> +++ b/drivers/pinctrl/pinctrl-imx.c
-> @@ -54,6 +54,34 @@ struct imx_pinctrl {
->  	const struct imx_pinctrl_soc_info *info;
->  };
->  
-> +static struct imx_pinctrl *imx_pinctrl;
-> +/*
-> + * Set bits for general purpose registers
-> + */
-> +int imx_pinctrl_gpr_write(u8 gpr, u32 mask, u32 value)
-> +{
-> +	u32 reg;
-> +
-> +	if (!imx_pinctrl)
-> +		return -EPROBE_DEFER;
-> +
-> +	reg = readl(imx_pinctrl->base + gpr);
-> +	reg &= ~mask;
-> +	writel(reg | value, imx_pinctrl->base + gpr);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(imx_pinctrl_gpr_write);
-> +
-> +int imx_pinctrl_gpr_read(u8 gpr)
-> +{
-> +	if (!imx_pinctrl)
-> +		return -EPROBE_DEFER;
-> +
-> +	return readl(imx_pinctrl->base + gpr);
->   
-Suppose the MSB of the register content is 1, how does the caller 
-distinguish if the function return an error or return a register content?
+Added device tree support for dsps musb glue driver and updated the
+Documentation with device tree binding information.
+
+Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+---
+ .../devicetree/bindings/usb/am33xx-usb.txt         |   14 +++++
+ drivers/usb/musb/musb_dsps.c                       |   62 +++++++++++++++++---
+ 2 files changed, 67 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/am33xx-usb.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+new file mode 100644
+index 0000000..ca8fa56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+@@ -0,0 +1,14 @@
++AM33XX MUSB GLUE
++ - compatible : Should be "ti,musb-am33xx"
++ - ti,hwmods : must be "usb_otg_hs"
++ - multipoint : Should be "1" indicating the musb controller supports
++   multipoint. This is a MUSB configuration-specific setting.
++ - num_eps : Specifies the number of endpoints. This is also a
++   MUSB configuration-specific setting. Should be set to "16"
++ - ram_bits : Specifies the ram address size. Should be set to "12"
++ - port0_mode : Should be "3" to represent OTG. "1" signifies HOST and "2"
++   represents PERIPHERAL.
++ - port1_mode : Should be "1" to represent HOST. "3" signifies OTG and "2"
++   represents PERIPHERAL.
++ - power : Should be "250". This signifies the controller can supply upto
++   500mA when operating in host mode.
+diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
+index 17efd3d..619c800 100644
+--- a/drivers/usb/musb/musb_dsps.c
++++ b/drivers/usb/musb/musb_dsps.c
+@@ -31,6 +31,7 @@
+ 
+ #include <linux/init.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ #include <linux/err.h>
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+@@ -45,6 +46,10 @@
+ 
+ #include "musb_core.h"
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id musb_dsps_of_match[];
++#endif
++
+ /**
+  * avoid using musb_readx()/musb_writex() as glue layer should not be
+  * dependent on musb core layer symbols.
+@@ -496,6 +501,8 @@ static int __devinit dsps_create_musb_pdev(struct dsps_glue *glue, u8 id)
+ 	struct device *dev = glue->dev;
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct musb_hdrc_platform_data  *pdata = dev->platform_data;
++	struct device_node *np = pdev->dev.of_node;
++	struct musb_hdrc_config	*config;
+ 	struct platform_device	*musb;
+ 	struct resource *res;
+ 	struct resource	resources[2];
+@@ -555,14 +562,40 @@ static int __devinit dsps_create_musb_pdev(struct dsps_glue *glue, u8 id)
+ 
+ 	glue->musb[id]			= musb;
+ 
+-	pdata->platform_ops		= &dsps_ops;
+-
+ 	ret = platform_device_add_resources(musb, resources, 2);
+ 	if (ret) {
+ 		dev_err(dev, "failed to add resources\n");
+ 		goto err1;
+ 	}
+ 
++	if (np) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata) {
++			dev_err(&pdev->dev,
++				"failed to allocate musb platfrom data\n");
++			ret = -ENOMEM;
++			goto err1;
++		}
++
++		config = devm_kzalloc(&pdev->dev, sizeof(*config), GFP_KERNEL);
++		if (!config) {
++			dev_err(&pdev->dev,
++				"failed to allocate musb hdrc config\n");
++			goto err1;
++		}
++
++		of_property_read_u32(np, "num_eps", (u32 *)&config->num_eps);
++		of_property_read_u32(np, "ram_bits", (u32 *)&config->ram_bits);
++		sprintf(res_name, "port%d_mode", id);
++		of_property_read_u32(np, res_name, (u32 *)&pdata->mode);
++		of_property_read_u32(np, "power", (u32 *)&pdata->power);
++		config->multipoint = of_property_read_bool(np, "multipoint");
++
++		pdata->config		= config;
++	}
++
++	pdata->platform_ops		= &dsps_ops;
++
+ 	ret = platform_device_add_data(musb, pdata, sizeof(*pdata));
+ 	if (ret) {
+ 		dev_err(dev, "failed to add platform_data\n");
+@@ -591,14 +624,22 @@ static void __devexit dsps_delete_musb_pdev(struct dsps_glue *glue, u8 id)
+ 
+ static int __devinit dsps_probe(struct platform_device *pdev)
+ {
+-	const struct platform_device_id *id = platform_get_device_id(pdev);
+-	const struct dsps_musb_wrapper *wrp =
+-				(struct dsps_musb_wrapper *)id->driver_data;
++	struct device_node *np = pdev->dev.of_node;
++	const struct of_device_id *match;
++	const struct dsps_musb_wrapper *wrp;
+ 	struct dsps_glue *glue;
+ 	struct resource *iomem;
+ 	u32 __iomem *usbss;
+ 	int ret, i;
+ 
++	match = of_match_node(musb_dsps_of_match, np);
++	if (!match) {
++		dev_err(&pdev->dev, "fail to get matching of_match struct\n");
++		ret = -EINVAL;
++		goto err0;
++	}
++	wrp = match->data;
++
+ 	/* allocate glue */
+ 	glue = kzalloc(sizeof(*glue), GFP_KERNEL);
+ 	if (!glue) {
+@@ -758,13 +799,16 @@ static const struct platform_device_id musb_dsps_id_table[] __devinitconst = {
+ };
+ MODULE_DEVICE_TABLE(platform, musb_dsps_id_table);
+ 
++#ifdef CONFIG_OF
+ static const struct of_device_id musb_dsps_of_match[] __devinitconst = {
+-	{ .compatible = "musb-ti81xx", },
+-	{ .compatible = "ti,ti81xx-musb", },
+-	{ .compatible = "ti,am335x-musb", },
++	{ .compatible = "ti,musb-am33xx",
++		.data = (void *) &ti81xx_driver_data, },
+ 	{  },
+ };
+ MODULE_DEVICE_TABLE(of, musb_dsps_of_match);
++#else
++#define musb_dsps_of_match NULL
++#endif
+ 
+ static struct platform_driver dsps_usbss_driver = {
+ 	.probe		= dsps_probe,
+@@ -772,7 +816,7 @@ static struct platform_driver dsps_usbss_driver = {
+ 	.driver         = {
+ 		.name   = "musb-dsps",
+ 		.pm	= &dsps_pm_ops,
+-		.of_match_table	= musb_dsps_of_match,
++		.of_match_table	= of_match_ptr(musb_dsps_of_match),
+ 	},
+ 	.id_table	= musb_dsps_id_table,
+ };
+-- 
+1.7.0.4
+
