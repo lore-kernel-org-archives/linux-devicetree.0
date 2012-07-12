@@ -1,52 +1,56 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 1/3] regulator: tps65217: Add device tree support
-Date: Thu, 12 Jul 2012 18:28:37 +0100
-Message-ID: <20120712172836.GR7256@opensource.wolfsonmicro.com>
-References: <1341918584-28004-1-git-send-email-anilkumar@ti.com>
- <1341918584-28004-2-git-send-email-anilkumar@ti.com>
+From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Subject: Re: Where to put a large bootloader-supplied device tree on ARM ?
+Date: Thu, 12 Jul 2012 14:16:01 -0400 (EDT)
+Message-ID: <alpine.LFD.2.02.1207121411180.14068@xanadu.home>
+References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
+ <201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
+ <201207062008.23952.arnd@arndb.de> <20120706210009.GC11470@lunn.ch>
+ <4FF781D8.3040206@firmworks.com>
+ <2966DB01BC317A4DA23684BA0F653415013701@xmb-aln-x08.cisco.com>
+ <4FF7980E.7050705@firmworks.com>
+ <alpine.LFD.2.02.1207090015270.31100@xanadu.home>
+ <4FFE743B.6080504@firmworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="24/piotZLKF/SXqU"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1341918584-28004-2-git-send-email-anilkumar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: AnilKumar Ch <anilkumar@ti.com>
-Cc: sameo@linux.intel.com, lrg@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <4FFE743B.6080504-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 11 Jul 2012, Mitch Bradley wrote:
+> On 7/8/2012 6:30 PM, Nicolas Pitre wrote:
+> > On Fri, 6 Jul 2012, Mitch Bradley wrote:
+> > 
+> >> For now, I'm putting the initrd at the end of memory and the dtb
+> >> below that.  That seems to work, but I'm unsure whether or not
+> >> I'm just "getting lucky".
+> > 
+> > That's also perfectly fine.
+> 
+> Alas, that worked for machines with 512 MiB of main memory, but failed
+> on 1 GiB machines.  My guess is that, when the initrd and dtb are near
+> the top of a 1 GiB memory, the virtual address gets too near the top of
+> the kernel's 1 GiB of virtual space (which starts at 0xc0000000),
+> perhaps colliding with the VMALLOC space.
 
---24/piotZLKF/SXqU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Indeed, that won't work in that case.
 
-On Tue, Jul 10, 2012 at 04:39:42PM +0530, AnilKumar Ch wrote:
-> This commit adds device tree support for tps65217 pmic. And usage
-> details are added to device tree documentation. Driver is tested
-> by using kernel module with regulator set and get APIs.
+> Putting them just below the 128 MiB boundary seems to work.
 
-Applied, thanks.
+Or at the 128MB mark, or any location between 64MB and 512MB should be 
+fine in practice.
 
---24/piotZLKF/SXqU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJP/wksAAoJEBus8iNuMP3dgcIP/Az7K5iUFhWJ5Kak7CtG1icC
-9BVT6amEhOGcXNQjA6nhi1Y6ajok+z+Ln0/4U/dbPg4yiXkNyn9TnALsV7L5Vcl1
-c4H4zwfYQgLLGTXo2mZilTabNBVspYPKZmtodMHrajsTVUeZbV1x1aDFHWsqnNJd
-bl8CgfaRrBbbotz7qJ3ojnsZWyDuhbsydI7c8h8ysgizFSxnClrFn4ekdZsE2+RS
-i2jwO4VseJAH+/EaRGXoJx2wOh564uEGzvOrWd4RZb2drzCtqQHkMn8IUXwVtqTg
-/UOaL5n8QHxNSOCFBsaNnXdnBKE14Rt4Kx8k1jIEWxPftKQRrCdVVQ3XZ6ZL+lJt
-a8mbhNBD2aYDRLglXU2jkjC4qc2XHI7/MvOoQqc9krXfGuaUwwXkjRUSbuQGw6v7
-G7lYWE3zBLOn0ESQPb4yjEiOqDEo/hkntD2CjbFEx4R7F57xoKm4LjntkEjUBPh+
-2zceV9I/jlsY9vzRg6Yp8JSZfVKND4uGN5vK6zZi5eJziN2wkdHl7Yqnt2yuEcZu
-UOuKDJaqh5QI1ea60+I+8i/CqoOHQSHjTGmeLEFhwI7boSjNPFDauM7lDsjEgpAe
-XEaSuHW9eXhL742eKq3fKwR/C9qZeRqheNu6xYhp5A2VsoCCrKSe+QfiXdt5Ogfq
-IJQRHLMV5fgKN84sIaDN
-=sBGE
------END PGP SIGNATURE-----
-
---24/piotZLKF/SXqU--
+Nicolas
