@@ -1,60 +1,61 @@
-From: Wolfgang Denk <wd@denx.de>
-Subject: Re: Where to put a large bootloader-supplied device tree
-	on ARM ?
-Date: Thu, 12 Jul 2012 23:47:43 +0200
-Message-ID: <20120712214743.2160B202A3F@gemini.denx.de>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
-	<201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
-	<201207062008.23952.arnd@arndb.de> <20120706210009.GC11470@lunn.ch>
-	<4FF781D8.3040206@firmworks.com>
-	<2966DB01BC317A4DA23684BA0F653415013701@xmb-aln-x08.cisco.com>
-	<4FF7980E.7050705@firmworks.com>
-	<alpine.LFD.2.02.1207090015270.31100@xanadu.home>
-	<4FFE743B.6080504@firmworks.com> <4FFF34C9.8030000@gmail.com>
-	<20120712233801.0411daa7@lilith>
+From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] spi: s3c64xx: add support for device tree
+Date: Fri, 13 Jul 2012 07:35:51 +0900
+Message-ID: <4FFF5147.3070707@samsung.com>
+References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
+	<20120711174908.GP3938@opensource.wolfsonmicro.com>
+	<CAJuYYwQA_x112xqOnQmwZjzoXoR-DAvT8YdB90Wm=78CH72uOg@mail.gmail.com>
+	<0fae01cd600e$442ed160$cc8c7420$%kim@samsung.com>
+	<20120712130234.GE3957@opensource.wolfsonmicro.com>
+	<CAJuYYwS59yoRnyFOR4_M5ymAS5uh0fN5zS=x2CS5Ax-795awBA@mail.gmail.com>
+	<20120712161657.GC7256@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-reply-to: <20120712233801.0411daa7@lilith>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Albert ARIBAUD <albert.u.boot@aribaud.net>
-Cc: Mitch Bradley <wmb@firmworks.com>, U-Boot <u-boot@lists.denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20120712161657.GC7256-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Albert ARIBAUD,
+On 07/13/12 01:16, Mark Brown wrote:
+> On Thu, Jul 12, 2012 at 07:13:37PM +0530, Thomas Abraham wrote:
+>> On 12 July 2012 18:32, Mark Brown<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>  wrote:
+>
+>>> Well, simple conflicts aren't that big a deal...  However, Thomas
+>>> mentioned that in order to test this he merged the SPI tree into your
+>>> tree so perhaps there is also a dependency on the SPI tree?  If that was
+>>> just for good practice testing then I agree that the best thing is to
+>>> merge via your tree, otherwise we might need to think harder.
+>
+>> There were no dependency on Grant's spi/next branch. It was merged
+>> just to ensure that nothing is broken.
+>
+> OK, great - then the Samsung tree it is.
 
-In message <20120712233801.0411daa7@lilith> you wrote:
-> 
-> If I'm not mistaken, yes U-Boot loads itself as high as it can, and I don't
-> know about the FDT, but no, U-Boot does not "like" to load initrd "just
-> below that": it loads initrd where the boot commands tell it to, and the
-> boot commands are written by board developers. Nothing in U-Boot forces
-> initrd to be loaded as high as possible.
-> 
-> That leaves the question of the FDT, though -- I'm not familiar enough
-> with it (yet) to tell if it is always located just under U-Boot or if
-> its placement is controllable by board commands.
+Thanks, will apply.
 
-You can always just set the "fdt_high" and "initrd_high" evironment
-variables to restrict the positioning of initrd and FDT in RAM; see
-the README for details.
+Mark, if you want to add your ack or review on them, let me know.
+
+Thanks.
 
 Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
 
-Wolfgang Denk
-
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-"He was so narrow minded he could see through  a  keyhole  with  both
-eyes ..."
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
