@@ -1,161 +1,29 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
-Date: Thu, 12 Jul 2012 07:27:50 +0200
-Message-ID: <CAPnjgZ1fTVfhhBbEYjtwVxVZ9xYmLwyAkMPAiGJ7P-2odV16rg@mail.gmail.com>
-References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
- <20120309014441.8236B3E0903@localhost>
- <20120309100435.GN27213@game.jcrosoft.org>
- <20120309162638.92E813E0880@localhost>
- <20120309163608.GQ27213@game.jcrosoft.org>
- <4F5E50DA.6080000@freescale.com>
- <20120313031739.GA18320@game.jcrosoft.org>
- <20120313041652.563B63E0536@localhost>
- <CAPnjgZ2dj5pcuGhM2_2nwwnhhcCmKhyi6jVHS7Xf1f682i_j_w@mail.gmail.com>
- <4FFC9D46.6090006@freescale.com>
- <CAPnjgZ1D0hCZobFENTPN8Vkz04x5bXa9RviJuVcgBt66BL961Q@mail.gmail.com>
- <4FFCB6A2.50805@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FFCB6A2.50805-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH 0/3 v2] USB: host: Add Device tree support for ohci-exynos &
+ ehci-s5p
+Date: Thu, 12 Jul 2012 11:25:09 +0530
+Message-ID: <1342072512-29945-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, jg1.han@samsung.com, jy0922.shim@samsung.com, sshtylyov@mvista.com, olofj@google.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Scott,
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
 
-On Wed, Jul 11, 2012 at 1:11 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On 07/10/2012 05:53 PM, Simon Glass wrote:
->> Hi Scott,
->>
->> On Tue, Jul 10, 2012 at 11:23 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
->> <mailto:scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>> wrote:
->>
->>     Also note that even non-boolean properties can mean something different
->>     when absent.  Sometimes this is a default value; sometimes, like with
->>     "ranges", it's something that can't be expressed with any value (empty
->>     ranges means all translations go straight through; no ranges means no
->>     translation is possible).
->>
->>
->> That's fine, but I'm not sure I understand why that relates to boolean
->> properties, which currently mean always the same thing (false) when
->> absent. I don't think there is any intent to change that.
->
-> The point was this isn't the only scenario where the absence of a
-> property means something, and where you might want to delete the property.
+Changes from v1:
+1) Added comment to explain inclusion of dma_mask through pdata.
+2) Replaced gpio_request() with gpio_request_one()
+3) Removed gpio_set_value()
 
-OK I see. We don't have that option for booleans, since absence will
-always mean false.
+This patchset is based and tested on 3.5 rc5.
+Abhilash Kesavan (1):
+  USB: ehci-s5p: Add vbus setup function to the s5p ehci glue layer
 
->
->>     > I think it is useful to
->>     > support a boolean with a non-null value which can be 0, meaning
->>     true as
->>     > Jean-Christophe says.
->>     >
->>     > My reasons are:
->>     >
->>     > 1. dtc does not have a way to delete a property and it isn't clear
->>     what
->>     > syntax could be used there.
->>
->>     Surely some syntax can be created for this.  E.g. /delete-prop/ foo;
->>
->>
->> Yes, in fact I saw a patch after sending this email. So for normal
->> values to change the value we do
->>
->>    prop = <23>;
->>
->> but for booleans we must do EITHER:
->>
->>    bool;
->>
->> or
->>
->>    /delete-prop/ bool;
->>
->> depending on whether we want the make it true or false? Ick.
->
-> Doesn't seem that bad to me except in the case you show below where
-> you're trying to do it programmatically.
->
->> It seems worse to me, see above. Also if we end up with symbols it will
-> *> be impossible to do something like:
->>
->>    bool-property = <WIBBLE_VALUE>;
->>
->> You will have to do:
->>
->> if WIBBLE_VALUE == 0
->>   /delete-prop/ bool-property;
->> #else
->>   bool-property;
->> #endif
->>
->> or whatever, or maybe I got that around the wrong way.... Not nice IMO.
->
-> Yeah, that's unpleasant.
->
-> I don't hugely object to a new boolean type for use in new bindings,
-> where <0> or absence can both be used to indicate false, as long as it's
-> clearly documented.  I'm hesitant to start doing this on existing
-> bindings, though, and in any case would like to see support for
-> property/node deletion in dtc.
+Vivek Gautam (2):
+  USB: ohci-exynos: Add support for device tree
+  USB: ehci-s5p: Add support for device tree
 
-Fair enough. Jean-Christophe's patch certainly changes existing
-behaviour, and without that it might be confusing - we don't want two
-functions for reading boolean properties. The only plus is that
-(perhaps) no one expects "bool-prop = <0>" to mean true, so it might
-be safe.
-
->
->> (any comments on point 2?)
->
-> It's basically the same as the above, right?
-
-Yes, and you commented above.
-
->
->>     > 3. Discoverability: it is nice to be able to see the possible options,
->>     > even if disabled.
->>
->>     This assumes the possible options were known in advance, or that you
->>     don't maintain compatibility with old device trees when a new option is
->>     added.
->>
->>
->> You can still add the option with a zero value - or maybe I
->> misunderstand what you mean.
->
-> We normally want to work with existing device trees (which could be
-> partially produced by firmware, so changing can be unpleasant), so the
-> absence of the property is still going to be a possibility.  Plus
-> enumerating every possibility, no matter how rarely used, in every node
-> of a certain type seems excessively verbose.  It's not like these are
-> user configuration knobs.
-
-Yes agreed. The point of this is just to make it easier (I think) to
-make a boolean value false either in the source, or later using
-fdtput.
-
-So what do we need to do? Take a vote? Revisit Jean-Christophe's patch?
-
->
-> -Scott
->
-
-Regards,
-Simon
+ drivers/usb/host/ehci-s5p.c    |   47 ++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/ohci-exynos.c |   22 ++++++++++++++++++
+ 2 files changed, 69 insertions(+), 0 deletions(-)
