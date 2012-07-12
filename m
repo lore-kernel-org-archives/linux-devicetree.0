@@ -1,479 +1,160 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Subject: [RESEND PATCH 1/1] clk: add DT support for clock gating control
-Date: Thu, 12 Jul 2012 09:15:05 +0200
-Message-ID: <4FFE7979.4060000@googlemail.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v2 07/19] tegra: fdt: Add LCD definitions for
+	Tegra
+Date: Thu, 12 Jul 2012 10:21:01 +0200
+Message-ID: <CAPnjgZ0Lv2rjVzNottsY+NWYmred5Au+hebUuTTOSAJufTkLjA@mail.gmail.com>
+References: <1339604395-6621-1-git-send-email-sjg@chromium.org>
+	<1339604395-6621-8-git-send-email-sjg@chromium.org>
+	<4FDA749D.2030201@wwwdotorg.org>
+	<CAPnjgZ2MUpjGS-BwQ6yASahFiu2OTWx4RUrJ7bkSkq72QmX++Q@mail.gmail.com>
+	<20120711054842.GB10344@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------050705000501050404000406"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <20120711054842.GB10344@avionic-0098.mockup.avionic-design.de>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Stephen Warren <swarren@nvidia.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------050705000501050404000406
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi Thierry,
 
-As Rob's clock binding support patch is now up on clk-next, I'd like to
-draw attention on this patch again.
---
-This patch adds support for using clock gates (clk-gate) from DT based
-on Rob Herrings DT clk binding support for 3.6.
+On Wed, Jul 11, 2012 at 7:48 AM, Thierry Reding
+<thierry.reding@avionic-design.de> wrote:
+> On Wed, Jul 11, 2012 at 06:44:10AM +0200, Simon Glass wrote:
+>> Hi Stephen,
+>>
+>> On Fri, Jun 15, 2012 at 1:32 AM, Stephen Warren <swarren@wwwdotorg.org>wrote:
+>>
+>> > On 06/13/2012 10:19 AM, Simon Glass wrote:
+>> > > Add LCD definitions and also a proposed binding for LCD displays.
+>> > >
+>> > > The PWFM is in progress on the device-tree-discuss list, so only a
+>> > > very basic binding is offered here.
+>> >
+>> > I believe we have settled on a final representation, it just hasn't been
+>> > added into linux-next yet. See:
+>> >
+>> >
+>> > http://gitorious.org/linux-pwm/linux-pwm/commit/d3ce73e5dc86646a6302f2b0f7dd40e8c552fa04
+>>
+>>
+>> Thanks for the pointer. I suppose this doesn't address clocks as yet, but
+>> that's fine.
+>
+> I was waiting for the common clock framework and DT bindings to get
+> ready. This should happen RSN for Tegra so I will probably look at
+> adding support for it in.
 
-It adds a helper function to clk-gate to allocate all resources required by
-a set of individual clock gates, i.e. register base address and lock. Each
-clock gate is described as a child of the clock-gating-control in DT and
-also created by the helper function.
+OK, are you looking at adding it in U-Boot?
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Mike Turquette <mturquette@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
-  .../bindings/clock/clock-gating-control.txt        |   80 +++++++++++++++++++
-  drivers/clk/clk-gate.c                             |   84 ++++++++++++++++++++
-  include/linux/clk-provider.h                       |    2 +
-  3 files changed, 166 insertions(+)
-  create mode 100644 Documentation/devicetree/bindings/clock/clock-gating-control.txt
+>
+> By the way, the PWM tree has now been in linux-next for a couple of
+> weeks and I plan to submit it for inclusion in 3.6.
 
-diff --git a/Documentation/devicetree/bindings/clock/clock-gating-control.txt 
-b/Documentation/devicetree/bindings/clock/clock-gating-control.txt
-new file mode 100644
-index 0000000..05f5728
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clock-gating-control.txt
-@@ -0,0 +1,80 @@
-+Binding for simple clock gating control based on clock gate register with one
-+bit per clock gate. This is a clock consumer and also a clock provider for a
-+set of gated clocks that are described as children of this node. Each clock gate
-+is described by a bit number and polarity to control the gate.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+==Clock gating control==
-+
-+Required properties:
-+- compatible : shall be "clock-gating-control".
-+- reg : should contain the register physical address and length for
-+        the clock gating control.
-+- clocks : shared parent clock for all gated clocks.
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- #address-cells : number of cells required to describe a clock gate;
-+                   should be <2>.
-+- #size-cells : should be zero.
-+
-+Each individual clock gate bit is described as a child of the
-+corresponding gating control register with the following properties.
-+
-+Required child properties:
-+- reg : should contain the individual bit and polarity to control
-+        the clock gate. A polarity of 0 means that by setting the
-+        bit to 1 the clock passes through the clock gate while
-+	setting the bit to 0 disables the clock. Any other value
-+     	for polarity inverts the meaning of the control bit.
-+
-+Optional child properties:
-+- clocks : overrides the shared parent clock for this clock gate
-+           by the clock passed in this property.
-+- clock-output-names : from common clock binding; allows to set
-+                       a specific name for the gated clock output.
-+
-+==Example==
-+
-+	/* fixed root clock */
-+	osc: oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <166666667>;
-+	};
-+
-+	/* sata peripheral clock */
-+	sata_clk: ext-oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+	};
-+
-+	/* register-based clock gating control */
-+	gating-control@f10d0038 {
-+		compatible = "clock-gating-control";
-+		reg = <0xf10d0038 0x4>;
-+		clocks = <&osc>;
-+		#clock-cells = <0>;
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		/* USB0 clock gate on register bit 0 with inverted polarity */
-+		cg_usb0: clockgate@0 {
-+			reg = <0 1>; /* register bit 0, inverted polarity */
-+		};
-+
-+		/* PCIe0 clock gate on register bit 1 with normal polarity
-+		 * and named output clock */
-+		cg_pcie0: clockgate@1 {
-+			reg = <1 0>; /* register bit 1, normal polarity */
-+			clock-output-names = "pcie0_clk";
-+		};
-+
-+		/* SATA clock gate with different parent clock */
-+		cg_sata: clockgate@3 {
-+			reg = <3 0>; /* register bit 3, normal polarity */
-+			clocks = <&sata_clk>;
-+		};
-+	};
-diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
-index 578465e..1e88907 100644
---- a/drivers/clk/clk-gate.c
-+++ b/drivers/clk/clk-gate.c
-@@ -15,6 +15,9 @@
-  #include <linux/io.h>
-  #include <linux/err.h>
-  #include <linux/string.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-   /**
-   * DOC: basic gatable clock which can gate and ungate it's ouput
-@@ -148,3 +151,84 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
-   	return clk;
-  }
-+
-+#ifdef CONFIG_OF
-+/**
-+ * of_clock_gating_control_setup() - Setup function for clock gate control
-+ *   This is a helper for using clk-gate from OF device tree. It allocates
-+ *   a common lock for a base register and creates the individual clk-gates.
-+ */
-+void __init of_clock_gating_control_setup(struct device_node *np)
-+{
-+	struct device_node *child;
-+	const char *pclk_name;
-+	void __iomem *base;
-+	spinlock_t *lockp;
-+	unsigned int rnum;
-+	u64 addr;
-+
-+	pclk_name = of_clk_get_parent_name(np, 0);
-+	if (!pclk_name) {
-+		pr_debug("%s: unable to get parent clock for %s\n",
-+			__func__, np->full_name);
-+		return;
-+	}
-+
-+	lockp = kzalloc(sizeof(spinlock_t), GFP_KERNEL);
-+	if (!lockp) {
-+		pr_debug("%s: unable to allocate spinlock for %s\n",
-+			 __func__, np->full_name);
-+		return;
-+	}
-+
-+	spin_lock_init(lockp);
-+	base = of_iomap(np, 0);
-+	rnum = sizeof(resource_size_t) * 8;
-+	addr = of_translate_address(np, of_get_property(np, "reg", NULL));
-+
-+	pr_debug("create clock gate control %s\n", np->full_name);
-+
-+	for_each_child_of_node(np, child) {
-+		struct clk *cg;
-+		const char *cg_name;
-+		const char *cg_pclk_name;
-+		u32 propval[2];
-+		unsigned int rbit;
-+
-+		if (of_property_read_u32_array(child, "reg", propval, 2)) {
-+			pr_debug("%s: wrong #reg on %s\n",
-+				 __func__, child->full_name);
-+			continue;
-+		}
-+
-+		rbit = propval[0];
-+		if (rbit >= rnum) {
-+			pr_debug("%s: bit position of %s exceeds resources\n",
-+				 __func__, child->full_name);
-+			continue;
-+		}
-+
-+		cg_pclk_name = of_clk_get_parent_name(child, 0);
-+		if (!pclk_name)
-+			cg_pclk_name = pclk_name;
-+
-+		if (of_property_read_string(child, "clock-output-names",
-+					    &cg_name)) {
-+			unsigned int nlen = 4 + 16 + strlen(child->name);
-+			char *name = kzalloc(nlen+1, GFP_KERNEL);
-+			if (!name)
-+				continue;
-+			snprintf(name, nlen, "%u@%llx.%s", rbit,
-+				 (unsigned long long)addr, child->name);
-+			cg_name = name;
-+		}
-+
-+		pr_debug("  create clock gate: %s\n", cg_name);
-+
-+		cg = clk_register_gate(NULL, cg_name, cg_pclk_name, 0,
-+				       base, rbit, propval[1], lockp);
-+		if (cg)
-+			of_clk_add_provider(child, of_clk_src_simple_get, cg);
-+	}
-+}
-+#endif
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index b97f61e..499eac2 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -205,6 +205,8 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
-  		void __iomem *reg, u8 bit_idx,
-  		u8 clk_gate_flags, spinlock_t *lock);
-  +void of_clock_gating_control_setup(struct device_node *np);
-+
-  /**
-   * struct clk_divider - adjustable divider clock
-   *
--- 
-1.7.10
+Yes Stephen pointed me to that so I picked it up, thanks.
 
+>
+>> > > I am not sure if it is better to have the lcd within the display
+>> > > controller as with i2c/spi, or a separate node. From a hardware point
+>> > > of view the LCD is certainly connected to the display controller, so
+>> > > perhaps this version makes most sense. We could have a stand-alone
+>> > > top-level lcd node with a phandle pointing to the display controller,
+>> > > but these doesn't seem to be an obvious advantage to that approach.
+>> >
+>> > Equally, there's been extensive discussion re: how to represent the
+>> > NVIDIA display controller in DT. I strongly believe that U-Boot
+>> > shouldn't go ahead in isolation with a binding that's completely
+>> > unrelated to what's happening in the kernel. Please can you take what
+>> > Thierry is working on for the kernel, and/or contribute to that binding
+>> > etc., so we don't end up with multiple ways of doing the same thing.
+>> > Part of the whole point of DT is to have a single way of representing HW
+>> > that multiple OSs (or perhaps bootloaders) cna use. If everyone just
+>> > goes and does their own thing, we've lost.
+>> >
+>>
+>> I can see the email here.
+>>
+>> http://lists.freedesktop.org/archives/dri-devel/2012-April/021223.html
+>>
+>> I posted this series originally in January. That email is from April, and I
+>> don't see activity in the last 2 months. As previously discussed it is not
+>> productive to chase a moving target.
+>
+> I had hoped I could get this finished much faster, but then things
+> happened. However there has been quite some progress in the meantime.
+>
+> I actually based that very first version on what you had in the earlier
+> Tegra LCD series with a couple of additions to support DRM
+> specificities. However the proposal was shot down pretty early mainly
+> because the display timing description was very Tegra specific. One
+> proposal was to include an EDID blob directly into the DT and pass it on
+> to DRM, which is what the current code does.
+>
+> Lately there's been some work on adding a generic description for
+> display timings:
+>
+>         http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
+>
+> I haven't tested that code yet, but it might turn out to be an
+> interesting replacement for the EDID blob.
 
---------------050705000501050404000406
-Content-Type: text/plain;
- name="Attached Message Part"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="Attached Message Part"
+Yes I prefer it, it is much easier to see what is going on. I will put
+something together based on that.
 
-This patch adds support for using clock gates (clk-gate) from DT based
-on Rob Herrings DT clk binding support for 3.6.
+>
+>> Thierry, have you settled on a binding yet? If not do you have something
+>> sort-of close that I could use in U-Boot?
+>
+> The currently accepted form (as in "Stephen said it looks reasonable")
+> is here:
+>
+>         http://lists.freedesktop.org/archives/dri-devel/2012-July/024899.html
+>
+> It currently only defines the bindings for the RGB and HDMI outputs, but
+> that should be fine since from what I can tell your U-Boot driver
+> supports RGB only anyway. It is probably also way more than you really
+> need in U-Boot because it has DT nodes for all the graphics-related
+> modules.
 
-It adds a helper function to clk-gate to allocate all resources required by
-a set of individual clock gates, i.e. register base address and lock. Each
-clock gate is described as a child of the clock-gating-control in DT and
-also created by the helper function.
+I also need a place to put the pwm and GPIOs for the panel itself.
+Something like this:
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Mike Turquette <mturquette@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- .../bindings/clock/clock-gating-control.txt        |   80 +++++++++++++++++++
- drivers/clk/clk-gate.c                             |   84 ++++++++++++++++++++
- include/linux/clk-provider.h                       |    2 +
- 3 files changed, 166 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/clock-gating-control.txt
+		nvidia,pwm = <&pwm 2 0>;
+		nvidia,backlight-enable-gpios = <&gpio 28 0>;	/* PD4 */
+		nvidia,lvds-shutdown-gpios = <&gpio 10 0>;	/* PB2 */
+		nvidia,backlight-vdd-gpios = <&gpio 176 0>;	/* PW0 */
+		nvidia,panel-vdd-gpios = <&gpio 22 0>;		/* PC6 */
+		nvidia,panel-timings = <4 203 17 15>;  (number of ms before turning
+on the next gpio)
+		nvidia,bits-per-pixel = <16>;    (er, TBD)
 
-diff --git a/Documentation/devicetree/bindings/clock/clock-gating-control.txt b/Documentation/devicetree/bindings/clock/clock-gating-control.txt
-new file mode 100644
-index 0000000..05f5728
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clock-gating-control.txt
-@@ -0,0 +1,80 @@
-+Binding for simple clock gating control based on clock gate register with one
-+bit per clock gate. This is a clock consumer and also a clock provider for a
-+set of gated clocks that are described as children of this node. Each clock gate
-+is described by a bit number and polarity to control the gate.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+==Clock gating control==
-+
-+Required properties:
-+- compatible : shall be "clock-gating-control".
-+- reg : should contain the register physical address and length for
-+        the clock gating control.
-+- clocks : shared parent clock for all gated clocks.
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- #address-cells : number of cells required to describe a clock gate;
-+                   should be <2>.
-+- #size-cells : should be zero.
-+
-+Each individual clock gate bit is described as a child of the
-+corresponding gating control register with the following properties.
-+
-+Required child properties:
-+- reg : should contain the individual bit and polarity to control
-+        the clock gate. A polarity of 0 means that by setting the
-+        bit to 1 the clock passes through the clock gate while
-+	setting the bit to 0 disables the clock. Any other value
-+     	for polarity inverts the meaning of the control bit.
-+
-+Optional child properties:
-+- clocks : overrides the shared parent clock for this clock gate
-+           by the clock passed in this property.
-+- clock-output-names : from common clock binding; allows to set
-+                       a specific name for the gated clock output.
-+
-+==Example==
-+
-+	/* fixed root clock */
-+	osc: oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <166666667>;
-+	};
-+
-+	/* sata peripheral clock */
-+	sata_clk: ext-oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+	};
-+
-+	/* register-based clock gating control */
-+	gating-control@f10d0038 {
-+		compatible = "clock-gating-control";
-+		reg = <0xf10d0038 0x4>;
-+		clocks = <&osc>;
-+		#clock-cells = <0>;
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		/* USB0 clock gate on register bit 0 with inverted polarity */
-+		cg_usb0: clockgate@0 {
-+			reg = <0 1>; /* register bit 0, inverted polarity */
-+		};
-+
-+		/* PCIe0 clock gate on register bit 1 with normal polarity
-+		 * and named output clock */
-+		cg_pcie0: clockgate@1 {
-+			reg = <1 0>; /* register bit 1, normal polarity */
-+			clock-output-names = "pcie0_clk";
-+		};
-+
-+		/* SATA clock gate with different parent clock */
-+		cg_sata: clockgate@3 {
-+			reg = <3 0>; /* register bit 3, normal polarity */
-+			clocks = <&sata_clk>;
-+		};
-+	};
-diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
-index 578465e..1e88907 100644
---- a/drivers/clk/clk-gate.c
-+++ b/drivers/clk/clk-gate.c
-@@ -15,6 +15,9 @@
- #include <linux/io.h>
- #include <linux/err.h>
- #include <linux/string.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
- 
- /**
-  * DOC: basic gatable clock which can gate and ungate it's ouput
-@@ -148,3 +151,84 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
- 
- 	return clk;
- }
-+
-+#ifdef CONFIG_OF
-+/**
-+ * of_clock_gating_control_setup() - Setup function for clock gate control
-+ *   This is a helper for using clk-gate from OF device tree. It allocates
-+ *   a common lock for a base register and creates the individual clk-gates.
-+ */
-+void __init of_clock_gating_control_setup(struct device_node *np)
-+{
-+	struct device_node *child;
-+	const char *pclk_name;
-+	void __iomem *base;
-+	spinlock_t *lockp;
-+	unsigned int rnum;
-+	u64 addr;
-+
-+	pclk_name = of_clk_get_parent_name(np, 0);
-+	if (!pclk_name) {
-+		pr_debug("%s: unable to get parent clock for %s\n",
-+			__func__, np->full_name);
-+		return;
-+	}
-+
-+	lockp = kzalloc(sizeof(spinlock_t), GFP_KERNEL);
-+	if (!lockp) {
-+		pr_debug("%s: unable to allocate spinlock for %s\n",
-+			 __func__, np->full_name);
-+		return;
-+	}
-+
-+	spin_lock_init(lockp);
-+	base = of_iomap(np, 0);
-+	rnum = sizeof(resource_size_t) * 8;
-+	addr = of_translate_address(np, of_get_property(np, "reg", NULL));
-+
-+	pr_debug("create clock gate control %s\n", np->full_name);
-+
-+	for_each_child_of_node(np, child) {
-+		struct clk *cg;
-+		const char *cg_name;
-+		const char *cg_pclk_name;
-+		u32 propval[2];
-+		unsigned int rbit;
-+
-+		if (of_property_read_u32_array(child, "reg", propval, 2)) {
-+			pr_debug("%s: wrong #reg on %s\n",
-+				 __func__, child->full_name);
-+			continue;
-+		}
-+
-+		rbit = propval[0];
-+		if (rbit >= rnum) {
-+			pr_debug("%s: bit position of %s exceeds resources\n",
-+				 __func__, child->full_name);
-+			continue;
-+		}
-+
-+		cg_pclk_name = of_clk_get_parent_name(child, 0);
-+		if (!pclk_name)
-+			cg_pclk_name = pclk_name;
-+
-+		if (of_property_read_string(child, "clock-output-names",
-+					    &cg_name)) {
-+			unsigned int nlen = 4 + 16 + strlen(child->name);
-+			char *name = kzalloc(nlen+1, GFP_KERNEL);
-+			if (!name)
-+				continue;
-+			snprintf(name, nlen, "%u@%llx.%s", rbit,
-+				 (unsigned long long)addr, child->name);
-+			cg_name = name;
-+		}
-+
-+		pr_debug("  create clock gate: %s\n", cg_name);
-+
-+		cg = clk_register_gate(NULL, cg_name, cg_pclk_name, 0,
-+				       base, rbit, propval[1], lockp);
-+		if (cg)
-+			of_clk_add_provider(child, of_clk_src_simple_get, cg);
-+	}
-+}
-+#endif
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index b97f61e..499eac2 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -205,6 +205,8 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
- 		void __iomem *reg, u8 bit_idx,
- 		u8 clk_gate_flags, spinlock_t *lock);
- 
-+void of_clock_gating_control_setup(struct device_node *np);
-+
- /**
-  * struct clk_divider - adjustable divider clock
-  *
--- 
-1.7.10
+I am thinking of something like a phandle in your rgb node:
 
+	host1x {
+		dc@54200000 {
+			rgb {
+				nvidia-panel = <&lcd_panel>;
+...
 
---------------050705000501050404000406--
+	lcd_panel: panel {
+		nvidia,pwm = <&pwm 2 0>;
+                ...
+        }
+
+Or have you already solved this problem another way?
+
+Regards,
+Simon
+
+>
+> Thierry
