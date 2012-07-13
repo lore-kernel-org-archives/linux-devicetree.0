@@ -1,247 +1,349 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC] media DT bindings
-Date: Fri, 13 Jul 2012 16:57:31 +0200
-Message-ID: <5000375B.9060100@gmail.com>
-References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 00/11] make struct of_device_id.data const
+Date: Fri, 13 Jul 2012 16:24:26 +0000
+Message-ID: <201207131624.27266.arnd@arndb.de>
+References: <1342182734-321-1-git-send-email-y> <5000175E.4070702@gmail.com>
+ <20120713134638.GH592@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1207110854290.18999@axis700.grange>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120713134638.GH592-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Friday 13 July 2012, Uwe Kleine-K=F6nig wrote:
+> On Fri, Jul 13, 2012 at 07:41:02AM -0500, Rob Herring wrote:
+> > On 07/13/2012 07:32 AM, y@pengutronix.de wrote:
+> > > From: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > =
 
-Cc: devicetree-disscuss@lists.ozlabs.org
+> > > this series' goal is to make struct of_device_id.data const.
+> > > Conceptually a driver must not modify the data contained there so mak=
+ing
+> > > it const is the right thing.
+> > > =
 
-On 07/11/2012 04:27 PM, Guennadi Liakhovetski wrote:
-> Hi all
-> 
-> Background
-> ==========
-> 
-> With ARM adoption of flat Device Trees a need arises to move platform
-> device descriptions and their data from platform files to DT. This has
-> also to be done for media devices, e.g., video capture and output
-> interfaces, data processing devices, camera sensors, TV decoders and
-> encoders. This RFC is trying to spawn a discussion to define standard V4L
-> DT bindings. The first version will concentrate on the capture path,
-> mostly taking care of simple capture-interface - camera sensor / TV
-> decoder configurations. Since the author is not working intensively yet
-> with the Media Controller API, pad-level configuration, these topics might
-> be underrepresented in this RFC. I hope others, actively working in these
-> areas, will fill me in on them.
+> > > This change might introduce warnings because drivers don't use const =
+to
+> > > access the data pointed to by of_device_id.data. In most cases the fix
+> > > is to add some consts.
+> > > =
 
-We've done some work on device tree support for SoC camera interface
-with driver based on the Media Controller API, I've posted some RFC
-patches a few weeks ago:
-http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg14769.html
-But unfortunately didn't receive any comments, perhaps because the actual
-bindings were not abstracted enough from a specific hardware support.
-An updated version of these patch set can be found here:
-https://github.com/snawrocki/linux/commits/camera-of-2
+> > > This series (apart from adding this const in patch 10) fixes all driv=
+ers
+> > > covered by all arm defconfigs (based on v3.5-rc6).
+> > > =
 
-Of course we shouldn't be forgetting that underlying bindings need to 
-be the same, regardless of the drivers are based on soc_camera, Media 
-Controller/subdev pad-level frameworks, or something else. Anything 
-linux specific in the bindings would be inappropriate.
+> > =
 
-> Overview
-> ========
-> 
-> As mentioned above, typical configurations, that we'll be dealing with
-> consist of a DMA data capture engine, one or more data sources like camera
-> sensors, possibly some data processing units. Data capture and processing
-> engines are usually platform devices, whereas data source devices are
-> typically I2C slaves. Apart from defining each device we'll also describe
-> connections between them as well as properties of those connections.
-> 
-> Capture devices
-> ==============================
-> 
-> These are usually platform devices, integrated into respective SoCs. There
-> also exist external image processing devices, but they are rare. Obvious
-> differences between them and integrated devices include a different bus
-> attribution and a need to explicitly describe the connection to the SoC.
-> As far as capture devices are concerned, their configuration will
-> typically include a few device-specific bindings, as well as standard
-> ones. Standard bindings will include the usual "reg," "interrupts,"
-> "clock-frequency" properties.
-> 
-> It is more complex to describe external links. We need to describe
-> configurations, used with various devices, attached to various pads. It is
-> proposed to describe such links as child nodes. Each such link will
-> reference a client pad, a local pad and specify the bus configuration. The
-> media bus can be either parallel or serial, e.g., MIPI CSI-2. It is
-> proposed to describe both the bus-width in the parallel case and the
-> number of lanes in the serial case, using the standard "bus-width"
-> property.
-> 
-> On the parallel bus common properties include signal polarities, possibly
-> data line shift (8 if lines 15:8 are used, 2 if 9:2, and 0 if lines 7:0),
-> protocol (e.g., BT.656). Additionally device-specific properties can be
-> defined.
-> 
-> A MIPI CSI-2 bus common properties would include, apart from the number of
-> lanes, routed to that client, the clock frequency, a channel number,
-> possibly CRC and ECC flags.
-> 
-> An sh-mobile CEU DT node could look like
-> 
-> 	ceu0@0xfe910000 = {
-> 		compatible = "renesas,sh-mobile-ceu";
-> 		reg =<0xfe910000 0xa0>;
-> 		interrupts =<0x880>;
-> 		bus-width =<16>;		/* #lines routed on the board */
-> 		clock-frequency =<50000000>;	/* max clock */
-> 		#address-cells =<1>;
-> 		#size-cells =<0>;
-> 		...
-> 		ov772x-1 = {
-> 			reg =<0>;
-> 			client =<&ov772x@0x21-0>;
-> 			local-pad = "parallel-sink";
-> 			remote-pad = "parallel-source";
+> > What about other arches?
+>
+> I didn't looked at them, mainly because I don't have the scripts for
+> arches other than arm to do such testing. Also note that it introduces
+> only some warnings, but no breakage. So adding the const in the merge
+> window might be ok?!
 
-I'm not sure I like that. Is it really needed when we already have
-the child/parent properties around ?
+I think it makes sense to change the drivers that are easy to find now:
 
-> 			bus-width =<8>;	/* used data lines */
-> 			data-shift =<0>;	/* lines 7:0 are used */
-> 			hsync-active =<1>;	/* active high */
-> 			vsync-active =<1>;	/* active high */
+git grep -A6 of_device_id | grep '\<data\>.*=3D'  | brain
 
-In the end I took a bit different approach, similar to how the interrupt 
-flag bindings are defined:
-https://github.com/snawrocki/linux/commit/c17a61a07008eeb8faea0205f7cc440545641adb
+arch/c6x/platforms/plldata.c-   { .compatible =3D "ti,c6455-pll", .data =3D=
+ c6455_setup_clocks },
+arch/mips/lantiq/irq.c- { .compatible =3D "lantiq,icu", .data =3D icu_of_in=
+it },
+arch/powerpc/platforms/83xx/suspend.c-          .data =3D &pmc_types[0],
+arch/powerpc/platforms/cell/celleb_pci.c-               .data =3D &celleb_f=
+ake_pci_spec,
+arch/powerpc/platforms/cell/celleb_pci.c-               .data =3D &celleb_e=
+pci_spec,
+arch/powerpc/sysdev/fsl_msi.c-          .data =3D (void *)&mpic_msi_feature,
+drivers/atm/fore200e.c-         .data =3D (void *) &fore200e_bus[1],
+drivers/char/xilinx_hwicap/xilinx_hwicap.c-     { .compatible =3D "xlnx,opb=
+-hwicap-1.00.b", .data =3D &buffer_icap_config},
+drivers/i2c/busses/i2c-mpc.c-   {.compatible =3D "mpc5200-i2c", .data =3D &=
+mpc_i2c_data_52xx, },
+drivers/macintosh/mediabay.c-   .data           =3D &keylargo_mb_ops,
+drivers/mfd/da9052-i2c.c-       { .compatible =3D "dlg,da9053-aa", .data =
+=3D &da9052_i2c_id[1] },
+drivers/net/can/mscan/mpc5xxx_can.c-    { .compatible =3D "fsl,mpc5200-msca=
+n", .data =3D &mpc5200_can_data, },
+drivers/scsi/qlogicpti.c-               .data =3D &qpti_template,
+drivers/usb/host/fsl-mph-dr-of.c-       { .compatible =3D "fsl-usb2-mph", .=
+data =3D &fsl_usb2_mpc8xxx_pd, },
+drivers/watchdog/mpc8xxx_wdt.c-         .data =3D &(struct mpc8xxx_wdt_type=
+) {
 
-However using a separate boolean for each signal, as you proposed, might 
-not be that much of string parsing, and it would have hurt less if this 
-would have been done is some common helper modules.
+I'm optimistic that this list covers the vast majority of the non-ARM
+drivers, and some of them don't even need any changes. I've done
+patches for the others below.
 
-> 			pclk-sample =<1>;	/* rising */
-> 			clock-frequency =<24000000>;
-> 		};
-> 	};
-> 
-> Client devices
-> ==============
-> 
-> Client nodes are children on their respective busses, e.g., i2c. This
-> placement leads to these devices being possibly probed before respective
-> host interfaces, which will fail due to known reasons. Therefore client
-> drivers have to be adapted to request a delayed probing, as long as the
-> respective video host hasn't probed.
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+ arch/powerpc/platforms/83xx/suspend.c    |    2 +-
+ arch/powerpc/platforms/cell/celleb_pci.c |    2 +-
+ arch/powerpc/sysdev/fsl_msi.c            |    8 ++++----
+ drivers/i2c/busses/i2c-mpc.c             |   12 ++++++------
+ drivers/macintosh/mediabay.c             |    8 ++++----
+ drivers/mfd/da9052-i2c.c                 |    4 ++--
+ drivers/net/can/mscan/mpc5xxx_can.c      |    6 +++---
+ drivers/scsi/qlogicpti.c                 |    2 +-
+ drivers/watchdog/mpc8xxx_wdt.c           |    2 +-
+ 10 files changed, 23 insertions(+), 26 deletions(-)
 
-I doubt this is going to be sufficient. Video bridge drivers may require
-all their sub-devices (e.g. I2C client devices) to be registered, in order
-to complete their probing. This was discussed in the past:
-http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg06595.html
+diff --git a/arch/powerpc/platforms/83xx/suspend.c b/arch/powerpc/platforms=
+/83xx/suspend.c
+index 1a04671..1d769a2 100644
+--- a/arch/powerpc/platforms/83xx/suspend.c
++++ b/arch/powerpc/platforms/83xx/suspend.c
+@@ -326,7 +326,7 @@ static int pmc_probe(struct platform_device *ofdev)
+ 	const struct of_device_id *match;
+ 	struct device_node *np =3D ofdev->dev.of_node;
+ 	struct resource res;
+-	struct pmc_type *type;
++	const struct pmc_type *type;
+ 	int ret =3D 0;
+ =
 
-So we ended up with defining an aggregate DT node that happens to be
-associated with the camera media device driver.
+ 	match =3D of_match_device(pmc_match, &ofdev->dev);
+diff --git a/arch/powerpc/platforms/cell/celleb_pci.c b/arch/powerpc/platfo=
+rms/cell/celleb_pci.c
+index 5822141..abc8af4 100644
+--- a/arch/powerpc/platforms/cell/celleb_pci.c
++++ b/arch/powerpc/platforms/cell/celleb_pci.c
+@@ -472,7 +472,7 @@ int __init celleb_setup_phb(struct pci_controller *phb)
+ {
+ 	struct device_node *dev =3D phb->dn;
+ 	const struct of_device_id *match;
+-	struct celleb_phb_spec *phb_spec;
++	const struct celleb_phb_spec *phb_spec;
+ 	int rc;
+ =
 
-Here is an example of how it might look like:
-https://github.com/snawrocki/linux/commit/eae639132681df6c068dc869bb8973f8d9d3efa1
+ 	match =3D of_match_node(celleb_phb_match, dev);
+diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
+index 6e097de..51ffafa 100644
+--- a/arch/powerpc/sysdev/fsl_msi.c
++++ b/arch/powerpc/sysdev/fsl_msi.c
+@@ -368,7 +368,7 @@ static int __devinit fsl_of_msi_probe(struct platform_d=
+evice *dev)
+ 	int err, i, j, irq_index, count;
+ 	int rc;
+ 	const u32 *p;
+-	struct fsl_msi_feature *features;
++	const struct fsl_msi_feature *features;
+ 	int len;
+ 	u32 offset;
+ 	static const u32 all_avail[] =3D { 0, NR_MSI_IRQS };
+@@ -502,15 +502,15 @@ static const struct fsl_msi_feature vmpic_msi_feature=
+ =3D {
+ static const struct of_device_id fsl_of_msi_ids[] =3D {
+ 	{
+ 		.compatible =3D "fsl,mpic-msi",
+-		.data =3D (void *)&mpic_msi_feature,
++		.data =3D &mpic_msi_feature,
+ 	},
+ 	{
+ 		.compatible =3D "fsl,ipic-msi",
+-		.data =3D (void *)&ipic_msi_feature,
++		.data =3D &ipic_msi_feature,
+ 	},
+ 	{
+ 		.compatible =3D "fsl,vmpic-msi",
+-		.data =3D (void *)&vmpic_msi_feature,
++		.data =3D &vmpic_msi_feature,
+ 	},
+ 	{}
+ };
+diff --git a/drivers/i2c/busses/i2c-mpc.c b/drivers/i2c/busses/i2c-mpc.c
+index b76731e..57f7703 100644
+--- a/drivers/i2c/busses/i2c-mpc.c
++++ b/drivers/i2c/busses/i2c-mpc.c
+@@ -647,7 +647,7 @@ static int __devinit fsl_i2c_probe(struct platform_devi=
+ce *op)
+ 	}
+ =
 
-> Client nodes will include all the properties, usual for their busses.
-> Additionally they will specify properties private to this device type and
-> common for all V4L2 client devices - device global and per-link. I think,
+ 	if (match->data) {
+-		struct mpc_i2c_data *data =3D match->data;
++		const struct mpc_i2c_data *data =3D match->data;
+ 		data->setup(op->dev.of_node, i2c, clock, data->prescaler);
+ 	} else {
+ 		/* Backwards compatibility */
+@@ -730,24 +730,24 @@ static int mpc_i2c_resume(struct device *dev)
+ SIMPLE_DEV_PM_OPS(mpc_i2c_pm_ops, mpc_i2c_suspend, mpc_i2c_resume);
+ #endif
+ =
 
-Sounds good.
+-static struct mpc_i2c_data mpc_i2c_data_512x __devinitdata =3D {
++static const struct mpc_i2c_data mpc_i2c_data_512x __devinitdata =3D {
+ 	.setup =3D mpc_i2c_setup_512x,
+ };
+ =
 
-> we should make it possible to define client devices, that can at run-time
-> be connected to different sinks, even though such configurations might not
-> be very frequent. To achieve this we also specify link information in
-> child devices, similar to those in host nodes above. This also helps
-> uniformity and will let us implement and use a universal link-binding
-> parser. So, a node, that has been referenced above could look like
+-static struct mpc_i2c_data mpc_i2c_data_52xx __devinitdata =3D {
++static const struct mpc_i2c_data mpc_i2c_data_52xx __devinitdata =3D {
+ 	.setup =3D mpc_i2c_setup_52xx,
+ };
+ =
 
-It seems dubious to me to push media links' description into DT. Links can 
-be configurable, and I don't think it's a rare situation. I'm inclined to
-code the interconnections within a composite device driver.
+-static struct mpc_i2c_data mpc_i2c_data_8313 __devinitdata =3D {
++static const struct mpc_i2c_data mpc_i2c_data_8313 __devinitdata =3D {
+ 	.setup =3D mpc_i2c_setup_8xxx,
+ };
+ =
 
-> 
-> 	ov772x@0x21-0 = {
-> 		compatible = "omnivision,ov772x";
-> 		reg =<0x21>;
-> 		vdd-supply =<&regulator>;
-> 		bus-width =<10>;
-> 		#address-cells =<1>;
-> 		#size-cells =<0>;
-> 		...
-> 		ceu0-1 = {
-> 			reg =<0>;
-> 			media-parent =<&ceu0@0xfe910000>;
-> 			bus-width =<8>;
-> 			hsync-active =<1>;
-> 			vsync-active =<0>;	/* who came up with an inverter here?... */
-> 			pclk-sample =<1>;
-> 		};
+-static struct mpc_i2c_data mpc_i2c_data_8543 __devinitdata =3D {
++static const struct mpc_i2c_data mpc_i2c_data_8543 __devinitdata =3D {
+ 	.setup =3D mpc_i2c_setup_8xxx,
+ 	.prescaler =3D 2,
+ };
+ =
 
-Are these mostly supposed to be properties specific to a sub-device and
-used by a host ?
+-static struct mpc_i2c_data mpc_i2c_data_8544 __devinitdata =3D {
++static const struct mpc_i2c_data mpc_i2c_data_8544 __devinitdata =3D {
+ 	.setup =3D mpc_i2c_setup_8xxx,
+ 	.prescaler =3D 3,
+ };
+diff --git a/drivers/macintosh/mediabay.c b/drivers/macintosh/mediabay.c
+index 831d751..3f8d032 100644
+--- a/drivers/macintosh/mediabay.c
++++ b/drivers/macintosh/mediabay.c
+@@ -63,7 +63,7 @@ struct media_bay_info {
+ 	int				value_count;
+ 	int				timer;
+ 	struct macio_dev		*mdev;
+-	struct mb_ops*			ops;
++	const struct mb_ops*		ops;
+ 	int				index;
+ 	int				cached_gpio;
+ 	int				sleeping;
+@@ -669,7 +669,7 @@ static int media_bay_resume(struct macio_dev *mdev)
+ =
 
-If so, how about adding them under the host or the aggregate node grouped
-into a sub-device specific child node ?
+ /* Definitions of "ops" structures.
+  */
+-static struct mb_ops ohare_mb_ops =3D {
++static const struct mb_ops ohare_mb_ops =3D {
+ 	.name		=3D "Ohare",
+ 	.content	=3D ohare_mb_content,
+ 	.power		=3D ohare_mb_power,
+@@ -678,7 +678,7 @@ static struct mb_ops ohare_mb_ops =3D {
+ 	.un_reset_ide	=3D ohare_mb_un_reset_ide,
+ };
+ =
 
-> 	};
-> 
-> Data processors
-> ===============
-> 
-> Data processing modules include resizers, codecs, rotators, serialisers,
-> etc. A node for an sh-mobile CSI-2 subdevice could look like
-> 
-> 	csi2@0xffc90000 = {
-> 		compatible = "renesas,sh-mobile-csi2";
-> 		reg =<0xffc90000 0x1000>;
-> 		interrupts =<0x17a0>;
-> 		bus-width =<4>;
-> 		clock-frequency =<30000000>;
-> 		...
-> 		imx074-1 = {
-> 			client =<&imx074@0x1a-0>;
-> 			local-pad = "csi2-sink";
-> 			remote-pad = "csi2-source";
-> 			bus-width =<2>;
-> 			clock-frequency =<25000000>;
-> 			csi2-crc;
-> 			csi2-ecc;
-> 			sh-csi2,phy =<0>;
-> 		};
-> 		ceu0 = {
-> 			media-parent =<&ceu0@0xfe910000>;
-> 			immutable;
+-static struct mb_ops heathrow_mb_ops =3D {
++static const struct mb_ops heathrow_mb_ops =3D {
+ 	.name		=3D "Heathrow",
+ 	.content	=3D heathrow_mb_content,
+ 	.power		=3D heathrow_mb_power,
+@@ -687,7 +687,7 @@ static struct mb_ops heathrow_mb_ops =3D {
+ 	.un_reset_ide	=3D heathrow_mb_un_reset_ide,
+ };
+ =
 
-> 		};
-> 	};
-> 
-> The respective child binding in the CEU node could then look like
-> 
-> 		csi2-1 = {
-> 			reg =<1>;
-> 			client =<&csi2@0xffc90000>;
-> 			immutable;
-> 		};
+-static struct mb_ops keylargo_mb_ops =3D {
++static const struct mb_ops keylargo_mb_ops =3D {
+ 	.name		=3D "KeyLargo",
+ 	.init		=3D keylargo_mb_init,
+ 	.content	=3D keylargo_mb_content,
+diff --git a/drivers/mfd/da9052-i2c.c b/drivers/mfd/da9052-i2c.c
+index 82c9d64..352c58b 100644
+--- a/drivers/mfd/da9052-i2c.c
++++ b/drivers/mfd/da9052-i2c.c
+@@ -46,7 +46,7 @@ static int da9052_i2c_enable_multiwrite(struct da9052 *da=
+9052)
+ 	return 0;
+ }
+ =
 
-It look a bit complex, and could more complex when we run into a system
-supporting more complex interconnections. I would prefer some sort of
-more flat structure...
+-static struct i2c_device_id da9052_i2c_id[] =3D {
++static const struct i2c_device_id da9052_i2c_id[] =3D {
+ 	{"da9052", DA9052},
+ 	{"da9053-aa", DA9053_AA},
+ 	{"da9053-ba", DA9053_BA},
+@@ -104,7 +104,7 @@ static int __devinit da9052_i2c_probe(struct i2c_client=
+ *client,
+ 		const struct of_device_id *deviceid;
+ =
 
-> Comments welcome.
-> 
-> Thanks
-> Guennadi
-> ---
-> Guennadi Liakhovetski, Ph.D.
-> Freelance Open-Source Software Developer
-> http://www.open-technology.de/
+ 		deviceid =3D of_match_node(dialog_dt_ids, np);
+-		id =3D (const struct i2c_device_id *)deviceid->data;
++		id =3D deviceid->data;
+ 	}
+ #endif
+ =
 
---
+diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mp=
+c5xxx_can.c
+index 5caa572..8a8df82 100644
+--- a/drivers/net/can/mscan/mpc5xxx_can.c
++++ b/drivers/net/can/mscan/mpc5xxx_can.c
+@@ -251,7 +251,7 @@ static struct of_device_id mpc5xxx_can_table[];
+ static int __devinit mpc5xxx_can_probe(struct platform_device *ofdev)
+ {
+ 	const struct of_device_id *match;
+-	struct mpc5xxx_can_data *data;
++	const struct mpc5xxx_can_data *data;
+ 	struct device_node *np =3D ofdev->dev.of_node;
+ 	struct net_device *dev;
+ 	struct mscan_priv *priv;
+@@ -380,12 +380,12 @@ static int mpc5xxx_can_resume(struct platform_device =
+*ofdev)
+ }
+ #endif
+ =
 
-Thanks,
-Sylwester
+-static struct mpc5xxx_can_data __devinitdata mpc5200_can_data =3D {
++static const struct mpc5xxx_can_data __devinitdata mpc5200_can_data =3D {
+ 	.type =3D MSCAN_TYPE_MPC5200,
+ 	.get_clock =3D mpc52xx_can_get_clock,
+ };
+ =
+
+-static struct mpc5xxx_can_data __devinitdata mpc5121_can_data =3D {
++static const struct mpc5xxx_can_data __devinitdata mpc5121_can_data =3D {
+ 	.type =3D MSCAN_TYPE_MPC5121,
+ 	.get_clock =3D mpc512x_can_get_clock,
+ };
+diff --git a/drivers/scsi/qlogicpti.c b/drivers/scsi/qlogicpti.c
+index b191dd5..53ed15b 100644
+--- a/drivers/scsi/qlogicpti.c
++++ b/drivers/scsi/qlogicpti.c
+@@ -1305,7 +1305,7 @@ static int __devinit qpti_sbus_probe(struct platform_=
+device *op)
+ 	match =3D of_match_device(qpti_match, &op->dev);
+ 	if (!match)
+ 		return -EINVAL;
+-	tpnt =3D match->data;
++	tpnt =3D (void *)match->data;
+ =
+
+ 	/* Sometimes Antares cards come up not completely
+ 	 * setup, and we get a report of a zero IRQ.
+diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
+index 40f7bf1..e6a038a 100644
+--- a/drivers/watchdog/mpc8xxx_wdt.c
++++ b/drivers/watchdog/mpc8xxx_wdt.c
+@@ -193,7 +193,7 @@ static int __devinit mpc8xxx_wdt_probe(struct platform_=
+device *ofdev)
+ 	int ret;
+ 	const struct of_device_id *match;
+ 	struct device_node *np =3D ofdev->dev.of_node;
+-	struct mpc8xxx_wdt_type *wdt_type;
++	const struct mpc8xxx_wdt_type *wdt_type;
+ 	u32 freq =3D fsl_get_sys_freq();
+ 	bool enabled;
+ =
