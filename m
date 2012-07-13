@@ -1,51 +1,50 @@
 From: y@pengutronix.de
-Subject: [PATCH 08/11] spi/spi-omap2-mcspi: add a const qualifier
-Date: Fri, 13 Jul 2012 14:32:11 +0200
-Message-ID: <6269.92369439012$1342182797@news.gmane.org>
+Subject: [PATCH 06/11] i2c/i2c-omap: add a const qualifier
+Date: Fri, 13 Jul 2012 14:32:09 +0200
+Message-ID: <29011.2576484264$1342182800@news.gmane.org>
 References: <1342182734-321-1-git-send-email-y>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1342182734-321-1-git-send-email-y>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4K
-ClRoaXMgcHJlcGFyZXMgb2ZfZGV2aWNlX2lkLmRhdGEgYmVjb21pbmcgY29uc3QuIFdpdGhvdXQg
-dGhpcyBjaGFuZ2UKdGhlIGZvbGxvd2luZyB3YXJuaW5nIHdvdWxkIG9jY3VyOgoKCWRyaXZlcnMv
-c3BpL3NwaS1vbWFwMi1tY3NwaS5jOiBJbiBmdW5jdGlvbiAnb21hcDJfbWNzcGlfcHJvYmUnOgoJ
-ZHJpdmVycy9zcGkvc3BpLW9tYXAyLW1jc3BpLmM6MTExODogd2FybmluZzogYXNzaWdubWVudCBk
-aXNjYXJkcyBxdWFsaWZpZXJzIGZyb20gcG9pbnRlciB0YXJnZXQgdHlwZQoKU2lnbmVkLW9mZi1i
-eTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KQ2M6
-IHNwaS1kZXZlbC1nZW5lcmFsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldAotLS0KIGRyaXZlcnMvc3Bp
-L3NwaS1vbWFwMi1tY3NwaS5jIHwgICAgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvc3BpLW9tYXAyLW1j
-c3BpLmMgYi9kcml2ZXJzL3NwaS9zcGktb21hcDItbWNzcGkuYwppbmRleCAwYzczZGQ0Li4zNDU1
-NzY5IDEwMDY0NAotLS0gYS9kcml2ZXJzL3NwaS9zcGktb21hcDItbWNzcGkuYworKysgYi9kcml2
-ZXJzL3NwaS9zcGktb21hcDItbWNzcGkuYwpAQCAtMTA4Nyw3ICsxMDg3LDcgQEAgTU9EVUxFX0RF
-VklDRV9UQUJMRShvZiwgb21hcF9tY3NwaV9vZl9tYXRjaCk7CiBzdGF0aWMgaW50IF9fZGV2aW5p
-dCBvbWFwMl9tY3NwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogewogCXN0
-cnVjdCBzcGlfbWFzdGVyCSptYXN0ZXI7Ci0Jc3RydWN0IG9tYXAyX21jc3BpX3BsYXRmb3JtX2Nv
-bmZpZyAqcGRhdGE7CisJY29uc3Qgc3RydWN0IG9tYXAyX21jc3BpX3BsYXRmb3JtX2NvbmZpZyAq
-cGRhdGE7CiAJc3RydWN0IG9tYXAyX21jc3BpCSptY3NwaTsKIAlzdHJ1Y3QgcmVzb3VyY2UJCSpy
-OwogCWludAkJCXN0YXR1cyA9IDAsIGk7Ci0tIAoxLjcuMTAuNAoKCi0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQpMaXZlIFNlY3VyaXR5IFZpcnR1YWwgQ29uZmVyZW5jZQpFeGNsdXNpdmUgbGl2ZSBldmVu
-dCB3aWxsIGNvdmVyIGFsbCB0aGUgd2F5cyB0b2RheSdzIHNlY3VyaXR5IGFuZCAKdGhyZWF0IGxh
-bmRzY2FwZSBoYXMgY2hhbmdlZCBhbmQgaG93IElUIG1hbmFnZXJzIGNhbiByZXNwb25kLiBEaXNj
-dXNzaW9ucyAKd2lsbCBpbmNsdWRlIGVuZHBvaW50IHNlY3VyaXR5LCBtb2JpbGUgc2VjdXJpdHkg
-YW5kIHRoZSBsYXRlc3QgaW4gbWFsd2FyZSAKdGhyZWF0cy4gaHR0cDovL3d3dy5hY2NlbGFjb21t
-LmNvbS9qYXcvc2ZybmwwNDI0MjAxMi8xMTQvNTAxMjIyNjMvCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCnNwaS1kZXZlbC1nZW5lcmFsIG1haWxpbmcgbGlz
-dApzcGktZGV2ZWwtZ2VuZXJhbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5z
-b3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vc3BpLWRldmVsLWdlbmVyYWwK
+=46rom: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+This prepares of_device_id.data becoming const. Without this change
+the following warning would occur:
+
+	drivers/i2c/busses/i2c-omap.c: In function 'omap_i2c_probe':
+	drivers/i2c/busses/i2c-omap.c:1025: warning: assignment discards quali=
+fiers from pointer target type
+
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ drivers/i2c/busses/i2c-omap.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-oma=
+p.c
+index 801df60..4fc585d 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -987,7 +987,8 @@ omap_i2c_probe(struct platform_device *pdev)
+ 	struct omap_i2c_dev	*dev;
+ 	struct i2c_adapter	*adap;
+ 	struct resource		*mem, *irq, *ioarea;
+-	struct omap_i2c_bus_platform_data *pdata =3D pdev->dev.platform_data;
++	const struct omap_i2c_bus_platform_data *pdata =3D
++		pdev->dev.platform_data;
+ 	struct device_node	*node =3D pdev->dev.of_node;
+ 	const struct of_device_id *match;
+ 	irq_handler_t isr;
+--=20
+1.7.10.4
