@@ -1,54 +1,73 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/11] misc/atmel_tc: make atmel_tc.tcb_config member
- point to const data
-Date: Fri, 13 Jul 2012 15:40:14 +0200
-Message-ID: <5000253E.7050006@atmel.com>
-References: <1342182734-321-1-git-send-email-y>
- <1342182734-321-6-git-send-email-y>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v5 6/6] spi: s3c64xx: add device tree support
+Date: Fri, 13 Jul 2012 22:42:52 +0900
+Message-ID: <118901cd60fd$66c26260$34472720$%kim@samsung.com>
+References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
+ <1342021265-11212-7-git-send-email-thomas.abraham@linaro.org>
+ <4FFF51EE.4080609@samsung.com>
+ <CAJuYYwQBL6OGJM41e9kD2ATUj3g9NTs-OC+G_gMKMScn3ms=hw@mail.gmail.com>
+ <117c01cd60ea$90f76ac0$b2e64040$%kim@samsung.com>
+ <CAJuYYwRiR8M5m9rDE6dzMawuSLO03f7mydoks+zU2ByTmbtMrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342182734-321-6-git-send-email-y>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwRiR8M5m9rDE6dzMawuSLO03f7mydoks+zU2ByTmbtMrA@mail.gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDcvMTMvMjAxMiAwMjozMiBQTSwgeUBwZW5ndXRyb25peC5kZSA6Cj4gRnJvbTogVXdlIEts
-ZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KPiAKPiBUaGlzIHBy
-ZXBhcmVzIG9mX2RldmljZV9pZC5kYXRhIGJlY29taW5nIGNvbnN0LiBXaXRob3V0IHRoaXMgY2hh
-bmdlCj4gdGhlIGZvbGxvd2luZyB3YXJuaW5nIHdvdWxkIG9jY3VyOgo+IAo+IAlkcml2ZXJzL21p
-c2MvYXRtZWxfdGNsaWIuYzogSW4gZnVuY3Rpb24gJ3RjX3Byb2JlJzoKPiAJZHJpdmVycy9taXNj
-L2F0bWVsX3RjbGliLmM6MTcwOiB3YXJuaW5nOiBhc3NpZ25tZW50IGRpc2NhcmRzIHF1YWxpZmll
-cnMgZnJvbSBwb2ludGVyIHRhcmdldCB0eXBlCj4gCj4gU2lnbmVkLW9mZi1ieTogVXdlIEtsZWlu
-ZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KPiBDYzogTmljb2xhcyBG
-ZXJyZSA8bmljb2xhcy5mZXJyZUBhdG1lbC5jb20+CgpBY2tlZC1ieTogTmljb2xhcyBGZXJyZSA8
-bmljb2xhcy5mZXJyZUBhdG1lbC5jb20+CgpUaGFua3MgVXdlIQoKPiBDYzogR3JlZyBLcm9haC1I
-YXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KPiAtLS0KPiBIZWxsbywKPiAKPiBi
-dHcsIGdldF9tYWludGFpbmVyLnBsIHN1Z2dlc3RlZCB0byBDYzoKPiBsaW51eC1hdG0tZ2VuZXJh
-bEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQgYnV0IG5vdCB0aGUgQXRtZWwgcGVvcGxlIGJlY2F1c2UK
-PiBpbmNsdWRlL2xpbnV4L2F0bWVsX3RjLmggbWF0Y2hlcyBpbmNsdWRlL2xpbnV4L2F0bSouCgpB
-aCwgb2ssIGdvb2QgdG8ga25vdy4gSSB3aWxsIHRyeSB0byB1cGRhdGUgTUFJTlRBSU5FUlMgZmls
-ZSBmb3IgdGhpcy4KCkJ5ZSwKCj4gQmVzdCByZWdhcmRzCj4gVXdlCj4gIGluY2x1ZGUvbGludXgv
-YXRtZWxfdGMuaCB8ICAgIDIgKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
-IGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvYXRtZWxfdGMuaCBi
-L2luY2x1ZGUvbGludXgvYXRtZWxfdGMuaAo+IGluZGV4IDFkMTRiMWRjLi44OWE5MzFiIDEwMDY0
-NAo+IC0tLSBhL2luY2x1ZGUvbGludXgvYXRtZWxfdGMuaAo+ICsrKyBiL2luY2x1ZGUvbGludXgv
-YXRtZWxfdGMuaAo+IEBAIC02Myw3ICs2Myw3IEBAIHN0cnVjdCBhdG1lbF90YyB7Cj4gIAlzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlCSpwZGV2Owo+ICAJc3RydWN0IHJlc291cmNlCQkqaW9tZW07Cj4g
-IAl2b2lkIF9faW9tZW0JCSpyZWdzOwo+IC0Jc3RydWN0IGF0bWVsX3RjYl9jb25maWcJKnRjYl9j
-b25maWc7Cj4gKwljb25zdCBzdHJ1Y3QgYXRtZWxfdGNiX2NvbmZpZyAqdGNiX2NvbmZpZzsKPiAg
-CWludAkJCWlycVszXTsKPiAgCXN0cnVjdCBjbGsJCSpjbGtbM107Cj4gIAlzdHJ1Y3QgbGlzdF9o
-ZWFkCW5vZGU7Cj4gCgoKLS0gCk5pY29sYXMgRmVycmUKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
-CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
-Lm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Thomas Abraham wrote:
+> 
+> On 13 July 2012 16:58, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> > Thomas Abraham wrote:
+> >>
+> >> On 13 July 2012 04:08, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> >> > Thomas, the DMACH_DT_PROP is available only on pl330 now. So seems
+> occur
+> >> > following build error with s3c6400_defconfig.
+> >> >
+> >> > drivers/spi/spi-s3c64xx.c: In function 's3c64xx_spi_get_dmares':
+> >> > drivers/spi/spi-s3c64xx.c:1098: error: 'DMACH_DT_PROP' undeclared
+> (first
+> >> use
+> >> > in this function)
+> >> > drivers/spi/spi-s3c64xx.c:1098: error: (Each undeclared identifier is
+> >> > reported only once
+> >> > drivers/spi/spi-s3c64xx.c:1098: error: for each function it appears
+> in.)
+> >> > make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
+> >> > make[2]: *** [drivers/spi] Error 2
+> >> >
+> >>
+> >> Dear Mr. Kim,
+> >>
+> >> Thanks for considering these patches to be merged via your tree. For
+> >> the build break you mentioned above, there was a patch submitted some
+> >> time back to handle this. The link to that patch is:
+> >> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-
+> >> June/102627.html.
+> >> Could you please apply this patch also to your tree.
+> >>
+> > Sure, it looks good to me, will apply that then this series will be
+> rebased
+> > on top of that.
+> 
+> There are six more patches that enable spi device tree support for
+> Exynos4 and Exynos5 platforms. Could you consider to apply those
+> patches as well. The link to those patches is:
+> http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg10851.html.
+> 
+Yeah, I remember, but I think some patches is needed to re-work as per
+comments...?
+
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
