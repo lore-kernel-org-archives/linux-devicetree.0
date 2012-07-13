@@ -1,93 +1,87 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 1/3 v2] USB: ohci-exynos: Add support for device tree
-Date: Fri, 13 Jul 2012 16:04:55 +0900
-Message-ID: <001a01cd60c5$ceb848e0$6c28daa0$%han@samsung.com>
-References: <1342072512-29945-1-git-send-email-gautam.vivek@samsung.com>
- <1342072512-29945-2-git-send-email-gautam.vivek@samsung.com>
+From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: re: regulator: tps65217: Add device tree support
+Date: Fri, 13 Jul 2012 12:02:20 +0300
+Message-ID: <20120713090220.GA18561@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1342072512-29945-2-git-send-email-gautam.vivek@samsung.com>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Vivek Gautam' <gautam.vivek@samsung.com>, stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, jy0922.shim@samsung.com, sshtylyov@mvista.com, olofj@google.com, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: anilkumar-l0cyMroinI0@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 12, 2012 2:55 PM, Vivek Gautam wrote:
-> 
-> This patch adds support to parse probe data for
-> ohci driver for exynos using device tree.
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> 
-> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-> index 2909621..c4ad60f 100644
-> --- a/drivers/usb/host/ohci-exynos.c
-> +++ b/drivers/usb/host/ohci-exynos.c
-> @@ -12,6 +12,7 @@
->   */
-> 
->  #include <linux/clk.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <mach/ohci.h>
->  #include <plat/usb-phy.h>
-> @@ -71,6 +72,8 @@ static const struct hc_driver exynos_ohci_hc_driver = {
->  	.start_port_reset	= ohci_start_port_reset,
->  };
-> 
-> +static u64 ohci_exynos_dma_mask = DMA_BIT_MASK(32);
-> +
->  static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->  {
->  	struct exynos4_ohci_platdata *pdata;
-> @@ -87,6 +90,16 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
-> 
-> +	/*
-> +	 * Right now device-tree probed devices don't get dma_mask set.
-> +	 * Since shared usb code relies on it, set it here for now.
-> +	 * Once we move to full device tree support this will vanish off.
-> +	 */
-> +	if (!pdev->dev.dma_mask)
-> +		pdev->dev.dma_mask = &ohci_exynos_dma_mask;
-> +	if (!pdev->dev.coherent_dma_mask)
-> +		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> +
->  	exynos_ohci = kzalloc(sizeof(struct exynos_ohci_hcd), GFP_KERNEL);
+Hello AnilKumar Ch,
 
-This makes conflict on 'usb-next' branch.
-Please re-base the patch on 'usb-next' branch.
+This is a semi-automatic email about new static checker warnings.
 
->  	if (!exynos_ohci)
->  		return -ENOMEM;
-> @@ -258,6 +271,14 @@ static const struct dev_pm_ops exynos_ohci_pm_ops = {
->  	.resume		= exynos_ohci_resume,
->  };
-> 
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id exynos_ohci_match[] = {
-> +	{ .compatible = "samsung,exynos-ohci" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, exynos_ohci_match);
-> +#endif
-> +
->  static struct platform_driver exynos_ohci_driver = {
->  	.probe		= exynos_ohci_probe,
->  	.remove		= __devexit_p(exynos_ohci_remove),
-> @@ -266,6 +287,7 @@ static struct platform_driver exynos_ohci_driver = {
->  		.name	= "exynos-ohci",
->  		.owner	= THIS_MODULE,
->  		.pm	= &exynos_ohci_pm_ops,
-> +		.of_match_table	= of_match_ptr(exynos_ohci_match),
->  	}
->  };
-> 
-> --
-> 1.7.0.4
+The patch a7f1b63eb856: "regulator: tps65217: Add device tree 
+support" from Jul 10, 2012, leads to the following Smatch complaint:
+
+drivers/mfd/tps65217.c:245 tps65217_probe()
+	 error: we previously assumed 'pdata' could be null (see line 205)
+
+drivers/mfd/tps65217.c
+   204	
+   205		if (!pdata && client->dev.of_node)
+                    ^^^^^^
+New check.
+
+   206			pdata = tps65217_parse_dt(client);
+   207	
+   208		tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
+   209		if (!tps)
+   210			return -ENOMEM;
+   211	
+   212		tps->pdata = pdata;
+   213		tps->regmap = devm_regmap_init_i2c(client, &tps65217_regmap_config);
+   214		if (IS_ERR(tps->regmap)) {
+   215			ret = PTR_ERR(tps->regmap);
+   216			dev_err(tps->dev, "Failed to allocate register map: %d\n",
+   217				ret);
+   218			return ret;
+   219		}
+   220	
+   221		i2c_set_clientdata(client, tps);
+   222		tps->dev = &client->dev;
+   223	
+   224		ret = tps65217_reg_read(tps, TPS65217_REG_CHIPID, &version);
+   225		if (ret < 0) {
+   226			dev_err(tps->dev, "Failed to read revision register: %d\n",
+   227				ret);
+   228			return ret;
+   229		}
+   230	
+   231		dev_info(tps->dev, "TPS65217 ID %#x version 1.%d\n",
+   232				(version & TPS65217_CHIPID_CHIP_MASK) >> 4,
+   233				version & TPS65217_CHIPID_REV_MASK);
+   234	
+   235		for (i = 0; i < TPS65217_NUM_REGULATOR; i++) {
+   236			struct platform_device *pdev;
+   237	
+   238			pdev = platform_device_alloc("tps65217-pmic", i);
+   239			if (!pdev) {
+   240				dev_err(tps->dev, "Cannot create regulator %d\n", i);
+   241				continue;
+   242			}
+   243	
+   244			pdev->dev.parent = tps->dev;
+   245			pdev->dev.of_node = pdata->of_node[i];
+                                            ^^^^^^^^^^^^^^
+Old dereference.
+
+   246			reg_data = pdata->tps65217_init_data[i];
+   247			platform_device_add_data(pdev, reg_data, sizeof(*reg_data));
+
+regards,
+dan carpenter
