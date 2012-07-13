@@ -1,39 +1,49 @@
-From: "Jayachandran C" <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Subject: [PATCH 3/4] V4L/DVB: mfd: use reg_shift instead of regstep
-Date: Fri, 13 Jul 2012 12:19:09 +0530
-Message-ID: <1342162149-6026-1-git-send-email-jayachandranc@netlogicmicro.com>
-References: <1342161543-5838-1-git-send-email-jayachandranc@netlogicmicro.com>
+From: Vinod Koul <vinod.koul@linux.intel.com>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 13 Jul 2012 12:21:12 +0530
+Message-ID: <1342162272.1726.29.camel@vkoul-udesk3>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	 <4FE896F9.2020806@ti.com> <1340647463.1562.127.camel@vkoul-udesk3>
+	 <201206252030.56025.arnd@arndb.de>
+	 <Pine.LNX.4.64.1207061315470.29809@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342161543-5838-1-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1207061315470.29809@axis700.grange>
+Sender: linux-omap-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Update for change in i2c-ocores.h which uses reg_shift to
-specify the register offset shifts instead of regstep.
+On Fri, 2012-07-06 at 13:36 +0200, Guennadi Liakhovetski wrote:
+> On Mon, 25 Jun 2012, Arnd Bergmann wrote:
+> 
+> [snip]
+> 
+> > The channel data in the device tree is still in a format
+> > that is specific to that dmaengine driver and interpreted
+> > by it. Using the regular dma_filter_fn prototype is not
+> > necessary, but it would be convenient because the dmaengine
+> > code already knows how to deal with it. If we don't use this
+> > method, how about adding another callback to struct dma_device
+> > like
+> > 
+> > bool (*device_match)(struct dma_chan *chan, struct property *req);
+> 
+> I like this idea, but why don't we extend it to also cover the non-DT 
+> case? I.e., why don't we add the above callback (call it "match" or 
+> "filter" or anything else) to dmaengine operations and inside (the 
+> extended) dma_request_channel(), instead of calling the filter function, 
+> passed as a parameter, we loop over all registered DMAC devices and call 
+> their filter callbacks, 
+And I have told you many times, that dmacs should not know anything
+about clients. They should be totally agnostic to it.
 
-Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Acked-by: Richard Rojfors <richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org>
----
- drivers/mfd/timberdale.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Clients need to request a specific channel, and that is where changes
+should come for. Not having dmac provide one.
 
-diff --git a/drivers/mfd/timberdale.c b/drivers/mfd/timberdale.c
-index 0ba26fb..a447f4e 100644
---- a/drivers/mfd/timberdale.c
-+++ b/drivers/mfd/timberdale.c
-@@ -83,7 +83,7 @@ timberdale_xiic_platform_data = {
- 
- static __devinitdata struct ocores_i2c_platform_data
- timberdale_ocores_platform_data = {
--	.regstep = 4,
-+	.reg_shift = 2,
- 	.clock_khz = 62500,
- 	.devices = timberdale_i2c_board_info,
- 	.num_devices = ARRAY_SIZE(timberdale_i2c_board_info)
+
 -- 
-1.7.9.5
+~Vinod
+
