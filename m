@@ -1,130 +1,100 @@
-From: "Jayachandran C" <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Subject: [PATCH 4/4] i2c: i2c-ocores: support for 16bit and 32bit IO
-Date: Fri, 13 Jul 2012 12:09:03 +0530
-Message-ID: <1342161543-5838-5-git-send-email-jayachandranc@netlogicmicro.com>
-References: <1342161543-5838-1-git-send-email-jayachandranc@netlogicmicro.com>
+From: Vinod Koul <vinod.koul@linux.intel.com>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 13 Jul 2012 12:15:07 +0530
+Message-ID: <1342161907.1726.26.camel@vkoul-udesk3>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	 <201206262027.47817.arnd@arndb.de> <1340804708.1562.253.camel@vkoul-udesk3>
+	 <201206271520.49276.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342161543-5838-1-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201206271520.49276.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Wed, 2012-06-27 at 15:20 +0000, Arnd Bergmann wrote:
+Back from vacation... so restart the pending discussion
 
-Some architectures supports only 16-bit or 32-bit read/write access to
-their IO space. Add a 'reg-io-width' platform and OF parameter which
-specifies the IO width to support these platforms.
+> 
+> Sorry, I believe I was just using the wrong terminology, and what I named
+> the slave here would just be the client.
+> 
+> This may have contributed to a lot of confusion before, so let's make
+> sure I use the right terms now:
+> 
+> a) slave == dmac == dmaengine driver
+> b) client == device driver, e.g. mmc
+> c) common code == dmaengine layer
+> 
+> Is this correct?
+Yup, that is what i use.
 
-reg-io-width can be specified as 1, 2 or 4, and has a default value
-of 1 if it is unspecified.
+> 
+> > > > > I think encoding a description for a dma request in a single number is
+> > > > > the last thing we want to do here. We've tried that with IRQ and GPIO
+> > > > > numbers and it got us into a huge mess that will need a long time to
+> > > > > get out of.
+> > > > No i wasn't thinking of a number. The mapping shouldn't be a global
+> > > > number at all, though that is a very easy but not very scalable
+> > > > solution.
+> > > > We need to take care of 1:1 mapping of client and channels as well as
+> > > > many:1  cases as well. A single global number cannot represent that
+> > > > properly.
+> > > > 
+> > > > My idea is platform gives this information to dmaengine. Clients and
+> > > > dmaengine driver do not worry about it. That also paves way for arch
+> > > > independent clients and drivers.
+> > > 
+> > > IMO the platform should have no part in this. I absolutely want to
+> > > get rid of any platform-specific hardcoded tables in the kernel for
+> > > stuff that can easily be run-time detected from the device tree.
+> > > There are cases where hard-coding in the kernel is easier, but I don't
+> > > think this is one of them.
+> >
+> > Again, you got me wrong. We don't want any hardcoded table is kernel.
+> > The information in table should come from whatever way that platform can
+> > give me. For your case it should be DT.
+> 
+> Ok, good.
+> 
+> > We can have the map of which client can use which channel as DT binding
+> > of dmaengine core. So dmaengine can easily arbitrate about channel
+> > requests. Again this mapping information is not some even linux
+> > independent.
+> 
+> Why can't it be OS independent?
+I meant OS independent, didn't come out well :(
+> 
+> Do you mean there must be a global table, or are you ok with putting
+> the information about a channel into the device that uses the channel,
+> as we do for most other subsystems (IRQ, GPIO, pinctrl, ...).
+> If not, what is the problem with that approach?
 
-Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 ++
- drivers/i2c/busses/i2c-ocores.c                    |   21 ++++++++++++++++++--
- include/linux/i2c-ocores.h                         |    1 +
- 3 files changed, 22 insertions(+), 2 deletions(-)
+Today, we simple ask, "give me dma channel with DMA_SLAVE capability".
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-index 1c9334b..c15781f 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-@@ -10,6 +10,7 @@ Required properties:
- 
- Optional properties:
- - reg-shift       : device register offsets are shifted by this value
-+- reg-io-width    : io register width in bytes (1, 2 or 4)
- - regstep         : deprecated, use reg-shift above
- 
- Example:
-@@ -23,6 +24,7 @@ Example:
- 		clock-frequency = <20000000>;
- 
- 		reg-shift = <0>;	/* 8 bit registers */
-+		reg-io-width = <1>;	/* 8 bit read/write */
- 
- 		dummy@60 {
- 			compatible = "dummy";
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index fb8db30..7e710bd 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -30,6 +30,7 @@
- struct ocores_i2c {
- 	void __iomem *base;
- 	int reg_shift;
-+	int reg_io_width;
- 	wait_queue_head_t wait;
- 	struct i2c_adapter adap;
- 	struct i2c_msg *msg;
-@@ -72,12 +73,22 @@ struct ocores_i2c {
- 
- static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
- {
--	iowrite8(value, i2c->base + (reg << i2c->reg_shift));
-+	if (i2c->reg_io_width == 4)
-+		iowrite32(value, i2c->base + (reg << i2c->reg_shift));
-+	else if (i2c->reg_io_width == 2)
-+		iowrite16(value, i2c->base + (reg << i2c->reg_shift));
-+	else
-+		iowrite8(value, i2c->base + (reg << i2c->reg_shift));
- }
- 
- static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
- {
--	return ioread8(i2c->base + (reg << i2c->reg_shift));
-+	if (i2c->reg_io_width == 4)
-+		return ioread32(i2c->base + (reg << i2c->reg_shift));
-+	else if (i2c->reg_io_width == 2)
-+		return ioread16(i2c->base + (reg << i2c->reg_shift));
-+	else
-+		return ioread8(i2c->base + (reg << i2c->reg_shift));
- }
- 
- static void ocores_process(struct ocores_i2c *i2c)
-@@ -245,6 +256,8 @@ static int ocores_i2c_of_probe(struct platform_device *pdev,
- 	}
- 	i2c->clock_khz = val / 1000;
- 
-+	if (!of_property_read_u32(pdev->dev.of_node, "reg-io-width", &val))
-+		i2c->reg_io_width = val;
- 	return 0;
- }
- #else
-@@ -287,6 +300,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- 	pdata = pdev->dev.platform_data;
- 	if (pdata) {
- 		i2c->reg_shift = pdata->reg_shift;
-+		i2c->reg_io_width = pdata->reg_io_width;
- 		i2c->clock_khz = pdata->clock_khz;
- 	} else {
- 		ret = ocores_i2c_of_probe(pdev, i2c);
-@@ -294,6 +308,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- 			return ret;
- 	}
- 
-+	if (i2c->reg_io_width == 0)
-+		i2c->reg_io_width = 1; /* Set to default value */
-+
- 	ocores_init(i2c);
- 
- 	init_waitqueue_head(&i2c->wait);
-diff --git a/include/linux/i2c-ocores.h b/include/linux/i2c-ocores.h
-index 75d7767..5fef682 100644
---- a/include/linux/i2c-ocores.h
-+++ b/include/linux/i2c-ocores.h
-@@ -13,6 +13,7 @@
- 
- struct ocores_i2c_platform_data {
- 	int reg_shift; /* register offset shift value */
-+	int reg_io_width; /* register io read/write width */
- 	u32 clock_khz; /* input clock in kHz */
- 	u8 num_devices; /* number of devices in the devices list */
- 	struct i2c_board_info const *devices; /* devices connected to the bus */
+If we change it to "give me dma channel which suits my need" and have
+additional information in dmaengine to handle this request effectively.
+
+What that would mean is
+a) DMA channel either knows which channel to provide, Or
+b) Additional arguments provided to dmaengine API to help it find out
+which channel to provide.
+
+It would be good to have client ask for a specific channel. But in order
+to build generic clients, we face a problem that clients may not know
+how they mapped to dmac by SoC designer. Or the mux maybe entirely
+flexible on which channel.
+
+If we add this as DT property (which I assume should be platform
+specific), then client will know which channel to request.
+It can have two levels, dmac and channel. In case mux is flexible enough
+then client gets a channel and program the mux for this mapping.
+
+I think this is the most simplistic solution I have for this, thoughts?
+
 -- 
-1.7.9.5
+~Vinod
+
