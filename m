@@ -1,114 +1,63 @@
-From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 6/6] spi: s3c64xx: add device tree support
-Date: Fri, 13 Jul 2012 07:38:38 +0900
-Message-ID: <4FFF51EE.4080609@samsung.com>
-References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
-	<1342021265-11212-7-git-send-email-thomas.abraham@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: Where to put a large bootloader-supplied device tree
+ on ARM ?
+Date: Thu, 12 Jul 2012 20:28:22 -0500
+Message-ID: <4FFF79B6.6040508@gmail.com>
+References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
+	<201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
+	<201207062008.23952.arnd@arndb.de> <20120706210009.GC11470@lunn.ch>
+	<4FF781D8.3040206@firmworks.com>
+	<2966DB01BC317A4DA23684BA0F653415013701@xmb-aln-x08.cisco.com>
+	<4FF7980E.7050705@firmworks.com>
+	<alpine.LFD.2.02.1207090015270.31100@xanadu.home>
+	<4FFE743B.6080504@firmworks.com> <4FFF34C9.8030000@gmail.com>
+	<20120712233801.0411daa7@lilith>
+	<20120712214743.2160B202A3F@gemini.denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1342021265-11212-7-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <20120712214743.2160B202A3F@gemini.denx.de>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Wolfgang Denk <wd@denx.de>, Albert ARIBAUD <albert.u.boot@aribaud.net>
+Cc: Mitch Bradley <wmb@firmworks.com>, U-Boot <u-boot@lists.denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/12/12 00:41, Thomas Abraham wrote:
-> Add support for device based discovery.
->
-> Signed-off-by: Thomas Abraham<thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Jaswinder Singh<jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> ---
->   .../devicetree/bindings/spi/spi-samsung.txt        |  113 ++++++++
->   drivers/spi/spi-s3c64xx.c                          |  305 +++++++++++++++++---
->   2 files changed, 378 insertions(+), 40 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/spi/spi-samsung.txt
->
+On 07/12/2012 04:47 PM, Wolfgang Denk wrote:
+> Dear Albert ARIBAUD,
+> 
+> In message <20120712233801.0411daa7@lilith> you wrote:
+>>
+>> If I'm not mistaken, yes U-Boot loads itself as high as it can, and I don't
+>> know about the FDT, but no, U-Boot does not "like" to load initrd "just
+>> below that": it loads initrd where the boot commands tell it to, and the
+>> boot commands are written by board developers. Nothing in U-Boot forces
+>> initrd to be loaded as high as possible.
 
-[snip]
+u-boot loads the initrd where you tell it, then bootm relocates it for
+some reason.
 
-> @@ -989,49 +1057,166 @@ static void s3c64xx_spi_hwinit(struct s3c64xx_spi_driver_data *sdd, int channel)
->   	flush_fifo(sdd);
->   }
->
-> +static int __devinit s3c64xx_spi_get_dmares(
-> +			struct s3c64xx_spi_driver_data *sdd, bool tx)
-> +{
-> +	struct platform_device *pdev = sdd->pdev;
-> +	struct s3c64xx_spi_dma_data *dma_data;
-> +	struct property *prop;
-> +	struct resource *res;
-> +	char prop_name[15], *chan_str;
-> +
-> +	if (tx) {
-> +		dma_data =&sdd->tx_dma;
-> +		dma_data->direction = DMA_TO_DEVICE;
-> +		chan_str = "tx";
-> +	} else {
-> +		dma_data =&sdd->rx_dma;
-> +		dma_data->direction = DMA_FROM_DEVICE;
-> +		chan_str = "rx";
-> +	}
-> +
-> +	if (!sdd->pdev->dev.of_node) {
-> +		res = platform_get_resource(pdev, IORESOURCE_DMA, tx ? 0 : 1);
-> +		if (!res) {
-> +			dev_err(&pdev->dev, "Unable to get SPI-%s dma "
-> +					"resource\n", chan_str);
-> +			return -ENXIO;
-> +		}
-> +		dma_data->dmach = res->start;
-> +		return 0;
-> +	}
-> +
-> +	sprintf(prop_name, "%s-dma-channel", chan_str);
-> +	prop = of_find_property(pdev->dev.of_node, prop_name, NULL);
-> +	if (!prop) {
-> +		dev_err(&pdev->dev, "%s dma channel property not specified\n",
-> +					chan_str);
-> +		return -ENXIO;
-> +	}
-> +
-> +	dma_data->dmach = DMACH_DT_PROP;
+>>
+>> That leaves the question of the FDT, though -- I'm not familiar enough
+>> with it (yet) to tell if it is always located just under U-Boot or if
+>> its placement is controllable by board commands.
+> 
+> You can always just set the "fdt_high" and "initrd_high" evironment
+> variables to restrict the positioning of initrd and FDT in RAM; see
+> the README for details.
 
-Thomas, the DMACH_DT_PROP is available only on pl330 now. So seems occur 
-following build error with s3c6400_defconfig.
+Yes, I'm aware of all this, but this is not the default behavior and the
+default behavior will not work in this case. It also has another bug
+related to the relocation that I fixed:
 
-drivers/spi/spi-s3c64xx.c: In function 's3c64xx_spi_get_dmares':
-drivers/spi/spi-s3c64xx.c:1098: error: 'DMACH_DT_PROP' undeclared (first 
-use in this function)
-drivers/spi/spi-s3c64xx.c:1098: error: (Each undeclared identifier is 
-reported only once
-drivers/spi/spi-s3c64xx.c:1098: error: for each function it appears in.)
-make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
-make[2]: *** [drivers/spi] Error 2
+http://www.mail-archive.com/u-boot@lists.denx.de/msg86475.html
 
-> +	dma_data->dma_prop = prop;
-> +	return 0;
-> +}
-
-[snip]
-
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Rob
