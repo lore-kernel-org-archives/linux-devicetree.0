@@ -1,55 +1,53 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v5 6/6] spi: s3c64xx: add device tree support
-Date: Fri, 13 Jul 2012 17:08:21 +0530
-Message-ID: <CAJuYYwRiR8M5m9rDE6dzMawuSLO03f7mydoks+zU2ByTmbtMrA@mail.gmail.com>
-References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
-	<1342021265-11212-7-git-send-email-thomas.abraham@linaro.org>
-	<4FFF51EE.4080609@samsung.com>
-	<CAJuYYwQBL6OGJM41e9kD2ATUj3g9NTs-OC+G_gMKMScn3ms=hw@mail.gmail.com>
-	<117c01cd60ea$90f76ac0$b2e64040$%kim@samsung.com>
+From: y@pengutronix.de
+Subject: [PATCH 02/11] serial/imx: make imx_port.devdata member point to const data
+Date: Fri, 13 Jul 2012 14:32:05 +0200
+Message-ID: <47813.9285035015$1342182787@news.gmane.org>
+References: <1342182734-321-1-git-send-email-y>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <117c01cd60ea$90f76ac0$b2e64040$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1342182734-321-1-git-send-email-y>
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>
+Cc: kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 July 2012 16:58, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> Thomas Abraham wrote:
->>
->> On 13 July 2012 04:08, Kukjin Kim <kgene.kim@samsung.com> wrote:
->> > Thomas, the DMACH_DT_PROP is available only on pl330 now. So seems occur
->> > following build error with s3c6400_defconfig.
->> >
->> > drivers/spi/spi-s3c64xx.c: In function 's3c64xx_spi_get_dmares':
->> > drivers/spi/spi-s3c64xx.c:1098: error: 'DMACH_DT_PROP' undeclared (first
->> use
->> > in this function)
->> > drivers/spi/spi-s3c64xx.c:1098: error: (Each undeclared identifier is
->> > reported only once
->> > drivers/spi/spi-s3c64xx.c:1098: error: for each function it appears in.)
->> > make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
->> > make[2]: *** [drivers/spi] Error 2
->> >
->>
->> Dear Mr. Kim,
->>
->> Thanks for considering these patches to be merged via your tree. For
->> the build break you mentioned above, there was a patch submitted some
->> time back to handle this. The link to that patch is:
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-
->> June/102627.html.
->> Could you please apply this patch also to your tree.
->>
-> Sure, it looks good to me, will apply that then this series will be rebased
-> on top of that.
+=46rom: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
-There are six more patches that enable spi device tree support for
-Exynos4 and Exynos5 platforms. Could you consider to apply those
-patches as well. The link to those patches is:
-http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg10851.html.
+This prepares of_device_id.data becoming const. Without this change the
+following warning would occur:
 
-Thanks,
-Thomas.
+	drivers/tty/serial/imx.c: In function 'serial_imx_probe_dt':
+	drivers/tty/serial/imx.c:1430:17: warning: assignment discards 'const'=
+ qualifier from pointer target type [enabled by default]
+
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+Cc: Alan Cox <alan@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org
+---
+ drivers/tty/serial/imx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 4ef7473..0af4eec 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -207,7 +207,7 @@ struct imx_port {
+ 	unsigned short		trcv_delay; /* transceiver delay */
+ 	struct clk		*clk_ipg;
+ 	struct clk		*clk_per;
+-	struct imx_uart_data	*devdata;
++	const struct imx_uart_data *devdata;
+ };
+=20
+ struct imx_port_ucrs {
+--=20
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
