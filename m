@@ -1,40 +1,54 @@
-From: y@pengutronix.de
-Subject: [PATCH 10/11] of: add const to struct of_device_id.data
-Date: Fri, 13 Jul 2012 14:32:13 +0200
-Message-ID: <35368.2079040029$1342184066@news.gmane.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/11] misc/atmel_tc: make atmel_tc.tcb_config member
+ point to const data
+Date: Fri, 13 Jul 2012 15:40:14 +0200
+Message-ID: <5000253E.7050006@atmel.com>
 References: <1342182734-321-1-git-send-email-y>
+ <1342182734-321-6-git-send-email-y>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1342182734-321-1-git-send-email-y>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@suse.de>, Rob Herring <rob.herring@calxeda.com>, kernel@pengutronix.de, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342182734-321-6-git-send-email-y>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4K
-CkRyaXZlcnMgc2hvdWxkIG5ldmVyIG5lZWQgdG8gbW9kaWZ5IHRoZSBkYXRhIG9mIGEgZGV2aWNl
-IGlkLiBTbyBpdCBjYW4KYmUgY29uc3Qgd2hpY2ggaW4gdHVybiBhbGxvd3MgbW9yZSBjb25zdHMg
-aW4gdGhlIGRyaXZlci4KClNpZ25lZC1vZmYtYnk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1LmtsZWlu
-ZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+CkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBz
-dXNlLmRlPgotLS0KIGluY2x1ZGUvbGludXgvbW9kX2RldmljZXRhYmxlLmggfCAgICAyICstCiAx
-IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQg
-YS9pbmNsdWRlL2xpbnV4L21vZF9kZXZpY2V0YWJsZS5oIGIvaW5jbHVkZS9saW51eC9tb2RfZGV2
-aWNldGFibGUuaAppbmRleCA1ZGI5MzgyLi45OGZiM2ZlIDEwMDY0NAotLS0gYS9pbmNsdWRlL2xp
-bnV4L21vZF9kZXZpY2V0YWJsZS5oCisrKyBiL2luY2x1ZGUvbGludXgvbW9kX2RldmljZXRhYmxl
-LmgKQEAgLTIyNCw3ICsyMjQsNyBAQCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkCiAJY2hhcgl0eXBlWzMy
-XTsKIAljaGFyCWNvbXBhdGlibGVbMTI4XTsKICNpZmRlZiBfX0tFUk5FTF9fCi0Jdm9pZAkqZGF0
-YTsKKwljb25zdCB2b2lkICpkYXRhOwogI2Vsc2UKIAlrZXJuZWxfdWxvbmdfdCBkYXRhOwogI2Vu
-ZGlmCi0tIAoxLjcuMTAuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+T24gMDcvMTMvMjAxMiAwMjozMiBQTSwgeUBwZW5ndXRyb25peC5kZSA6Cj4gRnJvbTogVXdlIEts
+ZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KPiAKPiBUaGlzIHBy
+ZXBhcmVzIG9mX2RldmljZV9pZC5kYXRhIGJlY29taW5nIGNvbnN0LiBXaXRob3V0IHRoaXMgY2hh
+bmdlCj4gdGhlIGZvbGxvd2luZyB3YXJuaW5nIHdvdWxkIG9jY3VyOgo+IAo+IAlkcml2ZXJzL21p
+c2MvYXRtZWxfdGNsaWIuYzogSW4gZnVuY3Rpb24gJ3RjX3Byb2JlJzoKPiAJZHJpdmVycy9taXNj
+L2F0bWVsX3RjbGliLmM6MTcwOiB3YXJuaW5nOiBhc3NpZ25tZW50IGRpc2NhcmRzIHF1YWxpZmll
+cnMgZnJvbSBwb2ludGVyIHRhcmdldCB0eXBlCj4gCj4gU2lnbmVkLW9mZi1ieTogVXdlIEtsZWlu
+ZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KPiBDYzogTmljb2xhcyBG
+ZXJyZSA8bmljb2xhcy5mZXJyZUBhdG1lbC5jb20+CgpBY2tlZC1ieTogTmljb2xhcyBGZXJyZSA8
+bmljb2xhcy5mZXJyZUBhdG1lbC5jb20+CgpUaGFua3MgVXdlIQoKPiBDYzogR3JlZyBLcm9haC1I
+YXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KPiAtLS0KPiBIZWxsbywKPiAKPiBi
+dHcsIGdldF9tYWludGFpbmVyLnBsIHN1Z2dlc3RlZCB0byBDYzoKPiBsaW51eC1hdG0tZ2VuZXJh
+bEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQgYnV0IG5vdCB0aGUgQXRtZWwgcGVvcGxlIGJlY2F1c2UK
+PiBpbmNsdWRlL2xpbnV4L2F0bWVsX3RjLmggbWF0Y2hlcyBpbmNsdWRlL2xpbnV4L2F0bSouCgpB
+aCwgb2ssIGdvb2QgdG8ga25vdy4gSSB3aWxsIHRyeSB0byB1cGRhdGUgTUFJTlRBSU5FUlMgZmls
+ZSBmb3IgdGhpcy4KCkJ5ZSwKCj4gQmVzdCByZWdhcmRzCj4gVXdlCj4gIGluY2x1ZGUvbGludXgv
+YXRtZWxfdGMuaCB8ICAgIDIgKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
+IGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvYXRtZWxfdGMuaCBi
+L2luY2x1ZGUvbGludXgvYXRtZWxfdGMuaAo+IGluZGV4IDFkMTRiMWRjLi44OWE5MzFiIDEwMDY0
+NAo+IC0tLSBhL2luY2x1ZGUvbGludXgvYXRtZWxfdGMuaAo+ICsrKyBiL2luY2x1ZGUvbGludXgv
+YXRtZWxfdGMuaAo+IEBAIC02Myw3ICs2Myw3IEBAIHN0cnVjdCBhdG1lbF90YyB7Cj4gIAlzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlCSpwZGV2Owo+ICAJc3RydWN0IHJlc291cmNlCQkqaW9tZW07Cj4g
+IAl2b2lkIF9faW9tZW0JCSpyZWdzOwo+IC0Jc3RydWN0IGF0bWVsX3RjYl9jb25maWcJKnRjYl9j
+b25maWc7Cj4gKwljb25zdCBzdHJ1Y3QgYXRtZWxfdGNiX2NvbmZpZyAqdGNiX2NvbmZpZzsKPiAg
+CWludAkJCWlycVszXTsKPiAgCXN0cnVjdCBjbGsJCSpjbGtbM107Cj4gIAlzdHJ1Y3QgbGlzdF9o
+ZWFkCW5vZGU7Cj4gCgoKLS0gCk5pY29sYXMgRmVycmUKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
+CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
+Lm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
