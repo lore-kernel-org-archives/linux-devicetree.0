@@ -1,79 +1,98 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 00/11] make struct of_device_id.data const
-Date: Fri, 13 Jul 2012 15:46:38 +0200
-Message-ID: <20120713134638.GH592@pengutronix.de>
-References: <1342182734-321-1-git-send-email-y>
- <5000175E.4070702@gmail.com>
+From: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] i2c: i2c-ocores: support for 16bit and 32bit IO
+Date: Fri, 13 Jul 2012 19:18:35 +0530
+Message-ID: <CAM=Q2csMBP7YHgmMob0Npaxo70Quo3-76TNhQawE972zfiLiHA@mail.gmail.com>
+References: <1342187065-1651-1-git-send-email-jayachandranc@netlogicmicro.com>
+	<1342187065-1651-5-git-send-email-jayachandranc@netlogicmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5000175E.4070702-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1342187065-1651-5-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 13, 2012 at 07:41:02AM -0500, Rob Herring wrote:
-> On 07/13/2012 07:32 AM, y@pengutronix.de wrote:
-> > From: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > =
+Hello,
 
-> > this series' goal is to make struct of_device_id.data const.
-> > Conceptually a driver must not modify the data contained there so making
-> > it const is the right thing.
-> > =
+On Fri, Jul 13, 2012 at 7:14 PM, Jayachandran C
+<jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org> wrote:
+> From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>
+> Some architectures supports only 16-bit or 32-bit read/write access to
+> their IO space. Add a 'reg-io-width' platform and OF parameter which
+> specifies the IO width to support these platforms.
+>
+> reg-io-width can be specified as 1, 2 or 4, and has a default value
+> of 1 if it is unspecified.
+>
+> Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+> ---
+>  .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 ++
+>  drivers/i2c/busses/i2c-ocores.c                    |   21 ++++++++++++++++++--
+>  include/linux/i2c-ocores.h                         |    1 +
+>  3 files changed, 22 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> index 1c9334b..c15781f 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>
+>  Optional properties:
+>  - reg-shift       : device register offsets are shifted by this value
+> +- reg-io-width    : io register width in bytes (1, 2 or 4)
+>  - regstep         : deprecated, use reg-shift above
+>
+>  Example:
+> @@ -23,6 +24,7 @@ Example:
+>                 clock-frequency = <20000000>;
+>
+>                 reg-shift = <0>;        /* 8 bit registers */
+> +               reg-io-width = <1>;     /* 8 bit read/write */
+>
+>                 dummy@60 {
+>                         compatible = "dummy";
+> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+> index 721ead9..de3b119 100644
+> --- a/drivers/i2c/busses/i2c-ocores.c
+> +++ b/drivers/i2c/busses/i2c-ocores.c
+> @@ -30,6 +30,7 @@
+>  struct ocores_i2c {
+>         void __iomem *base;
+>         u32 reg_shift;
+> +       u32 reg_io_width;
+>         wait_queue_head_t wait;
+>         struct i2c_adapter adap;
+>         struct i2c_msg *msg;
+> @@ -72,12 +73,22 @@ struct ocores_i2c {
+>
+>  static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
+>  {
+> -       iowrite8(value, i2c->base + (reg << i2c->reg_shift));
+> +       if (i2c->reg_io_width == 4)
+> +               iowrite32(value, i2c->base + (reg << i2c->reg_shift));
+> +       else if (i2c->reg_io_width == 2)
+> +               iowrite16(value, i2c->base + (reg << i2c->reg_shift));
+> +       else
+> +               iowrite8(value, i2c->base + (reg << i2c->reg_shift));
+>  }
+>
+>  static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
 
-> > This change might introduce warnings because drivers don't use const to
-> > access the data pointed to by of_device_id.data. In most cases the fix
-> > is to add some consts.
-> > =
+Should the return type be changed.
+Now that it is returning more that than 8 bits.
 
-> > This series (apart from adding this const in patch 10) fixes all drivers
-> > covered by all arm defconfigs (based on v3.5-rc6).
-> > =
+Did I miss something?
 
-> =
-
-> What about other arches?
-I didn't looked at them, mainly because I don't have the scripts for
-arches other than arm to do such testing. Also note that it introduces
-only some warnings, but no breakage. So adding the const in the merge
-window might be ok?!
-
-I'm not sure I'll have the capacity to fix other arches now. Maybe only
-add the const for ARCH=3Darm for now and I'll address the other archs as
-time permits even though this is ugly? At least getting in patches 1-9
-would be nice to get in to save me from keeping them up to date.
-
-Which other arches do you consider relevant?
-
-$ git grep -l '\<OF\>' arch/*/Kconfig
-arch/arm/Kconfig
-arch/c6x/Kconfig
-arch/microblaze/Kconfig
-arch/mips/Kconfig
-arch/openrisc/Kconfig
-arch/powerpc/Kconfig
-arch/sparc/Kconfig
-arch/x86/Kconfig
-
-For most of these I first have to look where to get a toolchain from.
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>  {
+> -       return ioread8(i2c->base + (reg << i2c->reg_shift));
+> +       if (i2c->reg_io_width == 4)
+> +               return ioread32(i2c->base + (reg << i2c->reg_shift));
+> +       else if (i2c->reg_io_width == 2)
+> +               return ioread16(i2c->base + (reg << i2c->reg_shift));
+> +       else
+> +               return ioread8(i2c->base + (reg << i2c->reg_shift));
+>  }
+>
