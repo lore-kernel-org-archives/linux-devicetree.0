@@ -1,73 +1,53 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v5 6/6] spi: s3c64xx: add device tree support
-Date: Fri, 13 Jul 2012 22:42:52 +0900
-Message-ID: <118901cd60fd$66c26260$34472720$%kim@samsung.com>
-References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
- <1342021265-11212-7-git-send-email-thomas.abraham@linaro.org>
- <4FFF51EE.4080609@samsung.com>
- <CAJuYYwQBL6OGJM41e9kD2ATUj3g9NTs-OC+G_gMKMScn3ms=hw@mail.gmail.com>
- <117c01cd60ea$90f76ac0$b2e64040$%kim@samsung.com>
- <CAJuYYwRiR8M5m9rDE6dzMawuSLO03f7mydoks+zU2ByTmbtMrA@mail.gmail.com>
+From: "Jayachandran C" <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Subject: [PATCH v3 0/4] I2C Ocores updates
+Date: Fri, 13 Jul 2012 19:14:21 +0530
+Message-ID: <1342187065-1651-1-git-send-email-jayachandranc@netlogicmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwRiR8M5m9rDE6dzMawuSLO03f7mydoks+zU2ByTmbtMrA@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thomas Abraham' <thomas.abraham@linaro.org>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thomas Abraham wrote:
-> 
-> On 13 July 2012 16:58, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> > Thomas Abraham wrote:
-> >>
-> >> On 13 July 2012 04:08, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> >> > Thomas, the DMACH_DT_PROP is available only on pl330 now. So seems
-> occur
-> >> > following build error with s3c6400_defconfig.
-> >> >
-> >> > drivers/spi/spi-s3c64xx.c: In function 's3c64xx_spi_get_dmares':
-> >> > drivers/spi/spi-s3c64xx.c:1098: error: 'DMACH_DT_PROP' undeclared
-> (first
-> >> use
-> >> > in this function)
-> >> > drivers/spi/spi-s3c64xx.c:1098: error: (Each undeclared identifier is
-> >> > reported only once
-> >> > drivers/spi/spi-s3c64xx.c:1098: error: for each function it appears
-> in.)
-> >> > make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
-> >> > make[2]: *** [drivers/spi] Error 2
-> >> >
-> >>
-> >> Dear Mr. Kim,
-> >>
-> >> Thanks for considering these patches to be merged via your tree. For
-> >> the build break you mentioned above, there was a patch submitted some
-> >> time back to handle this. The link to that patch is:
-> >> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-
-> >> June/102627.html.
-> >> Could you please apply this patch also to your tree.
-> >>
-> > Sure, it looks good to me, will apply that then this series will be
-> rebased
-> > on top of that.
-> 
-> There are six more patches that enable spi device tree support for
-> Exynos4 and Exynos5 platforms. Could you consider to apply those
-> patches as well. The link to those patches is:
-> http://www.mail-archive.com/linux-samsung-
-> soc@vger.kernel.org/msg10851.html.
-> 
-Yeah, I remember, but I think some patches is needed to re-work as per
-comments...?
+Updated patchset to use u32 for reg_shift and reg_io_width, both
+for ocores_i2c_platform_data and for ocores_i2c.
 
-Thanks.
+V2 notes
+========
+Updated patchset, changes in v2 are:
+ * pass u32 value to of_property_read_u32() in ocores_i2c_of_probe()
+ * undo whitespace change in include/linux/i2c-ocores.h
+ * use int for reg_shift and reg_io_width in ocores_i2c_platform_data
+   (include/linux/i2c-ocores.h) as well.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+V1 notes
+========
+While trying to add reg-io-width property to i2c-ocores, we noticed
+a few things that needs to fixed up in i2c-ocores device tree code.
+
+The changes are to: 
+ * use the standard 'reg-shift' property instead of 'regstep'
+ * fix the fallout of the about change in drivers/mfd/timberdale.c
+ * move bindings documentation to under Documentation/, 
+ * fix up formatting, and add \n to a few dev_* messages,
+ * and finally to add reg-io-width optional property.
+
+Ganesan Ramalingam (2):
+  i2c: i2c-ocores: Use reg-shift property
+  i2c: i2c-ocores: support for 16bit and 32bit IO
+
+Jayachandran C (2):
+  i2c: i2c-ocores - DT bindings and minor fixes.
+  V4L/DVB: mfd: use reg_shift instead of regstep
+
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |   33 +++++++
+ drivers/i2c/busses/i2c-ocores.c                    |   96 +++++++++-----------
+ drivers/mfd/timberdale.c                           |    2 +-
+ include/linux/i2c-ocores.h                         |    3 +-
+ 4 files changed, 81 insertions(+), 53 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+
+-- 
+1.7.9.5
