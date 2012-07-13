@@ -1,79 +1,39 @@
-From: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
-Subject: Re: [U-Boot] Where to put a large bootloader-supplied device tree
- on ARM ?
-Date: Fri, 13 Jul 2012 08:45:26 +0200
-Message-ID: <20120713084526.5f680de3@lilith>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
- <201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
- <201207062008.23952.arnd@arndb.de> <20120706210009.GC11470@lunn.ch>
- <4FF781D8.3040206@firmworks.com>
- <2966DB01BC317A4DA23684BA0F653415013701@xmb-aln-x08.cisco.com>
- <4FF7980E.7050705@firmworks.com>
- <alpine.LFD.2.02.1207090015270.31100@xanadu.home>
- <4FFE743B.6080504@firmworks.com> <4FFF34C9.8030000@gmail.com>
- <20120712233801.0411daa7@lilith>
- <20120712214743.2160B202A3F@gemini.denx.de>
- <4FFF79B6.6040508@gmail.com>
+From: "Jayachandran C" <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Subject: [PATCH 3/4] V4L/DVB: mfd: use reg_shift instead of regstep
+Date: Fri, 13 Jul 2012 12:19:09 +0530
+Message-ID: <1342162149-6026-1-git-send-email-jayachandranc@netlogicmicro.com>
+References: <1342161543-5838-1-git-send-email-jayachandranc@netlogicmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FFF79B6.6040508-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1342161543-5838-1-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Update for change in i2c-ocores.h which uses reg_shift to
+specify the register offset shifts instead of regstep.
 
-On Thu, 12 Jul 2012 20:28:22 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 07/12/2012 04:47 PM, Wolfgang Denk wrote:
-> > Dear Albert ARIBAUD,
-> > 
-> > In message <20120712233801.0411daa7@lilith> you wrote:
-> >>
-> >> If I'm not mistaken, yes U-Boot loads itself as high as it can, and I don't
-> >> know about the FDT, but no, U-Boot does not "like" to load initrd "just
-> >> below that": it loads initrd where the boot commands tell it to, and the
-> >> boot commands are written by board developers. Nothing in U-Boot forces
-> >> initrd to be loaded as high as possible.
-> 
-> u-boot loads the initrd where you tell it, then bootm relocates it for
-> some reason.
-> >>
-> >> That leaves the question of the FDT, though -- I'm not familiar enough
-> >> with it (yet) to tell if it is always located just under U-Boot or if
-> >> its placement is controllable by board commands.
-> > 
-> > You can always just set the "fdt_high" and "initrd_high" evironment
-> > variables to restrict the positioning of initrd and FDT in RAM; see
-> > the README for details.
-> 
-> Yes, I'm aware of all this, but this is not the default behavior and the
-> default behavior will not work in this case. It also has another bug
-> related to the relocation that I fixed:
-> 
-> http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg86475.html
-> 
-> Rob
+Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Acked-by: Richard Rojfors <richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org>
+---
+ drivers/mfd/timberdale.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As for the default behavior, this becomes a board config issue, not a
-U-Boot issue.
-
-Regarding the patch, as a bugfix it will go in u-boot-arm/master
-for 2012.07.
-
-With all this, do we have the overall issue covered?
-
-Amicalement,
+diff --git a/drivers/mfd/timberdale.c b/drivers/mfd/timberdale.c
+index 0ba26fb..a447f4e 100644
+--- a/drivers/mfd/timberdale.c
++++ b/drivers/mfd/timberdale.c
+@@ -83,7 +83,7 @@ timberdale_xiic_platform_data = {
+ 
+ static __devinitdata struct ocores_i2c_platform_data
+ timberdale_ocores_platform_data = {
+-	.regstep = 4,
++	.reg_shift = 2,
+ 	.clock_khz = 62500,
+ 	.devices = timberdale_i2c_board_info,
+ 	.num_devices = ARRAY_SIZE(timberdale_i2c_board_info)
 -- 
-Albert.
+1.7.9.5
