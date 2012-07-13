@@ -1,65 +1,54 @@
-From: Sebastian Hesselbarh <sebastian.hesselbarth@googlemail.com>
-Subject: Re: [RESEND PATCH 1/1] clk: add DT support for clock gating control
-Date: Fri, 13 Jul 2012 11:42:20 +0200
-Message-ID: <4FFFED7C.9050406@googlemail.com>
-References: <4FFE7979.4060000@googlemail.com> <4FFEBF8A.1020700@gmail.com> <4FFECC4E.4070001@googlemail.com> <4FFF93DC.30103@gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 1/3] regulator: tps65217: Add device tree support
+Date: Fri, 13 Jul 2012 10:54:54 +0100
+Message-ID: <20120713095454.GB4215@opensource.wolfsonmicro.com>
+References: <1341918584-28004-1-git-send-email-anilkumar@ti.com>
+ <1341918584-28004-2-git-send-email-anilkumar@ti.com>
+ <20120712172836.GR7256@opensource.wolfsonmicro.com>
+ <331ABD5ECB02734CA317220B2BBEABC13E9F61CC@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4FFF93DC.30103@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EuxKj2iCbKjpUGkD"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13E9F61CC@DBDE01.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "Girdwood, Liam" <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 07/13/2012 05:19 AM, Rob Herring wrote:
-> What's implemented in Linux should not define the binding. The binding
-> should describe the hardware.
-> [...]
-> True, but not your problem to implement. A binding doesn't necessarily
-> mean there is a full Linux implementation. We just don't want to create
-> something only to find others need something completely different.
 
-Ok, what about a DT describing the following for a simple register-based
-clock gating controller and the corresponding gated-clock independent of
-the controller. I am sure there are a bunch of SoCs out there that
-control their clock gates by writing some bits to a register. If that
-DT description matches your expectations, I ll prepare patches with
-documentation and implementation for common clock framework.
+--EuxKj2iCbKjpUGkD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sebastian
+On Fri, Jul 13, 2012 at 05:43:30AM +0000, AnilKumar, Chimata wrote:
 
---
-  /* Simple clock gating controller based on bitmasks and register */
-cgc: clock-gating-control@f1000000 {
-   compatible = "clock-gating-control-register";
-   reg = <0xf1000000 0x4>;
+> Thanks much, are you going to push reset of the patches in this series?
 
-   /* Clock gating control with one bit at bit position 0
-      enable with (1<<0), disable with (0<<0) */
-   cgctrl_usb0: cgc_usb0 {
-     clock-gating-control,shift = <0>;
-     clock-gating-control,mask = <1>;
-     clock-gating-control,enable = <1>;
-     clock-gating-control,disable = <0>;
-   };
+No, there's no dependency so I'd expect them to be applied by the
+architecture maintainers.
 
-   /* Clock gating control with two bits at bit position 1-2
-      enable with (2<<1), disable with (0<<1) */
-   cgctrl_sata: cgc_sata {
-     clock-gating-control,shift = <1>;
-     clock-gating-control,mask = <3>;
-     clock-gating-control,enable = <2>;
-     clock-gating-control,disable = <0>;
-   };
-};
+--EuxKj2iCbKjpUGkD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-/* Generic clock gate description that can be used with
-    any clock gating controller */
-cg_usb0: clockgate@0 {
-   compatible = "gated-clock";
-   #clock-cells = <0>;
-   clocks = <&osc>;
-   clock-gate-control = <&cgctrl_usb0>;
-};
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJP//AuAAoJEBus8iNuMP3d3dcP/1YA08soeMqDBAvVREqJdIAx
+VpsvDCE3A2MYEK7muDbS8W+v4AuV27NwkFPavlMUlTLRZVATeLQWJQR9mXt0/LwV
+Nhu59GYoYd3HsvQRwUJCLBQMyokG045fSrXY/YvA6pJKRVJ5bcS76QBIESrPUpsA
+y06LaI9/qUGm6PzmYd9z5jtO5Z1IXPBfOl/AAs0lwdhJI3FDucSFtXhzocTieVXY
+/tPmZvwbI1MTCe0U5pq47rSL8MH6box1QBctgQ6Q18KIst/cWkyS0FiJ/hywMZDB
++EFFWC1cOZq+tWB+2nZ8LbomlhNtnagzxDrhfU3V9LBD8KtDeAhv694D9j4jl4wg
+N4e4Rc7cllt2/iW3j7ctNIGVDiyOwDsSaZAKzXr3m9/aZErAaQNtLs0eFgUQ81Zk
+AnvXBuLmM3XqkV3J+2dAc8RCr9XftSAkl/XgZsW/YfK4eqNfo50UNQQwDqbwqsDs
+f8oRjzdKUSVuzRUh5YaI80wZRourZtUg4CJqLGb3hoy1rY8c/TwLZ/BeLn4ckC/g
+h90/nGZi2dU5OtYvdoQRIspfT1S99oBRHnTW0ncPvabSOWZgHVgNNxVtoydzJCqB
+eF10xqG0yQausM/bcajmmSTbMkVllRu7KK+Rra/Fbe+18452e3CYa5pNQ/EhJuvB
+5QfQD0Era/MAEIFQghOV
+=vKfD
+-----END PGP SIGNATURE-----
+
+--EuxKj2iCbKjpUGkD--
