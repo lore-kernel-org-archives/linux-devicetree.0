@@ -1,53 +1,68 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/2] regulator: tps6586x: add support for input supply
-Date: Fri, 13 Jul 2012 15:22:30 +0100
-Message-ID: <20120713142229.GM4215@opensource.wolfsonmicro.com>
-References: <1342187432-18668-1-git-send-email-ldewangan@nvidia.com>
- <1342187432-18668-3-git-send-email-ldewangan@nvidia.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v5 6/6] spi: s3c64xx: add device tree support
+Date: Fri, 13 Jul 2012 20:21:53 +0530
+Message-ID: <CAJuYYwQ9AyVPiZzV4-ncYF-Z1JqwHx-xKGHJXGhugc_w+KUHZQ@mail.gmail.com>
+References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
+	<1342021265-11212-7-git-send-email-thomas.abraham@linaro.org>
+	<4FFF51EE.4080609@samsung.com>
+	<CAJuYYwQBL6OGJM41e9kD2ATUj3g9NTs-OC+G_gMKMScn3ms=hw@mail.gmail.com>
+	<117c01cd60ea$90f76ac0$b2e64040$%kim@samsung.com>
+	<CAJuYYwRiR8M5m9rDE6dzMawuSLO03f7mydoks+zU2ByTmbtMrA@mail.gmail.com>
+	<118901cd60fd$66c26260$34472720$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VIOdPewhitSMo36n"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1342187432-18668-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: ccross@android.com, olof@lixom.net, swarren@wwwdotorg.org, lrg@ti.com, thierry.reding@avionic-design.de, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <118901cd60fd$66c26260$34472720$%kim@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On 13 July 2012 19:12, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> Thomas Abraham wrote:
+>>
+>> On 13 July 2012 16:58, Kukjin Kim <kgene.kim@samsung.com> wrote:
+>> > Thomas Abraham wrote:
+>> >>
+>> >> On 13 July 2012 04:08, Kukjin Kim <kgene.kim@samsung.com> wrote:
+>> >> > Thomas, the DMACH_DT_PROP is available only on pl330 now. So seems
+>> occur
+>> >> > following build error with s3c6400_defconfig.
+>> >> >
+>> >> > drivers/spi/spi-s3c64xx.c: In function 's3c64xx_spi_get_dmares':
+>> >> > drivers/spi/spi-s3c64xx.c:1098: error: 'DMACH_DT_PROP' undeclared
+>> (first
+>> >> use
+>> >> > in this function)
+>> >> > drivers/spi/spi-s3c64xx.c:1098: error: (Each undeclared identifier is
+>> >> > reported only once
+>> >> > drivers/spi/spi-s3c64xx.c:1098: error: for each function it appears
+>> in.)
+>> >> > make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
+>> >> > make[2]: *** [drivers/spi] Error 2
+>> >> >
+>> >>
+>> >> Dear Mr. Kim,
+>> >>
+>> >> Thanks for considering these patches to be merged via your tree. For
+>> >> the build break you mentioned above, there was a patch submitted some
+>> >> time back to handle this. The link to that patch is:
+>> >> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-
+>> >> June/102627.html.
+>> >> Could you please apply this patch also to your tree.
+>> >>
+>> > Sure, it looks good to me, will apply that then this series will be
+>> rebased
+>> > on top of that.
+>>
+>> There are six more patches that enable spi device tree support for
+>> Exynos4 and Exynos5 platforms. Could you consider to apply those
+>> patches as well. The link to those patches is:
+>> http://www.mail-archive.com/linux-samsung-
+>> soc@vger.kernel.org/msg10851.html.
+>>
+> Yeah, I remember, but I think some patches is needed to re-work as per
+> comments...?
 
---VIOdPewhitSMo36n
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jul 13, 2012 at 07:20:32PM +0530, Laxman Dewangan wrote:
-> There is multiple voltage input pins on device which
-> takes the voltage input for different voltage regulator.
-> Support to configure the voltage input supplied by
-> different regulator for each regulators.
-
-Applied, thanks.
-
---VIOdPewhitSMo36n
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQAC8DAAoJEBus8iNuMP3d6vEP/3WoHqW4W3x1iLzifEMyf2te
-lH8dIT7igfEemLOMyZGyWd2uIrtvliGKTs16r5uM/KL76CRXPTLiM2ExqUrVDNDb
-l40YJ5U02ymf0qk2qp+3k0Xyd20PZOaUVV0vzOR3Gua6kycpzZBZ8Mno0qKp6U/B
-XHY/FPZXiEFeRpL+OBIPxdDo+166ZjOzpbLLpRxtjU/K1W1lUr8Iglnw6pgo6f5T
-FPF9HfRdj4fDUR8C+ly1VeTENzFgfY24dLD0HvzgryAZXSWJA7bi4FdyK86x862v
-0b1uCLLThlgPJENSUxvYXVAmbPD+Fu9oeTfBgN9qy983fBNADIBFudVprGxsOBTu
-tc6lqgX4m6hPHHTRGxQyWpOYUZxMKCNR2o3Mpk1ZE4ejDkGBCEsWgYxPyQVliUKY
-d8MGG8vzY5Ks/URbiU3r8fVHf2xipF8c4I1hewvAkXstur0oGCdWmDMiXCz0e5uh
-i1MpnPtM2jGR6s/V+y8AvdKIL64cfIvICZopJVJ/wioltCslUsR0oAyMnrr8WEJv
-Ouq5fS6APFnUKT7mv7bSfQxBNURB0+Ez9m+YSgUbJyIicMWystE6Rmne9d4HPc3O
-6FZmwcBjPoZHfqflT625FBDUnBPIqNm/u+Pbs6xP4XbWPFz08aZ7QZEu23lDHHi9
-eJlcnszTMcXaIwfX5FQt
-=4y1h
------END PGP SIGNATURE-----
-
---VIOdPewhitSMo36n--
+I checked again for any pending comments on v2 version. There are no
+pending comments for the v2 version of this patch series. Thanks.
