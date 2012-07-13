@@ -1,63 +1,66 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: Where to put a large bootloader-supplied device tree
- on ARM ?
-Date: Thu, 12 Jul 2012 20:28:22 -0500
-Message-ID: <4FFF79B6.6040508@gmail.com>
-References: <1341325365-21393-1-git-send-email-andrew@lunn.ch>
-	<201207051454.24475.arnd@arndb.de> <20120705161600.GA28860@lunn.ch>
-	<201207062008.23952.arnd@arndb.de> <20120706210009.GC11470@lunn.ch>
-	<4FF781D8.3040206@firmworks.com>
-	<2966DB01BC317A4DA23684BA0F653415013701@xmb-aln-x08.cisco.com>
-	<4FF7980E.7050705@firmworks.com>
-	<alpine.LFD.2.02.1207090015270.31100@xanadu.home>
-	<4FFE743B.6080504@firmworks.com> <4FFF34C9.8030000@gmail.com>
-	<20120712233801.0411daa7@lilith>
-	<20120712214743.2160B202A3F@gemini.denx.de>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v4 2/2] pinctrl: pinctrl-imx6q: add missed mux function for
+ USBOTG_ID
+Date: Fri, 13 Jul 2012 10:31:16 +0800
+Message-ID: <1342146676-26270-2-git-send-email-b29396@freescale.com>
+References: <1342146676-26270-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <20120712214743.2160B202A3F@gemini.denx.de>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Wolfgang Denk <wd@denx.de>, Albert ARIBAUD <albert.u.boot@aribaud.net>
-Cc: Mitch Bradley <wmb@firmworks.com>, U-Boot <u-boot@lists.denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342146676-26270-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/12/2012 04:47 PM, Wolfgang Denk wrote:
-> Dear Albert ARIBAUD,
-> 
-> In message <20120712233801.0411daa7@lilith> you wrote:
->>
->> If I'm not mistaken, yes U-Boot loads itself as high as it can, and I don't
->> know about the FDT, but no, U-Boot does not "like" to load initrd "just
->> below that": it loads initrd where the boot commands tell it to, and the
->> boot commands are written by board developers. Nothing in U-Boot forces
->> initrd to be loaded as high as possible.
+From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-u-boot loads the initrd where you tell it, then bootm relocates it for
-some reason.
+The original pin registers table is derived from u-boot mainline,
+but somehow it was found missing some mux functions for USBOTG_ID.
+We added it at the bottom by following the exist pin function ids,
+then it will not break the exist using of pin function id in dts file.
 
->>
->> That leaves the question of the FDT, though -- I'm not familiar enough
->> with it (yet) to tell if it is always located just under U-Boot or if
->> its placement is controllable by board commands.
-> 
-> You can always just set the "fdt_high" and "initrd_high" evironment
-> variables to restrict the positioning of initrd and FDT in RAM; see
-> the README for details.
+Reported-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+No changes
+---
+ .../bindings/pinctrl/fsl,imx6q-pinctrl.txt         |    2 ++
+ drivers/pinctrl/pinctrl-imx6q.c                    |    2 ++
+ 2 files changed, 4 insertions(+), 0 deletions(-)
 
-Yes, I'm aware of all this, but this is not the default behavior and the
-default behavior will not work in this case. It also has another bug
-related to the relocation that I fixed:
-
-http://www.mail-archive.com/u-boot@lists.denx.de/msg86475.html
-
-Rob
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
+index 82b43f9..a4119f6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
+@@ -1626,3 +1626,5 @@ MX6Q_PAD_SD2_DAT3__PCIE_CTRL_MUX_11		1587
+ MX6Q_PAD_SD2_DAT3__GPIO_1_12			1588
+ MX6Q_PAD_SD2_DAT3__SJC_DONE			1589
+ MX6Q_PAD_SD2_DAT3__ANATOP_TESTO_3		1590
++MX6Q_PAD_ENET_RX_ER__ANATOP_USBOTG_ID		1591
++MX6Q_PAD_GPIO_1__ANATOP_USBOTG_ID		1592
+diff --git a/drivers/pinctrl/pinctrl-imx6q.c b/drivers/pinctrl/pinctrl-imx6q.c
+index 6974238..4d9bc07 100644
+--- a/drivers/pinctrl/pinctrl-imx6q.c
++++ b/drivers/pinctrl/pinctrl-imx6q.c
+@@ -1950,6 +1950,8 @@ static struct imx_pin_reg imx6q_pin_regs[] = {
+ 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 5, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__GPIO_1_12 */
+ 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 6, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__SJC_DONE */
+ 	IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 7, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__ANATOP_TESTO_3 */
++	IMX_PIN_REG(MX6Q_PAD_ENET_RX_ER, 0x04EC, 0x01D8, 0, 0x0000, 0), /* MX6Q_PAD_ENET_RX_ER__ANATOP_USBOTG_ID */
++	IMX_PIN_REG(MX6Q_PAD_GPIO_1, 0x05F4, 0x0224, 3, 0x0000, 0), /* MX6Q_PAD_GPIO_1__ANATOP_USBOTG_ID */
+ };
+ 
+ /* Pad names for the pinmux subsystem */
+-- 
+1.7.0.4
