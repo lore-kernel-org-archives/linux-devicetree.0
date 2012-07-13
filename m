@@ -1,42 +1,159 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v2 1/3] regulator: tps65217: Add device tree support
-Date: Fri, 13 Jul 2012 05:43:30 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13E9F61CC@DBDE01.ent.ti.com>
-References: <1341918584-28004-1-git-send-email-anilkumar@ti.com>
- <1341918584-28004-2-git-send-email-anilkumar@ti.com>
- <20120712172836.GR7256@opensource.wolfsonmicro.com>
+From: "Jayachandran C" <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Subject: [PATCH 2/4] i2c: i2c-ocores: Use reg-shift property
+Date: Fri, 13 Jul 2012 12:09:01 +0530
+Message-ID: <1342161543-5838-3-git-send-email-jayachandranc@netlogicmicro.com>
+References: <1342161543-5838-1-git-send-email-jayachandranc@netlogicmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120712172836.GR7256-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Girdwood,
- Liam" <lrg-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1342161543-5838-1-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-On Thu, Jul 12, 2012 at 22:58:37, Mark Brown wrote:
-> On Tue, Jul 10, 2012 at 04:39:42PM +0530, AnilKumar Ch wrote:
-> > This commit adds device tree support for tps65217 pmic. And usage
-> > details are added to device tree documentation. Driver is tested
-> > by using kernel module with regulator set and get APIs.
-> 
-> Applied, thanks.
+Deprecate 'regstep' property and use the standard 'reg-shift' property
+for register offset shifts. 'regstep' will still be supported as an
+optional property, but will give a warning when used.
 
-Thanks much, are you going to push reset of the patches in this series?
+Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+---
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |    8 +++-
+ drivers/i2c/busses/i2c-ocores.c                    |   39 ++++++++++++--------
+ include/linux/i2c-ocores.h                         |    2 +-
+ 3 files changed, 31 insertions(+), 18 deletions(-)
 
-Thanks
-AnilKumar
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+index bfec894..1c9334b 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+@@ -4,11 +4,14 @@ Required properties:
+ - compatible      : "opencores,i2c-ocores"
+ - reg             : bus address start and address range size of device
+ - interrupts      : interrupt number
+-- regstep         : size of device registers in bytes
+ - clock-frequency : frequency of bus clock in Hz
+ - #address-cells  : should be <1>
+ - #size-cells     : should be <0>
+ 
++Optional properties:
++- reg-shift       : device register offsets are shifted by this value
++- regstep         : deprecated, use reg-shift above
++
+ Example:
+ 
+ 	i2c0: ocores@a0000000 {
+@@ -17,9 +20,10 @@ Example:
+ 		compatible = "opencores,i2c-ocores";
+ 		reg = <0xa0000000 0x8>;
+ 		interrupts = <10>;
+-		regstep = <1>;
+ 		clock-frequency = <20000000>;
+ 
++		reg-shift = <0>;	/* 8 bit registers */
++
+ 		dummy@60 {
+ 			compatible = "dummy";
+ 			reg = <0x60>;
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index e8159db..fb8db30 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -25,10 +25,11 @@
+ #include <linux/slab.h>
+ #include <linux/io.h>
+ #include <linux/of_i2c.h>
++#include <linux/log2.h>
+ 
+ struct ocores_i2c {
+ 	void __iomem *base;
+-	int regstep;
++	int reg_shift;
+ 	wait_queue_head_t wait;
+ 	struct i2c_adapter adap;
+ 	struct i2c_msg *msg;
+@@ -71,12 +72,12 @@ struct ocores_i2c {
+ 
+ static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
+ {
+-	iowrite8(value, i2c->base + reg * i2c->regstep);
++	iowrite8(value, i2c->base + (reg << i2c->reg_shift));
+ }
+ 
+ static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
+ {
+-	return ioread8(i2c->base + reg * i2c->regstep);
++	return ioread8(i2c->base + (reg << i2c->reg_shift));
+ }
+ 
+ static void ocores_process(struct ocores_i2c *i2c)
+@@ -219,22 +220,30 @@ static struct i2c_adapter ocores_adapter = {
+ static int ocores_i2c_of_probe(struct platform_device *pdev,
+ 				struct ocores_i2c *i2c)
+ {
+-	const __be32* val;
+-
+-	val = of_get_property(pdev->dev.of_node, "regstep", NULL);
+-	if (!val) {
+-		dev_err(&pdev->dev, "Missing required parameter 'regstep'\n");
+-		return -ENODEV;
+-	}
+-	i2c->regstep = be32_to_cpup(val);
++	struct device_node *np = pdev->dev.of_node;
++	u32 val;
++
++	if (of_property_read_u32(np, "reg-shift", &val)) {
++		/* no 'reg-shift', check for deprecated 'regstep' */
++		if (!of_property_read_u32(np, "regstep", &val)) {
++			if (!is_power_of_2(val)) {
++				dev_err(&pdev->dev, "invalid regstep %d\n",
++					val);
++				return -EINVAL;
++			}
++			i2c->reg_shift = ilog2(val);
++			dev_warn(&pdev->dev,
++				"regstep property deprecated, use reg-shift\n");
++		}
++	} else
++		i2c->reg_shift = val;
+ 
+-	val = of_get_property(pdev->dev.of_node, "clock-frequency", NULL);
+-	if (!val) {
++	if (of_property_read_u32(np, "clock-frequency", &val)) {
+ 		dev_err(&pdev->dev,
+ 			"Missing required parameter 'clock-frequency'\n");
+ 		return -ENODEV;
+ 	}
+-	i2c->clock_khz = be32_to_cpup(val) / 1000;
++	i2c->clock_khz = val / 1000;
+ 
+ 	return 0;
+ }
+@@ -277,7 +286,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+ 
+ 	pdata = pdev->dev.platform_data;
+ 	if (pdata) {
+-		i2c->regstep = pdata->regstep;
++		i2c->reg_shift = pdata->reg_shift;
+ 		i2c->clock_khz = pdata->clock_khz;
+ 	} else {
+ 		ret = ocores_i2c_of_probe(pdev, i2c);
+diff --git a/include/linux/i2c-ocores.h b/include/linux/i2c-ocores.h
+index 4d5e57f..75d7767 100644
+--- a/include/linux/i2c-ocores.h
++++ b/include/linux/i2c-ocores.h
+@@ -12,7 +12,7 @@
+ #define _LINUX_I2C_OCORES_H
+ 
+ struct ocores_i2c_platform_data {
+-	u32 regstep;   /* distance between registers */
++	int reg_shift; /* register offset shift value */
+ 	u32 clock_khz; /* input clock in kHz */
+ 	u8 num_devices; /* number of devices in the devices list */
+ 	struct i2c_board_info const *devices; /* devices connected to the bus */
+-- 
+1.7.9.5
