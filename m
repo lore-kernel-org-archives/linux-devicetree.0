@@ -1,40 +1,71 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v5 6/6] spi: s3c64xx: add device tree support
-Date: Fri, 13 Jul 2012 09:25:55 +0530
-Message-ID: <CAJuYYwQBL6OGJM41e9kD2ATUj3g9NTs-OC+G_gMKMScn3ms=hw@mail.gmail.com>
-References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
-	<1342021265-11212-7-git-send-email-thomas.abraham@linaro.org>
-	<4FFF51EE.4080609@samsung.com>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [RFC][PATCH V2 3/3] tegra: add pwm backlight device tree nodes
+Date: Fri, 13 Jul 2012 14:32:12 +0900
+Message-ID: <4FFFB2DC.3040605@nvidia.com>
+References: <1341814105-20690-1-git-send-email-acourbot@nvidia.com> <1341814105-20690-4-git-send-email-acourbot@nvidia.com> <CAPnjgZ1QbjE+-tr0c01K2feUdEE2wMBfR=bKpTxnyDOJbY8+1Q@mail.gmail.com> <4FFEA2D4.9050308@nvidia.com> <CAPnjgZ2=Ga2P-40trA_=UABm=i7Uy4NTAM=ehea11mE22VfDew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4FFF51EE.4080609@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPnjgZ2=Ga2P-40trA_=UABm=i7Uy4NTAM=ehea11mE22VfDew@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Glass <sjg@chromium.org>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 July 2012 04:08, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> Thomas, the DMACH_DT_PROP is available only on pl330 now. So seems occur
-> following build error with s3c6400_defconfig.
+On 07/12/2012 11:27 PM, Simon Glass wrote
+>> I agree the type strings are a problem in the current form - if we could get
+>> constants in the device tree, that would be much better. Your way of
+>> representing the sequences is interesting though, if we can solve the type
+>> issue (and also evaluate its cost in terms of memory footprint), it would be
+>> interesting to consider it as well.
 >
-> drivers/spi/spi-s3c64xx.c: In function 's3c64xx_spi_get_dmares':
-> drivers/spi/spi-s3c64xx.c:1098: error: 'DMACH_DT_PROP' undeclared (first use
-> in this function)
-> drivers/spi/spi-s3c64xx.c:1098: error: (Each undeclared identifier is
-> reported only once
-> drivers/spi/spi-s3c64xx.c:1098: error: for each function it appears in.)
-> make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
-> make[2]: *** [drivers/spi] Error 2
+> At a guess:
 >
+>>>> +               power-on-sequence = "REGULATOR", "power", <1>,
+>>>> +                                   "DELAY", <10>,
+>>>> +                                   "PWM", "backlight", <1>,
+>>>> +                                   "GPIO", "enable", <1>;
+>
+> About 106 bytes I think
+>
+>>>      step@0 { 16
+>              type = "regulator"; 24
+>>>         phandle = <&backlight_reg>; 16
+>>>         enable = <1>; 16
+>>>         post-delay = <10>; 16
+>>>      }
+>>>      step@1 { 16
+>              type = "pwm"; 16
+>>>         phandle = <&pwm 2 5000000>; 24
+>>>      }
+>>>      step@2 { 16
+>              type = "gpio"; 20
+>>>         phandle = <&gpio 28 0>; 24
+>>>         enable = <1>; 16
+>>>      }
+>
+> 220?
 
-Dear Mr. Kim,
+I compiled both versions to try it out. Your version was just 50 bytes 
+larger than mine (I assumed that with yours, we would be able to remove 
+the top-level pwm/regulator/gpio definitions that are referred by the 
+sequence). The question here is do we want to have something more 
+DT-ish, or are we trying to save every possible byte in the DT structure?
 
-Thanks for considering these patches to be merged via your tree. For
-the build break you mentioned above, there was a patch submitted some
-time back to handle this. The link to that patch is:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/102627.html.
-Could you please apply this patch also to your tree.
+As Thierry also mentionned, we are trying to provide the same feature 
+using the platform interface. I am not sure how we can elegantly support 
+both ways through this.
 
-Thanks,
-Thomas.
+>  From my understanding mixing strings and numbers in a property is
+> frowned on though.
+
+But doesn't it make sense in the current case? The power sequence is 
+basically a program that is run by an interpreter. From this 
+perspective, it makes more sense to me to have it as a binary field 
+rather than a hierarchy of nodes and properties that will be harder to 
+parse and will make error detection more complicated. I don't really see 
+any practical benefit from turning the steps into sub-nodes, but then 
+again I am not so familiar with the DT.
+
+Alex.
