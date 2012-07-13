@@ -1,47 +1,66 @@
-From: y@pengutronix.de
-Subject: [PATCH 11/11] gpio/gpio-omap: make platformdata used as
- of_device_id.data const
-Date: Fri, 13 Jul 2012 14:32:14 +0200
-Message-ID: <34295.4216794626$1342183501@news.gmane.org>
-References: <1342182734-321-1-git-send-email-y>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] spi: Add support for specifing 3-wire mode via device tree
+Date: Fri, 13 Jul 2012 07:44:58 -0500
+Message-ID: <5000184A.2000600@gmail.com>
+References: <1342183427-23430-1-git-send-email-lars@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1342182734-321-1-git-send-email-y>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, kernel@pengutronix.de, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342183427-23430-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4K
-ClNpZ25lZC1vZmYtYnk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0
-cm9uaXguZGU+CkNjOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQHN0ZXJpY3Nzb24uY29t
-PgotLS0KIGRyaXZlcnMvZ3Bpby9ncGlvLW9tYXAuYyB8ICAgIDYgKysrLS0tCiAxIGZpbGUgY2hh
-bmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3Bpby9ncGlvLW9tYXAuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLW9tYXAuYwppbmRleCAwMTlj
-YjdiLi4xMmFiNTQ3IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwaW8vZ3Bpby1vbWFwLmMKKysrIGIv
-ZHJpdmVycy9ncGlvL2dwaW8tb21hcC5jCkBAIC0xNDMwLDE5ICsxNDMwLDE5IEBAIHN0YXRpYyBz
-dHJ1Y3Qgb21hcF9ncGlvX3JlZ19vZmZzIG9tYXA0X2dwaW9fcmVncyA9IHsKIAkuZmFsbGluZ2Rl
-dGVjdCA9CU9NQVA0X0dQSU9fRkFMTElOR0RFVEVDVCwKIH07CiAKLXN0YXRpYyBzdHJ1Y3Qgb21h
-cF9ncGlvX3BsYXRmb3JtX2RhdGEgb21hcDJfcGRhdGEgPSB7Citjb25zdCBzdGF0aWMgc3RydWN0
-IG9tYXBfZ3Bpb19wbGF0Zm9ybV9kYXRhIG9tYXAyX3BkYXRhID0gewogCS5yZWdzID0gJm9tYXAy
-X2dwaW9fcmVncywKIAkuYmFua193aWR0aCA9IDMyLAogCS5kYmNrX2ZsYWcgPSBmYWxzZSwKIH07
-CiAKLXN0YXRpYyBzdHJ1Y3Qgb21hcF9ncGlvX3BsYXRmb3JtX2RhdGEgb21hcDNfcGRhdGEgPSB7
-Citjb25zdCBzdGF0aWMgc3RydWN0IG9tYXBfZ3Bpb19wbGF0Zm9ybV9kYXRhIG9tYXAzX3BkYXRh
-ID0gewogCS5yZWdzID0gJm9tYXAyX2dwaW9fcmVncywKIAkuYmFua193aWR0aCA9IDMyLAogCS5k
-YmNrX2ZsYWcgPSB0cnVlLAogfTsKIAotc3RhdGljIHN0cnVjdCBvbWFwX2dwaW9fcGxhdGZvcm1f
-ZGF0YSBvbWFwNF9wZGF0YSA9IHsKK2NvbnN0IHN0YXRpYyBzdHJ1Y3Qgb21hcF9ncGlvX3BsYXRm
-b3JtX2RhdGEgb21hcDRfcGRhdGEgPSB7CiAJLnJlZ3MgPSAmb21hcDRfZ3Bpb19yZWdzLAogCS5i
-YW5rX3dpZHRoID0gMzIsCiAJLmRiY2tfZmxhZyA9IHRydWUsCi0tIAoxLjcuMTAuNAoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 07/13/2012 07:43 AM, Lars-Peter Clausen wrote:
+> This patch allows to specify that a SPI device is connected in 3-wire mode via
+> the device tree.
+> 
+> Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> ---
+
+Might explain what 3-wire mode is, but otherwise
+
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+>  Documentation/devicetree/bindings/spi/spi-bus.txt |    2 ++
+>  drivers/spi/spi.c                                 |    2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index e782add..46f2f3b 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -33,6 +33,8 @@ contain the following properties.
+>      		shifted clock phase (CPHA) mode
+>  - spi-cs-high     - (optional) Empty property indicating device requires
+>      		chip select active high
+> +- spi-3wire       - (optional) Empty property indicating device requires
+> +    		    3-wire mode.
+>  
+>  SPI example for an MPC5200 SPI bus:
+>  	spi@f00 {
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index fc0da39..09da7de 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -856,6 +856,8 @@ static void of_register_spi_devices(struct spi_master *master)
+>  			spi->mode |= SPI_CPOL;
+>  		if (of_find_property(nc, "spi-cs-high", NULL))
+>  			spi->mode |= SPI_CS_HIGH;
+> +		if (of_find_property(nc, "spi-3wire", NULL))
+> +			spi->mode |= SPI_3WIRE;
+>  
+>  		/* Device speed */
+>  		prop = of_get_property(nc, "spi-max-frequency", &len);
+> 
