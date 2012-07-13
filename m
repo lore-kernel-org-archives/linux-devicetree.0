@@ -1,98 +1,55 @@
-From: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] i2c: i2c-ocores: support for 16bit and 32bit IO
-Date: Fri, 13 Jul 2012 19:18:35 +0530
-Message-ID: <CAM=Q2csMBP7YHgmMob0Npaxo70Quo3-76TNhQawE972zfiLiHA@mail.gmail.com>
-References: <1342187065-1651-1-git-send-email-jayachandranc@netlogicmicro.com>
-	<1342187065-1651-5-git-send-email-jayachandranc@netlogicmicro.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 07/11] dmaengine: at_hdmac: add a few const qualifiers
+Date: Fri, 13 Jul 2012 15:54:27 +0200
+Message-ID: <50002893.6030700@atmel.com>
+References: <1342182734-321-1-git-send-email-y>
+ <1342182734-321-9-git-send-email-y>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342187065-1651-5-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342182734-321-9-git-send-email-y>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Fri, Jul 13, 2012 at 7:14 PM, Jayachandran C
-<jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org> wrote:
-> From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> Some architectures supports only 16-bit or 32-bit read/write access to
-> their IO space. Add a 'reg-io-width' platform and OF parameter which
-> specifies the IO width to support these platforms.
->
-> reg-io-width can be specified as 1, 2 or 4, and has a default value
-> of 1 if it is unspecified.
->
-> Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-> ---
->  .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 ++
->  drivers/i2c/busses/i2c-ocores.c                    |   21 ++++++++++++++++++--
->  include/linux/i2c-ocores.h                         |    1 +
->  3 files changed, 22 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> index 1c9334b..c15781f 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> @@ -10,6 +10,7 @@ Required properties:
->
->  Optional properties:
->  - reg-shift       : device register offsets are shifted by this value
-> +- reg-io-width    : io register width in bytes (1, 2 or 4)
->  - regstep         : deprecated, use reg-shift above
->
->  Example:
-> @@ -23,6 +24,7 @@ Example:
->                 clock-frequency = <20000000>;
->
->                 reg-shift = <0>;        /* 8 bit registers */
-> +               reg-io-width = <1>;     /* 8 bit read/write */
->
->                 dummy@60 {
->                         compatible = "dummy";
-> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-> index 721ead9..de3b119 100644
-> --- a/drivers/i2c/busses/i2c-ocores.c
-> +++ b/drivers/i2c/busses/i2c-ocores.c
-> @@ -30,6 +30,7 @@
->  struct ocores_i2c {
->         void __iomem *base;
->         u32 reg_shift;
-> +       u32 reg_io_width;
->         wait_queue_head_t wait;
->         struct i2c_adapter adap;
->         struct i2c_msg *msg;
-> @@ -72,12 +73,22 @@ struct ocores_i2c {
->
->  static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
->  {
-> -       iowrite8(value, i2c->base + (reg << i2c->reg_shift));
-> +       if (i2c->reg_io_width == 4)
-> +               iowrite32(value, i2c->base + (reg << i2c->reg_shift));
-> +       else if (i2c->reg_io_width == 2)
-> +               iowrite16(value, i2c->base + (reg << i2c->reg_shift));
-> +       else
-> +               iowrite8(value, i2c->base + (reg << i2c->reg_shift));
->  }
->
->  static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
-
-Should the return type be changed.
-Now that it is returning more that than 8 bits.
-
-Did I miss something?
-
->  {
-> -       return ioread8(i2c->base + (reg << i2c->reg_shift));
-> +       if (i2c->reg_io_width == 4)
-> +               return ioread32(i2c->base + (reg << i2c->reg_shift));
-> +       else if (i2c->reg_io_width == 2)
-> +               return ioread16(i2c->base + (reg << i2c->reg_shift));
-> +       else
-> +               return ioread8(i2c->base + (reg << i2c->reg_shift));
->  }
->
+T24gMDcvMTMvMjAxMiAwMjozMiBQTSwgeUBwZW5ndXRyb25peC5kZSA6Cj4gRnJvbTogVXdlIEts
+ZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KPiAKPiBUaGlzIHBy
+ZXBhcmVzIG9mX2RldmljZV9pZC5kYXRhIGJlY29taW5nIGNvbnN0LiBXaXRob3V0IHRoaXMgY2hh
+bmdlCj4gdGhlIGZvbGxvd2luZyB3YXJuaW5nIHdvdWxkIG9jY3VyOgo+IAo+IAlkcml2ZXJzL2Rt
+YS9hdF9oZG1hYy5jOiBJbiBmdW5jdGlvbiAnYXRfZG1hX2dldF9kcml2ZXJfZGF0YSc6Cj4gCWRy
+aXZlcnMvZG1hL2F0X2hkbWFjLmM6MTIyODogd2FybmluZzogcmV0dXJuIGRpc2NhcmRzIHF1YWxp
+ZmllcnMgZnJvbSBwb2ludGVyIHRhcmdldCB0eXBlCj4gCj4gU2lnbmVkLW9mZi1ieTogVXdlIEts
+ZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KPiBDYzogTmljb2xh
+cyBGZXJyZSA8bmljb2xhcy5mZXJyZUBhdG1lbC5jb20+CgpBY2tlZC1ieTogTmljb2xhcyBGZXJy
+ZSA8bmljb2xhcy5mZXJyZUBhdG1lbC5jb20+Cgo+IENjOiBEYW4gV2lsbGlhbXMgPGRhbi5qLndp
+bGxpYW1zQGludGVsLmNvbT4KPiBDYzogVmlub2QgS291bCA8dmlub2Qua291bEBpbnRlbC5jb20+
+Cj4gLS0tCj4gIGRyaXZlcnMvZG1hL2F0X2hkbWFjLmMgfCAgICA0ICsrLS0KPiAgMSBmaWxlIGNo
+YW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9kbWEvYXRfaGRtYWMuYyBiL2RyaXZlcnMvZG1hL2F0X2hkbWFjLmMKPiBpbmRleCA3
+MjkyYWE4Li43ZTlkMjY1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZG1hL2F0X2hkbWFjLmMKPiAr
+KysgYi9kcml2ZXJzL2RtYS9hdF9oZG1hYy5jCj4gQEAgLTEyMTcsNyArMTIxNyw3IEBAIHN0YXRp
+YyBjb25zdCBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlX2lkIGF0ZG1hX2RldnR5cGVzW10gPSB7Cj4g
+IAl9Cj4gIH07Cj4gIAo+IC1zdGF0aWMgaW5saW5lIHN0cnVjdCBhdF9kbWFfcGxhdGZvcm1fZGF0
+YSAqIF9faW5pdCBhdF9kbWFfZ2V0X2RyaXZlcl9kYXRhKAo+ICtzdGF0aWMgaW5saW5lIGNvbnN0
+IHN0cnVjdCBhdF9kbWFfcGxhdGZvcm1fZGF0YSAqIF9faW5pdCBhdF9kbWFfZ2V0X2RyaXZlcl9k
+YXRhKAo+ICAJCQkJCQlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICB7Cj4gIAlpZiAo
+cGRldi0+ZGV2Lm9mX25vZGUpIHsKPiBAQCAtMTI1NSw3ICsxMjU1LDcgQEAgc3RhdGljIGludCBf
+X2luaXQgYXRfZG1hX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAlpbnQJ
+CQlpcnE7Cj4gIAlpbnQJCQllcnI7Cj4gIAlpbnQJCQlpOwo+IC0Jc3RydWN0IGF0X2RtYV9wbGF0
+Zm9ybV9kYXRhICpwbGF0X2RhdDsKPiArCWNvbnN0IHN0cnVjdCBhdF9kbWFfcGxhdGZvcm1fZGF0
+YSAqcGxhdF9kYXQ7Cj4gIAo+ICAJLyogc2V0dXAgcGxhdGZvcm0gZGF0YSBmb3IgZWFjaCBTb0Mg
+Ki8KPiAgCWRtYV9jYXBfc2V0KERNQV9NRU1DUFksIGF0OTFzYW05cmxfY29uZmlnLmNhcF9tYXNr
+KTsKPiAKCgotLSAKTmljb2xhcyBGZXJyZQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNl
+dHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
+c3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
