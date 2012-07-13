@@ -1,37 +1,98 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 0/2] regulator: tps6586x: support for input supply
-Date: Fri, 13 Jul 2012 19:20:30 +0530
-Message-ID: <1342187432-18668-1-git-send-email-ldewangan@nvidia.com>
+From: "Jayachandran C." <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] i2c: i2c-ocores: support for 16bit and 32bit
+ IO
+Date: Fri, 13 Jul 2012 19:28:48 +0530
+Message-ID: <20120713135848.GC18519@jayachandranc.netlogicmicro.com>
+References: <1342187065-1651-1-git-send-email-jayachandranc@netlogicmicro.com>
+ <1342187065-1651-5-git-send-email-jayachandranc@netlogicmicro.com>
+ <CAM=Q2csMBP7YHgmMob0Npaxo70Quo3-76TNhQawE972zfiLiHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, ccross@android.com, olof@lixom.net, swarren@wwwdotorg.org, lrg@ti.com
-Cc: thierry.reding@avionic-design.de, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain;
+ charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAM=Q2csMBP7YHgmMob0Npaxo70Quo3-76TNhQawE972zfiLiHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series add the support for the input supply of tps6586x
-regulator.
-The changes are based on on discussion on patch
-[PATCH 1/3] ARM: dt: tegra: seaboard: add regulators
-on which the input supply name should be require in DT case and
-unconditionally set on the desc.supply_name.
+On Fri, Jul 13, 2012 at 07:18:35PM +0530, Shubhrajyoti Datta wrote:
+> Hello,
+> 
+> On Fri, Jul 13, 2012 at 7:14 PM, Jayachandran C
+> <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org> wrote:
+> > From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >
+> > Some architectures supports only 16-bit or 32-bit read/write access to
+> > their IO space. Add a 'reg-io-width' platform and OF parameter which
+> > specifies the IO width to support these platforms.
+> >
+> > reg-io-width can be specified as 1, 2 or 4, and has a default value
+> > of 1 if it is unspecified.
+> >
+> > Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 ++
+> >  drivers/i2c/busses/i2c-ocores.c                    |   21 ++++++++++++++++++--
+> >  include/linux/i2c-ocores.h                         |    1 +
+> >  3 files changed, 22 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > index 1c9334b..c15781f 100644
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > @@ -10,6 +10,7 @@ Required properties:
+> >
+> >  Optional properties:
+> >  - reg-shift       : device register offsets are shifted by this value
+> > +- reg-io-width    : io register width in bytes (1, 2 or 4)
+> >  - regstep         : deprecated, use reg-shift above
+> >
+> >  Example:
+> > @@ -23,6 +24,7 @@ Example:
+> >                 clock-frequency = <20000000>;
+> >
+> >                 reg-shift = <0>;        /* 8 bit registers */
+> > +               reg-io-width = <1>;     /* 8 bit read/write */
+> >
+> >                 dummy@60 {
+> >                         compatible = "dummy";
+> > diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+> > index 721ead9..de3b119 100644
+> > --- a/drivers/i2c/busses/i2c-ocores.c
+> > +++ b/drivers/i2c/busses/i2c-ocores.c
+> > @@ -30,6 +30,7 @@
+> >  struct ocores_i2c {
+> >         void __iomem *base;
+> >         u32 reg_shift;
+> > +       u32 reg_io_width;
+> >         wait_queue_head_t wait;
+> >         struct i2c_adapter adap;
+> >         struct i2c_msg *msg;
+> > @@ -72,12 +73,22 @@ struct ocores_i2c {
+> >
+> >  static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
+> >  {
+> > -       iowrite8(value, i2c->base + (reg << i2c->reg_shift));
+> > +       if (i2c->reg_io_width == 4)
+> > +               iowrite32(value, i2c->base + (reg << i2c->reg_shift));
+> > +       else if (i2c->reg_io_width == 2)
+> > +               iowrite16(value, i2c->base + (reg << i2c->reg_shift));
+> > +       else
+> > +               iowrite8(value, i2c->base + (reg << i2c->reg_shift));
+> >  }
+> >
+> >  static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
+> 
+> Should the return type be changed.
+> Now that it is returning more that than 8 bits.
+> 
+> Did I miss something?
 
-To add this, the existing user (non-dt) of this PMIC also need to fill
-require input supply so that it will not break the functionality with
-this support.
-Currently harmony is using this PMIC and hence making the changes
-on this as first change of series to avoid any functionality break.
+Only 8 bits of the register is significant, so even if we read 16 or 32
+bits only the lowest 8 bits are returned.
 
-The grep shows that there is no more user of this regulator and hence it
-is safe to change in tps6586x regulator driver.
-
-Laxman Dewangan (2):
-  ARM: tegra: harmony: add regulator supply name and its input supply
-  regulator: tps6586x: add support for input supply
-
- .../devicetree/bindings/regulator/tps6586x.txt     |   17 +++++++
- arch/arm/mach-tegra/board-harmony-power.c          |   33 ++++++++-----
- drivers/regulator/tps6586x-regulator.c             |   47 ++++++++++---------
- 3 files changed, 62 insertions(+), 35 deletions(-)
-
+JC.
