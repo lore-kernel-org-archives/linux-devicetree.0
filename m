@@ -1,54 +1,51 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 1/3] regulator: tps65217: Add device tree support
-Date: Fri, 13 Jul 2012 10:54:54 +0100
-Message-ID: <20120713095454.GB4215@opensource.wolfsonmicro.com>
-References: <1341918584-28004-1-git-send-email-anilkumar@ti.com>
- <1341918584-28004-2-git-send-email-anilkumar@ti.com>
- <20120712172836.GR7256@opensource.wolfsonmicro.com>
- <331ABD5ECB02734CA317220B2BBEABC13E9F61CC@DBDE01.ent.ti.com>
+From: Christian Engelmayer <christian.engelmayer@frequentis.com>
+Subject: [RFC] Configure GPIO settings via the device tree
+Date: Fri, 13 Jul 2012 10:04:40 +0200
+Message-ID: <20120713100440.7a80e05f@frequentis.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EuxKj2iCbKjpUGkD"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13E9F61CC@DBDE01.ent.ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "Girdwood, Liam" <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: grant.likely@secretlab.ca, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org
+Cc: linuxppc-dev@lists.ozlabs.org, christian.engelmayer@frequentis.com
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---EuxKj2iCbKjpUGkD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I am looking for a way to configure GPIO initial settings and exports to the
+userspace via Sysfs in a generic way via a device tree.
 
-On Fri, Jul 13, 2012 at 05:43:30AM +0000, AnilKumar, Chimata wrote:
+The purpose would be to have the same features as when initializing and
+exporting pins via platform code, eg.
 
-> Thanks much, are you going to push reset of the patches in this series?
+	static struct gpio leds_gpios[] = {
+		{ 32, GPIOF_OUT_INIT_HIGH, "Power LED" }, /* default to ON */
+		{ 33, GPIOF_OUT_INIT_LOW,  "Green LED" }, /* default to OFF */
+		{ 34, GPIOF_OUT_INIT_LOW,  "Red LED"   }, /* default to OFF */
+		{ 35, GPIOF_OUT_INIT_LOW,  "Blue LED"  }, /* default to OFF */
+		{ ... },
+	};
 
-No, there's no dependency so I'd expect them to be applied by the
-architecture maintainers.
+,however, with no need for the kernel to know anything more about those pins
+and their later handling by simple userpsace drivers than the setup information
+provided in the device tree.
 
---EuxKj2iCbKjpUGkD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+This should also attack the problem of unstable GPIO numbers in the case of
+daughtercards on different base boards and would help provide a defined API
+to the userspace based on pin labels with the board specifics hidden in one
+place in the device tree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Is there already a way for realizing such a scenario ?
 
-iQIcBAEBAgAGBQJP//AuAAoJEBus8iNuMP3d3dcP/1YA08soeMqDBAvVREqJdIAx
-VpsvDCE3A2MYEK7muDbS8W+v4AuV27NwkFPavlMUlTLRZVATeLQWJQR9mXt0/LwV
-Nhu59GYoYd3HsvQRwUJCLBQMyokG045fSrXY/YvA6pJKRVJ5bcS76QBIESrPUpsA
-y06LaI9/qUGm6PzmYd9z5jtO5Z1IXPBfOl/AAs0lwdhJI3FDucSFtXhzocTieVXY
-/tPmZvwbI1MTCe0U5pq47rSL8MH6box1QBctgQ6Q18KIst/cWkyS0FiJ/hywMZDB
-+EFFWC1cOZq+tWB+2nZ8LbomlhNtnagzxDrhfU3V9LBD8KtDeAhv694D9j4jl4wg
-N4e4Rc7cllt2/iW3j7ctNIGVDiyOwDsSaZAKzXr3m9/aZErAaQNtLs0eFgUQ81Zk
-AnvXBuLmM3XqkV3J+2dAc8RCr9XftSAkl/XgZsW/YfK4eqNfo50UNQQwDqbwqsDs
-f8oRjzdKUSVuzRUh5YaI80wZRourZtUg4CJqLGb3hoy1rY8c/TwLZ/BeLn4ckC/g
-h90/nGZi2dU5OtYvdoQRIspfT1S99oBRHnTW0ncPvabSOWZgHVgNNxVtoydzJCqB
-eF10xqG0yQausM/bcajmmSTbMkVllRu7KK+Rra/Fbe+18452e3CYa5pNQ/EhJuvB
-5QfQD0Era/MAEIFQghOV
-=vKfD
------END PGP SIGNATURE-----
-
---EuxKj2iCbKjpUGkD--
+Regards,
+Christian
