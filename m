@@ -1,98 +1,155 @@
-From: "Jayachandran C." <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] i2c: i2c-ocores: support for 16bit and 32bit
- IO
-Date: Fri, 13 Jul 2012 19:28:48 +0530
-Message-ID: <20120713135848.GC18519@jayachandranc.netlogicmicro.com>
-References: <1342187065-1651-1-git-send-email-jayachandranc@netlogicmicro.com>
- <1342187065-1651-5-git-send-email-jayachandranc@netlogicmicro.com>
- <CAM=Q2csMBP7YHgmMob0Npaxo70Quo3-76TNhQawE972zfiLiHA@mail.gmail.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] regulator: tps6586x: add support for input supply
+Date: Fri, 13 Jul 2012 19:20:32 +0530
+Message-ID: <1342187432-18668-3-git-send-email-ldewangan@nvidia.com>
+References: <1342187432-18668-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAM=Q2csMBP7YHgmMob0Npaxo70Quo3-76TNhQawE972zfiLiHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Disposition: inline
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1342187432-18668-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org
+Cc: thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 13, 2012 at 07:18:35PM +0530, Shubhrajyoti Datta wrote:
-> Hello,
-> 
-> On Fri, Jul 13, 2012 at 7:14 PM, Jayachandran C
-> <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org> wrote:
-> > From: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >
-> > Some architectures supports only 16-bit or 32-bit read/write access to
-> > their IO space. Add a 'reg-io-width' platform and OF parameter which
-> > specifies the IO width to support these platforms.
-> >
-> > reg-io-width can be specified as 1, 2 or 4, and has a default value
-> > of 1 if it is unspecified.
-> >
-> > Signed-off-by: Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 ++
-> >  drivers/i2c/busses/i2c-ocores.c                    |   21 ++++++++++++++++++--
-> >  include/linux/i2c-ocores.h                         |    1 +
-> >  3 files changed, 22 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> > index 1c9334b..c15781f 100644
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> > @@ -10,6 +10,7 @@ Required properties:
-> >
-> >  Optional properties:
-> >  - reg-shift       : device register offsets are shifted by this value
-> > +- reg-io-width    : io register width in bytes (1, 2 or 4)
-> >  - regstep         : deprecated, use reg-shift above
-> >
-> >  Example:
-> > @@ -23,6 +24,7 @@ Example:
-> >                 clock-frequency = <20000000>;
-> >
-> >                 reg-shift = <0>;        /* 8 bit registers */
-> > +               reg-io-width = <1>;     /* 8 bit read/write */
-> >
-> >                 dummy@60 {
-> >                         compatible = "dummy";
-> > diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-> > index 721ead9..de3b119 100644
-> > --- a/drivers/i2c/busses/i2c-ocores.c
-> > +++ b/drivers/i2c/busses/i2c-ocores.c
-> > @@ -30,6 +30,7 @@
-> >  struct ocores_i2c {
-> >         void __iomem *base;
-> >         u32 reg_shift;
-> > +       u32 reg_io_width;
-> >         wait_queue_head_t wait;
-> >         struct i2c_adapter adap;
-> >         struct i2c_msg *msg;
-> > @@ -72,12 +73,22 @@ struct ocores_i2c {
-> >
-> >  static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
-> >  {
-> > -       iowrite8(value, i2c->base + (reg << i2c->reg_shift));
-> > +       if (i2c->reg_io_width == 4)
-> > +               iowrite32(value, i2c->base + (reg << i2c->reg_shift));
-> > +       else if (i2c->reg_io_width == 2)
-> > +               iowrite16(value, i2c->base + (reg << i2c->reg_shift));
-> > +       else
-> > +               iowrite8(value, i2c->base + (reg << i2c->reg_shift));
-> >  }
-> >
-> >  static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
-> 
-> Should the return type be changed.
-> Now that it is returning more that than 8 bits.
-> 
-> Did I miss something?
+There is multiple voltage input pins on device which
+takes the voltage input for different voltage regulator.
+Support to configure the voltage input supplied by
+different regulator for each regulators.
 
-Only 8 bits of the register is significant, so even if we read 16 or 32
-bits only the lowest 8 bits are returned.
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/regulator/tps6586x.txt     |   17 +++++++
+ drivers/regulator/tps6586x-regulator.c             |   47 ++++++++++---------
+ 2 files changed, 42 insertions(+), 22 deletions(-)
 
-JC.
+diff --git a/Documentation/devicetree/bindings/regulator/tps6586x.txt b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+index ab17ef6..d156e1b 100644
+--- a/Documentation/devicetree/bindings/regulator/tps6586x.txt
++++ b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+@@ -9,6 +9,14 @@ Required properties:
+ - regulators: list of regulators provided by this controller, must have
+   property "regulator-compatible" to match their hardware counterparts:
+   sm[0-2], ldo[0-9] and ldo_rtc
++- sm0-supply: The input supply for the SM0.
++- sm1-supply: The input supply for the SM1.
++- sm2-supply: The input supply for the SM2.
++- vinldo01-supply: The input supply for the LDO1 and LDO2
++- vinldo23-supply: The input supply for the LDO2 and LDO3
++- vinldo4-supply: The input supply for the LDO4
++- vinldo678-supply: The input supply for the LDO6, LDO7 and LDO8
++- vinldo9-supply: The input supply for the LDO9
+ 
+ Each regulator is defined using the standard binding for regulators.
+ 
+@@ -22,6 +30,15 @@ Example:
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
+ 
++		sm0-supply = <&some_reg>;
++		sm1-supply = <&some_reg>;
++		sm2-supply = <&some_reg>;
++		vinldo01-supply = <...>;
++		vinldo23-supply = <...>;
++		vinldo4-supply = <...>;
++		vinldo678-supply = <...>;
++		vinldo9-supply = <...>;
++
+ 		regulators {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+diff --git a/drivers/regulator/tps6586x-regulator.c b/drivers/regulator/tps6586x-regulator.c
+index c0ac241..e6da90a 100644
+--- a/drivers/regulator/tps6586x-regulator.c
++++ b/drivers/regulator/tps6586x-regulator.c
+@@ -70,7 +70,7 @@ struct tps6586x_regulator {
+ 
+ static inline struct device *to_tps6586x_dev(struct regulator_dev *rdev)
+ {
+-	return rdev_get_dev(rdev)->parent->parent;
++	return rdev_get_dev(rdev)->parent;
+ }
+ 
+ static int tps6586x_set_voltage_sel(struct regulator_dev *rdev,
+@@ -191,9 +191,10 @@ static const unsigned int tps6586x_dvm_voltages[] = {
+ 	1325000, 1350000, 1375000, 1400000, 1425000, 1450000, 1475000, 1500000,
+ };
+ 
+-#define TPS6586X_REGULATOR(_id, vdata, vreg, shift, nbits,		\
++#define TPS6586X_REGULATOR(_id, _pin_name, vdata, vreg, shift, nbits,	\
+ 			   ereg0, ebit0, ereg1, ebit1)			\
+ 	.desc	= {							\
++		.supply_name = _pin_name,				\
+ 		.name	= "REG-" #_id,					\
+ 		.ops	= &tps6586x_regulator_ops,			\
+ 		.type	= REGULATOR_VOLTAGE,				\
+@@ -214,37 +215,39 @@ static const unsigned int tps6586x_dvm_voltages[] = {
+ 	.go_reg = TPS6586X_##goreg,					\
+ 	.go_bit = (gobit),
+ 
+-#define TPS6586X_LDO(_id, vdata, vreg, shift, nbits,			\
++#define TPS6586X_LDO(_id, _pname, vdata, vreg, shift, nbits,		\
+ 		     ereg0, ebit0, ereg1, ebit1)			\
+ {									\
+-	TPS6586X_REGULATOR(_id, vdata, vreg, shift, nbits,		\
++	TPS6586X_REGULATOR(_id, _pname, vdata, vreg, shift, nbits,	\
+ 			   ereg0, ebit0, ereg1, ebit1)			\
+ }
+ 
+-#define TPS6586X_DVM(_id, vdata, vreg, shift, nbits,			\
++#define TPS6586X_DVM(_id, _pname, vdata, vreg, shift, nbits,		\
+ 		     ereg0, ebit0, ereg1, ebit1, goreg, gobit)		\
+ {									\
+-	TPS6586X_REGULATOR(_id, vdata, vreg, shift, nbits,		\
++	TPS6586X_REGULATOR(_id, _pname, vdata, vreg, shift, nbits,	\
+ 			   ereg0, ebit0, ereg1, ebit1)			\
+ 	TPS6586X_REGULATOR_DVM_GOREG(goreg, gobit)			\
+ }
+ 
+ static struct tps6586x_regulator tps6586x_regulator[] = {
+-	TPS6586X_LDO(LDO_0, ldo0, SUPPLYV1, 5, 3, ENC, 0, END, 0),
+-	TPS6586X_LDO(LDO_3, ldo, SUPPLYV4, 0, 3, ENC, 2, END, 2),
+-	TPS6586X_LDO(LDO_5, ldo, SUPPLYV6, 0, 3, ENE, 6, ENE, 6),
+-	TPS6586X_LDO(LDO_6, ldo, SUPPLYV3, 0, 3, ENC, 4, END, 4),
+-	TPS6586X_LDO(LDO_7, ldo, SUPPLYV3, 3, 3, ENC, 5, END, 5),
+-	TPS6586X_LDO(LDO_8, ldo, SUPPLYV2, 5, 3, ENC, 6, END, 6),
+-	TPS6586X_LDO(LDO_9, ldo, SUPPLYV6, 3, 3, ENE, 7, ENE, 7),
+-	TPS6586X_LDO(LDO_RTC, ldo, SUPPLYV4, 3, 3, V4, 7, V4, 7),
+-	TPS6586X_LDO(LDO_1, dvm, SUPPLYV1, 0, 5, ENC, 1, END, 1),
+-	TPS6586X_LDO(SM_2, sm2, SUPPLYV2, 0, 5, ENC, 7, END, 7),
+-
+-	TPS6586X_DVM(LDO_2, dvm, LDO2BV1, 0, 5, ENA, 3, ENB, 3, VCC2, 6),
+-	TPS6586X_DVM(LDO_4, ldo4, LDO4V1, 0, 5, ENC, 3, END, 3, VCC1, 6),
+-	TPS6586X_DVM(SM_0, dvm, SM0V1, 0, 5, ENA, 1, ENB, 1, VCC1, 2),
+-	TPS6586X_DVM(SM_1, dvm, SM1V1, 0, 5, ENA, 0, ENB, 0, VCC1, 0),
++	TPS6586X_LDO(LDO_0, "vinldo01", ldo0, SUPPLYV1, 5, 3, ENC, 0, END, 0),
++	TPS6586X_LDO(LDO_3, "vinldo23", ldo, SUPPLYV4, 0, 3, ENC, 2, END, 2),
++	TPS6586X_LDO(LDO_5, NULL, ldo, SUPPLYV6, 0, 3, ENE, 6, ENE, 6),
++	TPS6586X_LDO(LDO_6, "vinldo678", ldo, SUPPLYV3, 0, 3, ENC, 4, END, 4),
++	TPS6586X_LDO(LDO_7, "vinldo678", ldo, SUPPLYV3, 3, 3, ENC, 5, END, 5),
++	TPS6586X_LDO(LDO_8, "vinldo678", ldo, SUPPLYV2, 5, 3, ENC, 6, END, 6),
++	TPS6586X_LDO(LDO_9, "vinldo9", ldo, SUPPLYV6, 3, 3, ENE, 7, ENE, 7),
++	TPS6586X_LDO(LDO_RTC, NULL, ldo, SUPPLYV4, 3, 3, V4, 7, V4, 7),
++	TPS6586X_LDO(LDO_1, "vinldo01", dvm, SUPPLYV1, 0, 5, ENC, 1, END, 1),
++	TPS6586X_LDO(SM_2, "sm2", sm2, SUPPLYV2, 0, 5, ENC, 7, END, 7),
++
++	TPS6586X_DVM(LDO_2, "vinldo23", dvm, LDO2BV1, 0, 5, ENA, 3,
++					ENB, 3, VCC2, 6),
++	TPS6586X_DVM(LDO_4, "vinldo4", ldo4, LDO4V1, 0, 5, ENC, 3,
++					END, 3, VCC1, 6),
++	TPS6586X_DVM(SM_0, "sm0", dvm, SM0V1, 0, 5, ENA, 1, ENB, 1, VCC1, 2),
++	TPS6586X_DVM(SM_1, "sm1", dvm, SM1V1, 0, 5, ENA, 0, ENB, 0, VCC1, 0),
+ };
+ 
+ /*
+@@ -351,7 +354,7 @@ static int __devinit tps6586x_regulator_probe(struct platform_device *pdev)
+ 	if (err)
+ 		return err;
+ 
+-	config.dev = &pdev->dev;
++	config.dev = pdev->dev.parent;
+ 	config.of_node = pdev->dev.of_node;
+ 	config.init_data = pdev->dev.platform_data;
+ 	config.driver_data = ri;
+-- 
+1.7.1.1
