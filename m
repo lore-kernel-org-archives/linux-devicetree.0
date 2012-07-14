@@ -1,15 +1,24 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: pinctrl-imx6q: add missed mux function for
- USBOTG_ID
-Date: Sat, 14 Jul 2012 21:59:41 +0200
-Message-ID: <CACRpkdbUqR2y0b4cvsDfOjDYdPt7XhUsEG5JJGDyyzFB2JFjYQ@mail.gmail.com>
-References: <1341565763-10074-1-git-send-email-b29396@freescale.com>
- <1341565763-10074-2-git-send-email-b29396@freescale.com>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree based
+ pinctrl driver
+Date: Sat, 14 Jul 2012 22:16:30 +0200
+Message-ID: <CACRpkdYUJ3v-DoVbK6Pc6Y833Hn_0KS9PtEpjUCnMr57zfH5Bw@mail.gmail.com>
+References: <20120615094938.GQ12766@atomide.com>
+ <4FDB6000.5080703@wwwdotorg.org>
+ <20120618055036.GU12766@atomide.com>
+ <20120619135600.GX12766@atomide.com>
+ <4FE39C86.5070901@wwwdotorg.org>
+ <20120622083955.GZ12766@atomide.com>
+ <4FE4AC40.8080400@wwwdotorg.org>
+ <20120626134319.GA3483@atomide.com>
+ <4FE9EBEC.9040208@wwwdotorg.org>
+ <20120627102851.GC3483@atomide.com>
+ <20120710091131.GQ1122@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1341565763-10074-2-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20120710091131.GQ1122-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,23 +29,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 6, 2012 at 11:09 AM, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+On Tue, Jul 10, 2012 at 11:11 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
 
-> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> The original pin registers table is derived from u-boot mainline,
-> but somehow it was found missing some mux functions for USBOTG_ID.
-> We added it at the bottom by following the exist pin function ids,
-> then it will not break the exist using of pin function id in dts file.
->
-> Reported-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> OK so no comments for a while. Here's the patch updated to leave out
+> the comments in the binding example.
 
-Applied.
+I reason like this:
 
-Thanks!
+- My fears is that the code gets hopeless to understand the mux, the
+ only way to understand that aspect of the system will be to read the DTS
+ and have the data sheet ready at hand.
+
+But:
+
+- Tony knows what he's doing and what is best for OMAP. And this gets
+ (hopefully) all that OMAP mux code out of arch/arm.
+
+- Surely it will be better to go through this subsystem if we're refactoring
+  it all again later, and all drivers can be transferred to the abstract
+  pinctrl API which is a big win in itself, bringing coherency to the
+  drivers/* at large.
+
+So applied it, so it can be evaluated in real operating environments.
+
+But if I don't see OMAP transferred to use this I'll simply delete it
+again. :-)
+
+Yours,
 Linus Walleij
