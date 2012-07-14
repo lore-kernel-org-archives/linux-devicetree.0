@@ -1,15 +1,13 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the
- i2c-embedded tree
-Date: Sat, 14 Jul 2012 23:34:54 +0200
-Message-ID: <CACRpkdboeF_G=sTPeSyuZ6KGLCmGSKx_NS=6Rim6HkR2f9=AAQ@mail.gmail.com>
-References: <20120710164130.f38e4d1673f925ddb13914c9@canb.auug.org.au>
- <20120712131231.GH2194@pengutronix.de>
+Subject: Re: [PATCH 05/11] gpio/gpio-omap.c: add a const qualifier
+Date: Sat, 14 Jul 2012 23:42:14 +0200
+Message-ID: <CACRpkdYXZ_--FG5sSFu0iLOz24uWF0i7D1Za-Az9peyHRvKJJA@mail.gmail.com>
+References: <50001a32.e50f320a.6348.fffff4bcSMTPIN_ADDED@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120712131231.GH2194-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <50001a32.e50f320a.6348.fffff4bcSMTPIN_ADDED-ATjtLOhZ0NVl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,33 +18,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Alessandro Rubini <rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?ISO-8859-1?Q?Uwe_Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2012 at 3:12 PM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+On Fri, Jul 13, 2012 at 2:32 PM,  <y@pengutronix.de> wrote:
 
-> Arnd, since you committed the patches, can you please comment? I'd
-> prefer to drop this DT conversion for now, otherwise we might have to
-> support this possibly rushed bindings forever? LinusW, what do you
-> think?
+> From: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> This prepares of_device_id.data becoming const. Without this change
+> the following warning would occur:
+>
+>         drivers/gpio/gpio-omap.c: In function 'omap_gpio_probe':
+>         drivers/gpio/gpio-omap.c:1060: warning: assignment discards quali=
+fiers from pointer target type
+>
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 
-Well I think I ACKed that from the point of view that it will work as
-expected with ux500 with these bindings. What is best from the I2C
-subsystem point of view is another question ...
-
-Overall I think we have this general problem with a lot of DT
-conversion happening right now: the tempo is set very high and
-all chip vendors want DT support RealQuickNowPreferrablyYesterday
-and that makes it hard for subsystem maintainers to hold back,
-and I also fear vendor-specific properties are overused for this
-reason.
-
-And about the perpetual nature of device tree bindings it
-appears to me that the modus operandi right now is to not
-regard any of these as written in stone until they are removed
-from the kernel tree. We have plenty of drivers patching
-trees and drivers in one for the moment.
+Pls run all OMAP-related patches by Kevin Hilman, I need his ACK on
+this and the other patch to move on.
 
 Yours,
 Linus Walleij
