@@ -1,46 +1,66 @@
-From: Gabor Juhos <juhosg@openwrt.org>
-Subject: Re: [PATCH] tty: of_serial: add no-loopback-test property
-Date: Sat, 14 Jul 2012 17:41:54 +0200
-Message-ID: <50019342.6080008@openwrt.org>
-References: <1342267580-3672-1-git-send-email-juhosg@openwrt.org> <20120714150101.1810c829@pyramind.ukuu.org.uk>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Mis?use of aliases
+Date: Sun, 15 Jul 2012 02:37:01 +1000
+Message-ID: <20120714163701.GI11326@truffala.fritz.box>
+References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
+ <1342218413-30116-2-git-send-email-jon-hunter@ti.com>
+ <5000D647.4090200@gmail.com> <50010402.3050502@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20120714150101.1810c829@pyramind.ukuu.org.uk>
-Sender: linux-serial-owner@vger.kernel.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50010402.3050502-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tarun Kanti DebBarma <tarun.kanti-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2012.07.14. 16:01 keltez=E9ssel, Alan Cox =EDrta:
-> On Sat, 14 Jul 2012 14:06:20 +0200
-> Gabor Juhos <juhosg@openwrt.org> wrote:
->=20
->> The loopback test mode is not implemented in all
->> NS16550 compatible UARTs. The 8250 driver uses the
->> UPF_SKIP_TEST flag to indicate this, however it is
->> not possible to set this flag via device-tree.
->>
->> Add a new 'no-loopback-test' property, and modify
->> the of_serial driver to set the UPF_SKIP_TEST flag
->> if the property is present.
->>
->> Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
->=20
-> Looks good to me but clashes with the sync of the termios changes, wh=
-ich
-> we urgently need to get in first.
->=20
-> Greg - I'll add this to my patch stack with the relevant changes so t=
-hat
-> it doesn't get messed up.
+On Fri, Jul 13, 2012 at 07:30:42PM -1000, Mitch Bradley wrote:
+> > I'm not sure this is really a good use of aliases. UARTs use aliases
+> > because it is important that the UART number to tty number is known and
+> > fixed.
+> 
+> This brings up an issue that I've been meaning to comment on.
+> 
+> The use of phandle-valued properties in the aliases node causes real OFW
+> implementations some amount of heartburn.  The Open Firmware standard
+> says that the properties in /aliases are string-valued.  That's
+> important, because aliases are shorthand for fragments of full device
+> specifiers (pathnames that can include arguments to nodes).  Phandles
+> can point to nodes, but can't be relative, and can't encode
+> per-node-component arguments.
 
-Thank you!
+Um, so, properties in /aliases should not have phandle values, flat
+tree or otherwise.  Has this been seen in the wild, or are you being
+misled by the fact that dtc's reference-to-phandle and
+reference-to-path syntax is very similar:
 
--Gabor
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	prop = <&fred>;
+Will generate a phandle valued property, but
+	prop = &fred;
+Will generate a string (path) valued property.
+
+> For binding a Linux unit number to a device node, I would prefer to
+> decorate the node with a property like "linux,unit#", instead of
+> breaking the standard semantics of /aliases.
+
+I don't see how using aliases for unit numbering (inherently) breaks
+the semantics of /aliases.  If phandle valued properties are being
+used that is wrong, but it's not necessary for the unit numbering
+anyway.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
