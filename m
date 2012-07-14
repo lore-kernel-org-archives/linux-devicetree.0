@@ -1,40 +1,46 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Gabor Juhos <juhosg@openwrt.org>
 Subject: Re: [PATCH] tty: of_serial: add no-loopback-test property
-Date: Sat, 14 Jul 2012 07:04:57 -0700
-Message-ID: <20120714140457.GA23878@kroah.com>
-References: <1342267580-3672-1-git-send-email-juhosg@openwrt.org>
- <20120714150101.1810c829@pyramind.ukuu.org.uk>
+Date: Sat, 14 Jul 2012 17:41:54 +0200
+Message-ID: <50019342.6080008@openwrt.org>
+References: <1342267580-3672-1-git-send-email-juhosg@openwrt.org> <20120714150101.1810c829@pyramind.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
 In-Reply-To: <20120714150101.1810c829@pyramind.ukuu.org.uk>
 Sender: linux-serial-owner@vger.kernel.org
 To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Gabor Juhos <juhosg@openwrt.org>, Grant Likely <grant.likely@secretlab.ca>, Alan Cox <alan@linux.intel.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 14, 2012 at 03:01:01PM +0100, Alan Cox wrote:
+2012.07.14. 16:01 keltez=E9ssel, Alan Cox =EDrta:
 > On Sat, 14 Jul 2012 14:06:20 +0200
 > Gabor Juhos <juhosg@openwrt.org> wrote:
-> 
-> > The loopback test mode is not implemented in all
-> > NS16550 compatible UARTs. The 8250 driver uses the
-> > UPF_SKIP_TEST flag to indicate this, however it is
-> > not possible to set this flag via device-tree.
-> > 
-> > Add a new 'no-loopback-test' property, and modify
-> > the of_serial driver to set the UPF_SKIP_TEST flag
-> > if the property is present.
-> > 
-> > Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
-> 
-> Looks good to me but clashes with the sync of the termios changes, which
+>=20
+>> The loopback test mode is not implemented in all
+>> NS16550 compatible UARTs. The 8250 driver uses the
+>> UPF_SKIP_TEST flag to indicate this, however it is
+>> not possible to set this flag via device-tree.
+>>
+>> Add a new 'no-loopback-test' property, and modify
+>> the of_serial driver to set the UPF_SKIP_TEST flag
+>> if the property is present.
+>>
+>> Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+>=20
+> Looks good to me but clashes with the sync of the termios changes, wh=
+ich
 > we urgently need to get in first.
-> 
-> Greg - I'll add this to my patch stack with the relevant changes so that
+>=20
+> Greg - I'll add this to my patch stack with the relevant changes so t=
+hat
 > it doesn't get messed up.
 
-Ok, thanks for doing that.
+Thank you!
 
-greg k-h
+-Gabor
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
