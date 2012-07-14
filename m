@@ -1,16 +1,15 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] OMAP: Define TCA6424 max number of possible IRQs
-Date: Sat, 14 Jul 2012 22:44:59 +0200
-Message-ID: <CACRpkdaPCf7eo5V3pHvVE=JFuZp=otXjvQ1US1bHXQ7D1QbDeQ@mail.gmail.com>
-References: <cover.1341925681.git.cmahapatra@ti.com>
- <f77496c24aa05320ad8cdc81759dd16d7bbb9d65.1341925681.git.cmahapatra@ti.com>
- <CACRpkdYZRzK4jTiQxra46KgSt8x1Vrq4GCFWyc62e303HVoZ+w@mail.gmail.com>
- <CAF0AtAs8euY79y-JmD8Bk4oX-8+gwPKsr_JJin+853EesrUTcg@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the
+ i2c-embedded tree
+Date: Sat, 14 Jul 2012 23:34:54 +0200
+Message-ID: <CACRpkdboeF_G=sTPeSyuZ6KGLCmGSKx_NS=6Rim6HkR2f9=AAQ@mail.gmail.com>
+References: <20120710164130.f38e4d1673f925ddb13914c9@canb.auug.org.au>
+ <20120712131231.GH2194@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAF0AtAs8euY79y-JmD8Bk4oX-8+gwPKsr_JJin+853EesrUTcg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20120712131231.GH2194-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,19 +20,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Mahapatra, Chandrabhanu" <cmahapatra-l0cyMroinI0@public.gmane.org>
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, leed.aguilar-l0cyMroinI0@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Alessandro Rubini <rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2012 at 3:00 PM, Mahapatra, Chandrabhanu
-<cmahapatra-l0cyMroinI0@public.gmane.org> wrote:
+On Thu, Jul 12, 2012 at 3:12 PM, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
 
-> OK, but if your taking this patch through GPIO tree the better if the 4th
-> patch is taken through it. TCA6424 fails if both the patches are not
-> present.
+> Arnd, since you committed the patches, can you please comment? I'd
+> prefer to drop this DT conversion for now, otherwise we might have to
+> support this possibly rushed bindings forever? LinusW, what do you
+> think?
 
-If the situation is such they should be squashed into one since the
-point after the first before the second patch is not bisectable.
+Well I think I ACKed that from the point of view that it will work as
+expected with ux500 with these bindings. What is best from the I2C
+subsystem point of view is another question ...
+
+Overall I think we have this general problem with a lot of DT
+conversion happening right now: the tempo is set very high and
+all chip vendors want DT support RealQuickNowPreferrablyYesterday
+and that makes it hard for subsystem maintainers to hold back,
+and I also fear vendor-specific properties are overused for this
+reason.
+
+And about the perpetual nature of device tree bindings it
+appears to me that the modus operandi right now is to not
+regard any of these as written in stone until they are removed
+from the kernel tree. We have plenty of drivers patching
+trees and drivers in one for the moment.
 
 Yours,
 Linus Walleij
