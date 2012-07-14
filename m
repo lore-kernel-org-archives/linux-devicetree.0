@@ -1,17 +1,15 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
-Date: Sat, 14 Jul 2012 11:42:58 -0600 (MDT)
-Message-ID: <alpine.DEB.2.00.1207141138160.3876@utopia.booyaka.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
- <1342218413-30116-2-git-send-email-jon-hunter@ti.com>
- <5000D647.4090200@gmail.com>
- <alpine.DEB.2.00.1207140048210.3876@utopia.booyaka.com>
- <50017BB1.8010702@gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 00/11] make struct of_device_id.data const
+Date: Sat, 14 Jul 2012 20:31:55 +0200
+Message-ID: <20120714183155.GP592@pengutronix.de>
+References: <5000175E.4070702@gmail.com>
+ <CACxGe6tXvz+rt2yrHHaD=j94-=JQEh06sHW0FWGiHb2=9GS2pA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50017BB1.8010702-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6tXvz+rt2yrHHaD=j94-=JQEh06sHW0FWGiHb2=9GS2pA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,44 +20,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tarun Kanti DebBarma <tarun.kanti-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello Grant,
 
-thanks for your response.
+On Fri, Jul 13, 2012 at 01:36:59PM -0600, Grant Likely wrote:
+> On Fri, Jul 13, 2012 at 6:41 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+> > On 07/13/2012 07:32 AM, y@pengutronix.de wrote:
+> >> this series' goal is to make struct of_device_id.data const.
+> >> Conceptually a driver must not modify the data contained there so maki=
+ng
+> >> it const is the right thing.
+> >>
+> >> This change might introduce warnings because drivers don't use const to
+> >> access the data pointed to by of_device_id.data. In most cases the fix
+> >> is to add some consts.
+> >>
+> >> This series (apart from adding this const in patch 10) fixes all drive=
+rs
+> >> covered by all arm defconfigs (based on v3.5-rc6).
+> >>
+> >
+> > What about other arches?
+> =
 
-On Sat, 14 Jul 2012, Rob Herring wrote:
+> This whole series is of questionable value to me.  While I agree that
+> .data should be const, I don't think changing it has is measurably
+> better than what we have now.  Particularly when the series isn't
+> complete for all users.  And "building all defconfigs" is not the
+> right way to look for affected users.
+As it's not really bad if a user isn't fixed (it only introduces a
+compiler warning) I think not being 100% sure to have fixed all of them
+is OK. I plan to check the defconfigs and an allyes build on powerpc and
+look over the patch that Arnd sent. IMHO this is enough to go on.
 
-> On 07/14/2012 01:56 AM, Paul Walmsley wrote:
-> > On Fri, 13 Jul 2012, Rob Herring wrote:
-> > 
-> >> I'm not sure this is really a good use of aliases. UARTs use aliases 
-> >> because it is important that the UART number to tty number is known and 
-> >> fixed. IIUC, as an example you are picking timer1 because it has 
-> >> properties X, Y and Z. If so, then you should describe those h/w 
-> >> properties within the timer nodes so you can pick which timer to use 
-> >> based on it's h/w properties.
-> > 
-> > Some GPTIMER blocks have input and output signals that can be routed to 
-> > external package balls.  So it's possible that some application may need 
-> > to request a specific timer ID, since that timer would be connected to a 
-> > specific off-chip device.
-> 
-> Yes, I understand that. So you
+Best regards
+Uwe
 
-(just to clarify, these are Jon's patches)
+-- =
 
-> should be describing which ones have i/o and what they are connected to. 
-
-Right, agreed.
-
-> The PWM binding is probably a starting point.
-
-My point, perhaps unclear, was about the aliases.  Do you have a different 
-approach in mind that applications should use, other than requesting a 
-specific timer by ID?
-
-
-- Paul
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
