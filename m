@@ -1,44 +1,45 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
-Date: Sat, 14 Jul 2012 00:56:16 -0600 (MDT)
-Message-ID: <alpine.DEB.2.00.1207140048210.3876@utopia.booyaka.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
- <1342218413-30116-2-git-send-email-jon-hunter@ti.com>
- <5000D647.4090200@gmail.com>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] I2C Ocores updates
+Date: Sat, 14 Jul 2012 12:45:45 +0200
+Message-ID: <20120714104545.GA29529@pengutronix.de>
+References: <1342187065-1651-1-git-send-email-jayachandranc@netlogicmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5000D647.4090200-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tarun Kanti DebBarma <tarun.kanti-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1342187065-1651-1-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org, richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On Fri, 13 Jul 2012, Rob Herring wrote:
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I'm not sure this is really a good use of aliases. UARTs use aliases 
-> because it is important that the UART number to tty number is known and 
-> fixed. IIUC, as an example you are picking timer1 because it has 
-> properties X, Y and Z. If so, then you should describe those h/w 
-> properties within the timer nodes so you can pick which timer to use 
-> based on it's h/w properties.
+On Fri, Jul 13, 2012 at 07:14:21PM +0530, Jayachandran C wrote:
+> Updated patchset to use u32 for reg_shift and reg_io_width, both
+> for ocores_i2c_platform_data and for ocores_i2c.
 
-Some GPTIMER blocks have input and output signals that can be routed to 
-external package balls.  So it's possible that some application may need 
-to request a specific timer ID, since that timer would be connected to a 
-specific off-chip device.
+Thanks, applied to next.
 
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
-- Paul
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlABTdkACgkQD27XaX1/VRueIgCfVydq4i4RuORBgUJ8a+6RcVsB
+ojUAnj0ANiqJyskWMOyPHntY7yFo77CC
+=Dc7w
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
