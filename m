@@ -1,44 +1,40 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
-Date: Sat, 14 Jul 2012 09:01:21 -0500
-Message-ID: <50017BB1.8010702@gmail.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-2-git-send-email-jon-hunter@ti.com> <5000D647.4090200@gmail.com> <alpine.DEB.2.00.1207140048210.3876@utopia.booyaka.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] tty: of_serial: add no-loopback-test property
+Date: Sat, 14 Jul 2012 07:04:57 -0700
+Message-ID: <20120714140457.GA23878@kroah.com>
+References: <1342267580-3672-1-git-send-email-juhosg@openwrt.org>
+ <20120714150101.1810c829@pyramind.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.00.1207140048210.3876@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Benoit Cousson <b-cousson@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120714150101.1810c829@pyramind.ukuu.org.uk>
+Sender: linux-serial-owner@vger.kernel.org
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: Gabor Juhos <juhosg@openwrt.org>, Grant Likely <grant.likely@secretlab.ca>, Alan Cox <alan@linux.intel.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2012 01:56 AM, Paul Walmsley wrote:
-> Hi
+On Sat, Jul 14, 2012 at 03:01:01PM +0100, Alan Cox wrote:
+> On Sat, 14 Jul 2012 14:06:20 +0200
+> Gabor Juhos <juhosg@openwrt.org> wrote:
 > 
-> On Fri, 13 Jul 2012, Rob Herring wrote:
+> > The loopback test mode is not implemented in all
+> > NS16550 compatible UARTs. The 8250 driver uses the
+> > UPF_SKIP_TEST flag to indicate this, however it is
+> > not possible to set this flag via device-tree.
+> > 
+> > Add a new 'no-loopback-test' property, and modify
+> > the of_serial driver to set the UPF_SKIP_TEST flag
+> > if the property is present.
+> > 
+> > Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
 > 
->> I'm not sure this is really a good use of aliases. UARTs use aliases 
->> because it is important that the UART number to tty number is known and 
->> fixed. IIUC, as an example you are picking timer1 because it has 
->> properties X, Y and Z. If so, then you should describe those h/w 
->> properties within the timer nodes so you can pick which timer to use 
->> based on it's h/w properties.
+> Looks good to me but clashes with the sync of the termios changes, which
+> we urgently need to get in first.
 > 
-> Some GPTIMER blocks have input and output signals that can be routed to 
-> external package balls.  So it's possible that some application may need 
-> to request a specific timer ID, since that timer would be connected to a 
-> specific off-chip device.
+> Greg - I'll add this to my patch stack with the relevant changes so that
+> it doesn't get messed up.
 
-Yes, I understand that. So you should be describing which ones have i/o
-and what they are connected to. The PWM binding is probably a starting
-point.
+Ok, thanks for doing that.
 
-Rob
-
-> 
-> 
-> - Paul
-> 
-
-
+greg k-h
