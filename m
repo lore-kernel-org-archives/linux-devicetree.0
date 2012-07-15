@@ -1,88 +1,94 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Mis?use of aliases
-Date: Sun, 15 Jul 2012 17:39:19 +1000
-Message-ID: <20120715073919.GJ11326@truffala.fritz.box>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
- <1342218413-30116-2-git-send-email-jon-hunter@ti.com>
- <5000D647.4090200@gmail.com> <50010402.3050502@firmworks.com>
- <20120714163701.GI11326@truffala.fritz.box>
- <5001A745.3000509@firmworks.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v5 6/6] spi: s3c64xx: add device tree support
+Date: Sun, 15 Jul 2012 19:39:50 +0900
+Message-ID: <127d01cd6276$295b3a80$7c11af80$%kim@samsung.com>
+References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
+ <1342021265-11212-7-git-send-email-thomas.abraham@linaro.org>
+ <4FFF51EE.4080609@samsung.com>
+ <CAJuYYwQBL6OGJM41e9kD2ATUj3g9NTs-OC+G_gMKMScn3ms=hw@mail.gmail.com>
+ <117c01cd60ea$90f76ac0$b2e64040$%kim@samsung.com>
+ <CAJuYYwRiR8M5m9rDE6dzMawuSLO03f7mydoks+zU2ByTmbtMrA@mail.gmail.com>
+ <118901cd60fd$66c26260$34472720$%kim@samsung.com>
+ <CAJuYYwQ9AyVPiZzV4-ncYF-Z1JqwHx-xKGHJXGhugc_w+KUHZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5001A745.3000509-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tarun Kanti DebBarma <tarun.kanti-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwQ9AyVPiZzV4-ncYF-Z1JqwHx-xKGHJXGhugc_w+KUHZQ@mail.gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>
+Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 14, 2012 at 07:07:17AM -1000, Mitch Bradley wrote:
-> On 7/14/2012 6:37 AM, David Gibson wrote:
-> > On Fri, Jul 13, 2012 at 07:30:42PM -1000, Mitch Bradley wrote:
-> >>> I'm not sure this is really a good use of aliases. UARTs use aliases
-> >>> because it is important that the UART number to tty number is known and
-> >>> fixed.
-> >>
-> >> This brings up an issue that I've been meaning to comment on.
-> >>
-> >> The use of phandle-valued properties in the aliases node causes real OFW
-> >> implementations some amount of heartburn.  The Open Firmware standard
-> >> says that the properties in /aliases are string-valued.  That's
-> >> important, because aliases are shorthand for fragments of full device
-> >> specifiers (pathnames that can include arguments to nodes).  Phandles
-> >> can point to nodes, but can't be relative, and can't encode
-> >> per-node-component arguments.
-> > 
-> > Um, so, properties in /aliases should not have phandle values, flat
-> > tree or otherwise.  Has this been seen in the wild, or are you being
-> > misled by the fact that dtc's reference-to-phandle and
-> > reference-to-path syntax is very similar:
+Thomas Abraham wrote:
 > 
-> Yes, I was indeed being misled.  Thanks for the clarification.  The
-> "&fred" syntax is present in the .dts files that I have looked at.
-
-Right, it's all about the context.  &label is always a reference to
-another node, but in cell context < ... > that's expanded as a
-phandle, in bare context it's expanded as a path.
-
-> > 	prop = <&fred>;
-> > Will generate a phandle valued property, but
-> > 	prop = &fred;
-> > Will generate a string (path) valued property.
-> > 
-> >> For binding a Linux unit number to a device node, I would prefer to
-> >> decorate the node with a property like "linux,unit#", instead of
-> >> breaking the standard semantics of /aliases.
-> > 
-> > I don't see how using aliases for unit numbering (inherently) breaks
-> > the semantics of /aliases.  If phandle valued properties are being
-> > used that is wrong, but it's not necessary for the unit numbering
-> > anyway.
+> On 13 July 2012 19:12, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> > Thomas Abraham wrote:
+> >>
+> >> On 13 July 2012 16:58, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> >> > Thomas Abraham wrote:
+> >> >>
+> >> >> On 13 July 2012 04:08, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> >> >> > Thomas, the DMACH_DT_PROP is available only on pl330 now. So seems
+> >> occur
+> >> >> > following build error with s3c6400_defconfig.
+> >> >> >
+> >> >> > drivers/spi/spi-s3c64xx.c: In function 's3c64xx_spi_get_dmares':
+> >> >> > drivers/spi/spi-s3c64xx.c:1098: error: 'DMACH_DT_PROP' undeclared
+> >> (first
+> >> >> use
+> >> >> > in this function)
+> >> >> > drivers/spi/spi-s3c64xx.c:1098: error: (Each undeclared identifier
+> is
+> >> >> > reported only once
+> >> >> > drivers/spi/spi-s3c64xx.c:1098: error: for each function it
+> appears
+> >> in.)
+> >> >> > make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
+> >> >> > make[2]: *** [drivers/spi] Error 2
+> >> >> >
+> >> >>
+> >> >> Dear Mr. Kim,
+> >> >>
+> >> >> Thanks for considering these patches to be merged via your tree. For
+> >> >> the build break you mentioned above, there was a patch submitted
+> some
+> >> >> time back to handle this. The link to that patch is:
+> >> >> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-
+> >> >> June/102627.html.
+> >> >> Could you please apply this patch also to your tree.
+> >> >>
+> >> > Sure, it looks good to me, will apply that then this series will be
+> >> rebased
+> >> > on top of that.
+> >>
+> >> There are six more patches that enable spi device tree support for
+> >> Exynos4 and Exynos5 platforms. Could you consider to apply those
+> >> patches as well. The link to those patches is:
+> >> http://www.mail-archive.com/linux-samsung-
+> >> soc@vger.kernel.org/msg10851.html.
+> >>
+> > Yeah, I remember, but I think some patches is needed to re-work as per
+> > comments...?
 > 
-> I agree, the use of string-valued /aliases is not a semantic problem.
-> That said, I still think that decorating individual nodes is a better
-> approach, for locality reasons.  But, now that my misunderstanding has
-> been cleared up, it's a mild preference instead of "heartburn".
+> I checked again for any pending comments on v2 version. There are no
+> pending comments for the v2 version of this patch series. Thanks.
 
-So, I think aliases was suggested for this sort of numbering precisely
-because it _isn't_ local.  Particularly when numbering similar devices
-across unrelated busses, the ordering more or less has to be a global
-platform convention, and may not be derived from - or even contradict
-- local numbering conventions from individual busses or components.
+OK, I checked v2 series you mentioned. Looks OK to me and applied into
+next/dt-samsung because it is related in supporting dt.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Note, I applied all of them into same dt branch, the fist one 'fix the
+incorrect hierarchy of spi controller bus clock for exynos4' can be sent to
+upstream via fixes now though. And I changed the clock name for
+exynos4_clk_mdout_spix to 'mdout_spi' for consensus when I applied.
+
+If any problems, please let me know.
+
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
