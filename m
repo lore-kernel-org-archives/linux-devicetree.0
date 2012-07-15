@@ -1,94 +1,104 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v5 6/6] spi: s3c64xx: add device tree support
-Date: Sun, 15 Jul 2012 19:39:50 +0900
-Message-ID: <127d01cd6276$295b3a80$7c11af80$%kim@samsung.com>
-References: <1342021265-11212-1-git-send-email-thomas.abraham@linaro.org>
- <1342021265-11212-7-git-send-email-thomas.abraham@linaro.org>
- <4FFF51EE.4080609@samsung.com>
- <CAJuYYwQBL6OGJM41e9kD2ATUj3g9NTs-OC+G_gMKMScn3ms=hw@mail.gmail.com>
- <117c01cd60ea$90f76ac0$b2e64040$%kim@samsung.com>
- <CAJuYYwRiR8M5m9rDE6dzMawuSLO03f7mydoks+zU2ByTmbtMrA@mail.gmail.com>
- <118901cd60fd$66c26260$34472720$%kim@samsung.com>
- <CAJuYYwQ9AyVPiZzV4-ncYF-Z1JqwHx-xKGHJXGhugc_w+KUHZQ@mail.gmail.com>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: [PATCH 0/8] ARM: support for Moschip MCS814x SoCs
+Date: Sun, 15 Jul 2012 16:49:06 +0200
+Message-ID: <1342363754-30808-1-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwQ9AyVPiZzV4-ncYF-Z1JqwHx-xKGHJXGhugc_w+KUHZQ@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thomas Abraham' <thomas.abraham@linaro.org>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: olof@lixom.net, devicetree-discuss@lists.ozlabs.org, Florian Fainelli <florian@openwrt.org>, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-Thomas Abraham wrote:
-> 
-> On 13 July 2012 19:12, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> > Thomas Abraham wrote:
-> >>
-> >> On 13 July 2012 16:58, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> >> > Thomas Abraham wrote:
-> >> >>
-> >> >> On 13 July 2012 04:08, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> >> >> > Thomas, the DMACH_DT_PROP is available only on pl330 now. So seems
-> >> occur
-> >> >> > following build error with s3c6400_defconfig.
-> >> >> >
-> >> >> > drivers/spi/spi-s3c64xx.c: In function 's3c64xx_spi_get_dmares':
-> >> >> > drivers/spi/spi-s3c64xx.c:1098: error: 'DMACH_DT_PROP' undeclared
-> >> (first
-> >> >> use
-> >> >> > in this function)
-> >> >> > drivers/spi/spi-s3c64xx.c:1098: error: (Each undeclared identifier
-> is
-> >> >> > reported only once
-> >> >> > drivers/spi/spi-s3c64xx.c:1098: error: for each function it
-> appears
-> >> in.)
-> >> >> > make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
-> >> >> > make[2]: *** [drivers/spi] Error 2
-> >> >> >
-> >> >>
-> >> >> Dear Mr. Kim,
-> >> >>
-> >> >> Thanks for considering these patches to be merged via your tree. For
-> >> >> the build break you mentioned above, there was a patch submitted
-> some
-> >> >> time back to handle this. The link to that patch is:
-> >> >> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-
-> >> >> June/102627.html.
-> >> >> Could you please apply this patch also to your tree.
-> >> >>
-> >> > Sure, it looks good to me, will apply that then this series will be
-> >> rebased
-> >> > on top of that.
-> >>
-> >> There are six more patches that enable spi device tree support for
-> >> Exynos4 and Exynos5 platforms. Could you consider to apply those
-> >> patches as well. The link to those patches is:
-> >> http://www.mail-archive.com/linux-samsung-
-> >> soc@vger.kernel.org/msg10851.html.
-> >>
-> > Yeah, I remember, but I think some patches is needed to re-work as per
-> > comments...?
-> 
-> I checked again for any pending comments on v2 version. There are no
-> pending comments for the v2 version of this patch series. Thanks.
+Hi all,
 
-OK, I checked v2 series you mentioned. Looks OK to me and applied into
-next/dt-samsung because it is related in supporting dt.
+This patchset adds basic support for Mocship MCS814x, and in particular
+MCS8140, and allows one booting to user space. Two off-the-shelf boards
+are support: Tigal/Robotech RBT-832 and Devolo dLAN USB Extender.
 
-Note, I applied all of them into same dt branch, the fist one 'fix the
-incorrect hierarchy of spi controller bus clock for exynos4' can be sent to
-upstream via fixes now though. And I changed the clock name for
-exynos4_clk_mdout_spix to 'mdout_spi' for consensus when I applied.
+Support for other on-board peripherals will obviously be contributed later
+once the basic SoC support has been accepted.
 
-If any problems, please let me know.
+Florian Fainelli (8):
+  ARM: support for Moschip MCS814x SoCs
+  ARM: MCS814x: add Device Tree based MCS8140 board support
+  ARM: MCS814x: add Device Tree bindings documentation
+  ARM: MCS814X: add DTS file for Tigal/Robotech RBT-832
+  ARM: MCS814x: add DTS file for Devolo dLAN USB Extender
+  ARM: MCS814x: provide a sample defconfig file
+  ARM: MSC814X: add Kconfig and Makefile to arch/arm
+  ARM: MSC814x: add MAINTAINERS entry
 
-Thanks.
+ .../bindings/arm/mcs814x/mcs814x-intc.txt          |   18 +
+ .../bindings/arm/mcs814x/mcs814x-pci.txt           |   16 +
+ .../bindings/arm/mcs814x/mcs814x-timer.txt         |   16 +
+ .../devicetree/bindings/arm/mcs814x/mcs814x.txt    |   13 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ MAINTAINERS                                        |    6 +
+ arch/arm/Kconfig                                   |   28 ++
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/dlan-usb-extender.dts            |   68 +++
+ arch/arm/boot/dts/mcs8140.dtsi                     |  207 +++++++++
+ arch/arm/boot/dts/rbt-832.dts                      |   83 ++++
+ arch/arm/configs/mcs814x_defconfig                 |  174 ++++++++
+ arch/arm/mach-mcs814x/Kconfig                      |   29 ++
+ arch/arm/mach-mcs814x/Makefile                     |    6 +
+ arch/arm/mach-mcs814x/Makefile.boot                |    6 +
+ arch/arm/mach-mcs814x/board-mcs8140-dt.c           |   46 ++
+ arch/arm/mach-mcs814x/clock.c                      |  271 ++++++++++++
+ arch/arm/mach-mcs814x/common.c                     |   97 +++++
+ arch/arm/mach-mcs814x/common.h                     |   15 +
+ arch/arm/mach-mcs814x/include/mach/cpu.h           |   16 +
+ arch/arm/mach-mcs814x/include/mach/debug-macro.S   |   11 +
+ arch/arm/mach-mcs814x/include/mach/entry-macro.S   |   29 ++
+ arch/arm/mach-mcs814x/include/mach/gpio.h          |    1 +
+ arch/arm/mach-mcs814x/include/mach/hardware.h      |   16 +
+ arch/arm/mach-mcs814x/include/mach/irqs.h          |   22 +
+ arch/arm/mach-mcs814x/include/mach/mcs814x.h       |   53 +++
+ arch/arm/mach-mcs814x/include/mach/memory.h        |   16 +
+ arch/arm/mach-mcs814x/include/mach/timex.h         |   18 +
+ arch/arm/mach-mcs814x/include/mach/uncompress.h    |   41 ++
+ arch/arm/mach-mcs814x/irq.c                        |   69 +++
+ arch/arm/mach-mcs814x/pci.c                        |  446 ++++++++++++++++++++
+ arch/arm/mach-mcs814x/timer.c                      |  133 ++++++
+ 32 files changed, 1972 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mcs814x/mcs814x-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mcs814x/mcs814x-pci.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mcs814x/mcs814x-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mcs814x/mcs814x.txt
+ create mode 100644 arch/arm/boot/dts/dlan-usb-extender.dts
+ create mode 100644 arch/arm/boot/dts/mcs8140.dtsi
+ create mode 100644 arch/arm/boot/dts/rbt-832.dts
+ create mode 100644 arch/arm/configs/mcs814x_defconfig
+ create mode 100644 arch/arm/mach-mcs814x/Kconfig
+ create mode 100644 arch/arm/mach-mcs814x/Makefile
+ create mode 100644 arch/arm/mach-mcs814x/Makefile.boot
+ create mode 100644 arch/arm/mach-mcs814x/board-mcs8140-dt.c
+ create mode 100644 arch/arm/mach-mcs814x/clock.c
+ create mode 100644 arch/arm/mach-mcs814x/common.c
+ create mode 100644 arch/arm/mach-mcs814x/common.h
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/cpu.h
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/debug-macro.S
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/entry-macro.S
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/gpio.h
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/hardware.h
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/irqs.h
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/mcs814x.h
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/memory.h
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/timex.h
+ create mode 100644 arch/arm/mach-mcs814x/include/mach/uncompress.h
+ create mode 100644 arch/arm/mach-mcs814x/irq.c
+ create mode 100644 arch/arm/mach-mcs814x/pci.c
+ create mode 100644 arch/arm/mach-mcs814x/timer.c
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+-- 
+1.7.10.4
