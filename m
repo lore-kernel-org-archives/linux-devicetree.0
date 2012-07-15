@@ -1,56 +1,77 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/2] regulator: tps6586x: add support for input supply
-Date: Sun, 15 Jul 2012 22:21:15 +0100
-Message-ID: <20120715212114.GI4041@opensource.wolfsonmicro.com>
-References: <1342187432-18668-1-git-send-email-ldewangan@nvidia.com>
- <1342187432-18668-3-git-send-email-ldewangan@nvidia.com>
- <20120713142229.GM4215@opensource.wolfsonmicro.com>
- <500057A0.1050108@nvidia.com>
+From: Rob Landley <rob@landley.net>
+Subject: Re: [RESEND PATCH 1/1] clk: add DT support for clock gating control
+Date: Sun, 15 Jul 2012 15:45:42 -0500
+Message-ID: <50032BF6.9000704@landley.net>
+References: <4FFE7979.4060000@googlemail.com> <4FFEBF8A.1020700@gmail.com> <4FFECC4E.4070001@googlemail.com> <4FFF93DC.30103@gmail.com> <4FFFED7C.9050406@googlemail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4LFBTxd4L5NLO6ly"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <500057A0.1050108@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "ccross@android.com" <ccross@android.com>, "olof@lixom.net" <olof@lixom.net>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "lrg@ti.com" <lrg@ti.com>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4FFFED7C.9050406@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarh <sebastian.hesselbarth@googlemail.com>
+Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mike Turquette <mturquette@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
+I believe clock anything is Thomas Gleixner, just making sure he's seen
+it...
 
---4LFBTxd4L5NLO6ly
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Rob
 
-On Fri, Jul 13, 2012 at 10:45:12PM +0530, Laxman Dewangan wrote:
+On 07/13/2012 04:42 AM, Sebastian Hesselbarh wrote:
+> On 07/13/2012 05:19 AM, Rob Herring wrote:
+>> What's implemented in Linux should not define the binding. The binding
+>> should describe the hardware.
+>> [...]
+>> True, but not your problem to implement. A binding doesn't necessarily
+>> mean there is a full Linux implementation. We just don't want to create
+>> something only to find others need something completely different.
+> 
+> Ok, what about a DT describing the following for a simple register-based
+> clock gating controller and the corresponding gated-clock independent of
+> the controller. I am sure there are a bunch of SoCs out there that
+> control their clock gates by writing some bits to a register. If that
+> DT description matches your expectations, I ll prepare patches with
+> documentation and implementation for common clock framework.
+> 
+> Sebastian
+> 
+> -- 
+>  /* Simple clock gating controller based on bitmasks and register */
+> cgc: clock-gating-control@f1000000 {
+>   compatible = "clock-gating-control-register";
+>   reg = <0xf1000000 0x4>;
+> 
+>   /* Clock gating control with one bit at bit position 0
+>      enable with (1<<0), disable with (0<<0) */
+>   cgctrl_usb0: cgc_usb0 {
+>     clock-gating-control,shift = <0>;
+>     clock-gating-control,mask = <1>;
+>     clock-gating-control,enable = <1>;
+>     clock-gating-control,disable = <0>;
+>   };
+> 
+>   /* Clock gating control with two bits at bit position 1-2
+>      enable with (2<<1), disable with (0<<1) */
+>   cgctrl_sata: cgc_sata {
+>     clock-gating-control,shift = <1>;
+>     clock-gating-control,mask = <3>;
+>     clock-gating-control,enable = <2>;
+>     clock-gating-control,disable = <0>;
+>   };
+> };
+> 
+> /* Generic clock gate description that can be used with
+>    any clock gating controller */
+> cg_usb0: clockgate@0 {
+>   compatible = "gated-clock";
+>   #clock-cells = <0>;
+>   clocks = <&osc>;
+>   clock-gate-control = <&cgctrl_usb0>;
+> };
+> 
 
-> I was thinking that 1/2 should also go through your tree to avoid
-> any functionality break on existing platform who are using this
-> regulator.
 
-I'd be happy to do that if the ARM people are happy with it; just let me
-know and resend the patch if you want me to apply it.
-
---4LFBTxd4L5NLO6ly
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQAzQ+AAoJEBus8iNuMP3d0WAP/A5PwYChGg8POUqZiQEyxdGC
-5uyLG81AvkS2vz5WNVktM/fM55mudtHScY09kpa1pz1fn3won7qZFYnm5C9VHQEF
-GlLktGRGc5jG7rFivlEbdrUDaB7qDhBIHTD45b1hkUTPxm26/cZEDXXNqx4TKSe1
-32ELootKEnQdvrmRSJt9/Wha5wLHMk00jgRWXAWivYvuY33bk7wxyrQGoNkxvHT3
-rkdDYAmu77370+s2u6lzPs7+gMRwaFBZCc9o1T3FYqZSxp/RBDc3vRVXKp5MtePh
-KiIJk1Xt1XEnEHY6nE8xo68B7rMeRSzo3xu3AT0vAGGP7xcn5Van2RJaQXEuWkI+
-xSaCrQYZBo9jIvFVhS+5TV8bomykQKrVEceeKqOn9MHJZAkjm9B5GAsJ7rZnj4vX
-Uw+/U4HxO6DP3o/d2V2j8jjCg8GpTe7iUr0ZMPLNSGQxDfJrpfmDMHz6lFjdSY6+
-ZRfPbqAa6n6eTj8HCqifkhVXET+yW9LBmRT2i2kD7nUa7okZBA9wFw2Xax8MZLqP
-aUaReVNmrauotO6aysNGDVKjGaCl/pGTtIo5PUtzZ6IzSmIZKGiBh89n7ZwiI0v2
-dLpC6b6YVqtFgurmBssaPkSjkO6Vr9SL1kpF1cCLaIXFyWcoG7iTMD/ql+gP9l0/
-0zFMJHAGRdycz77C1jO3
-=7Z0V
------END PGP SIGNATURE-----
-
---4LFBTxd4L5NLO6ly--
+-- 
+GNU/Linux isn't: Linux=GPLv2, GNU=GPLv3+, they can't share code.
+Either it's "mere aggregation", or a license violation.  Pick one.
