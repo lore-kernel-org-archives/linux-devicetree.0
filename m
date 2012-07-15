@@ -1,13 +1,13 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] clk: fix error path inside clk_get()
-Date: Sun, 15 Jul 2012 14:03:12 -0500
-Message-ID: <500313F0.3060605@gmail.com>
-References: <1342375269-6410-1-git-send-email-blogic@openwrt.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 0/8] ARM: support for Moschip MCS814x SoCs
+Date: Sun, 15 Jul 2012 19:59:19 +0000
+Message-ID: <201207151959.19620.arnd@arndb.de>
+References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342375269-6410-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <1342363754-30808-1-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,45 +18,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2012 01:01 PM, John Crispin wrote:
-> clk_get() calls of_clk_get_by_name() which can return a ERR_PTR. The error path
-> currently only checks for !NULL. We need to use !IS_ERR_OR_NULL instead.
+On Sunday 15 July 2012, Florian Fainelli wrote:
+> This patchset adds basic support for Mocship MCS814x, and in particular
+> MCS8140, and allows one booting to user space. Two off-the-shelf boards
+> are support: Tigal/Robotech RBT-832 and Devolo dLAN USB Extender.
 > 
-> This bug was introduced by 766e6a4ec602d0c107553b91b3434fe9c03474f4
-> 
-> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
-> I am seeing this bug on linux-next from 13.07.2012
+> Support for other on-board peripherals will obviously be contributed later
+> once the basic SoC support has been accepted.
 
-Already got a fix for this from Shawn Guo earlier today.
+Hi Florian,
 
-> 
->  drivers/clk/clkdev.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-> index 20649b3..7100d5c 100644
-> --- a/drivers/clk/clkdev.c
-> +++ b/drivers/clk/clkdev.c
-> @@ -157,7 +157,7 @@ struct clk *clk_get(struct device *dev, const char *con_id)
->  
->  	if (dev) {
->  		clk = of_clk_get_by_name(dev->of_node, con_id);
-> -		if (clk && __clk_get(clk))
-> +		if (!IS_ERR_OR_NULL(clk) && __clk_get(clk))
+This looks quite nice at first sight, but I have to say that your timing
+is rather unfortunate. We're getting rather close to the 3.6 merge window,
+so there is not much time to review the platform thoroughly before that
+and I'd feel more comfortable about putting it into 3.7. I'll let others
+weigh in, too. At least there is no risk of regressions for a new platform
+getting added, so if other people think we should take it for 3.5, I might
+get convinced.
 
-IS_ERR() is correct here.
+I'll follow up with more detailed feedback on the individual patches.
 
-Rob
-
->  			return clk;
->  	}
->  
-> 
+	Arnd
