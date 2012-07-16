@@ -1,84 +1,55 @@
-From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] pinctrl: pinctrl-imx: add support for set bits
- for general purpose registers
-Date: Mon, 16 Jul 2012 16:17:04 +0800
-Message-ID: <20120716081703.GH21635@b20223-02.ap.freescale.net>
-References: <1342084080-3145-1-git-send-email-b29396@freescale.com>
- <CACRpkdbHtgKLA3JJxc4VY35zSpJFvk15u62Z3aBCqERoeQ10CA@mail.gmail.com>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: Re: [PATCH 0/8] ARM: support for Moschip MCS814x SoCs
+Date: Mon, 16 Jul 2012 10:16:10 +0200
+Message-ID: <6935999.5Q12VaaN3A@flexo>
+References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
+ <201207151959.19620.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbHtgKLA3JJxc4VY35zSpJFvk15u62Z3aBCqERoeQ10CA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201207151959.19620.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: olof@lixom.net, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 14, 2012 at 10:43:03PM +0200, Linus Walleij wrote:
-> On Thu, Jul 12, 2012 at 11:07 AM, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> Hm, hm. This makes be ever more hesitant to have this in pinctrl.
-> 
-> Remeber again that nothing stops you from remapping the same register
-> range in another driver.
-> 
-> > +#define IMX6Q_GPR0_CLOCK_8_MUX_SEL_MASK                (0x3 << 30)
-> 
-> This belongs in drivers/clk/*
-> 
-> Why funnel these register writes through pinctrl? Just remap that address
-> offset in the clk driver.
-> 
-> > +#define IMX6Q_GPR0_DMAREQ_MUX_SEL7_MASK                BIT(7)
-> 
-> This belongs in drivers/dma/*
-> 
-> Same comments.
-> 
-> > +#define IMX6Q_GPR1_PCIE_REQ_MASK               (0x3 << 30)
-> 
-> Looks like it belongs in some PCI driver or glue layer.
-> 
-> > +#define IMX6Q_GPR1_MIPI_COLOR_SW               BIT(25)
-> > +#define IMX6Q_GPR1_DPI_OFF                     BIT(24)
-> 
-> Looks related to some test or something...
-> 
-> And so on.
-> 
-> If you really wants a "funnel driver" doing all these diverse things,
-> I'd put it in drivers/mfd.
-It's like driver drivers/mfd/anatop-mfd.c. They both store misc bits.
-We may need a generic driver to simply provide register accessor.
+Hello Arnd,
 
-Thanks
-Richard
+On Sunday 15 July 2012 19:59:19 Arnd Bergmann wrote:
+> On Sunday 15 July 2012, Florian Fainelli wrote:
+> > This patchset adds basic support for Mocship MCS814x, and in particular
+> > MCS8140, and allows one booting to user space. Two off-the-shelf boards
+> > are support: Tigal/Robotech RBT-832 and Devolo dLAN USB Extender.
+> > 
+> > Support for other on-board peripherals will obviously be contributed later
+> > once the basic SoC support has been accepted.
 > 
-> This whole issue appears in other systems so you're not alone
-> on this, for example the ux500 PRCMU driver has exactly these
-> properties.
+> Hi Florian,
 > 
-> I'm also contemplating drivers/syscon again, but
-> I have a hard time seeing it would be much more than another
-> drivers/mfd-similar construct.
+> This looks quite nice at first sight, but I have to say that your timing
+> is rather unfortunate. We're getting rather close to the 3.6 merge window,
+> so there is not much time to review the platform thoroughly before that
+> and I'd feel more comfortable about putting it into 3.7. I'll let others
+> weigh in, too. At least there is no risk of regressions for a new platform
+> getting added, so if other people think we should take it for 3.5, I might
+> get convinced.
+
+I am not in a hurry getting this merged during the 3.6 merge window, so this 
+really is not a big deal for me, I just wanted this out so that people can 
+comment on it.
+
 > 
-> I would really like input from Arnd and Samuel and other clever
-> people on the placement of drivers like this one :-/
-> 
-> But close address range proximity to the pin controller is not a
-> reason to have it in pinctrl.
-> 
-> Yours,
-> Linus Walleij
-> 
+> I'll follow up with more detailed feedback on the individual patches.
+
+Thank you!
+--
+Florian
