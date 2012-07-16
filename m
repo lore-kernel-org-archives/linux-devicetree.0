@@ -1,39 +1,28 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 4/7] net, ethernet, davinci_emac: add OF support
-Date: Mon, 16 Jul 2012 22:57:33 +0530
-Message-ID: <50044F05.6060707@ti.com>
-References: <1341823456-32297-1-git-send-email-hs@denx.de>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
+Date: Mon, 16 Jul 2012 11:48:40 -0600 (MDT)
+Message-ID: <alpine.DEB.2.00.1207161147190.28834@utopia.booyaka.com>
+References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-2-git-send-email-jon-hunter@ti.com> <5000D647.4090200@gmail.com> <alpine.DEB.2.00.1207140048210.3876@utopia.booyaka.com> <50017BB1.8010702@gmail.com>
+ <alpine.DEB.2.00.1207141138160.3876@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1341823456-32297-1-git-send-email-hs@denx.de>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: Heiko Schocher <hs@denx.de>, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Wolfgang Denk <wd@denx.de>, Anatoly Sivov <mm05@mail.ru>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.00.1207141138160.3876@utopia.booyaka.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Jon Hunter <jon-hunter@ti.com>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Benoit Cousson <b-cousson@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dave,
+Hi Rob,
 
-On 7/9/2012 2:14 PM, Heiko Schocher wrote:
-> add of support for the davinci_emac driver.
-> 
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> Acked-by: Sekhar Nori <nsekhar@ti.com>
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: netdev@vger.kernel.org
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: Wolfgang Denk <wd@denx.de>
-> Cc: Anatoly Sivov <mm05@mail.ru>
-> Cc: David Miller <davem@davemloft.net>
+On Sat, 14 Jul 2012, Paul Walmsley wrote:
 
-Can you please consider this patch for v3.6? I tested it on DaVinci
-AM18x EVM with and without CONFIG_OF using NFS root.
+> My point, perhaps unclear, was about the aliases.  Do you have a different 
+> approach in mind that applications should use, other than requesting a 
+> specific timer by ID?
 
-This patch can be independently queued and does not have any dependencies.
+Please disregard this question, I think I'm misunderstanding something 
+from a previous mail...
 
-Thanks,
-Sekhar
+
+- Paul
