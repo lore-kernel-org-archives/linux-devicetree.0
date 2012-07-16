@@ -1,82 +1,88 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH RESEND v2 2/2] ARM: EXYNOS: Add gscaler device from DT
-Date: Mon, 16 Jul 2012 22:33:45 +0200
-Message-ID: <50047AA9.4000608@gmail.com>
-References: <1342416803-30809-1-git-send-email-shaik.ameer@samsung.com> <1342416803-30809-3-git-send-email-shaik.ameer@samsung.com>
+From: "Turquette, Mike" <mturquette-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
+Date: Mon, 16 Jul 2012 13:47:01 -0700
+Message-ID: <CAJOA=zNEywZ6tbJDuLjekVQeJpr9O2X1u-sTXpp0GYWzc+OHig@mail.gmail.com>
+References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
+ <1342363754-30808-2-git-send-email-florian@openwrt.org>
+ <201207161554.04812.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1342416803-30809-3-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, sachin.kamat@linaro.org, joshi@samsung.com, ameersk@gmail.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201207161554.04812.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
-
-On 07/16/2012 07:33 AM, Shaik Ameer Basha wrote:
-> +++ b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-> @@ -0,0 +1,16 @@
-> +* Samsung Exynos5 Gscaler device
-> +
-> +Gscaler is used for scaling and color space conversion on EXYNOS5 SoCs.
-> +
-> +Required properties:
-> +- compatible: should be "samsung,exynos-gsc"
-
-Shouldn't there rather be a specific "compatible" property for each SoC,
-e.g.
-    - compatible: should be one of:
-	"samsung5250,exynos-gsc",
-	"samsung5450,exynos-gsc",
-etc. ?
-
-> +- reg: should contian Gsaler physical address location and length.
-
-contian -> contain, Gsaler -> Gscaler
-
-> +- interrupts: should contain Gscaler interrupt number
-> +
-> +Example:
-> +
-> +gsc_0:  gsc@0x13e00000 {
-> +	compatible = "samsung,exynos-gsc";
-
-	compatible = "samsung5250,exynos-gsc";
-
-> +	reg =<0x13e00000 0x1000>;
-> +	interrupts =<0 85 0>;
-> +};
-
-The aliases are still undocumented. How about adding something
-along the lines of:
-
-"Each Gscaler node should have a numbered alias in the aliases node,
-in the form of gscN, N = 0...3."
-
-?
-
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 4272b29..b945c00 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -23,6 +23,13 @@
->   	compatible = "samsung,exynos5250";
->   	interrupt-parent =<&gic>;
+On Mon, Jul 16, 2012 at 8:54 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Sunday 15 July 2012, Florian Fainelli wrote:
 >
-> +	aliases {
-> +		gsc0 =&gsc_0;
-> +		gsc1 =&gsc_1;
-> +		gsc2 =&gsc_2;
-> +		gsc3 =&gsc_3;
-> +	};
-> +
->   	gic:interrupt-controller@10481000 {
->   		compatible = "arm,cortex-a9-gic";
->   		#interrupt-cells =<3>;
+>> diff --git a/arch/arm/mach-mcs814x/Kconfig b/arch/arm/mach-mcs814x/Kconfig
+>> new file mode 100644
+>> index 0000000..c89422f
+>> --- /dev/null
+>> +++ b/arch/arm/mach-mcs814x/Kconfig
+>> @@ -0,0 +1,11 @@
+>> +if ARCH_MCS814X
+>> +
+>> +config MCS8140
+>> +     select CPU_ARM926T
+>> +     bool
+>> +
+>> +menu "Moschip MCS8140 boards"
+>> +
+>> +endmenu
+>> +
+>> +endif
+>
+> What values does the Kconfig file actually provide? I see that you are
+> adding the boards here later, but I think it would be nice to just
+> make the new platform a single Kconfig option with no individual
+> board selection.
+>
+>> +struct clk {
+>> +     struct clk *parent;             /* parent clk */
+>> +     unsigned long rate;             /* clock rate in Hz */
+>> +     unsigned long divider;          /* clock divider */
+>> +     u32 usecount;                   /* reference count */
+>> +     struct clk_ops *ops;            /* clock operation */
+>> +     u32 enable_reg;                 /* clock enable register */
+>> +     u32 enable_mask;                /* clock enable mask */
+>> +};
+>
+> Platforms are now converting to the common clock framework in drivers/clk.
+> Mike Turquette as the subsystem maintainer can probably judge better whether
+> we should still be allowing new platforms with their own implementation
+> of clk, but my feeling is that you should use the subsystem instead
+> and add a driver in a subdirectory of drivers/clk instead of in the
+> platform.
 
---
+Hi Florian & Arnd,
+
+Adopting the new clock framework is highly preferable, especially if
+MCS814x support is being delayed until 3.7.  There is also a push to
+put clock drivers into drivers/clk and I would like to continue that
+trend, but I'm less strict on that measure if it proves very difficult
+for your platform immediately (e.g. duplicating headers across
+platform and generic code, etc).  Migrating code from arch/arm to
+drivers/clk can always be done in a future series.
+
+This platform also seems to be making use of DT so it would be very
+nice if we use MCS814x to push the state of clk DT bindings and
+adoption forward a bit.  There are not a lot of folks using the
+patches from Rob/Grant today.  Hopefully delaying these patches by
+another merge cycle means that these requests are not asking too much
+:-)
 
 Regards,
-Sylwester
+Mike
