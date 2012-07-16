@@ -1,76 +1,69 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the
- i2c-embedded tree
-Date: Mon, 16 Jul 2012 12:17:06 +0200
-Message-ID: <20120716101706.GB17435@pengutronix.de>
-References: <20120710164130.f38e4d1673f925ddb13914c9@canb.auug.org.au>
- <20120712131231.GH2194@pengutronix.de>
- <CACRpkdboeF_G=sTPeSyuZ6KGLCmGSKx_NS=6Rim6HkR2f9=AAQ@mail.gmail.com>
+From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: RE: regulator: tps65217: Add device tree support
+Date: Mon, 16 Jul 2012 11:07:44 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13E9F6F8A@DBDE01.ent.ti.com>
+References: <20120713090220.GA18561@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
-Return-path: <linux-next-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdboeF_G=sTPeSyuZ6KGLCmGSKx_NS=6Rim6HkR2f9=AAQ@mail.gmail.com>
-Sender: linux-next-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120713090220.GA18561-mgFCXtclrQlZLf2FXnZxJA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
++cc Mark
 
---MW5yreqqjyrRcusr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Dan,
 
+Thanks for checking the static code warnings.
 
-> Well I think I ACKed that from the point of view that it will work as
-> expected with ux500 with these bindings. What is best from the I2C
-> subsystem point of view is another question ...
+On Fri, Jul 13, 2012 at 14:32:20, Dan Carpenter wrote:
+> Hello AnilKumar Ch,
+> 
+> This is a semi-automatic email about new static checker warnings.
+> 
+> The patch a7f1b63eb856: "regulator: tps65217: Add device tree 
+> support" from Jul 10, 2012, leads to the following Smatch complaint:
+> 
+> drivers/mfd/tps65217.c:245 tps65217_probe()
+> 	 error: we previously assumed 'pdata' could be null (see line 205)
+> 
+> drivers/mfd/tps65217.c
+>    204	
+>    205		if (!pdata && client->dev.of_node)
+>                     ^^^^^^
+> New check.
 
-Okay, thanks for clarifying.
+!pdata in the above if condition is not required if we do a separate check for
+"pdata == NULL". So removing pdata check from this and adding a separate
+check for NULL pointer.
 
-> Overall I think we have this general problem with a lot of DT
-> conversion happening right now: the tempo is set very high and
-> all chip vendors want DT support RealQuickNowPreferrablyYesterday
-> and that makes it hard for subsystem maintainers to hold back,
-> and I also fear vendor-specific properties are overused for this
-> reason.
+> 
+>    206			pdata = tps65217_parse_dt(client);
 
-Word.
+Above two lines will be replaced with these lines
 
-> And about the perpetual nature of device tree bindings it
-> appears to me that the modus operandi right now is to not
-> regard any of these as written in stone until they are removed
-> from the kernel tree. We have plenty of drivers patching
-> trees and drivers in one for the moment.
+			if (client->dev.of_node)
+				pdata = tps65217_parse_dt(client);
 
-I don't get this one. Yes, they are of perpetual nature, so how could we
-remove them from the kernel tree?
+			if (!pdata) {
+				dev_err(&client->dev, "tps65217 requires platform data\n");
+				return -EINVAL;
+			}
 
-What I am afraid of is: tentative solutions tend to stay, because the
-need for a proper solution is reduced. Yet, finding proper generic
-bindings might take some time which doesn't meet the high pressure
-around DT at the moment.
+I will submit a separate patch for this.
 
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---MW5yreqqjyrRcusr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlAD6iIACgkQD27XaX1/VRtxEACfZtHvrw1MIgXyO1xqL9gXN3MA
-YAIAnjsEPtmTIatHwp4A0OjqtcOed/KL
-=+TIl
------END PGP SIGNATURE-----
-
---MW5yreqqjyrRcusr--
+Thanks
+AnilKumar
