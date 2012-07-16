@@ -1,86 +1,69 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [RFC/PATCH 12/13] media: s5p-fimc: Add device tree based sensors
- registration
-Date: Mon, 16 Jul 2012 11:51:54 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207161149230.12302@axis700.grange>
-References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com>
- <1337975573-27117-12-git-send-email-s.nawrocki@samsung.com>
+From: jagan <402jagan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [DTC] Compilation issue on Red-hat host systems
+Date: Mon, 16 Jul 2012 15:29:49 +0530
+Message-ID: <CALdT2jzsyC9TuXRgZxRP-zJjyfihUN_u2uXF=bSER3ARpPot3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1337975573-27117-12-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Content-Type: multipart/mixed; boundary="===============2775912205335102705=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 May 2012, Sylwester Nawrocki wrote:
+--===============2775912205335102705==
+Content-Type: multipart/alternative; boundary=047d7b66f6198a56f704c4ef7dbc
 
-> Add parsing of 'sensor' nodes specified as 'camera' child nodes.
-> Each 'sensor' node should contain a phandle indicating sensor I2C
-> client device. Sensors with SPI control bus are not yet supported.
-> 
-> Additionally it is required that the I2C client node (child node
-> of I2C bus controller node) contains 'clock-frequency' and
-> 'video-bus-type' properties. These properties allow the host
-> controller to switch to proper video bus and set proper master
-> clock frequency for a sensor.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
-> 
-> We might need something like this as a V4L2 core function.
-> But I wanted to have something settled first until proposing
-> any addtions to the V4L2 core modules.
-> ---
->  .../bindings/camera/soc/samsung-fimc.txt           |   22 ++++
->  drivers/media/video/s5p-fimc/fimc-mdevice.c        |  114 +++++++++++++++++++-
->  2 files changed, 133 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt b/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
-> index b459da2..ffe09ac 100644
-> --- a/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
-> +++ b/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
-> @@ -54,6 +54,28 @@ Required properties:
->  - cell-index : FIMC-LITE IP instance index;
->  
->  
-> +The 'sensor' nodes
-> +------------------
-> +
-> +Required properties:
-> +
-> + - i2c-client : a phandle to an image sensor I2C client device;
-> +
-> +Optional properties:
-> +
-> +- samsung,camif-mux-id : FIMC video multiplexer input index; for camera
-> +			 port A, B, C the indexes are 0, 1, 0 respectively.
-> +			 If this property is not specified a default 0
-> +			 value will be used by driver.
+--047d7b66f6198a56f704c4ef7dbc
+Content-Type: text/plain; charset=ISO-8859-1
 
-Isn't it possible to have several clients connected to different mux 
-inputs and switch between them at run-time? Even if only one of them can 
-be active at any time? That's why I've introduced link nodes in my RFC to 
-specify exactly which pads are connected.
+Hi,
 
-> +
-> +- samsung,fimc-camclk-id : the SoC CAM_MCLK clock output index. These clocks
-> +			   are master clocks for external image processors.
-> +			   If this property is not specified a default 0 value
-> +			   will be used by driver.
-> +
-> + "video-bus-type" and "clock-frequency" properties must be specified at the
-> + node referenced by 'i2c-client' phandle.
-> +
->  Example:
->  
->  	fimc0: fimc@11800000 {
+I am building dtc as follows
+        $ git clone git://jdl.com/software/dtc.git
+        $ cd dtc
+        $ make
+I got the below error while doing make
+convert-dtsv0-lexer.lex.c:684: warning: no previous prototype for 'yylex'
+make: *** [convert-dtsv0-lexer.lex.o] Error 1
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Can anyone help me, I am I missing any PATH setup
+
+Regards,
+Jagan.
+
+--047d7b66f6198a56f704c4ef7dbc
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hi,<div><br></div><div>I am building dtc as follows=A0</div><div><div>=A0 =
+=A0 =A0 =A0 $ git clone git://<a href=3D"http://jdl.com/software/dtc.git">j=
+dl.com/software/dtc.git</a></div><div>=A0 =A0 =A0 =A0 $ cd dtc</div><div>=
+=A0 =A0 =A0 =A0 $ make</div>
+<div>I got the below error while doing make</div><div>convert-dtsv0-lexer.l=
+ex.c:684: warning: no previous prototype for &#39;yylex&#39;</div><div>make=
+: *** [convert-dtsv0-lexer.lex.o] Error 1</div><div>=A0</div></div><div>Can=
+ anyone help me, I am I missing any PATH setup</div>
+<div><br></div><div>Regards,</div><div>Jagan.</div><div><br></div>
+
+--047d7b66f6198a56f704c4ef7dbc--
+
+--===============2775912205335102705==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2775912205335102705==--
