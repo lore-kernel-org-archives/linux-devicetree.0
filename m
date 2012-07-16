@@ -1,32 +1,39 @@
-From: Michael Walle <michael@walle.cc>
-Subject: [PATCH] ARM: kirkwood: Add LS-XHL and LS-CHLv2 support
-Date: Mon, 16 Jul 2012 22:55:44 +0200
-Message-ID: <1342472144-27703-1-git-send-email-michael@walle.cc>
+From: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
+Subject: [PATCH v2] ARM: kirkwood: Add LS-XHL and LS-CHLv2 support
+Date: Mon, 16 Jul 2012 23:02:52 +0200
+Message-ID: <1342472572-27770-1-git-send-email-michael@walle.cc>
+References: <1342472144-27703-1-git-send-email-michael@walle.cc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree-discuss@lists.ozlabs.org, Michael Walle <michael@walle.cc>, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342472144-27703-1-git-send-email-michael-QKn5cuLxLXY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Add support for Buffalo Linkstation LS-XHL and LS-CHLv2 using the device
 tree where possible.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
 ---
 
 This patch is based on Andrew Lunn's kirkwood devicetree branch at:
   git://github.com/lunn/linux.git v3.5-rc7-qnap-dt
+
+Changes:
+v2:
+ - fixed keycodes
 
  arch/arm/boot/dts/kirkwood-lschlv2.dts |   20 +++++
  arch/arm/boot/dts/kirkwood-lsxhl.dts   |   20 +++++
@@ -96,7 +103,7 @@ index 0000000..eb3c071
 +};
 diff --git a/arch/arm/boot/dts/kirkwood-lsxl.dtsi b/arch/arm/boot/dts/kirkwood-lsxl.dtsi
 new file mode 100644
-index 0000000..5961d85
+index 0000000..8ac51c0
 --- /dev/null
 +++ b/arch/arm/boot/dts/kirkwood-lsxl.dtsi
 @@ -0,0 +1,95 @@
@@ -150,17 +157,17 @@ index 0000000..5961d85
 +		#size-cells = <0>;
 +		button@1 {
 +			label = "Function Button";
-+			linux,code = <1>;
++			linux,code = <132>;
 +			gpios = <&gpio1 9 1>;
 +		};
 +		button@2 {
 +			label = "Power-on Switch";
-+			linux,code = <2>;
++			linux,code = <116>;
 +			gpios = <&gpio1 10 1>;
 +		};
 +		button@3 {
 +			label = "Power-auto Switch";
-+			linux,code = <3>;
++			linux,code = <142>;
 +			gpios = <&gpio1 11 1>;
 +		};
 +	};
@@ -252,7 +259,7 @@ index 0000000..a06ed79
 +++ b/arch/arm/mach-kirkwood/board-lsxl.c
 @@ -0,0 +1,137 @@
 +/*
-+ * Copyright 2012 (C), Michael Walle <michael@walle.cc>
++ * Copyright 2012 (C), Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
 + *
 + * arch/arm/mach-kirkwood/board-lsxl.c
 + *
