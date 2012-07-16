@@ -1,50 +1,156 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH] mfd: add tps65910 32-kHz-crystal-input init
-Date: Mon, 16 Jul 2012 15:43:55 +0200
-Message-ID: <20120716134355.GI20652@sortiz-mobl>
-References: <20120705152334.GH18200@sortiz-mobl>
- <1342014273-31665-1-git-send-email-jhovold@gmail.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH] regulator: tps65910: set input_supply on desc unconditionally
+Date: Mon, 16 Jul 2012 19:14:54 +0530
+Message-ID: <1342446294-2644-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1342014273-31665-1-git-send-email-jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, swarren@wwwdotorg.org
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Johan,
+Set the supply_name in the regulator descriptor unconditionally
+and make this parameter as required parameter in the device
+node for successfully registration of the regulator.
 
-On Wed, Jul 11, 2012 at 03:44:33PM +0200, Johan Hovold wrote:
-> Replace tps65910_misc_init with a dedicated init function for the
-> 32-kHz-crystal input.
-> 
-> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> 
-> Hi Samuel,
-> 
-> How about something like this? My thought with misc_init was that it could be
-> extended should more simple initialisation like for the ck32k_xtal need to be
-> done, but perhaps it's cleaner to stick with dedicated init functions
-> through-out. At least for now.
-Yes, it's clearer, at least to me.
-I applied this patch, thanks for following up.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
 
-Cheers,
-Samuel.
+The changes are based on on discussion on patch
+[PATCH 1/3] ARM: dt: tegra: seaboard: add regulators
+on which the input supply name should be require in DT case and 
+unconditionally set on the desc.supply_name.
 
+Although the support was accepted earlier but as per discussion,
+it was not so good and hence this is the change.
+Becasue no-one is using this device as of now in dt file, it is safe
+to change now and provide guidance to the new user of this device.
+
+
+ Documentation/devicetree/bindings/mfd/tps65910.txt |   36 ++++++++++++--------
+ drivers/regulator/tps65910-regulator.c             |   11 +-----
+ include/linux/mfd/tps65910.h                       |    2 -
+ 3 files changed, 23 insertions(+), 26 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
+index 2ae1854..019ef5c 100644
+--- a/Documentation/devicetree/bindings/mfd/tps65910.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
+@@ -24,20 +24,12 @@ Required properties:
+             vaux2, vaux33, vmmc
+   tps65911: vrtc, vio, vdd1, vdd3, vddctrl, ldo1, ldo2, ldo3, ldo4, ldo5,
+             ldo6, ldo7, ldo8
+-
+-Optional properties:
+-- ti,vmbch-threshold: (tps65911) main battery charged threshold
+-  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
+-- ti,vmbch2-threshold: (tps65911) main battery discharged threshold
+-  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
+-- ti,en-ck32k-xtal: enable external 32-kHz crystal oscillator (see CK32K_CTRL
+-  in TPS6591X datasheet)
+-- ti,en-gpio-sleep: enable sleep control for gpios
+-  There should be 9 entries here, one for each gpio.
+ - xxx-supply: Input voltage supply regulator.
+-  Missing of these properties will be assume as there is no supply regulator
+-  for that input pins and always powered on.
+-  The valid input supply properties are:
++  These entries are require if regulators are enabled for a device. Missing of these
++  properties can cause the regulator registration fails.
++  If some of input supply is powered through battery or always-on supply then
++  also it is require to have these parameters with proper node handle of always
++  on power supply.
+   tps65910:
+ 	vcc1-supply: VDD1 input.
+ 	vcc2-supply: VDD2 input.
+@@ -57,6 +49,16 @@ Optional properties:
+ 	vcc7-supply: VRTC input.
+ 	vccio-supply: VIO input.
+ 
++Optional properties:
++- ti,vmbch-threshold: (tps65911) main battery charged threshold
++  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
++- ti,vmbch2-threshold: (tps65911) main battery discharged threshold
++  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
++- ti,en-ck32k-xtal: enable external 32-kHz crystal oscillator (see CK32K_CTRL
++  in TPS6591X datasheet)
++- ti,en-gpio-sleep: enable sleep control for gpios
++  There should be 9 entries here, one for each gpio.
++
+ Regulator Optional properties:
+ - ti,regulator-ext-sleep-control: enable external sleep
+   control through external inputs [0 (not enabled), 1 (EN1), 2 (EN2) or 4(EN3)]
+@@ -81,8 +83,14 @@ Example:
+ 		ti,en-ck32k-xtal;
+ 		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
+ 
+-		vcc7-supply = <&reg_parent>;
+ 		vcc1-supply = <&reg_parent>;
++		vcc2-supply = <&some_reg>;
++		vcc3-supply = <...>;
++		vcc4-supply = <...>;
++		vcc5-supply = <...>;
++		vcc6-supply = <...>;
++		vcc7-supply = <...>;
++		vccio-supply = <...>;
+ 
+ 		regulators {
+ 			#address-cells = <1>;
+diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
+index d2ba066..793adda 100644
+--- a/drivers/regulator/tps65910-regulator.c
++++ b/drivers/regulator/tps65910-regulator.c
+@@ -1001,9 +1001,6 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
+ 	*tps65910_reg_matches = matches;
+ 
+ 	for (idx = 0; idx < count; idx++) {
+-		struct tps_info *info = matches[idx].driver_data;
+-		char in_supply[32]; /* 32 is max size of property name */
+-
+ 		if (!matches[idx].init_data || !matches[idx].of_node)
+ 			continue;
+ 
+@@ -1015,12 +1012,6 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
+ 		if (!ret)
+ 			pmic_plat_data->regulator_ext_sleep_control[idx] = prop;
+ 
+-		if (info->vin_name) {
+-			snprintf(in_supply, 32, "%s-supply", info->vin_name);
+-			if (of_find_property(np, in_supply, 0))
+-				pmic_plat_data->input_supply[idx] =
+-								info->vin_name;
+-		}
+ 	}
+ 
+ 	return pmic_plat_data;
+@@ -1123,7 +1114,7 @@ static __devinit int tps65910_probe(struct platform_device *pdev)
+ 		pmic->info[i] = info;
+ 
+ 		pmic->desc[i].name = info->name;
+-		pmic->desc[i].supply_name = pmic_plat_data->input_supply[i];
++		pmic->desc[i].supply_name = info->vin_name;
+ 		pmic->desc[i].id = i;
+ 		pmic->desc[i].n_voltages = info->n_voltages;
+ 		pmic->desc[i].enable_time = info->enable_time_us;
+diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
+index 9cc09c8..9bf8767 100644
+--- a/include/linux/mfd/tps65910.h
++++ b/include/linux/mfd/tps65910.h
+@@ -799,7 +799,6 @@ struct tps65910_sleep_keepon_data {
+ /**
+  * struct tps65910_board
+  * Board platform data may be used to initialize regulators.
+- * @input_supply: Name of input supply regulator.
+  */
+ 
+ struct tps65910_board {
+@@ -813,7 +812,6 @@ struct tps65910_board {
+ 	struct tps65910_sleep_keepon_data *slp_keepon;
+ 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
+ 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
+-	const char *input_supply[TPS65910_NUM_REGS];
+ 	struct regulator_init_data *tps65910_pmic_init_data[TPS65910_NUM_REGS];
+ };
+ 
 -- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+1.7.1.1
