@@ -1,71 +1,117 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree
- based pinctrl driver
-Date: Mon, 16 Jul 2012 00:10:18 -0700
-Message-ID: <20120716071017.GC6522@atomide.com>
-References: <20120618055036.GU12766@atomide.com>
- <20120619135600.GX12766@atomide.com>
- <4FE39C86.5070901@wwwdotorg.org>
- <20120622083955.GZ12766@atomide.com>
- <4FE4AC40.8080400@wwwdotorg.org>
- <20120626134319.GA3483@atomide.com>
- <4FE9EBEC.9040208@wwwdotorg.org>
- <20120627102851.GC3483@atomide.com>
- <20120710091131.GQ1122@atomide.com>
- <CACRpkdYUJ3v-DoVbK6Pc6Y833Hn_0KS9PtEpjUCnMr57zfH5Bw@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH v2 1/2] drivers: misc: omap: add a new driver for
+ ocp2scp
+Date: Mon, 16 Jul 2012 11:12:05 +0300
+Message-ID: <20120716081204.GI7955@arwen.pp.htv.fi>
+References: <1340370942-23201-1-git-send-email-kishon@ti.com>
+ <CAAe_U6+dkiQw-i93pFapt6qKrArzaQoE8X3GjDzUDraziG8B2Q@mail.gmail.com>
+ <20120625122449.GA30463@arwen.pp.htv.fi>
+ <201206251626.09666.arnd@arndb.de>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYUJ3v-DoVbK6Pc6Y833Hn_0KS9PtEpjUCnMr57zfH5Bw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============4663252096285554978=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201206251626.09666.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, "ABRAHAM,
+ KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij@linaro.org> [120714 13:21]:
-> On Tue, Jul 10, 2012 at 11:11 AM, Tony Lindgren <tony@atomide.com> wrote:
-> 
-> > OK so no comments for a while. Here's the patch updated to leave out
-> > the comments in the binding example.
-> 
-> I reason like this:
-> 
-> - My fears is that the code gets hopeless to understand the mux, the
->  only way to understand that aspect of the system will be to read the DTS
->  and have the data sheet ready at hand.
 
-Yes that is a valid concern. Once we have the preprocessing available
-for DTS files reading should be easier. Also user space tools can be
-developed for showing the package specific data in detailed form.
- 
-> But:
-> 
-> - Tony knows what he's doing and what is best for OMAP. And this gets
->  (hopefully) all that OMAP mux code out of arch/arm.
+--===============4663252096285554978==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1E1Oui4vdubnXi3o"
+Content-Disposition: inline
 
-Heh thanks for the positive feedback ;) Yes this should allow us to
-drop close to 8k lines of data and code from arch/arm/mach-omap2 
-once the conversion is done. I'm planning to drop the unused entries
-first to cut down the data quite a bit. And already omap5 and am33xx
-are DT only and using pinctrl-single to start with. The remaining
-legacy mux code can be dropped once we are done with the DT conversion.
 
-> - Surely it will be better to go through this subsystem if we're refactoring
->   it all again later, and all drivers can be transferred to the abstract
->   pinctrl API which is a big win in itself, bringing coherency to the
->   drivers/* at large.
-> 
-> So applied it, so it can be evaluated in real operating environments.
-> 
-> But if I don't see OMAP transferred to use this I'll simply delete it
-> again. :-)
+--1E1Oui4vdubnXi3o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK thanks, for reference some am33xx patches for beagle bone already
-got posted using an earlier revision of this binding:
+Hi,
 
-http://www.mail-archive.com/linux-omap@vger.kernel.org/msg71695.html
+On Mon, Jun 25, 2012 at 04:26:08PM +0000, Arnd Bergmann wrote:
+> On Monday 25 June 2012, Felipe Balbi wrote:
+> > > > Can't this live where the scp drivers live?  Actually, where is tha=
+t at?
+> > > > Do we have scp drivers?
+> > > AFAIK, there isn't any driver for scp. But we have a driver for ocp
+> > > and it is present at arch/arm/mach-omap2/omap_l3_noc.c
+> >=20
+> > I don't think this deserves a directory of its own. Maybe
+> > drivers/platform/arm/omap/ ?? the l3_noc is an OMAP-specific
+> > interconnect and the SCP bus is also an OMAP-specific bus. I don't know
+> > of any other arch/soc who uses the same interconnect IP as OMAP and the
+> > same ocp2scp bridge. That bridge was created by TI for all I know.
+> >=20
+> > Greg, would drivers/platform/arm/omap/ work for you ? We could also move
+> > the interconnect drivers there.
+>=20
+> I really don't like the idea of introducing drivers/platform/arm/ because
+> very little of the stuff that one would put in there are actually ARM
+> specific.
+>=20
+> I have suggested a drivers/bus/ before and people did not see the need
+> back then, and we agreed to continue having a directory for each bus,
+> as we have for the big ones (pci, usb, i2c, spi, ...) and a lot of
+> simple (amba, rapidio, bcma, ...) or obscure (tc,  vlynq, nubus, ...)
+> ones.
+>=20
+> I think we should reconsider the idea of drivers/bus/ with a file per
+> bus in there at least for new buses, but doing a new drivers/scp/
+> would be ok for me if there is enough opposition against the idea
+> of drivers/bus aggregating different buses.
 
-Regards,
+I don't mind either way. The fact is that this ocp-to-scp bridge is
+really a TI/OMAP thing. Not sure it deserves a directory of its own.
 
-Tony
+--=20
+balbi
+
+--1E1Oui4vdubnXi3o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQA8zUAAoJEIaOsuA1yqRE4JkQALI83LTo9OfM8CoTYh0g7KGd
+5TJvXf0AG0WBfCoDlQvZ9j5EgtYRszt3i+M9E+0w+kyvzyGbIJKfLY/IfB4rr3BR
+dh79GY4omy6olnD4qU6cKv4lOz36W+LFgbM61ncopuo3zUXMPWy6cgOGnMWnSRFl
+XGs53wEWyC0Ya2GB81c5HXXMAlMJYQOwF2yQgQczR9ruS3cVPZbyZwylK/to0cFa
+utLMCVH9SZDBEZLtz6krTPf2Msm2paa74FFmDvgQTbkz6Ytz5rOPkmzeqUjapAzx
+8EnMrzEBbpRXC+wTmnCNw+Cp5lU2xF4kgWWkE0JITimEQcLPo3/N0BlNnCW3VDEl
+oAVJyNpEU1Tgeeby415yiVaUKBKEECVdKXJgalZud4FEnEThyiSqKsw7N4Vsp3aF
+iIBO/8Nth/3kdwPvf4hVdC28+rDKqkOPm8hG/qW+eAvKRwb4K5J5Wa9yIAG+QmLl
+E+eD+NIHeVb86JmtlLubn9X50mInRV6qVGS2KYkCYHAKiU2oIPRZq/prnahTP9Jx
+LJq+/DiHFoyqtsz7rOq8YzGePKKGMRmU4XnaAAJFhRxQBNbLDI8sP0UTpxUFQpEx
+/OqeFIacUyw5WgFHmYF6UZJYt22rqDX0Kv5r++/Xg1jKvEgdeqWUIS+89AmuuQ47
+2ViplZx5LsFYUuxnn2I5
+=uQmT
+-----END PGP SIGNATURE-----
+
+--1E1Oui4vdubnXi3o--
+
+--===============4663252096285554978==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4663252096285554978==--
