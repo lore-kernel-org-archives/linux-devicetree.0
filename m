@@ -1,45 +1,40 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the i2c-embedded
- tree
-Date: Mon, 16 Jul 2012 14:55:40 +0100
-Message-ID: <50041D5C.7010904@linaro.org>
-References: <20120710164130.f38e4d1673f925ddb13914c9@canb.auug.org.au> <20120712131231.GH2194@pengutronix.de> <CACRpkdboeF_G=sTPeSyuZ6KGLCmGSKx_NS=6Rim6HkR2f9=AAQ@mail.gmail.com> <20120716101706.GB17435@pengutronix.de> <5003FB7C.4030509@linaro.org> <20120716130015.GF17435@pengutronix.de>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: MXS i2c PIOQ/DMA mode selection via DT
+Date: Mon, 16 Jul 2012 16:05:44 +0200
+Message-ID: <201207161605.44379.marek.vasut@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <20120716130015.GF17435@pengutronix.de>
-Sender: linux-next-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux ARM kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefano Babic <sbabic-ynQEQJNshbs@public.gmane.org>, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16/07/12 14:00, Wolfram Sang wrote:
->>> What I am afraid of is: tentative solutions tend to stay, because t=
-he
->>> need for a proper solution is reduced. Yet, finding proper generic
->>> bindings might take some time which doesn't meet the high pressure
->>> around DT at the moment.
->>
->> I agree with what you say to some extent, but I believe that it is
->> more important to have a working solution now than to ensure that
->> each bindings are as unique as possible. After any suggestion of
->> consolidation, a move from vendor specific to generically defined
->> Device Tree bindings is trivial. Especially in the current stage
->> where adaptions and definitions are still fluid.
->
-> See my response to Linus. I do understand your view and where it come=
-s
-> from. As a maintainer, I have other priorities. No offence involved,
-> it needs some settlement.
+Hello,
 
-I'm certainly not adverse to doing this, although I'd prefer it was=20
-completed in the short-term. So should we do it?
+There's been this patch going on, which adds DMA mode into MXS i2c driver:
+https://patchwork.kernel.org/patch/1174051/
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-M: +44 77 88 633 515
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Recent nitpick was about toggling the PIOQUEUE (almost like PIO, only transfer 
+mode in current implementation) vs. DMA mode (newly added) on a per-bus basis.
+
+Current implementation in the patch adds a DT property, "fsl,use-pio" (shall be 
+changed to "fsl,use-pioqueue", but that's irrelevant) to select between the 
+PIOQUEUE and DMA mode on per-bus basis.
+
+There was now a suggestion to dump this property and use kernel module parameter 
+instead. This obviously disallows to configure this behavior on per-bus basis. 
+Consider a scenario where small transfers happens on one bus (possibly from a 
+sensor) and large transfers on the other bus (eg. i2c EEPROM). In such scenario, 
+it's beneficial to enable PIOQUEUE mode for the sensor and DMA mode for the 
+EEPROM to minimize the overall overhead.
+
+The mixed mode (PIOQ for small data and DMA for large data transfers) isn't 
+supported yet.
+
+Please advise.
+
+Best regards,
+Marek Vasut
