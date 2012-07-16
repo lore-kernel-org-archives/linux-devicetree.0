@@ -1,91 +1,71 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/3 v3] USB: ehci-s5p: Add vbus setup function to the s5p
- ehci glue layer
-Date: Mon, 16 Jul 2012 15:40:18 +0900
-Message-ID: <002901cd631d$ddbcc5f0$993651d0$%han@samsung.com>
-References: <1342418138-6192-1-git-send-email-gautam.vivek@samsung.com>
- <1342418138-6192-4-git-send-email-gautam.vivek@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] pinctrl: Add one-register-per-pin type device tree
+ based pinctrl driver
+Date: Mon, 16 Jul 2012 00:10:18 -0700
+Message-ID: <20120716071017.GC6522@atomide.com>
+References: <20120618055036.GU12766@atomide.com>
+ <20120619135600.GX12766@atomide.com>
+ <4FE39C86.5070901@wwwdotorg.org>
+ <20120622083955.GZ12766@atomide.com>
+ <4FE4AC40.8080400@wwwdotorg.org>
+ <20120626134319.GA3483@atomide.com>
+ <4FE9EBEC.9040208@wwwdotorg.org>
+ <20120627102851.GC3483@atomide.com>
+ <20120710091131.GQ1122@atomide.com>
+ <CACRpkdYUJ3v-DoVbK6Pc6Y833Hn_0KS9PtEpjUCnMr57zfH5Bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1342418138-6192-4-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-language: ko
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: 'Vivek Gautam' <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYUJ3v-DoVbK6Pc6Y833Hn_0KS9PtEpjUCnMr57zfH5Bw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 16, 2012 2:56 PM, Vivek Gautam wrote:
+* Linus Walleij <linus.walleij@linaro.org> [120714 13:21]:
+> On Tue, Jul 10, 2012 at 11:11 AM, Tony Lindgren <tony@atomide.com> wrote:
 > 
-> This patch retrieves and configures the vbus control gpio via
-> the device tree. The suspend/resume callbacks will be later
-> modified for vbus control.
+> > OK so no comments for a while. Here's the patch updated to leave out
+> > the comments in the binding example.
 > 
-> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> I reason like this:
+> 
+> - My fears is that the code gets hopeless to understand the mux, the
+>  only way to understand that aspect of the system will be to read the DTS
+>  and have the data sheet ready at hand.
 
-Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Yes that is a valid concern. Once we have the preprocessing available
+for DTS files reading should be easier. Also user space tools can be
+developed for showing the package specific data in detailed form.
+ 
+> But:
+> 
+> - Tony knows what he's doing and what is best for OMAP. And this gets
+>  (hopefully) all that OMAP mux code out of arch/arm.
 
+Heh thanks for the positive feedback ;) Yes this should allow us to
+drop close to 8k lines of data and code from arch/arm/mach-omap2 
+once the conversion is done. I'm planning to drop the unused entries
+first to cut down the data quite a bit. And already omap5 and am33xx
+are DT only and using pinctrl-single to start with. The remaining
+legacy mux code can be dropped once we are done with the DT conversion.
+
+> - Surely it will be better to go through this subsystem if we're refactoring
+>   it all again later, and all drivers can be transferred to the abstract
+>   pinctrl API which is a big win in itself, bringing coherency to the
+>   drivers/* at large.
 > 
-> diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-s5p.c
-> index 37d84cf..4037878 100644
-> --- a/drivers/usb/host/ehci-s5p.c
-> +++ b/drivers/usb/host/ehci-s5p.c
-> @@ -15,6 +15,7 @@
->  #include <linux/clk.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of_gpio.h>
->  #include <plat/ehci.h>
->  #include <plat/usb-phy.h>
+> So applied it, so it can be evaluated in real operating environments.
 > 
-> @@ -64,6 +65,28 @@ static const struct hc_driver s5p_ehci_hc_driver = {
->  	.clear_tt_buffer_complete	= ehci_clear_tt_buffer_complete,
->  };
-> 
-> +static int s5p_ehci_setup_gpio(struct platform_device *pdev)
-> +{
-> +	int err;
-> +	int gpio;
-> +
-> +	if (!pdev->dev.of_node)
-> +		return 0;
-> +
-> +	gpio = of_get_named_gpio(pdev->dev.of_node,
-> +			"samsung,vbus-gpio", 0);
-> +	if (!gpio_is_valid(gpio))
-> +		return 0;
-> +
-> +	err = gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH, "ehci_vbus_gpio");
-> +	if (err) {
-> +		dev_err(&pdev->dev, "can't request ehci vbus gpio %d", gpio);
-> +		return err;
-> +	}
-> +
-> +	return err;
-> +}
-> +
->  static u64 ehci_s5p_dma_mask = DMA_BIT_MASK(32);
-> 
->  static int __devinit s5p_ehci_probe(struct platform_device *pdev)
-> @@ -92,6 +115,8 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
->  	if (!pdev->dev.coherent_dma_mask)
->  		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> 
-> +	s5p_ehci_setup_gpio(pdev);
-> +
->  	s5p_ehci = devm_kzalloc(&pdev->dev, sizeof(struct s5p_ehci_hcd),
->  				GFP_KERNEL);
->  	if (!s5p_ehci)
-> --
-> 1.7.0.4
+> But if I don't see OMAP transferred to use this I'll simply delete it
+> again. :-)
+
+OK thanks, for reference some am33xx patches for beagle bone already
+got posted using an earlier revision of this binding:
+
+http://www.mail-archive.com/linux-omap@vger.kernel.org/msg71695.html
+
+Regards,
+
+Tony
