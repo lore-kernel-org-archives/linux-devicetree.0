@@ -1,33 +1,79 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH v2 1/2] drivers: misc: omap: add a new driver for ocp2scp
-Date: Mon, 16 Jul 2012 19:47:01 +0000
-Message-ID: <201207161947.01751.arnd@arndb.de>
-References: <1340370942-23201-1-git-send-email-kishon@ti.com> <20120716081204.GI7955@arwen.pp.htv.fi> <CAAe_U6JMGP3jEkkd=vqpR5KTeOnY51AOcb65zqKRRa8MtnWjzQ@mail.gmail.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH] regulator: tps65910: set input_supply on desc
+ unconditionally
+Date: Mon, 16 Jul 2012 20:57:57 +0100
+Message-ID: <20120716195756.GA10774@opensource.wolfsonmicro.com>
+References: <1342446294-2644-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAAe_U6JMGP3jEkkd=vqpR5KTeOnY51AOcb65zqKRRa8MtnWjzQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: balbi@ti.com, Greg KH <gregkh@linuxfoundation.org>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============9040332630029312047=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342446294-2644-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 16 July 2012, ABRAHAM, KISHON VIJAY wrote:
-> >>
-> >> I think we should reconsider the idea of drivers/bus/ with a file per
-> >> bus in there at least for new buses, but doing a new drivers/scp/
-> >> would be ok for me if there is enough opposition against the idea
-> >> of drivers/bus aggregating different buses.
-> >
-> > I don't mind either way. The fact is that this ocp-to-scp bridge is
-> > really a TI/OMAP thing. Not sure it deserves a directory of its own.
-> 
-> Ok. Then I'll have a file in drivers/bus/ for ocp2scp driver.
 
-Sounds good to me. I don't care if it's the only file in that directory.
-We can point the next person to a bus with a single file to that directory
-and let them add theirs.
+--===============9040332630029312047==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Content-Disposition: inline
 
-	Arnd
+
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jul 16, 2012 at 07:14:54PM +0530, Laxman Dewangan wrote:
+> Set the supply_name in the regulator descriptor unconditionally
+> and make this parameter as required parameter in the device
+> node for successfully registration of the regulator.
+
+This doesn't apply against topic/drivers, please check what's going on
+here.
+
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQBHIrAAoJEBus8iNuMP3dTcoP/1xS0IJP0JYlk7oAeYhtV581
+zGsQkC9WCQqDYdbsEz7c5ZCI0v92mHPbvONs0n1lBNclynyuIggj7GuNM7w1SFIE
+jwpwCZmbHSev9Z7JIAEHK4c5/nVV0SSnX0Eo2/toMmS5SYtPeU55FMfBd4YlBJH6
+GaZTAkCjNcOLM+GApMkMXroMpe38Iw9rF7PlF3J5nobSKJ6iSXFeiiRO5JItZ7Zo
+PcLHwKQVWkW4zL5G2VUWoRT5reYq3vHke+A7v8YDmjGv4NSYU5JOmo97zvsyiu77
+B+bsXl5uwm/zgInfeSpPMinCoxXVI4TKvgoeWgf4wj+c9pJzs9EpmqUKykFPMEno
+/vuqfJeYLfcIzGYcJWipdYp3bHU48RN1Bz8Ell2cixtnpBwpNZ9TosERX6+m1mOb
+9aVUVpba28w59lnK7BTnm095H8YMIgr+aw3rFCA8yCJKOPJ3jVL2ordPxGJRGw1m
+DaSVSi+uZVtV5iWJ3200WSAsaMIg+eiN61nPu+Yx/tp9zxl6eyA07n7sFP5Jup21
+bCs8rnFeqN7GSm/qoim+ZhpKnwfuAfgR06IOqo13KDaHcCqAZHCdpEJFccmI9yCt
+WLT1+HO+Imok88t6E7AiZJcEz65sxZ5nmWiXWWYtAvozNGfZO3GJ4/k6a+1j0cIa
+inMJAIfz6gHoX6qhM1TM
+=eV7c
+-----END PGP SIGNATURE-----
+
+--7JfCtLOvnd9MIVvH--
+
+--===============9040332630029312047==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============9040332630029312047==--
