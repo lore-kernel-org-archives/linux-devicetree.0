@@ -1,77 +1,147 @@
-From: Rob Landley <rob@landley.net>
-Subject: Re: [RESEND PATCH 1/1] clk: add DT support for clock gating control
-Date: Sun, 15 Jul 2012 15:45:42 -0500
-Message-ID: <50032BF6.9000704@landley.net>
-References: <4FFE7979.4060000@googlemail.com> <4FFEBF8A.1020700@gmail.com> <4FFECC4E.4070001@googlemail.com> <4FFF93DC.30103@gmail.com> <4FFFED7C.9050406@googlemail.com>
+From: Rajeev kumar <rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] i2c: i2c-ocores - DT bindings and minor fixes.
+Date: Mon, 16 Jul 2012 09:12:34 +0530
+Message-ID: <50038DAA.3030002@st.com>
+References: <1342187065-1651-1-git-send-email-jayachandranc@netlogicmicro.com> <1342187065-1651-2-git-send-email-jayachandranc@netlogicmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4FFFED7C.9050406@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarh <sebastian.hesselbarth@googlemail.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mike Turquette <mturquette@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1342187065-1651-2-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+Cc: "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org" <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, "richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org" <richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I believe clock anything is Thomas Gleixner, just making sure he's seen
-it...
-
-Rob
-
-On 07/13/2012 04:42 AM, Sebastian Hesselbarh wrote:
-> On 07/13/2012 05:19 AM, Rob Herring wrote:
->> What's implemented in Linux should not define the binding. The binding
->> should describe the hardware.
->> [...]
->> True, but not your problem to implement. A binding doesn't necessarily
->> mean there is a full Linux implementation. We just don't want to create
->> something only to find others need something completely different.
-> 
-> Ok, what about a DT describing the following for a simple register-based
-> clock gating controller and the corresponding gated-clock independent of
-> the controller. I am sure there are a bunch of SoCs out there that
-> control their clock gates by writing some bits to a register. If that
-> DT description matches your expectations, I ll prepare patches with
-> documentation and implementation for common clock framework.
-> 
-> Sebastian
-> 
-> -- 
->  /* Simple clock gating controller based on bitmasks and register */
-> cgc: clock-gating-control@f1000000 {
->   compatible = "clock-gating-control-register";
->   reg = <0xf1000000 0x4>;
-> 
->   /* Clock gating control with one bit at bit position 0
->      enable with (1<<0), disable with (0<<0) */
->   cgctrl_usb0: cgc_usb0 {
->     clock-gating-control,shift = <0>;
->     clock-gating-control,mask = <1>;
->     clock-gating-control,enable = <1>;
->     clock-gating-control,disable = <0>;
+On 7/13/2012 7:14 PM, Jayachandran C wrote:
+> Cleanups to i2c-cores, no change in logic, changes are:
+> * Move i2c-ocores device tree documentation from source file to
+>    Documentation/devicetree/bindings/i2c/i2c-ocores.txt.
+> * Add \n to dev_warn and dev_err messages where missing
+> * Minor updates to the text and formatting fixes.
+>
+> Signed-off-by: Jayachandran C<jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+> ---
+>   .../devicetree/bindings/i2c/i2c-ocores.txt         |   27 ++++++++++++
+>   drivers/i2c/busses/i2c-ocores.c                    |   45 +++-----------------
+>   2 files changed, 34 insertions(+), 38 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> new file mode 100644
+> index 0000000..bfec894
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> @@ -0,0 +1,27 @@
+> +Device tree configuration for i2c-ocores
+> +
+> +Required properties:
+> +- compatible      : "opencores,i2c-ocores"
+> +- reg             : bus address start and address range size of device
+> +- interrupts      : interrupt number
+> +- regstep         : size of device registers in bytes
+> +- clock-frequency : frequency of bus clock in Hz
+> +- #address-cells  : should be<1>
+> +- #size-cells     : should be<0>
+> +
+> +Example:
+> +
+> +	i2c0: ocores@a0000000 {
+> +		#address-cells =<1>;
+> +		#size-cells =<0>;
+> +		compatible = "opencores,i2c-ocores";
+> +		reg =<0xa0000000 0x8>;
+> +		interrupts =<10>;
+> +		regstep =<1>;
+> +		clock-frequency =<20000000>;
+> +
+> +		dummy@60 {
+> +			compatible = "dummy";
+> +			reg =<0x60>;
+> +		};
+> +	};
+> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+> index 75194c5..e8159db 100644
+> --- a/drivers/i2c/busses/i2c-ocores.c
+> +++ b/drivers/i2c/busses/i2c-ocores.c
+> @@ -10,40 +10,9 @@
+>    */
+>
+>   /*
+> - * Device tree configuration:
+> - *
+> - * Required properties:
+> - * - compatible      : "opencores,i2c-ocores"
+> - * - reg             : bus address start and address range size of device
+> - * - interrupts      : interrupt number
+> - * - regstep         : size of device registers in bytes
+> - * - clock-frequency : frequency of bus clock in Hz
+> - *
+> - * Example:
+> - *
+> - *  i2c0: ocores@a0000000 {
+> - *              compatible = "opencores,i2c-ocores";
+> - *              reg =<0xa0000000 0x8>;
+> - *              interrupts =<10>;
+> - *
+> - *              regstep =<1>;
+> - *              clock-frequency =<20000000>;
+> - *
+> - * -- Devices connected on this I2C bus get
+> - * -- defined here; address- and size-cells
+> - * -- apply to these child devices
+> - *
+> - *              #address-cells =<1>;
+> - *              #size-cells =<0>;
+> - *
+> - *              dummy@60 {
+> - *                     compatible = "dummy";
+> - *                     reg =<60>;
+> - *              };
+> - *  };
+> - *
+> + * This driver can be used from the device tree, see
+> + *     Documentation/devicetree/bindings/i2c/ocore-i2c.txt
+>    */
+> -
+>   #include<linux/kernel.h>
+>   #include<linux/module.h>
+>   #include<linux/init.h>
+> @@ -247,14 +216,14 @@ static struct i2c_adapter ocores_adapter = {
 >   };
-> 
->   /* Clock gating control with two bits at bit position 1-2
->      enable with (2<<1), disable with (0<<1) */
->   cgctrl_sata: cgc_sata {
->     clock-gating-control,shift = <1>;
->     clock-gating-control,mask = <3>;
->     clock-gating-control,enable = <2>;
->     clock-gating-control,disable = <0>;
->   };
-> };
-> 
-> /* Generic clock gate description that can be used with
->    any clock gating controller */
-> cg_usb0: clockgate@0 {
->   compatible = "gated-clock";
->   #clock-cells = <0>;
->   clocks = <&osc>;
->   clock-gate-control = <&cgctrl_usb0>;
-> };
-> 
+>
+>   #ifdef CONFIG_OF
+> -static int ocores_i2c_of_probe(struct platform_device* pdev,
+> -				struct ocores_i2c* i2c)
+> +static int ocores_i2c_of_probe(struct platform_device *pdev,
+> +				struct ocores_i2c *i2c)
+>   {
+>   	const __be32* val;
+>
+>   	val = of_get_property(pdev->dev.of_node, "regstep", NULL);
+>   	if (!val) {
+> -		dev_err(&pdev->dev, "Missing required parameter 'regstep'");
+> +		dev_err(&pdev->dev, "Missing required parameter 'regstep'\n");
+>   		return -ENODEV;
+>   	}
+>   	i2c->regstep = be32_to_cpup(val);
+> @@ -262,7 +231,7 @@ static int ocores_i2c_of_probe(struct platform_device* pdev,
+>   	val = of_get_property(pdev->dev.of_node, "clock-frequency", NULL);
+>   	if (!val) {
+>   		dev_err(&pdev->dev,
+> -			"Missing required parameter 'clock-frequency'");
+> +			"Missing required parameter 'clock-frequency'\n");
+>   		return -ENODEV;
+>   	}
+>   	i2c->clock_khz = be32_to_cpup(val) / 1000;
+> @@ -351,7 +320,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>   	return 0;
+>   }
+>
+> -static int __devexit ocores_i2c_remove(struct platform_device* pdev)
+> +static int __devexit ocores_i2c_remove(struct platform_device *pdev)
+>   {
+>   	struct ocores_i2c *i2c = platform_get_drvdata(pdev);
+>
 
-
--- 
-GNU/Linux isn't: Linux=GPLv2, GNU=GPLv3+, they can't share code.
-Either it's "mere aggregation", or a license violation.  Pick one.
+Reviewed By: Rajeev Kumar <rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org>
