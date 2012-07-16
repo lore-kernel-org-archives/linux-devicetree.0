@@ -1,16 +1,15 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] pinctrl: pinctrl-imx: add support for set bits for
- general purpose registers
-Date: Mon, 16 Jul 2012 13:40:17 +0000
-Message-ID: <201207161340.18528.arnd@arndb.de>
-References: <1342084080-3145-1-git-send-email-b29396@freescale.com>
- <CACRpkdbHtgKLA3JJxc4VY35zSpJFvk15u62Z3aBCqERoeQ10CA@mail.gmail.com>
- <20120716081703.GH21635@b20223-02.ap.freescale.net>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH] mfd: add tps65910 32-kHz-crystal-input init
+Date: Mon, 16 Jul 2012 15:43:55 +0200
+Message-ID: <20120716134355.GI20652@sortiz-mobl>
+References: <20120705152334.GH18200@sortiz-mobl>
+ <1342014273-31665-1-git-send-email-jhovold@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120716081703.GH21635-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1342014273-31665-1-git-send-email-jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,23 +20,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 16 July 2012, Richard Zhao wrote:
-> > If you really wants a "funnel driver" doing all these diverse things,
-> > I'd put it in drivers/mfd.
->
-> It's like driver drivers/mfd/anatop-mfd.c. They both store misc bits.
-> We may need a generic driver to simply provide register accessor.
+Hi Johan,
 
-We already have the "regmap" framework that deals with sets of registers
-on spi, i2c or memory mapped buses. One thing I've thought about
-before is to create some kind of very simple "system controller"
-framework based on regmap that lets you register a single global
-"struct regmap" pointer from an SoC specific driver, and have drivers
-call a function into that framework to get a reference to that
-regmap.
+On Wed, Jul 11, 2012 at 03:44:33PM +0200, Johan Hovold wrote:
+> Replace tps65910_misc_init with a dedicated init function for the
+> 32-kHz-crystal input.
+> 
+> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+> Hi Samuel,
+> 
+> How about something like this? My thought with misc_init was that it could be
+> extended should more simple initialisation like for the ck32k_xtal need to be
+> done, but perhaps it's cleaner to stick with dedicated init functions
+> through-out. At least for now.
+Yes, it's clearer, at least to me.
+I applied this patch, thanks for following up.
 
-	Arnd
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
