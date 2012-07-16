@@ -1,75 +1,97 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH 2/2 v3] USB: dwc3-exynos: Add vbus setup function to the exynos
- dwc3 glue layer
-Date: Mon, 16 Jul 2012 11:27:39 +0530
-Message-ID: <1342418259-23802-3-git-send-email-gautam.vivek@samsung.com>
-References: <1342418259-23802-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1342418259-23802-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, olofj@google.com, thomas.abraham@linaro.org, sshtylyov@mvista.com, av.tikhomirov@samsung.com
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3 v3] USB: ohci-exynos: Add support for device tree
+Date: Mon, 16 Jul 2012 15:38:13 +0900
+Message-ID: <002701cd631d$9372fb40$ba58f1c0$%han@samsung.com>
+References: <1342418138-6192-1-git-send-email-gautam.vivek@samsung.com>
+ <1342418138-6192-2-git-send-email-gautam.vivek@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1342418138-6192-2-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-language: ko
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Vivek Gautam' <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch retrieves and configures the vbus control gpio via
-the device tree. The suspend/resume callbacks will be later
-modified for vbus control.
+On Monday, July 16, 2012 2:56 PM, Vivek Gautam wrote:
+> 
+> This patch adds support to parse probe data for
+> ohci driver for exynos using device tree.
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
----
- drivers/usb/dwc3/dwc3-exynos.c |   25 +++++++++++++++++++++++++
- 1 files changed, 25 insertions(+), 0 deletions(-)
+Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index a293c69..9b0238f 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -20,6 +20,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/clk.h>
- #include <linux/of.h>
-+#include <linux/of_gpio.h>
- 
- #include "core.h"
- 
-@@ -30,6 +31,28 @@ struct dwc3_exynos {
- 	struct clk		*clk;
- };
- 
-+static int dwc3_setup_vbus_gpio(struct platform_device *pdev)
-+{
-+	int err;
-+	int gpio;
-+
-+	if (!pdev->dev.of_node)
-+		return 0;
-+
-+	gpio = of_get_named_gpio(pdev->dev.of_node,
-+				"samsung,vbus-gpio", 0);
-+	if (!gpio_is_valid(gpio))
-+		return 0;
-+
-+	err = gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH, "dwc3_vbus_gpio");
-+	if (err) {
-+		dev_err(&pdev->dev, "can't request dwc3 vbus gpio %d", gpio);
-+		return err;
-+	}
-+
-+	return err;
-+}
-+
- static u64 dwc3_exynos_dma_mask = DMA_BIT_MASK(32);
- 
- static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
-@@ -58,6 +81,8 @@ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
- 	if (!pdev->dev.coherent_dma_mask)
- 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
- 
-+	dwc3_setup_vbus_gpio(pdev);
-+
- 	platform_set_drvdata(pdev, exynos);
- 
- 	devid = dwc3_get_device_id();
--- 
-1.7.0.4
+> 
+> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+> index 8bcbdb5..fc3091b 100644
+> --- a/drivers/usb/host/ohci-exynos.c
+> +++ b/drivers/usb/host/ohci-exynos.c
+> @@ -12,6 +12,7 @@
+>   */
+> 
+>  #include <linux/clk.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <mach/ohci.h>
+>  #include <plat/usb-phy.h>
+> @@ -71,6 +72,8 @@ static const struct hc_driver exynos_ohci_hc_driver = {
+>  	.start_port_reset	= ohci_start_port_reset,
+>  };
+> 
+> +static u64 ohci_exynos_dma_mask = DMA_BIT_MASK(32);
+> +
+>  static int __devinit exynos_ohci_probe(struct platform_device *pdev)
+>  {
+>  	struct exynos4_ohci_platdata *pdata;
+> @@ -87,6 +90,16 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+> 
+> +	/*
+> +	 * Right now device-tree probed devices don't get dma_mask set.
+> +	 * Since shared usb code relies on it, set it here for now.
+> +	 * Once we move to full device tree support this will vanish off.
+> +	 */
+> +	if (!pdev->dev.dma_mask)
+> +		pdev->dev.dma_mask = &ohci_exynos_dma_mask;
+> +	if (!pdev->dev.coherent_dma_mask)
+> +		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> +
+>  	exynos_ohci = devm_kzalloc(&pdev->dev, sizeof(struct exynos_ohci_hcd),
+>  					GFP_KERNEL);
+>  	if (!exynos_ohci)
+> @@ -256,6 +269,14 @@ static const struct dev_pm_ops exynos_ohci_pm_ops = {
+>  	.resume		= exynos_ohci_resume,
+>  };
+> 
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id exynos_ohci_match[] = {
+> +	{ .compatible = "samsung,exynos-ohci" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_ohci_match);
+> +#endif
+> +
+>  static struct platform_driver exynos_ohci_driver = {
+>  	.probe		= exynos_ohci_probe,
+>  	.remove		= __devexit_p(exynos_ohci_remove),
+> @@ -264,6 +285,7 @@ static struct platform_driver exynos_ohci_driver = {
+>  		.name	= "exynos-ohci",
+>  		.owner	= THIS_MODULE,
+>  		.pm	= &exynos_ohci_pm_ops,
+> +		.of_match_table	= of_match_ptr(exynos_ohci_match),
+>  	}
+>  };
+> 
+> --
+> 1.7.0.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
