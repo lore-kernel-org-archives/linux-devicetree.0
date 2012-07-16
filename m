@@ -1,13 +1,14 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/2] drivers: bus: add a new driver for omap-ocp2scp
-Date: Mon, 16 Jul 2012 19:43:42 +0530
-Message-ID: <1342448023-14438-2-git-send-email-kishon@ti.com>
-References: <1342448023-14438-1-git-send-email-kishon@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
+Date: Mon, 16 Jul 2012 15:54:04 +0000
+Message-ID: <201207161554.04812.arnd@arndb.de>
+References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
+ <1342363754-30808-2-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342448023-14438-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1342363754-30808-2-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,209 +19,472 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds a new driver *omap-ocp2scp*. This driver takes the responsibility of
-creating all the devices that is connected to OCP2SCP. In the case of OMAP4,
-USB2PHY is connected to ocp2scp.
+On Sunday 15 July 2012, Florian Fainelli wrote:
 
-This also includes device tree support for ocp2scp driver and
-the documentation with device tree binding information is updated.
+> diff --git a/arch/arm/mach-mcs814x/Kconfig b/arch/arm/mach-mcs814x/Kconfig
+> new file mode 100644
+> index 0000000..c89422f
+> --- /dev/null
+> +++ b/arch/arm/mach-mcs814x/Kconfig
+> @@ -0,0 +1,11 @@
+> +if ARCH_MCS814X
+> +
+> +config MCS8140
+> +	select CPU_ARM926T
+> +	bool
+> +
+> +menu "Moschip MCS8140 boards"
+> +
+> +endmenu
+> +
+> +endif
 
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/bus/omap-ocp2scp.txt       |   10 ++
- drivers/Kconfig                                    |    2 +
- drivers/Makefile                                   |    2 +
- drivers/bus/Kconfig                                |   15 +++
- drivers/bus/Makefile                               |    5 +
- drivers/bus/omap-ocp2scp.c                         |   98 ++++++++++++++++++++
- 6 files changed, 132 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
- create mode 100644 drivers/bus/Kconfig
- create mode 100644 drivers/bus/Makefile
- create mode 100644 drivers/bus/omap-ocp2scp.c
+What values does the Kconfig file actually provide? I see that you are
+adding the boards here later, but I think it would be nice to just 
+make the new platform a single Kconfig option with no individual
+board selection.
 
-diff --git a/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt b/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
-new file mode 100644
-index 0000000..d2fe064
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
-@@ -0,0 +1,10 @@
-+* OMAP OCP2SCP - ocp interface to scp interface
-+
-+properties:
-+- compatible : Should be "ti,omap-ocp2scp"
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+- ranges : the child address space are mapped 1:1 onto the parent address space
-+- ti,hwmods : must be "ocp2scp_usb_phy"
-+
-+Sub-nodes:
-+All the devices connected to ocp2scp are described using sub-node to ocp2scp
-diff --git a/drivers/Kconfig b/drivers/Kconfig
-index bfc9186..4fe1e4c 100644
---- a/drivers/Kconfig
-+++ b/drivers/Kconfig
-@@ -2,6 +2,8 @@ menu "Device Drivers"
- 
- source "drivers/base/Kconfig"
- 
-+source "drivers/bus/Kconfig"
-+
- source "drivers/connector/Kconfig"
- 
- source "drivers/mtd/Kconfig"
-diff --git a/drivers/Makefile b/drivers/Makefile
-index 2ba29ff..cac3819 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -5,6 +5,8 @@
- # Rewritten to use lists instead of if-statements.
- #
- 
-+obj-y				+= bus/
-+
- # GPIO must come after pinctrl as gpios may need to mux pins etc
- obj-y				+= pinctrl/
- obj-y				+= gpio/
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-new file mode 100644
-index 0000000..6270415
---- /dev/null
-+++ b/drivers/bus/Kconfig
-@@ -0,0 +1,15 @@
-+#
-+# Bus Devices
-+#
-+
-+menu "Bus devices"
-+
-+config OMAP_OCP2SCP
-+	tristate "OMAP OCP2SCP DRIVER"
-+	help
-+	  Driver to enable ocp2scp module which transforms ocp interface
-+	  protocol to scp protocol. In OMAP4, USB PHY is connected via
-+	  OCP2SCP and in OMAP5, both USB PHY and SATA PHY is connected via
-+	  OCP2SCP.
-+
-+endmenu
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-new file mode 100644
-index 0000000..0ec50bc
---- /dev/null
-+++ b/drivers/bus/Makefile
-@@ -0,0 +1,5 @@
-+#
-+# Makefile for the bus drivers.
-+#
-+
-+obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
-diff --git a/drivers/bus/omap-ocp2scp.c b/drivers/bus/omap-ocp2scp.c
-new file mode 100644
-index 0000000..8c3db3a
---- /dev/null
-+++ b/drivers/bus/omap-ocp2scp.c
-@@ -0,0 +1,98 @@
-+/*
-+ * omap-ocp2scp.c - transform ocp interface protocol to scp protocol
-+ *
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * Author: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/err.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+
-+static int ocp2scp_remove_devices(struct device *dev, void *c)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+
-+	platform_device_unregister(pdev);
-+
-+	return 0;
-+}
-+
-+static int __devinit omap_ocp2scp_probe(struct platform_device *pdev)
-+{
-+	int			ret;
-+	struct device_node	*np = pdev->dev.of_node;
-+
-+	if (np) {
-+		ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to add resources for ocp2scp child\n");
-+			goto err0;
-+		}
-+	}
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
-+
-+err0:
-+	device_for_each_child(&pdev->dev, NULL, ocp2scp_remove_devices);
-+
-+	return ret;
-+}
-+
-+static int __devexit omap_ocp2scp_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+	device_for_each_child(&pdev->dev, NULL, ocp2scp_remove_devices);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id omap_ocp2scp_id_table[] = {
-+	{ .compatible = "ti,omap-ocp2scp" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
-+#endif
-+
-+static struct platform_driver omap_ocp2scp_driver = {
-+	.probe		= omap_ocp2scp_probe,
-+	.remove		= __devexit_p(omap_ocp2scp_remove),
-+	.driver		= {
-+		.name	= "omap-ocp2scp",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(omap_ocp2scp_id_table),
-+	},
-+};
-+
-+static int __init omap_ocp2scp_init(void)
-+{
-+	return platform_driver_register(&omap_ocp2scp_driver);
-+}
-+arch_initcall(omap_ocp2scp_init);
-+
-+static void __exit omap_ocp2scp_exit(void)
-+{
-+	platform_driver_unregister(&omap_ocp2scp_driver);
-+}
-+module_exit(omap_ocp2scp_exit);
-+
-+MODULE_ALIAS("platform: omap-ocp2scp");
-+MODULE_AUTHOR("Texas Instruments Inc.");
-+MODULE_DESCRIPTION("OMAP OCP2SCP DRIVER");
-+MODULE_LICENSE("GPLv2");
--- 
-1.7.5.4
+> +struct clk {
+> +	struct clk *parent;		/* parent clk */
+> +	unsigned long rate;		/* clock rate in Hz */
+> +	unsigned long divider;		/* clock divider */
+> +	u32 usecount;			/* reference count */
+> +	struct clk_ops *ops;		/* clock operation */
+> +	u32 enable_reg;			/* clock enable register */
+> +	u32 enable_mask;		/* clock enable mask */
+> +};
+
+Platforms are now converting to the common clock framework in drivers/clk.
+Mike Turquette as the subsystem maintainer can probably judge better whether
+we should still be allowing new platforms with their own implementation
+of clk, but my feeling is that you should use the subsystem instead
+and add a driver in a subdirectory of drivers/clk instead of in the
+platform.
+
+> +void __iomem *mcs814x_sysdbg_base;
+
+Does this have to be globally visible? I would recommend making it static.
+
+> +
+> +struct cpu_mode {
+> +	const char *name;
+> +	int gpio_start;
+> +	int gpio_end;
+> +};
+> +
+> +static const struct cpu_mode cpu_modes[] = {
+> +	{
+> +		.name		= "I2S",
+> +		.gpio_start	= 4,
+> +		.gpio_end	= 8,
+> +	},
+> +	{
+> +		.name		= "UART",
+> +		.gpio_start	= 4,
+> +		.gpio_end	= 9,
+> +	},
+> +	{
+> +		.name		= "External MII",
+> +		.gpio_start	= 0,
+> +		.gpio_end	= 16,
+> +	},
+> +	{
+> +		.name		= "Normal",
+> +		.gpio_start	= -1,
+> +		.gpio_end	= -1,
+> +	},
+> +};
+> +
+> +void __init mcs814x_init_machine(void)
+> +{
+> +	u32 bs2, cpu_mode;
+> +	int gpio;
+> +
+> +	bs2 = __raw_readl(mcs814x_sysdbg_base + SYSDBG_BS2);
+> +	cpu_mode = (bs2 >> CPU_MODE_SHIFT) & CPU_MODE_MASK;
+> +
+> +	pr_info("CPU mode: %s\n", cpu_modes[cpu_mode].name);
+> +
+> +	/* request the gpios since the pins are muxed for functionnality */
+> +	for (gpio = cpu_modes[cpu_mode].gpio_start;
+> +		gpio == cpu_modes[cpu_mode].gpio_end; gpio++) {
+> +		if (gpio != -1)
+> +			gpio_request(gpio, cpu_modes[cpu_mode].name);
+> +	}
+> +}
+
+This looks like a very simple instance of a pinmux driver. I wonder
+if it's worth doing an actual pinctrl driver that knows about these
+modes and about the gpio handling of the platform. Maybe Linus Walleij
+can comment on that.
+
+How is the cpu mode managed? Is it hardwired through something like
+strapping pins, or could you have a system that sets it dynamically
+based on what hardware is being plugged in?
+
+> +void __init mcs814x_map_io(void)
+> +{
+> +	iotable_init(mcs814x_io_desc, ARRAY_SIZE(mcs814x_io_desc));
+> +
+> +	mcs814x_sysdbg_base = ioremap(MCS814X_IO_START + MCS814X_SYSDBG,
+> +					MCS814X_SYSDBG_SIZE);
+> +	if (!mcs814x_sysdbg_base)
+> +		panic("unable to remap sysdbg base");
+> +}
+> +
+> +void mcs814x_restart(char mode, const char *cmd)
+> +{
+> +	__raw_writel(~(1 << 31), mcs814x_sysdbg_base);
+> +}
+
+You should generally avoid using __raw_readl etc. and instead use
+readl/write or readl_relaxed/writel_relaxed.
+
+> diff --git a/arch/arm/mach-mcs814x/common.h b/arch/arm/mach-mcs814x/common.h
+> new file mode 100644
+> index 0000000..e523abe
+> --- /dev/null
+> +++ b/arch/arm/mach-mcs814x/common.h
+> @@ -0,0 +1,15 @@
+> +#ifndef __ARCH_MCS814X_COMMON_H
+> +#define __ARCH_MCS814X_COMMON_H
+> +
+> +#include <asm/mach/time.h>
+> +
+> +void mcs814x_map_io(void);
+> +void mcs814x_clk_init(void);
+> +void mcs814x_of_irq_init(void);
+> +void mcs814x_init_machine(void);
+> +void mcs814x_handle_irq(struct pt_regs *regs);
+> +void mcs814x_restart(char mode, const char *cmd);
+> +extern struct sys_timer mcs814x_timer;
+> +extern void __iomem *mcs814x_sysdbg_base;
+> +
+> +#endif /* __ARCH_MCS814X_COMMON_H */
+
+I think a lot of these don't actually need to be global if you combine some
+of the files.
+
+
+> diff --git a/arch/arm/mach-mcs814x/include/mach/cpu.h b/arch/arm/mach-mcs814x/include/mach/cpu.h
+> new file mode 100644
+> index 0000000..1ef3c4a
+> --- /dev/null
+> +++ b/arch/arm/mach-mcs814x/include/mach/cpu.h
+> @@ -0,0 +1,16 @@
+> +#ifndef __ASM_ARCH_CPU_H__
+> +#define __ASM_ARCH_CPU_H__
+> +
+> +#include <asm/cputype.h>
+> +
+> +#define MCS8140_ID	0x41069260	/* ARM926EJ-S */
+> +#define MCS814X_MASK	0xff0ffff0
+> +
+> +#ifdef CONFIG_MCS8140
+> +/* Moschip MCS8140 is based on an ARM926EJ-S core */
+> +#define soc_is_mcs8140()	((read_cpuid_id() & MCS814X_MASK) == MCS8140_ID)
+> +#else
+> +#define soc_is_mcs8140()	(0)
+> +#endif /* !CONFIG_MCS8140 */
+> +
+> +#endif /* __ASM_ARCH_CPU_H__ */
+
+Can you explain what this is used for? Are there other SoCs in the same
+platform that will get added later?
+
+> diff --git a/arch/arm/mach-mcs814x/include/mach/hardware.h b/arch/arm/mach-mcs814x/include/mach/hardware.h
+> new file mode 100644
+> index 0000000..529f648
+> --- /dev/null
+> +++ b/arch/arm/mach-mcs814x/include/mach/hardware.h
+> @@ -0,0 +1,16 @@
+> +/*
+> + * Copyright (C) 2003 Artec Design Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#ifndef __ASM_ARCH_HARDWARE_H
+> +#define __ASM_ARCH_HARDWARE_H
+> +
+> +#include "mcs814x.h"
+> +
+> +#endif
+
+I'd just make this an empty file, like gpio.h. That will let us kill off
+these files more easily in the future.
+
+> diff --git a/arch/arm/mach-mcs814x/include/mach/irqs.h b/arch/arm/mach-mcs814x/include/mach/irqs.h
+> new file mode 100644
+> index 0000000..78021d1
+> --- /dev/null
+> +++ b/arch/arm/mach-mcs814x/include/mach/irqs.h
+> @@ -0,0 +1,22 @@
+> +/*
+> + * Copyright (C) 2003 Artec Design Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#ifndef __ASM_ARCH_IRQS_H
+> +#define __ASM_ARCH_IRQS_H
+> +
+> +#define FIQ_START	0
+
+Why do you need the FIQ_START macro here?
+
+> +#define NR_IRQS		32
+> +
+> +#define IRQ_PCI_INTA            22
+> +#define IRQ_PCI_INTB            23
+> +#define IRQ_PCI_INTC            24
+> +#define IRQ_PCI_INTD            26
+
+The PCI interrupts should come from the device tree.
+
+You should also select CONFIG_SPARSE_IRQ unconditionally and use IRQ domains
+so that you no longer need to set NR_IRQS.
+
+> diff --git a/arch/arm/mach-mcs814x/include/mach/mcs814x.h b/arch/arm/mach-mcs814x/include/mach/mcs814x.h
+> new file mode 100644
+> index 0000000..a4a369e
+> --- /dev/null
+> +++ b/arch/arm/mach-mcs814x/include/mach/mcs814x.h
+> @@ -0,0 +1,53 @@
+> +/*
+> + * Copyright (C) 2003 Artec Design Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#ifndef __ASM_ARCH_MCS814X_H
+> +#define __ASM_ARCH_MCS814X_H
+> +
+> +#define MCS814X_IO_BASE		0xF0000000
+> +#define MCS814X_IO_START	0x40000000
+> +#define MCS814X_IO_SIZE		0x00100000
+
+What are these required for in the global space? Can you move them into
+a single .c file?
+
+> +/* IRQ controller register offset */
+> +#define MCS814X_IRQ_ICR		0x00
+> +#define MCS814X_IRQ_ISR		0x04
+> +#define MCS814X_IRQ_MASK	0x20
+> +#define MCS814X_IRQ_STS0	0x40
+
+I'm pretty sure these can be in irq.c
+
+> +#define MCS814X_PHYS_BASE	0x40000000
+> +#define MCS814X_VIRT_BASE	MCS814X_IO_BASE
+> +
+> +#define MCS814X_UART		0x000DC000
+> +#define MCS814X_DBGLED		0x000EC000
+> +#define MCS814X_SYSDBG		0x000F8000
+> +#define MCS814X_SYSDBG_SIZE	0x50
+> +
+> +/* System configuration and bootstrap registers */
+> +#define SYSDBG_BS1		0x00
+> +#define  CPU_FREQ_SHIFT		27
+> +#define  CPU_FREQ_MASK		0x0F
+> +#define  SDRAM_FREQ_BIT		(1 << 22)
+> +
+> +#define SYSDBG_BS2		0x04
+> +#define  LED_CFG_MASK		0x03
+> +#define  CPU_MODE_SHIFT		23
+> +#define  CPU_MODE_MASK		0x03
+> +
+> +#define SYSDBG_SYSCTL_MAC	0x1d
+> +#define  BUF_SHIFT_BIT		(1 << 0)
+> +
+> +#define SYSDBG_SYSCTL		0x08
+> +#define  SYSCTL_EMAC		(1 << 0)
+> +#define  SYSCTL_EPHY		(1 << 0) /* active low */
+> +#define  SYSCTL_CIPHER		(1 << 16)
+> +
+> +#define SYSDBG_PLL_CTL		0x3C
+
+The sysdbg stuff can probably go into a file that deals
+with the sysdbg registers and exports a high-level interface.
+
+> +
+> +void __iomem *mcs814x_intc_base;
+
+static?
+
+> +#define MCS8140_PCI_HOST_BASE           0x80000000
+> +#define MCS8140_PCI_IOMISC_BASE         0x00000000
+> +#define MCS8140_PCI_PRE_BASE            0x10000000
+> +#define MCS8140_PCI_NONPRE_BASE         0x30000000
+> +
+> +#define MCS8140_PCI_CFG_BASE		(MCS8140_PCI_HOST_BASE + 0x04000000)
+> +#define MCS8140_PCI_IO_BASE		(MCS8140_PCI_HOST_BASE)
+> +
+> +#define MCS8140_PCI_IO_VIRT_BASE	(MCS814X_IO_BASE - \
+> +					 MCS8140_PCI_CONFIG_SIZE - \
+> +					 MCS8140_PCI_IOMISC_SIZE)
+> +#define MCS8140_PCI_CFG_VIRT_BASE	(MCS814X_IO_BASE - \
+> +					 MCS8140_PCI_CONFIG_SIZE)
+
+
+> +static unsigned long __pci_addr(struct pci_bus *bus,
+> +				unsigned int devfn, int offset)
+> +{
+> +	unsigned int busnr = bus->number;
+> +	unsigned int slot;
+> +
+> +	/* we only support bus 0 */
+> +	if (busnr != 0)
+> +		return 0;
+
+Why? A lot of devices have bridges on them and they should just
+work if you take out this check.
+
+> +	/*
+> +	 * Trap out illegal values
+> +	 */
+> +	BUG_ON(devfn > 255 || busnr > 255 || devfn > 255);
+
+You're checking devfn twice...
+
+> +	/* Scan 3 slots */
+> +	slot = PCI_SLOT(devfn);
+> +	switch (slot) {
+> +	case 1:
+> +	case 2:
+> +	case 3:
+> +		if (PCI_FUNC(devfn) >= 4)
+> +			return 0;
+
+This also looks bogus. Why limit it to three devices?
+
+> +static int mcs8140_pci_read_config(struct pci_bus *bus,
+> +					unsigned int devfn, int where,
+> +					int size, u32 *val)
+> +{
+> +	unsigned long v = 0xFFFFFFFF;
+> +	unsigned long addr = __pci_addr(bus, devfn, where);
+> +
+> +	if (addr != 0) {
+> +		switch (size) {
+> +		case 1:
+> +			v = __raw_readb(addr);
+> +			break;
+> +		case 2:
+> +			addr &= ~1;
+> +			v = __raw_readw(addr);
+> +			break;
+> +		default:
+> +			addr &= ~3;
+> +			v = __raw_readl(addr);
+> +			break;
+> +		}
+> +	} else
+> +		v = 0xffffffff;
+
+This is just mmconfig, right? Don't we have a generic implementation for that?
+
+> +
+> +static struct resource io_mem = {
+> +	.name	= "PCI I/O space",
+> +	.start	= MCS8140_PCI_HOST_BASE + MCS8140_PCI_IOMISC_BASE,
+> +	.end	= MCS8140_PCI_HOST_BASE + MCS8140_PCI_IOMISC_BASE + SZ_64M,
+> +	.flags	= IORESOURCE_IO,
+> +};
+
+This is wrong: MCS8140_PCI_HOST_BASE is an address in IORESOURCE_MEM space.
+You probably also mean SZ_64K instead of SZ_64M.
+
+> +int __init pci_mcs8140_setup(int nr, struct pci_sys_data *sys)
+> +{
+> +	int ret = 0;
+> +	u32 val;
+> +
+> +	if (nr > 0)
+> +		return 0;
+> +
+> +	sys->mem_offset = MCS8140_PCI_IO_VIRT_BASE - MCS8140_PCI_IO_BASE;
+
+Your address spaces are very confusing (or confused). So you have defined
+#define MCS8140_PCI_IO_VIRT_BASE       (MCS814X_IO_BASE - \
+                                        MCS8140_PCI_CONFIG_SIZE - \
+                                        MCS8140_PCI_IOMISC_SIZE)
+#define MCS8140_PCI_CFG_VIRT_BASE      (MCS814X_IO_BASE - \
+                                        MCS8140_PCI_CONFIG_SIZE)
+
+
+which means you mem_offset is (MCS814X_IO_BASE - MCS8140_PCI_CONFIG_SIZE -
+MCS8140_PCI_IOMISC_SIZE) - (MCS814X_IO_BASE - MCS8140_PCI_CONFIG_SIZE)
+which is (-MCS8140_PCI_IOMISC_SIZE), which in turn evaluates to
+-SZ_64M or 0xfc000000. If that is the correct value, I'm sure it's
+just coincidence ;-)
+
+> +static int __init mcs8140_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> +{
+> +	int line = IRQ_PCI_INTA;
+> +
+> +	if (pin != 0) {
+> +		/* IRQ_PCIA - 22 */
+> +		if (pin == PCI_INTD)
+> +			line = IRQ_PCI_INTA + pin; /* IRQ_PCIA - 22 */
+> +		else
+> +			line = IRQ_PCI_INTA + pin - 1; /* IRQ_PCIA - 22 */
+> +	}
+> +
+> +	pr_info("PCI: Map interrupt slot 0x%02x pin 0x%02x line 0x%02x\n",
+> +		slot, pin, line);
+> +
+> +	return line;
+> +}
+
+This looks like a very unusual mapping. Maybe it's just wrong and that
+explains why you don't support child buses or additional slots?
+
+In any case, you should use an "interrupt-map" in the device tree that
+describes how the IRQs are mapped to the slots. I think we have generic
+code to deal with that already.
+
+> +static struct map_desc mcs8140_pci_io_desc[] __initdata = {
+> +	{
+> +		.virtual	= MCS8140_PCI_CFG_VIRT_BASE,
+> +		.pfn		= __phys_to_pfn(MCS8140_PCI_CFG_BASE),
+> +		.length		= MCS8140_PCI_CONFIG_SIZE,
+> +		.type		= MT_DEVICE
+> +	},
+> +	{
+> +		.virtual	= MCS8140_PCI_IO_VIRT_BASE,
+> +		.pfn		= __phys_to_pfn(MCS8140_PCI_IO_BASE),
+> +		.length		= MCS8140_PCI_IOMISC_SIZE,
+> +		.type		= MT_DEVICE
+> +	},
+> +};
+
+Please have a look at the latest patches from Rob Herring about
+mapping the I/O space. I don't think you need to map the config
+space early because you don't rely on a fixed location for that.
+Just use of_iomap() to find that and store the pointer to the
+config space somewhere.
+
+> +	pcibios_min_io = MCS8140_PCI_HOST_BASE;
+
+Leave this one at the default of 0x1000. MCS8140_PCI_HOST_BASE is the
+address from the CPU's point of view, not from the bus. You just need
+to stay out of the range of possible legacy ISA devices.
+
+It's probably a good idea to keep the PCI support as a separate patch
+for reviewing purposes.
+
+	Arnd
