@@ -1,66 +1,82 @@
-From: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the
- i2c-embedded tree
-Date: Mon, 16 Jul 2012 16:04:25 -0400
-Message-ID: <874np7jwvq.fsf@octavius.laptop.org>
-References: <20120710164130.f38e4d1673f925ddb13914c9@canb.auug.org.au>
- <20120712131231.GH2194@pengutronix.de>
- <CACRpkdboeF_G=sTPeSyuZ6KGLCmGSKx_NS=6Rim6HkR2f9=AAQ@mail.gmail.com>
- <20120716101706.GB17435@pengutronix.de>
- <CACRpkdY626iYATorphAvg7cQxD2ufysBvXdt3Z644zEuW0wS=w@mail.gmail.com>
- <20120716123550.GE17435@pengutronix.de>
- <CACRpkdaMB-n7XYcxE8QtAm-WrGc2DR0krfTjQZCbvOL1HYep1Q@mail.gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH RESEND v2 2/2] ARM: EXYNOS: Add gscaler device from DT
+Date: Mon, 16 Jul 2012 22:33:45 +0200
+Message-ID: <50047AA9.4000608@gmail.com>
+References: <1342416803-30809-1-git-send-email-shaik.ameer@samsung.com> <1342416803-30809-3-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdaMB-n7XYcxE8QtAm-WrGc2DR0krfTjQZCbvOL1HYep1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
- (Linus Walleij's message of "Mon, 16 Jul 2012 21:45:29 +0200")
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Alessandro Rubini <rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1342416803-30809-3-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, sachin.kamat@linaro.org, joshi@samsung.com, ameersk@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Shaik,
 
-On Mon, Jul 16 2012, Linus Walleij wrote:
->> Uhm, I seem to have missed that bindings are deemed more "flexible" as
->> long as they are coupled to in-kernel dts files? Is that discussed
->> somewhere? I do wonder about it...
->
-> Well patches like this are sent out but not commented on from
-> the perspective of binding stability. So of course, they get merged.
->
-> Have a look at this commit:
->
-> commit 7f217794ffa72f208a250b79ab0b7ea3de19677f
-> Author: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Date:   Sun May 13 00:14:24 2012 -0400
->
->     mmc: dt: Consolidate DT bindings
->
-> This is deleting custom properties from DTS files without
-> adding any code to fallback-support them on old device trees.
+On 07/16/2012 07:33 AM, Shaik Ameer Basha wrote:
+> +++ b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
+> @@ -0,0 +1,16 @@
+> +* Samsung Exynos5 Gscaler device
+> +
+> +Gscaler is used for scaling and color space conversion on EXYNOS5 SoCs.
+> +
+> +Required properties:
+> +- compatible: should be "samsung,exynos-gsc"
 
-I agree with your point, but just as an FYI: this patch did involve
-a conversation about binding stability, and left some attributes
-(e.g. ti,non-removable) purposefully alone (and different to the
-new generic MMC bindings) to preserve backwards compatibility:
+Shouldn't there rather be a specific "compatible" property for each SoC,
+e.g.
+    - compatible: should be one of:
+	"samsung5250,exynos-gsc",
+	"samsung5450,exynos-gsc",
+etc. ?
 
-http://article.gmane.org/gmane.linux.kernel.samsung-soc/10409
+> +- reg: should contian Gsaler physical address location and length.
 
-Thanks,
+contian -> contain, Gsaler -> Gscaler
 
-- Chris.
--- 
-Chris Ball   <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>   <http://printf.net/>
-One Laptop Per Child
+> +- interrupts: should contain Gscaler interrupt number
+> +
+> +Example:
+> +
+> +gsc_0:  gsc@0x13e00000 {
+> +	compatible = "samsung,exynos-gsc";
+
+	compatible = "samsung5250,exynos-gsc";
+
+> +	reg =<0x13e00000 0x1000>;
+> +	interrupts =<0 85 0>;
+> +};
+
+The aliases are still undocumented. How about adding something
+along the lines of:
+
+"Each Gscaler node should have a numbered alias in the aliases node,
+in the form of gscN, N = 0...3."
+
+?
+
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 4272b29..b945c00 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -23,6 +23,13 @@
+>   	compatible = "samsung,exynos5250";
+>   	interrupt-parent =<&gic>;
+>
+> +	aliases {
+> +		gsc0 =&gsc_0;
+> +		gsc1 =&gsc_1;
+> +		gsc2 =&gsc_2;
+> +		gsc3 =&gsc_3;
+> +	};
+> +
+>   	gic:interrupt-controller@10481000 {
+>   		compatible = "arm,cortex-a9-gic";
+>   		#interrupt-cells =<3>;
+
+--
+
+Regards,
+Sylwester
