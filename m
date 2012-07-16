@@ -1,15 +1,17 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
-Date: Tue, 17 Jul 2012 00:12:01 +0200
-Message-ID: <CACRpkdbxesmgFswBKzAFHUBt-Np7wX0SXXVKrmGzubUN3OVN2w@mail.gmail.com>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <1342363754-30808-2-git-send-email-florian@openwrt.org>
- <201207161554.04812.arnd@arndb.de>
+Subject: Re: [PATCH v2 1/2] pinctrl: pinctrl-imx: add support for set bits for
+ general purpose registers
+Date: Tue, 17 Jul 2012 00:15:14 +0200
+Message-ID: <CACRpkdbCra8C=32wdpqyf9e05AsBDeiADiDn_FesvvW9bteVcA@mail.gmail.com>
+References: <1342084080-3145-1-git-send-email-b29396@freescale.com>
+ <CACRpkdbHtgKLA3JJxc4VY35zSpJFvk15u62Z3aBCqERoeQ10CA@mail.gmail.com>
+ <20120716081703.GH21635@b20223-02.ap.freescale.net>
+ <201207161340.18528.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201207161554.04812.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <201207161340.18528.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,71 +23,23 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: b20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 16, 2012 at 5:54 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+On Mon, Jul 16, 2012 at 3:40 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
->> +static const struct cpu_mode cpu_modes[] = {
->> +     {
->> +             .name           = "I2S",
->> +             .gpio_start     = 4,
->> +             .gpio_end       = 8,
->> +     },
->> +     {
->> +             .name           = "UART",
->> +             .gpio_start     = 4,
->> +             .gpio_end       = 9,
->> +     },
->> +     {
->> +             .name           = "External MII",
->> +             .gpio_start     = 0,
->> +             .gpio_end       = 16,
->> +     },
->> +     {
->> +             .name           = "Normal",
->> +             .gpio_start     = -1,
->> +             .gpio_end       = -1,
->> +     },
->> +};
->> +
->> +void __init mcs814x_init_machine(void)
->> +{
->> +     u32 bs2, cpu_mode;
->> +     int gpio;
->> +
->> +     bs2 = __raw_readl(mcs814x_sysdbg_base + SYSDBG_BS2);
->> +     cpu_mode = (bs2 >> CPU_MODE_SHIFT) & CPU_MODE_MASK;
->> +
->> +     pr_info("CPU mode: %s\n", cpu_modes[cpu_mode].name);
->> +
->> +     /* request the gpios since the pins are muxed for functionnality */
->> +     for (gpio = cpu_modes[cpu_mode].gpio_start;
->> +             gpio == cpu_modes[cpu_mode].gpio_end; gpio++) {
->> +             if (gpio != -1)
->> +                     gpio_request(gpio, cpu_modes[cpu_mode].name);
->> +     }
->> +}
->
-> This looks like a very simple instance of a pinmux driver. I wonder
-> if it's worth doing an actual pinctrl driver that knows about these
-> modes and about the gpio handling of the platform. Maybe Linus Walleij
-> can comment on that.
+> One thing I've thought about
+> before is to create some kind of very simple "system controller"
+> framework based on regmap that lets you register a single global
+> "struct regmap" pointer from an SoC specific driver, and have drivers
+> call a function into that framework to get a reference to that
+> regmap.
 
-It is worth, because usually it is not simple at all but these are,
-as I highly suspect, the first few entries to get the platform up and
-running. Then it's going to need to add another one, and then
-another one, and then break it into a separate file, and then it's a
-custom pin controller implementation all over again
+This sounds like a good idea. "misc-bit-poking" is something a lot
+of systems are doing.
 
-Nothing is forbidding a simple pin controller implementation
-in drivers/pinctrl, just a few tens of lines is perfectly OK
-with me.
-
-Documentation/pinctrl.txt is the friend at all times.
-arch/arm/mach-u300/core.c shows how a simple set-up
-at boot time can be achieved using so-called pinctrl
-hogs.
+I haven't fully grasped regmap so that I can say whether that is the
+proper abstraction or not though. But I trust you on this...
 
 Yours,
 Linus Walleij
