@@ -1,158 +1,523 @@
-From: Rajeev kumar <rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] i2c: i2c-ocores: Use reg-shift property
-Date: Mon, 16 Jul 2012 09:15:32 +0530
-Message-ID: <50038E5C.4050300@st.com>
-References: <1342187065-1651-1-git-send-email-jayachandranc@netlogicmicro.com> <1342187065-1651-3-git-send-email-jayachandranc@netlogicmicro.com>
+From: Girish K S <girish.shivananjappa@linaro.org>
+Subject: Re: [PATCH v3 5/6] mmc: dw_mmc: add device tree support
+Date: Mon, 16 Jul 2012 09:45:05 +0530
+Message-ID: <CAGxe1ZHZr2=127p8X-A12K2-zOyKMOJ0fkx5pWNovVteFfSPwg@mail.gmail.com>
+References: <1342097668-25243-1-git-send-email-thomas.abraham@linaro.org>
+	<1342097668-25243-6-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342187065-1651-3-git-send-email-jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
-Cc: "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org" <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, "richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org" <richard.rojfors-gfIc91nka+FZroRs9YW3xA@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Ganesan Ramalingam <ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1342097668-25243-6-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/13/2012 7:14 PM, Jayachandran C wrote:
-> From: Ganesan Ramalingam<ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On 12 July 2012 18:24, Thomas Abraham <thomas.abraham@linaro.org> wrote:
+> Add device tree based discovery support.
 >
-> Deprecate 'regstep' property and use the standard 'reg-shift' property
-> for register offset shifts. 'regstep' will still be supported as an
-> optional property, but will give a warning when used.
->
-> Signed-off-by: Ganesan Ramalingam<ganesanr-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Jayachandran C<jayachandranc-oSioyQM9ZPnuBjGU1YDckgC/G2K4zDHf@public.gmane.org>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 > ---
->   .../devicetree/bindings/i2c/i2c-ocores.txt         |    8 +++--
->   drivers/i2c/busses/i2c-ocores.c                    |   36 ++++++++++++--------
->   include/linux/i2c-ocores.h                         |    2 +-
->   3 files changed, 29 insertions(+), 17 deletions(-)
+>  .../devicetree/bindings/mmc/synposis-dw-mshc.txt   |  108 +++++++++++
+>  drivers/mmc/host/dw_mmc-pltfm.c                    |   24 +++
+>  drivers/mmc/host/dw_mmc.c                          |  201 +++++++++++++++++++-
+>  drivers/mmc/host/dw_mmc.h                          |    9 +
+>  include/linux/mmc/dw_mmc.h                         |    2 +
+>  5 files changed, 338 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
 >
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> index bfec894..1c9334b 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> @@ -4,11 +4,14 @@ Required properties:
->   - compatible      : "opencores,i2c-ocores"
->   - reg             : bus address start and address range size of device
->   - interrupts      : interrupt number
-> -- regstep         : size of device registers in bytes
->   - clock-frequency : frequency of bus clock in Hz
->   - #address-cells  : should be<1>
->   - #size-cells     : should be<0>
->
+> diff --git a/Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
+> new file mode 100644
+> index 0000000..3acd6c9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
+> @@ -0,0 +1,108 @@
+> +* Synopsis Designware Mobile Storage Host Controller
+> +
+> +The Synopsis designware mobile storage host controller is used to interface
+> +a SoC with storage medium such as eMMC or SD/MMC cards.
+> +
+> +Required Properties:
+> +
+> +* compatible: should be one of the following
+> +       - snps,dw-mshc: for controllers compliant with synopsis dw-mshc.
+> +
+> +* reg: physical base address of the dw-mshc controller and size of its memory
+> +  region.
+> +
+> +* interrupts: interrupt specifier for the controller. The format and value of
+> +  the interrupt specifier depends on the interrupt parent for the controller.
+> +
+> +* #address-cells: should be 1.
+> +
+> +* #size-cells: should be 0.
+> +
+> +# Slots: The slot specific information are contained within child-nodes with
+> +  each child-node representing a supported slot. There should be atleast one
+> +  child node representing a card slot. The name of the child node representing
+> +  the slot is recommended to be slot@n where n is the unique number of the slot
+> +  connnected to the controller. The following are optional properties which
+> +  can be included in the slot child node.
+> +
+> +       * reg: specifies the physical slot number. The valid values of this
+> +         property is 0 to (num-slots -1), where num-slots is the value
+> +         specified by the num-slots property.
+> +
+> +       * bus-width: specifies the width of the data bus connected from the
+> +         controller to the card slot. The value should be 1, 4 or 8. In case
+> +         this property is not specified, a default value of 1 is assumed for
+> +         this property.
+> +
+> +       * cd-gpios: specifies the card detect gpio line. The format of the
+> +         gpio specifier depends on the gpio controller.
+> +
+> +       * wp-gpios: specifies the write protect gpio line. The format of the
+> +         gpio specifier depends on the gpio controller.
+> +
+> +       * gpios: specifies a list of gpios used for command, clock and data
+> +         bus. The first gpio is the command line and the second gpio is the
+> +         clock line. The rest of the gpios (depending on the bus-width
+> +         property) are the data lines in no particular order. The format of
+> +         the gpio specifier depends on the gpio controller.
+> +
 > +Optional properties:
-> +- reg-shift       : device register offsets are shifted by this value
-> +- regstep         : deprecated, use reg-shift above
 > +
->   Example:
->
->   	i2c0: ocores@a0000000 {
-> @@ -17,9 +20,10 @@ Example:
->   		compatible = "opencores,i2c-ocores";
->   		reg =<0xa0000000 0x8>;
->   		interrupts =<10>;
-> -		regstep =<1>;
->   		clock-frequency =<20000000>;
->
-> +		reg-shift =<0>;	/* 8 bit registers */
+> +* num-slots: specifies the number of slots supported by the controller.
+> +  The number of physical slots actually used could be equal or less than the
+> +  value specified by num-slots. If this property is not specified, the value
+> +  of num-slot property is assumed to be 1.
 > +
->   		dummy@60 {
->   			compatible = "dummy";
->   			reg =<0x60>;
-> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-> index e8159db..721ead9 100644
-> --- a/drivers/i2c/busses/i2c-ocores.c
-> +++ b/drivers/i2c/busses/i2c-ocores.c
-> @@ -25,10 +25,11 @@
->   #include<linux/slab.h>
->   #include<linux/io.h>
->   #include<linux/of_i2c.h>
-> +#include<linux/log2.h>
->
->   struct ocores_i2c {
->   	void __iomem *base;
-> -	int regstep;
-> +	u32 reg_shift;
->   	wait_queue_head_t wait;
->   	struct i2c_adapter adap;
->   	struct i2c_msg *msg;
-> @@ -71,12 +72,12 @@ struct ocores_i2c {
->
->   static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
->   {
-> -	iowrite8(value, i2c->base + reg * i2c->regstep);
-> +	iowrite8(value, i2c->base + (reg<<  i2c->reg_shift));
->   }
->
->   static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
->   {
-> -	return ioread8(i2c->base + reg * i2c->regstep);
-> +	return ioread8(i2c->base + (reg<<  i2c->reg_shift));
->   }
->
->   static void ocores_process(struct ocores_i2c *i2c)
-> @@ -219,22 +220,29 @@ static struct i2c_adapter ocores_adapter = {
->   static int ocores_i2c_of_probe(struct platform_device *pdev,
->   				struct ocores_i2c *i2c)
->   {
-> -	const __be32* val;
-> -
-> -	val = of_get_property(pdev->dev.of_node, "regstep", NULL);
-> -	if (!val) {
-> -		dev_err(&pdev->dev, "Missing required parameter 'regstep'\n");
-> -		return -ENODEV;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	u32 val;
+> +* fifo-depth: The maximum size of the tx/rx fifo's. If this property is not
+> +  specified, the default value of the fifo size is determined from the
+> +  controller registers.
 > +
-> +	if (of_property_read_u32(np, "reg-shift",&i2c->reg_shift)) {
-> +		/* no 'reg-shift', check for deprecated 'regstep' */
-> +		if (!of_property_read_u32(np, "regstep",&val)) {
-> +			if (!is_power_of_2(val)) {
-> +				dev_err(&pdev->dev, "invalid regstep %d\n",
-> +					val);
-> +				return -EINVAL;
-> +			}
-> +			i2c->reg_shift = ilog2(val);
-> +			dev_warn(&pdev->dev,
-> +				"regstep property deprecated, use reg-shift\n");
-> +		}
->   	}
-> -	i2c->regstep = be32_to_cpup(val);
+> +* card-detect-delay: Delay in milli-seconds before detecting card after card
+> +  insert event. The default value is 0.
+> +
+> +* supports-highspeed: Enables support for high speed cards (upto 50MHz)
+> +
+> +* card-detection-broken: The card detection functionality is not available on
+> +  any of the slots.
+> +
+> +* no-write-protect: The write protect pad of the controller is not connected
+> +  to the write protect pin on the slot.
+> +
+> +Aliases:
+> +
+> +- All the MSHC controller nodes should be represented in the aliases node using
+> +  the following format 'mshc{n}' where n is a unique number for the alias.
+> +
+> +
+> +Example:
+> +
+> +  The MSHC controller node can be split into two portions, SoC specific and
+> +  board specific portions as listed below.
+> +
+> +       dwmmc0@12200000 {
+> +               compatible = "snps,dw-mshc";
+> +               reg = <0x12200000 0x1000>;
+> +               interrupts = <0 75 0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +       };
+> +
+> +       dwmmc0@12200000 {
+> +               num-slots = <1>;
+> +               supports-highspeed;
+> +               card-detection-broken;
+> +               no-write-protect;
+> +               fifo-depth = <0x80>;
+> +               card-detect-delay = <200>;
+> +
+> +               slot@0 {
+> +                       reg = <0>;
+> +                       bus-width = <8>;
+> +                       cd-gpios = <&gpc0 2 2 3 3>;
+> +                       gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
+> +                               <&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
+> +                               <&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
+> +                               <&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
+> +                               <&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
+> +               };
+> +       };
+> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+> index 9a63299..8d24f6d 100644
+> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+> @@ -19,8 +19,24 @@
+>  #include <linux/mmc/host.h>
+>  #include <linux/mmc/mmc.h>
+>  #include <linux/mmc/dw_mmc.h>
+> +#include <linux/of.h>
+>  #include "dw_mmc.h"
 >
-> -	val = of_get_property(pdev->dev.of_node, "clock-frequency", NULL);
-> -	if (!val) {
-> +	if (of_property_read_u32(np, "clock-frequency",&val)) {
->   		dev_err(&pdev->dev,
->   			"Missing required parameter 'clock-frequency'\n");
->   		return -ENODEV;
->   	}
-> -	i2c->clock_khz = be32_to_cpup(val) / 1000;
-> +	i2c->clock_khz = val / 1000;
+> +#ifdef CONFIG_OF
+> +static struct dw_mci_drv_data synopsis_drv_data = {
+> +       .ctrl_type      = DW_MCI_TYPE_SYNOPSIS,
+> +};
+> +
+> +static const struct of_device_id dw_mci_pltfm_match[] = {
+> +       { .compatible = "snps,dw-mshc",
+> +                       .data = (void *)&synopsis_drv_data, },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_mci_pltfm_match);
+> +#else
+> +static const struct of_device_id dw_mci_pltfm_match[];
+the #else and a statement can be completely removed if of_match_ptr is
+used while accessing the dw_mci_pltfm_match in of_match_node function.
+> +#endif
+> +
+>  static int dw_mci_pltfm_probe(struct platform_device *pdev)
+>  {
+>         struct dw_mci *host;
+> @@ -51,6 +67,13 @@ static int dw_mci_pltfm_probe(struct platform_device *pdev)
+>         if (!host->regs)
+>                 goto err_free;
+>         platform_set_drvdata(pdev, host);
+> +
+> +       if (pdev->dev.of_node) {
+> +               const struct of_device_id *match;
+> +               match = of_match_node(dw_mci_pltfm_match, pdev->dev.of_node);
+can be modified to of_match_node(of_match_pt(dw_mci_pltfm_match),
+pdev->dev.of_node);
+This will remove the dummy allocation of variable as mentioned above.
+Also it will be generic in non dt case.
+> +               host->drv_data = match->data;
+> +       }
+> +
+>         ret = dw_mci_probe(host);
+>         if (ret)
+>                 goto err_out;
+> @@ -111,6 +134,7 @@ static struct platform_driver dw_mci_pltfm_driver = {
+>         .remove         = __exit_p(dw_mci_pltfm_remove),
+>         .driver         = {
+>                 .name           = "dw_mmc",
+> +               .of_match_table = of_match_ptr(dw_mci_pltfm_match),
+>                 .pm             = &dw_mci_pltfm_pmops,
+>         },
+>  };
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 075f89d..3bc276d 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -33,9 +33,13 @@
+>  #include <linux/bitops.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/workqueue.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
 >
->   	return 0;
->   }
-> @@ -277,7 +285,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>  #include "dw_mmc.h"
 >
->   	pdata = pdev->dev.platform_data;
->   	if (pdata) {
-> -		i2c->regstep = pdata->regstep;
-> +		i2c->reg_shift = pdata->reg_shift;
->   		i2c->clock_khz = pdata->clock_khz;
->   	} else {
->   		ret = ocores_i2c_of_probe(pdev, i2c);
-> diff --git a/include/linux/i2c-ocores.h b/include/linux/i2c-ocores.h
-> index 4d5e57f..5d95df2 100644
-> --- a/include/linux/i2c-ocores.h
-> +++ b/include/linux/i2c-ocores.h
-> @@ -12,7 +12,7 @@
->   #define _LINUX_I2C_OCORES_H
+> +#define NUM_PINS(x) (x + 2)
+> +
+>  /* Common flag combinations */
+>  #define DW_MCI_DATA_ERROR_FLAGS        (SDMMC_INT_DTO | SDMMC_INT_DCRC | \
+>                                  SDMMC_INT_HTO | SDMMC_INT_SBE  | \
+> @@ -86,6 +90,8 @@ struct idmac_desc {
+>  struct dw_mci_slot {
+>         struct mmc_host         *mmc;
+>         struct dw_mci           *host;
+> +       int                     wp_gpio;
+> +       int                     cd_gpio;
 >
->   struct ocores_i2c_platform_data {
-> -	u32 regstep;   /* distance between registers */
-> +	u32 reg_shift; /* register offset shift value */
->   	u32 clock_khz; /* input clock in kHz */
->   	u8 num_devices; /* number of devices in the devices list */
->   	struct i2c_board_info const *devices; /* devices connected to the bus */
-
-Reviewed By: Rajeev Kumar <rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org>
+>         u32                     ctype;
+>
+> @@ -1762,10 +1768,106 @@ static void dw_mci_work_routine_card(struct work_struct *work)
+>         }
+>  }
+>
+> +#ifdef CONFIG_OF
+> +static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
+> +{
+> +       struct device_node *np;
+> +       const __be32 *addr;
+> +       int len;
+> +
+> +       if (!dev || !dev->of_node)
+> +               return NULL;
+> +
+> +       for_each_child_of_node(dev->of_node, np) {
+> +               addr = of_get_property(np, "reg", &len);
+> +               if (!addr || (len < sizeof(int)))
+> +                       continue;
+> +               if (be32_to_cpup(addr) == slot)
+> +                       return np;
+> +       }
+> +       return NULL;
+> +}
+> +
+> +static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
+> +{
+> +       struct device_node *np = dw_mci_of_find_slot_node(dev, slot);
+> +       u32 bus_wd = 1;
+> +
+> +       if (!np)
+> +               return 1;
+> +
+> +       if (of_property_read_u32(np, "bus-width", &bus_wd))
+> +               dev_err(dev, "bus-width property not found, assuming width"
+> +                              " as 1\n");
+> +       return bus_wd;
+> +}
+> +
+> +static int dw_mci_of_setup_bus(struct dw_mci *host, u8 slot, u32 bus_wd)
+> +{
+> +       struct device_node *np = dw_mci_of_find_slot_node(host->dev, slot);
+> +       int idx, gpio, ret;
+> +
+> +       if (!np)
+> +               return -EINVAL;
+> +
+> +       for (idx = 0; idx < NUM_PINS(bus_wd); idx++) {
+> +               gpio = of_get_gpio(np, idx);
+> +               if (!gpio_is_valid(gpio)) {
+> +                       dev_err(host->dev, "invalid gpio: %d\n", gpio);
+> +                       return -EINVAL;
+> +               }
+> +
+> +               ret = devm_gpio_request(host->dev, gpio, "dw-mci-bus");
+> +               if (ret) {
+> +                       dev_err(host->dev, "gpio [%d] request failed\n", gpio);
+> +                       return -EBUSY;
+> +               }
+> +       }
+> +
+> +       host->slot[slot]->wp_gpio = -1;
+> +       gpio = of_get_named_gpio(np, "wp-gpios", 0);
+> +       if (!gpio_is_valid(gpio)) {
+> +               dev_info(host->dev, "wp gpio not available");
+> +       } else {
+> +               ret = devm_gpio_request(host->dev, gpio, "dw-mci-wp");
+> +               if (ret)
+> +                       dev_info(host->dev, "gpio [%d] request failed\n",
+> +                                               gpio);
+> +               else
+> +                       host->slot[slot]->wp_gpio = gpio;
+> +       }
+> +
+> +       host->slot[slot]->cd_gpio = -1;
+> +       gpio = of_get_named_gpio(np, "cd-gpios", 0);
+> +       if (!gpio_is_valid(gpio)) {
+> +               dev_info(host->dev, "cd gpio not available");
+> +       } else {
+> +               ret = devm_gpio_request(host->dev, gpio, "dw-mci-cd");
+> +               if (ret)
+> +                       dev_err(host->dev, "gpio [%d] request failed\n", gpio);
+> +               else
+> +                       host->slot[slot]->cd_gpio = gpio;
+> +       }
+> +
+> +       return 0;
+> +}
+> +#else /* CONFIG_OF */
+> +static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
+> +{
+> +       return 1;
+> +}
+> +
+> +static int dw_mci_of_setup_bus(struct dw_mci *host, u8 slot, u32 bus_wd)
+> +{
+> +       return -EINVAL;
+> +}
+> +#endif /* CONFIG_OF */
+> +
+>  static int __init dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+>  {
+>         struct mmc_host *mmc;
+>         struct dw_mci_slot *slot;
+> +       int ctrl_id, ret;
+>
+>         mmc = mmc_alloc_host(sizeof(struct dw_mci_slot), host->dev);
+>         if (!mmc)
+> @@ -1775,6 +1877,7 @@ static int __init dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+>         slot->id = id;
+>         slot->mmc = mmc;
+>         slot->host = host;
+> +       host->slot[id] = slot;
+>
+>         mmc->ops = &dw_mci_ops;
+>         mmc->f_min = DIV_ROUND_UP(host->bus_hz, 510);
+> @@ -1795,12 +1898,33 @@ static int __init dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+>         if (host->pdata->caps)
+>                 mmc->caps = host->pdata->caps;
+>
+> +       if (host->dev->of_node) {
+> +               ctrl_id = of_alias_get_id(host->dev->of_node, "mshc");
+> +               if (ctrl_id < 0)
+> +                       ctrl_id = 0;
+> +       }
+> +       if (host->drv_data->caps)
+> +               mmc->caps |= host->drv_data->caps[ctrl_id];
+> +
+>         if (host->pdata->caps2)
+>                 mmc->caps2 = host->pdata->caps2;
+>
+> -       if (host->pdata->get_bus_wd)
+> +       if (host->pdata->get_bus_wd) {
+>                 if (host->pdata->get_bus_wd(slot->id) >= 4)
+>                         mmc->caps |= MMC_CAP_4_BIT_DATA;
+> +       } else if (host->dev->of_node) {
+> +               unsigned int bus_width;
+> +               bus_width = dw_mci_of_get_bus_wd(host->dev, slot->id);
+> +               switch (bus_width) {
+> +               case 8:
+> +                       mmc->caps |= MMC_CAP_8_BIT_DATA;
+> +               case 4:
+> +                       mmc->caps |= MMC_CAP_4_BIT_DATA;
+> +               }
+> +               ret = dw_mci_of_setup_bus(host, slot->id, bus_width);
+> +               if (ret)
+> +                       goto err_setup_bus;
+> +       }
+>
+>         if (host->pdata->quirks & DW_MCI_QUIRK_HIGHSPEED)
+>                 mmc->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
+> @@ -1845,7 +1969,6 @@ static int __init dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+>         else
+>                 clear_bit(DW_MMC_CARD_PRESENT, &slot->flags);
+>
+> -       host->slot[id] = slot;
+>         mmc_add_host(mmc);
+>
+>  #if defined(CONFIG_DEBUG_FS)
+> @@ -1862,6 +1985,10 @@ static int __init dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+>         queue_work(host->card_workqueue, &host->card_work);
+>
+>         return 0;
+> +
+> +err_setup_bus:
+> +       mmc_free_host(mmc);
+> +       return -EINVAL;
+>  }
+>
+>  static void dw_mci_cleanup_slot(struct dw_mci_slot *slot, unsigned int id)
+> @@ -1937,16 +2064,78 @@ static bool mci_wait_reset(struct device *dev, struct dw_mci *host)
+>         return false;
+>  }
+>
+> +#ifdef CONFIG_OF
+> +static struct dw_mci_of_quirks {
+> +       char *quirk;
+> +       int id;
+> +} of_quriks[] = {
+> +       {
+> +               .quirk  = "supports-highspeed",
+> +               .id     = DW_MCI_QUIRK_HIGHSPEED,
+> +       }, {
+> +               .quirk  = "card-detection-broken",
+> +               .id     = DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
+> +       }, {
+> +               .quirk  = "no-write-protect",
+> +               .id     = DW_MCI_QUIRK_NO_WRITE_PROTECT,
+> +       }
+> +};
+> +
+> +static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
+> +{
+> +       struct dw_mci_board *pdata;
+> +       struct device *dev = host->dev;
+> +       struct device_node *np = dev->of_node;
+> +       int idx, cnt;
+> +
+> +       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +       if (!pdata) {
+> +               dev_err(dev, "could not allocate memory for pdata\n");
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       /* find out number of slots supported */
+> +       if (of_property_read_u32(dev->of_node, "num-slots",
+> +                               &pdata->num_slots)) {
+> +               dev_info(dev, "num-slots property not found, "
+> +                               "assuming 1 slot is available\n");
+> +               pdata->num_slots = 1;
+> +       }
+> +
+> +       /* get quirks */
+> +       cnt = sizeof(of_quriks) / sizeof(struct dw_mci_of_quirks);
+> +       for (idx = 0; idx < cnt; idx++)
+> +               if (of_get_property(np, of_quriks[idx].quirk, NULL))
+> +                       pdata->quirks |= of_quriks[idx].id;
+> +
+> +       if (of_property_read_u32(np, "fifo-depth", &pdata->fifo_depth))
+> +               dev_info(dev, "fifo-depth property not found, using "
+> +                               "value of FIFOTH register as default\n");
+> +
+> +       of_property_read_u32(np, "card-detect-delay", &pdata->detect_delay_ms);
+> +
+> +       return pdata;
+> +}
+> +
+> +#else /* CONFIG_OF */
+> +static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
+> +{
+> +       return ERR_PTR(-EINVAL);
+> +}
+> +#endif /* CONFIG_OF */
+> +
+>  int dw_mci_probe(struct dw_mci *host)
+>  {
+>         int width, i, ret = 0;
+>         u32 fifo_size;
+>         int init_slots = 0;
+>
+> -       if (!host->pdata || !host->pdata->init) {
+> -               dev_err(host->dev,
+> -                       "Platform data must supply init function\n");
+> -               return -ENODEV;
+> +       if (!host->pdata) {
+> +               host->pdata = dw_mci_parse_dt(host);
+> +               if (IS_ERR(host->pdata)) {
+> +                       dev_err(host->dev, "platform data not available\n");
+> +                       return -EINVAL;
+> +               }
+>         }
+>
+>         if (!host->pdata->select_slot && host->pdata->num_slots > 1) {
+> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
+> index 15c27e1..1ecaa02 100644
+> --- a/drivers/mmc/host/dw_mmc.h
+> +++ b/drivers/mmc/host/dw_mmc.h
+> @@ -182,4 +182,13 @@ extern int dw_mci_suspend(struct dw_mci *host);
+>  extern int dw_mci_resume(struct dw_mci *host);
+>  #endif
+>
+> +/* Variations in the dw_mci controller */
+> +#define DW_MCI_TYPE_SYNOPSIS           0
+> +
+> +/* dw_mci platform driver data */
+> +struct dw_mci_drv_data {
+> +       unsigned long           ctrl_type;
+> +       unsigned long           *caps;
+> +};
+> +
+>  #endif /* _DW_MMC_H_ */
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index b72e4aa..ae45e4f 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -78,6 +78,7 @@ struct mmc_data;
+>   * @data_offset: Set the offset of DATA register according to VERID.
+>   * @dev: Device associated with the MMC controller.
+>   * @pdata: Platform data associated with the MMC controller.
+> + * @drv_data: Driver specific data for identified variant of the controller
+>   * @biu_clk: Pointer to bus interface unit clock instance.
+>   * @ciu_clk: Pointer to card interface unit clock instance.
+>   * @slot: Slots sharing this MMC controller.
+> @@ -160,6 +161,7 @@ struct dw_mci {
+>         u16                     data_offset;
+>         struct device           *dev;
+>         struct dw_mci_board     *pdata;
+> +       struct dw_mci_drv_data  *drv_data;
+>         struct clk              *biu_clk;
+>         struct clk              *ciu_clk;
+>         struct dw_mci_slot      *slot[MAX_MCI_SLOTS];
+> --
+> 1.6.6.rc2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
