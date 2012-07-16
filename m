@@ -1,131 +1,81 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: [PATCH RESEND v2 2/2] ARM: EXYNOS: Add gscaler device from DT
-Date: Mon, 16 Jul 2012 11:03:23 +0530
-Message-ID: <1342416803-30809-3-git-send-email-shaik.ameer@samsung.com>
-References: <1342416803-30809-1-git-send-email-shaik.ameer@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1342416803-30809-1-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, sachin.kamat@linaro.org, joshi@samsung.com, ameersk@gmail.com, shaik.ameer@samsung.com
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH 1/3 v3] USB: ohci-exynos: Add support for device tree
+Date: Mon, 16 Jul 2012 11:25:36 +0530
+Message-ID: <1342418138-6192-2-git-send-email-gautam.vivek@samsung.com>
+References: <1342418138-6192-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1342418138-6192-1-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, olofj@google.com, jg1.han@samsung.com, jy0922.shim@samsung.com, thomas.abraham@linaro.org, sshtylyov@mvista.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds,
-- 4 Gscaler devices to the DT device list
-- Gscaler specific entries to the machine file
-- binding documentation for Gscaler entries
+This patch adds support to parse probe data for
+ohci driver for exynos using device tree.
 
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
----
- .../devicetree/bindings/media/exynos5-gsc.txt      |   16 ++++++++++
- arch/arm/boot/dts/exynos5250.dtsi                  |   31 ++++++++++++++++++++
- arch/arm/mach-exynos/include/mach/map.h            |    3 ++
- arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 +++++
- 4 files changed, 58 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/exynos5-gsc.txt
+Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
 
-diff --git a/Documentation/devicetree/bindings/media/exynos5-gsc.txt b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-new file mode 100644
-index 0000000..f743c60
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-@@ -0,0 +1,16 @@
-+* Samsung Exynos5 Gscaler device
-+
-+Gscaler is used for scaling and color space conversion on EXYNOS5 SoCs.
-+
-+Required properties:
-+- compatible: should be "samsung,exynos-gsc"
-+- reg: should contian Gsaler physical address location and length.
-+- interrupts: should contain Gscaler interrupt number
-+
-+Example:
-+
-+gsc_0:  gsc@0x13e00000 {
-+	compatible = "samsung,exynos-gsc";
-+	reg = <0x13e00000 0x1000>;
-+	interrupts = <0 85 0>;
-+};
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 4272b29..b945c00 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -23,6 +23,13 @@
- 	compatible = "samsung,exynos5250";
- 	interrupt-parent = <&gic>;
+diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+index 8bcbdb5..fc3091b 100644
+--- a/drivers/usb/host/ohci-exynos.c
++++ b/drivers/usb/host/ohci-exynos.c
+@@ -12,6 +12,7 @@
+  */
  
-+	aliases {
-+		gsc0 = &gsc_0;
-+		gsc1 = &gsc_1;
-+		gsc2 = &gsc_2;
-+		gsc3 = &gsc_3;
-+	};
-+
- 	gic:interrupt-controller@10481000 {
- 		compatible = "arm,cortex-a9-gic";
- 		#interrupt-cells = <3>;
-@@ -424,4 +431,28 @@
- 			#gpio-cells = <4>;
- 		};
- 	};
-+
-+	gsc_0:  gsc@0x13e00000 {
-+		compatible = "samsung,exynos-gsc";
-+		reg = <0x13e00000 0x1000>;
-+		interrupts = <0 85 0>;
-+	};
-+
-+	gsc_1:  gsc@0x13e10000 {
-+		compatible = "samsung,exynos-gsc";
-+		reg = <0x13e10000 0x1000>;
-+		interrupts = <0 86 0>;
-+	};
-+
-+	gsc_2:  gsc@0x13e20000 {
-+		compatible = "samsung,exynos-gsc";
-+		reg = <0x13e20000 0x1000>;
-+		interrupts = <0 87 0>;
-+	};
-+
-+	gsc_3:  gsc@0x13e30000 {
-+		compatible = "samsung,exynos-gsc";
-+		reg = <0x13e30000 0x1000>;
-+		interrupts = <0 88 0>;
-+	};
+ #include <linux/clk.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <mach/ohci.h>
+ #include <plat/usb-phy.h>
+@@ -71,6 +72,8 @@ static const struct hc_driver exynos_ohci_hc_driver = {
+ 	.start_port_reset	= ohci_start_port_reset,
  };
-diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-index ca4aa89..e68d249 100644
---- a/arch/arm/mach-exynos/include/mach/map.h
-+++ b/arch/arm/mach-exynos/include/mach/map.h
-@@ -121,6 +121,9 @@
- #define EXYNOS4_PA_SYSMMU_MFC_L		0x13620000
- #define EXYNOS4_PA_SYSMMU_MFC_R		0x13630000
  
-+/* x = 0...3 */
-+#define EXYNOS5_PA_GSC(x)		(0x13e00000 + ((x) * 0x10000))
++static u64 ohci_exynos_dma_mask = DMA_BIT_MASK(32);
 +
- #define EXYNOS5_PA_SYSMMU_MDMA1		0x10A40000
- #define EXYNOS5_PA_SYSMMU_SSS		0x10A50000
- #define EXYNOS5_PA_SYSMMU_2D		0x10A60000
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index 7b1e11a..9eb83b6 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -50,6 +50,14 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA1, "dma-pl330.1", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos-gsc", EXYNOS5_PA_GSC(0),
-+				"exynos-gsc.0", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos-gsc", EXYNOS5_PA_GSC(1),
-+				"exynos-gsc.1", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos-gsc", EXYNOS5_PA_GSC(2),
-+				"exynos-gsc.2", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos-gsc", EXYNOS5_PA_GSC(3),
-+				"exynos-gsc.3", NULL),
- 	{},
+ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
+ {
+ 	struct exynos4_ohci_platdata *pdata;
+@@ -87,6 +90,16 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
++	/*
++	 * Right now device-tree probed devices don't get dma_mask set.
++	 * Since shared usb code relies on it, set it here for now.
++	 * Once we move to full device tree support this will vanish off.
++	 */
++	if (!pdev->dev.dma_mask)
++		pdev->dev.dma_mask = &ohci_exynos_dma_mask;
++	if (!pdev->dev.coherent_dma_mask)
++		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
++
+ 	exynos_ohci = devm_kzalloc(&pdev->dev, sizeof(struct exynos_ohci_hcd),
+ 					GFP_KERNEL);
+ 	if (!exynos_ohci)
+@@ -256,6 +269,14 @@ static const struct dev_pm_ops exynos_ohci_pm_ops = {
+ 	.resume		= exynos_ohci_resume,
+ };
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id exynos_ohci_match[] = {
++	{ .compatible = "samsung,exynos-ohci" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, exynos_ohci_match);
++#endif
++
+ static struct platform_driver exynos_ohci_driver = {
+ 	.probe		= exynos_ohci_probe,
+ 	.remove		= __devexit_p(exynos_ohci_remove),
+@@ -264,6 +285,7 @@ static struct platform_driver exynos_ohci_driver = {
+ 		.name	= "exynos-ohci",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &exynos_ohci_pm_ops,
++		.of_match_table	= of_match_ptr(exynos_ohci_match),
+ 	}
  };
  
 -- 
