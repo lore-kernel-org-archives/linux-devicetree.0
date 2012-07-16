@@ -1,80 +1,109 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
-Date: Mon, 16 Jul 2012 10:56:24 -0500
-Message-ID: <500439A8.1050705@ti.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-2-git-send-email-jon-hunter@ti.com> <5000D647.4090200@gmail.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 5/7] ARM: davinci: i2c: add OF support
+Date: Mon, 16 Jul 2012 21:46:17 +0530
+Message-ID: <50043E51.8070702@ti.com>
+References: <1338373143-7467-1-git-send-email-hs@denx.de>
+ <1338373143-7467-6-git-send-email-hs@denx.de> <5000294C.5070606@ti.com>
+ <5000F276.3080301@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5000D647.4090200@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Tarun Kanti DebBarma <tarun.kanti@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <b-cousson@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5000F276.3080301-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: hs-ynQEQJNshbs@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 07/13/2012 09:15 PM, Rob Herring wrote:
-> On 07/13/2012 05:26 PM, Jon Hunter wrote:
->> Add the 12 GP timers nodes present in OMAP3.
->> Add the 11 GP timers nodes present in OMAP4.
->>
->> Add documentation for timer properties specific to OMAP.
->>
->> For each timer an alias is being added. The purpose for doing this is because
->> the OMAP dmtimer driver uses an ID to distinguish between the different timer
->> instances. For example, a timer can be requested by its ID. By adding an alias
->> for each timer we can then use the function of_alias_get_id() to extract the
->> ID for each timer from the alias name. The same method is used for the TTY
->> serial devices. If it is preferred that such an alias is not added and there
->> is a better way to pass an ID from device-tree let me know.
+On 7/14/2012 9:45 AM, Heiko Schocher wrote:
+> Hello Sekhar,
 > 
-> I'm not sure this is really a good use of aliases. UARTs use aliases
-> because it is important that the UART number to tty number is known and
-> fixed. IIUC, as an example you are picking timer1 because it has
-> properties X, Y and Z. If so, then you should describe those h/w
-> properties within the timer nodes so you can pick which timer to use
-> based on it's h/w properties.
+> On 13.07.2012 15:57, Sekhar Nori wrote:
+>> Hi Heiko,
+>>
+>> On 5/30/2012 3:49 PM, Heiko Schocher wrote:
+>>> add of support for the davinci i2c driver.
+>>>
+>>> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+>>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Cc: Ben Dooks<ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+>>> Cc: Wolfram Sang<w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>>> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+>>> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
+>>> Cc: Sylwester Nawrocki<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> [...]
 
-Thanks for the feedback. What you suggest could definitely work for most
-timers. The only item that I would need to resolve here is the handling
-of system timers (ie. those used for clockevents and clocksource). These
-system timers (for OMAP) are reserved during early boot based upon the
-timer ID today and so this is before the actual main timer driver has
-been probed and all the attributes of the timers has been read for
-device-tree.
+[...]
 
-One thought would be to move the reservation of the system timers out of
-the kernel and into device-tree itself. Then we query device tree on
-start-up to see which we should use. I am wondering if this could be a
-better use of alias? For example, say I want to use timer1 as my
-clockevent timer and so I could have an alias of ...
+>>> diff --git a/drivers/i2c/busses/i2c-davinci.c
+>>> b/drivers/i2c/busses/i2c-davinci.c
+>>> index a76d85f..4e7a966 100644
+>>> --- a/drivers/i2c/busses/i2c-davinci.c
+>>> +++ b/drivers/i2c/busses/i2c-davinci.c
 
-alias {
-	clockevent_timer = &timer1;
-}
+[...]
 
-However, I am not sure if this is even correct, because there does not
-appear to be an API to search the aliases by name and return the
-phandle, just of_alias_get_id(). Alternatively, I could add another
-property called "ti,timer-clockevent" that is populated for the timer
-used as the clockevent timer.
+>>>   static int davinci_i2c_probe(struct platform_device *pdev)
+>>>   {
+>>>       struct davinci_i2c_dev *dev;
+>>> @@ -676,6 +695,25 @@ static int davinci_i2c_probe(struct
+>>> platform_device *pdev)
+>>>       dev->irq = irq->start;
+>>>       platform_set_drvdata(pdev, dev);
+>>>
+>>> +    if ((dev->dev->platform_data == NULL)&&
+>>> +        (pdev->dev.of_node)) {
+>>> +        u32 prop;
+>>> +
+>>> +        dev->pdata = devm_kzalloc(&pdev->dev,
+>>> +            sizeof(struct davinci_i2c_platform_data), GFP_KERNEL);
+>>> +        if (!dev->pdata) {
+>>> +            r = -ENOMEM;
+>>> +            goto err_free_mem;
+>>> +        }
+>>> +        memcpy(dev->pdata,&davinci_i2c_platform_data_default,
+>>> +            sizeof(struct davinci_i2c_platform_data));
+>>> +        if (!of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+>>> +            &prop))
+>>> +            dev->pdata->bus_freq = prop / 1000;
+>>> +        if (!of_property_read_u32(pdev->dev.of_node, "bus-delay",
+>>> +            &prop))
+>>> +            dev->pdata->bus_delay = prop;
+>>
+>> You are leaving out two other platform data members (the gpio pins
+>> corresponding to data and clock) from DT data. We should be able to
+>> get that information from DT too, right?
+> 
+> Yes, but I had not ported the GPIO driver to OF ...
 
-Tony, Tarun,
+Okay. Understood. They can added once GPIO has been ported too and this
+part is tested.
 
-How would you feel on replacing omap_dmtimer_request_specific(int id)
-with say omap_dm_timer_request_by_cap(int cap)?
+> 
+>> So, I took this patch and tried to see if pdata maintenance can be
+>> simplified and came with the diff below. Can you have a look and see
+>> if this makes sense? I tested this using i2cdetect both with and
+>> without DT.
+> 
+> Tested your patch on the enbw_cmc board with a LM75 on the enbw_cmc
+> board, works fine. Can I post a "v6" of my patch, merged with your
+> patch below and your Signed-off?
 
-I was thinking of changing the name so that it is clear that the API has
-changed. The "int cap" passed to the above function would be an OR of
-the appropriate the capabilities flags we have in dmtimer.h ...
+Yes, please do. You can post it as in independent patch (not as part of
+a series) since the patch does not have any dependencies.
 
-/* timer capabilities used in hwmod database */
-#define OMAP_TIMER_SECURE                               0x80000000
-#define OMAP_TIMER_ALWON                                0x40000000
-#define OMAP_TIMER_HAS_PWM                              0x20000000
-...
-
-Cheers
-Jon
+Thanks,
+Sekhar
