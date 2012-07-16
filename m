@@ -1,13 +1,14 @@
-From: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
-Subject: Re: [PATCH] ARM: kirkwood: Add LS-XHL and LS-CHLv2 support
-Date: Mon, 16 Jul 2012 23:04:51 +0200
-Message-ID: <201207162304.51598.michael@walle.cc>
-References: <1342472144-27703-1-git-send-email-michael@walle.cc>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
+Date: Tue, 17 Jul 2012 00:06:20 +0200
+Message-ID: <CACRpkdZup6OuKcr-VafrB_irau7WRqL+v1URbm1+=ScM6pM6DA@mail.gmail.com>
+References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
+ <1342363754-30808-2-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342472144-27703-1-git-send-email-michael-QKn5cuLxLXY@public.gmane.org>
+In-Reply-To: <1342363754-30808-2-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,159 +19,264 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Add support for Buffalo Linkstation LS-XHL and LS-CHLv2 using the device
-> tree where possible.
-> 
-> Signed-off-by: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
-> ---
-> 
-> This patch is based on Andrew Lunn's kirkwood devicetree branch at:
->   git://github.com/lunn/linux.git v3.5-rc7-qnap-dt
-> 
->  arch/arm/boot/dts/kirkwood-lschlv2.dts |   20 +++++
->  arch/arm/boot/dts/kirkwood-lsxhl.dts   |   20 +++++
->  arch/arm/boot/dts/kirkwood-lsxl.dtsi   |   95 ++++++++++++++++++++++
->  arch/arm/mach-kirkwood/Kconfig         |    8 ++
->  arch/arm/mach-kirkwood/Makefile        |    1 +
->  arch/arm/mach-kirkwood/board-dt.c      |    4 +
->  arch/arm/mach-kirkwood/board-lsxl.c    |  137
-> ++++++++++++++++++++++++++++++++ arch/arm/mach-kirkwood/common.h        | 
->   6 ++
->  8 files changed, 291 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/kirkwood-lschlv2.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-lsxhl.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-lsxl.dtsi
->  create mode 100644 arch/arm/mach-kirkwood/board-lsxl.c
-> 
-> diff --git a/arch/arm/boot/dts/kirkwood-lschlv2.dts
-> b/arch/arm/boot/dts/kirkwood-lschlv2.dts new file mode 100644
-> index 0000000..37649b5
+On Sun, Jul 15, 2012 at 4:49 PM, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+
+> diff --git a/arch/arm/mach-mcs814x/clock.c b/arch/arm/mach-mcs814x/clock.c
+
+As mentioned by other reviewers, move this to the new common
+clock framework. I just migrated the Integrator, Nomadik and U300
+for the v3.7 merge window, we need to get rid of these
+implementations, not make more of them.
+
+> diff --git a/arch/arm/mach-mcs814x/common.c b/arch/arm/mach-mcs814x/common.c
+
+Usually this kind of file is called "core.c".
+
+> +void __init mcs814x_init_machine(void)
+> +{
+> +       u32 bs2, cpu_mode;
+> +       int gpio;
+> +
+> +       bs2 = __raw_readl(mcs814x_sysdbg_base + SYSDBG_BS2);
+> +       cpu_mode = (bs2 >> CPU_MODE_SHIFT) & CPU_MODE_MASK;
+> +
+> +       pr_info("CPU mode: %s\n", cpu_modes[cpu_mode].name);
+> +
+> +       /* request the gpios since the pins are muxed for functionnality */
+> +       for (gpio = cpu_modes[cpu_mode].gpio_start;
+> +               gpio == cpu_modes[cpu_mode].gpio_end; gpio++) {
+> +               if (gpio != -1)
+> +                       gpio_request(gpio, cpu_modes[cpu_mode].name);
+> +       }
+> +}
+
+What is this? It is looking very suspiciouly much like a pin multiplexer,
+which means it should have a driver in drivers/pinctrl/pinctrl-foo.c not
+in arch/arm/*.
+
+I do understand it is just a small hack to make things work, but I fear
+it is going to grow and then it sets a bad example.
+
+This version looks like switching some I2S, GPIO and UART and that's
+all, but I highly suspect that is not the whole story, is it? Better
+to get it in right shape from the start.
+
+> diff --git a/arch/arm/mach-mcs814x/irq.c b/arch/arm/mach-mcs814x/irq.c
+> new file mode 100644
+> index 0000000..089937b
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/kirkwood-lschlv2.dts
-> @@ -0,0 +1,20 @@
-> +/dts-v1/;
+> +++ b/arch/arm/mach-mcs814x/irq.c
+(...)
+> +       /* Clear all interrupts */
+> +       __raw_writel(0xffffffff, base + MCS814X_IRQ_ICR);
+
+Consider writel_relaxed()
+
+> diff --git a/arch/arm/mach-mcs814x/include/mach/entry-macro.S b/arch/arm/mach-mcs814x/include/mach/entry-macro.S
+> new file mode 100644
+> index 0000000..cbad566
+> --- /dev/null
+> +++ b/arch/arm/mach-mcs814x/include/mach/entry-macro.S
+> @@ -0,0 +1,29 @@
+> +#include <mach/mcs814x.h>
+> +                .macro  disable_fiq
+> +                .endm
 > +
-> +/include/ "kirkwood-lsxl.dtsi"
+> +               .macro arch_ret_to_user, tmp1, tmp2
+> +               .endm
 > +
-> +/ {
-> +	model = "Buffalo Linkstation LS-CHLv2";
-> +	compatible = "buffalo,lschlv2", "buffalo,lsxl", 
-"mrvl,kirkwood-88f6281",
-> "mrvl,kirkwood"; +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x4000000>;
-> +	};
+> +               .macro  get_irqnr_preamble, base, tmp
+> +               ldr     \base, =mcs814x_intc_base@ base virtual address of INTC
+> +               ldr     \base, [\base]
+> +               .endm
 > +
-> +	ocp@f1000000 {
-> +		serial@12000 {
-> +			clock-frequency = <166666667>;
-> +			status = "okay";
-> +		};
-> +	};
+> +               .macro  get_irqnr_and_base, irqnr, irqstat, base, tmp
+> +               mov     \tmp, #MCS814X_IRQ_STS0  @ load tmp with STS0 register offset
+> +               ldr     \irqstat, [\base, \tmp]  @ load value at base + tmp
+> +               tst     \irqstat, \irqstat       @ test if no active IRQ's
+> +               beq     1002f                    @ if no active irqs return with status 0
+> +               mov     \irqnr, #0               @ start from irq zero
+> +               mov     \tmp,   #1               @ the mask initially 1
+> +1001:
+> +               tst     \irqstat, \tmp           @ and with mask
+> +               addeq   \irqnr, \irqnr, #1       @ if  zero then add one to nr
+> +               moveq   \tmp,   \tmp, lsl #1     @ shift mask one to left
+> +               beq     1001b                    @ if  zero then loop again
+> +               mov     \irqstat, \tmp           @ save the return mask
+> +               mov     \tmp, #MCS814X_IRQ_STS0  @ load tmp with ICR offset
+> +               str     \irqstat,  [\base, \tmp] @ clear irq with selected mask
+> +1002:
+> +                .endm
+
+Don't do this. Delete this file.
+
+Let your platform select MULTI_IRQ_HANDLER
+Then let your platform MACHINE_START (or DT_MACHINE_START)
+have a .handle_irq member, calling a function from your interrupt controller
+driver to handle the IRQs.
+
+Add some
+asmlinkage void __exception_irq_entry foo_handle_irq(struct pt_regs *regs)
+
+And rewrite the entry handler in plain C.
+
+Refer to for example the rewrite I do of the FPGA IRQ controller in commit
+3108e6ab21a9b9dbd88f0b2ff99f73e95b8b1580 or directly to
+arch/arm/plat-versatile/fpga-irq.c or
+arch/arm/common/vic.c for an example.
+
+> diff --git a/arch/arm/mach-mcs814x/timer.c b/arch/arm/mach-mcs814x/timer.c
+
+A timer driver not #including <linux/clockchips.h> and <linux/clocksource.h>
+is a real bad idea.
+
+(...)
+> +static inline unsigned long ticks2usecs(u32 x)
+> +{
+> +       return x / (clock_rate / 1000000);
+> +}
+> +
+> +/*
+> + * Returns number of ms since last clock interrupt.  Note that interrupts
+> + * will have been disabled by do_gettimeoffset()
+> + */
+> +static unsigned long mcs814x_gettimeoffset(void)
+> +{
+> +       u32 ticks = __raw_readl(mcs814x_timer_base + TIMER_VAL);
+> +
+> +       if (ticks < last_reload)
+> +               return ticks2usecs(ticks + (u32)(0xffffffff - last_reload));
+> +       else
+> +               return ticks2usecs(ticks - last_reload);
+> +}
+
+This is not looking good. Don't handle ticks -> usec conversion in the
+driver.
+
+> +static irqreturn_t mcs814x_timer_interrupt(int irq, void *dev_id)
+> +{
+> +       u32 count = __raw_readl(mcs814x_timer_base + TIMER_VAL);
+> +
+> +       /* take into account delay up to this moment */
+> +       last_reload = count + timer_correct + timer_reload_value;
+> +
+> +       if (last_reload < timer_reload_value)
+> +               last_reload = timer_reload_value;
+> +       else if (timer_correct == 0)
+> +               timer_correct = __raw_readl(mcs814x_timer_base + TIMER_VAL) -
+> +                                       count;
+
+Don't do this. Let the timer infrastructure take care of these
+things.
+
+> +       __raw_writel(last_reload, mcs814x_timer_base + TIMER_VAL);
+> +
+> +       timer_tick();
+
+Only archaic and bad example platforms call timer_tick() directly.
+Use the clockevent API.
+
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static struct irqaction mcs814x_timer_irq = {
+> +       .name           = "mcs814x-timer",
+> +       .flags          = IRQF_DISABLED | IRQF_TIMER | IRQF_IRQPOLL,
+> +       .handler        = mcs814x_timer_interrupt,
 > +};
-> diff --git a/arch/arm/boot/dts/kirkwood-lsxhl.dts
-> b/arch/arm/boot/dts/kirkwood-lsxhl.dts new file mode 100644
-> index 0000000..eb3c071
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/kirkwood-lsxhl.dts
-> @@ -0,0 +1,20 @@
-> +/dts-v1/;
 > +
-> +/include/ "kirkwood-lsxl.dtsi"
-> +
-> +/ {
-> +	model = "Buffalo Linkstation LS-XHL";
-> +	compatible = "buffalo,lsxhl", "buffalo,lsxl", "mrvl,kirkwood-88f6281",
-> "mrvl,kirkwood"; +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x10000000>;
-> +	};
-> +
-> +	ocp@f1000000 {
-> +		serial@12000 {
-> +			clock-frequency = <200000000>;
-> +			status = "okay";
-> +		};
-> +	};
+> +static struct of_device_id mcs814x_timer_ids[] = {
+> +       { .compatible = "moschip,mcs814x-timer" },
+> +       { /* sentinel */ },
 > +};
-> diff --git a/arch/arm/boot/dts/kirkwood-lsxl.dtsi
-> b/arch/arm/boot/dts/kirkwood-lsxl.dtsi new file mode 100644
-> index 0000000..5961d85
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/kirkwood-lsxl.dtsi
-> @@ -0,0 +1,95 @@
-> +/include/ "kirkwood.dtsi"
 > +
-> +/ {
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
-> +	};
+> +static void __init mcs814x_of_timer_init(void)
+> +{
+> +       struct device_node *np;
+> +       const unsigned int *intspec;
 > +
-> +	ocp@f1000000 {
-> +		sata@80000 {
-> +			status = "okay";
-> +			nr-ports = <1>;
-> +		};
+> +       np = of_find_matching_node(NULL, mcs814x_timer_ids);
+> +       if (!np)
+> +               panic("unable to find compatible timer node in dtb");
 > +
-> +		spi@10600 {
-> +			status = "okay";
+> +       mcs814x_timer_base = of_iomap(np, 0);
+> +       if (!mcs814x_timer_base)
+> +               panic("unable to remap timer cpu registers");
 > +
-> +			m25p40@0 {
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +				compatible = "m25p40";
-> +				reg = <0>;
-> +				spi-max-frequency = <25000000>;
-> +				mode = <0>;
+> +       intspec = of_get_property(np, "interrupts", NULL);
+> +       if (!intspec)
+> +               panic("no interrupts property for timer");
 > +
-> +				partition@0 {
-> +					reg = <0x0 0x60000>;
-> +					label = "uboot";
-> +					read-only;
-> +				};
-> +
-> +				partition@60000 {
-> +					reg = <0x60000 0x10000>;
-> +					label = "dtb";
-> +					read-only;
-> +				};
-> +
-> +				partition@70000 {
-> +					reg = <0x70000 0x10000>;
-> +					label = "uboot_env";
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		button@1 {
-> +			label = "Function Button";
-> +			linux,code = <1>;
-> +			gpios = <&gpio1 9 1>;
-> +		};
-> +		button@2 {
-> +			label = "Power-on Switch";
-> +			linux,code = <2>;
-> +			gpios = <&gpio1 10 1>;
-> +		};
-> +		button@3 {
-> +			label = "Power-auto Switch";
-> +			linux,code = <3>;
+> +       mcs814x_timer_irq.irq = be32_to_cpup(intspec);
 
-sorry somehow this slipped through... i've already posted a new patch with 
-some more meaningful event codes.
+Why are you getting and converting this from bigendian?
 
-[..snip..]
+What is wrong with using irq_of_parse_and_map(np, 0) for this, this
+just looks dangerous.
 
--- 
-Michael
+> +}
+> +
+> +static void __init mcs814x_timer_init(void)
+> +{
+> +       struct clk *clk;
+> +
+> +       clk = clk_get_sys("timer0", NULL);
+> +       if (IS_ERR_OR_NULL(clk))
+> +               panic("unable to get timer0 clock");
+
+clk_prepare_enable() is needed at this point.
+
+> +
+> +       clock_rate = clk_get_rate(clk);
+> +       clk_put(clk);
+
+Don't put the clock here, you're using it, perpetually. If you
+put() it the clock framework can disable it at as unused.
+
+> +
+> +       mcs814x_of_timer_init();
+> +
+> +       pr_info("Timer frequency: %d (kHz)\n", clock_rate / 1000);
+> +
+> +       timer_reload_value = 0xffffffff - (clock_rate / HZ);
+> +
+> +       /* disable timer */
+> +       __raw_writel(0, mcs814x_timer_base + TIMER_CTL);
+> +       __raw_writel(timer_reload_value, mcs814x_timer_base + TIMER_VAL);
+> +       last_reload = timer_reload_value;
+> +
+> +       setup_irq(mcs814x_timer_irq.irq, &mcs814x_timer_irq);
+> +       /* enable timer, stop timer in debug mode */
+> +       __raw_writel(0x03, mcs814x_timer_base + TIMER_CTL);
+> +}
+> +
+> +struct sys_timer mcs814x_timer = {
+> +       .init   = mcs814x_timer_init,
+> +       .offset = mcs814x_gettimeoffset,
+> +};
+
+No .offset and rewrite this to register a clock source+clock event
+and use that instead.
+
+Please look at arch/arm/common/timer-sp.c for a good example
+of how a timer driver should look.
+
+You will feel it's much more elegant afterwards :-)
+
+What might be complicated is that it appears you have only one
+single timer in your system, is that reallty the case? Usually
+Linux fires one timer to just "run free" to be used as cycle counter
+(clock source) and another one to "shoot events" (clock event)
+
+I've never seen one and the same timer being used for both
+clock source and clock events but if you really have only one
+timer I think that is also feasible, but will need some serious
+hacking.
+
+Yours,
+Linus Walleij
