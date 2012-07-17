@@ -1,18 +1,17 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] pinctrl: pinctrl-imx: add support for set bits
- for general purpose registers
-Date: Tue, 17 Jul 2012 19:24:34 +0100
-Message-ID: <20120717182434.GB11723@sirena.org.uk>
-References: <1342084080-3145-1-git-send-email-b29396@freescale.com>
- <CACRpkdbHtgKLA3JJxc4VY35zSpJFvk15u62Z3aBCqERoeQ10CA@mail.gmail.com>
- <20120717030225.GF19699@shlinux2.ap.freescale.net>
- <CACRpkdZei=U67wHQW6rKGkv0X10t4k+BEYE8uFZPbp-6Y60deQ@mail.gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC/PATCH 06/13] media: s5p-fimc: Add device tree support for
+ FIMC-LITE
+Date: Tue, 17 Jul 2012 20:55:26 +0200
+Message-ID: <5005B51E.20505@gmail.com>
+References: <4FBFE1EC.9060209@samsung.com>
+ <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com>
+ <1337975573-27117-6-git-send-email-s.nawrocki@samsung.com>
+ <Pine.LNX.4.64.1207161114130.12302@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZei=U67wHQW6rKGkv0X10t4k+BEYE8uFZPbp-6Y60deQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.64.1207161114130.12302-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,19 +22,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liu Hui-R64343 <r64343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, riverful.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2012 at 08:15:40PM +0200, Linus Walleij wrote:
+On 07/16/2012 11:15 AM, Guennadi Liakhovetski wrote:
+>> --- a/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
+>> +++ b/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
+>> @@ -39,6 +39,21 @@ Required properties:
+>>   	       depends on the SoC revision. For S5PV210 valid values are:
+>>   	       0...2, for Exynos4x1x: 0...3.
+>>
+>> +
+>> +'fimc-lite' device node
+>> +-----------------------
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : should be one of:
+>> +		"samsung,exynos4212-fimc";
+>> +		"samsung,exynos4412-fimc";
+>> +- reg	     : physical base address and size of the device's memory mapped
+>> +	       registers;
+>> +- interrupts : should contain FIMC-LITE interrupt;
+>> +- cell-index : FIMC-LITE IP instance index;
+>
+> Same as in an earlier patch - not sure this is needed.
 
-> u32 db8500_prcmu_read(unsigned int reg);
-> void db8500_prcmu_write(unsigned int reg, u32 value);
-> void db8500_prcmu_write_masked(unsigned int reg, u32 mask, u32 value);
+It is needed for setting up a pipeline of multiple sub-device
+within a SoC. As I commented on patch 2/13 I'd like to replace
+this with proper entries in the "aliases" node. Some sub-devices
+have registers that these indexes need to be directly written to.
 
-> The third function is an oddity which performs read-modify-write
-> on the other side (firmware).
+--
 
-Not so odd - a very high proportion of APIs like this have a r/m/w
-operation as there's usually a requirement for doing the updates
-atomically.
+Thanks,
+Sylwester
