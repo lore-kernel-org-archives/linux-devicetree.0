@@ -1,14 +1,14 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/8] ARM: MCS814x: add Device Tree bindings documentation
-Date: Tue, 17 Jul 2012 13:24:10 +0000
-Message-ID: <201207171324.11392.arnd@arndb.de>
+Subject: Re: [PATCH 4/8] ARM: MCS814X: add DTS file for Tigal/Robotech RBT-832
+Date: Tue, 17 Jul 2012 13:27:51 +0000
+Message-ID: <201207171327.52118.arnd@arndb.de>
 References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <1342363754-30808-4-git-send-email-florian@openwrt.org>
+ <1342363754-30808-5-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342363754-30808-4-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <1342363754-30808-5-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,49 +25,52 @@ List-Id: devicetree@vger.kernel.org
 
 On Sunday 15 July 2012, Florian Fainelli wrote:
 
-> diff --git a/Documentation/devicetree/bindings/arm/mcs814x/mcs814x-pci.txt b/Documentation/devicetree/bindings/arm/mcs814x/mcs814x-pci.txt
-> new file mode 100644
-> index 0000000..de59b04
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mcs814x/mcs814x-pci.txt
-> @@ -0,0 +1,16 @@
-> +Moschip MCS814x PCI controller bindings
-> +---------------------------------------
+> +	model = "Tigal RBT-832";
+> +	compatible = "tigal,rbt-832", "moschip,mcs8140", "moschip,mcs814x";
 > +
-> +Required properties:
-> +- compatible: should be "moschip,mcs814x-pci"
-> +- reg: should contain the base register address and length of the PCI controller
-> +  configuration register as well as the base register address and length of the
-> +  PCI eeprom emulator
-> +- interrupts: should contain the interrupt line of the abort interrupt
-> +- #address-cells: should be 3
-> +- #size-cells: should be 2
-> +- ranges: should contain the properly encoded PCI ranges of the IO, non-prefetchable
-> +  and prefetchable memory regions
-> +- #interrupt-cells: should be 1
-> +- interrupt-map-mask: should be 0
-> +- interrupt-map: should be the properly encoded PCI slot/pin to interrupt line
+> +	chosen {
+> +		bootargs = "mem=32M console=ttyS0,115200 earlyprintk";
+> +	};
 
-interrupt-map-mask of 0 implies that all devices are wired to the
-same IRQ lines, which is rather unusual. Better leave that open
-so the interrupt-map can be written to work on any board.
+I think the mem=32M doesn't belong here, it's already specified in the memory
+node.
 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 6eab917..943e4f3 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -28,6 +28,7 @@ linux	Linux-specific binding
->  marvell	Marvell Technology Group Ltd.
->  maxim	Maxim Integrated Products
->  mosaixtech	Mosaix Technologies, Inc.
-> +moschp		Moschip Semiconductors
->  national	National Semiconductor
->  nintendo	Nintendo
->  nvidia	NVIDIA
+> diff --git a/arch/arm/mach-mcs814x/Kconfig b/arch/arm/mach-mcs814x/Kconfig
+> index c89422f..604537b 100644
+> --- a/arch/arm/mach-mcs814x/Kconfig
+> +++ b/arch/arm/mach-mcs814x/Kconfig
+> @@ -6,6 +6,15 @@ config MCS8140
+>  
+>  menu "Moschip MCS8140 boards"
+>  
+> +config MACH_RBT_832
+> +	bool "Tigal RBT-832"
+> +	select MCS8140
+> +	select NEW_LEDS
+> +	select LEDS_CLASS
+> +	select LEDS_GPIO
+> +	help
+> +	  Machine support for the Tigal RBT-832 board
+> +
+>  endmenu
+>  
+>  endif
 
-This string does not match what you use everywhere else. Please fix
-either the documentation here or every other instance. The stock
-ticker symbol is MOSCHIP.BO, so using "moschip" is probably better
-than "moschp".
+I would prefer not to have any additional symbols selected by the board.
+It's better to put those into the defconfig.
+
+> @@ -27,6 +27,7 @@ static void __init mcs814x_dt_device_init(void)
+>  }
+>  
+>  static const char *mcs8140_dt_board_compat[] __initdata = {
+> +	"tigal,rbt-832",
+>  	"moschip,mcs8140",
+>  	NULL,	/* sentinel */
+>  };
+
+I'm not sure what the normal practice is these days regarding the 
+board compatible table. I thought that we just put the soc name
+in there for new platforms that are already DT-only. Your .dts
+file contains both, so it works either way.
 
 	Arnd
