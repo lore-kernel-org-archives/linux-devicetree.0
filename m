@@ -1,77 +1,52 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
-Date: Tue, 17 Jul 2012 11:41:56 +0200
-Message-ID: <2442382.A2GKNpPZbv@flexo>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <201207161554.04812.arnd@arndb.de>
- <CAJOA=zNEywZ6tbJDuLjekVQeJpr9O2X1u-sTXpp0GYWzc+OHig@mail.gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH REBASE] regulator: tps65910: set input_supply on desc
+ unconditionally
+Date: Tue, 17 Jul 2012 11:08:04 +0100
+Message-ID: <20120717100804.GA4477@opensource.wolfsonmicro.com>
+References: <1342505046-8176-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJOA=zNEywZ6tbJDuLjekVQeJpr9O2X1u-sTXpp0GYWzc+OHig@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: olof@lixom.net, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, "Turquette,
- Mike" <mturquette@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1342505046-8176-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: lrg@ti.com, rob.herring@calxeda.com, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
 
-On Monday 16 July 2012 13:47:01 Turquette, Mike wrote:
-> On Mon, Jul 16, 2012 at 8:54 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-[snip]
-> > board selection.
-> >
-> >> +struct clk {
-> >> +     struct clk *parent;             /* parent clk */
-> >> +     unsigned long rate;             /* clock rate in Hz */
-> >> +     unsigned long divider;          /* clock divider */
-> >> +     u32 usecount;                   /* reference count */
-> >> +     struct clk_ops *ops;            /* clock operation */
-> >> +     u32 enable_reg;                 /* clock enable register */
-> >> +     u32 enable_mask;                /* clock enable mask */
-> >> +};
-> >
-> > Platforms are now converting to the common clock framework in drivers/clk.
-> > Mike Turquette as the subsystem maintainer can probably judge better 
-whether
-> > we should still be allowing new platforms with their own implementation
-> > of clk, but my feeling is that you should use the subsystem instead
-> > and add a driver in a subdirectory of drivers/clk instead of in the
-> > platform.
-> 
-> Hi Florian & Arnd,
-> 
-> Adopting the new clock framework is highly preferable, especially if
-> MCS814x support is being delayed until 3.7.  There is also a push to
-> put clock drivers into drivers/clk and I would like to continue that
-> trend, but I'm less strict on that measure if it proves very difficult
-> for your platform immediately (e.g. duplicating headers across
-> platform and generic code, etc).  Migrating code from arch/arm to
-> drivers/clk can always be done in a future series.
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Since we are now targetting 3.7, I would rather come up with proper DT clock 
-bindings, which should make the mcs814x clock driver much nicer.
+On Tue, Jul 17, 2012 at 11:34:06AM +0530, Laxman Dewangan wrote:
+> Set the supply_name in the regulator descriptor unconditionally
+> and make this parameter as required parameter in the device
+> node for successfully registration of the regulator.
 
-> 
-> This platform also seems to be making use of DT so it would be very
-> nice if we use MCS814x to push the state of clk DT bindings and
-> adoption forward a bit.  There are not a lot of folks using the
-> patches from Rob/Grant today.  Hopefully delaying these patches by
-> another merge cycle means that these requests are not asking too much
-> :-)
+Applied, thanks.
 
-If we could get them merged during 3.6 that would allow me, and other ARM-soc 
-maintainers to get their stuff fully migrated to DT. Are there any blockers to 
-these patches?
---
-Florian
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQBTl9AAoJEBus8iNuMP3doTcP/ReEpR1pUtioM3ZuIA92kz6l
+Beg+oBUXTaM9gqrtzFdyfIMJgET2oShbc5SVGHR6qAYOraiF70GY0q9udJUNT6GA
+Z5xmG9/4P19v8o9Y+VQ6qrPn/jmHCCppLi6n9Cy2mW/SFDZofzhyJD+aMycYcKC9
+eKqpfY4TAnjlvpUZMw8tnte0ppOyvm5H3UXuaHzNmFvfdURavQpDV1OeqGuI6sDy
+rBDckYACsz7hEUqhE1s8M12wLhaU/gIRurJGZzbsBIT7QgWfUPpNElpUXDTRwI77
+mIeptnrEDSkP7Vxg8ITcsXa48kGzAh6ePFLD6GwiowUySWuhAz+MFU0rjb0h8PhC
+ajiVOl8ZCKXFmhsC+2tzLKbe9eMN5fcDQRphZOi84jyHFXMiTGFD4NP6H7WHW0+x
+yi9nuOg3YTPTqEEGiwmhiRXp+iBNZvreA1XsRnHgPBluyt57RemvVWsqrG6nMMEe
+9EO6OcUFe3+etyEnr/xcjbbq0OVFplJI/LzURO/G97rAPulIE7XHYHsiqEFvyz/O
+wUwsJ+VE0OM5YZ2QU0mnReMh6G1n03IBSOYUYgDgVVUJv7GDvggAbCqKWfYir6Io
+gDyS7t56uyrUnjE8jBiSWVkK868LejZIaE4X4KPMXXQpNc7WAmRw+QBF1lIO22xI
+TzTXWRDUGcRl5QGMSpQ+
+=FEQ9
+-----END PGP SIGNATURE-----
+
+--huq684BweRXVnRxX--
