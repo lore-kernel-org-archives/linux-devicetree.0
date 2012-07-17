@@ -1,76 +1,74 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4] USB: ehci-s5p: Add vbus setup function to the s5p ehci glue
- layer
-Date: Tue, 17 Jul 2012 10:10:50 +0530
-Message-ID: <1342500050-27470-2-git-send-email-gautam.vivek@samsung.com>
-References: <1342500050-27470-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1342500050-27470-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V2 0/2] video: drm: Add Device tree support to DRM-FIMD
+Date: Tue, 17 Jul 2012 09:58:47 +0530
+Message-ID: <CAL1wa8eUNNb+pCG8tZwzEQKBb9YM9GOJseRJspnm_fnpikAHiA@mail.gmail.com>
+References: <1341996287-14666-1-git-send-email-l.krishna@samsung.com>
+ <CAAQKjZN0tE=Kfeco434JO3ynkap5d-W6et6VoZjD=eR3USGHGw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAAQKjZN0tE=Kfeco434JO3ynkap5d-W6et6VoZjD=eR3USGHGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: InKi Dae <daeinki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch retrieves and configures the vbus control gpio via
-the device tree. The suspend/resume callbacks will be later
-modified for vbus control.
+On Tue, Jul 17, 2012 at 9:49 AM, InKi Dae <daeinki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> 2012/7/11, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+> > This patch set adds device tree support for DRM-FIMD for Samsung's
+> > Exynos5250.
+> > It includes parsing platform data from dts file.
+> >
+> > This patchset is based and tested on top of v3.5-rc6
+> >
+> > Changes since V1:
+> >       - Corrected typo errors and changed compatibility string
+> >
+> > Leela Krishna Amudala (1):
+> >   video: drm: exynos: Add device tree support
+> >
+> > Prathyush K (1):
+> >   drm/exynos: Modifying exynos drm fimd to support exynos5
+> >
+> >  Documentation/devicetree/bindings/fb/drm-fimd.txt |   73
+> > +++++++++++++++
+> >  drivers/gpu/drm/exynos/exynos_drm_fimd.c          |  101
+> > ++++++++++++++++++++-
+> >  2 files changed, 171 insertions(+), 3 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/fb/drm-fimd.txt
+> >
+>
+> I'm sorry for being late. I was so busy. your patch set should be
+> tested on our target(based on exynos5) and then it will be reviewed
+> and merged to exynos-drm-next soon if there is no any problem.
+>
+> Thanks,
+> Inki Dae
+>
+>
 
-Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/usb/host/ehci-s5p.c |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
+I have tested this patchset over smdk5250 board and seen the boot logo also.
 
-diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-s5p.c
-index 37d84cf..9d8f1dd 100644
---- a/drivers/usb/host/ehci-s5p.c
-+++ b/drivers/usb/host/ehci-s5p.c
-@@ -15,6 +15,7 @@
- #include <linux/clk.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/of_gpio.h>
- #include <plat/ehci.h>
- #include <plat/usb-phy.h>
- 
-@@ -64,6 +65,24 @@ static const struct hc_driver s5p_ehci_hc_driver = {
- 	.clear_tt_buffer_complete	= ehci_clear_tt_buffer_complete,
- };
- 
-+static void s5p_setup_vbus_gpio(struct platform_device *pdev)
-+{
-+	int err;
-+	int gpio;
-+
-+	if (!pdev->dev.of_node)
-+		return;
-+
-+	gpio = of_get_named_gpio(pdev->dev.of_node,
-+			"samsung,vbus-gpio", 0);
-+	if (!gpio_is_valid(gpio))
-+		return;
-+
-+	err = gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH, "ehci_vbus_gpio");
-+	if (err)
-+		dev_err(&pdev->dev, "can't request ehci vbus gpio %d", gpio);
-+}
-+
- static u64 ehci_s5p_dma_mask = DMA_BIT_MASK(32);
- 
- static int __devinit s5p_ehci_probe(struct platform_device *pdev)
-@@ -92,6 +111,8 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
- 	if (!pdev->dev.coherent_dma_mask)
- 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
- 
-+	s5p_setup_vbus_gpio(pdev);
-+
- 	s5p_ehci = devm_kzalloc(&pdev->dev, sizeof(struct s5p_ehci_hcd),
- 				GFP_KERNEL);
- 	if (!s5p_ehci)
--- 
-1.7.0.4
+Thanks,
+Leela Krishna Amudala
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> > http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
