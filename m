@@ -1,221 +1,154 @@
-From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Subject: Re: [PATCH 1/2] drivers: bus: add a new driver for omap-ocp2scp
-Date: Tue, 17 Jul 2012 10:43:29 +0530
-Message-ID: <CAAe_U6K9sm-sDK80ySSHPGf5SYuwDkhW+4q8r2deXi7Tz3TxJw@mail.gmail.com>
-References: <1342448023-14438-1-git-send-email-kishon@ti.com>
-	<1342448023-14438-2-git-send-email-kishon@ti.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH REBASE] regulator: tps65910: set input_supply on desc unconditionally
+Date: Tue, 17 Jul 2012 11:34:06 +0530
+Message-ID: <1342505046-8176-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1342448023-14438-2-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, kishon@ti.com, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, gregkh@linuxfoundation.org, ohad@wizery.com, linus.walleij@linaro.org, myungjoo.ham@samsung.com, rusty@rustcorp.com.au, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com, lrg@ti.com, rob.herring@calxeda.com, swarren@wwwdotorg.org
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-+Arnd Bergmann
+Set the supply_name in the regulator descriptor unconditionally
+and make this parameter as required parameter in the device
+node for successfully registration of the regulator.
 
-On Mon, Jul 16, 2012 at 7:43 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Adds a new driver *omap-ocp2scp*. This driver takes the responsibility of
-> creating all the devices that is connected to OCP2SCP. In the case of OMAP4,
-> USB2PHY is connected to ocp2scp.
->
-> This also includes device tree support for ocp2scp driver and
-> the documentation with device tree binding information is updated.
->
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../devicetree/bindings/bus/omap-ocp2scp.txt       |   10 ++
->  drivers/Kconfig                                    |    2 +
->  drivers/Makefile                                   |    2 +
->  drivers/bus/Kconfig                                |   15 +++
->  drivers/bus/Makefile                               |    5 +
->  drivers/bus/omap-ocp2scp.c                         |   98 ++++++++++++++++++++
->  6 files changed, 132 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
->  create mode 100644 drivers/bus/Kconfig
->  create mode 100644 drivers/bus/Makefile
->  create mode 100644 drivers/bus/omap-ocp2scp.c
->
-> diff --git a/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt b/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
-> new file mode 100644
-> index 0000000..d2fe064
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
-> @@ -0,0 +1,10 @@
-> +* OMAP OCP2SCP - ocp interface to scp interface
-> +
-> +properties:
-> +- compatible : Should be "ti,omap-ocp2scp"
-> +- #address-cells, #size-cells : Must be present if the device has sub-nodes
-> +- ranges : the child address space are mapped 1:1 onto the parent address space
-> +- ti,hwmods : must be "ocp2scp_usb_phy"
-> +
-> +Sub-nodes:
-> +All the devices connected to ocp2scp are described using sub-node to ocp2scp
-> diff --git a/drivers/Kconfig b/drivers/Kconfig
-> index bfc9186..4fe1e4c 100644
-> --- a/drivers/Kconfig
-> +++ b/drivers/Kconfig
-> @@ -2,6 +2,8 @@ menu "Device Drivers"
->
->  source "drivers/base/Kconfig"
->
-> +source "drivers/bus/Kconfig"
-> +
->  source "drivers/connector/Kconfig"
->
->  source "drivers/mtd/Kconfig"
-> diff --git a/drivers/Makefile b/drivers/Makefile
-> index 2ba29ff..cac3819 100644
-> --- a/drivers/Makefile
-> +++ b/drivers/Makefile
-> @@ -5,6 +5,8 @@
->  # Rewritten to use lists instead of if-statements.
->  #
->
-> +obj-y                          += bus/
-> +
->  # GPIO must come after pinctrl as gpios may need to mux pins etc
->  obj-y                          += pinctrl/
->  obj-y                          += gpio/
-> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-> new file mode 100644
-> index 0000000..6270415
-> --- /dev/null
-> +++ b/drivers/bus/Kconfig
-> @@ -0,0 +1,15 @@
-> +#
-> +# Bus Devices
-> +#
-> +
-> +menu "Bus devices"
-> +
-> +config OMAP_OCP2SCP
-> +       tristate "OMAP OCP2SCP DRIVER"
-> +       help
-> +         Driver to enable ocp2scp module which transforms ocp interface
-> +         protocol to scp protocol. In OMAP4, USB PHY is connected via
-> +         OCP2SCP and in OMAP5, both USB PHY and SATA PHY is connected via
-> +         OCP2SCP.
-> +
-> +endmenu
-> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-> new file mode 100644
-> index 0000000..0ec50bc
-> --- /dev/null
-> +++ b/drivers/bus/Makefile
-> @@ -0,0 +1,5 @@
-> +#
-> +# Makefile for the bus drivers.
-> +#
-> +
-> +obj-$(CONFIG_OMAP_OCP2SCP)     += omap-ocp2scp.o
-> diff --git a/drivers/bus/omap-ocp2scp.c b/drivers/bus/omap-ocp2scp.c
-> new file mode 100644
-> index 0000000..8c3db3a
-> --- /dev/null
-> +++ b/drivers/bus/omap-ocp2scp.c
-> @@ -0,0 +1,98 @@
-> +/*
-> + * omap-ocp2scp.c - transform ocp interface protocol to scp protocol
-> + *
-> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/err.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +
-> +static int ocp2scp_remove_devices(struct device *dev, void *c)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +
-> +       platform_device_unregister(pdev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __devinit omap_ocp2scp_probe(struct platform_device *pdev)
-> +{
-> +       int                     ret;
-> +       struct device_node      *np = pdev->dev.of_node;
-> +
-> +       if (np) {
-> +               ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "failed to add resources for ocp2scp child\n");
-> +                       goto err0;
-> +               }
-> +       }
-> +       pm_runtime_enable(&pdev->dev);
-> +
-> +       return 0;
-> +
-> +err0:
-> +       device_for_each_child(&pdev->dev, NULL, ocp2scp_remove_devices);
-> +
-> +       return ret;
-> +}
-> +
-> +static int __devexit omap_ocp2scp_remove(struct platform_device *pdev)
-> +{
-> +       pm_runtime_disable(&pdev->dev);
-> +       device_for_each_child(&pdev->dev, NULL, ocp2scp_remove_devices);
-> +
-> +       return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id omap_ocp2scp_id_table[] = {
-> +       { .compatible = "ti,omap-ocp2scp" },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
-> +#endif
-> +
-> +static struct platform_driver omap_ocp2scp_driver = {
-> +       .probe          = omap_ocp2scp_probe,
-> +       .remove         = __devexit_p(omap_ocp2scp_remove),
-> +       .driver         = {
-> +               .name   = "omap-ocp2scp",
-> +               .owner  = THIS_MODULE,
-> +               .of_match_table = of_match_ptr(omap_ocp2scp_id_table),
-> +       },
-> +};
-> +
-> +static int __init omap_ocp2scp_init(void)
-> +{
-> +       return platform_driver_register(&omap_ocp2scp_driver);
-> +}
-> +arch_initcall(omap_ocp2scp_init);
-> +
-> +static void __exit omap_ocp2scp_exit(void)
-> +{
-> +       platform_driver_unregister(&omap_ocp2scp_driver);
-> +}
-> +module_exit(omap_ocp2scp_exit);
-> +
-> +MODULE_ALIAS("platform: omap-ocp2scp");
-> +MODULE_AUTHOR("Texas Instruments Inc.");
-> +MODULE_DESCRIPTION("OMAP OCP2SCP DRIVER");
-> +MODULE_LICENSE("GPLv2");
-> --
-> 1.7.5.4
->
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+The changes are based on on discussion on patch
+[PATCH 1/3] ARM: dt: tegra: seaboard: add regulators
+on which the input supply name should be require in DT case and 
+unconditionally set on the desc.supply_name.
+
+Although the support was accepted earlier but as per discussion,
+it was not so good and hence this is the change.
+Becasue no-one is using this device as of now in dt file, it is safe
+to change now and provide guidance to the new user of this device.
+
+There is problem in apply patch. Rebased against Mark's topic/drivers
+and sending.
+
+ Documentation/devicetree/bindings/mfd/tps65910.txt |   33 +++++++++++++------
+ drivers/regulator/tps65910-regulator.c             |   11 +------
+ include/linux/mfd/tps65910.h                       |    2 -
+ 3 files changed, 23 insertions(+), 23 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
+index 31be5a3..d2802d4 100644
+--- a/Documentation/devicetree/bindings/mfd/tps65910.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
+@@ -25,17 +25,12 @@ Required properties:
+   tps65911: vrtc, vio, vdd1, vdd3, vddctrl, ldo1, ldo2, ldo3, ldo4, ldo5,
+             ldo6, ldo7, ldo8
+ 
+-Optional properties:
+-- ti,vmbch-threshold: (tps65911) main battery charged threshold
+-  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
+-- ti,vmbch2-threshold: (tps65911) main battery discharged threshold
+-  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
+-- ti,en-gpio-sleep: enable sleep control for gpios
+-  There should be 9 entries here, one for each gpio.
+ - xxx-supply: Input voltage supply regulator.
+-  Missing of these properties will be assume as there is no supply regulator
+-  for that input pins and always powered on.
+-  The valid input supply properties are:
++  These entries are require if regulators are enabled for a device. Missing of these
++  properties can cause the regulator registration fails.
++  If some of input supply is powered through battery or always-on supply then
++  also it is require to have these parameters with proper node handle of always
++  on power supply.
+   tps65910:
+ 	vcc1-supply: VDD1 input.
+ 	vcc2-supply: VDD2 input.
+@@ -55,6 +50,16 @@ Optional properties:
+ 	vcc7-supply: VRTC input.
+ 	vccio-supply: VIO input.
+ 
++Optional properties:
++- ti,vmbch-threshold: (tps65911) main battery charged threshold
++  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
++- ti,vmbch2-threshold: (tps65911) main battery discharged threshold
++  comparator. (see VMBCH_VSEL in TPS65910 datasheet)
++- ti,en-ck32k-xtal: enable external 32-kHz crystal oscillator (see CK32K_CTRL
++  in TPS6591X datasheet)
++- ti,en-gpio-sleep: enable sleep control for gpios
++  There should be 9 entries here, one for each gpio.
++
+ Regulator Optional properties:
+ - ti,regulator-ext-sleep-control: enable external sleep
+   control through external inputs [0 (not enabled), 1 (EN1), 2 (EN2) or 4(EN3)]
+@@ -79,8 +84,14 @@ Example:
+ 
+ 		ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
+ 
+-		vcc7-supply = <&reg_parent>;
+ 		vcc1-supply = <&reg_parent>;
++		vcc2-supply = <&some_reg>;
++		vcc3-supply = <...>;
++		vcc4-supply = <...>;
++		vcc5-supply = <...>;
++		vcc6-supply = <...>;
++		vcc7-supply = <...>;
++		vccio-supply = <...>;
+ 
+ 		regulators {
+ 			#address-cells = <1>;
+diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
+index d2ba066..793adda 100644
+--- a/drivers/regulator/tps65910-regulator.c
++++ b/drivers/regulator/tps65910-regulator.c
+@@ -1001,9 +1001,6 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
+ 	*tps65910_reg_matches = matches;
+ 
+ 	for (idx = 0; idx < count; idx++) {
+-		struct tps_info *info = matches[idx].driver_data;
+-		char in_supply[32]; /* 32 is max size of property name */
+-
+ 		if (!matches[idx].init_data || !matches[idx].of_node)
+ 			continue;
+ 
+@@ -1015,12 +1012,6 @@ static struct tps65910_board *tps65910_parse_dt_reg_data(
+ 		if (!ret)
+ 			pmic_plat_data->regulator_ext_sleep_control[idx] = prop;
+ 
+-		if (info->vin_name) {
+-			snprintf(in_supply, 32, "%s-supply", info->vin_name);
+-			if (of_find_property(np, in_supply, 0))
+-				pmic_plat_data->input_supply[idx] =
+-								info->vin_name;
+-		}
+ 	}
+ 
+ 	return pmic_plat_data;
+@@ -1123,7 +1114,7 @@ static __devinit int tps65910_probe(struct platform_device *pdev)
+ 		pmic->info[i] = info;
+ 
+ 		pmic->desc[i].name = info->name;
+-		pmic->desc[i].supply_name = pmic_plat_data->input_supply[i];
++		pmic->desc[i].supply_name = info->vin_name;
+ 		pmic->desc[i].id = i;
+ 		pmic->desc[i].n_voltages = info->n_voltages;
+ 		pmic->desc[i].enable_time = info->enable_time_us;
+diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
+index 1aca1fb..6c4c478 100644
+--- a/include/linux/mfd/tps65910.h
++++ b/include/linux/mfd/tps65910.h
+@@ -799,7 +799,6 @@ struct tps65910_sleep_keepon_data {
+ /**
+  * struct tps65910_board
+  * Board platform data may be used to initialize regulators.
+- * @input_supply: Name of input supply regulator.
+  */
+ 
+ struct tps65910_board {
+@@ -812,7 +811,6 @@ struct tps65910_board {
+ 	struct tps65910_sleep_keepon_data *slp_keepon;
+ 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
+ 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
+-	const char *input_supply[TPS65910_NUM_REGS];
+ 	struct regulator_init_data *tps65910_pmic_init_data[TPS65910_NUM_REGS];
+ };
+ 
+-- 
+1.7.1.1
