@@ -1,43 +1,123 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 02/11] arm/dts: omap: Add omap-usb2 dt data
-Date: Tue, 17 Jul 2012 16:27:13 +0400
-Message-ID: <50055A21.5010206@mvista.com>
-References: <1342512611-20529-1-git-send-email-kishon@ti.com> <1342512611-20529-3-git-send-email-kishon@ti.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
+Date: Tue, 17 Jul 2012 14:30:17 +0200
+Message-ID: <50055AD9.6030807@de.bosch.com>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+ <1339590863-10564-9-git-send-email-richard.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342512611-20529-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1339590863-10564-9-git-send-email-richard.zhao@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Richard Zhao <richard.zhao@freescale.com>
+Cc: "marex@denx.de" <marex@denx.de>, "B20596@freescale.com" <B20596@freescale.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "fabio.estevam@freescale.com" <fabio.estevam@freescale.com>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "B29397@freescale.com" <B29397@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>, Rob Herring <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dong.aisheng@linaro.org" <dong.aisheng@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxzsc@gmail.com" <linuxz>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 17-07-2012 12:10, Kishon Vijay Abraham I wrote:
-
-> Add omap-usb2 data node in omap4 device tree file.
-
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+On 13.06.2012 14:34, Richard Zhao wrote:
+> Sometimes, boards have gpios that don't own by any driver or owner
+> by a generic driver that don't like hacks. Such gpios is normally
+> output and need setup once on boot. So I introduce the config-on-boot
+> gpios.
+> 
+> Signed-off-by: Richard Zhao <richard.zhao@freescale.com>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
 > ---
->   arch/arm/boot/dts/omap4.dtsi |    5 +++++
->   1 files changed, 5 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index bda5df3..4d2dcc1 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -279,6 +279,11 @@
->   			#size-cells = <1>;
->   			ranges;
->   			ti,hwmods = "ocp2scp_usb_phy";
-> +			usb2phy@0x4a0ad080 {
+>  .../devicetree/bindings/arm/config-on-boot.txt     |   12 +++++++
+>  arch/arm/boot/dts/imx6q-sabrelite.dts              |    7 ++++
+>  arch/arm/mach-imx/mach-imx6q.c                     |   35 ++++++++++++++++++++
+>  3 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/config-on-boot.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/config-on-boot.txt b/Documentation/devicetree/bindings/arm/config-on-boot.txt
+> new file mode 100644
+> index 0000000..f98ed74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/config-on-boot.txt
+> @@ -0,0 +1,12 @@
+> +* Configure on Boot
+> +
+> +Node name: config-on-boot
+> +  It must be in root node. config-on-boot means to describe settings that needs
+> +  to be set one time on boot but aren't owned by any driver, or the owned driver
+> +  is too generic to handle such settings. For example, usb hub uses generic
+> +  driver in usb core code, a on-board usb may need deassert reset pin.
+> +
+> +Optional properties:
+> +- output-gpios: Output gpio array that needs to set.
+> +- output-gpio-values: This property is required if output-gpios is set.
+> +  The value is a array of 0 or 1. Total count eaquals the number of gpios.
+> diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
+> index e0ec929..1dd2261 100644
+> --- a/arch/arm/boot/dts/imx6q-sabrelite.dts
+> +++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
+> @@ -17,6 +17,13 @@
+>  	model = "Freescale i.MX6 Quad SABRE Lite Board";
+>  	compatible = "fsl,imx6q-sabrelite", "fsl,imx6q";
+>  
+> +	config-on-boot {
+> +		output-gpios = <
+> +				&gpio3 22 0>;	/* vbus reset */
+> +		output-gpio-values = <
+> +				1>;		/* vbus reset */
+> +	};
+> +
+>  	memory {
+>  		reg = <0x10000000 0x40000000>;
+>  	};
+> diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+> index b47e98b..577cf19 100644
+> --- a/arch/arm/mach-imx/mach-imx6q.c
+> +++ b/arch/arm/mach-imx/mach-imx6q.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/irqdomain.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/pinctrl/machine.h>
+> @@ -113,6 +114,38 @@ static void __init imx6q_sabrelite_init(void)
+>  	imx6q_sabrelite_cko1_setup();
+>  }
+>  
+> +static void __init imx6q_config_on_boot(void)
+> +{
+> +	struct device_node *np;
+> +	struct property *pp;
+> +	int cnt, len, i;
+> +	int gpio;
+> +
+> +	np = of_find_node_by_path("/config-on-boot");
+> +	if (!np)
+> +		return;
+> +	cnt = of_gpio_named_count(np, "output-gpios");
+> +	pp = of_find_property(np, "output-gpio-values", &len);
+> +	if (!pp || cnt != len / sizeof(u32)) {
+> +		pr_err("Invalid config-on-boot gpios!\n");
+> +		of_node_put(np);
+> +		return;
+> +	}
+> +	for (i = 0; i < cnt; i++) {
+> +		gpio = of_get_named_gpio(np, "output-gpios", i);
+> +		if (gpio_is_valid(gpio))
+> +			gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH,
+> +					"config-on-boot");
 
-    There should be no "0x" prefix here.
+While trying to use this code: Is there a special reason why all pins 
+are set to HIGH here? The contents of 'output-gpio-values' seem to be 
+ignored?
 
-WBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+
+Dirk
