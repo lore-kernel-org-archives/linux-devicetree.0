@@ -1,119 +1,134 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [PATCH V2 1/7] ARM: SAMSUNG: add additional registers and SFR
- definitions for writeback
-Date: Fri, 20 Jul 2012 16:37:52 +0530
-Message-ID: <CAL1wa8cR_1OCL8x4xoxmsZ9mU5XMd9dfsm=z4aZwmogAN4Z85Q@mail.gmail.com>
-References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com>
- <1429943.UqWt7uDBOU@flatron> <CAL1wa8cCq-w8w-d-Z7rqRfA9yrfPvxQjxFn9b475A-D=J8d3Ew@mail.gmail.com>
- <4240594.0SndFBiAl5@flatron> <000a01cd661e$4e1e19e0$ea5a4da0$%han@samsung.com>
- <CAL1wa8dyLjC8BZBc0wBnjP=a2Yo5XDQq1Kfq9yw35_e8wxp0bw@mail.gmail.com> <50092C2F.9010304@gmail.com>
+From: Tony Prisk <sentientnz@yahoo.co.nz>
+Subject: Re: [PATCH 1/1] Add Wondermedia Technologies (wmt) to
+ docs/devicetree/vendor-bindings.txt
+Date: Tue, 17 Jul 2012 06:47:21 -0700 (PDT)
+Message-ID: <1342532841.54512.YahooMailNeo@web140804.mail.bf1.yahoo.com>
+References: <76F764B079F92A4E843589C893D0A022C380F1D4@SERVER.prisktech.co.nz>
+ <201207171250.32265.arnd@arndb.de>
+Reply-To: Tony Prisk <sentientnz@yahoo.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <50092C2F.9010304@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, thomas.ab@samsung.com, kgene.kim@samsung.com, olofj@google.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============5776810397999007662=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201207171250.32265.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Tony Prisk <linux@prisktech.co.nz>
+Cc: "vt8500-wm8505-linux-kernel@googlegroups.com" <vt8500-wm8505-linux-kernel@googlegroups.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+--===============5776810397999007662==
+Content-Type: multipart/alternative; boundary="1125311499-75163143-1342532841=:54512"
 
-On Fri, Jul 20, 2012 at 3:30 PM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> On 07/20/2012 04:59 AM, Leela Krishna Amudala wrote:
->>>>>>> --- a/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
->>>>>>> +++ b/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
->>>>>>> @@ -30,9 +30,16 @@
->>>>>>>
->>>>>>>   #define VIDCON1_FSTATUS_EVEN (1<<  15)
->>>>>>>
->>>>>>>   /* Video timing controls */
->>>>>>>
->>>>>>> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
->>>>>>> +#define VIDTCON0                                (0x20010)
->>>>>>> +#define VIDTCON1                                (0x20014)
->>>>>>> +#define VIDTCON3                                (0x2001C)
->>>>>>> +#else
->>>>>>>
->>>>>>>   #define VIDTCON0                             (0x10)
->>>>>>>   #define VIDTCON1                             (0x14)
->>>>>>>   #define VIDTCON2                             (0x18)
->>>>>>>
->>>>>>> +#define VIDTCON3                             (0x1C)
->>>>>>> +#endif
->>>>>>
->>>>>> Wouldn't it break s3c-fb on SoCs with earlier FIMD versions with
->>>>>> CONFIG_FB_EXYNOS_FIMD_V8 selected? We are aiming at multi-platform ARM
->>>>>> kernels, aren't we (i.e support of both V8 and earlier FIMD in one
->>>>>> kernel)?
->>>>> Exynos5 has FIMD_V8 and other SoCs has older FIMD versions.
->>>>> As address offsets for certain registers has changed in FIMD_V8, we
->>>>> introduced these defines.
->>>>> So we have to select CONFIG_FB_EXYNOS_FIMD_V8 in case of Exynos5 SoC,
->>>>> and deselect for other SoCs.
->>>>
->>>> Yes, I'm aware of different FIMD versions in different SoCs. My point is
->>>> that it shouldn't be necessary to deselect CONFIG_FB_EXYNOS_FIMD_V8 to
->>>> support other SoCs than Exynos5, i.e. additional config options should be
->>>> incremental - should not break other setups. Ideally there should not be
->>>> any new config option for FIMD v8.
->>>>
->>>> The detection of FIMD version and selection of appropriate register offsets
->>>> should be done in the driver at runtime, based for example on
->>>> platform_device_id (see the s3c-fb driver and usage of s3c_fb_driverdata
->>>> and s3c_fb_win_variant structs).
->>>
->>> I could not agree with Tomasz Figa more.
->>> FIMD register offset should be selected at runtime.
->>>
->>> Leela Krishna Amudala,
->>> Please, don't use ugly "#ifdef".
->>>
->>> Best regards,
->>> Jingoo Han
->>>
->>
->> Yes, Each SoC having its own defconfigs (eg: exynos4_defconfig,
->> exynos5_defconfig etc.,)
->> So, CONFIG_FB_EXYNOS_FIMD_V8 will be added into exynos5_defconfig and
->> it won't affect the other SoCs.
->
-> NACK.
->
-> As others explained, and you don't seem to understand or you are stubborn
-> enough not to change your approach, resolving hardware differences at
-> compile time only is not acceptable, especially that Exynos SoCs are
-> going to be DT only platforms. We shouldn't be short-sighted like this.
->
-> Especially that the problem is relatively easy to solve at run-time, just
-> add EXYNOS5_* register address definitions and create separate functions
-> at the driver(s) touching those registers that changed on Exynos5.
->
-> Or parametrize existing ones with an offset that would be stored in driver
-> data passed trough struct platform_device_id::driver_data.
->
-> @Jingoo: BTW, shouldn't we have
->
-> plat-samsung/include/plat/regs-fb.h
-> plat-samsung/include/plat/regs-fb-v4.h
->
-> merged into one file and moved under include/video/ ?
->
-> For example include/video/s3c-fb.h, and board files could also include
-> that header. We have FIMD variant structures anyway, so why do we still
-> need multiple headers ?
->
+--1125311499-75163143-1342532841=:54512
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Will do the run-time approach, and post the next version patchset soon.
+Arnd,=0A=0AI don't know what has happened with the patch(es).=0AI used git =
+format-patch to export them. I had to copy them to another PC to send the e=
+mails, so perhaps that's the problem.=0A=0ARe: 'wmt' - as Alexey mentioned,=
+ this is the name the vendor uses in their own sources so it seemed like th=
+e obvious choice. I will post on devicetree-discuss and see what they think=
+.=0A=0ARegard,=0ATony P=0A=0A=0A=0A________________________________=0A From=
+: Arnd Bergmann <arnd@arndb.de>=0ATo: Tony Prisk <linux@prisktech.co.nz> =
+=0ACc: "vt8500-wm8505-linux-kernel@googlegroups.com" <vt8500-wm8505-linux-k=
+ernel@googlegroups.com>; devicetree-discuss@lists.ozlabs.org; Russell King =
+<linux@arm.linux.org.uk>; "linux-kernel@vger.kernel.org" <linux-kernel@vger=
+.kernel.org>; "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@list=
+s.infradead.org> =0ASent: Wednesday, 18 July 2012 12:50 AM=0ASubject: Re: [=
+PATCH 1/1] Add Wondermedia Technologies (wmt) to docs/devicetree/vendor-bin=
+dings.txt=0A =0AOn Tuesday 17 July 2012, Tony Prisk wrote:=0A> From 756ae5c=
+2f475d679649adff99058679b651af8d9 Mon Sep 17 00:00:00 2001=0A> From: Tony P=
+risk <linux@prisktech.co.nz>=0A> Date: Tue, 17 Jul 2012 19:09:31 +1200=0A> =
+Subject: [PATCH] Add Wondermedia Technologies (wmt) to vendor-prefixes.txt=
+=0A>=A0 Signed-off-by: Tony Prisk <linux@prisktech.co.nz>=0A=0ASomething we=
+nt wrong with exporting the patch. You probably used git-show=0Arather than=
+ git-format-patch, so you got the wrong headers.=0A=0AIt would also be help=
+ful to describe why the specific string is used here.=0ANormally we use the=
+ stock ticker symbol and "wmt" refers to Wal-Mart,=0Awhich would be unlikel=
+y but not impossible to produce their own hardware=0Ain the future. The sam=
+e thing applies to "via", which is VIACOM. The symbol=0Afor VIA technologie=
+s is "2388.TW", but that is not particularly descriptive=0Aor well-known.=
+=0A=0AMaybe someone on the devicetree-discuss mailing list has a better=0As=
+uggestion. I think using "via" is probably the best compromise, as=0Ait's a=
+ well-known name and most of the components of the wondermedia=0Achips were=
+ first made by VIA anyway.=0A=0A=A0=A0=A0 Arnd=0A=0A_______________________=
+________________________=0Alinux-arm-kernel mailing list=0Alinux-arm-kernel=
+@lists.infradead.org=0Ahttp://lists.infradead.org/mailman/listinfo/linux-ar=
+m-kernel
+--1125311499-75163143-1342532841=:54512
+Content-Type: text/html; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Leela Krishna Amudala
+<html><body><div style=3D"color:#000; background-color:#fff; font-family:ti=
+mes new roman, new york, times, serif;font-size:12pt"><div><span>Arnd,</spa=
+n></div><div><br><span></span></div><div><span>I don't know what has happen=
+ed with the patch(es).</span></div><div><span>I used git format-patch to ex=
+port them. I had to copy them to another PC to send the emails, so perhaps =
+that's the problem.</span></div><div><br><span></span></div><div><span>Re: =
+'wmt' - as Alexey mentioned, this is the name the vendor uses in their own =
+sources so it seemed like the obvious choice. I will post on devicetree-dis=
+cuss and see what they think.</span></div><div><br><span></span></div><div>=
+<span>Regard,</span></div><div><span>Tony P</span></div><div><br></div>  <d=
+iv style=3D"font-family: times new roman, new york, times, serif; font-size=
+: 12pt;"> <div style=3D"font-family: times new roman, new york, times, seri=
+f; font-size: 12pt;"> <div dir=3D"ltr"> <font face=3D"Arial" size=3D"2"> <h=
+r
+ size=3D"1">  <b><span style=3D"font-weight:bold;">From:</span></b> Arnd Be=
+rgmann &lt;arnd@arndb.de&gt;<br> <b><span style=3D"font-weight: bold;">To:<=
+/span></b> Tony Prisk &lt;linux@prisktech.co.nz&gt; <br><b><span style=3D"f=
+ont-weight: bold;">Cc:</span></b> "vt8500-wm8505-linux-kernel@googlegroups.=
+com" &lt;vt8500-wm8505-linux-kernel@googlegroups.com&gt;; devicetree-discus=
+s@lists.ozlabs.org; Russell King &lt;linux@arm.linux.org.uk&gt;; "linux-ker=
+nel@vger.kernel.org" &lt;linux-kernel@vger.kernel.org&gt;; "linux-arm-kerne=
+l@lists.infradead.org" &lt;linux-arm-kernel@lists.infradead.org&gt; <br> <b=
+><span style=3D"font-weight: bold;">Sent:</span></b> Wednesday, 18 July 201=
+2 12:50 AM<br> <b><span style=3D"font-weight: bold;">Subject:</span></b> Re=
+: [PATCH 1/1] Add Wondermedia Technologies (wmt) to docs/devicetree/vendor-=
+bindings.txt<br> </font> </div> <br>On Tuesday 17 July 2012, Tony Prisk wro=
+te:<br>&gt; From 756ae5c2f475d679649adff99058679b651af8d9 Mon Sep 17 00:00:=
+00
+ 2001<br>&gt; From: Tony Prisk &lt;<a ymailto=3D"mailto:linux@prisktech.co.=
+nz" href=3D"mailto:linux@prisktech.co.nz">linux@prisktech.co.nz</a>&gt;<br>=
+&gt; Date: Tue, 17 Jul 2012 19:09:31 +1200<br>&gt; Subject: [PATCH] Add Won=
+dermedia Technologies (wmt) to vendor-prefixes.txt<br>&gt;&nbsp; Signed-off=
+-by: Tony Prisk &lt;<a ymailto=3D"mailto:linux@prisktech.co.nz" href=3D"mai=
+lto:linux@prisktech.co.nz">linux@prisktech.co.nz</a>&gt;<br> <br>Something =
+went wrong with exporting the patch. You probably used git-show<br>rather t=
+han git-format-patch, so you got the wrong headers.<br><br>It would also be=
+ helpful to describe why the specific string is used here.<br>Normally we u=
+se the stock ticker symbol and "wmt" refers to Wal-Mart,<br>which would be =
+unlikely but not impossible to produce their own hardware<br>in the future.=
+ The same thing applies to "via", which is VIACOM. The symbol<br>for VIA te=
+chnologies is "2388.TW", but that is not particularly descriptive<br>or
+ well-known.<br><br>Maybe someone on the devicetree-discuss mailing list ha=
+s a better<br>suggestion. I think using "via" is probably the best compromi=
+se, as<br>it's a well-known name and most of the components of the wonderme=
+dia<br>chips were first made by VIA anyway.<br><br>&nbsp;&nbsp;&nbsp; Arnd<=
+br><br>_______________________________________________<br>linux-arm-kernel =
+mailing list<br><a ymailto=3D"mailto:linux-arm-kernel@lists.infradead.org" =
+href=3D"mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@lists=
+.infradead.org</a><br><a href=3D"http://lists.infradead.org/mailman/listinf=
+o/linux-arm-kernel" target=3D"_blank">http://lists.infradead.org/mailman/li=
+stinfo/linux-arm-kernel</a><br><br><br> </div> </div>  </div></body></html>
+--1125311499-75163143-1342532841=:54512--
 
-> --
->
-> Regards,
-> Sylwester
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--===============5776810397999007662==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5776810397999007662==--
