@@ -1,58 +1,68 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
-Date: Tue, 17 Jul 2012 15:28:26 +0200
-Message-ID: <20120717152826.2bf75948@skate>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <201207161554.04812.arnd@arndb.de> <20120717121640.589780ce@skate>
- <201207171312.06987.arnd@arndb.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the
+ i2c-embedded tree
+Date: Tue, 17 Jul 2012 14:35:51 +0100
+Message-ID: <20120717133550.GC4477@opensource.wolfsonmicro.com>
+References: <5003FB7C.4030509@linaro.org>
+ <20120717130650.GB27595@sirena.org.uk>
+ <500568D9.10805@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201207171312.06987.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <florian@openwrt.org>, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vOmOzSkFvhd7u8Ms"
+Return-path: <linux-next-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <500568D9.10805@linaro.org>
+Sender: linux-next-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpUaGFua3MgYSBsb3QgZm9yIHRob3NlIGRldGFpbHMuCgpMZSBUdWUsIDE3IEp1bCAy
-MDEyIDEzOjEyOjA2ICswMDAwLApBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPiBhIMOpY3Jp
-dCA6Cgo+ID4gTXkgdW5kZXJzdGFuZGluZyB1bnRpbCBub3cgd2FzIHRoYXQgX19yYXdfcmVhZGwv
-X19yYXdfd3JpdGVsIHNob3VsZAo+ID4gYmUgdXNlZCBmb3IgYWNjZXNzZXMgd2l0aCBuYXRpdmUg
-ZW5kaWFubmVzcywgYnV0IGFwcGFyZW50bHksIGl0J3MKPiA+IG1vcmUgc3VidGxlIHRoYW4gdGhp
-cy4gV291bGQgeW91IG1pbmQgZXhwYW5kaW5nIGEgYml0IG9uIHRoaXM/Cj4gCj4gVGhlIF9fcmF3
-XyogdmVyc2lvbnMgYXJlIGJhc2ljYWxseSBvbmx5IHZhbGlkIGlmIHlvdSBhY2Nlc3MgYSBtZW1v
-cnkKPiBidWZmZXIsIHN1Y2ggYXMgYSB2aWRlbyBmcmFtZWJ1ZmZlci4gVGhleSBkbyB0aGUgY29u
-dmVyc2lvbiBvZiBhbgo+IF9faW9tZW0gcG9pbnRlciBpbnRvIHNvbWV0aGluZyB0aGF0IGNhbiBi
-ZSBhY2Nlc3NlZCBieSB0aGUgY29tcGlsZXIuCj4gCj4gVGhlIG5vbi1yYXcgdmVyc2lvbnMgaGF2
-ZSBmaXhlZCBlbmRpYW5lc3MsIGd1YXJhbnRlZSB0aGF0IHRoZSBhY2Nlc3MKPiBpcyBkb25lIGF0
-b21pY2FsbHkgKGNvdWxkIGJlIGJ5dGUtd2lzZSBvdGhlcndpc2UpIGFuZCB0aGF0IGFsbCB0aGUK
-PiBuZWNlc3NhcnkgYmFycmllcnMgYXJlIHVzZWQgdG8gc3luY2hyb25pemUgYWdhaW5zdCBETUEg
-YW5kCj4gb3V0LW9mLW9yZGVyIGV4ZWN1dGlvbi4KPiAKPiBXZSBkb24ndCBhY3R1YWxseSBoYXZl
-IGFjY2Vzc29ycyB0aGF0IGFyZSBDUFUtZW5kaWFuIGFuZCBndWFyYW50ZWUKPiB0aGF0IHlvdSBj
-YW4gYWNjZXNzIGFuIE1NSU8gcmVnaXN0ZXIgcHJvcGVybHkuCj4gCj4gT24gcG93ZXJwYywgdGhl
-IGNvbnZlbnRpb24gaXMgdGhhdCByZWFkbC93cml0ZWwgc2hvdWxkIG9ubHkgYmUgdXNlZAo+IHRv
-IGFjY2VzcyBQQ0ksIGJ1dCB0aGF0IGlzIGZvciB0aGUgZW5oYW5jZWQgZXJyb3IgaGFuZGxpbmcs
-IG5vdCBmb3IKPiBlbmRpYW5lc3MuCgpBbmQgdGhlbiwgb24gUG93ZXJQQywgd2hpY2ggYWNjZXNz
-b3JzIGRvIHlvdSB1c2UgdG8gYWNjZXNzClNvQy1wZXJpcGhlcmFscyB0aGF0IGFyZSBub3Qgb24g
-dGhlIFBDSSBidXM/CgpGb3IgZXhhbXBsZSwgZHJpdmVycy90dHkvc2VyaWFsL21wc2MuYyB1c2Vz
-IHdyaXRlbC9yZWFkbCwgc28gYQpjb252ZXJzaW9uIHRvL2Zyb20gbGl0dGxlLWVuZGlhbiBpcyBk
-b25lIHdoZW4gd3JpdGluZy9yZWFkaW5nCnJlZ2lzdGVycy4gQXJlIHRob3NlIG1lbW9yeS1tYXBw
-ZWQgZGV2aWNlcyBsaXR0bGUtZW5kaWFuIGV2ZW4gdGhvdWdoCnRoZXkgYXJlIHVzZWQgb24gYmln
-LWVuZGlhbiBQb3dlclBDcz8KCkkgYXBvbG9naXplIGZvciB0aGUgc2lsbHkgcXVlc3Rpb25zLCBi
-dXQgSSdtIHRyeWluZyB0byBtYWtlIHNvbWUgc2Vuc2UKb3V0IG9mIHRoZXNlIG51bWVyb3VzIEkv
-TyBhbmQgbWVtb3J5IGFjY2Vzc29ycy4KClRoYW5rcywKClRob21hcwotLSAKVGhvbWFzIFBldGF6
-em9uaSwgRnJlZSBFbGVjdHJvbnMKS2VybmVsLCBkcml2ZXJzLCByZWFsLXRpbWUgYW5kIGVtYmVk
-ZGVkIExpbnV4CmRldmVsb3BtZW50LCBjb25zdWx0aW5nLCB0cmFpbmluZyBhbmQgc3VwcG9ydC4K
-aHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+--vOmOzSkFvhd7u8Ms
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Jul 17, 2012 at 02:30:01PM +0100, Lee Jones wrote:
+> On 17/07/12 14:06, Mark Brown wrote:
+
+> >It's not just about having generic bindings, it's also about having
+> >bindings which have some abstraction and hope of reusability. An awful
+> >lot of bindings are just straight dumps of Linux data structures into
+> >the device tree which don't make a terribly great deal of sense as
+> >bindings.
+
+> The Device Tree should supply any platform configuration which the
+> driver needs in order to correctly setup for a particular machine.
+> This is exactly what the platform_data structure did before, hence
+> is is reasonable to assume that whatever information resides in that
+> structure would be required in the Device Tree.
+
+An *awful* lot of what people are trying to put into platform data is
+nothing to do with that, it's just the generic data the driver needs to
+be able to understand the hardware at all.  Things like the MFD
+breakdown, random parameters of the hardware which you can infer from
+the device name and so on.
+
+--vOmOzSkFvhd7u8Ms
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQBWobAAoJEBus8iNuMP3dysIQAJUP9/WdJ9VLTOG5bA3f/tLD
+iXDgfrm/9QJVz5POnOnjgR3fnrW0W2VyY9huF+1SBV+5IGMuCp55GhqEXruhYs4h
+CLfMvRsBZ2nAZZMgNWr8vDIMont2Q73cM/HZB1nWHSUFwtbOsq8pQrvoe9SF7/0Q
+78Q0MTWKDQvdfNfzjeF5ZItcN9GdezSRvcKhJN/tiiSeEsN3eh3ztZuEqVgLUKx0
+ODbCR2g6w4KZfxyOkRuZHXzNX4OnDr9SXaH6sUZ8Axf1X2d49AA2Cg1ijijeAVV2
+MI6mJSOERDV153zWUIOHLOyApbMZdsg/InZtFsMFwjkbs5G0reb2xCsbFZVBhsog
+37OyD9W5TixQWTaX0HY0mYt4lJkdXyQ7yEFRadCkUWnjb7M2PkciY1NscmPJPgW8
+ZATOpg643ouJ0w2q4Q9yaKQVG+8mQFcgahzYudYujzHB8KOV9AY6MJcY/w3hSY9X
+V21+YHXrvwiVf5e5QlEt275gTUIXz9dQHo2LADDcj7wAvpkB8B2U6K9np+ILTVcy
+cl+D4aSB7N7NVlLqbkVliOw//AeHLfGVyowcyPboi3P6BbAyr4l/NJ/hBiv3BxlJ
+CJvcOggci2vnYLYLRa1mPyio3Qo6q47oycTL9t3wvvU69RynC3uVflDNSjHCQHAA
+UDowXAzqLfqYRFlgSjPY
+=C2mU
+-----END PGP SIGNATURE-----
+
+--vOmOzSkFvhd7u8Ms--
