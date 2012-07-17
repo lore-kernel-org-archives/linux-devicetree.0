@@ -1,75 +1,67 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/8] ARM: MCS814x: add Device Tree based MCS8140 board
- support
-Date: Tue, 17 Jul 2012 13:53:13 +0000
-Message-ID: <201207171353.14070.arnd@arndb.de>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <201207171319.43593.arnd@arndb.de> <6873084.DUBYG1ACKX@flexo>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the i2c-embedded
+ tree
+Date: Tue, 17 Jul 2012 15:02:00 +0100
+Message-ID: <50057058.2060002@linaro.org>
+References: <5003FB7C.4030509@linaro.org> <20120717130650.GB27595@sirena.org.uk> <500568D9.10805@linaro.org> <20120717133550.GC4477@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <6873084.DUBYG1ACKX@flexo>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <20120717133550.GC4477@opensource.wolfsonmicro.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 July 2012, Florian Fainelli wrote:
-> On Tuesday 17 July 2012 13:19:43 Arnd Bergmann wrote:
-> > On Sunday 15 July 2012, Florian Fainelli wrote:
+On 17/07/12 14:35, Mark Brown wrote:
+> On Tue, Jul 17, 2012 at 02:30:01PM +0100, Lee Jones wrote:
+>> On 17/07/12 14:06, Mark Brown wrote:
+>
+>>> It's not just about having generic bindings, it's also about having
+>>> bindings which have some abstraction and hope of reusability. An aw=
+ful
+>>> lot of bindings are just straight dumps of Linux data structures in=
+to
+>>> the device tree which don't make a terribly great deal of sense as
+>>> bindings.
+>
+>> The Device Tree should supply any platform configuration which the
+>> driver needs in order to correctly setup for a particular machine.
+>> This is exactly what the platform_data structure did before, hence
+>> is is reasonable to assume that whatever information resides in that
+>> structure would be required in the Device Tree.
+>
+> An *awful* lot of what people are trying to put into platform data is
+> nothing to do with that, it's just the generic data the driver needs =
+to
+> be able to understand the hardware at all.  Things like the MFD
+> breakdown, random parameters of the hardware which you can infer from
+> the device name and so on.
 
-> > > +			adc {
-> > > +				compatible = "simple-bus";
-> > > +				#address-cells = <2>;
-> > > +				#size-cells = <1>;
-> > > +				// 8 64MB chip-selects
-> > > +				ranges = <0 0 0x00000000 0x4000000	// sdram
-> > > +					  1 0 0x04000000 0x4000000	// sdram
-> > > +					  2 0 0x08000000 0x4000000	// reserved
-> > > +					  3 0 0x0c000000 0x4000000	// 
-> flash/localbus
-> > > +					  4 0 0x10000000 0x4000000	// 
-> flash/localbus
-> > > +					  5 0 0x14000000 0x4000000	// 
-> flash/localbus
-> > > +					  6 0 0x18000000 0x4000000	// 
-> flash/localbus
-> > > +					  7 0 0x1c000000 0x4000000>;	// 
-> flash/localbus
-> > > +
-> > > +				sdram: memory@0,0 {
-> > > +					reg = <0 0 0>;
-> > > +				};
-> > > +
-> > > +				nor: flash@7,0 {
-> > > +					reg = <7 0 0x4000000>;
-> > > +					compatible = "cfi-flash";
-> > > +					bank-width = <1>;		// 8-bit external 
-> flash
-> > > +					#address-cells = <1>;
-> > > +					#size-cells = <1>;
-> > > +                                };
-> > > +                        };
-> > 
-> > Nice representation of the external buses. It does seem however that at
-> > least the nor flash entry is board specific and should be moved into the
-> > board .dts file.
-> 
-> In fact, MCS8140 only supports 8-bit CFI Flash chips, so this really is the 
-> common point of all MCS8140-based boards. As you can see in the following 
-> board-specific DTS patches, only the partition layout is different.
+I can only speak from a personal perspective on that one. I do _try_ no=
+t=20
+to put anything in there (platform data or Device Tree), which does not=
+=20
+belong. I have no idea how successful that notion was however.
 
-But is the flash always connected to bank 7? It looks like you could easily have
-a NIC on that one and the flash on a different bank.
+I'm sure sure this is relevant in the current case though, as the i2c=20
+properties proposed here are platform specific. What we're discussing i=
+s=20
+some consolidation of property names, which I do support in theory. Wha=
+t=20
+I fear is that this driver will lack Device Tree functionality for yet=20
+another kernel version if it isn't resolved quickly.
 
-	Arnd
+Wolfram, are you theorising about these the multiple use of these=20
+properties, or do you have some examples? I think we would do well to=20
+work on these, or else they're just going to lie dormant and not get do=
+ne.
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+M: +44 77 88 633 515
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
