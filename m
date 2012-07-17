@@ -1,81 +1,35 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 2/8] ARM: MCS814x: add Device Tree based MCS8140 board
- support
-Date: Tue, 17 Jul 2012 15:57:55 +0200
-Message-ID: <2127715.xEAHMTj091@flexo>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <6873084.DUBYG1ACKX@flexo> <201207171353.14070.arnd@arndb.de>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH RESEND v4] USB: ehci-s5p: Add vbus setup function to the
+ s5p ehci glue layer
+Date: Tue, 17 Jul 2012 10:20:36 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1207171020220.1315-100000@iolanthe.rowland.org>
+References: <1342523006-8379-2-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201207171353.14070.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342523006-8379-2-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 July 2012 13:53:13 Arnd Bergmann wrote:
-> On Tuesday 17 July 2012, Florian Fainelli wrote:
-> > On Tuesday 17 July 2012 13:19:43 Arnd Bergmann wrote:
-> > > On Sunday 15 July 2012, Florian Fainelli wrote:
-> 
-> > > > +			adc {
-> > > > +				compatible = "simple-bus";
-> > > > +				#address-cells = <2>;
-> > > > +				#size-cells = <1>;
-> > > > +				// 8 64MB chip-selects
-> > > > +				ranges = <0 0 0x00000000 0x4000000	// sdram
-> > > > +					  1 0 0x04000000 0x4000000	// sdram
-> > > > +					  2 0 0x08000000 0x4000000	// reserved
-> > > > +					  3 0 0x0c000000 0x4000000	// 
-> > flash/localbus
-> > > > +					  4 0 0x10000000 0x4000000	// 
-> > flash/localbus
-> > > > +					  5 0 0x14000000 0x4000000	// 
-> > flash/localbus
-> > > > +					  6 0 0x18000000 0x4000000	// 
-> > flash/localbus
-> > > > +					  7 0 0x1c000000 0x4000000>;	// 
-> > flash/localbus
-> > > > +
-> > > > +				sdram: memory@0,0 {
-> > > > +					reg = <0 0 0>;
-> > > > +				};
-> > > > +
-> > > > +				nor: flash@7,0 {
-> > > > +					reg = <7 0 0x4000000>;
-> > > > +					compatible = "cfi-flash";
-> > > > +					bank-width = <1>;		// 8-bit external 
-> > flash
-> > > > +					#address-cells = <1>;
-> > > > +					#size-cells = <1>;
-> > > > +                                };
-> > > > +                        };
-> > > 
-> > > Nice representation of the external buses. It does seem however that at
-> > > least the nor flash entry is board specific and should be moved into the
-> > > board .dts file.
-> > 
-> > In fact, MCS8140 only supports 8-bit CFI Flash chips, so this really is 
-the 
-> > common point of all MCS8140-based boards. As you can see in the following 
-> > board-specific DTS patches, only the partition layout is different.
-> 
-> But is the flash always connected to bank 7? It looks like you could easily 
-have
-> a NIC on that one and the flash on a different bank.
+On Tue, 17 Jul 2012, Vivek Gautam wrote:
 
-In fact, the only constraint is that bank7 is the only one which can be used 
-for an external boot flash. I do not have any problem moving this to the per-
-board DTS file.
---
-Florian
+> This patch retrieves and configures the vbus control gpio via
+> the device tree. The suspend/resume callbacks will be later
+> modified for vbus control.
+> 
+> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
