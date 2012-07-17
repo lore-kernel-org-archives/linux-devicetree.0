@@ -1,14 +1,15 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
-Date: Tue, 17 Jul 2012 13:12:06 +0000
-Message-ID: <201207171312.06987.arnd@arndb.de>
+Subject: Re: [PATCH 2/8] ARM: MCS814x: add Device Tree based MCS8140 board
+ support
+Date: Tue, 17 Jul 2012 13:19:43 +0000
+Message-ID: <201207171319.43593.arnd@arndb.de>
 References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <201207161554.04812.arnd@arndb.de> <20120717121640.589780ce@skate>
+ <1342363754-30808-3-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120717121640.589780ce@skate>
+In-Reply-To: <1342363754-30808-3-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,40 +20,112 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlc2RheSAxNyBKdWx5IDIwMTIsIFRob21hcyBQZXRhenpvbmkgd3JvdGU6Cj4gTGUgTW9u
-LCAxNiBKdWwgMjAxMiAxNTo1NDowNCArMDAwMCwKPiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRi
-LmRlPiBhIMOpY3JpdCA6Cj4gCj4gPiA+ICt2b2lkIG1jczgxNHhfcmVzdGFydChjaGFyIG1vZGUs
-IGNvbnN0IGNoYXIgKmNtZCkKPiA+ID4gK3sKPiA+ID4gKyAgIF9fcmF3X3dyaXRlbCh+KDEgPDwg
-MzEpLCBtY3M4MTR4X3N5c2RiZ19iYXNlKTsKPiA+ID4gK30KPiA+IAo+ID4gWW91IHNob3VsZCBn
-ZW5lcmFsbHkgYXZvaWQgdXNpbmcgX19yYXdfcmVhZGwgZXRjLiBhbmQgaW5zdGVhZCB1c2UKPiA+
-IHJlYWRsL3dyaXRlIG9yIHJlYWRsX3JlbGF4ZWQvd3JpdGVsX3JlbGF4ZWQuCj4gCj4gSSB0aG91
-Z2h0IHRoYXQgcmVhZGwvd3JpdGVsIGFuZCByZWFkbF9yZWxheGVkL3dyaXRlbF9yZWxheGVkIHdl
-cmUgdXNlZAo+IGZvciBQQ0ktc3R5bGUgYWNjZXNzLCBmb3Igd2hpY2ggdGhlc2UgbWFjcm9zL2Z1
-bmN0aW9ucyBkbyBhdXRvbWF0aWNhbGx5Cj4gYSBjb252ZXJzaW9uIGZyb20gdGhlIENQVS1lbmRp
-YW5uZXNzIHRvIHRoZSBQQ0ktZW5kaWFubmVzcwo+IChsaXR0bGUtZW5kaWFuKS4gSGVyZSBvZiBj
-b3Vyc2UsIHRoaXMgdGhlIFNvQyBpcyB1c2VkIGxpdHRsZS1lbmRpYW4sIGl0Cj4gd2lsbCBqdXN0
-IHdvcmsgYmVjYXVzZSByZWFkbC93cml0ZWwgd2lsbCBub3QgZG8gYW55IGVuZGlhbm5lc3MKPiBj
-b252ZXJzaW9uLCBidXQgaWYgd2Ugd2VyZSBvbiBhIGJpZy1lbmRpYW4gbWFjaGluZT8KPiAKPiBN
-eSB1bmRlcnN0YW5kaW5nIHVudGlsIG5vdyB3YXMgdGhhdCBfX3Jhd19yZWFkbC9fX3Jhd193cml0
-ZWwgc2hvdWxkIGJlCj4gdXNlZCBmb3IgYWNjZXNzZXMgd2l0aCBuYXRpdmUgZW5kaWFubmVzcywg
-YnV0IGFwcGFyZW50bHksIGl0J3MgbW9yZQo+IHN1YnRsZSB0aGFuIHRoaXMuIFdvdWxkIHlvdSBt
-aW5kIGV4cGFuZGluZyBhIGJpdCBvbiB0aGlzPwoKVGhlIF9fcmF3XyogdmVyc2lvbnMgYXJlIGJh
-c2ljYWxseSBvbmx5IHZhbGlkIGlmIHlvdSBhY2Nlc3MgYSBtZW1vcnkKYnVmZmVyLCBzdWNoIGFz
-IGEgdmlkZW8gZnJhbWVidWZmZXIuIFRoZXkgZG8gdGhlIGNvbnZlcnNpb24gb2YgYW4KX19pb21l
-bSBwb2ludGVyIGludG8gc29tZXRoaW5nIHRoYXQgY2FuIGJlIGFjY2Vzc2VkIGJ5IHRoZSBjb21w
-aWxlci4KClRoZSBub24tcmF3IHZlcnNpb25zIGhhdmUgZml4ZWQgZW5kaWFuZXNzLCBndWFyYW50
-ZWUgdGhhdCB0aGUgYWNjZXNzCmlzIGRvbmUgYXRvbWljYWxseSAoY291bGQgYmUgYnl0ZS13aXNl
-IG90aGVyd2lzZSkgYW5kIHRoYXQgYWxsIHRoZQpuZWNlc3NhcnkgYmFycmllcnMgYXJlIHVzZWQg
-dG8gc3luY2hyb25pemUgYWdhaW5zdCBETUEgYW5kIG91dC1vZi1vcmRlcgpleGVjdXRpb24uCgpX
-ZSBkb24ndCBhY3R1YWxseSBoYXZlIGFjY2Vzc29ycyB0aGF0IGFyZSBDUFUtZW5kaWFuIGFuZCBn
-dWFyYW50ZWUgdGhhdAp5b3UgY2FuIGFjY2VzcyBhbiBNTUlPIHJlZ2lzdGVyIHByb3Blcmx5LgoK
-T24gcG93ZXJwYywgdGhlIGNvbnZlbnRpb24gaXMgdGhhdCByZWFkbC93cml0ZWwgc2hvdWxkIG9u
-bHkgYmUgdXNlZAp0byBhY2Nlc3MgUENJLCBidXQgdGhhdCBpcyBmb3IgdGhlIGVuaGFuY2VkIGVy
-cm9yIGhhbmRsaW5nLCBub3QgZm9yCmVuZGlhbmVzcy4KCglBcm5kCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5n
-IGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
-emxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Sunday 15 July 2012, Florian Fainelli wrote:
+
+> +
+> +			uart0: serial@400dc000 {
+> +				compatible = "ns16550";
+> +				reg = <0x400dc000 0x20>;
+> +				clock-frequency = <50000000>;
+> +				reg-shift = <2>;
+> +				interrupts = <21>;
+> +				status = "okay";
+> +			};
+
+We often mark stuff like the uart as status="disabled" in the .dtsi file
+and only enable it in the board specific .dts file when it's actually
+connected. For components that are always present and usable, that's
+of course not necessary.
+
+> +
+> +			adc {
+> +				compatible = "simple-bus";
+> +				#address-cells = <2>;
+> +				#size-cells = <1>;
+> +				// 8 64MB chip-selects
+> +				ranges = <0 0 0x00000000 0x4000000	// sdram
+> +					  1 0 0x04000000 0x4000000	// sdram
+> +					  2 0 0x08000000 0x4000000	// reserved
+> +					  3 0 0x0c000000 0x4000000	// flash/localbus
+> +					  4 0 0x10000000 0x4000000	// flash/localbus
+> +					  5 0 0x14000000 0x4000000	// flash/localbus
+> +					  6 0 0x18000000 0x4000000	// flash/localbus
+> +					  7 0 0x1c000000 0x4000000>;	// flash/localbus
+> +
+> +				sdram: memory@0,0 {
+> +					reg = <0 0 0>;
+> +				};
+> +
+> +				nor: flash@7,0 {
+> +					reg = <7 0 0x4000000>;
+> +					compatible = "cfi-flash";
+> +					bank-width = <1>;		// 8-bit external flash
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +                                };
+> +                        };
+
+Nice representation of the external buses. It does seem however that at
+least the nor flash entry is board specific and should be moved into the
+board .dts file.
+I would probably do the same for the memory node, but that one is less
+obvious as it seems that there is not much choice here.
+
+> +			usb0: ehci@400fc000 {
+> +				compatible = "moschip,mcs814x-ehci", "usb-ehci";
+> +				reg = <0x400fc000 0x74>;
+> +				interrupts = <2>;
+> +			};
+> +
+> +			usb1: ohci@400fd000 {
+> +				compatible = "moschip,mcs814x-ohci", "ohci-le";
+> +				reg = <0x400fd000 0x74>;
+> +				interrupts = <11>;
+> +			};
+> +
+> +			usb2: ohci@400fe000 {
+> +				compatible = "moschip,mcs814x-ohci", "ohci-le";
+> +				reg = <0x400fe000 0x74>;
+> +				interrupts = <12>;
+> +			};
+> +
+> +			usb3: otg@400ff000 {
+> +				compatible = "moschip,msc814x-otg", "usb-otg";
+> +				reg = <0x400ff000 0x1000>;
+> +				interrupts = <13>;
+> +			};
+
+same comment as for the uart, I would mark these as disabled and only
+enable the ones that are connected on a give board.
+
+> +
+> +static void __init mcs814x_dt_device_init(void)
+> +{
+> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> +	mcs814x_init_machine();
+> +}
+> +
+> +static const char *mcs8140_dt_board_compat[] __initdata = {
+> +	"moschip,mcs8140",
+> +	NULL,	/* sentinel */
+> +};
+> +
+> +DT_MACHINE_START(mcs8140_dt, "Moschip MCS8140 board")
+> +	/* Maintainer: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> */
+> +	.timer		= &mcs814x_timer,
+> +	.map_io		= mcs814x_map_io,
+> +	.init_early	= mcs814x_clk_init,
+> +	.init_irq	= mcs814x_of_irq_init,
+> +	.init_machine	= mcs814x_dt_device_init,
+> +	.restart	= mcs814x_restart,
+> +	.dt_compat	= mcs8140_dt_board_compat,
+> +MACHINE_END
+
+Not much to see here. Just move this into the common.c file. There is no
+need to have a separate board file when all boards use the same one.
+
+	Arnd
