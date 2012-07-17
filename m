@@ -1,39 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/1] Add Wondermedia Technologies (wmt) to docs/devicetree/vendor-bindings.txt
-Date: Tue, 17 Jul 2012 12:50:31 +0000
-Message-ID: <201207171250.32265.arnd@arndb.de>
-References: <76F764B079F92A4E843589C893D0A022C380F1D4@SERVER.prisktech.co.nz>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the
+ i2c-embedded tree
+Date: Tue, 17 Jul 2012 14:06:50 +0100
+Message-ID: <20120717130650.GB27595@sirena.org.uk>
+References: <5003FB7C.4030509@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <76F764B079F92A4E843589C893D0A022C380F1D4@SERVER.prisktech.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Prisk <linux@prisktech.co.nz>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "vt8500-wm8505-linux-kernel@googlegroups.com" <vt8500-wm8505-linux-kernel@googlegroups.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-next-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5003FB7C.4030509@linaro.org>
+Sender: linux-next-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 July 2012, Tony Prisk wrote:
-> From 756ae5c2f475d679649adff99058679b651af8d9 Mon Sep 17 00:00:00 2001
-> From: Tony Prisk <linux@prisktech.co.nz>
-> Date: Tue, 17 Jul 2012 19:09:31 +1200
-> Subject: [PATCH] Add Wondermedia Technologies (wmt) to vendor-prefixes.txt
->  Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
- 
-Something went wrong with exporting the patch. You probably used git-show
-rather than git-format-patch, so you got the wrong headers.
+On Mon, Jul 16, 2012 at 12:31:08PM +0100, Lee Jones wrote:
 
-It would also be helpful to describe why the specific string is used here.
-Normally we use the stock ticker symbol and "wmt" refers to Wal-Mart,
-which would be unlikely but not impossible to produce their own hardware
-in the future. The same thing applies to "via", which is VIACOM. The symbol
-for VIA technologies is "2388.TW", but that is not particularly descriptive
-or well-known.
+> I agree with what you say to some extent, but I believe that it is
+> more important to have a working solution now than to ensure that
+> each bindings are as unique as possible. After any suggestion of
+> consolidation, a move from vendor specific to generically defined
+> Device Tree bindings is trivial. Especially in the current stage
+> where adaptions and definitions are still fluid.
 
-Maybe someone on the devicetree-discuss mailing list has a better
-suggestion. I think using "via" is probably the best compromise, as
-it's a well-known name and most of the components of the wondermedia
-chips were first made by VIA anyway.
+> Obviously some care is taken to ensure the bindings are as generic
+> as possible, but not to the extent that will put the project back
+> some months. Over past few months I have enabled many sub-systems;
 
-	Arnd
+It's not just about having generic bindings, it's also about having
+bindings which have some abstraction and hope of reusability. An awful
+lot of bindings are just straight dumps of Linux data structures into
+the device tree which don't make a terribly great deal of sense as
+bindings.
+
+> however, I think it would have been a fraction of that if we'd gone
+> through the laborious process of immediate forced consolidation. I
+> think it's fine to have platform/vendor specific bindings that work,
+> then come back to unify them once the dust settles.
+
+In many of these cases we'd be better off just not putting things into
+the device tree in the first place, leaving things at the basic "is the
+device there" stuff.
