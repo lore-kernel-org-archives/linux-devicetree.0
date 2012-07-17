@@ -1,76 +1,65 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/8] ARM: MCS814X: add DTS file for Tigal/Robotech RBT-832
-Date: Tue, 17 Jul 2012 13:27:51 +0000
-Message-ID: <201207171327.52118.arnd@arndb.de>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <1342363754-30808-5-git-send-email-florian@openwrt.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the i2c-embedded
+ tree
+Date: Tue, 17 Jul 2012 14:30:01 +0100
+Message-ID: <500568D9.10805@linaro.org>
+References: <5003FB7C.4030509@linaro.org> <20120717130650.GB27595@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342363754-30808-5-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <20120717130650.GB27595@sirena.org.uk>
+Sender: linux-next-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 15 July 2012, Florian Fainelli wrote:
+On 17/07/12 14:06, Mark Brown wrote:
+> On Mon, Jul 16, 2012 at 12:31:08PM +0100, Lee Jones wrote:
+>
+>> I agree with what you say to some extent, but I believe that it is
+>> more important to have a working solution now than to ensure that
+>> each bindings are as unique as possible. After any suggestion of
+>> consolidation, a move from vendor specific to generically defined
+>> Device Tree bindings is trivial. Especially in the current stage
+>> where adaptions and definitions are still fluid.
+>
+>> Obviously some care is taken to ensure the bindings are as generic
+>> as possible, but not to the extent that will put the project back
+>> some months. Over past few months I have enabled many sub-systems;
+>
+> It's not just about having generic bindings, it's also about having
+> bindings which have some abstraction and hope of reusability. An awfu=
+l
+> lot of bindings are just straight dumps of Linux data structures into
+> the device tree which don't make a terribly great deal of sense as
+> bindings.
 
-> +	model = "Tigal RBT-832";
-> +	compatible = "tigal,rbt-832", "moschip,mcs8140", "moschip,mcs814x";
-> +
-> +	chosen {
-> +		bootargs = "mem=32M console=ttyS0,115200 earlyprintk";
-> +	};
+The Device Tree should supply any platform configuration which the=20
+driver needs in order to correctly setup for a particular machine. This=
+=20
+is exactly what the platform_data structure did before, hence is is=20
+reasonable to assume that whatever information resides in that structur=
+e=20
+would be required in the Device Tree.
 
-I think the mem=32M doesn't belong here, it's already specified in the memory
-node.
+>> however, I think it would have been a fraction of that if we'd gone
+>> through the laborious process of immediate forced consolidation. I
+>> think it's fine to have platform/vendor specific bindings that work,
+>> then come back to unify them once the dust settles.
+>
+> In many of these cases we'd be better off just not putting things int=
+o
+> the device tree in the first place, leaving things at the basic "is t=
+he
+> device there" stuff.
 
-> diff --git a/arch/arm/mach-mcs814x/Kconfig b/arch/arm/mach-mcs814x/Kconfig
-> index c89422f..604537b 100644
-> --- a/arch/arm/mach-mcs814x/Kconfig
-> +++ b/arch/arm/mach-mcs814x/Kconfig
-> @@ -6,6 +6,15 @@ config MCS8140
->  
->  menu "Moschip MCS8140 boards"
->  
-> +config MACH_RBT_832
-> +	bool "Tigal RBT-832"
-> +	select MCS8140
-> +	select NEW_LEDS
-> +	select LEDS_CLASS
-> +	select LEDS_GPIO
-> +	help
-> +	  Machine support for the Tigal RBT-832 board
-> +
->  endmenu
->  
->  endif
+Then what do you do with the platform data?
 
-I would prefer not to have any additional symbols selected by the board.
-It's better to put those into the defconfig.
-
-> @@ -27,6 +27,7 @@ static void __init mcs814x_dt_device_init(void)
->  }
->  
->  static const char *mcs8140_dt_board_compat[] __initdata = {
-> +	"tigal,rbt-832",
->  	"moschip,mcs8140",
->  	NULL,	/* sentinel */
->  };
-
-I'm not sure what the normal practice is these days regarding the 
-board compatible table. I thought that we just put the soc name
-in there for new platforms that are already DT-only. Your .dts
-file contains both, so it works either way.
-
-	Arnd
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+M: +44 77 88 633 515
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
