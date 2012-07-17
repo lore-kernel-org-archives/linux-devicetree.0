@@ -1,12 +1,14 @@
 From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4] USB: host: Add Device tree support for ohci-exynos &
- ehci-s5p
-Date: Tue, 17 Jul 2012 10:16:44 +0530
-Message-ID: <1342500405-6738-1-git-send-email-gautam.vivek@samsung.com>
+Subject: [PATCH v4] USB: ehci-s5p: Add vbus setup function to the s5p ehci glue
+ layer
+Date: Tue, 17 Jul 2012 10:16:45 +0530
+Message-ID: <1342500405-6738-2-git-send-email-gautam.vivek@samsung.com>
+References: <1342500405-6738-1-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1342500405-6738-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,17 +22,61 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Reworked third patch; other two got applied to 'usb-next' branch.
+This patch retrieves and configures the vbus control gpio via
+the device tree. The suspend/resume callbacks will be later
+modified for vbus control.
 
-Changes from v3:
-1) Change the function name from s5p_ehci_setup_gpio()
-to s5p_setup_vbus_gpio(). 
-2) Make s5p_setup_vbus_gpio() function to return void
-instead of int.
-3) Return void in case of failures.
-
-Vivek Gautam (1):
-  USB: ehci-s5p: Add vbus setup function to the s5p ehci glue layer
-
+Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
  drivers/usb/host/ehci-s5p.c |   21 +++++++++++++++++++++
  1 files changed, 21 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-s5p.c
+index 37d84cf..9d8f1dd 100644
+--- a/drivers/usb/host/ehci-s5p.c
++++ b/drivers/usb/host/ehci-s5p.c
+@@ -15,6 +15,7 @@
+ #include <linux/clk.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/of_gpio.h>
+ #include <plat/ehci.h>
+ #include <plat/usb-phy.h>
+ 
+@@ -64,6 +65,24 @@ static const struct hc_driver s5p_ehci_hc_driver = {
+ 	.clear_tt_buffer_complete	= ehci_clear_tt_buffer_complete,
+ };
+ 
++static void s5p_setup_vbus_gpio(struct platform_device *pdev)
++{
++	int err;
++	int gpio;
++
++	if (!pdev->dev.of_node)
++		return;
++
++	gpio = of_get_named_gpio(pdev->dev.of_node,
++			"samsung,vbus-gpio", 0);
++	if (!gpio_is_valid(gpio))
++		return;
++
++	err = gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH, "ehci_vbus_gpio");
++	if (err)
++		dev_err(&pdev->dev, "can't request ehci vbus gpio %d", gpio);
++}
++
+ static u64 ehci_s5p_dma_mask = DMA_BIT_MASK(32);
+ 
+ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+@@ -92,6 +111,8 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+ 	if (!pdev->dev.coherent_dma_mask)
+ 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+ 
++	s5p_setup_vbus_gpio(pdev);
++
+ 	s5p_ehci = devm_kzalloc(&pdev->dev, sizeof(struct s5p_ehci_hcd),
+ 				GFP_KERNEL);
+ 	if (!s5p_ehci)
+-- 
+1.7.0.4
