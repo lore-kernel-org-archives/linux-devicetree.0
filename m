@@ -1,13 +1,13 @@
 From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH v2 06/11] arm/dts: am33xx: Add dt data for usbss
-Date: Tue, 17 Jul 2012 16:38:49 +0400
-Message-ID: <50055CD9.3060300@mvista.com>
-References: <1342516407-16515-1-git-send-email-ajay.gupta@ti.com> <1342516407-16515-7-git-send-email-ajay.gupta@ti.com>
+Subject: Re: [PATCH v2 07/11] usb: otg: nop: add dt support
+Date: Tue, 17 Jul 2012 16:40:52 +0400
+Message-ID: <50055D54.9040005@mvista.com>
+References: <1342516407-16515-1-git-send-email-ajay.gupta@ti.com> <1342516407-16515-8-git-send-email-ajay.gupta@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1342516407-16515-7-git-send-email-ajay.gupta@ti.com>
+In-Reply-To: <1342516407-16515-8-git-send-email-ajay.gupta@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Ajay Kumar Gupta <ajay.gupta@ti.com>
 Cc: linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com
@@ -17,37 +17,28 @@ Hello.
 
 On 17-07-2012 13:13, Ajay Kumar Gupta wrote:
 
-> Added device tree data for usbss on am33xx. There are two musb controllers
-> on am33xx platform so have port0_mode and port1_mode additional data.
+> Added device tree support for nop transceiver driver and updated the
+> Documentation with device tree binding information for am33xx platform.
 
 > Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
 > ---
->   arch/arm/boot/dts/am33xx.dtsi |   11 +++++++++++
->   1 files changed, 11 insertions(+), 0 deletions(-)
+>   .../devicetree/bindings/usb/am33xx-usb.txt         |    3 +++
+>   drivers/usb/otg/nop-usb-xceiv.c                    |   12 ++++++++++++
+>   2 files changed, 15 insertions(+), 0 deletions(-)
 
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 59509c4..b572803 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -154,5 +154,16 @@
->   			#size-cells = <0>;
->   			ti,hwmods = "i2c3";
->   		};
+> diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+> index ca8fa56..a314720 100644
+> --- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+> @@ -12,3 +12,6 @@ AM33XX MUSB GLUE
+>      represents PERIPHERAL.
+>    - power : Should be "250". This signifies the controller can supply upto
+>      500mA when operating in host mode.
 > +
-> +		usb_otg_hs: usb_otg_hs@47400000 {
+> +NOP USB PHY
+> + - compatible : Should be "ti,nop-xceiv-usb"
 
-    The "reg" property is absent, so why did you give the node name the 
-address postfix?
-
-> +			compatible = "ti,musb-am33xx";
-> +			ti,hwmods = "usb_otg_hs";
-> +			multipoint = <1>;
-> +			num_eps = <16>;
-> +			ram_bits = <12>;
-> +			port0_mode = <3>;
-> +			port1_mode = <1>;
-> +			power = <250>;
-> +		};
+    Why are you declaring it as TI specific. There's nothing company specific 
+in the NOP transceiver.
 
 WBR, Sergei
-
