@@ -1,60 +1,162 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC/PATCH 06/13] media: s5p-fimc: Add device tree support for
- FIMC-LITE
-Date: Tue, 17 Jul 2012 20:55:26 +0200
-Message-ID: <5005B51E.20505@gmail.com>
-References: <4FBFE1EC.9060209@samsung.com>
- <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com>
- <1337975573-27117-6-git-send-email-s.nawrocki@samsung.com>
- <Pine.LNX.4.64.1207161114130.12302@axis700.grange>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Tue, 17 Jul 2012 19:24:33 +0000
+Message-ID: <201207171924.33756.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206271520.49276.arnd@arndb.de> <1342161907.1726.26.camel@vkoul-udesk3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.64.1207161114130.12302-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, riverful.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1342161907.1726.26.camel@vkoul-udesk3>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2012 11:15 AM, Guennadi Liakhovetski wrote:
->> --- a/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
->> +++ b/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
->> @@ -39,6 +39,21 @@ Required properties:
->>   	       depends on the SoC revision. For S5PV210 valid values are:
->>   	       0...2, for Exynos4x1x: 0...3.
->>
->> +
->> +'fimc-lite' device node
->> +-----------------------
->> +
->> +Required properties:
->> +
->> +- compatible : should be one of:
->> +		"samsung,exynos4212-fimc";
->> +		"samsung,exynos4412-fimc";
->> +- reg	     : physical base address and size of the device's memory mapped
->> +	       registers;
->> +- interrupts : should contain FIMC-LITE interrupt;
->> +- cell-index : FIMC-LITE IP instance index;
->
-> Same as in an earlier patch - not sure this is needed.
+On Friday 13 July 2012, Vinod Koul wrote:
+> > Do you mean there must be a global table, or are you ok with putting
+> > the information about a channel into the device that uses the channel,
+> > as we do for most other subsystems (IRQ, GPIO, pinctrl, ...).
+> > If not, what is the problem with that approach?
+> 
+> Today, we simple ask, "give me dma channel with DMA_SLAVE capability".
+> 
+> If we change it to "give me dma channel which suits my need" and have
+> additional information in dmaengine to handle this request effectively.
+> 
+> What that would mean is
+> a) DMA channel either knows which channel to provide, Or
+> b) Additional arguments provided to dmaengine API to help it find out
+> which channel to provide.
+> 
+> It would be good to have client ask for a specific channel. But in order
+> to build generic clients, we face a problem that clients may not know
+> how they mapped to dmac by SoC designer. Or the mux maybe entirely
+> flexible on which channel.
+> 
+> If we add this as DT property (which I assume should be platform
+> specific), then client will know which channel to request.
+> It can have two levels, dmac and channel. In case mux is flexible enough
+> then client gets a channel and program the mux for this mapping.
+> 
+> I think this is the most simplistic solution I have for this, thoughts?
 
-It is needed for setting up a pipeline of multiple sub-device
-within a SoC. As I commented on patch 2/13 I'd like to replace
-this with proper entries in the "aliases" node. Some sub-devices
-have registers that these indexes need to be directly written to.
+I think we're basically on the same page. Let's see if I have covered
+all the cases we discussed so far. I've tried to update the binding that
+Jon sent out initially with everything we've discussed, so please review
+this to see if I understood you correctly.
 
---
+	Arnd
 
-Thanks,
-Sylwester
+
+* Generic DMA Controller and DMA request bindings
+
+Generic binding to provide a way for a driver using DMA Engine to retrieve the
+DMA request or channel information that goes from a hardware device to a DMA
+controller.
+
+* DMA controller
+
+Required property:
+    - #dma-cells: Number elements to describe DMA channel information. Must be
+                  at least 2, allowing a phandle and a flags cell, but usually
+		  is larger so a client can also specify a request or channel
+                  number and/or some configuration.
+
+Optional properties:
+    - #dma-channels: Number of DMA channels supported by the controller.
+    - #dma-requests: Number of DMA requests signals supported by the controller.
+
+Example:
+
+       sdma: dmaengine@48000000 {
+               compatible = "ti,omap4-sdma"
+               reg = <0x48000000 0x1000>;
+               interrupts = <4>;
+               #dma-cells = <3>;
+               #dma-channels = <32>;
+               #dma-requests = <127>;
+       };
+
+
+* DMA client
+
+Client drivers should specify the DMA property using a phandle to the controller
+followed by the number of DMA request/channel and the transfer type of the
+channel (eg. device-to-memory, memory-to-device, memory-to-memory, etc).
+
+Required property:
+    dmas: list of one or more dma specifiers, each consisting of
+     - phandle pointing to dma controller node
+     - flags word, a bit map that can hold these flags
+       * 0x00000001 channel can be used for transfer from device
+       * 0x00000002 channel can be user for transfer to device
+     - zero or more cells in a format specific to the the dma controller
+       node listed in the phandle. This typically contains a dma request
+       line number or a channel number, but can contain any data that
+       is used required for configuring a channel.
+
+Optional property:
+    dma-names: when present, this shall contain one identifier string
+    for each dma specifier in the dmas property. The specific strings
+    that can be used are defined in the binding of the DMA client
+    device. When multiple dma specifiers can be used as alternatives,
+    the dma-names for those dma specifiers must be identical.
+
+Any dma specifiers that have identical flags and identical dma-names
+(if present) shall refer to different dma controllers that can be
+used as alternatives, e.g. when a request line is connected to
+multiple dma controllers. If multiple dma specifiers are listed that
+have the same flags but refer to different functional channels,
+the dma-names property must be used to distinguish them.
+
+Examples:
+
+1. One DMA write channel, one DMA read/write channel:
+
+       i2c1: i2c@1 {
+               ...
+               dmas = <&sdma 2 1 &sdma 3 2>;
+               ...
+       };
+
+2. A single read-write channel with two alternative dma controllers
+   providing it:
+
+	dmas = <&dma0 3 5
+		&dma1 3 7
+		&dma2 3 2>;
+
+3. A device with three channels, one of which has two alternatives:
+
+	dmas = <&dma0 1 4 /* data read */
+		&dma0 2 6 /* data write */
+		&dma1 1 0 /* error read */
+		&dma2 1 0>; /* alternative error read */
+	dma-names = "data", "data", "error", "error";
+
+4. A dma controller requiring complex configuration:
+
+       dma: dmaengine@48000000 {
+               compatible = "foo,foo-sdma"
+               reg = <0x48000000 0x1000>;
+               interrupts = <4>;
+               #dma-cells = <6>; /* phandle, flag, request, channel,
+					 input-width, output-width */
+               #dma-channels = <32>;
+               #dma-requests = <127>;
+       };
+
+       mmc@49000000 {
+		...
+		dmas = <&dma 1	/* read */
+			2	/* request line */
+			5       /* channel */
+			16	/* 16 bit bus width on read */
+			8>	/* 8 bit bus width on write */
+		       <&dma 2	/* write */
+			3	/* request line */
+			6       /* channel */
+			8	/* 8 bit bus width on read */
+			16>	/* 16 bit bus width on write */
