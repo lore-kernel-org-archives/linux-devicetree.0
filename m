@@ -1,59 +1,25 @@
-From: InKi Dae <daeinki@gmail.com>
-Subject: Re: [PATCH V2 0/2] video: drm: Add Device tree support to DRM-FIMD
-Date: Tue, 17 Jul 2012 13:19:11 +0900
-Message-ID: <CAAQKjZN0tE=Kfeco434JO3ynkap5d-W6et6VoZjD=eR3USGHGw@mail.gmail.com>
-References: <1341996287-14666-1-git-send-email-l.krishna@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <1341996287-14666-1-git-send-email-l.krishna@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, dri-devel@lists.freedesktop.org, inki.dae@samsung.com, laurent.pinchart@ideasonboard.com, olofj@google.com
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v4] USB: host: Add Device tree support for ohci-exynos &
+ ehci-s5p
+Date: Tue, 17 Jul 2012 10:10:49 +0530
+Message-ID: <1342500050-27470-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, olofj@google.com, thomas.abraham@linaro.org, sshtylyov@mvista.com, av.tikhomirov@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-2012/7/11, Leela Krishna Amudala <l.krishna@samsung.com>:
-> This patch set adds device tree support for DRM-FIMD for Samsung's
-> Exynos5250.
-> It includes parsing platform data from dts file.
->
-> This patchset is based and tested on top of v3.5-rc6
->
-> Changes since V1:
-> 	- Corrected typo errors and changed compatibility string
->
-> Leela Krishna Amudala (1):
->   video: drm: exynos: Add device tree support
->
-> Prathyush K (1):
->   drm/exynos: Modifying exynos drm fimd to support exynos5
->
->  Documentation/devicetree/bindings/fb/drm-fimd.txt |   73 +++++++++++++++
->  drivers/gpu/drm/exynos/exynos_drm_fimd.c          |  101
-> ++++++++++++++++++++-
->  2 files changed, 171 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/fb/drm-fimd.txt
->
+Reworked third patch; other two got applied to 'usb-next' branch.
 
-I'm sorry for being late. I was so busy. your patch set should be
-tested on our target(based on exynos5) and then it will be reviewed
-and merged to exynos-drm-next soon if there is no any problem.
+Changes from v3:
+1) Change the function name from s5p_ehci_setup_gpio()
+to s5p_setup_vbus_gpio(). 
+2) Make s5p_setup_vbus_gpio() function to return void
+instead of int.
+3) Return void in case of failures.
 
-Thanks,
-Inki Dae
+Vivek Gautam (1):
+  USB: ehci-s5p: Add vbus setup function to the s5p ehci glue layer
 
-
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+ drivers/usb/host/ehci-s5p.c |   21 +++++++++++++++++++++
+ 1 files changed, 21 insertions(+), 0 deletions(-)
