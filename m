@@ -1,52 +1,39 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] arm/dts: am33xx: add dt data for usb nop phy
-Date: Tue, 17 Jul 2012 16:42:30 +0400
-Message-ID: <50055DB6.7020602@mvista.com>
-References: <1342516407-16515-1-git-send-email-ajay.gupta@ti.com> <1342516407-16515-9-git-send-email-ajay.gupta@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/1] Add Wondermedia Technologies (wmt) to docs/devicetree/vendor-bindings.txt
+Date: Tue, 17 Jul 2012 12:50:31 +0000
+Message-ID: <201207171250.32265.arnd@arndb.de>
+References: <76F764B079F92A4E843589C893D0A022C380F1D4@SERVER.prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342516407-16515-9-git-send-email-ajay.gupta-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <76F764B079F92A4E843589C893D0A022C380F1D4@SERVER.prisktech.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Prisk <linux@prisktech.co.nz>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "vt8500-wm8505-linux-kernel@googlegroups.com" <vt8500-wm8505-linux-kernel@googlegroups.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tuesday 17 July 2012, Tony Prisk wrote:
+> From 756ae5c2f475d679649adff99058679b651af8d9 Mon Sep 17 00:00:00 2001
+> From: Tony Prisk <linux@prisktech.co.nz>
+> Date: Tue, 17 Jul 2012 19:09:31 +1200
+> Subject: [PATCH] Add Wondermedia Technologies (wmt) to vendor-prefixes.txt
+>  Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+ 
+Something went wrong with exporting the patch. You probably used git-show
+rather than git-format-patch, so you got the wrong headers.
 
-On 17-07-2012 13:13, Ajay Kumar Gupta wrote:
+It would also be helpful to describe why the specific string is used here.
+Normally we use the stock ticker symbol and "wmt" refers to Wal-Mart,
+which would be unlikely but not impossible to produce their own hardware
+in the future. The same thing applies to "via", which is VIACOM. The symbol
+for VIA technologies is "2388.TW", but that is not particularly descriptive
+or well-known.
 
-> AM33xx has two musb controller and they have one NOP PHY each.
-> Added the device tree data for NOP PHY.
+Maybe someone on the devicetree-discuss mailing list has a better
+suggestion. I think using "via" is probably the best compromise, as
+it's a well-known name and most of the components of the wondermedia
+chips were first made by VIA anyway.
 
-> Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
-> ---
->   arch/arm/boot/dts/am33xx.dtsi |    8 ++++++++
->   1 files changed, 8 insertions(+), 0 deletions(-)
-
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index b572803..3bd9911 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -155,6 +155,14 @@
->   			ti,hwmods = "i2c3";
->   		};
->
-> +		usb0_phy: phy@1 {
-> +			compatible = "ti,nop-xceiv-usb";
-> +		};
-> +
-> +		usb1_phy: phy@2 {
-> +			compatible = "ti,nop-xceiv-usb";
-> +		};
-
-    No "reg" property again, and address postfix in the node name?
-
-WBR, Sergei
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
