@@ -1,39 +1,58 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the
- i2c-embedded tree
-Date: Tue, 17 Jul 2012 14:10:37 +0100
-Message-ID: <20120717131037.GC27595@sirena.org.uk>
-References: <20120710164130.f38e4d1673f925ddb13914c9@canb.auug.org.au>
- <20120712131231.GH2194@pengutronix.de>
- <CACRpkdboeF_G=sTPeSyuZ6KGLCmGSKx_NS=6Rim6HkR2f9=AAQ@mail.gmail.com>
- <20120716101706.GB17435@pengutronix.de>
- <CACRpkdY626iYATorphAvg7cQxD2ufysBvXdt3Z644zEuW0wS=w@mail.gmail.com>
- <20120716123550.GE17435@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
+Date: Tue, 17 Jul 2012 13:12:06 +0000
+Message-ID: <201207171312.06987.arnd@arndb.de>
+References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
+ <201207161554.04812.arnd@arndb.de> <20120717121640.589780ce@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-next-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120716123550.GE17435@pengutronix.de>
-Sender: linux-next-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120717121640.589780ce@skate>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 16, 2012 at 02:35:50PM +0200, Wolfram Sang wrote:
-
-> I do know both sides. I easily agree that we have to find a balance
-> somewhere to meet both interests. Though, currently my impressions from
-> maintaining I2C are:
-
-> a) it is not balanced, but too far on the "let's deploy stuff" side
-> b) developers have a tendency to simply map platform_data to bindings
->    and are surprised when told this is often not possible
-
-> which adds burden to the maintainers (who sometimes might not even be
-> familiar with devicetree because they are not focused on embedded). And
-> I worry about bindings of unmaintained subsystems.
-
-A issue I'm seeing with some of the subsystems mantained by people who
-don't work on ARM is that they've got the DT message so strongly that
-they're pushing back on people trying to add platform data at all even
-on off SoC things that need to work with non-ARM processors.
+T24gVHVlc2RheSAxNyBKdWx5IDIwMTIsIFRob21hcyBQZXRhenpvbmkgd3JvdGU6Cj4gTGUgTW9u
+LCAxNiBKdWwgMjAxMiAxNTo1NDowNCArMDAwMCwKPiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRi
+LmRlPiBhIMOpY3JpdCA6Cj4gCj4gPiA+ICt2b2lkIG1jczgxNHhfcmVzdGFydChjaGFyIG1vZGUs
+IGNvbnN0IGNoYXIgKmNtZCkKPiA+ID4gK3sKPiA+ID4gKyAgIF9fcmF3X3dyaXRlbCh+KDEgPDwg
+MzEpLCBtY3M4MTR4X3N5c2RiZ19iYXNlKTsKPiA+ID4gK30KPiA+IAo+ID4gWW91IHNob3VsZCBn
+ZW5lcmFsbHkgYXZvaWQgdXNpbmcgX19yYXdfcmVhZGwgZXRjLiBhbmQgaW5zdGVhZCB1c2UKPiA+
+IHJlYWRsL3dyaXRlIG9yIHJlYWRsX3JlbGF4ZWQvd3JpdGVsX3JlbGF4ZWQuCj4gCj4gSSB0aG91
+Z2h0IHRoYXQgcmVhZGwvd3JpdGVsIGFuZCByZWFkbF9yZWxheGVkL3dyaXRlbF9yZWxheGVkIHdl
+cmUgdXNlZAo+IGZvciBQQ0ktc3R5bGUgYWNjZXNzLCBmb3Igd2hpY2ggdGhlc2UgbWFjcm9zL2Z1
+bmN0aW9ucyBkbyBhdXRvbWF0aWNhbGx5Cj4gYSBjb252ZXJzaW9uIGZyb20gdGhlIENQVS1lbmRp
+YW5uZXNzIHRvIHRoZSBQQ0ktZW5kaWFubmVzcwo+IChsaXR0bGUtZW5kaWFuKS4gSGVyZSBvZiBj
+b3Vyc2UsIHRoaXMgdGhlIFNvQyBpcyB1c2VkIGxpdHRsZS1lbmRpYW4sIGl0Cj4gd2lsbCBqdXN0
+IHdvcmsgYmVjYXVzZSByZWFkbC93cml0ZWwgd2lsbCBub3QgZG8gYW55IGVuZGlhbm5lc3MKPiBj
+b252ZXJzaW9uLCBidXQgaWYgd2Ugd2VyZSBvbiBhIGJpZy1lbmRpYW4gbWFjaGluZT8KPiAKPiBN
+eSB1bmRlcnN0YW5kaW5nIHVudGlsIG5vdyB3YXMgdGhhdCBfX3Jhd19yZWFkbC9fX3Jhd193cml0
+ZWwgc2hvdWxkIGJlCj4gdXNlZCBmb3IgYWNjZXNzZXMgd2l0aCBuYXRpdmUgZW5kaWFubmVzcywg
+YnV0IGFwcGFyZW50bHksIGl0J3MgbW9yZQo+IHN1YnRsZSB0aGFuIHRoaXMuIFdvdWxkIHlvdSBt
+aW5kIGV4cGFuZGluZyBhIGJpdCBvbiB0aGlzPwoKVGhlIF9fcmF3XyogdmVyc2lvbnMgYXJlIGJh
+c2ljYWxseSBvbmx5IHZhbGlkIGlmIHlvdSBhY2Nlc3MgYSBtZW1vcnkKYnVmZmVyLCBzdWNoIGFz
+IGEgdmlkZW8gZnJhbWVidWZmZXIuIFRoZXkgZG8gdGhlIGNvbnZlcnNpb24gb2YgYW4KX19pb21l
+bSBwb2ludGVyIGludG8gc29tZXRoaW5nIHRoYXQgY2FuIGJlIGFjY2Vzc2VkIGJ5IHRoZSBjb21w
+aWxlci4KClRoZSBub24tcmF3IHZlcnNpb25zIGhhdmUgZml4ZWQgZW5kaWFuZXNzLCBndWFyYW50
+ZWUgdGhhdCB0aGUgYWNjZXNzCmlzIGRvbmUgYXRvbWljYWxseSAoY291bGQgYmUgYnl0ZS13aXNl
+IG90aGVyd2lzZSkgYW5kIHRoYXQgYWxsIHRoZQpuZWNlc3NhcnkgYmFycmllcnMgYXJlIHVzZWQg
+dG8gc3luY2hyb25pemUgYWdhaW5zdCBETUEgYW5kIG91dC1vZi1vcmRlcgpleGVjdXRpb24uCgpX
+ZSBkb24ndCBhY3R1YWxseSBoYXZlIGFjY2Vzc29ycyB0aGF0IGFyZSBDUFUtZW5kaWFuIGFuZCBn
+dWFyYW50ZWUgdGhhdAp5b3UgY2FuIGFjY2VzcyBhbiBNTUlPIHJlZ2lzdGVyIHByb3Blcmx5LgoK
+T24gcG93ZXJwYywgdGhlIGNvbnZlbnRpb24gaXMgdGhhdCByZWFkbC93cml0ZWwgc2hvdWxkIG9u
+bHkgYmUgdXNlZAp0byBhY2Nlc3MgUENJLCBidXQgdGhhdCBpcyBmb3IgdGhlIGVuaGFuY2VkIGVy
+cm9yIGhhbmRsaW5nLCBub3QgZm9yCmVuZGlhbmVzcy4KCglBcm5kCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5n
+IGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
+emxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
