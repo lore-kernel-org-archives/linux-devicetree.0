@@ -1,83 +1,55 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 3/8] ARM: MCS814x: add Device Tree bindings documentation
-Date: Tue, 17 Jul 2012 15:35:24 +0200
-Message-ID: <2030205.GuLVzJk5dq@flexo>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
+Date: Tue, 17 Jul 2012 13:51:14 +0000
+Message-ID: <201207171351.15034.arnd@arndb.de>
 References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <1342363754-30808-4-git-send-email-florian@openwrt.org>
- <201207171324.11392.arnd@arndb.de>
+ <201207171312.06987.arnd@arndb.de> <20120717152826.2bf75948@skate>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201207171324.11392.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120717152826.2bf75948@skate>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 July 2012 13:24:10 Arnd Bergmann wrote:
-> On Sunday 15 July 2012, Florian Fainelli wrote:
-> 
-> > diff --git a/Documentation/devicetree/bindings/arm/mcs814x/mcs814x-pci.txt 
-b/Documentation/devicetree/bindings/arm/mcs814x/mcs814x-pci.txt
-> > new file mode 100644
-> > index 0000000..de59b04
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/mcs814x/mcs814x-pci.txt
-> > @@ -0,0 +1,16 @@
-> > +Moschip MCS814x PCI controller bindings
-> > +---------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible: should be "moschip,mcs814x-pci"
-> > +- reg: should contain the base register address and length of the PCI 
-controller
-> > +  configuration register as well as the base register address and length 
-of the
-> > +  PCI eeprom emulator
-> > +- interrupts: should contain the interrupt line of the abort interrupt
-> > +- #address-cells: should be 3
-> > +- #size-cells: should be 2
-> > +- ranges: should contain the properly encoded PCI ranges of the IO, non-
-prefetchable
-> > +  and prefetchable memory regions
-> > +- #interrupt-cells: should be 1
-> > +- interrupt-map-mask: should be 0
-> > +- interrupt-map: should be the properly encoded PCI slot/pin to interrupt 
-line
-> 
-> interrupt-map-mask of 0 implies that all devices are wired to the
-> same IRQ lines, which is rather unusual. Better leave that open
-> so the interrupt-map can be written to work on any board.
-> 
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt 
-b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index 6eab917..943e4f3 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -28,6 +28,7 @@ linux	Linux-specific binding
-> >  marvell	Marvell Technology Group Ltd.
-> >  maxim	Maxim Integrated Products
-> >  mosaixtech	Mosaix Technologies, Inc.
-> > +moschp		Moschip Semiconductors
-> >  national	National Semiconductor
-> >  nintendo	Nintendo
-> >  nvidia	NVIDIA
-> 
-> This string does not match what you use everywhere else. Please fix
-> either the documentation here or every other instance. The stock
-> ticker symbol is MOSCHIP.BO, so using "moschip" is probably better
-> than "moschp".
+On Tuesday 17 July 2012, Thomas Petazzoni wrote:
+> And then, on PowerPC, which accessors do you use to access
+> SoC-peripherals that are not on the PCI bus?
 
-This was actually a typo, I meant to type "moschip" instead of "moschp", I 
-will fix that of course.
---
-Florian
+PowerPC has in_le32/out_le32 and variants of those, which unfortunately
+are not defined for most other architectures, so you cannot use them
+in portable code. They are the same as readl/writel, but without the
+PCI error handling.
+
+> For example, drivers/tty/serial/mpsc.c uses writel/readl, so a
+> conversion to/from little-endian is done when writing/reading
+> registers. Are those memory-mapped devices little-endian even though
+> they are used on big-endian PowerPCs?
+> 
+> I apologize for the silly questions, but I'm trying to make some sense
+> out of these numerous I/O and memory accessors.
+
+All combinations of little/big endian CPUs and peripherals have been
+done in the past, including peripherals that switch their endianess
+dynamically when you change the mode of the CPU, and those that come
+with an extra register to add byte-swapping for operating systems
+that don't deal with it.
+
+It's all a big mess and there is no good solution that anyone has
+managed to come with to cover all possibilities. My recommendation
+is generally to use the little-endian accessors when they work,
+and have your bus-specific or driver-specific wrapper around those
+when the endianess is not always the same.
+
+	Arnd
