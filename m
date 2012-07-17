@@ -1,215 +1,246 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 11/11] arm: omap: phy: remove unused functions from
- omap-phy-internal.c
-Date: Tue, 17 Jul 2012 13:40:11 +0530
-Message-ID: <1342512611-20529-12-git-send-email-kishon@ti.com>
-References: <1342512611-20529-1-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342512611-20529-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: kishon-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v6] ARM: davinci: i2c: add OF support
+Date: Tue, 17 Jul 2012 10:40:47 +0200
+Message-ID: <1342514447-30810-1-git-send-email-hs@denx.de>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-All the unnessary functions in omap-phy-internal is removed.
-These functionality are now handled by omap-usb2 phy driver.
+add of support for the davinci i2c driver.
 
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
 ---
- arch/arm/mach-omap2/omap_phy_internal.c |  138 -------------------------------
- arch/arm/mach-omap2/twl-common.c        |    5 -
- arch/arm/mach-omap2/usb-musb.c          |    3 -
- 3 files changed, 0 insertions(+), 146 deletions(-)
+- changes for v2:
+- add comments from Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+  - use "cell-index" instead "id"
+  - OF_DEV_AUXDATA in the machine code, instead pre-define platform
+    device name
+- add comment from Grant Likely:
+  - removed "id" resp. "cell-index" completely
+  - fixed documentation
+  - use of_match_ptr()
+  - use devm_kzalloc() for allocating plattform data mem
+  - fixed a whitespace issue
+- no changes for v3
+- changes for v4
+  remove "pinmux-handle" property as discussed here:
+  http://www.spinics.net/lists/arm-kernel/msg175701.html
+  with Nori Sekhar
 
-diff --git a/arch/arm/mach-omap2/omap_phy_internal.c b/arch/arm/mach-omap2/omap_phy_internal.c
-index d52651a..874aecc 100644
---- a/arch/arm/mach-omap2/omap_phy_internal.c
-+++ b/arch/arm/mach-omap2/omap_phy_internal.c
-@@ -31,144 +31,6 @@
- #include <plat/usb.h>
- #include "control.h"
+- changes for v5
+  add comments from Grant Likely:
+  - do not change value of dev->dev->platform_data, instead
+    hold a copy in davinci_i2c_dev.
+
+- changes for v6:
+  add comments from Sekhar Nori:
+  - removed unneccessary include
+  - merge patch from Sekhar Nori:
+    setup the newly introduced dev->pdata member correctly once in
+    probe -> i2c_get_plattformdata(() not needed, remove a lot of
+    checks for pdata in code
+  - add Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+  - patch no longer in patchserie, as it has no dependencies.
+---
+ .../devicetree/bindings/arm/davinci/i2c.txt        |   31 ++++++++++++
+ drivers/i2c/busses/i2c-davinci.c                   |   50 +++++++++++++++----
+ 2 files changed, 70 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci/i2c.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/davinci/i2c.txt b/Documentation/devicetree/bindings/arm/davinci/i2c.txt
+new file mode 100644
+index 0000000..e98a025
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/davinci/i2c.txt
+@@ -0,0 +1,31 @@
++* Texas Instruments Davinci I2C
++
++This file provides information, what the device node for the
++davinci i2c interface contain.
++
++Required properties:
++- compatible: "ti,davinci-i2c";
++- reg : Offset and length of the register set for the device
++
++Recommended properties :
++- interrupts : <a> standard interrupt property.
++- clock-frequency : desired I2C bus clock frequency in Hz.
++
++Optional properties:
++- bus-delay: bus delay in usec
++
++Example (enbw_cmc board):
++	i2c@1c22000 {
++		compatible = "ti,davinci-i2c";
++		reg = <0x22000 0x1000>;
++		clock-frequency = <100000>;
++		interrupts = <15>;
++		interrupt-parent = <&intc>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		dtt@48 {
++				compatible = "national,lm75";
++				reg = <0x48>;
++			};
++	};
+diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
+index a76d85f..8d4efce 100644
+--- a/drivers/i2c/busses/i2c-davinci.c
++++ b/drivers/i2c/busses/i2c-davinci.c
+@@ -38,6 +38,8 @@
+ #include <linux/slab.h>
+ #include <linux/cpufreq.h>
+ #include <linux/gpio.h>
++#include <linux/of_i2c.h>
++#include <linux/of_device.h>
  
--/* OMAP control module register for UTMI PHY */
--#define CONTROL_DEV_CONF		0x300
--#define PHY_PD				0x1
--
--#define USBOTGHS_CONTROL		0x33c
--#define	AVALID				BIT(0)
--#define	BVALID				BIT(1)
--#define	VBUSVALID			BIT(2)
--#define	SESSEND				BIT(3)
--#define	IDDIG				BIT(4)
--
--static struct clk *phyclk, *clk48m, *clk32k;
--static void __iomem *ctrl_base;
--static int usbotghs_control;
--
--int omap4430_phy_init(struct device *dev)
--{
--	ctrl_base = ioremap(OMAP443X_SCM_BASE, SZ_1K);
--	if (!ctrl_base) {
--		pr_err("control module ioremap failed\n");
--		return -ENOMEM;
--	}
--	/* Power down the phy */
--	__raw_writel(PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--
--	if (!dev) {
--		iounmap(ctrl_base);
--		return 0;
--	}
--
--	phyclk = clk_get(dev, "ocp2scp_usb_phy_ick");
--	if (IS_ERR(phyclk)) {
--		dev_err(dev, "cannot clk_get ocp2scp_usb_phy_ick\n");
--		iounmap(ctrl_base);
--		return PTR_ERR(phyclk);
--	}
--
--	clk48m = clk_get(dev, "ocp2scp_usb_phy_phy_48m");
--	if (IS_ERR(clk48m)) {
--		dev_err(dev, "cannot clk_get ocp2scp_usb_phy_phy_48m\n");
--		clk_put(phyclk);
--		iounmap(ctrl_base);
--		return PTR_ERR(clk48m);
--	}
--
--	clk32k = clk_get(dev, "usb_phy_cm_clk32k");
--	if (IS_ERR(clk32k)) {
--		dev_err(dev, "cannot clk_get usb_phy_cm_clk32k\n");
--		clk_put(phyclk);
--		clk_put(clk48m);
--		iounmap(ctrl_base);
--		return PTR_ERR(clk32k);
--	}
--	return 0;
--}
--
--int omap4430_phy_set_clk(struct device *dev, int on)
--{
--	static int state;
--
--	if (on && !state) {
--		/* Enable the phy clocks */
--		clk_enable(phyclk);
--		clk_enable(clk48m);
--		clk_enable(clk32k);
--		state = 1;
--	} else if (state) {
--		/* Disable the phy clocks */
--		clk_disable(phyclk);
--		clk_disable(clk48m);
--		clk_disable(clk32k);
--		state = 0;
--	}
--	return 0;
--}
--
--int omap4430_phy_power(struct device *dev, int ID, int on)
--{
--	if (on) {
--		if (ID)
--			/* enable VBUS valid, IDDIG groung */
--			__raw_writel(AVALID | VBUSVALID, ctrl_base +
--							USBOTGHS_CONTROL);
--		else
--			/*
--			 * Enable VBUS Valid, AValid and IDDIG
--			 * high impedance
--			 */
--			__raw_writel(IDDIG | AVALID | VBUSVALID,
--						ctrl_base + USBOTGHS_CONTROL);
--	} else {
--		/* Enable session END and IDIG to high impedance. */
--		__raw_writel(SESSEND | IDDIG, ctrl_base +
--					USBOTGHS_CONTROL);
--	}
--	return 0;
--}
--
--int omap4430_phy_suspend(struct device *dev, int suspend)
--{
--	if (suspend) {
--		/* Disable the clocks */
--		omap4430_phy_set_clk(dev, 0);
--		/* Power down the phy */
--		__raw_writel(PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--
--		/* save the context */
--		usbotghs_control = __raw_readl(ctrl_base + USBOTGHS_CONTROL);
--	} else {
--		/* Enable the internel phy clcoks */
--		omap4430_phy_set_clk(dev, 1);
--		/* power on the phy */
--		if (__raw_readl(ctrl_base + CONTROL_DEV_CONF) & PHY_PD) {
--			__raw_writel(~PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--			mdelay(200);
--		}
--
--		/* restore the context */
--		__raw_writel(usbotghs_control, ctrl_base + USBOTGHS_CONTROL);
--	}
--
--	return 0;
--}
--
--int omap4430_phy_exit(struct device *dev)
--{
--	if (ctrl_base)
--		iounmap(ctrl_base);
--	if (phyclk)
--		clk_put(phyclk);
--	if (clk48m)
--		clk_put(clk48m);
--	if (clk32k)
--		clk_put(clk32k);
--
--	return 0;
--}
--
- void am35x_musb_reset(void)
- {
- 	u32	regval;
-diff --git a/arch/arm/mach-omap2/twl-common.c b/arch/arm/mach-omap2/twl-common.c
-index 119d5a9..396d189 100644
---- a/arch/arm/mach-omap2/twl-common.c
-+++ b/arch/arm/mach-omap2/twl-common.c
-@@ -250,11 +250,6 @@ void __init omap3_pmic_get_config(struct twl4030_platform_data *pmic_data,
- 
- #if defined(CONFIG_ARCH_OMAP4)
- static struct twl4030_usb_data omap4_usb_pdata = {
--	.phy_init	= omap4430_phy_init,
--	.phy_exit	= omap4430_phy_exit,
--	.phy_power	= omap4430_phy_power,
--	.phy_set_clock	= omap4430_phy_set_clk,
--	.phy_suspend	= omap4430_phy_suspend,
+ #include <mach/hardware.h>
+ #include <mach/i2c.h>
+@@ -114,6 +116,7 @@ struct davinci_i2c_dev {
+ 	struct completion	xfr_complete;
+ 	struct notifier_block	freq_transition;
+ #endif
++	struct davinci_i2c_platform_data *pdata;
  };
  
- static struct regulator_init_data omap4_vdac_idata = {
-diff --git a/arch/arm/mach-omap2/usb-musb.c b/arch/arm/mach-omap2/usb-musb.c
-index c4a5768..e9b4b23 100644
---- a/arch/arm/mach-omap2/usb-musb.c
-+++ b/arch/arm/mach-omap2/usb-musb.c
-@@ -117,7 +117,4 @@ void __init usb_musb_init(struct omap_musb_board_data *musb_board_data)
- 	dev->dma_mask = &musb_dmamask;
- 	dev->coherent_dma_mask = musb_dmamask;
- 	put_device(dev);
+ /* default platform data to use if not supplied in the platform_device */
+@@ -155,7 +158,7 @@ static void generic_i2c_clock_pulse(unsigned int scl_pin)
+ static void i2c_recover_bus(struct davinci_i2c_dev *dev)
+ {
+ 	u32 flag = 0;
+-	struct davinci_i2c_platform_data *pdata = dev->dev->platform_data;
++	struct davinci_i2c_platform_data *pdata = dev->pdata;
+ 
+ 	dev_err(dev->dev, "initiating i2c bus recovery\n");
+ 	/* Send NACK to the slave */
+@@ -163,8 +166,7 @@ static void i2c_recover_bus(struct davinci_i2c_dev *dev)
+ 	flag |=  DAVINCI_I2C_MDR_NACK;
+ 	/* write the data into mode register */
+ 	davinci_i2c_write_reg(dev, DAVINCI_I2C_MDR_REG, flag);
+-	if (pdata)
+-		generic_i2c_clock_pulse(pdata->scl_pin);
++	generic_i2c_clock_pulse(pdata->scl_pin);
+ 	/* Send STOP */
+ 	flag = davinci_i2c_read_reg(dev, DAVINCI_I2C_MDR_REG);
+ 	flag |= DAVINCI_I2C_MDR_STP;
+@@ -187,7 +189,7 @@ static inline void davinci_i2c_reset_ctrl(struct davinci_i2c_dev *i2c_dev,
+ 
+ static void i2c_davinci_calc_clk_dividers(struct davinci_i2c_dev *dev)
+ {
+-	struct davinci_i2c_platform_data *pdata = dev->dev->platform_data;
++	struct davinci_i2c_platform_data *pdata = dev->pdata;
+ 	u16 psc;
+ 	u32 clk;
+ 	u32 d;
+@@ -235,10 +237,7 @@ static void i2c_davinci_calc_clk_dividers(struct davinci_i2c_dev *dev)
+  */
+ static int i2c_davinci_init(struct davinci_i2c_dev *dev)
+ {
+-	struct davinci_i2c_platform_data *pdata = dev->dev->platform_data;
 -
--	if (cpu_is_omap44xx())
--		omap4430_phy_init(dev);
- }
+-	if (!pdata)
+-		pdata = &davinci_i2c_platform_data_default;
++	struct davinci_i2c_platform_data *pdata = dev->pdata;
+ 
+ 	/* put I2C into reset */
+ 	davinci_i2c_reset_ctrl(dev, 0);
+@@ -308,13 +307,11 @@ static int
+ i2c_davinci_xfer_msg(struct i2c_adapter *adap, struct i2c_msg *msg, int stop)
+ {
+ 	struct davinci_i2c_dev *dev = i2c_get_adapdata(adap);
+-	struct davinci_i2c_platform_data *pdata = dev->dev->platform_data;
++	struct davinci_i2c_platform_data *pdata = dev->pdata;
+ 	u32 flag;
+ 	u16 w;
+ 	int r;
+ 
+-	if (!pdata)
+-		pdata = &davinci_i2c_platform_data_default;
+ 	/* Introduce a delay, required for some boards (e.g Davinci EVM) */
+ 	if (pdata->bus_delay)
+ 		udelay(pdata->bus_delay);
+@@ -635,6 +632,12 @@ static struct i2c_algorithm i2c_davinci_algo = {
+ 	.functionality	= i2c_davinci_func,
+ };
+ 
++static const struct of_device_id davinci_i2c_of_match[] = {
++	{.compatible = "ti,davinci-i2c", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, davinci_i2c_of_match);
++
+ static int davinci_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct davinci_i2c_dev *dev;
+@@ -674,8 +677,30 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+ #endif
+ 	dev->dev = get_device(&pdev->dev);
+ 	dev->irq = irq->start;
++	dev->pdata = dev->dev->platform_data;
+ 	platform_set_drvdata(pdev, dev);
+ 
++	if (!dev->pdata && pdev->dev.of_node) {
++		u32 prop;
++
++		dev->pdata = devm_kzalloc(&pdev->dev,
++			sizeof(struct davinci_i2c_platform_data), GFP_KERNEL);
++		if (!dev->pdata) {
++			r = -ENOMEM;
++			goto err_free_mem;
++		}
++		memcpy(dev->pdata, &davinci_i2c_platform_data_default,
++			sizeof(struct davinci_i2c_platform_data));
++		if (!of_property_read_u32(pdev->dev.of_node, "clock-frequency",
++			&prop))
++			dev->pdata->bus_freq = prop / 1000;
++		if (!of_property_read_u32(pdev->dev.of_node, "bus-delay",
++			&prop))
++			dev->pdata->bus_delay = prop;
++	} else if (!dev->pdata) {
++		dev->pdata = &davinci_i2c_platform_data_default;
++	}
++
+ 	dev->clk = clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(dev->clk)) {
+ 		r = -ENODEV;
+@@ -711,6 +736,7 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+ 	adap->algo = &i2c_davinci_algo;
+ 	adap->dev.parent = &pdev->dev;
+ 	adap->timeout = DAVINCI_I2C_TIMEOUT;
++	adap->dev.of_node = pdev->dev.of_node;
+ 
+ 	adap->nr = pdev->id;
+ 	r = i2c_add_numbered_adapter(adap);
+@@ -718,6 +744,7 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "failure adding adapter\n");
+ 		goto err_free_irq;
+ 	}
++	of_i2c_register_devices(adap);
+ 
+ 	return 0;
+ 
+@@ -809,6 +836,7 @@ static struct platform_driver davinci_i2c_driver = {
+ 		.name	= "i2c_davinci",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= davinci_i2c_pm_ops,
++		.of_match_table = of_match_ptr(davinci_i2c_of_match),
+ 	},
+ };
+ 
 -- 
-1.7.5.4
+1.7.7.6
