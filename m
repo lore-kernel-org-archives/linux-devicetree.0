@@ -1,48 +1,61 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
-Date: Tue, 17 Jul 2012 12:16:40 +0200
-Message-ID: <20120717121640.589780ce@skate>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <1342363754-30808-2-git-send-email-florian@openwrt.org>
- <201207161554.04812.arnd@arndb.de>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v3 5/6] mmc: dw_mmc: add device tree support
+Date: Tue, 17 Jul 2012 15:49:58 +0530
+Message-ID: <CAJuYYwTLxEgm3CnPof4ub=XQazJ+PaUG-zk14nGnpBwWsnHMvw@mail.gmail.com>
+References: <1342097668-25243-1-git-send-email-thomas.abraham@linaro.org>
+	<1342097668-25243-6-git-send-email-thomas.abraham@linaro.org>
+	<CAGxe1ZHZr2=127p8X-A12K2-zOyKMOJ0fkx5pWNovVteFfSPwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201207161554.04812.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <florian@openwrt.org>, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGxe1ZHZr2=127p8X-A12K2-zOyKMOJ0fkx5pWNovVteFfSPwg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Girish K S <girish.shivananjappa@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-TGUgTW9uLCAxNiBKdWwgMjAxMiAxNTo1NDowNCArMDAwMCwKQXJuZCBCZXJnbWFubiA8YXJuZEBh
-cm5kYi5kZT4gYSDDqWNyaXQgOgoKPiA+ICt2b2lkIG1jczgxNHhfcmVzdGFydChjaGFyIG1vZGUs
-IGNvbnN0IGNoYXIgKmNtZCkKPiA+ICt7Cj4gPiArCV9fcmF3X3dyaXRlbCh+KDEgPDwgMzEpLCBt
-Y3M4MTR4X3N5c2RiZ19iYXNlKTsKPiA+ICt9Cj4gCj4gWW91IHNob3VsZCBnZW5lcmFsbHkgYXZv
-aWQgdXNpbmcgX19yYXdfcmVhZGwgZXRjLiBhbmQgaW5zdGVhZCB1c2UKPiByZWFkbC93cml0ZSBv
-ciByZWFkbF9yZWxheGVkL3dyaXRlbF9yZWxheGVkLgoKSSB0aG91Z2h0IHRoYXQgcmVhZGwvd3Jp
-dGVsIGFuZCByZWFkbF9yZWxheGVkL3dyaXRlbF9yZWxheGVkIHdlcmUgdXNlZApmb3IgUENJLXN0
-eWxlIGFjY2VzcywgZm9yIHdoaWNoIHRoZXNlIG1hY3Jvcy9mdW5jdGlvbnMgZG8gYXV0b21hdGlj
-YWxseQphIGNvbnZlcnNpb24gZnJvbSB0aGUgQ1BVLWVuZGlhbm5lc3MgdG8gdGhlIFBDSS1lbmRp
-YW5uZXNzCihsaXR0bGUtZW5kaWFuKS4gSGVyZSBvZiBjb3Vyc2UsIHRoaXMgdGhlIFNvQyBpcyB1
-c2VkIGxpdHRsZS1lbmRpYW4sIGl0CndpbGwganVzdCB3b3JrIGJlY2F1c2UgcmVhZGwvd3JpdGVs
-IHdpbGwgbm90IGRvIGFueSBlbmRpYW5uZXNzCmNvbnZlcnNpb24sIGJ1dCBpZiB3ZSB3ZXJlIG9u
-IGEgYmlnLWVuZGlhbiBtYWNoaW5lPwoKTXkgdW5kZXJzdGFuZGluZyB1bnRpbCBub3cgd2FzIHRo
-YXQgX19yYXdfcmVhZGwvX19yYXdfd3JpdGVsIHNob3VsZCBiZQp1c2VkIGZvciBhY2Nlc3NlcyB3
-aXRoIG5hdGl2ZSBlbmRpYW5uZXNzLCBidXQgYXBwYXJlbnRseSwgaXQncyBtb3JlCnN1YnRsZSB0
-aGFuIHRoaXMuIFdvdWxkIHlvdSBtaW5kIGV4cGFuZGluZyBhIGJpdCBvbiB0aGlzPwoKQmVzdCBy
-ZWdhcmRzLAoKVGhvbWFzCi0tIApUaG9tYXMgUGV0YXp6b25pLCBGcmVlIEVsZWN0cm9ucwpLZXJu
-ZWwsIGRyaXZlcnMsIHJlYWwtdGltZSBhbmQgZW1iZWRkZWQgTGludXgKZGV2ZWxvcG1lbnQsIGNv
-bnN1bHRpbmcsIHRyYWluaW5nIGFuZCBzdXBwb3J0LgpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29t
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+On 16 July 2012 09:45, Girish K S <girish.shivananjappa@linaro.org> wrote:
+> On 12 July 2012 18:24, Thomas Abraham <thomas.abraham@linaro.org> wrote:
+
+[...]
+
+>>
+>> +#ifdef CONFIG_OF
+>> +static struct dw_mci_drv_data synopsis_drv_data = {
+>> +       .ctrl_type      = DW_MCI_TYPE_SYNOPSIS,
+>> +};
+>> +
+>> +static const struct of_device_id dw_mci_pltfm_match[] = {
+>> +       { .compatible = "snps,dw-mshc",
+>> +                       .data = (void *)&synopsis_drv_data, },
+>> +       {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, dw_mci_pltfm_match);
+>> +#else
+>> +static const struct of_device_id dw_mci_pltfm_match[];
+> the #else and a statement can be completely removed if of_match_ptr is
+> used while accessing the dw_mci_pltfm_match in of_match_node function.
+>> +#endif
+>> +
+>>  static int dw_mci_pltfm_probe(struct platform_device *pdev)
+>>  {
+>>         struct dw_mci *host;
+>> @@ -51,6 +67,13 @@ static int dw_mci_pltfm_probe(struct platform_device *pdev)
+>>         if (!host->regs)
+>>                 goto err_free;
+>>         platform_set_drvdata(pdev, host);
+>> +
+>> +       if (pdev->dev.of_node) {
+>> +               const struct of_device_id *match;
+>> +               match = of_match_node(dw_mci_pltfm_match, pdev->dev.of_node);
+> can be modified to of_match_node(of_match_pt(dw_mci_pltfm_match),
+> pdev->dev.of_node);
+> This will remove the dummy allocation of variable as mentioned above.
+> Also it will be generic in non dt case.
+
+Ok. Thanks for the suggestion. I will modify it as per your suggestion.
+
+Thanks,
+Thomas.
+
+[...]
