@@ -1,77 +1,43 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
-Date: Tue, 17 Jul 2012 12:47:42 +0200
-Message-ID: <2687165.ZxhDogvXZe@flexo>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <201207161554.04812.arnd@arndb.de>
- <CAJOA=zNEywZ6tbJDuLjekVQeJpr9O2X1u-sTXpp0GYWzc+OHig@mail.gmail.com>
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 02/11] arm/dts: omap: Add omap-usb2 dt data
+Date: Tue, 17 Jul 2012 16:27:13 +0400
+Message-ID: <50055A21.5010206@mvista.com>
+References: <1342512611-20529-1-git-send-email-kishon@ti.com> <1342512611-20529-3-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJOA=zNEywZ6tbJDuLjekVQeJpr9O2X1u-sTXpp0GYWzc+OHig@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: olof@lixom.net, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, "Turquette,
- Mike" <mturquette@ti.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1342512611-20529-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Hello.
 
-On Monday 16 July 2012 13:47:01 Turquette, Mike wrote:
-> On Mon, Jul 16, 2012 at 8:54 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-[snip]
-> > board selection.
-> >
-> >> +struct clk {
-> >> +     struct clk *parent;             /* parent clk */
-> >> +     unsigned long rate;             /* clock rate in Hz */
-> >> +     unsigned long divider;          /* clock divider */
-> >> +     u32 usecount;                   /* reference count */
-> >> +     struct clk_ops *ops;            /* clock operation */
-> >> +     u32 enable_reg;                 /* clock enable register */
-> >> +     u32 enable_mask;                /* clock enable mask */
-> >> +};
-> >
-> > Platforms are now converting to the common clock framework in drivers/clk.
-> > Mike Turquette as the subsystem maintainer can probably judge better 
-whether
-> > we should still be allowing new platforms with their own implementation
-> > of clk, but my feeling is that you should use the subsystem instead
-> > and add a driver in a subdirectory of drivers/clk instead of in the
-> > platform.
-> 
-> Hi Florian & Arnd,
-> 
-> Adopting the new clock framework is highly preferable, especially if
-> MCS814x support is being delayed until 3.7.  There is also a push to
-> put clock drivers into drivers/clk and I would like to continue that
-> trend, but I'm less strict on that measure if it proves very difficult
-> for your platform immediately (e.g. duplicating headers across
-> platform and generic code, etc).  Migrating code from arch/arm to
-> drivers/clk can always be done in a future series.
+On 17-07-2012 12:10, Kishon Vijay Abraham I wrote:
 
-Since we are now targetting 3.7, I would rather come up with proper DT clock 
-bindings, which should make the mcs814x clock driver much nicer.
+> Add omap-usb2 data node in omap4 device tree file.
 
-> 
-> This platform also seems to be making use of DT so it would be very
-> nice if we use MCS814x to push the state of clk DT bindings and
-> adoption forward a bit.  There are not a lot of folks using the
-> patches from Rob/Grant today.  Hopefully delaying these patches by
-> another merge cycle means that these requests are not asking too much
-> :-)
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/omap4.dtsi |    5 +++++
+>   1 files changed, 5 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index bda5df3..4d2dcc1 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -279,6 +279,11 @@
+>   			#size-cells = <1>;
+>   			ranges;
+>   			ti,hwmods = "ocp2scp_usb_phy";
+> +			usb2phy@0x4a0ad080 {
 
-If we could get them merged during 3.6 that would allow me, and other ARM-soc 
-maintainers to get their stuff fully migrated to DT. Are there any blockers to 
-these patches?
+    There should be no "0x" prefix here.
+
+WBR, Sergei
 --
-Florian
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
