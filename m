@@ -1,178 +1,74 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree
- based instantiation
-Date: Wed, 18 Jul 2012 11:18:33 +0200
-Message-ID: <50067F69.6080501@gmail.com>
-References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com> <1337975573-27117-9-git-send-email-s.nawrocki@samsung.com> <Pine.LNX.4.64.1207161122390.12302@axis700.grange>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the
+ i2c-embedded tree
+Date: Wed, 18 Jul 2012 10:59:37 +0100
+Message-ID: <20120718095937.GB22739@opensource.wolfsonmicro.com>
+References: <5003FB7C.4030509@linaro.org>
+ <20120717130650.GB27595@sirena.org.uk>
+ <500568D9.10805@linaro.org>
+ <20120717133550.GC4477@opensource.wolfsonmicro.com>
+ <50057058.2060002@linaro.org>
+ <20120717142222.GE4477@opensource.wolfsonmicro.com>
+ <50057C1A.80606@linaro.org>
+ <20120717152001.GF4477@opensource.wolfsonmicro.com>
+ <20120718053341.GA4009@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1207161122390.12302@axis700.grange>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+pHx0qQiF2pBVqBT"
+Return-path: <linux-next-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120718053341.GA4009@S2100-06.ap.freescale.net>
+Sender: linux-next-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linus Walleij <linus.walleij@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, linux-kernel@vger.kernel.org, Deepak Saxena <dsaxena@linaro.org>, linux-next@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
 
-On 07/16/2012 11:42 AM, Guennadi Liakhovetski wrote:
-> On Fri, 25 May 2012, Sylwester Nawrocki wrote:
-> 
->> The driver initializes all board related properties except the s_power()
->> callback to board code. The platforms that require this callback are not
->> supported by this driver yet for CONFIG_OF=y.
->>
->> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
->> Signed-off-by: Bartlomiej Zolnierkiewicz<b.zolnierkie@samsung.com>
->> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
->> ---
->>   .../bindings/camera/samsung-s5k6aafx.txt           |   57 +++++++++
->>   drivers/media/video/s5k6aa.c                       |  129 ++++++++++++++------
->>   2 files changed, 146 insertions(+), 40 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
->>
->> diff --git a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
->> new file mode 100644
->> index 0000000..6685a9c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
->> @@ -0,0 +1,57 @@
->> +Samsung S5K6AAFX camera sensor
->> +------------------------------
->> +
->> +Required properties:
->> +
->> +- compatible : "samsung,s5k6aafx";
->> +- reg : base address of the device on I2C bus;
-> 
-> You said you ended up putting your sensors outside of I2C busses, is this
-> one of changes, that are present in your git-tree but not in this series?
+--+pHx0qQiF2pBVqBT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No, I must have been not clear enough on that. Our idea was to keep
-I2C slave device nodes as an I2C controller's child nodes, according
-to the current convention.
-The 'sensor' nodes (the 'camera''s children) would only contain a phandle
-to a respective I2C slave node.
+On Wed, Jul 18, 2012 at 01:33:42PM +0800, Shawn Guo wrote:
 
-This implies that we cannot access I2C bus in I2C client's device probe() 
-callback. An actual H/W access could begin only from within and after 
-invocation of v4l2_subdev .registered callback..
+> I have an IP block getting different FIFO size on different IMX SoCs.
+> We could introduce a new compatible string for driver to figure it out,
+> but I think the simpler way is just have the data encoded in device
+> tree.  In any case DT is not completely limited in encoding board
+> specific data.  Today, we have IO region and interrupt number of
+> hardware blocks encoded in DT, and to me, FIFO size could just be
+> another aspect of hardware block we could choose to encode in DT.
 
->> +- video-itu-601-bus : parallel bus with HSYNC and VSYNC - ITU-R BT.601;
-> 
-> If this is a boolean property, it cannot be required? Otherwise, as
-> discussed in a different patch comment, this property might not be
-> required, and if it is, I would use the same definition for both the
-> camera interface and for sensors.
+So, this is part of the problem with encoding the description of the SoC
+into the DT - we're not doing a good job of splitting out the silicon
+description from the board specific description which is not a triumph
+for maintainability since it means that we end up needing to modify the
+DT for every board using the silicon if we want to use the new feature
+(assuming people maintain binary compatibility with old DTs, which we
+don't do a good job at either even for established DT architectures).
 
-Yeah, that's an omission, a leftover from previous versions. It should have 
-been 'video-bus-type', for this series.
+It's not the using device tree bit that creates concern for me here,
+it's the fact that the board and silicon aren't being separated.
 
-Here is the updated binding documentation:
+--+pHx0qQiF2pBVqBT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-8<----------------------------------------------------------------------
-Required properties:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-- compatible : "samsung,s5k6aafx";
-- reg : base address of the device on I2C bus;
-- vdd_core-supply : digital core voltage supply 1.5V (1.4V to 1.6V);
-- vdda-supply : analog circuits voltage supply 2.8V (2.6V to 3.0V);
-- vdd_reg-supply : regulator input voltage supply 1.8V (1.7V to 1.9V)
-                   or 2.8V (2.6V to 3.0);
-- vddio-supply : I/O voltage supply 1.8V (1.65V to 1.95V)
-                 or 2.8V (2.5V to 3.1V);
-- video-bus-type : sensor video output bus type, must be one of:
-                   "itu-601", "mipi-csi2";
-- clock-frequency : the sensor's master clock frequency in Hz;
+iQIcBAEBAgAGBQJQBoj1AAoJEBus8iNuMP3dKsoP/jz7hlUOFJ+Hq5WtbuQwHWj3
+lPVHrs2rkZzb5CEXnnJ2YdfnwouEhYtoH/SxypUSlxOa8nFqjH5ZwF3Sil5IS8RC
+cYgOT6Olkt684XwtTx6J2Q40MpY0gVCCOCKfbnc1lp6t3mnySNtSEuwYJGWAaeps
+UgC3IqNrC0Vi86+vIETuJ1JU8JVpjwVuko0OD0KRpyckbnPkNpTM90kKi7DlsKI1
+gyvxWpDp8no0liclfb67osBPXz75Q1okzU6G5Iz2N3VWz0Tj/aHOS8JMQ7ZXWBQI
+FcAqHPMxGeq6Ez22HPUMeJ4hcRwFGWutPFgbsepCfU+qZy6UbiMfWTIOmuHF35tW
+QkEqTWgtpJNlzSegueiiGpR4KUKtSOLU2+qBVEAH46RXIbm7iPnepi1v5vka2b0i
+Pq1OeYXyFtkVIfg5vg0bnPXsuZ0bJDkcyA/i1Cfc3Iq2lkNv57CUh+dOXjW4y38b
+qcXxNwy7hPewbe5dn10hyZkeUj0Gs2sFJn4upMNWdKh/f7XwHAWac+nP4BvTLRCJ
+z7L2jeSq+Ldi1OMcGkB0i07dsaI0AGhip1ynSxJY1c+ohhwt5RUbhnXKmIZy+7PX
+vANGifd39Jv5vvYdVsjupm5eEdPiNmDqboS7RI0NCQPVNw9WsKv6jFwW/0jGHdvr
+00gtjLoGNXqK3QPT3D0d
+=HT/j
+-----END PGP SIGNATURE-----
 
-Optional properties:
-
-- data-lanes : number of physical MIPI-CSI2 data lanes used
-               (default is 2 when this property is not specified);
-- gpios : specifies gpios connected to the sensor's reset
-          reset (RSTN) and standby (STBYN) pins, the order
-          of gpios is: <RSTN, STBYN>; If any of these gpios
-          is not used, its specifier shall be 0;
-- samsung,s5k6aa-gpio-lvls : this property (bits [1:0]) specifies an active
-                             state of the S5K6AAFX reset and stand-by signals;
-                             the meaning of bits is: bit[1:0] = [RST, STBY],
-                             e.g. bit[1] = 0 indicates the GPIO driving the
-                             S5K6AAFX's standby pin should be set to 1 to bring
-                             the sensor out from stand-by to normal operation
-                             state.
-- samsung,s5k6aa-hflip : sets the default horizontal image flipping;
-- samsung,s5k6aa-vflip : sets the default vertical image flipping;
-8<----------------------------------------------------------------------
-
->> +- vdd_core-supply : digital core voltage supply 1.5V (1.4V to 1.6V);
->> +- vdda-supply : analog power voltage supply 2.8V (2.6V to 3.0V);
->> +- vdd_reg-supply : regulator input power voltage supply 1.8V (1.7V to 1.9V)
->> +		   or 2.8V (2.6V to 3.0);
-> 
-> I think, underscores in property names are generally frowned upon.
-
-Indeed, I felt something might be wrong here;) It's in this form because
-I just copied regulator supply names from the existing driver. And I
-didn't want to change them, to avoid updating them in all board files where
-they're used. Thanks for pointing it out, I'll fix that in next iteration.
-
->> +- vddio-supply : I/O voltage supply 1.8V (1.65V to 1.95V)
->> +		 or 2.8V (2.5V to 3.1V);
->> +
->> +Optional properties:
->> +
->> +- clock-frequency : the IP's main (system bus) clock frequency in Hz, the default
->> +		    value when this property is not specified is 24 MHz;
->> +- data-lanes : number of physical lanes used (default 2 if not specified);
-> 
-> bus-width?
-
-OK.
-
->> +- gpio-stby : specifies the S5K6AA_STBY GPIO
->> +- gpio-rst : specifies the S5K6AA_RST GPIO
-> 
->  From Documentation/devicetree/bindings/gpio/gpio.txt:
-> 
-> <quote>
-> GPIO properties should be named "[<name>-]gpios".
-> </quote>
-
-Thanks, these have been already removed in the next version, as can be seen
-above.
-
->> +- samsung,s5k6aa-inv-stby : set inverted S5K6AA_STBY GPIO level;
->> +- samsung,s5k6aa-inv-rst : set inverted S5K6AA_RST GPIO level;
-> 
-> Isn't this provided by GPIO flags as described in include/linux/of_gpio.h
-> by using the OF_GPIO_ACTIVE_LOW bit?
-
-Hmm, I wasn't aware of that. I'll see how this flag can be used.
-
->> +- samsung,s5k6aa-hflip : set the default horizontal image flipping;
->> +- samsung,s5k6aa-vflip : set the default vertical image flipping;
-> 
-> This is a board property, specifying how the sensor is wired and mounted
-> on the casing, right? IIRC, libv4l has a database of these for USB
-
-Yeah, that's exactly it. It could be used for compensating for an
-"upside down" mounting.
-
-> cameras. So, maybe it belongs to the user-space for embedded systems too?
-
-Using library for these things is one of the solutions, which works well
-for USB webcams. However, I wouldn't like enforcing that. Those properties 
-still describe hardware IHMO, then why not add them into DT blob that is 
-usually distributed with each board ? There wouldn't be a need to rely on 
-any user-space database lookup, before the hardware can actually be used. 
-
-> Or at least this shouldn't be Samsung-specific?
-
-Yes, good point. If we agree we can keep them, perhaps we could standardize
-those as boolean properties: horizontal-flip; and vertical-flip; ?
-
---
-
-Thanks,
-Sylwester
+--+pHx0qQiF2pBVqBT--
