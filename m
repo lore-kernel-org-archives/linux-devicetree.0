@@ -1,167 +1,43 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: require a match on all fields of of_device_id
-Date: Tue, 17 Jul 2012 21:38:17 -0500
-Message-ID: <50062199.7090904@gmail.com>
-References: <20120718011151.GA6119@tyr.buserror.net>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the
+ i2c-embedded tree
+Date: Wed, 18 Jul 2012 13:33:42 +0800
+Message-ID: <20120718053341.GA4009@S2100-06.ap.freescale.net>
+References: <5003FB7C.4030509@linaro.org>
+ <20120717130650.GB27595@sirena.org.uk>
+ <500568D9.10805@linaro.org>
+ <20120717133550.GC4477@opensource.wolfsonmicro.com>
+ <50057058.2060002@linaro.org>
+ <20120717142222.GE4477@opensource.wolfsonmicro.com>
+ <50057C1A.80606@linaro.org>
+ <20120717152001.GF4477@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120718011151.GA6119-sYzRgVcTFj7IOBva1QDFkw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-next-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120717152001.GF4477@opensource.wolfsonmicro.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linus Walleij <linus.walleij@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, linux-kernel@vger.kernel.org, Deepak Saxena <dsaxena@linaro.org>, linux-next@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/17/2012 08:11 PM, Scott Wood wrote:
-> Commit 107a84e61cdd3406c842a0e4be7efffd3a05dba6 ("of: match by compatible
-> property first") breaks the gianfar ethernet driver found on various
-> Freescale PPC chips.
+On Tue, Jul 17, 2012 at 04:20:01PM +0100, Mark Brown wrote:
+> Looking at what's specified in the platform data in the current kernel
+> it seems like there's a mixture of things in there that are board and
+> silicon specific.  We've got parameters like the the speed mode and
+> timeout which are reasonably board specific but we've also got things
+> like the FIFO sizes which shouldn't be at all board specific and slsu
+> which really looks like it's something that that the driver ought to be
+> able to figure out for itself.
 
-You do know this is reverted, right?
+I have an IP block getting different FIFO size on different IMX SoCs.
+We could introduce a new compatible string for driver to figure it out,
+but I think the simpler way is just have the data encoded in device
+tree.  In any case DT is not completely limited in encoding board
+specific data.  Today, we have IO region and interrupt number of
+hardware blocks encoded in DT, and to me, FIFO size could just be
+another aspect of hardware block we could choose to encode in DT.
 
-> 
-> There are, for unfortunate historical reasons, two nodes with a
-> compatible of "gianfar".  One has a device_type of "network" and the
-> other has device_type of "mdio".  The match entries look like this:
-> 
->>         {
->>                 .type = "mdio",
->>                 .compatible = "gianfar",
->>         },
-> 
-> and
-> 
->>         {
->>                 .type = "network",
->>                 .compatible = "gianfar",
->>         },
-> 
-> With the above patch, both nodes get probed by the first driver, because
-> nothing else in the match struct is looked at if there's a compatible
-> match.
-> 
-> Signed-off-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Here's my fix (untested) which is a bit simpler. I'm assuming if we care
-about which compatible string we are matching to, then we require name
-and type are blank and we only care about compatible strings.
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index eada3f4..6e10004 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -518,6 +518,9 @@ static const struct of_device_id
-*of_match_compat(const struct of_device_id *mat
-                const char *cp = matches->compatible;
-                int len = strlen(cp);
-
-+               if (matches->name[0] || matches->type[0])
-+                       continue;
-+
-                if (len > 0 && of_compat_cmp(compat, cp, len) == 0)
-                        return matches;
-
-@@ -557,7 +560,10 @@ const struct of_device_id *of_match_node(const
-struct of_device_id *matches,
-                if (matches->type[0])
-                        match &= node->type
-                                && !strcmp(matches->type, node->type);
--               if (match && !matches->compatible[0])
-+               if (matches->compatible[0])
-+                       match &= of_device_is_compatible(node,
-+                                               matches->compatible);
-+               if (match)
-                        return matches;
-                matches++;
-        }
-
-> ---
->  drivers/of/base.c |   44 ++++++++++++++++++++++++++++++++------------
->  1 file changed, 32 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index bc86ea2..4e707cc 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -511,14 +511,37 @@ out:
->  }
->  EXPORT_SYMBOL(of_find_node_with_property);
->  
-> -static const struct of_device_id *of_match_compat(const struct of_device_id *matches,
-> -						  const char *compat)
-> +/*
-> + * Tell if an device_node matches the non-compatible fields of
-> + * a specific of_match element.
-> + */
-> +static bool of_match_one_noncompat(const struct of_device_id *match,
-> +				   const struct device_node *node)
-> +{
-> +	bool is_match = true;
-> +
-> +	if (match->name[0])
-> +		is_match &= node->name && !strcmp(match->name, node->name);
-> +	if (match->type[0])
-> +		is_match &= node->type && !strcmp(match->type, node->type);
-> +
-> +	return is_match;
-> +}
-> +
-> +/*
-> + * Find an OF match using the supplied compatible string, rather than
-> + * the node's entire string list.
-> + */
-> +static const struct of_device_id *of_match_compat(
-> +	const struct of_device_id *matches, const char *compat,
-> +	const struct device_node *node)
->  {
->  	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
->  		const char *cp = matches->compatible;
->  		int len = strlen(cp);
->  
-> -		if (len > 0 && of_compat_cmp(compat, cp, len) == 0)
-> +		if (len > 0 && of_compat_cmp(compat, cp, len) == 0 &&
-> +		    of_match_one_noncompat(matches, node))
->  			return matches;
->  
->  		matches++;
-> @@ -544,23 +567,20 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
->  		return NULL;
->  
->  	of_property_for_each_string(node, "compatible", prop, cp) {
-> -		const struct of_device_id *match = of_match_compat(matches, cp);
-> +		const struct of_device_id *match =
-> +			of_match_compat(matches, cp, node);
->  		if (match)
->  			return match;
->  	}
->  
->  	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
-> -		int match = 1;
-> -		if (matches->name[0])
-> -			match &= node->name
-> -				&& !strcmp(matches->name, node->name);
-> -		if (matches->type[0])
-> -			match &= node->type
-> -				&& !strcmp(matches->type, node->type);
-> -		if (match && !matches->compatible[0])
-> +		if (of_match_one_noncompat(matches, node) &&
-> +		    !matches->compatible[0])
->  			return matches;
-> +
->  		matches++;
->  	}
-> +
->  	return NULL;
->  }
->  EXPORT_SYMBOL(of_match_node);
-> 
+-- 
+Regards,
+Shawn
