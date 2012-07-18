@@ -1,117 +1,136 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 07/11] drivers: usb: twl4030: Add device tree support for twl4030 usb
-Date: Wed, 18 Jul 2012 12:04:44 +0530
-Message-ID: <1342593288-7872-8-git-send-email-kishon@ti.com>
-References: <1342593288-7872-1-git-send-email-kishon@ti.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: RE: [PATCH V2 3/7] ARM: EXYNOS5: add machine specific support for LCD
+Date: Wed, 18 Jul 2012 08:45:57 +0200
+Message-ID: <009b01cd64b1$0019eb20$004dc160$%szyprowski@samsung.com>
+References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com>
+ <1342591053-7092-4-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342593288-7872-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1342591053-7092-4-git-send-email-l.krishna@samsung.com>
+Content-language: pl
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Leela Krishna Amudala' <l.krishna@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: kgene.kim@samsung.com, jg1.han@samsung.com, joshi@samsung.com, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, thomas.ab@samsung.com, olofj@google.com
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for twl4030 usb driver.
-Update the Documentation with device tree binding information.
+Hello,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/usb/twlxxxx-usb.txt        |   19 ++++++++++++++
- drivers/usb/otg/twl4030-usb.c                      |   26 +++++++++++++++----
- 2 files changed, 39 insertions(+), 6 deletions(-)
+On Wednesday, July 18, 2012 7:57 AM Leela Krishna Amudala wrote:
 
-diff --git a/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt b/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
-index e3f6d73..bdf1dd4 100644
---- a/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
-@@ -20,3 +20,22 @@ Board specific device node entry
- &twl6030-usb {
- 	usb-supply = <&vusb>;
- };
-+
-+TWL4030 USB PHY AND COMPARATOR
-+ - compatible : Should be "ti,twl4030-usb"
-+ - interrupts : The interrupt numbers to the cpu should be specified. First
-+   interrupt number is the otg interrupt number that raises ID interrupts
-+   and VBUS interrupts. The second interrupt number is optional.
-+ - <supply-name>-supply : phandle to the regulator device tree node.
-+   <supply-name> should be vusb1v5, vusb1v8 and vusb3v1
-+ - usb_mode : The mode used by the phy to connect to the controller. "1"
-+   specifies "ULPI" mode and "2" specifies "CEA2011_3PIN" mode.
-+
-+twl4030-usb {
-+	compatible = "ti,twl4030-usb";
-+	interrupts = < 10 4 >;
-+	usb1v5-supply = <&vusb1v5>;
-+	usb1v8-supply = <&vusb1v8>;
-+	usb3v1-supply = <&vusb3v1>;
-+	usb_mode = <1>;
-+};
-diff --git a/drivers/usb/otg/twl4030-usb.c b/drivers/usb/otg/twl4030-usb.c
-index 523cad5..f0d2e75 100644
---- a/drivers/usb/otg/twl4030-usb.c
-+++ b/drivers/usb/otg/twl4030-usb.c
-@@ -585,23 +585,28 @@ static int __devinit twl4030_usb_probe(struct platform_device *pdev)
- 	struct twl4030_usb	*twl;
- 	int			status, err;
- 	struct usb_otg		*otg;
--
--	if (!pdata) {
--		dev_dbg(&pdev->dev, "platform_data not available\n");
--		return -EINVAL;
--	}
-+	struct device_node	*np = pdev->dev.of_node;
- 
- 	twl = devm_kzalloc(&pdev->dev, sizeof *twl, GFP_KERNEL);
- 	if (!twl)
- 		return -ENOMEM;
- 
-+	if (np)
-+		of_property_read_u32(np, "usb_mode",
-+				(enum twl4030_usb_mode *)&twl->usb_mode);
-+	else if (pdata)
-+		twl->usb_mode = pdata->usb_mode;
-+	else {
-+		dev_err(&pdev->dev, "twl4030 initialized without pdata\n");
-+		return -EINVAL;
-+	}
-+
- 	otg = devm_kzalloc(&pdev->dev, sizeof *otg, GFP_KERNEL);
- 	if (!otg)
- 		return -ENOMEM;
- 
- 	twl->dev		= &pdev->dev;
- 	twl->irq		= platform_get_irq(pdev, 0);
--	twl->usb_mode		= pdata->usb_mode;
- 	twl->vbus_supplied	= false;
- 	twl->asleep		= 1;
- 	twl->linkstat		= OMAP_MUSB_UNKNOWN;
-@@ -690,12 +695,21 @@ static int __exit twl4030_usb_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id twl4030_usb_id_table[] = {
-+	{ .compatible = "ti,twl4030-usb" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, twl4030_usb_id_table);
-+#endif
-+
- static struct platform_driver twl4030_usb_driver = {
- 	.probe		= twl4030_usb_probe,
- 	.remove		= __exit_p(twl4030_usb_remove),
- 	.driver		= {
- 		.name	= "twl4030_usb",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(twl4030_usb_id_table),
- 	},
- };
- 
+> This patch adds machine specific support for LCD controller like setting power to LCD
+> and adding LCD platform device.
+> 
+> Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> ---
+>  arch/arm/mach-exynos/mach-exynos5-dt.c |   56 ++++++++++++++++++++++++++++++++
+>  1 files changed, 56 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> index e7113cc..02a0e68 100644
+> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
+> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/serial_core.h>
+>  #include <linux/pwm_backlight.h>
+>  #include <linux/gpio.h>
+> +#include <linux/delay.h>
+> 
+>  #include <asm/mach/arch.h>
+>  #include <asm/hardware/gic.h>
+> @@ -24,6 +25,7 @@
+>  #include <plat/gpio-cfg.h>
+> 
+>  #include "common.h"
+> +#include <video/platform_lcd.h>
+> 
+>  static int smdk5250_bl_notify(struct device *unused, int brightness)
+>  {
+> @@ -47,6 +49,55 @@ static struct platform_pwm_backlight_data smdk5250_bl_data = {
+>  	.notify		= smdk5250_bl_notify,
+>  };
+> 
+> +static void lcd_set_power(struct plat_lcd_data *pd,
+> +			unsigned int power)
+> +{
+> +
+> +	/* reset */
+> +	gpio_request_one(EXYNOS5_GPX1(5), GPIOF_OUT_INIT_HIGH, "GPX1");
+> +
+> +	mdelay(20);
+> +	if (power) {
+> +		/* fire nRESET on power up */
+> +		gpio_set_value(EXYNOS5_GPX1(5), 0);
+> +		mdelay(20);
+> +		gpio_set_value(EXYNOS5_GPX1(5), 1);
+> +		mdelay(20);
+> +		gpio_free(EXYNOS5_GPX1(5));
+> +	} else {
+> +		/* fire nRESET on power off */
+> +		gpio_set_value(EXYNOS5_GPX1(5), 0);
+> +		mdelay(20);
+> +		gpio_set_value(EXYNOS5_GPX1(5), 1);
+> +		mdelay(20);
+> +		gpio_free(EXYNOS5_GPX1(5));
+> +	}
+> +	mdelay(20);
+> +
+> +	/*
+> +	 * Request lcd_bl_en GPIO for smdk5250_bl_notify().
+> +	 * TODO: Fix this so we are not at risk of requesting the GPIO
+> +	 * multiple times, this should be done with device tree, and
+> +	 * likely integrated into the plat-samsung/dev-backlight.c init.
+> +	 */
+> +	gpio_request_one(EXYNOS5_GPX3(0), GPIOF_OUT_INIT_LOW, "GPX3");
+> +}
+> +
+> +static int smdk5250_match_fb(struct plat_lcd_data *pd, struct fb_info *info)
+> +{
+> +	/* Don't call .set_power callback while unblanking */
+> +	return 0;
+> +}
+> +
+> +static struct plat_lcd_data smdk5250_lcd_data = {
+> +	.set_power	= lcd_set_power,
+> +	.match_fb	= smdk5250_match_fb,
+> +};
+> +
+> +static struct platform_device smdk5250_lcd = {
+> +	.name			= "platform-lcd",
+> +	.dev.platform_data	= &smdk5250_lcd_data,
+> +};
+>  /*
+>   * The following lookup table is used to override device names when devices
+>   * are registered from device tree. This is temporarily added to enable
+> @@ -85,6 +136,10 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst
+> = {
+>  	{},
+>  };
+> 
+> +static struct platform_device *smdk5250_devices[] __initdata = {
+> +	&smdk5250_lcd, /* for platform_lcd device */
+> +};
+> +
+>  static void __init exynos5250_dt_map_io(void)
+>  {
+>  	exynos_init_io(NULL, 0);
+> @@ -96,6 +151,7 @@ static void __init exynos5250_dt_machine_init(void)
+>  	samsung_bl_set(&smdk5250_bl_gpio_info, &smdk5250_bl_data);
+>  	of_platform_populate(NULL, of_default_bus_match_table,
+>  				exynos5250_auxdata_lookup, NULL);
+> +	platform_add_devices(smdk5250_devices, ARRAY_SIZE(smdk5250_devices));
+>  }
+> 
+>  static char const *exynos5250_dt_compat[] __initdata = {
+
+Sorry, but this patch looks completely weird to me. exynos5-dt machine is aimed to 
+operate on ANY Exynos5 based board with proper device tree bindings, not only SMDK5250.
+Please add DT support to platform lcd driver and create required bindings for it
+instead of hardcoding the platform data and gpio numbers in mach-exynos5-dt.c
+
+Best regards
 -- 
-1.7.5.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Marek Szyprowski
+Samsung Poland R&D Center
