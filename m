@@ -1,126 +1,61 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: [PATCH V2 7/7] ARM: EXYNOS5: Set parent clock to fimd
-Date: Wed, 18 Jul 2012 11:27:33 +0530
-Message-ID: <1342591053-7092-8-git-send-email-l.krishna@samsung.com>
-References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1342591053-7092-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, olofj@google.com, thomas.ab@samsung.com, kgene.kim@samsung.com, joshi@samsung.com, jg1.han@samsung.com
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/2] omap: add ocp2scp as a bus driver
+Date: Wed, 18 Jul 2012 12:00:37 +0530
+Message-ID: <1342593039-7728-1-git-send-email-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch sets mout_mpll_user as parent clock to fimd also
-sets Fimd source clock rate to 800 MHz for MIPI LCD
+This patch series is done as a preparatory step for adding phy drivers
+for dwc3 and musb.
 
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
----
- arch/arm/mach-exynos/clock-exynos5.c       |   25 +++++++++++++++----------
- arch/arm/mach-exynos/mach-exynos5-dt.c     |   11 +++++++++++
- arch/arm/plat-samsung/include/plat/clock.h |    2 ++
- 3 files changed, 28 insertions(+), 10 deletions(-)
+This series adds a new driver for ocp2scp (only dt) to which phy
+drivers are connected.
 
-diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-exynos/clock-exynos5.c
-index f001876..8c20c4d 100644
---- a/arch/arm/mach-exynos/clock-exynos5.c
-+++ b/arch/arm/mach-exynos/clock-exynos5.c
-@@ -1125,6 +1125,18 @@ static struct clksrc_clk exynos5_clk_sclk_spi2 = {
- 	.reg_div = { .reg = EXYNOS5_CLKDIV_PERIC2, .shift = 8, .size = 8 },
- };
- 
-+struct clksrc_clk exynos5_clk_sclk_fimd = {
-+	.clk	= {
-+		.name	        = "sclk_fimd",
-+		.devname        = "exynos5-fb",
-+		.enable         = exynos5_clksrc_mask_disp1_0_ctrl,
-+		.ctrlbit        = (1 << 0),
-+	},
-+	.sources = &exynos5_clkset_group,
-+	.reg_src = { .reg = EXYNOS5_CLKSRC_DISP1_0, .shift = 0, .size = 4 },
-+	.reg_div = { .reg = EXYNOS5_CLKDIV_DISP1_0, .shift = 0, .size = 4 },
-+};
-+
- static struct clksrc_clk exynos5_clksrcs[] = {
- 	{
- 		.clk	= {
-@@ -1136,16 +1148,6 @@ static struct clksrc_clk exynos5_clksrcs[] = {
- 		.reg_div = { .reg = EXYNOS5_CLKDIV_FSYS3, .shift = 8, .size = 8 },
- 	}, {
- 		.clk	= {
--			.name		= "sclk_fimd",
--			.devname	= "exynos5-fb",
--			.enable		= exynos5_clksrc_mask_disp1_0_ctrl,
--			.ctrlbit	= (1 << 0),
--		},
--		.sources = &exynos5_clkset_group,
--		.reg_src = { .reg = EXYNOS5_CLKSRC_DISP1_0, .shift = 0, .size = 4 },
--		.reg_div = { .reg = EXYNOS5_CLKDIV_DISP1_0, .shift = 0, .size = 4 },
--	}, {
--		.clk	= {
- 			.name		= "aclk_266_gscl",
- 		},
- 		.sources = &clk_src_gscl_266,
-@@ -1245,6 +1247,7 @@ static struct clksrc_clk *exynos5_sysclks[] = {
- 	&exynos5_clk_mdout_spi0,
- 	&exynos5_clk_mdout_spi1,
- 	&exynos5_clk_mdout_spi2,
-+	&exynos5_clk_sclk_fimd,
- };
- 
- static struct clk *exynos5_clk_cdev[] = {
-@@ -1497,6 +1500,8 @@ void __init_or_cpufreq exynos5_setup_clocks(void)
- 
- 	clk_set_rate(&exynos5_clk_aclk_acp.clk, 267000000);
- 	clk_set_rate(&exynos5_clk_pclk_acp.clk, 134000000);
-+	clk_set_parent(&exynos5_clk_sclk_fimd.clk,
-+			&exynos5_clk_mout_mpll_user.clk);
- 
- 	for (ptr = 0; ptr < ARRAY_SIZE(exynos5_clksrcs); ptr++)
- 		s3c_set_clksrc(&exynos5_clksrcs[ptr], true);
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index 2107e01..19f3724 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -24,6 +24,9 @@
- #include <plat/regs-serial.h>
- #include <plat/backlight.h>
- #include <plat/gpio-cfg.h>
-+#include <plat/clock.h>
-+#include <plat/s5p-clock.h>
-+#include <plat/clock-clksrc.h>
- 
- #include "common.h"
- #include <video/platform_lcd.h>
-@@ -176,9 +179,17 @@ static void __init exynos5250_dt_map_io(void)
- 
- static void __init exynos5250_dt_machine_init(void)
- {
-+	struct device_node *fimd_node;
-+
- 	samsung_bl_set(&smdk5250_bl_gpio_info, &smdk5250_bl_data);
- 	of_platform_populate(NULL, of_default_bus_match_table,
- 				exynos5250_auxdata_lookup, NULL);
-+
-+	fimd_node = of_find_node_with_property(NULL, "supports-mipi-panel");
-+	if (of_get_property(fimd_node, "supports-mipi-panel", NULL))
-+		clk_set_rate(&exynos5_clk_sclk_fimd.clk, 800000000);
-+	of_node_put(fimd_node);
-+
- 	exynos_fimd_gpio_setup_24bpp();
- 	platform_add_devices(smdk5250_devices, ARRAY_SIZE(smdk5250_devices));
- }
-diff --git a/arch/arm/plat-samsung/include/plat/clock.h b/arch/arm/plat-samsung/include/plat/clock.h
-index a62753d..3d27783 100644
---- a/arch/arm/plat-samsung/include/plat/clock.h
-+++ b/arch/arm/plat-samsung/include/plat/clock.h
-@@ -83,6 +83,8 @@ extern struct clk clk_ext;
- extern struct clksrc_clk clk_epllref;
- extern struct clksrc_clk clk_esysclk;
- 
-+extern struct clksrc_clk exynos5_clk_sclk_fimd;
-+
- /* S3C64XX specific clocks */
- extern struct clk clk_h2;
- extern struct clk clk_27m;
+Since currently there is no generic way to create a child device along
+with doing a pm_runtime_enable (the exact requirement for ocp2scp), I'm
+creating a separate driver for ocp2scp.
+
+Changes from v1:
+Fixed Sergei's comments to remove the address in the node name of ocp2scp
+since the ocp2scp node doesn't have a reg property.
+
+Changes from [RFC PATCH v2 0/2] omap: add ocp2scp as a misc driver:
+Created a new folder drivers/bus and moved ocp2scp driver from misc to
+drivers/bus.
+
+This patch was developed and tested on
+git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git
+
+Kishon Vijay Abraham I (2):
+  drivers: bus: add a new driver for omap-ocp2scp
+  arm/dts: omap4: Add ocp2scp data
+
+ .../devicetree/bindings/bus/omap-ocp2scp.txt       |   10 ++
+ arch/arm/boot/dts/omap4.dtsi                       |    8 ++
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    2 +
+ drivers/bus/Kconfig                                |   15 +++
+ drivers/bus/Makefile                               |    5 +
+ drivers/bus/omap-ocp2scp.c                         |   98 ++++++++++++++++++++
+ 7 files changed, 140 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
+ create mode 100644 drivers/bus/Kconfig
+ create mode 100644 drivers/bus/Makefile
+ create mode 100644 drivers/bus/omap-ocp2scp.c
+
 -- 
-1.7.0.4
+1.7.5.4
