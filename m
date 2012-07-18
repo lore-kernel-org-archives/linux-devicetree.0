@@ -1,45 +1,54 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: MXS i2c PIOQ/DMA mode selection via DT
-Date: Wed, 18 Jul 2012 14:38:54 +0200
-Message-ID: <201207181438.54721.marek.vasut@gmail.com>
-References: <201207161605.44379.marek.vasut@gmail.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201207161605.44379.marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux ARM kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefano Babic <sbabic-ynQEQJNshbs@public.gmane.org>, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Nick Bowler <nbowler@elliptictech.com>
+Subject: [PATCH 2/2] drivers/rtc/rtc-pcf8563.c: add device tree support.
+Date: Wed, 18 Jul 2012 09:20:04 -0400
+Message-ID: <1342617604-19516-2-git-send-email-nbowler@elliptictech.com>
+References: <1342617604-19516-1-git-send-email-nbowler@elliptictech.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1342617604-19516-1-git-send-email-nbowler@elliptictech.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-> Hello,
-> 
-> There's been this patch going on, which adds DMA mode into MXS i2c driver:
-> https://patchwork.kernel.org/patch/1174051/
-> 
-> Recent nitpick was about toggling the PIOQUEUE (almost like PIO, only
-> transfer mode in current implementation) vs. DMA mode (newly added) on a
-> per-bus basis.
-> 
-> Current implementation in the patch adds a DT property, "fsl,use-pio"
-> (shall be changed to "fsl,use-pioqueue", but that's irrelevant) to select
-> between the PIOQUEUE and DMA mode on per-bus basis.
-> 
-> There was now a suggestion to dump this property and use kernel module
-> parameter instead. This obviously disallows to configure this behavior on
-> per-bus basis. Consider a scenario where small transfers happens on one
-> bus (possibly from a sensor) and large transfers on the other bus (eg. i2c
-> EEPROM). In such scenario, it's beneficial to enable PIOQUEUE mode for the
-> sensor and DMA mode for the EEPROM to minimize the overall overhead.
-> 
-> The mixed mode (PIOQ for small data and DMA for large data transfers) isn't
-> supported yet.
-> 
-> Please advise.
-> 
-> Best regards,
-> Marek Vasut
+Set the of_match_table for this driver so that devices can be described
+in the device tree.
 
-BUMP?
+Signed-off-by: Nick Bowler <nbowler@elliptictech.com>
+---
+ drivers/rtc/rtc-pcf8563.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
+index 24a9d6a..c2fe426 100644
+--- a/drivers/rtc/rtc-pcf8563.c
++++ b/drivers/rtc/rtc-pcf8563.c
+@@ -19,6 +19,7 @@
+ #include <linux/rtc.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ 
+ #define DRV_VERSION "0.4.3"
+ 
+@@ -285,10 +286,19 @@ static const struct i2c_device_id pcf8563_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, pcf8563_id);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id pcf8563_of_match[] __devinitconst = {
++	{ .compatible = "nxp,pcf8563" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, pcf8563_of_match);
++#endif
++
+ static struct i2c_driver pcf8563_driver = {
+ 	.driver		= {
+ 		.name	= "rtc-pcf8563",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(pcf8563_of_match),
+ 	},
+ 	.probe		= pcf8563_probe,
+ 	.remove		= pcf8563_remove,
+-- 
+1.7.8.6
