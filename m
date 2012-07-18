@@ -1,59 +1,49 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
-Date: Wed, 18 Jul 2012 10:11:56 -0500
-Message-ID: <5006D23C.5010004@ti.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-2-git-send-email-jon-hunter@ti.com> <5000D647.4090200@gmail.com> <500439A8.1050705@ti.com> <20120718071906.GJ6522@atomide.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] of: require a match on all fields of of_device_id
+Date: Wed, 18 Jul 2012 11:04:23 -0500
+Message-ID: <5006DE87.7020503@freescale.com>
+References: <20120718011151.GA6119@tyr.buserror.net>
+ <50062199.7090904@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120718071906.GJ6522@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robherring2@gmail.com>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <b-cousson@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50062199.7090904-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-On 07/18/2012 02:19 AM, Tony Lindgren wrote:
-> * Jon Hunter <jon-hunter@ti.com> [120716 09:01]:
->> On 07/13/2012 09:15 PM, Rob Herring wrote:
->>
->> Tony, Tarun,
->>
->> How would you feel on replacing omap_dmtimer_request_specific(int id)
->> with say omap_dm_timer_request_by_cap(int cap)?
->>
->> I was thinking of changing the name so that it is clear that the API has
->> changed. The "int cap" passed to the above function would be an OR of
->> the appropriate the capabilities flags we have in dmtimer.h ...
->>
->> /* timer capabilities used in hwmod database */
->> #define OMAP_TIMER_SECURE                               0x80000000
->> #define OMAP_TIMER_ALWON                                0x40000000
->> #define OMAP_TIMER_HAS_PWM                              0x20000000
->> ...
+On 07/17/2012 09:38 PM, Rob Herring wrote:
+> On 07/17/2012 08:11 PM, Scott Wood wrote:
+>> Commit 107a84e61cdd3406c842a0e4be7efffd3a05dba6 ("of: match by compatible
+>> property first") breaks the gianfar ethernet driver found on various
+>> Freescale PPC chips.
 > 
-> That may break coprocessors where the firmware may expect a hardcoded
-> specific timer.. So at least that should be checked before the change.
-> If the specific timer is still needed for some firmware, it's best to
-> add a separate function for the capabilities.
+> You do know this is reverted, right?
 
-I have seen that timers are used by the GPU and Ducati. Maybe I can
-check with the authors to see if we can get them to request by
-capability instead. If we can't then I need to figure out a way to
-resolve the timer ID when using DT. Per Rob's comments using alias is
-not the intended use. An alternative would be to extract the ID from the
-hwmod name, but was not sure if that would be appropriate either :-(
+No, I didn't.  I got it via Kumar's next branch, and saw that it was
+still in your fixes-for-grant branch, and didn't see any revert-related
+e-mail activity on the devicetree-discuss list about it.  I now see that
+it was reverted directly in Linus's tree (I didn't see either the
+original or the revert in Linus's tree when I checked, but apparently I
+hadn't fetched that as recently as I thought).
 
-> Also, I believe it's up to the firmware running in secure mode to
-> select the secure timers. So unless there's some way to query which
-> timers are claimed by the secure mode, that too needs to be passed
-> via DT.
+> Here's my fix (untested) which is a bit simpler. I'm assuming if we care
+> about which compatible string we are matching to, then we require name
+> and type are blank and we only care about compatible strings.
 
-Yes, that is handled by patch 2/4. If we are on a secure device, then
-will not register any timers marked with the "ti,timer-secure" property.
+Any particular reason for making that assumption?  We should be avoiding
+the need for .name or .type matching in new bindings, but this seems
+like unnecessarily inconsistent behavior.
 
-Cheers
-Jon
-
+-Scott
