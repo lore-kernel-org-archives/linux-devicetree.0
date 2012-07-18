@@ -1,54 +1,49 @@
-From: Nick Bowler <nbowler@elliptictech.com>
-Subject: [PATCH 2/2] drivers/rtc/rtc-pcf8563.c: add device tree support.
-Date: Wed, 18 Jul 2012 09:20:04 -0400
-Message-ID: <1342617604-19516-2-git-send-email-nbowler@elliptictech.com>
-References: <1342617604-19516-1-git-send-email-nbowler@elliptictech.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1342617604-19516-1-git-send-email-nbowler@elliptictech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH 0/8] EXYNOS5: USB: Add USB 2.0 and USB 3.0 support for exynos5
+Date: Wed, 18 Jul 2012 19:15:20 +0530
+Message-ID: <1342619128-25013-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com, l.majewski@samsung.com, kyungmin.park@samsung.com, thomas.abraham@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, m.szyprowski@samsung.com
+Cc: a.kesavan@samsung.com, yulgon.kim@samsung.com, boyko.lee@samsung.com, av.tikhomirov@samsung.com, joshi@samsung.com, olofj@google.com, prashanth.g@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Set the of_match_table for this driver so that devices can be described
-in the device tree.
+This patchset adds arch support for USB 2.0(EHCI and OHCI)
+and USB 3.0(DWC3) on exynos5.
 
-Signed-off-by: Nick Bowler <nbowler@elliptictech.com>
----
- drivers/rtc/rtc-pcf8563.c |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+Below patch modifies few functions to enable supporting
+exynos5 later.
+EXYNOS4: USB: Generalising setup-usb-phy driver for exynos
 
-diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
-index 24a9d6a..c2fe426 100644
---- a/drivers/rtc/rtc-pcf8563.c
-+++ b/drivers/rtc/rtc-pcf8563.c
-@@ -19,6 +19,7 @@
- #include <linux/rtc.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- 
- #define DRV_VERSION "0.4.3"
- 
-@@ -285,10 +286,19 @@ static const struct i2c_device_id pcf8563_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, pcf8563_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id pcf8563_of_match[] __devinitconst = {
-+	{ .compatible = "nxp,pcf8563" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, pcf8563_of_match);
-+#endif
-+
- static struct i2c_driver pcf8563_driver = {
- 	.driver		= {
- 		.name	= "rtc-pcf8563",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(pcf8563_of_match),
- 	},
- 	.probe		= pcf8563_probe,
- 	.remove		= pcf8563_remove,
--- 
-1.7.8.6
+Based and tested on 'for-next' branch.
+
+Ajay Kumar (2):
+  ARM: EXYNOS5: Add machine data for USB 2.0
+  ARM: EXYNOS5: Add OHCI device from device tree
+
+Vivek Gautam (6):
+  EXYNOS4: USB: Generalising setup-usb-phy driver for exynos
+  ARM: EXYNOS5: Add EHCI device from device tree
+  ARM: EXYNOS5: Add PHY initialization code for usb 2.0
+  ARM: EXYNOS5: Add machine data for USB3.0
+  ARM: EXYNOS5: Add XHCI device from device tree
+  ARM: EXYNOS5: Add PHY initialization code for usb 3.0
+
+ .../devicetree/bindings/usb/exynos-usb.txt         |   60 +++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |   18 +
+ arch/arm/mach-exynos/Kconfig                       |    1 +
+ arch/arm/mach-exynos/clock-exynos5.c               |   24 ++
+ arch/arm/mach-exynos/common.c                      |   10 +
+ arch/arm/mach-exynos/include/mach/map.h            |    3 +
+ arch/arm/mach-exynos/include/mach/regs-pmu.h       |    4 +
+ arch/arm/mach-exynos/include/mach/regs-usb-phy.h   |   86 ++++
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |   26 ++
+ arch/arm/mach-exynos/setup-usb-phy.c               |  413 ++++++++++++++++++--
+ arch/arm/plat-samsung/include/plat/map-s5p.h       |    2 +
+ .../include/plat/regs-usb3-exynos-drd-phy.h        |   75 ++++
+ arch/arm/plat-samsung/include/plat/usb-phy.h       |    1 +
+ drivers/usb/Kconfig                                |    1 +
+ 15 files changed, 695 insertions(+), 33 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
+ create mode 100644 arch/arm/plat-samsung/include/plat/regs-usb3-exynos-drd-phy.h
