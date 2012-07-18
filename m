@@ -1,53 +1,48 @@
-From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Subject: Re: [PATCH 2/2] arm/dts: omap4: Add ocp2scp data
-Date: Wed, 18 Jul 2012 11:13:00 +0530
-Message-ID: <CAAe_U6KGPnTefBVzYises6-+o40MZTr8j+zLRB504TDOfmsf9A@mail.gmail.com>
-References: <1342448023-14438-1-git-send-email-kishon@ti.com>
-	<1342448023-14438-3-git-send-email-kishon@ti.com>
-	<50055C38.3000309@mvista.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50055C38.3000309@mvista.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sergei Shtylyov <sshtylyov@mvista.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, gregkh@linuxfoundation.org, ohad@wizery.com, linus.walleij@linaro.org, myungjoo.ham@samsung.com, rusty@rustcorp.com.au, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH V2 0/7] Add device tree based discovery support for drm-fimd
+Date: Wed, 18 Jul 2012 11:27:26 +0530
+Message-ID: <1342591053-7092-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, olofj@google.com, thomas.ab@samsung.com, kgene.kim@samsung.com, joshi@samsung.com, jg1.han@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The patches are created against "for-next" branch of Kukjin Kim's tree at:
+ git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
 
-On Tue, Jul 17, 2012 at 6:06 PM, Sergei Shtylyov <sshtylyov@mvista.com> wrote:
-> Hello.
->
->
-> On 16-07-2012 18:13, Kishon Vijay Abraham I wrote:
->
->> Add ocp2scp data node in omap4 device tree file.
->
->
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>   arch/arm/boot/dts/omap4.dtsi |    8 ++++++++
->>   1 files changed, 8 insertions(+), 0 deletions(-)
->
->
->> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
->> index 359c497..bda5df3 100644
->> --- a/arch/arm/boot/dts/omap4.dtsi
->> +++ b/arch/arm/boot/dts/omap4.dtsi
->> @@ -272,5 +272,13 @@
->>                         ti,hwmods = "mmc5";
->>                         ti,needs-special-reset;
->>                 };
->> +
->> +               ocp2scp@4a0ad000  {
->
->
->    "reg" property is absent, so why do you give the node name an address
-> postfix?
-When I was initially developing, I had "reg" property populated. Those
-info is now obtained from *ti,hwmods*. I'll resend the patch removing
-it.
+This patch set adds Backlight, LCD support and device tree based discovery
+support for drm-fimd.
 
-Thanks
-Kishon
+This patchset has been tested on smdk5250 board and seen the bootup logo on LCD.
+
+The documentation for bindings has been posted to mainline. Please refer to the
+link http://www.spinics.net/lists/dri-devel/msg24862.html 
+
+Changes since V1:
+	- Removed unwanted empty lines for below patches
+  	ARM: EXYNOS5: add machine specific support for backlight
+  	ARM: EXYNOS5: add machine specific support for LCD
+  	ARM: EXYNOS5: Set parent clock to fimd
+
+Leela Krishna Amudala (7):
+  ARM: SAMSUNG: add additional registers and SFR definitions for
+    writeback
+  ARM: EXYNOS5: add machine specific support for backlight
+  ARM: EXYNOS5: add machine specific support for LCD
+  ARM: EXYNOS: Adding DRM platform device
+  ARM: EXYNOS: add device tree based discovery support for FIMD
+  ARM: EXYNOS5: Add the bus clock for FIMD
+  ARM: EXYNOS5: Set parent clock to fimd
+
+ arch/arm/boot/dts/exynos5250-smdk5250.dts       |   16 +++
+ arch/arm/boot/dts/exynos5250.dtsi               |    7 ++
+ arch/arm/mach-exynos/Kconfig                    |    1 +
+ arch/arm/mach-exynos/clock-exynos5.c            |   30 ++++--
+ arch/arm/mach-exynos/include/mach/map.h         |    1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c          |  123 +++++++++++++++++++++++
+ arch/arm/plat-samsung/include/plat/clock.h      |    2 +
+ arch/arm/plat-samsung/include/plat/regs-fb-v4.h |   10 ++
+ arch/arm/plat-samsung/include/plat/regs-fb.h    |   51 ++++++++++
+ drivers/video/Kconfig                           |    6 +
+ 10 files changed, 237 insertions(+), 10 deletions(-)
