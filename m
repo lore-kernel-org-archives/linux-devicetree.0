@@ -1,43 +1,49 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the
- i2c-embedded tree
-Date: Wed, 18 Jul 2012 13:33:42 +0800
-Message-ID: <20120718053341.GA4009@S2100-06.ap.freescale.net>
-References: <5003FB7C.4030509@linaro.org>
- <20120717130650.GB27595@sirena.org.uk>
- <500568D9.10805@linaro.org>
- <20120717133550.GC4477@opensource.wolfsonmicro.com>
- <50057058.2060002@linaro.org>
- <20120717142222.GE4477@opensource.wolfsonmicro.com>
- <50057C1A.80606@linaro.org>
- <20120717152001.GF4477@opensource.wolfsonmicro.com>
+From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Subject: Re: [PATCH v2 02/11] arm/dts: omap: Add omap-usb2 dt data
+Date: Wed, 18 Jul 2012 11:10:44 +0530
+Message-ID: <CAAe_U6K1rXN3+YsbMo01kUUh-p=j7OBeMz-Kg_qADXjTbV2_Hg@mail.gmail.com>
+References: <1342512611-20529-1-git-send-email-kishon@ti.com>
+	<1342512611-20529-3-git-send-email-kishon@ti.com>
+	<50055A21.5010206@mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-next-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120717152001.GF4477@opensource.wolfsonmicro.com>
-Sender: linux-next-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linus Walleij <linus.walleij@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, linux-kernel@vger.kernel.org, Deepak Saxena <dsaxena@linaro.org>, linux-next@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50055A21.5010206@mvista.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2012 at 04:20:01PM +0100, Mark Brown wrote:
-> Looking at what's specified in the platform data in the current kernel
-> it seems like there's a mixture of things in there that are board and
-> silicon specific.  We've got parameters like the the speed mode and
-> timeout which are reasonably board specific but we've also got things
-> like the FIFO sizes which shouldn't be at all board specific and slsu
-> which really looks like it's something that that the driver ought to be
-> able to figure out for itself.
+Hi,
 
-I have an IP block getting different FIFO size on different IMX SoCs.
-We could introduce a new compatible string for driver to figure it out,
-but I think the simpler way is just have the data encoded in device
-tree.  In any case DT is not completely limited in encoding board
-specific data.  Today, we have IO region and interrupt number of
-hardware blocks encoded in DT, and to me, FIFO size could just be
-another aspect of hardware block we could choose to encode in DT.
+On Tue, Jul 17, 2012 at 5:57 PM, Sergei Shtylyov <sshtylyov@mvista.com> wrote:
+> Hello.
+>
+>
+> On 17-07-2012 12:10, Kishon Vijay Abraham I wrote:
+>
+>> Add omap-usb2 data node in omap4 device tree file.
+>
+>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   arch/arm/boot/dts/omap4.dtsi |    5 +++++
+>>   1 files changed, 5 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+>> index bda5df3..4d2dcc1 100644
+>> --- a/arch/arm/boot/dts/omap4.dtsi
+>> +++ b/arch/arm/boot/dts/omap4.dtsi
+>> @@ -279,6 +279,11 @@
+>>                         #size-cells = <1>;
+>>                         ranges;
+>>                         ti,hwmods = "ocp2scp_usb_phy";
+>> +                       usb2phy@0x4a0ad080 {
+>
+>
+>    There should be no "0x" prefix here.
 
--- 
-Regards,
-Shawn
+Ok. Will fix it.
+
+Thanks
+Kishon
