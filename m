@@ -1,85 +1,95 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the
- i2c-embedded tree
-Date: Wed, 18 Jul 2012 12:12:26 +0100
-Message-ID: <20120718111226.GH22739@opensource.wolfsonmicro.com>
-References: <50066739.4010206@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the i2c-embedded
+ tree
+Date: Wed, 18 Jul 2012 12:24:15 +0100
+Message-ID: <50069CDF.7000202@linaro.org>
+References: <50066739.4010206@linaro.org> <20120718111226.GH22739@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="K1n7F7fSdjvFAEnM"
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-next-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50066739.4010206@linaro.org>
+In-Reply-To: <20120718111226.GH22739@opensource.wolfsonmicro.com>
 Sender: linux-next-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Cc: Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
+On 18/07/12 12:12, Mark Brown wrote:
+> On Wed, Jul 18, 2012 at 08:35:21AM +0100, Lee Jones wrote:
+>
+> Fix your mailer to word wrap within paragraphs.  I've reformatted you=
+r
+> mail for legibility.
 
---K1n7F7fSdjvFAEnM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Does it always do that, or was it just this time? It's setup to=20
+word-wrap, for instance this paragraph should. I have an add-on, which=20
+disables wrapping, but I only enable that when I send individual patche=
+s=20
+out. I know it used to work, but I have a feeling it's broken.
 
-On Wed, Jul 18, 2012 at 08:35:21AM +0100, Lee Jones wrote:
+>> I agree, but in this instance it really does stand to reason.
+>
+>> 1. No unified bindings currently exist.
+>> 2. I don't have time to create them.
+>> 3. It will probably take quite a bit of time for someone else to get
+>>     round to creating them.
+>> 4. The bindings I'm proposing are siloed by vendor and driver, so wi=
+ll
+>>     cause no harm.
+>
+> Right, this is just a restatement of the standard vendor line.
+>
+> If the issue is purely about having generic bindings quite frankly it=
+'s
+> very hard to see how it could take much time or effort to handle the
+> generic bits for I2C, it's basically just the maximum bus frequency a=
+nd
 
-Fix your mailer to word wrap within paragraphs.  I've reformatted your
-mail for legibility.
+The frequency is already a generic binding, it's the others which need=20
+alignment.
 
-> I agree, but in this instance it really does stand to reason.
+> possibly also the various fast modes (though to a good approximation =
+it
+> seems reasonable to just infer them from the bus frequency and then s=
+ee
+> if we need any more).  One thing I frequently find is that people say
+> any sort of generic work is hard without explaining why, if there are
+> complex issues that's one thing but that's often not the case.
 
-> 1. No unified bindings currently exist.
-> 2. I don't have time to create them.
-> 3. It will probably take quite a bit of time for someone else to get
->    round to creating them.
-> 4. The bindings I'm proposing are siloed by vendor and driver, so will
->    cause no harm.
+I didn't say it was hard, I was it was time consuming. It would require=
+=20
+looking at all of the other drivers and picking out bits which are the=20
+same. An i2c guy would be better to do it. I didn't even know what the=20
+nmk-i2c ones were (slsu, tft, rft, sm) until I was told my the author. =
+I=20
+fear the other drivers will be just as cryptic.
 
-Right, this is just a restatement of the standard vendor line.
+> BTW, looking at the platform data again it seems like i2c_freq_mode i=
+t
+> seems very odd that it's driver specific?
 
-If the issue is purely about having generic bindings quite frankly it's
-very hard to see how it could take much time or effort to handle the
-generic bits for I2C, it's basically just the maximum bus frequency and
-possibly also the various fast modes (though to a good approximation it
-seems reasonable to just infer them from the bus frequency and then see
-if we need any more).  One thing I frequently find is that people say
-any sort of generic work is hard without explaining why, if there are
-complex issues that's one thing but that's often not the case.
+I agree.
 
-BTW, looking at the platform data again it seems like i2c_freq_mode it
-seems very odd that it's driver specific?
+>> 5. I've already volunteered to move them over to the unified ones on=
+ce
+>>     created.
+>> 6. These allow support for the driver to work with DT, at the moment
+>>     it does not.
+>
+>> Personally, I think there is more to be gained by applying the
+>> (working) vendor specific bindings to the vendor specific driver unt=
+il
+>> some more consolidated ones appear.
+>
+> Again, vendors always make great promises about how they're going to
+> keep everything up to date...
 
-> 5. I've already volunteered to move them over to the unified ones once
->    created.
-> 6. These allow support for the driver to work with DT, at the moment
->    it does not.
+I'm not a vendor. I also keep my promises. :)
 
-> Personally, I think there is more to be gained by applying the
-> (working) vendor specific bindings to the vendor specific driver until
-> some more consolidated ones appear.
-
-Again, vendors always make great promises about how they're going to
-keep everything up to date...
-
---K1n7F7fSdjvFAEnM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQBpn6AAoJEBus8iNuMP3dKeoP/RrR4e89lhefdhT9p9LijXqS
-GFOPHvqWSkKvwNYqaJnyYAEaski/RaQQyYHOhxStK+Ir8zwjAHibIXVM+J9t3807
-AfFb4LmOclyVEjN8V3lLP3DXdamk1htnf4dNhMHnvS6Zy7KEGBMyMv+r0xpZTPB2
-J+aMtAoHZ+tZ8Bkik54E+6JIHVaU0ojppcTKgWfVu1e6RrBaVi2CErxHtDpwVrot
-nRZ8QfYMttCJo9spjGPMx6SZ0PpDn5U6U2g7aIsZEmYjyVXEPb0oiON+FgOamrzd
-teAQxWi/P1wWlWXDXMKNGxZgRVOUrZu9jpLgOUp9VT/r9XbTu3PdDHhPXdsEJ1fC
-7pB6rIuOe7hIwGUIix9I3ocYgjG4O351B8hsxz6TqZXpWjSOXL4L5ocmom64LCRX
-0S6ua/mnRpq+/3UCsqJAXNDgqcnf9xCwPgYcZSTlB2JkqtJnqf8scO0WJt8Q4Uc5
-rDu33tDs9EmNjbjvungTWjGle3fDfD6Koh6woRF0Ngv/fm9G+Y4rNR3iyM9I5RTR
-yLpCS+23X2XRQDwSwbHb2wKvCWAPj3uh85KqfMD/+0Jk1/NKR62Ipnv6z9vj2t3+
-2f7AV3HOe/u47SvePQHs/hdzgm7bq8GtVI8ItrS+p7s+Fs2pAEh0qObNE1Rae891
-lcPAI9GbHAzvRET5yLv9
-=eCiZ
------END PGP SIGNATURE-----
-
---K1n7F7fSdjvFAEnM--
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+M: +44 77 88 633 515
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
