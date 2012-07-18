@@ -1,244 +1,79 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 6/7] ARM: mtd: nand: davinci: add OF support for davinci
-	nand controller
-Date: Wed, 18 Jul 2012 23:15:28 +0530
-Message-ID: <5006F638.2000301@ti.com>
-References: <1338373143-7467-1-git-send-email-hs@denx.de>
-	<1338373143-7467-7-git-send-email-hs@denx.de>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [RFC/PATCH 06/13] media: s5p-fimc: Add device tree support for
+ FIMC-LITE
+Date: Wed, 18 Jul 2012 19:46:38 +0200
+Message-ID: <5006F67E.3020404@gmail.com>
+References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com> <1337975573-27117-6-git-send-email-s.nawrocki@samsung.com> <Pine.LNX.4.64.1207161114130.12302@axis700.grange> <5005B51E.20505@gmail.com> <alpine.DEB.2.00.1207180939290.6403@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1338373143-7467-7-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.00.1207180939290.6403@axis700.grange>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Hi Guennadi,
 
-On 5/30/2012 3:49 PM, Heiko Schocher wrote:
-> add OF support for the davinci nand controller.
+On 07/18/2012 09:57 AM, Guennadi Liakhovetski wrote:
+> On Tue, 17 Jul 2012, Sylwester Nawrocki wrote:
+>> On 07/16/2012 11:15 AM, Guennadi Liakhovetski wrote:
+>>>> --- a/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
+>>>> +++ b/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
+>>>> @@ -39,6 +39,21 @@ Required properties:
+>>>>    	       depends on the SoC revision. For S5PV210 valid values are:
+>>>>    	       0...2, for Exynos4x1x: 0...3.
+>>>>
+>>>> +
+>>>> +'fimc-lite' device node
+>>>> +-----------------------
+>>>> +
+>>>> +Required properties:
+>>>> +
+>>>> +- compatible : should be one of:
+>>>> +		"samsung,exynos4212-fimc";
+>>>> +		"samsung,exynos4412-fimc";
+>>>> +- reg	     : physical base address and size of the device's memory
+>>>> mapped
+>>>> +	       registers;
+>>>> +- interrupts : should contain FIMC-LITE interrupt;
+>>>> +- cell-index : FIMC-LITE IP instance index;
+>>>
+>>> Same as in an earlier patch - not sure this is needed.
+>>
+>> It is needed for setting up a pipeline of multiple sub-device
+>> within a SoC. As I commented on patch 2/13 I'd like to replace
+>> this with proper entries in the "aliases" node. Some sub-devices
+>> have registers that these indexes need to be directly written to.
 > 
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-> Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> ---
-> - changes for v2:
->   - add comments from Scott Wood:
->     - add "ti,davinci-" prefix
->     - Dashes are preferred to underscores
->     - rename "nandflash" to "nand"
->     - introduce new "ti,davinci" specific properties for setting
->       up ecc_mode, ecc_bits, options and bbt options, instead
->       using linux defines
->     - readme fixes
-> - no changes for v3
-> - changes for v4
->   remove "pinmux-handle" property as discussed here:
->   http://www.spinics.net/lists/arm-kernel/msg175701.html
->   with Nori Sekhar
-> - no changes for v5
-> 
->  .../devicetree/bindings/arm/davinci/nand.txt       |   72 ++++++++++++++++++
->  drivers/mtd/nand/davinci_nand.c                    |   80 +++++++++++++++++++-
->  2 files changed, 151 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-> new file mode 100644
-> index 0000000..5afe4a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-> @@ -0,0 +1,72 @@
-> +* Texas Instruments Davinci NAND
-> +
-> +This file provides information, what the device node for the
-> +davinci nand interface contain.
-> +
-> +Required properties:
-> +- compatible: "ti,davinci-nand";
-> +- reg : contain 2 offset/length values:
-> +        - offset and length for the access window
-> +        - offset and length for accessing the aemif control registers
-> +- ti,davinci-chipselect: Indicates on the davinci_nand driver which
-> +                         chipselect is used for accessing the nand.
-> +
-> +Recommended properties :
-> +- ti,davinci-mask-ale: mask for ale
-> +- ti,davinci-mask-cle: mask for cle
-> +- ti,davinci-mask-chipsel: mask for chipselect
-> +- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
-> +		- "none"
-> +		- "soft"
-> +		- "hw"
-> +- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
-> +- ti,davinci-nand-buswidth: buswidth 8 or 16
-> +- ti,davinci-nand-use-bbt: use flash based bad block table support.
-> +
-> +Optional properties:
-> +- timing-handle: contains a handle to setup aemif timing.
-> +
-> +Example (enbw_cmc board):
-> +aemif@60000000 {
-> +	compatible = "ti,davinci-aemif";
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	reg = <0x68000000 0x80000>;
-> +	ranges = <2 0 0x60000000 0x02000000
-> +		  3 0 0x62000000 0x02000000
-> +		  4 0 0x64000000 0x02000000
-> +		  5 0 0x66000000 0x02000000
-> +		  6 0 0x68000000 0x02000000>;
-> +	nand_cs: cs3@68000000 {
-> +		compatible = "ti,davinci-cs";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		/* all timings in nanoseconds */
-> +		cs = <3>;
-> +		asize = <0>;
-> +		ta = <0>;
-> +		rhold = <7>;
-> +		rstrobe = <42>;
-> +		rsetup = <7>;
-> +		whold = <7>;
-> +		wstrobe = <14>;
-> +		wsetup = <7>;
-> +		ew = <0>;
-> +		ss = <0>;
-> +	};
-> +	nand@3,0 {
-> +		compatible = "ti,davinci-nand";
-> +		reg = <3 0x0 0x807ff
-> +			6 0x0 0x8000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ti,davinci-chipselect = <1>;
-> +		ti,davinci-mask-ale = <0>;
-> +		ti,davinci-mask-cle = <0>;
-> +		ti,davinci-mask-chipsel = <0>;
-> +		ti,davinci-ecc-mode = "hw";
-> +		ti,davinci-ecc-bits = <4>;
-> +		ti,davinci-nand-use-bbt;
-> +		timing-handle = <&nand_cs>;
-> +	};
-> +};
-> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-> index d94b03c..67bdd29 100644
-> --- a/drivers/mtd/nand/davinci_nand.c
-> +++ b/drivers/mtd/nand/davinci_nand.c
-> @@ -33,9 +33,12 @@
->  #include <linux/mtd/nand.h>
->  #include <linux/mtd/partitions.h>
->  #include <linux/slab.h>
-> +#include <linux/of_i2c.h>
+> Aha, so, these are not purely software indices, that you just use to
+> identify your devices, these are actual hardware values? You really have
+> to write, e.g., "1" into a resizer register to connect it to a certain
+> capture engine? Ok, in this case it indeed might make sense to have these
 
-This include is not required.
+Yes, that's more or less how it works. If I select input mux id = 0, 
+then MIPI-CSIS0 have to be used for streaming. For this FIMC-LITE device
+there are some commands/registers within the device that sits after
+FIMC-LITE in the data pipeline (not yet mainlined).
 
-> +#include <linux/of_device.h>
->  
->  #include <mach/nand.h>
->  #include <mach/aemif.h>
-> +#include <mach/mux.h>
+> values in the DT. Not sure how best to call these properties, or whether
+> aliases is the best solution, but that's already a detail. And btw, if you
 
-This too.
+Yeah, the property seems more accurate. But I don't really mind, I could 
+just use whatever is accepted in the mainline.
 
->  
->  /*
->   * This is a device driver for the NAND flash controller found on the
-> @@ -518,9 +521,81 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
->  	},
->  };
->  
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id davinci_nand_of_match[] = {
-> +	{.compatible = "ti,davinci-nand", },
-> +	{},
-> +}
-> +MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
-> +
-> +static struct davinci_nand_pdata
-> +	*nand_davinci_get_pdata(struct platform_device *pdev)
-> +{
-> +	if ((pdev->dev.platform_data == NULL) &&
-> +		(pdev->dev.of_node)) {
+> do decide to keep this as a property, maybe this is one of the cases,
+> where you'd want to mark it with your hardware type, like "fimc,cell-id"
+> or similar?
 
-You can simplify this and also avoid breaking the statement.
+I'm not sure about that. "cell-index" has well defined semantics. So
+there should be no reason to use device specific property. I would have
+then to use "samsung,fimc-cell-id", "samsung,fimc-lite-cell-id" and
+"samsung,csis-cell-id", as all device specific bindings need to be 
+prefixed with a manufacturer code.
 
-	if (!pdev->dev.platform_data && pdev->dev.of_node) {
-
-
-> +		struct device_node *tmp_np;
-> +		struct davinci_nand_pdata *pdata;
-> +		const char *mode;
-> +		u32 prop;
-> +		int len;
-> +
-> +		pdata =  kzalloc(sizeof(struct davinci_nand_pdata),
-> +				GFP_KERNEL);
-
-I don't see this getting freed anywhere. You wanted to use devm_kzalloc()?
-
-> +		pdev->dev.platform_data = pdata;
-> +		if (!pdata)
-> +			return NULL;
-> +		if (!of_property_read_u32(pdev->dev.of_node,
-> +			"ti,davinci-chipselect", &prop))
-> +			pdev->id = prop;
-> +		if (!of_property_read_u32(pdev->dev.of_node,
-> +			"ti,davinci-mask-ale", &prop))
-> +			pdata->mask_ale = prop;
-> +		if (!of_property_read_u32(pdev->dev.of_node,
-> +			"ti,davinci-mask-cle", &prop))
-> +			pdata->mask_cle = prop;
-> +		if (!of_property_read_u32(pdev->dev.of_node,
-> +			"ti,davinci-mask-chipsel", &prop))
-> +			pdata->mask_chipsel = prop;
-> +		if (!of_property_read_string(pdev->dev.of_node,
-> +			"ti,davinci-ecc-mode", &mode)) {
-> +			if (!strncmp("none", mode, 4))
-> +				pdata->ecc_mode = NAND_ECC_NONE;
-> +			if (!strncmp("soft", mode, 4))
-> +				pdata->ecc_mode = NAND_ECC_SOFT;
-> +			if (!strncmp("hw", mode, 2))
-> +				pdata->ecc_mode = NAND_ECC_HW;
-> +		}
-> +		if (!of_property_read_u32(pdev->dev.of_node,
-> +			"ti,davinci-ecc-bits", &prop))
-> +			pdata->ecc_bits = prop;
-> +		if (!of_property_read_u32(pdev->dev.of_node,
-> +			"ti,davinci-nand-buswidth", &prop))
-> +			if (prop == 16)
-> +				pdata->options |= NAND_BUSWIDTH_16;
-> +		if (of_find_property(pdev->dev.of_node,
-> +			"ti,davinci-nand-use-bbt", &len))
-> +			pdata->bbt_options = NAND_BBT_USE_FLASH;
-> +
-
-> +		tmp_np = of_parse_phandle(pdev->dev.of_node,
-> +				"timing-handle", 0);
-> +		if (tmp_np)
-> +			davinci_aemif_setup_timing_of(tmp_np);
-
-Since the aemif driver conversion to DT needs to be looked at along with
-its movement to drivers/ folder, is it possible to drop the AEMIF timing
-specific bindings from the patch and only keep the NAND specific ones?
+--
 
 Thanks,
-Sekhar
+Sylwester
