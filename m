@@ -1,79 +1,178 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC/PATCH 06/13] media: s5p-fimc: Add device tree support for
- FIMC-LITE
-Date: Wed, 18 Jul 2012 19:46:38 +0200
-Message-ID: <5006F67E.3020404@gmail.com>
-References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com> <1337975573-27117-6-git-send-email-s.nawrocki@samsung.com> <Pine.LNX.4.64.1207161114130.12302@axis700.grange> <5005B51E.20505@gmail.com> <alpine.DEB.2.00.1207180939290.6403@axis700.grange>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH] PM / OPP: Initialize OPP table from device tree
+Date: Wed, 18 Jul 2012 21:36:43 +0200
+Message-ID: <201207182136.43507.rjw@sisk.pl>
+References: <1342630669-27546-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.00.1207180939290.6403@axis700.grange>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1342630669-27546-1-git-send-email-shawn.guo@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Nishanth Menon <nm@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
-
-On 07/18/2012 09:57 AM, Guennadi Liakhovetski wrote:
-> On Tue, 17 Jul 2012, Sylwester Nawrocki wrote:
->> On 07/16/2012 11:15 AM, Guennadi Liakhovetski wrote:
->>>> --- a/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
->>>> +++ b/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
->>>> @@ -39,6 +39,21 @@ Required properties:
->>>>    	       depends on the SoC revision. For S5PV210 valid values are:
->>>>    	       0...2, for Exynos4x1x: 0...3.
->>>>
->>>> +
->>>> +'fimc-lite' device node
->>>> +-----------------------
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible : should be one of:
->>>> +		"samsung,exynos4212-fimc";
->>>> +		"samsung,exynos4412-fimc";
->>>> +- reg	     : physical base address and size of the device's memory
->>>> mapped
->>>> +	       registers;
->>>> +- interrupts : should contain FIMC-LITE interrupt;
->>>> +- cell-index : FIMC-LITE IP instance index;
->>>
->>> Same as in an earlier patch - not sure this is needed.
->>
->> It is needed for setting up a pipeline of multiple sub-device
->> within a SoC. As I commented on patch 2/13 I'd like to replace
->> this with proper entries in the "aliases" node. Some sub-devices
->> have registers that these indexes need to be directly written to.
+On Wednesday, July 18, 2012, Shawn Guo wrote:
+> With a lot of devices booting from device tree nowadays, it requires
+> that OPP table can be initialized from device tree.  The patch adds
+> a helper function of_init_opp_table together with a binding doc for
+> that purpose.
 > 
-> Aha, so, these are not purely software indices, that you just use to
-> identify your devices, these are actual hardware values? You really have
-> to write, e.g., "1" into a resizer register to connect it to a certain
-> capture engine? Ok, in this case it indeed might make sense to have these
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 
-Yes, that's more or less how it works. If I select input mux id = 0, 
-then MIPI-CSIS0 have to be used for streaming. For this FIMC-LITE device
-there are some commands/registers within the device that sits after
-FIMC-LITE in the data pipeline (not yet mainlined).
+While I can take it, I'm not going to include it into my v3.6 pull request.
 
-> values in the DT. Not sure how best to call these properties, or whether
-> aliases is the best solution, but that's already a detail. And btw, if you
-
-Yeah, the property seems more accurate. But I don't really mind, I could 
-just use whatever is accepted in the mainline.
-
-> do decide to keep this as a property, maybe this is one of the cases,
-> where you'd want to mark it with your hardware type, like "fimc,cell-id"
-> or similar?
-
-I'm not sure about that. "cell-index" has well defined semantics. So
-there should be no reason to use device specific property. I would have
-then to use "samsung,fimc-cell-id", "samsung,fimc-lite-cell-id" and
-"samsung,csis-cell-id", as all device specific bindings need to be 
-prefixed with a manufacturer code.
-
---
+If no one has objections, it will show up in linux-next after v3.6-rc1.
 
 Thanks,
-Sylwester
+Rafael
+
+
+> ---
+>  Documentation/devicetree/bindings/power/opp.txt |   29 ++++++++++
+>  drivers/base/power/opp.c                        |   66 +++++++++++++++++++++++
+>  include/linux/opp.h                             |    4 ++
+>  3 files changed, 99 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/opp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> new file mode 100644
+> index 0000000..1dd0db2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -0,0 +1,29 @@
+> +* Generic OPP Interface
+> +
+> +SoCs have a standard set of tuples consisting of frequency and
+> +voltage pairs that the device will support per voltage domain. These
+> +are called Operating Performance Points or OPPs.
+> +
+> +Properties:
+> +- operating-points: An array of 3-tuples items, and each item consists
+> +  of frequency, voltage and enabling like <freq vol en>.
+> +	freq: clock frequency in kHz
+> +	vol: voltage in microvolt
+> +	en: initially enabled (1) or not (0)
+> +
+> +Examples:
+> +
+> +cpu@0 {
+> +	compatible = "arm,cortex-a9";
+> +	reg = <0>;
+> +	next-level-cache = <&L2>;
+> +	operating-points = <
+> +		/* kHz    uV    en */
+> +		1200000 1275000 0
+> +		996000  1225000 1
+> +		792000  1100000 1
+> +		672000  1100000 0
+> +		396000  950000  1
+> +		198000  850000  1
+> +	>;
+> +};
+> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+> index ac993ea..2d750f9 100644
+> --- a/drivers/base/power/opp.c
+> +++ b/drivers/base/power/opp.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/rculist.h>
+>  #include <linux/rcupdate.h>
+>  #include <linux/opp.h>
+> +#include <linux/of.h>
+>  
+>  /*
+>   * Internal data structure organization with the OPP layer library is as
+> @@ -674,3 +675,68 @@ struct srcu_notifier_head *opp_get_notifier(struct device *dev)
+>  
+>  	return &dev_opp->head;
+>  }
+> +
+> +#ifdef CONFIG_OF
+> +/**
+> + * of_init_opp_table() - Initialize opp table from device tree
+> + * @dev:	device pointer used to lookup device OPPs.
+> + *
+> + * Register the initial OPP table with the OPP library for given device.
+> + */
+> +int of_init_opp_table(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	const char *propname = "operating-points";
+> +	const struct property *pp;
+> +	u32 *opp;
+> +	int ret, i, nr;
+> +
+> +	pp = of_find_property(np, propname, NULL);
+> +	if (!pp) {
+> +		dev_err(dev, "%s: Unable to find property", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	opp = kzalloc(pp->length, GFP_KERNEL);
+> +	if (!opp) {
+> +		dev_err(dev, "%s: Unable to allocate array\n", __func__);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	nr = pp->length / sizeof(u32);
+> +	ret = of_property_read_u32_array(np, propname, opp, nr);
+> +	if (ret) {
+> +		dev_err(dev, "%s: Unable to read OPPs\n", __func__);
+> +		goto out;
+> +	}
+> +
+> +	nr /= 3;
+> +	for (i = 0; i < nr; i++) {
+> +		/*
+> +		 * Each OPP is a set of tuples consisting of frequency,
+> +		 * voltage and availability like <freq-kHz vol-uV enable>.
+> +		 */
+> +		u32 *val = opp + i * 3;
+> +
+> +		val[0] *= 1000;
+> +		ret = opp_add(dev, val[0], val[1]);
+> +		if (ret) {
+> +			dev_warn(dev, "%s: Failed to add OPP %d: %d\n",
+> +				 __func__, val[0], ret);
+> +			continue;
+> +		}
+> +
+> +		if (!val[2]) {
+> +			ret = opp_disable(dev, val[0]);
+> +			if (ret)
+> +				dev_warn(dev, "%s: Failed to disable OPP %d: %d\n",
+> +					 __func__, val[0], ret);
+> +		}
+> +	}
+> +
+> +	ret = 0;
+> +out:
+> +	kfree(opp);
+> +	return ret;
+> +}
+> +#endif
+> diff --git a/include/linux/opp.h b/include/linux/opp.h
+> index 2a4e5fa..fd165ad 100644
+> --- a/include/linux/opp.h
+> +++ b/include/linux/opp.h
+> @@ -48,6 +48,10 @@ int opp_disable(struct device *dev, unsigned long freq);
+>  
+>  struct srcu_notifier_head *opp_get_notifier(struct device *dev);
+>  
+> +#ifdef CONFIG_OF
+> +int of_init_opp_table(struct device *dev);
+> +#endif
+> +
+>  #else
+>  static inline unsigned long opp_get_voltage(struct opp *opp)
+>  {
+> 
