@@ -1,78 +1,102 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [RFC/PATCH 05/13] media: s5p-fimc: Add device tree support for
- FIMC devices
-Date: Wed, 18 Jul 2012 10:17:09 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207180958540.8472@axis700.grange>
-References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com>
- <1337975573-27117-5-git-send-email-s.nawrocki@samsung.com>
- <Pine.LNX.4.64.1207161110430.12302@axis700.grange> <5005C7E4.3050908@gmail.com>
+From: Sunyoung Kang <sy0816.kang@samsung.com>
+Subject: RE: [PATCH RESEND v2 1/2] ARM: EXYNOS: Add clock support for Gscaler
+Date: Wed, 18 Jul 2012 17:44:33 +0900
+Message-ID: <005401cd64c1$8e299d10$aa7cd730$%kang@samsung.com>
+References: <1342416803-30809-1-git-send-email-shaik.ameer@samsung.com>
+ <1342416803-30809-2-git-send-email-shaik.ameer@samsung.com>
+ <143701cd63a3$c0b81140$422833c0$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5005C7E4.3050908@gmail.com>
+In-reply-to: <143701cd63a3$c0b81140$422833c0$%kim@samsung.com>
+Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>
+To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, sachin.kamat@linaro.org, joshi@samsung.com, ameersk@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Jul 2012, Sylwester Nawrocki wrote:
+Kukjin Kim wrote:
+>
+>Shaik Ameer Basha wrote:
+>>
+>> Add required clock support for Gscaler for exynos5
+>>
+>Hi,
+>
+>Cc'ed Sunyoung Kang who knows gscaler well in my team.
+>
+>> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>> Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+>> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+>> ---
+>>  arch/arm/mach-exynos/clock-exynos5.c |   79
+>> ++++++++++++++++++++++++++++++++++
+>>  1 files changed, 79 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-
+>> exynos/clock-exynos5.c
+>> index fefa336..c8293a3 100644
+>> --- a/arch/arm/mach-exynos/clock-exynos5.c
+>> +++ b/arch/arm/mach-exynos/clock-exynos5.c
+>> @@ -741,6 +741,26 @@ static struct clk exynos5_init_clocks_off[] = {
+>>  		.enable		= exynos5_clk_ip_peric_ctrl,
+>>  		.ctrlbit	= (1 << 14),
+>>  	}, {
+>> +		.name		= "gscl",
+>> +		.devname	= "exynos-gsc.0",
+>> +		.enable		= exynos5_clk_ip_gscl_ctrl,
+>> +		.ctrlbit	= (1 << 0),
+>
+>Sunyoung, I've seen (1 << 15) | (1 << 0) here instead, which one is right?
+>
 
-> On 07/16/2012 11:13 AM, Guennadi Liakhovetski wrote:
-> > On Fri, 25 May 2012, Sylwester Nawrocki wrote:
-> > 
-> >> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
-> >> Signed-off-by: Karol Lewandowski<k.lewandowsk@samsung.com>
-> >> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
-> > 
-> >  From the documentation below I think, I understand what it does, but why
-> > is it needed? It doesn't describe your video subsystem topology, right?
-> > How various subdevices are connected. It just lists them all in one
-> > node... A description for this patch would be very welcome IMHO and,
-> > maybe, such a node can be completely avoided?
-> 
-> Sorry, I'll provide better description in next iteration.
-> It's true it doesn't describe the topology in detail, as there are
-> multiple one-to many possible connections between sub-devices. An exact
-> topology is coded in the driver and can be changed through MC API.
-> The "samsung,camif-mux-id" and "video-bus-type" properties at "sensor" 
-> nodes just specify to which physical SoC camera port an image sensor
-> is connected.
+Actually, the ctrl bit, (1 << 0) is correct. The 15th bit Kukjin said is
+used for another purpose.
 
-So, don't you think my media-link child nodes are a good solution for 
-this?
+>[snip]
+>
+>I think, following part should be moved between
+>
+>---
+>static struct clksrc_clk exynos5_clk_aclk_66 = {
+>[snip]
+>};
+>
+><<<HERE>>>
+>
+>static struct clk exynos5_init_clocks_off[] = {
+>---
+>
+>Please don't put your clock code without any checking the clock code.
+>
+>
+>> +/* For ACLK_300_gscl_mid */
+>> +static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl_mid = {
+>> +	.clk    = {
+>> +		.name   = "mout_aclk_300_gscl_mid",
+>> +	},
+>> +	.sources = &exynos5_clkset_aclk,
+>> +	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 24, .size = 1 },
+>> +};
+>> +
+>> +/* For ACLK_300_gscl */
+>> +struct clk *exynos5_clkset_aclk_300_gscl_list[] = {
+>> +	[0] = &exynos5_clk_mout_aclk_300_gscl_mid.clk,
+>> +	[1] = &exynos5_clk_sclk_vpll.clk,
+>
+>As I know, this is wrong. Its [1] should be
+>&exynos5_clk_mout_aclk_300_gscl_mid1.clk
+>
 
-> Originally the all camera devices were supposed to land under common 
-> 'camera' node. And a top level driver would be registering all platform 
-> devices. With this approach it would be possible to better control PM 
-> handling (which currently depends on an order of registering devices to 
-> the driver core). But then we discovered that we couldn't use OF_DEV_AUXDATA 
-> in such case, which was required to preserve platform device names, in order 
-> for the clock API to work. So I've moved some sub-devices out of 'camera' 
-> node and have added only a list of phandles to them in that node. This is 
-> rather a cheap workaround..
-> 
-> I think all camera sub-devices should be placed under common node, as there
-> are some properties that don't belong to any sub-node: GPIO config, clocks,
-> to name a few. Of course simpler devices might not need such a composite 
-> node. I think we can treat the sub-device interdependencies as an issue
-> separate from a need for a common node.
-> 
-> If some devices need to reflect the topology better, we probably could
-> include in some nodes (a list of) phandles to other nodes. This could ease
-> parsing the topology at the drivers, by using existing OF infrastructure.
+Yes, right. It should be 'exynos5_clk_mout_aclk_300_gscl_mid1.clk' which is
+generated by CPLL. The VPLL shouldn't be used here. It means you need to
+implement CPLL for gscaler. As a note, CPLL can be used for fimd as well.
 
-Ok, I think you have some good ideas in your RFC's, an interesting 
-question now is - how to proceed. Do you think we'd be able to work out a 
-combined RFC? Or would you prefer to make two versions and then see what 
-others think? In either case it would be nice, I think, if you could try 
-to separate what you see as common V4L DT bindings, then we could discuss 
-that separately. Whereas what you think is private to your hardware, we 
-can also look at for common ideas, or maybe even some of those properties 
-we'll wake to make common too.
+[snip]
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Thanks.
+
+BRs
+Sunyoung
