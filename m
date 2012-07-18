@@ -1,104 +1,48 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v4 00/11] omap: musb: Add device tree support
-Date: Wed, 18 Jul 2012 16:08:31 +0530
-Message-ID: <1342607922-11554-1-git-send-email-kishon@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the i2c-embedded
+ tree
+Date: Wed, 18 Jul 2012 11:43:45 +0100
+Message-ID: <50069361.1080509@linaro.org>
+References: <20120717130650.GB27595@sirena.org.uk> <500568D9.10805@linaro.org> <20120717133550.GC4477@opensource.wolfsonmicro.com> <50057058.2060002@linaro.org> <20120717142222.GE4477@opensource.wolfsonmicro.com> <50057C1A.80606@linaro.org> <20120717152001.GF4477@opensource.wolfsonmicro.com> <20120718053341.GA4009@S2100-06.ap.freescale.net> <20120718095937.GB22739@opensource.wolfsonmicro.com> <50069006.8050301@linaro.org> <20120718103311.GG22739@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120718103311.GG22739@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Shawn Guo <shawn.guo@freescale.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Linus Walleij <linus.walleij@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, linux-kernel@vger.kernel.org, Deepak Saxena <dsaxena@linaro.org>, linux-next@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds device tree support for MUSB and device
-tree support for all the related modules to get MUSB working in
-OMAP platform.
+On 18/07/12 11:33, Mark Brown wrote:
+> On Wed, Jul 18, 2012 at 11:29:26AM +0100, Lee Jones wrote:
+>> On 18/07/12 10:59, Mark Brown wrote:
+>
+>>> It's not the using device tree bit that creates concern for me here=
+,
+>>> it's the fact that the board and silicon aren't being separated.
+>
+>> What's the difference?
+>
+>>> +- db8500.dtsi       // silicon
+>>> \=09
+>>> +-- snowball.dts    // board
+>
+> I have glanced at some of this stuff in the past, thanks.  Now think =
+how
+> that's working for people when they put the configuration for the
+> silicon in the same DT node as the configuration for the board...
 
-A new omap-usb2 phy driver has been added (with only dt suppport)
-to perform phy configurations. Previously this configuration was
-performed by twl6030, using pdata function pointers.
+Granted, ideally the configuration and silicon description should be=20
+separated. I don't know that is the case for us yet however. That is=20
+something I'll enforce when we have a new dts file, which will be comin=
+g=20
+very soon.
 
-With the addition of omap-usb2 to perform phy configurations,
-twl6030 is made as a comparator driver to detect VBUS and ID events
-and notify it to the glue layer.
-
-musb core is _NOT_ yet converted to support device tree support as it
-would need lot of driver re-design because of its enormous use of
-function pointers. That will be in _TO DO_ list.
-
-Changes from v3:
-remove the address in the node name of usb_otg_hs since the usb_otg_hs
-node doesn't have a reg property. Thanks Ajay Gupta for finding this.
-
-Changes from v2:
-Fixed Sergei's comment to remove *0x* prefix in usb2phy@0x4a0ad080
-
-Changes from v1:
-* Fixed Rajendra Nayak comments (regulator naming, compatible naming of
-musb and other minor cleanups.)
-* It's agreed to have ocp2scp in drivers/bus and usb2 phy is a child of
-ocp2scp, the documentation is updated accordingly.
-
-Changes from RFC:
-Removed the dependency on [RFC PATCH 00/11] OMAP System Control Module.
-Writing to control module register is now handled in otg driver itself.
-Once the system control module driver get upstreamed, I'll send a patch
-to make use of API's in control module driver to write to control
-module register.
-
-This series was developed on
-git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git xceiv
-
-This patch series depends on
-[PATCH 0/2] omap: add ocp2scp as a bus driver
-
-Performed MUSB device mode testing on OMAP4 panda, OMAP4 SDP
-and OMAP3 beagle.
-
-Kishon Vijay Abraham I (11):
-  drivers: usb: otg: add a new driver for omap usb2 phy
-  arm/dts: omap: Add omap-usb2 dt data
-  drivers: usb: otg: make twl6030_usb as a comparator driver to
-    omap_usb2
-  arm: omap: hwmod: add a new addr space in otg for writing to control
-    module
-  drivers: usb: twl6030: Add dt support for twl6030 usb
-  arm/dts: Add twl6030-usb data
-  drivers: usb: twl4030: Add device tree support for twl4030 usb
-  arm/dts: Add twl4030-usb data
-  drivers: usb: musb: Add device tree support for omap musb glue
-  arm/dts: omap: Add usb_otg and glue data
-  arm: omap: phy: remove unused functions from omap-phy-internal.c
-
- .../devicetree/bindings/bus/omap-ocp2scp.txt       |    3 +
- Documentation/devicetree/bindings/usb/omap-usb.txt |   48 ++++
- .../devicetree/bindings/usb/twlxxxx-usb.txt        |   41 +++
- arch/arm/boot/dts/omap3-beagle.dts                 |    6 +
- arch/arm/boot/dts/omap3-evm.dts                    |    6 +
- arch/arm/boot/dts/omap3.dtsi                       |    8 +
- arch/arm/boot/dts/omap4-panda.dts                  |   10 +
- arch/arm/boot/dts/omap4-sdp.dts                    |   10 +
- arch/arm/boot/dts/omap4.dtsi                       |   13 +
- arch/arm/boot/dts/twl4030.dtsi                     |   21 ++
- arch/arm/boot/dts/twl6030.dtsi                     |    6 +
- arch/arm/mach-omap2/omap_hwmod_44xx_data.c         |    5 +
- arch/arm/mach-omap2/omap_phy_internal.c            |  138 ----------
- arch/arm/mach-omap2/twl-common.c                   |    5 -
- arch/arm/mach-omap2/usb-musb.c                     |    3 -
- drivers/usb/musb/omap2430.c                        |  107 +++++++-
- drivers/usb/musb/omap2430.h                        |    9 +
- drivers/usb/otg/Kconfig                            |   10 +
- drivers/usb/otg/Makefile                           |    1 +
- drivers/usb/otg/omap-usb2.c                        |  271 ++++++++++++++++++++
- drivers/usb/otg/twl4030-usb.c                      |   26 ++-
- drivers/usb/otg/twl6030-usb.c                      |  153 +++--------
- include/linux/usb/omap_usb.h                       |   45 ++++
- include/linux/usb/phy_companion.h                  |   34 +++
- 24 files changed, 706 insertions(+), 273 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/omap-usb.txt
- create mode 100644 Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
- create mode 100644 drivers/usb/otg/omap-usb2.c
- create mode 100644 include/linux/usb/omap_usb.h
- create mode 100644 include/linux/usb/phy_companion.h
-
--- 
-1.7.5.4
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+M: +44 77 88 633 515
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
