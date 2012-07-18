@@ -1,66 +1,74 @@
-From: "Gupta, Ajay Kumar" <ajay.gupta-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v2 06/11] arm/dts: am33xx: Add dt data for usbss
-Date: Wed, 18 Jul 2012 10:03:15 +0000
-Message-ID: <47CEF8C4B26E8C44B22B028A650E0EA93EADB1C5@DBDE01.ent.ti.com>
-References: <1342516407-16515-1-git-send-email-ajay.gupta@ti.com>
- <1342516407-16515-7-git-send-email-ajay.gupta@ti.com>
- <50055CD9.3060300@mvista.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the i2c-embedded
+ tree
+Date: Wed, 18 Jul 2012 11:29:26 +0100
+Message-ID: <50069006.8050301@linaro.org>
+References: <5003FB7C.4030509@linaro.org> <20120717130650.GB27595@sirena.org.uk> <500568D9.10805@linaro.org> <20120717133550.GC4477@opensource.wolfsonmicro.com> <50057058.2060002@linaro.org> <20120717142222.GE4477@opensource.wolfsonmicro.com> <50057C1A.80606@linaro.org> <20120717152001.GF4477@opensource.wolfsonmicro.com> <20120718053341.GA4009@S2100-06.ap.freescale.net> <20120718095937.GB22739@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50055CD9.3060300-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <20120718095937.GB22739@opensource.wolfsonmicro.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Shawn Guo <shawn.guo@freescale.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Linus Walleij <linus.walleij@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, linux-kernel@vger.kernel.org, Deepak Saxena <dsaxena@linaro.org>, linux-next@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-> On 17-07-2012 13:13, Ajay Kumar Gupta wrote:
-> 
-> > Added device tree data for usbss on am33xx. There are two musb
-> controllers
-> > on am33xx platform so have port0_mode and port1_mode additional data.
-> 
-> > Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
-> > ---
-> >   arch/arm/boot/dts/am33xx.dtsi |   11 +++++++++++
-> >   1 files changed, 11 insertions(+), 0 deletions(-)
-> 
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi
-> b/arch/arm/boot/dts/am33xx.dtsi
-> > index 59509c4..b572803 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -154,5 +154,16 @@
-> >   			#size-cells = <0>;
-> >   			ti,hwmods = "i2c3";
-> >   		};
-> > +
-> > +		usb_otg_hs: usb_otg_hs@47400000 {
-> 
->     The "reg" property is absent, so why did you give the node name the
-> address postfix?
+On 18/07/12 10:59, Mark Brown wrote:
+> On Wed, Jul 18, 2012 at 01:33:42PM +0800, Shawn Guo wrote:
+>
+>> I have an IP block getting different FIFO size on different IMX SoCs=
+=2E
+>> We could introduce a new compatible string for driver to figure it o=
+ut,
+>> but I think the simpler way is just have the data encoded in device
+>> tree.  In any case DT is not completely limited in encoding board
+>> specific data.  Today, we have IO region and interrupt number of
+>> hardware blocks encoded in DT, and to me, FIFO size could just be
+>> another aspect of hardware block we could choose to encode in DT.
+>
+> So, this is part of the problem with encoding the description of the =
+SoC
+> into the DT - we're not doing a good job of splitting out the silicon
+> description from the board specific description which is not a triump=
+h
+> for maintainability since it means that we end up needing to modify t=
+he
+> DT for every board using the silicon if we want to use the new featur=
+e
+> (assuming people maintain binary compatibility with old DTs, which we
+> don't do a good job at either even for established DT architectures).
+>
+> It's not the using device tree bit that creates concern for me here,
+> it's the fact that the board and silicon aren't being separated.
 
-Currently "reg" property is coming from "ti hwmods".
+What's the difference?
 
-Thanks,
-Ajay
-> 
-> > +			compatible = "ti,musb-am33xx";
-> > +			ti,hwmods = "usb_otg_hs";
-> > +			multipoint = <1>;
-> > +			num_eps = <16>;
-> > +			ram_bits = <12>;
-> > +			port0_mode = <3>;
-> > +			port1_mode = <1>;
-> > +			power = <250>;
-> > +		};
-> 
-> WBR, Sergei
+The Device Tree describes the hardware (hardware =3D=3D silicon +=20
+peripherals). So different platforms are different pieces of hardware.=20
+Everything the driver can't figure itself out from the silicon itself=20
+needs to be described in the DT.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We can describe the relationship with a hierarchical layout of the dts=20
+and dtsi files. So for my recent venture we have:
+
+> +- db8500.dtsi       // silicon
+> \=09
+>  +-- snowball.dts    // board
+
+We also have plans to split it up further:
+
+>           db8xx0.dtsi               // shared silicon
+>       _________/\_________
+>      /                    \
+> db8500.dtsi          db8540.dtsi    // differing silicon
+> \                    \
+>  +-- snowball.dts     +-- new_board.dts // board
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+M: +44 77 88 633 515
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
