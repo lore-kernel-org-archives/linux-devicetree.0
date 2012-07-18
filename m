@@ -1,27 +1,168 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [net-next PATCH v7] net: ethernet: davinci_emac: add OF support
-Date: Wed, 18 Jul 2012 09:45:00 -0700 (PDT)
-Message-ID: <20120718.094500.2234614298478867072.davem@davemloft.net>
-References: <1342521264-18466-1-git-send-email-agust@denx.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] PM / OPP: Initialize OPP table from device tree
+Date: Thu, 19 Jul 2012 00:57:49 +0800
+Message-ID: <1342630669-27546-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1342521264-18466-1-git-send-email-agust@denx.de>
-Sender: netdev-owner@vger.kernel.org
-To: agust@denx.de
-Cc: netdev@vger.kernel.org, hs@denx.de, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, nsekhar@ti.com, wd@denx.de, mm05@mail.ru
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anatolij Gustschin <agust@denx.de>
-Date: Tue, 17 Jul 2012 12:34:24 +0200
+With a lot of devices booting from device tree nowadays, it requires
+that OPP table can be initialized from device tree.  The patch adds
+a helper function of_init_opp_table together with a binding doc for
+that purpose.
 
-> From: Heiko Schocher <hs@denx.de>
-> 
-> add OF support for the davinci_emac driver.
-> 
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> Acked-by: Sekhar Nori <nsekhar@ti.com>
-> Signed-off-by: Anatolij Gustschin <agust@denx.de>
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/power/opp.txt |   29 ++++++++++
+ drivers/base/power/opp.c                        |   66 +++++++++++++++++++++++
+ include/linux/opp.h                             |    4 ++
+ 3 files changed, 99 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/opp.txt
 
-Applied.
+diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+new file mode 100644
+index 0000000..1dd0db2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/opp.txt
+@@ -0,0 +1,29 @@
++* Generic OPP Interface
++
++SoCs have a standard set of tuples consisting of frequency and
++voltage pairs that the device will support per voltage domain. These
++are called Operating Performance Points or OPPs.
++
++Properties:
++- operating-points: An array of 3-tuples items, and each item consists
++  of frequency, voltage and enabling like <freq vol en>.
++	freq: clock frequency in kHz
++	vol: voltage in microvolt
++	en: initially enabled (1) or not (0)
++
++Examples:
++
++cpu@0 {
++	compatible = "arm,cortex-a9";
++	reg = <0>;
++	next-level-cache = <&L2>;
++	operating-points = <
++		/* kHz    uV    en */
++		1200000 1275000 0
++		996000  1225000 1
++		792000  1100000 1
++		672000  1100000 0
++		396000  950000  1
++		198000  850000  1
++	>;
++};
+diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+index ac993ea..2d750f9 100644
+--- a/drivers/base/power/opp.c
++++ b/drivers/base/power/opp.c
+@@ -22,6 +22,7 @@
+ #include <linux/rculist.h>
+ #include <linux/rcupdate.h>
+ #include <linux/opp.h>
++#include <linux/of.h>
+ 
+ /*
+  * Internal data structure organization with the OPP layer library is as
+@@ -674,3 +675,68 @@ struct srcu_notifier_head *opp_get_notifier(struct device *dev)
+ 
+ 	return &dev_opp->head;
+ }
++
++#ifdef CONFIG_OF
++/**
++ * of_init_opp_table() - Initialize opp table from device tree
++ * @dev:	device pointer used to lookup device OPPs.
++ *
++ * Register the initial OPP table with the OPP library for given device.
++ */
++int of_init_opp_table(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	const char *propname = "operating-points";
++	const struct property *pp;
++	u32 *opp;
++	int ret, i, nr;
++
++	pp = of_find_property(np, propname, NULL);
++	if (!pp) {
++		dev_err(dev, "%s: Unable to find property", __func__);
++		return -ENODEV;
++	}
++
++	opp = kzalloc(pp->length, GFP_KERNEL);
++	if (!opp) {
++		dev_err(dev, "%s: Unable to allocate array\n", __func__);
++		return -ENOMEM;
++	}
++
++	nr = pp->length / sizeof(u32);
++	ret = of_property_read_u32_array(np, propname, opp, nr);
++	if (ret) {
++		dev_err(dev, "%s: Unable to read OPPs\n", __func__);
++		goto out;
++	}
++
++	nr /= 3;
++	for (i = 0; i < nr; i++) {
++		/*
++		 * Each OPP is a set of tuples consisting of frequency,
++		 * voltage and availability like <freq-kHz vol-uV enable>.
++		 */
++		u32 *val = opp + i * 3;
++
++		val[0] *= 1000;
++		ret = opp_add(dev, val[0], val[1]);
++		if (ret) {
++			dev_warn(dev, "%s: Failed to add OPP %d: %d\n",
++				 __func__, val[0], ret);
++			continue;
++		}
++
++		if (!val[2]) {
++			ret = opp_disable(dev, val[0]);
++			if (ret)
++				dev_warn(dev, "%s: Failed to disable OPP %d: %d\n",
++					 __func__, val[0], ret);
++		}
++	}
++
++	ret = 0;
++out:
++	kfree(opp);
++	return ret;
++}
++#endif
+diff --git a/include/linux/opp.h b/include/linux/opp.h
+index 2a4e5fa..fd165ad 100644
+--- a/include/linux/opp.h
++++ b/include/linux/opp.h
+@@ -48,6 +48,10 @@ int opp_disable(struct device *dev, unsigned long freq);
+ 
+ struct srcu_notifier_head *opp_get_notifier(struct device *dev);
+ 
++#ifdef CONFIG_OF
++int of_init_opp_table(struct device *dev);
++#endif
++
+ #else
+ static inline unsigned long opp_get_voltage(struct opp *opp)
+ {
+-- 
+1.7.5.4
