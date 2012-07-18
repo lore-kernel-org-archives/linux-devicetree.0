@@ -1,48 +1,41 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
-Date: Wed, 18 Jul 2012 00:19:07 -0700
-Message-ID: <20120718071906.GJ6522@atomide.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
- <1342218413-30116-2-git-send-email-jon-hunter@ti.com>
- <5000D647.4090200@gmail.com>
- <500439A8.1050705@ti.com>
+Subject: Re: [RFC PATCH v2 1/2] drivers: misc: omap: add a new driver for
+ ocp2scp
+Date: Wed, 18 Jul 2012 00:35:08 -0700
+Message-ID: <20120718073507.GL6522@atomide.com>
+References: <1340370942-23201-1-git-send-email-kishon@ti.com>
+ <20120716081204.GI7955@arwen.pp.htv.fi>
+ <CAAe_U6JMGP3jEkkd=vqpR5KTeOnY51AOcb65zqKRRa8MtnWjzQ@mail.gmail.com>
+ <201207161947.01751.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <500439A8.1050705@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Rob Herring <robherring2@gmail.com>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <b-cousson@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
+In-Reply-To: <201207161947.01751.arnd@arndb.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, balbi@ti.com, Greg KH <gregkh@linuxfoundation.org>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, b-cousson@ti.com, rnayak@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Jon Hunter <jon-hunter@ti.com> [120716 09:01]:
-> On 07/13/2012 09:15 PM, Rob Herring wrote:
+* Arnd Bergmann <arnd@arndb.de> [120716 12:51]:
+> On Monday 16 July 2012, ABRAHAM, KISHON VIJAY wrote:
+> > >>
+> > >> I think we should reconsider the idea of drivers/bus/ with a file per
+> > >> bus in there at least for new buses, but doing a new drivers/scp/
+> > >> would be ok for me if there is enough opposition against the idea
+> > >> of drivers/bus aggregating different buses.
+> > >
+> > > I don't mind either way. The fact is that this ocp-to-scp bridge is
+> > > really a TI/OMAP thing. Not sure it deserves a directory of its own.
+> > 
+> > Ok. Then I'll have a file in drivers/bus/ for ocp2scp driver.
 > 
-> Tony, Tarun,
-> 
-> How would you feel on replacing omap_dmtimer_request_specific(int id)
-> with say omap_dm_timer_request_by_cap(int cap)?
-> 
-> I was thinking of changing the name so that it is clear that the API has
-> changed. The "int cap" passed to the above function would be an OR of
-> the appropriate the capabilities flags we have in dmtimer.h ...
-> 
-> /* timer capabilities used in hwmod database */
-> #define OMAP_TIMER_SECURE                               0x80000000
-> #define OMAP_TIMER_ALWON                                0x40000000
-> #define OMAP_TIMER_HAS_PWM                              0x20000000
-> ...
+> Sounds good to me. I don't care if it's the only file in that directory.
+> We can point the next person to a bus with a single file to that directory
+> and let them add theirs.
 
-That may break coprocessors where the firmware may expect a hardcoded
-specific timer.. So at least that should be checked before the change.
-If the specific timer is still needed for some firmware, it's best to
-add a separate function for the capabilities.
-
-Also, I believe it's up to the firmware running in secure mode to
-select the secure timers. So unless there's some way to query which
-timers are claimed by the secure mode, that too needs to be passed
-via DT.
+Yes great. Sounds like that's where the omap GPMC bus driver should
+end up going eventually.
 
 Regards,
 
