@@ -1,68 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the i2c-embedded
- tree
-Date: Wed, 18 Jul 2012 08:35:21 +0100
-Message-ID: <50066739.4010206@linaro.org>
-References: <5003FB7C.4030509@linaro.org> <20120717130650.GB27595@sirena.org.uk> <500568D9.10805@linaro.org> <20120717133550.GC4477@opensource.wolfsonmicro.com> <50057058.2060002@linaro.org> <20120717142222.GE4477@opensource.wolfsonmicro.com> <50057C1A.80606@linaro.org> <20120717152001.GF4477@opensource.wolfsonmicro.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [RFC/PATCH 06/13] media: s5p-fimc: Add device tree support for
+ FIMC-LITE
+Date: Wed, 18 Jul 2012 09:57:34 +0200 (CEST)
+Message-ID: <alpine.DEB.2.00.1207180939290.6403@axis700.grange>
+References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com>
+ <1337975573-27117-6-git-send-email-s.nawrocki@samsung.com>
+ <Pine.LNX.4.64.1207161114130.12302@axis700.grange> <5005B51E.20505@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <20120717152001.GF4477@opensource.wolfsonmicro.com>
-Sender: linux-next-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5005B51E.20505@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 17/07/12 16:20, Mark Brown wrote:
-> On Tue, Jul 17, 2012 at 03:52:10PM +0100, Lee Jones wrote:
->=20
->> I think it would be okay to take the 3 patches due for the v3.6
->> merge window, which target the nmk-i2c driver. If any consolidation
->> happens in the mean-time/future I will personally do the work to
->> bring the nmk-i2c into line to use any generic bindings which
->> result.
->=20
->> No one else is ever going to use these vendor specific bindings, so
->> I'm sure no issues will arise. It also means that we have a fully
->> enabled driver which is capable of receiving a new configuration via
->> minor changes to the dts, which is important for the current (only)
->> user of this driver for an upcoming project.
->=20
-> So, this is pretty much what vendors always say about this stuff...
+Hi Sylwester
 
-I agree, but in this instance it really does stand to reason.
+On Tue, 17 Jul 2012, Sylwester Nawrocki wrote:
 
-1. No unified bindings currently exist.
-2. I don't have time to create them.
-3. It will probably take quite a bit of time for someone else to get ro=
-und to creating them.
-4. The bindings I'm proposing are siloed by vendor and driver, so will =
-cause no harm.
-5. I've already volunteered to move them over to the unified ones once =
-created.
-6. These allow support for the driver to work with DT, at the moment it=
- does not.
+> On 07/16/2012 11:15 AM, Guennadi Liakhovetski wrote:
+> > > --- a/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
+> > > +++ b/Documentation/devicetree/bindings/camera/soc/samsung-fimc.txt
+> > > @@ -39,6 +39,21 @@ Required properties:
+> > >   	       depends on the SoC revision. For S5PV210 valid values are:
+> > >   	       0...2, for Exynos4x1x: 0...3.
+> > > 
+> > > +
+> > > +'fimc-lite' device node
+> > > +-----------------------
+> > > +
+> > > +Required properties:
+> > > +
+> > > +- compatible : should be one of:
+> > > +		"samsung,exynos4212-fimc";
+> > > +		"samsung,exynos4412-fimc";
+> > > +- reg	     : physical base address and size of the device's memory
+> > > mapped
+> > > +	       registers;
+> > > +- interrupts : should contain FIMC-LITE interrupt;
+> > > +- cell-index : FIMC-LITE IP instance index;
+> > 
+> > Same as in an earlier patch - not sure this is needed.
+> 
+> It is needed for setting up a pipeline of multiple sub-device
+> within a SoC. As I commented on patch 2/13 I'd like to replace
+> this with proper entries in the "aliases" node. Some sub-devices
+> have registers that these indexes need to be directly written to.
 
-Personally, I think there is more to be gained by applying the (working=
-) vendor specific bindings to the vendor specific driver until some mor=
-e consolidated ones appear.
+Aha, so, these are not purely software indices, that you just use to 
+identify your devices, these are actual hardware values? You really have 
+to write, e.g., "1" into a resizer register to connect it to a certain 
+capture engine? Ok, in this case it indeed might make sense to have these 
+values in the DT. Not sure how best to call these properties, or whether 
+aliases is the best solution, but that's already a detail. And btw, if you 
+do decide to keep this as a property, maybe this is one of the cases, 
+where you'd want to mark it with your hardware type, like "fimc,cell-id" 
+or similar?
 
-> Looking at what's specified in the platform data in the current kerne=
-l
-> it seems like there's a mixture of things in there that are board and
-> silicon specific.  We've got parameters like the the speed mode and
-> timeout which are reasonably board specific but we've also got things
-> like the FIFO sizes which shouldn't be at all board specific and slsu
-> which really looks like it's something that that the driver ought to =
-be
-> able to figure out for itself.
->=20
-
-
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-M: +44 77 88 633 515=20
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
