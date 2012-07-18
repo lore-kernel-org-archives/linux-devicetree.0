@@ -1,74 +1,66 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the
- i2c-embedded tree
-Date: Wed, 18 Jul 2012 10:59:37 +0100
-Message-ID: <20120718095937.GB22739@opensource.wolfsonmicro.com>
-References: <5003FB7C.4030509@linaro.org>
- <20120717130650.GB27595@sirena.org.uk>
- <500568D9.10805@linaro.org>
- <20120717133550.GC4477@opensource.wolfsonmicro.com>
- <50057058.2060002@linaro.org>
- <20120717142222.GE4477@opensource.wolfsonmicro.com>
- <50057C1A.80606@linaro.org>
- <20120717152001.GF4477@opensource.wolfsonmicro.com>
- <20120718053341.GA4009@S2100-06.ap.freescale.net>
+From: "Gupta, Ajay Kumar" <ajay.gupta-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v2 06/11] arm/dts: am33xx: Add dt data for usbss
+Date: Wed, 18 Jul 2012 10:03:15 +0000
+Message-ID: <47CEF8C4B26E8C44B22B028A650E0EA93EADB1C5@DBDE01.ent.ti.com>
+References: <1342516407-16515-1-git-send-email-ajay.gupta@ti.com>
+ <1342516407-16515-7-git-send-email-ajay.gupta@ti.com>
+ <50055CD9.3060300@mvista.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+pHx0qQiF2pBVqBT"
-Return-path: <linux-next-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120718053341.GA4009@S2100-06.ap.freescale.net>
-Sender: linux-next-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linus Walleij <linus.walleij@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, linux-kernel@vger.kernel.org, Deepak Saxena <dsaxena@linaro.org>, linux-next@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50055CD9.3060300-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+> On 17-07-2012 13:13, Ajay Kumar Gupta wrote:
+> 
+> > Added device tree data for usbss on am33xx. There are two musb
+> controllers
+> > on am33xx platform so have port0_mode and port1_mode additional data.
+> 
+> > Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
+> > ---
+> >   arch/arm/boot/dts/am33xx.dtsi |   11 +++++++++++
+> >   1 files changed, 11 insertions(+), 0 deletions(-)
+> 
+> > diff --git a/arch/arm/boot/dts/am33xx.dtsi
+> b/arch/arm/boot/dts/am33xx.dtsi
+> > index 59509c4..b572803 100644
+> > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > @@ -154,5 +154,16 @@
+> >   			#size-cells = <0>;
+> >   			ti,hwmods = "i2c3";
+> >   		};
+> > +
+> > +		usb_otg_hs: usb_otg_hs@47400000 {
+> 
+>     The "reg" property is absent, so why did you give the node name the
+> address postfix?
 
---+pHx0qQiF2pBVqBT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Currently "reg" property is coming from "ti hwmods".
 
-On Wed, Jul 18, 2012 at 01:33:42PM +0800, Shawn Guo wrote:
+Thanks,
+Ajay
+> 
+> > +			compatible = "ti,musb-am33xx";
+> > +			ti,hwmods = "usb_otg_hs";
+> > +			multipoint = <1>;
+> > +			num_eps = <16>;
+> > +			ram_bits = <12>;
+> > +			port0_mode = <3>;
+> > +			port1_mode = <1>;
+> > +			power = <250>;
+> > +		};
+> 
+> WBR, Sergei
 
-> I have an IP block getting different FIFO size on different IMX SoCs.
-> We could introduce a new compatible string for driver to figure it out,
-> but I think the simpler way is just have the data encoded in device
-> tree.  In any case DT is not completely limited in encoding board
-> specific data.  Today, we have IO region and interrupt number of
-> hardware blocks encoded in DT, and to me, FIFO size could just be
-> another aspect of hardware block we could choose to encode in DT.
-
-So, this is part of the problem with encoding the description of the SoC
-into the DT - we're not doing a good job of splitting out the silicon
-description from the board specific description which is not a triumph
-for maintainability since it means that we end up needing to modify the
-DT for every board using the silicon if we want to use the new feature
-(assuming people maintain binary compatibility with old DTs, which we
-don't do a good job at either even for established DT architectures).
-
-It's not the using device tree bit that creates concern for me here,
-it's the fact that the board and silicon aren't being separated.
-
---+pHx0qQiF2pBVqBT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQBoj1AAoJEBus8iNuMP3dKsoP/jz7hlUOFJ+Hq5WtbuQwHWj3
-lPVHrs2rkZzb5CEXnnJ2YdfnwouEhYtoH/SxypUSlxOa8nFqjH5ZwF3Sil5IS8RC
-cYgOT6Olkt684XwtTx6J2Q40MpY0gVCCOCKfbnc1lp6t3mnySNtSEuwYJGWAaeps
-UgC3IqNrC0Vi86+vIETuJ1JU8JVpjwVuko0OD0KRpyckbnPkNpTM90kKi7DlsKI1
-gyvxWpDp8no0liclfb67osBPXz75Q1okzU6G5Iz2N3VWz0Tj/aHOS8JMQ7ZXWBQI
-FcAqHPMxGeq6Ez22HPUMeJ4hcRwFGWutPFgbsepCfU+qZy6UbiMfWTIOmuHF35tW
-QkEqTWgtpJNlzSegueiiGpR4KUKtSOLU2+qBVEAH46RXIbm7iPnepi1v5vka2b0i
-Pq1OeYXyFtkVIfg5vg0bnPXsuZ0bJDkcyA/i1Cfc3Iq2lkNv57CUh+dOXjW4y38b
-qcXxNwy7hPewbe5dn10hyZkeUj0Gs2sFJn4upMNWdKh/f7XwHAWac+nP4BvTLRCJ
-z7L2jeSq+Ldi1OMcGkB0i07dsaI0AGhip1ynSxJY1c+ohhwt5RUbhnXKmIZy+7PX
-vANGifd39Jv5vvYdVsjupm5eEdPiNmDqboS7RI0NCQPVNw9WsKv6jFwW/0jGHdvr
-00gtjLoGNXqK3QPT3D0d
-=HT/j
------END PGP SIGNATURE-----
-
---+pHx0qQiF2pBVqBT--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
