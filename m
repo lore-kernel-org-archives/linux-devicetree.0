@@ -1,95 +1,76 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: linux-next: manual merge of the arm-soc tree with the i2c-embedded
- tree
-Date: Wed, 18 Jul 2012 12:24:15 +0100
-Message-ID: <50069CDF.7000202@linaro.org>
-References: <50066739.4010206@linaro.org> <20120718111226.GH22739@opensource.wolfsonmicro.com>
+From: "Gupta, Ajay Kumar" <ajay.gupta-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v2 06/11] arm/dts: am33xx: Add dt data for usbss
+Date: Wed, 18 Jul 2012 12:37:23 +0000
+Message-ID: <47CEF8C4B26E8C44B22B028A650E0EA93EADB646@DBDE01.ent.ti.com>
+References: <1342516407-16515-1-git-send-email-ajay.gupta@ti.com>
+ <1342516407-16515-7-git-send-email-ajay.gupta@ti.com>
+ <50055CD9.3060300@mvista.com>
+ <47CEF8C4B26E8C44B22B028A650E0EA93EADB1C5@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <20120718111226.GH22739@opensource.wolfsonmicro.com>
-Sender: linux-next-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>, Linus Walleij <linus.walleij@stericsson.com>, Stephen Warren <swarren@wwwdotorg.org>, Deepak Saxena <dsaxena@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <47CEF8C4B26E8C44B22B028A650E0EA93EADB1C5-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/07/12 12:12, Mark Brown wrote:
-> On Wed, Jul 18, 2012 at 08:35:21AM +0100, Lee Jones wrote:
->
-> Fix your mailer to word wrap within paragraphs.  I've reformatted you=
-r
-> mail for legibility.
+Hi
+> > On 17-07-2012 13:13, Ajay Kumar Gupta wrote:
+> >
+> > > Added device tree data for usbss on am33xx. There are two musb
+> > controllers
+> > > on am33xx platform so have port0_mode and port1_mode additional
+> data.
+> >
+> > > Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
+> > > ---
+> > >   arch/arm/boot/dts/am33xx.dtsi |   11 +++++++++++
+> > >   1 files changed, 11 insertions(+), 0 deletions(-)
+> >
+> > > diff --git a/arch/arm/boot/dts/am33xx.dtsi
+> > b/arch/arm/boot/dts/am33xx.dtsi
+> > > index 59509c4..b572803 100644
+> > > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > > @@ -154,5 +154,16 @@
+> > >   			#size-cells = <0>;
+> > >   			ti,hwmods = "i2c3";
+> > >   		};
+> > > +
+> > > +		usb_otg_hs: usb_otg_hs@47400000 {
+> >
+> >     The "reg" property is absent, so why did you give the node name
+> the
+> > address postfix?
+> 
+> Currently "reg" property is coming from "ti hwmods".
 
-Does it always do that, or was it just this time? It's setup to=20
-word-wrap, for instance this paragraph should. I have an add-on, which=20
-disables wrapping, but I only enable that when I send individual patche=
-s=20
-out. I know it used to work, but I have a feeling it's broken.
+I meant base addresses are coming from hwmods and so there is no "reg"
+property added here. I will update the patch dropping address postfix.
 
->> I agree, but in this instance it really does stand to reason.
->
->> 1. No unified bindings currently exist.
->> 2. I don't have time to create them.
->> 3. It will probably take quite a bit of time for someone else to get
->>     round to creating them.
->> 4. The bindings I'm proposing are siloed by vendor and driver, so wi=
-ll
->>     cause no harm.
->
-> Right, this is just a restatement of the standard vendor line.
->
-> If the issue is purely about having generic bindings quite frankly it=
-'s
-> very hard to see how it could take much time or effort to handle the
-> generic bits for I2C, it's basically just the maximum bus frequency a=
-nd
+Ajay
 
-The frequency is already a generic binding, it's the others which need=20
-alignment.
-
-> possibly also the various fast modes (though to a good approximation =
-it
-> seems reasonable to just infer them from the bus frequency and then s=
-ee
-> if we need any more).  One thing I frequently find is that people say
-> any sort of generic work is hard without explaining why, if there are
-> complex issues that's one thing but that's often not the case.
-
-I didn't say it was hard, I was it was time consuming. It would require=
-=20
-looking at all of the other drivers and picking out bits which are the=20
-same. An i2c guy would be better to do it. I didn't even know what the=20
-nmk-i2c ones were (slsu, tft, rft, sm) until I was told my the author. =
-I=20
-fear the other drivers will be just as cryptic.
-
-> BTW, looking at the platform data again it seems like i2c_freq_mode i=
-t
-> seems very odd that it's driver specific?
-
-I agree.
-
->> 5. I've already volunteered to move them over to the unified ones on=
-ce
->>     created.
->> 6. These allow support for the driver to work with DT, at the moment
->>     it does not.
->
->> Personally, I think there is more to be gained by applying the
->> (working) vendor specific bindings to the vendor specific driver unt=
-il
->> some more consolidated ones appear.
->
-> Again, vendors always make great promises about how they're going to
-> keep everything up to date...
-
-I'm not a vendor. I also keep my promises. :)
-
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-M: +44 77 88 633 515
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> > > +			compatible = "ti,musb-am33xx";
+> > > +			ti,hwmods = "usb_otg_hs";
+> > > +			multipoint = <1>;
+> > > +			num_eps = <16>;
+> > > +			ram_bits = <12>;
+> > > +			port0_mode = <3>;
+> > > +			port1_mode = <1>;
+> > > +			power = <250>;
+> > > +		};
+> >
+> > WBR, Sergei
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap"
+> in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
