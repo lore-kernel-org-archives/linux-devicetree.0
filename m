@@ -1,15 +1,13 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] PM / OPP: Initialize OPP table from device tree
-Date: Fri, 20 Jul 2012 00:00:58 +0800
-Message-ID: <20120719160055.GA30461@S2101-09.ap.freescale.net>
-References: <1342630669-27546-1-git-send-email-shawn.guo@linaro.org>
- <201207182136.43507.rjw@sisk.pl>
+From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Subject: [PATCH 2/2] ARM: vt8500: Add support for UHCI companion controller
+Date: Fri, 20 Jul 2012 04:07:55 +1200
+Message-ID: <1342714075-15006-2-git-send-email-linux@prisktech.co.nz>
+References: <1342714075-15006-1-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201207182136.43507.rjw-KKrjLPT3xs0@public.gmane.org>
+In-Reply-To: <1342714075-15006-1-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,29 +18,229 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
+Add support for the UHCI companion controller in arch-vt8500.
+This patch is based almost entirely off uhci-grlib.c with
+additions for device tree support.
 
-On Wed, Jul 18, 2012 at 09:36:43PM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, July 18, 2012, Shawn Guo wrote:
-> > With a lot of devices booting from device tree nowadays, it requires
-> > that OPP table can be initialized from device tree.  The patch adds
-> > a helper function of_init_opp_table together with a binding doc for
-> > that purpose.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> While I can take it, I'm not going to include it into my v3.6 pull request.
-> 
-> If no one has objections, it will show up in linux-next after v3.6-rc1.
-> 
-I have a cpufreq patch depending on this one.  Since you are maintaining
-cpufreq too, I just had them be a series below and sent them all to you.
+Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+---
+ drivers/usb/host/Kconfig    |   11 +++-
+ drivers/usb/host/uhci-hcd.c |    5 ++
+ drivers/usb/host/uhci-of.c  |  158 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 172 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/usb/host/uhci-of.c
 
-  [PATCH 0/3] Add a generic cpufreq-cpu0 driver
-
-Regards,
-Shawn
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 83e58df..a79410b 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -450,7 +450,7 @@ config USB_OHCI_LITTLE_ENDIAN
+ 
+ config USB_UHCI_HCD
+ 	tristate "UHCI HCD (most Intel and VIA) support"
+-	depends on USB && (PCI || SPARC_LEON)
++	depends on USB && (PCI || SPARC_LEON || ARCH_VT8500)
+ 	---help---
+ 	  The Universal Host Controller Interface is a standard by Intel for
+ 	  accessing the USB hardware in the PC (which is also called the USB
+@@ -468,7 +468,14 @@ config USB_UHCI_HCD
+ config USB_UHCI_SUPPORT_NON_PCI_HC
+ 	bool
+ 	depends on USB_UHCI_HCD
+-	default y if SPARC_LEON
++	default y if (SPARC_LEON || ARCH_VT8500)
++
++config USB_UHCI_OF
++	bool "Generic Non-PCI UHCI Driver support"
++	depends on USB_UHCI_SUPPORT_NON_PCI_HC
++	default y if ARCH_VT8500
++	---help---
++	  Generic Non-PCI UHCI driver.
+ 
+ config USB_UHCI_BIG_ENDIAN_MMIO
+ 	bool
+diff --git a/drivers/usb/host/uhci-hcd.c b/drivers/usb/host/uhci-hcd.c
+index e4db350..fd3721c 100644
+--- a/drivers/usb/host/uhci-hcd.c
++++ b/drivers/usb/host/uhci-hcd.c
+@@ -846,6 +846,11 @@ static const char hcd_name[] = "uhci_hcd";
+ #define PLATFORM_DRIVER		uhci_grlib_driver
+ #endif
+ 
++#ifdef CONFIG_USB_UHCI_OF
++#include "uhci-of.c"
++#define PLATFORM_DRIVER		uhci_of_driver
++#endif
++
+ #if !defined(PCI_DRIVER) && !defined(PLATFORM_DRIVER)
+ #error "missing bus glue for uhci-hcd"
+ #endif
+diff --git a/drivers/usb/host/uhci-of.c b/drivers/usb/host/uhci-of.c
+new file mode 100644
+index 0000000..21c558e
+--- /dev/null
++++ b/drivers/usb/host/uhci-of.c
+@@ -0,0 +1,158 @@
++/*
++ * Generic UHCI HCD (Host Controller Driver)
++ *
++ * Copyright (c) 2011 Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
++ *
++ * This file is based on uhci-grlib.c
++ * (C) Copyright 2004-2007 Alan Stern, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
++ */
++
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++static int uhci_of_init(struct usb_hcd *hcd)
++{
++	struct uhci_hcd *uhci = hcd_to_uhci(hcd);
++
++	uhci->rh_numports = uhci_count_ports(hcd);
++
++	/* Set up pointers to to generic functions */
++	uhci->reset_hc = uhci_generic_reset_hc;
++	uhci->check_and_reset_hc = uhci_generic_check_and_reset_hc;
++
++	/* No special actions need to be taken for the functions below */
++	uhci->configure_hc = NULL;
++	uhci->resume_detect_interrupts_are_broken = NULL;
++	uhci->global_suspend_mode_is_broken = NULL;
++
++	/* Reset if the controller isn't already safely quiescent. */
++	check_and_reset_hc(uhci);
++	return 0;
++}
++
++static const struct hc_driver uhci_of_hc_driver = {
++	.description =		hcd_name,
++	.product_desc =		"Generic UHCI Host Controller",
++	.hcd_priv_size =	sizeof(struct uhci_hcd),
++
++	/* Generic hardware linkage */
++	.irq =			uhci_irq,
++	.flags =		HCD_MEMORY | HCD_USB11,
++
++	/* Basic lifecycle operations */
++	.reset =		uhci_of_init,
++	.start =		uhci_start,
++#ifdef CONFIG_PM
++	.pci_suspend =		NULL,
++	.pci_resume =		NULL,
++	.bus_suspend =		uhci_rh_suspend,
++	.bus_resume =		uhci_rh_resume,
++#endif
++	.stop =			uhci_stop,
++
++	.urb_enqueue =		uhci_urb_enqueue,
++	.urb_dequeue =		uhci_urb_dequeue,
++
++	.endpoint_disable =	uhci_hcd_endpoint_disable,
++	.get_frame_number =	uhci_hcd_get_frame_number,
++
++	.hub_status_data =	uhci_hub_status_data,
++	.hub_control =		uhci_hub_control,
++};
++
++
++static int __devinit uhci_hcd_of_probe(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd;
++	struct uhci_hcd	*uhci;
++	struct resource *res;
++	int ret;
++
++	if (usb_disabled())
++		return -ENODEV;
++
++	hcd = usb_create_hcd(&uhci_of_hc_driver, &pdev->dev,
++			pdev->name);
++	if (!hcd)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	hcd->rsrc_start = res->start;
++	hcd->rsrc_len = resource_size(res);
++
++	if (!request_mem_region(hcd->rsrc_start, hcd->rsrc_len, hcd_name)) {
++		pr_err("%s: request_mem_region failed\n", __func__);
++		ret = -EBUSY;
++		goto err_rmr;
++	}
++
++	hcd->regs = ioremap(hcd->rsrc_start, hcd->rsrc_len);
++	if (!hcd->regs) {
++		pr_err("%s: ioremap failed\n", __func__);
++		ret = -ENOMEM;
++		goto err_irq;
++	}
++
++	uhci = hcd_to_uhci(hcd);
++
++	uhci->regs = hcd->regs;
++
++	ret = usb_add_hcd(hcd, pdev->resource[1].start, IRQF_DISABLED |
++								IRQF_SHARED);
++	if (ret)
++		goto err_uhci;
++
++	return 0;
++
++err_uhci:
++	iounmap(hcd->regs);
++err_irq:
++	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
++err_rmr:
++	usb_put_hcd(hcd);
++
++	return ret;
++}
++
++static int uhci_hcd_of_remove(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(pdev);
++
++	usb_remove_hcd(hcd);
++	iounmap(hcd->regs);
++	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
++	usb_put_hcd(hcd);
++	platform_set_drvdata(pdev, NULL);
++
++	return 0;
++}
++
++/* Make sure the controller is quiescent and that we're not using it
++ * any more.  This is mainly for the benefit of programs which, like kexec,
++ * expect the hardware to be idle: not doing DMA or generating IRQs.
++ *
++ * This routine may be called in a damaged or failing kernel.  Hence we
++ * do not acquire the spinlock before shutting down the controller.
++ */
++static void uhci_hcd_of_shutdown(struct platform_device *op)
++{
++	struct usb_hcd *hcd = dev_get_drvdata(&op->dev);
++
++	uhci_hc_died(hcd_to_uhci(hcd));
++}
++
++static const struct of_device_id of_uhci_ids[] = {
++	{ .compatible = "of-uhci", },
++	{}
++};
++
++static struct platform_driver uhci_of_driver = {
++	.probe		= uhci_hcd_of_probe,
++	.remove		= uhci_hcd_of_remove,
++	.shutdown	= uhci_hcd_of_shutdown,
++	.driver = {
++		.name = "of-uhci",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(of_uhci_ids),
++	},
++};
+-- 
+1.7.2.5
