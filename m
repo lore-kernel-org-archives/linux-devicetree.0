@@ -1,313 +1,277 @@
-From: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 03/11] usb: musb: am335x: add support for dual instance
-Date: Thu, 19 Jul 2012 11:11:31 +0530
-Message-ID: <1342676499-32507-4-git-send-email-ajay.gupta@ti.com>
-References: <1342676499-32507-1-git-send-email-ajay.gupta@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH RESEND V2] input: gpio_keys_polled: convert to dt
+Date: Thu, 19 Jul 2012 00:27:51 -0700
+Message-ID: <20120719072751.GC3300@core.coreip.homeip.net>
+References: <1341858707-1771-1-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1342676499-32507-1-git-send-email-ajay.gupta-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1341858707-1771-1-git-send-email-aletes.xgr@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Tobias Klauser <tklauser@distanz.ch>, David Jander <david@protonic.nl>, JJ Ding <dgdunix@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-AM335x and TI81xx platform has dual musb controller so updating the
-musb_dspc.c to support the same.
+Hi Alexandre,
 
-Changes:
-	- Moved otg_workaround timer to glue structure
-	- Moved static local variable last_timer to glue structure
-	- PHY on/off related cleanups
+On Mon, Jul 09, 2012 at 03:31:43PM -0300, Alexandre Pereira da Silva wrote:
+> @@ -38,7 +40,7 @@ struct gpio_keys_button_data {
+>  struct gpio_keys_polled_dev {
+>  	struct input_polled_dev *poll_dev;
+>  	struct device *dev;
+> -	struct gpio_keys_platform_data *pdata;
+> +	struct gpio_keys_platform_data pdata;
+>  	struct gpio_keys_button_data data[0];
+>  };
 
-Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
----
- drivers/usb/musb/musb_dsps.c |   93 +++++++++++++++++++++++++----------------
- 1 files changed, 57 insertions(+), 36 deletions(-)
+Instead of using a copy of pdata how about the patch below?
 
-diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
-index 2174699..a2c8a06 100644
---- a/drivers/usb/musb/musb_dsps.c
-+++ b/drivers/usb/musb/musb_dsps.c
-@@ -105,6 +105,8 @@ struct dsps_musb_wrapper {
- 	/* miscellaneous stuff */
- 	u32		musb_core_offset;
- 	u8		poll_seconds;
-+	/* number of musb instances */
-+	u8		instances;
- };
- 
- /**
-@@ -112,16 +114,18 @@ struct dsps_musb_wrapper {
-  */
- struct dsps_glue {
- 	struct device *dev;
--	struct platform_device *musb;	/* child musb pdev */
-+	struct platform_device *musb[2];	/* child musb pdev */
- 	const struct dsps_musb_wrapper *wrp; /* wrapper register offsets */
--	struct timer_list timer;	/* otg_workaround timer */
--	u32 __iomem *usb_ctrl;
-+	struct timer_list timer[2];	/* otg_workaround timer */
-+	unsigned long last_timer[2];    /* last timer data for each instance */
-+	u32 __iomem *usb_ctrl[2];
- 	u8      usbss_rev;
- };
- 
- /**
-  * musb_dsps_phy_control - phy on/off
-  * @glue: struct dsps_glue *
-+ * @id: musb instance
-  * @on: flag for phy to be switched on or off
-  *
-  * This is to enable the PHY using usb_ctrl register in system control
-@@ -130,11 +134,11 @@ struct dsps_glue {
-  * XXX: This function will be removed once we have a seperate driver for
-  * control module
-  */
--static void musb_dsps_phy_control(struct dsps_glue *glue, u8 on)
-+static void musb_dsps_phy_control(struct dsps_glue *glue, u8 id, u8 on)
- {
- 	u32 usbphycfg;
- 
--	usbphycfg = __raw_readl(glue->usb_ctrl);
-+	usbphycfg = __raw_readl(glue->usb_ctrl[id]);
- 
- 	if (on) {
- 		if (glue->usbss_rev == MUSB_USBSS_REV_816X) {
-@@ -157,7 +161,7 @@ static void musb_dsps_phy_control(struct dsps_glue *glue, u8 on)
- 				glue->usbss_rev == MUSB_USBSS_REV_33XX)
- 			usbphycfg |= USBPHY_CM_PWRDN | USBPHY_OTG_PWRDN;
- 	}
--	__raw_writel(usbphycfg, glue->usb_ctrl);
-+	__raw_writel(usbphycfg, glue->usb_ctrl[id]);
- }
- /**
-  * dsps_musb_enable - enable interrupts
-@@ -247,7 +251,7 @@ static void otg_timer(unsigned long _musb)
- 
- 		devctl = dsps_readb(mregs, MUSB_DEVCTL);
- 		if (devctl & MUSB_DEVCTL_BDEVICE)
--			mod_timer(&glue->timer,
-+			mod_timer(&glue->timer[musb->id],
- 					jiffies + wrp->poll_seconds * HZ);
- 		else
- 			musb->xceiv->state = OTG_STATE_A_IDLE;
-@@ -263,7 +267,6 @@ static void dsps_musb_try_idle(struct musb *musb, unsigned long timeout)
- 	struct device *dev = musb->controller;
- 	struct platform_device *pdev = to_platform_device(dev->parent);
- 	struct dsps_glue *glue = platform_get_drvdata(pdev);
--	static unsigned long last_timer;
- 
- 	if (!is_otg_enabled(musb))
- 		return;
-@@ -276,22 +279,23 @@ static void dsps_musb_try_idle(struct musb *musb, unsigned long timeout)
- 				musb->xceiv->state == OTG_STATE_A_WAIT_BCON)) {
- 		dev_dbg(musb->controller, "%s active, deleting timer\n",
- 				otg_state_string(musb->xceiv->state));
--		del_timer(&glue->timer);
--		last_timer = jiffies;
-+		del_timer(&glue->timer[musb->id]);
-+		glue->last_timer[musb->id] = jiffies;
- 		return;
- 	}
- 
--	if (time_after(last_timer, timeout) && timer_pending(&glue->timer)) {
-+	if (time_after(glue->last_timer[musb->id], timeout) &&
-+				timer_pending(&glue->timer[musb->id])) {
- 		dev_dbg(musb->controller,
- 			"Longer idle timer already pending, ignoring...\n");
- 		return;
- 	}
--	last_timer = timeout;
-+	glue->last_timer[musb->id] = timeout;
- 
- 	dev_dbg(musb->controller, "%s inactive, starting idle timer for %u ms\n",
- 		otg_state_string(musb->xceiv->state),
- 			jiffies_to_msecs(timeout - jiffies));
--	mod_timer(&glue->timer, timeout);
-+	mod_timer(&glue->timer[musb->id], timeout);
- }
- 
- static irqreturn_t dsps_interrupt(int irq, void *hci)
-@@ -360,7 +364,7 @@ static irqreturn_t dsps_interrupt(int irq, void *hci)
- 			 */
- 			musb->int_usb &= ~MUSB_INTR_VBUSERROR;
- 			musb->xceiv->state = OTG_STATE_A_WAIT_VFALL;
--			mod_timer(&glue->timer,
-+			mod_timer(&glue->timer[musb->id],
- 					jiffies + wrp->poll_seconds * HZ);
- 			WARNING("VBUS error workaround (delay coming)\n");
- 		} else if (is_host_enabled(musb) && drvvbus) {
-@@ -368,7 +372,7 @@ static irqreturn_t dsps_interrupt(int irq, void *hci)
- 			MUSB_HST_MODE(musb);
- 			musb->xceiv->otg->default_a = 1;
- 			musb->xceiv->state = OTG_STATE_A_WAIT_VRISE;
--			del_timer(&glue->timer);
-+			del_timer(&glue->timer[musb->id]);
- 		} else {
- 			musb->is_active = 0;
- 			MUSB_DEV_MODE(musb);
-@@ -395,7 +399,8 @@ static irqreturn_t dsps_interrupt(int irq, void *hci)
- 
- 	/* Poll for ID change */
- 	if (is_otg_enabled(musb) && musb->xceiv->state == OTG_STATE_B_IDLE)
--		mod_timer(&glue->timer, jiffies + wrp->poll_seconds * HZ);
-+		mod_timer(&glue->timer[musb->id],
-+				jiffies + wrp->poll_seconds * HZ);
- 
- 	spin_unlock_irqrestore(&musb->lock, flags);
- 
-@@ -429,13 +434,14 @@ static int dsps_musb_init(struct musb *musb)
- 	}
- 
- 	if (is_host_enabled(musb))
--		setup_timer(&glue->timer, otg_timer, (unsigned long) musb);
-+		setup_timer(&glue->timer[musb->id], otg_timer,
-+			(unsigned long) musb);
- 
- 	/* Reset the musb */
- 	dsps_writel(reg_base, wrp->control, (1 << wrp->reset));
- 
- 	/* Start the on-chip PHY and its PLL. */
--	musb_dsps_phy_control(glue, 1);
-+	musb_dsps_phy_control(glue, musb->id, 1);
- 
- 	musb->isr = dsps_interrupt;
- 
-@@ -461,10 +467,10 @@ static int dsps_musb_exit(struct musb *musb)
- 	struct dsps_glue *glue = platform_get_drvdata(pdev);
- 
- 	if (is_host_enabled(musb))
--		del_timer_sync(&glue->timer);
-+		del_timer_sync(&glue->timer[musb->id]);
- 
- 	/* Shutdown the on-chip PHY and its PLL. */
--	musb_dsps_phy_control(glue, 0);
-+	musb_dsps_phy_control(glue, musb->id, 0);
- 
- 	/* NOP driver needs change if supporting dual instance */
- 	usb_put_phy(musb->xceiv);
-@@ -504,8 +510,8 @@ static int __devinit dsps_create_musb_pdev(struct dsps_glue *glue, u8 id)
- 		goto err0;
- 	}
- 
--	glue->usb_ctrl = devm_request_and_ioremap(&pdev->dev, res);
--	if (glue->usb_ctrl == NULL) {
-+	glue->usb_ctrl[id] = devm_request_and_ioremap(&pdev->dev, res);
-+	if (glue->usb_ctrl[id] == NULL) {
- 		dev_err(dev, "Failed to obtain usb_ctrl%d memory\n", id);
- 		ret = -ENODEV;
- 		goto err0;
-@@ -554,7 +560,7 @@ static int __devinit dsps_create_musb_pdev(struct dsps_glue *glue, u8 id)
- 	musb->dev.dma_mask		= &musb_dmamask;
- 	musb->dev.coherent_dma_mask	= musb_dmamask;
- 
--	glue->musb			= musb;
-+	glue->musb[id]			= musb;
- 
- 	pdata->platform_ops		= &dsps_ops;
- 
-@@ -586,11 +592,11 @@ err0:
- 	return ret;
- }
- 
--static void __devexit dsps_delete_musb_pdev(struct dsps_glue *glue)
-+static void __devexit dsps_delete_musb_pdev(struct dsps_glue *glue, u8 id)
- {
--	musb_put_id(glue->dev, glue->musb->id);
--	platform_device_del(glue->musb);
--	platform_device_put(glue->musb);
-+	musb_put_id(glue->dev, glue->musb[id]->id);
-+	platform_device_del(glue->musb[id]);
-+	platform_device_put(glue->musb[id]);
- }
- 
- static int __devinit dsps_probe(struct platform_device *pdev)
-@@ -601,7 +607,7 @@ static int __devinit dsps_probe(struct platform_device *pdev)
- 	struct dsps_glue *glue;
- 	struct resource *iomem;
- 	u32 __iomem *usbss;
--	int ret;
-+	int ret, i;
- 
- 	/* allocate glue */
- 	glue = kzalloc(sizeof(*glue), GFP_KERNEL);
-@@ -645,11 +651,16 @@ static int __devinit dsps_probe(struct platform_device *pdev)
- 		goto err2;
- 	}
- 
--	/* create the child platform device for first instances of musb */
--	ret = dsps_create_musb_pdev(glue, 0);
--	if (ret != 0) {
--		dev_err(&pdev->dev, "failed to create child pdev\n");
--		goto err3;
-+	/* create the child platform device for all instances of musb */
-+	for (i = 0; i < wrp->instances ; i++) {
-+		ret = dsps_create_musb_pdev(glue, i);
-+		if (ret != 0) {
-+			dev_err(&pdev->dev, "failed to create child pdev\n");
-+			/* release resources of previously created instances */
-+			for (i--; i >= 0 ; i--)
-+				dsps_delete_musb_pdev(glue, i);
-+			goto err3;
-+		}
- 	}
- 
- 	/* read the usbss revision register */
-@@ -670,9 +681,12 @@ err0:
- static int __devexit dsps_remove(struct platform_device *pdev)
- {
- 	struct dsps_glue *glue = platform_get_drvdata(pdev);
-+	const struct dsps_musb_wrapper *wrp = glue->wrp;
-+	int i;
- 
- 	/* delete the child platform device */
--	dsps_delete_musb_pdev(glue);
-+	for (i = 0; i < wrp->instances ; i++)
-+		dsps_delete_musb_pdev(glue, i);
- 
- 	/* disable usbss clocks */
- 	pm_runtime_put(&pdev->dev);
-@@ -687,9 +701,12 @@ static int dsps_suspend(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev->parent);
- 	struct dsps_glue *glue = platform_get_drvdata(pdev);
-+	const struct dsps_musb_wrapper *wrp = glue->wrp;
-+	int i;
- 
- 	/* Shutdown the on-chip PHY and its PLL. */
--	musb_dsps_phy_control(glue, 0);
-+	for (i = 0 ; i < wrp->instances ; i++)
-+		musb_dsps_phy_control(glue, i, 0);
- 
- 	return 0;
- }
-@@ -698,9 +715,12 @@ static int dsps_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev->parent);
- 	struct dsps_glue *glue = platform_get_drvdata(pdev);
-+	const struct dsps_musb_wrapper *wrp = glue->wrp;
-+	int i;
- 
- 	/* Start the on-chip PHY and its PLL. */
--	musb_dsps_phy_control(glue, 1);
-+	for (i = 0 ; i < wrp->instances ; i++)
-+		musb_dsps_phy_control(glue, i, 1);
- 
- 	return 0;
- }
-@@ -736,6 +756,7 @@ static const struct dsps_musb_wrapper ti81xx_driver_data __devinitconst = {
- 	.rxep_bitmap		= (0xfffe << 16),
- 	.musb_core_offset	= 0x400,
- 	.poll_seconds		= 2,
-+	.instances		= 2,
- };
- 
- static const struct platform_device_id musb_dsps_id_table[] __devinitconst = {
+Thanks.
+
 -- 
-1.7.0.4
+Dmitry
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Input: gpio_keys_polled - convert to dt
+
+From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+
+Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+
+ .../devicetree/bindings/input/gpio-keys-polled.txt |   38 ++++++
+ drivers/input/keyboard/gpio_keys_polled.c          |  124 +++++++++++++++++++-
+ 2 files changed, 157 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+
+
+diff --git a/Documentation/devicetree/bindings/input/gpio-keys-polled.txt b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+new file mode 100644
+index 0000000..313abef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+@@ -0,0 +1,38 @@
++Device-Tree bindings for input/gpio_keys_polled.c keyboard driver
++
++Required properties:
++	- compatible = "gpio-keys-polled";
++	- poll-interval: Poll interval time in milliseconds
++
++Optional properties:
++	- autorepeat: Boolean, Enable auto repeat feature of Linux input
++	  subsystem.
++
++Each button (key) is represented as a sub-node of "gpio-keys-polled":
++Subnode properties:
++
++	- gpios: OF device-tree gpio specification.
++	- label: Descriptive name of the key.
++	- linux,code: Keycode to emit.
++
++Optional subnode-properties:
++	- linux,input-type: Specify event type this button/key generates.
++	  If not specified defaults to <1> == EV_KEY.
++	- debounce-interval: Debouncing interval time in milliseconds.
++	  If not specified defaults to 5.
++	- gpio-key,wakeup: Boolean, button can wake-up the system.
++
++Example nodes:
++
++	gpio_keys_polled {
++			compatible = "gpio-keys-polled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			poll-interval = <100>;
++			autorepeat;
++			button@21 {
++				label = "GPIO Key UP";
++				linux,code = <103>;
++				gpios = <&gpio1 0 1>;
++			};
++			...
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index 2619297..5a8856e6 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -25,6 +25,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio_keys.h>
++#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
+ 
+ #define DRV_NAME	"gpio-keys-polled"
+ 
+@@ -100,6 +102,96 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
+ 		pdata->disable(bdev->dev);
+ }
+ 
++#ifdef CONFIG_OF
++static struct gpio_keys_platform_data * __devinit
++gpio_keys_polled_get_devtree_pdata(struct device *dev)
++{
++	struct device_node *node, *pp;
++	struct gpio_keys_platform_data *pdata;
++	struct gpio_keys_button *button;
++	int error;
++	int nbuttons;
++	int i;
++
++	node = dev->of_node;
++	if (!node) {
++		error = -ENODEV;
++		goto err_out;
++	}
++
++	nbuttons = of_get_child_count(node);
++	if (nbuttons == 0) {
++		error = -ENODEV;
++		goto err_out;
++	}
++
++	pdata = kzalloc(sizeof(*pdata) + nbuttons * (sizeof *button),
++			GFP_KERNEL);
++	if (!pdata) {
++		error = -ENOMEM;
++		goto err_out;
++	}
++
++	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
++	of_property_read_u32(node, "poll-interval", &pdata->poll_interval);
++
++	i = 0;
++	for_each_child_of_node(node, pp) {
++		enum of_gpio_flags flags;
++
++		if (!of_find_property(pp, "gpios", NULL)) {
++			pdata->nbuttons--;
++			dev_warn(dev, "Found button without gpios\n");
++			continue;
++		}
++
++		button = &pdata->buttons[i++];
++
++		button->gpio = of_get_gpio_flags(pp, 0, &flags);
++		button->active_low = flags & OF_GPIO_ACTIVE_LOW;
++
++		if (of_property_read_u32(pp, "linux,code", &button->code)) {
++			dev_err(dev, "Button without keycode: 0x%x\n",
++				button->gpio);
++			error = -EINVAL;
++			goto err_free_pdata;
++		}
++
++		button->desc = of_get_property(pp, "label", NULL);
++
++		if (of_property_read_u32(pp, "linux,input-type", &button->type))
++			button->type = EV_KEY;
++
++		button->wakeup = !!of_get_property(pp, "gpio-key,wakeup", NULL);
++
++		if (of_property_read_u32(pp, "debounce-interval",
++					 &button->debounce_interval))
++			button->debounce_interval = 5;
++	}
++
++	return pdata;
++
++err_free_pdata:
++	kfree(pdata);
++err_out:
++	return ERR_PTR(error);
++}
++
++static struct of_device_id gpio_keys_polled_of_match[] = {
++	{ .compatible = "gpio-keys-polled", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
++
++#else
++
++static inline struct gpio_keys_platform_data *
++gpio_keys_polled_get_devtree_pdata(struct device *dev)
++{
++	return ERR_PTR(-ENODEV);
++}
++#endif
++
+ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -110,15 +202,24 @@ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
+ 	int error;
+ 	int i;
+ 
+-	if (!pdata || !pdata->poll_interval)
+-		return -EINVAL;
++	if (!pdata) {
++		pdata = gpio_keys_polled_get_devtree_pdata(dev);
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
++	}
++
++	if (!pdata->poll_interval) {
++		error = -EINVAL;
++		goto err_free_pdata;
++	}
+ 
+ 	bdev = kzalloc(sizeof(struct gpio_keys_polled_dev) +
+ 		       pdata->nbuttons * sizeof(struct gpio_keys_button_data),
+ 		       GFP_KERNEL);
+ 	if (!bdev) {
+ 		dev_err(dev, "no memory for private data\n");
+-		return -ENOMEM;
++		error = -ENOMEM;
++		goto err_free_pdata;
+ 	}
+ 
+ 	poll_dev = input_allocate_polled_device();
+@@ -197,7 +298,7 @@ static int __devinit gpio_keys_polled_probe(struct platform_device *pdev)
+ 	/* report initial state of the buttons */
+ 	for (i = 0; i < pdata->nbuttons; i++)
+ 		gpio_keys_polled_check_state(input, &pdata->buttons[i],
+-					 &bdev->data[i]);
++					     &bdev->data[i]);
+ 
+ 	return 0;
+ 
+@@ -209,8 +310,13 @@ err_free_gpio:
+ 
+ err_free_bdev:
+ 	kfree(bdev);
+-
+ 	platform_set_drvdata(pdev, NULL);
++
++err_free_pdata:
++	/* If we have no platform_data, we allocated pdata dynamically.  */
++	if (!dev_get_platdata(&pdev->dev))
++		kfree(pdata);
++
+ 	return error;
+ }
+ 
+@@ -227,6 +333,13 @@ static int __devexit gpio_keys_polled_remove(struct platform_device *pdev)
+ 
+ 	input_free_polled_device(bdev->poll_dev);
+ 
++	/*
++	 * If we had no platform_data, we allocated pdata dynamically and
++	 * must free it here.
++	 */
++	if (!dev_get_platdata(&pdev->dev))
++		kfree(pdata);
++
+ 	kfree(bdev);
+ 	platform_set_drvdata(pdev, NULL);
+ 
+@@ -239,6 +352,7 @@ static struct platform_driver gpio_keys_polled_driver = {
+ 	.driver	= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(gpio_keys_polled_of_match),
+ 	},
+ };
+ module_platform_driver(gpio_keys_polled_driver);
