@@ -1,7 +1,7 @@
 From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH 2/3] PM / OPP: Initialize OPP table from device tree
-Date: Thu, 19 Jul 2012 23:54:40 +0800
-Message-ID: <1342713281-31114-3-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH 1/3] ARM: add cpufreq transiton notifier to adjust loops_per_jiffy for smp
+Date: Thu, 19 Jul 2012 23:54:39 +0800
+Message-ID: <1342713281-31114-2-git-send-email-shawn.guo@linaro.org>
 References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,153 +9,89 @@ Return-path: <cpufreq-owner@vger.kernel.org>
 In-Reply-To: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
 Sender: cpufreq-owner@vger.kernel.org
 To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
+Cc: Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org, Richard Zhao <richard.zhao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-With a lot of devices booting from device tree nowadays, it requires
-that OPP table can be initialized from device tree.  The patch adds
-a helper function of_init_opp_table together with a binding doc for
-that purpose.
+From: Richard Zhao <richard.zhao@linaro.org>
 
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+If CONFIG_SMP, cpufreq skips loops_per_jiffy update, because different
+arch has different per-cpu loops_per_jiffy definition.
+
+Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+Acked-by: Russell King <rmk+kernel@arm.linux.org.uk>
 ---
- Documentation/devicetree/bindings/power/opp.txt |   29 ++++++++++
- drivers/base/power/opp.c                        |   66 +++++++++++++++++++++++
- include/linux/opp.h                             |    4 ++
- 3 files changed, 99 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/opp.txt
+ arch/arm/kernel/smp.c |   54 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 54 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
-new file mode 100644
-index 0000000..1dd0db2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/opp.txt
-@@ -0,0 +1,29 @@
-+* Generic OPP Interface
-+
-+SoCs have a standard set of tuples consisting of frequency and
-+voltage pairs that the device will support per voltage domain. These
-+are called Operating Performance Points or OPPs.
-+
-+Properties:
-+- operating-points: An array of 3-tuples items, and each item consists
-+  of frequency, voltage and enabling like <freq vol en>.
-+	freq: clock frequency in kHz
-+	vol: voltage in microvolt
-+	en: initially enabled (1) or not (0)
-+
-+Examples:
-+
-+cpu@0 {
-+	compatible = "arm,cortex-a9";
-+	reg = <0>;
-+	next-level-cache = <&L2>;
-+	operating-points = <
-+		/* kHz    uV    en */
-+		1200000 1275000 0
-+		996000  1225000 1
-+		792000  1100000 1
-+		672000  1100000 0
-+		396000  950000  1
-+		198000  850000  1
-+	>;
-+};
-diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
-index ac993ea..2d750f9 100644
---- a/drivers/base/power/opp.c
-+++ b/drivers/base/power/opp.c
-@@ -22,6 +22,7 @@
- #include <linux/rculist.h>
- #include <linux/rcupdate.h>
- #include <linux/opp.h>
-+#include <linux/of.h>
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 2c7217d..83412d2 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -25,6 +25,7 @@
+ #include <linux/percpu.h>
+ #include <linux/clockchips.h>
+ #include <linux/completion.h>
++#include <linux/cpufreq.h>
  
- /*
-  * Internal data structure organization with the OPP layer library is as
-@@ -674,3 +675,68 @@ struct srcu_notifier_head *opp_get_notifier(struct device *dev)
- 
- 	return &dev_opp->head;
+ #include <linux/atomic.h>
+ #include <asm/cacheflush.h>
+@@ -583,3 +584,56 @@ int setup_profiling_timer(unsigned int multiplier)
+ {
+ 	return -EINVAL;
  }
 +
-+#ifdef CONFIG_OF
-+/**
-+ * of_init_opp_table() - Initialize opp table from device tree
-+ * @dev:	device pointer used to lookup device OPPs.
-+ *
-+ * Register the initial OPP table with the OPP library for given device.
-+ */
-+int of_init_opp_table(struct device *dev)
++#ifdef CONFIG_CPU_FREQ
++
++static DEFINE_PER_CPU(unsigned long, l_p_j_ref);
++static DEFINE_PER_CPU(unsigned long, l_p_j_ref_freq);
++static unsigned long global_l_p_j_ref;
++static unsigned long global_l_p_j_ref_freq;
++
++static int cpufreq_callback(struct notifier_block *nb,
++					unsigned long val, void *data)
 +{
-+	struct device_node *np = dev->of_node;
-+	const char *propname = "operating-points";
-+	const struct property *pp;
-+	u32 *opp;
-+	int ret, i, nr;
++	struct cpufreq_freqs *freq = data;
++	int cpu = freq->cpu;
 +
-+	pp = of_find_property(np, propname, NULL);
-+	if (!pp) {
-+		dev_err(dev, "%s: Unable to find property", __func__);
-+		return -ENODEV;
-+	}
++	if (freq->flags & CPUFREQ_CONST_LOOPS)
++		return NOTIFY_OK;
 +
-+	opp = kzalloc(pp->length, GFP_KERNEL);
-+	if (!opp) {
-+		dev_err(dev, "%s: Unable to allocate array\n", __func__);
-+		return -ENOMEM;
-+	}
-+
-+	nr = pp->length / sizeof(u32);
-+	ret = of_property_read_u32_array(np, propname, opp, nr);
-+	if (ret) {
-+		dev_err(dev, "%s: Unable to read OPPs\n", __func__);
-+		goto out;
-+	}
-+
-+	nr /= 3;
-+	for (i = 0; i < nr; i++) {
-+		/*
-+		 * Each OPP is a set of tuples consisting of frequency,
-+		 * voltage and availability like <freq-kHz vol-uV enable>.
-+		 */
-+		u32 *val = opp + i * 3;
-+
-+		val[0] *= 1000;
-+		ret = opp_add(dev, val[0], val[1]);
-+		if (ret) {
-+			dev_warn(dev, "%s: Failed to add OPP %d: %d\n",
-+				 __func__, val[0], ret);
-+			continue;
-+		}
-+
-+		if (!val[2]) {
-+			ret = opp_disable(dev, val[0]);
-+			if (ret)
-+				dev_warn(dev, "%s: Failed to disable OPP %d: %d\n",
-+					 __func__, val[0], ret);
++	if (!per_cpu(l_p_j_ref, cpu)) {
++		per_cpu(l_p_j_ref, cpu) =
++			per_cpu(cpu_data, cpu).loops_per_jiffy;
++		per_cpu(l_p_j_ref_freq, cpu) = freq->old;
++		if (!global_l_p_j_ref) {
++			global_l_p_j_ref = loops_per_jiffy;
++			global_l_p_j_ref_freq = freq->old;
 +		}
 +	}
 +
-+	ret = 0;
-+out:
-+	kfree(opp);
-+	return ret;
++	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
++	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new) ||
++	    (val == CPUFREQ_RESUMECHANGE || val == CPUFREQ_SUSPENDCHANGE)) {
++		loops_per_jiffy = cpufreq_scale(global_l_p_j_ref,
++						global_l_p_j_ref_freq,
++						freq->new);
++		per_cpu(cpu_data, cpu).loops_per_jiffy =
++			cpufreq_scale(per_cpu(l_p_j_ref, cpu),
++					per_cpu(l_p_j_ref_freq, cpu),
++					freq->new);
++	}
++	return NOTIFY_OK;
 +}
-+#endif
-diff --git a/include/linux/opp.h b/include/linux/opp.h
-index 2a4e5fa..fd165ad 100644
---- a/include/linux/opp.h
-+++ b/include/linux/opp.h
-@@ -48,6 +48,10 @@ int opp_disable(struct device *dev, unsigned long freq);
- 
- struct srcu_notifier_head *opp_get_notifier(struct device *dev);
- 
-+#ifdef CONFIG_OF
-+int of_init_opp_table(struct device *dev);
-+#endif
 +
- #else
- static inline unsigned long opp_get_voltage(struct opp *opp)
- {
++static struct notifier_block cpufreq_notifier = {
++	.notifier_call  = cpufreq_callback,
++};
++
++static int __init register_cpufreq_notifier(void)
++{
++	return cpufreq_register_notifier(&cpufreq_notifier,
++						CPUFREQ_TRANSITION_NOTIFIER);
++}
++core_initcall(register_cpufreq_notifier);
++
++#endif
 -- 
 1.7.5.4
 
