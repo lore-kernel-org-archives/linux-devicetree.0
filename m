@@ -1,84 +1,45 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: [PATCH 1/2] ARM: vt8500: Update vt8500-ehci driver to support device
- tree.
-Date: Fri, 20 Jul 2012 04:07:54 +1200
-Message-ID: <1342714075-15006-1-git-send-email-linux@prisktech.co.nz>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 0/3] Add a generic cpufreq-cpu0 driver
+Date: Thu, 19 Jul 2012 20:39:39 +0200
+Message-ID: <201207192039.40213.rjw@sisk.pl>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-2"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
----
- .../devicetree/bindings/usb/vt8500-ehci.txt        |   12 ++++++++++++
- drivers/usb/host/ehci-vt8500.c                     |    9 +++++++++
- 2 files changed, 21 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/vt8500-ehci.txt
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/usb/vt8500-ehci.txt b/Documentation/devicetree/bindings/usb/vt8500-ehci.txt
-new file mode 100644
-index 0000000..c14b38c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/vt8500-ehci.txt
-@@ -0,0 +1,12 @@
-+VIA VT8500 and Wondermedia WM8xxx SoC USB controllers.
-+
-+EHCI
-+
-+Required properties:
-+ - compatible: Should be "via,vt8500-ehci" or "wm,prizm-ehci".
-+
-+usb: ehci@D8007100 {
-+	compatible = "wm,prizm-ehci", "usb-ehci";
-+	reg = <0xD8007100 0x200>;
-+	interrupts = <1>;
-+};
-diff --git a/drivers/usb/host/ehci-vt8500.c b/drivers/usb/host/ehci-vt8500.c
-index c1eda73..4ba8f0c 100644
---- a/drivers/usb/host/ehci-vt8500.c
-+++ b/drivers/usb/host/ehci-vt8500.c
-@@ -16,6 +16,7 @@
-  *
-  */
- 
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- 
- static int ehci_update_device(struct usb_hcd *hcd, struct usb_device *udev)
-@@ -162,6 +163,12 @@ static int vt8500_ehci_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id vt8500_ehci_ids[] = {
-+	{ .compatible = "via,vt8500-ehci", },
-+	{ .compatible = "wm,prizm-ehci", },
-+	{}
-+};
-+
- static struct platform_driver vt8500_ehci_driver = {
- 	.probe		= vt8500_ehci_drv_probe,
- 	.remove		= vt8500_ehci_drv_remove,
-@@ -169,7 +176,9 @@ static struct platform_driver vt8500_ehci_driver = {
- 	.driver = {
- 		.name	= "vt8500-ehci",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(vt8500_ehci_ids),
- 	}
- };
- 
- MODULE_ALIAS("platform:vt8500-ehci");
-+MODULE_DEVICE_TABLE(of, vt8500_ehci_ids);
--- 
-1.7.2.5
+On Thursday, July 19, 2012, Shawn Guo wrote:
+> This is a continuous effort of Richard's work [1].  But that generic
+> cpufreq driver has been rewritten with taking omap-cpufreq.c as the
+> reference to adopt OPP library.
+> 
+> Same as Richard's patch, the driver has no intention to support the
+> multi-core systems that frequency and voltage can be scaled
+> independently on different CPUs.  Instead, it aims at uniprocessor (UP)
+> and those symmetric multiprocessor (SMP) systems which share clock and
+> voltage across all CPUs.
+> 
+> I have seen patch from Mike changing omap-cpufreq driver to scale
+> regulator from clk notifier.  We can definitely make the same move
+> for cpufreq-cpu0 later when the patch gets accepted.
+> 
+> Regards,
+> Shawn
+> 
+> [1] http://thread.gmane.org/gmane.linux.kernel.cpufreq/7688/focus=7688
+
+It is too late to consider your patches for inclusion into v3.6, so I'm
+regarding them as RFC at this point.
+
+Please resubmit after v3.6-rc1 has been released.
+
+Thanks,
+Rafael
