@@ -1,58 +1,295 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: Re: [PATCH RESEND v2 2/2] ARM: EXYNOS: Add gscaler device from DT
-Date: Thu, 19 Jul 2012 09:23:12 +0000 (GMT)
-Message-ID: <4623345.151721342689791471.JavaMail.weblogic@epml09>
-Reply-To: shaik.ameer@samsung.com
+From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Subject: Re: [PATCH v3 04/11] usb: otg: nop: add support for multiple tranceiver
+Date: Thu, 19 Jul 2012 14:53:37 +0530
+Message-ID: <CAAe_U6+a_8hoJgdHfLGyMeg6EMmkfkP1Zow9avRTgG6EpV5p1Q@mail.gmail.com>
+References: <1342676499-32507-1-git-send-email-ajay.gupta@ti.com>
+	<1342676499-32507-5-git-send-email-ajay.gupta@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: base64
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, "olofj@google.com" <olofj@google.com>, Thomas P Abraham <thomas.ab@samsung.com>, "sachin.kamat@linaro.org" <sachin.kamat@linaro.org>, SUNIL JOSHI <joshi@samsung.com>, "shaik.samsung@gmail.com" <shaik.samsung@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1342676499-32507-5-git-send-email-ajay.gupta@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Cc: linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3lsd2VzdGVyLA0KDQoNCk9uIFR1ZSwgSnVsIDE3LCAyMDEyIGF0IDI6MDMgQU0sIFN5bHdl
-c3RlciBOYXdyb2NraSA8c3lsdmVzdGVyLm5hd3JvY2tpQGdtYWlsLmNvbT4gd3JvdGU6DQo+IEhp
-IFNoYWlrLA0KPg0KPg0KPiBPbiAwNy8xNi8yMDEyIDA3OjMzIEFNLCBTaGFpayBBbWVlciBCYXNo
-YSB3cm90ZToNCj4+DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bWVkaWEvZXh5bm9zNS1nc2MudHh0DQo+PiBAQCAtMCwwICsxLDE2IEBADQo+PiArKiBTYW1zdW5n
-IEV4eW5vczUgR3NjYWxlciBkZXZpY2UNCj4+ICsNCj4+ICtHc2NhbGVyIGlzIHVzZWQgZm9yIHNj
-YWxpbmcgYW5kIGNvbG9yIHNwYWNlIGNvbnZlcnNpb24gb24gRVhZTk9TNSBTb0NzLg0KPj4gKw0K
-Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInNh
-bXN1bmcsZXh5bm9zLWdzYyINCj4NCj4NCj4gU2hvdWxkbid0IHRoZXJlIHJhdGhlciBiZSBhIHNw
-ZWNpZmljICJjb21wYXRpYmxlIiBwcm9wZXJ0eSBmb3IgZWFjaCBTb0MsDQo+IGUuZy4NCj4gICAg
-LSBjb21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mOg0KPiAgICAgICAgICJzYW1zdW5nNTI1MCxl
-eHlub3MtZ3NjIiwNCj4gICAgICAgICAic2Ftc3VuZzU0NTAsZXh5bm9zLWdzYyIsDQo+IGV0Yy4g
-Pw0KPg0KDQoNCk9LLiBJIHdpbGwgY2hhbmdlIHRoZSBjb21wYXRpYmxlIHByb3BlcnR5IHRvICJz
-YW1zdW5nLGV4eW5vczUyNTAtZ3NjIi4NCg0KDQo+DQo+PiArLSByZWc6IHNob3VsZCBjb250aWFu
-IEdzYWxlciBwaHlzaWNhbCBhZGRyZXNzIGxvY2F0aW9uIGFuZCBsZW5ndGguDQo+DQo+DQo+IGNv
-bnRpYW4gLT4gY29udGFpbiwgR3NhbGVyIC0+IEdzY2FsZXINCj4NCg0KDQpPSy4gSSB3aWxsIGNv
-cnJlY3QgdGhhdC4uLg0KDQoNCj4NCj4+ICstIGludGVycnVwdHM6IHNob3VsZCBjb250YWluIEdz
-Y2FsZXIgaW50ZXJydXB0IG51bWJlcg0KPj4gKw0KPj4gK0V4YW1wbGU6DQo+PiArDQo+PiArZ3Nj
-XzA6ICBnc2NAMHgxM2UwMDAwMCB7DQo+PiArICAgICAgIGNvbXBhdGlibGUgPSAic2Ftc3VuZyxl
-eHlub3MtZ3NjIjsNCj4NCj4NCj4gICAgICAgICBjb21wYXRpYmxlID0gInNhbXN1bmc1MjUwLGV4
-eW5vcy1nc2MiOw0KPg0KDQpPay4gSSB3aWxsIGNoYW5nZSB0aGF0IHRvLA0KY29tcGF0aWJsZSA9
-ICJzYW1zdW5nLGV4eW5vczUyNTAtZ3NjIjsNCg0KPg0KPj4gKyAgICAgICByZWcgPTwweDEzZTAw
-MDAwIDB4MTAwMD47DQo+PiArICAgICAgIGludGVycnVwdHMgPTwwIDg1IDA+Ow0KPj4gK307DQo+
-DQo+DQo+IFRoZSBhbGlhc2VzIGFyZSBzdGlsbCB1bmRvY3VtZW50ZWQuIEhvdyBhYm91dCBhZGRp
-bmcgc29tZXRoaW5nDQo+IGFsb25nIHRoZSBsaW5lcyBvZjoNCj4NCj4gIkVhY2ggR3NjYWxlciBu
-b2RlIHNob3VsZCBoYXZlIGEgbnVtYmVyZWQgYWxpYXMgaW4gdGhlIGFsaWFzZXMgbm9kZSwNCj4g
-aW4gdGhlIGZvcm0gb2YgZ3NjTiwgTiA9IDAuLi4zLiINCj4NCg0KVGhhbmtzIGZvciB0aGF0Li4u
-DQoNCkkgcmVzZW50IHRoZSBzYW1lIHBhdGNoIHRvIGRldmljZXRyZWUgbWFpbGluZ2xpc3QuLi4g
-dGhhdCdzIHdoeSBhbGlhc2VzIGRvY3VtZW50YXRpb24gd2FzIG5vdCBwcmVzZW50Li4uLg0KSSB3
-aWxsIGFkZCB0aGUgYWxpYXNlcyBkb2N1bWVudGF0aW9uIGluIHRoZSB2MyByZWxlYXNlLg0KDQo+
-DQo+ID8NCj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLmR0
-c2kNCj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC5kdHNpDQo+PiBpbmRleCA0Mjcy
-YjI5Li5iOTQ1YzAwIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1
-MC5kdHNpDQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLmR0c2kNCj4+IEBA
-IC0yMyw2ICsyMywxMyBAQA0KPj4gICAgICAgICBjb21wYXRpYmxlID0gInNhbXN1bmcsZXh5bm9z
-NTI1MCI7DQo+PiAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPTwmZ2ljPjsNCj4+DQo+PiArICAg
-ICAgIGFsaWFzZXMgew0KPj4gKyAgICAgICAgICAgICAgIGdzYzAgPSZnc2NfMDsNCj4+ICsgICAg
-ICAgICAgICAgICBnc2MxID0mZ3NjXzE7DQo+PiArICAgICAgICAgICAgICAgZ3NjMiA9JmdzY18y
-Ow0KPj4gKyAgICAgICAgICAgICAgIGdzYzMgPSZnc2NfMzsNCj4+ICsgICAgICAgfTsNCj4+ICsN
-Cj4+ICAgICAgICAgZ2ljOmludGVycnVwdC1jb250cm9sbGVyQDEwNDgxMDAwIHsNCj4+ICAgICAg
-ICAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTktZ2ljIjsNCj4+ICAgICAgICAg
-ICAgICAgICAjaW50ZXJydXB0LWNlbGxzID08Mz47DQo+DQo+DQo+IC0tDQo+DQo+IFJlZ2FyZHMs
-DQo+IFN5bHdlc3Rlcg0KDQpSZWdhcmRzLA0KU2hhaWsgQW1lZXIgQmFzaGE=
+Hi,
+
+On Thu, Jul 19, 2012 at 11:11 AM, Ajay Kumar Gupta <ajay.gupta@ti.com> wrote:
+> Currently we have one single nop transceiver support as same is
+> defined as a global variable in drivers/usb/otg/nop-usb-xceiv.c.
+> This need to be changed to support multiple otg controller each
+> using nop transceiver on a platform such as am335x.
+>
+> Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+> ---
+>  arch/arm/mach-omap2/board-omap3evm.c |    2 +-
+>  drivers/usb/musb/am35x.c             |    4 ++--
+>  drivers/usb/musb/blackfin.c          |    4 ++--
+>  drivers/usb/musb/da8xx.c             |    4 ++--
+>  drivers/usb/musb/davinci.c           |    6 +++---
+>  drivers/usb/musb/musb_dsps.c         |   10 +++++-----
+>  drivers/usb/musb/tusb6010.c          |    6 +++---
+>  drivers/usb/otg/nop-usb-xceiv.c      |   20 ++++++++++++--------
+>  include/linux/usb/otg.h              |    9 +++++----
+>  9 files changed, 35 insertions(+), 30 deletions(-)
+>
+> diff --git a/arch/arm/mach-omap2/board-omap3evm.c b/arch/arm/mach-omap2/board-omap3evm.c
+> index ef230a0..a3393bc 100644
+> --- a/arch/arm/mach-omap2/board-omap3evm.c
+> +++ b/arch/arm/mach-omap2/board-omap3evm.c
+> @@ -704,7 +704,7 @@ static void __init omap3_evm_init(void)
+>         omap_sdrc_init(mt46h32m32lf6_sdrc_params, NULL);
+>
+>         /* OMAP3EVM uses ISP1504 phy and so register nop transceiver */
+> -       usb_nop_xceiv_register();
+> +       usb_nop_xceiv_register(0);
+>
+>         if (get_omap3_evm_rev() >= OMAP3EVM_BOARD_GEN_2) {
+>                 /* enable EHCI VBUS using GPIO22 */
+> diff --git a/drivers/usb/musb/am35x.c b/drivers/usb/musb/am35x.c
+> index 01203eb..eb6220f 100644
+> --- a/drivers/usb/musb/am35x.c
+> +++ b/drivers/usb/musb/am35x.c
+> @@ -364,7 +364,7 @@ static int am35x_musb_init(struct musb *musb)
+>         if (!rev)
+>                 return -ENODEV;
+>
+> -       usb_nop_xceiv_register();
+> +       usb_nop_xceiv_register(musb->id);
+>         musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
+>         if (IS_ERR_OR_NULL(musb->xceiv))
+>                 return -ENODEV;
+> @@ -408,7 +408,7 @@ static int am35x_musb_exit(struct musb *musb)
+>                 data->set_phy_power(0);
+>
+>         usb_put_phy(musb->xceiv);
+> -       usb_nop_xceiv_unregister();
+> +       usb_nop_xceiv_unregister(musb->xceiv);
+>
+>         return 0;
+>  }
+> diff --git a/drivers/usb/musb/blackfin.c b/drivers/usb/musb/blackfin.c
+> index c848b82..03d081c 100644
+> --- a/drivers/usb/musb/blackfin.c
+> +++ b/drivers/usb/musb/blackfin.c
+> @@ -415,7 +415,7 @@ static int bfin_musb_init(struct musb *musb)
+>         }
+>         gpio_direction_output(musb->config->gpio_vrsel, 0);
+>
+> -       usb_nop_xceiv_register();
+> +       usb_nop_xceiv_register(musb->id);
+>         musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
+>         if (IS_ERR_OR_NULL(musb->xceiv)) {
+>                 gpio_free(musb->config->gpio_vrsel);
+> @@ -442,7 +442,7 @@ static int bfin_musb_exit(struct musb *musb)
+>         gpio_free(musb->config->gpio_vrsel);
+>
+>         usb_put_phy(musb->xceiv);
+> -       usb_nop_xceiv_unregister();
+> +       usb_nop_xceiv_unregister(musb->xceiv);
+>         return 0;
+>  }
+>
+> diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+> index cebd9d7..3ce4a92 100644
+> --- a/drivers/usb/musb/da8xx.c
+> +++ b/drivers/usb/musb/da8xx.c
+> @@ -425,7 +425,7 @@ static int da8xx_musb_init(struct musb *musb)
+>         if (!rev)
+>                 goto fail;
+>
+> -       usb_nop_xceiv_register();
+> +       usb_nop_xceiv_register(musb->id);
+>         musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
+>         if (IS_ERR_OR_NULL(musb->xceiv))
+>                 goto fail;
+> @@ -460,7 +460,7 @@ static int da8xx_musb_exit(struct musb *musb)
+>         phy_off();
+>
+>         usb_put_phy(musb->xceiv);
+> -       usb_nop_xceiv_unregister();
+> +       usb_nop_xceiv_unregister(musb->xceiv);
+>
+>         return 0;
+>  }
+> diff --git a/drivers/usb/musb/davinci.c b/drivers/usb/musb/davinci.c
+> index 3f094f2..d5156b3 100644
+> --- a/drivers/usb/musb/davinci.c
+> +++ b/drivers/usb/musb/davinci.c
+> @@ -385,7 +385,7 @@ static int davinci_musb_init(struct musb *musb)
+>         void __iomem    *tibase = musb->ctrl_base;
+>         u32             revision;
+>
+> -       usb_nop_xceiv_register();
+> +       usb_nop_xceiv_register(musb->id);
+>         musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
+>         if (IS_ERR_OR_NULL(musb->xceiv))
+>                 goto unregister;
+> @@ -447,7 +447,7 @@ static int davinci_musb_init(struct musb *musb)
+>  fail:
+>         usb_put_phy(musb->xceiv);
+>  unregister:
+> -       usb_nop_xceiv_unregister();
+> +       usb_nop_xceiv_unregister(musb->xceiv);
+>         return -ENODEV;
+>  }
+>
+> @@ -496,7 +496,7 @@ static int davinci_musb_exit(struct musb *musb)
+>         phy_off();
+>
+>         usb_put_phy(musb->xceiv);
+> -       usb_nop_xceiv_unregister();
+> +       usb_nop_xceiv_unregister(musb->xceiv);
+>
+>         return 0;
+>  }
+> diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
+> index a2c8a06..9fcacff 100644
+> --- a/drivers/usb/musb/musb_dsps.c
+> +++ b/drivers/usb/musb/musb_dsps.c
+> @@ -420,8 +420,8 @@ static int dsps_musb_init(struct musb *musb)
+>         /* mentor core register starts at offset of 0x400 from musb base */
+>         musb->mregs += wrp->musb_core_offset;
+>
+> -       /* NOP driver needs change if supporting dual instance */
+> -       usb_nop_xceiv_register();
+> +       /* Register NOP driver */
+> +       usb_nop_xceiv_register(musb->id);
+>         musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
+>         if (IS_ERR_OR_NULL(musb->xceiv))
+>                 return -ENODEV;
+> @@ -456,7 +456,7 @@ static int dsps_musb_init(struct musb *musb)
+>         return 0;
+>  err0:
+>         usb_put_phy(musb->xceiv);
+> -       usb_nop_xceiv_unregister();
+> +       usb_nop_xceiv_unregister(musb->xceiv);
+>         return status;
+>  }
+>
+> @@ -472,9 +472,9 @@ static int dsps_musb_exit(struct musb *musb)
+>         /* Shutdown the on-chip PHY and its PLL. */
+>         musb_dsps_phy_control(glue, musb->id, 0);
+>
+> -       /* NOP driver needs change if supporting dual instance */
+> +       /* Unregister NOP driver */
+>         usb_put_phy(musb->xceiv);
+> -       usb_nop_xceiv_unregister();
+> +       usb_nop_xceiv_unregister(musb->xceiv);
+>
+>         return 0;
+>  }
+> diff --git a/drivers/usb/musb/tusb6010.c b/drivers/usb/musb/tusb6010.c
+> index 64a0e95..6b23e55 100644
+> --- a/drivers/usb/musb/tusb6010.c
+> +++ b/drivers/usb/musb/tusb6010.c
+> @@ -1078,7 +1078,7 @@ static int tusb_musb_init(struct musb *musb)
+>         void __iomem            *sync = NULL;
+>         int                     ret;
+>
+> -       usb_nop_xceiv_register();
+> +       usb_nop_xceiv_register(musb->id);
+>         musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
+>         if (IS_ERR_OR_NULL(musb->xceiv))
+>                 return -ENODEV;
+> @@ -1132,7 +1132,7 @@ done:
+>                         iounmap(sync);
+>
+>                 usb_put_phy(musb->xceiv);
+> -               usb_nop_xceiv_unregister();
+> +               usb_nop_xceiv_unregister(musb->xceiv);
+>         }
+>         return ret;
+>  }
+> @@ -1148,7 +1148,7 @@ static int tusb_musb_exit(struct musb *musb)
+>         iounmap(musb->sync_va);
+>
+>         usb_put_phy(musb->xceiv);
+> -       usb_nop_xceiv_unregister();
+> +       usb_nop_xceiv_unregister(musb->xceiv);
+>         return 0;
+>  }
+>
+> diff --git a/drivers/usb/otg/nop-usb-xceiv.c b/drivers/usb/otg/nop-usb-xceiv.c
+> index 803f958..2e5e889 100644
+> --- a/drivers/usb/otg/nop-usb-xceiv.c
+> +++ b/drivers/usb/otg/nop-usb-xceiv.c
+> @@ -35,15 +35,14 @@
+>  struct nop_usb_xceiv {
+>         struct usb_phy          phy;
+>         struct device           *dev;
+> +       struct platform_device  *pd;
+>  };
+>
+> -static struct platform_device *pd;
+> -
+> -void usb_nop_xceiv_register(void)
+> +void usb_nop_xceiv_register(int id)
+>  {
+> -       if (pd)
+> -               return;
+> -       pd = platform_device_register_simple("nop_usb_xceiv", -1, NULL, 0);
+> +       struct platform_device *pd;
+> +
+> +       pd = platform_device_register_simple("nop_usb_xceiv", id, NULL, 0);
+>         if (!pd) {
+>                 printk(KERN_ERR "Unable to register usb nop transceiver\n");
+>                 return;
+> @@ -51,10 +50,13 @@ void usb_nop_xceiv_register(void)
+>  }
+>  EXPORT_SYMBOL(usb_nop_xceiv_register);
+>
+> -void usb_nop_xceiv_unregister(void)
+> +void usb_nop_xceiv_unregister(struct usb_phy *phy)
+>  {
+> +       struct nop_usb_xceiv *nop = container_of(phy,
+> +                       struct nop_usb_xceiv, phy);
+> +       struct platform_device *pd = nop->pd;
+> +
+>         platform_device_unregister(pd);
+> -       pd = NULL;
+>  }
+>  EXPORT_SYMBOL(usb_nop_xceiv_unregister);
+>
+> @@ -107,11 +109,13 @@ static int __devinit nop_usb_xceiv_probe(struct platform_device *pdev)
+>                 return -ENOMEM;
+>         }
+>
+> +       nop->pd                 = pdev;
+>         nop->dev                = &pdev->dev;
+>         nop->phy.dev            = nop->dev;
+>         nop->phy.label          = "nop-xceiv";
+>         nop->phy.set_suspend    = nop_set_suspend;
+>         nop->phy.state          = OTG_STATE_UNDEFINED;
+> +       nop->phy.id             = pdev->id;
+>
+>         nop->phy.otg->phy               = &nop->phy;
+>         nop->phy.otg->set_host          = nop_set_host;
+> diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+> index 4636d39..36cc791 100644
+> --- a/include/linux/usb/otg.h
+> +++ b/include/linux/usb/otg.h
+> @@ -95,6 +95,7 @@ struct usb_phy {
+>         struct device           *dev;
+>         const char              *label;
+>         unsigned int             flags;
+> +       u8                      id;
+
+Do we really need to have *id* in phy??
+>
+>         enum usb_phy_type       type;
+>         enum usb_otg_state      state;
+> @@ -137,14 +138,14 @@ extern void usb_remove_phy(struct usb_phy *);
+>
+>  #if defined(CONFIG_NOP_USB_XCEIV) || (defined(CONFIG_NOP_USB_XCEIV_MODULE) && defined(MODULE))
+>  /* sometimes transceivers are accessed only through e.g. ULPI */
+> -extern void usb_nop_xceiv_register(void);
+> -extern void usb_nop_xceiv_unregister(void);
+> +extern void usb_nop_xceiv_register(int id);
+> +extern void usb_nop_xceiv_unregister(struct usb_phy *);
+IMHO,  these declarations shouldn't be in usb/otg.h. It can be in a
+header file specific to usb_nop?
+
+Thanks
+Kishon
