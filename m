@@ -1,85 +1,208 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v3 0/6] mmc: dw_mmc: add support for device tree based instantiation
-Date: Fri, 20 Jul 2012 00:29:08 +0530
-Message-ID: <CAJuYYwQBgpJ1wiS3fSDS2cMi6kanuO47rc8SmniAqjRPuBGJHg@mail.gmail.com>
-References: <1342097668-25243-1-git-send-email-thomas.abraham@linaro.org>
-	<5008279B.4000001@samsung.com>
+From: Jamie Lentin <jm@lentin.co.uk>
+Subject: [PATCH 3/4] ARM: Kirkwood: Move common portions into a
+ kirkwood-dnskw.dtsi
+Date: Thu, 19 Jul 2012 21:30:59 +0100
+Message-ID: <1342729860-14647-4-git-send-email-jm@lentin.co.uk>
+References: <y>
+ <1342729860-14647-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5008279B.4000001@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1342729860-14647-1-git-send-email-jm@lentin.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>, Jason <jason@lakedaemon.net>
+Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 July 2012 20:58, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> Hi Thomas,
->
-> I think not good that added the samsung specific code into dw_mmc-pltfm.c
-> How about separating to dw-mmc-exynos.c?
+A lot of device setup is shared between DNS-320 and DNS-325, move the
+definitions into a common include.
 
-I am not sure of this. The only samsung specific code in
-dw_mmc-pltfm.c file is the data for of_device_id instances. The clock
-lookup added into this file in the 3rd patch does not cause any harm
-on non-samsung SoC's which might not define those clocks (on clock
-lookup failure, there are only warning printed, the driver's probe
-does not fail.
+Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+---
+ arch/arm/boot/dts/kirkwood-dns320.dts |   42 +----------------------------
+ arch/arm/boot/dts/kirkwood-dns325.dts |   42 +----------------------------
+ arch/arm/boot/dts/kirkwood-dnskw.dtsi |   48 +++++++++++++++++++++++++++++++++
+ 3 files changed, 50 insertions(+), 82 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-dnskw.dtsi
 
-I would prefer not to add separate file for Exynos SoC's for now.
-Splitting into different files will need to defined new callbacks
-which I fell is not really required.
-
-Thanks,
-Thomas.
-
->
-> Best Regards,
-> Jaehoon Chung
->
-> On 07/12/2012 09:54 PM, Thomas Abraham wrote:
->> This patch series adds device tree support for Synopsis Designware Mobile
->> Storage Host Controller.
->>
->> The first patch converts the copy of controller device instance into a
->> reference. This is need to allow device resource management api to correctly
->> manage the resources allocated by the driver. The second patch fixes the
->> incorrect abort of the probe in case a slot initialization fails. This is
->> fixed by allowing as many slots to be initialized successfully and failing
->> only if there are no slots that were initialized.
->>
->> The third patch adds clock lookup in the driver and this is optional. Platforms
->> that do not need any clock gating and control for the dw_mmc controllers will
->> not be affected with this change. The fourth patch adds a quirk to notify the
->> controller about the absence of the write protect line.
->>
->> The fifth patch adds device tree based discovery support for the dw_mmc driver.
->> The sixth patch add Samsung Exynos5250 specific extentions to the driver.
->>
->> This patchset is based on Samsung kernel tree's for-next branch with the
->> mmc tree's mmc-next branch merged.
->>
->> Thomas Abraham (6):
->>   mmc: dw_mmc: convert copy of struct device in struct dw_mci to a reference
->>   mmc: dw_mmc: allow probe to succeed even if one slot is initialized
->>   mmc: dw_mmc: lookup for optional biu and ciu clocks
->>   mmc: dw_mmc: add quirk to indicate missing write protect line
->>   mmc: dw_mmc: add device tree support
->>   mmc: dw_mmc: add samsung exynos5250 specific extentions
->>
->>  .../devicetree/bindings/mmc/synposis-dw-mshc.txt   |  144 ++++++++
->>  drivers/mmc/host/dw_mmc-pci.c                      |    2 +-
->>  drivers/mmc/host/dw_mmc-pltfm.c                    |   41 +++-
->>  drivers/mmc/host/dw_mmc.c                          |  364 +++++++++++++++++---
->>  drivers/mmc/host/dw_mmc.h                          |   23 ++
->>  include/linux/mmc/dw_mmc.h                         |   17 +-
->>  6 files changed, 538 insertions(+), 53 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->
->
+diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
+index a81c3a9..d41e204 100644
+--- a/arch/arm/boot/dts/kirkwood-dns320.dts
++++ b/arch/arm/boot/dts/kirkwood-dns320.dts
+@@ -1,6 +1,6 @@
+ /dts-v1/;
+ 
+-/include/ "kirkwood.dtsi"
++/include/ "kirkwood-dnskw.dtsi"
+ 
+ / {
+ 	model = "D-Link DNS-320 NAS (Rev A1)";
+@@ -50,45 +50,5 @@
+ 			clock-frequency = <166666667>;
+ 			status = "okay";
+ 		};
+-
+-		sata@80000 {
+-			status = "okay";
+-			nr-ports = <2>;
+-		};
+-
+-		nand@3000000 {
+-			status = "okay";
+-
+-			partition@0 {
+-				label = "u-boot";
+-				reg = <0x0000000 0x100000>;
+-				read-only;
+-			};
+-
+-			partition@100000 {
+-				label = "uImage";
+-				reg = <0x0100000 0x500000>;
+-			};
+-
+-			partition@600000 {
+-				label = "ramdisk";
+-				reg = <0x0600000 0x500000>;
+-			};
+-
+-			partition@b00000 {
+-				label = "image";
+-				reg = <0x0b00000 0x6600000>;
+-			};
+-
+-			partition@7100000 {
+-				label = "mini firmware";
+-				reg = <0x7100000 0xa00000>;
+-			};
+-
+-			partition@7b00000 {
+-				label = "config";
+-				reg = <0x7b00000 0x500000>;
+-			};
+-		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts b/arch/arm/boot/dts/kirkwood-dns325.dts
+index 421dcab..2662efc 100644
+--- a/arch/arm/boot/dts/kirkwood-dns325.dts
++++ b/arch/arm/boot/dts/kirkwood-dns325.dts
+@@ -1,6 +1,6 @@
+ /dts-v1/;
+ 
+-/include/ "kirkwood.dtsi"
++/include/ "kirkwood-dnskw.dtsi"
+ 
+ / {
+ 	model = "D-Link DNS-325 NAS (Rev A1)";
+@@ -53,45 +53,5 @@
+ 			clock-frequency = <200000000>;
+ 			status = "okay";
+ 		};
+-
+-		sata@80000 {
+-			status = "okay";
+-			nr-ports = <2>;
+-		};
+-
+-		nand@3000000 {
+-			status = "okay";
+-
+-			partition@0 {
+-				label = "u-boot";
+-				reg = <0x0000000 0x100000>;
+-				read-only;
+-			};
+-
+-			partition@100000 {
+-				label = "uImage";
+-				reg = <0x0100000 0x500000>;
+-			};
+-
+-			partition@600000 {
+-				label = "ramdisk";
+-				reg = <0x0600000 0x500000>;
+-			};
+-
+-			partition@b00000 {
+-				label = "image";
+-				reg = <0x0b00000 0x6600000>;
+-			};
+-
+-			partition@7100000 {
+-				label = "mini firmware";
+-				reg = <0x7100000 0xa00000>;
+-			};
+-
+-			partition@7b00000 {
+-				label = "config";
+-				reg = <0x7b00000 0x500000>;
+-			};
+-		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/kirkwood-dnskw.dtsi b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
+new file mode 100644
+index 0000000..067672c
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
+@@ -0,0 +1,48 @@
++/include/ "kirkwood.dtsi"
++
++/ {
++	model = "D-Link DNS NASes (kirkwood-based)";
++	compatible = "dlink,dns-kirkwood", "mrvl,kirkwood-88f6281", "mrvl,kirkwood";
++
++	ocp@f1000000 {
++		sata@80000 {
++			status = "okay";
++			nr-ports = <2>;
++		};
++
++		nand@3000000 {
++			status = "okay";
++
++			partition@0 {
++				label = "u-boot";
++				reg = <0x0000000 0x100000>;
++				read-only;
++			};
++
++			partition@100000 {
++				label = "uImage";
++				reg = <0x0100000 0x500000>;
++			};
++
++			partition@600000 {
++				label = "ramdisk";
++				reg = <0x0600000 0x500000>;
++			};
++
++			partition@b00000 {
++				label = "image";
++				reg = <0x0b00000 0x6600000>;
++			};
++
++			partition@7100000 {
++				label = "mini firmware";
++				reg = <0x7100000 0xa00000>;
++			};
++
++			partition@7b00000 {
++				label = "config";
++				reg = <0x7b00000 0x500000>;
++			};
++		};
++	};
++};
+-- 
+1.7.10.4
