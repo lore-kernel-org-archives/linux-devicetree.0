@@ -1,104 +1,131 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC/PATCH 05/13] media: s5p-fimc: Add device tree support for
- FIMC devices
-Date: Wed, 18 Jul 2012 21:53:34 +0200
-Message-ID: <5007143E.8040807@gmail.com>
-References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com> <1337975573-27117-5-git-send-email-s.nawrocki@samsung.com> <Pine.LNX.4.64.1207161110430.12302@axis700.grange> <5005C7E4.3050908@gmail.com> <Pine.LNX.4.64.1207180958540.8472@axis700.grange>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [Patch v5 08/13] ARM: imx6q: add config-on-boot gpios
+Date: Thu, 19 Jul 2012 10:15:23 +0800
+Message-ID: <20120719021522.GP21635@b20223-02.ap.freescale.net>
+References: <1339590863-10564-1-git-send-email-richard.zhao@freescale.com>
+ <1339590863-10564-9-git-send-email-richard.zhao@freescale.com>
+ <50055AD9.6030807@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1207180958540.8472@axis700.grange>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50055AD9.6030807-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2012 10:17 AM, Guennadi Liakhovetski wrote:
-> On Tue, 17 Jul 2012, Sylwester Nawrocki wrote:
->> On 07/16/2012 11:13 AM, Guennadi Liakhovetski wrote:
->>> On Fri, 25 May 2012, Sylwester Nawrocki wrote:
->>>
->>>> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
->>>> Signed-off-by: Karol Lewandowski<k.lewandowsk@samsung.com>
->>>> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
->>>
->>>    From the documentation below I think, I understand what it does, but why
->>> is it needed? It doesn't describe your video subsystem topology, right?
->>> How various subdevices are connected. It just lists them all in one
->>> node... A description for this patch would be very welcome IMHO and,
->>> maybe, such a node can be completely avoided?
->>
->> Sorry, I'll provide better description in next iteration.
->> It's true it doesn't describe the topology in detail, as there are
->> multiple one-to many possible connections between sub-devices. An exact
->> topology is coded in the driver and can be changed through MC API.
->> The "samsung,camif-mux-id" and "video-bus-type" properties at "sensor"
->> nodes just specify to which physical SoC camera port an image sensor
->> is connected.
+On Tue, Jul 17, 2012 at 02:30:17PM +0200, Dirk Behme wrote:
+> On 13.06.2012 14:34, Richard Zhao wrote:
+> >Sometimes, boards have gpios that don't own by any driver or owner
+> >by a generic driver that don't like hacks. Such gpios is normally
+> >output and need setup once on boot. So I introduce the config-on-boot
+> >gpios.
+> >
+> >Signed-off-by: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> >---
+> > .../devicetree/bindings/arm/config-on-boot.txt     |   12 +++++++
+> > arch/arm/boot/dts/imx6q-sabrelite.dts              |    7 ++++
+> > arch/arm/mach-imx/mach-imx6q.c                     |   35 ++++++++++++++++++++
+> > 3 files changed, 54 insertions(+)
+> > create mode 100644 Documentation/devicetree/bindings/arm/config-on-boot.txt
+> >
+> >diff --git a/Documentation/devicetree/bindings/arm/config-on-boot.txt b/Documentation/devicetree/bindings/arm/config-on-boot.txt
+> >new file mode 100644
+> >index 0000000..f98ed74
+> >--- /dev/null
+> >+++ b/Documentation/devicetree/bindings/arm/config-on-boot.txt
+> >@@ -0,0 +1,12 @@
+> >+* Configure on Boot
+> >+
+> >+Node name: config-on-boot
+> >+  It must be in root node. config-on-boot means to describe settings that needs
+> >+  to be set one time on boot but aren't owned by any driver, or the owned driver
+> >+  is too generic to handle such settings. For example, usb hub uses generic
+> >+  driver in usb core code, a on-board usb may need deassert reset pin.
+> >+
+> >+Optional properties:
+> >+- output-gpios: Output gpio array that needs to set.
+> >+- output-gpio-values: This property is required if output-gpios is set.
+> >+  The value is a array of 0 or 1. Total count eaquals the number of gpios.
+> >diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
+> >index e0ec929..1dd2261 100644
+> >--- a/arch/arm/boot/dts/imx6q-sabrelite.dts
+> >+++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
+> >@@ -17,6 +17,13 @@
+> > 	model = "Freescale i.MX6 Quad SABRE Lite Board";
+> > 	compatible = "fsl,imx6q-sabrelite", "fsl,imx6q";
+> >+	config-on-boot {
+> >+		output-gpios = <
+> >+				&gpio3 22 0>;	/* vbus reset */
+> >+		output-gpio-values = <
+> >+				1>;		/* vbus reset */
+> >+	};
+> >+
+> > 	memory {
+> > 		reg = <0x10000000 0x40000000>;
+> > 	};
+> >diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+> >index b47e98b..577cf19 100644
+> >--- a/arch/arm/mach-imx/mach-imx6q.c
+> >+++ b/arch/arm/mach-imx/mach-imx6q.c
+> >@@ -19,6 +19,7 @@
+> > #include <linux/irqdomain.h>
+> > #include <linux/of.h>
+> > #include <linux/of_address.h>
+> >+#include <linux/of_gpio.h>
+> > #include <linux/of_irq.h>
+> > #include <linux/of_platform.h>
+> > #include <linux/pinctrl/machine.h>
+> >@@ -113,6 +114,38 @@ static void __init imx6q_sabrelite_init(void)
+> > 	imx6q_sabrelite_cko1_setup();
+> > }
+> >+static void __init imx6q_config_on_boot(void)
+> >+{
+> >+	struct device_node *np;
+> >+	struct property *pp;
+> >+	int cnt, len, i;
+> >+	int gpio;
+> >+
+> >+	np = of_find_node_by_path("/config-on-boot");
+> >+	if (!np)
+> >+		return;
+> >+	cnt = of_gpio_named_count(np, "output-gpios");
+> >+	pp = of_find_property(np, "output-gpio-values", &len);
+> >+	if (!pp || cnt != len / sizeof(u32)) {
+> >+		pr_err("Invalid config-on-boot gpios!\n");
+> >+		of_node_put(np);
+> >+		return;
+> >+	}
+> >+	for (i = 0; i < cnt; i++) {
+> >+		gpio = of_get_named_gpio(np, "output-gpios", i);
+> >+		if (gpio_is_valid(gpio))
+> >+			gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH,
+> >+					"config-on-boot");
 > 
-> So, don't you think my media-link child nodes are a good solution for
-> this?
+> While trying to use this code: Is there a special reason why all
+> pins are set to HIGH here? The contents of 'output-gpio-values' seem
+> to be ignored?
+It may be bug here. The patch is rejected. imx6_sabrelite happens work
+by default value. So I won't follow it any more.
 
-Not quite yet ;) It would be good to see some example implementation
-and how it actually works.
-
->> Originally the all camera devices were supposed to land under common
->> 'camera' node. And a top level driver would be registering all platform
->> devices. With this approach it would be possible to better control PM
->> handling (which currently depends on an order of registering devices to
->> the driver core). But then we discovered that we couldn't use OF_DEV_AUXDATA
->> in such case, which was required to preserve platform device names, in order
->> for the clock API to work. So I've moved some sub-devices out of 'camera'
->> node and have added only a list of phandles to them in that node. This is
->> rather a cheap workaround..
->>
->> I think all camera sub-devices should be placed under common node, as there
->> are some properties that don't belong to any sub-node: GPIO config, clocks,
->> to name a few. Of course simpler devices might not need such a composite
->> node. I think we can treat the sub-device interdependencies as an issue
->> separate from a need for a common node.
->>
->> If some devices need to reflect the topology better, we probably could
->> include in some nodes (a list of) phandles to other nodes. This could ease
->> parsing the topology at the drivers, by using existing OF infrastructure.
+Thanks
+Richard
 > 
-> Ok, I think you have some good ideas in your RFC's, an interesting
-> question now is - how to proceed. Do you think we'd be able to work out a
-> combined RFC? Or would you prefer to make two versions and then see what
-> others think? In either case it would be nice, I think, if you could try
-> to separate what you see as common V4L DT bindings, then we could discuss
-> that separately. Whereas what you think is private to your hardware, we
-> can also look at for common ideas, or maybe even some of those properties
-> we'll wake to make common too.
-
-I think we need a one combined RFC and continue discussions in one thread.
-Still, our proposals are quite different, but I believe we need something
-in between. I presume we should focus more to have common bindings for 
-subdevs that are reused among different host/ISP devices, i.e. sensors and 
-encoders. For simple host interfaces we can likely come up with common
-binding patterns, but more complex processing pipelines may require 
-a sort of individual approach.
-
-The suspend/resume handling is still something I don't have an idea
-on how the solution for might look like..
-Instantiating all devices from a top level driver could help, but it
-is only going to work when platforms are converted to the common clock
-framework and have their clocks instantiated from device tree.
-
-This week I'm out of office, and next one or two I have some pending
-assignments. So there might be some delay before I can dedicate some 
-reasonable amount of time to carry on with that topic.
-
-I unfortunately won't be attending KS this time.
-
-I'll try to prepare some summary with topics that appear common. And also 
-to restructure my RFC series to better separate new common features and 
-specific H/W support.
-
-In the meantime we could possibly continue discussions in your RFC thread.
-
---
-
-Regards,
-Sylwester
+> Best regards
+> 
+> Dirk
+> 
