@@ -1,150 +1,86 @@
-From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Subject: Re: [PATCHv6] arm/dts: omap4-sdp: Add keypad data
-Date: Thu, 19 Jul 2012 17:04:15 +0530
-Message-ID: <CAAe_U6LXB0EdBqG+=W+zKjtZ1av-UWpxJDZSrSOcb4_fNp9gDg@mail.gmail.com>
-References: <1342191422-8235-1-git-send-email-sourav.poddar@ti.com>
+From: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 00/11] usb: musb: adding multi instance support
+Date: Thu, 19 Jul 2012 17:15:56 +0530
+Message-ID: <1342698367-12978-1-git-send-email-ajay.gupta@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1342191422-8235-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This series of patches adds,
+a) Multi instances support in musb driver
+b) DT support for musb_dsps glue layer
+c) DT support for NOP transceiver
 
-On Fri, Jul 13, 2012 at 8:27 PM, Sourav Poddar <sourav.poddar@ti.com> wrote:
-> Add keypad data node in omap4 device tree file.
-> Also fill the device tree binding parameters
-> with the required value in "omap4-sdp" dts file.
->
-> Tested on omap4430 sdp with 3.5-rc6 kernel.
->
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-> ---
-> This patch[1] was initially posted as a series.
-> The first patch[2] of the series is taken into
-> dmitry's input tree.
-> So, posting this as a independent patch .
->
-> [1]: https://lkml.org/lkml/2012/6/8/239
-> [2]: https://lkml.org/lkml/2012/6/1/75
->
-> Changes since v5:
-> Few key mappings were missed, added "linux, keymap"
-> data for those key mappings.
->
->  arch/arm/boot/dts/omap4-sdp.dts |   70 +++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi    |    5 +++
->  2 files changed, 75 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-> index d08c4d1..53ded54 100644
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -70,6 +70,76 @@
->                         gpios = <&gpio5 11 0>; /* 139 */
->                 };
->         };
-> +
-> +       keypad@4a31c000 {
+AM33xx and TI81xx has dual musb controller and has two usb PHY of same type.
+This patch series uses 'phandle' based API devm_usb_get_phy_by_phandle() to
+get the PHY of same type. This API support is being added by Kishon's patch
+discussed at [1]
 
-I think you should drop the address in node name since it does not
-have a <reg> property.
+The series applies to linux-omap (master branch)
+	+ Vaibhav baseport patches on his tree at [3]
+	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
+	+ Kishon's patch on phandle at [1]
+	+ AM33xx musb glue compile and bugfix patches at [4], [5], [6] and [7]
+	+ Damodar's recent patch at [2] 
 
-> +               keypad,num-rows = <8>;
-> +               keypad,num-columns = <8>;
-> +               linux,keymap = < 0x00000012
-> +                       0x00010013
-> +                       0x00020014
-> +                       0x00030066
-> +                       0x0004003f
-> +                       0x000500f0
-> +                       0x00060017
-> +                       0x0007002a
-> +                       0x01000020
-> +                       0x01010021
-> +                       0x01020022
-> +                       0x010300e7
-> +                       0x01040040
-> +                       0x010500f0
-> +                       0x01060025
-> +                       0x0107001c
-> +                       0x0200002d
-> +                       0x0201002e
-> +                       0x0202002f
-> +                       0x0203006b
-> +                       0x02040041
-> +                       0x020500f0
-> +                       0x02060034
-> +                       0x0207003a
-> +                       0x0300002c
-> +                       0x0301004e
-> +                       0x03020030
-> +                       0x0303003b
-> +                       0x03040042
-> +                       0x030500f0
-> +                       0x03060018
-> +                       0x03070039
-> +                       0x04000011
-> +                       0x04010015
-> +                       0x04020016
-> +                       0x0403003c
-> +                       0x04040073
-> +                       0x040500f0
-> +                       0x04060026
-> +                       0x04070069
-> +                       0x0500001f
-> +                       0x05010023
-> +                       0x05020024
-> +                       0x0503003d
-> +                       0x05040043
-> +                       0x05050072
-> +                       0x05060032
-> +                       0x0507006a
-> +                       0x06000010
-> +                       0x0601001e
-> +                       0x06020031
-> +                       0x0603009e
-> +                       0x0604000e
-> +                       0x060500f0
-> +                       0x06060019
-> +                       0x06070067
-> +                       0x07000094
-> +                       0x07010095
-> +                       0x070200ca
-> +                       0x070300cb
-> +                       0x0704003e
-> +                       0x070500f0
-> +                       0x07060160
-> +                       0x0707006c >;
-> +               linux,input-no-autorepeat;
-> +       };
->  };
->
->  &i2c1 {
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index 359c497..11b72d2 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -273,4 +273,9 @@
->                         ti,needs-special-reset;
->                 };
->         };
-> +
-> +       keypad@4a31c000 {
-same comment here.
+and have been tested on Beaglebone board.
 
-> +               compatible = "ti,omap4-keypad";
-> +               ti,hwmods = "kbd";
-> +       };
->  };
+1. http://marc.info/?l=linux-usb&m=134070369306112&w=2
+2. http://marc.info/?l=linux-usb&m=134200284230689&w=2
+3. https://github.com/hvaibhav/am335x-linux/commits/am335x-upstream-staging
+4. http://marc.info/?l=linux-usb&m=134131746111637&w=2
+5. http://marc.info/?l=linux-usb&m=134131746411639&w=2
+6. http://marc.info/?l=linux-usb&m=134062716011251&w=2
+7. http://marc.info/?l=linux-usb&m=134061179405213&w=2
 
-Thanks
-Kishon
+Changes from v3:
+	- Fixed Kishon's comment on removing "id" from phy struct and
+	  removing unneeded "#else" part.
+Changes from v2:
+	- Fixed Sergei's comment on not using address prefix in musb_dsps
+	  glue and nop transceiver dt dats.
+	- Also removed the "ti" string in compatible property for nop data.
+Changes from v1:
+	- Defined musb_ida to manage core ids based on Felipe's comment
+	  in [PATCH 01/11]
+
+Ajay Kumar Gupta (11):
+  usb: musb: add musb->id to identify core instance
+  usb: musb: kill global and static for multi instance
+  usb: musb: am335x: add support for dual instance
+  usb: otg: nop: add support for multiple tranceiver
+  usb: musb: dsps: add dt support
+  arm/dts: am33xx: Add dt data for usbss
+  usb: otg: nop: add dt support
+  arm/dts: am33xx: add dt data for usb nop phy
+  usb: musb: dsps: remove explicit NOP device creation
+  usb: musb: dsps: get the PHY using phandle api
+  arm/dts: am33xx: add phy phandle to usbss
+
+ .../devicetree/bindings/usb/am33xx-usb.txt         |   19 ++
+ arch/arm/boot/dts/am33xx.dtsi                      |   21 +++
+ arch/arm/mach-omap2/board-omap3evm.c               |    2 +-
+ drivers/usb/musb/am35x.c                           |   46 +++--
+ drivers/usb/musb/blackfin.c                        |   30 +++-
+ drivers/usb/musb/da8xx.c                           |   38 +++--
+ drivers/usb/musb/davinci.c                         |   40 +++--
+ drivers/usb/musb/musb_core.c                       |   47 ++++--
+ drivers/usb/musb/musb_core.h                       |    8 +
+ drivers/usb/musb/musb_debugfs.c                    |   14 +-
+ drivers/usb/musb/musb_dsps.c                       |  189 ++++++++++++++------
+ drivers/usb/musb/omap2430.c                        |   26 ++-
+ drivers/usb/musb/tusb6010.c                        |   32 +++-
+ drivers/usb/musb/ux500.c                           |   33 +++-
+ drivers/usb/otg/nop-usb-xceiv.c                    |   29 +++-
+ include/linux/usb/otg.h                            |    8 +-
+ 16 files changed, 419 insertions(+), 163 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/am33xx-usb.txt
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
