@@ -1,59 +1,57 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: RE: [PATCH 1/2] ARM: vt8500: Update vt8500-ehci driver to support
- device tree.
-Date: Thu, 19 Jul 2012 15:31:14 +0000
-Message-ID: <76F764B079F92A4E843589C893D0A022C381243A@SERVER.prisktech.co.nz>
-References: <1342704684-4858-1-git-send-email-linux@prisktech.co.nz>,
- <CABjd4YxfynH5f0dTwOh3EpiNr2vLq_2yJqys=Ztm_XV2oY4nsw@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH 0/3] Add a generic cpufreq-cpu0 driver
+Date: Thu, 19 Jul 2012 23:54:38 +0800
+Message-ID: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CABjd4YxfynH5f0dTwOh3EpiNr2vLq_2yJqys=Ztm_XV2oY4nsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <cpufreq-owner@vger.kernel.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexey Charkov [alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
-Sent: 20 July 2012 02:45
-To: vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Arnd Bergmann; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Tony Prisk
-Subject: Re: [PATCH 1/2] ARM: vt8500: Update vt8500-ehci driver to support device tree.
+This is a continuous effort of Richard's work [1].  But that generic
+cpufreq driver has been rewritten with taking omap-cpufreq.c as the
+reference to adopt OPP library.
 
-2012/7/19 Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>:
-> Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-> ---
->  drivers/usb/host/ehci-vt8500.c |    9 +++++++++
->  1 files changed, 9 insertions(+), 0 deletions(-)
+Same as Richard's patch, the driver has no intention to support the
+multi-core systems that frequency and voltage can be scaled
+independently on different CPUs.  Instead, it aims at uniprocessor (UP)
+and those symmetric multiprocessor (SMP) systems which share clock and
+voltage across all CPUs.
 
-Have you tried to use ehci-platform on VIA/WMT devices? If it works
-(which I would expect), I believe it's better to include OF support
-into ehci-platform and drop ehci-vt8500 completely after existing
-boards are converted to Device Tree. When writing ehci-vt8500, I
-mostly only copied stuff from the PCI version and made it initialize
-from the platform bus (nothing specific to vt8500).
+I have seen patch from Mike changing omap-cpufreq driver to scale
+regulator from clk notifier.  We can definitely make the same move
+for cpufreq-cpu0 later when the patch gets accepted.
 
-Thanks,
-Alexey
+Regards,
+Shawn
 
------
+[1] http://thread.gmane.org/gmane.linux.kernel.cpufreq/7688/focus=7688
+
+---
+
+Richard Zhao (1):
+  ARM: add cpufreq transiton notifier to adjust loops_per_jiffy for smp
+
+Shawn Guo (2):
+  PM / OPP: Initialize OPP table from device tree
+  cpufreq: Add a generic cpufreq-cpu0 driver
+
+ .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |   58 +++++
+ Documentation/devicetree/bindings/power/opp.txt    |   29 +++
+ arch/arm/kernel/smp.c                              |   54 +++++
+ drivers/base/power/opp.c                           |   66 ++++++
+ drivers/cpufreq/Kconfig                            |   11 +
+ drivers/cpufreq/Makefile                           |    2 +
+ drivers/cpufreq/cpufreq-cpu0.c                     |  235 ++++++++++++++++++++
+ include/linux/opp.h                                |    4 +
+ 8 files changed, 459 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+ create mode 100644 Documentation/devicetree/bindings/power/opp.txt
+ create mode 100644 drivers/cpufreq/cpufreq-cpu0.c
+
+-- 
+1.7.5.4
 
 
-The ehci-platform device requires platform_data be passed at probe.
-While its generic enought , it puts requirements on the device-tree to setup
-the private data, which would be messy to get approved I suspect.
-
-Regards
-
-Tony P
