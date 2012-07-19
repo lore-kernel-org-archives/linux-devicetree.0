@@ -1,65 +1,151 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: RE: [PATCH 1/1] Add Wondermedia Technologies (wmt) to
- docs/devicetree/vendor-bindings.txt
-Date: Thu, 19 Jul 2012 04:56:06 +0000
-Message-ID: <76F764B079F92A4E843589C893D0A022C381059B@SERVER.prisktech.co.nz>
-References: <76F764B079F92A4E843589C893D0A022C380F1D4@SERVER.prisktech.co.nz>
- <201207171250.32265.arnd@arndb.de>
- <CABjd4Yyk6XR6RizgcpjCdi2N_+Z2EzTtezbkN9V7r4bAXXjhqA@mail.gmail.com>
+From: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Subject: [PATCH v3 02/11] usb: musb: kill global and static for multi instance
+Date: Thu, 19 Jul 2012 11:11:30 +0530
+Message-ID: <1342676499-32507-3-git-send-email-ajay.gupta@ti.com>
+References: <1342676499-32507-1-git-send-email-ajay.gupta@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABjd4Yyk6XR6RizgcpjCdi2N_+Z2EzTtezbkN9V7r4bAXXjhqA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Charkov <alchark@gmail.com>, "vt8500-wm8505-linux-kernel@googlegroups.com" <vt8500-wm8505-linux-kernel@googlegroups.com>
-Cc: Tony Prisk <linux@prisktech.co.nz>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1342676499-32507-1-git-send-email-ajay.gupta@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, Ajay Kumar Gupta <ajay.gupta@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Given that there have been no replies to this thread, and the restart patch has
-now been accepted using 'wmt' as the vendor namespace - would it be safe to
-assume we should formalize this in the vendor-bindings.txt?
+Moved global variable "musb_debugfs_root" and static variable
+"old_state" to 'struct musb' to help support multi instance of
+musb controller as present on AM335x platform.
 
-I'd like to try and have basic device tree support added for the next merge
-window (or this one if it all goes well :) ), but it relies on the vendor binding being
-formalized.
+Also removed the global variable "orig_dma_mask" and filled the
+dev->dma_mask with parent device's dma_mask.
 
-Regards,
+Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+---
+ drivers/usb/musb/musb_core.c    |   16 +++-------------
+ drivers/usb/musb/musb_core.h    |    4 ++++
+ drivers/usb/musb/musb_debugfs.c |   14 ++++++++------
+ 3 files changed, 15 insertions(+), 19 deletions(-)
 
-Tony P
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 3e09984..a5db4dd 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -1802,10 +1802,9 @@ static const struct attribute_group musb_attr_group = {
+ static void musb_irq_work(struct work_struct *data)
+ {
+ 	struct musb *musb = container_of(data, struct musb, irq_work);
+-	static int old_state;
+ 
+-	if (musb->xceiv->state != old_state) {
+-		old_state = musb->xceiv->state;
++	if (musb->xceiv->state != musb->xceiv_old_state) {
++		musb->xceiv_old_state = musb->xceiv->state;
+ 		sysfs_notify(&musb->controller->kobj, NULL, "mode");
+ 	}
+ }
+@@ -2115,11 +2114,6 @@ fail0:
+ /* all implementations (PCI bridge to FPGA, VLYNQ, etc) should just
+  * bridge to a platform device; this driver then suffices.
+  */
+-
+-#ifndef CONFIG_MUSB_PIO_ONLY
+-static u64	*orig_dma_mask;
+-#endif
+-
+ static int __devinit musb_probe(struct platform_device *pdev)
+ {
+ 	struct device	*dev = &pdev->dev;
+@@ -2138,10 +2132,6 @@ static int __devinit musb_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-#ifndef CONFIG_MUSB_PIO_ONLY
+-	/* clobbered by use_dma=n */
+-	orig_dma_mask = dev->dma_mask;
+-#endif
+ 	status = musb_init_controller(dev, irq, base);
+ 	if (status < 0)
+ 		iounmap(base);
+@@ -2166,7 +2156,7 @@ static int __devexit musb_remove(struct platform_device *pdev)
+ 	iounmap(ctrl_base);
+ 	device_init_wakeup(&pdev->dev, 0);
+ #ifndef CONFIG_MUSB_PIO_ONLY
+-	pdev->dev.dma_mask = orig_dma_mask;
++	pdev->dev.dma_mask = (&dev->dev.parent)->dma_mask;
+ #endif
+ 	return 0;
+ }
+diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+index 69ed141..6b6cee9 100644
+--- a/drivers/usb/musb/musb_core.h
++++ b/drivers/usb/musb/musb_core.h
+@@ -452,6 +452,10 @@ struct musb {
+ #endif
+ 	/* id for multiple musb instances */
+ 	u8			id;
++	int                     xceiv_old_state;
++#ifdef CONFIG_DEBUG_FS
++	struct dentry           *debugfs_root;
++#endif
+ };
+ 
+ static inline struct musb *gadget_to_musb(struct usb_gadget *g)
+diff --git a/drivers/usb/musb/musb_debugfs.c b/drivers/usb/musb/musb_debugfs.c
+index 40a37c9..b1e8f21 100644
+--- a/drivers/usb/musb/musb_debugfs.c
++++ b/drivers/usb/musb/musb_debugfs.c
+@@ -103,8 +103,6 @@ static const struct musb_register_map musb_regmap[] = {
+ 	{  }	/* Terminating Entry */
+ };
+ 
+-static struct dentry *musb_debugfs_root;
+-
+ static int musb_regdump_show(struct seq_file *s, void *unused)
+ {
+ 	struct musb		*musb = s->private;
+@@ -240,20 +238,24 @@ int __devinit musb_init_debugfs(struct musb *musb)
+ 	struct dentry		*root;
+ 	struct dentry		*file;
+ 	int			ret;
++	char			name[10];
+ 
+-	root = debugfs_create_dir("musb", NULL);
++	sprintf(name, "musb%d", musb->id);
++	root = debugfs_create_dir(name, NULL);
+ 	if (!root) {
+ 		ret = -ENOMEM;
+ 		goto err0;
+ 	}
+ 
+-	file = debugfs_create_file("regdump", S_IRUGO, root, musb,
++	sprintf(name, "regdump%d", musb->id);
++	file = debugfs_create_file(name, S_IRUGO, root, musb,
+ 			&musb_regdump_fops);
+ 	if (!file) {
+ 		ret = -ENOMEM;
+ 		goto err1;
+ 	}
+ 
++	sprintf(name, "testmode%d", musb->id);
+ 	file = debugfs_create_file("testmode", S_IRUGO | S_IWUSR,
+ 			root, musb, &musb_test_mode_fops);
+ 	if (!file) {
+@@ -261,7 +263,7 @@ int __devinit musb_init_debugfs(struct musb *musb)
+ 		goto err1;
+ 	}
+ 
+-	musb_debugfs_root = root;
++	musb->debugfs_root = root;
+ 
+ 	return 0;
+ 
+@@ -274,5 +276,5 @@ err0:
+ 
+ void /* __init_or_exit */ musb_exit_debugfs(struct musb *musb)
+ {
+-	debugfs_remove_recursive(musb_debugfs_root);
++	debugfs_remove_recursive(musb->debugfs_root);
+ }
+-- 
+1.7.0.4
 
-> -----Original Message-----
-> From: linux-arm-kernel-bounces@lists.infradead.org [mailto:linux-arm-kernel-bounces@lists.infradead.org] On Behalf Of Alexey
-> Charkov
-> Sent: Wednesday, 18 July 2012 1:31 a.m.
-> To: vt8500-wm8505-linux-kernel@googlegroups.com
-> Cc: Tony Prisk; devicetree-discuss@lists.ozlabs.org; Russell King; linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH 1/1] Add Wondermedia Technologies (wmt) to docs/devicetree/vendor-bindings.txt
-> 
-> 2012/7/17 Arnd Bergmann <arnd@arndb.de>:
-> > It would also be helpful to describe why the specific string is used here.
-> > Normally we use the stock ticker symbol and "wmt" refers to Wal-Mart,
-> > which would be unlikely but not impossible to produce their own hardware
-> > in the future. The same thing applies to "via", which is VIACOM. The symbol
-> > for VIA technologies is "2388.TW", but that is not particularly descriptive
-> > or well-known.
-> >
-> > Maybe someone on the devicetree-discuss mailing list has a better
-> > suggestion. I think using "via" is probably the best compromise, as
-> > it's a well-known name and most of the components of the wondermedia
-> > chips were first made by VIA anyway.
-> 
-> In fact, "wmt" is the name that the vendor itself uses in their GPL
-> code (they also use mach-wmt as the arch-specific folder name). I
-> believe that we could just as well use the full "wondermedia" word to
-> avoid possible confusion, in case "wmt" is unacceptable for any
-> reason.
-> 
-> Best,
-> Alexey
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
