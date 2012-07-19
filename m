@@ -1,83 +1,135 @@
-From: "Gupta, Ajay Kumar" <ajay.gupta@ti.com>
-Subject: RE: [PATCH v3 04/11] usb: otg: nop: add support for multiple
- tranceiver
-Date: Thu, 19 Jul 2012 10:15:47 +0000
-Message-ID: <47CEF8C4B26E8C44B22B028A650E0EA93EADDADE@DBDE01.ent.ti.com>
-References: <1342676499-32507-1-git-send-email-ajay.gupta@ti.com>
-	<1342676499-32507-5-git-send-email-ajay.gupta@ti.com>
- <CAAe_U6+a_8hoJgdHfLGyMeg6EMmkfkP1Zow9avRTgG6EpV5p1Q@mail.gmail.com>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCH 3/9] mmc: dw_mmc: lookup for optional biu and ciu clocks
+Date: Thu, 19 Jul 2012 19:27:25 +0900
+Message-ID: <004201cd6599$17401610$45c04230$%jun@samsung.com>
+References: <CAGxe1ZGMvrec-nEYdZJ84Hub0fByYvnkCY_dRq2k489gCRSxQg@mail.gmail.com>
+ <1342521538-12790-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAe_U6+a_8hoJgdHfLGyMeg6EMmkfkP1Zow9avRTgG6EpV5p1Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset=ks_c_5601-1987
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1342521538-12790-1-git-send-email-thomas.abraham@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-> > Currently we have one single nop transceiver support as same is
-> > defined as a global variable in drivers/usb/otg/nop-usb-xceiv.c.
-> > This need to be changed to support multiple otg controller each
-> > using nop transceiver on a platform such as am335x.
-> >
-> > Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
-> > ---
-> >  arch/arm/mach-omap2/board-omap3evm.c |    2 +-
-> >  drivers/usb/musb/am35x.c             |    4 ++--
-> >  drivers/usb/musb/blackfin.c          |    4 ++--
-> >  drivers/usb/musb/da8xx.c             |    4 ++--
-> >  drivers/usb/musb/davinci.c           |    6 +++---
-> >  drivers/usb/musb/musb_dsps.c         |   10 +++++-----
-> >  drivers/usb/musb/tusb6010.c          |    6 +++---
-> >  drivers/usb/otg/nop-usb-xceiv.c      |   20 ++++++++++++--------
-> >  include/linux/usb/otg.h              |    9 +++++----
-> >  9 files changed, 35 insertions(+), 30 deletions(-)
-> >
-> > diff --git a/arch/arm/mach-omap2/board-omap3evm.c b/arch/arm/mach-
-> omap2/board-omap3evm.c
-> > index ef230a0..a3393bc 100644
-[...]
-> > diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-> > index 4636d39..36cc791 100644
-> > --- a/include/linux/usb/otg.h
-> > +++ b/include/linux/usb/otg.h
-> > @@ -95,6 +95,7 @@ struct usb_phy {
-> >         struct device           *dev;
-> >         const char              *label;
-> >         unsigned int             flags;
-> > +       u8                      id;
+July 17, 2012, Thomas Abraham <thomas.abraham@linaro.org> wrote:
+> Some platforms allow for clock gating and control of bus interface unit clock
+> and card interface unit clock. Add support for clock lookup of optional biu
+> and ciu clocks for clock gating and clock speed determination.
 > 
-> Do we really need to have *id* in phy??
-
-I will update the patches dropping this.
-
-> >
-> >         enum usb_phy_type       type;
-> >         enum usb_otg_state      state;
-> > @@ -137,14 +138,14 @@ extern void usb_remove_phy(struct usb_phy *);
-> >
-> >  #if defined(CONFIG_NOP_USB_XCEIV) ||
-> (defined(CONFIG_NOP_USB_XCEIV_MODULE) && defined(MODULE))
-> >  /* sometimes transceivers are accessed only through e.g. ULPI */
-
-> > -extern void usb_nop_xceiv_register(void);
-> > -extern void usb_nop_xceiv_unregister(void);
-> > +extern void usb_nop_xceiv_register(int id);
-> > +extern void usb_nop_xceiv_unregister(struct usb_phy *);
-
-> IMHO,  these declarations shouldn't be in usb/otg.h. It can be in a
-> header file specific to usb_nop?
-
-They were in otg.h and just definition getting changed so I think they
-need to be in otg.h only as a logical change of this patch.
-
-Location can be changed as a separate patch later.
+> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  drivers/mmc/host/dw_mmc.c  |   39 ++++++++++++++++++++++++++++++++++++---
+>  include/linux/mmc/dw_mmc.h |    4 ++++
+>  2 files changed, 40 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index cd58063..ebd22d8 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -1953,13 +1953,30 @@ int dw_mci_probe(struct dw_mci *host)
+>  		return -ENODEV;
+>  	}
+> 
+> -	if (!host->pdata->bus_hz) {
+> +	host->biu_clk = clk_get(host->dev, "biu");
+> +	if (IS_ERR(host->biu_clk))
+> +		dev_dbg(host->dev, "biu clock not available\n");
+> +	else
+> +		clk_prepare_enable(host->biu_clk);
+> +
+> +	host->ciu_clk = clk_get(host->dev, "ciu");
+> +	if (IS_ERR(host->ciu_clk))
+> +		dev_dbg(host->dev, "ciu clock not available\n");
+> +	else
+> +		clk_prepare_enable(host->ciu_clk);
+> +
+> +	if (IS_ERR(host->ciu_clk))
+> +		host->bus_hz = host->pdata->bus_hz;
+> +	else
+> +		host->bus_hz = clk_get_rate(host->ciu_clk);
+I have posted similar patch some time back.
+bus_hz represents input rate for cclk_in of mshc.
+Host of samsung soc doesn't use input clock from system directly.
+As you have introduced CLKSEL in your another patch, input clock can be changed prior to cclk_in.
+For non-samsung  host, we don't need to consider this with generic way?
 
 Thanks,
-Ajay
+Seungwon Jeon
+
+> +
+> +	if (!host->bus_hz) {
+>  		dev_err(host->dev,
+>  			"Platform data must supply bus speed\n");
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto err_clk;
+>  	}
 > 
-> Thanks
-> Kishon
+> -	host->bus_hz = host->pdata->bus_hz;
+>  	host->quirks = host->pdata->quirks;
+> 
+>  	spin_lock_init(&host->lock);
+> @@ -2109,6 +2126,16 @@ err_dmaunmap:
+>  		regulator_disable(host->vmmc);
+>  		regulator_put(host->vmmc);
+>  	}
+> +
+> +err_clk:
+> +	if (!IS_ERR(host->ciu_clk)) {
+> +		clk_disable_unprepare(host->ciu_clk);
+> +		clk_put(host->ciu_clk);
+> +	}
+> +	if (!IS_ERR(host->biu_clk)) {
+> +		clk_disable_unprepare(host->biu_clk);
+> +		clk_put(host->biu_clk);
+> +	}
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(dw_mci_probe);
+> @@ -2142,6 +2169,12 @@ void dw_mci_remove(struct dw_mci *host)
+>  		regulator_put(host->vmmc);
+>  	}
+> 
+> +	if (!IS_ERR(host->ciu_clk))
+> +		clk_disable_unprepare(host->ciu_clk);
+> +	if (!IS_ERR(host->biu_clk))
+> +		clk_disable_unprepare(host->biu_clk);
+> +	clk_put(host->ciu_clk);
+> +	clk_put(host->biu_clk);
+>  }
+>  EXPORT_SYMBOL(dw_mci_remove);
+> 
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index a37a573..787ad56 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -78,6 +78,8 @@ struct mmc_data;
+>   * @data_offset: Set the offset of DATA register according to VERID.
+>   * @dev: Device associated with the MMC controller.
+>   * @pdata: Platform data associated with the MMC controller.
+> + * @biu_clk: Pointer to bus interface unit clock instance.
+> + * @ciu_clk: Pointer to card interface unit clock instance.
+>   * @slot: Slots sharing this MMC controller.
+>   * @fifo_depth: depth of FIFO.
+>   * @data_shift: log2 of FIFO item size.
+> @@ -158,6 +160,8 @@ struct dw_mci {
+>  	u16			data_offset;
+>  	struct device		*dev;
+>  	struct dw_mci_board	*pdata;
+> +	struct clk		*biu_clk;
+> +	struct clk		*ciu_clk;
+>  	struct dw_mci_slot	*slot[MAX_MCI_SLOTS];
+> 
+>  	/* FIFO push and pull */
+> --
+> 1.6.6.rc2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
