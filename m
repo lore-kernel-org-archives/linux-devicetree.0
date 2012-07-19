@@ -1,215 +1,52 @@
-From: Jamie Lentin <jm@lentin.co.uk>
-Subject: [PATCH 2/4] kirkwood: Replace DNS-320/DNS-325 leds with dt bindings
-Date: Thu, 19 Jul 2012 21:30:58 +0100
-Message-ID: <1342729860-14647-3-git-send-email-jm@lentin.co.uk>
-References: <y>
- <1342729860-14647-1-git-send-email-jm@lentin.co.uk>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v3 0/6] mmc: dw_mmc: add support for device tree based
+ instantiation
+Date: Fri, 20 Jul 2012 07:47:34 +0900
+Message-ID: <195201cd6600$7cb089f0$76119dd0$%kim@samsung.com>
+References: <1342097668-25243-1-git-send-email-thomas.abraham@linaro.org>
+ <5008279B.4000001@samsung.com>
+ <CAJuYYwQBgpJ1wiS3fSDS2cMi6kanuO47rc8SmniAqjRPuBGJHg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1342729860-14647-1-git-send-email-jm@lentin.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>, Jason <jason@lakedaemon.net>
-Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwQBgpJ1wiS3fSDS2cMi6kanuO47rc8SmniAqjRPuBGJHg@mail.gmail.com>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Replace code in board-dnskw with the equivalent devicetree bindings.
+Thomas Abraham wrote:
+> 
+> On 19 July 2012 20:58, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> > Hi Thomas,
+> >
+> > I think not good that added the samsung specific code into dw_mmc-
+> pltfm.c
+> > How about separating to dw-mmc-exynos.c?
+> 
+> I am not sure of this. The only samsung specific code in
+> dw_mmc-pltfm.c file is the data for of_device_id instances. The clock
+> lookup added into this file in the 3rd patch does not cause any harm
+> on non-samsung SoC's which might not define those clocks (on clock
+> lookup failure, there are only warning printed, the driver's probe
+> does not fail.
+> 
+I agree with Thomas' opinion, in addition, the dw_mmc-pltfm.c file can
+support that, so adding dw-mmc-exynos.c is not needed now.
 
-Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
----
- arch/arm/boot/dts/kirkwood-dns320.dts |   25 +++++++++
- arch/arm/boot/dts/kirkwood-dns325.dts |   25 +++++++++
- arch/arm/mach-kirkwood/board-dnskw.c  |   90 ---------------------------------
- 3 files changed, 50 insertions(+), 90 deletions(-)
+> I would prefer not to add separate file for Exynos SoC's for now.
+> Splitting into different files will need to defined new callbacks
+> which I fell is not really required.
+> 
+Yes.
 
-diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
-index f2a9808..a81c3a9 100644
---- a/arch/arm/boot/dts/kirkwood-dns320.dts
-+++ b/arch/arm/boot/dts/kirkwood-dns320.dts
-@@ -15,6 +15,31 @@
- 		bootargs = "console=ttyS0,115200n8 earlyprintk";
- 	};
- 
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		blue-power {
-+			label = "dns320:blue:power";
-+			gpios = <&gpio0 26 1>; /* GPIO 26 Active Low */
-+			linux,default-trigger = "default-on";
-+		};
-+		blue-usb {
-+			label = "dns320:blue:usb";
-+			gpios = <&gpio1 11 1>; /* GPIO 43 Active Low */
-+		};
-+		orange-l_hdd {
-+			label = "dns320:orange:l_hdd";
-+			gpios = <&gpio0 28 1>; /* GPIO 28 Active Low */
-+		};
-+		orange-r_hdd {
-+			label = "dns320:orange:r_hdd";
-+			gpios = <&gpio0 27 1>; /* GPIO 27 Active Low */
-+		};
-+		orange-usb {
-+			label = "dns320:orange:usb";
-+			gpios = <&gpio1 3 1>; /* GPIO 35 Active Low */
-+		};
-+	};
-+
- 	ocp@f1000000 {
- 		serial@12000 {
- 			clock-frequency = <166666667>;
-diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts b/arch/arm/boot/dts/kirkwood-dns325.dts
-index e040d6c..421dcab 100644
---- a/arch/arm/boot/dts/kirkwood-dns325.dts
-+++ b/arch/arm/boot/dts/kirkwood-dns325.dts
-@@ -15,6 +15,31 @@
- 		bootargs = "console=ttyS0,115200n8 earlyprintk";
- 	};
- 
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		white-power {
-+			label = "dns325:white:power";
-+			gpios = <&gpio0 26 1>; /* GPIO 26 Active Low */
-+			linux,default-trigger = "default-on";
-+		};
-+		white-usb {
-+			label = "dns325:white:usb";
-+			gpios = <&gpio1 11 1>; /* GPIO 43 Active Low */
-+		};
-+		red-l_hdd {
-+			label = "dns325:red:l_hdd";
-+			gpios = <&gpio0 28 1>; /* GPIO 28 Active Low */
-+		};
-+		red-r_hdd {
-+			label = "dns325:red:r_hdd";
-+			gpios = <&gpio0 27 1>; /* GPIO 27 Active Low */
-+		};
-+		red-usb {
-+			label = "dns325:red:usb";
-+			gpios = <&gpio0 29 1>; /* GPIO 29 Active Low */
-+		};
-+	};
-+
- 	ocp@f1000000 {
- 		i2c@11000 {
- 			status = "okay";
-diff --git a/arch/arm/mach-kirkwood/board-dnskw.c b/arch/arm/mach-kirkwood/board-dnskw.c
-index 1c97efa..aac9c90 100644
---- a/arch/arm/mach-kirkwood/board-dnskw.c
-+++ b/arch/arm/mach-kirkwood/board-dnskw.c
-@@ -68,90 +68,6 @@ static unsigned int dnskw_mpp_config[] __initdata = {
- 	0
- };
- 
--static struct gpio_led dns325_led_pins[] = {
--	{
--		.name	= "dns325:white:power",
--		.gpio	= 26,
--		.active_low = 1,
--		.default_trigger = "default-on",
--	},
--	{
--		.name	= "dns325:white:usb",
--		.gpio	= 43,
--		.active_low = 1,
--	},
--	{
--		.name	= "dns325:red:l_hdd",
--		.gpio	= 28,
--		.active_low = 1,
--	},
--	{
--		.name	= "dns325:red:r_hdd",
--		.gpio	= 27,
--		.active_low = 1,
--	},
--	{
--		.name	= "dns325:red:usb",
--		.gpio	= 29,
--		.active_low = 1,
--	},
--};
--
--static struct gpio_led_platform_data dns325_led_data = {
--	.num_leds	= ARRAY_SIZE(dns325_led_pins),
--	.leds		= dns325_led_pins,
--};
--
--static struct platform_device dns325_led_device = {
--	.name		= "leds-gpio",
--	.id		= -1,
--	.dev		= {
--		.platform_data	= &dns325_led_data,
--	},
--};
--
--static struct gpio_led dns320_led_pins[] = {
--	{
--		.name	= "dns320:blue:power",
--		.gpio	= 26,
--		.active_low = 1,
--		.default_trigger = "default-on",
--	},
--	{
--		.name	= "dns320:blue:usb",
--		.gpio	= 43,
--		.active_low = 1,
--	},
--	{
--		.name	= "dns320:orange:l_hdd",
--		.gpio	= 28,
--		.active_low = 1,
--	},
--	{
--		.name	= "dns320:orange:r_hdd",
--		.gpio	= 27,
--		.active_low = 1,
--	},
--	{
--		.name	= "dns320:orange:usb",
--		.gpio	= 35,
--		.active_low = 1,
--	},
--};
--
--static struct gpio_led_platform_data dns320_led_data = {
--	.num_leds	= ARRAY_SIZE(dns320_led_pins),
--	.leds		= dns320_led_pins,
--};
--
--static struct platform_device dns320_led_device = {
--	.name		= "leds-gpio",
--	.id		= -1,
--	.dev		= {
--		.platform_data	= &dns320_led_data,
--	},
--};
--
- static struct gpio_keys_button dnskw_button_pins[] = {
- 	{
- 		.code		= KEY_POWER,
-@@ -237,12 +153,6 @@ void __init dnskw_init(void)
- 	platform_device_register(&dnskw_button_device);
- 	platform_device_register(&dnskw_fan_device);
- 
--	if (of_machine_is_compatible("dlink,dns-325"))
--		platform_device_register(&dns325_led_device);
--
--	else if (of_machine_is_compatible("dlink,dns-320"))
--		platform_device_register(&dns320_led_device);
--
- 	/* Register power-off GPIO. */
- 	if (gpio_request(36, "dnskw:power:off") == 0
- 	    && gpio_direction_output(36, 0) == 0)
--- 
-1.7.10.4
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
+
