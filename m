@@ -1,69 +1,69 @@
-From: Christian Engelmayer <christian.engelmayer@frequentis.com>
-Subject: Re: [RFC] Configure GPIO settings via the device tree
-Date: Thu, 19 Jul 2012 10:39:17 +0200
-Message-ID: <20120719103917.78e01091@frequentis.com>
-References: <20120713100440.7a80e05f@frequentis.com>
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: Re: [PATCH RESEND v2 1/2] ARM: EXYNOS: Add clock support for Gscaler
+Date: Thu, 19 Jul 2012 09:08:57 +0000 (GMT)
+Message-ID: <24446146.151121342688937045.JavaMail.weblogic@epml09>
+Reply-To: shaik.ameer@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20120713100440.7a80e05f@frequentis.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: grant.likely@secretlab.ca, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org
-Cc: linuxppc-dev@lists.ozlabs.org, christian.engelmayer@frequentis.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sun-Young Kang <sy0816.kang@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "olofj@google.com" <olofj@google.com>, Thomas P Abraham <thomas.ab@samsung.com>, "sylvester.nawrocki@gmail.com" <sylvester.nawrocki@gmail.com>, "sachin.kamat@linaro.org" <sachin.kamat@linaro.org>, SUNIL JOSHI <joshi@samsung.com>, shaik.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-As there was no response to my question I assume that I see it correctly
-that at the moment the only 2 options for setting up GPIO configurations
-is either via platform-specific code by eg. platform_data or via userspace?
-
-Would there be a common use of defining GPIO configurations via a device
-tree and applying those settings via a generic, platform-unaware driver?
-
-Regards,
-Christian
-
-
-On Fri, 13 Jul 2012 10:04:40 +0200
-Christian Engelmayer <christian.engelmayer@frequentis.com> wrote:
-
-> Hello,
-> 
-> I am looking for a way to configure GPIO initial settings and exports to the
-> userspace via Sysfs in a generic way via a device tree.
-> 
-> The purpose would be to have the same features as when initializing and
-> exporting pins via platform code, eg.
-> 
-> 	static struct gpio leds_gpios[] = {
-> 		{ 32, GPIOF_OUT_INIT_HIGH, "Power LED" }, /* default to ON */
-> 		{ 33, GPIOF_OUT_INIT_LOW,  "Green LED" }, /* default to OFF */
-> 		{ 34, GPIOF_OUT_INIT_LOW,  "Red LED"   }, /* default to OFF */
-> 		{ 35, GPIOF_OUT_INIT_LOW,  "Blue LED"  }, /* default to OFF */
-> 		{ ... },
-> 	};
-> 
-> ,however, with no need for the kernel to know anything more about those pins
-> and their later handling by simple userpsace drivers than the setup information
-> provided in the device tree.
-> 
-> This should also attack the problem of unstable GPIO numbers in the case of
-> daughtercards on different base boards and would help provide a defined API
-> to the userspace based on pin labels with the board specifics hidden in one
-> place in the device tree.
-> 
-> Is there already a way for realizing such a scenario ?
-> 
-> Regards,
-> Christian
+SGkgS3VramluIEtpbSAmIFN1bnlvdW5nLA0KDQp0aGFua3MgZm9yIHRoZSByZXZpZXcgY29tbWVu
+dHMuLi4NCg0KT24gV2VkLCBKdWwgMTgsIDIwMTIgYXQgMjoxNCBQTSwgU3VueW91bmcgS2FuZyA8
+c3kwODE2LmthbmdAc2Ftc3VuZy5jb20+IHdyb3RlOg0KPiBLdWtqaW4gS2ltIHdyb3RlOg0KPj4N
+Cj4+U2hhaWsgQW1lZXIgQmFzaGEgd3JvdGU6DQo+Pj4NCj4+PiBBZGQgcmVxdWlyZWQgY2xvY2sg
+c3VwcG9ydCBmb3IgR3NjYWxlciBmb3IgZXh5bm9zNQ0KPj4+DQo+PkhpLA0KPj4NCj4+Q2MnZWQg
+U3VueW91bmcgS2FuZyB3aG8ga25vd3MgZ3NjYWxlciB3ZWxsIGluIG15IHRlYW0uDQo+Pg0KPj4+
+IFNpZ25lZC1vZmYtYnk6IEFiaGlsYXNoIEtlc2F2YW4gPGEua2VzYXZhbkBzYW1zdW5nLmNvbT4N
+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBMZWVsYSBLcmlzaG5hIEFtdWRhbGEgPGwua3Jpc2huYUBzYW1z
+dW5nLmNvbT4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBQcmF0aHl1c2ggSyA8cHJhdGh5dXNoLmtAc2Ft
+c3VuZy5jb20+DQo+Pj4gU2lnbmVkLW9mZi1ieTogU2hhaWsgQW1lZXIgQmFzaGEgPHNoYWlrLmFt
+ZWVyQHNhbXN1bmcuY29tPg0KPj4+IC0tLQ0KPj4+ICBhcmNoL2FybS9tYWNoLWV4eW5vcy9jbG9j
+ay1leHlub3M1LmMgfCAgIDc5DQo+Pj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Kw0KPj4+ICAxIGZpbGVzIGNoYW5nZWQsIDc5IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0p
+DQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1leHlub3MvY2xvY2stZXh5bm9z
+NS5jIGIvYXJjaC9hcm0vbWFjaC0NCj4+PiBleHlub3MvY2xvY2stZXh5bm9zNS5jDQo+Pj4gaW5k
+ZXggZmVmYTMzNi4uYzgyOTNhMyAxMDA2NDQNCj4+PiAtLS0gYS9hcmNoL2FybS9tYWNoLWV4eW5v
+cy9jbG9jay1leHlub3M1LmMNCj4+PiArKysgYi9hcmNoL2FybS9tYWNoLWV4eW5vcy9jbG9jay1l
+eHlub3M1LmMNCj4+PiBAQCAtNzQxLDYgKzc0MSwyNiBAQCBzdGF0aWMgc3RydWN0IGNsayBleHlu
+b3M1X2luaXRfY2xvY2tzX29mZltdID0gew0KPj4+ICAgICAgICAgICAgICAuZW5hYmxlICAgICAg
+ICAgPSBleHlub3M1X2Nsa19pcF9wZXJpY19jdHJsLA0KPj4+ICAgICAgICAgICAgICAuY3RybGJp
+dCAgICAgICAgPSAoMSA8PCAxNCksDQo+Pj4gICAgICB9LCB7DQo+Pj4gKyAgICAgICAgICAgIC5u
+YW1lICAgICAgICAgICA9ICJnc2NsIiwNCj4+PiArICAgICAgICAgICAgLmRldm5hbWUgICAgICAg
+ID0gImV4eW5vcy1nc2MuMCIsDQo+Pj4gKyAgICAgICAgICAgIC5lbmFibGUgICAgICAgICA9IGV4
+eW5vczVfY2xrX2lwX2dzY2xfY3RybCwNCj4+PiArICAgICAgICAgICAgLmN0cmxiaXQgICAgICAg
+ID0gKDEgPDwgMCksDQo+Pg0KPj5TdW55b3VuZywgSSd2ZSBzZWVuICgxIDw8IDE1KSB8ICgxIDw8
+IDApIGhlcmUgaW5zdGVhZCwgd2hpY2ggb25lIGlzIHJpZ2h0Pw0KPj4NCj4NCj4gQWN0dWFsbHks
+IHRoZSBjdHJsIGJpdCwgKDEgPDwgMCkgaXMgY29ycmVjdC4gVGhlIDE1dGggYml0IEt1a2ppbiBz
+YWlkIGlzDQo+IHVzZWQgZm9yIGFub3RoZXIgcHVycG9zZS4NCj4NCg0KQXMgU3VueW91bmcgcG9p
+bnRlZCBvdXQgdGhlICcuY3RybGJpdCcgdmFsdWUgaXMgY29ycmVjdC4uLg0KDQo+PltzbmlwXQ0K
+Pj4NCj4+SSB0aGluaywgZm9sbG93aW5nIHBhcnQgc2hvdWxkIGJlIG1vdmVkIGJldHdlZW4NCj4+
+DQo+Pi0tLQ0KPj5zdGF0aWMgc3RydWN0IGNsa3NyY19jbGsgZXh5bm9zNV9jbGtfYWNsa182NiA9
+IHsNCj4+W3NuaXBdDQo+Pn07DQo+Pg0KPj48PDxIRVJFPj4+DQoNCm9rLi4gaSB3aWxsIGRvIHRo
+YXQuDQoNCj4+DQo+PnN0YXRpYyBzdHJ1Y3QgY2xrIGV4eW5vczVfaW5pdF9jbG9ja3Nfb2ZmW10g
+PSB7DQo+Pi0tLQ0KPj4NCj4+UGxlYXNlIGRvbid0IHB1dCB5b3VyIGNsb2NrIGNvZGUgd2l0aG91
+dCBhbnkgY2hlY2tpbmcgdGhlIGNsb2NrIGNvZGUuDQo+Pg0KPj4NCj4+PiArLyogRm9yIEFDTEtf
+MzAwX2dzY2xfbWlkICovDQo+Pj4gK3N0YXRpYyBzdHJ1Y3QgY2xrc3JjX2NsayBleHlub3M1X2Ns
+a19tb3V0X2FjbGtfMzAwX2dzY2xfbWlkID0gew0KPj4+ICsgICAgLmNsayAgICA9IHsNCj4+PiAr
+ICAgICAgICAgICAgLm5hbWUgICA9ICJtb3V0X2FjbGtfMzAwX2dzY2xfbWlkIiwNCj4+PiArICAg
+IH0sDQo+Pj4gKyAgICAuc291cmNlcyA9ICZleHlub3M1X2Nsa3NldF9hY2xrLA0KPj4+ICsgICAg
+LnJlZ19zcmMgPSB7IC5yZWcgPSBFWFlOT1M1X0NMS1NSQ19UT1AwLCAuc2hpZnQgPSAyNCwgLnNp
+emUgPSAxIH0sDQo+Pj4gK307DQo+Pj4gKw0KPj4+ICsvKiBGb3IgQUNMS18zMDBfZ3NjbCAqLw0K
+Pj4+ICtzdHJ1Y3QgY2xrICpleHlub3M1X2Nsa3NldF9hY2xrXzMwMF9nc2NsX2xpc3RbXSA9IHsN
+Cj4+PiArICAgIFswXSA9ICZleHlub3M1X2Nsa19tb3V0X2FjbGtfMzAwX2dzY2xfbWlkLmNsaywN
+Cj4+PiArICAgIFsxXSA9ICZleHlub3M1X2Nsa19zY2xrX3ZwbGwuY2xrLA0KPj4NCj4+QXMgSSBr
+bm93LCB0aGlzIGlzIHdyb25nLiBJdHMgWzFdIHNob3VsZCBiZQ0KPj4mZXh5bm9zNV9jbGtfbW91
+dF9hY2xrXzMwMF9nc2NsX21pZDEuY2xrDQo+Pg0KPg0KPiBZZXMsIHJpZ2h0LiBJdCBzaG91bGQg
+YmUgJ2V4eW5vczVfY2xrX21vdXRfYWNsa18zMDBfZ3NjbF9taWQxLmNsaycgd2hpY2ggaXMNCj4g
+Z2VuZXJhdGVkIGJ5IENQTEwuIFRoZSBWUExMIHNob3VsZG4ndCBiZSB1c2VkIGhlcmUuIEl0IG1l
+YW5zIHlvdSBuZWVkIHRvDQo+IGltcGxlbWVudCBDUExMIGZvciBnc2NhbGVyLiBBcyBhIG5vdGUs
+IENQTEwgY2FuIGJlIHVzZWQgZm9yIGZpbWQgYXMgd2VsbC4NCg0KU29ycnksIEkgd2FzIHJlZmVy
+cmluZyB0byB0aGUgb2xkIG1hbnVhbC4gDQpJIHdpbGwgYWRkIHRoZSAnZXh5bm9zNV9jbGtfbW91
+dF9hY2xrXzMwMF9nc2NsX21pZDEnIGNsay4uLiBpbiB2MyByZWxlYXNlLi4uDQoNCj4NCj4gW3Nu
+aXBdDQo+DQo+IFRoYW5rcy4NCj4NCj4gQlJzDQo+IFN1bnlvdW5nDQo+DQoNClRoYW5rcywNClNo
+YWlrIEFtZWVyIEJhc2hh
