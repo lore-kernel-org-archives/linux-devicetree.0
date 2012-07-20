@@ -1,37 +1,56 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] driver-core: dev_to_node() should handle NULL pointers
-Date: Fri, 20 Jul 2012 09:56:23 +0300
-Message-ID: <20120720065622.GA11710@elgon.mountain>
+From: Joonyoung Shim <jy0922.shim@samsung.com>
+Subject: Re: [PATCH V2 0/2] video: drm: Add Device tree support to DRM-FIMD
+Date: Fri, 20 Jul 2012 16:00:32 +0900
+Message-ID: <50090210.8080609@samsung.com>
+References: <1341996287-14666-1-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-reply-to: <1341996287-14666-1-git-send-email-l.krishna@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, dri-devel@lists.freedesktop.org, inki.dae@samsung.com, laurent.pinchart@ideasonboard.com, olofj@google.com
 List-Id: devicetree@vger.kernel.org
 
-What prompted this patch is that in dma_pool_create() we call
-dev_to_node() before checking whether "dev" is NULL.  It looks like
-there are places which call dma_pool_create() with a NULL pointer.  An
-example is in drivers/usb/gadget/amd5536udc.c.
+Hi,
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-Static checker fix.
+On 07/11/2012 05:44 PM, Leela Krishna Amudala wrote:
+> This patch set adds device tree support for DRM-FIMD for Samsung's Exynos5250.
+> It includes parsing platform data from dts file.
+>
+> This patchset is based and tested on top of v3.5-rc6
+>
+> Changes since V1:
+> 	- Corrected typo errors and changed compatibility string
+>
+> Leela Krishna Amudala (1):
+>    video: drm: exynos: Add device tree support
+>
+> Prathyush K (1):
+>    drm/exynos: Modifying exynos drm fimd to support exynos5
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index aa7b3b4..c80e7a8d 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -714,7 +714,9 @@ int dev_set_name(struct device *dev, const char *name, ...);
- #ifdef CONFIG_NUMA
- static inline int dev_to_node(struct device *dev)
- {
--	return dev->numa_node;
-+	if (dev)
-+		return dev->numa_node;
-+	return -1;
- }
- static inline void set_dev_node(struct device *dev, int node)
- {
+This patch is not related with device tree. Please send a patch without
+dependency with "video: drm: exynos: Add device tree support".
+
+Thanks.
+
+>
+>   Documentation/devicetree/bindings/fb/drm-fimd.txt |   73 +++++++++++++++
+>   drivers/gpu/drm/exynos/exynos_drm_fimd.c          |  101 ++++++++++++++++++++-
+>   2 files changed, 171 insertions(+), 3 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/fb/drm-fimd.txt
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
