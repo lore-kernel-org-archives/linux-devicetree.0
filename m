@@ -1,131 +1,119 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v6] ARM: davinci: i2c: add OF support
-Date: Fri, 20 Jul 2012 12:52:08 +0200
-Message-ID: <20120720105208.GB5971@pengutronix.de>
-References: <1342514447-30810-1-git-send-email-hs@denx.de>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH V2 1/7] ARM: SAMSUNG: add additional registers and SFR
+ definitions for writeback
+Date: Fri, 20 Jul 2012 16:37:52 +0530
+Message-ID: <CAL1wa8cR_1OCL8x4xoxmsZ9mU5XMd9dfsm=z4aZwmogAN4Z85Q@mail.gmail.com>
+References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com>
+ <1429943.UqWt7uDBOU@flatron> <CAL1wa8cCq-w8w-d-Z7rqRfA9yrfPvxQjxFn9b475A-D=J8d3Ew@mail.gmail.com>
+ <4240594.0SndFBiAl5@flatron> <000a01cd661e$4e1e19e0$ea5a4da0$%han@samsung.com>
+ <CAL1wa8dyLjC8BZBc0wBnjP=a2Yo5XDQq1Kfq9yw35_e8wxp0bw@mail.gmail.com> <50092C2F.9010304@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xXmbgvnjoT4axfJE"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1342514447-30810-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <50092C2F.9010304@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, thomas.ab@samsung.com, kgene.kim@samsung.com, olofj@google.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---xXmbgvnjoT4axfJE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 20, 2012 at 3:30 PM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> On 07/20/2012 04:59 AM, Leela Krishna Amudala wrote:
+>>>>>>> --- a/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
+>>>>>>> +++ b/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
+>>>>>>> @@ -30,9 +30,16 @@
+>>>>>>>
+>>>>>>>   #define VIDCON1_FSTATUS_EVEN (1<<  15)
+>>>>>>>
+>>>>>>>   /* Video timing controls */
+>>>>>>>
+>>>>>>> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
+>>>>>>> +#define VIDTCON0                                (0x20010)
+>>>>>>> +#define VIDTCON1                                (0x20014)
+>>>>>>> +#define VIDTCON3                                (0x2001C)
+>>>>>>> +#else
+>>>>>>>
+>>>>>>>   #define VIDTCON0                             (0x10)
+>>>>>>>   #define VIDTCON1                             (0x14)
+>>>>>>>   #define VIDTCON2                             (0x18)
+>>>>>>>
+>>>>>>> +#define VIDTCON3                             (0x1C)
+>>>>>>> +#endif
+>>>>>>
+>>>>>> Wouldn't it break s3c-fb on SoCs with earlier FIMD versions with
+>>>>>> CONFIG_FB_EXYNOS_FIMD_V8 selected? We are aiming at multi-platform ARM
+>>>>>> kernels, aren't we (i.e support of both V8 and earlier FIMD in one
+>>>>>> kernel)?
+>>>>> Exynos5 has FIMD_V8 and other SoCs has older FIMD versions.
+>>>>> As address offsets for certain registers has changed in FIMD_V8, we
+>>>>> introduced these defines.
+>>>>> So we have to select CONFIG_FB_EXYNOS_FIMD_V8 in case of Exynos5 SoC,
+>>>>> and deselect for other SoCs.
+>>>>
+>>>> Yes, I'm aware of different FIMD versions in different SoCs. My point is
+>>>> that it shouldn't be necessary to deselect CONFIG_FB_EXYNOS_FIMD_V8 to
+>>>> support other SoCs than Exynos5, i.e. additional config options should be
+>>>> incremental - should not break other setups. Ideally there should not be
+>>>> any new config option for FIMD v8.
+>>>>
+>>>> The detection of FIMD version and selection of appropriate register offsets
+>>>> should be done in the driver at runtime, based for example on
+>>>> platform_device_id (see the s3c-fb driver and usage of s3c_fb_driverdata
+>>>> and s3c_fb_win_variant structs).
+>>>
+>>> I could not agree with Tomasz Figa more.
+>>> FIMD register offset should be selected at runtime.
+>>>
+>>> Leela Krishna Amudala,
+>>> Please, don't use ugly "#ifdef".
+>>>
+>>> Best regards,
+>>> Jingoo Han
+>>>
+>>
+>> Yes, Each SoC having its own defconfigs (eg: exynos4_defconfig,
+>> exynos5_defconfig etc.,)
+>> So, CONFIG_FB_EXYNOS_FIMD_V8 will be added into exynos5_defconfig and
+>> it won't affect the other SoCs.
+>
+> NACK.
+>
+> As others explained, and you don't seem to understand or you are stubborn
+> enough not to change your approach, resolving hardware differences at
+> compile time only is not acceptable, especially that Exynos SoCs are
+> going to be DT only platforms. We shouldn't be short-sighted like this.
+>
+> Especially that the problem is relatively easy to solve at run-time, just
+> add EXYNOS5_* register address definitions and create separate functions
+> at the driver(s) touching those registers that changed on Exynos5.
+>
+> Or parametrize existing ones with an offset that would be stored in driver
+> data passed trough struct platform_device_id::driver_data.
+>
+> @Jingoo: BTW, shouldn't we have
+>
+> plat-samsung/include/plat/regs-fb.h
+> plat-samsung/include/plat/regs-fb-v4.h
+>
+> merged into one file and moved under include/video/ ?
+>
+> For example include/video/s3c-fb.h, and board files could also include
+> that header. We have FIMD variant structures anyway, so why do we still
+> need multiple headers ?
+>
 
-Hi,
+Will do the run-time approach, and post the next version patchset soon.
 
-On Tue, Jul 17, 2012 at 10:40:47AM +0200, Heiko Schocher wrote:
-> add of support for the davinci i2c driver.
->=20
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-> Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->=20
-> ---
-> - changes for v2:
-> - add comments from Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
->   - use "cell-index" instead "id"
->   - OF_DEV_AUXDATA in the machine code, instead pre-define platform
->     device name
-> - add comment from Grant Likely:
->   - removed "id" resp. "cell-index" completely
->   - fixed documentation
->   - use of_match_ptr()
->   - use devm_kzalloc() for allocating plattform data mem
->   - fixed a whitespace issue
-> - no changes for v3
-> - changes for v4
->   remove "pinmux-handle" property as discussed here:
->   http://www.spinics.net/lists/arm-kernel/msg175701.html
->   with Nori Sekhar
->=20
-> - changes for v5
->   add comments from Grant Likely:
->   - do not change value of dev->dev->platform_data, instead
->     hold a copy in davinci_i2c_dev.
->=20
-> - changes for v6:
->   add comments from Sekhar Nori:
->   - removed unneccessary include
->   - merge patch from Sekhar Nori:
->     setup the newly introduced dev->pdata member correctly once in
->     probe -> i2c_get_plattformdata(() not needed, remove a lot of
->     checks for pdata in code
->   - add Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
->   - patch no longer in patchserie, as it has no dependencies.
-> ---
->  .../devicetree/bindings/arm/davinci/i2c.txt        |   31 ++++++++++++
->  drivers/i2c/busses/i2c-davinci.c                   |   50 ++++++++++++++=
-+----
->  2 files changed, 70 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/davinci/i2c.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/i2c.txt b/Docu=
-mentation/devicetree/bindings/arm/davinci/i2c.txt
-> new file mode 100644
-> index 0000000..e98a025
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/davinci/i2c.txt
+Thanks,
+Leela Krishna Amudala
 
-This should go bindings/i2c/...
-
-> @@ -0,0 +1,31 @@
-> +* Texas Instruments Davinci I2C
-> +
-> +This file provides information, what the device node for the
-> +davinci i2c interface contain.
-> +
-> +Required properties:
-> +- compatible: "ti,davinci-i2c";
-> +- reg : Offset and length of the register set for the device
-> +
-> +Recommended properties :
-> +- interrupts : <a> standard interrupt property.
-> +- clock-frequency : desired I2C bus clock frequency in Hz.
-> +
-> +Optional properties:
-> +- bus-delay: bus delay in usec
-
-See my mail to Andrew regarding the timeout property in the mv64xxx
-driver. I'd like to skip the binding discussion for now in order to make
-it into 3.6. Is it okay for you to drop this binding and use a sane
-default?
-
-Rest looks good (from a visual review),
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---xXmbgvnjoT4axfJE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlAJOFgACgkQD27XaX1/VRuu9ACfbmSdA87RQ1Xqz3XGvpIuH+dJ
-OaIAoKzK+vu1ZmTQcKQZHa3ma85U/qOK
-=5nLF
------END PGP SIGNATURE-----
-
---xXmbgvnjoT4axfJE--
+> --
+>
+> Regards,
+> Sylwester
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
