@@ -1,158 +1,80 @@
-From: "Poddar, Sourav" <sourav.poddar@ti.com>
-Subject: Re: [PATCHv6] arm/dts: omap4-sdp: Add keypad data
-Date: Fri, 20 Jul 2012 14:04:07 +0530
-Message-ID: <CAKdam57Q0aYjN3+SBYZEaRQvXxEogSaQi4Un9NJh8614wz_E-A@mail.gmail.com>
-References: <1342191422-8235-1-git-send-email-sourav.poddar@ti.com>
-	<CAAe_U6LXB0EdBqG+=W+zKjtZ1av-UWpxJDZSrSOcb4_fNp9gDg@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 20 Jul 2012 08:39:23 +0000
+Message-ID: <201207200839.24259.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+ <201207171924.33756.arnd@arndb.de> <1342756850.1726.74.camel@vkoul-udesk3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAe_U6LXB0EdBqG+=W+zKjtZ1av-UWpxJDZSrSOcb4_fNp9gDg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342756850.1726.74.camel@vkoul-udesk3>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+On Friday 20 July 2012, Vinod Koul wrote:
+> > Required property:
+> >     dmas: list of one or more dma specifiers, each consisting of
+> >      - phandle pointing to dma controller node
+> >      - flags word, a bit map that can hold these flags
+> >        * 0x00000001 channel can be used for transfer from device
+> >        * 0x00000002 channel can be user for transfer to device
+>
+> Is this for identifying which channel is for TX and RX? If not I am not
+> sure I understood it well
 
-On Thu, Jul 19, 2012 at 5:04 PM, ABRAHAM, KISHON VIJAY <kishon@ti.com> wrote:
-> Hi,
->
-> On Fri, Jul 13, 2012 at 8:27 PM, Sourav Poddar <sourav.poddar@ti.com> wrote:
->> Add keypad data node in omap4 device tree file.
->> Also fill the device tree binding parameters
->> with the required value in "omap4-sdp" dts file.
->>
->> Tested on omap4430 sdp with 3.5-rc6 kernel.
->>
->> Cc: Tony Lindgren <tony@atomide.com>
->> Cc: Benoit Cousson <b-cousson@ti.com>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: Grant Likely <grant.likely@secretlab.ca>
->> Cc: Felipe Balbi <balbi@ti.com>
->> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
->> ---
->> This patch[1] was initially posted as a series.
->> The first patch[2] of the series is taken into
->> dmitry's input tree.
->> So, posting this as a independent patch .
->>
->> [1]: https://lkml.org/lkml/2012/6/8/239
->> [2]: https://lkml.org/lkml/2012/6/1/75
->>
->> Changes since v5:
->> Few key mappings were missed, added "linux, keymap"
->> data for those key mappings.
->>
->>  arch/arm/boot/dts/omap4-sdp.dts |   70 +++++++++++++++++++++++++++++++++++++++
->>  arch/arm/boot/dts/omap4.dtsi    |    5 +++
->>  2 files changed, 75 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
->> index d08c4d1..53ded54 100644
->> --- a/arch/arm/boot/dts/omap4-sdp.dts
->> +++ b/arch/arm/boot/dts/omap4-sdp.dts
->> @@ -70,6 +70,76 @@
->>                         gpios = <&gpio5 11 0>; /* 139 */
->>                 };
->>         };
->> +
->> +       keypad@4a31c000 {
->
-> I think you should drop the address in node name since it does not
-> have a <reg> property.
->
-Ok. Will fix it and post a new version.
->> +               keypad,num-rows = <8>;
->> +               keypad,num-columns = <8>;
->> +               linux,keymap = < 0x00000012
->> +                       0x00010013
->> +                       0x00020014
->> +                       0x00030066
->> +                       0x0004003f
->> +                       0x000500f0
->> +                       0x00060017
->> +                       0x0007002a
->> +                       0x01000020
->> +                       0x01010021
->> +                       0x01020022
->> +                       0x010300e7
->> +                       0x01040040
->> +                       0x010500f0
->> +                       0x01060025
->> +                       0x0107001c
->> +                       0x0200002d
->> +                       0x0201002e
->> +                       0x0202002f
->> +                       0x0203006b
->> +                       0x02040041
->> +                       0x020500f0
->> +                       0x02060034
->> +                       0x0207003a
->> +                       0x0300002c
->> +                       0x0301004e
->> +                       0x03020030
->> +                       0x0303003b
->> +                       0x03040042
->> +                       0x030500f0
->> +                       0x03060018
->> +                       0x03070039
->> +                       0x04000011
->> +                       0x04010015
->> +                       0x04020016
->> +                       0x0403003c
->> +                       0x04040073
->> +                       0x040500f0
->> +                       0x04060026
->> +                       0x04070069
->> +                       0x0500001f
->> +                       0x05010023
->> +                       0x05020024
->> +                       0x0503003d
->> +                       0x05040043
->> +                       0x05050072
->> +                       0x05060032
->> +                       0x0507006a
->> +                       0x06000010
->> +                       0x0601001e
->> +                       0x06020031
->> +                       0x0603009e
->> +                       0x0604000e
->> +                       0x060500f0
->> +                       0x06060019
->> +                       0x06070067
->> +                       0x07000094
->> +                       0x07010095
->> +                       0x070200ca
->> +                       0x070300cb
->> +                       0x0704003e
->> +                       0x070500f0
->> +                       0x07060160
->> +                       0x0707006c >;
->> +               linux,input-no-autorepeat;
->> +       };
->>  };
->>
->>  &i2c1 {
->> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
->> index 359c497..11b72d2 100644
->> --- a/arch/arm/boot/dts/omap4.dtsi
->> +++ b/arch/arm/boot/dts/omap4.dtsi
->> @@ -273,4 +273,9 @@
->>                         ti,needs-special-reset;
->>                 };
->>         };
->> +
->> +       keypad@4a31c000 {
-> same comment here.
->
-Ok.
->> +               compatible = "ti,omap4-keypad";
->> +               ti,hwmods = "kbd";
->> +       };
->>  };
->
-> Thanks
+Yes, but we can potentially add more flags here.
 
-~Sourav
-> Kishon
+The argument we had when coming up with this was roughly:
+
+* we need to identify which specifiers are referring to the same
+  conceptual channel and can be used as alternatives
+* this could be done just using the dma-names property, but making
+  dma-names mandatory adds complexity for everyone.
+* Most devices have just one or two channels, and if they have two,
+  there is usually one input and one output.
+
+=> if the common dmaengine code can find out whether a channel is
+  input or output without looking at the dmac driver specific configuration,
+  we don't need to add dma-names in most cases, but just let the client
+  driver ask for "give me a channel with these flags".
+
+> > 4. A dma controller requiring complex configuration:
+> > 
+> >        dma: dmaengine@48000000 {
+> >                compatible = "foo,foo-sdma"
+> >                reg = <0x48000000 0x1000>;
+> >                interrupts = <4>;
+> >                #dma-cells = <6>; /* phandle, flag, request, channel,
+> >                                        input-width, output-width */
+>
+> Why would we want the widths to be here?
+> Assuming a DMA from System memory to a peripheral, source width should
+> be system memory width and destination the peripheral width. IMO these
+> should not be in dma property even if we need these
+
+I was just trying to come up with an example of something we might put
+into the additional configuration fields. This may or may not be a
+realistic one, I have no idea. If you know something else that one
+of the dma controllers might want to put in there, we should change the
+example.
+
+I took the example of data width from 'struct stedma40_chan_cfg', which
+is used in some places to configure this from platform data. My
+impression was that if we want to move that data from board files into
+the device tree, it has to be here, but it can well be that there is
+a better place for it, e.g. in the global (channel independent)
+configuration of the dmac.
+
+	Arnd
