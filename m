@@ -1,38 +1,37 @@
-From: "Turquette, Mike" <mturquette@ti.com>
-Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Fri, 20 Jul 2012 08:50:58 -0700
-Message-ID: <CAJOA=zMQKLTumW7Nx68+yxHC5Yk4QyiL2mf1+TSZfVOAtnXDWA@mail.gmail.com>
-References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
- <1342713281-31114-4-git-send-email-shawn.guo@linaro.org> <CAMQu2gw32LogXJJa+K5ZjmCZzBNK3FY2wYwZXU8fsftsVzEO2Q@mail.gmail.com>
- <20120720123317.GA32263@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <20120720123317.GA32263@S2101-09.ap.freescale.net>
-Sender: cpufreq-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+From: Laura Abbott <lauraa@codeaurora.org>
+Subject: [PATCH] dt/flattree: Add stub defintions for flat device tree functions
+Date: Fri, 20 Jul 2012 10:49:03 -0700
+Message-ID: <1342806543-18469-1-git-send-email-lauraa@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Cc: mbohan@codeaurora.org, linux-arm-msm@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2012 at 5:33 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
-> On Fri, Jul 20, 2012 at 12:22:14PM +0530, Shilimkar, Santosh wrote:
->> This *_CPU0 doesn't seems to be appropriate since this infrastructure will be
->> used on SMP systems where CPUs shares clock/voltage rails. May be you can
->> get rid of that unless there is a strong need.
->>
-> All the resource handlers, clk, regulator, opp, DT node, are retrieved
-> from CPU0 device even for SMP.  I hope the naming of the driver could
-> tell:
->
-> - The driver supports UP
-> - The driver supports SMP where CPUs shares clock/voltage rails by
->   managing CPU0 (resource)
-> - The driver does not support SMP where individual CPU can scale
->   clock/voltage independently.
->
+Several flattened device tree functions are missing stub functions
+when CONFIG_OF_FLATTREE is not selected, creating compilation
+errors. Add the stub functions.
 
-How about cpufreq-single-thread.c and CONFIG_CPUFREQ_SINGLE_THREAD?
-That makes sense for both UP and SMP.
+Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+---
+ include/linux/of_fdt.h |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
 
-Regards,
-Mike
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index ed136ad..e3d59cd 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -119,6 +119,11 @@ extern void unflatten_device_tree(void);
+ extern void early_init_devtree(void *);
+ #else /* CONFIG_OF_FLATTREE */
+ static inline void unflatten_device_tree(void) {}
++static inline void *of_get_flat_dt_prop(unsigned long node, const char *name,
++				 unsigned long *size) { return NULL; }
++
++static inline int of_flat_dt_is_compatible(unsigned long node,
++				const char *name) { return 0; }
+ #endif /* CONFIG_OF_FLATTREE */
+ 
+ #endif /* __ASSEMBLY__ */
+-- 
+1.7.8.3
