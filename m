@@ -1,8 +1,7 @@
 From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: [PATCH] ARM: vt8500: Minor updates to platform drivers for devicetree
- support
-Date: Sat, 21 Jul 2012 02:39:43 +1200
-Message-ID: <1342795183-7942-1-git-send-email-linux@prisktech.co.nz>
+Subject: [PATCHv3 2/2] ARM: vt8500: Add support for UHCI companion controller
+Date: Sat, 21 Jul 2012 02:41:33 +1200
+Message-ID: <1342795293-7999-1-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -21,130 +20,324 @@ To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: VT8500 mailing list <vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Updated the vt8500-rtc and vt8500-uart platform drivers for
-devicetree support.
+Add support for a generic non-pci UHCI companion controller.
+Existing board files for arch-vt8500 updated to include UHCI
+support.
 
 Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/vt8500-rtc.txt         |   14 ++++++++++++++
- .../devicetree/bindings/tty/serial/vt8500-uart.txt |   14 ++++++++++++++
- drivers/rtc/rtc-vt8500.c                           |    8 ++++++++
- drivers/tty/serial/vt8500_serial.c                 |    8 ++++++++
- 4 files changed, 44 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/vt8500-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
+V3:
+Added the missing commits for the board files.
 
-diff --git a/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt b/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt
-new file mode 100644
-index 0000000..8cf6ce1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt
-@@ -0,0 +1,14 @@
-+* SPEAr RTC
-+
-+Required properties:
-+- compatible : "via,vt8500-rtc"
-+- reg : Address range of the rtc registers
-+- interrupt: Should contain the rtc interrupt number
-+
-+Example:
-+
-+	rtc@d8100000 {
-+		compatible = "via,vt8500-rtc";
-+		reg = <0xd8100000 0x2c>;
-+		interrupts = <48>;
-+	};
-diff --git a/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt b/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
-new file mode 100644
-index 0000000..745070a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
-@@ -0,0 +1,14 @@
-+* VIA/Wondermedia Universal Asynchronous Receiver/Transmitter (UART)
-+
-+Required properties:
-+- compatible: Should be "via,vt8500-uart"
-+- reg: Should contain registers location and length
-+- interrupts: Should contain interrupt
-+
-+Example:
-+	uart0: serial@d8200000 {
-+		compatible = "via,vt8500-uart";
-+		reg = <0xd8200000 0x1040>;
-+		interrupts = <32>;
-+	};
-+
-diff --git a/drivers/rtc/rtc-vt8500.c b/drivers/rtc/rtc-vt8500.c
-index 9e94fb1..2f155c2 100644
---- a/drivers/rtc/rtc-vt8500.c
-+++ b/drivers/rtc/rtc-vt8500.c
-@@ -23,6 +23,7 @@
- #include <linux/bcd.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
+ arch/arm/mach-vt8500/bv07.c           |    1 +
+ arch/arm/mach-vt8500/devices-vt8500.c |    5 +
+ arch/arm/mach-vt8500/devices-wm8505.c |    4 +
+ arch/arm/mach-vt8500/devices.c        |   11 +++
+ arch/arm/mach-vt8500/devices.h        |    1 +
+ arch/arm/mach-vt8500/wm8505_7in.c     |    1 +
+ drivers/usb/host/Kconfig              |   12 ++-
+ drivers/usb/host/uhci-hcd.c           |    5 +
+ drivers/usb/host/uhci-platform.c      |  157 +++++++++++++++++++++++++++++++++
+ 9 files changed, 195 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/usb/host/uhci-platform.c
+
+diff --git a/arch/arm/mach-vt8500/bv07.c b/arch/arm/mach-vt8500/bv07.c
+index a464c75..19d20d9 100644
+--- a/arch/arm/mach-vt8500/bv07.c
++++ b/arch/arm/mach-vt8500/bv07.c
+@@ -32,6 +32,7 @@ static struct platform_device *devices[] __initdata = {
+ 	&vt8500_device_uart0,
+ 	&vt8500_device_lcdc,
+ 	&vt8500_device_ehci,
++	&vt8500_device_uhci,
+ 	&vt8500_device_ge_rops,
+ 	&vt8500_device_pwm,
+ 	&vt8500_device_pwmbl,
+diff --git a/arch/arm/mach-vt8500/devices-vt8500.c b/arch/arm/mach-vt8500/devices-vt8500.c
+index 19519ae..def7fe3 100644
+--- a/arch/arm/mach-vt8500/devices-vt8500.c
++++ b/arch/arm/mach-vt8500/devices-vt8500.c
+@@ -48,6 +48,11 @@ void __init vt8500_set_resources(void)
+ 	tmp[1] = wmt_irq_res(IRQ_EHCI);
+ 	wmt_res_add(&vt8500_device_ehci, tmp, 2);
  
- /*
-  * Register definitions
-@@ -302,12 +303,18 @@ static int __devexit vt8500_rtc_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id vt8500_rtc_ids[] = {
-+	{ .compatible = "via,vt8500-rtc", },
-+	{}
-+};
++	/* vt8500 uses a single IRQ for both EHCI and UHCI controllers */
++	tmp[0] = wmt_mmio_res(VT8500_UHCI_BASE, SZ_512);
++	tmp[1] = wmt_irq_res(IRQ_EHCI);
++	wmt_res_add(&vt8500_device_uhci, tmp, 2);
 +
- static struct platform_driver vt8500_rtc_driver = {
- 	.probe		= vt8500_rtc_probe,
- 	.remove		= __devexit_p(vt8500_rtc_remove),
- 	.driver		= {
- 		.name	= "vt8500-rtc",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(vt8500_rtc_ids),
+ 	tmp[0] = wmt_mmio_res(VT8500_GEGEA_BASE, SZ_256);
+ 	wmt_res_add(&vt8500_device_ge_rops, tmp, 1);
+ 
+diff --git a/arch/arm/mach-vt8500/devices-wm8505.c b/arch/arm/mach-vt8500/devices-wm8505.c
+index db4594e..c810454 100644
+--- a/arch/arm/mach-vt8500/devices-wm8505.c
++++ b/arch/arm/mach-vt8500/devices-wm8505.c
+@@ -55,6 +55,10 @@ void __init wm8505_set_resources(void)
+ 	tmp[1] = wmt_irq_res(IRQ_EHCI);
+ 	wmt_res_add(&vt8500_device_ehci, tmp, 2);
+ 
++	tmp[0] = wmt_mmio_res(WM8505_UHCI_BASE, SZ_512);
++	tmp[1] = wmt_irq_res(IRQ_UHCI);
++	wmt_res_add(&vt8500_device_uhci, tmp, 2);
++
+ 	tmp[0] = wmt_mmio_res(WM8505_GEGEA_BASE, SZ_256);
+ 	wmt_res_add(&vt8500_device_ge_rops, tmp, 1);
+ 
+diff --git a/arch/arm/mach-vt8500/devices.c b/arch/arm/mach-vt8500/devices.c
+index 1fcdc36..46ff82d 100644
+--- a/arch/arm/mach-vt8500/devices.c
++++ b/arch/arm/mach-vt8500/devices.c
+@@ -204,6 +204,17 @@ struct platform_device vt8500_device_ehci = {
  	},
  };
  
-@@ -317,3 +324,4 @@ MODULE_AUTHOR("Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
- MODULE_DESCRIPTION("VIA VT8500 SoC Realtime Clock Driver (RTC)");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:vt8500-rtc");
-+MODULE_DEVICE_TABLE(of, vt8500_rtc_ids);
-diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
-index 2be006f..bd20b4e 100644
---- a/drivers/tty/serial/vt8500_serial.c
-+++ b/drivers/tty/serial/vt8500_serial.c
-@@ -34,6 +34,7 @@
- #include <linux/slab.h>
- #include <linux/clk.h>
- #include <linux/platform_device.h>
++static u64 uhci_dma_mask = DMA_BIT_MASK(32);
++
++struct platform_device vt8500_device_uhci = {
++	.name		= "platform-uhci",
++	.id		= 0,
++	.dev		= {
++		.dma_mask	= &uhci_dma_mask,
++		.coherent_dma_mask = DMA_BIT_MASK(32),
++	},
++};
++
+ struct platform_device vt8500_device_ge_rops = {
+ 	.name		= "wmt_ge_rops",
+ 	.id		= -1,
+diff --git a/arch/arm/mach-vt8500/devices.h b/arch/arm/mach-vt8500/devices.h
+index 188d4e1..0e6d9f9 100644
+--- a/arch/arm/mach-vt8500/devices.h
++++ b/arch/arm/mach-vt8500/devices.h
+@@ -81,6 +81,7 @@ extern struct platform_device vt8500_device_uart5;
+ extern struct platform_device vt8500_device_lcdc;
+ extern struct platform_device vt8500_device_wm8505_fb;
+ extern struct platform_device vt8500_device_ehci;
++extern struct platform_device vt8500_device_uhci;
+ extern struct platform_device vt8500_device_ge_rops;
+ extern struct platform_device vt8500_device_pwm;
+ extern struct platform_device vt8500_device_pwmbl;
+diff --git a/arch/arm/mach-vt8500/wm8505_7in.c b/arch/arm/mach-vt8500/wm8505_7in.c
+index cf910a9..302ae2f 100644
+--- a/arch/arm/mach-vt8500/wm8505_7in.c
++++ b/arch/arm/mach-vt8500/wm8505_7in.c
+@@ -31,6 +31,7 @@ static void __iomem *pmc_hiber;
+ static struct platform_device *devices[] __initdata = {
+ 	&vt8500_device_uart0,
+ 	&vt8500_device_ehci,
++	&vt8500_device_uhci,
+ 	&vt8500_device_wm8505_fb,
+ 	&vt8500_device_ge_rops,
+ 	&vt8500_device_pwm,
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 83e58df..3d153d0 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -450,7 +450,7 @@ config USB_OHCI_LITTLE_ENDIAN
+ 
+ config USB_UHCI_HCD
+ 	tristate "UHCI HCD (most Intel and VIA) support"
+-	depends on USB && (PCI || SPARC_LEON)
++	depends on USB && (PCI || SPARC_LEON || ARCH_VT8500)
+ 	---help---
+ 	  The Universal Host Controller Interface is a standard by Intel for
+ 	  accessing the USB hardware in the PC (which is also called the USB
+@@ -468,7 +468,15 @@ config USB_UHCI_HCD
+ config USB_UHCI_SUPPORT_NON_PCI_HC
+ 	bool
+ 	depends on USB_UHCI_HCD
+-	default y if SPARC_LEON
++	default y if (SPARC_LEON || ARCH_VT8500)
++
++config USB_UHCI_PLATFORM
++	bool "Generic UHCI Platform Driver support"
++	depends on USB_UHCI_SUPPORT_NON_PCI_HC
++	default y if ARCH_VT8500
++	---help---
++	  Enable support for generic UHCI platform devices that require no
++	  additional configuration.
+ 
+ config USB_UHCI_BIG_ENDIAN_MMIO
+ 	bool
+diff --git a/drivers/usb/host/uhci-hcd.c b/drivers/usb/host/uhci-hcd.c
+index e4db350..4b9e9ab 100644
+--- a/drivers/usb/host/uhci-hcd.c
++++ b/drivers/usb/host/uhci-hcd.c
+@@ -846,6 +846,11 @@ static const char hcd_name[] = "uhci_hcd";
+ #define PLATFORM_DRIVER		uhci_grlib_driver
+ #endif
+ 
++#ifdef CONFIG_USB_UHCI_PLATFORM
++#include "uhci-platform.c"
++#define PLATFORM_DRIVER		uhci_platform_driver
++#endif
++
+ #if !defined(PCI_DRIVER) && !defined(PLATFORM_DRIVER)
+ #error "missing bus glue for uhci-hcd"
+ #endif
+diff --git a/drivers/usb/host/uhci-platform.c b/drivers/usb/host/uhci-platform.c
+new file mode 100644
+index 0000000..dafe42a
+--- /dev/null
++++ b/drivers/usb/host/uhci-platform.c
+@@ -0,0 +1,157 @@
++/*
++ * Generic UHCI HCD (Host Controller Driver) for Platform Devices
++ *
++ * Copyright (c) 2011 Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
++ *
++ * This file is based on uhci-grlib.c
++ * (C) Copyright 2004-2007 Alan Stern, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
++ */
++
 +#include <linux/of.h>
- 
- /*
-  * UART Register offsets
-@@ -603,12 +604,18 @@ static int __devexit vt8500_serial_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id vt8500_uart_ids[] = {
-+	{ .compatible = "via,vt8500-uart", },
++#include <linux/platform_device.h>
++
++static int uhci_platform_init(struct usb_hcd *hcd)
++{
++	struct uhci_hcd *uhci = hcd_to_uhci(hcd);
++
++	uhci->rh_numports = uhci_count_ports(hcd);
++
++	/* Set up pointers to to generic functions */
++	uhci->reset_hc = uhci_generic_reset_hc;
++	uhci->check_and_reset_hc = uhci_generic_check_and_reset_hc;
++
++	/* No special actions need to be taken for the functions below */
++	uhci->configure_hc = NULL;
++	uhci->resume_detect_interrupts_are_broken = NULL;
++	uhci->global_suspend_mode_is_broken = NULL;
++
++	/* Reset if the controller isn't already safely quiescent. */
++	check_and_reset_hc(uhci);
++	return 0;
++}
++
++static const struct hc_driver uhci_platform_hc_driver = {
++	.description =		hcd_name,
++	.product_desc =		"Generic UHCI Host Controller",
++	.hcd_priv_size =	sizeof(struct uhci_hcd),
++
++	/* Generic hardware linkage */
++	.irq =			uhci_irq,
++	.flags =		HCD_MEMORY | HCD_USB11,
++
++	/* Basic lifecycle operations */
++	.reset =		uhci_platform_init,
++	.start =		uhci_start,
++#ifdef CONFIG_PM
++	.pci_suspend =		NULL,
++	.pci_resume =		NULL,
++	.bus_suspend =		uhci_rh_suspend,
++	.bus_resume =		uhci_rh_resume,
++#endif
++	.stop =			uhci_stop,
++
++	.urb_enqueue =		uhci_urb_enqueue,
++	.urb_dequeue =		uhci_urb_dequeue,
++
++	.endpoint_disable =	uhci_hcd_endpoint_disable,
++	.get_frame_number =	uhci_hcd_get_frame_number,
++
++	.hub_status_data =	uhci_hub_status_data,
++	.hub_control =		uhci_hub_control,
++};
++
++
++static int __devinit uhci_hcd_platform_probe(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd;
++	struct uhci_hcd	*uhci;
++	struct resource *res;
++	int ret;
++
++	if (usb_disabled())
++		return -ENODEV;
++
++	hcd = usb_create_hcd(&uhci_platform_hc_driver, &pdev->dev,
++			pdev->name);
++	if (!hcd)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	hcd->rsrc_start = res->start;
++	hcd->rsrc_len = resource_size(res);
++
++	if (!request_mem_region(hcd->rsrc_start, hcd->rsrc_len, hcd_name)) {
++		pr_err("%s: request_mem_region failed\n", __func__);
++		ret = -EBUSY;
++		goto err_rmr;
++	}
++
++	hcd->regs = ioremap(hcd->rsrc_start, hcd->rsrc_len);
++	if (!hcd->regs) {
++		pr_err("%s: ioremap failed\n", __func__);
++		ret = -ENOMEM;
++		goto err_irq;
++	}
++	uhci = hcd_to_uhci(hcd);
++
++	uhci->regs = hcd->regs;
++
++	ret = usb_add_hcd(hcd, pdev->resource[1].start, IRQF_DISABLED |
++								IRQF_SHARED);
++	if (ret)
++		goto err_uhci;
++
++	return 0;
++
++err_uhci:
++	iounmap(hcd->regs);
++err_irq:
++	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
++err_rmr:
++	usb_put_hcd(hcd);
++
++	return ret;
++}
++
++static int uhci_hcd_platform_remove(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(pdev);
++
++	usb_remove_hcd(hcd);
++	iounmap(hcd->regs);
++	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
++	usb_put_hcd(hcd);
++	platform_set_drvdata(pdev, NULL);
++
++	return 0;
++}
++
++/* Make sure the controller is quiescent and that we're not using it
++ * any more.  This is mainly for the benefit of programs which, like kexec,
++ * expect the hardware to be idle: not doing DMA or generating IRQs.
++ *
++ * This routine may be called in a damaged or failing kernel.  Hence we
++ * do not acquire the spinlock before shutting down the controller.
++ */
++static void uhci_hcd_platform_shutdown(struct platform_device *op)
++{
++	struct usb_hcd *hcd = dev_get_drvdata(&op->dev);
++
++	uhci_hc_died(hcd_to_uhci(hcd));
++}
++
++static const struct of_device_id platform_uhci_ids[] = {
++	{ .compatible = "of-uhci", },
 +	{}
 +};
 +
- static struct platform_driver vt8500_platform_driver = {
- 	.probe  = vt8500_serial_probe,
- 	.remove = __devexit_p(vt8500_serial_remove),
- 	.driver = {
- 		.name = "vt8500_serial",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(vt8500_uart_ids),
- 	},
- };
- 
-@@ -643,3 +650,4 @@ module_exit(vt8500_serial_exit);
- MODULE_AUTHOR("Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
- MODULE_DESCRIPTION("Driver for vt8500 serial device");
- MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, vt8500_uart_ids);
++static struct platform_driver uhci_platform_driver = {
++	.probe		= uhci_hcd_platform_probe,
++	.remove		= uhci_hcd_platform_remove,
++	.shutdown	= uhci_hcd_platform_shutdown,
++	.driver = {
++		.name = "platform-uhci",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(platform_uhci_ids),
++	},
++};
 -- 
 1.7.2.5
