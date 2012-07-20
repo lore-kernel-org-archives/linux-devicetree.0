@@ -1,60 +1,43 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [patch] driver-core: dev_to_node() should handle NULL pointers
-Date: Fri, 20 Jul 2012 18:18:46 +0300
-Message-ID: <20120720151846.GQ16348@mwanda>
-References: <20120720065622.GA11710@elgon.mountain>
- <20120720150042.GA1996@kroah.com>
+From: Alexey Charkov <alchark@gmail.com>
+Subject: Re: [PATCH] ARM: vt8500: Minor updates to platform drivers for
+ devicetree support
+Date: Fri, 20 Jul 2012 17:24:37 +0200
+Message-ID: <CABjd4YwmtyiSU9x=jTLCjR7S67qeDQjrCRbXJydX9gGsj-ctMA@mail.gmail.com>
+References: <1342795183-7942-1-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120720150042.GA1996@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1342795183-7942-1-git-send-email-linux@prisktech.co.nz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: vt8500-wm8505-linux-kernel@googlegroups.com
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2012 at 08:00:42AM -0700, Greg Kroah-Hartman wrote:
-> On Fri, Jul 20, 2012 at 09:56:23AM +0300, Dan Carpenter wrote:
-> > What prompted this patch is that in dma_pool_create() we call
-> > dev_to_node() before checking whether "dev" is NULL.  It looks like
-> > there are places which call dma_pool_create() with a NULL pointer.  An
-> > example is in drivers/usb/gadget/amd5536udc.c.
-> > 
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> > Static checker fix.
-> > 
-> > diff --git a/include/linux/device.h b/include/linux/device.h
-> > index aa7b3b4..c80e7a8d 100644
-> > --- a/include/linux/device.h
-> > +++ b/include/linux/device.h
-> > @@ -714,7 +714,9 @@ int dev_set_name(struct device *dev, const char *name, ...);
-> >  #ifdef CONFIG_NUMA
-> >  static inline int dev_to_node(struct device *dev)
-> >  {
-> > -	return dev->numa_node;
-> > +	if (dev)
-> > +		return dev->numa_node;
-> > +	return -1;
-> 
-> What happens if this function returns -1?  Can the callers properly
-> handle this?
-> 
+2012/7/20 Tony Prisk <linux@prisktech.co.nz>:
+> Updated the vt8500-rtc and vt8500-uart platform drivers for
+> devicetree support.
 
-Gar.  Now I'm not sure any more.
+Shouldn't these go as separate patches? Note also that you haven't
+CC'd the relevant mailing lists on this one.
 
--1 means no affinity and it's what the dev_to_node() returns if NUMA
-is disabled.  But now I think probably it's important to get the
-NUMA node correct in dma_pool_create() so this isn't the right
-answer.
+> diff --git a/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt b/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt
+> new file mode 100644
+> index 0000000..8cf6ce1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt
+> @@ -0,0 +1,14 @@
+> +* SPEAr RTC
 
-dma_pool_create() is not correct.  It has code to handle a NULL
-"dev" pointer, but the dev_to_node() dereference will cause an oops
-before we reach it.  I'm think this is a real issue that affects a
-couple drivers.  Maybe those people compile without NUMA?
+Looks like a copy-paste leftover.
 
-I'm not sure the right fix now.
-
-regards,
-dan carpenter
+Thanks,
+Alexey
