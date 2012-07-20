@@ -1,121 +1,115 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2 v3] USB: dwc3-exynos: Add support for device tree
-Date: Fri, 20 Jul 2012 12:49:54 +0300
-Message-ID: <20120720094953.GF24414@arwen.pp.htv.fi>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 2/2 v3] USB: dwc3-exynos: Add vbus setup function to the
+ exynos dwc3 glue layer
+Date: Fri, 20 Jul 2012 12:51:35 +0300
+Message-ID: <20120720095134.GG24414@arwen.pp.htv.fi>
 References: <1342418259-23802-1-git-send-email-gautam.vivek@samsung.com>
- <1342418259-23802-2-git-send-email-gautam.vivek@samsung.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+ <1342418259-23802-3-git-send-email-gautam.vivek@samsung.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UKNXkkdQCYZ6W5l3"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="WIIRZ1HQ6FgrlPgb"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1342418259-23802-2-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1342418259-23802-3-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, olofj@google.com, thomas.abraham@linaro.org, sshtylyov@mvista.com, av.tikhomirov@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 
---UKNXkkdQCYZ6W5l3
+--WIIRZ1HQ6FgrlPgb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Jul 16, 2012 at 11:27:38AM +0530, Vivek Gautam wrote:
-> This patch adds support to parse probe data for
-> dwc3 driver for exynos using device tree
+On Mon, Jul 16, 2012 at 11:27:39AM +0530, Vivek Gautam wrote:
+> This patch retrieves and configures the vbus control gpio via
+> the device tree. The suspend/resume callbacks will be later
+> modified for vbus control.
 >=20
-> Signed-off-by: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
 > ---
->  drivers/usb/dwc3/dwc3-exynos.c |   22 ++++++++++++++++++++++
->  1 files changed, 22 insertions(+), 0 deletions(-)
+>  drivers/usb/dwc3/dwc3-exynos.c |   25 +++++++++++++++++++++++++
+>  1 files changed, 25 insertions(+), 0 deletions(-)
 >=20
 > diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exyno=
 s.c
-> index b8f0038..a293c69 100644
+> index a293c69..9b0238f 100644
 > --- a/drivers/usb/dwc3/dwc3-exynos.c
 > +++ b/drivers/usb/dwc3/dwc3-exynos.c
-> @@ -19,6 +19,7 @@
->  #include <linux/platform_data/dwc3-exynos.h>
+> @@ -20,6 +20,7 @@
 >  #include <linux/dma-mapping.h>
 >  #include <linux/clk.h>
-> +#include <linux/of.h>
+>  #include <linux/of.h>
+> +#include <linux/of_gpio.h>
 > =20
 >  #include "core.h"
 > =20
-> @@ -29,6 +30,8 @@ struct dwc3_exynos {
+> @@ -30,6 +31,28 @@ struct dwc3_exynos {
 >  	struct clk		*clk;
 >  };
 > =20
-> +static u64 dwc3_exynos_dma_mask =3D DMA_BIT_MASK(32);
+> +static int dwc3_setup_vbus_gpio(struct platform_device *pdev)
+> +{
+> +	int err;
+> +	int gpio;
 > +
+> +	if (!pdev->dev.of_node)
+> +		return 0;
+> +
+> +	gpio =3D of_get_named_gpio(pdev->dev.of_node,
+> +				"samsung,vbus-gpio", 0);
+> +	if (!gpio_is_valid(gpio))
+> +		return 0;
+> +
+> +	err =3D gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH, "dwc3_vbus_gpio");
+> +	if (err) {
+> +		dev_err(&pdev->dev, "can't request dwc3 vbus gpio %d", gpio);
+> +		return err;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>  static u64 dwc3_exynos_dma_mask =3D DMA_BIT_MASK(32);
+> =20
 >  static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
->  {
->  	struct dwc3_exynos_data	*pdata =3D pdev->dev.platform_data;
-> @@ -45,6 +48,16 @@ static int __devinit dwc3_exynos_probe(struct platform=
-_device *pdev)
->  		goto err0;
->  	}
+> @@ -58,6 +81,8 @@ static int __devinit dwc3_exynos_probe(struct platform_=
+device *pdev)
+>  	if (!pdev->dev.coherent_dma_mask)
+>  		pdev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32);
 > =20
-> +	/*
-> +	 * Right now device-tree probed devices don't get dma_mask set.
-> +	 * Since shared usb code relies on it, set it here for now.
-> +	 * Once we move to full device tree support this will vanish off.
-> +	 */
-> +	if (!pdev->dev.dma_mask)
-> +		pdev->dev.dma_mask =3D &dwc3_exynos_dma_mask;
-> +	if (!pdev->dev.coherent_dma_mask)
-> +		pdev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32);
-> +
->  	platform_set_drvdata(pdev, exynos);
-> =20
->  	devid =3D dwc3_get_device_id();
-> @@ -134,11 +147,20 @@ static int __devexit dwc3_exynos_remove(struct plat=
-form_device *pdev)
->  	return 0;
->  }
-> =20
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id exynos_xhci_match[] =3D {
-> +	{ .compatible =3D "samsung,exynos-xhci" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, exynos_xhci_match);
+> +	dwc3_setup_vbus_gpio(pdev);
 
-this is not an xhci device. It contains one inside of it, but it's not
-an xhci device.
+I think this should be handled by the gpio-vbus transceiver. No ?
 
 --=20
 balbi
 
---UKNXkkdQCYZ6W5l3
+--WIIRZ1HQ6FgrlPgb
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQCSnBAAoJEIaOsuA1yqREoRUP/At/inO013H0bVrld9rE0pnv
-/hqDtw2eHzawN+ozDV6xvEfWYwVIT0sXDv2ces0WoSyP79kKu84UeX2JNR23c6E6
-QfONYP3YpG8W4oi3JhSxXBZVJY2AsIJcU2dETj9vT1CCLrjoz5dgC4Op+Lk9g/T7
-cmtIqlyVbWaY5Uyt4umqw/Ic+8K6CglHXeCBYSz4RU/d/68A24iUFYF7xDWjE07F
-zP0UCu2xC4Uo0PcT8Oo2py7tzmdWcw/p+v0E4wqoLAWoqhouZJCqvYlTv4SCP/AF
-kOXgB/jtR4hw9irKJ4w6jiFCa4j2Npfo8wcEiUrlhlSOK0DTw5n+x80G2PM5sdw8
-HVRxHc3q2vm6iusLBexKaO9J+gmfWkdLnbS7Hx6t24Kyy9OFwlmQISIQQwsc1gTy
-UiEAYYceYmLvqUgtFgsgEi3LsnRY163IFrViyx8ulZubZRkAjEEgNUOp4bp+B+sZ
-lTunSzDvnThMIIbLyTr9yk5R7fK8hyqvnO8Ru+oi/sET02KNDWqxNb3UsGbPNWcs
-TkPz8tj/Kmyo2Z4qa3zD+KV/WeEMN5uma3uT0PwWiX4cDpv284EfVjms4WOuEb8v
-r5T19nemSLlo+RJ34TLncvmTJkpyZfrJa+l8dtTAUYDIV86noxK2oUVLEytaeUdy
-fqTtWyqH6pbLVPpV/gUQ
-=zisS
+iQIcBAEBAgAGBQJQCSomAAoJEIaOsuA1yqRE7J8P/A29Zx7roSCMCj5yXegDFuEI
+MtlFlhaFIPZyN9uvzwjOiuUzOO2ZgDq3uie3Ve8bZLGReU+qyHvb1IkxjzVm/cOa
+c6Pl+69bMJZXC7qCX2IDF+TTGnoCEpgr3DRSJgY12UkZlcAuQuHI8QMq8IpVJbao
+rDoUoCYOEy+gKHJgNHRa/+F9JUPIY+AIKHUxVFBVumb2KpfLNHkBpSwwiFGy3Ilc
+Qb0bAmkycT3oTyLiw1d6fIoUiuR01PNC+uMzkwbZc6LGqI6Dg18JQo/68In46vj/
+wuCzHomCPwCzzt05OQy53ESXyw/i4RBbSrv+r09sTuJ77mEMBl/P+YqJuFp6VMHi
+P6P/b2H+R0/06Fz7AGeHyE02BiiKxbnRzboerpoXtgztMaHsYiR7B13chWhqSd/A
+NLFCNJBCRK4seRz2X7CgyCwqeWh79A4KkGj+3TY/pDJsBTrIfppcGHHfMfPjDzl2
+KNJZmMnOYeVJBgvUGcX8gjPEQ3YMATV/QuVssP5aYM6hN1LAi2D8T5pCvUtVR98x
++Oym+9Wr73m5nFoMMBkP8qlstsE39BUUF456bRuYWka5APZBi0uZCIlHBXWI1ufB
+O5Ks8/K3Bc6AXAzMrbqwMxCpxffefRdXKe4plHtx9kfDukw2fRqjpdbvgSAKR4q0
+xywia9jHrOTw0ZeDXar4
+=JdIW
 -----END PGP SIGNATURE-----
 
---UKNXkkdQCYZ6W5l3--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--WIIRZ1HQ6FgrlPgb--
