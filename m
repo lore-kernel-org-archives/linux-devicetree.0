@@ -1,115 +1,103 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/2 v3] USB: dwc3-exynos: Add vbus setup function to the
- exynos dwc3 glue layer
-Date: Fri, 20 Jul 2012 12:51:35 +0300
-Message-ID: <20120720095134.GG24414@arwen.pp.htv.fi>
-References: <1342418259-23802-1-git-send-email-gautam.vivek@samsung.com>
- <1342418259-23802-3-git-send-email-gautam.vivek@samsung.com>
-Reply-To: balbi@ti.com
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH V2 1/7] ARM: SAMSUNG: add additional registers and SFR
+ definitions for writeback
+Date: Fri, 20 Jul 2012 12:00:15 +0200
+Message-ID: <50092C2F.9010304@gmail.com>
+References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com> <1429943.UqWt7uDBOU@flatron> <CAL1wa8cCq-w8w-d-Z7rqRfA9yrfPvxQjxFn9b475A-D=J8d3Ew@mail.gmail.com> <4240594.0SndFBiAl5@flatron> <000a01cd661e$4e1e19e0$ea5a4da0$%han@samsung.com> <CAL1wa8dyLjC8BZBc0wBnjP=a2Yo5XDQq1Kfq9yw35_e8wxp0bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WIIRZ1HQ6FgrlPgb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1342418259-23802-3-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, olofj@google.com, thomas.abraham@linaro.org, sshtylyov@mvista.com, av.tikhomirov@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL1wa8dyLjC8BZBc0wBnjP=a2Yo5XDQq1Kfq9yw35_e8wxp0bw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, thomas.ab@samsung.com, kgene.kim@samsung.com, olofj@google.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/20/2012 04:59 AM, Leela Krishna Amudala wrote:
+>>>>>> --- a/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
+>>>>>> +++ b/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
+>>>>>> @@ -30,9 +30,16 @@
+>>>>>>
+>>>>>>   #define VIDCON1_FSTATUS_EVEN (1<<  15)
+>>>>>>
+>>>>>>   /* Video timing controls */
+>>>>>>
+>>>>>> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
+>>>>>> +#define VIDTCON0                                (0x20010)
+>>>>>> +#define VIDTCON1                                (0x20014)
+>>>>>> +#define VIDTCON3                                (0x2001C)
+>>>>>> +#else
+>>>>>>
+>>>>>>   #define VIDTCON0                             (0x10)
+>>>>>>   #define VIDTCON1                             (0x14)
+>>>>>>   #define VIDTCON2                             (0x18)
+>>>>>>
+>>>>>> +#define VIDTCON3                             (0x1C)
+>>>>>> +#endif
+>>>>>
+>>>>> Wouldn't it break s3c-fb on SoCs with earlier FIMD versions with
+>>>>> CONFIG_FB_EXYNOS_FIMD_V8 selected? We are aiming at multi-platform ARM
+>>>>> kernels, aren't we (i.e support of both V8 and earlier FIMD in one
+>>>>> kernel)?
+>>>> Exynos5 has FIMD_V8 and other SoCs has older FIMD versions.
+>>>> As address offsets for certain registers has changed in FIMD_V8, we
+>>>> introduced these defines.
+>>>> So we have to select CONFIG_FB_EXYNOS_FIMD_V8 in case of Exynos5 SoC,
+>>>> and deselect for other SoCs.
+>>>
+>>> Yes, I'm aware of different FIMD versions in different SoCs. My point is
+>>> that it shouldn't be necessary to deselect CONFIG_FB_EXYNOS_FIMD_V8 to
+>>> support other SoCs than Exynos5, i.e. additional config options should be
+>>> incremental - should not break other setups. Ideally there should not be
+>>> any new config option for FIMD v8.
+>>>
+>>> The detection of FIMD version and selection of appropriate register offsets
+>>> should be done in the driver at runtime, based for example on
+>>> platform_device_id (see the s3c-fb driver and usage of s3c_fb_driverdata
+>>> and s3c_fb_win_variant structs).
+>>
+>> I could not agree with Tomasz Figa more.
+>> FIMD register offset should be selected at runtime.
+>>
+>> Leela Krishna Amudala,
+>> Please, don't use ugly "#ifdef".
+>>
+>> Best regards,
+>> Jingoo Han
+>>
+> 
+> Yes, Each SoC having its own defconfigs (eg: exynos4_defconfig,
+> exynos5_defconfig etc.,)
+> So, CONFIG_FB_EXYNOS_FIMD_V8 will be added into exynos5_defconfig and
+> it won't affect the other SoCs.
 
---WIIRZ1HQ6FgrlPgb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+NACK.
 
-Hi,
+As others explained, and you don't seem to understand or you are stubborn 
+enough not to change your approach, resolving hardware differences at
+compile time only is not acceptable, especially that Exynos SoCs are
+going to be DT only platforms. We shouldn't be short-sighted like this.
 
-On Mon, Jul 16, 2012 at 11:27:39AM +0530, Vivek Gautam wrote:
-> This patch retrieves and configures the vbus control gpio via
-> the device tree. The suspend/resume callbacks will be later
-> modified for vbus control.
->=20
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> ---
->  drivers/usb/dwc3/dwc3-exynos.c |   25 +++++++++++++++++++++++++
->  1 files changed, 25 insertions(+), 0 deletions(-)
->=20
-> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exyno=
-s.c
-> index a293c69..9b0238f 100644
-> --- a/drivers/usb/dwc3/dwc3-exynos.c
-> +++ b/drivers/usb/dwc3/dwc3-exynos.c
-> @@ -20,6 +20,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/clk.h>
->  #include <linux/of.h>
-> +#include <linux/of_gpio.h>
-> =20
->  #include "core.h"
-> =20
-> @@ -30,6 +31,28 @@ struct dwc3_exynos {
->  	struct clk		*clk;
->  };
-> =20
-> +static int dwc3_setup_vbus_gpio(struct platform_device *pdev)
-> +{
-> +	int err;
-> +	int gpio;
-> +
-> +	if (!pdev->dev.of_node)
-> +		return 0;
-> +
-> +	gpio =3D of_get_named_gpio(pdev->dev.of_node,
-> +				"samsung,vbus-gpio", 0);
-> +	if (!gpio_is_valid(gpio))
-> +		return 0;
-> +
-> +	err =3D gpio_request_one(gpio, GPIOF_OUT_INIT_HIGH, "dwc3_vbus_gpio");
-> +	if (err) {
-> +		dev_err(&pdev->dev, "can't request dwc3 vbus gpio %d", gpio);
-> +		return err;
-> +	}
-> +
-> +	return err;
-> +}
-> +
->  static u64 dwc3_exynos_dma_mask =3D DMA_BIT_MASK(32);
-> =20
->  static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
-> @@ -58,6 +81,8 @@ static int __devinit dwc3_exynos_probe(struct platform_=
-device *pdev)
->  	if (!pdev->dev.coherent_dma_mask)
->  		pdev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32);
-> =20
-> +	dwc3_setup_vbus_gpio(pdev);
+Especially that the problem is relatively easy to solve at run-time, just 
+add EXYNOS5_* register address definitions and create separate functions 
+at the driver(s) touching those registers that changed on Exynos5.
 
-I think this should be handled by the gpio-vbus transceiver. No ?
+Or parametrize existing ones with an offset that would be stored in driver 
+data passed trough struct platform_device_id::driver_data.
 
---=20
-balbi
+@Jingoo: BTW, shouldn't we have 
 
---WIIRZ1HQ6FgrlPgb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+plat-samsung/include/plat/regs-fb.h
+plat-samsung/include/plat/regs-fb-v4.h
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+merged into one file and moved under include/video/ ?
 
-iQIcBAEBAgAGBQJQCSomAAoJEIaOsuA1yqRE7J8P/A29Zx7roSCMCj5yXegDFuEI
-MtlFlhaFIPZyN9uvzwjOiuUzOO2ZgDq3uie3Ve8bZLGReU+qyHvb1IkxjzVm/cOa
-c6Pl+69bMJZXC7qCX2IDF+TTGnoCEpgr3DRSJgY12UkZlcAuQuHI8QMq8IpVJbao
-rDoUoCYOEy+gKHJgNHRa/+F9JUPIY+AIKHUxVFBVumb2KpfLNHkBpSwwiFGy3Ilc
-Qb0bAmkycT3oTyLiw1d6fIoUiuR01PNC+uMzkwbZc6LGqI6Dg18JQo/68In46vj/
-wuCzHomCPwCzzt05OQy53ESXyw/i4RBbSrv+r09sTuJ77mEMBl/P+YqJuFp6VMHi
-P6P/b2H+R0/06Fz7AGeHyE02BiiKxbnRzboerpoXtgztMaHsYiR7B13chWhqSd/A
-NLFCNJBCRK4seRz2X7CgyCwqeWh79A4KkGj+3TY/pDJsBTrIfppcGHHfMfPjDzl2
-KNJZmMnOYeVJBgvUGcX8gjPEQ3YMATV/QuVssP5aYM6hN1LAi2D8T5pCvUtVR98x
-+Oym+9Wr73m5nFoMMBkP8qlstsE39BUUF456bRuYWka5APZBi0uZCIlHBXWI1ufB
-O5Ks8/K3Bc6AXAzMrbqwMxCpxffefRdXKe4plHtx9kfDukw2fRqjpdbvgSAKR4q0
-xywia9jHrOTw0ZeDXar4
-=JdIW
------END PGP SIGNATURE-----
+For example include/video/s3c-fb.h, and board files could also include
+that header. We have FIMD variant structures anyway, so why do we still
+need multiple headers ?
 
---WIIRZ1HQ6FgrlPgb--
+--
+
+Regards,
+Sylwester
