@@ -1,43 +1,38 @@
-From: Alexey Charkov <alchark@gmail.com>
-Subject: Re: [PATCH] ARM: vt8500: Minor updates to platform drivers for
- devicetree support
-Date: Fri, 20 Jul 2012 17:24:37 +0200
-Message-ID: <CABjd4YwmtyiSU9x=jTLCjR7S67qeDQjrCRbXJydX9gGsj-ctMA@mail.gmail.com>
-References: <1342795183-7942-1-git-send-email-linux@prisktech.co.nz>
+From: "Turquette, Mike" <mturquette@ti.com>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Fri, 20 Jul 2012 08:50:58 -0700
+Message-ID: <CAJOA=zMQKLTumW7Nx68+yxHC5Yk4QyiL2mf1+TSZfVOAtnXDWA@mail.gmail.com>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+ <1342713281-31114-4-git-send-email-shawn.guo@linaro.org> <CAMQu2gw32LogXJJa+K5ZjmCZzBNK3FY2wYwZXU8fsftsVzEO2Q@mail.gmail.com>
+ <20120720123317.GA32263@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1342795183-7942-1-git-send-email-linux@prisktech.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: vt8500-wm8505-linux-kernel@googlegroups.com
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20120720123317.GA32263@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2012/7/20 Tony Prisk <linux@prisktech.co.nz>:
-> Updated the vt8500-rtc and vt8500-uart platform drivers for
-> devicetree support.
+On Fri, Jul 20, 2012 at 5:33 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
+> On Fri, Jul 20, 2012 at 12:22:14PM +0530, Shilimkar, Santosh wrote:
+>> This *_CPU0 doesn't seems to be appropriate since this infrastructure will be
+>> used on SMP systems where CPUs shares clock/voltage rails. May be you can
+>> get rid of that unless there is a strong need.
+>>
+> All the resource handlers, clk, regulator, opp, DT node, are retrieved
+> from CPU0 device even for SMP.  I hope the naming of the driver could
+> tell:
+>
+> - The driver supports UP
+> - The driver supports SMP where CPUs shares clock/voltage rails by
+>   managing CPU0 (resource)
+> - The driver does not support SMP where individual CPU can scale
+>   clock/voltage independently.
+>
 
-Shouldn't these go as separate patches? Note also that you haven't
-CC'd the relevant mailing lists on this one.
+How about cpufreq-single-thread.c and CONFIG_CPUFREQ_SINGLE_THREAD?
+That makes sense for both UP and SMP.
 
-> diff --git a/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt b/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt
-> new file mode 100644
-> index 0000000..8cf6ce1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/vt8500-rtc.txt
-> @@ -0,0 +1,14 @@
-> +* SPEAr RTC
-
-Looks like a copy-paste leftover.
-
-Thanks,
-Alexey
+Regards,
+Mike
