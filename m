@@ -1,20 +1,30 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH V2 1/7] ARM: SAMSUNG: add additional registers and SFR
- definitions for writeback
-Date: Fri, 20 Jul 2012 14:54:03 +0200
-Message-ID: <500954EB.2080504@gmail.com>
-References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com> <1429943.UqWt7uDBOU@flatron> <CAL1wa8cCq-w8w-d-Z7rqRfA9yrfPvxQjxFn9b475A-D=J8d3Ew@mail.gmail.com> <4240594.0SndFBiAl5@flatron> <000a01cd661e$4e1e19e0$ea5a4da0$%han@samsung.com> <CAL1wa8dyLjC8BZBc0wBnjP=a2Yo5XDQq1Kfq9yw35_e8wxp0bw@mail.gmail.com> <50092C2F.9010304@gmail.com> <CAL1wa8cR_1OCL8x4xoxmsZ9mU5XMd9dfsm=z4aZwmogAN4Z85Q@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Fri, 20 Jul 2012 21:15:55 +0800
+Message-ID: <20120720131554.GB32263@S2101-09.ap.freescale.net>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+ <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
+ <d9889f8c-cebd-482d-af5c-c9e207c3dfae@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL1wa8cR_1OCL8x4xoxmsZ9mU5XMd9dfsm=z4aZwmogAN4Z85Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, thomas.ab@samsung.com, kgene.kim@samsung.com, olofj@google.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d9889f8c-cebd-482d-af5c-c9e207c3dfae@email.android.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Richard Zhao <linuxzsc@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Mike Turquette <mturquette@linaro.org>, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/20/2012 01:07 PM, Leela Krishna Amudala wrote:
-> Will do the run-time approach, and post the next version patchset soon.
+On Fri, Jul 20, 2012 at 08:51:17PM +0800, Richard Zhao wrote:
+> Hi, Shawn,
+> 
+> I find you create a new driver rather than work on my generic cpufreq driver based on clk and regulator.
+> Is there any reason besides adding opp support?
+> 
+Adopting OPP support forces me to look at omap-cpufreq driver, hence
+makes me create a new driver by referencing to omap-cpufreq.
 
-Great, thanks.
+-- 
+Regards,
+Shawn
+
