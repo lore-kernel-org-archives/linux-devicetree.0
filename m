@@ -1,347 +1,121 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V2 1/7] ARM: SAMSUNG: add additional registers and SFR definitions for writeback
-Date: Fri, 20 Jul 2012 11:49:13 +0200
-Message-ID: <1709456.m4QueKk3h0@flatron>
-References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com> <000a01cd661e$4e1e19e0$ea5a4da0$%han@samsung.com> <CAL1wa8dyLjC8BZBc0wBnjP=a2Yo5XDQq1Kfq9yw35_e8wxp0bw@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2 v3] USB: dwc3-exynos: Add support for device tree
+Date: Fri, 20 Jul 2012 12:49:54 +0300
+Message-ID: <20120720094953.GF24414@arwen.pp.htv.fi>
+References: <1342418259-23802-1-git-send-email-gautam.vivek@samsung.com>
+ <1342418259-23802-2-git-send-email-gautam.vivek@samsung.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL1wa8dyLjC8BZBc0wBnjP=a2Yo5XDQq1Kfq9yw35_e8wxp0bw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, thomas.ab@samsung.com, kgene.kim@samsung.com, olofj@google.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UKNXkkdQCYZ6W5l3"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1342418259-23802-2-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+
+--UKNXkkdQCYZ6W5l3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Friday 20 of July 2012 08:29:21 Leela Krishna Amudala wrote:
-> On Fri, Jul 20, 2012 at 7:51 AM, Jingoo Han <jg1.han@samsung.com> wrote:
-> > On Thursday, July 19, 2012 10:35 PM, Tomasz Figa wrote:
-> >> Hi Leela,
-> >> 
-> >> On Thursday 19 of July 2012 18:30:44 Leela Krishna Amudala wrote:
-> >> > Hi Tomasz,
-> >> > 
-> >> > On Wed, Jul 18, 2012 at 4:35 PM, Tomasz Figa <tomasz.figa@gmail.com>
-> >> 
-> >> wrote:
-> >> > > Hi,
-> >> > > 
-> >> > > On Wednesday 18 of July 2012 11:27:27 Leela Krishna Amudala wrote:
-> >> > >> This patch updates the register address offsets and adds SFR
-> >> > >> definitions
-> >> > >> for writeback for Samsung's V8 display controller.
-> >> > >> 
-> >> > >> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> >> > >> ---
-> >> > >> 
-> >> > >>  arch/arm/plat-samsung/include/plat/regs-fb-v4.h |   10 ++++
-> >> > >>  arch/arm/plat-samsung/include/plat/regs-fb.h    |   51
-> >> > >> 
-> >> > >> +++++++++++++++++++++++ drivers/video/Kconfig
-> >> > >> 
-> >> > >> |    6 +++
-> >> > >>  
-> >> > >>  3 files changed, 67 insertions(+), 0 deletions(-)
-> >> > >> 
-> >> > >> diff --git a/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
-> >> > >> b/arch/arm/plat-samsung/include/plat/regs-fb-v4.h index
-> >> > >> 4c3647f..1639c17
-> >> > >> 100644
-> >> > >> --- a/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
-> >> > >> +++ b/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
-> >> > >> @@ -30,9 +30,16 @@
-> >> > >> 
-> >> > >>  #define VIDCON1_FSTATUS_EVEN (1 << 15)
-> >> > >>  
-> >> > >>  /* Video timing controls */
-> >> > >> 
-> >> > >> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
-> >> > >> +#define VIDTCON0                                (0x20010)
-> >> > >> +#define VIDTCON1                                (0x20014)
-> >> > >> +#define VIDTCON3                                (0x2001C)
-> >> > >> +#else
-> >> > >> 
-> >> > >>  #define VIDTCON0                             (0x10)
-> >> > >>  #define VIDTCON1                             (0x14)
-> >> > >>  #define VIDTCON2                             (0x18)
-> >> > >> 
-> >> > >> +#define VIDTCON3                             (0x1C)
-> >> > >> +#endif
-> >> > > 
-> >> > > Wouldn't it break s3c-fb on SoCs with earlier FIMD versions with
-> >> > > CONFIG_FB_EXYNOS_FIMD_V8 selected? We are aiming at multi-platform
-> >> > > ARM
-> >> > > kernels, aren't we (i.e support of both V8 and earlier FIMD in one
-> >> > > kernel)?
-> >> > 
-> >> > Exynos5 has FIMD_V8 and other SoCs has older FIMD versions.
-> >> > As address offsets for certain registers has changed in FIMD_V8, we
-> >> > introduced these defines.
-> >> > So we have to select CONFIG_FB_EXYNOS_FIMD_V8 in case of Exynos5
-> >> > SoC,
-> >> > and deselect for other SoCs.
-> >> 
-> >> Yes, I'm aware of different FIMD versions in different SoCs. My point
-> >> is
-> >> that it shouldn't be necessary to deselect CONFIG_FB_EXYNOS_FIMD_V8 to
-> >> support other SoCs than Exynos5, i.e. additional config options should
-> >> be incremental - should not break other setups. Ideally there should
-> >> not be any new config option for FIMD v8.
-> >> 
-> >> The detection of FIMD version and selection of appropriate register
-> >> offsets should be done in the driver at runtime, based for example on
-> >> platform_device_id (see the s3c-fb driver and usage of
-> >> s3c_fb_driverdata
-> >> and s3c_fb_win_variant structs).
-> > 
-> > I could not agree with Tomasz Figa more.
-> > FIMD register offset should be selected at runtime.
-> > 
-> > Leela Krishna Amudala,
-> > Please, don't use ugly "#ifdef".
-> > 
-> > Best regards,
-> > Jingoo Han
-> 
-> Yes, Each SoC having its own defconfigs (eg: exynos4_defconfig,
-> exynos5_defconfig etc.,)
-> So, CONFIG_FB_EXYNOS_FIMD_V8 will be added into exynos5_defconfig and
-> it won't affect the other SoCs.
-> 
-> Best Wishes,
-> Leela Krishna Amudala.
+On Mon, Jul 16, 2012 at 11:27:38AM +0530, Vivek Gautam wrote:
+> This patch adds support to parse probe data for
+> dwc3 driver for exynos using device tree
+>=20
+> Signed-off-by: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/usb/dwc3/dwc3-exynos.c |   22 ++++++++++++++++++++++
+>  1 files changed, 22 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exyno=
+s.c
+> index b8f0038..a293c69 100644
+> --- a/drivers/usb/dwc3/dwc3-exynos.c
+> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/platform_data/dwc3-exynos.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/clk.h>
+> +#include <linux/of.h>
+> =20
+>  #include "core.h"
+> =20
+> @@ -29,6 +30,8 @@ struct dwc3_exynos {
+>  	struct clk		*clk;
+>  };
+> =20
+> +static u64 dwc3_exynos_dma_mask =3D DMA_BIT_MASK(32);
+> +
+>  static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+>  {
+>  	struct dwc3_exynos_data	*pdata =3D pdev->dev.platform_data;
+> @@ -45,6 +48,16 @@ static int __devinit dwc3_exynos_probe(struct platform=
+_device *pdev)
+>  		goto err0;
+>  	}
+> =20
+> +	/*
+> +	 * Right now device-tree probed devices don't get dma_mask set.
+> +	 * Since shared usb code relies on it, set it here for now.
+> +	 * Once we move to full device tree support this will vanish off.
+> +	 */
+> +	if (!pdev->dev.dma_mask)
+> +		pdev->dev.dma_mask =3D &dwc3_exynos_dma_mask;
+> +	if (!pdev->dev.coherent_dma_mask)
+> +		pdev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32);
+> +
+>  	platform_set_drvdata(pdev, exynos);
+> =20
+>  	devid =3D dwc3_get_device_id();
+> @@ -134,11 +147,20 @@ static int __devexit dwc3_exynos_remove(struct plat=
+form_device *pdev)
+>  	return 0;
+>  }
+> =20
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id exynos_xhci_match[] =3D {
+> +	{ .compatible =3D "samsung,exynos-xhci" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_xhci_match);
 
-Defconfig is only used to build a kernel image for a single machine.
+this is not an xhci device. It contains one inside of it, but it's not
+an xhci device.
 
-Let me give you another example. Consider that we want to build a single 
-kernel binary running on all Exynos SocS (this is what ARM Linux is 
-currently aiming at).  What we do is enabling in config support for every 
-bit of every SoC we want to support in resulting kernel binary. Now with 
-your patch to support Exynos 5 in such kernel we would have to enable 
-CONFIG_FB_EXYNOS_FIMD_V8 to get support for FIMD on Exynos 5 leading to a 
-situation where we could have support for all Exynos SoCs in one kernel, 
-but, depending on one config option, either without FIMD support on Exynos 
-5 or on any older SoC.
+--=20
+balbi
 
-Best regards,
-Tom
+--UKNXkkdQCYZ6W5l3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> >> Best regards,
-> >> Tomasz Figa
-> >> 
-> >> > >>  /* Window position controls */
-> >> > >> 
-> >> > >> @@ -43,9 +50,12 @@
-> >> > >> 
-> >> > >>  #define VIDOSD_BASE                          (0x40)
-> >> > >>  
-> >> > >>  #define VIDINTCON0                           (0x130)
-> >> > >> 
-> >> > >> +#define VIDINTCON1                              (0x134)
-> >> > >> 
-> >> > >>  /* WINCONx */
-> >> > >> 
-> >> > >> +#define WINCONx_CSC_CON_EQ709                   (1 << 28)
-> >> > >> +#define WINCONx_CSC_CON_EQ601                   (0 << 28)
-> >> > >> 
-> >> > >>  #define WINCONx_CSCWIDTH_MASK                        (0x3 << 26)
-> >> > >>  #define WINCONx_CSCWIDTH_SHIFT                       (26)
-> >> > >>  #define WINCONx_CSCWIDTH_WIDE                        (0x0 << 26)
-> >> > >> 
-> >> > >> diff --git a/arch/arm/plat-samsung/include/plat/regs-fb.h
-> >> > >> b/arch/arm/plat-samsung/include/plat/regs-fb.h index
-> >> > >> 9a78012..6d2ee16
-> >> > >> 100644
-> >> > >> --- a/arch/arm/plat-samsung/include/plat/regs-fb.h
-> >> > >> +++ b/arch/arm/plat-samsung/include/plat/regs-fb.h
-> >> > >> @@ -32,12 +32,28 @@
-> >> > >> 
-> >> > >>  #define VIDCON0                                      (0x00)
-> >> > >>  #define VIDCON0_INTERLACE                    (1 << 29)
-> >> > >> 
-> >> > >> +
-> >> > >> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
-> >> > >> +#define VIDOUT_CON                           (0x20000)
-> >> > >> +#define VIDOUT_CON_VIDOUT_UP_MASK            (0x1 << 16)
-> >> > >> +#define VIDOUT_CON_VIDOUT_UP_SHIFT           (16)
-> >> > >> +#define VIDOUT_CON_VIDOUT_UP_ALWAYS          (0x0 << 16)
-> >> > >> +#define VIDOUT_CON_VIDOUT_UP_START_FRAME     (0x1 << 16)
-> >> > >> +#define VIDOUT_CON_VIDOUT_F_MASK             (0x7 << 8)
-> >> > >> +#define VIDOUT_CON_VIDOUT_F_SHIFT            (8)
-> >> > >> +#define VIDOUT_CON_VIDOUT_F_RGB                      (0x0 << 8)
-> >> > >> +#define VIDOUT_CON_VIDOUT_F_I80_LDI0         (0x2 << 8)
-> >> > >> +#define VIDOUT_CON_VIDOUT_F_I80_LDI1         (0x3 << 8)
-> >> > >> +#define VIDOUT_CON_VIDOUT_F_WB                       (0x4 << 8)
-> >> > >> +#endif
-> >> > >> +
-> >> > >> 
-> >> > >>  #define VIDCON0_VIDOUT_MASK                  (0x3 << 26)
-> >> > >>  #define VIDCON0_VIDOUT_SHIFT                 (26)
-> >> > >>  #define VIDCON0_VIDOUT_RGB                   (0x0 << 26)
-> >> > >>  #define VIDCON0_VIDOUT_TV                    (0x1 << 26)
-> >> > >>  #define VIDCON0_VIDOUT_I80_LDI0                      (0x2 << 26)
-> >> > >>  #define VIDCON0_VIDOUT_I80_LDI1                      (0x3 << 26)
-> >> > >> 
-> >> > >> +#define VIDCON0_VIDOUT_WB                       (0x4 << 26)
-> >> > >> 
-> >> > >>  #define VIDCON0_L1_DATA_MASK                 (0x7 << 23)
-> >> > >>  #define VIDCON0_L1_DATA_SHIFT                        (23)
-> >> > >> 
-> >> > >> @@ -81,7 +97,13 @@
-> >> > >> 
-> >> > >>  #define VIDCON0_ENVID                                (1 << 1)
-> >> > >>  #define VIDCON0_ENVID_F                              (1 << 0)
-> >> > >> 
-> >> > >> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
-> >> > >> +#define VIDOUT_CON                              (0x20000)
-> >> > >> +#define VIDCON1                                 (0x20004)
-> >> > >> +#else
-> >> > >> 
-> >> > >>  #define VIDCON1                                      (0x04)
-> >> > >> 
-> >> > >> +#endif
-> >> > > 
-> >> > > Same here. Also isn't it a redefinition of VIDOUT_CON that was
-> >> > > defined
-> >> > > several lines above?
-> >> > 
-> >> > Will be corrected in the next version patch set.
-> >> > 
-> >> > Best Wishes,
-> >> > Leela Krishna Amudala.
-> >> > 
-> >> > >>  #define VIDCON1_LINECNT_MASK                 (0x7ff << 16)
-> >> > >>  #define VIDCON1_LINECNT_SHIFT                        (16)
-> >> > >>  #define VIDCON1_LINECNT_GET(_v)                      (((_v) >>
-> >> > >>  16) &
-> >> > >>  0x7ff)>>
-> >> > >> 
-> >> > >> @@ -111,6 +133,14 @@
-> >> > >> 
-> >> > >>  #define VIDCON2_TVFMTSEL1_RGB                        (0x0 << 12)
-> >> > >>  #define VIDCON2_TVFMTSEL1_YUV422             (0x1 << 12)
-> >> > >>  #define VIDCON2_TVFMTSEL1_YUV444             (0x2 << 12)
-> >> > >> 
-> >> > >> +#define VIDCON2_TVFMTSEL1_SHIFT                      (12)
-> >> > >> +#define VIDCON2_TVFMTSEL_SW                  (1 << 14)
-> >> > >> +#define VIDCON2_TVFORMATSEL_YUV444           (0x2 << 12)
-> >> > >> +
-> >> > >> +#define VIDCON2_TVFMTSEL1_MASK                       (0x3 << 12)
-> >> > >> +#define VIDCON2_TVFMTSEL1_RGB                        (0x0 << 12)
-> >> > >> +#define VIDCON2_TVFMTSEL1_YUV422             (0x1 << 12)
-> >> > >> +#define VIDCON2_TVFMTSEL1_YUV444             (0x2 << 12)
-> >> > >> 
-> >> > >>  #define VIDCON2_ORGYCbCr                     (1 << 8)
-> >> > >>  #define VIDCON2_YUVORDCrCb                   (1 << 7)
-> >> > >> 
-> >> > >> @@ -165,8 +195,15 @@
-> >> > >> 
-> >> > >>  #define VIDTCON1_HSPW_SHIFT                  (0)
-> >> > >>  #define VIDTCON1_HSPW_LIMIT                  (0xff)
-> >> > >>  #define VIDTCON1_HSPW(_x)                    ((_x) << 0)
-> >> > >> 
-> >> > >> +#define VIDCON1_VCLK_MASK                       (0x3 << 9)
-> >> > >> +#define VIDCON1_VCLK_HOLD                       (0x0 << 9)
-> >> > >> +#define VIDCON1_VCLK_RUN                        (0x1 << 9)
-> >> > >> 
-> >> > >> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
-> >> > >> +#define VIDTCON2                             (0x20018)
-> >> > >> +#else
-> >> > >> 
-> >> > >>  #define VIDTCON2                             (0x18)
-> >> > >> 
-> >> > >> +#endif
-> >> > > 
-> >> > > Same as in my first comment.
-> >> > > 
-> >> > >>  #define VIDTCON2_LINEVAL_E(_x)                       ((((_x) &
-> >> > >>  0x800)
-> >> > >>  
-> >> > >>  >> 11) << 23) #define VIDTCON2_LINEVAL_MASK
-> >> > >>  
-> >> > >>  (0x7ff << 11) #define VIDTCON2_LINEVAL_SHIFT
-> >> > >>  (11)
-> >> > >> 
-> >> > >> @@ -186,6 +223,9 @@
-> >> > >> 
-> >> > >>  #define WINCONx_BYTSWP                               (1 << 17)
-> >> > >>  #define WINCONx_HAWSWP                               (1 << 16)
-> >> > >>  #define WINCONx_WSWP                         (1 << 15)
-> >> > >> 
-> >> > >> +#define WINCONx_ENLOCAL_MASK                 (0xf << 15)
-> >> > >> +#define WINCONx_INRGB_RGB                    (0 << 13)
-> >> > >> +#define WINCONx_INRGB_YCBCR                  (1 << 13)
-> >> > >> 
-> >> > >>  #define WINCONx_BURSTLEN_MASK                        (0x3 << 9)
-> >> > >>  #define WINCONx_BURSTLEN_SHIFT                       (9)
-> >> > >>  #define WINCONx_BURSTLEN_16WORD                      (0x0 << 9)
-> >> > >> 
-> >> > >> @@ -205,6 +245,7 @@
-> >> > >> 
-> >> > >>  #define WINCON0_BPPMODE_24BPP_888            (0xb << 2)
-> >> > >>  
-> >> > >>  #define WINCON1_BLD_PIX                              (1 << 6)
-> >> > >> 
-> >> > >> +#define WINCON1_BLD_PLANE                    (0 << 6)
-> >> > >> 
-> >> > >>  #define WINCON1_ALPHA_SEL                    (1 << 1)
-> >> > >>  #define WINCON1_BPPMODE_MASK                 (0xf << 2)
-> >> > >> 
-> >> > >> @@ -395,9 +436,19 @@
-> >> > >> 
-> >> > >>  #define WPALCON_W0PAL_16BPP_A555             (0x5 << 0)
-> >> > >>  #define WPALCON_W0PAL_16BPP_565                      (0x6 << 0)
-> >> > >> 
-> >> > >> +/* Clock gate mode control */
-> >> > >> +#define REG_CLKGATE_MODE                     (0x1b0)
-> >> > >> +#define REG_CLKGATE_MODE_AUTO_CLOCK_GATE     (0 << 0)
-> >> > >> +#define REG_CLKGATE_MODE_NON_CLOCK_GATE              (1 << 0)
-> >> > >> +
-> >> > >> 
-> >> > >>  /* Blending equation control */
-> >> > >>  #define BLENDCON                             (0x260)
-> >> > >>  #define BLENDCON_NEW_MASK                    (1 << 0)
-> >> > >>  #define BLENDCON_NEW_8BIT_ALPHA_VALUE                (1 << 0)
-> >> > >>  #define BLENDCON_NEW_4BIT_ALPHA_VALUE                (0 << 0)
-> >> > >> 
-> >> > >> +/* Window alpha control */
-> >> > >> +#define VIDW0ALPHA0                          (0x200)
-> >> > >> +#define VIDW0ALPHA1                          (0x204)
-> >> > >> +#define DPCLKCON                             (0x27c)
-> >> > >> +#define DPCLKCON_ENABLE                              (1 << 1)
-> >> > >> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> >> > >> index 0217f74..f81bf55 100644
-> >> > >> --- a/drivers/video/Kconfig
-> >> > >> +++ b/drivers/video/Kconfig
-> >> > >> @@ -2053,6 +2053,12 @@ config FB_S3C
-> >> > >> 
-> >> > >>         Currently the support is only for the S3C6400 and S3C6410
-> >> > >>         SoCs.
-> >> > >> 
-> >> > >> +config FB_EXYNOS_FIMD_V8
-> >> > >> +     bool "register extensions for FIMD version 8"
-> >> > >> +     depends on ARCH_EXYNOS5
-> >> > >> +     ---help---
-> >> > >> +     This uses register extensions for FIMD version 8
-> >> > >> +
-> >> > >> 
-> >> > >>  config FB_S3C_DEBUG_REGWRITE
-> >> > >>  
-> >> > >>         bool "Debug register writes"
-> >> > >>         depends on FB_S3C
-> >> > > 
-> >> > > Best regards,
-> >> > > Tomasz Figa
-> >> > > 
-> >> > > --
-> >> > > To unsubscribe from this list: send the line "unsubscribe
-> >> > > linux-samsung-soc" in the body of a message to
-> >> > > majordomo@vger.kernel.org
-> >> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
-> > _______________________________________________
-> > devicetree-discuss mailing list
-> > devicetree-discuss@lists.ozlabs.org
-> > https://lists.ozlabs.org/listinfo/devicetree-discuss
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQCSnBAAoJEIaOsuA1yqREoRUP/At/inO013H0bVrld9rE0pnv
+/hqDtw2eHzawN+ozDV6xvEfWYwVIT0sXDv2ces0WoSyP79kKu84UeX2JNR23c6E6
+QfONYP3YpG8W4oi3JhSxXBZVJY2AsIJcU2dETj9vT1CCLrjoz5dgC4Op+Lk9g/T7
+cmtIqlyVbWaY5Uyt4umqw/Ic+8K6CglHXeCBYSz4RU/d/68A24iUFYF7xDWjE07F
+zP0UCu2xC4Uo0PcT8Oo2py7tzmdWcw/p+v0E4wqoLAWoqhouZJCqvYlTv4SCP/AF
+kOXgB/jtR4hw9irKJ4w6jiFCa4j2Npfo8wcEiUrlhlSOK0DTw5n+x80G2PM5sdw8
+HVRxHc3q2vm6iusLBexKaO9J+gmfWkdLnbS7Hx6t24Kyy9OFwlmQISIQQwsc1gTy
+UiEAYYceYmLvqUgtFgsgEi3LsnRY163IFrViyx8ulZubZRkAjEEgNUOp4bp+B+sZ
+lTunSzDvnThMIIbLyTr9yk5R7fK8hyqvnO8Ru+oi/sET02KNDWqxNb3UsGbPNWcs
+TkPz8tj/Kmyo2Z4qa3zD+KV/WeEMN5uma3uT0PwWiX4cDpv284EfVjms4WOuEb8v
+r5T19nemSLlo+RJ34TLncvmTJkpyZfrJa+l8dtTAUYDIV86noxK2oUVLEytaeUdy
+fqTtWyqH6pbLVPpV/gUQ
+=zisS
+-----END PGP SIGNATURE-----
+
+--UKNXkkdQCYZ6W5l3--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
