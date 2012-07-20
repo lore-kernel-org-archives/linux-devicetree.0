@@ -1,240 +1,299 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: RE: [PATCH V2 1/7] ARM: SAMSUNG: add additional registers and SFR
- definitions for writeback
-Date: Fri, 20 Jul 2012 08:45:41 +0200
-Message-ID: <018d01cd6643$4af7fae0$e0e7f0a0$%szyprowski@samsung.com>
-References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com>
- <1342591053-7092-2-git-send-email-l.krishna@samsung.com>
- <009c01cd64b1$bd3a8390$37af8ab0$%szyprowski@samsung.com>
- <CAL1wa8f0NOF+K4Z-6w6Aue_L2x_1-5HaXWu9t8QDaDY9SCW-Cw@mail.gmail.com>
+From: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Fri, 20 Jul 2012 12:22:14 +0530
+Message-ID: <CAMQu2gw32LogXJJa+K5ZjmCZzBNK3FY2wYwZXU8fsftsVzEO2Q@mail.gmail.com>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org> <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAL1wa8f0NOF+K4Z-6w6Aue_L2x_1-5HaXWu9t8QDaDY9SCW-Cw@mail.gmail.com>
-Content-language: pl
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Leela Krishna Amudala' <l.krishna@samsung.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, jg1.han@samsung.com, joshi@samsung.com, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, thomas.ab@samsung.com, olofj@google.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Shawn,
 
-On Thursday, July 19, 2012 2:44 PM Leela Krishna Amudala
+On Thu, Jul 19, 2012 at 9:24 PM, Shawn Guo <shawn.guo@linaro.org> wrote:
+> It adds a generic cpufreq driver for CPU0 frequency management based on
+> clk, regulator, OPP and device tree support.  It can support both
+> uniprocessor (UP) and those symmetric multiprocessor (SMP) systems which
+> share clock and voltage across all CPUs.
+>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> ---
 
-> Hello Marek,
-> 
-> On Wed, Jul 18, 2012 at 12:21 PM, Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
-> > Hello,
-> >
-> > On Wednesday, July 18, 2012 7:57 AM Leela Krishna Amudala wrote:
-> >
-> >> This patch updates the register address offsets and adds SFR definitions
-> >> for writeback for Samsung's V8 display controller.
-> >>
-> >> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> >> ---
-> >>  arch/arm/plat-samsung/include/plat/regs-fb-v4.h |   10 ++++
-> >>  arch/arm/plat-samsung/include/plat/regs-fb.h    |   51 +++++++++++++++++++++++
-> >>  drivers/video/Kconfig                           |    6 +++
-> >>  3 files changed, 67 insertions(+), 0 deletions(-)
-> >>
-> >> diff --git a/arch/arm/plat-samsung/include/plat/regs-fb-v4.h b/arch/arm/plat-
-> >> samsung/include/plat/regs-fb-v4.h
-> >> index 4c3647f..1639c17 100644
-> >> --- a/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
-> >> +++ b/arch/arm/plat-samsung/include/plat/regs-fb-v4.h
-> >> @@ -30,9 +30,16 @@
-> >>  #define VIDCON1_FSTATUS_EVEN (1 << 15)
-> >>
-> >>  /* Video timing controls */
-> >> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
-> >> +#define VIDTCON0                                (0x20010)
-> >> +#define VIDTCON1                                (0x20014)
-> >> +#define VIDTCON3                                (0x2001C)
-> >> +#else
-> >>  #define VIDTCON0                             (0x10)
-> >>  #define VIDTCON1                             (0x14)
-> >>  #define VIDTCON2                             (0x18)
-> >> +#define VIDTCON3                             (0x1C)
-> >> +#endif
-> >>
-> >>  /* Window position controls */
-> >>
-> >> @@ -43,9 +50,12 @@
-> >>  #define VIDOSD_BASE                          (0x40)
-> >>
-> >>  #define VIDINTCON0                           (0x130)
-> >> +#define VIDINTCON1                              (0x134)
-> >>
-> >>  /* WINCONx */
-> >>
-> >> +#define WINCONx_CSC_CON_EQ709                   (1 << 28)
-> >> +#define WINCONx_CSC_CON_EQ601                   (0 << 28)
-> >>  #define WINCONx_CSCWIDTH_MASK                        (0x3 << 26)
-> >>  #define WINCONx_CSCWIDTH_SHIFT                       (26)
-> >>  #define WINCONx_CSCWIDTH_WIDE                        (0x0 << 26)
-> >> diff --git a/arch/arm/plat-samsung/include/plat/regs-fb.h b/arch/arm/plat-
-> >> samsung/include/plat/regs-fb.h
-> >> index 9a78012..6d2ee16 100644
-> >> --- a/arch/arm/plat-samsung/include/plat/regs-fb.h
-> >> +++ b/arch/arm/plat-samsung/include/plat/regs-fb.h
-> >> @@ -32,12 +32,28 @@
-> >>
-> >>  #define VIDCON0                                      (0x00)
-> >>  #define VIDCON0_INTERLACE                    (1 << 29)
-> >> +
-> >> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
-> >> +#define VIDOUT_CON                           (0x20000)
-> >> +#define VIDOUT_CON_VIDOUT_UP_MASK            (0x1 << 16)
-> >> +#define VIDOUT_CON_VIDOUT_UP_SHIFT           (16)
-> >> +#define VIDOUT_CON_VIDOUT_UP_ALWAYS          (0x0 << 16)
-> >> +#define VIDOUT_CON_VIDOUT_UP_START_FRAME     (0x1 << 16)
-> >> +#define VIDOUT_CON_VIDOUT_F_MASK             (0x7 << 8)
-> >> +#define VIDOUT_CON_VIDOUT_F_SHIFT            (8)
-> >> +#define VIDOUT_CON_VIDOUT_F_RGB                      (0x0 << 8)
-> >> +#define VIDOUT_CON_VIDOUT_F_I80_LDI0         (0x2 << 8)
-> >> +#define VIDOUT_CON_VIDOUT_F_I80_LDI1         (0x3 << 8)
-> >> +#define VIDOUT_CON_VIDOUT_F_WB                       (0x4 << 8)
-> >> +#endif
-> >> +
-> >>  #define VIDCON0_VIDOUT_MASK                  (0x3 << 26)
-> >>  #define VIDCON0_VIDOUT_SHIFT                 (26)
-> >>  #define VIDCON0_VIDOUT_RGB                   (0x0 << 26)
-> >>  #define VIDCON0_VIDOUT_TV                    (0x1 << 26)
-> >>  #define VIDCON0_VIDOUT_I80_LDI0                      (0x2 << 26)
-> >>  #define VIDCON0_VIDOUT_I80_LDI1                      (0x3 << 26)
-> >> +#define VIDCON0_VIDOUT_WB                       (0x4 << 26)
-> >>
-> >>  #define VIDCON0_L1_DATA_MASK                 (0x7 << 23)
-> >>  #define VIDCON0_L1_DATA_SHIFT                        (23)
-> >> @@ -81,7 +97,13 @@
-> >>  #define VIDCON0_ENVID                                (1 << 1)
-> >>  #define VIDCON0_ENVID_F                              (1 << 0)
-> >>
-> >> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
-> >> +#define VIDOUT_CON                              (0x20000)
-> >> +#define VIDCON1                                 (0x20004)
-> >> +#else
-> >>  #define VIDCON1                                      (0x04)
-> >> +#endif
-> >> +
-> >>  #define VIDCON1_LINECNT_MASK                 (0x7ff << 16)
-> >>  #define VIDCON1_LINECNT_SHIFT                        (16)
-> >>  #define VIDCON1_LINECNT_GET(_v)                      (((_v) >> 16) & 0x7ff)
-> >> @@ -111,6 +133,14 @@
-> >>  #define VIDCON2_TVFMTSEL1_RGB                        (0x0 << 12)
-> >>  #define VIDCON2_TVFMTSEL1_YUV422             (0x1 << 12)
-> >>  #define VIDCON2_TVFMTSEL1_YUV444             (0x2 << 12)
-> >> +#define VIDCON2_TVFMTSEL1_SHIFT                      (12)
-> >> +#define VIDCON2_TVFMTSEL_SW                  (1 << 14)
-> >> +#define VIDCON2_TVFORMATSEL_YUV444           (0x2 << 12)
-> >> +
-> >> +#define VIDCON2_TVFMTSEL1_MASK                       (0x3 << 12)
-> >> +#define VIDCON2_TVFMTSEL1_RGB                        (0x0 << 12)
-> >> +#define VIDCON2_TVFMTSEL1_YUV422             (0x1 << 12)
-> >> +#define VIDCON2_TVFMTSEL1_YUV444             (0x2 << 12)
-> >>
-> >>  #define VIDCON2_ORGYCbCr                     (1 << 8)
-> >>  #define VIDCON2_YUVORDCrCb                   (1 << 7)
-> >> @@ -165,8 +195,15 @@
-> >>  #define VIDTCON1_HSPW_SHIFT                  (0)
-> >>  #define VIDTCON1_HSPW_LIMIT                  (0xff)
-> >>  #define VIDTCON1_HSPW(_x)                    ((_x) << 0)
-> >> +#define VIDCON1_VCLK_MASK                       (0x3 << 9)
-> >> +#define VIDCON1_VCLK_HOLD                       (0x0 << 9)
-> >> +#define VIDCON1_VCLK_RUN                        (0x1 << 9)
-> >>
-> >> +#ifdef CONFIG_FB_EXYNOS_FIMD_V8
-> >> +#define VIDTCON2                             (0x20018)
-> >> +#else
-> >>  #define VIDTCON2                             (0x18)
-> >> +#endif
-> >>  #define VIDTCON2_LINEVAL_E(_x)                       ((((_x) & 0x800) >> 11) << 23)
-> >>  #define VIDTCON2_LINEVAL_MASK                        (0x7ff << 11)
-> >>  #define VIDTCON2_LINEVAL_SHIFT                       (11)
-> >> @@ -186,6 +223,9 @@
-> >>  #define WINCONx_BYTSWP                               (1 << 17)
-> >>  #define WINCONx_HAWSWP                               (1 << 16)
-> >>  #define WINCONx_WSWP                         (1 << 15)
-> >> +#define WINCONx_ENLOCAL_MASK                 (0xf << 15)
-> >> +#define WINCONx_INRGB_RGB                    (0 << 13)
-> >> +#define WINCONx_INRGB_YCBCR                  (1 << 13)
-> >>  #define WINCONx_BURSTLEN_MASK                        (0x3 << 9)
-> >>  #define WINCONx_BURSTLEN_SHIFT                       (9)
-> >>  #define WINCONx_BURSTLEN_16WORD                      (0x0 << 9)
-> >> @@ -205,6 +245,7 @@
-> >>  #define WINCON0_BPPMODE_24BPP_888            (0xb << 2)
-> >>
-> >>  #define WINCON1_BLD_PIX                              (1 << 6)
-> >> +#define WINCON1_BLD_PLANE                    (0 << 6)
-> >>
-> >>  #define WINCON1_ALPHA_SEL                    (1 << 1)
-> >>  #define WINCON1_BPPMODE_MASK                 (0xf << 2)
-> >> @@ -395,9 +436,19 @@
-> >>  #define WPALCON_W0PAL_16BPP_A555             (0x5 << 0)
-> >>  #define WPALCON_W0PAL_16BPP_565                      (0x6 << 0)
-> >>
-> >> +/* Clock gate mode control */
-> >> +#define REG_CLKGATE_MODE                     (0x1b0)
-> >> +#define REG_CLKGATE_MODE_AUTO_CLOCK_GATE     (0 << 0)
-> >> +#define REG_CLKGATE_MODE_NON_CLOCK_GATE              (1 << 0)
-> >> +
-> >>  /* Blending equation control */
-> >>  #define BLENDCON                             (0x260)
-> >>  #define BLENDCON_NEW_MASK                    (1 << 0)
-> >>  #define BLENDCON_NEW_8BIT_ALPHA_VALUE                (1 << 0)
-> >>  #define BLENDCON_NEW_4BIT_ALPHA_VALUE                (0 << 0)
-> >>
-> >> +/* Window alpha control */
-> >> +#define VIDW0ALPHA0                          (0x200)
-> >> +#define VIDW0ALPHA1                          (0x204)
-> >> +#define DPCLKCON                             (0x27c)
-> >> +#define DPCLKCON_ENABLE                              (1 << 1)
-> >> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> >> index 0217f74..f81bf55 100644
-> >> --- a/drivers/video/Kconfig
-> >> +++ b/drivers/video/Kconfig
-> >> @@ -2053,6 +2053,12 @@ config FB_S3C
-> >>
-> >>         Currently the support is only for the S3C6400 and S3C6410 SoCs.
-> >>
-> >> +config FB_EXYNOS_FIMD_V8
-> >> +     bool "register extensions for FIMD version 8"
-> >> +     depends on ARCH_EXYNOS5
-> >> +     ---help---
-> >> +     This uses register extensions for FIMD version 8
-> >> +
-> >>  config FB_S3C_DEBUG_REGWRITE
-> >>         bool "Debug register writes"
-> >>         depends on FB_S3C
-> >
-> > Do we really need these defines in arch/arm/plat-samsung/include/plat/regs-fb* ?
-> > IMHO they should be moved from arch/arm to drivers/video to live together with the driver.
-> > They are not a part of core platform code. I thought that there have been some patches
-> > cleaning up regs-fb mess a long time ago, but it looks they didn't get their way to
-> > mainline.
-> >
-> 
-> The defines I had given in these headers are specific to exynos5
-> platform and are using by both drm-fimd and
-> s3c-fb. I'm not understanding the need to move these defines from
-> arch/arm to drivers/video. Can you please tell me why we have to do
-> that.
+[...]
 
-These defines are not the part of the Samsung platform core, they are used only by the
-device drivers. There is no point bloating arch/arm directory with the defines used
-only by the device drivers. If they are shared between 2 drivers then /include/video
-might be a good place for them.
+> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+> index e24a2a1..e77a1e0 100644
+> --- a/drivers/cpufreq/Kconfig
+> +++ b/drivers/cpufreq/Kconfig
+> @@ -179,6 +179,17 @@ config CPU_FREQ_GOV_CONSERVATIVE
+>
+>           If in doubt, say N.
+>
+> +config GENERIC_CPUFREQ_CPU0
+> +       bool "Generic cpufreq driver for CPU0"
+> +       depends on HAVE_CLK && REGULATOR && PM_OPP && OF
+> +       select CPU_FREQ_TABLE
+> +       help
+> +         This adds a generic cpufreq driver for CPU0 frequency management.
+> +         It supports both uniprocessor (UP) and symmetric multiprocessor (SMP)
+> +         systems which share clock and voltage across all CPUs.
+> +
+> +         If in doubt, say N.
+> +
+This *_CPU0 doesn't seems to be appropriate since this infrastructure will be
+used on SMP systems where CPUs shares clock/voltage rails. May be you can
+get rid of that unless there is a strong need.
 
-I'm not really sure if we really need to add another Kconfig for adding support for
-V8 of fimd device. There is already runtime support for different variants of the
-fimd hw block varing from s3c-2443 to exynos4 based on the platform device name (see 
-s3c_fb_driver_ids in drivers/video/s3c-fb.c). Another variant for exynos5 looks like 
-a cleaner approach.
+[...]
 
-Best regards
--- 
-Marek Szyprowski
-Samsung Poland R&D Center
+> +++ b/drivers/cpufreq/cpufreq-cpu0.c
+> @@ -0,0 +1,235 @@
+> +/*
+> + * Copyright (C) 2012 Freescale Semiconductor, Inc.
+> + *
+> + * Reuse some codes from drivers/cpufreq/omap-cpufreq.c
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#define pr_fmt(fmt)    KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/clk.h>
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/opp.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +/* voltage tolerance in percentage */
+> +static unsigned int voltage_tolerance;
+> +
+> +static struct device *cpu_dev;
+> +static struct clk *cpu_clk;
+> +static struct regulator *cpu_reg;
+> +static struct cpufreq_frequency_table *freq_table;
+> +
+> +static int cpu0_verify_speed(struct cpufreq_policy *policy)
+> +{
+> +       return cpufreq_frequency_table_verify(policy, freq_table);
+> +}
+> +
+> +static unsigned int cpu0_get_speed(unsigned int cpu)
+> +{
+> +       return clk_get_rate(cpu_clk) / 1000;
+> +}
+> +
+> +static int cpu0_set_target(struct cpufreq_policy *policy,
+> +                          unsigned int target_freq, unsigned int relation)
+> +{
+> +       struct cpufreq_freqs freqs;
+> +       struct opp *opp;
+> +       unsigned long freq_Hz, volt = 0, volt_old = 0, tol = 0;
+> +       unsigned int index, cpu;
+> +       int ret = 0;
+> +
+> +       ret = cpufreq_frequency_table_target(policy, freq_table, target_freq,
+> +                                            relation, &index);
+> +       if (ret) {
+> +               pr_err("failed to match target freqency %d: %d\n",
+> +                      target_freq, ret);
+> +               return ret;
+> +       }
+> +
+> +       freq_Hz = clk_round_rate(cpu_clk, freq_table[index].frequency * 1000);
+> +       if (freq_Hz < 0)
+> +               freq_Hz = freq_table[index].frequency * 1000;
+> +       freqs.new = freq_Hz / 1000;
+> +       freqs.old = clk_get_rate(cpu_clk) / 1000;
+> +
+> +       if (freqs.old == freqs.new)
+> +               return 0;
+> +
+> +       for_each_cpu(cpu, policy->cpus) {
+You need for_each_online_cpu() here o.w you will end up calling the
+notifier on CPU which is are hot-plugged out or not online yet.
+
+> +               freqs.cpu = cpu;
+> +               cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
+> +       }
+> +
+> +       if (cpu_reg) {
+> +               opp = opp_find_freq_ceil(cpu_dev, &freq_Hz);
+> +               if (IS_ERR(opp)) {
+> +                       pr_err("failed to find OPP for %ld\n", freq_Hz);
+> +                       return PTR_ERR(opp);
+> +               }
+> +               volt = opp_get_voltage(opp);
+> +               tol = volt * voltage_tolerance / 100;
+> +               volt_old = regulator_get_voltage(cpu_reg);
+> +       }
+> +
+> +       pr_debug("%u MHz, %ld mV --> %u MHz, %ld mV\n",
+> +                freqs.old / 1000, volt_old ? volt_old / 1000 : -1,
+> +                freqs.new / 1000, volt ? volt / 1000 : -1);
+> +
+> +       /* scaling up?  scale voltage before frequency */
+> +       if (cpu_reg && freqs.new > freqs.old) {
+> +               if (regulator_set_voltage(cpu_reg, volt - tol, volt + tol)) {
+> +                       pr_warn("Unable to scale voltage up\n");
+> +                       freqs.new = freqs.old;
+> +                       goto done;
+Do you need a POST notifier in case of the failure ?
+
+> +               }
+> +       }
+> +
+> +       ret = clk_set_rate(cpu_clk, freqs.new * 1000);
+> +
+> +       /* scaling down?  scale voltage after frequency */
+> +       if (cpu_reg && (freqs.new < freqs.old)) {
+> +               if (regulator_set_voltage(cpu_reg, volt - tol, volt + tol)) {
+> +                       pr_warn("Unable to scale voltage down\n");
+> +                       ret = clk_set_rate(cpu_clk, freqs.old * 1000);
+> +                       freqs.new = freqs.old;
+> +                       goto done;
+Here too.
+
+> +               }
+> +       }
+> +
+> +done:
+> +       for_each_cpu(cpu, policy->cpus) {
+Same as first comment.
+
+> +               freqs.cpu = cpu;
+> +               cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
+> +{
+> +       struct device_node *np;
+> +       int ret;
+> +
+> +       /* Initialize resources via CPU0 */
+> +       if (policy->cpu != 0)
+> +               return -EINVAL;
+> +
+> +       np = of_find_node_by_path("/cpus/cpu@0");
+> +       if (!np) {
+> +               pr_err("failed to find cpu0 node\n");
+> +               return -ENOENT;
+> +       }
+> +
+> +       cpu_dev = get_cpu_device(0);
+> +       if (!cpu_dev) {
+> +               pr_err("failed to get cpu0 device\n");
+> +               ret = -ENODEV;
+> +               goto out_put_node;
+> +       }
+> +
+> +       cpu_dev->of_node = np;
+> +       ret = of_init_opp_table(cpu_dev);
+> +       if (ret) {
+> +               pr_err("failed to init OPP table\n");
+> +               goto out_put_node;
+> +       }
+> +
+> +       ret = opp_init_cpufreq_table(cpu_dev, &freq_table);
+> +       if (ret) {
+> +               pr_err("failed to init cpufreq table\n");
+> +               goto out_put_node;
+> +       }
+> +
+> +       ret = cpufreq_frequency_table_cpuinfo(policy, freq_table);
+> +       if (ret) {
+> +               pr_err("invalid frequency table for cpu0\n");
+> +               goto out_free_table;
+> +       }
+> +
+> +       if (of_property_read_u32(np, "transition-latency",
+> +                                &policy->cpuinfo.transition_latency))
+> +               policy->cpuinfo.transition_latency = CPUFREQ_ETERNAL;
+> +
+> +       of_property_read_u32(np, "voltage-tolerance", &voltage_tolerance);
+> +
+> +       cpu_clk = clk_get(cpu_dev, NULL);
+> +       if (IS_ERR(cpu_clk)) {
+> +               pr_err("failed to get cpu0 clock\n");
+> +               ret = PTR_ERR(cpu_clk);
+> +               goto out_free_table;
+> +       }
+> +       policy->cur = clk_get_rate(cpu_clk) / 1000;
+> +
+> +       cpu_reg = regulator_get(cpu_dev, "cpu0");
+> +       if (IS_ERR(cpu_reg)) {
+> +               pr_warn("failed to get cpu0 regulator\n");
+> +               cpu_reg = NULL;
+> +       }
+> +
+> +       /*
+> +        * The driver only supports the SMP configuartion where all processors
+> +        * share the clock and voltage and clock.  Use cpufreq affected_cpus
+> +        * interface to have all CPUs scaled together.
+> +        */
+> +       policy->shared_type = CPUFREQ_SHARED_TYPE_ANY;
+> +       cpumask_setall(policy->cpus);
+> +
+> +       cpufreq_frequency_table_get_attr(freq_table, policy->cpu);
+> +
+> +       of_node_put(np);
+> +       return 0;
+> +
+> +out_free_table:
+> +       opp_free_cpufreq_table(cpu_dev, &freq_table);
+> +out_put_node:
+> +       of_node_put(np);
+> +       return ret;
+> +}
+> +
+> +static int cpu0_cpufreq_exit(struct cpufreq_policy *policy)
+> +{
+> +       cpufreq_frequency_table_put_attr(policy->cpu);
+> +       regulator_put(cpu_reg);
+> +       clk_put(cpu_clk);
+> +       opp_free_cpufreq_table(cpu_dev, &freq_table);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct freq_attr *cpu0_cpufreq_attr[] = {
+> +       &cpufreq_freq_attr_scaling_available_freqs,
+> +       NULL,
+> +};
+> +
+> +static struct cpufreq_driver cpu0_cpufreq_driver = {
+> +       .flags = CPUFREQ_STICKY,
+> +       .verify = cpu0_verify_speed,
+> +       .target = cpu0_set_target,
+> +       .get = cpu0_get_speed,
+> +       .init = cpu0_cpufreq_init,
+> +       .exit = cpu0_cpufreq_exit,
+> +       .name = "generic_cpu0",
+> +       .attr = cpu0_cpufreq_attr,
+> +};
+> +
+> +static int __devinit cpu0_cpufreq_driver_init(void)
+> +{
+> +       return cpufreq_register_driver(&cpu0_cpufreq_driver);
+> +}
+> +late_initcall(cpu0_cpufreq_driver_init);
+
+Can you also add support to build this as loadable module ?
+
+Regards
+santosh
