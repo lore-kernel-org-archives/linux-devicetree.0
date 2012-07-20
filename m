@@ -1,55 +1,45 @@
-From: "Menon, Nishanth" <nm@ti.com>
-Subject: Re: [PATCH 2/3] PM / OPP: Initialize OPP table from device tree
-Date: Fri, 20 Jul 2012 04:04:19 -0500
-Message-ID: <CAOMWX4eAUH1LSshfaZnc2Pj5r39e9v5axTVFa37U0xEP66uczg@mail.gmail.com>
-References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
- <1342713281-31114-3-git-send-email-shawn.guo@linaro.org> <CAOMWX4fq8aWpRgtBj+5FgqhMus=zJL3Ubqe9pwiz-Y3a6V3svg@mail.gmail.com>
- <20120720084655.GB31866@S2101-09.ap.freescale.net>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 20 Jul 2012 11:08:44 +0200
+Message-ID: <87y5meu7dv.fsf@free.fr>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
+	<201206271520.49276.arnd@arndb.de>
+	<1342161907.1726.26.camel@vkoul-udesk3>
+	<201207171924.33756.arnd@arndb.de>
+	<1342756850.1726.74.camel@vkoul-udesk3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <20120720084655.GB31866@S2101-09.ap.freescale.net>
-Sender: cpufreq-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2012 at 3:46 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
->
->> > +       ret = of_property_read_u32_array(np, propname, opp, nr);
->> > +       if (ret) {
->> > +               dev_err(dev, "%s: Unable to read OPPs\n", __func__);
->> > +               goto out;
->> > +       }
->> > +
->> > +       nr /= 3;
->> > +       for (i = 0; i < nr; i++) {
->> > +               /*
->> > +                * Each OPP is a set of tuples consisting of frequency,
->> > +                * voltage and availability like <freq-kHz vol-uV enable>.
->> > +                */
->> > +               u32 *val = opp + i * 3;
->> > +
->> > +               val[0] *= 1000;
->> > +               ret = opp_add(dev, val[0], val[1]);
->> > +               if (ret) {
->> > +                       dev_warn(dev, "%s: Failed to add OPP %d: %d\n",
->> > +                                __func__, val[0], ret);
->> > +                       continue;
->> > +               }
->> > +
->> > +               if (!val[2]) {
->> > +                       ret = opp_disable(dev, val[0]);
->> Since we are updating the table out of context of the SoC users,
->> consider what might happen if someone where to operate on the OPP
->> after opp_add, but before opp_disable?
->
-> I would take this as another comment reminding me to remove the
-> enabling/availability tuple from the binding.  Will do it in the
-> next version.
-I am not completely convinced that dropping the flag would be the best approach
-on a long run, but might be a good starting point while we meet current reqs and
-as a need arises, could increase the scope. Thanks once again for doing this.
+Vinod Koul <vinod.koul@linux.intel.com> writes:
 
-Regards,
-Nishanth Menon
+>> 4. A dma controller requiring complex configuration:
+>> 
+>>        dma: dmaengine@48000000 {
+>>                compatible = "foo,foo-sdma"
+>>                reg = <0x48000000 0x1000>;
+>>                interrupts = <4>;
+>>                #dma-cells = <6>; /* phandle, flag, request, channel,
+>> 					 input-width, output-width */
+> Why would we want the widths to be here?
+> Assuming a DMA from System memory to a peripheral, source width should
+> be system memory width and destination the peripheral width. IMO these
+> should not be in dma property even if we need these
+Hi Vinod,
+
+I know at least one peripheral which accepts 2 widths, 8bit and 16bit, namely the
+M-Systems DiskOnChip G3 NAND chip.
+This device has to configured to choose either 8bit data bus access or 16bit
+data bus access.
+
+I'm just wondering if that usecase will fit in without the width information
+embedded, and how will the driver choose the width to use ?
+
+Cheers.
+
+--
+Robert
