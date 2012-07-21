@@ -1,37 +1,56 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv2 2/2] ARM: vt8500: Add support for UHCI companion controller
-Date: Sat, 21 Jul 2012 20:19:00 +0400
-Message-ID: <500AD674.9050206@mvista.com>
-References: <1342787373-2230-1-git-send-email-linux@prisktech.co.nz> <1342787373-2230-2-git-send-email-linux@prisktech.co.nz> <201207202210.28790.arnd@arndb.de>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: [PATCH] of: i2c: add support for wakeup-source property
+Date: Sat, 21 Jul 2012 11:47:25 -0700
+Message-ID: <1342896445-5244-1-git-send-email-olof@lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201207202210.28790.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add support for specifying a generic "wakeup-source" property on i2c
+clients, which will set the I2C_CLIENT_WAKE flag, thus configuring the
+device to wake the system from suspend (via IRQ).
 
-On 21-07-2012 2:10, Arnd Bergmann wrote:
+This obviously doesn't make sense on devices lacking IRQ, but since we
+still allow that in the i2c_board_info case, I don't see a reason to
+restrict it here.
 
->> +static const struct of_device_id platform_uhci_ids[] = {
->> +	{ .compatible = "of-uhci", },
->> +	{}
->> +};
+Note: Since the generic i2c bindings aren't documented in the kernel,
+I didn't find a good place to add documentation for this binding
+extension. I still think it makes sense to have a generic property
+instead of having each device do its own binding for the same.
 
-> The of- part is clearly meaningless in the binding that is about of
-> devices. Using usb-uhci would be more appropriate I think, but maybe
-> someone can come up with an even better name. Which consortium
-> or company created uhci?
+Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+---
+ drivers/of/of_i2c.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-    UHCI is Intel's spec.
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
+index 1e173f3..3550f3b 100644
+--- a/drivers/of/of_i2c.c
++++ b/drivers/of/of_i2c.c
+@@ -61,6 +61,9 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
+ 		info.of_node = of_node_get(node);
+ 		info.archdata = &dev_ad;
+ 
++		if (of_get_property(node, "wakeup-source", NULL))
++			info.flags |= I2C_CLIENT_WAKE;
++
+ 		request_module("%s%s", I2C_MODULE_PREFIX, info.type);
+ 
+ 		result = i2c_new_device(adap, &info);
+-- 
+1.7.10.1.488.g05fbf7a
