@@ -1,91 +1,79 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: [PATCHv2 2/2] ARM: vt8500: Minor update to vt8500-uart for devicetree
- support
-Date: Sat, 21 Jul 2012 23:22:12 +1200
-Message-ID: <1342869732-11232-1-git-send-email-linux@prisktech.co.nz>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2 V3] MXS: Implement DMA support into mxs-i2c
+Date: Sat, 21 Jul 2012 14:44:06 +0200
+Message-ID: <20120721124406.GA9946@pengutronix.de>
+References: <1341850974-11977-1-git-send-email-marex@denx.de>
+ <1341850974-11977-2-git-send-email-marex@denx.de>
+ <20120713082249.GF32184@pengutronix.de>
+ <20120715081715.GA2429@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, VT8500 mailing list <vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120715081715.GA2429-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux ARM kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefano Babic <sbabic-ynQEQJNshbs@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
-v2:
-Split single patch into seperate patches.
- .../devicetree/bindings/tty/serial/vt8500-uart.txt |   14 ++++++++++++++
- drivers/tty/serial/vt8500_serial.c                 |    8 ++++++++
- 2 files changed, 22 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
 
-diff --git a/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt b/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
-new file mode 100644
-index 0000000..745070a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
-@@ -0,0 +1,14 @@
-+* VIA/Wondermedia Universal Asynchronous Receiver/Transmitter (UART)
-+
-+Required properties:
-+- compatible: Should be "via,vt8500-uart"
-+- reg: Should contain registers location and length
-+- interrupts: Should contain interrupt
-+
-+Example:
-+	uart0: serial@d8200000 {
-+		compatible = "via,vt8500-uart";
-+		reg = <0xd8200000 0x1040>;
-+		interrupts = <32>;
-+	};
-+
-diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
-index 2be006f..b9ea0b9 100644
---- a/drivers/tty/serial/vt8500_serial.c
-+++ b/drivers/tty/serial/vt8500_serial.c
-@@ -34,6 +34,7 @@
- #include <linux/slab.h>
- #include <linux/clk.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- 
- /*
-  * UART Register offsets
-@@ -603,12 +604,18 @@ static int __devexit vt8500_serial_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id vt8500_uart_ids[] = {
-+	{ .compatible = "via,vt8500-uart", },
-+	{}
-+};
-+
- static struct platform_driver vt8500_platform_driver = {
- 	.probe  = vt8500_serial_probe,
- 	.remove = __devexit_p(vt8500_serial_remove),
- 	.driver = {
- 		.name = "vt8500_serial",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(vt8500_uart_ids),
- 	},
- };
- 
-@@ -643,3 +650,4 @@ module_exit(vt8500_serial_exit);
- MODULE_AUTHOR("Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
- MODULE_DESCRIPTION("Driver for vt8500 serial device");
- MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, vt8500_uart_ids);
--- 
-1.7.2.5
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jul 15, 2012 at 04:17:16PM +0800, Shawn Guo wrote:
+> On Fri, Jul 13, 2012 at 10:22:49AM +0200, Wolfram Sang wrote:
+> > > +	/*
+> > > +	 * TODO: This is a temporary solution and should be changed
+> > > +	 * to use generic DMA binding later when the helpers get in.
+> > > +	 */
+> >=20
+> > @Shawn: Any idea when this is going to happen? And why do we need this?
+>=20
+> See thread [1] for current statues.  I'm not sure when it's going to
+> happen though.
+
+Phew, [1] is a bit too much too read. I will just assume there are still
+issues.
+
+> > AFAICT it will be always channel 6/7 on mx28?
+> >=20
+> Yes, but it might be a different channel on mx23.  Just like we define
+> IO region and interrupt number in device tree, dma channel is just
+> another resource of hardware block that we choose to define in device
+> tree.
+
+What makes me wonder now that I come to think of it (not necessarily a
+question for Shawn but to all):
+
+If I have an I2C slave with an interrupt line tied to something, GPIO or
+external IRQ from the SoC, it makes perfect sense to define that in the
+devicetree.
+
+Yet, if I know the compatible property for the mxs I2C driver, and also
+know the CPU type (be it MX23 or MX28), I can deduce from that a lot of
+information, including DMA channel. That is fix. Why encode it?
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlAKpBUACgkQD27XaX1/VRvtAwCgt3WQkUBdzIuYvXShLYYKfzr9
+/y8An2sFWUFGs5e+1+J8/ZUdrY/POUEl
+=Z0WR
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
