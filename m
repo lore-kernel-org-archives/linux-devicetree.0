@@ -1,88 +1,80 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: [PATCHv4 1/2] ARM: vt8500: Update vt8500-ehci driver to support
- device tree.
-Date: Sat, 21 Jul 2012 22:58:52 +1200
-Message-ID: <1342868333-10647-1-git-send-email-linux@prisktech.co.nz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, VT8500 mailing list <vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: [PATCH 2/2] ARM: vt8500: Minor update to vt8500-uart for devicetree support
+Date: Sat, 21 Jul 2012 23:20:22 +1200
+Message-ID: <1342869622-11171-2-git-send-email-linux@prisktech.co.nz>
+References: <1342869622-11171-1-git-send-email-linux@prisktech.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1342869622-11171-1-git-send-email-linux@prisktech.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alessandro Zumoo <a.zummo@towertech.it>, Alan Cox <alan@linux.intel.com>
+Cc: Tony Prisk <linux@prisktech.co.nz>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, VT8500 mailing list <vt8500-wm8505-linux-kernel@googlegroups.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v4:
-Minor changes to the documentation of required properties.
+v2:
+Split single patch into seperate patches.
+ .../devicetree/bindings/tty/serial/vt8500-uart.txt |   14 ++++++++++++++
+ drivers/tty/serial/vt8500_serial.c                 |    8 ++++++++
+ 2 files changed, 22 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
 
- .../devicetree/bindings/usb/vt8500-ehci.txt        |   12 ++++++++++++
- drivers/usb/host/ehci-vt8500.c                     |    9 +++++++++
- 2 files changed, 21 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/vt8500-ehci.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/vt8500-ehci.txt b/Documentation/devicetree/bindings/usb/vt8500-ehci.txt
+diff --git a/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt b/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
 new file mode 100644
-index 0000000..5fb8fd6
+index 0000000..745070a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/vt8500-ehci.txt
-@@ -0,0 +1,12 @@
-+VIA VT8500 and Wondermedia WM8xxx SoC USB controllers.
++++ b/Documentation/devicetree/bindings/tty/serial/vt8500-uart.txt
+@@ -0,0 +1,14 @@
++* VIA/Wondermedia Universal Asynchronous Receiver/Transmitter (UART)
 +
 +Required properties:
-+ - compatible: Should be "via,vt8500-ehci" or "wm,prizm-ehci".
-+ - reg: Address range of the ehci registers. size should be 0x200
-+ - interrupts: Should contain the ehci interrupt.
++- compatible: Should be "via,vt8500-uart"
++- reg: Should contain registers location and length
++- interrupts: Should contain interrupt
 +
-+usb: ehci@D8007100 {
-+	compatible = "wm,prizm-ehci", "usb-ehci";
-+	reg = <0xD8007100 0x200>;
-+	interrupts = <1>;
-+};
-diff --git a/drivers/usb/host/ehci-vt8500.c b/drivers/usb/host/ehci-vt8500.c
-index c1eda73..4ba8f0c 100644
---- a/drivers/usb/host/ehci-vt8500.c
-+++ b/drivers/usb/host/ehci-vt8500.c
-@@ -16,6 +16,7 @@
-  *
-  */
- 
-+#include <linux/of.h>
++Example:
++	uart0: serial@d8200000 {
++		compatible = "via,vt8500-uart";
++		reg = <0xd8200000 0x1040>;
++		interrupts = <32>;
++	};
++
+diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
+index 2be006f..b9ea0b9 100644
+--- a/drivers/tty/serial/vt8500_serial.c
++++ b/drivers/tty/serial/vt8500_serial.c
+@@ -34,6 +34,7 @@
+ #include <linux/slab.h>
+ #include <linux/clk.h>
  #include <linux/platform_device.h>
++#include <linux/of.h>
  
- static int ehci_update_device(struct usb_hcd *hcd, struct usb_device *udev)
-@@ -162,6 +163,12 @@ static int vt8500_ehci_drv_remove(struct platform_device *pdev)
+ /*
+  * UART Register offsets
+@@ -603,12 +604,18 @@ static int __devexit vt8500_serial_remove(struct platform_device *pdev)
  	return 0;
  }
  
-+static const struct of_device_id vt8500_ehci_ids[] = {
-+	{ .compatible = "via,vt8500-ehci", },
-+	{ .compatible = "wm,prizm-ehci", },
++static const struct of_device_id vt8500_uart_ids[] = {
++	{ .compatible = "via,vt8500-uart", },
 +	{}
 +};
 +
- static struct platform_driver vt8500_ehci_driver = {
- 	.probe		= vt8500_ehci_drv_probe,
- 	.remove		= vt8500_ehci_drv_remove,
-@@ -169,7 +176,9 @@ static struct platform_driver vt8500_ehci_driver = {
+ static struct platform_driver vt8500_platform_driver = {
+ 	.probe  = vt8500_serial_probe,
+ 	.remove = __devexit_p(vt8500_serial_remove),
  	.driver = {
- 		.name	= "vt8500-ehci",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(vt8500_ehci_ids),
- 	}
+ 		.name = "vt8500_serial",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(vt8500_uart_ids),
+ 	},
  };
  
- MODULE_ALIAS("platform:vt8500-ehci");
-+MODULE_DEVICE_TABLE(of, vt8500_ehci_ids);
+@@ -643,3 +650,4 @@ module_exit(vt8500_serial_exit);
+ MODULE_AUTHOR("Alexey Charkov <alchark@gmail.com>");
+ MODULE_DESCRIPTION("Driver for vt8500 serial device");
+ MODULE_LICENSE("GPL");
++MODULE_DEVICE_TABLE(of, vt8500_uart_ids);
 -- 
 1.7.2.5
