@@ -1,296 +1,366 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH 8/8 v2] ARM: EXYNOS5: Add PHY initialization code for usb 3.0
-Date: Sat, 21 Jul 2012 16:02:09 +0530
-Message-ID: <1342866729-30460-9-git-send-email-gautam.vivek@samsung.com>
-References: <1342866729-30460-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1342866729-30460-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene.kim@samsung.com, l.majewski@samsung.com, kyungmin.park@samsung.com, thomas.abraham@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, m.szyprowski@samsung.com
-Cc: a.kesavan@samsung.com, yulgon.kim@samsung.com, boyko.lee@samsung.com, av.tikhomirov@samsung.com, joshi@samsung.com, olofj@google.com, prashanth.g@samsung.com, ajaykumar.rs@samsung.com
+From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Subject: [PATCHv4 2/2] ARM: vt8500: Add support for UHCI companion controller
+Date: Sat, 21 Jul 2012 22:58:53 +1200
+Message-ID: <1342868333-10647-2-git-send-email-linux@prisktech.co.nz>
+References: <1342868333-10647-1-git-send-email-linux@prisktech.co.nz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342868333-10647-1-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, VT8500 mailing list <vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds PHY setup functions for usb 3.0 support on exynos5
+Add support for a generic non-pci UHCI companion controller.
+Existing board files for arch-vt8500 updated to include UHCI
+support.
 
-Signed-off-by: Yulgon Kim <yulgon.kim@samsung.com>
-Signed-off-by: Anton Tikhomirov <av.tikhomirov@samsung.com>
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 ---
- arch/arm/mach-exynos/setup-usb-phy.c               |  127 ++++++++++++++++++++
- .../include/plat/regs-usb3-exynos-drd-phy.h        |   75 ++++++++++++
- arch/arm/plat-samsung/include/plat/usb-phy.h       |    1 +
- 3 files changed, 203 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/plat-samsung/include/plat/regs-usb3-exynos-drd-phy.h
+v4:
+Add the binding documentation.
+Changed the OF .compatibility to 'platform-uhci'
 
-diff --git a/arch/arm/mach-exynos/setup-usb-phy.c b/arch/arm/mach-exynos/setup-usb-phy.c
-index e6f2f84..b90871d 100644
---- a/arch/arm/mach-exynos/setup-usb-phy.c
-+++ b/arch/arm/mach-exynos/setup-usb-phy.c
-@@ -18,12 +18,14 @@
- #include <mach/regs-usb-phy.h>
- #include <plat/cpu.h>
- #include <plat/usb-phy.h>
-+#include <plat/regs-usb3-exynos-drd-phy.h>
+ .../devicetree/bindings/usb/platform-uhci.txt      |   12 ++
+ arch/arm/mach-vt8500/bv07.c                        |    1 +
+ arch/arm/mach-vt8500/devices-vt8500.c              |    5 +
+ arch/arm/mach-vt8500/devices-wm8505.c              |    4 +
+ arch/arm/mach-vt8500/devices.c                     |   11 ++
+ arch/arm/mach-vt8500/devices.h                     |    1 +
+ arch/arm/mach-vt8500/wm8505_7in.c                  |    1 +
+ drivers/usb/host/Kconfig                           |   12 ++-
+ drivers/usb/host/uhci-hcd.c                        |    5 +
+ drivers/usb/host/uhci-platform.c                   |  157 ++++++++++++++++++++
+ 10 files changed, 207 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/platform-uhci.txt
+ create mode 100644 drivers/usb/host/uhci-platform.c
+
+diff --git a/Documentation/devicetree/bindings/usb/platform-uhci.txt b/Documentation/devicetree/bindings/usb/platform-uhci.txt
+new file mode 100644
+index 0000000..91477d6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/platform-uhci.txt
+@@ -0,0 +1,12 @@
++Generic Platform UHCI controllers.
++
++Required properties:
++ - compatible: Should be "platform-uhci".
++ - reg: Address range of the uhci registers
++ - interrupts: Should contain the uhci interrupt.
++
++usb: uhci@D8007301 {
++	compatible = "platform-uhci", "usb-uhci";
++	reg = <0xD8007301 0x200>;
++	interrupts = <0>;
++};
+diff --git a/arch/arm/mach-vt8500/bv07.c b/arch/arm/mach-vt8500/bv07.c
+index a464c75..19d20d9 100644
+--- a/arch/arm/mach-vt8500/bv07.c
++++ b/arch/arm/mach-vt8500/bv07.c
+@@ -32,6 +32,7 @@ static struct platform_device *devices[] __initdata = {
+ 	&vt8500_device_uart0,
+ 	&vt8500_device_lcdc,
+ 	&vt8500_device_ehci,
++	&vt8500_device_uhci,
+ 	&vt8500_device_ge_rops,
+ 	&vt8500_device_pwm,
+ 	&vt8500_device_pwmbl,
+diff --git a/arch/arm/mach-vt8500/devices-vt8500.c b/arch/arm/mach-vt8500/devices-vt8500.c
+index 19519ae..def7fe3 100644
+--- a/arch/arm/mach-vt8500/devices-vt8500.c
++++ b/arch/arm/mach-vt8500/devices-vt8500.c
+@@ -48,6 +48,11 @@ void __init vt8500_set_resources(void)
+ 	tmp[1] = wmt_irq_res(IRQ_EHCI);
+ 	wmt_res_add(&vt8500_device_ehci, tmp, 2);
  
- #define PHY_ENABLE	1
- #define PHY_DISABLE	0
++	/* vt8500 uses a single IRQ for both EHCI and UHCI controllers */
++	tmp[0] = wmt_mmio_res(VT8500_UHCI_BASE, SZ_512);
++	tmp[1] = wmt_irq_res(IRQ_EHCI);
++	wmt_res_add(&vt8500_device_uhci, tmp, 2);
++
+ 	tmp[0] = wmt_mmio_res(VT8500_GEGEA_BASE, SZ_256);
+ 	wmt_res_add(&vt8500_device_ge_rops, tmp, 1);
  
- enum usb_phy_type {
- 	USB_PHY		= (0x1 << 0),
-+	USB_PHY_DRD	= (0x1 << 1),
+diff --git a/arch/arm/mach-vt8500/devices-wm8505.c b/arch/arm/mach-vt8500/devices-wm8505.c
+index db4594e..c810454 100644
+--- a/arch/arm/mach-vt8500/devices-wm8505.c
++++ b/arch/arm/mach-vt8500/devices-wm8505.c
+@@ -55,6 +55,10 @@ void __init wm8505_set_resources(void)
+ 	tmp[1] = wmt_irq_res(IRQ_EHCI);
+ 	wmt_res_add(&vt8500_device_ehci, tmp, 2);
+ 
++	tmp[0] = wmt_mmio_res(WM8505_UHCI_BASE, SZ_512);
++	tmp[1] = wmt_irq_res(IRQ_UHCI);
++	wmt_res_add(&vt8500_device_uhci, tmp, 2);
++
+ 	tmp[0] = wmt_mmio_res(WM8505_GEGEA_BASE, SZ_256);
+ 	wmt_res_add(&vt8500_device_ge_rops, tmp, 1);
+ 
+diff --git a/arch/arm/mach-vt8500/devices.c b/arch/arm/mach-vt8500/devices.c
+index 1fcdc36..46ff82d 100644
+--- a/arch/arm/mach-vt8500/devices.c
++++ b/arch/arm/mach-vt8500/devices.c
+@@ -204,6 +204,17 @@ struct platform_device vt8500_device_ehci = {
+ 	},
  };
  
- static atomic_t host_usage;
-@@ -161,11 +163,44 @@ static int exynos4210_usb_phy_clkset(struct platform_device *pdev)
- 	return phyclk;
- }
++static u64 uhci_dma_mask = DMA_BIT_MASK(32);
++
++struct platform_device vt8500_device_uhci = {
++	.name		= "platform-uhci",
++	.id		= 0,
++	.dev		= {
++		.dma_mask	= &uhci_dma_mask,
++		.coherent_dma_mask = DMA_BIT_MASK(32),
++	},
++};
++
+ struct platform_device vt8500_device_ge_rops = {
+ 	.name		= "wmt_ge_rops",
+ 	.id		= -1,
+diff --git a/arch/arm/mach-vt8500/devices.h b/arch/arm/mach-vt8500/devices.h
+index 188d4e1..0e6d9f9 100644
+--- a/arch/arm/mach-vt8500/devices.h
++++ b/arch/arm/mach-vt8500/devices.h
+@@ -81,6 +81,7 @@ extern struct platform_device vt8500_device_uart5;
+ extern struct platform_device vt8500_device_lcdc;
+ extern struct platform_device vt8500_device_wm8505_fb;
+ extern struct platform_device vt8500_device_ehci;
++extern struct platform_device vt8500_device_uhci;
+ extern struct platform_device vt8500_device_ge_rops;
+ extern struct platform_device vt8500_device_pwm;
+ extern struct platform_device vt8500_device_pwmbl;
+diff --git a/arch/arm/mach-vt8500/wm8505_7in.c b/arch/arm/mach-vt8500/wm8505_7in.c
+index cf910a9..302ae2f 100644
+--- a/arch/arm/mach-vt8500/wm8505_7in.c
++++ b/arch/arm/mach-vt8500/wm8505_7in.c
+@@ -31,6 +31,7 @@ static void __iomem *pmc_hiber;
+ static struct platform_device *devices[] __initdata = {
+ 	&vt8500_device_uart0,
+ 	&vt8500_device_ehci,
++	&vt8500_device_uhci,
+ 	&vt8500_device_wm8505_fb,
+ 	&vt8500_device_ge_rops,
+ 	&vt8500_device_pwm,
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 83e58df..3d153d0 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -450,7 +450,7 @@ config USB_OHCI_LITTLE_ENDIAN
  
-+static u32 exynos_usb_phy30_set_clock(struct platform_device *pdev)
-+{
-+	u32 reg, refclk;
+ config USB_UHCI_HCD
+ 	tristate "UHCI HCD (most Intel and VIA) support"
+-	depends on USB && (PCI || SPARC_LEON)
++	depends on USB && (PCI || SPARC_LEON || ARCH_VT8500)
+ 	---help---
+ 	  The Universal Host Controller Interface is a standard by Intel for
+ 	  accessing the USB hardware in the PC (which is also called the USB
+@@ -468,7 +468,15 @@ config USB_UHCI_HCD
+ config USB_UHCI_SUPPORT_NON_PCI_HC
+ 	bool
+ 	depends on USB_UHCI_HCD
+-	default y if SPARC_LEON
++	default y if (SPARC_LEON || ARCH_VT8500)
 +
-+	refclk = exynos4210_usb_phy_clkset(pdev);
-+	reg = EXYNOS_USB3_PHYCLKRST_REFCLKSEL(3) |
-+	      EXYNOS_USB3_PHYCLKRST_FSEL(refclk);
-+
-+	switch (refclk) {
-+	case EXYNOS5_CLKSEL_50M:
-+		reg |= (EXYNOS_USB3_PHYCLKRST_MPLL_MULTIPLIER(0x02) |
-+			EXYNOS_USB3_PHYCLKRST_SSC_REF_CLK_SEL(0x00));
-+		break;
-+	case EXYNOS5_CLKSEL_20M:
-+		reg |= (EXYNOS_USB3_PHYCLKRST_MPLL_MULTIPLIER(0x7d) |
-+			EXYNOS_USB3_PHYCLKRST_SSC_REF_CLK_SEL(0x00));
-+		break;
-+	case EXYNOS5_CLKSEL_19200K:
-+		reg |= (EXYNOS_USB3_PHYCLKRST_MPLL_MULTIPLIER(0x02) |
-+			EXYNOS_USB3_PHYCLKRST_SSC_REF_CLK_SEL(0x88));
-+		break;
-+	case EXYNOS5_CLKSEL_24M:
-+	default:
-+		reg |= (EXYNOS_USB3_PHYCLKRST_MPLL_MULTIPLIER(0x68) |
-+			EXYNOS_USB3_PHYCLKRST_SSC_REF_CLK_SEL(0x88));
-+		break;
-+	}
-+
-+	return reg;
-+}
-+
- static void exynos_usb_phy_control(enum usb_phy_type phy_type , int on)
- {
- 	if (soc_is_exynos5250()) {
- 		if (phy_type & USB_PHY)
- 			writel(on, S5P_USBHOST_PHY_CONTROL);
-+		if (phy_type & USB_PHY_DRD)
-+			writel(on, S5P_USBDRD_PHY_CONTROL);
- 	}
- }
++config USB_UHCI_PLATFORM
++	bool "Generic UHCI Platform Driver support"
++	depends on USB_UHCI_SUPPORT_NON_PCI_HC
++	default y if ARCH_VT8500
++	---help---
++	  Enable support for generic UHCI platform devices that require no
++	  additional configuration.
  
-@@ -413,6 +448,88 @@ static int exynos5_usb_phy20_exit(struct platform_device *pdev)
- 	return 0;
- }
+ config USB_UHCI_BIG_ENDIAN_MMIO
+ 	bool
+diff --git a/drivers/usb/host/uhci-hcd.c b/drivers/usb/host/uhci-hcd.c
+index e4db350..4b9e9ab 100644
+--- a/drivers/usb/host/uhci-hcd.c
++++ b/drivers/usb/host/uhci-hcd.c
+@@ -846,6 +846,11 @@ static const char hcd_name[] = "uhci_hcd";
+ #define PLATFORM_DRIVER		uhci_grlib_driver
+ #endif
  
-+static int exynos5_usb_phy30_init(struct platform_device *pdev)
-+{
-+	struct clk *host_clk;
-+	u32 reg;
++#ifdef CONFIG_USB_UHCI_PLATFORM
++#include "uhci-platform.c"
++#define PLATFORM_DRIVER		uhci_platform_driver
++#endif
 +
-+	host_clk = exynos_usb_clock_enable(pdev);
-+	if (host_clk == NULL) {
-+		dev_err(&pdev->dev, "Failed to enable USB3.0 host clock this time\n");
-+		return -1;
-+	}
-+
-+	exynos_usb_phy_control(USB_PHY_DRD, PHY_ENABLE);
-+
-+	/* Reset USB 3.0 PHY */
-+	writel(0x00000000, EXYNOS_USB3_PHYREG0);
-+	writel(0x24d4e6e4, EXYNOS_USB3_PHYPARAM0);
-+	writel(0x03fff81c, EXYNOS_USB3_PHYPARAM1);
-+	writel(0x00000000, EXYNOS_USB3_PHYRESUME);
-+
-+	writel(0x08000040, EXYNOS_USB3_LINKSYSTEM);
-+	writel(0x00000004, EXYNOS_USB3_PHYBATCHG);
-+
-+	/* PHYTEST POWERDOWN Control */
-+	reg = readl(EXYNOS_USB3_PHYTEST);
-+	reg &= ~(EXYNOS_USB3_PHYTEST_POWERDOWN_SSP |
-+		 EXYNOS_USB3_PHYTEST_POWERDOWN_HSP);
-+	writel(reg, EXYNOS_USB3_PHYTEST);
-+
-+	/* UTMI Power Control */
-+	writel(EXYNOS_USB3_PHYUTMI_OTGDISABLE, EXYNOS_USB3_PHYUTMI);
-+
-+	reg = exynos_usb_phy30_set_clock(pdev);
-+
-+	reg |= (EXYNOS_USB3_PHYCLKRST_PORTRESET |
-+		/* Digital power supply in normal operating mode */
-+		EXYNOS_USB3_PHYCLKRST_RETENABLEN |
-+		/* Enable ref clock for SS function */
-+		EXYNOS_USB3_PHYCLKRST_REF_SSP_EN |
-+		/* Enable spread spectrum */
-+		EXYNOS_USB3_PHYCLKRST_SSC_EN) |
-+		EXYNOS_USB3_PHYCLKRST_COMMONONN;
-+	writel(reg, EXYNOS_USB3_PHYCLKRST);
-+
-+	udelay(10);
-+
-+	reg &= ~(EXYNOS_USB3_PHYCLKRST_PORTRESET);
-+	writel(reg, EXYNOS_USB3_PHYCLKRST);
-+
-+	clk_disable(host_clk);
-+	clk_put(host_clk);
-+	return 0;
-+}
-+
-+static int exynos5_usb_phy30_exit(struct platform_device *pdev)
-+{
-+	struct clk *host_clk;
-+	u32 reg;
-+
-+	host_clk = exynos_usb_clock_enable(pdev);
-+	if (host_clk == NULL) {
-+		dev_err(&pdev->dev, "Failed to enable USB3.0 host clock this time\n");
-+		return -1;
-+	}
-+
-+	reg = EXYNOS_USB3_PHYUTMI_OTGDISABLE |
-+		EXYNOS_USB3_PHYUTMI_FORCESUSPEND |
-+		EXYNOS_USB3_PHYUTMI_FORCESLEEP;
-+	writel(reg, EXYNOS_USB3_PHYUTMI);
-+
-+	/* Control PHYTEST to remove leakage current */
-+	reg = readl(EXYNOS_USB3_PHYTEST);
-+	reg |= (EXYNOS_USB3_PHYTEST_POWERDOWN_SSP |
-+		 EXYNOS_USB3_PHYTEST_POWERDOWN_HSP);
-+	writel(reg, EXYNOS_USB3_PHYTEST);
-+
-+	exynos_usb_phy_control(USB_PHY_DRD, PHY_DISABLE);
-+
-+	clk_disable(host_clk);
-+	clk_put(host_clk);
-+	return 0;
-+}
-+
- int s5p_usb_phy_init(struct platform_device *pdev, int type)
- {
- 	if (type == S5P_USB_PHY_DEVICE)
-@@ -422,6 +539,11 @@ int s5p_usb_phy_init(struct platform_device *pdev, int type)
- 			return exynos5_usb_phy20_init(pdev);
- 		else
- 			return exynos4210_usb_phy1_init(pdev);
-+	} else if (type == S5P_USB_PHY_DRD) {
-+		if (soc_is_exynos5250())
-+			return exynos5_usb_phy30_init(pdev);
-+		else
-+			dev_err(&pdev->dev, "USB 3.0 DRD not present\n");
- 	}
- 
- 	return -EINVAL;
-@@ -436,6 +558,11 @@ int s5p_usb_phy_exit(struct platform_device *pdev, int type)
- 			return exynos5_usb_phy20_exit(pdev);
- 		else
- 			return exynos4210_usb_phy1_exit(pdev);
-+	} else if (type == S5P_USB_PHY_DRD) {
-+		if (soc_is_exynos5250())
-+			return exynos5_usb_phy30_exit(pdev);
-+		else
-+			dev_err(&pdev->dev, "USB 3.0 DRD not present\n");
- 	}
- 	return -EINVAL;
- }
-diff --git a/arch/arm/plat-samsung/include/plat/regs-usb3-exynos-drd-phy.h b/arch/arm/plat-samsung/include/plat/regs-usb3-exynos-drd-phy.h
+ #if !defined(PCI_DRIVER) && !defined(PLATFORM_DRIVER)
+ #error "missing bus glue for uhci-hcd"
+ #endif
+diff --git a/drivers/usb/host/uhci-platform.c b/drivers/usb/host/uhci-platform.c
 new file mode 100644
-index 0000000..8efd5c7
+index 0000000..e478049
 --- /dev/null
-+++ b/arch/arm/plat-samsung/include/plat/regs-usb3-exynos-drd-phy.h
-@@ -0,0 +1,75 @@
++++ b/drivers/usb/host/uhci-platform.c
+@@ -0,0 +1,157 @@
 +/*
-+ * Copyright (c) 2012 Samsung Electronics Co. Ltd
++ * Generic UHCI HCD (Host Controller Driver) for Platform Devices
 + *
-+ * Exynos SuperSpeed USB 3.0 DRD Controller PHY registers
++ * Copyright (c) 2011 Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This file is based on uhci-grlib.c
++ * (C) Copyright 2004-2007 Alan Stern, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
 + */
 +
-+#ifndef __PLAT_SAMSUNG_REGS_USB3_EXYNOS_DRD_PHY_H
-+#define __PLAT_SAMSUNG_REGS_USB3_EXYNOS_DRD_PHY_H __FILE__
++#include <linux/of.h>
++#include <linux/platform_device.h>
 +
-+#define EXYNOS_USB3_PHYREG(x) ((x) + S5P_VA_DRD_PHY)
++static int uhci_platform_init(struct usb_hcd *hcd)
++{
++	struct uhci_hcd *uhci = hcd_to_uhci(hcd);
 +
-+#define EXYNOS_USB3_LINKSYSTEM		EXYNOS_USB3_PHYREG(0x04)
-+#define EXYNOS_USB3_PHYUTMI		EXYNOS_USB3_PHYREG(0x08)
++	uhci->rh_numports = uhci_count_ports(hcd);
 +
-+#define EXYNOS_USB3_PHYUTMI_OTGDISABLE			(1 << 6)
-+#define EXYNOS_USB3_PHYUTMI_FORCESUSPEND		(1 << 1)
-+#define EXYNOS_USB3_PHYUTMI_FORCESLEEP			(1 << 0)
++	/* Set up pointers to to generic functions */
++	uhci->reset_hc = uhci_generic_reset_hc;
++	uhci->check_and_reset_hc = uhci_generic_check_and_reset_hc;
 +
-+#define EXYNOS_USB3_PHYPIPE		EXYNOS_USB3_PHYREG(0x0C)
-+#define EXYNOS_USB3_PHYCLKRST		EXYNOS_USB3_PHYREG(0x10)
++	/* No special actions need to be taken for the functions below */
++	uhci->configure_hc = NULL;
++	uhci->resume_detect_interrupts_are_broken = NULL;
++	uhci->global_suspend_mode_is_broken = NULL;
 +
-+#define EXYNOS_USB3_PHYCLKRST_SSC_REF_CLK_SEL_MASK	(0xff << 23)
-+#define EXYNOS_USB3_PHYCLKRST_SSC_REF_CLK_SEL_SHIFT	(23)
-+#define EXYNOS_USB3_PHYCLKRST_SSC_REF_CLK_SEL_LIMIT	(0xff)
-+#define EXYNOS_USB3_PHYCLKRST_SSC_REF_CLK_SEL(_x)	((_x) << 23)
++	/* Reset if the controller isn't already safely quiescent. */
++	check_and_reset_hc(uhci);
++	return 0;
++}
 +
-+#define EXYNOS_USB3_PHYCLKRST_SSC_RANGE_MASK		(0x03 << 21)
-+#define EXYNOS_USB3_PHYCLKRST_SSC_RANGE_SHIFT		(21)
-+#define EXYNOS_USB3_PHYCLKRST_SSC_RANGE_LIMIT		(0x03)
-+#define EXYNOS_USB3_PHYCLKRST_SSC_RANGE(_x)		((_x) << 21)
++static const struct hc_driver uhci_platform_hc_driver = {
++	.description =		hcd_name,
++	.product_desc =		"Generic UHCI Host Controller",
++	.hcd_priv_size =	sizeof(struct uhci_hcd),
 +
-+#define EXYNOS_USB3_PHYCLKRST_SSC_EN			(1 << 20)
-+#define EXYNOS_USB3_PHYCLKRST_REF_SSP_EN		(1 << 19)
-+#define EXYNOS_USB3_PHYCLKRST_REF_CLKDIV2		(1 << 18)
++	/* Generic hardware linkage */
++	.irq =			uhci_irq,
++	.flags =		HCD_MEMORY | HCD_USB11,
 +
-+#define EXYNOS_USB3_PHYCLKRST_MPLL_MULTIPLIER_MASK	(0x7f << 11)
-+#define EXYNOS_USB3_PHYCLKRST_MPLL_MULTIPLIER_SHIFT	(11)
-+#define EXYNOS_USB3_PHYCLKRST_MPLL_MULTIPLIER_LIMIT	(0x7f)
-+#define EXYNOS_USB3_PHYCLKRST_MPLL_MULTIPLIER(_x)	((_x) << 11)
++	/* Basic lifecycle operations */
++	.reset =		uhci_platform_init,
++	.start =		uhci_start,
++#ifdef CONFIG_PM
++	.pci_suspend =		NULL,
++	.pci_resume =		NULL,
++	.bus_suspend =		uhci_rh_suspend,
++	.bus_resume =		uhci_rh_resume,
++#endif
++	.stop =			uhci_stop,
 +
-+#define EXYNOS_USB3_PHYCLKRST_FSEL_MASK			(0x3f << 5)
-+#define EXYNOS_USB3_PHYCLKRST_FSEL_SHIFT		(5)
-+#define EXYNOS_USB3_PHYCLKRST_FSEL_LIMIT		(0x3f)
-+#define EXYNOS_USB3_PHYCLKRST_FSEL(_x)			((_x) << 5)
++	.urb_enqueue =		uhci_urb_enqueue,
++	.urb_dequeue =		uhci_urb_dequeue,
 +
-+#define EXYNOS_USB3_PHYCLKRST_RETENABLEN		(1 << 4)
++	.endpoint_disable =	uhci_hcd_endpoint_disable,
++	.get_frame_number =	uhci_hcd_get_frame_number,
 +
-+#define EXYNOS_USB3_PHYCLKRST_REFCLKSEL_MASK		(0x03 << 2)
-+#define EXYNOS_USB3_PHYCLKRST_REFCLKSEL_SHIFT		(2)
-+#define EXYNOS_USB3_PHYCLKRST_REFCLKSEL_LIMIT		(0x03)
-+#define EXYNOS_USB3_PHYCLKRST_REFCLKSEL(_x)		((_x) << 2)
++	.hub_status_data =	uhci_hub_status_data,
++	.hub_control =		uhci_hub_control,
++};
 +
-+#define EXYNOS_USB3_PHYCLKRST_PORTRESET			(1 << 1)
-+#define EXYNOS_USB3_PHYCLKRST_COMMONONN			(1 << 0)
 +
-+#define EXYNOS_USB3_PHYREG0		EXYNOS_USB3_PHYREG(0x14)
-+#define EXYNOS_USB3_PHYREG1		EXYNOS_USB3_PHYREG(0x18)
-+#define EXYNOS_USB3_PHYPARAM0		EXYNOS_USB3_PHYREG(0x1C)
-+#define EXYNOS_USB3_PHYPARAM1		EXYNOS_USB3_PHYREG(0x20)
-+#define EXYNOS_USB3_PHYTERM		EXYNOS_USB3_PHYREG(0x24)
++static int __devinit uhci_hcd_platform_probe(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd;
++	struct uhci_hcd	*uhci;
++	struct resource *res;
++	int ret;
 +
-+#define EXYNOS_USB3_PHYTEST		EXYNOS_USB3_PHYREG(0x28)
++	if (usb_disabled())
++		return -ENODEV;
 +
-+#define EXYNOS_USB3_PHYTEST_POWERDOWN_SSP		(1 << 3)
-+#define EXYNOS_USB3_PHYTEST_POWERDOWN_HSP		(1 << 3)
++	hcd = usb_create_hcd(&uhci_platform_hc_driver, &pdev->dev,
++			pdev->name);
++	if (!hcd)
++		return -ENOMEM;
 +
-+#define EXYNOS_USB3_PHYADP		EXYNOS_USB3_PHYREG(0x2C)
-+#define EXYNOS_USB3_PHYBATCHG		EXYNOS_USB3_PHYREG(0x30)
-+#define EXYNOS_USB3_PHYRESUME		EXYNOS_USB3_PHYREG(0x34)
-+#define EXYNOS_USB3_LINKPORT		EXYNOS_USB3_PHYREG(0x44)
-+#endif /* __PLAT_SAMSUNG_REGS_USB3_EXYNOS_DRD_PHY_H */
-diff --git a/arch/arm/plat-samsung/include/plat/usb-phy.h b/arch/arm/plat-samsung/include/plat/usb-phy.h
-index 959bcdb..f784101 100644
---- a/arch/arm/plat-samsung/include/plat/usb-phy.h
-+++ b/arch/arm/plat-samsung/include/plat/usb-phy.h
-@@ -14,6 +14,7 @@
- enum s5p_usb_phy_type {
- 	S5P_USB_PHY_DEVICE,
- 	S5P_USB_PHY_HOST,
-+	S5P_USB_PHY_DRD,
- };
- 
- extern int s5p_usb_phy_init(struct platform_device *pdev, int type);
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	hcd->rsrc_start = res->start;
++	hcd->rsrc_len = resource_size(res);
++
++	if (!request_mem_region(hcd->rsrc_start, hcd->rsrc_len, hcd_name)) {
++		pr_err("%s: request_mem_region failed\n", __func__);
++		ret = -EBUSY;
++		goto err_rmr;
++	}
++
++	hcd->regs = ioremap(hcd->rsrc_start, hcd->rsrc_len);
++	if (!hcd->regs) {
++		pr_err("%s: ioremap failed\n", __func__);
++		ret = -ENOMEM;
++		goto err_irq;
++	}
++	uhci = hcd_to_uhci(hcd);
++
++	uhci->regs = hcd->regs;
++
++	ret = usb_add_hcd(hcd, pdev->resource[1].start, IRQF_DISABLED |
++								IRQF_SHARED);
++	if (ret)
++		goto err_uhci;
++
++	return 0;
++
++err_uhci:
++	iounmap(hcd->regs);
++err_irq:
++	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
++err_rmr:
++	usb_put_hcd(hcd);
++
++	return ret;
++}
++
++static int uhci_hcd_platform_remove(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(pdev);
++
++	usb_remove_hcd(hcd);
++	iounmap(hcd->regs);
++	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
++	usb_put_hcd(hcd);
++	platform_set_drvdata(pdev, NULL);
++
++	return 0;
++}
++
++/* Make sure the controller is quiescent and that we're not using it
++ * any more.  This is mainly for the benefit of programs which, like kexec,
++ * expect the hardware to be idle: not doing DMA or generating IRQs.
++ *
++ * This routine may be called in a damaged or failing kernel.  Hence we
++ * do not acquire the spinlock before shutting down the controller.
++ */
++static void uhci_hcd_platform_shutdown(struct platform_device *op)
++{
++	struct usb_hcd *hcd = dev_get_drvdata(&op->dev);
++
++	uhci_hc_died(hcd_to_uhci(hcd));
++}
++
++static const struct of_device_id platform_uhci_ids[] = {
++	{ .compatible = "platform-uhci", },
++	{}
++};
++
++static struct platform_driver uhci_platform_driver = {
++	.probe		= uhci_hcd_platform_probe,
++	.remove		= uhci_hcd_platform_remove,
++	.shutdown	= uhci_hcd_platform_shutdown,
++	.driver = {
++		.name = "platform-uhci",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(platform_uhci_ids),
++	},
++};
 -- 
-1.7.0.4
+1.7.2.5
