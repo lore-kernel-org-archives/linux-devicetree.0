@@ -1,56 +1,64 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: require a match on all fields of of_device_id
-Date: Sun, 22 Jul 2012 20:56:25 -0500
-Message-ID: <500CAF49.1060003@gmail.com>
-References: <20120718011151.GA6119@tyr.buserror.net>
- <50062199.7090904@gmail.com> <5006DE87.7020503@freescale.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v3 0/6] mmc: dw_mmc: add support for device tree based
+ instantiation
+Date: Mon, 23 Jul 2012 10:57:35 +0900
+Message-ID: <500CAF8F.5040407@samsung.com>
+References: <1342097668-25243-1-git-send-email-thomas.abraham@linaro.org>
+ <5008279B.4000001@samsung.com>
+ <CAJuYYwQBgpJ1wiS3fSDS2cMi6kanuO47rc8SmniAqjRPuBGJHg@mail.gmail.com>
+ <195201cd6600$7cb089f0$76119dd0$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5006DE87.7020503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <195201cd6600$7cb089f0$76119dd0$%kim@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2012 11:04 AM, Scott Wood wrote:
-> On 07/17/2012 09:38 PM, Rob Herring wrote:
->> On 07/17/2012 08:11 PM, Scott Wood wrote:
->>> Commit 107a84e61cdd3406c842a0e4be7efffd3a05dba6 ("of: match by compatible
->>> property first") breaks the gianfar ethernet driver found on various
->>> Freescale PPC chips.
+On 07/20/2012 07:47 AM, Kukjin Kim wrote:
+> Thomas Abraham wrote:
 >>
->> You do know this is reverted, right?
+>> On 19 July 2012 20:58, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+>>> Hi Thomas,
+>>>
+>>> I think not good that added the samsung specific code into dw_mmc-
+>> pltfm.c
+>>> How about separating to dw-mmc-exynos.c?
+>>
+>> I am not sure of this. The only samsung specific code in
+>> dw_mmc-pltfm.c file is the data for of_device_id instances. The clock
+>> lookup added into this file in the 3rd patch does not cause any harm
+>> on non-samsung SoC's which might not define those clocks (on clock
+>> lookup failure, there are only warning printed, the driver's probe
+>> does not fail.
+>>
+> I agree with Thomas' opinion, in addition, the dw_mmc-pltfm.c file can
+> support that, so adding dw-mmc-exynos.c is not needed now.
 > 
-> No, I didn't.  I got it via Kumar's next branch, and saw that it was
-> still in your fixes-for-grant branch, and didn't see any revert-related
-> e-mail activity on the devicetree-discuss list about it.  I now see that
-> it was reverted directly in Linus's tree (I didn't see either the
-> original or the revert in Linus's tree when I checked, but apparently I
-> hadn't fetched that as recently as I thought).
-> 
->> Here's my fix (untested) which is a bit simpler. I'm assuming if we care
->> about which compatible string we are matching to, then we require name
->> and type are blank and we only care about compatible strings.
-> 
-> Any particular reason for making that assumption?  We should be avoiding
-> the need for .name or .type matching in new bindings, but this seems
-> like unnecessarily inconsistent behavior.
+>> I would prefer not to add separate file for Exynos SoC's for now.
+>> Splitting into different files will need to defined new callbacks
+>> which I fell is not really required.
+Then where is the callback function located?
 
-Only to ensure we don't change existing behavior and I think trying to
-cover all possibilities will be nearly impossible. For example, what if
-we match on both a specific compatible prop alone and a less specific
-compatible prop plus name and/or type. Which one do we pick as the
-better match?
+Best Regards,
+Jaehoon Chung
+>>
+> Yes.
+> 
+> Thanks.
+> 
+> Best regards,
+> Kgene.
+> --
+> Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+> SW Solution Development Team, Samsung Electronics Co., Ltd.
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-Rob
+
