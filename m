@@ -1,71 +1,88 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
-Date: Mon, 23 Jul 2012 10:24:27 -0500
-Message-ID: <500D6CAB.4030504@ti.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-2-git-send-email-jon-hunter@ti.com> <5000D647.4090200@gmail.com> <500439A8.1050705@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 2/2 v3] USB: dwc3-exynos: Add vbus setup function to the
+ exynos dwc3 glue layer
+Date: Mon, 23 Jul 2012 18:24:09 +0300
+Message-ID: <20120723152407.GC9020@arwen.pp.htv.fi>
+References: <1342418259-23802-1-git-send-email-gautam.vivek@samsung.com>
+ <1342418259-23802-3-git-send-email-gautam.vivek@samsung.com>
+ <20120720095134.GG24414@arwen.pp.htv.fi>
+ <CAFp+6iENsdZW0tLRA-9QRPh4AvtyLq-Ebpty9zE+bd=hv3dKog@mail.gmail.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <500439A8.1050705@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eRtJSFbw+EEWtPj3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iENsdZW0tLRA-9QRPh4AvtyLq-Ebpty9zE+bd=hv3dKog@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: balbi@ti.com, Vivek Gautam <gautam.vivek@samsung.com>, stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, olofj@google.com, thomas.abraham@linaro.org, sshtylyov@mvista.com, av.tikhomirov@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 07/16/2012 10:56 AM, Jon Hunter wrote:
-> Hi Rob,
-> 
-> On 07/13/2012 09:15 PM, Rob Herring wrote:
->> On 07/13/2012 05:26 PM, Jon Hunter wrote:
->>> Add the 12 GP timers nodes present in OMAP3.
->>> Add the 11 GP timers nodes present in OMAP4.
->>>
->>> Add documentation for timer properties specific to OMAP.
->>>
->>> For each timer an alias is being added. The purpose for doing this is because
->>> the OMAP dmtimer driver uses an ID to distinguish between the different timer
->>> instances. For example, a timer can be requested by its ID. By adding an alias
->>> for each timer we can then use the function of_alias_get_id() to extract the
->>> ID for each timer from the alias name. The same method is used for the TTY
->>> serial devices. If it is preferred that such an alias is not added and there
->>> is a better way to pass an ID from device-tree let me know.
->>
->> I'm not sure this is really a good use of aliases. UARTs use aliases
->> because it is important that the UART number to tty number is known and
->> fixed. IIUC, as an example you are picking timer1 because it has
->> properties X, Y and Z. If so, then you should describe those h/w
->> properties within the timer nodes so you can pick which timer to use
->> based on it's h/w properties.
-> 
-> Thanks for the feedback. What you suggest could definitely work for most
-> timers. The only item that I would need to resolve here is the handling
-> of system timers (ie. those used for clockevents and clocksource). These
-> system timers (for OMAP) are reserved during early boot based upon the
-> timer ID today and so this is before the actual main timer driver has
-> been probed and all the attributes of the timers has been read for
-> device-tree.
-> 
-> One thought would be to move the reservation of the system timers out of
-> the kernel and into device-tree itself. Then we query device tree on
-> start-up to see which we should use. I am wondering if this could be a
-> better use of alias? For example, say I want to use timer1 as my
-> clockevent timer and so I could have an alias of ...
-> 
-> alias {
-> 	clockevent_timer = &timer1;
-> }
-> 
-> However, I am not sure if this is even correct, because there does not
-> appear to be an API to search the aliases by name and return the
-> phandle, just of_alias_get_id(). Alternatively, I could add another
-> property called "ti,timer-clockevent" that is populated for the timer
-> used as the clockevent timer.
+--eRtJSFbw+EEWtPj3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Do you have any inputs on the above? Does it make sense to reserve timer
-resources for kernel system timers in device-tree?
+Hi,
 
-Cheers
-Jon
+On Tue, Jul 24, 2012 at 12:09:47AM +0900, Vivek Gautam wrote:
+<snip>
+> > > @@ -58,6 +81,8 @@ static int __devinit dwc3_exynos_probe(struct
+> > platform_device *pdev)
+> > >       if (!pdev->dev.coherent_dma_mask)
+> > >               pdev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32);
+> > >
+> > > +     dwc3_setup_vbus_gpio(pdev);
+> >
+> > I think this should be handled by the gpio-vbus transceiver. No ?
+> >
+> > I can understand that we can use gpio-vbus transceiver. But i have one
+> confusion here.
+> We have ehci as well as this dwc3 which need gpio to be setup to
+> control vbus. So do we have two instances of this gpio-vbus driver to
+> facilitate both ehci and dwc3, because both may be on different gpio
+> lines.
+
+Sure... one for dwc3 and one for ehci.
+
+> Moreover, the gpio line right now is parsed from the DT node of the
+> device, so while assigning the 'gpio_vbus' field in
+> 'gpio_vbus_mach_info', how do we provide that. Please suggest.
+
+gpio-vbus doesn't have support for DT today, just add it ;-)
+
+> One more suggestion please. Now that we are moving to DT we should be
+> making changes for gpio-vbus transceiver also for device tree support.
+
+yes, it needs support for DT before you can use it then.
+
+cheers
+
+--=20
+balbi
+
+--eRtJSFbw+EEWtPj3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQDWyWAAoJEIaOsuA1yqREL3YQAJs77TTPGZpsuNfbh3peg8W3
+duLz0bNUy6WiyPc06Ad0M1KwLTt+NasTmgmyaroDjqNfnsgulQx2vvSgcsrGXRvO
+WHBzwdSGRpRhoSC3tzY9kAd9eLKyDkh2QET8odWZAjCcg/plveMOausf4sCl5et/
+zJ4A9TbNSTTMbGwVbLRXOGZAI5/V3zFr8SLALAQBgeMYigBavfAYJnbObqQyYMF3
+LDpQBsPPdmsaq3UTGNfmPmR14Gvsh7DXQz6pynOvubV/JngTKIWvEY5+rRSQv6V2
+tE50aydArGyJDYKuKJGGdGrPewJB5cpsJkPK1/p2YOrGas7N/mp2g6JWlLgQCp6s
+3xduYajVUmSNzLF+InkQxwfsXtgcN/5bpRXWXqf4QMB+4JssbLwWXibQq+pmPLLn
+NX0jc8QxLoU4Tcw/4aY+aFKNzn2gPAKKoA2QDKPcnkN73DffH9mxVlwg+Rd3EL1b
+xSppEp/gOh9yX3Pq29Afhk1xKt/GoC47dV+gPynWGAbwbvpQBd4QSY43jsEVm+eq
+TJWMaPfAdkbM8yirfjd3KRzSJhkVCysSPFKCFmqY50//mW6on6Bp97Y+FW+hLxbO
+/fJaHDEnMEkds7yAfa75Jj7axnOwZ3kzq7oh03zKGdGyE8CsAL8dXz+IspFgZgqi
+93lziv74N4vxJznwgblV
+=KEaZ
+-----END PGP SIGNATURE-----
+
+--eRtJSFbw+EEWtPj3--
