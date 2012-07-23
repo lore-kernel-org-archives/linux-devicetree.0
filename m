@@ -1,248 +1,760 @@
-From: Seungwon Jeon <tgih.jun@samsung.com>
-Subject: RE: [PATCH v3 6/6] mmc: dw_mmc: add samsung exynos5250 specific
- extentions
-Date: Mon, 23 Jul 2012 18:59:54 +0900
-Message-ID: <003e01cd68b9$e92cfad0$bb86f070$%jun@samsung.com>
-References: <1342097668-25243-1-git-send-email-thomas.abraham@linaro.org>
- <1342097668-25243-7-git-send-email-thomas.abraham@linaro.org>
- <002901cd6561$bb6dc9e0$32495da0$%jun@samsung.com>
- <CAJuYYwRKRrNgDKw8ZmHbsejO4yxUC0VXjEyfh-WtKNO5qVXukg@mail.gmail.com>
- <001101cd6663$deb769d0$9c263d70$%jun@samsung.com>
- <CAJuYYwR8rSaA_m2_8XSuQ9sR-VG4JEVo6ysZjWMFzaRSJmLivQ@mail.gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
+Date: Mon, 23 Jul 2012 13:59:30 +0200
+Message-ID: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwR8rSaA_m2_8XSuQ9sR-VG4JEVo6ysZjWMFzaRSJmLivQ@mail.gmail.com>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Thomas Abraham' <thomas.abraham@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-July 23, 2012, Thomas Abraham <thomas.abraham@linaro.org> wrote:
-> On 20 July 2012 16:08, Seungwon Jeon <tgih.jun@samsung.com> wrote:
-> > July 20, 2012, Thomas Abraham <thomas.abraham@linaro.org> wrote:
-> >> On 19 July 2012 09:21, Seungwon Jeon <tgih.jun@samsung.com> wrote:
-> 
-> [...]
-> 
-> >> >> +static unsigned long exynos5250_dwmmc_caps[4] = {
-> >> >> +     MMC_CAP_UHS_DDR50 | MMC_CAP_1_8V_DDR |
-> >> >> +             MMC_CAP_8_BIT_DATA | MMC_CAP_CMD23,
-> >> >> +     MMC_CAP_CMD23,
-> >> >> +     MMC_CAP_CMD23,
-> >> >> +     MMC_CAP_CMD23,
-> >> >> +};
-> >> >> +
-> >> > Kyungmin Park has already pointed .
-> >> > It's not still proper place for board specific caps.
-> >> > If I'm incorrect, please let me know.
-> >> > And why MMC_CAP_CMD23 is default caps for all channel of hosts?
-> >>
-> >> The cap listed above are specifying controller capabilities for dw-mmc
-> >> controllers on Exynos5 SoC. They are not board specific caps. All the
-> >> Exynos5 dw-mmc controllers can support MMC_CAP_CMD23 cap and hence, it
-> >> has been listed for all the controllers. Please let me know if you
-> >> feel there is any change required here.
-> > MMC_CAP_8_BIT_DATA could be dependent on board.
-> 
-> A controller can have the MMC_CAP_8_BIT_DATA capability but the board
-> will decide the bus-width. The bus-width is specified in the dts files
-> of each board (or platform data). The bus-width for data transfer is
-> then decided by the MMC core code based on the caps and the bus-width
-> information. So MMC_CAP_8_BIT_DATA can be specified irrespective   of
-> whether the board supports 8-bit or not.
-> 
-> > I agree about MMC_CAP_CMD23.
-> > Additionally, MMC_CAP_CMD23 is applied for dw-mmc host driver without regard to Exynos5.
-> 
-> The caps listed in exynos5250_dwmmc_caps is applicable only for
-> Exynos5 SoC's. Could you please let me know if there is anything
-> incorrect here.
-I mean that MMC_CAP_CMD23 is a capability which is implemented in driver without dependency of SOC.
-So, other soc also includes MMC_CAP_CMD23.
-It'd rather make a default caps than list in specific soc, considering the other soc.
+This commit adds a driver for the Avionic Design N-bit GPIO expander.
+The expander provides a variable number of GPIO pins with interrupt
+support.
 
-> 
-> [...]
-> 
-> >> >> +     if (slot->host->drv_data->ctrl_type == DW_MCI_TYPE_EXYNOS5250) {
-> >> >> +             slot->host->bus_hz = clk_get_rate(slot->host->ciu_clk);
-> >> >> +             slot->host->bus_hz /= SDMMC_CLKSEL_GET_DIVRATIO(
-> >> >> +                                     mci_readl(slot->host, CLKSEL));
-> >> >> +     }
-> >> > As you know, CLKSEL is specific for Samsung soc.
-> >> > 0x09C(CLKSEL)  is reserved area in Synopsys memory map.
-> >> > In case of non-samsung-soc, we cannot ensure this usage.
-> >> > In previous version, I have suggested separating the variant into another file.
-> >>
-> >> There is a check for type of SoC before using 0x9C as CLKSEL register.
-> > Do you mean checking DW_MCI_TYPE_EXYNOS5250?
-> > But Above two case(ddr_timing/sdr_timing), CLKSEL can be accessed on other soc's.
-> 
-> The tests have only been completed on Exynos5250. I do not have boards
-> for other Samsung SoC's which have a dw_mmc port connected and used on
-> the board. When we have other platforms tested with this patchset, we
-> can extend the 'if' check in the above code for other SoC's.
-My meaning  seem to be passed incorrectly.
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 
-+       if (ios->timing == MMC_TIMING_UHS_DDR50) {
-                regs |= (0x1 << slot->id) << 16;
--       else
-+               mci_writel(slot->host, CLKSEL, slot->host->ddr_timing);
-What is the execution for non-samsung soc?
-CLKSEL register is valid  only for Exynos.
-dw_mci_set_ios shoud be aware of this.
+---
+Changes in v2:
+- allow building the driver as a module
+- assign of_node unconditionally
+- use linear mapping IRQ domain
+- properly cleanup IRQ domain
+- add OF device table and annotate device tables
+- emulate rising and falling edge triggers
+- increase #gpio-cells to 2
+- drop support for !OF
+- use IS_ENABLED to conditionalize DEBUG_FS code
+---
+ .../devicetree/bindings/gpio/gpio-adnp.txt         |  38 ++
+ drivers/gpio/Kconfig                               |  18 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-adnp.c                           | 615 +++++++++++++++++++++
+ 4 files changed, 672 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-adnp.txt
+ create mode 100644 drivers/gpio/gpio-adnp.c
 
-+       } else {
-                regs &= ~(0x1 << slot->id) << 16;
-+               mci_writel(slot->host, CLKSEL, slot->host->sdr_timing);
-This line is same.
-+       }
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
+new file mode 100644
+index 0000000..513a18e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
+@@ -0,0 +1,38 @@
++Avionic Design N-bit GPIO expander bindings
 +
-
-> 
-> >
-> >> Other implementations of dw-mmc might define custom register at 0x9C
-> > Even so, register field can be different with Samsung soc.
-> 
-> Yes, with the correct checks for the type of SoC, differences in the
-> usage of 0x9C register can be handled.
-> 
-> >
-> >> but this will code will not execute on other SoC's and will not break
-> >> anything on other implementations. Regarding spliting this Exynos
-> >> specific code into another file, I prefer not to do it for now.
-> >> Spliting the code means adding new definitions of callback functions
-> >> which I am not sure is really required. The present code is fairly
-> >> simple one.
-> > Yes, callback functions might be needed to accommodate various implementation
-> > of host controller. It would be better to prepare this for other variant next.
-> >
-> 
-> Ok. I will relook at these patches and check if we really need split
-> these changes into a separate exynos specific file. If I again feel
-> that such a split is not required, I will reply back to you with
-> justification.
-> 
-> [...]
-> 
-> >> >> +     if (of_property_read_u32_array(dev->of_node,
-> >> >> +                     "samsung,dw-mshc-sdr-timing", timing, 3))
-> >> >> +             host->sdr_timing = DW_MCI_DEF_SDR_TIMING;
-> >> > Host of non-samsung will reach here.
-> >> > host->sdr_timing is needed for this host? host->ddr_timing is the same.
-> >>
-> >> Yes, but non-samsung hosts will not have have this property into their
-> >> dts file. So the code within the condition will not execute on
-> >> non-samsung hosts. SDR and DDR timing are required for Exynos5 SoC.
-> > Yes, these are required only for Exynos Soc.
-> > Non-samsung host will have default value here, but it seems to be meaningless.
-> 
-> Non-Samsung platforms will not have this property in their dts files.
-> This property is required on only those platforms that want to define
-> sdr and ddr timing values. It is not required on platforms that do no
-> use it.
-> 
-> >
-> >>
-> >> >
-> >> >> +     else
-> >> >> +             host->sdr_timing = SDMMC_CLKSEL_TIMING(timing[0],
-> >> >> +                                     timing[1], timing[2]);
-> >> >> +
-> >> >> +     if (of_property_read_u32_array(dev->of_node,
-> >> >> +                     "samsung,dw-mshc-ddr-timing", timing, 3))
-> >> >> +             host->ddr_timing = DW_MCI_DEF_DDR_TIMING;
-> >> >> +     else
-> >> >> +             host->ddr_timing = SDMMC_CLKSEL_TIMING(timing[0],
-> >> >> +                                     timing[1], timing[2]);
-> >> >> +
-> >> >>       if (of_property_read_u32(np, "fifo-depth", &pdata->fifo_depth))
-> >> >>               dev_info(dev, "fifo-depth property not found, using "
-> >> >>                               "value of FIFOTH register as default\n");
-> >> >> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-> >> >> index 1ecaa02..6c17282 100644
-> >> >> --- a/drivers/mmc/host/dw_mmc.h
-> >> >> +++ b/drivers/mmc/host/dw_mmc.h
-> >> >> @@ -53,6 +53,7 @@
-> >> >>  #define SDMMC_IDINTEN                0x090
-> >> >>  #define SDMMC_DSCADDR                0x094
-> >> >>  #define SDMMC_BUFADDR                0x098
-> >> >> +#define SDMMC_CLKSEL         0x09C /* specific to Samsung Exynos5250 */
-> >> >>  #define SDMMC_DATA(x)                (x)
-> >> >>
-> >> >>  /*
-> >> >> @@ -111,6 +112,7 @@
-> >> >>  #define SDMMC_INT_ERROR                      0xbfc2
-> >> >>  /* Command register defines */
-> >> >>  #define SDMMC_CMD_START                      BIT(31)
-> >> >> +#define SDMMC_CMD_USE_HOLD_REG               BIT(29)
-> >> >>  #define SDMMC_CMD_CCS_EXP            BIT(23)
-> >> >>  #define SDMMC_CMD_CEATA_RD           BIT(22)
-> >> >>  #define SDMMC_CMD_UPD_CLK            BIT(21)
-> >> >> @@ -142,6 +144,17 @@
-> >> >>  /* Version ID register define */
-> >> >>  #define SDMMC_GET_VERID(x)           ((x) & 0xFFFF)
-> >> >>
-> >> >> +#define DW_MCI_DEF_SDR_TIMING                0x03030002
-> >> >> +#define DW_MCI_DEF_DDR_TIMING                0x03020001
-> >> > What is the basis for these timing?
-> >> > These values is board-specific.
-> > One missed comment?
-> 
-> Yes, sorry, missed this last time. These are default values for SDR
-> and DDR timing in case it is not specified in dts file. It may be
-> better to make it mandatory to specify the SDR and DDR property in dts
-> files (for Exynos5250) and remove this default values. Non-samsung
-> platforms or platforms not using this property are unaffected by this.
-These value(0x03030002, 0x03020001) cannot be acceptable in specific board type of Exynos5250.
-Assuming that timing values are not specified in dts file and board is different,
-default values may be not proper. As you mentioned, other approach will be needed.
-
-Thanks,
-Seungwon Jeon
-> 
-> >
-> >> >
-> >> >> +#define SDMMC_CLKSEL_CCLK_SAMPLE(x)  (((x) & 3) << 0)
-> >> >> +#define SDMMC_CLKSEL_CCLK_DRIVE(x)   (((x) & 3) << 16)
-> >> >> +#define SDMMC_CLKSEL_CCLK_DIVIDER(x) (((x) & 3) << 24)
-> >> > If it's for exynos5, it will be 7 not 3.
-> >>
-> >> Yes, I missed that. Thanks. I will fix this.
-> >>
-> >> >
-> >> >> +#define SDMMC_CLKSEL_TIMING(x, y, z) (SDMMC_CLKSEL_CCLK_SAMPLE(x) |  \
-> >> >> +                                     SDMMC_CLKSEL_CCLK_DRIVE(y) |    \
-> >> >> +                                     SDMMC_CLKSEL_CCLK_DIVIDER(z))
-> >> >> +#define SDMMC_CLKSEL_GET_DIVRATIO(x) ((((x) >> 24) & 0x7) + 1)
-> >> >> +#define SDMMC_CLKSEL_GET_SELCLK_DRV(x)       (((x) >> 16) & 0x7)
-> >> >> +
-> >> > Is this patch considered only for exynos5250?
-> >> > In case of exynos4210, the number of bits is different.
-> >> > If upper macros is backward-compatible, it would be better.
-> >>
-> >> These consider the Exynos4210 and Exynos4412 implementations as well.
-> >> The device tree documentation clearly states that the possible values
-> >> for each of the dividers. For Exynos4 SoC's, the divider value is
-> >> between 1 to 4 (or 0 to 3). So a bit mask of 7 is backward compatilble
-> >> for Exynos4.
-> > Bit width is 2 for selclk_drv in exynos4210.
-> > So bit mask of 3 is proper.
-> >
-> > Let me clear it about divider value.
-> > In case of Exynos4 SoC's, divider value(DIVRATIO) is reserved and host doesn't modify.
-> > But value is fixed internally like following.
-> > Exynos4210 : 2
-> > Exynos4412 : 4
-> 
-> Ok. I will relook into this. Thanks.
-> 
-> Regards,
-> Thomas.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
++Required properties:
++- compatible: should be "ad,gpio-adnp"
++- reg: The I2C slave address for this device.
++- interrupt-parent: phandle of the parent interrupt controller.
++- interrupts: Interrupt specifier for the controllers interrupt.
++- #gpio-cells: Should be 2. The first cell is the GPIO number and the
++  second cell is used to specify optional parameters:
++  - bit 0: polarity (0: normal, 1: inverted)
++- gpio-controller: Marks the device as a GPIO controller
++- #interrupt-cells: Should be 2. The first cell contains the GPIO number,
++  whereas the second cell is used to specify flags:
++    bits[3:0] trigger type and level flags
++      1 = low-to-high edge triggered
++      2 = high-to-low edge triggered
++      4 = active high level-sensitive
++      8 = active low level-sensitive
++- interrupt-controller: Marks the device as an interrupt controller.
++- nr-gpios: The number of pins supported by the controller.
++
++Example:
++
++	gpioext: gpio-adnp@41 {
++		compatible = "ad,gpio-adnp";
++		reg = <0x41>;
++
++		interrupt-parent = <&gpio>;
++		interrupts = <160 1>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		nr-gpios = <64>;
++	};
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 502b5ea..d1b0f7d 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -444,6 +444,24 @@ config GPIO_ADP5588_IRQ
+ 	  Say yes here to enable the adp5588 to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
+ 
++config GPIO_ADNP
++	tristate "Avionic Design N-bit GPIO expander"
++	depends on I2C && OF
++	help
++	  This option enables support for N GPIOs found on Avionic Design
++	  I2C GPIO expanders. The register space will be extended by powers
++	  of two, so the controller will need to accomodate for that. For
++	  example: if a controller provides 48 pins, 6 registers will be
++	  enough to represent all pins, but the driver will assume a
++	  register layout for 64 pins (8 registers).
++
++config GPIO_ADNP_IRQ
++	tristate "Interrupt controller support"
++	depends on GPIO_ADNP
++	help
++	  Say yes here to enable the Avionic Design N-bit GPIO expander to
++	  be used as an interrupt controller.
++
+ comment "PCI GPIO expanders:"
+ 
+ config GPIO_CS5535
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index d370481..73affce 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_GPIO_GENERIC)	+= gpio-generic.o
+ 
+ obj-$(CONFIG_GPIO_74X164)	+= gpio-74x164.o
+ obj-$(CONFIG_GPIO_AB8500)	+= gpio-ab8500.o
++obj-$(CONFIG_GPIO_ADNP)		+= gpio-adnp.o
+ obj-$(CONFIG_GPIO_ADP5520)	+= gpio-adp5520.o
+ obj-$(CONFIG_GPIO_ADP5588)	+= gpio-adp5588.o
+ obj-$(CONFIG_GPIO_AMD8111)	+= gpio-amd8111.o
+diff --git a/drivers/gpio/gpio-adnp.c b/drivers/gpio/gpio-adnp.c
+new file mode 100644
+index 0000000..c122ff4
+--- /dev/null
++++ b/drivers/gpio/gpio-adnp.c
+@@ -0,0 +1,615 @@
++/*
++ * Copyright (C) 2011-2012 Avionic Design GmbH
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/gpio.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/irqdomain.h>
++#include <linux/module.h>
++#include <linux/of_irq.h>
++#include <linux/seq_file.h>
++#include <linux/slab.h>
++
++#define GPIO_DDR(gpio) (0x00 << (gpio)->reg_shift)
++#define GPIO_PLR(gpio) (0x01 << (gpio)->reg_shift)
++#define GPIO_IER(gpio) (0x02 << (gpio)->reg_shift)
++#define GPIO_ISR(gpio) (0x03 << (gpio)->reg_shift)
++#define GPIO_PTR(gpio) (0x04 << (gpio)->reg_shift)
++
++struct adnp {
++	struct i2c_client *client;
++	struct gpio_chip gpio;
++	unsigned int reg_shift;
++
++	struct mutex i2c_lock;
++
++	struct irq_domain *domain;
++	struct mutex irq_lock;
++
++	u8 *irq_mask;
++	u8 *irq_mask_cur;
++	u8 *irq_level;
++	u8 *irq_rise;
++	u8 *irq_fall;
++	u8 *irq_high;
++	u8 *irq_low;
++};
++
++static int adnp_read(struct adnp *gpio, unsigned offset, uint8_t *value)
++{
++	int err;
++
++	err = i2c_smbus_read_byte_data(gpio->client, offset);
++	if (err < 0) {
++		dev_err(gpio->gpio.dev, "%s failed: %d\n",
++			"i2c_smbus_read_byte_data()", err);
++		return err;
++	}
++
++	*value = err;
++	return 0;
++}
++
++static int adnp_write(struct adnp *gpio, unsigned offset, uint8_t value)
++{
++	int err;
++
++	err = i2c_smbus_write_byte_data(gpio->client, offset, value);
++	if (err < 0) {
++		dev_err(gpio->gpio.dev, "%s failed: %d\n",
++			"i2c_smbus_write_byte_data()", err);
++		return err;
++	}
++
++	return 0;
++}
++
++static int adnp_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct adnp *gpio = container_of(chip, struct adnp, gpio);
++	unsigned int reg = offset >> gpio->reg_shift;
++	unsigned int pos = offset & 7;
++	u8 value;
++	int err;
++
++	mutex_lock(&gpio->i2c_lock);
++
++	err = adnp_read(gpio, GPIO_PLR(gpio) + reg, &value);
++	if (err < 0)
++		goto out;
++
++	err = (value & BIT(pos)) ? 1 : 0;
++
++out:
++	mutex_unlock(&gpio->i2c_lock);
++	return err;
++}
++
++static void adnp_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct adnp *gpio = container_of(chip, struct adnp, gpio);
++	unsigned int reg = offset >> gpio->reg_shift;
++	unsigned int pos = offset & 7;
++	int err;
++	u8 val;
++
++	mutex_lock(&gpio->i2c_lock);
++
++	err = adnp_read(gpio, GPIO_PLR(gpio) + reg, &val);
++	if (err < 0)
++		goto out;
++
++	if (value)
++		val |= BIT(pos);
++	else
++		val &= ~BIT(pos);
++
++	adnp_write(gpio, GPIO_PLR(gpio) + reg, val);
++
++out:
++	mutex_unlock(&gpio->i2c_lock);
++}
++
++static int adnp_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
++{
++	struct adnp *gpio = container_of(chip, struct adnp, gpio);
++	unsigned int reg = offset >> gpio->reg_shift;
++	unsigned int pos = offset & 7;
++	u8 value;
++	int err;
++
++	mutex_lock(&gpio->i2c_lock);
++
++	err = adnp_read(gpio, GPIO_DDR(gpio) + reg, &value);
++	if (err < 0)
++		goto out;
++
++	value &= ~BIT(pos);
++
++	err = adnp_write(gpio, GPIO_DDR(gpio) + reg, value);
++	if (err < 0)
++		goto out;
++
++	err = adnp_read(gpio, GPIO_DDR(gpio) + reg, &value);
++	if (err < 0)
++		goto out;
++
++	if (err & BIT(pos))
++		err = -EACCES;
++
++	err = 0;
++
++out:
++	mutex_unlock(&gpio->i2c_lock);
++	return err;
++}
++
++static int adnp_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
++				      int value)
++{
++	struct adnp *gpio = container_of(chip, struct adnp, gpio);
++	unsigned int reg = offset >> gpio->reg_shift;
++	unsigned int pos = offset & 7;
++	int err;
++	u8 val;
++
++	mutex_lock(&gpio->i2c_lock);
++
++	err = adnp_read(gpio, GPIO_DDR(gpio) + reg, &val);
++	if (err < 0)
++		goto out;
++
++	val |= BIT(pos);
++
++	err = adnp_write(gpio, GPIO_DDR(gpio) + reg, val);
++	if (err < 0)
++		goto out;
++
++	err = adnp_read(gpio, GPIO_DDR(gpio) + reg, &val);
++	if (err < 0)
++		goto out;
++
++	if (!(val & BIT(pos))) {
++		err = -EPERM;
++		goto out;
++	}
++
++	adnp_gpio_set(chip, offset, value);
++	err = 0;
++
++out:
++	mutex_unlock(&gpio->i2c_lock);
++	return err;
++}
++
++static void adnp_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
++{
++	struct adnp *gpio = container_of(chip, struct adnp, gpio);
++	u8 *base, *ddr, *plr, *ier, *isr, *ptr;
++	unsigned int regs, i, j;
++	int err;
++
++	regs = 1 << gpio->reg_shift;
++
++	base = kzalloc(regs * 5, GFP_KERNEL);
++	if (!base)
++		return;
++
++	ddr = base + (regs * 0);
++	plr = base + (regs * 1);
++	ier = base + (regs * 2);
++	isr = base + (regs * 3);
++	ptr = base + (regs * 4);
++
++	for (i = 0; i < regs; i++) {
++		err = adnp_read(gpio, GPIO_DDR(gpio) + i, &ddr[i]);
++		if (err < 0)
++			goto out;
++
++		err = adnp_read(gpio, GPIO_PLR(gpio) + i, &plr[i]);
++		if (err < 0)
++			goto out;
++
++		err = adnp_read(gpio, GPIO_IER(gpio) + i, &ier[i]);
++		if (err < 0)
++			goto out;
++
++		err = adnp_read(gpio, GPIO_ISR(gpio) + i, &isr[i]);
++		if (err < 0)
++			goto out;
++
++		err = adnp_read(gpio, GPIO_PTR(gpio) + i, &ptr[i]);
++		if (err < 0)
++			goto out;
++	}
++
++	for (i = 0; i < regs; i++) {
++		for (j = 0; j < 8; j++) {
++			unsigned int bit = (i << gpio->reg_shift) + j;
++			const char *direction = "input ";
++			const char *level = "low ";
++			const char *interrupt = "disabled";
++			const char *pending = "";
++
++			if (ddr[i] & BIT(j))
++				direction = "output";
++
++			if (plr[i] & BIT(j))
++				level = "high";
++
++			if (ier[i] & BIT(j))
++				interrupt = "enabled ";
++
++			if (isr[i] & BIT(j))
++				pending = "pending";
++
++			seq_printf(s, "%2u: %s %s IRQ %s %s\n", bit,
++				   direction, level, interrupt, pending);
++		}
++	}
++
++out:
++	kfree(base);
++}
++
++static int adnp_gpio_setup(struct adnp *gpio, unsigned int num_gpios)
++{
++	struct gpio_chip *chip = &gpio->gpio;
++
++	gpio->reg_shift = get_count_order(num_gpios) - 3;
++
++	chip->direction_input = adnp_gpio_direction_input;
++	chip->direction_output = adnp_gpio_direction_output;
++	chip->get = adnp_gpio_get;
++	chip->set = adnp_gpio_set;
++	chip->can_sleep = 1;
++
++	if (IS_ENABLED(CONFIG_DEBUG_FS))
++		chip->dbg_show = adnp_gpio_dbg_show;
++
++	chip->base = -1;
++	chip->ngpio = num_gpios;
++	chip->label = gpio->client->name;
++	chip->dev = &gpio->client->dev;
++	chip->of_node = chip->dev->of_node;
++	chip->owner = THIS_MODULE;
++
++	return 0;
++}
++
++static irqreturn_t adnp_irq(int irq, void *data)
++{
++	struct adnp *gpio = data;
++	unsigned int regs, i;
++
++	regs = 1 << gpio->reg_shift;
++
++	for (i = 0; i < regs; i++) {
++		unsigned int base = i << gpio->reg_shift, bit;
++		u8 changed, level, isr;
++		unsigned long pending;
++		int err;
++
++		mutex_lock(&gpio->i2c_lock);
++
++		err = adnp_read(gpio, GPIO_PLR(gpio) + i, &level);
++		if (err < 0) {
++			mutex_unlock(&gpio->i2c_lock);
++			continue;
++		}
++
++		err = adnp_read(gpio, GPIO_ISR(gpio) + i, &isr);
++		if (err < 0) {
++			mutex_unlock(&gpio->i2c_lock);
++			continue;
++		}
++
++		mutex_unlock(&gpio->i2c_lock);
++
++		/* determine pins that changed levels */
++		changed = level ^ gpio->irq_level[i];
++
++		/* compute edge-triggered interrupts */
++		pending = changed & ((gpio->irq_fall[i] & ~level) |
++				     (gpio->irq_rise[i] & level));
++
++		/* add in level-triggered interrupts */
++		pending |= (gpio->irq_high[i] & level) |
++			   (gpio->irq_low[i] & ~level);
++
++		/* mask out non-pending and disabled interrupts */
++		pending &= isr & gpio->irq_mask_cur[i];
++
++		for_each_set_bit(bit, &pending, 8) {
++			unsigned int virq;
++			virq = irq_find_mapping(gpio->domain, base + bit);
++			handle_nested_irq(virq);
++		}
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void adnp_irq_update_mask(struct adnp *gpio)
++{
++	unsigned int regs = 1 << gpio->reg_shift;
++	bool equal = true;
++	unsigned int i;
++
++	for (i = 0; i < regs; i++) {
++		if (gpio->irq_mask[i] != gpio->irq_mask_cur[i]) {
++			equal = false;
++			break;
++		}
++	}
++
++	if (equal)
++		return;
++
++	memcpy(gpio->irq_mask, gpio->irq_mask_cur, regs);
++
++	mutex_lock(&gpio->i2c_lock);
++
++	for (i = 0; i < regs; i++)
++		adnp_write(gpio, GPIO_IER(gpio) + i, gpio->irq_mask[i]);
++
++	mutex_unlock(&gpio->i2c_lock);
++}
++
++static int adnp_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
++{
++	struct adnp *gpio = container_of(chip, struct adnp, gpio);
++	return irq_create_mapping(gpio->domain, offset);
++}
++
++static void adnp_irq_mask(struct irq_data *data)
++{
++	struct adnp *gpio = irq_data_get_irq_chip_data(data);
++	unsigned int reg = data->hwirq >> gpio->reg_shift;
++	unsigned int pos = data->hwirq & 7;
++
++	gpio->irq_mask_cur[reg] &= ~BIT(pos);
++}
++
++static void adnp_irq_unmask(struct irq_data *data)
++{
++	struct adnp *gpio = irq_data_get_irq_chip_data(data);
++	unsigned int reg = data->hwirq >> gpio->reg_shift;
++	unsigned int pos = data->hwirq & 7;
++
++	gpio->irq_mask_cur[reg] |= BIT(pos);
++}
++
++static int adnp_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct adnp *gpio = irq_data_get_irq_chip_data(data);
++	unsigned int reg = data->hwirq >> gpio->reg_shift;
++	unsigned int pos = data->hwirq & 7;
++
++	if (type & IRQ_TYPE_EDGE_RISING)
++		gpio->irq_rise[reg] |= BIT(pos);
++	else
++		gpio->irq_rise[reg] &= ~BIT(pos);
++
++	if (type & IRQ_TYPE_EDGE_FALLING)
++		gpio->irq_fall[reg] |= BIT(pos);
++	else
++		gpio->irq_fall[reg] &= ~BIT(pos);
++
++	if (type & IRQ_TYPE_LEVEL_HIGH)
++		gpio->irq_high[reg] |= BIT(pos);
++	else
++		gpio->irq_high[reg] &= ~BIT(pos);
++
++	if (type & IRQ_TYPE_LEVEL_LOW)
++		gpio->irq_low[reg] |= BIT(pos);
++	else
++		gpio->irq_low[reg] &= ~BIT(pos);
++
++	return 0;
++}
++
++static void adnp_irq_bus_lock(struct irq_data *data)
++{
++	struct adnp *gpio = irq_data_get_irq_chip_data(data);
++	unsigned int regs = 1 << gpio->reg_shift;
++
++	mutex_lock(&gpio->irq_lock);
++	memcpy(gpio->irq_mask_cur, gpio->irq_mask, regs);
++}
++
++static void adnp_irq_bus_unlock(struct irq_data *data)
++{
++	struct adnp *gpio = irq_data_get_irq_chip_data(data);
++
++	adnp_irq_update_mask(gpio);
++	mutex_unlock(&gpio->irq_lock);
++}
++
++static struct irq_chip adnp_irq_chip = {
++	.name = "gpio-adnp",
++	.irq_mask = adnp_irq_mask,
++	.irq_unmask = adnp_irq_unmask,
++	.irq_set_type = adnp_irq_set_type,
++	.irq_bus_lock = adnp_irq_bus_lock,
++	.irq_bus_sync_unlock = adnp_irq_bus_unlock,
++};
++
++static int adnp_irq_map(struct irq_domain *domain, unsigned int irq,
++			irq_hw_number_t hwirq)
++{
++	irq_set_chip_data(irq, domain->host_data);
++	irq_set_chip(irq, &adnp_irq_chip);
++	irq_set_nested_thread(irq, true);
++
++#ifdef CONFIG_ARM
++	set_irq_flags(irq, IRQF_VALID);
++#else
++	irq_set_noprobe(irq);
++#endif
++
++	return 0;
++}
++
++static const struct irq_domain_ops adnp_irq_domain_ops = {
++	.map = adnp_irq_map,
++	.xlate = irq_domain_xlate_twocell,
++};
++
++static int adnp_irq_setup(struct adnp *gpio)
++{
++	unsigned int regs = 1 << gpio->reg_shift, i;
++	struct gpio_chip *chip = &gpio->gpio;
++	int err;
++
++	mutex_init(&gpio->irq_lock);
++
++	gpio->irq_mask = devm_kzalloc(chip->dev, regs * 7, GFP_KERNEL);
++	if (!gpio->irq_mask)
++		return -ENOMEM;
++
++	gpio->irq_mask_cur = gpio->irq_mask + (regs * 1);
++	gpio->irq_level = gpio->irq_mask + (regs * 2);
++	gpio->irq_rise = gpio->irq_mask + (regs * 3);
++	gpio->irq_fall = gpio->irq_mask + (regs * 4);
++	gpio->irq_high = gpio->irq_mask + (regs * 5);
++	gpio->irq_low = gpio->irq_mask + (regs * 6);
++
++	for (i = 0; i < regs; i++) {
++		err = adnp_read(gpio, GPIO_PLR(gpio) + i, &gpio->irq_level[i]);
++		if (err < 0)
++			return err;
++	}
++
++	gpio->domain = irq_domain_add_linear(chip->of_node, chip->ngpio,
++					     &adnp_irq_domain_ops, gpio);
++
++	err = request_threaded_irq(gpio->client->irq, NULL, adnp_irq,
++				   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
++				   dev_name(chip->dev), gpio);
++	if (err != 0) {
++		dev_err(chip->dev, "can't request IRQ#%d: %d\n",
++			gpio->client->irq, err);
++		goto error;
++	}
++
++	gpio->gpio.to_irq = adnp_gpio_to_irq;
++	return 0;
++
++error:
++	irq_domain_remove(gpio->domain);
++	return err;
++}
++
++static void adnp_irq_teardown(struct adnp *gpio)
++{
++	unsigned int irq, i;
++
++	free_irq(gpio->client->irq, gpio);
++
++	for (i = 0; i < gpio->gpio.ngpio; i++) {
++		irq = irq_find_mapping(gpio->domain, i);
++		if (irq > 0)
++			irq_dispose_mapping(irq);
++	}
++
++	irq_domain_remove(gpio->domain);
++}
++
++static __devinit int adnp_i2c_probe(struct i2c_client *client,
++				    const struct i2c_device_id *id)
++{
++	struct adnp *gpio;
++	u32 num_gpios;
++	int err;
++
++	err = of_property_read_u32(client->dev.of_node, "nr-gpios",
++				   &num_gpios);
++	if (err < 0)
++		return err;
++
++	client->irq = irq_of_parse_and_map(client->dev.of_node, 0);
++	if (client->irq == NO_IRQ)
++		return -EPROBE_DEFER;
++
++	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	mutex_init(&gpio->i2c_lock);
++	gpio->client = client;
++
++	err = adnp_gpio_setup(gpio, num_gpios);
++	if (err < 0)
++		return err;
++
++	if (IS_ENABLED(CONFIG_GPIO_ADNP_IRQ)) {
++		err = adnp_irq_setup(gpio);
++		if (err < 0)
++			goto teardown;
++	}
++
++	err = gpiochip_add(&gpio->gpio);
++	if (err < 0)
++		goto teardown;
++
++	i2c_set_clientdata(client, gpio);
++	return 0;
++
++teardown:
++	if (IS_ENABLED(CONFIG_GPIO_ADNP_IRQ))
++		adnp_irq_teardown(gpio);
++
++	return err;
++}
++
++static __devexit int adnp_i2c_remove(struct i2c_client *client)
++{
++	struct adnp *gpio = i2c_get_clientdata(client);
++	int err;
++
++	err = gpiochip_remove(&gpio->gpio);
++	if (err < 0) {
++		dev_err(&client->dev, "%s failed: %d\n", "gpiochip_remove()",
++			err);
++		return err;
++	}
++
++	if (IS_ENABLED(CONFIG_GPIO_ADNP_IRQ))
++		adnp_irq_teardown(gpio);
++
++	return 0;
++}
++
++static const struct i2c_device_id adnp_i2c_id[] __devinitconst = {
++	{ "gpio-adnp" },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, adnp_i2c_id);
++
++static const struct of_device_id adnp_of_match[] __devinitconst = {
++	{ .compatible = "ad,gpio-adnp", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, adnp_of_match);
++
++static struct i2c_driver adnp_i2c_driver = {
++	.driver = {
++		.name = "gpio-adnp",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(adnp_of_match),
++	},
++	.probe = adnp_i2c_probe,
++	.remove = __devexit_p(adnp_i2c_remove),
++	.id_table = adnp_i2c_id,
++};
++module_i2c_driver(adnp_i2c_driver);
++
++MODULE_DESCRIPTION("Avionic Design N-bit GPIO expander");
++MODULE_AUTHOR("Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>");
++MODULE_LICENSE("GPL");
+-- 
+1.7.11.2
