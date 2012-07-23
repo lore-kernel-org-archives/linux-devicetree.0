@@ -1,24 +1,33 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: RE: [PATCH V2 6/7] ARM: EXYNOS5: Add the bus clock for FIMD
-Date: Tue, 24 Jul 2012 08:48:40 +0900
-Message-ID: <000501cd692d$afa71560$0ef54020$%han@samsung.com>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V2 6/7] ARM: EXYNOS5: Add the bus clock for FIMD
+Date: Tue, 24 Jul 2012 08:55:55 +0900
+Message-ID: <000601cd692e$b2ba7a70$182f6f50$%han@samsung.com>
 References: <1342591053-7092-1-git-send-email-l.krishna@samsung.com>
  <1342591053-7092-7-git-send-email-l.krishna@samsung.com>
  <500D0C8B.3080007@samsung.com> <500D1F59.9030807@samsung.com>
  <000301cd6928$e5021660$af064320$%han@samsung.com>
  <500DE22F.5010006@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <500DE22F.5010006@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <500DE22F.5010006-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Joonyoung Shim' <jy0922.shim@samsung.com>
-Cc: 'Leela Krishna Amudala' <l.krishna@samsung.com>, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, thomas.ab@samsung.com, olofj@google.com, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: 'Joonyoung Shim' <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, 'Leela Krishna Amudala' <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 24, 2012 8:46 AM, Joonyoung Shim wrote:
+On Tuesday, July 24, 2012 8:46 AM, Joonyoung Shim Wrote:
 > 
 > On 07/24/2012 08:14 AM, Jingoo Han wrote:
 > > On Monday, July 23, 2012 6:55 PM, Joonyoung Shim wrote:
@@ -32,7 +41,7 @@ On Tuesday, July 24, 2012 8:46 AM, Joonyoung Shim wrote:
 > >>>
 > >>> http://lists.linaro.org/pipermail/linaro-dev/2011-December/008872.html
 > >>>
-> >>>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> >>>> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > >>>> ---
 > >>>>    arch/arm/mach-exynos/clock-exynos5.c |    7 ++++++-
 > >>>>    1 files changed, 6 insertions(+), 1 deletions(-)
@@ -64,12 +73,16 @@ On Tuesday, July 24, 2012 8:46 AM, Joonyoung Shim wrote:
 > So then, i think DP driver also should control FIMD pixel clock.
 > Do you have any patch or plan for it?
 
-I have no plan.
+Um, I don't think so.
+Because, DP cannot work by itself.
+In order to use DP, FIMD should be enabled.
 
-Best regards,
-Jingoo Han
+If FIMD is enabled, FIMD pixel clock is enabled;
+therefore, DP driver does not need to control FIMD pixel clock.
+
+In my opinion, adding config dependency would be better, such as FB_S3C or DRM_EXYNOS_FIMD.
 
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
