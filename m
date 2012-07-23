@@ -1,88 +1,68 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/2 v3] USB: dwc3-exynos: Add vbus setup function to the
- exynos dwc3 glue layer
-Date: Mon, 23 Jul 2012 18:24:09 +0300
-Message-ID: <20120723152407.GC9020@arwen.pp.htv.fi>
-References: <1342418259-23802-1-git-send-email-gautam.vivek@samsung.com>
- <1342418259-23802-3-git-send-email-gautam.vivek@samsung.com>
- <20120720095134.GG24414@arwen.pp.htv.fi>
- <CAFp+6iENsdZW0tLRA-9QRPh4AvtyLq-Ebpty9zE+bd=hv3dKog@mail.gmail.com>
-Reply-To: balbi@ti.com
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] of: require a match on all fields of of_device_id
+Date: Mon, 23 Jul 2012 10:52:54 -0500
+Message-ID: <500D7356.5080706@freescale.com>
+References: <20120718011151.GA6119@tyr.buserror.net>
+ <50062199.7090904@gmail.com> <5006DE87.7020503@freescale.com>
+ <500CAF49.1060003@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eRtJSFbw+EEWtPj3"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iENsdZW0tLRA-9QRPh4AvtyLq-Ebpty9zE+bd=hv3dKog@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: balbi@ti.com, Vivek Gautam <gautam.vivek@samsung.com>, stern@rowland.harvard.edu, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, l.majewski@samsung.com, a.kesavan@samsung.com, prashanth.g@samsung.com, kmpark@infradead.org, joshi@samsung.com, olofj@google.com, thomas.abraham@linaro.org, sshtylyov@mvista.com, av.tikhomirov@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <500CAF49.1060003-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/22/2012 08:56 PM, Rob Herring wrote:
+> On 07/18/2012 11:04 AM, Scott Wood wrote:
+>> On 07/17/2012 09:38 PM, Rob Herring wrote:
+>>> On 07/17/2012 08:11 PM, Scott Wood wrote:
+>>>> Commit 107a84e61cdd3406c842a0e4be7efffd3a05dba6 ("of: match by compatible
+>>>> property first") breaks the gianfar ethernet driver found on various
+>>>> Freescale PPC chips.
+>>>
+>>> You do know this is reverted, right?
+>>
+>> No, I didn't.  I got it via Kumar's next branch, and saw that it was
+>> still in your fixes-for-grant branch, and didn't see any revert-related
+>> e-mail activity on the devicetree-discuss list about it.  I now see that
+>> it was reverted directly in Linus's tree (I didn't see either the
+>> original or the revert in Linus's tree when I checked, but apparently I
+>> hadn't fetched that as recently as I thought).
+>>
+>>> Here's my fix (untested) which is a bit simpler. I'm assuming if we care
+>>> about which compatible string we are matching to, then we require name
+>>> and type are blank and we only care about compatible strings.
+>>
+>> Any particular reason for making that assumption?  We should be avoiding
+>> the need for .name or .type matching in new bindings, but this seems
+>> like unnecessarily inconsistent behavior.
+> 
+> Only to ensure we don't change existing behavior and I think trying to
+> cover all possibilities will be nearly impossible. For example, what if
+> we match on both a specific compatible prop alone and a less specific
+> compatible prop plus name and/or type. Which one do we pick as the
+> better match?
 
---eRtJSFbw+EEWtPj3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Whichever one has a compatible string that is listed earlier.  Having an
+additional type/name field doesn't necessarily make it a better match --
+it's just there to resolve ambiguity (or sometimes for no good reason at
+all).
 
-Hi,
+You're going to change existing behavior in some case no matter what,
+short of a match table flag saying "it's OK to not keep depending on
+link order", or just not making the change.  Might as well change it to
+something sane.
 
-On Tue, Jul 24, 2012 at 12:09:47AM +0900, Vivek Gautam wrote:
-<snip>
-> > > @@ -58,6 +81,8 @@ static int __devinit dwc3_exynos_probe(struct
-> > platform_device *pdev)
-> > >       if (!pdev->dev.coherent_dma_mask)
-> > >               pdev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32);
-> > >
-> > > +     dwc3_setup_vbus_gpio(pdev);
-> >
-> > I think this should be handled by the gpio-vbus transceiver. No ?
-> >
-> > I can understand that we can use gpio-vbus transceiver. But i have one
-> confusion here.
-> We have ehci as well as this dwc3 which need gpio to be setup to
-> control vbus. So do we have two instances of this gpio-vbus driver to
-> facilitate both ehci and dwc3, because both may be on different gpio
-> lines.
-
-Sure... one for dwc3 and one for ehci.
-
-> Moreover, the gpio line right now is parsed from the DT node of the
-> device, so while assigning the 'gpio_vbus' field in
-> 'gpio_vbus_mach_info', how do we provide that. Please suggest.
-
-gpio-vbus doesn't have support for DT today, just add it ;-)
-
-> One more suggestion please. Now that we are moving to DT we should be
-> making changes for gpio-vbus transceiver also for device tree support.
-
-yes, it needs support for DT before you can use it then.
-
-cheers
-
---=20
-balbi
-
---eRtJSFbw+EEWtPj3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQDWyWAAoJEIaOsuA1yqREL3YQAJs77TTPGZpsuNfbh3peg8W3
-duLz0bNUy6WiyPc06Ad0M1KwLTt+NasTmgmyaroDjqNfnsgulQx2vvSgcsrGXRvO
-WHBzwdSGRpRhoSC3tzY9kAd9eLKyDkh2QET8odWZAjCcg/plveMOausf4sCl5et/
-zJ4A9TbNSTTMbGwVbLRXOGZAI5/V3zFr8SLALAQBgeMYigBavfAYJnbObqQyYMF3
-LDpQBsPPdmsaq3UTGNfmPmR14Gvsh7DXQz6pynOvubV/JngTKIWvEY5+rRSQv6V2
-tE50aydArGyJDYKuKJGGdGrPewJB5cpsJkPK1/p2YOrGas7N/mp2g6JWlLgQCp6s
-3xduYajVUmSNzLF+InkQxwfsXtgcN/5bpRXWXqf4QMB+4JssbLwWXibQq+pmPLLn
-NX0jc8QxLoU4Tcw/4aY+aFKNzn2gPAKKoA2QDKPcnkN73DffH9mxVlwg+Rd3EL1b
-xSppEp/gOh9yX3Pq29Afhk1xKt/GoC47dV+gPynWGAbwbvpQBd4QSY43jsEVm+eq
-TJWMaPfAdkbM8yirfjd3KRzSJhkVCysSPFKCFmqY50//mW6on6Bp97Y+FW+hLxbO
-/fJaHDEnMEkds7yAfa75Jj7axnOwZ3kzq7oh03zKGdGyE8CsAL8dXz+IspFgZgqi
-93lziv74N4vxJznwgblV
-=KEaZ
------END PGP SIGNATURE-----
-
---eRtJSFbw+EEWtPj3--
+-Scott
