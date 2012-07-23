@@ -1,109 +1,71 @@
-From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/6] rtc: omap: dt support
-Date: Mon, 23 Jul 2012 19:12:36 +0530
-Message-ID: <a1bbb4ca059980175a755bc189b40c3f1e597db7.1343046707.git.afzal@ti.com>
-References: <cover.1343046707.git.afzal@ti.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
+Date: Mon, 23 Jul 2012 10:24:27 -0500
+Message-ID: <500D6CAB.4030504@ti.com>
+References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-2-git-send-email-jon-hunter@ti.com> <5000D647.4090200@gmail.com> <500439A8.1050705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <cover.1343046707.git.afzal-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-l0cyMroinI0@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <500439A8.1050705@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Enhance rtc-omap driver with DT capability
+Hi Rob,
 
-Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
----
- Documentation/devicetree/bindings/rtc/rtc-omap.txt |   20 ++++++++++++++++++++
- drivers/rtc/rtc-omap.c                             |   18 ++++++++++++++++++
- 2 files changed, 38 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-omap.txt
+On 07/16/2012 10:56 AM, Jon Hunter wrote:
+> Hi Rob,
+> 
+> On 07/13/2012 09:15 PM, Rob Herring wrote:
+>> On 07/13/2012 05:26 PM, Jon Hunter wrote:
+>>> Add the 12 GP timers nodes present in OMAP3.
+>>> Add the 11 GP timers nodes present in OMAP4.
+>>>
+>>> Add documentation for timer properties specific to OMAP.
+>>>
+>>> For each timer an alias is being added. The purpose for doing this is because
+>>> the OMAP dmtimer driver uses an ID to distinguish between the different timer
+>>> instances. For example, a timer can be requested by its ID. By adding an alias
+>>> for each timer we can then use the function of_alias_get_id() to extract the
+>>> ID for each timer from the alias name. The same method is used for the TTY
+>>> serial devices. If it is preferred that such an alias is not added and there
+>>> is a better way to pass an ID from device-tree let me know.
+>>
+>> I'm not sure this is really a good use of aliases. UARTs use aliases
+>> because it is important that the UART number to tty number is known and
+>> fixed. IIUC, as an example you are picking timer1 because it has
+>> properties X, Y and Z. If so, then you should describe those h/w
+>> properties within the timer nodes so you can pick which timer to use
+>> based on it's h/w properties.
+> 
+> Thanks for the feedback. What you suggest could definitely work for most
+> timers. The only item that I would need to resolve here is the handling
+> of system timers (ie. those used for clockevents and clocksource). These
+> system timers (for OMAP) are reserved during early boot based upon the
+> timer ID today and so this is before the actual main timer driver has
+> been probed and all the attributes of the timers has been read for
+> device-tree.
+> 
+> One thought would be to move the reservation of the system timers out of
+> the kernel and into device-tree itself. Then we query device tree on
+> start-up to see which we should use. I am wondering if this could be a
+> better use of alias? For example, say I want to use timer1 as my
+> clockevent timer and so I could have an alias of ...
+> 
+> alias {
+> 	clockevent_timer = &timer1;
+> }
+> 
+> However, I am not sure if this is even correct, because there does not
+> appear to be an API to search the aliases by name and return the
+> phandle, just of_alias_get_id(). Alternatively, I could add another
+> property called "ti,timer-clockevent" that is populated for the timer
+> used as the clockevent timer.
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-new file mode 100644
-index 0000000..858c4b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-@@ -0,0 +1,20 @@
-+TI Real Time Clock
-+
-+Required properties:
-+- compatible: "ti,am1808-rtc"
-+- reg: Address range of rtc register set
-+- interrupts: rtc timer, alarm interrupts in order
-+- interrupt-parent: phandle for the interrupt controller
-+
-+Alternative for reg and interrupt properties on OMAP:
-+- ti,hwmods: Name of the hwmod associated to the RTC
-+
-+Example:
-+
-+rtc@1c23000 {
-+	compatible = "ti,am1808-rtc";
-+	reg = <0x23000 0x1000>;
-+	interrupts = <19
-+		      19>;
-+	interrupt-parent = <&intc>;
-+};
-diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-index 65eda29..f7cc4b0 100644
---- a/drivers/rtc/rtc-omap.c
-+++ b/drivers/rtc/rtc-omap.c
-@@ -20,6 +20,8 @@
- #include <linux/rtc.h>
- #include <linux/bcd.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include <asm/io.h>
- 
-@@ -308,12 +310,27 @@ static struct platform_device_id omap_rtc_devtype[] = {
- };
- MODULE_DEVICE_TABLE(platform, omap_rtc_devtype);
- 
-+#define	OMAP_RTC_DATA_AM1808_IDX	1
-+
-+static const struct of_device_id omap_rtc_of_match[] = {
-+	{	.compatible	= "ti,am1808-rtc",
-+		.data		= &omap_rtc_devtype[OMAP_RTC_DATA_AM1808_IDX],
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
-+
- static int __init omap_rtc_probe(struct platform_device *pdev)
- {
- 	struct resource		*res, *mem;
- 	struct rtc_device	*rtc;
- 	u8			reg, new_ctrl;
- 	const struct platform_device_id *id_entry;
-+	const struct of_device_id *of_id;
-+
-+	of_id = of_match_device(omap_rtc_of_match, &pdev->dev);
-+	if (of_id)
-+		pdev->id_entry = of_id->data;
- 
- 	omap_rtc_timer = platform_get_irq(pdev, 0);
- 	if (omap_rtc_timer <= 0) {
-@@ -509,6 +526,7 @@ static struct platform_driver omap_rtc_driver = {
- 	.driver		= {
- 		.name	= DRIVER_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(omap_rtc_of_match),
- 	},
- 	.id_table	= omap_rtc_devtype,
- };
--- 
-1.7.1
+Do you have any inputs on the above? Does it make sense to reserve timer
+resources for kernel system timers in device-tree?
+
+Cheers
+Jon
