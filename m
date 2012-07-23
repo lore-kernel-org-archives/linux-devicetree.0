@@ -1,14 +1,14 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH V2] mtd: m25p80: Make fast read configurable via DT
-Date: Mon, 23 Jul 2012 04:07:18 +0200
-Message-ID: <201207230407.18747.marex@denx.de>
-References: <1343006437-11669-1-git-send-email-marex@denx.de>
- <500CB097.4000507@gmail.com>
+From: Aggrwal Poonam-B10812 <B10812-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: Forcing PIO mode instead of DMA via DT property
+Date: Mon, 23 Jul 2012 03:25:35 +0000
+Message-ID: <ACB6D0C0104CFF42A45A5D82A0DD4F3D079B4DAE@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <201207222328.27008.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <500CB097.4000507-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <201207222328.27008.marex-ynQEQJNshbs@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,67 +19,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "pavel-ynQEQJNshbs@public.gmane.org" <pavel-ynQEQJNshbs@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob Herring,
 
-> +devicetree-discuss
+
+> -----Original Message-----
+> From: devicetree-discuss [mailto:devicetree-discuss-
+> bounces+poonam.aggrwal=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of Marek
+> Vasut
+> Sent: Monday, July 23, 2012 2:58 AM
+> To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: pavel-ynQEQJNshbs@public.gmane.org; Wolfgang Denk
+> Subject: Forcing PIO mode instead of DMA via DT property
 > 
-> On 07/22/2012 08:20 PM, Marek Vasut wrote:
-> > Add DT property "m25p,fast-read" that signalises the particular
-> > chip supports "fast read" opcode.
-> > 
-> > NOTE: I'm not sure where to document this property, as m25p80 is
-> > 
-> >       a simple DT device. Any hints please?
-> > 
-> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > Cc: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > Cc: David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/mtd/m25p80.txt |   27
-> >  ++++++++++++++++++ drivers/mtd/devices/m25p80.c                     |  
-> >  32 +++++++++++++--------- 2 files changed, 46 insertions(+), 13
-> >  deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/m25p80.txt
-> > 
-> > V2: Add documentation for the DT property. (Thanks Rob Herring for
-> > helping!)
-> > 
-> >     Supersedes [PATCH 3/3] [RFC] mtd: m25p80: Make fast read configurable
-> >     via DT
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt
-> > b/Documentation/devicetree/bindings/mtd/m25p80.txt new file mode 100644
-> > index 0000000..e05d9b8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
-> > @@ -0,0 +1,27 @@
-> > +* MTD SPI driver for ST M25Pxx (and similar) serial flash chips
-> > +
-> > +Required properties:
-> > +- #address-cells, #size-cells : Must be present if the device has
-> > sub-nodes +  representing partitions.
-> > +- compatible : Should be the name of the chip, see the "m25p_ids" table
-> > in +               drivers/mtd/devices/m25p80.c
+> Hi guys,
 > 
-> Two things wrong with this:
+> I'm trying to implement a driver that can do both DMA and PIO, and it
+> would be nice if the user was able to select the mode (on a per-bus
+> basis) using the DT.
+> The PIO mode can reduce the overhead in some cases and therefore be
+> better choice than the DMA (for example when most transfers move only
+> very few data, or when board-specific hardware properties kick in).
+> 
+> I was thinking about using some "manf,use-pio" DT property, but I haven't
+> found any such example yet, so I wonder if this is a good idea.
+Not sure, but as far as I understand device tree is to publish the hardware capabilities, not the user choice/configuration.
+One option would be to put a compile time flag in the driver, which prefers PIO than DMA.
+I believe by default DMA is the first preference.
 
-Damn, I just sent a V3 a minute ago. Please ignore that V3 then, since V4 will 
-come of course, sorry about the noise. Let's discuss this properly.
-
-> - Bindings are not Linux specific, so the docs should not be based on Linux.
-
-Correct. Can you please advise how to formulate the "compatible" property then?
-
-> - This doesn't follow the existing user which is "spansion,m25p80"
-
-It doesn't, but the driver does support many other chips as well. I wasn't quite 
-sure how to go about that either. Any help would be appreciated, I gotta admit 
-I'm still a bit lost in all the devicetree stuff.
-
-> Rob
-[...]
+Regards
+Poonam
+> 
+> What is your suggestion how I shoud address such a problem?
+> 
+> Thanks in advance!
+> 
+> Best regards,
+> Marek Vasut
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
