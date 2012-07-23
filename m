@@ -1,32 +1,50 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC] media DT bindings
-Date: Mon, 23 Jul 2012 13:14:20 +0100
-Message-ID: <20120723121420.GC8302@sirena.org.uk>
-References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange>
- <5000375B.9060100@gmail.com>
- <Pine.LNX.4.64.1207161257590.18978@axis700.grange>
- <5006EB9F.5010408@gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH v2 1/2] of: Add Semtech Corp. vendor prefix
+Date: Mon, 23 Jul 2012 14:18:46 +0200
+Message-ID: <1343045927-22063-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5006EB9F.5010408@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 18, 2012 at 07:00:15PM +0200, Sylwester Nawrocki wrote:
+This commit adds a device tree vendor prefix for Semtech Corp.
 
-> One possible solution would be to have host/bridge drivers to register
-> a clkdev entry for I2C client device, so it can acquire the clock through 
-> just clk_get(). We would have to ensure the clock is not tried to be
-> accessed before it is registered by a bridge. This would require to add
-> clock handling code to all sensor/encoder subdev drivers though..
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 
-If this is done well it could just be a simple callback, and we could
-probably arrange for the framework to just implement the default
-behaviour if the driver doesn't do anything explicit.
+---
+Changes in v2:
+- change prefix to smtc to match the stock ticker symbol
 
-Of couse this is one of those things where we really need the generic
-clock API to be generally available...
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index db4d3af..b4b68ab 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -46,6 +46,7 @@ simtek
+ sirf	SiRF Technology, Inc.
+ st	STMicroelectronics
+ stericsson	ST-Ericsson
++smtc	Semtech Corp.
+ ti	Texas Instruments
+ wlf	Wolfson Microelectronics
+ xlnx	Xilinx
+-- 
+1.7.11.2
