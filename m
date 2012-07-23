@@ -1,11 +1,13 @@
 From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/6] OMAP-AM33xx RTC DT support
-Date: Mon, 23 Jul 2012 19:11:03 +0530
-Message-ID: <cover.1343046707.git.afzal@ti.com>
+Subject: [PATCH 2/6] ARM: davinci: remove rtc kicker release
+Date: Mon, 23 Jul 2012 19:12:29 +0530
+Message-ID: <f9e348c8cb7402b27b1a5633b06620266e369641.1343046707.git.afzal@ti.com>
+References: <cover.1343046707.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <cover.1343046707.git.afzal-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
 	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
@@ -13,49 +15,52 @@ List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@pu
 List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
 List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
 	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-l0cyMroinI0@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+rtc-omap driver is now capable of handling kicker mechanism,
+hence remove kicker handling at platform level, instead
+provide proper device name so that driver can handle kicker
+mechanism by itself
 
-This series makes rtc-omap driver DT capable, adds AM33xx
-RTC DT support along with a few enchancments to the driver.
+Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/mach-davinci/devices-da8xx.c |   13 +------------
+ 1 files changed, 1 insertions(+), 12 deletions(-)
 
-rtc-omap driver is made intelligent enough to handle kicker
-mechanism. This helps in removing kicker mechanism support
-done for DaVinci at platform level.
-
-This has been tested on Beaglebone (AM33xx platform) and on
-DaVinci DA850 EVM.
-
-This series is based over linux-omap master and can be
-directly applied over linux-next, except for
-[PATCH 6/6] arm/dts: am33xx rtc node.
-
-PATCH 6/6 should go through linux-omap tree and needs
-http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg71644.html
-(arm/dts: am33xx wdt node) to get applied cleanly
-
-Regards
-Afzal
-
-Afzal Mohammed (5):
-  rtc: omap: kicker mechanism support
-  ARM: davinci: remove rtc kicker release
-  rtc: omap: dt support
-  rtc: omap: depend on am33xx
-  arm/dts: am33xx rtc node
-
-Vaibhav Hiremath (1):
-  rtc: omap: Add runtime pm support
-
- Documentation/devicetree/bindings/rtc/rtc-omap.txt |   20 +++++
- arch/arm/boot/dts/am33xx.dtsi                      |    5 ++
- arch/arm/mach-davinci/devices-da8xx.c              |   13 +---
- drivers/rtc/Kconfig                                |    8 +-
- drivers/rtc/rtc-omap.c                             |   75 +++++++++++++++++++-
- 5 files changed, 104 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-omap.txt
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index d1624a3..c915bff 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -679,7 +679,7 @@ static struct resource da8xx_rtc_resources[] = {
+ };
+ 
+ static struct platform_device da8xx_rtc_device = {
+-	.name           = "omap_rtc",
++	.name           = "am1808-rtc",
+ 	.id             = -1,
+ 	.num_resources	= ARRAY_SIZE(da8xx_rtc_resources),
+ 	.resource	= da8xx_rtc_resources,
+@@ -688,17 +688,6 @@ static struct platform_device da8xx_rtc_device = {
+ int da8xx_register_rtc(void)
+ {
+ 	int ret;
+-	void __iomem *base;
+-
+-	base = ioremap(DA8XX_RTC_BASE, SZ_4K);
+-	if (WARN_ON(!base))
+-		return -ENOMEM;
+-
+-	/* Unlock the rtc's registers */
+-	__raw_writel(0x83e70b13, base + 0x6c);
+-	__raw_writel(0x95a4f1e0, base + 0x70);
+-
+-	iounmap(base);
+ 
+ 	ret = platform_device_register(&da8xx_rtc_device);
+ 	if (!ret)
+-- 
+1.7.1
