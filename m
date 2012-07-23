@@ -1,58 +1,31 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 2/2] regulator: tps6586x: add support for input supply
-Date: Mon, 23 Jul 2012 22:29:17 +0100
-Message-ID: <20120723212916.GE12438@opensource.wolfsonmicro.com>
-References: <1342187432-18668-1-git-send-email-ldewangan@nvidia.com>
- <1342187432-18668-3-git-send-email-ldewangan@nvidia.com>
- <500DB960.6020802@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Mon, 23 Jul 2012 15:29:57 -0600
+Message-ID: <500DC255.40900@wwwdotorg.org>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206271520.49276.arnd@arndb.de> <1342161907.1726.26.camel@vkoul-udesk3> <201207171924.33756.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Uwl7UQhJk99r8jnw"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <500DB960.6020802-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201207171924.33756.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Vinod Koul <vinod.koul@linux.intel.com>, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/17/2012 01:24 PM, Arnd Bergmann wrote:
+...
+> I think we're basically on the same page. Let's see if I have covered
+> all the cases we discussed so far. I've tried to update the binding that
+> Jon sent out initially with everything we've discussed, so please review
+> this to see if I understood you correctly.
+...
+> * DMA client
+...
+> Examples:
+...
+> 3. A device with three channels, one of which has two alternatives:
 
---Uwl7UQhJk99r8jnw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+s/three/four/   s/one of which/both of which/
 
-On Mon, Jul 23, 2012 at 02:51:44PM -0600, Stephen Warren wrote:
-> On 07/13/2012 07:50 AM, Laxman Dewangan wrote:
-
-> > -	config.dev = &pdev->dev;
-> > +	config.dev = pdev->dev.parent;
-
-> Those seem like unrelated changes, but I suppose it's fine.
-
-Not entirely, it's being done so that the supplies are on the I2C device
-node rather than on the synthetic node that we generated to instantiate
-the regulator driver from our MFD.
-
---Uwl7UQhJk99r8jnw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQDcIgAAoJEBus8iNuMP3dfZkP/RQl+079xwMfPn9z3Nfr+UHA
-bCy58eZqxkEgCaN7casCV/W3cWA9kRW1n7KTxbUDf7brzBcKB1ERF6Xt7Xo/MsCX
-PqA6mmzk49m8YMsyyn5itQkhxgqYZzTNexh54VeMBbCxtFaE5dOJruMuxuA7e/WD
-m//HDkkV//xQfiPMjoYpiHfs9qj7wp+t1b92g2mhjFXECksVFAV9HfyBD1s2pR62
-PPIQD6nmfEqNyuhyNjNZLL/g+7mpvPKum4Cw8lIaAwKtvcX0mKRWOMUfT7yCYlWt
-hW5JPETtq8Uufrz4rbnKMGX3IBIG/UgoNrbcPBTvAFGNQZlEEWAYxIQBq0IfTWnO
-gOBRN27FobPJlinaiOQOXf8O7d7VZEYrVoEzSrpKfvhHVTzspEXe0gxGiZf8yda0
-8oZPmyjdlioZ5Y3pLZWM8JDvMwncKsp6/heGdo76YU+UIzoMEdWWupA/Oq0TOau+
-kL2nDfpsf4Auh/qL4P/ExE0uC6ztlYWiKLFlhYuURjlnSCZcC8aJLHyUvqUn+/Z1
-OW90yo3Q6O3ziYwgzn955mqlJhkIAjBvjXFzFYfTp8sF0qA6JYrafLjhBdxUzw3Q
-Hm6jG8E8ecXd34rhYjPVcfe67l20q4uk3ThGfXGEOPsN8LWPUsDDYXNLSRcKy/kn
-zTRrKUh9YRACKgp16FYH
-=fF/G
------END PGP SIGNATURE-----
-
---Uwl7UQhJk99r8jnw--
+This binding doc seems reasonable to me.
