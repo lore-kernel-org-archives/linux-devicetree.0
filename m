@@ -1,95 +1,119 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
-Date: Mon, 23 Jul 2012 21:11:06 +0200
-Message-ID: <6220407.M8CZZfZu0N@bender>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <1342363754-30808-2-git-send-email-florian@openwrt.org>
- <20120716142941.666d928c@skate>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2 2/2] input: Add support for the Semtech SX8634
+ controller
+Date: Mon, 23 Jul 2012 22:15:37 +0200
+Message-ID: <20120723201537.GA7626@avionic-0098.mockup.avionic-design.de>
+References: <1343045927-22063-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343045927-22063-2-git-send-email-thierry.reding@avionic-design.de>
+ <20120723164816.GA26577@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120716142941.666d928c@skate>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: olof@lixom.net, devicetree-discuss@lists.ozlabs.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120723164816.GA26577@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Thomas,
 
-On Monday 16 July 2012 14:29:41 Thomas Petazzoni wrote:
-> Hello Florian,
-> 
-[snip]
-> > +static void __init mcs814x_of_timer_init(void)
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 23, 2012 at 09:48:16AM -0700, Dmitry Torokhov wrote:
+> Hi Thierry,
+>=20
+> On Mon, Jul 23, 2012 at 02:18:47PM +0200, Thierry Reding wrote:
+> > +
+> > +	if (gpio_is_valid(sx->power_gpio)) {
+> > +		err =3D gpio_request(sx->power_gpio, "sx8634 power");
+> > +		if (err < 0) {
+> > +			dev_err(&client->dev,
+> > +				"failed to request power GPIO#%u: %d\n",
+> > +				sx->power_gpio, err);
+> > +			goto free_input_device;
+> > +		}
+> > +
+> > +		err =3D gpio_direction_output(sx->power_gpio, 1);
+> > +		if (err < 0) {
+> > +			dev_err(&client->dev, "failed to enable power: %d\n",
+> > +				err);
+> > +			goto free_power_gpio;
+> > +		}
+>=20
+> I think there is gpio_request_one() that will take care of tehse 2
+> calls.
+
+Right, that shortens this by half.
+
+>=20
+> > +
+> > +		msleep(150);
+> > +	}
+> > +
+> > +	err =3D sx8634_setup(sx, pdata);
+> > +	if (err < 0)
+> > +		goto free_power_gpio;
+> > +
+> > +	err =3D sysfs_create_group(&client->dev.kobj, &sx8634_attr_group);
+> > +	if (err < 0)
+> > +		goto free_power_gpio;
+> > +
+> > +	err =3D devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> > +					sx8634_irq, IRQF_ONESHOT, "sx8634",
+> > +					sx);
+>=20
+> Please do not use devm_* interface here as it make the driverr bomb in
+> remove() where you unregister input device but keep interrupt handler
+> active until after remove() finishes.
+
+Okay, will do. There is devm_free_irq() but I guess it isn't worth the
+overhead since the only benefit would be that it simplifies the .probe()
+error unwinding a bit.
+
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int sx8634_i2c_suspend(struct device *dev)
 > > +{
-> > +	struct device_node *np;
-> > +	const unsigned int *intspec;
-> > +
-> > +	np = of_find_matching_node(NULL, mcs814x_timer_ids);
-> > +	if (!np)
-> > +		panic("unable to find compatible timer node in dtb");
-> > +
-> > +	mcs814x_timer_base = of_iomap(np, 0);
-> > +	if (!mcs814x_timer_base)
-> > +		panic("unable to remap timer cpu registers");
-> > +
-> > +	intspec = of_get_property(np, "interrupts", NULL);
-> > +	if (!intspec)
-> > +		panic("no interrupts property for timer");
-> > +
-> > +	mcs814x_timer_irq.irq = be32_to_cpup(intspec);
+> > +	return 0;
 > > +}
 > > +
-> > +static void __init mcs814x_timer_init(void)
+> > +static int sx8634_i2c_resume(struct device *dev)
 > > +{
-> > +	struct clk *clk;
-> > +
-> > +	clk = clk_get_sys("timer0", NULL);
-> > +	if (IS_ERR_OR_NULL(clk))
-> > +		panic("unable to get timer0 clock");
-> > +
-> > +	clock_rate = clk_get_rate(clk);
-> > +	clk_put(clk);
-> > +
-> > +	mcs814x_of_timer_init();
-> > +
-> > +	pr_info("Timer frequency: %d (kHz)\n", clock_rate / 1000);
-> > +
-> > +	timer_reload_value = 0xffffffff - (clock_rate / HZ);
-> > +
-> > +	/* disable timer */
-> > +	__raw_writel(0, mcs814x_timer_base + TIMER_CTL);
-> > +	__raw_writel(timer_reload_value, mcs814x_timer_base + TIMER_VAL);
-> > +	last_reload = timer_reload_value;
-> > +
-> > +	setup_irq(mcs814x_timer_irq.irq, &mcs814x_timer_irq);
-> > +	/* enable timer, stop timer in debug mode */
-> > +	__raw_writel(0x03, mcs814x_timer_base + TIMER_CTL);
+> > +	return 0;
 > > +}
+> > +#endif
 > > +
-> > +struct sys_timer mcs814x_timer = {
-> > +	.init	= mcs814x_timer_init,
-> > +	.offset	= mcs814x_gettimeoffset,
-> > +};
-> 
-> I am surprised that this doesn't use the clocksource and clockevents
-> infrastructure. It probably should, and be implemented in
-> drivers/clocksource/.
+> > +static SIMPLE_DEV_PM_OPS(sx8634_i2c_pm, sx8634_i2c_suspend, sx8634_i2c=
+_resume);
+>=20
+> Why are these stubs needed?
 
-This may sound like a stupid question, but the big constraint with this SoC is 
-that the timers do not reload themselves, and so far, I did not find out how I 
-can handle this properly with a clocksource. I suppose that it should not be a 
-big problem for the clockevent device however.
+They're not, I'll drop them.
 
-Has anyone any example of such particular case?
--- 
-Florian
+Thierry
+
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQDbDpAAoJEN0jrNd/PrOhFKcP/2hYtiSj/wuUdzIaP5ZgqxZG
+qzLghZ9abdZMvg3tcv5ZINafbGX26X2oCHsv+aQOU6c/NZBOmcrbMkj8ULZ4OIY5
+8upUn+7PvXVh7JzpzH31EuHuL/HH9/vO8ZE14fVXPcsv+OYZx3lDWIZtqmA5l3LQ
+G0zLkjMCLkRsoUBz9TIIE/L3sJXBN4Ej0/e9lK5SmkNn/Mg1CWPB0WxBPf2QCp/V
+eLq75gZdf2E38r3tZxu5aTHSqmsgQiqhyBqOTr/kFl+dQFL18DsDQLtN5cRWzoDN
+twk+lRI7b1KHYB7/Vkc0pVrL7p0NHX/gI0y7jDZzHfNKGSY1oreUgr5ySX4z3/15
+Wg16nmPlDzxX/m+aQXhxVXicsf9b/PCZKKBnpPZqime/OvjWaVsMYrdz60w0l/CO
+WCNo7pxlrNIaW2J8eLSIXW1xXOC0Jeh/KuB7frGcV13fp10PKHDfg67NfpGO7Oof
+8bgtbYUlQot04b0fBVoSeceR6RD0LZrVoMddQS6ZqFSXmkUAacc1/Oienb91b8bX
+JpxGI1x9W9La0n5YE1zy7hBuTiMDZTPrrhvEp4h50GmVK15yT32wlPxTx3zxDdYR
+j2m5tw3Ec3WpM20iBB1wTa3ldZzgzr1I6/c7Y98aoysIhUezqoZWuZOE88djUoi7
+OhWfEMo0mnrw96bfrNdl
+=nAMZ
+-----END PGP SIGNATURE-----
+
+--XsQoSWH+UP9D9v3l--
