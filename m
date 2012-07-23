@@ -1,68 +1,81 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] of: require a match on all fields of of_device_id
-Date: Mon, 23 Jul 2012 10:52:54 -0500
-Message-ID: <500D7356.5080706@freescale.com>
-References: <20120718011151.GA6119@tyr.buserror.net>
- <50062199.7090904@gmail.com> <5006DE87.7020503@freescale.com>
- <500CAF49.1060003@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 2/2] input: Add support for the Semtech SX8634
+ controller
+Date: Mon, 23 Jul 2012 09:48:16 -0700
+Message-ID: <20120723164816.GA26577@core.coreip.homeip.net>
+References: <1343045927-22063-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343045927-22063-2-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <500CAF49.1060003-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1343045927-22063-2-git-send-email-thierry.reding@avionic-design.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-input@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/2012 08:56 PM, Rob Herring wrote:
-> On 07/18/2012 11:04 AM, Scott Wood wrote:
->> On 07/17/2012 09:38 PM, Rob Herring wrote:
->>> On 07/17/2012 08:11 PM, Scott Wood wrote:
->>>> Commit 107a84e61cdd3406c842a0e4be7efffd3a05dba6 ("of: match by compatible
->>>> property first") breaks the gianfar ethernet driver found on various
->>>> Freescale PPC chips.
->>>
->>> You do know this is reverted, right?
->>
->> No, I didn't.  I got it via Kumar's next branch, and saw that it was
->> still in your fixes-for-grant branch, and didn't see any revert-related
->> e-mail activity on the devicetree-discuss list about it.  I now see that
->> it was reverted directly in Linus's tree (I didn't see either the
->> original or the revert in Linus's tree when I checked, but apparently I
->> hadn't fetched that as recently as I thought).
->>
->>> Here's my fix (untested) which is a bit simpler. I'm assuming if we care
->>> about which compatible string we are matching to, then we require name
->>> and type are blank and we only care about compatible strings.
->>
->> Any particular reason for making that assumption?  We should be avoiding
->> the need for .name or .type matching in new bindings, but this seems
->> like unnecessarily inconsistent behavior.
-> 
-> Only to ensure we don't change existing behavior and I think trying to
-> cover all possibilities will be nearly impossible. For example, what if
-> we match on both a specific compatible prop alone and a less specific
-> compatible prop plus name and/or type. Which one do we pick as the
-> better match?
+Hi Thierry,
 
-Whichever one has a compatible string that is listed earlier.  Having an
-additional type/name field doesn't necessarily make it a better match --
-it's just there to resolve ambiguity (or sometimes for no good reason at
-all).
+On Mon, Jul 23, 2012 at 02:18:47PM +0200, Thierry Reding wrote:
+> +
+> +	if (gpio_is_valid(sx->power_gpio)) {
+> +		err = gpio_request(sx->power_gpio, "sx8634 power");
+> +		if (err < 0) {
+> +			dev_err(&client->dev,
+> +				"failed to request power GPIO#%u: %d\n",
+> +				sx->power_gpio, err);
+> +			goto free_input_device;
+> +		}
+> +
+> +		err = gpio_direction_output(sx->power_gpio, 1);
+> +		if (err < 0) {
+> +			dev_err(&client->dev, "failed to enable power: %d\n",
+> +				err);
+> +			goto free_power_gpio;
+> +		}
 
-You're going to change existing behavior in some case no matter what,
-short of a match table flag saying "it's OK to not keep depending on
-link order", or just not making the change.  Might as well change it to
-something sane.
+I think there is gpio_request_one() that will take care of tehse 2
+calls.
 
--Scott
+> +
+> +		msleep(150);
+> +	}
+> +
+> +	err = sx8634_setup(sx, pdata);
+> +	if (err < 0)
+> +		goto free_power_gpio;
+> +
+> +	err = sysfs_create_group(&client->dev.kobj, &sx8634_attr_group);
+> +	if (err < 0)
+> +		goto free_power_gpio;
+> +
+> +	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> +					sx8634_irq, IRQF_ONESHOT, "sx8634",
+> +					sx);
+
+Please do not use devm_* interface here as it make the driverr bomb in
+remove() where you unregister input device but keep interrupt handler
+active until after remove() finishes.
+
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int sx8634_i2c_suspend(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int sx8634_i2c_resume(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(sx8634_i2c_pm, sx8634_i2c_suspend, sx8634_i2c_resume);
+
+Why are these stubs needed?
+
+Thanks.
+
+-- 
+Dmitry
