@@ -1,42 +1,40 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] of: support an enumerated-bus compatible value
-Date: Tue, 24 Jul 2012 18:48:53 +0000
-Message-ID: <201207241848.53308.arnd@arndb.de>
-References: <4FF1C567.4060809@wwwdotorg.org> <4FF34EC2.6040908@wwwdotorg.org>
- <500EDD8A.2010701@wwwdotorg.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Tue, 24 Jul 2012 18:55:37 +0000
+Message-ID: <201207241855.37568.arnd@arndb.de>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201207240719.03601.arnd@arndb.de> <500EC7A5.6020907@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <500EDD8A.2010701-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <500EC7A5.6020907@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Vinod Koul <vinod.koul@linux.intel.com>, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On Tuesday 24 July 2012, Stephen Warren wrote:
+> It seems that given there are two values for dma-names, there really are
+> two channels; it's just that one channel is bi-directional, and the
+> second has two alternatives.
 > 
-> That makes the child nodes' reg property slightly more complex since I
-> don't get to elide the size cell, but does mean that we don't have to
-> change anything (code or bindings) at all to make it work. I guess the
-> lack of any ranges property within the top-level regulators node makes
-> it clear enough that the bus/child address space is not part of the
-> parent CPU's address space.
+> Still, I guess you could also view this as three separate channels
+> instead. In which case, the text below makes sense.
+> 
+> > 3. A device with three channels, one of which has two alternatives:
+> > 
+> >         dmas = <&dma0 1 4   /* first channel,  data read */
+> >                 &dma0 2 6   /* second channel, data write */
+> >                 &dma1 1 0   /* third channel,  error read */
+> >                 &dma2 1 0>; /* third channel,  ernative error read */
+> >         dma-names = "data", "data", "error", "error";
+> > 
 
-One would think that, but the of_address handling code actually treats
-empty ranges the same as missing ranges, in violation of the spec,
-and as a workaround to deal with some powermac machines that required
-this.
+A bidirectional channel would have only one request line, not two,
+and we would write that as
 
-I'd rather fix the code to deal with this correctly.
+	dmas = <&dma0 3 4>; /* one channel on dmarq 4, read-write */
+
 
 	Arnd
