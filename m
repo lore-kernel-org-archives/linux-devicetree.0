@@ -1,71 +1,67 @@
-From: Attila Kinali <attila-HB9FjVmMKa7tRgLqZ5aouw@public.gmane.org>
-Subject: specifying two conflicting configs
-Date: Tue, 24 Jul 2012 11:34:50 +0200
-Message-ID: <20120724113450.328c27430ebc4438d0048346@kinali.ch>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [PATCH 2/6] ARM: davinci: remove rtc kicker release
+Date: Tue, 24 Jul 2012 15:11:16 +0400
+Message-ID: <500E82D4.9090702@mvista.com>
+References: <cover.1343046707.git.afzal@ti.com> <f9e348c8cb7402b27b1a5633b06620266e369641.1343046707.git.afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <f9e348c8cb7402b27b1a5633b06620266e369641.1343046707.git.afzal@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Afzal Mohammed <afzal@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, nsekhar@ti.com, khilman@ti.com, a.zummo@towertech.it, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, rtc-linux@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-I have here an embedded system where i use a serial port as SD Card
-interface as well as SPI interface. I select what i want to use
-by setting a GPIO pin high or low.
+On 23-07-2012 17:42, Afzal Mohammed wrote:
 
-Currently i'm using two different dts files, one that specifies the
-serial port as SD Card interface and one that specifies the serial
-port as SPI interface.
+> rtc-omap driver is now capable of handling kicker mechanism,
+> hence remove kicker handling at platform level, instead
+> provide proper device name so that driver can handle kicker
+> mechanism by itself
 
-Now i would like to merge them into one file so that i can select
-which mode to use at runtime. The documentation gave me the impression
-that this should be possible, but i was not able to figure out how
-to do it.
+> Signed-off-by: Afzal Mohammed <afzal@ti.com>
+> ---
+>   arch/arm/mach-davinci/devices-da8xx.c |   13 +------------
+>   1 files changed, 1 insertions(+), 12 deletions(-)
 
-Would someone be so kind and point me to the documentation/example
-i've missed?
+> diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+> index d1624a3..c915bff 100644
+> --- a/arch/arm/mach-davinci/devices-da8xx.c
+> +++ b/arch/arm/mach-davinci/devices-da8xx.c
+> @@ -679,7 +679,7 @@ static struct resource da8xx_rtc_resources[] = {
+>   };
+>
+>   static struct platform_device da8xx_rtc_device = {
+> -	.name           = "omap_rtc",
+> +	.name           = "am1808-rtc",
 
-The current configuration i use is either:
+    Why not "da8xx-rtc". Kick registers exist startting with 
+DA830/OMAP-L137/AM1707, not only on AM1808.
 
-ssp0: ssp@80010000 {
-        compatible = "fsl,imx23-mmc";
-        pinctrl-names = "default";
-        pinctrl-0 = <&mmc0_8bit_pins_a &mmc1_pins_fixup>;
-        bus-width = <8>;
-        status = "okay";
-};
+>   	.id             = -1,
+>   	.num_resources	= ARRAY_SIZE(da8xx_rtc_resources),
+>   	.resource	= da8xx_rtc_resources,
+> @@ -688,17 +688,6 @@ static struct platform_device da8xx_rtc_device = {
+>   int da8xx_register_rtc(void)
+>   {
+>   	int ret;
+> -	void __iomem *base;
+> -
+> -	base = ioremap(DA8XX_RTC_BASE, SZ_4K);
+> -	if (WARN_ON(!base))
+> -		return -ENOMEM;
+> -
+> -	/* Unlock the rtc's registers */
+> -	__raw_writel(0x83e70b13, base + 0x6c);
+> -	__raw_writel(0x95a4f1e0, base + 0x70);
+> -
+> -	iounmap(base);
+>
+>   	ret = platform_device_register(&da8xx_rtc_device);
+>   	if (!ret)
 
-or:
+WBR, Sergei
 
-ssp0: ssp@80010000 {
-        #address-cells = <1>;
-        #size-cells = <0>;
-        compatible = "fsl,imx23-spi";
-        fsl,ssp-dma-channel = <1>;
-        pinctrl-names = "default";
-        pinctrl-0 = <&spi_pins_a>;
-        status = "okay";
-
-};
-
-
-Thanks in advance
-
-			Attila Kinali
--- 
-It is upon moral qualities that a society is ultimately founded. All 
-the prosperity and technological sophistication in the world is of no 
-use without that foundation.
-                 -- Miss Matheson, The Diamond Age, Neil Stephenson
