@@ -1,36 +1,36 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCH 2/6] ARM: davinci: remove rtc kicker release
-Date: Tue, 24 Jul 2012 12:04:30 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93E9AD19E@DBDE01.ent.ti.com>
-References: <cover.1343046707.git.afzal@ti.com>
- <f9e348c8cb7402b27b1a5633b06620266e369641.1343046707.git.afzal@ti.com>
- <500E82D4.9090702@mvista.com>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Tue, 24 Jul 2012 16:54:27 +0400
+Message-ID: <500E9B03.20706@mvista.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201206271520.49276.arnd@arndb.de> <1342161907.1726.26.camel@vkoul-udesk3> <201207171924.33756.arnd@arndb.de> <500DC255.40900@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <500E82D4.9090702@mvista.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sshtylyov@mvista.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Nori, Sekhar" <nsekhar@ti.com>, "Hilman, Kevin" <khilman@ti.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <500DC255.40900@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@linux.intel.com>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hello.
 
-On Tue, Jul 24, 2012 at 16:41:16, Sergei Shtylyov wrote:
+On 24-07-2012 1:29, Stephen Warren wrote:
 
-> >   static struct platform_device da8xx_rtc_device = {
-> > -	.name           = "omap_rtc",
-> > +	.name           = "am1808-rtc",
-> 
->     Why not "da8xx-rtc". Kick registers exist startting with 
-> DA830/OMAP-L137/AM1707, not only on AM1808.
+>> I think we're basically on the same page. Let's see if I have covered
+>> all the cases we discussed so far. I've tried to update the binding that
+>> Jon sent out initially with everything we've discussed, so please review
+>> this to see if I understood you correctly.
+> ...
+>> * DMA client
+> ...
+>> Examples:
+> ...
+>> 3. A device with three channels, one of which has two alternatives:
 
-I would prefer to keep da830-rtc, even though it is not strictly
-a requirement; "da830-rtc" could be used for DT case too (as in
-DT, wild card compatibles are not recommended), hence allowing
-us to have a uniform name for DT & non-DT case.
+> s/three/four/   s/one of which/both of which/
 
-Regards
-Afzal
+    You can't say "both" of 4 channels, only "all". :-)
+
+WBR, Sergei
+
