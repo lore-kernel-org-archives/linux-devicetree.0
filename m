@@ -1,123 +1,46 @@
-From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: [PATCH v2] usb: gadget: composite: parse dt values
-Date: Tue, 24 Jul 2012 10:15:20 -0300
-Message-ID: <1343135720-26559-1-git-send-email-aletes.xgr@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Nazarewicz <mina86@mina86.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: Forcing PIO mode instead of DMA via DT property
+Date: Tue, 24 Jul 2012 13:19:44 +0000
+Message-ID: <201207241319.45101.arnd@arndb.de>
+References: <201207222328.27008.marex@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201207222328.27008.marex-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: pavel-ynQEQJNshbs@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Grab the devicetree node properties to set VendorId, ProductId,
-bcdDevice, Manucacturer, Product and SerialNumber
+On Sunday 22 July 2012, Marek Vasut wrote:
+> I'm trying to implement a driver that can do both DMA and PIO, and it would be 
+> nice if the user was able to select the mode (on a per-bus basis) using the DT. 
+> The PIO mode can reduce the overhead in some cases and therefore be better 
+> choice than the DMA (for example when most transfers move only very few data, or 
+> when board-specific hardware properties kick in).
+> 
+> I was thinking about using some "manf,use-pio" DT property, but I haven't found 
+> any such example yet, so I wonder if this is a good idea.
+> 
 
-Signed-off-by: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Acked-by: Rob Herring <rob.herring@calxeda.com>
----
-Applies to v3.5
+What kind of device is this? We are currently working on the dmaengine
+binding, so an easy way to do this would be (one that binding is complete)
+to either provide or not provide the channel description depending on
+what you want to do with the device. This is clearly a hack but might
+fit your use case without adding any ugly code to the kernel.
 
-Changes since V1:
-* Minor patch description and code comments updates
+Another option would be to make it a runtime configuration option,
+e.g. through sysfs, but that again depends a lot on what device you
+are talking about.
 
- Documentation/devicetree/bindings/usb/gadget.txt |   20 +++++++++++
- drivers/usb/gadget/composite.c                   |   39 ++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/gadget.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/gadget.txt b/Documentation/devicetree/bindings/usb/gadget.txt
-new file mode 100644
-index 0000000..93388d3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/gadget.txt
-@@ -0,0 +1,20 @@
-+Usb Gadget DeviceTree bindings
-+
-+These optional properties inside the usb device controller node are used to
-+change some of the gadget drivers configuration:
-+- vendor-id: Usb vendor id
-+- product-id: Usb product id
-+- release: Version of this device
-+- vendor: Textual description of the vendor
-+- device: Textual description of this device
-+- serial: Textual representation of the device's serial number
-+
-+Binding Example:
-+	usbd@31020000 {
-+		vendor-id = <0x0525>;
-+		product-id = <0xa4a6>;
-+		release = <1>;
-+		vendor = "Some Corp";
-+		device = "Test Device";
-+		serial = "12345";
-+	};
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 390749b..a02be8c 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -17,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/utsname.h>
-+#include <linux/of.h>
- 
- #include <linux/usb/composite.h>
- #include <asm/unaligned.h>
-@@ -1419,10 +1420,44 @@ static u8 override_id(struct usb_composite_dev *cdev, u8 *desc)
- 	return *desc;
- }
- 
-+static void composite_parse_dt(struct usb_composite_dev *cdev,
-+	struct device_node *np)
-+{
-+	u32 reg;
-+
-+	if (!idVendor && of_property_read_u32(np, "vendor-id", &reg) == 0)
-+		idVendor = reg;
-+
-+	if (!idProduct && of_property_read_u32(np, "product-id", &reg) == 0)
-+		idProduct = reg;
-+
-+	if (!bcdDevice && of_property_read_u32(np, "release", &reg) == 0)
-+		bcdDevice = reg;
-+
-+	if (!iManufacturer)
-+		if (of_property_read_string(np, "vendor",
-+			&composite->iManufacturer) == 0)
-+			cdev->manufacturer_override = override_id(cdev,
-+				&cdev->desc.iManufacturer);
-+
-+	if (!iProduct)
-+		if (of_property_read_string(np, "device",
-+			&composite->iProduct) == 0)
-+			cdev->product_override = override_id(cdev,
-+				&cdev->desc.iProduct);
-+
-+	if (!iSerialNumber)
-+		if (of_property_read_string(np, "serial",
-+			&composite->iSerialNumber) == 0)
-+			cdev->serial_override = override_id(cdev,
-+				&cdev->desc.iSerialNumber);
-+}
-+
- static int composite_bind(struct usb_gadget *gadget)
- {
- 	struct usb_composite_dev	*cdev;
- 	int				status = -ENOMEM;
-+	struct device_node		*np = gadget->dev.of_node;
- 
- 	cdev = kzalloc(sizeof *cdev, GFP_KERNEL);
- 	if (!cdev)
-@@ -1470,6 +1505,10 @@ static int composite_bind(struct usb_gadget *gadget)
- 
- 	cdev->desc = *composite->dev;
- 
-+	/* grab values from devicetree */
-+	if (np)
-+		composite_parse_dt(cdev, np);
-+
- 	/* standardized runtime overrides for device ID data */
- 	if (idVendor)
- 		cdev->desc.idVendor = cpu_to_le16(idVendor);
--- 
-1.7.10
-
+	Arnd
