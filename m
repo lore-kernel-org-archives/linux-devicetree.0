@@ -1,41 +1,63 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Tue, 24 Jul 2012 07:19:03 +0000
-Message-ID: <201207240719.03601.arnd@arndb.de>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com> <201207171924.33756.arnd@arndb.de> <500DC255.40900@wwwdotorg.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 2/2] arm/dts: Configure pinmuxs for user leds
+ control on Bone
+Date: Tue, 24 Jul 2012 01:30:08 -0700
+Message-ID: <20120724083007.GU6522@atomide.com>
+References: <1342769508-24810-1-git-send-email-anilkumar@ti.com>
+ <1342769508-24810-3-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <500DC255.40900@wwwdotorg.org>
+Content-Disposition: inline
+In-Reply-To: <1342769508-24810-3-git-send-email-anilkumar@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Vinod Koul <vinod.koul@linux.intel.com>, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>
+To: AnilKumar Ch <anilkumar@ti.com>
+Cc: linux-omap@vger.kernel.org, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 July 2012, Stephen Warren wrote:
-> > 3. A device with three channels, one of which has two alternatives:
+* AnilKumar Ch <anilkumar@ti.com> [120720 00:36]:
+> Adds GPIO pinctrl nodes to am3358_pinmux master node to control
+> user leds (USR0, USR1, USR2 and USR3) present on BeagleBone.
 > 
-> s/three/four/   s/one of which/both of which/
+> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> ---
+>  arch/arm/boot/dts/am335x-bone.dts |   15 +++++++++++++++
+>  1 files changed, 15 insertions(+), 0 deletions(-)
 > 
-> This binding doc seems reasonable to me.
+> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+> index a4d4415..452ce3f 100644
+> --- a/arch/arm/boot/dts/am335x-bone.dts
+> +++ b/arch/arm/boot/dts/am335x-bone.dts
+> @@ -28,3 +28,18 @@
+>  };
+>  
+>  /include/ "tps65217.dtsi"
+> +
+> +&am3358_pinmux {
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&userled_pins>;
+> +
+> +	userled_pins: pinmux_userled_pins {
+> +		pinctrl-single,pins = <
+> +			0x54 0x7	/* gpmc_a5.gpio1_21, OMAP_PIN_OUTPUT | OMAP_MUX_MODE7 */
+> +			0x58 0x17	/* gpmc_a6.gpio1_22, OMAP_PIN_OUTPUT_PULLUP | OMAP_MUX_MODE7 */
+> +			0x5C 0x7	/* gpmc_a7.gpio1_23, OMAP_PIN_OUTPUT | OMAP_MUX_MODE7 */
+> +			0x60 0x17	/* gpmc_a8.gpio1_24, OMAP_PIN_OUTPUT_PULLUP | OMAP_MUX_MODE7 */
+> +		>;
+> +	};
+> +};
 
-I asked a linguist about it who said that you can't have "both" together
-with "four". She also mentioned that my text is rather confusing, so maybe
-you also got it wrong. I'll try adding some explanation:
+Let's standardize on the following minimal commenting as those can be
+search and replaced the same way when we have preprocessing available:
 
-3. A device with three channels, one of which has two alternatives:
+		pinctrl-single,pins = <
+			0x54 0x7	/* gpmc_a5.gpio1_21  OUTPUT | MODE7 */
+			0x58 0x17	/* gpmc_a6.gpio1_22, OUTPUT_PULLUP | MODE7 */
+			0x5C 0x7	/* gpmc_a7.gpio1_23, OUTPUT | MODE7 */
+			0x60 0x17	/* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
+		>;
 
-        dmas = <&dma0 1 4   /* first channel,  data read */
-                &dma0 2 6   /* second channel, data write */
-                &dma1 1 0   /* third channel,  error read */
-                &dma2 1 0>; /* third channel,  ernative error read */
-        dma-names = "data", "data", "error", "error";
+Regards,
 
-   The first two channels are identified by having a unique direction
-   flag in combination with the "data" string. For the third channel,
-   there are two dma specifiers with identical flags (1) and strings
-   ("error"), so only one specifier may be used at a time.
-
-	Arnd
+Tony
