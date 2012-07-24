@@ -1,8 +1,8 @@
 From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 4/6] Document: devicetree: add OF documents for lantiq falcon
+Subject: [PATCH 2/6] Document: devicetree: add OF documents for lantiq xway
  pinctrl
-Date: Tue, 24 Jul 2012 08:50:58 +0200
-Message-ID: <1343112660-12245-4-git-send-email-blogic@openwrt.org>
+Date: Tue, 24 Jul 2012 08:50:56 +0200
+Message-ID: <1343112660-12245-2-git-send-email-blogic@openwrt.org>
 References: <1343112660-12245-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,29 +20,28 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Thomas Langer <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Signed-off-by: Thomas Langer <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>
 Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- .../bindings/pinctrl/lantiq,falcon-pinumx.txt      |   83 ++++++++++++++++++++
- 1 files changed, 83 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/lantiq,falcon-pinumx.txt
+ .../bindings/pinctrl/lantiq,xway-pinumx.txt        |   97 ++++++++++++++++++++
+ 1 files changed, 97 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/lantiq,xway-pinumx.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/lantiq,falcon-pinumx.txt b/Documentation/devicetree/bindings/pinctrl/lantiq,falcon-pinumx.txt
+diff --git a/Documentation/devicetree/bindings/pinctrl/lantiq,xway-pinumx.txt b/Documentation/devicetree/bindings/pinctrl/lantiq,xway-pinumx.txt
 new file mode 100644
-index 0000000..daa7689
+index 0000000..b5469db
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/lantiq,falcon-pinumx.txt
-@@ -0,0 +1,83 @@
-+Lantiq FALCON pinmux controller
++++ b/Documentation/devicetree/bindings/pinctrl/lantiq,xway-pinumx.txt
+@@ -0,0 +1,97 @@
++Lantiq XWAY pinmux controller
 +
 +Required properties:
-+- compatible: "lantiq,pinctrl-falcon"
++- compatible: "lantiq,pinctrl-xway" or "lantiq,pinctrl-xr9"
 +- reg: Should contain the physical address and length of the gpio/pinmux
 +  register range
 +
@@ -78,11 +77,18 @@ index 0000000..daa7689
 +Valid values for group and function names:
 +
 +  mux groups:
-+    por, ntr, ntr8k, hrst, mdio, bootled, asc0, spi, spi cs0, spi cs1, i2c,
-+    jtag, slic, pcm, asc1
++    exin0, exin1, exin2, jtag, ebu a23, ebu a24, ebu a25, ebu clk, ebu cs1,
++    ebu wait, nand ale, nand cs1, nand cle, spi, spi_cs1, spi_cs2, spi_cs3,
++    spi_cs4, spi_cs5, spi_cs6, asc0, asc0 cts rts, stp, nmi , gpt1, gpt2,
++    gpt3, clkout0, clkout1, clkout2, clkout3, gnt1, gnt2, gnt3, req1, req2,
++    req3
++
++  additional mux groups (XR9 only):
++    mdio, nand rdy, nand rd, exin3, exin4, gnt4, req4
 +
 +  functions:
-+    rst, ntr, mdio, led, asc, spi, i2c, jtag, slic, pcm
++    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu, mdio
++
 +
 +
 +Definition of pin configurations:
@@ -93,34 +99,41 @@ index 0000000..daa7689
 +
 +Optional subnode-properties:
 +- lantiq,pull: Integer, representing the pull-down/up to apply to the pin.
-+    0: none, 1: down
-+- lantiq,drive-current: Boolean, enables drive-current
-+- lantiq,slew-rate: Boolean, enables slew-rate
++    0: none, 1: down, 2: up.
++- lantiq,open-drain: Boolean, enables open-drain on the defined pin.
++
++Valid values for XWAY pin names:
++  Pinconf pins can be referenced via the names io0-io31.
++
++Valid values for XR9 pin names:
++  Pinconf pins can be referenced via the names io0-io55.
 +
 +Example:
-+	pinmux0 {
-+		compatible = "lantiq,pinctrl-falcon";
++	gpio: pinmux@E100B10 {
++		compatible = "lantiq,pinctrl-xway";
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&state_default>;
 +
++		#gpio-cells = <2>;
++		gpio-controller;
++		reg = <0xE100B10 0xA0>;
++
 +		state_default: pinmux {
-+			asc0 {
-+				lantiq,groups = "asc0";
-+				lantiq,function = "asc";
++			stp {
++				lantiq,groups = "stp";
++				lantiq,function = "stp";
 +			};
-+			ntr {
-+				lantiq,groups = "ntr8k";
-+				lantiq,function = "ntr";
++			pci {
++				lantiq,groups = "gnt1";
++				lantiq,function = "pci";
 +			};
-+			i2c {
-+				lantiq,groups = "i2c";
-+				lantiq,function = "i2c";
-+			};
-+			hrst {
-+				lantiq,groups = "hrst";
-+				lantiq,function = "rst";
++			conf_out {
++				lantiq,pins = "io4", "io5", "io6"; /* stp */
++				lantiq,open-drain;
++				lantiq,pull = <0>;
 +			};
 +		};
 +	};
++
 -- 
 1.7.9.1
