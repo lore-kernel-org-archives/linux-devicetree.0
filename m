@@ -1,7 +1,7 @@
 From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/6] rtc: omap: kicker mechanism support
-Date: Wed, 25 Jul 2012 11:42:03 +0530
-Message-ID: <ecf6520fc9d5da53b670675a71ebece3d006cbb8.1343191280.git.afzal@ti.com>
+Subject: [PATCH v2 3/6] rtc: omap: dt support
+Date: Wed, 25 Jul 2012 11:42:20 +0530
+Message-ID: <bc349a56656d9b6502a999ddc218f4e3936f9f00.1343191280.git.afzal@ti.com>
 References: <cover.1343191280.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,156 +21,100 @@ To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/D
 Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-OMAP RTC IP can have kicker feature. This prevents spurious
-writes to register. To write to registers kicker lock has to
-be released. Procedure to do it as follows,
-
-1. write to kick0 register, 0x83e70b13
-2. write to kick1 register, 0x95a4f1e0
-
-Writing value other than 0x83e70b13 to kick0 enables write
-locking, more details about kicker mechanism can be found in
-section 20.3.3.5.3 of AM335X TRM @www.ti.com/am335x
-
-Here id table information is added and is used to distinguish
-those that require kicker handling and the ones that doesn't
-need it. There are more features in the newer IP's compared
-to legacy ones other than kicker, which driver currently
-doesn't handle, supporting additional features would be
-easier with the addition of id table.
-
-Older IP (of OMAP1) doesn't have revision register as per
-TRM, so revision register can't be relied always to find
-features, hence id table is being used.
+Enhance rtc-omap driver with DT capability
 
 Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 ---
 
 v2:
- Use device name da830-rtc instead of am1808-rtc
- Newly added register name made similar to that existing in the driver
- Better commit message description
+ Use compatible as ti,da830-rtc instead of ti,am1808-rtc
 
- drivers/rtc/rtc-omap.c |   39 ++++++++++++++++++++++++++++++++++++++-
- 1 files changed, 38 insertions(+), 1 deletions(-)
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |   20 ++++++++++++++++++++
+ drivers/rtc/rtc-omap.c                             |   18 ++++++++++++++++++
+ 2 files changed, 38 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-omap.txt
 
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+new file mode 100644
+index 0000000..8c5c584
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+@@ -0,0 +1,20 @@
++TI Real Time Clock
++
++Required properties:
++- compatible: "ti,da830-rtc"
++- reg: Address range of rtc register set
++- interrupts: rtc timer, alarm interrupts in order
++- interrupt-parent: phandle for the interrupt controller
++
++Alternative for reg and interrupt properties on OMAP:
++- ti,hwmods: Name of the hwmod associated to the RTC
++
++Example:
++
++rtc@1c23000 {
++	compatible = "ti,da830-rtc";
++	reg = <0x23000 0x1000>;
++	interrupts = <19
++		      19>;
++	interrupt-parent = <&intc>;
++};
 diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-index 0b614e3..8afbc2e 100644
+index 8afbc2e..dc1a4da 100644
 --- a/drivers/rtc/rtc-omap.c
 +++ b/drivers/rtc/rtc-omap.c
-@@ -38,6 +38,8 @@
-  * the SoC). See the BOARD-SPECIFIC CUSTOMIZATION comment.
-  */
+@@ -20,6 +20,8 @@
+ #include <linux/rtc.h>
+ #include <linux/bcd.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
  
-+#define	DRIVER_NAME			"omap_rtc"
-+
- #define OMAP_RTC_BASE			0xfffb4800
+ #include <asm/io.h>
  
- /* RTC registers */
-@@ -64,6 +66,9 @@
- #define OMAP_RTC_COMP_MSB_REG		0x50
- #define OMAP_RTC_OSC_REG		0x54
- 
-+#define OMAP_RTC_KICK0_REG		0x6c
-+#define OMAP_RTC_KICK1_REG		0x70
-+
- /* OMAP_RTC_CTRL_REG bit fields: */
- #define OMAP_RTC_CTRL_SPLIT		(1<<7)
- #define OMAP_RTC_CTRL_DISABLE		(1<<6)
-@@ -88,11 +93,19 @@
- #define OMAP_RTC_INTERRUPTS_IT_ALARM    (1<<3)
- #define OMAP_RTC_INTERRUPTS_IT_TIMER    (1<<2)
- 
-+/* OMAP_RTC_KICKER values */
-+#define	KICK0_VALUE			(0x83e70b13)
-+#define	KICK1_VALUE			(0x95a4f1e0)
-+
-+#define	OMAP_RTC_HAS_KICKER		0x1
-+
- static void __iomem	*rtc_base;
- 
- #define rtc_read(addr)		__raw_readb(rtc_base + (addr))
- #define rtc_write(val, addr)	__raw_writeb(val, rtc_base + (addr))
- 
-+#define rtc_writel(val, addr)	writel(val, rtc_base + (addr))
-+
- 
- /* we rely on the rtc framework to handle locking (rtc->ops_lock),
-  * so the only other requirement is that register accesses which
-@@ -285,11 +298,22 @@ static struct rtc_class_ops omap_rtc_ops = {
+@@ -298,6 +300,8 @@ static struct rtc_class_ops omap_rtc_ops = {
  static int omap_rtc_alarm;
  static int omap_rtc_timer;
  
-+static struct platform_device_id omap_rtc_devtype[] = {
-+	{
-+		.name	= DRIVER_NAME,
-+	}, {
-+		.name	= "da830-rtc",
-+		.driver_data = OMAP_RTC_HAS_KICKER,
-+	}
++#define	OMAP_RTC_DATA_DA830_IDX	1
++
+ static struct platform_device_id omap_rtc_devtype[] = {
+ 	{
+ 		.name	= DRIVER_NAME,
+@@ -308,12 +312,25 @@ static struct platform_device_id omap_rtc_devtype[] = {
+ };
+ MODULE_DEVICE_TABLE(platform, omap_rtc_devtype);
+ 
++static const struct of_device_id omap_rtc_of_match[] = {
++	{	.compatible	= "ti,da830-rtc",
++		.data		= &omap_rtc_devtype[OMAP_RTC_DATA_DA830_IDX],
++	},
++	{},
 +};
-+MODULE_DEVICE_TABLE(platform, omap_rtc_devtype);
++MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
 +
  static int __init omap_rtc_probe(struct platform_device *pdev)
  {
  	struct resource		*res, *mem;
  	struct rtc_device	*rtc;
  	u8			reg, new_ctrl;
-+	const struct platform_device_id *id_entry;
+ 	const struct platform_device_id *id_entry;
++	const struct of_device_id *of_id;
++
++	of_id = of_match_device(omap_rtc_of_match, &pdev->dev);
++	if (of_id)
++		pdev->id_entry = of_id->data;
  
  	omap_rtc_timer = platform_get_irq(pdev, 0);
  	if (omap_rtc_timer <= 0) {
-@@ -322,6 +346,12 @@ static int __init omap_rtc_probe(struct platform_device *pdev)
- 		goto fail;
- 	}
- 
-+	id_entry = platform_get_device_id(pdev);
-+	if (id_entry && (id_entry->driver_data & OMAP_RTC_HAS_KICKER)) {
-+		rtc_writel(KICK0_VALUE, OMAP_RTC_KICK0_REG);
-+		rtc_writel(KICK1_VALUE, OMAP_RTC_KICK1_REG);
-+	}
-+
- 	rtc = rtc_device_register(pdev->name, &pdev->dev,
- 			&omap_rtc_ops, THIS_MODULE);
- 	if (IS_ERR(rtc)) {
-@@ -398,6 +428,8 @@ fail2:
- fail1:
- 	rtc_device_unregister(rtc);
- fail0:
-+	if (id_entry && (id_entry->driver_data & OMAP_RTC_HAS_KICKER))
-+		rtc_writel(0, OMAP_RTC_KICK0_REG);
- 	iounmap(rtc_base);
- fail:
- 	release_mem_region(mem->start, resource_size(mem));
-@@ -408,6 +440,8 @@ static int __exit omap_rtc_remove(struct platform_device *pdev)
- {
- 	struct rtc_device	*rtc = platform_get_drvdata(pdev);
- 	struct resource		*mem = dev_get_drvdata(&rtc->dev);
-+	const struct platform_device_id *id_entry =
-+				platform_get_device_id(pdev);
- 
- 	device_init_wakeup(&pdev->dev, 0);
- 
-@@ -420,6 +454,8 @@ static int __exit omap_rtc_remove(struct platform_device *pdev)
- 		free_irq(omap_rtc_alarm, rtc);
- 
- 	rtc_device_unregister(rtc);
-+	if (id_entry && (id_entry->driver_data & OMAP_RTC_HAS_KICKER))
-+		rtc_writel(0, OMAP_RTC_KICK0_REG);
- 	iounmap(rtc_base);
- 	release_mem_region(mem->start, resource_size(mem));
- 	return 0;
-@@ -471,9 +507,10 @@ static struct platform_driver omap_rtc_driver = {
- 	.resume		= omap_rtc_resume,
- 	.shutdown	= omap_rtc_shutdown,
+@@ -509,6 +526,7 @@ static struct platform_driver omap_rtc_driver = {
  	.driver		= {
--		.name	= "omap_rtc",
-+		.name	= DRIVER_NAME,
+ 		.name	= DRIVER_NAME,
  		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(omap_rtc_of_match),
  	},
-+	.id_table	= omap_rtc_devtype,
+ 	.id_table	= omap_rtc_devtype,
  };
- 
- static int __init rtc_init(void)
 -- 
 1.7.1
