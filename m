@@ -1,7 +1,7 @@
 From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 3/6] rtc: omap: dt support
-Date: Wed, 25 Jul 2012 11:42:20 +0530
-Message-ID: <bc349a56656d9b6502a999ddc218f4e3936f9f00.1343191280.git.afzal@ti.com>
+Subject: [PATCH v2 4/6] rtc: omap: depend on am33xx
+Date: Wed, 25 Jul 2012 11:42:25 +0530
+Message-ID: <3a154df108ee961c1017c1733092098f1fe8120e.1343191280.git.afzal@ti.com>
 References: <cover.1343191280.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,100 +21,39 @@ To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/D
 Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enhance rtc-omap driver with DT capability
+rtc-omap driver can be reused for AM33xx RTC.
+Provide dependency in Kconfig.
 
 Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 ---
 
 v2:
- Use compatible as ti,da830-rtc instead of ti,am1808-rtc
+ Modify Kconfig help, resolve checkpatch warning
 
- Documentation/devicetree/bindings/rtc/rtc-omap.txt |   20 ++++++++++++++++++++
- drivers/rtc/rtc-omap.c                             |   18 ++++++++++++++++++
- 2 files changed, 38 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-omap.txt
+ drivers/rtc/Kconfig |   10 ++++++----
+ 1 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-new file mode 100644
-index 0000000..8c5c584
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-@@ -0,0 +1,20 @@
-+TI Real Time Clock
-+
-+Required properties:
-+- compatible: "ti,da830-rtc"
-+- reg: Address range of rtc register set
-+- interrupts: rtc timer, alarm interrupts in order
-+- interrupt-parent: phandle for the interrupt controller
-+
-+Alternative for reg and interrupt properties on OMAP:
-+- ti,hwmods: Name of the hwmod associated to the RTC
-+
-+Example:
-+
-+rtc@1c23000 {
-+	compatible = "ti,da830-rtc";
-+	reg = <0x23000 0x1000>;
-+	interrupts = <19
-+		      19>;
-+	interrupt-parent = <&intc>;
-+};
-diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-index 8afbc2e..dc1a4da 100644
---- a/drivers/rtc/rtc-omap.c
-+++ b/drivers/rtc/rtc-omap.c
-@@ -20,6 +20,8 @@
- #include <linux/rtc.h>
- #include <linux/bcd.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 08cbdb9..eada3db 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -729,11 +729,13 @@ config RTC_DRV_IMXDI
  
- #include <asm/io.h>
- 
-@@ -298,6 +300,8 @@ static struct rtc_class_ops omap_rtc_ops = {
- static int omap_rtc_alarm;
- static int omap_rtc_timer;
- 
-+#define	OMAP_RTC_DATA_DA830_IDX	1
+ config RTC_DRV_OMAP
+ 	tristate "TI OMAP1"
+-	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVINCI_DA8XX
++	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVINCI_DA8XX || SOC_AM33XX
+ 	help
+-	  Say "yes" here to support the real time clock on TI OMAP1 and
+-	  DA8xx/OMAP-L13x chips.  This driver can also be built as a
+-	  module called rtc-omap.
++	  Say "yes" here to support the on chip real time clock
++	  present on TI OMAP1, AM33xx and DA8xx/OMAP-L13x.
 +
- static struct platform_device_id omap_rtc_devtype[] = {
- 	{
- 		.name	= DRIVER_NAME,
-@@ -308,12 +312,25 @@ static struct platform_device_id omap_rtc_devtype[] = {
- };
- MODULE_DEVICE_TABLE(platform, omap_rtc_devtype);
++	  This driver can also be built as a module, if so, module
++	  will be called rtc-omap.
  
-+static const struct of_device_id omap_rtc_of_match[] = {
-+	{	.compatible	= "ti,da830-rtc",
-+		.data		= &omap_rtc_devtype[OMAP_RTC_DATA_DA830_IDX],
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
-+
- static int __init omap_rtc_probe(struct platform_device *pdev)
- {
- 	struct resource		*res, *mem;
- 	struct rtc_device	*rtc;
- 	u8			reg, new_ctrl;
- 	const struct platform_device_id *id_entry;
-+	const struct of_device_id *of_id;
-+
-+	of_id = of_match_device(omap_rtc_of_match, &pdev->dev);
-+	if (of_id)
-+		pdev->id_entry = of_id->data;
- 
- 	omap_rtc_timer = platform_get_irq(pdev, 0);
- 	if (omap_rtc_timer <= 0) {
-@@ -509,6 +526,7 @@ static struct platform_driver omap_rtc_driver = {
- 	.driver		= {
- 		.name	= DRIVER_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(omap_rtc_of_match),
- 	},
- 	.id_table	= omap_rtc_devtype,
- };
+ config HAVE_S3C_RTC
+ 	bool
 -- 
 1.7.1
