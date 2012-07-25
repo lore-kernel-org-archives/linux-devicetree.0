@@ -1,26 +1,68 @@
-From: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Subject: Atmel bindings to pinctrl/pinmux/etc
-Date: Tue, 24 Jul 2012 22:37:01 -0600
-Message-ID: <BC9468F7-C80E-4E14-ABDA-D5A93B6305BB@bsdimp.com>
-Mime-Version: 1.0 (Apple Message framework v1084)
+From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/6] omap-am33xx rtc dt support
+Date: Wed, 25 Jul 2012 11:41:01 +0530
+Message-ID: <cover.1343191280.git.afzal@ti.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-l0cyMroinI0@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Greetings,
+Hi,
 
-I'm looking pinctl/pinmux/etc bindings for the Atmel CPUS (at91rm9200, at91sam9*, etc).  I see 3.5 has much of the devices documented.  However, it looks incomplete as there's no pinctrl/pinmux bindings defined yet in the committed code.  Google of the obvious things hasn't turned up anything.  Can someone give me a pointer?
+This series makes rtc-omap driver DT capable, adds AM33xx
+RTC DT support along with a few enchancments to the driver.
 
-Warner
+rtc-omap driver is made intelligent enough to handle kicker
+mechanism. This helps in removing kicker mechanism support
+done for DaVinci at platform level.
+
+This has been tested on Beaglebone (AM33xx platform) and on
+DaVinci DA850 EVM.
+
+This series is based over linux-omap master and can be
+directly applied over linux-next, except for
+[PATCH 6/6] arm/dts: am33xx rtc node.
+
+PATCH 6/6 should go through linux-omap tree and needs
+http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg71644.html
+(arm/dts: am33xx wdt node) to get applied cleanly
+
+Regards
+Afzal
+
+v2:
+ Use device name da830-rtc instead of am1808-rtc, similar change in
+ compatible for DT
+ Newly added register name made similar to that existing in the driver
+ Better commit message description
+ Modify Kconfig help, resolve checkpatch warning
+
+Afzal Mohammed (5):
+  rtc: omap: kicker mechanism support
+  ARM: davinci: remove rtc kicker release
+  rtc: omap: dt support
+  rtc: omap: depend on am33xx
+  arm/dts: am33xx rtc node
+
+Vaibhav Hiremath (1):
+  rtc: omap: Add runtime pm support
+
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |   20 +++++
+ arch/arm/boot/dts/am33xx.dtsi                      |    5 ++
+ arch/arm/mach-davinci/devices-da8xx.c              |   13 +---
+ drivers/rtc/Kconfig                                |   10 ++-
+ drivers/rtc/rtc-omap.c                             |   75 +++++++++++++++++++-
+ 5 files changed, 106 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-omap.txt
