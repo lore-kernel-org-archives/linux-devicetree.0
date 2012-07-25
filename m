@@ -1,138 +1,27 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] SPI: spi-gpio: store chipselect information in private
-	structure
-Date: Wed, 25 Jul 2012 13:44:11 +0200
-Message-ID: <1343216652-1463-1-git-send-email-zonque@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH 0/2] ASOC: SAMSUNG: Add dt support for i2s
+Date: Wed, 25 Jul 2012 17:39:28 +0530
+Message-ID: <1343218170-30483-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Cc: padma.v@samsung.com, rcsekar@samsung.com, sbkim73@samsung.com, sangsu4u.park@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, olofj@google.com, thutt@chromium.org, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-The spi-gpio driver currently assumes the chipselect gpio number is
-stored in ->controller_data of the device's static board information.
+This patch series adds device tree based discovery support for Samsung's
+i2s controller. This is tested on Exynos5250 with 8994 codec for playback
+and capturing modes on 3.5.0-rc7
 
-In devicetree environments, this information is unavailable and has to
-be derived from the DT node.
+Padmavathi Venna (2):
+  ASOC: SAMSUNG: Add DT support for i2s
+  ASOC: SAMSUNG: Add dma_prop variable in s3c_dma_params
 
-This patch moves the gpio storage to the controller's private data so
-the DT bindings can easily build upon the driver.
+ .../devicetree/bindings/sound/samsung-i2s.txt      |   62 ++++++
+ sound/soc/samsung/dma.c                            |    1 +
+ sound/soc/samsung/dma.h                            |    1 +
+ sound/soc/samsung/i2s.c                            |  228 +++++++++++++++-----
+ 4 files changed, 243 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
 
-Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/spi/spi-gpio.c |   34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 0094c64..e79e311 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -46,6 +46,7 @@ struct spi_gpio {
- 	struct spi_bitbang		bitbang;
- 	struct spi_gpio_platform_data	pdata;
- 	struct platform_device		*pdev;
-+	int				cs_gpios[0];
- };
- 
- /*----------------------------------------------------------------------*/
-@@ -89,15 +90,21 @@ struct spi_gpio {
- 
- /*----------------------------------------------------------------------*/
- 
--static inline const struct spi_gpio_platform_data * __pure
--spi_to_pdata(const struct spi_device *spi)
-+static inline struct spi_gpio * __pure
-+spi_to_spi_gpio(const struct spi_device *spi)
- {
- 	const struct spi_bitbang	*bang;
--	const struct spi_gpio		*spi_gpio;
-+	struct spi_gpio			*spi_gpio;
- 
- 	bang = spi_master_get_devdata(spi->master);
- 	spi_gpio = container_of(bang, struct spi_gpio, bitbang);
--	return &spi_gpio->pdata;
-+	return spi_gpio;
-+}
-+
-+static inline struct spi_gpio_platform_data * __pure
-+spi_to_pdata(const struct spi_device *spi)
-+{
-+	return &spi_to_spi_gpio(spi)->pdata;
- }
- 
- /* this is #defined to avoid unused-variable warnings when inlining */
-@@ -210,7 +217,8 @@ static u32 spi_gpio_spec_txrx_word_mode3(struct spi_device *spi,
- 
- static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
- {
--	unsigned long cs = (unsigned long) spi->controller_data;
-+	struct spi_gpio *spi_gpio = spi_to_spi_gpio(spi);
-+	unsigned int cs = spi_gpio->cs_gpios[spi->chip_select];
- 
- 	/* set initial clock polarity */
- 	if (is_active)
-@@ -224,8 +232,9 @@ static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
- 
- static int spi_gpio_setup(struct spi_device *spi)
- {
--	unsigned long	cs = (unsigned long) spi->controller_data;
--	int		status = 0;
-+	unsigned int		cs = (unsigned int) spi->controller_data;
-+	int			status = 0;
-+	struct spi_gpio		*spi_gpio = spi_to_spi_gpio(spi);
- 
- 	if (spi->bits_per_word > 32)
- 		return -EINVAL;
-@@ -238,8 +247,11 @@ static int spi_gpio_setup(struct spi_device *spi)
- 			status = gpio_direction_output(cs, spi->mode & SPI_CS_HIGH);
- 		}
- 	}
--	if (!status)
-+	if (!status) {
- 		status = spi_bitbang_setup(spi);
-+		spi_gpio->cs_gpios[spi->chip_select] = cs;
-+	}
-+
- 	if (status) {
- 		if (!spi->controller_state && cs != SPI_GPIO_NO_CHIPSELECT)
- 			gpio_free(cs);
-@@ -249,7 +261,8 @@ static int spi_gpio_setup(struct spi_device *spi)
- 
- static void spi_gpio_cleanup(struct spi_device *spi)
- {
--	unsigned long	cs = (unsigned long) spi->controller_data;
-+	struct spi_gpio *spi_gpio = spi_to_spi_gpio(spi);
-+	unsigned int cs = spi_gpio->cs_gpios[spi->chip_select];
- 
- 	if (cs != SPI_GPIO_NO_CHIPSELECT)
- 		gpio_free(cs);
-@@ -330,7 +343,8 @@ static int __devinit spi_gpio_probe(struct platform_device *pdev)
- 	if (status < 0)
- 		return status;
- 
--	master = spi_alloc_master(&pdev->dev, sizeof *spi_gpio);
-+	master = spi_alloc_master(&pdev->dev, sizeof(*spi_gpio) +
-+					(sizeof(int) * SPI_N_CHIPSEL));
- 	if (!master) {
- 		status = -ENOMEM;
- 		goto gpio_free;
 -- 
-1.7.10.4
-
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+1.7.4.4
