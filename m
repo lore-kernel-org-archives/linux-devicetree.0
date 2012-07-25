@@ -1,72 +1,263 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] SPI: spi-gpio: store chipselect information in private
-	structure
-Date: Wed, 25 Jul 2012 22:22:20 +0200
-Message-ID: <5010557C.7090203@gmail.com>
-References: <1343216652-1463-1-git-send-email-zonque@gmail.com>
-	<20120725193359.GB9792@sirena.org.uk> <50104B52.7090509@gmail.com>
-	<20120725195203.GC9792@sirena.org.uk> <50105052.4000603@gmail.com>
-	<20120725201227.GE9792@sirena.org.uk>
+From: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
+Subject: Re: [RFC][PATCH 0/14] PM / shmobile: Pass power domain information
+ via DT (was: Re: [RFD] PM: Device tree representation of power domains)
+Date: Thu, 26 Jul 2012 00:32:39 +0200
+Message-ID: <201207260032.40159.rjw@sisk.pl>
+References: <201207032302.17805.rjw@sisk.pl> <201207242237.28051.rjw@sisk.pl>
+ <201207251300.34892.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20120725201227.GE9792-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201207251300.34892.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25.07.2012 22:12, Mark Brown wrote:
-> On Wed, Jul 25, 2012 at 10:00:18PM +0200, Daniel Mack wrote:
+On Wednesday, July 25, 2012, Arnd Bergmann wrote:
+> On Tuesday 24 July 2012, Rafael J. Wysocki wrote:
+> > On Tuesday, July 24, 2012, Arnd Bergmann wrote:
+> > > On Tuesday 24 July 2012, Rafael J. Wysocki wrote:
+> > > > On Tuesday, July 24, 2012, Arnd Bergmann wrote:
+> > > > > On Saturday 21 July 2012, Rafael J. Wysocki wrote:
+> > > 
+> > > > > 
+> > > > > Sorry for taking so long to reply. I am really not that familiar with the
+> > > > > power domain requirements, but I do have two comments on your approach:
+> > > > > 
+> > > > > * I think when we want to add a generic concept to the device tree such
+> > > > >   as power domains, we should always make it specified in a generic way.
+> > > > 
+> > > > Do we really want that?  I'm a bit skeptical, because apparently nobody
+> > > > cares, as the (zero) response to this patchset evidently indicates and
+> > > > since nobody cares, it's probably better not to add such "generic" things
+> > > > just yet.
+> > > 
+> > > Well, the trouble with bindings is that they are much harder to change
+> > > later, at least in incompatible ways. 
+> > 
+> > Hmm, so I think you wanted to say that it might be burdensome to retain the
+> > code handling the old binding once we had started to use a new generic one.
+> > 
+> > I can agree with that, but that's quite similar to user space interfaces.
+> > Once we've exposed a user space interface of some kind and someone starts
+> > to use it, we'll have to maintain it going forward for the user in question.
+> > However, there is a way to deprecate old user space interfaces and it has
+> > happened.
+> > 
+> > In this particular case the burden would be on Renesas, but I don't think it
+> > would affect anybody else.
 > 
->> I don't know what's wrong here, but clearly, the message in my inbox has
+> [adding devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org]
 > 
->> To: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
->> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org,
->> 	rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org,
->> 	devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org,
->> 	Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> In case of user space interfaces, we also try very hard to avoid cases
+> where we know that we will have to change things later.
+
+[Cough, cough]  Yeah, sure.  Except that that's rather difficult to anticipate
+usually.
+
+> I don't think it's that hard to define a generic binding here, we just
+> need to make sure it's extensible.
 > 
->> And I sent them off with git "send-email --to
->> spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org --cc grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org ..."
+> One thing I would like to avoid is having to add to every single
+> device binding two separate optional properties defined like
 > 
->> Sorry if that's my mistake, I just don't see it.
+> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+> index 2b584ca..353152e 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+> @@ -13,3 +13,9 @@ Required properties:
+>  Optional properties:
+>  - mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable
+>  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable
+> +- pm-domain		 : a phandle pointing to the power domain
+> +			   controlling this device
+> +			   See ../pm-domain/generic.txt
+> +- renesas,pm-domain	 : a string with the name of the power domain
+> +			   controlling this device.
+> +			   See ../pm-domain/renesas.txt
 > 
-> I forwarded <1343216652-1463-1-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> to you
-> under separate cover.
+> Even if you say that the burden is only on Renesas to maintain all those
+> changes to every binding they use, there is also a burden on people trying
+> to understand the binding and deciding which one to use.
+
+What about (tongue in cheek) "renesas,hwmod", then?  That won't be confused
+with the generic "pm-domain" in any way, will it?  And since TI did that, we
+surely should be allowed to do it as well, no?
+
+Seriously, I'm not fundamentally opposed to using phandles for that in analogy
+with regulators, but I'm afraid we won't get it right from the start and it
+will turn out that we need to change the definition of the binding somehow
+and _that_ is going to be painful.  Pretty much like changing generic user
+space interfaces is (as opposed to changing interfaces of limited scope).
+
+However, if that route is taken, I'll expect you to require TI to change their
+hwmod binding in the analogous way.
+
+> > > > >   You have used the "renesas,pmdomain" attribute, which is specific to
+> > > > >   one vendor and requires platform specific code to read it.
+> > > > >   Is there any reason not to put the code into the generic
+> > > > >   drivers/base/power/domain.c file (or near it) and make a binding that
+> > > > >   works for everyone?
+> > > > 
+> > > > Yes, there is.  A couple of them in fact.
+> > > > 
+> > > > First off, power domains will always need platform-specific code to support
+> > > > them, no matter what.  The problem is that they tend to require special
+> > > > handling, even within the same SoC, let alone different SoCs, and that handling
+> > > > has to be implemented in an SoC-specific way, because it has to know various
+> > > > things about the platform (like what to write to what register(s) at what time
+> > > > and so on).  Of course, that platform-specific code needs to know which
+> > > > domain the given description corresponds to and there doesn't seem to be any
+> > > > useful way to specify that through DTs.
+> > > 
+> > > We have the same problem for a lot of other subsystems: clock, regulator,
+> > > irq, gpio, pinctrl, dma, ...
+> > > 
+> > > In each of these cases, we want a driver to be able to associate some
+> > > property with a driver (or platform code) from another subsystem.
+> > > We try to handle those using generic subsystem code that interprets
+> > > regular property names.
+> > 
+> > For power domains those properties would be SoC-specific.  That is, there may
+> > be a different set of properties for each SoC in principle and it's going to
+> > get quite messy relatively quickly.
 > 
+> I don't see how power domains are any different from the other cases
+> I listed. The differences should be contained in whatever provides
+> the domains. For a device that is part of a power domain, you only need
+> to know how to find that domain, not what that information means.
 
-Yes, you're right - I also saw that on the devicetree-discuss archives.
-Still, I can't see the reason. My MTA's log states:
+For a device that belongs to a power domain all is trivial pretty much in any
+case.  For platform code supposed to operate the domains the situation is
+quite different, though.
 
-Jul 25 13:44:18 rambrand postfix/smtp[17884]: 84613C0081:
-to=<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, relay=127.0.0.1[127.0.0.1]:10024,
-delay=0.7, delays=0.35/0/0.01/0.34, dsn=2.0.0, status=sent (250 2.0.0
-from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as ED410C029D)
-Jul 25 13:44:19 rambrand postfix/smtp[17898]: ED410C029D:
-to=<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>,
-relay=aspmx.l.google.com[173.194.78.26]:25, delay=1.3,
-delays=0.06/0.19/0.5/0.57, dsn=2.0.0, status=sent (250 2.0.0 OK
-1343216659 e19si24125620wec.111)
+Suppose that there is a power domain that needs some special handling and
+we have a definition in a DT like:
 
-(Each queue ID matches one of the two original patches' Message-ID)
+xyz: pm-domain@0 {
+                pm-domain-name = "XYZ";
+                ...
+        };
 
-As you appearantly received the mail via spi-devel-general, is it
-possible that that list dropped it? Must be.
+Now, obviously, the platform code has to figure out that this definition
+corresponds to the "special" domain.  What is your suggestion in that respect?
+Should we introduce a "pm-this-domain-requires-this-and-that" attribute (that's
+not going to be portable between SoCs most likely) or should the platform code
+use the domain name or something different?
 
+> > > > Second, the generic code needed to support such a binding would have to be
+> > > > quite complex and I don't see any advantage from adding it.
+> > > 
+> > > The generic binding would only need to specify what the property
+> > > looks like and how the possible values can be determined. We don't
+> > > need to make that code generic right away but could wait until we
+> > > have a couple of implementations before we pull out the common bits.
+> > > 
+> > > The important part to me is writing the binding in a way that allows
+> > > us to do this.
+> > 
+> > Admittedly, I have a little experience with writing DT bindings.
+> > 
+> > The regulator bindings look like we could do something similar for power
+> > domains, but for one I don't want platform device objects to be created
+> > for them in any case (that would make as much sense as creating a platform
+> > device for a bus type).
+> 
+> We have lots of device nodes in the device tree that do not get
+> added as platform devices in Linux, and they are used for all sorts
+> of purposes. For instance most buses (amba, pci, usb, i2c, spi, ...)
+> can have their devices represented in the device tree but register
+> their own devices rather than platform devices.
+> 
+> Other nodes are used internally in some code and have no "device"
+> associated at all. Examples for these are parts of the system that
+> we don't treat as devices in Linux (cpu, memory, command line)
+> and things that are subsystem specific but structured (regulators,
+> pincontrol, clock).
 
+As I said, regulators seem to be something we can follow.
 
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+> > > > > * Mark suggested two options (string and phandle), and (you guessed it),
+> > > > 
+> > > > To me, the Mark's suggestion was to follow the example of TI hwmods, which
+> > > > I did.  In fact, the power domains on Renesas platforms are an analogous
+> > > > concept, so in my opinion handling them in analogy with hwmods makes a lot of
+> > > > sense.
+> > > 
+> > > I had never seen the hwmod binding before and if I had I would have
+> > > given them the same comments. I definitely don't think we should be
+> > > using it as a good example for common code.
+> > 
+> > Well, good to know. :-)
+> > 
+> > > > >   IMHO using phandle makes it much easier to do this in a generic way,
+> > > > >   without having to document every possible string that this can be
+> > > > >   set to in the binding document. Obviously the phandle requires having
+> > > > >   a node in the device tree for each domain, but I think having that
+> > > > >   node is actually an advantage because it lets you describe the
+> > > > >   hierarchy of the domains there.
+> > > > 
+> > > > I don't quite see how it is better.  I could (and should in fact) represent
+> > > > that hierarchy as an array of pairs of strings without adding any special
+> > > > parsing code to the kernel (except for a simple routine walking that table
+> > > > and calling pm_genpd_add_subdomain_names() for every pair).
+> > > > 
+> > > > The only disadvantage of the current approach I can see is that whoever
+> > > > creates a dts for a board based on the given SoC has to know the names of the
+> > > > power domains to use in there.  I don't think this is an overly burdensome
+> > > > requirement.
+> > > 
+> > > Well, it does mean that we need to maintain a separate binding document
+> > > for each soc that has its own set of possible values.
+> > 
+> > I'm not sure we'll be able to avoid that anyway.
+> 
+> True, but a different kind of document.
+> 
+> The difference is that when using a string, each binding for a device that
+> can be part of a domain should have a way to document which strings are
+> possible for the property.
+> If you use a phandle, the binding for that device just needs to document
+> that it's a phandle that points to another device for which a binding
+> exists.
+> The binding for the SoC can then describe the power domains in a way
+> that is detached from the devices.
+
+Well, this is much too vague to be useful for me, sorry.
+
+> > > > The other way around, the platform code supposed to handle the power domains
+> > > > would need a way to match DT nodes against the domains, which also would
+> > > > require some string-based identification and that would have to be documented
+> > > > as well.
+> > > 
+> > > The part that matches the pm-domain device nodes can and should be
+> > > specific to the platform implementing the pm-domain. We can easily
+> > > do the same thing we did for regulators, where each regulator can
+> > > be either identified through its "reg" property in cases where that
+> > > makes sense or through a "regulator-compatible" property in cases
+> > > where we need a string representation.
+> > 
+> > Where can I find the code that parses the regulator bindings?
+> 
+> The binding is in Documentation/devicetree/bindings/regulator/regulator.txt
+> and the code is in drivers/regulator/of_regulator.c. Note that this
+> has recently been extended, so be sure to look at the latest snapshot in
+> git, not the v3.5 version.
+
+I'm rather interested in the code that processes those bindings, but I guess
+I'll need to find it myself.  I'm not sure if my determination is sufficient
+to deal with all that at the moment, though, but that's a different matter.
+
+Thanks,
+Rafael
