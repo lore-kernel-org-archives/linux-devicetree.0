@@ -1,7 +1,7 @@
 From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 2/6] ARM: davinci: remove rtc kicker release
-Date: Wed, 25 Jul 2012 11:42:13 +0530
-Message-ID: <2b8ac8b7d69c1629b5e4ed1e892d358add82fe1d.1343191280.git.afzal@ti.com>
+Subject: [PATCH v2 6/6] arm/dts: am33xx rtc node
+Date: Wed, 25 Jul 2012 11:42:42 +0530
+Message-ID: <d16976055462214af276d7242faa2bc6e621fd44.1343191280.git.afzal@ti.com>
 References: <cover.1343191280.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,50 +21,31 @@ To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/D
 Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-rtc-omap driver is now capable of handling kicker mechanism,
-hence remove kicker handling at platform level, instead
-provide proper device name so that driver can handle kicker
-mechanism by itself
+Add AM33xx rtc node.
 
 Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 ---
 
 v2:
- Use device name da830-rtc instead of am1808-rtc
+ Use compatible as ti,da830-rtc instead of ti,am1808-rtc
 
- arch/arm/mach-davinci/devices-da8xx.c |   13 +------------
- 1 files changed, 1 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/am33xx.dtsi |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index d1624a3..da5e4c7 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -679,7 +679,7 @@ static struct resource da8xx_rtc_resources[] = {
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index bd0cff3..e1ed72d 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -159,5 +159,10 @@
+ 			compatible = "ti,omap3-wdt";
+ 			ti,hwmods = "wd_timer2";
+ 		};
++
++		rtc@44e3e000 {
++			compatible = "ti,da830-rtc";
++			ti,hwmods = "rtc";
++		};
+ 	};
  };
- 
- static struct platform_device da8xx_rtc_device = {
--	.name           = "omap_rtc",
-+	.name           = "da830-rtc",
- 	.id             = -1,
- 	.num_resources	= ARRAY_SIZE(da8xx_rtc_resources),
- 	.resource	= da8xx_rtc_resources,
-@@ -688,17 +688,6 @@ static struct platform_device da8xx_rtc_device = {
- int da8xx_register_rtc(void)
- {
- 	int ret;
--	void __iomem *base;
--
--	base = ioremap(DA8XX_RTC_BASE, SZ_4K);
--	if (WARN_ON(!base))
--		return -ENOMEM;
--
--	/* Unlock the rtc's registers */
--	__raw_writel(0x83e70b13, base + 0x6c);
--	__raw_writel(0x95a4f1e0, base + 0x70);
--
--	iounmap(base);
- 
- 	ret = platform_device_register(&da8xx_rtc_device);
- 	if (!ret)
 -- 
 1.7.1
