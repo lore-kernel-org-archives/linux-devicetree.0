@@ -1,96 +1,75 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v5 01/11] usb: musb: add musb->id to identify core
- instance
-Date: Wed, 25 Jul 2012 15:32:21 +0300
-Message-ID: <20120725123221.GY16794@arwen.pp.htv.fi>
-References: <1343218049-29917-1-git-send-email-ajay.gupta@ti.com>
- <1343218049-29917-2-git-send-email-ajay.gupta@ti.com>
- <20120725121128.GO16794@arwen.pp.htv.fi>
- <47CEF8C4B26E8C44B22B028A650E0EA93EAE5B87@DBDE01.ent.ti.com>
- <20120725122028.GV16794@arwen.pp.htv.fi>
- <47CEF8C4B26E8C44B22B028A650E0EA93EAE5BEC@DBDE01.ent.ti.com>
-Reply-To: balbi@ti.com
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] SPI: spi-gpio: Add DT bindings
+Date: Wed, 25 Jul 2012 14:35:46 +0200
+Message-ID: <500FE822.5050309@gmail.com>
+References: <1343216652-1463-1-git-send-email-zonque@gmail.com>
+	<1343216652-1463-2-git-send-email-zonque@gmail.com>
+	<20120725121131.GA2628@pengutronix.de> <500FE3CB.9020902@gmail.com>
+	<20120725123244.GB2628@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wHYmV+hLPeNaasdK"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <47CEF8C4B26E8C44B22B028A650E0EA93EAE5BEC@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Ajay Kumar" <ajay.gupta@ti.com>
-Cc: "Balbi, Felipe" <balbi@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20120725123244.GB2628-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 25.07.2012 14:32, Wolfram Sang wrote:
+> 
+>>>> +Example:
+>>>> +
+>>>> +	spi {
+>>>> +		compatible = "spi-gpio";
+>>>> +		#address-cells = <0x1>;
+>>>> +		ranges;
+>>>> +
+>>>> +		gpio-sck = <&gpio 95 0>;
+>>>> +		gpio-miso = <&gpio 98 0>;
+>>>> +		gpio-mosi = <&gpio 97 0>;
+>>>> +		cs-gpios = <&gpio 125 0>;
+>>>> +		num-chipselects = <1>;
+>>>
+>>> Can't we use of_gpio_named_count() instead of this property?
+>>
+>> I thought so too, but it's probably also a good idea to keep this driver
+>> in line to what other drivers do, no?
+> 
+> I'd prefer to drop it unless there is a real need for it. CCing Shawn to
+> ask why "fsl,spi-num-chipselects" was added to the spi-imx driver
+> instead of using of_gpio_{named_}count(). Was there a reason?
+> 
+>>>> +
+>>>> +		/* clients */
+>>>
+>>> Minor: A simple example is helpful for people new to devicetree as I
+>>> experienced in the last days.
+>>
+>> Hmm, aren't there enough examples in a) the full dts files in the kernel
+>> and b) in the documenation of spi clients?
+> 
+> Many, yes; enough, don't know :) I just experienced that people
+> missed this information in some of the i2c host controller binding
+> descriptions, despite it was available elsewhere.
 
---wHYmV+hLPeNaasdK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I would rather say specific examples in the documenation for generic bus
+drivers cause more confusion than they clear :)
 
-On Wed, Jul 25, 2012 at 12:30:12PM +0000, Gupta, Ajay Kumar wrote:
-> Hi,
-> > On Wed, Jul 25, 2012 at 12:19:32PM +0000, Gupta, Ajay Kumar wrote:
-> > > Hi,
-> > > >
-> > > > On Wed, Jul 25, 2012 at 05:37:19PM +0530, Ajay Kumar Gupta wrote:
-> > > > > diff --git a/drivers/usb/musb/musb_core.c
-> > > > > b/drivers/usb/musb/musb_core.c index 89d1871..f5eb8a7 100644
-> > > > > --- a/drivers/usb/musb/musb_core.c
-> > > > > +++ b/drivers/usb/musb/musb_core.c
-> > > >
-> > > > <snip>
-> > > >
-> > > > > @@ -1889,6 +1921,7 @@ musb_init_controller(struct device *dev, int
-> > > > > nIrq,
-> > > > void __iomem *ctrl)
-> > > > >  	pm_runtime_enable(musb->controller);
-> > > > >
-> > > > >  	spin_lock_init(&musb->lock);
-> > > > > +	musb->id =3D pdev->id;
-> > > >
-> > > > I fail to see where this musb->id would be used. Care to clarify ?
-> > >
-> > > Sure, It is used in musb_init_debugfs(). Please refer 02/11.
-> >=20
-> > Then it's a bit unnecessary right ?
-> >=20
-> > You can change the directory name to dev_name(musb->controller) as that=
- will
-> > already have the id appended to it.
->=20
-> Well, musb->id is used at many more places and it has to be there. Please=
- refer
->=20
-> 01/11 where all glue layers using it for:
-> +       musb_put_id(&pdev->dev, glue->musb->id);
 
-your struct *_glue{}; should be the one holding the ID as it's the one
-who requested it. If you request multiple IDs, you hold multiple IDs
-(glue->id0, glue->id1, glue->idN) and so on.
+Daniel
 
---=20
-balbi
 
---wHYmV+hLPeNaasdK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQD+dVAAoJEIaOsuA1yqRE/+IP/iukZ7X7dqGUWrTJnfPaY29/
-1lqN8AI6t06E4ZRQ/FsCz3eUJ4gUfwkbFL4Ek4B6yPz1jkksFX9EMDBbnfLBRO4M
-idRQcIRs+ULgWXYZgsCoYK9HB7Rbg565aQjiAwz7GjalrY2UmtPmzKPW8eNd314P
-O4w/HVTaewmk9ii2NvxaMKaXlunFOTCTqXd3ZTv/MCoJde509YH2GzdrXeHlfG9D
-AdN4igUIe1uskILapctK7ryyDMcNdEk37IFAPo2wuUorjoMH8DETvUUJg2lLNJtL
-bSbrSg6x5xyGqfmwNznCRuoAV3b7QJgxeOQ3shhgwU5XmJpP6exj9Lq0ZHr0Y7be
-XRXaChPA2e3xQHihaoetOETUK+tk7T7Ij8i81tIrcEUwjSgCzc5UORS70NrGx0CP
-VmRFxXjqG8iuZCU5m7DXDF2XerNXYiGH3q4bqnOx/4VIUaPy2JwXLr9XeSHaoF4c
-YcI7o13lFg8FyJuxCYqaeCLQIf442zCQl99eOXHSqUrIJdIzILLwMX341X+3C78x
-fKlmye8bccKBc2qEFQL3P/G0IpW5HIlnS0KkgHFx19KqugcGnGeWwKFMykMKkICQ
-hMSuLmsRKLrYUJv4dA+f6pqL/wWLK3Doe8tSv7uArZyCxG+LVK5VrfA/e6JW48Kq
-mEVQogVR+2MMFgQiR8Rh
-=hV9e
------END PGP SIGNATURE-----
-
---wHYmV+hLPeNaasdK--
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
