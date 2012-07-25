@@ -1,74 +1,94 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 01/11] usb: musb: add musb->id to identify core
- instance
-Date: Wed, 25 Jul 2012 15:11:29 +0300
-Message-ID: <20120725121128.GO16794@arwen.pp.htv.fi>
-References: <1343218049-29917-1-git-send-email-ajay.gupta@ti.com>
- <1343218049-29917-2-git-send-email-ajay.gupta@ti.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] SPI: spi-gpio: Add DT bindings
+Date: Wed, 25 Jul 2012 14:17:15 +0200
+Message-ID: <500FE3CB.9020902@gmail.com>
+References: <1343216652-1463-1-git-send-email-zonque@gmail.com>
+	<1343216652-1463-2-git-send-email-zonque@gmail.com>
+	<20120725121131.GA2628@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lLR1BQqf7txDtYcF"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1343218049-29917-2-git-send-email-ajay.gupta-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20120725121131.GA2628-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 25.07.2012 14:11, Wolfram Sang wrote:
+> On Wed, Jul 25, 2012 at 01:44:12PM +0200, Daniel Mack wrote:
+>> This patch adds DT bindings to the spi-gpio driver and some
+>> documentation about how to use it.
+>>
+>> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/spi/spi-gpio.txt |   29 ++++++
+>>  drivers/spi/spi-gpio.c                             |   99 +++++++++++++++++++-
+>>  2 files changed, 125 insertions(+), 3 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/spi-gpio.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+>> new file mode 100644
+>> index 0000000..8a824be
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+>> @@ -0,0 +1,29 @@
+>> +SPI-GPIO devicetree bindings
+>> +
+>> +Required properties:
+>> +
+>> + - compatible: should be set to "spi-gpio"
+>> + - #address-cells: should be set to <0x1>
+>> + - ranges
+>> + - gpio-sck: GPIO spec for the SCK line to use
+>> + - gpio-miso: GPIO spec for the MISO line to use
+>> + - gpio-mosi: GPIO spec for the MOSI line to use
+>> + - cs-gpios: GPIOs to use for chipselect lines
+>> + - num-chipselects: number of chipselect lines
+>> +
+>> +Example:
+>> +
+>> +	spi {
+>> +		compatible = "spi-gpio";
+>> +		#address-cells = <0x1>;
+>> +		ranges;
+>> +
+>> +		gpio-sck = <&gpio 95 0>;
+>> +		gpio-miso = <&gpio 98 0>;
+>> +		gpio-mosi = <&gpio 97 0>;
+>> +		cs-gpios = <&gpio 125 0>;
+>> +		num-chipselects = <1>;
+> 
+> Can't we use of_gpio_named_count() instead of this property?
 
---lLR1BQqf7txDtYcF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I thought so too, but it's probably also a good idea to keep this driver
+in line to what other drivers do, no? Anyway, I can of course change it
+if desired.
 
-hi,
+>> +
+>> +		/* clients */
+> 
+> Minor: A simple example is helpful for people new to devicetree as I
+> experienced in the last days.
 
-On Wed, Jul 25, 2012 at 05:37:19PM +0530, Ajay Kumar Gupta wrote:
-> diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-> index 89d1871..f5eb8a7 100644
-> --- a/drivers/usb/musb/musb_core.c
-> +++ b/drivers/usb/musb/musb_core.c
+Hmm, aren't there enough examples in a) the full dts files in the kernel
+and b) in the documenation of spi clients?
 
-<snip>
 
-> @@ -1889,6 +1921,7 @@ musb_init_controller(struct device *dev, int nIrq, =
-void __iomem *ctrl)
->  	pm_runtime_enable(musb->controller);
-> =20
->  	spin_lock_init(&musb->lock);
-> +	musb->id =3D pdev->id;
+Thanks,
+Daniel
 
-I fail to see where this musb->id would be used. Care to clarify ?
 
---=20
-balbi
-
---lLR1BQqf7txDtYcF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQD+JwAAoJEIaOsuA1yqREvusP/A4McnAxdTMPHHe9NKSsm9BJ
-EI4o2TTQ62iEJ4WRTnuVQvuXz6YmCWly6n04+Q+yizh6ohW0BnJkYUM4KoDTD0gJ
-LUw1iODyi2kTfNvha8ktvUeJvskPzvrW4PNyVQiI02v8HVLthuNpDejYCsji4KUd
-DKfgT+7eIVtOfZjKzEiGcAO/nGr57A1DtVrZRWHhUyqtwjLx2585drr9irmEvlk3
-tBCRJa8xcCOSlfHjg+WJg7vfb31g2HthS9fvny6yOom2Fg75MedTKALknAFe+qVW
-66knu1ChZan7Q3XgCgca30a73jlbKed7GkQQCgGgqGcv4Jg+qt7gsi/hK5Swi5xi
-IR4sxPKFk6nbJ6osdFCZ/00oab4e4uw82Lj7g9WbJbhk0MNnGVd7jpTOWdQCSge2
-MAS30UsJ/F7NzPHPM3DqHD+MsiPVSlfgO+/tKBqTOzGQRlttA8wyzMfQqXnDxaC3
-JpeW2Kpb5rexsjV5tkHixqLj8qqICyTWsT8j63Gk1GLqwtPFel4YPq7E1kjrBZxn
-wK0B7GVihTS8F0eSMadNzJodgMC+kg3c8hiBiFfu3Xo770yM+1XJ20mw1AZATRv7
-lu2i4pCL6gshbJpDwdblOa2Uqqh3UpwtN0z9CVqaftXYFj3iAgK3vU0ZDypSsjR/
-RuM/tg1SMHjsAd4kUeTL
-=Hnv6
------END PGP SIGNATURE-----
-
---lLR1BQqf7txDtYcF--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
