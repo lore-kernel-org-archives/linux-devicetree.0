@@ -1,115 +1,235 @@
-From: "Gupta, Ajay Kumar" <ajay.gupta@ti.com>
-Subject: RE: [PATCH v4 02/11] usb: musb: kill global and static for multi
- instance
-Date: Wed, 25 Jul 2012 11:24:58 +0000
-Message-ID: <47CEF8C4B26E8C44B22B028A650E0EA93EAE58FA@DBDE01.ent.ti.com>
-References: <1342698367-12978-1-git-send-email-ajay.gupta@ti.com>
- <1342698367-12978-3-git-send-email-ajay.gupta@ti.com>
- <20120725075014.GR3630@arwen.pp.htv.fi>
- <47CEF8C4B26E8C44B22B028A650E0EA93EAE56BD@DBDE01.ent.ti.com>
- <20120725111023.GG16794@arwen.pp.htv.fi>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/2] SPI: spi-gpio: Add DT bindings
+Date: Wed, 25 Jul 2012 13:44:12 +0200
+Message-ID: <1343216652-1463-2-git-send-email-zonque@gmail.com>
+References: <1343216652-1463-1-git-send-email-zonque@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120725111023.GG16794@arwen.pp.htv.fi>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Balbi, Felipe" <balbi@ti.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1343216652-1463-1-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-> On Wed, Jul 25, 2012 at 10:34:49AM +0000, Gupta, Ajay Kumar wrote:
-> > Hi,
-> > >
-> > > On Thu, Jul 19, 2012 at 05:15:58PM +0530, Ajay Kumar Gupta wrote:
-> > > > Moved global variable "musb_debugfs_root" and static variable
-> > > > "old_state" to 'struct musb' to help support multi instance of
-> > > > musb controller as present on AM335x platform.
-> > > >
-> > > > Also removed the global variable "orig_dma_mask" and filled the
-> > > > dev->dma_mask with parent device's dma_mask.
-> > > >
-> > > > Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
-> > > > ---
-> > > >  drivers/usb/musb/musb_core.c    |   16 +++-------------
-> > > >  drivers/usb/musb/musb_core.h    |    4 ++++
-> > > >  drivers/usb/musb/musb_debugfs.c |   14 ++++++++------
-> > > >  3 files changed, 15 insertions(+), 19 deletions(-)
-> > > >
-> > > > diff --git a/drivers/usb/musb/musb_core.c
-> > > > b/drivers/usb/musb/musb_core.c index 3e09984..a5db4dd 100644
-> > > > --- a/drivers/usb/musb/musb_core.c
-> > > > +++ b/drivers/usb/musb/musb_core.c
-> > > > @@ -1802,10 +1802,9 @@ static const struct attribute_group
-> > > > musb_attr_group = {  static void musb_irq_work(struct work_struct
-> > > > *data)  {
-> > > >  	struct musb *musb = container_of(data, struct musb, irq_work);
-> > > > -	static int old_state;
-> > > >
-> > > > -	if (musb->xceiv->state != old_state) {
-> > > > -		old_state = musb->xceiv->state;
-> > > > +	if (musb->xceiv->state != musb->xceiv_old_state) {
-> > > > +		musb->xceiv_old_state = musb->xceiv->state;
-> > > >  		sysfs_notify(&musb->controller->kobj, NULL, "mode");
-> > > >  	}
-> > > >  }
-> > > > @@ -2115,11 +2114,6 @@ fail0:
-> > > >  /* all implementations (PCI bridge to FPGA, VLYNQ, etc) should just
-> > > >   * bridge to a platform device; this driver then suffices.
-> > > >   */
-> > > > -
-> > > > -#ifndef CONFIG_MUSB_PIO_ONLY
-> > > > -static u64	*orig_dma_mask;
-> > > > -#endif
-> > > > -
-> > > >  static int __devinit musb_probe(struct platform_device *pdev)  {
-> > > >  	struct device	*dev = &pdev->dev;
-> > > > @@ -2138,10 +2132,6 @@ static int __devinit musb_probe(struct
-> > > platform_device *pdev)
-> > > >  		return -ENOMEM;
-> > > >  	}
-> > > >
-> > > > -#ifndef CONFIG_MUSB_PIO_ONLY
-> > > > -	/* clobbered by use_dma=n */
-> > > > -	orig_dma_mask = dev->dma_mask;
-> > > > -#endif
-> > > >  	status = musb_init_controller(dev, irq, base);
-> > > >  	if (status < 0)
-> > > >  		iounmap(base);
-> > > > @@ -2166,7 +2156,7 @@ static int __devexit musb_remove(struct
-> > > platform_device *pdev)
-> > > >  	iounmap(ctrl_base);
-> > > >  	device_init_wakeup(&pdev->dev, 0);  #ifndef
-> CONFIG_MUSB_PIO_ONLY
-> > > > -	pdev->dev.dma_mask = orig_dma_mask;
-> > > > +	pdev->dev.dma_mask = (&dev->dev.parent)->dma_mask;
-> > >
-> > > are you sure ?? This should be:
-> > >
-> > > dev->parent.dma_mask;
-> >
-> > Actually both are fine and I used parent based on your recommendation
-> > in my earlier version of patch at
-> > http://marc.info/?l=linux-usb&m=134121391908734&w=2
-> >
-> > anyways I will change to :
-> > pdev->dev.dma_mask = dma_set_mask((&pdev->dev, DMA_BIT_MASK(64));
-> 
-> no Ajay, you misunderstood... I don't see how this patch would compile.
-It was my bad. I am testing it with PIO mode only and so code was not compiled.
-"dev" was actually a "pdev".
+This patch adds DT bindings to the spi-gpio driver and some
+documentation about how to use it.
 
-> the variable named "dev" is already a pointer to a struct device, and struct
-> device doesn't have a "dev" field.
-> 
-> what I asked to do while doing that is:
-> 
-> dev_set_mask(dev, *dev->parent->dma_mask);
-Sure.
+Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/spi-gpio.txt |   29 ++++++
+ drivers/spi/spi-gpio.c                             |   99 +++++++++++++++++++-
+ 2 files changed, 125 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-gpio.txt
 
-Thanks.
-> 
-> --
-> balbi
+diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+new file mode 100644
+index 0000000..8a824be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+@@ -0,0 +1,29 @@
++SPI-GPIO devicetree bindings
++
++Required properties:
++
++ - compatible: should be set to "spi-gpio"
++ - #address-cells: should be set to <0x1>
++ - ranges
++ - gpio-sck: GPIO spec for the SCK line to use
++ - gpio-miso: GPIO spec for the MISO line to use
++ - gpio-mosi: GPIO spec for the MOSI line to use
++ - cs-gpios: GPIOs to use for chipselect lines
++ - num-chipselects: number of chipselect lines
++
++Example:
++
++	spi {
++		compatible = "spi-gpio";
++		#address-cells = <0x1>;
++		ranges;
++
++		gpio-sck = <&gpio 95 0>;
++		gpio-miso = <&gpio 98 0>;
++		gpio-mosi = <&gpio 97 0>;
++		cs-gpios = <&gpio 125 0>;
++		num-chipselects = <1>;
++
++		/* clients */
++	};
++
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index e79e311..c57a267 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -22,6 +22,8 @@
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ 
+ #include <linux/spi/spi.h>
+ #include <linux/spi/spi_bitbang.h>
+@@ -232,13 +234,27 @@ static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
+ 
+ static int spi_gpio_setup(struct spi_device *spi)
+ {
+-	unsigned int		cs = (unsigned int) spi->controller_data;
++	unsigned int		cs;
+ 	int			status = 0;
+ 	struct spi_gpio		*spi_gpio = spi_to_spi_gpio(spi);
++	struct device_node	*np = spi->master->dev.of_node;
+ 
+ 	if (spi->bits_per_word > 32)
+ 		return -EINVAL;
+ 
++	if (np) {
++		/*
++		 * In DT environments, the CS GPIOs have already been
++		 * initialized from the "cs-gpios" property of the node.
++		 */
++		cs = spi_gpio->cs_gpios[spi->chip_select];
++	} else {
++		/*
++		 * ... otherwise, take it from spi->controller_data
++		 */
++		cs = (unsigned int) spi->controller_data;
++	}
++
+ 	if (!spi->controller_state) {
+ 		if (cs != SPI_GPIO_NO_CHIPSELECT) {
+ 			status = gpio_request(cs, dev_name(&spi->dev));
+@@ -249,6 +265,7 @@ static int spi_gpio_setup(struct spi_device *spi)
+ 	}
+ 	if (!status) {
+ 		status = spi_bitbang_setup(spi);
++		/* in case it was initialized from static board data */
+ 		spi_gpio->cs_gpios[spi->chip_select] = cs;
+ 	}
+ 
+@@ -325,6 +342,55 @@ done:
+ 	return value;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id spi_gpio_dt_ids[] = {
++	{ .compatible = "spi-gpio" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, spi_gpio_dt_ids);
++
++static int spi_gpio_probe_dt(struct platform_device *pdev)
++{
++	int ret;
++	u32 tmp;
++	struct spi_gpio_platform_data	*pdata;
++	struct device_node *np = pdev->dev.of_node;
++	const struct of_device_id *of_id =
++			of_match_device(spi_gpio_dt_ids, &pdev->dev);
++
++	if (!of_id)
++		return 0;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
++
++	pdata->sck = of_get_named_gpio(np, "gpio-sck", 0);
++	pdata->miso = of_get_named_gpio(np, "gpio-miso", 0);
++	pdata->mosi = of_get_named_gpio(np, "gpio-mosi", 0);
++
++	ret = of_property_read_u32(np, "num-chipselects", &tmp);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "num-chipselects property not found\n");
++		goto error_free;
++	}
++
++	pdata->num_chipselect = tmp;
++	pdev->dev.platform_data = pdata;
++
++	return 1;
++
++error_free:
++	devm_kfree(&pdev->dev, pdata);
++	return ret;
++}
++#else
++static inline int spi_probe_dt(struct platform_device *)
++{
++	return 0;
++}
++#endif
++
+ static int __devinit spi_gpio_probe(struct platform_device *pdev)
+ {
+ 	int				status;
+@@ -332,6 +398,13 @@ static int __devinit spi_gpio_probe(struct platform_device *pdev)
+ 	struct spi_gpio			*spi_gpio;
+ 	struct spi_gpio_platform_data	*pdata;
+ 	u16 master_flags = 0;
++	bool use_of = 0;
++
++	status = spi_gpio_probe_dt(pdev);
++	if (status < 0)
++		return status;
++	if (status > 0)
++		use_of = 1;
+ 
+ 	pdata = pdev->dev.platform_data;
+ #ifdef GENERIC_BITBANG
+@@ -361,6 +434,23 @@ static int __devinit spi_gpio_probe(struct platform_device *pdev)
+ 	master->num_chipselect = SPI_N_CHIPSEL;
+ 	master->setup = spi_gpio_setup;
+ 	master->cleanup = spi_gpio_cleanup;
++#ifdef CONFIG_OF
++	master->dev.of_node = pdev->dev.of_node;
++
++	if (use_of) {
++		int i;
++		struct device_node *np = pdev->dev.of_node;
++
++		/*
++		 * In DT environments, take the CS GPIO from the "cs-gpios"
++		 * property of the node.
++		 */
++
++		for (i = 0; i < SPI_N_CHIPSEL; i++)
++			spi_gpio->cs_gpios[i] =
++				of_get_named_gpio(np, "cs-gpios", i);
++	}
++#endif
+ 
+ 	spi_gpio->bitbang.master = spi_master_get(master);
+ 	spi_gpio->bitbang.chipselect = spi_gpio_chipselect;
+@@ -421,8 +511,11 @@ static int __devexit spi_gpio_remove(struct platform_device *pdev)
+ MODULE_ALIAS("platform:" DRIVER_NAME);
+ 
+ static struct platform_driver spi_gpio_driver = {
+-	.driver.name	= DRIVER_NAME,
+-	.driver.owner	= THIS_MODULE,
++	.driver = {
++		.name	= DRIVER_NAME,
++		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(spi_gpio_dt_ids),
++	},
+ 	.probe		= spi_gpio_probe,
+ 	.remove		= __devexit_p(spi_gpio_remove),
+ };
+-- 
+1.7.10.4
+
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
