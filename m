@@ -1,106 +1,50 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] rtc: omap: kicker mechanism support
-Date: Wed, 25 Jul 2012 15:15:29 +0400
-Message-ID: <500FD551.9070002@mvista.com>
-References: <cover.1343191280.git.afzal@ti.com>
- <ecf6520fc9d5da53b670675a71ebece3d006cbb8.1343191280.git.afzal@ti.com>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [PATCH v2 6/6] arm/dts: am33xx rtc node
+Date: Wed, 25 Jul 2012 15:20:56 +0400
+Message-ID: <500FD698.30906@mvista.com>
+References: <cover.1343191280.git.afzal@ti.com> <d16976055462214af276d7242faa2bc6e621fd44.1343191280.git.afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <ecf6520fc9d5da53b670675a71ebece3d006cbb8.1343191280.git.afzal-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Cc: khilman-l0cyMroinI0@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <d16976055462214af276d7242faa2bc6e621fd44.1343191280.git.afzal@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Afzal Mohammed <afzal@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, nsekhar@ti.com, khilman@ti.com, a.zummo@towertech.it, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, rtc-linux@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 Hello.
 
 On 25-07-2012 10:12, Afzal Mohammed wrote:
 
-> OMAP RTC IP can have kicker feature. This prevents spurious
-> writes to register. To write to registers kicker lock has to
-> be released. Procedure to do it as follows,
+> Add AM33xx rtc node.
 
-> 1. write to kick0 register, 0x83e70b13
-> 2. write to kick1 register, 0x95a4f1e0
-
-> Writing value other than 0x83e70b13 to kick0 enables write
-> locking, more details about kicker mechanism can be found in
-> section 20.3.3.5.3 of AM335X TRM @www.ti.com/am335x
-
-> Here id table information is added and is used to distinguish
-> those that require kicker handling and the ones that doesn't
-> need it. There are more features in the newer IP's compared
-> to legacy ones other than kicker, which driver currently
-> doesn't handle, supporting additional features would be
-> easier with the addition of id table.
-
-> Older IP (of OMAP1) doesn't have revision register as per
-> TRM, so revision register can't be relied always to find
-> features, hence id table is being used.
-
-> Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Afzal Mohammed <afzal@ti.com>
 > ---
 
 > v2:
->   Use device name da830-rtc instead of am1808-rtc
->   Newly added register name made similar to that existing in the driver
->   Better commit message description
+>   Use compatible as ti,da830-rtc instead of ti,am1808-rtc
 
->   drivers/rtc/rtc-omap.c |   39 ++++++++++++++++++++++++++++++++++++++-
->   1 files changed, 38 insertions(+), 1 deletions(-)
+>   arch/arm/boot/dts/am33xx.dtsi |    5 +++++
+>   1 files changed, 5 insertions(+), 0 deletions(-)
 
-> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-> index 0b614e3..8afbc2e 100644
-> --- a/drivers/rtc/rtc-omap.c
-> +++ b/drivers/rtc/rtc-omap.c
-> @@ -38,6 +38,8 @@
->    * the SoC). See the BOARD-SPECIFIC CUSTOMIZATION comment.
->    */
->
-> +#define	DRIVER_NAME			"omap_rtc"
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index bd0cff3..e1ed72d 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -159,5 +159,10 @@
+>   			compatible = "ti,omap3-wdt";
+>   			ti,hwmods = "wd_timer2";
+>   		};
 > +
->   #define OMAP_RTC_BASE			0xfffb4800
->
->   /* RTC registers */
-> @@ -64,6 +66,9 @@
->   #define OMAP_RTC_COMP_MSB_REG		0x50
->   #define OMAP_RTC_OSC_REG		0x54
->
-> +#define OMAP_RTC_KICK0_REG		0x6c
-> +#define OMAP_RTC_KICK1_REG		0x70
-> +
->   /* OMAP_RTC_CTRL_REG bit fields: */
->   #define OMAP_RTC_CTRL_SPLIT		(1<<7)
->   #define OMAP_RTC_CTRL_DISABLE		(1<<6)
-> @@ -88,11 +93,19 @@
->   #define OMAP_RTC_INTERRUPTS_IT_ALARM    (1<<3)
->   #define OMAP_RTC_INTERRUPTS_IT_TIMER    (1<<2)
->
-> +/* OMAP_RTC_KICKER values */
-> +#define	KICK0_VALUE			(0x83e70b13)
-> +#define	KICK1_VALUE			(0x95a4f1e0)
+> +		rtc@44e3e000 {
 
-    Parens not needed around simple literals.
+    Address postfix in the node name without "reg" property?
 
->   static void __iomem	*rtc_base;
->
->   #define rtc_read(addr)		__raw_readb(rtc_base + (addr))
->   #define rtc_write(val, addr)	__raw_writeb(val, rtc_base + (addr))
->
-> +#define rtc_writel(val, addr)	writel(val, rtc_base + (addr))
-> +
-
-    Why not __raw_writel() like the above functions?
+> +			compatible = "ti,da830-rtc";
+> +			ti,hwmods = "rtc";
+> +		};
 
 WBR, Sergei
+
+
