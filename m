@@ -1,71 +1,39 @@
-From: Tony Prisk <sentientnz@yahoo.co.nz>
-Subject: DT problem - interrupts?
-Date: Wed, 25 Jul 2012 08:19:29 -0700 (PDT)
-Message-ID: <1343229569.81486.YahooMailNeo@web140804.mail.bf1.yahoo.com>
-Reply-To: Tony Prisk <sentientnz@yahoo.co.nz>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [PATCH v2 6/6] arm/dts: am33xx rtc node
+Date: Wed, 25 Jul 2012 20:59:24 +0400
+Message-ID: <501025EC.6010600@mvista.com>
+References: <cover.1343191280.git.afzal@ti.com> <d16976055462214af276d7242faa2bc6e621fd44.1343191280.git.afzal@ti.com> <500FD698.30906@mvista.com> <C8443D0743D26F4388EA172BF4E2A7A93E9AD8B1@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
-Cc: Linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93E9AD8B1@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Mohammed, Afzal" <afzal@ti.com>
+Cc: "Hilman, Kevin" <khilman@ti.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hopefully someone can think of something simple that I'm missing here because 
+Hello.
 
-it's got me a little baffled.
+On 07/25/2012 06:09 PM, Mohammed, Afzal wrote:
 
-Trying to port the arch-vt8500 over to device tree, but I've run into a hiccup with the
-first device that requires interrupts (EHCI + UHCI drivers).
+>>> +		rtc@44e3e000 {
 
-Both these drivers work perfectly when passed as old-style platform_devices that are
-setup in the board init. When they are initialised from a devicetree file, they both
-initialize fine, but fail with error -32 trying to detect devices.
+>>     Address postfix in the node name without "reg" property?
 
-I'm sure the problem is with the irq initialization code, and to keep it simple i used
+> As per [1], "The unit-address is included if the node describes
+> a device with an address".
 
-the old working irq code, and simply added an irqdomain with irq_domain_add_legacy.
+   Which in this case it doesn't.
 
-Any ideas?
+> Here even though reg property is not present, as via hwmod
+> (see below) it is getting address, isn't it better to have it
 
-(Let me know if there is any more info that might clarify things).
+   I think not.
 
+>>> +			compatible = "ti,da830-rtc";
+>>> +			ti,hwmods = "rtc";
 
-Regards
-
-Tony Prisk
-
-----------
-wm8650.dts <relevant parts>
-
-intc0: interrupt-controller@d8140000 {
-compatible="wm,intc";
-interrupt-controller;
-reg = <0xd8140000 0x10000>;
-#interrupt-cells = <1>;
-}
-
-ehci@d8007900 {
-compatible="wm,prizm-ehci";
-reg = <0xd8007900 0x200>;
-interrupt-parent = <&intc0>;
-interrupts = <43>;
-}
+WBR, Sergei
 
 
-irq.c
-
-/* interrupt controller has 64 irqs starting at 0 */
-
-irq_domain_add_legacy(node, 64, 0, 0, &irq_simple_domain_ops, priv);
-
-----------
