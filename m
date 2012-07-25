@@ -1,139 +1,106 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 02/11] usb: musb: kill global and static for multi
- instance
-Date: Wed, 25 Jul 2012 14:10:23 +0300
-Message-ID: <20120725111023.GG16794@arwen.pp.htv.fi>
-References: <1342698367-12978-1-git-send-email-ajay.gupta@ti.com>
- <1342698367-12978-3-git-send-email-ajay.gupta@ti.com>
- <20120725075014.GR3630@arwen.pp.htv.fi>
- <47CEF8C4B26E8C44B22B028A650E0EA93EAE56BD@DBDE01.ent.ti.com>
-Reply-To: balbi@ti.com
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] rtc: omap: kicker mechanism support
+Date: Wed, 25 Jul 2012 15:15:29 +0400
+Message-ID: <500FD551.9070002@mvista.com>
+References: <cover.1343191280.git.afzal@ti.com>
+ <ecf6520fc9d5da53b670675a71ebece3d006cbb8.1343191280.git.afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zGQnqpIoxlsbsOfg"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <47CEF8C4B26E8C44B22B028A650E0EA93EAE56BD@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Ajay Kumar" <ajay.gupta@ti.com>
-Cc: "Balbi, Felipe" <balbi@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <ecf6520fc9d5da53b670675a71ebece3d006cbb8.1343191280.git.afzal-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+Cc: khilman-l0cyMroinI0@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---zGQnqpIoxlsbsOfg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 25-07-2012 10:12, Afzal Mohammed wrote:
 
-On Wed, Jul 25, 2012 at 10:34:49AM +0000, Gupta, Ajay Kumar wrote:
-> Hi,
-> >=20
-> > On Thu, Jul 19, 2012 at 05:15:58PM +0530, Ajay Kumar Gupta wrote:
-> > > Moved global variable "musb_debugfs_root" and static variable
-> > > "old_state" to 'struct musb' to help support multi instance of musb
-> > > controller as present on AM335x platform.
-> > >
-> > > Also removed the global variable "orig_dma_mask" and filled the
-> > > dev->dma_mask with parent device's dma_mask.
-> > >
-> > > Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
-> > > ---
-> > >  drivers/usb/musb/musb_core.c    |   16 +++-------------
-> > >  drivers/usb/musb/musb_core.h    |    4 ++++
-> > >  drivers/usb/musb/musb_debugfs.c |   14 ++++++++------
-> > >  3 files changed, 15 insertions(+), 19 deletions(-)
-> > >
-> > > diff --git a/drivers/usb/musb/musb_core.c
-> > > b/drivers/usb/musb/musb_core.c index 3e09984..a5db4dd 100644
-> > > --- a/drivers/usb/musb/musb_core.c
-> > > +++ b/drivers/usb/musb/musb_core.c
-> > > @@ -1802,10 +1802,9 @@ static const struct attribute_group
-> > > musb_attr_group =3D {  static void musb_irq_work(struct work_struct
-> > > *data)  {
-> > >  	struct musb *musb =3D container_of(data, struct musb, irq_work);
-> > > -	static int old_state;
-> > >
-> > > -	if (musb->xceiv->state !=3D old_state) {
-> > > -		old_state =3D musb->xceiv->state;
-> > > +	if (musb->xceiv->state !=3D musb->xceiv_old_state) {
-> > > +		musb->xceiv_old_state =3D musb->xceiv->state;
-> > >  		sysfs_notify(&musb->controller->kobj, NULL, "mode");
-> > >  	}
-> > >  }
-> > > @@ -2115,11 +2114,6 @@ fail0:
-> > >  /* all implementations (PCI bridge to FPGA, VLYNQ, etc) should just
-> > >   * bridge to a platform device; this driver then suffices.
-> > >   */
-> > > -
-> > > -#ifndef CONFIG_MUSB_PIO_ONLY
-> > > -static u64	*orig_dma_mask;
-> > > -#endif
-> > > -
-> > >  static int __devinit musb_probe(struct platform_device *pdev)  {
-> > >  	struct device	*dev =3D &pdev->dev;
-> > > @@ -2138,10 +2132,6 @@ static int __devinit musb_probe(struct
-> > platform_device *pdev)
-> > >  		return -ENOMEM;
-> > >  	}
-> > >
-> > > -#ifndef CONFIG_MUSB_PIO_ONLY
-> > > -	/* clobbered by use_dma=3Dn */
-> > > -	orig_dma_mask =3D dev->dma_mask;
-> > > -#endif
-> > >  	status =3D musb_init_controller(dev, irq, base);
-> > >  	if (status < 0)
-> > >  		iounmap(base);
-> > > @@ -2166,7 +2156,7 @@ static int __devexit musb_remove(struct
-> > platform_device *pdev)
-> > >  	iounmap(ctrl_base);
-> > >  	device_init_wakeup(&pdev->dev, 0);
-> > >  #ifndef CONFIG_MUSB_PIO_ONLY
-> > > -	pdev->dev.dma_mask =3D orig_dma_mask;
-> > > +	pdev->dev.dma_mask =3D (&dev->dev.parent)->dma_mask;
-> >=20
-> > are you sure ?? This should be:
-> >=20
-> > dev->parent.dma_mask;
->=20
-> Actually both are fine and I used parent based on your recommendation
-> in my earlier version of patch at
-> http://marc.info/?l=3Dlinux-usb&m=3D134121391908734&w=3D2
->=20
-> anyways I will change to :
-> pdev->dev.dma_mask =3D dma_set_mask((&pdev->dev, DMA_BIT_MASK(64));
+> OMAP RTC IP can have kicker feature. This prevents spurious
+> writes to register. To write to registers kicker lock has to
+> be released. Procedure to do it as follows,
 
-no Ajay, you misunderstood... I don't see how this patch would compile.
+> 1. write to kick0 register, 0x83e70b13
+> 2. write to kick1 register, 0x95a4f1e0
 
-the variable named "dev" is already a pointer to a struct device, and
-struct device doesn't have a "dev" field.
+> Writing value other than 0x83e70b13 to kick0 enables write
+> locking, more details about kicker mechanism can be found in
+> section 20.3.3.5.3 of AM335X TRM @www.ti.com/am335x
 
-what I asked to do while doing that is:
+> Here id table information is added and is used to distinguish
+> those that require kicker handling and the ones that doesn't
+> need it. There are more features in the newer IP's compared
+> to legacy ones other than kicker, which driver currently
+> doesn't handle, supporting additional features would be
+> easier with the addition of id table.
 
-dev_set_mask(dev, *dev->parent->dma_mask);
+> Older IP (of OMAP1) doesn't have revision register as per
+> TRM, so revision register can't be relied always to find
+> features, hence id table is being used.
 
---=20
-balbi
+> Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+> ---
 
---zGQnqpIoxlsbsOfg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> v2:
+>   Use device name da830-rtc instead of am1808-rtc
+>   Newly added register name made similar to that existing in the driver
+>   Better commit message description
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+>   drivers/rtc/rtc-omap.c |   39 ++++++++++++++++++++++++++++++++++++++-
+>   1 files changed, 38 insertions(+), 1 deletions(-)
 
-iQIcBAEBAgAGBQJQD9QfAAoJEIaOsuA1yqRE3UUP/3c4HHItoiz5doVgnWytCdCz
-M00iXKQk/M2BAvr2qKIZEkGnhWjKsy/UG91qZTS+ReJQrfvqNXIWCdrxrwkCGGSB
-4w9RnwaugUJWzmzETEqRXV6nE19rFNF7VxDwK8Vgw1ph9G5pVgmS+jzT/LkNDavl
-wcg5zcol5IWAT4rchtpnR8yN4U0kTloCaH/+FK7HwiZr8Mt+bDoBxmnfSsMmJ89v
-ewz4GoMo65/PR9JjencqcjabVHWZnAmqht2jnMtSLEWeFbMSrpIwV0orpLmNxUnY
-GjAwFnPjAPH1c36xtnWpiuRiZiT8MGXH5vrIK2nanXxUkLFfE+3mfw2nOSY6KNeU
-G+Rsecl+0eHuvHeDpH27b21jtgHaLmGT9l2eHmYST9i3kd/uQqKtpr3swSv/kCHr
-+BWLcuYZnnj468+GbjNAkj0YawWLI5y4BT/VM+biHSCn9XN4riQCSZXTB3IjAK5V
-iIj0ZktS1GmBHGbnTK5oSoLuKUrWFia5nRyNRWChsbsYUVOaSyV9msVoq3UifoOR
-uRL5MlGxMdQ4cpIuQ02zHtpFQIhk0B7EjlLnPGIA+VHlwsH6AsPX9O022tYF4/BD
-MDwp/W2W5vPTUpGUjrYL5aFSiUhwO0LCY7JsxMuO+tvwRPSFQEHF9v+giYV7Gk5i
-LOATssn4yo2Qs0KB3M5S
-=10iL
------END PGP SIGNATURE-----
+> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+> index 0b614e3..8afbc2e 100644
+> --- a/drivers/rtc/rtc-omap.c
+> +++ b/drivers/rtc/rtc-omap.c
+> @@ -38,6 +38,8 @@
+>    * the SoC). See the BOARD-SPECIFIC CUSTOMIZATION comment.
+>    */
+>
+> +#define	DRIVER_NAME			"omap_rtc"
+> +
+>   #define OMAP_RTC_BASE			0xfffb4800
+>
+>   /* RTC registers */
+> @@ -64,6 +66,9 @@
+>   #define OMAP_RTC_COMP_MSB_REG		0x50
+>   #define OMAP_RTC_OSC_REG		0x54
+>
+> +#define OMAP_RTC_KICK0_REG		0x6c
+> +#define OMAP_RTC_KICK1_REG		0x70
+> +
+>   /* OMAP_RTC_CTRL_REG bit fields: */
+>   #define OMAP_RTC_CTRL_SPLIT		(1<<7)
+>   #define OMAP_RTC_CTRL_DISABLE		(1<<6)
+> @@ -88,11 +93,19 @@
+>   #define OMAP_RTC_INTERRUPTS_IT_ALARM    (1<<3)
+>   #define OMAP_RTC_INTERRUPTS_IT_TIMER    (1<<2)
+>
+> +/* OMAP_RTC_KICKER values */
+> +#define	KICK0_VALUE			(0x83e70b13)
+> +#define	KICK1_VALUE			(0x95a4f1e0)
 
---zGQnqpIoxlsbsOfg--
+    Parens not needed around simple literals.
+
+>   static void __iomem	*rtc_base;
+>
+>   #define rtc_read(addr)		__raw_readb(rtc_base + (addr))
+>   #define rtc_write(val, addr)	__raw_writeb(val, rtc_base + (addr))
+>
+> +#define rtc_writel(val, addr)	writel(val, rtc_base + (addr))
+> +
+
+    Why not __raw_writel() like the above functions?
+
+WBR, Sergei
