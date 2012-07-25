@@ -1,94 +1,210 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] SPI: spi-gpio: Add DT bindings
-Date: Wed, 25 Jul 2012 14:17:15 +0200
-Message-ID: <500FE3CB.9020902@gmail.com>
-References: <1343216652-1463-1-git-send-email-zonque@gmail.com>
-	<1343216652-1463-2-git-send-email-zonque@gmail.com>
-	<20120725121131.GA2628@pengutronix.de>
+From: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 1/2] can: c_can: Add device tree support to Bosch
+ C_CAN/D_CAN controller
+Date: Wed, 25 Jul 2012 17:48:48 +0530
+Message-ID: <1343218729-16954-2-git-send-email-anilkumar@ti.com>
+References: <1343218729-16954-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20120725121131.GA2628-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1343218729-16954-1-git-send-email-anilkumar-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, anantgole-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25.07.2012 14:11, Wolfram Sang wrote:
-> On Wed, Jul 25, 2012 at 01:44:12PM +0200, Daniel Mack wrote:
->> This patch adds DT bindings to the spi-gpio driver and some
->> documentation about how to use it.
->>
->> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/spi/spi-gpio.txt |   29 ++++++
->>  drivers/spi/spi-gpio.c                             |   99 +++++++++++++++++++-
->>  2 files changed, 125 insertions(+), 3 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/spi/spi-gpio.txt
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
->> new file mode 100644
->> index 0000000..8a824be
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
->> @@ -0,0 +1,29 @@
->> +SPI-GPIO devicetree bindings
->> +
->> +Required properties:
->> +
->> + - compatible: should be set to "spi-gpio"
->> + - #address-cells: should be set to <0x1>
->> + - ranges
->> + - gpio-sck: GPIO spec for the SCK line to use
->> + - gpio-miso: GPIO spec for the MISO line to use
->> + - gpio-mosi: GPIO spec for the MOSI line to use
->> + - cs-gpios: GPIOs to use for chipselect lines
->> + - num-chipselects: number of chipselect lines
->> +
->> +Example:
->> +
->> +	spi {
->> +		compatible = "spi-gpio";
->> +		#address-cells = <0x1>;
->> +		ranges;
->> +
->> +		gpio-sck = <&gpio 95 0>;
->> +		gpio-miso = <&gpio 98 0>;
->> +		gpio-mosi = <&gpio 97 0>;
->> +		cs-gpios = <&gpio 125 0>;
->> +		num-chipselects = <1>;
-> 
-> Can't we use of_gpio_named_count() instead of this property?
+Add device tree support to C_CAN/D_CAN controller and usage details
+are added to device tree documentation. Driver was tested on AM335x
+EVM.
 
-I thought so too, but it's probably also a good idea to keep this driver
-in line to what other drivers do, no? Anyway, I can of course change it
-if desired.
+Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/net/can/c_can.txt          |   37 +++++++++++++
+ drivers/net/can/c_can/c_can.h                      |    5 +-
+ drivers/net/can/c_can/c_can_platform.c             |   57 ++++++++++++++------
+ 3 files changed, 80 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/can/c_can.txt
 
->> +
->> +		/* clients */
-> 
-> Minor: A simple example is helpful for people new to devicetree as I
-> experienced in the last days.
-
-Hmm, aren't there enough examples in a) the full dts files in the kernel
-and b) in the documenation of spi clients?
-
-
-Thanks,
-Daniel
-
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+diff --git a/Documentation/devicetree/bindings/net/can/c_can.txt b/Documentation/devicetree/bindings/net/can/c_can.txt
+new file mode 100644
+index 0000000..dc4aec5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/c_can.txt
+@@ -0,0 +1,37 @@
++Bosch C_CAN/D_CAN controller Device Tree Bindings
++-------------------------------------------------
++
++Required properties:
++- compatible		: Should be "bosch,c_can" for C_CAN controllers and
++			  "bosch,d_can" for D_CAN controllers.
++- reg			: physical base address and size of the C_CAN/D_CAN
++			  registers map
++- interrupts		: property with a value describing the interrupt
++			  number
++- interrupt-parent	: The parent interrupt controller
++
++Optional properties:
++- ti,hwmods		: Must be "d_can<n>" or "c_can<n>", n being the
++			  instance number
++
++Note: "ti,hwmods" field is used to fetch the base address and irq
++resources from TI, omap hwmod data base during device registration.
++Future plan is to migrate hwmod data base contents into device tree
++blob so that, all the required data will be used from device tree dts
++file.
++
++Examples:
++
++	d_can@481D0000 {
++		compatible = "bosch,d_can";
++		reg = <0x481D0000 0x1000>;
++		interrupts = <55 0x4>;
++		interrupt-parent = <&intc>;
++	};
++
++(or)
++
++	d_can@481D0000 {
++		compatible = "bosch,d_can";
++		ti,hwmods = "d_can1";
++	};
+diff --git a/drivers/net/can/c_can/c_can.h b/drivers/net/can/c_can/c_can.h
+index 01a7049..4e56baa 100644
+--- a/drivers/net/can/c_can/c_can.h
++++ b/drivers/net/can/c_can/c_can.h
+@@ -143,8 +143,9 @@ static const u16 reg_map_d_can[] = {
+ };
+ 
+ enum c_can_dev_id {
+-	C_CAN_DEVTYPE,
+-	D_CAN_DEVTYPE,
++	BOSCH_C_CAN_PLATFORM,
++	BOSCH_C_CAN,
++	BOSCH_D_CAN,
+ };
+ 
+ /* c_can private data structure */
+diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
+index 6ff7ad0..d0a66cf 100644
+--- a/drivers/net/can/c_can/c_can_platform.c
++++ b/drivers/net/can/c_can/c_can_platform.c
+@@ -30,6 +30,8 @@
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #include <linux/can/dev.h>
+ 
+@@ -65,17 +67,52 @@ static void c_can_plat_write_reg_aligned_to_32bit(struct c_can_priv *priv,
+ 	writew(val, priv->base + 2 * priv->regs[index]);
+ }
+ 
++static struct platform_device_id c_can_id_table[] = {
++	[BOSCH_C_CAN_PLATFORM] = {
++		.name = KBUILD_MODNAME,
++		.driver_data = BOSCH_C_CAN,
++	},
++	[BOSCH_C_CAN] = {
++		.name = "c_can",
++		.driver_data = BOSCH_C_CAN,
++	},
++	[BOSCH_D_CAN] = {
++		.name = "d_can",
++		.driver_data = BOSCH_D_CAN,
++	}, {
++	}
++};
++
++static const struct of_device_id c_can_of_table[] = {
++	{ .compatible = "bosch,c_can", .data = &c_can_id_table[BOSCH_C_CAN] },
++	{ .compatible = "bosch,d_can", .data = &c_can_id_table[BOSCH_D_CAN] },
++	{ /* sentinel */ },
++};
++
+ static int __devinit c_can_plat_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+ 	void __iomem *addr;
+ 	struct net_device *dev;
+ 	struct c_can_priv *priv;
++	const struct of_device_id *match;
+ 	const struct platform_device_id *id;
+ 	struct resource *mem;
+ 	int irq;
+ 	struct clk *clk;
+ 
++	if (pdev->dev.of_node) {
++		match = of_match_device(c_can_of_table, &pdev->dev);
++		if (!match) {
++			dev_err(&pdev->dev, "Failed to find matching dt id\n");
++			ret = -EINVAL;
++			goto exit;
++		}
++		id = match->data;
++	} else {
++		id = platform_get_device_id(pdev);
++	}
++
+ 	/* get the appropriate clk */
+ 	clk = clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
+@@ -114,9 +151,8 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	priv = netdev_priv(dev);
+-	id = platform_get_device_id(pdev);
+ 	switch (id->driver_data) {
+-	case C_CAN_DEVTYPE:
++	case BOSCH_C_CAN:
+ 		priv->regs = reg_map_c_can;
+ 		switch (mem->flags & IORESOURCE_MEM_TYPE_MASK) {
+ 		case IORESOURCE_MEM_32BIT:
+@@ -130,7 +166,7 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
+ 			break;
+ 		}
+ 		break;
+-	case D_CAN_DEVTYPE:
++	case BOSCH_D_CAN:
+ 		priv->regs = reg_map_d_can;
+ 		priv->can.ctrlmode_supported |= CAN_CTRLMODE_3_SAMPLES;
+ 		priv->read_reg = c_can_plat_read_reg_aligned_to_16bit;
+@@ -195,24 +231,11 @@ static int __devexit c_can_plat_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct platform_device_id c_can_id_table[] = {
+-	{
+-		.name = KBUILD_MODNAME,
+-		.driver_data = C_CAN_DEVTYPE,
+-	}, {
+-		.name = "c_can",
+-		.driver_data = C_CAN_DEVTYPE,
+-	}, {
+-		.name = "d_can",
+-		.driver_data = D_CAN_DEVTYPE,
+-	}, {
+-	}
+-};
+-
+ static struct platform_driver c_can_plat_driver = {
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(c_can_of_table),
+ 	},
+ 	.probe = c_can_plat_probe,
+ 	.remove = __devexit_p(c_can_plat_remove),
+-- 
+1.7.9.5
