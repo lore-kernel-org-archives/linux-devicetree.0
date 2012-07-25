@@ -1,15 +1,11 @@
-From: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
-Subject: Re: [RFC][PATCH 0/14] PM / shmobile: Pass power domain information
- via DT (was: Re: [RFD] PM: Device tree representation of power domains)
-Date: Thu, 26 Jul 2012 00:32:39 +0200
-Message-ID: <201207260032.40159.rjw@sisk.pl>
-References: <201207032302.17805.rjw@sisk.pl> <201207242237.28051.rjw@sisk.pl>
- <201207251300.34892.arnd@arndb.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] of: Allow busses with #size-cells=0
+Date: Wed, 25 Jul 2012 17:34:37 -0600
+Message-ID: <1343259277-19037-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201207251300.34892.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,244 +16,180 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 25, 2012, Arnd Bergmann wrote:
-> On Tuesday 24 July 2012, Rafael J. Wysocki wrote:
-> > On Tuesday, July 24, 2012, Arnd Bergmann wrote:
-> > > On Tuesday 24 July 2012, Rafael J. Wysocki wrote:
-> > > > On Tuesday, July 24, 2012, Arnd Bergmann wrote:
-> > > > > On Saturday 21 July 2012, Rafael J. Wysocki wrote:
-> > > 
-> > > > > 
-> > > > > Sorry for taking so long to reply. I am really not that familiar with the
-> > > > > power domain requirements, but I do have two comments on your approach:
-> > > > > 
-> > > > > * I think when we want to add a generic concept to the device tree such
-> > > > >   as power domains, we should always make it specified in a generic way.
-> > > > 
-> > > > Do we really want that?  I'm a bit skeptical, because apparently nobody
-> > > > cares, as the (zero) response to this patchset evidently indicates and
-> > > > since nobody cares, it's probably better not to add such "generic" things
-> > > > just yet.
-> > > 
-> > > Well, the trouble with bindings is that they are much harder to change
-> > > later, at least in incompatible ways. 
-> > 
-> > Hmm, so I think you wanted to say that it might be burdensome to retain the
-> > code handling the old binding once we had started to use a new generic one.
-> > 
-> > I can agree with that, but that's quite similar to user space interfaces.
-> > Once we've exposed a user space interface of some kind and someone starts
-> > to use it, we'll have to maintain it going forward for the user in question.
-> > However, there is a way to deprecate old user space interfaces and it has
-> > happened.
-> > 
-> > In this particular case the burden would be on Renesas, but I don't think it
-> > would affect anybody else.
-> 
-> [adding devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org]
-> 
-> In case of user space interfaces, we also try very hard to avoid cases
-> where we know that we will have to change things later.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-[Cough, cough]  Yeah, sure.  Except that that's rather difficult to anticipate
-usually.
+It's quite legitimate for a DT node to specify #size-cells=0. One example
+is a node that's used to collect a number of non-memory-mapped devices.
+In that scenario, there may be multiple child nodes with the same name
+(type) thus necessitating the use of unit addresses in node names, and
+reg properties:
 
-> I don't think it's that hard to define a generic binding here, we just
-> need to make sure it's extensible.
-> 
-> One thing I would like to avoid is having to add to every single
-> device binding two separate optional properties defined like
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
-> index 2b584ca..353152e 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
-> @@ -13,3 +13,9 @@ Required properties:
->  Optional properties:
->  - mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable
->  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable
-> +- pm-domain		 : a phandle pointing to the power domain
-> +			   controlling this device
-> +			   See ../pm-domain/generic.txt
-> +- renesas,pm-domain	 : a string with the name of the power domain
-> +			   controlling this device.
-> +			   See ../pm-domain/renesas.txt
-> 
-> Even if you say that the burden is only on Renesas to maintain all those
-> changes to every binding they use, there is also a burden on people trying
-> to understand the binding and deciding which one to use.
+/ {
+	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
 
-What about (tongue in cheek) "renesas,hwmod", then?  That won't be confused
-with the generic "pm-domain" in any way, will it?  And since TI did that, we
-surely should be allowed to do it as well, no?
+		regulator@0 {
+			compatible = "regulator-fixed";
+			reg = <0>;
+			...
+		};
 
-Seriously, I'm not fundamentally opposed to using phandles for that in analogy
-with regulators, but I'm afraid we won't get it right from the start and it
-will turn out that we need to change the definition of the binding somehow
-and _that_ is going to be painful.  Pretty much like changing generic user
-space interfaces is (as opposed to changing interfaces of limited scope).
+		regulator@1 {
+			compatible = "regulator-fixed";
+			reg = <1>;
+			...
+		};
 
-However, if that route is taken, I'll expect you to require TI to change their
-hwmod binding in the analogous way.
+		...
+	};
+};
 
-> > > > >   You have used the "renesas,pmdomain" attribute, which is specific to
-> > > > >   one vendor and requires platform specific code to read it.
-> > > > >   Is there any reason not to put the code into the generic
-> > > > >   drivers/base/power/domain.c file (or near it) and make a binding that
-> > > > >   works for everyone?
-> > > > 
-> > > > Yes, there is.  A couple of them in fact.
-> > > > 
-> > > > First off, power domains will always need platform-specific code to support
-> > > > them, no matter what.  The problem is that they tend to require special
-> > > > handling, even within the same SoC, let alone different SoCs, and that handling
-> > > > has to be implemented in an SoC-specific way, because it has to know various
-> > > > things about the platform (like what to write to what register(s) at what time
-> > > > and so on).  Of course, that platform-specific code needs to know which
-> > > > domain the given description corresponds to and there doesn't seem to be any
-> > > > useful way to specify that through DTs.
-> > > 
-> > > We have the same problem for a lot of other subsystems: clock, regulator,
-> > > irq, gpio, pinctrl, dma, ...
-> > > 
-> > > In each of these cases, we want a driver to be able to associate some
-> > > property with a driver (or platform code) from another subsystem.
-> > > We try to handle those using generic subsystem code that interprets
-> > > regular property names.
-> > 
-> > For power domains those properties would be SoC-specific.  That is, there may
-> > be a different set of properties for each SoC in principle and it's going to
-> > get quite messy relatively quickly.
-> 
-> I don't see how power domains are any different from the other cases
-> I listed. The differences should be contained in whatever provides
-> the domains. For a device that is part of a power domain, you only need
-> to know how to find that domain, not what that information means.
+However, #size-cells=0 prevents translation of reg property values into
+the parent node's address space. In turn, this triggers the kernel to
+emit error messages during boot, such as:
 
-For a device that belongs to a power domain all is trivial pretty much in any
-case.  For platform code supposed to operate the domains the situation is
-quite different, though.
+    prom_parse: Bad cell count for /regulators/regulator@0
 
-Suppose that there is a power domain that needs some special handling and
-we have a definition in a DT like:
+To prevent printing these error messages for legitimate DT content, a
+number of changes are made:
 
-xyz: pm-domain@0 {
-                pm-domain-name = "XYZ";
-                ...
-        };
+1) of_get_address()/of_get_pci_address() are modified only to validate
+   the value of #address-cells, and not #size-cells.
 
-Now, obviously, the platform code has to figure out that this definition
-corresponds to the "special" domain.  What is your suggestion in that respect?
-Should we introduce a "pm-this-domain-requires-this-and-that" attribute (that's
-not going to be portable between SoCs most likely) or should the platform code
-use the domain name or something different?
+2) of_can_translate_address() is added to indicate whether address
+   translation is possible.
 
-> > > > Second, the generic code needed to support such a binding would have to be
-> > > > quite complex and I don't see any advantage from adding it.
-> > > 
-> > > The generic binding would only need to specify what the property
-> > > looks like and how the possible values can be determined. We don't
-> > > need to make that code generic right away but could wait until we
-> > > have a couple of implementations before we pull out the common bits.
-> > > 
-> > > The important part to me is writing the binding in a way that allows
-> > > us to do this.
-> > 
-> > Admittedly, I have a little experience with writing DT bindings.
-> > 
-> > The regulator bindings look like we could do something similar for power
-> > domains, but for one I don't want platform device objects to be created
-> > for them in any case (that would make as much sense as creating a platform
-> > device for a bus type).
-> 
-> We have lots of device nodes in the device tree that do not get
-> added as platform devices in Linux, and they are used for all sorts
-> of purposes. For instance most buses (amba, pci, usb, i2c, spi, ...)
-> can have their devices represented in the device tree but register
-> their own devices rather than platform devices.
-> 
-> Other nodes are used internally in some code and have no "device"
-> associated at all. Examples for these are parts of the system that
-> we don't treat as devices in Linux (cpu, memory, command line)
-> and things that are subsystem specific but structured (regulators,
-> pincontrol, clock).
+3) of_device_make_bus_id() is modified to name devices based on the
+   translated address only where possible, and otherwise fall back to
+   using the (first cell of the) raw untranslated address.
 
-As I said, regulators seem to be something we can follow.
+4) of_device_alloc() is modified to create memory resources for a device
+   only if the address can be translated into the CPU's address space.
 
-> > > > > * Mark suggested two options (string and phandle), and (you guessed it),
-> > > > 
-> > > > To me, the Mark's suggestion was to follow the example of TI hwmods, which
-> > > > I did.  In fact, the power domains on Renesas platforms are an analogous
-> > > > concept, so in my opinion handling them in analogy with hwmods makes a lot of
-> > > > sense.
-> > > 
-> > > I had never seen the hwmod binding before and if I had I would have
-> > > given them the same comments. I definitely don't think we should be
-> > > using it as a good example for common code.
-> > 
-> > Well, good to know. :-)
-> > 
-> > > > >   IMHO using phandle makes it much easier to do this in a generic way,
-> > > > >   without having to document every possible string that this can be
-> > > > >   set to in the binding document. Obviously the phandle requires having
-> > > > >   a node in the device tree for each domain, but I think having that
-> > > > >   node is actually an advantage because it lets you describe the
-> > > > >   hierarchy of the domains there.
-> > > > 
-> > > > I don't quite see how it is better.  I could (and should in fact) represent
-> > > > that hierarchy as an array of pairs of strings without adding any special
-> > > > parsing code to the kernel (except for a simple routine walking that table
-> > > > and calling pm_genpd_add_subdomain_names() for every pair).
-> > > > 
-> > > > The only disadvantage of the current approach I can see is that whoever
-> > > > creates a dts for a board based on the given SoC has to know the names of the
-> > > > power domains to use in there.  I don't think this is an overly burdensome
-> > > > requirement.
-> > > 
-> > > Well, it does mean that we need to maintain a separate binding document
-> > > for each soc that has its own set of possible values.
-> > 
-> > I'm not sure we'll be able to avoid that anyway.
-> 
-> True, but a different kind of document.
-> 
-> The difference is that when using a string, each binding for a device that
-> can be part of a domain should have a way to document which strings are
-> possible for the property.
-> If you use a phandle, the binding for that device just needs to document
-> that it's a phandle that points to another device for which a binding
-> exists.
-> The binding for the SoC can then describe the power domains in a way
-> that is detached from the devices.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/of/address.c       |   27 +++++++++++++++++++++++----
+ drivers/of/platform.c      |   16 +++++++++++++---
+ include/linux/of_address.h |    1 +
+ 3 files changed, 37 insertions(+), 7 deletions(-)
 
-Well, this is much too vague to be useful for me, sorry.
-
-> > > > The other way around, the platform code supposed to handle the power domains
-> > > > would need a way to match DT nodes against the domains, which also would
-> > > > require some string-based identification and that would have to be documented
-> > > > as well.
-> > > 
-> > > The part that matches the pm-domain device nodes can and should be
-> > > specific to the platform implementing the pm-domain. We can easily
-> > > do the same thing we did for regulators, where each regulator can
-> > > be either identified through its "reg" property in cases where that
-> > > makes sense or through a "regulator-compatible" property in cases
-> > > where we need a string representation.
-> > 
-> > Where can I find the code that parses the regulator bindings?
-> 
-> The binding is in Documentation/devicetree/bindings/regulator/regulator.txt
-> and the code is in drivers/regulator/of_regulator.c. Note that this
-> has recently been extended, so be sure to look at the latest snapshot in
-> git, not the v3.5 version.
-
-I'm rather interested in the code that processes those bindings, but I guess
-I'll need to find it myself.  I'm not sure if my determination is sufficient
-to deal with all that at the moment, though, but that's a different matter.
-
-Thanks,
-Rafael
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 7e262a6..7a07751 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -9,8 +9,8 @@
+ 
+ /* Max address size we deal with */
+ #define OF_MAX_ADDR_CELLS	4
+-#define OF_CHECK_COUNTS(na, ns)	((na) > 0 && (na) <= OF_MAX_ADDR_CELLS && \
+-			(ns) > 0)
++#define OF_CHECK_ADDR_COUNT(na)	((na) > 0 && (na) <= OF_MAX_ADDR_CELLS)
++#define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) > 0)
+ 
+ static struct of_bus *of_match_bus(struct device_node *np);
+ static int __of_address_to_resource(struct device_node *dev,
+@@ -182,7 +182,7 @@ const __be32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
+ 	}
+ 	bus->count_cells(dev, &na, &ns);
+ 	of_node_put(parent);
+-	if (!OF_CHECK_COUNTS(na, ns))
++	if (!OF_CHECK_ADDR_COUNT(na))
+ 		return NULL;
+ 
+ 	/* Get "reg" or "assigned-addresses" property */
+@@ -490,6 +490,25 @@ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
+ }
+ EXPORT_SYMBOL(of_translate_dma_address);
+ 
++bool of_can_translate_address(struct device_node *dev)
++{
++	struct device_node *parent;
++	struct of_bus *bus;
++	int na, ns;
++
++	parent = of_get_parent(dev);
++	if (parent == NULL)
++		return false;
++
++	bus = of_match_bus(parent);
++	bus->count_cells(dev, &na, &ns);
++
++	of_node_put(parent);
++
++	return OF_CHECK_COUNTS(na, ns);
++}
++EXPORT_SYMBOL(of_can_translate_address);
++
+ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+ 		    unsigned int *flags)
+ {
+@@ -506,7 +525,7 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+ 	bus = of_match_bus(parent);
+ 	bus->count_cells(dev, &na, &ns);
+ 	of_node_put(parent);
+-	if (!OF_CHECK_COUNTS(na, ns))
++	if (!OF_CHECK_ADDR_COUNT(na))
+ 		return NULL;
+ 
+ 	/* Get "reg" or "assigned-addresses" property */
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index e44f8c2..9bdeaf3 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -78,6 +78,7 @@ void of_device_make_bus_id(struct device *dev)
+ 	struct device_node *node = dev->of_node;
+ 	const u32 *reg;
+ 	u64 addr;
++	const __be32 *addrp;
+ 	int magic;
+ 
+ #ifdef CONFIG_PPC_DCR
+@@ -105,7 +106,15 @@ void of_device_make_bus_id(struct device *dev)
+ 	 */
+ 	reg = of_get_property(node, "reg", NULL);
+ 	if (reg) {
+-		addr = of_translate_address(node, reg);
++		if (of_can_translate_address(node)) {
++			addr = of_translate_address(node, reg);
++		} else {
++			addrp = of_get_address(node, 0, NULL, NULL);
++			if (addrp)
++				addr = of_read_number(addrp, 1);
++			else
++				addr = OF_BAD_ADDR;
++		}
+ 		if (addr != OF_BAD_ADDR) {
+ 			dev_set_name(dev, "%llx.%s",
+ 				     (unsigned long long)addr, node->name);
+@@ -140,8 +149,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 		return NULL;
+ 
+ 	/* count the io and irq resources */
+-	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+-		num_reg++;
++	if (of_can_translate_address(np))
++		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
++			num_reg++;
+ 	num_irq = of_irq_count(np);
+ 
+ 	/* Populate the resource table */
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 01b925a..c3cdc10 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -6,6 +6,7 @@
+ 
+ #ifdef CONFIG_OF_ADDRESS
+ extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
++extern bool of_can_translate_address(struct device_node *dev);
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+ extern struct device_node *of_find_matching_node_by_address(
+-- 
+1.7.0.4
