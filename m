@@ -1,52 +1,44 @@
-From: AnilKumar Ch <anilkumar@ti.com>
-Subject: [PATCH v2 0/2] Add DT support to C_CAN/D_CAN controller
-Date: Wed, 25 Jul 2012 17:48:47 +0530
-Message-ID: <1343218729-16954-1-git-send-email-anilkumar@ti.com>
+From: "Gupta, Ajay Kumar" <ajay.gupta@ti.com>
+Subject: RE: [PATCH v5 01/11] usb: musb: add musb->id to identify core
+ instance
+Date: Wed, 25 Jul 2012 12:19:32 +0000
+Message-ID: <47CEF8C4B26E8C44B22B028A650E0EA93EAE5B87@DBDE01.ent.ti.com>
+References: <1343218049-29917-1-git-send-email-ajay.gupta@ti.com>
+ <1343218049-29917-2-git-send-email-ajay.gupta@ti.com>
+ <20120725121128.GO16794@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-can-owner@vger.kernel.org>
-Sender: linux-can-owner@vger.kernel.org
-To: wg@grandegger.com, mkl@pengutronix.de, linux-can@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, anantgole@ti.com, nsekhar@ti.com, AnilKumar Ch <anilkumar@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120725121128.GO16794@arwen.pp.htv.fi>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Balbi, Felipe" <balbi@ti.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds the device tree support to C_CAN/D_CAN
-controller with pinmux configuration and device tree data
-addition to corresponding dts and dtsi files.
+Hi,
+> 
+> On Wed, Jul 25, 2012 at 05:37:19PM +0530, Ajay Kumar Gupta wrote:
+> > diff --git a/drivers/usb/musb/musb_core.c
+> > b/drivers/usb/musb/musb_core.c index 89d1871..f5eb8a7 100644
+> > --- a/drivers/usb/musb/musb_core.c
+> > +++ b/drivers/usb/musb/musb_core.c
+> 
+> <snip>
+> 
+> > @@ -1889,6 +1921,7 @@ musb_init_controller(struct device *dev, int nIrq,
+> void __iomem *ctrl)
+> >  	pm_runtime_enable(musb->controller);
+> >
+> >  	spin_lock_init(&musb->lock);
+> > +	musb->id = pdev->id;
+> 
+> I fail to see where this musb->id would be used. Care to clarify ?
 
-Also adds Runtime PM support to C_CAN/D_CAN controller.
+Sure, It is used in musb_init_debugfs(). Please refer 02/11.
 
-These patches have been tested on AM335x EVM using some additional
-patches to add device tree data to EVM dts files and to initialize
-D_CAN RAM. D_CAN raminit is controlled from control module register.
-This patch will be submitted once control module MFD driver support
-is added to mainline.
-
-Due to lack of hardware I am not able to test c_can functionality.
-I appreciate if anyone can test c_can functionality with this patch
-series.
-
-First and last patches applies on top of linux-next tree, 2nd and
-3rd patches applies on linux-omap tree.
-
-Changes from v1:
-	- Separated 4 patches into CAN driver specific and device
-	  tree data addition specific.
-	- Incorporated Marc's comments on v1
-	  * Modified c_can_dev_id enum to handle both devtype and
-	    platform device id index.
-	  * Removed "legacy bosch,c_can_platform" from DT bindings
-
-AnilKumar Ch (2):
-  can: c_can: Add device tree support to Bosch C_CAN/D_CAN controller
-  can: c_can: Add runtime PM support to Bosch C_CAN/D_CAN controller
-
- .../devicetree/bindings/net/can/c_can.txt          |   37 +++++++++++
- drivers/net/can/c_can/c_can.h                      |    5 +-
- drivers/net/can/c_can/c_can_platform.c             |   65 +++++++++++++++-----
- 3 files changed, 88 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/can/c_can.txt
-
--- 
-1.7.9.5
-
+Ajay
+> 
+> --
+> balbi
