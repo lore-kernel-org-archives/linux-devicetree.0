@@ -1,14 +1,11 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: specifying two conflicting configs
-Date: Wed, 25 Jul 2012 13:48:01 +1000
-Message-ID: <20120725034801.GB23430@truffala.fritz.box>
-References: <20120724113450.328c27430ebc4438d0048346@kinali.ch>
-Mime-Version: 1.0
+From: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Subject: Atmel bindings to pinctrl/pinmux/etc
+Date: Tue, 24 Jul 2012 22:37:01 -0600
+Message-ID: <BC9468F7-C80E-4E14-ABDA-D5A93B6305BB@bsdimp.com>
+Mime-Version: 1.0 (Apple Message framework v1084)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120724113450.328c27430ebc4438d0048346-HB9FjVmMKa7tRgLqZ5aouw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,86 +16,11 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Attila Kinali <attila-HB9FjVmMKa7tRgLqZ5aouw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2012 at 11:34:50AM +0200, Attila Kinali wrote:
-> Hi,
-> 
-> I have here an embedded system where i use a serial port as SD Card
-> interface as well as SPI interface. I select what i want to use
-> by setting a GPIO pin high or low.
-> 
-> Currently i'm using two different dts files, one that specifies the
-> serial port as SD Card interface and one that specifies the serial
-> port as SPI interface.
-> 
-> Now i would like to merge them into one file so that i can select
-> which mode to use at runtime. The documentation gave me the impression
-> that this should be possible, but i was not able to figure out how
-> to do it.
-> 
-> Would someone be so kind and point me to the documentation/example
-> i've missed?
-> 
-> The current configuration i use is either:
-> 
-> ssp0: ssp@80010000 {
->         compatible = "fsl,imx23-mmc";
->         pinctrl-names = "default";
->         pinctrl-0 = <&mmc0_8bit_pins_a &mmc1_pins_fixup>;
->         bus-width = <8>;
->         status = "okay";
-> };
-> 
-> or:
-> 
-> ssp0: ssp@80010000 {
->         #address-cells = <1>;
->         #size-cells = <0>;
->         compatible = "fsl,imx23-spi";
->         fsl,ssp-dma-channel = <1>;
->         pinctrl-names = "default";
->         pinctrl-0 = <&spi_pins_a>;
->         status = "okay";
-> 
-> };
+Greetings,
 
-So, Mitch may have better insights here, but my inclination would be
-to do something like this:
+I'm looking pinctl/pinmux/etc bindings for the Atmel CPUS (at91rm9200, at91sam9*, etc).  I see 3.5 has much of the devices documented.  However, it looks incomplete as there's no pinctrl/pinmux bindings defined yet in the committed code.  Google of the obvious things hasn't turned up anything.  Can someone give me a pointer?
 
-ssp-mux@80010000 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-	compatible = "yourvendor,ssp-mux";
-	control-line = <&gpio 17>;
-	ranges = <0x0 0x80010000>;
-
-	ssp-mmc@0 {
-		  compatible = "fsl,imx23-mmc";
-		  /* ... */
-		  status = "okay";
-	};
-
-	ssp-spi@1 {
-		  compatible = "fsl,imx23-spi";
-		  /* ... */
-		  status = "disabled";
-	};
-};
-
-ranges would need tweaking depending on #size-cells of the parent and
-the existing node reg properties, which you don't show.
-
-A hackier, but possibly simpler alternative would be to simply include
-both nodes, but have the one that's active by default marked status =
-"okay" and the other marked status = "disabled".  Platform specific
-knowledge would then me needed to know that with the right gpio magic
-the original one can be disabled and the other enabled.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Warner
