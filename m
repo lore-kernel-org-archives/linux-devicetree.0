@@ -1,32 +1,50 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [RFC][PATCH 0/14] PM / shmobile: Pass power domain information via DT (was: Re: [RFD] PM: Device tree representation of power domains)
-Date: Thu, 26 Jul 2012 23:34:11 +0200
-Message-ID: <201207262334.11789.rjw@sisk.pl>
-References: <201207032302.17805.rjw@sisk.pl> <87vchb4ar8.fsf@ti.com> <20120726210952.GG4560@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/8 v2] ARM: EXYNOS5: Add machine data for USB 2.0
+Date: Thu, 26 Jul 2012 11:24:49 +0000
+Message-ID: <201207261124.50141.arnd@arndb.de>
+References: <1342866729-30460-1-git-send-email-gautam.vivek@samsung.com> <1342866729-30460-3-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="iso-8859-2"
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20120726210952.GG4560@opensource.wolfsonmicro.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Kevin Hilman <khilman@ti.com>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Linux PM list <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Magnus Damm <magnus.damm@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Linux-sh list <linux-sh@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1342866729-30460-3-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, kgene.kim@samsung.com, l.majewski@samsung.com, kyungmin.park@samsung.com, thomas.abraham@linaro.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, m.szyprowski@samsung.com, yulgon.kim@samsung.com, av.tikhomirov@samsung.com, prashanth.g@samsung.com, boyko.lee@samsung.com, joshi@samsung.com, a.kesavan@samsung.com, olofj@google.com, ajaykumar.rs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 26, 2012, Mark Brown wrote:
-> On Wed, Jul 25, 2012 at 05:38:35PM -0700, Kevin Hilman wrote:
+On Saturday 21 July 2012, Vivek Gautam wrote:
+> From: Ajay Kumar <ajaykumar.rs@samsung.com>
 > 
-> > That being said, I'm not sure why ti,hwmods is being used as an example
-> > for powerdomains.  hwmods describe the integration of SoC IP blocks
-> > (base addr, IRQ, DMA channel etc., which are being moved to DT) as well
-> > as a bunch of SoC specific PM register descriptions.  This stuff is
-> > SoC-specific PM register layout, so being very SoC specific, it has the
-> > 'ti' prefix in the DT binding.
+> This patch adds address mapping of USB 2.0 PHY for exynos5
 > 
-> I think the thing here is that one aspect of that SoC integration is
-> which power domain the blocks are in.  Describing which power domain an
-> IP is in isn't a million miles away from describing which hwmod applies
-> to an IP.
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> ---
+>  arch/arm/mach-exynos/common.c           |    5 +++++
+>  arch/arm/mach-exynos/include/mach/map.h |    2 ++
+>  2 files changed, 7 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+> index 4eb39cd..92d5e61 100644
+> --- a/arch/arm/mach-exynos/common.c
+> +++ b/arch/arm/mach-exynos/common.c
+> @@ -275,6 +275,11 @@ static struct map_desc exynos5_iodesc[] __initdata = {
+>                 .pfn            = __phys_to_pfn(EXYNOS5_PA_GIC_DIST),
+>                 .length         = SZ_4K,
+>                 .type           = MT_DEVICE,
+> +       }, {
+> +               .virtual        = (unsigned long)S3C_VA_USB_HSPHY,
+> +               .pfn            = __phys_to_pfn(EXYNOS5_PA_USB_PHY),
+> +               .length         = SZ_4K,
+> +               .type           = MT_DEVICE,
+>         },
+>  };
 
-I agree.
+Can you pleae explain why this is done in the changelog?
+
+We try hard to do such mappings from the device driver instead,
+so I'm surprised that this is necessary fo rthe USB phy.
+
+	Arnd
