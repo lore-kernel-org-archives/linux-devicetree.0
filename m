@@ -1,121 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 5/8 v2] ARM: EXYNOS5: Add PHY initialization code for usb
- 2.0
-Date: Thu, 26 Jul 2012 12:08:13 +0000
-Message-ID: <201207261208.13874.arnd@arndb.de>
-References: <1342866729-30460-1-git-send-email-gautam.vivek@samsung.com>
- <1342866729-30460-6-git-send-email-gautam.vivek@samsung.com>
+From: Kevin Hilman <khilman@ti.com>
+Subject: Re: [RFC][PATCH 0/14] PM / shmobile: Pass power domain information via DT (was: Re: [RFD] PM: Device tree representation of power domains)
+Date: Thu, 26 Jul 2012 14:45:52 -0700
+Message-ID: <87mx2mmc1b.fsf@ti.com>
+References: <201207032302.17805.rjw@sisk.pl> <201207242237.28051.rjw@sisk.pl>
+	<201207251300.34892.arnd@arndb.de> <201207260032.40159.rjw@sisk.pl>
+	<87vchb4ar8.fsf@ti.com>
+	<20120726210952.GG4560@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342866729-30460-6-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, boyko.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120726210952.GG4560@opensource.wolfsonmicro.com> (Mark Brown's
+	message of "Thu, 26 Jul 2012 22:09:53 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Linux PM list <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Magnus Damm <magnus.damm@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Linux-sh list <linux-sh@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 21 July 2012, Vivek Gautam wrote:
-> This patch adds PHY setup functions usb 2.0 support on exynos5
-> 
-> Signed-off-by: Yulgon Kim <yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/mach-exynos/Kconfig                     |    1 +
->  arch/arm/mach-exynos/include/mach/regs-usb-phy.h |   86 ++++++++
->  arch/arm/mach-exynos/setup-usb-phy.c             |  232 +++++++++++++++++++++-
->  3 files changed, 311 insertions(+), 8 deletions(-)
+Mark Brown <broonie@opensource.wolfsonmicro.com> writes:
 
-This looks very much like a new device driver, not some code you can just stick
-into platform code. We're trying hard to move driver code out of the platform
-directories, so please don't add any new stuff for a driver and soc that doesn't
-have to deal with legacy code.
+> On Wed, Jul 25, 2012 at 05:38:35PM -0700, Kevin Hilman wrote:
+>
+>> That being said, I'm not sure why ti,hwmods is being used as an example
+>> for powerdomains.  hwmods describe the integration of SoC IP blocks
+>> (base addr, IRQ, DMA channel etc., which are being moved to DT) as well
+>> as a bunch of SoC specific PM register descriptions.  This stuff is
+>> SoC-specific PM register layout, so being very SoC specific, it has the
+>> 'ti' prefix in the DT binding.
+>
+> I think the thing here is that one aspect of that SoC integration is
+> which power domain the blocks are in.  Describing which power domain an
+> IP is in isn't a million miles away from describing which hwmod applies
+> to an IP.
 
->  
->  static int exynos4_usb_host_phy_is_on(void)
->  {
-> -	return (readl(EXYNOS4_PHYPWR) & PHY1_STD_ANALOG_POWERDOWN) ? 0 : 1;
-> +	if (soc_is_exynos5250()) {
-> +		return (readl(EXYNOS5_PHY_HOST_CTRL0) &
-> +				HOST_CTRL0_PHYSWRSTALL) ? 0 : 1;
-> +	} else {
-> +		return (readl(EXYNOS4_PHYPWR) &
-> +				PHY1_STD_ANALOG_POWERDOWN) ? 0 : 1;
-> +	}
-> +}
+Not a million miles, just a million transistors. ;)
 
-Never hardcode register locations like this.
-Also you clearly have two SoC that do different things here, so putting them
-into the same function is a bit strange.
+Ideally, we will eventually have a representation that can map
+from regulators all the way down to IP blocks.  regulator --> voltage
+domain --> power domain --> clock domain --> clocks --> IP block.
 
->  
->  static struct clk *exynos_usb_clock_enable(struct platform_device *pdev)
-> @@ -31,7 +56,10 @@ static struct clk *exynos_usb_clock_enable(struct platform_device *pdev)
->  	struct clk *usb_clk = NULL;
->  	int err = 0;
->  
-> -	usb_clk = clk_get(&pdev->dev, "otg");
-> +	if (soc_is_exynos5250())
-> +		usb_clk = clk_get(&pdev->dev, "usbhost");
-> +	else
-> +		usb_clk = clk_get(&pdev->dev, "otg");
->  	if (IS_ERR(usb_clk)) {
->  		dev_err(&pdev->dev, "Failed to get otg clock\n");
->  		return NULL;
+Currently we have bindings for regulators,  IP blocks (ti,hwmods on
+OMAP) and clocks are in progress.  Eventually, we'll need everything
+else in between.
 
-Why do you have different names for the same clock on different SoCs?
-
-If the clock has the same purpose, just give it the same name.
-
-> @@ -50,7 +78,11 @@ static int exynos4210_usb_phy_clkset(struct platform_device *pdev)
->  	struct clk *xusbxti_clk;
->  	u32 phyclk = 0;
->  
-> -	xusbxti_clk = clk_get(&pdev->dev, "xusbxti");
-> +	if (soc_is_exynos5250())
-> +		xusbxti_clk = clk_get(&pdev->dev, "ext_xtal");
-> +	else
-> +		xusbxti_clk = clk_get(&pdev->dev, "xusbxti");
-> +
->  	if (xusbxti_clk && !IS_ERR(xusbxti_clk)) {
->  		if (soc_is_exynos4210()) {
->  			/* set clock frequency for PLL */
-
-same here.
-
-> @@ -218,8 +431,11 @@ int s5p_usb_phy_exit(struct platform_device *pdev, int type)
->  {
->  	if (type == S5P_USB_PHY_DEVICE)
->  		return exynos4210_usb_phy0_exit(pdev);
-> -	else if (type == S5P_USB_PHY_HOST)
-> -		return exynos4210_usb_phy1_exit(pdev);
-> -
-> +	else if (type == S5P_USB_PHY_HOST) {
-> +		if (soc_is_exynos5250())
-> +			return exynos5_usb_phy20_exit(pdev);
-> +		else
-> +			return exynos4210_usb_phy1_exit(pdev);
-> +	}
->  	return -EINVAL;
->  }
-
-You are doing completely different things here. None of these are actually
-s5p, so better make these different functions for each soc.
-
-If you have a driver that has some common code and some hardware specific
-code, we generally structure the code so that the entry points are different
-for the each kind of hardware and they call into common code from there.
-
-This code is done in the opposite way and should be changed over time,
-so please don't add to the mess.
-
-	Arnd
+Kevin
