@@ -1,78 +1,56 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
-Date: Thu, 26 Jul 2012 21:55:02 +0200
-Message-ID: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-tegra@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Mitch Bradley <wmb@firmworks.com>, Arnd Bergmann <arnd@arndb.de>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [RFC/PATCH 01/13] ARM: Samsung: Extend MIPI PHY callback with
+ an index argument
+Date: Thu, 26 Jul 2012 22:15:40 +0200
+Message-ID: <5011A56C.6050503@gmail.com>
+References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com> <3148357.irbGOBJ73x@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <3148357.irbGOBJ73x@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for device tree based probing of the PCIe
-controller found on Tegra SoCs.
+Hi Laurent,
 
-Patches 1 and 2 keep the pci_fixup_irqs() and ARM-specific
-pci_common_init() functions around after init. This is required to
-support driver probe deferral, which may cause built-in drivers to be
-probed after __init data has already been freed.
+On 07/26/2012 04:42 PM, Laurent Pinchart wrote:
+> Hi Sylwester,
+>
+> On Friday 25 May 2012 21:52:40 Sylwester Nawrocki wrote:
+>> For systems instantiated from device tree struct platform_device id
+>> field is always -1, add an 'id' argument to the s5p_csis_phy_enable()
+>> function so the MIPI-CSIS hardware instance index can be passed in
+>> by driver, for CONFIG_OF=y.
+>>
+>> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+>> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
+>> ---
+>>   arch/arm/plat-s5p/setup-mipiphy.c              |   20 ++++++++------------
+>>   arch/arm/plat-samsung/include/plat/mipi_csis.h |   10 ++++++----
+>>   2 files changed, 14 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/arch/arm/plat-s5p/setup-mipiphy.c
+>> b/arch/arm/plat-s5p/setup-mipiphy.c index 683c466..146ecc3 100644
+>> --- a/arch/arm/plat-s5p/setup-mipiphy.c
+>> +++ b/arch/arm/plat-s5p/setup-mipiphy.c
+>> @@ -14,24 +14,19 @@
+>>   #include<linux/spinlock.h>
+>>   #include<mach/regs-clock.h>
+>>
+>> -static int __s5p_mipi_phy_control(struct platform_device *pdev,
+>> +static int __s5p_mipi_phy_control(struct platform_device *pdev, int id,
+>>   				  bool on, u32 reset)
+>
+> What about removing the pdev argument, as it's now not needed ?
 
-Patch 3 allows a driver's probe function to pass per-controller private
-data when calling the pci_common_init() function.
+Indeed, it isn't useful any more. I'm not sure what I intended to
+keep it for, perhaps just some sentimental reasons.. :)
+Thanks for pointing out, I'll remove it in the next iteration.
 
-Patch 4 is trivial and has already been Acked-by: Stephen Warren before.
+--
 
-Patch 5 adds a flag to mark a struct resource as defining a PCI
-configuration space. The flag will be used subsequently to differentiate
-between memory-mapped I/O regions and PCI configuration space.
-
-Patch 6 rewrites PCIe support as a driver and switches the Harmony and
-TrimSlice boards to add the proper platform device instead of calling
-the tegra_pcie_init() function. Patch 7 adds MSI support as an IRQ
-domain.
-
-Patches 8 and 9 add code to support the new PCIe controller binding used
-by patch 10 to instantiate the controller from DT.
-
-
-Thierry Reding (10):
-  PCI: Keep pci_fixup_irqs() around after init
-  ARM: pci: Keep pci_common_init() around after init
-  ARM: pci: Allow passing per-controller private data
-  ARM: tegra: Move tegra_pcie_xclk_clamp() to PMC
-  resource: add PCI configuration space support
-  ARM: tegra: Rewrite PCIe support as a driver
-  ARM: tegra: pcie: Add MSI support
-  of/address: Handle #address-cells > 2 specially
-  of: Add of_pci_parse_ranges()
-  ARM: tegra: pcie: Add device tree support
-
- .../bindings/pci/nvidia,tegra20-pcie.txt           |   94 ++
- arch/arm/boot/dts/tegra20.dtsi                     |   62 +
- arch/arm/include/asm/mach/pci.h                    |    1 +
- arch/arm/kernel/bios32.c                           |    7 +-
- arch/arm/mach-tegra/Kconfig                        |    1 +
- arch/arm/mach-tegra/board-dt-tegra20.c             |    7 +-
- arch/arm/mach-tegra/board-harmony-pcie.c           |   30 +-
- arch/arm/mach-tegra/board-harmony.c                |    1 +
- arch/arm/mach-tegra/board-harmony.h                |    1 +
- arch/arm/mach-tegra/board-trimslice.c              |   11 +-
- arch/arm/mach-tegra/board.h                        |    2 +-
- arch/arm/mach-tegra/devices.c                      |  142 ++
- arch/arm/mach-tegra/devices.h                      |    3 +
- arch/arm/mach-tegra/include/mach/iomap.h           |    3 -
- arch/arm/mach-tegra/include/mach/irqs.h            |    5 +-
- arch/arm/mach-tegra/include/mach/pci-tegra.h       |   38 +
- arch/arm/mach-tegra/pcie.c                         | 1406 ++++++++++++++------
- arch/arm/mach-tegra/pmc.c                          |   16 +
- arch/arm/mach-tegra/pmc.h                          |    1 +
- drivers/of/address.c                               |    8 +
- drivers/of/of_pci.c                                |   84 +-
- drivers/pci/setup-irq.c                            |    4 +-
- include/linux/ioport.h                             |    2 +-
- include/linux/of_pci.h                             |    2 +
- 24 files changed, 1485 insertions(+), 446 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
- create mode 100644 arch/arm/mach-tegra/include/mach/pci-tegra.h
-
--- 
-1.7.11.2
+Regards,
+Sylwester
