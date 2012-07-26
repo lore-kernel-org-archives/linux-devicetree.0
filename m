@@ -1,74 +1,39 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 26 Jul 2012 12:43:31 -0500
-Message-ID: <501181C3.1020301@ti.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>  <201207171924.33756.arnd@arndb.de> <1342756850.1726.74.camel@vkoul-udesk3>  <201207200839.24259.arnd@arndb.de> <1342777047.1726.435.camel@vkoul-udesk3>  <500EF27F.6050905@ti.com> <1343284960.1726.8978.camel@vkoul-udesk3>
+From: rvaswani@codeaurora.org
+Subject: [DT] API to determine if interrupt is PPI or SPI ?
+Date: Thu, 26 Jul 2012 12:18:41 -0700 (PDT)
+Message-ID: <53a41d02c4c4c24bdab47667183891bf.squirrel@www.codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1343284960.1726.8978.camel@vkoul-udesk3>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linux.intel.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org, davidb@codeaurora.org, grant.likely@secretlab.ca
+Cc: linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-On 07/26/2012 01:42 AM, Vinod Koul wrote:
-> On Tue, 2012-07-24 at 14:07 -0500, Jon Hunter wrote:
->> Hi Vinod,
->>>>>> Required property:
->>>>>>     dmas: list of one or more dma specifiers, each consisting of
->>>>>>      - phandle pointing to dma controller node
->>>>>>      - flags word, a bit map that can hold these flags
->>>>>>        * 0x00000001 channel can be used for transfer from device
->>>>>>        * 0x00000002 channel can be user for transfer to device
->>>>>
->>>>> Is this for identifying which channel is for TX and RX? If not I am not
->>>>> sure I understood it well
->>>>
->>>> Yes, but we can potentially add more flags here.
->>>>
->>>> The argument we had when coming up with this was roughly:
->>>>
->>>> * we need to identify which specifiers are referring to the same
->>>>   conceptual channel and can be used as alternatives
->>>> * this could be done just using the dma-names property, but making
->>>>   dma-names mandatory adds complexity for everyone.
->>>> * Most devices have just one or two channels, and if they have two,
->>>>   there is usually one input and one output.
->>>>
->>>> => if the common dmaengine code can find out whether a channel is
->>>>   input or output without looking at the dmac driver specific configuration,
->>>>   we don't need to add dma-names in most cases, but just let the client
->>>>   driver ask for "give me a channel with these flags".
->>> No we don't export the direction of the channel and usually channel can
->>> be configured either way.
->>
->> So yes I can see that a channel itself could be configured to support a
->> given direction, but when we ask for a channel via dma_request_channel()
->> we are going to get a channel that matches the criteria we pass using
->> the filter parameter. So here the thinking was that "flags" is a filter
->> parameter that the user could specify and one example being direction
->> but it could be something else too.
-> Yes that can be done, but I am leaning towards clients not have to do
-> anything :) DMAEngine needs to know mapping and when
-> dma_request_channel() is called it _always_ gives you the right channel.
+We can specify the interrupt information in the device tree using the arm
+gic convention.
+Is there an API to read directly the 1st cell and determine if an
+interrupt is a PPI or a SPI ? This information is directly relevant to the
+driver because it needs to call request_irq or request_percpu_irq based on
+this data.
 
-Ok, so are you proposing to remove the filter function and parameter
-from the dma_request_channel()?
+How should this be done ideally ?
 
-> Maybe for slave case we need to create dma_request_slave_channel() which
-> has additional arguments for dmaengine to do the filtering.
+Thanks,
+Rohit
 
-Ok, so what is not clear to me is if you envision that
-dma_request_slave_channel() is using a mapping table based look-up or
-the DT scheme or both.
-
-As Arnd highlighted the DT convention is to store the DMA info in each
-of the device nodes and not store in a global mapping table which
-conflicts with having a mapping table approach for non-DT usage. So I am
-still not sure how you envision this function working for both the
-non-DT and DT use-cases.
-
-Jon
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+--
