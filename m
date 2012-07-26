@@ -1,109 +1,61 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree based instantiation
-Date: Thu, 26 Jul 2012 17:21:36 +0200
-Message-ID: <1393020.I6XBuRyBXi@avalon>
-References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com> <1337975573-27117-9-git-send-email-s.nawrocki@samsung.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
+Date: Thu, 26 Jul 2012 10:53:46 -0500
+Message-ID: <5011680A.6040400@ti.com>
+References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>  <500EF27F.6050905@ti.com> <1343284960.1726.8978.camel@vkoul-udesk3>  <201207260714.34540.arnd@arndb.de> <1343302083.1726.9027.camel@vkoul-udesk3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1337975573-27117-9-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1343302083.1726.9027.camel@vkoul-udesk3>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
 
-On Friday 25 May 2012 21:52:48 Sylwester Nawrocki wrote:
-> The driver initializes all board related properties except the s_power()
-> callback to board code. The platforms that require this callback are not
-> supported by this driver yet for CONFIG_OF=y.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../bindings/camera/samsung-s5k6aafx.txt           |   57 +++++++++
->  drivers/media/video/s5k6aa.c                       |  129 ++++++++++++-----
->  2 files changed, 146 insertions(+), 40 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
-> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt new file
-> mode 100644
-> index 0000000..6685a9c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
-> @@ -0,0 +1,57 @@
-> +Samsung S5K6AAFX camera sensor
-> +------------------------------
-> +
-> +Required properties:
-> +
-> +- compatible : "samsung,s5k6aafx";
-> +- reg : base address of the device on I2C bus;
-> +- video-itu-601-bus : parallel bus with HSYNC and VSYNC - ITU-R BT.601;
-> +- vdd_core-supply : digital core voltage supply 1.5V (1.4V to 1.6V);
-> +- vdda-supply : analog power voltage supply 2.8V (2.6V to 3.0V);
-> +- vdd_reg-supply : regulator input power voltage supply 1.8V (1.7V to 1.9V)
-> +		   or 2.8V (2.6V to 3.0);
-> +- vddio-supply : I/O voltage supply 1.8V (1.65V to 1.95V)
-> +		 or 2.8V (2.5V to 3.1V);
-> +
-> +Optional properties:
-> +
-> +- clock-frequency : the IP's main (system bus) clock frequency in Hz, the
-> default 
+On 07/26/2012 06:28 AM, Vinod Koul wrote:
+> On Thu, 2012-07-26 at 07:14 +0000, Arnd Bergmann wrote:
+>> On Thursday 26 July 2012, Vinod Koul wrote:
+>>>>> But from a client POV it makes sense as with the given direction you
+>>>>> would need a specific request line for a channel. So this is right.
+>>>>> But direction is something I don't expect to be used for "give me a
+>>>>> channel" 
+>>>>
+>>>> Ok. The thought was that the user would have the following means of
+>>>> requesting a channel ...
+>>>>
+>>>> 1. By name
+>>> Bare name maynot be enough. In a dmac we have many channels which one to
+>>> choose?
+>> The name is what is associated with the property in the client device
+>> node, which describes everything the dmac driver needs to know.
+>> If the dmac needs to pick a specific channel, it can find out from the
+>> "dmas" property in combination with that name. If it is allowed to
+>> pick any channel, it doesn't need to bother.
+> dmac doesn't pick a channel. They don't come into picture till dmaengine
+> and client have agreed on channel. And then channel callback in invoked,
+> still it doesn't know which client.
 
-Is that the input clock frequency ? Can't it vary ? Instead of accessing the 
-sensor clock frequency from the FIMC driver you should reference a clock in 
-the sensor DT node. That obviously requires generic clock support, which might 
-not be available for your platform yet (that's one of the reasons the OMAP3 
-ISP driver doesn't support DT yet).
+I think what Arnd meant was that dmaengine (not the dmac) would use the
+DT node and name information to extract the dma mapping information from
+the device tree and provide a channel back to the client. So yes the
+dmac is not involved here.
 
-> +		    value when this property is not specified is 24 MHz;
-> +- data-lanes : number of physical lanes used (default 2 if not specified);
-> +- gpio-stby : specifies the S5K6AA_STBY GPIO
-> +- gpio-rst : specifies the S5K6AA_RST GPIO
-> +- samsung,s5k6aa-inv-stby : set inverted S5K6AA_STBY GPIO level;
-> +- samsung,s5k6aa-inv-rst : set inverted S5K6AA_RST GPIO level;
-> +- samsung,s5k6aa-hflip : set the default horizontal image flipping;
-> +- samsung,s5k6aa-vflip : set the default vertical image flipping;
-> +
-> +
-> +Example:
-> +
-> +	gpl2: gpio-controller@0 {
-> +	};
-> +
-> +	reg0: regulator@0 {
-> +	};
-> +
-> +	reg1: regulator@1 {
-> +	};
-> +
-> +	reg2: regulator@2 {
-> +	};
-> +
-> +	reg3: regulator@3 {
-> +	};
-> +
-> +	s5k6aafx@3c {
-> +		compatible = "samsung,s5k6aafx";
-> +		reg = <0x3c>;
-> +		clock-frequency = <24000000>;
-> +		gpio-rst = <&gpl2 0 2 0 3>;
-> +		gpio-stby = <&gpl2 1 2 0 3>;
-> +		video-itu-601-bus;
-> +		vdd_core-supply = <&reg0>;
-> +		vdda-supply = <&reg1>;
-> +		vdd_reg-supply = <&reg2>;
-> +		vddio-supply = <&reg3>;
-> +	};
+By the way, when I said "by name" above (and probably this was not
+clear) but it should have been "DT node and name". So really a channel
+is requested by ...
 
--- 
-Regards,
+1. DT node and a name
+2. DT node and a filter parameter (flags)
+3. DT node, a name and a filter parameter (flags)
 
-Laurent Pinchart
+The DT node points us to the specific device in the DT, say an MMC node,
+and the MMC node then contains the DMA mapping info. The device node may
+have the mapping information have one or more DMA requests/channels and
+so then the name and/or flags is used to determine which the client needs.
+
+Sorry hope that this is a little clearer.
+
+Cheers
+Jon
