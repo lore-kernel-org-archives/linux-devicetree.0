@@ -1,61 +1,138 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 26 Jul 2012 07:14:34 +0000
-Message-ID: <201207260714.34540.arnd@arndb.de>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
- <500EF27F.6050905@ti.com> <1343284960.1726.8978.camel@vkoul-udesk3>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v5 03/11] usb: musb: am335x: add support for dual instance
+Date: Thu, 26 Jul 2012 10:34:38 +0300
+Message-ID: <20120726073437.GF29029@arwen.pp.htv.fi>
+References: <1343218049-29917-1-git-send-email-ajay.gupta@ti.com>
+ <1343218049-29917-4-git-send-email-ajay.gupta@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1343284960.1726.8978.camel@vkoul-udesk3>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6v9BRtpmy+umdQlo"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1343218049-29917-4-git-send-email-ajay.gupta@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Cc: linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 26 July 2012, Vinod Koul wrote:
-> > > But from a client POV it makes sense as with the given direction you
-> > > would need a specific request line for a channel. So this is right.
-> > > But direction is something I don't expect to be used for "give me a
-> > > channel" 
-> > 
-> > Ok. The thought was that the user would have the following means of
-> > requesting a channel ...
-> > 
-> > 1. By name
-> Bare name maynot be enough. In a dmac we have many channels which one to
-> choose?
 
-The name is what is associated with the property in the client device
-node, which describes everything the dmac driver needs to know.
-If the dmac needs to pick a specific channel, it can find out from the
-"dmas" property in combination with that name. If it is allowed to
-pick any channel, it doesn't need to bother.
+--6v9BRtpmy+umdQlo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > 2. By a filter parameter (flags)
-> Even with direction same problem can arise
+On Wed, Jul 25, 2012 at 05:37:21PM +0530, Ajay Kumar Gupta wrote:
+> AM335x and TI81xx platform has dual musb controller so updating the
+> musb_dspc.c to support the same.
+>=20
+> Changes:
+> 	- Moved otg_workaround timer to glue structure
+> 	- Moved static local variable last_timer to glue structure
+> 	- PHY on/off related cleanups
+>=20
+> Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+> ---
+>  drivers/usb/musb/musb_dsps.c |   93 +++++++++++++++++++++++++-----------=
+-----
+>  1 files changed, 57 insertions(+), 36 deletions(-)
+>=20
+> diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
+> index 2174699..a2c8a06 100644
+> --- a/drivers/usb/musb/musb_dsps.c
+> +++ b/drivers/usb/musb/musb_dsps.c
+> @@ -105,6 +105,8 @@ struct dsps_musb_wrapper {
+>  	/* miscellaneous stuff */
+>  	u32		musb_core_offset;
+>  	u8		poll_seconds;
+> +	/* number of musb instances */
+> +	u8		instances;
+>  };
+> =20
+>  /**
+> @@ -112,16 +114,18 @@ struct dsps_musb_wrapper {
+>   */
+>  struct dsps_glue {
+>  	struct device *dev;
+> -	struct platform_device *musb;	/* child musb pdev */
+> +	struct platform_device *musb[2];	/* child musb pdev */
+>  	const struct dsps_musb_wrapper *wrp; /* wrapper register offsets */
+> -	struct timer_list timer;	/* otg_workaround timer */
+> -	u32 __iomem *usb_ctrl;
+> +	struct timer_list timer[2];	/* otg_workaround timer */
+> +	unsigned long last_timer[2];    /* last timer data for each instance */
+> +	u32 __iomem *usb_ctrl[2];
+>  	u8      usbss_rev;
+>  };
+> =20
+>  /**
+>   * musb_dsps_phy_control - phy on/off
+>   * @glue: struct dsps_glue *
+> + * @id: musb instance
+>   * @on: flag for phy to be switched on or off
+>   *
+>   * This is to enable the PHY using usb_ctrl register in system control
+> @@ -130,11 +134,11 @@ struct dsps_glue {
+>   * XXX: This function will be removed once we have a seperate driver for
+>   * control module
+>   */
+> -static void musb_dsps_phy_control(struct dsps_glue *glue, u8 on)
+> +static void musb_dsps_phy_control(struct dsps_glue *glue, u8 id, u8 on)
+>  {
+>  	u32 usbphycfg;
+> =20
+> -	usbphycfg =3D __raw_readl(glue->usb_ctrl);
+> +	usbphycfg =3D __raw_readl(glue->usb_ctrl[id]);
+> =20
+>  	if (on) {
+>  		if (glue->usbss_rev =3D=3D MUSB_USBSS_REV_816X) {
+> @@ -157,7 +161,7 @@ static void musb_dsps_phy_control(struct dsps_glue *g=
+lue, u8 on)
+>  				glue->usbss_rev =3D=3D MUSB_USBSS_REV_33XX)
+>  			usbphycfg |=3D USBPHY_CM_PWRDN | USBPHY_OTG_PWRDN;
+>  	}
+> -	__raw_writel(usbphycfg, glue->usb_ctrl);
+> +	__raw_writel(usbphycfg, glue->usb_ctrl[id]);
+>  }
+>  /**
+>   * dsps_musb_enable - enable interrupts
+> @@ -247,7 +251,7 @@ static void otg_timer(unsigned long _musb)
+> =20
+>  		devctl =3D dsps_readb(mregs, MUSB_DEVCTL);
+>  		if (devctl & MUSB_DEVCTL_BDEVICE)
+> -			mod_timer(&glue->timer,
+> +			mod_timer(&glue->timer[musb->id],
 
-Again this is just identifying which dma specifier from the "dmas"
-property to pick. The use case is the very common one that there
-is at most one "read" and one "write" channel. In this case all
-the client has to know is that it wants a channel that fits the
-description given in DT for the direction it's looking for.
+I believe this "musb" is a struct musb pointer, right ? Why would you
+use that ID ? You can find the correct musb by grabbing its
+platform_device with to_platform_device(musb->controller) and use that
+pdev to get to the correct ID.
 
-> > 3. By name and a filter parameter
-> Additionally we need to say which channel, or making dmaengine already
-> aware will help here.
+ditto to all others.
 
-The channel is still described in the specifier, the client should
-not care about it.
+--=20
+balbi
 
-	Arnd
+--6v9BRtpmy+umdQlo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQEPMNAAoJEIaOsuA1yqREn5UP/0qvx2QMHHcAkCwCkAPFaYwO
+6Zhc0eBrnfssCiyza/ApxSQ+6nTeW3oIScX91HrrDFlevWtjMgbWKAj8W6Sr4MXR
+oj+NA4lwHzaG4ZSJvtsr9sPHRvDvkmXCyL3m9A2S9X3HC37F04/kf0frevTZ+sev
+pyW4hK81FhKsG1Uhjw2lVAkNAs+MmUOeSwl/1JoRAm6aLyAtlBA2cAjCX7yfUCVV
+tMJxNEfpAkgybooA/hhzFL9xry8IIwjJDPJ5FGYP4ZevycZXny2s8yicoH++M881
+mwckVLHfD5vz82gBnQ7R4qtRqNytjQLG0FP7f+HVh1lDucf7PW1Bv7tTjY8/vlip
+K1yJBv/1rE330bGPfyPLyGEMkhkxh3x+3Ob0eIOhSgwLvplYkoBBKU0RklnnDz34
+cgLHFmRTdjKm3qbaJCjtVaP7wWxsJjNatq4n63ZJbWYCJPKBB80uifML8cJ7yMp0
+a4V6dQGmnLsv6xkyz9Y/zRY+4ubjbekA5EAwNQonD9+BhMJ0emHbQ3O0guDhC4VL
+E1lOlIAjGiIEB2uXP0o770zlZBE9fzhLHFxLtFE3Go4TiGqj+i/WEMhqPBqXiz3H
+Mvhw/z0pykAsuC9mWTaf//BzAMoaNsoamHNKx8eeil2ONVc/eG4ouIYiGYPKj0HH
+GuF9MFuKZfxn4hVhh0BE
+=aiv8
+-----END PGP SIGNATURE-----
+
+--6v9BRtpmy+umdQlo--
