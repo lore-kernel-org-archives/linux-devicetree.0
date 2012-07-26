@@ -1,62 +1,50 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC][PATCH 0/14] PM / shmobile: Pass power domain information
- via DT (was: Re: [RFD] PM: Device tree representation of power domains)
-Date: Thu, 26 Jul 2012 22:55:43 +0100
-Message-ID: <20120726215543.GJ4560@opensource.wolfsonmicro.com>
-References: <201207032302.17805.rjw@sisk.pl>
- <201207242237.28051.rjw@sisk.pl>
- <201207251300.34892.arnd@arndb.de>
- <201207260032.40159.rjw@sisk.pl>
- <87vchb4ar8.fsf@ti.com>
- <20120726210952.GG4560@opensource.wolfsonmicro.com>
- <87mx2mmc1b.fsf@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] mfd: add MAX8907 core driver
+Date: Thu, 26 Jul 2012 16:07:12 -0600
+Message-ID: <5011BF90.5030708@wwwdotorg.org>
+References: <1343331630-27126-1-git-send-email-swarren@wwwdotorg.org> <20120726203526.GD4560@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SLfjTIIQuAzj8yil"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87mx2mmc1b.fsf@ti.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kevin Hilman <khilman@ti.com>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Linux PM list <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Magnus Damm <magnus.damm@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Linux-sh list <linux-sh@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120726203526.GD4560@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Laxman Dewangan <ldewangan@nvidia.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Gyungoh Yoo <jack.yoo@maxim-ic.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On 07/26/2012 02:35 PM, Mark Brown wrote:
+> On Thu, Jul 26, 2012 at 01:40:30PM -0600, Stephen Warren wrote:
 
---SLfjTIIQuAzj8yil
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> +		if (irqd_is_wakeup_set(d)) {
+>> +			/* 1 -- disable, 0 -- enable */
+>> +			switch (irq_data->mask_reg) {
+> 
+> This loop we should just port over into the regmap code.
 
-On Thu, Jul 26, 2012 at 02:45:52PM -0700, Kevin Hilman wrote:
+I assume the best way of doing this is to add new functions
+regmap_irq_suspend()/regmap_irq_resume() (which would mask any enabled
+interrupts that were not wake enabled); that way, the regmap_irq code
+can loop over each register and just write it once. An alternative might
+be to implement struct irq_chip's .irq_suspend/.irq_resume ops, but that
+might worst-case end up with an I2C write per interrupt.
 
-> Ideally, we will eventually have a representation that can map
-> from regulators all the way down to IP blocks.  regulator --> voltage
-> domain --> power domain --> clock domain --> clocks --> IP block.
+I see that the MAX8907 IRQ code does this in suspend:
 
-Well, often the clock bit is something of a noop - a lot of SoCs can
-reparent the IP block clocks between the different clock domains happily
-and have core clock domains that are mostly orthogonal to the power
-domains.  But yes.
+	if (device_may_wakeup(chip->dev))
+		enable_irq_wake(i2c->irq);
+	else
+		disable_irq(i2c->irq);
 
---SLfjTIIQuAzj8yil
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+and this in resume:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+	if (device_may_wakeup(chip->dev))
+		disable_irq_wake(i2c->irq);
+	else
+		enable_irq(i2c->irq);
 
-iQIcBAEBAgAGBQJQEbzUAAoJEBus8iNuMP3dnXcP/jFLKtSMKjOVVPSJfE9TfobM
-ClesmABbQItO82QxziXieqbP0lqCW3gKjvHRPLNiPqmQg5YtQ4mx6Wqo9OFwxHdL
-OXwxKDybMDuN4x/x8SHbnpzrPm4CNQ7zOrSjYgMq+vv3zufAvOtO3QOaUPMdKVd2
-6+s7T3kf8esHf5hllCeNiJhrIcImbJlw2p4+X/GHDi2tVPs1d7b4V46ZvjtFqXG4
-G4Tsyli3aelMEml+w2E3hVWP+CJX7kygLvOAX3BzlDWtHVxpdYIxR6b/JS4Fhuhg
-X6P/BpZRTQthDMhI+9Xj5C/8HvYCN4ZUQ31NLdh4Gaov5Fu10N8kPL6JO4SxxOUQ
-T2aCUzT2hvpeeUG2w8hXvyUSdUri5MdPSHRgCl0hVaBWCLBgoxr62u1CHrh6z5m5
-3vITouilNQ+mvXwKx16whLxUcRKomYK/CNo7LYA7jiW6ftsWsw1xPPqkM3Qa9SzK
-XZPbdeTrM+bsH/utP1xoKQ3RR1d464bNMyeNikrRB46nXu3TrXyUGeyWS+XJU5RC
-9VC3CsD13S1he5EVJB6phJS+gVICqqAWmZdiaiD0Ts/O2EiOJuQbKx0LSteoAigb
-ac7XlAdqAW476w9AwtZP5ERMmurUlMi/VCr9cFIrb297ufZpJOooaQ/tG4qrRrBE
-Pp8SJQa/3s3uJl86XERp
-=Mioi
------END PGP SIGNATURE-----
-
---SLfjTIIQuAzj8yil--
+neither of which are done in regmap_irq, since it doesn't explicitly do
+anything for suspend/resume at the moment. Are those code blocks
+necessary? I see that regmap_irq_sync_unlock() is already calling
+irq_set_irq_wake(), which implies that suspend/resume may have already
+been completely taken care of?
