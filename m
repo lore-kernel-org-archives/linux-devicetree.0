@@ -1,125 +1,106 @@
-From: Kevin Hilman <khilman@ti.com>
-Subject: Re: [RFC][PATCH 0/14] PM / shmobile: Pass power domain information via DT (was: Re: [RFD] PM: Device tree representation of power domains)
-Date: Wed, 25 Jul 2012 17:38:35 -0700
-Message-ID: <87vchb4ar8.fsf@ti.com>
-References: <201207032302.17805.rjw@sisk.pl> <201207242237.28051.rjw@sisk.pl>
-	<201207251300.34892.arnd@arndb.de> <201207260032.40159.rjw@sisk.pl>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: specifying two conflicting configs
+Date: Thu, 26 Jul 2012 08:53:03 +0800
+Message-ID: <501094EF.6090606@firmworks.com>
+References: <20120724113450.328c27430ebc4438d0048346@kinali.ch>
+ <20120725034801.GB23430@truffala.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201207260032.40159.rjw@sisk.pl> (Rafael J. Wysocki's message of
-	"Thu, 26 Jul 2012 00:32:39 +0200")
-Sender: linux-sh-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Linux PM list <linux-pm@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Magnus Damm <magnus.damm@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Linux-sh list <linux-sh@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120725034801.GB23430-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-"Rafael J. Wysocki" <rjw@sisk.pl> writes:
+On 7/25/2012 11:48 AM, David Gibson wrote:
+> On Tue, Jul 24, 2012 at 11:34:50AM +0200, Attila Kinali wrote:
+>> Hi,
+>>
+>> I have here an embedded system where i use a serial port as SD Card
+>> interface as well as SPI interface. I select what i want to use
+>> by setting a GPIO pin high or low.
+>>
+>> Currently i'm using two different dts files, one that specifies the
+>> serial port as SD Card interface and one that specifies the serial
+>> port as SPI interface.
+>>
+>> Now i would like to merge them into one file so that i can select
+>> which mode to use at runtime. The documentation gave me the impression
+>> that this should be possible, but i was not able to figure out how
+>> to do it.
+>>
+>> Would someone be so kind and point me to the documentation/example
+>> i've missed?
+>>
+>> The current configuration i use is either:
+>>
+>> ssp0: ssp@80010000 {
+>>         compatible = "fsl,imx23-mmc";
+>>         pinctrl-names = "default";
+>>         pinctrl-0 = <&mmc0_8bit_pins_a &mmc1_pins_fixup>;
+>>         bus-width = <8>;
+>>         status = "okay";
+>> };
+>>
+>> or:
+>>
+>> ssp0: ssp@80010000 {
+>>         #address-cells = <1>;
+>>         #size-cells = <0>;
+>>         compatible = "fsl,imx23-spi";
+>>         fsl,ssp-dma-channel = <1>;
+>>         pinctrl-names = "default";
+>>         pinctrl-0 = <&spi_pins_a>;
+>>         status = "okay";
+>>
+>> };
+> 
+> So, Mitch may have better insights here, but my inclination would be
+> to do something like this:
 
-> On Wednesday, July 25, 2012, Arnd Bergmann wrote:
->> On Tuesday 24 July 2012, Rafael J. Wysocki wrote:
->> > On Tuesday, July 24, 2012, Arnd Bergmann wrote:
->> > > On Tuesday 24 July 2012, Rafael J. Wysocki wrote:
->> > > > On Tuesday, July 24, 2012, Arnd Bergmann wrote:
->> > > > > On Saturday 21 July 2012, Rafael J. Wysocki wrote:
->> > > 
->> > > > > 
->> > > > > Sorry for taking so long to reply. I am really not that familiar with the
->> > > > > power domain requirements, but I do have two comments on your approach:
->> > > > > 
->> > > > > * I think when we want to add a generic concept to the device tree such
->> > > > >   as power domains, we should always make it specified in a generic way.
->> > > > 
->> > > > Do we really want that?  I'm a bit skeptical, because apparently nobody
->> > > > cares, as the (zero) response to this patchset evidently indicates and
->> > > > since nobody cares, it's probably better not to add such "generic" things
->> > > > just yet.
+The example below looks okay to me, except for the
+ranges property.  It doesn't seem that the mux node
+"passes through" the address space - because then
+the @1 sub-device would have the address 8001001
 
-Sorry to jump in late, but it's been another busy dev cycle and I
-haven't had the time to look at this series in detail.  But just so you
-know that somebody cares, we're also interested in bindings that will be
-useful on other SoCs for PM domains.
-
-However, since OMAP powerdomain support pre-dates generic powerdomains ,
-the "generic" power domains aren't quite generic enough get for OMAP,
-and I haven't had the time to extend the generic code, we haven't yet
-moved to generic powerdomains.
-
->> > > 
->> > > Well, the trouble with bindings is that they are much harder to change
->> > > later, at least in incompatible ways. 
->> > 
->> > Hmm, so I think you wanted to say that it might be burdensome to retain the
->> > code handling the old binding once we had started to use a new generic one.
->> > 
->> > I can agree with that, but that's quite similar to user space interfaces.
->> > Once we've exposed a user space interface of some kind and someone starts
->> > to use it, we'll have to maintain it going forward for the user in question.
->> > However, there is a way to deprecate old user space interfaces and it has
->> > happened.
->> > 
->> > In this particular case the burden would be on Renesas, but I don't think it
->> > would affect anybody else.
->> 
->> [adding devicetree-discuss@lists.ozlabs.org]
->> 
->> In case of user space interfaces, we also try very hard to avoid cases
->> where we know that we will have to change things later.
->
-> [Cough, cough]  Yeah, sure.  Except that that's rather difficult to anticipate
-> usually.
->
->> I don't think it's that hard to define a generic binding here, we just
->> need to make sure it's extensible.
->> 
->> One thing I would like to avoid is having to add to every single
->> device binding two separate optional properties defined like
->> 
->> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
->> index 2b584ca..353152e 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
->> @@ -13,3 +13,9 @@ Required properties:
->>  Optional properties:
->>  - mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable
->>  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable
->> +- pm-domain		 : a phandle pointing to the power domain
->> +			   controlling this device
->> +			   See ../pm-domain/generic.txt
->> +- renesas,pm-domain	 : a string with the name of the power domain
->> +			   controlling this device.
->> +			   See ../pm-domain/renesas.txt
->> 
->> Even if you say that the burden is only on Renesas to maintain all those
->> changes to every binding they use, there is also a burden on people trying
->> to understand the binding and deciding which one to use.
->
-> What about (tongue in cheek) "renesas,hwmod", then?  That won't be confused
-> with the generic "pm-domain" in any way, will it?  And since TI did that, we
-> surely should be allowed to do it as well, no?
->
-> Seriously, I'm not fundamentally opposed to using phandles for that in analogy
-> with regulators, but I'm afraid we won't get it right from the start and it
-> will turn out that we need to change the definition of the binding somehow
-> and _that_ is going to be painful.  Pretty much like changing generic user
-> space interfaces is (as opposed to changing interfaces of limited scope).
->
-> However, if that route is taken, I'll expect you to require TI to change their
-> hwmod binding in the analogous way.
-
-FWIW, we're already working on making ti,hwmods disappear.  That was a
-temporary step to allow us to easily migrate to DT using our existing,
-in-tree description of device IP blocks (hwmods.)
-
-That being said, I'm not sure why ti,hwmods is being used as an example
-for powerdomains.  hwmods describe the integration of SoC IP blocks
-(base addr, IRQ, DMA channel etc., which are being moved to DT) as well
-as a bunch of SoC specific PM register descriptions.  This stuff is
-SoC-specific PM register layout, so being very SoC specific, it has the
-'ti' prefix in the DT binding.
-
-Anyways, I hope to have a closer look this week, and I know Benoit
-Cousson (CC'd) has some ideas for DT bindings for power domains as well.
-Unfortunately, he's out until next week.
-
-Kevin
+> 
+> ssp-mux@80010000 {
+> 	#address-cells = <1>;
+> 	#size-cells = <0>;
+> 	compatible = "yourvendor,ssp-mux";
+> 	control-line = <&gpio 17>;
+> 	ranges = <0x0 0x80010000>;
+> 
+> 	ssp-mmc@0 {
+> 		  compatible = "fsl,imx23-mmc";
+> 		  /* ... */
+> 		  status = "okay";
+> 	};
+> 
+> 	ssp-spi@1 {
+> 		  compatible = "fsl,imx23-spi";
+> 		  /* ... */
+> 		  status = "disabled";
+> 	};
+> };
+> 
+> ranges would need tweaking depending on #size-cells of the parent and
+> the existing node reg properties, which you don't show.
+> 
+> A hackier, but possibly simpler alternative would be to simply include
+> both nodes, but have the one that's active by default marked status =
+> "okay" and the other marked status = "disabled".  Platform specific
+> knowledge would then me needed to know that with the right gpio magic
+> the original one can be disabled and the other enabled.
+> 
