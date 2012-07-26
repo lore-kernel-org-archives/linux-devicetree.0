@@ -1,91 +1,61 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v5 02/11] usb: musb: kill global and static for multi
- instance
-Date: Thu, 26 Jul 2012 16:06:14 +0300
-Message-ID: <20120726130613.GA2378@arwen.pp.htv.fi>
-References: <1343218326-30610-1-git-send-email-ajay.gupta@ti.com>
- <20120726074057.GH29029@arwen.pp.htv.fi>
- <47CEF8C4B26E8C44B22B028A650E0EA93EAEF790@DBDE01.ent.ti.com>
- <20120726082459.GP29029@arwen.pp.htv.fi>
- <47CEF8C4B26E8C44B22B028A650E0EA93EAEF877@DBDE01.ent.ti.com>
- <47CEF8C4B26E8C44B22B028A650E0EA93EAF41EB@DBDE01.ent.ti.com>
-Reply-To: balbi@ti.com
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Thu, 26 Jul 2012 14:11:21 +0100
+Message-ID: <20120726131121.GB7306@sirena.org.uk>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+ <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <47CEF8C4B26E8C44B22B028A650E0EA93EAF41EB@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Ajay Kumar" <ajay.gupta@ti.com>
-Cc: "Balbi, Felipe" <balbi@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>
+In-Reply-To: <1342713281-31114-4-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 19, 2012 at 11:54:41PM +0800, Shawn Guo wrote:
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +Optional properties:
+> +- transition-latency: Specify the possible maximum transition latency,
+> +  in unit of nanoseconds.
 
-On Thu, Jul 26, 2012 at 12:46:43PM +0000, Gupta, Ajay Kumar wrote:
-> Hi,
-> > > > > On Wed, Jul 25, 2012 at 05:42:06PM +0530, Ajay Kumar Gupta wrote:
-> > > > > > @@ -240,20 +238,24 @@ int __devinit musb_init_debugfs(struct mu=
-sb
-> > > *musb)
-> > > > > >  	struct dentry		*root;
-> > > > > >  	struct dentry		*file;
-> > > > > >  	int			ret;
-> > > > > > +	char			name[10];
-> > > > > >
-> > > > > > -	root =3D debugfs_create_dir("musb", NULL);
-> > > > > > +	sprintf(name, "musb%d", musb->id);
-> > > > > > +	root =3D debugfs_create_dir(name, NULL);
-> > > > >
-> > > > > I told you to use dev_name(musb) for a reason. See what happens w=
-hen
-> > > > > you use dev_name(musb);
-> > > > >
-> > > > > Do you not think about the other users of this driver ? Do you not
-> > > > > know what's the ID on platform_devices which "don't have an ID" ??
-> > > >
-> > > > We are now using musb_ida for all glue layers so '-1' issue will not
-> > come.
-> > >
-> > > true.
-> > >
-> > > > Still if we can manage without 'id' then better to do that way.
-> > >
-> > > just make sure to notice that directory name will "musb.0".
->=20
-> It creates musb-hdrc.0 and musb-hdrc.1 as glue layers use "musb-hdrc"
-> name in platform_device_alloc() call.
+This should make it clear that the transition latency being documented
+here is just that for the core clock change itself, there may be other
+sources of latency like the regulator ramp time or reprogramming PLLs.
 
-yes, indeed. That shouldn't be a problem though... what do you think ?
+> +	if (cpu_reg) {
+> +		opp = opp_find_freq_ceil(cpu_dev, &freq_Hz);
+> +		if (IS_ERR(opp)) {
+> +			pr_err("failed to find OPP for %ld\n", freq_Hz);
+> +			return PTR_ERR(opp);
+> +		}
+> +		volt = opp_get_voltage(opp);
+> +		tol = volt * voltage_tolerance / 100;
+> +		volt_old = regulator_get_voltage(cpu_reg);
 
---=20
-balbi
+regulator_get_voltage() might be a bit expensive, many regulators will
+query the hardware every time.  Since it's just for diagnostic purposes
+it'd be better to not bother and let people read the historical
+information from the logs.
 
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +	/* scaling up?  scale voltage before frequency */
+> +	if (cpu_reg && freqs.new > freqs.old) {
+> +		if (regulator_set_voltage(cpu_reg, volt - tol, volt + tol)) {
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+This is a totally sane and sensible use case for specifying a voltage
+range, we should move it into the regulator core for other users so you
+can just specify the voltage and the tolerance directly.
 
-iQIcBAEBAgAGBQJQEUDFAAoJEIaOsuA1yqREKNYP/RXLcS+8XdedugTZR34qsVVr
-OFXERXTFnfoPI+CVmHOFeQToD+KdPySMyVKwQr+7LMz8CTt26XaW5nTavl6Uk2Yo
-LYYD/8wWahu54QORtBf5U48YJETYjKTh3KONmdRXalT5uszp2xqQ/QOMfC9qjUMb
-Q3ulpBLSs9rs/FY0/AuwzrN7QtAUMeotoKAOUtQtpa3DNBa1YI6Esz0we2rAHhQx
-MNBqCyMCscShU1Wh2m+KMaJlRMt9eOkx4ydeMuaBDvIY6mmYwAefWFA11r2fRb8H
-lOvpWCDNbplcO/orrf32pq55+iFSZ4Rf/1g8lrzLdXcnwaMnTExzpxXuDpgNHR/x
-32m7C8SstBjZOLi5nGQL1NLQhDGEoWvp8SaQWE0eYqhKaceoppTfFbNVbFNuoYnG
-s6zDQaPs8b6wAuIn/+pAlXUCCw3eWJGKX9OyXcNF/YW5yOjbIIH5qtgzcxZK6cwz
-xdghKQN5d9XLTi/0WD8ul7PKJCcHShYlf73EJljJgj+5Egt/6+bQDnqySwAqjuxB
-/Q617sUlJGsT1ehuGxT1A4q/o+VdYp10QBNz6tfhDKUnYBJfxq0/BTxUTPKdLkQQ
-5CoQlrFadxPq97NUQlk7vIJjLmZdksFLfMDxyXKpJEmOlDXP9jUZLRUKLPpCT7VM
-BbX+ISCOy0SBDfephc8N
-=kmR1
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
+It is a little sad here as it means that we loose the ability to do
+frequency only scaling if there's no regulator which is nice.
