@@ -1,196 +1,99 @@
-From: zhangfei gao <zhangfei.gao@gmail.com>
+From: Vinod Koul <vinod.koul@linux.intel.com>
 Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 26 Jul 2012 12:56:02 +0800
-Message-ID: <CAMj5BkjbZsL_vSCfLsZ6UsdPrAHeQ+FwBFYbUM_L1w3wqCLuMQ@mail.gmail.com>
+Date: Thu, 26 Jul 2012 12:12:40 +0530
+Message-ID: <1343284960.1726.8978.camel@vkoul-udesk3>
 References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	<201206271520.49276.arnd@arndb.de>
-	<1342161907.1726.26.camel@vkoul-udesk3>
-	<201207171924.33756.arnd@arndb.de>
-	<1342756850.1726.74.camel@vkoul-udesk3>
+	 <201207171924.33756.arnd@arndb.de> <1342756850.1726.74.camel@vkoul-udesk3>
+	 <201207200839.24259.arnd@arndb.de> <1342777047.1726.435.camel@vkoul-udesk3>
+	 <500EF27F.6050905@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1342756850.1726.74.camel@vkoul-udesk3>
+In-Reply-To: <500EF27F.6050905@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Jon Hunter <jon-hunter@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2012 at 12:00 PM, Vinod Koul <vinod.koul@linux.intel.com> wrote:
-> On Tue, 2012-07-17 at 19:24 +0000, Arnd Bergmann wrote:
->> On Friday 13 July 2012, Vinod Koul wrote:
->> > > Do you mean there must be a global table, or are you ok with putting
->> > > the information about a channel into the device that uses the channel,
->> > > as we do for most other subsystems (IRQ, GPIO, pinctrl, ...).
->> > > If not, what is the problem with that approach?
->> >
->> > Today, we simple ask, "give me dma channel with DMA_SLAVE capability".
->> >
->> > If we change it to "give me dma channel which suits my need" and have
->> > additional information in dmaengine to handle this request effectively.
->> >
->> > What that would mean is
->> > a) DMA channel either knows which channel to provide, Or
->> > b) Additional arguments provided to dmaengine API to help it find out
->> > which channel to provide.
->> >
->> > It would be good to have client ask for a specific channel. But in order
->> > to build generic clients, we face a problem that clients may not know
->> > how they mapped to dmac by SoC designer. Or the mux maybe entirely
->> > flexible on which channel.
->> >
->> > If we add this as DT property (which I assume should be platform
->> > specific), then client will know which channel to request.
->> > It can have two levels, dmac and channel. In case mux is flexible enough
->> > then client gets a channel and program the mux for this mapping.
->> >
->> > I think this is the most simplistic solution I have for this, thoughts?
->>
->> I think we're basically on the same page. Let's see if I have covered
->> all the cases we discussed so far. I've tried to update the binding that
->> Jon sent out initially with everything we've discussed, so please review
->> this to see if I understood you correctly.
-> I think this looks fine to me. Few comments below on client side
->>
->>       Arnd
->>
->>
->> * Generic DMA Controller and DMA request bindings
->>
->> Generic binding to provide a way for a driver using DMA Engine to retrieve the
->> DMA request or channel information that goes from a hardware device to a DMA
->> controller.
->>
->> * DMA controller
->>
->> Required property:
->>     - #dma-cells: Number elements to describe DMA channel information. Must be
->>                   at least 2, allowing a phandle and a flags cell, but usually
->>                 is larger so a client can also specify a request or channel
->>                   number and/or some configuration.
->>
->> Optional properties:
->>     - #dma-channels: Number of DMA channels supported by the controller.
->>     - #dma-requests: Number of DMA requests signals supported by the controller.
->>
->> Example:
->>
->>        sdma: dmaengine@48000000 {
->>                compatible = "ti,omap4-sdma"
->>                reg = <0x48000000 0x1000>;
->>                interrupts = <4>;
->>                #dma-cells = <3>;
->>                #dma-channels = <32>;
->>                #dma-requests = <127>;
->>        };
->>
->>
->> * DMA client
->>
->> Client drivers should specify the DMA property using a phandle to the controller
->> followed by the number of DMA request/channel and the transfer type of the
->> channel (eg. device-to-memory, memory-to-device, memory-to-memory, etc).
->>
->> Required property:
->>     dmas: list of one or more dma specifiers, each consisting of
->>      - phandle pointing to dma controller node
->>      - flags word, a bit map that can hold these flags
->>        * 0x00000001 channel can be used for transfer from device
->>        * 0x00000002 channel can be user for transfer to device
-> Is this for identifying which channel is for TX and RX? If not I am not
-> sure I understood it well
->
->>      - zero or more cells in a format specific to the the dma controller
->>        node listed in the phandle. This typically contains a dma request
->>        line number or a channel number, but can contain any data that
->>        is used required for configuring a channel.
+On Tue, 2012-07-24 at 14:07 -0500, Jon Hunter wrote:
+> Hi Vinod,
+> >>>> Required property:
+> >>>>     dmas: list of one or more dma specifiers, each consisting of
+> >>>>      - phandle pointing to dma controller node
+> >>>>      - flags word, a bit map that can hold these flags
+> >>>>        * 0x00000001 channel can be used for transfer from device
+> >>>>        * 0x00000002 channel can be user for transfer to device
+> >>>
+> >>> Is this for identifying which channel is for TX and RX? If not I am not
+> >>> sure I understood it well
+> >>
+> >> Yes, but we can potentially add more flags here.
+> >>
+> >> The argument we had when coming up with this was roughly:
+> >>
+> >> * we need to identify which specifiers are referring to the same
+> >>   conceptual channel and can be used as alternatives
+> >> * this could be done just using the dma-names property, but making
+> >>   dma-names mandatory adds complexity for everyone.
+> >> * Most devices have just one or two channels, and if they have two,
+> >>   there is usually one input and one output.
+> >>
+> >> => if the common dmaengine code can find out whether a channel is
+> >>   input or output without looking at the dmac driver specific configuration,
+> >>   we don't need to add dma-names in most cases, but just let the client
+> >>   driver ask for "give me a channel with these flags".
+> > No we don't export the direction of the channel and usually channel can
+> > be configured either way.
+> 
+> So yes I can see that a channel itself could be configured to support a
+> given direction, but when we ask for a channel via dma_request_channel()
+> we are going to get a channel that matches the criteria we pass using
+> the filter parameter. So here the thinking was that "flags" is a filter
+> parameter that the user could specify and one example being direction
+> but it could be something else too.
+Yes that can be done, but I am leaning towards clients not have to do
+anything :) DMAEngine needs to know mapping and when
+dma_request_channel() is called it _always_ gives you the right channel.
 
-How about extend struct dma_slave_config, adding one member of
-"request_line", if
-"request line" is must config in most platform.
+Maybe for slave case we need to create dma_request_slave_channel() which
+has additional arguments for dmaengine to do the filtering.
 
-struct dma_slave_config {
-~
-u32 request_line;
-}
-The advantage is request_line can be get directly from
-dmaengine_slave_config regardless of DT.
 
->>
->> Optional property:
->>     dma-names: when present, this shall contain one identifier string
->>     for each dma specifier in the dmas property. The specific strings
->>     that can be used are defined in the binding of the DMA client
->>     device. When multiple dma specifiers can be used as alternatives,
->>     the dma-names for those dma specifiers must be identical.
->>
->> Any dma specifiers that have identical flags and identical dma-names
->> (if present) shall refer to different dma controllers that can be
->> used as alternatives, e.g. when a request line is connected to
->> multiple dma controllers. If multiple dma specifiers are listed that
->> have the same flags but refer to different functional channels,
->> the dma-names property must be used to distinguish them.
->>
->> Examples:
->>
->> 1. One DMA write channel, one DMA read/write channel:
->>
->>        i2c1: i2c@1 {
->>                ...
->>                dmas = <&sdma 2 1 &sdma 3 2>;
->>                ...
->>        };
->>
->> 2. A single read-write channel with two alternative dma controllers
->>    providing it:
->>
->>       dmas = <&dma0 3 5
->>               &dma1 3 7
->>               &dma2 3 2>;
->>
->> 3. A device with three channels, one of which has two alternatives:
->>
->>       dmas = <&dma0 1 4 /* data read */
->>               &dma0 2 6 /* data write */
->>               &dma1 1 0 /* error read */
->>               &dma2 1 0>; /* alternative error read */
->>       dma-names = "data", "data", "error", "error";
->>
->> 4. A dma controller requiring complex configuration:
->>
->>        dma: dmaengine@48000000 {
->>                compatible = "foo,foo-sdma"
->>                reg = <0x48000000 0x1000>;
->>                interrupts = <4>;
->>                #dma-cells = <6>; /* phandle, flag, request, channel,
->>                                        input-width, output-width */
-> Why would we want the widths to be here?
-> Assuming a DMA from System memory to a peripheral, source width should
-> be system memory width and destination the peripheral width. IMO these
-> should not be in dma property even if we need these
->>                #dma-channels = <32>;
->>                #dma-requests = <127>;
->>        };
->>
->>        mmc@49000000 {
->>               ...
->>               dmas = <&dma 1  /* read */
->>                       2       /* request line */
->>                       5       /* channel */
->>                       16      /* 16 bit bus width on read */
->>                       8>      /* 8 bit bus width on write */
->>                      <&dma 2  /* write */
->>                       3       /* request line */
->>                       6       /* channel */
->>                       8       /* 8 bit bus width on read */
->>                       16>     /* 16 bit bus width on write */
-> >From this looks like flag is for TX/RX, so maybe i read correct :)
->
-> --
-> ~Vinod
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > But from a client POV it makes sense as with the given direction you
+> > would need a specific request line for a channel. So this is right.
+> > But direction is something I don't expect to be used for "give me a
+> > channel" 
+> 
+> Ok. The thought was that the user would have the following means of
+> requesting a channel ...
+> 
+> 1. By name
+Bare name maynot be enough. In a dmac we have many channels which one to
+choose?
+> 2. By a filter parameter (flags)
+Even with direction same problem can arise
+> 3. By name and a filter parameter
+Additionally we need to say which channel, or making dmaengine already
+aware will help here
+
+> 
+> So we would have the following APIs ...
+> 
+> struct dma_chan
+> *of_dma_request_channel(struct device_node *node, unsigned int flags);
+> struct dma_chan
+> *of_dma_request_named channel(struct device_node *node, char *name,
+> unsigned int flags);
+> 
+> In both of these the filter parameter flags is optional.
+> 
+> Let me know your thoughts on this.
+I would call them dma_request_slave_channel and try to add to it for
+additional filtering
+
+
+
+-- 
+~Vinod
+
