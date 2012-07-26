@@ -1,56 +1,123 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC/PATCH 01/13] ARM: Samsung: Extend MIPI PHY callback with
- an index argument
-Date: Thu, 26 Jul 2012 22:15:40 +0200
-Message-ID: <5011A56C.6050503@gmail.com>
-References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com> <3148357.irbGOBJ73x@avalon>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH] mfd: add MAX8907 core driver
+Date: Thu, 26 Jul 2012 21:35:26 +0100
+Message-ID: <20120726203526.GD4560@opensource.wolfsonmicro.com>
+References: <1343331630-27126-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <3148357.irbGOBJ73x@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YToU2i3Vx8H2dn7O"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1343331630-27126-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Laxman Dewangan <ldewangan@nvidia.com>, Liam Girdwood <lrg@ti.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Gyungoh Yoo <jack.yoo@maxim-ic.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
 
-On 07/26/2012 04:42 PM, Laurent Pinchart wrote:
-> Hi Sylwester,
->
-> On Friday 25 May 2012 21:52:40 Sylwester Nawrocki wrote:
->> For systems instantiated from device tree struct platform_device id
->> field is always -1, add an 'id' argument to the s5p_csis_phy_enable()
->> function so the MIPI-CSIS hardware instance index can be passed in
->> by driver, for CONFIG_OF=y.
->>
->> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
->> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
->> ---
->>   arch/arm/plat-s5p/setup-mipiphy.c              |   20 ++++++++------------
->>   arch/arm/plat-samsung/include/plat/mipi_csis.h |   10 ++++++----
->>   2 files changed, 14 insertions(+), 16 deletions(-)
->>
->> diff --git a/arch/arm/plat-s5p/setup-mipiphy.c
->> b/arch/arm/plat-s5p/setup-mipiphy.c index 683c466..146ecc3 100644
->> --- a/arch/arm/plat-s5p/setup-mipiphy.c
->> +++ b/arch/arm/plat-s5p/setup-mipiphy.c
->> @@ -14,24 +14,19 @@
->>   #include<linux/spinlock.h>
->>   #include<mach/regs-clock.h>
->>
->> -static int __s5p_mipi_phy_control(struct platform_device *pdev,
->> +static int __s5p_mipi_phy_control(struct platform_device *pdev, int id,
->>   				  bool on, u32 reset)
->
-> What about removing the pdev argument, as it's now not needed ?
+--YToU2i3Vx8H2dn7O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Indeed, it isn't useful any more. I'm not sure what I intended to
-keep it for, perhaps just some sentimental reasons.. :)
-Thanks for pointing out, I'll remove it in the next iteration.
+On Thu, Jul 26, 2012 at 01:40:30PM -0600, Stephen Warren wrote:
 
---
+> +struct max8907_irq_data {
+> +	int	reg;
+> +	int	mask_reg;
+> +	int	offs;		/* bit offset in mask register */
+> +	bool	is_rtc;
+> +};
 
-Regards,
-Sylwester
+This (and all the code in here) looks very much like regmap-irq (or one
+of the pre-regmap drivers I wrote which were factored out to there)...
+why can't we use regmap_irq?
+
+Looking at the code it looks like a very similar pattern to the arizona
+chips where you've got two IRQ domains in the chip which can be handled
+with a single virtual IRQ to do the demux.  We could factor that out
+too easily enough, I might just do that...
+
+> +		if (!irqd_irq_disabled(d) && (value & irq_data->offs)) {
+
+This looks very suspicious...  why do we need to call
+irqd_irq_disabled() here?
+
+> +	regmap_write(chip->regmap_gen, MAX8907_REG_CHG_IRQ1_MASK, irq_chg[0]);
+> +	regmap_write(chip->regmap_gen, MAX8907_REG_CHG_IRQ2_MASK, irq_chg[1]);
+> +	regmap_write(chip->regmap_gen, MAX8907_REG_ON_OFF_IRQ1_MASK,
+> +		     irq_on[0]);
+> +	regmap_write(chip->regmap_gen, MAX8907_REG_ON_OFF_IRQ2_MASK,
+> +		     irq_on[1]);
+> +	regmap_write(chip->regmap_rtc, MAX8907_REG_RTC_IRQ_MASK, irq_rtc);
+
+If you have the cache enabled regmap_update_bits() is your friend here,
+it'll suppress duplicate I/O.
+
+> +static void max8907_irq_enable(struct irq_data *data)
+> +{
+> +	/* Everything happens in max8907_irq_sync_unlock */
+> +}
+
+> +static void max8907_irq_disable(struct irq_data *data)
+> +{
+> +	/* Everything happens in max8907_irq_sync_unlock */
+> +}
+
+The fact that these functions are empty is the second part of the above
+suspicous check for disabled IRQs.  We're just completely ignoring the
+caller here.  What would idiomatically happen is that we'd update a
+variable here then write it out in the unmask.
+
+If these functions really should be empty then they should be omitted.
+
+> +static int max8907_irq_set_wake(struct irq_data *data, unsigned int on)
+> +{
+> +	/* Everything happens in max8907_irq_sync_unlock */
+> +
+> +	return 0;
+> +}
+
+Again, this doesn't look clever at all.
+
+> +		if (irqd_is_wakeup_set(d)) {
+> +			/* 1 -- disable, 0 -- enable */
+> +			switch (irq_data->mask_reg) {
+
+This loop we should just port over into the regmap code.
+
+> +static const struct regmap_config max8907_regmap_gen_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.volatile_reg = max8907_gen_is_volatile_reg,
+> +	.writeable_reg = max8907_gen_is_writeable_reg,
+> +	.max_register = MAX8907_REG_LDO20VOUT,
+> +	.cache_type = REGCACHE_RBTREE,
+> +};
+
+Your IRQ registers appear to be clear on read which means you should
+have a precious_reg callback too otherwise someone looking at the
+register map in debugfs can ack interrupts.
+
+--YToU2i3Vx8H2dn7O
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQEan/AAoJEBus8iNuMP3dooIP/3M85KMd6fJayKtfy1+8Oz47
+wgNuHGXnalcIJtFQcohpFCx8+sCmx7hg7QQeXZWENqxaK7TKZ9sIDwcuqfh3RkyE
+Iei727sHU66xK1XUTenfInqwruur3yOKFuZLLMf0gyVu6sqarcvS4xfiDHrPROG3
+PbD7aSIaGN8kFZyU6WCqtPdbL7ybBfcSm488rRFWH6hVTIHIHp03JWIa5wejI/jt
+G6a+uCnZtLHXXPBXc/uj1t+nxoS7w+uLNRPDe9svA1/XqyWTLl1RIOlHOU82qUf1
+mbzNm9Znz6cSjvO0uSiBfKl5XpyUPAD0vR/JNx7i4RBGAsHK79MYjhJ4PmATqJqy
+g1yiZJ4TqHqDKvH8yv8xE0UJd4fF9eNIZyp4WQ0+by35Wir2Z1IRv+5G1yR//r2+
+KCtf9G9leKZK/J+xnIBgZfRDtNL2eOgzQMHccJ+gB+ACJbXQzZ8pdDhn4Uh0HqS6
+QkxsFHWCHbW6mFxwy9IBfSfMP5t6N8T8Pe/qb35HQiO7fjveb5pgTGjvUUFpC2W5
+iog9gU1EKO6YVjXB7rghexmm6I1Ppd45d4ei8gBNnWG8CcAkSOl1b3unlnEywQKE
+6RqjRIEu/BZJ6WPFAhP6WzS1Q9i1ANaT0mFCdz10vsHOszfGgPe7RwqOmTKoRVRH
+P0eL0Y3HBfKNfX3jQGq2
+=GN3A
+-----END PGP SIGNATURE-----
+
+--YToU2i3Vx8H2dn7O--
