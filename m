@@ -1,97 +1,142 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree
- based instantiation
-Date: Thu, 26 Jul 2012 22:39:31 +0200
-Message-ID: <5011AB03.2070900@gmail.com>
-References: <4FBFE1EC.9060209@samsung.com> <1337975573-27117-1-git-send-email-s.nawrocki@samsung.com> <1337975573-27117-9-git-send-email-s.nawrocki@samsung.com> <1393020.I6XBuRyBXi@avalon>
+From: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
+Subject: Re: [RFC][PATCH 0/14] PM / shmobile: Pass power domain information
+ via DT (was: Re: [RFD] PM: Device tree representation of power domains)
+Date: Thu, 26 Jul 2012 22:55:42 +0200
+Message-ID: <201207262255.43054.rjw@sisk.pl>
+References: <201207032302.17805.rjw@sisk.pl> <201207260032.40159.rjw@sisk.pl>
+ <87vchb4ar8.fsf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1393020.I6XBuRyBXi@avalon>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <87vchb4ar8.fsf-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
+Cc: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On 07/26/2012 05:21 PM, Laurent Pinchart wrote:
-> On Friday 25 May 2012 21:52:48 Sylwester Nawrocki wrote:
->> The driver initializes all board related properties except the s_power()
->> callback to board code. The platforms that require this callback are not
->> supported by this driver yet for CONFIG_OF=y.
->>
->> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
->> Signed-off-by: Bartlomiej Zolnierkiewicz<b.zolnierkie@samsung.com>
->> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
->> ---
->>   .../bindings/camera/samsung-s5k6aafx.txt           |   57 +++++++++
->>   drivers/media/video/s5k6aa.c                       |  129 ++++++++++++-----
->>   2 files changed, 146 insertions(+), 40 deletions(-)
->>   create mode 100644
->> Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
->>
->> diff --git a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
->> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt new file
->> mode 100644
->> index 0000000..6685a9c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
->> @@ -0,0 +1,57 @@
->> +Samsung S5K6AAFX camera sensor
->> +------------------------------
->> +
->> +Required properties:
->> +
->> +- compatible : "samsung,s5k6aafx";
->> +- reg : base address of the device on I2C bus;
->> +- video-itu-601-bus : parallel bus with HSYNC and VSYNC - ITU-R BT.601;
->> +- vdd_core-supply : digital core voltage supply 1.5V (1.4V to 1.6V);
->> +- vdda-supply : analog power voltage supply 2.8V (2.6V to 3.0V);
->> +- vdd_reg-supply : regulator input power voltage supply 1.8V (1.7V to 1.9V)
->> +		   or 2.8V (2.6V to 3.0);
->> +- vddio-supply : I/O voltage supply 1.8V (1.65V to 1.95V)
->> +		 or 2.8V (2.5V to 3.1V);
->> +
->> +Optional properties:
->> +
->> +- clock-frequency : the IP's main (system bus) clock frequency in Hz, the
->> default
+On Thursday, July 26, 2012, Kevin Hilman wrote:
+> "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org> writes:
 > 
-> Is that the input clock frequency ? Can't it vary ? Instead of accessing the
+> > On Wednesday, July 25, 2012, Arnd Bergmann wrote:
+> >> On Tuesday 24 July 2012, Rafael J. Wysocki wrote:
+> >> > On Tuesday, July 24, 2012, Arnd Bergmann wrote:
+> >> > > On Tuesday 24 July 2012, Rafael J. Wysocki wrote:
+> >> > > > On Tuesday, July 24, 2012, Arnd Bergmann wrote:
+> >> > > > > On Saturday 21 July 2012, Rafael J. Wysocki wrote:
+> >> > > 
+> >> > > > > 
+> >> > > > > Sorry for taking so long to reply. I am really not that familiar with the
+> >> > > > > power domain requirements, but I do have two comments on your approach:
+> >> > > > > 
+> >> > > > > * I think when we want to add a generic concept to the device tree such
+> >> > > > >   as power domains, we should always make it specified in a generic way.
+> >> > > > 
+> >> > > > Do we really want that?  I'm a bit skeptical, because apparently nobody
+> >> > > > cares, as the (zero) response to this patchset evidently indicates and
+> >> > > > since nobody cares, it's probably better not to add such "generic" things
+> >> > > > just yet.
+> 
+> Sorry to jump in late, but it's been another busy dev cycle and I
+> haven't had the time to look at this series in detail.  But just so you
+> know that somebody cares, we're also interested in bindings that will be
+> useful on other SoCs for PM domains.
+> 
+> However, since OMAP powerdomain support pre-dates generic powerdomains ,
+> the "generic" power domains aren't quite generic enough get for OMAP,
+> and I haven't had the time to extend the generic code, we haven't yet
+> moved to generic powerdomains.
+> 
+> >> > > 
+> >> > > Well, the trouble with bindings is that they are much harder to change
+> >> > > later, at least in incompatible ways. 
+> >> > 
+> >> > Hmm, so I think you wanted to say that it might be burdensome to retain the
+> >> > code handling the old binding once we had started to use a new generic one.
+> >> > 
+> >> > I can agree with that, but that's quite similar to user space interfaces.
+> >> > Once we've exposed a user space interface of some kind and someone starts
+> >> > to use it, we'll have to maintain it going forward for the user in question.
+> >> > However, there is a way to deprecate old user space interfaces and it has
+> >> > happened.
+> >> > 
+> >> > In this particular case the burden would be on Renesas, but I don't think it
+> >> > would affect anybody else.
+> >> 
+> >> [adding devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org]
+> >> 
+> >> In case of user space interfaces, we also try very hard to avoid cases
+> >> where we know that we will have to change things later.
+> >
+> > [Cough, cough]  Yeah, sure.  Except that that's rather difficult to anticipate
+> > usually.
+> >
+> >> I don't think it's that hard to define a generic binding here, we just
+> >> need to make sure it's extensible.
+> >> 
+> >> One thing I would like to avoid is having to add to every single
+> >> device binding two separate optional properties defined like
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+> >> index 2b584ca..353152e 100644
+> >> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
+> >> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+> >> @@ -13,3 +13,9 @@ Required properties:
+> >>  Optional properties:
+> >>  - mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable
+> >>  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable
+> >> +- pm-domain		 : a phandle pointing to the power domain
+> >> +			   controlling this device
+> >> +			   See ../pm-domain/generic.txt
+> >> +- renesas,pm-domain	 : a string with the name of the power domain
+> >> +			   controlling this device.
+> >> +			   See ../pm-domain/renesas.txt
+> >> 
+> >> Even if you say that the burden is only on Renesas to maintain all those
+> >> changes to every binding they use, there is also a burden on people trying
+> >> to understand the binding and deciding which one to use.
+> >
+> > What about (tongue in cheek) "renesas,hwmod", then?  That won't be confused
+> > with the generic "pm-domain" in any way, will it?  And since TI did that, we
+> > surely should be allowed to do it as well, no?
+> >
+> > Seriously, I'm not fundamentally opposed to using phandles for that in analogy
+> > with regulators, but I'm afraid we won't get it right from the start and it
+> > will turn out that we need to change the definition of the binding somehow
+> > and _that_ is going to be painful.  Pretty much like changing generic user
+> > space interfaces is (as opposed to changing interfaces of limited scope).
+> >
+> > However, if that route is taken, I'll expect you to require TI to change their
+> > hwmod binding in the analogous way.
+> 
+> FWIW, we're already working on making ti,hwmods disappear.  That was a
+> temporary step to allow us to easily migrate to DT using our existing,
+> in-tree description of device IP blocks (hwmods.)
 
-Yes, the description is incorrect in this patch, it should read:
+I see.  Obviously I didn't know that. :-)
 
-+- clock-frequency : the sensor's master clock frequency in Hz;
+> That being said, I'm not sure why ti,hwmods is being used as an example
+> for powerdomains.  hwmods describe the integration of SoC IP blocks
+> (base addr, IRQ, DMA channel etc., which are being moved to DT) as well
+> as a bunch of SoC specific PM register descriptions.  This stuff is
+> SoC-specific PM register layout, so being very SoC specific, it has the
+> 'ti' prefix in the DT binding.
+> 
+> Anyways, I hope to have a closer look this week, and I know Benoit
+> Cousson (CC'd) has some ideas for DT bindings for power domains as well.
+> Unfortunately, he's out until next week.
 
-and be a required property. As in this patch:
-https://github.com/snawrocki/linux/commit/e8a5f890dec0d7414b656bb1d1ac97d5e7abe563
+No stress, I won't have the time to look into this again any time soon,
+perhaps not even before San Diego.
 
-It could vary (as this is a PLL input frequency), so probably a range would
-be a better alternative. Given that host device won't always be able to set 
-this exact value...
-
-> sensor clock frequency from the FIMC driver you should reference a clock in
-> the sensor DT node. That obviously requires generic clock support, which might
-> not be available for your platform yet (that's one of the reasons the OMAP3
-> ISP driver doesn't support DT yet).
-
-I agree it might be better, but waiting unknown number of kernel releases
-for the platforms to get converted to common clock API is not a good 
-alternative either. I guess we could have some transitional solutions
-while other subsystems are getting adapted. 
-
-Yet we need to specify the clock frequency range per sensor, so
-
-1. either we specify it at a sensor node and host device driver references
-   it, or
-2. it could be added to a sensor specific child node of a host device
-   mode, and then only the host would reference it, and sensor would
-   reference a clock in its DT node; I guess it's not a problem that
-   in most cases the camera host device is a clock provider.
-
---
-
-Regards,
-Sylwester
+Thanks,
+Rafael
