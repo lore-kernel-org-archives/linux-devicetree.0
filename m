@@ -1,63 +1,32 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] mfd: add MAX8907 core driver
-Date: Thu, 26 Jul 2012 15:14:21 -0600
-Message-ID: <5011B32D.1080102@wwwdotorg.org>
-References: <1343331630-27126-1-git-send-email-swarren@wwwdotorg.org>
- <20120726203526.GD4560@opensource.wolfsonmicro.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [RFC][PATCH 0/14] PM / shmobile: Pass power domain information via DT (was: Re: [RFD] PM: Device tree representation of power domains)
+Date: Thu, 26 Jul 2012 23:34:11 +0200
+Message-ID: <201207262334.11789.rjw@sisk.pl>
+References: <201207032302.17805.rjw@sisk.pl> <87vchb4ar8.fsf@ti.com> <20120726210952.GG4560@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-2"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120726203526.GD4560-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20120726210952.GG4560@opensource.wolfsonmicro.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Kevin Hilman <khilman@ti.com>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Linux PM list <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Magnus Damm <magnus.damm@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Linux-sh list <linux-sh@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2012 02:35 PM, Mark Brown wrote:
-> On Thu, Jul 26, 2012 at 01:40:30PM -0600, Stephen Warren wrote:
+On Thursday, July 26, 2012, Mark Brown wrote:
+> On Wed, Jul 25, 2012 at 05:38:35PM -0700, Kevin Hilman wrote:
+> 
+> > That being said, I'm not sure why ti,hwmods is being used as an example
+> > for powerdomains.  hwmods describe the integration of SoC IP blocks
+> > (base addr, IRQ, DMA channel etc., which are being moved to DT) as well
+> > as a bunch of SoC specific PM register descriptions.  This stuff is
+> > SoC-specific PM register layout, so being very SoC specific, it has the
+> > 'ti' prefix in the DT binding.
+> 
+> I think the thing here is that one aspect of that SoC integration is
+> which power domain the blocks are in.  Describing which power domain an
+> IP is in isn't a million miles away from describing which hwmod applies
+> to an IP.
 
->> +		if (!irqd_irq_disabled(d) && (value & irq_data->offs)) {
-> 
-> This looks very suspicious...  why do we need to call 
-> irqd_irq_disabled() here?
-
-I believe the status register reflects the unmasked status, it's just
-the interrupt signal that's affected by the mask.
-
->> +static void max8907_irq_enable(struct irq_data *data) +{ +	/*
->> Everything happens in max8907_irq_sync_unlock */ +}
-> 
->> +static void max8907_irq_disable(struct irq_data *data) +{ +	/*
->> Everything happens in max8907_irq_sync_unlock */ +}
-> 
-> The fact that these functions are empty is the second part of the
-> above suspicous check for disabled IRQs.  We're just completely
-> ignoring the caller here.  What would idiomatically happen is that
-> we'd update a variable here then write it out in the unmask.
-> 
-> If these functions really should be empty then they should be
-> omitted.
-> 
->> +static int max8907_irq_set_wake(struct irq_data *data, unsigned
->> int on) +{ +	/* Everything happens in max8907_irq_sync_unlock */ 
->> + +	return 0; +}
-> 
-> Again, this doesn't look clever at all.
-
-So the idea here was that the IRQ core is already maintaining state
-which describes which IRQs are enabled/disabled and wake/not. Rather
-than have irq_enable/irq_disable/set_wake do nothing but save the same
-state to irq_chip-specific structures, I removed the body of those
-functions and instead just call irqd_irq_disabled() etc. wherever I
-would have accessed the "local" state. Is that not a legitimate design
-then?
+I agree.
