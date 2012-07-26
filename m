@@ -1,68 +1,139 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC/PATCH 02/13] media: s5p-csis: Add device tree support
-Date: Thu, 26 Jul 2012 21:51:30 +0200
-Message-ID: <50119FC2.7090908@gmail.com>
-References: <4FBFE1EC.9060209@samsung.com> <Pine.LNX.4.64.1207161031000.12302@axis700.grange> <5005ABF7.6020008@gmail.com> <24426306.kyhKLGOJzl@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <24426306.kyhKLGOJzl@avalon>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH v3 09/10] of: Add of_pci_parse_ranges()
+Date: Thu, 26 Jul 2012 21:55:11 +0200
+Message-ID: <1343332512-28762-10-git-send-email-thierry.reding@avionic-design.de>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1343332512-28762-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+This new function parses the ranges property of PCI device nodes into
+an array of struct resource elements. It is useful in multiple-port PCI
+host controller drivers to collect information about the ranges that it
+needs to forward to the respective ports.
 
-On 07/26/2012 04:38 PM, Laurent Pinchart wrote:
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/video/mipi.txt
->>>> @@ -0,0 +1,5 @@
->>>> +Common properties of MIPI-CSI1 and MIPI-CSI2 receivers and transmitters
->>>> +
->>>> + - data-lanes : number of differential data lanes wired and actively
->>>> used in
->>>> +		communication between the transmitter and the receiver, this
->>>> +		excludes the clock lane;
->>>
->>> Wouldn't it be better to use the standard "bus-width" DT property?
->>
->> I can't see any problems with using "bus-width". It seems sufficient
->> and could indeed be better, without a need to invent new MIPI-CSI
->> specific names. That was my first RFC on that and my perspective
->> wasn't probably broad enough. :)
-> 
-> What about CSI receivers that can reroute the lanes internally ? We would need
-> to specify lane indices for each lane then, maybe with something like
-> 
-> clock-lane =<0>;
-> data-lanes =<2 3 1>;
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+---
+Changes in v3:
+- new patch
 
-Sounds good to me. And the clock-lane could be made optional, as not all
-devices would need it.
+ drivers/of/of_pci.c    | 84 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/of_pci.h |  2 ++
+ 2 files changed, 85 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index 13e37e2..bcff301 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -1,7 +1,8 @@
+ #include <linux/kernel.h>
+ #include <linux/export.h>
+-#include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/of_pci.h>
++#include <linux/slab.h>
+ #include <asm/prom.h>
  
-However, as far as I can see, there is currently no generic API for handling 
-this kind of data structure. E.g. number of cells for the "interrupts"
-property is specified with an additional "#interrupt-cells" property.
-
-It would have been much easier to handle something like:
-
-data-lanes = <2>, <3>, <1>;
-
-i.e. an array of the lane indexes.
-
-> For receivers that can't reroute lanes internally, the data-lanes property
-> would be need to specify lanes in sequence.
-> 
-> data-lanes =<1 2 3>;
-
-In this case we would be only interested in the number of cells in this
-property, but how it could be retrieved ? With an array, it could have been
-calculated from property length returned by of_property_find() (divided by
-sizof(u32)).
-
---
-
-Regards,
-Sylwester
+ static inline int __of_pci_pci_compare(struct device_node *node,
+@@ -40,3 +41,84 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 	return NULL;
+ }
+ EXPORT_SYMBOL_GPL(of_pci_find_child_device);
++
++struct resource *of_pci_parse_ranges(struct device_node *node,
++				     unsigned int *countp)
++{
++	unsigned int count, i = 0;
++	struct resource *ranges;
++	const __be32 *values;
++	int len, pna, np;
++
++	values = of_get_property(node, "ranges", &len);
++	if (!values)
++		return NULL;
++
++	pna = of_n_addr_cells(node);
++	np = pna + 5;
++
++	count = len / (np * sizeof(*values));
++
++	ranges = kzalloc(sizeof(*ranges) * count, GFP_KERNEL);
++	if (!ranges)
++		return NULL;
++
++	pr_debug("PCI ranges:\n");
++
++	while ((len -= np * sizeof(*values)) >= 0) {
++		u64 addr = of_translate_address(node, values + 3);
++		u64 size = of_read_number(values + 3 + pna, 2);
++		u32 type = be32_to_cpup(values);
++		const char *suffix = "";
++		struct resource range;
++
++		memset(&range, 0, sizeof(range));
++		range.start = addr;
++		range.end = addr + size - 1;
++
++		switch ((type >> 24) & 0x3) {
++		case 0:
++			range.flags = IORESOURCE_MEM | IORESOURCE_PCI_CS;
++			pr_debug("  CS  %#x-%#x\n", range.start, range.end);
++			break;
++
++		case 1:
++			range.flags = IORESOURCE_IO;
++			pr_debug("  IO  %#x-%#x\n", range.start, range.end);
++			break;
++
++		case 2:
++			range.flags = IORESOURCE_MEM;
++
++			if (type & 0x40000000) {
++				range.flags |= IORESOURCE_PREFETCH;
++				suffix = "prefetch";
++			}
++
++			pr_debug("  MEM %#x-%#x %s\n", range.start, range.end,
++				 suffix);
++			break;
++
++		case 3:
++			range.flags = IORESOURCE_MEM | IORESOURCE_MEM_64;
++
++			if (type & 0x40000000) {
++				range.flags |= IORESOURCE_PREFETCH;
++				suffix = "prefetch";
++			}
++
++			pr_debug("  MEM %#x-%#x 64-bit %s\n", range.start,
++				 range.end, suffix);
++			break;
++		}
++
++		memcpy(&ranges[i++], &range, sizeof(range));
++		values += np;
++	}
++
++	if (countp)
++		*countp = count;
++
++	return ranges;
++}
++EXPORT_SYMBOL_GPL(of_pci_parse_ranges);
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index bb115de..c0db6ea 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -10,5 +10,7 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
+ struct device_node;
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 					     unsigned int devfn);
++struct resource *of_pci_parse_ranges(struct device_node *node,
++				     unsigned int *countp);
+ 
+ #endif
+-- 
+1.7.11.2
