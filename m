@@ -1,7 +1,7 @@
 From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 3/6] rtc: omap: dt support
-Date: Fri, 27 Jul 2012 17:54:18 +0530
-Message-ID: <d75af2cbe49f852b1e74e785fe5c5d5de5c3730d.1343383616.git.afzal@ti.com>
+Subject: [PATCH v3 5/6] rtc: omap: Add runtime pm support
+Date: Fri, 27 Jul 2012 17:54:29 +0530
+Message-ID: <2843abe86b0e676c66c5590d429caa2396968a83.1343383616.git.afzal@ti.com>
 References: <cover.1343383616.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,100 +21,84 @@ To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/D
 Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enhance rtc-omap driver with DT capability
+From: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
 
+OMAP1 RTC driver is used in multiple devices like,
+OMAPL138 and AM33XX. Driver currently doesn't handle any clocks,
+which may be right for OMAP1 architecture but in case of AM33XX,
+the clock/module needs to be enabled in order to access the registers.
+
+So covert this driver to runtime pm, which internally handles rest.
+
+Afzal: handle error path
+
+Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 ---
+ drivers/rtc/rtc-omap.c |   18 ++++++++++++++++++
+ 1 files changed, 18 insertions(+), 0 deletions(-)
 
-v2:
- Use compatible as ti,da830-rtc instead of ti,am1808-rtc
-
- Documentation/devicetree/bindings/rtc/rtc-omap.txt |   20 ++++++++++++++++++++
- drivers/rtc/rtc-omap.c                             |   18 ++++++++++++++++++
- 2 files changed, 38 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-omap.txt
-
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-new file mode 100644
-index 0000000..8c5c584
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-@@ -0,0 +1,20 @@
-+TI Real Time Clock
-+
-+Required properties:
-+- compatible: "ti,da830-rtc"
-+- reg: Address range of rtc register set
-+- interrupts: rtc timer, alarm interrupts in order
-+- interrupt-parent: phandle for the interrupt controller
-+
-+Alternative for reg and interrupt properties on OMAP:
-+- ti,hwmods: Name of the hwmod associated to the RTC
-+
-+Example:
-+
-+rtc@1c23000 {
-+	compatible = "ti,da830-rtc";
-+	reg = <0x23000 0x1000>;
-+	interrupts = <19
-+		      19>;
-+	interrupt-parent = <&intc>;
-+};
 diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-index 27cc70d..d600297 100644
+index d600297..c075d07 100644
 --- a/drivers/rtc/rtc-omap.c
 +++ b/drivers/rtc/rtc-omap.c
-@@ -20,6 +20,8 @@
- #include <linux/rtc.h>
- #include <linux/bcd.h>
+@@ -22,6 +22,7 @@
  #include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/pm_runtime.h>
  
  #include <asm/io.h>
  
-@@ -298,6 +300,8 @@ static struct rtc_class_ops omap_rtc_ops = {
- static int omap_rtc_alarm;
- static int omap_rtc_timer;
+@@ -363,6 +364,10 @@ static int __init omap_rtc_probe(struct platform_device *pdev)
+ 		goto fail;
+ 	}
  
-+#define	OMAP_RTC_DATA_DA830_IDX	1
++	/* Enable the clock/module so that we can access the registers */
++	pm_runtime_enable(&pdev->dev);
++	pm_runtime_get_sync(&pdev->dev);
 +
- static struct platform_device_id omap_rtc_devtype[] = {
- 	{
- 		.name	= DRIVER_NAME,
-@@ -308,12 +312,25 @@ static struct platform_device_id omap_rtc_devtype[] = {
- };
- MODULE_DEVICE_TABLE(platform, omap_rtc_devtype);
+ 	id_entry = platform_get_device_id(pdev);
+ 	if (id_entry && (id_entry->driver_data & OMAP_RTC_HAS_KICKER)) {
+ 		rtc_writel(KICK0_VALUE, OMAP_RTC_KICK0_REG);
+@@ -447,6 +452,8 @@ fail1:
+ fail0:
+ 	if (id_entry && (id_entry->driver_data & OMAP_RTC_HAS_KICKER))
+ 		rtc_writel(0, OMAP_RTC_KICK0_REG);
++	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
+ 	iounmap(rtc_base);
+ fail:
+ 	release_mem_region(mem->start, resource_size(mem));
+@@ -473,6 +480,11 @@ static int __exit omap_rtc_remove(struct platform_device *pdev)
+ 	rtc_device_unregister(rtc);
+ 	if (id_entry && (id_entry->driver_data & OMAP_RTC_HAS_KICKER))
+ 		rtc_writel(0, OMAP_RTC_KICK0_REG);
++
++	/* Disable the clock/module */
++	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++
+ 	iounmap(rtc_base);
+ 	release_mem_region(mem->start, resource_size(mem));
+ 	return 0;
+@@ -495,11 +507,17 @@ static int omap_rtc_suspend(struct platform_device *pdev, pm_message_t state)
+ 	else
+ 		rtc_write(0, OMAP_RTC_INTERRUPTS_REG);
  
-+static const struct of_device_id omap_rtc_of_match[] = {
-+	{	.compatible	= "ti,da830-rtc",
-+		.data		= &omap_rtc_devtype[OMAP_RTC_DATA_DA830_IDX],
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
++	/* Disable the clock/module */
++	pm_runtime_put_sync(&pdev->dev);
 +
- static int __init omap_rtc_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+ static int omap_rtc_resume(struct platform_device *pdev)
  {
- 	struct resource		*res, *mem;
- 	struct rtc_device	*rtc;
- 	u8			reg, new_ctrl;
- 	const struct platform_device_id *id_entry;
-+	const struct of_device_id *of_id;
++	/* Enable the clock/module so that we can access the registers */
++	pm_runtime_get_sync(&pdev->dev);
 +
-+	of_id = of_match_device(omap_rtc_of_match, &pdev->dev);
-+	if (of_id)
-+		pdev->id_entry = of_id->data;
- 
- 	omap_rtc_timer = platform_get_irq(pdev, 0);
- 	if (omap_rtc_timer <= 0) {
-@@ -509,6 +526,7 @@ static struct platform_driver omap_rtc_driver = {
- 	.driver		= {
- 		.name	= DRIVER_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(omap_rtc_of_match),
- 	},
- 	.id_table	= omap_rtc_devtype,
- };
+ 	if (device_may_wakeup(&pdev->dev))
+ 		disable_irq_wake(omap_rtc_alarm);
+ 	else
 -- 
 1.7.1
