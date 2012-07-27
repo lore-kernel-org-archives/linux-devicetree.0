@@ -1,51 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
-Date: Sat, 28 Jul 2012 00:42:06 +0200
-Message-ID: <CACRpkdah3B95C0f7C78E65mWWc7+5VE__ByFQ+vFBv6BA=LKRg@mail.gmail.com>
-References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
- <1342363754-30808-2-git-send-email-florian@openwrt.org>
- <20120716142941.666d928c@skate> <6220407.M8CZZfZu0N@bender>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] mfd: twl6040: Add twl6040-gpio child
+Date: Sat, 28 Jul 2012 00:50:43 +0200
+Message-ID: <CACRpkdZJcy5HOZkjMCVJW5beExoCHOBb=BiB4GOGR7sM+5Xsww@mail.gmail.com>
+References: <1342603220-13287-1-git-send-email-peter.ujfalusi@ti.com>
+	<1342603220-13287-3-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <6220407.M8CZZfZu0N@bender>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1342603220-13287-3-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree-discuss@lists.ozlabs.org
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>, linux-kernel@vger.kernel.org, Sergio Aguirre <saaguirre@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 23, 2012 at 9:11 PM, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+On Wed, Jul 18, 2012 at 11:20 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-> [Thomas P]
->> I am surprised that this doesn't use the clocksource and clockevents
->> infrastructure. It probably should, and be implemented in
->> drivers/clocksource/.
+I think you need to CC DT bindings to devicetree-discuss.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Documentation/devicetree/bindings/mfd/twl6040.txt
+> index c855240..2a3d55c 100644
+> --- a/Documentation/devicetree/bindings/mfd/twl6040.txt
+> +++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
+> @@ -10,6 +10,8 @@ Required properties:
+>  - reg: must be 0x4b for i2c address
+>  - interrupts: twl6040 has one interrupt line connecteded to the main SoC
+>  - interrupt-parent: The parent interrupt controller
+> +- gpio-controller:
+> +- #gpio-cells = <1>: twl6040 provides GPO lines.
+>  - twl6040,audpwron-gpio: Power on GPIO line for the twl6040
 >
-> This may sound like a stupid question, but the big constraint with this SoC is
-> that the timers do not reload themselves, and so far, I did not find out how I
-> can handle this properly with a clocksource. I suppose that it should not be a
-> big problem for the clockevent device however.
+>  - vio-supply: Regulator for the twl6040 VIO supply
+> @@ -29,6 +31,8 @@ Required properties:
+>  - ti,viblmotor-res: Resistance parameter for left motor
+>  - ti,viblmotor-res: Resistance parameter for right motor
 >
-> Has anyone any example of such particular case?
+> +- ti,use-gpo: Set it to <1> if the GPO functionality is in use
+> +
 
-Gah what horror.
+It's not like I'm sort of expert on bindings, but I've seen the
+pattern status = "okay" used for this kind of boolean stuff,
+and if that node is not there it's implicitly not OK.
 
-So you don't have *anything* in your platform which is really
-continous and sufficiently fast?
-
-Then try to get an IRQ to rearm and retrigger the timer to fire
-itself whenever it reloads and pray this doesn't add a skew too much.
-Bonus if you can use the NMI for this :-/
+Can someone shed some light on this convention?
 
 Yours,
 Linus Walleij
