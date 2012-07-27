@@ -1,47 +1,57 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/3] mfd: twl6040: Add twl6040-gpio child
-Date: Sat, 28 Jul 2012 00:50:43 +0200
-Message-ID: <CACRpkdZJcy5HOZkjMCVJW5beExoCHOBb=BiB4GOGR7sM+5Xsww@mail.gmail.com>
-References: <1342603220-13287-1-git-send-email-peter.ujfalusi@ti.com>
-	<1342603220-13287-3-git-send-email-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/6] OF: pinctrl: MIPS: lantiq: implement lantiq/xway
+ pinctrl support
+Date: Sat, 28 Jul 2012 01:23:26 +0200
+Message-ID: <CACRpkdZi+-V+-LGKiws-c=t0ZjvjV=CFxpuZCBwf9i_q5P+6UQ@mail.gmail.com>
+References: <1343112660-12245-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1342603220-13287-3-git-send-email-peter.ujfalusi@ti.com>
+In-Reply-To: <1343112660-12245-1-git-send-email-blogic@openwrt.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree-discuss@lists.ozlabs.org
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>, linux-kernel@vger.kernel.org, Sergio Aguirre <saaguirre@ti.com>
+To: John Crispin <blogic@openwrt.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 18, 2012 at 11:20 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+On Tue, Jul 24, 2012 at 8:50 AM, John Crispin <blogic@openwrt.org> wrote:
 
-I think you need to CC DT bindings to devicetree-discuss.
+> Implement support for pinctrl on lantiq/xway socs. The IO core found on these
+> socs has the registers for pinctrl, pinconf and gpio mixed up in the same
+> register range. As the gpio_chip handling is only a few lines, the driver also
+> implements the gpio functionality. This obseletes the old gpio driver that was
+> located in the arch/ folder.
+>
+> Signed-off-by: John Crispin <blogic@openwrt.org>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-> diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Documentation/devicetree/bindings/mfd/twl6040.txt
-> index c855240..2a3d55c 100644
-> --- a/Documentation/devicetree/bindings/mfd/twl6040.txt
-> +++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
-> @@ -10,6 +10,8 @@ Required properties:
->  - reg: must be 0x4b for i2c address
->  - interrupts: twl6040 has one interrupt line connecteded to the main SoC
->  - interrupt-parent: The parent interrupt controller
-> +- gpio-controller:
-> +- #gpio-cells = <1>: twl6040 provides GPO lines.
->  - twl6040,audpwron-gpio: Power on GPIO line for the twl6040
->
->  - vio-supply: Regulator for the twl6040 VIO supply
-> @@ -29,6 +31,8 @@ Required properties:
->  - ti,viblmotor-res: Resistance parameter for left motor
->  - ti,viblmotor-res: Resistance parameter for right motor
->
-> +- ti,use-gpo: Set it to <1> if the GPO functionality is in use
+I still ACK it, just a comment:
+
+> +/* these are the offsets to our registers */
+> +#define GPIO_BASE(p)           (REG_OFF * PORT(p))
+> +#define GPIO_OUT(p)            GPIO_BASE(p)
+> +#define GPIO_IN(p)             (GPIO_BASE(p) + 0x04)
+> +#define GPIO_DIR(p)            (GPIO_BASE(p) + 0x08)
+> +#define GPIO_ALT0(p)           (GPIO_BASE(p) + 0x0C)
+> +#define GPIO_ALT1(p)           (GPIO_BASE(p) + 0x10)
+> +#define GPIO_OD(p)             (GPIO_BASE(p) + 0x14)
+> +#define GPIO_PUDSEL(p)         (GPIO_BASE(p) + 0x1c)
+> +#define GPIO_PUDEN(p)          (GPIO_BASE(p) + 0x20)
 > +
+> +/* the 1/2 port needs special offsets for some registers */
+> +#define GPIO3_OD               (GPIO_BASE(0) + 0x24)
+> +#define GPIO3_PUDSEL           (GPIO_BASE(0) + 0x28)
+> +#define GPIO3_PUDEN            (GPIO_BASE(0) + 0x2C)
+> +#define GPIO3_ALT1             (GPIO_BASE(PINS) + 0x24)
+> +
+> +/* macros to help us access the registers */
+> +#define gpio_getbit(m, r, p)   (!!(ltq_r32(m + r) & BIT(p)))
+> +#define gpio_setbit(m, r, p)   ltq_w32_mask(0, BIT(p), m + r)
+> +#define gpio_clearbit(m, r, p) ltq_w32_mask(BIT(p), 0, m + r)
 
-It's not like I'm sort of expert on bindings, but I've seen the
-pattern status = "okay" used for this kind of boolean stuff,
-and if that node is not there it's implicitly not OK.
+These are a bit confusing since much of this stuff is not dealing with
+GPIO at all (but some pulling, open draining etc).
 
-Can someone shed some light on this convention?
+Consider renaming some of these some day.
 
 Yours,
 Linus Walleij
