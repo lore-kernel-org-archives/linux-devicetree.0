@@ -1,52 +1,44 @@
-From: Richard Zhao <richard.zhao@freescale.com>
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Fri, 27 Jul 2012 10:04:34 +0800
-Message-ID: <20120727020433.GA3347@b20223-02.ap.freescale.net>
+Date: Fri, 27 Jul 2012 10:13:04 +0800
+Message-ID: <20120727021303.GB3347@b20223-02.ap.freescale.net>
 References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
  <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
- <CAMQu2gw32LogXJJa+K5ZjmCZzBNK3FY2wYwZXU8fsftsVzEO2Q@mail.gmail.com>
- <20120720123317.GA32263@S2101-09.ap.freescale.net>
- <CAJOA=zMQKLTumW7Nx68+yxHC5Yk4QyiL2mf1+TSZfVOAtnXDWA@mail.gmail.com>
- <CAMQu2gy4p+rL-sDAsGCnqSn_2eXwSqf---OS0BSXuDoacjd6_g@mail.gmail.com>
- <20120721063811.GA619@S2101-09.ap.freescale.net>
+ <20120726131121.GB7306@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120721063811.GA619@S2101-09.ap.freescale.net>
-Sender: cpufreq-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "Turquette, Mike" <mturquette@ti.com>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20120726131121.GB7306-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 21, 2012 at 02:38:13PM +0800, Shawn Guo wrote:
-> On Sat, Jul 21, 2012 at 10:34:29AM +0530, Shilimkar, Santosh wrote:
-> > On Fri, Jul 20, 2012 at 9:20 PM, Turquette, Mike <mturquette@ti.com> wrote:
-> > > How about cpufreq-single-thread.c and CONFIG_CPUFREQ_SINGLE_THREAD?
-> > > That makes sense for both UP and SMP.
-> > >
-> > Indeed. This sounds more appropriate and also reflects what actually happens
-> > with a UP or shared clock SMP case.
-> > 
-> While I agree with this observation, the suggested naming does not
-> reflect the rationale of CPU0 though, which is really important for
-> driver to work, and is exactly the thing I like about *_CPU0 naming.
+On Thu, Jul 26, 2012 at 02:11:21PM +0100, Mark Brown wrote:
+> On Thu, Jul 19, 2012 at 11:54:41PM +0800, Shawn Guo wrote:
 > 
-> The driver needs the following stuff around CPU0 to be functional.
+> > +Optional properties:
+> > +- transition-latency: Specify the possible maximum transition latency,
+> > +  in unit of nanoseconds.
 > 
-> - Device tree node /cpus/cpu@0
-> - clk lookup with dev_id being "cpu0"
-> - regulator with id being "cpu0"
-> 
-> I think the *_CPU0 naming does a better job on emphasising those in the
-> first place.
-Are we going to support the case in the future that cores has
-independent freq? If yes, maybe we should have a more common name.
-
+> This should make it clear that the transition latency being documented
+> here is just that for the core clock change itself, there may be other
+> sources of latency like the regulator ramp time or reprogramming PLLs.
+I think it's the total time and board dts can over-write it if it
+needs. Different transitions between different operating points may
+differ, and regulator may be able to indicate the transition time but
+clk don't have such api, and probably not worth to have.
+ 
 Thanks
 Richard
-> 
-> -- 
-> Regards,
-> Shawn
-
