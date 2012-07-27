@@ -1,111 +1,52 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree based instantiation
-Date: Fri, 27 Jul 2012 00:50:13 +0200
-Message-ID: <1451056.l0aSnQP8f4@avalon>
-References: <4FBFE1EC.9060209@samsung.com> <1393020.I6XBuRyBXi@avalon> <5011AB03.2070900@gmail.com>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Fri, 27 Jul 2012 10:04:34 +0800
+Message-ID: <20120727020433.GA3347@b20223-02.ap.freescale.net>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+ <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
+ <CAMQu2gw32LogXJJa+K5ZjmCZzBNK3FY2wYwZXU8fsftsVzEO2Q@mail.gmail.com>
+ <20120720123317.GA32263@S2101-09.ap.freescale.net>
+ <CAJOA=zMQKLTumW7Nx68+yxHC5Yk4QyiL2mf1+TSZfVOAtnXDWA@mail.gmail.com>
+ <CAMQu2gy4p+rL-sDAsGCnqSn_2eXwSqf---OS0BSXuDoacjd6_g@mail.gmail.com>
+ <20120721063811.GA619@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5011AB03.2070900@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sakari.ailus@iki.fi
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120721063811.GA619@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "Turquette, Mike" <mturquette@ti.com>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
-
-On Thursday 26 July 2012 22:39:31 Sylwester Nawrocki wrote:
-> On 07/26/2012 05:21 PM, Laurent Pinchart wrote:
-> > On Friday 25 May 2012 21:52:48 Sylwester Nawrocki wrote:
-> >> The driver initializes all board related properties except the s_power()
-> >> callback to board code. The platforms that require this callback are not
-> >> supported by this driver yet for CONFIG_OF=y.
-> >> 
-> >> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
-> >> Signed-off-by: Bartlomiej Zolnierkiewicz<b.zolnierkie@samsung.com>
-> >> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
-> >> ---
-> >> 
-> >>   .../bindings/camera/samsung-s5k6aafx.txt           |   57 +++++++++
-> >>   drivers/media/video/s5k6aa.c                       |  129 +++++++++----
-> >>   2 files changed, 146 insertions(+), 40 deletions(-)
-> >>   create mode 100644
-> >> 
-> >> Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
-> >> 
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
-> >> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt new file
-> >> mode 100644
-> >> index 0000000..6685a9c
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
-> >> @@ -0,0 +1,57 @@
-> >> +Samsung S5K6AAFX camera sensor
-> >> +------------------------------
-> >> +
-> >> +Required properties:
-> >> +
-> >> +- compatible : "samsung,s5k6aafx";
-> >> +- reg : base address of the device on I2C bus;
-> >> +- video-itu-601-bus : parallel bus with HSYNC and VSYNC - ITU-R BT.601;
-> >> +- vdd_core-supply : digital core voltage supply 1.5V (1.4V to 1.6V);
-> >> +- vdda-supply : analog power voltage supply 2.8V (2.6V to 3.0V);
-> >> +- vdd_reg-supply : regulator input power voltage supply 1.8V (1.7V to
-> >> 1.9V) +		   or 2.8V (2.6V to 3.0);
-> >> +- vddio-supply : I/O voltage supply 1.8V (1.65V to 1.95V)
-> >> +		 or 2.8V (2.5V to 3.1V);
-> >> +
-> >> +Optional properties:
-> >> +
-> >> +- clock-frequency : the IP's main (system bus) clock frequency in Hz,
-> >> the default
+On Sat, Jul 21, 2012 at 02:38:13PM +0800, Shawn Guo wrote:
+> On Sat, Jul 21, 2012 at 10:34:29AM +0530, Shilimkar, Santosh wrote:
+> > On Fri, Jul 20, 2012 at 9:20 PM, Turquette, Mike <mturquette@ti.com> wrote:
+> > > How about cpufreq-single-thread.c and CONFIG_CPUFREQ_SINGLE_THREAD?
+> > > That makes sense for both UP and SMP.
+> > >
+> > Indeed. This sounds more appropriate and also reflects what actually happens
+> > with a UP or shared clock SMP case.
 > > 
-> > Is that the input clock frequency ? Can't it vary ? Instead of accessing
-> > the
-> Yes, the description is incorrect in this patch, it should read:
+> While I agree with this observation, the suggested naming does not
+> reflect the rationale of CPU0 though, which is really important for
+> driver to work, and is exactly the thing I like about *_CPU0 naming.
 > 
-> +- clock-frequency : the sensor's master clock frequency in Hz;
+> The driver needs the following stuff around CPU0 to be functional.
 > 
-> and be a required property. As in this patch:
-> https://github.com/snawrocki/linux/commit/e8a5f890dec0d7414b656bb1d1ac97d5e7
-> abe563
+> - Device tree node /cpus/cpu@0
+> - clk lookup with dev_id being "cpu0"
+> - regulator with id being "cpu0"
 > 
-> It could vary (as this is a PLL input frequency), so probably a range would
-> be a better alternative. Given that host device won't always be able to set
-> this exact value...
+> I think the *_CPU0 naming does a better job on emphasising those in the
+> first place.
+Are we going to support the case in the future that cores has
+independent freq? If yes, maybe we should have a more common name.
 
-A range sounds good, or perhaps a list of ranges. Sakari, what would you need 
-for the SMIA++ driver ?
-
-> > sensor clock frequency from the FIMC driver you should reference a clock
-> > in the sensor DT node. That obviously requires generic clock support,
-> > which might not be available for your platform yet (that's one of the
-> > reasons the OMAP3 ISP driver doesn't support DT yet).
+Thanks
+Richard
 > 
-> I agree it might be better, but waiting unknown number of kernel releases
-> for the platforms to get converted to common clock API is not a good
-> alternative either. I guess we could have some transitional solutions while
-> other subsystems are getting adapted.
+> -- 
+> Regards,
+> Shawn
 
-I agree, we need an interim solution.
-
-> Yet we need to specify the clock frequency range per sensor, so
-> 
-> 1. either we specify it at a sensor node and host device driver references
->    it, or
-> 2. it could be added to a sensor specific child node of a host device
->    mode, and then only the host would reference it, and sensor would
->    reference a clock in its DT node; I guess it's not a problem that
->    in most cases the camera host device is a clock provider.
-
-The sensor will need to configure the clock rate, so a (list of) clock 
-frequency range(s) will be needed in the sensor node anyway. As an interim 
-solution the host can access that property. When the platform will be ported 
-to the common clock API no modification to the DT will be needed.
-
--- 
-Regards,
-
-Laurent Pinchart
