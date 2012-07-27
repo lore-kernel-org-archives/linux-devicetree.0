@@ -1,391 +1,45 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Fri, 27 Jul 2012 14:33:35 +0800
-Message-ID: <20120727063334.GC3347@b20223-02.ap.freescale.net>
-References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
- <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH] mfd: add MAX8907 core driver
+Date: Fri, 27 Jul 2012 12:06:03 +0530
+Message-ID: <501236D3.3050505@nvidia.com>
+References: <1343331630-27126-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
-Sender: cpufreq-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1343331630-27126-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Gyungoh Yoo <jack.yoo@maxim-ic.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 19, 2012 at 11:54:41PM +0800, Shawn Guo wrote:
-> It adds a generic cpufreq driver for CPU0 frequency management based on
-> clk, regulator, OPP and device tree support.  It can support both
-> uniprocessor (UP) and those symmetric multiprocessor (SMP) systems which
-> share clock and voltage across all CPUs.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> ---
->  .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |   58 +++++
->  drivers/cpufreq/Kconfig                            |   11 +
->  drivers/cpufreq/Makefile                           |    2 +
->  drivers/cpufreq/cpufreq-cpu0.c                     |  235 ++++++++++++++++++++
->  4 files changed, 306 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
->  create mode 100644 drivers/cpufreq/cpufreq-cpu0.c
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-> new file mode 100644
-> index 0000000..94799bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-> @@ -0,0 +1,58 @@
-> +Generic cpufreq driver for CPU0
-It's going to have generic name if it will become more generic.
+On Friday 27 July 2012 01:10 AM, Stephen Warren wrote:
+> From: Gyungoh Yoo<jack.yoo@maxim-ic.com>
+>
 
-> +
-> +It is a generic cpufreq driver for CPU0 frequency management.  It
-> +supports both uniprocessor (UP) and symmetric multiprocessor (SMP)
-> +systems which share clock and voltage across all CPUs.
-> +
-> +Both required and optional properties listed below must be defined
-> +under node /cpus/cpu@0.
-> +
-> +Required properties:
-> +- operating-points: Refer to Documentation/devicetree/bindings/power/opp.txt
-> +  for details
-> +
-> +Optional properties:
-> +- transition-latency: Specify the possible maximum transition latency,
-> +  in unit of nanoseconds.
-> +- voltage-tolerance: Specify the CPU voltage tolerance in percentage.
-Why do we have the same tolerance for all points? I think you can
-either remove tolerance or add it to opps.
-> +
-> +Examples:
-> +
-> +cpus {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	cpu@0 {
-> +		compatible = "arm,cortex-a9";
-> +		reg = <0>;
-> +		next-level-cache = <&L2>;
-> +		operating-points = <
-> +			/* kHz    uV    en */
-> +			1200000 1275000 0
-> +			996000  1225000 1
-> +			792000  1100000 1
-> +			672000  1100000 0
-> +			396000  950000  1
-> +			198000  850000  1
-> +		>;
-> +		transition-latency = <61036>; /* two CLK32 periods */
-> +	};
-> +
-> +	cpu@1 {
-> +		compatible = "arm,cortex-a9";
-> +		reg = <1>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	cpu@2 {
-> +		compatible = "arm,cortex-a9";
-> +		reg = <2>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	cpu@3 {
-> +		compatible = "arm,cortex-a9";
-> +		reg = <3>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +};
-> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-> index e24a2a1..e77a1e0 100644
-> --- a/drivers/cpufreq/Kconfig
-> +++ b/drivers/cpufreq/Kconfig
-> @@ -179,6 +179,17 @@ config CPU_FREQ_GOV_CONSERVATIVE
->  
->  	  If in doubt, say N.
->  
-> +config GENERIC_CPUFREQ_CPU0
-> +	bool "Generic cpufreq driver for CPU0"
-> +	depends on HAVE_CLK && REGULATOR && PM_OPP && OF
-> +	select CPU_FREQ_TABLE
-> +	help
-> +	  This adds a generic cpufreq driver for CPU0 frequency management.
-> +	  It supports both uniprocessor (UP) and symmetric multiprocessor (SMP)
-> +	  systems which share clock and voltage across all CPUs.
-> +
-> +	  If in doubt, say N.
-> +
->  menu "x86 CPU frequency scaling drivers"
->  depends on X86
->  source "drivers/cpufreq/Kconfig.x86"
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index 9531fc2..a378ed2 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -13,6 +13,8 @@ obj-$(CONFIG_CPU_FREQ_GOV_CONSERVATIVE)	+= cpufreq_conservative.o
->  # CPUfreq cross-arch helpers
->  obj-$(CONFIG_CPU_FREQ_TABLE)		+= freq_table.o
->  
-> +obj-$(CONFIG_GENERIC_CPUFREQ_CPU0)	+= cpufreq-cpu0.o
-> +
->  ##################################################################################
->  # x86 drivers.
->  # Link order matters. K8 is preferred to ACPI because of firmware bugs in early
-> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
-> new file mode 100644
-> index 0000000..f1bb7f37
-> --- /dev/null
-> +++ b/drivers/cpufreq/cpufreq-cpu0.c
-> @@ -0,0 +1,235 @@
-> +/*
-> + * Copyright (C) 2012 Freescale Semiconductor, Inc.
-> + *
-> + * Reuse some codes from drivers/cpufreq/omap-cpufreq.c
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/clk.h>
-> +#include <linux/cpu.h>
-> +#include <linux/cpufreq.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/opp.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
-> +
-> +/* voltage tolerance in percentage */
-> +static unsigned int voltage_tolerance;
-> +
-> +static struct device *cpu_dev;
-> +static struct clk *cpu_clk;
-> +static struct regulator *cpu_reg;
-> +static struct cpufreq_frequency_table *freq_table;
-> +
-> +static int cpu0_verify_speed(struct cpufreq_policy *policy)
+> +static int max8907_irq_set_wake(struct irq_data *data, unsigned int on)
 > +{
-> +	return cpufreq_frequency_table_verify(policy, freq_table);
-> +}
+> +       /* Everything happens in max8907_irq_sync_unlock */
 > +
-> +static unsigned int cpu0_get_speed(unsigned int cpu)
-> +{
-> +	return clk_get_rate(cpu_clk) / 1000;
-> +}
-> +
-> +static int cpu0_set_target(struct cpufreq_policy *policy,
-> +			   unsigned int target_freq, unsigned int relation)
-> +{
-> +	struct cpufreq_freqs freqs;
-> +	struct opp *opp;
-> +	unsigned long freq_Hz, volt = 0, volt_old = 0, tol = 0;
-> +	unsigned int index, cpu;
-> +	int ret = 0;
-> +
-> +	ret = cpufreq_frequency_table_target(policy, freq_table, target_freq,
-> +					     relation, &index);
-> +	if (ret) {
-> +		pr_err("failed to match target freqency %d: %d\n",
-> +		       target_freq, ret);
-> +		return ret;
-> +	}
-> +
-> +	freq_Hz = clk_round_rate(cpu_clk, freq_table[index].frequency * 1000);
-> +	if (freq_Hz < 0)
-> +		freq_Hz = freq_table[index].frequency * 1000;
-> +	freqs.new = freq_Hz / 1000;
-> +	freqs.old = clk_get_rate(cpu_clk) / 1000;
-> +
-> +	if (freqs.old == freqs.new)
-> +		return 0;
-> +
-> +	for_each_cpu(cpu, policy->cpus) {
-> +		freqs.cpu = cpu;
-> +		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
-> +	}
-> +
-> +	if (cpu_reg) {
-> +		opp = opp_find_freq_ceil(cpu_dev, &freq_Hz);
-> +		if (IS_ERR(opp)) {
-> +			pr_err("failed to find OPP for %ld\n", freq_Hz);
-> +			return PTR_ERR(opp);
-> +		}
-> +		volt = opp_get_voltage(opp);
-> +		tol = volt * voltage_tolerance / 100;
-> +		volt_old = regulator_get_voltage(cpu_reg);
-> +	}
-> +
-> +	pr_debug("%u MHz, %ld mV --> %u MHz, %ld mV\n",
-> +		 freqs.old / 1000, volt_old ? volt_old / 1000 : -1,
-> +		 freqs.new / 1000, volt ? volt / 1000 : -1);
-> +
-> +	/* scaling up?  scale voltage before frequency */
-> +	if (cpu_reg && freqs.new > freqs.old) {
-> +		if (regulator_set_voltage(cpu_reg, volt - tol, volt + tol)) {
-> +			pr_warn("Unable to scale voltage up\n");
-> +			freqs.new = freqs.old;
-> +			goto done;
-> +		}
-> +	}
-> +
-> +	ret = clk_set_rate(cpu_clk, freqs.new * 1000);
-Check return value and fall back to previous point if it needs?
-> +
-> +	/* scaling down?  scale voltage after frequency */
-> +	if (cpu_reg && (freqs.new < freqs.old)) {
-> +		if (regulator_set_voltage(cpu_reg, volt - tol, volt + tol)) {
-> +			pr_warn("Unable to scale voltage down\n");
-> +			ret = clk_set_rate(cpu_clk, freqs.old * 1000);
-> +			freqs.new = freqs.old;
-> +			goto done;
-> +		}
-> +	}
-> +
-> +done:
-> +	for_each_cpu(cpu, policy->cpus) {
-> +		freqs.cpu = cpu;
-> +		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
-> +{
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	/* Initialize resources via CPU0 */
-> +	if (policy->cpu != 0)
-> +		return -EINVAL;
-> +
-> +	np = of_find_node_by_path("/cpus/cpu@0");
-> +	if (!np) {
-> +		pr_err("failed to find cpu0 node\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	cpu_dev = get_cpu_device(0);
-> +	if (!cpu_dev) {
-> +		pr_err("failed to get cpu0 device\n");
-> +		ret = -ENODEV;
-> +		goto out_put_node;
-> +	}
-> +
-> +	cpu_dev->of_node = np;
-hmm.. sys dev can not set of_node when populate it?
-And why not do it in module init? 
-> +	ret = of_init_opp_table(cpu_dev);
-> +	if (ret) {
-> +		pr_err("failed to init OPP table\n");
-> +		goto out_put_node;
-> +	}
-> +
-> +	ret = opp_init_cpufreq_table(cpu_dev, &freq_table);
-> +	if (ret) {
-> +		pr_err("failed to init cpufreq table\n");
-> +		goto out_put_node;
-> +	}
-> +
-> +	ret = cpufreq_frequency_table_cpuinfo(policy, freq_table);
-> +	if (ret) {
-> +		pr_err("invalid frequency table for cpu0\n");
-> +		goto out_free_table;
-> +	}
-> +
-> +	if (of_property_read_u32(np, "transition-latency",
-> +				 &policy->cpuinfo.transition_latency))
-> +		policy->cpuinfo.transition_latency = CPUFREQ_ETERNAL;
-> +
-> +	of_property_read_u32(np, "voltage-tolerance", &voltage_tolerance);
-> +
-> +	cpu_clk = clk_get(cpu_dev, NULL);
-> +	if (IS_ERR(cpu_clk)) {
-> +		pr_err("failed to get cpu0 clock\n");
-> +		ret = PTR_ERR(cpu_clk);
-> +		goto out_free_table;
-> +	}
-> +	policy->cur = clk_get_rate(cpu_clk) / 1000;
-> +
-> +	cpu_reg = regulator_get(cpu_dev, "cpu0");
-> +	if (IS_ERR(cpu_reg)) {
-> +		pr_warn("failed to get cpu0 regulator\n");
-> +		cpu_reg = NULL;
-> +	}
-> +
-> +	/*
-> +	 * The driver only supports the SMP configuartion where all processors
-> +	 * share the clock and voltage and clock.  Use cpufreq affected_cpus
-> +	 * interface to have all CPUs scaled together.
-> +	 */
-> +	policy->shared_type = CPUFREQ_SHARED_TYPE_ANY;
-> +	cpumask_setall(policy->cpus);
-> +
-> +	cpufreq_frequency_table_get_attr(freq_table, policy->cpu);
-> +
-> +	of_node_put(np);
-> +	return 0;
-> +
-> +out_free_table:
-> +	opp_free_cpufreq_table(cpu_dev, &freq_table);
-> +out_put_node:
-> +	of_node_put(np);
-> +	return ret;
-> +}
-> +
-> +static int cpu0_cpufreq_exit(struct cpufreq_policy *policy)
-> +{
-> +	cpufreq_frequency_table_put_attr(policy->cpu);
-> +	regulator_put(cpu_reg);
-> +	clk_put(cpu_clk);
-> +	opp_free_cpufreq_table(cpu_dev, &freq_table);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct freq_attr *cpu0_cpufreq_attr[] = {
-> +	&cpufreq_freq_attr_scaling_available_freqs,
-> +	NULL,
-> +};
-> +
-> +static struct cpufreq_driver cpu0_cpufreq_driver = {
-> +	.flags = CPUFREQ_STICKY,
-> +	.verify = cpu0_verify_speed,
-> +	.target = cpu0_set_target,
-> +	.get = cpu0_get_speed,
-> +	.init = cpu0_cpufreq_init,
-> +	.exit = cpu0_cpufreq_exit,
-> +	.name = "generic_cpu0",
-> +	.attr = cpu0_cpufreq_attr,
-> +};
-static u32 max_freq = UINT_MAX / 1000; /* kHz */
-module_param(max_freq, uint, 0);
-MODULE_PARM_DESC(max_freq, "max cpu frequency in unit of kHz");
 
-It's for debug. Make sense?
+Probably you need to call the wake_enable of irq which goes to the cpu here.
 
-Thanks
-Richard
-> +
-> +static int __devinit cpu0_cpufreq_driver_init(void)
-> +{
-> +	return cpufreq_register_driver(&cpu0_cpufreq_driver);
-> +}
-> +late_initcall(cpu0_cpufreq_driver_init);
-> +
-> +MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
-> +MODULE_DESCRIPTION("Generic cpufreq driver for CPU0");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 1.7.5.4
-> 
 
+> +       if (device_may_wakeup(chip->dev))
+> +               enable_irq_wake(i2c->irq);
+> +       else
+> +               disable_irq(i2c->irq);
+
+I think lets sub devices decide the wakeups rather than it is done by 
+the core.
+
+
+> +       max8907->i2c_rtc = i2c_new_dummy(i2c->adapter, MAX8907_RTC_I2C_ADDR);
+> +       if (!max8907->i2c_rtc) {
+> +               ret = -ENOMEM;
+> +               goto err_dummy_rtc;
+> +       }
+> +       i2c_set_clientdata(max8907->i2c_rtc, max8907);
+> +       max8907->regmap_rtc = devm_regmap_init_i2c(i2c,
+> +&max8907_regmap_rtc_config);
+the argiment should be  max8907->i2c_rtc rather than i2c here.
