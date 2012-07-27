@@ -1,12 +1,12 @@
 From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 4/6] rtc: omap: depend on am33xx
-Date: Fri, 27 Jul 2012 17:54:23 +0530
-Message-ID: <c2c35f38772bb285c8da0cd11f9db630c0994ca4.1343383616.git.afzal@ti.com>
+Subject: [PATCH v3 2/6] ARM: davinci: remove rtc kicker release
+Date: Fri, 27 Jul 2012 17:54:12 +0530
+Message-ID: <5562695915addebc4a118c4fb75e4ca6e4f2ae06.1343383616.git.afzal@ti.com>
 References: <cover.1343383616.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
 In-Reply-To: <cover.1343383616.git.afzal-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
 	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
@@ -15,45 +15,56 @@ List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@pu
 List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
 List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
 	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
 To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-l0cyMroinI0@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-rtc-omap driver can be reused for AM33xx RTC.
-Provide dependency in Kconfig.
+rtc-omap driver is now capable of handling kicker mechanism,
+hence remove kicker handling at platform level, instead
+provide proper device name so that driver can handle kicker
+mechanism by itself
 
 Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 ---
 
 v2:
- Modify Kconfig help, resolve checkpatch warning
+ Use device name da830-rtc instead of am1808-rtc
 
- drivers/rtc/Kconfig |   10 ++++++----
- 1 files changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/mach-davinci/devices-da8xx.c |   13 +------------
+ 1 files changed, 1 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 08cbdb9..eada3db 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -729,11 +729,13 @@ config RTC_DRV_IMXDI
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index d1624a3..da5e4c7 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -679,7 +679,7 @@ static struct resource da8xx_rtc_resources[] = {
+ };
  
- config RTC_DRV_OMAP
- 	tristate "TI OMAP1"
--	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVINCI_DA8XX
-+	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVINCI_DA8XX || SOC_AM33XX
- 	help
--	  Say "yes" here to support the real time clock on TI OMAP1 and
--	  DA8xx/OMAP-L13x chips.  This driver can also be built as a
--	  module called rtc-omap.
-+	  Say "yes" here to support the on chip real time clock
-+	  present on TI OMAP1, AM33xx and DA8xx/OMAP-L13x.
-+
-+	  This driver can also be built as a module, if so, module
-+	  will be called rtc-omap.
+ static struct platform_device da8xx_rtc_device = {
+-	.name           = "omap_rtc",
++	.name           = "da830-rtc",
+ 	.id             = -1,
+ 	.num_resources	= ARRAY_SIZE(da8xx_rtc_resources),
+ 	.resource	= da8xx_rtc_resources,
+@@ -688,17 +688,6 @@ static struct platform_device da8xx_rtc_device = {
+ int da8xx_register_rtc(void)
+ {
+ 	int ret;
+-	void __iomem *base;
+-
+-	base = ioremap(DA8XX_RTC_BASE, SZ_4K);
+-	if (WARN_ON(!base))
+-		return -ENOMEM;
+-
+-	/* Unlock the rtc's registers */
+-	__raw_writel(0x83e70b13, base + 0x6c);
+-	__raw_writel(0x95a4f1e0, base + 0x70);
+-
+-	iounmap(base);
  
- config HAVE_S3C_RTC
- 	bool
+ 	ret = platform_device_register(&da8xx_rtc_device);
+ 	if (!ret)
 -- 
 1.7.1
