@@ -1,7 +1,7 @@
 From: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 2/6] ARM: davinci: remove rtc kicker release
-Date: Fri, 27 Jul 2012 17:54:12 +0530
-Message-ID: <5562695915addebc4a118c4fb75e4ca6e4f2ae06.1343383616.git.afzal@ti.com>
+Subject: [PATCH v3 3/6] rtc: omap: dt support
+Date: Fri, 27 Jul 2012 17:54:18 +0530
+Message-ID: <d75af2cbe49f852b1e74e785fe5c5d5de5c3730d.1343383616.git.afzal@ti.com>
 References: <cover.1343383616.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,50 +21,100 @@ To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/D
 Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-rtc-omap driver is now capable of handling kicker mechanism,
-hence remove kicker handling at platform level, instead
-provide proper device name so that driver can handle kicker
-mechanism by itself
+Enhance rtc-omap driver with DT capability
 
 Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
 ---
 
 v2:
- Use device name da830-rtc instead of am1808-rtc
+ Use compatible as ti,da830-rtc instead of ti,am1808-rtc
 
- arch/arm/mach-davinci/devices-da8xx.c |   13 +------------
- 1 files changed, 1 insertions(+), 12 deletions(-)
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |   20 ++++++++++++++++++++
+ drivers/rtc/rtc-omap.c                             |   18 ++++++++++++++++++
+ 2 files changed, 38 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-omap.txt
 
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index d1624a3..da5e4c7 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -679,7 +679,7 @@ static struct resource da8xx_rtc_resources[] = {
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+new file mode 100644
+index 0000000..8c5c584
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+@@ -0,0 +1,20 @@
++TI Real Time Clock
++
++Required properties:
++- compatible: "ti,da830-rtc"
++- reg: Address range of rtc register set
++- interrupts: rtc timer, alarm interrupts in order
++- interrupt-parent: phandle for the interrupt controller
++
++Alternative for reg and interrupt properties on OMAP:
++- ti,hwmods: Name of the hwmod associated to the RTC
++
++Example:
++
++rtc@1c23000 {
++	compatible = "ti,da830-rtc";
++	reg = <0x23000 0x1000>;
++	interrupts = <19
++		      19>;
++	interrupt-parent = <&intc>;
++};
+diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+index 27cc70d..d600297 100644
+--- a/drivers/rtc/rtc-omap.c
++++ b/drivers/rtc/rtc-omap.c
+@@ -20,6 +20,8 @@
+ #include <linux/rtc.h>
+ #include <linux/bcd.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #include <asm/io.h>
+ 
+@@ -298,6 +300,8 @@ static struct rtc_class_ops omap_rtc_ops = {
+ static int omap_rtc_alarm;
+ static int omap_rtc_timer;
+ 
++#define	OMAP_RTC_DATA_DA830_IDX	1
++
+ static struct platform_device_id omap_rtc_devtype[] = {
+ 	{
+ 		.name	= DRIVER_NAME,
+@@ -308,12 +312,25 @@ static struct platform_device_id omap_rtc_devtype[] = {
  };
+ MODULE_DEVICE_TABLE(platform, omap_rtc_devtype);
  
- static struct platform_device da8xx_rtc_device = {
--	.name           = "omap_rtc",
-+	.name           = "da830-rtc",
- 	.id             = -1,
- 	.num_resources	= ARRAY_SIZE(da8xx_rtc_resources),
- 	.resource	= da8xx_rtc_resources,
-@@ -688,17 +688,6 @@ static struct platform_device da8xx_rtc_device = {
- int da8xx_register_rtc(void)
++static const struct of_device_id omap_rtc_of_match[] = {
++	{	.compatible	= "ti,da830-rtc",
++		.data		= &omap_rtc_devtype[OMAP_RTC_DATA_DA830_IDX],
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
++
+ static int __init omap_rtc_probe(struct platform_device *pdev)
  {
- 	int ret;
--	void __iomem *base;
--
--	base = ioremap(DA8XX_RTC_BASE, SZ_4K);
--	if (WARN_ON(!base))
--		return -ENOMEM;
--
--	/* Unlock the rtc's registers */
--	__raw_writel(0x83e70b13, base + 0x6c);
--	__raw_writel(0x95a4f1e0, base + 0x70);
--
--	iounmap(base);
+ 	struct resource		*res, *mem;
+ 	struct rtc_device	*rtc;
+ 	u8			reg, new_ctrl;
+ 	const struct platform_device_id *id_entry;
++	const struct of_device_id *of_id;
++
++	of_id = of_match_device(omap_rtc_of_match, &pdev->dev);
++	if (of_id)
++		pdev->id_entry = of_id->data;
  
- 	ret = platform_device_register(&da8xx_rtc_device);
- 	if (!ret)
+ 	omap_rtc_timer = platform_get_irq(pdev, 0);
+ 	if (omap_rtc_timer <= 0) {
+@@ -509,6 +526,7 @@ static struct platform_driver omap_rtc_driver = {
+ 	.driver		= {
+ 		.name	= DRIVER_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(omap_rtc_of_match),
+ 	},
+ 	.id_table	= omap_rtc_devtype,
+ };
 -- 
 1.7.1
