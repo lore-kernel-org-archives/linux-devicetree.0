@@ -1,69 +1,51 @@
-From: rvaswani@codeaurora.org
-Subject: Re: [DT] API to determine if interrupt is PPI or SPI ?
-Date: Fri, 27 Jul 2012 13:00:24 -0700 (PDT)
-Message-ID: <8cdb3e7e9dc79635a130214cf6ba1dd4.squirrel@www.codeaurora.org>
-References: <53a41d02c4c4c24bdab47667183891bf.squirrel@www.codeaurora.org>
- <50128AA0.8040409@gmail.com>
- <20120727130947.GN559@mudshark.cambridge.arm.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: support for Moschip MCS814x SoCs
+Date: Sat, 28 Jul 2012 00:42:06 +0200
+Message-ID: <CACRpkdah3B95C0f7C78E65mWWc7+5VE__ByFQ+vFBv6BA=LKRg@mail.gmail.com>
+References: <1342363754-30808-1-git-send-email-florian@openwrt.org>
+ <1342363754-30808-2-git-send-email-florian@openwrt.org>
+ <20120716142941.666d928c@skate> <6220407.M8CZZfZu0N@bender>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120727130947.GN559@mudshark.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rvaswani@codeaurora.org" <rvaswani@codeaurora.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "davidb@codeaurora.org" <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <6220407.M8CZZfZu0N@bender>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> On Fri, Jul 27, 2012 at 01:33:36PM +0100, Rob Herring wrote:
->> On 07/26/2012 02:18 PM, rvaswani@codeaurora.org wrote:
->> > Hello,
->> >
->> > We can specify the interrupt information in the device tree using the
->> arm
->> > gic convention.
->> > Is there an API to read directly the 1st cell and determine if an
->> > interrupt is a PPI or a SPI ? This information is directly relevant to
->> the
->> > driver because it needs to call request_irq or request_percpu_irq
->> based on
->> > this data.
->> >
->> > How should this be done ideally ?
->>
->> Seems a bit strange to me that you would have a h/w block that can be
->> connected either way...
->
-> The CPU PMU can be wired as either SPI or PPI. The latter makes more sense
-> to
-> me but usually (although not exclusively) it's wired using the former.
->
-> Will
->
+On Mon, Jul 23, 2012 at 9:11 PM, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
 
-We have the same driver for a hardware for different chipsets and
-unfortunately the hardware team decided to connect this GIC interrupt
-differently across these chipsets. This leaves us with a software choice
-to make.
-We could add another property to the device tree (like irq-is-percpu,
-irq-is-not-percpu), but that seems redundant.
-We were hoping to have an API to tell us the SPI/PPI difference since this
-information is already encoded in the interrupt-cells in the device tree
-for this device.
-Would that be the right way to go or there is something better that can be
-done ?
+> [Thomas P]
+>> I am surprised that this doesn't use the clocksource and clockevents
+>> infrastructure. It probably should, and be implemented in
+>> drivers/clocksource/.
+>
+> This may sound like a stupid question, but the big constraint with this SoC is
+> that the timers do not reload themselves, and so far, I did not find out how I
+> can handle this properly with a clocksource. I suppose that it should not be a
+> big problem for the clockevent device however.
+>
+> Has anyone any example of such particular case?
 
-Thanks,
-Rohit
+Gah what horror.
 
--- 
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+So you don't have *anything* in your platform which is really
+continous and sufficiently fast?
+
+Then try to get an IRQ to rearm and retrigger the timer to fire
+itself whenever it reloads and pray this doesn't add a skew too much.
+Bonus if you can use the NMI for this :-/
+
+Yours,
+Linus Walleij
