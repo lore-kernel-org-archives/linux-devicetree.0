@@ -1,15 +1,15 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [DT] API to determine if interrupt is PPI or SPI ?
-Date: Fri, 27 Jul 2012 14:09:47 +0100
-Message-ID: <20120727130947.GN559@mudshark.cambridge.arm.com>
-References: <53a41d02c4c4c24bdab47667183891bf.squirrel@www.codeaurora.org>
- <50128AA0.8040409@gmail.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Fri, 27 Jul 2012 11:19:23 -0700
+Message-ID: <20120727181923.GB23564@kroah.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
+ <1343390750-3642-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <50128AA0.8040409-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1343390750-3642-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,27 +20,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 27, 2012 at 01:33:36PM +0100, Rob Herring wrote:
-> On 07/26/2012 02:18 PM, rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
-> > Hello,
-> > 
-> > We can specify the interrupt information in the device tree using the arm
-> > gic convention.
-> > Is there an API to read directly the 1st cell and determine if an
-> > interrupt is a PPI or a SPI ? This information is directly relevant to the
-> > driver because it needs to call request_irq or request_percpu_irq based on
-> > this data.
-> > 
-> > How should this be done ideally ?
+On Fri, Jul 27, 2012 at 09:05:48PM +0900, Alexandre Courbot wrote:
+> Some device drivers (panel backlights especially) need to follow precise
+> sequences for powering on and off, involving gpios, regulators, PWMs
+> with a precise powering order and delays to respect between each steps.
+> These sequences are board-specific, and do not belong to a particular
+> driver - therefore they have been performed by board-specific hook
+> functions to far.
 > 
-> Seems a bit strange to me that you would have a h/w block that can be
-> connected either way...
+> With the advent of the device tree and of ARM kernels that are not
+> board-tied, we cannot rely on these board-specific hooks anymore but
+> need a way to implement these sequences in a portable manner. This patch
+> introduces a simple interpreter that can execute such power sequences
+> encoded either as platform data or within the device tree.
+> 
+> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/power/power_seq.txt | 120 +++++++++++++++
+>  drivers/base/Kconfig              |   4 +
+>  drivers/base/Makefile             |   1 +
+>  drivers/base/power_seq.c          | 300 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/power_seq.h         | 139 ++++++++++++++++++
 
-The CPU PMU can be wired as either SPI or PPI. The latter makes more sense to
-me but usually (although not exclusively) it's wired using the former.
+What's wrong with drivers/power/?  I sure don't want to maintain this
+code, and it seems to not be part of the "driver core" infrastructure.
 
-Will
+thanks,
+
+greg k-h
