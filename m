@@ -1,215 +1,173 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 5/5] arm: omap: phy: remove unused functions from
- omap-phy-internal.c
-Date: Thu, 6 Sep 2012 20:27:10 +0530
-Message-ID: <1346943430-18236-6-git-send-email-kishon@ti.com>
-References: <1346943430-18236-1-git-send-email-kishon@ti.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 2/8 v2] ARM: EXYNOS5: Add machine data for USB 2.0
+Date: Sun, 29 Jul 2012 01:05:11 +0900
+Message-ID: <CAFp+6iH0c=LogUXnpg0pD05X+mMGP9XiWDDxiTyNQAxJq_srJg@mail.gmail.com>
+References: <1342866729-30460-1-git-send-email-gautam.vivek@samsung.com>
+ <1342866729-30460-3-git-send-email-gautam.vivek@samsung.com>
+ <201207261124.50141.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1346943430-18236-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2262386042382380780=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201207261124.50141.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: yulgon.kim@samsung.com, kgene.kim@samsung.com, prashanth.g@samsung.com, olofj@google.com, devicetree-discuss@lists.ozlabs.org, l.majewski@samsung.com, joshi@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, Vivek Gautam <gautam.vivek@samsung.com>, a.kesavan@samsung.com, av.tikhomirov@samsung.com, boyko.lee@samsung.com, ajaykumar.rs@samsung.com, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-All the unnessary functions in omap-phy-internal is removed.
-These functionality are now handled by omap-usb2 phy driver.
+--===============2262386042382380780==
+Content-Type: multipart/alternative; boundary=f46d040890c74ebf3f04c5e5fe41
 
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/mach-omap2/omap_phy_internal.c |  138 -------------------------------
- arch/arm/mach-omap2/twl-common.c        |    5 --
- arch/arm/mach-omap2/usb-musb.c          |    3 -
- 3 files changed, 146 deletions(-)
+--f46d040890c74ebf3f04c5e5fe41
+Content-Type: text/plain; charset=ISO-8859-1
 
-diff --git a/arch/arm/mach-omap2/omap_phy_internal.c b/arch/arm/mach-omap2/omap_phy_internal.c
-index d52651a..874aecc 100644
---- a/arch/arm/mach-omap2/omap_phy_internal.c
-+++ b/arch/arm/mach-omap2/omap_phy_internal.c
-@@ -31,144 +31,6 @@
- #include <plat/usb.h>
- #include "control.h"
- 
--/* OMAP control module register for UTMI PHY */
--#define CONTROL_DEV_CONF		0x300
--#define PHY_PD				0x1
--
--#define USBOTGHS_CONTROL		0x33c
--#define	AVALID				BIT(0)
--#define	BVALID				BIT(1)
--#define	VBUSVALID			BIT(2)
--#define	SESSEND				BIT(3)
--#define	IDDIG				BIT(4)
--
--static struct clk *phyclk, *clk48m, *clk32k;
--static void __iomem *ctrl_base;
--static int usbotghs_control;
--
--int omap4430_phy_init(struct device *dev)
--{
--	ctrl_base = ioremap(OMAP443X_SCM_BASE, SZ_1K);
--	if (!ctrl_base) {
--		pr_err("control module ioremap failed\n");
--		return -ENOMEM;
--	}
--	/* Power down the phy */
--	__raw_writel(PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--
--	if (!dev) {
--		iounmap(ctrl_base);
--		return 0;
--	}
--
--	phyclk = clk_get(dev, "ocp2scp_usb_phy_ick");
--	if (IS_ERR(phyclk)) {
--		dev_err(dev, "cannot clk_get ocp2scp_usb_phy_ick\n");
--		iounmap(ctrl_base);
--		return PTR_ERR(phyclk);
--	}
--
--	clk48m = clk_get(dev, "ocp2scp_usb_phy_phy_48m");
--	if (IS_ERR(clk48m)) {
--		dev_err(dev, "cannot clk_get ocp2scp_usb_phy_phy_48m\n");
--		clk_put(phyclk);
--		iounmap(ctrl_base);
--		return PTR_ERR(clk48m);
--	}
--
--	clk32k = clk_get(dev, "usb_phy_cm_clk32k");
--	if (IS_ERR(clk32k)) {
--		dev_err(dev, "cannot clk_get usb_phy_cm_clk32k\n");
--		clk_put(phyclk);
--		clk_put(clk48m);
--		iounmap(ctrl_base);
--		return PTR_ERR(clk32k);
--	}
--	return 0;
--}
--
--int omap4430_phy_set_clk(struct device *dev, int on)
--{
--	static int state;
--
--	if (on && !state) {
--		/* Enable the phy clocks */
--		clk_enable(phyclk);
--		clk_enable(clk48m);
--		clk_enable(clk32k);
--		state = 1;
--	} else if (state) {
--		/* Disable the phy clocks */
--		clk_disable(phyclk);
--		clk_disable(clk48m);
--		clk_disable(clk32k);
--		state = 0;
--	}
--	return 0;
--}
--
--int omap4430_phy_power(struct device *dev, int ID, int on)
--{
--	if (on) {
--		if (ID)
--			/* enable VBUS valid, IDDIG groung */
--			__raw_writel(AVALID | VBUSVALID, ctrl_base +
--							USBOTGHS_CONTROL);
--		else
--			/*
--			 * Enable VBUS Valid, AValid and IDDIG
--			 * high impedance
--			 */
--			__raw_writel(IDDIG | AVALID | VBUSVALID,
--						ctrl_base + USBOTGHS_CONTROL);
--	} else {
--		/* Enable session END and IDIG to high impedance. */
--		__raw_writel(SESSEND | IDDIG, ctrl_base +
--					USBOTGHS_CONTROL);
--	}
--	return 0;
--}
--
--int omap4430_phy_suspend(struct device *dev, int suspend)
--{
--	if (suspend) {
--		/* Disable the clocks */
--		omap4430_phy_set_clk(dev, 0);
--		/* Power down the phy */
--		__raw_writel(PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--
--		/* save the context */
--		usbotghs_control = __raw_readl(ctrl_base + USBOTGHS_CONTROL);
--	} else {
--		/* Enable the internel phy clcoks */
--		omap4430_phy_set_clk(dev, 1);
--		/* power on the phy */
--		if (__raw_readl(ctrl_base + CONTROL_DEV_CONF) & PHY_PD) {
--			__raw_writel(~PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--			mdelay(200);
--		}
--
--		/* restore the context */
--		__raw_writel(usbotghs_control, ctrl_base + USBOTGHS_CONTROL);
--	}
--
--	return 0;
--}
--
--int omap4430_phy_exit(struct device *dev)
--{
--	if (ctrl_base)
--		iounmap(ctrl_base);
--	if (phyclk)
--		clk_put(phyclk);
--	if (clk48m)
--		clk_put(clk48m);
--	if (clk32k)
--		clk_put(clk32k);
--
--	return 0;
--}
--
- void am35x_musb_reset(void)
- {
- 	u32	regval;
-diff --git a/arch/arm/mach-omap2/twl-common.c b/arch/arm/mach-omap2/twl-common.c
-index de47f17..e2cdf67 100644
---- a/arch/arm/mach-omap2/twl-common.c
-+++ b/arch/arm/mach-omap2/twl-common.c
-@@ -250,11 +250,6 @@ void __init omap3_pmic_get_config(struct twl4030_platform_data *pmic_data,
- 
- #if defined(CONFIG_ARCH_OMAP4)
- static struct twl4030_usb_data omap4_usb_pdata = {
--	.phy_init	= omap4430_phy_init,
--	.phy_exit	= omap4430_phy_exit,
--	.phy_power	= omap4430_phy_power,
--	.phy_set_clock	= omap4430_phy_set_clk,
--	.phy_suspend	= omap4430_phy_suspend,
- };
- 
- static struct regulator_init_data omap4_vdac_idata = {
-diff --git a/arch/arm/mach-omap2/usb-musb.c b/arch/arm/mach-omap2/usb-musb.c
-index c4a5768..e9b4b23 100644
---- a/arch/arm/mach-omap2/usb-musb.c
-+++ b/arch/arm/mach-omap2/usb-musb.c
-@@ -117,7 +117,4 @@ void __init usb_musb_init(struct omap_musb_board_data *musb_board_data)
- 	dev->dma_mask = &musb_dmamask;
- 	dev->coherent_dma_mask = musb_dmamask;
- 	put_device(dev);
--
--	if (cpu_is_omap44xx())
--		omap4430_phy_init(dev);
- }
--- 
-1.7.9.5
+On Thu, Jul 26, 2012 at 8:24 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+
+> On Saturday 21 July 2012, Vivek Gautam wrote:
+> > From: Ajay Kumar <ajaykumar.rs@samsung.com>
+> >
+> > This patch adds address mapping of USB 2.0 PHY for exynos5
+> >
+> > Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> > Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> > ---
+> >  arch/arm/mach-exynos/common.c           |    5 +++++
+> >  arch/arm/mach-exynos/include/mach/map.h |    2 ++
+> >  2 files changed, 7 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/arm/mach-exynos/common.c
+> b/arch/arm/mach-exynos/common.c
+> > index 4eb39cd..92d5e61 100644
+> > --- a/arch/arm/mach-exynos/common.c
+> > +++ b/arch/arm/mach-exynos/common.c
+> > @@ -275,6 +275,11 @@ static struct map_desc exynos5_iodesc[] __initdata
+> = {
+> >                 .pfn            = __phys_to_pfn(EXYNOS5_PA_GIC_DIST),
+> >                 .length         = SZ_4K,
+> >                 .type           = MT_DEVICE,
+> > +       }, {
+> > +               .virtual        = (unsigned long)S3C_VA_USB_HSPHY,
+> > +               .pfn            = __phys_to_pfn(EXYNOS5_PA_USB_PHY),
+> > +               .length         = SZ_4K,
+> > +               .type           = MT_DEVICE,
+> >         },
+> >  };
+>
+> Can you pleae explain why this is done in the changelog?
+>
+> We try hard to do such mappings from the device driver instead,
+> so I'm surprised that this is necessary fo rthe USB phy.
+>
+
+We are doing the mapping for device address in the driver, but this memory
+mapping for USB PHY registers that need to be programmed by the software
+is done here. This is similar to what we see for exynos4 also. Is it
+something
+that i can still change? Please suggest.
+
+>
+>         Arnd
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+
+Best regards
+Vivek
+
+--f46d040890c74ebf3f04c5e5fe41
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<br><br><div class=3D"gmail_quote">On Thu, Jul 26, 2012 at 8:24 PM, Arnd Be=
+rgmann <span dir=3D"ltr">&lt;<a href=3D"mailto:arnd@arndb.de" target=3D"_bl=
+ank">arnd@arndb.de</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quot=
+e" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+<div class=3D"im">On Saturday 21 July 2012, Vivek Gautam wrote:<br>
+&gt; From: Ajay Kumar &lt;<a href=3D"mailto:ajaykumar.rs@samsung.com">ajayk=
+umar.rs@samsung.com</a>&gt;<br>
+&gt;<br>
+&gt; This patch adds address mapping of USB 2.0 PHY for exynos5<br>
+&gt;<br>
+&gt; Signed-off-by: Ajay Kumar &lt;<a href=3D"mailto:ajaykumar.rs@samsung.c=
+om">ajaykumar.rs@samsung.com</a>&gt;<br>
+&gt; Signed-off-by: Vivek Gautam &lt;<a href=3D"mailto:gautam.vivek@samsung=
+.com">gautam.vivek@samsung.com</a>&gt;<br>
+&gt; ---<br>
+&gt; =A0arch/arm/mach-exynos/common.c =A0 =A0 =A0 =A0 =A0 | =A0 =A05 +++++<=
+br>
+&gt; =A0arch/arm/mach-exynos/include/mach/map.h | =A0 =A02 ++<br>
+&gt; =A02 files changed, 7 insertions(+), 0 deletions(-)<br>
+&gt;<br>
+&gt; diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/comm=
+on.c<br>
+&gt; index 4eb39cd..92d5e61 100644<br>
+&gt; --- a/arch/arm/mach-exynos/common.c<br>
+&gt; +++ b/arch/arm/mach-exynos/common.c<br>
+&gt; @@ -275,6 +275,11 @@ static struct map_desc exynos5_iodesc[] __initdat=
+a =3D {<br>
+&gt; =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 .pfn =A0 =A0 =A0 =A0 =A0 =A0=3D __phys=
+_to_pfn(EXYNOS5_PA_GIC_DIST),<br>
+&gt; =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 .length =A0 =A0 =A0 =A0 =3D SZ_4K,<br>
+&gt; =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 .type =A0 =A0 =A0 =A0 =A0 =3D MT_DEVIC=
+E,<br>
+&gt; + =A0 =A0 =A0 }, {<br>
+&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .virtual =A0 =A0 =A0 =A0=3D (unsigned lo=
+ng)S3C_VA_USB_HSPHY,<br>
+&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .pfn =A0 =A0 =A0 =A0 =A0 =A0=3D __phys_t=
+o_pfn(EXYNOS5_PA_USB_PHY),<br>
+&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .length =A0 =A0 =A0 =A0 =3D SZ_4K,<br>
+&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .type =A0 =A0 =A0 =A0 =A0 =3D MT_DEVICE,=
+<br>
+&gt; =A0 =A0 =A0 =A0 },<br>
+&gt; =A0};<br>
+<br>
+</div>Can you pleae explain why this is done in the changelog?<br>
+<br>
+We try hard to do such mappings from the device driver instead,<br>
+so I&#39;m surprised that this is necessary fo rthe USB phy.<br></blockquot=
+e><div><br></div><div>We are doing the mapping for device address in the dr=
+iver, but this memory</div><div>mapping for USB PHY registers that need to =
+be programmed by the software</div>
+<div>is done here. This is similar to what we see for exynos4 also. Is it s=
+omething</div><div>that i can still change? Please suggest.</div><blockquot=
+e class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc sol=
+id;padding-left:1ex">
+
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+=A0 =A0 =A0 =A0 Arnd<br>
+</font></span><div class=3D"HOEnZb"><div class=3D"h5"><br>
+_______________________________________________<br>
+devicetree-discuss mailing list<br>
+<a href=3D"mailto:devicetree-discuss@lists.ozlabs.org">devicetree-discuss@l=
+ists.ozlabs.org</a><br>
+<a href=3D"https://lists.ozlabs.org/listinfo/devicetree-discuss" target=3D"=
+_blank">https://lists.ozlabs.org/listinfo/devicetree-discuss</a></div></div=
+></blockquote><div><br></div><div>Best regards</div><div>Vivek=A0</div></di=
+v>
+<br>
+
+--f46d040890c74ebf3f04c5e5fe41--
+
+
+--===============2262386042382380780==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2262386042382380780==--
