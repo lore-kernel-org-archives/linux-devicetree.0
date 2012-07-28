@@ -1,51 +1,44 @@
-From: Chandrabhanu Mahapatra <cmahapatra@ti.com>
-Subject: [PATCH V1 3/3] OMAP: Define TCA6424 max number of possible IRQs
-Date: Sat, 28 Jul 2012 11:40:05 +0530
-Message-ID: <03736c1b42a7e28fc0b47aabd5c0f019edb1baf2.1343026861.git.cmahapatra@ti.com>
-References: <cover.1341925681.git.cmahapatra@ti.com> <cover.1343026861.git.cmahapatra@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2 V3] MXS: Implement DMA support into mxs-i2c
+Date: Sat, 28 Jul 2012 16:02:50 +0800
+Message-ID: <20120728080245.GA2128@S2101-09.ap.freescale.net>
+References: <1341850974-11977-1-git-send-email-marex@denx.de>
+ <1341850974-11977-2-git-send-email-marex@denx.de>
+ <20120713082249.GF32184@pengutronix.de>
+ <20120715081715.GA2429@S2100-06.ap.freescale.net>
+ <20120721124406.GA9946@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1343026861.git.cmahapatra@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@stericsson.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, tony@atomide.com
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, leed.aguilar@ti.com, Chandrabhanu Mahapatra <cmahapatra@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120721124406.GA9946-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Linux ARM kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Leed Aguilar <leed.aguilar@ti.com>
+On Sat, Jul 21, 2012 at 02:44:06PM +0200, Wolfram Sang wrote:
+> Yet, if I know the compatible property for the mxs I2C driver, and also
+> know the CPU type (be it MX23 or MX28), I can deduce from that a lot of
+> information, including DMA channel. That is fix. Why encode it?
+> 
+The driver shouldn't know the CPU type but just the IP type/version.
+We can definitely have "fsl,imx23-i2c" and "fsl,imx28-i2c" compatible
+strings for iMX23 and iMX28 respectively if the I2C controller on these
+two SoC differs on the IP inside aspects.  But we shouldn't do that
+for IO region, interrupt number, DMA channel such differences at SoC
+integration level.
 
-TCA6424 being a 24 bit I2C and SMBus I/O expander has 24 available GPIO lines
-that can be used as IRQs lines. So, the support for 24 more IRQ lines has been
-added to the kernel.
-
-Signed-off-by: Leed Aguilar <leed.aguilar@ti.com>
-Signed-off-by: Chandrabhanu Mahapatra <cmahapatra@ti.com>
----
- arch/arm/plat-omap/include/plat/irqs.h |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/plat-omap/include/plat/irqs.h b/arch/arm/plat-omap/include/plat/irqs.h
-index 37bbbbb..97c71ba 100644
---- a/arch/arm/plat-omap/include/plat/irqs.h
-+++ b/arch/arm/plat-omap/include/plat/irqs.h
-@@ -378,8 +378,17 @@
- #endif
- #define OMAP_FPGA_IRQ_END	(OMAP_FPGA_IRQ_BASE + OMAP_FPGA_NR_IRQS)
- 
-+/* TCA6424A I2C and SMBus I/O expander */
-+#define OMAP_TCA6424_IRQ_BASE	(OMAP_FPGA_IRQ_END)
-+#ifdef CONFIG_GPIO_PCA953X
-+#define OMAP_TCA6424_NR_IRQS	24
-+#else
-+#define OMAP_TCA6424_NR_IRQS	0
-+#endif
-+#define OMAP_TCA6424_IRQ_END	(OMAP_TCA6424_IRQ_BASE + OMAP_TCA6424_NR_IRQS)
-+
- /* External TWL4030 can handle interrupts on 2430 and 34xx boards */
--#define	TWL4030_IRQ_BASE	(OMAP_FPGA_IRQ_END)
-+#define	TWL4030_IRQ_BASE	(OMAP_TCA6424_IRQ_END)
- #ifdef	CONFIG_TWL4030_CORE
- #define	TWL4030_BASE_NR_IRQS	8
- #define	TWL4030_PWR_NR_IRQS	8
 -- 
-1.7.10
+Regards,
+Shawn
