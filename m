@@ -1,44 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/6] OF: pinctrl: MIPS: lantiq: adds support for FALCON SoC
-Date: Sat, 28 Jul 2012 01:23:55 +0200
-Message-ID: <CACRpkdYP8PdcnS2h_-+n9ZdBmMuBPUv9so9WsUyS-X5rMz1qsQ@mail.gmail.com>
-References: <1343112660-12245-1-git-send-email-blogic@openwrt.org>
-	<1343112660-12245-3-git-send-email-blogic@openwrt.org>
+From: Chandrabhanu Mahapatra <cmahapatra@ti.com>
+Subject: [PATCH V1 0/3] Extend TCA6424 support
+Date: Sat, 28 Jul 2012 11:35:36 +0530
+Message-ID: <cover.1343026861.git.cmahapatra@ti.com>
+References: <cover.1341925681.git.cmahapatra@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1343112660-12245-3-git-send-email-blogic@openwrt.org>
+In-Reply-To: <cover.1341925681.git.cmahapatra@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <blogic@openwrt.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Thomas Langer <thomas.langer@lantiq.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: linus.walleij@stericsson.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, tony@atomide.com
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, leed.aguilar@ti.com, Chandrabhanu Mahapatra <cmahapatra@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2012 at 8:50 AM, John Crispin <blogic@openwrt.org> wrote:
+Hi everyone!
+This following patch series extends support capabilities of TCA6424 through
+following patches.
 
-> Implement support for pinctrl on lantiq/falcon socs. The FALCON has 5 banks
-> of up to 32 pins.
->
-> Signed-off-by: John Crispin <blogic@openwrt.org>
-> Signed-off-by: Thomas Langer <thomas.langer@lantiq.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-kernel@vger.kernel.org
+The 1st patch adds 24 bit support for polarity inversion registers by providing
+24 bit support for invert variable.
+The 2nd patch adds 24 bit support of the variables such as irq_mask, irq_stat, etc.
+The 3rd patch extends 24 lines irq support for TCA6424.
 
-No big issues and looking really sweet so:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+The 4th patch for the previous patch series has been removed.
 
-> --- a/arch/mips/lantiq/Kconfig
-> +++ b/arch/mips/lantiq/Kconfig
-> @@ -20,6 +20,7 @@ config SOC_XWAY
->
->  config SOC_FALCON
->         bool "FALCON"
-> +       select PINCTRL_FALCON
+These patches were based on mainline kernel v3.5rc7.
 
-I think you need to add "select PINCTRL" above "select PINCTRL_FALCON"
-for this to work.
+All your comments and suggestions are welcome.
 
-Atleast I had to do that in the past to get things working.
+Regards,
+Chandrabhanu
 
-Yours,
-Linus Walleij
+Chandrabhanu Mahapatra (1):
+  GPIO: PCA953X: Increase size of invert variable to support 24 bit
+
+Leed Aguilar (2):
+  gpio/pca953x: increase variables size to support 24 bit of data
+  OMAP: Define TCA6424 max number of possible IRQs
+
+ arch/arm/plat-omap/include/plat/irqs.h |   11 ++++++++-
+ drivers/gpio/gpio-pca953x.c            |   39 ++++++++++++++++----------------
+ include/linux/i2c/pca953x.h            |    2 +-
+ 3 files changed, 31 insertions(+), 21 deletions(-)
+
+-- 
+1.7.10
