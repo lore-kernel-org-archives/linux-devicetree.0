@@ -1,32 +1,40 @@
-From: Shubhrajyoti <shubhrajyoti@ti.com>
-Subject: Re: [PATCH v6 01/11] drivers: usb: otg: add a new driver for omap
- usb2 phy
-Date: Mon, 30 Jul 2012 15:34:23 +0530
-Message-ID: <50165C27.3010107@ti.com>
-References: <1343639400-28725-1-git-send-email-kishon@ti.com> <1343639400-28725-2-git-send-email-kishon@ti.com> <501655F2.7070900@ti.com> <CAAe_U6LWEiAE8TVVEQ5LcKy0_+J7Er2vP71MrQVrg=ZteyAeCw@mail.gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [DTC] Compilation issue on Red-hat host systems
+Date: Sun, 29 Jul 2012 12:09:59 +1000
+Message-ID: <20120729020959.GB27550@truffala.fritz.box>
+References: <CALdT2jzsyC9TuXRgZxRP-zJjyfihUN_u2uXF=bSER3ARpPot3Q@mail.gmail.com>
+ <20120719032633.GC8100@truffala.fritz.box>
+ <CALdT2jw_m=uR8T=uE8BiptLG40_6K=5FsRWs4maR0u=4vUEyCA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAAe_U6LWEiAE8TVVEQ5LcKy0_+J7Er2vP71MrQVrg=ZteyAeCw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CALdT2jw_m=uR8T=uE8BiptLG40_6K=5FsRWs4maR0u=4vUEyCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: jagan <402jagan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 30 July 2012 03:16 PM, ABRAHAM, KISHON VIJAY wrote:
-> Hi,
->
-> On Mon, Jul 30, 2012 at 3:07 PM, Shubhrajyoti <shubhrajyoti@ti.com> wrote:
->> On Monday 30 July 2012 02:39 PM, Kishon Vijay Abraham I wrote:
->>> +                     writel(~PHY_PD, phy->control_dev);
->>> +                     /* XXX: add proper documentation for this delay */
->>> +                     mdelay(200);
->> Do you need this to be busy?
-> This might be called from interrupt context. This delay was initially
-> added in omap_phy_internal.c and I just inherited it.
-Thanks for the explanation.
+On Sat, Jul 28, 2012 at 03:03:50PM +0530, jagan wrote:
+> My flex version on system is flex version 2.5.4
+> I tried by  -Wstrict-prototypes  form Makefile, But still I got the same
+> error.
 
-> Thanks
-> Kishon
+Ah, sorry, I think that warning comes from -Wmissing-prototypes, not
+-Wstrict-prototypes  try removing that one instead.
 
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
