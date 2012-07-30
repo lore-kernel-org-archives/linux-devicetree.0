@@ -1,74 +1,157 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Mon, 30 Jul 2012 14:52:20 +0800
-Message-ID: <20120730065218.GB31509@S2101-09.ap.freescale.net>
-References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
- <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
- <20120726131121.GB7306@sirena.org.uk>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH] pwm_backlight: Add device tree support for Low Threshold
+ Brightness
+Date: Mon, 30 Jul 2012 08:58:05 +0200
+Message-ID: <20120730065805.GB15245@avionic-0098.mockup.avionic-design.de>
+References: <1343219042-4371-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120726131121.GB7306@sirena.org.uk>
-Sender: cpufreq-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
+In-Reply-To: <1343219042-4371-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, rpurdie@rpsys.net, broonie@opensource.wolfsonmicro.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2012 at 02:11:21PM +0100, Mark Brown wrote:
-> On Thu, Jul 19, 2012 at 11:54:41PM +0800, Shawn Guo wrote:
-> 
-> > +Optional properties:
-> > +- transition-latency: Specify the possible maximum transition latency,
-> > +  in unit of nanoseconds.
-> 
-> This should make it clear that the transition latency being documented
-> here is just that for the core clock change itself, there may be other
-> sources of latency like the regulator ramp time or reprogramming PLLs.
-> 
-I intended to make it be the total latency from whatever sources that
-should be counted on particular system.  Rather than adding complexity
-for the driver to figure out these latencies from every single source,
-I would expect that people know the possible maximum latency in total
-for their systems and specify it in device tree.
 
-> > +	if (cpu_reg) {
-> > +		opp = opp_find_freq_ceil(cpu_dev, &freq_Hz);
-> > +		if (IS_ERR(opp)) {
-> > +			pr_err("failed to find OPP for %ld\n", freq_Hz);
-> > +			return PTR_ERR(opp);
-> > +		}
-> > +		volt = opp_get_voltage(opp);
-> > +		tol = volt * voltage_tolerance / 100;
-> > +		volt_old = regulator_get_voltage(cpu_reg);
-> 
-> regulator_get_voltage() might be a bit expensive, many regulators will
-> query the hardware every time.  Since it's just for diagnostic purposes
-> it'd be better to not bother and let people read the historical
-> information from the logs.
-> 
-Ok, makes sense to me.
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +	/* scaling up?  scale voltage before frequency */
-> > +	if (cpu_reg && freqs.new > freqs.old) {
-> > +		if (regulator_set_voltage(cpu_reg, volt - tol, volt + tol)) {
-> 
-> This is a totally sane and sensible use case for specifying a voltage
-> range, we should move it into the regulator core for other users so you
-> can just specify the voltage and the tolerance directly.
-> 
-Are you asking for a change on regulator_set_voltage API?  While I agree
-with your comment, it's not a thing we need to necessarily do in this
-series.  The change on the API requires a touch on all the existing
-users.  I do not think it's nice to carry such a patch in this series.
+On Wed, Jul 25, 2012 at 05:54:02PM +0530, Philip, Avinash wrote:
+> Low Threshold Brightness should be configured to have a linear relation
+> in brightness scale. This patch adds device tree support for low
+> threshold brightness as optional one for pwm_backlight.
 
-> It is a little sad here as it means that we loose the ability to do
-> frequency only scaling if there's no regulator which is nice.
+I think this should be more explicit as to why this is required, perhaps
+something like this:
 
-I do not understand it.  The regulator is optional for the driver, and
-we can still scale frequency even if there is no regulator.
+	Some backlights perform poorly when driven by a PWM with a short
+	duty-cycle. For such devices, the low threshold can be used to
+	specify a lower bound for the duty-cycle and should be chosen to
+	exclude the problematic range.
 
--- 
-Regards,
-Shawn
+	This patch adds support for an optional low-threshold-brightness
+	property.
 
+Perhaps a similar explanation should be given somewhere else instead of
+just the changelog. It took me some time to understand what exactly this
+low threshold means and I think it'd make sense to write this kind of
+information down somewhere. I'll see if I can make time to add a bit of
+documentation somewhere below Documentation/backlight perhaps.
+
+> Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+> ---
+> :100644 100644 1e4fc72... 5c54380... M	Documentation/devicetree/bindings/=
+video/backlight/pwm-backlight.txt
+> :100644 100644 995f016... 4965408... M	drivers/video/backlight/pwm_bl.c
+>  .../bindings/video/backlight/pwm-backlight.txt     |   21 ++++++++++++++=
+++++++
+>  drivers/video/backlight/pwm_bl.c                   |    5 ++++
+>  2 files changed, 26 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backli=
+ght.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.t=
+xt
+> index 1e4fc72..5c54380 100644
+> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> @@ -14,6 +14,8 @@ Required properties:
+>  Optional properties:
+>    - pwm-names: a list of names for the PWM devices specified in the
+>                 "pwms" property (see PWM binding[0])
+> +  - low_threshold_brightness: brightness threshold low level. (get linear
+> +		 scales in brightness in low end of brightness levels)
+
+The convention is to use dashes, not underscores, in device tree
+property names, so this should be "low-threshold-brightness". I'd also
+omit the comment in parentheses because the DT binding document
+shouldn't specify any particular use-case. However I think it'd make
+sense to add some information about the number space of the low
+threshold value.
+
+Maybe we should also rethink how the low threshold is handled in cases
+where the brightness levels are used. I'm not sure it makes sense to
+specify the low threshold as a value relative to the range given by the
+levels. Perhaps it is more meaningful to specify it as relative to the
+period/duty-cycle.
+
+> =20
+>  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+> =20
+> @@ -26,3 +28,22 @@ Example:
+>  		brightness-levels =3D <0 4 8 16 32 64 128 255>;
+>  		default-brightness-level =3D <6>;
+>  	};
+> +
+> +Example for brightness_threshold_level:
+> +
+> +	backlight {
+> +		compatible	=3D "pwm-backlight";
+> +		pwms =3D <&pwm 0 50000>;
+> +
+> +		brightness-levels =3D <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level =3D <6>;
+> +		low_threshold_brightness =3D <50>;
+> +	};
+> +};
+
+I think you can just merge the low-threshold-brightness with the
+previous example.
+
+> +Note:
+> +Low threshold support is required to have linear brightness scale from
+> +0 to max. For some panels, backlight absent on low end of brightness
+> +scale. So support for Low Threshold been required. So that the scale of
+> +brightness changed from Low Threshold to Max in scales defined in
+> +brightness-levels. In this example 20% maximum brightness scale should
+> +be required to turn on panel backlight.
+
+I think this kind of documentation doesn't belong in the device tree
+binding. I'll work something like that into the proper documentation.
+
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/p=
+wm_bl.c
+> index 995f016..4965408 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -143,6 +143,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
+> =20
+>  		data->dft_brightness =3D value;
+>  		data->max_brightness--;
+> +
+> +		ret =3D of_property_read_u32(node, "low_threshold_brightness",
+> +					   &value);
+> +		if (!ret)
+> +			data->lth_brightness =3D value;
+>  	}
+
+This obviously should also be low-threshold-brightness.
+
+Thierry
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQFjB9AAoJEN0jrNd/PrOhaZoP/R+iBikJYEbKJpUtsPA64NSJ
+Msao0ZA21IQTuHwYbGy9YOBJ56utA9QotTc9hMp3ZeoKJbsNgIEyE3qAdDrHBqe/
+sLFQjobI5AsB/pMkJ8bvnBR6OJwItD485sD+dAc3muACmBpKlkxH3c4+BDOtW07D
+NdAmQ4tt/7+0mMPeU6jWEczWBnq2NJ78K6YJxgsyD5tn+CkL/1PoUQM/NPOnsBl4
+WLFhhPEMDOcModlMatDqWMj7oUR84do6yYJRtSv20kZ33Le7Gusls2F1NxpcwSfh
+ruSScyr1hhxM/YESn94cX2ZMp78A72SgK+QCi7QD45nGeBcevEwCX9tE5PcEkvp6
+Bg+b+fwlWJ/hvTeX1GukQ03JSrrkdZ8rFt4s2kNY/iPSJTgmKPeNT7po0jxPaQVm
+T2uJ9C+boNOc+2vC4PI7Mq22CGe3vSpRNPyuboCAuJrgUJSqL1KidLalpK3BBr8H
+A3tguaZl4tQ/p7aPBVilEcntsz5kYWJg2i0S9hs8fDZReyb3lhd2RXQgEO072nf1
+clsxFgl31URSy/bPZP1OlQQuXIl8NUH42DG2kuLJdC/wMP7gP34nnGatijo0Do37
+TaK4OUqpinUojS++kGUOjRNfSJQ1dPWWfLPVfEJOiuulV14RAtRMjNpqbiR7PsOc
+1we2edxx/o3wXZR7HfMO
+=InzF
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
