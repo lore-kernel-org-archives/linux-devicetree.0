@@ -1,43 +1,61 @@
 From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC] media DT bindings
-Date: Mon, 30 Jul 2012 23:02:26 +0200
-Message-ID: <5016F662.8030807@gmail.com>
-References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <5000375B.9060100@gmail.com> <Pine.LNX.4.64.1207161257590.18978@axis700.grange> <5006EB9F.5010408@gmail.com> <20120723121420.GC8302@sirena.org.uk>
+Subject: Re: [RFC/PATCH 05/13] media: s5p-fimc: Add device tree support for
+ FIMC devices
+Date: Mon, 30 Jul 2012 23:35:37 +0200
+Message-ID: <5016FE29.9020406@gmail.com>
+References: <4FBFE1EC.9060209@samsung.com> <Pine.LNX.4.64.1207180958540.8472@axis700.grange> <5007143E.8040807@gmail.com> <3360710.ek62A7CVxd@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20120723121420.GC8302@sirena.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3360710.ek62A7CVxd@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/23/2012 02:14 PM, Mark Brown wrote:
-> On Wed, Jul 18, 2012 at 07:00:15PM +0200, Sylwester Nawrocki wrote:
+Hi Laurent,
+
+On 07/26/2012 04:54 PM, Laurent Pinchart wrote:
+> On Wednesday 18 July 2012 21:53:34 Sylwester Nawrocki wrote:
+>> I think we need a one combined RFC and continue discussions in one thread.
 > 
->> One possible solution would be to have host/bridge drivers to register
->> a clkdev entry for I2C client device, so it can acquire the clock through
->> just clk_get(). We would have to ensure the clock is not tried to be
->> accessed before it is registered by a bridge. This would require to add
->> clock handling code to all sensor/encoder subdev drivers though..
+> Agreed.
 > 
-> If this is done well it could just be a simple callback, and we could
-> probably arrange for the framework to just implement the default
-> behaviour if the driver doesn't do anything explicit.
+>> Still, our proposals are quite different, but I believe we need something
+>> in between. I presume we should focus more to have common bindings for
+>> subdevs that are reused among different host/ISP devices, i.e. sensors and
+>> encoders. For simple host interfaces we can likely come up with common
+>> binding patterns, but more complex processing pipelines may require
+>> a sort of individual approach.
+>>
+>> The suspend/resume handling is still something I don't have an idea
+>> on how the solution for might look like..
+>> Instantiating all devices from a top level driver could help, but it
+>> is only going to work when platforms are converted to the common clock
+>> framework and have their clocks instantiated from device tree.
+>>
+>> This week I'm out of office, and next one or two I have some pending
+>> assignments. So there might be some delay before I can dedicate some
+>> reasonable amount of time to carry on with that topic.
+>>
+>> I unfortunately won't be attending KS this time.
+> 
+> That's bad news :-( I still think this topic should be discussed during KS, I
 
-I agree, if a clock is bound to a sub-device beforehand it could 
-probably be done with just a callback as well. Implementing default 
-behaviour at the framework makes a lot of sense too, it could ease 
-the conversion process significantly.
+Yeah, shit happens.. :) I guess -ENOBUDGET this time... I didn't really 
+plan early to attend KS, I might be coming to ELCE though. However it's 
+a rather distant event and we'll probably get most things settled by 
+that time.
 
-> Of couse this is one of those things where we really need the generic
-> clock API to be generally available...
+> expect several developers to be interested. The media workshop might not be
+> the best venue though, as we might need quite a lot of time.
+>
+> Until KS let's continue the discussion by e-mail.
 
-Indeed, I hope it won't take too much time before at least some of the
-platforms get converted.
+OK, thank you for taking time to review the RFCs.
 
 --
 
-Thanks,
+Regards,
 Sylwester
