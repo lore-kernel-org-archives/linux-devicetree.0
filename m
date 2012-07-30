@@ -1,30 +1,46 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Mon, 30 Jul 2012 19:55:01 +0100
-Message-ID: <20120730185501.GU4468@opensource.wolfsonmicro.com>
-References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
- <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
- <20120726131121.GB7306@sirena.org.uk>
- <20120730065218.GB31509@S2101-09.ap.freescale.net>
- <20120730082052.GD31509@S2101-09.ap.freescale.net>
+From: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
+Subject: Re: Gethering power management/policy hw drivers under drivers/power/? (Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences)
+Date: Mon, 30 Jul 2012 22:59:39 +0200
+Message-ID: <201207302259.39396.rjw@sisk.pl>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <5015E8AE.8060404@nvidia.com> <20120730024049.GA10442@lizard>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120730082052.GD31509@S2101-09.ap.freescale.net>
-Sender: cpufreq-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Mike Turquette <mturquette@linaro.org>, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120730024049.GA10442@lizard>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jean Pihet <j-pihet-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2012 at 04:20:54PM +0800, Shawn Guo wrote:
-> On Mon, Jul 30, 2012 at 02:52:20PM +0800, Shawn Guo wrote:
+On Monday, July 30, 2012, Anton Vorontsov wrote:
+> On Mon, Jul 30, 2012 at 10:51:42AM +0900, Alex Courbot wrote:
+> [...]
+> > On the other hand I have just noticed that the apparently unrelated
+> > Adaptive Voltage Scaling driver just appeared in drivers/power/avs.
+> > So if Anton and David are ok with this, maybe I could put the power
+> > sequences code in its own subdirectory within drivers/power.
+> 
+> Well, currently drivers/power/ is indeed just for power supply class
+> subsystem and drivers. But if the trend is to gather power management
+> ("policy") stuff under one directory, i.e.
+> 
+> drivers/
+>   power/
+>     supplies/    <- former "power supply class and drivers"
+>     regulators/
+>     idle/
+>     cpuidle/
+>     cpufreq/
+>     devfreq/
+>     avs/
+>     ...
+> 
+> That would probably make sense, we could easily see the big picture.
+> But if we're not going to do this long-term,
 
-> > Ok, makes sense to me.
+Yes, we may do this eventually, but surely not right now.
 
-> In the reply to one of Richard's comment, the volt_old will be used
-> not only for diagnostic purpose but also for reverting voltage back
-> when clk_set_rate fails.
-
-We should be able to figure out what operating point we set without
-having to read it back from the hardware like this.
+Thanks,
+Rafael
