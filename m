@@ -1,38 +1,175 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 00/14] add imx usb driver based on Greg next tree
-Date: Mon, 30 Jul 2012 19:27:33 -0300
-Message-ID: <CAOMZO5Bg11-ocEXoOd5W+0hEAHvuVqP6_6CW=rANySDTiNo6SA@mail.gmail.com>
-References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com>
-	<CAOMZO5BEVrPrgZ7E5xUE-_3zXb317mzqoZXaxXw1SNACuRzOPw@mail.gmail.com>
-	<20120626023754.GJ2342@S2101-09.ap.freescale.net>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Mon, 30 Jul 2012 16:45:52 -0600
+Message-ID: <50170EA0.1010408@wwwdotorg.org>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120626023754.GJ2342-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1343390750-3642-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2012 at 11:37 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Jun 25, 2012 at 01:18:22PM -0300, Fabio Estevam wrote:
->> Any suggestions as to how to make the driver work on mx23?
->>
-> I won't be able to test it on my imx23-evk board, because the board
-> design is somehow odd on vbus supply, which probably requires a board
-> rework.
+On 07/27/2012 06:05 AM, Alexandre Courbot wrote:
+> Some device drivers (panel backlights especially) need to follow precise
+> sequences for powering on and off, involving gpios, regulators, PWMs
+> with a precise powering order and delays to respect between each steps.
+> These sequences are board-specific, and do not belong to a particular
+> driver - therefore they have been performed by board-specific hook
+> functions to far.
 
-Which board rework?
+> diff --git a/Documentation/power/power_seq.txt b/Documentation/power/power_seq.txt
 
-It looks like the 2.6.35 FSL kernel supports USB host on mx23evk
-without the need of hardware rework.
+> +Sequences Format
+> +----------------
+> +Power sequences are a series of sequential steps during which an action is
+> +performed on a resource. The supported resources so far are:
+> +- GPIOs
+> +- Regulators
+> +- PWMs
+> +
+> +Each step designates a resource and the following parameters:
+> +- Whether the step should enable or disable the resource,
 
-Can we try getting USB to work on mx23 too?
+At the highest level, i.e. what's being describe here, I wouldn't even
+talk about enable/disable, but rather the action to perform on the
+resource. The set of legal actions may be specific to the type of
+resource in question. Admittedly enable/disable are common though.
 
-Regards,
+> +- Delay to wait before performing the action,
+> +- Delay to wait after performing the action.
 
-Fabio Estevam
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't see a need to have a delay both before and after an action;
+except at the start of the sequence, step n's post-delay is at the same
+point in the sequence as step n+1's pre-delay. Perhaps make a "delay"
+step type?
+
+> +Both new resources and parameters can be introduced, but the goal is of course
+> +to keep things as simple and compact as possible.
+
+> +The platform data is a simple array of platform_power_seq_step instances, each
+
+Rather than jumping straight into platform data here, I'd expect an
+enumeration of legal resource types, and what actions can be performed
+on each, followed by a description of a sequence (very simply, just a
+list of actions and their parameters). This could be followed by a
+section describing the mapping of the abstract concepts to concrete
+platform data representation (and concrete device tree representation).
+
+> +instance describing a step. The type as well as one of id or gpio members
+> +(depending on the type) must be specified. The last step must be of type
+> +POWER_SEQ_STOP.
+
+I'd certainly suggest having a step count rather than a sentinel value
+in the list.
+
+> Regulator and PWM resources are identified by name. GPIO are
+> +identified by number.
+
+That's a little implementation-specific. I guess it's entirely true for
+a platform data representation, but not when mapping this into device tree.
+
+> +Usage by Drivers and Resources Management
+> +-----------------------------------------
+> +Power sequences make use of resources that must be properly allocated and
+> +managed. The power_seq_build() function takes care of resolving the resources as
+> +they are met in the sequence and to allocate them if needed:
+> +
+> +power_seq *power_seq_build(struct device *dev, power_seq_resources *ress,
+> +			   platform_power_seq *pseq);
+> +
+> +You will need an instance of power_seq_resources to keep track of the resources
+> +that are already allocated. On success, the function returns a devm allocated
+> +resolved sequence that is ready to be passed to power_seq_run(). In case of
+> +failure, and error code is returned.
+
+If the result is devm-allocated, the function probably should be named
+devm_power_seq_build().
+
+I wonder if using the same structure/array as input and output would
+simplify the API; the platform data would fill in the fields mentioned
+above, and power_seq_build() would parse those, then set other fields in
+the same structs to the looked-up handle values?
+
+> +Finally, some resources that cannot be allocated through devm need to be freed
+> +manually. Therefore, be sure to call power_seq_free_resources() in your device
+> +remove function:
+> +
+> +void power_seq_free_resources(power_seq_resources *ress);
+
+You can make a custom devm free routine for the power_seq_resources
+itself, so the overall free'ing of the content can be triggered by devm,
+but the free'ing function can then call whatever non-devm APIs it wants
+for the non-devm-allocated members.
+
+> +Device tree
+> +-----------
+> +All the same, power sequences can be encoded as device tree nodes. The following
+> +properties and nodes are equivalent to the platform data defined previously:
+> +
+> +		power-supply = <&mydevice_reg>;
+> +		enable-gpio = <&gpio 6 0>;
+> +
+> +		power-on-sequence {
+> +			regulator@0 {
+
+As Thierry mentioned, the step nodes should be named for the type of
+object they are (a "step") not the type or name of resource they act
+upon ("regulator" or "gpio").
+
+If the nodes have a unit address (i.e. end in "@n"), which they will
+have to if all named "step" and there's more than one of them, then they
+will need a matching reg property. Equally, the parent node will need
+#address-cells and #size-cells too. So, the last couple lines would be:
+
+		power-on-sequence {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			step@0 {
+				reg = <0>;
+
+> +				id = "power";
+
+"id" is usually a name or identifier. I think you mean "type" or perhaps
+"action" here:
+
+				type = "regulator";
+				action = "enable";
+
+or:
+
+				action = "enable-regulator";
+
+I wish we had integer constants in DT so we didn't have to do all this
+with strings. Sigh.
+
+> +				enable;
+> +				post-delay = <10>;
+> +			};
+> +			gpio@1 {
+> +				id = "enable-gpio";
+> +				enable;
+> +			};
+> +		};
+> +
+> +Note that first, the phandles of the regulator and gpio used in the sequences
+> +are defined as properties. Then the sequence references them through the id
+> +property of every step. The name of sub-properties defines the type of the step.
+> +Valid names are "regulator", "gpio" and "pwm". Steps must be numbered
+> +sequentially.
+
+Oh I see. That's a little confusing. Why not just reference the relevant
+resources directly in each step; something more like:
+
+		gpio@1 {
+			action = "enable-gpio";
+			gpio = <&gpio 1 0>;
+		};
+
+I guess that might make parsing/building a little harder, since you'd
+have to detect when you'd already done gpio_request() on a given GPIO
+and not repeat it or something like that, but to me this makes the DT a
+lot easier to comprehend.
