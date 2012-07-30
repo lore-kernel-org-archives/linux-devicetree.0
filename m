@@ -1,45 +1,84 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
-Date: Mon, 30 Jul 2012 16:47:06 +0100
-Message-ID: <20120730154706.GL4468@opensource.wolfsonmicro.com>
-References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
- <1343390750-3642-2-git-send-email-acourbot@nvidia.com>
- <5016ABDD.5010809@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5016ABDD.5010809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Subject: [PATCH 1/1] ARM: dove: DT support for sdhci-dove
+Date: Mon, 30 Jul 2012 18:35:34 +0200
+Message-ID: <1343666134-21205-1-git-send-email-sebastian.hesselbarth@googlemail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Manuel Lauss <manuel.lauss@googlemail.com>, David Brown <davidb@codeaurora.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2012 at 10:44:29AM -0500, Rob Herring wrote:
-> On 07/27/2012 07:05 AM, Alexandre Courbot wrote:
+This patch adds device tree support and binding documentiation for
+sdhci-dove.
 
-> > +		power-on-sequence {
-> > +			regulator@0 {
-> > +				id = "power";
-> > +				enable;
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Chris Ball <cjb@laptop.org>
+Cc: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: Manuel Lauss <manuel.lauss@googlemail.com>
+Cc: David Brown <davidb@codeaurora.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mmc@vger.kernel.org
 
-> What do this mean? Isn't this implied for a regulator?
+---
+ Documentation/devicetree/bindings/mmc/sdhci-dove.txt |   12 ++++++++++++
+ drivers/mmc/host/sdhci-dove.c                        |    8 ++++++++
+ 2 files changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-dove.txt
 
-I assume you might have some sequences which need some things to be
-turned off for some reason; it at least seems to be something you'd want
-to design for.
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-dove.txt b/Documentation/devicetree/bindings/mmc/sdhci-dove.txt
+new file mode 100644
+index 0000000..3dd42552
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/sdhci-dove.txt
+@@ -0,0 +1,12 @@
++* Marvell sdhci-dove controller
++
++Required properties:
++- compatible: Should be "marvell,dove-sdhci".
++
++Example:
++
++sdio0: sdio@92000 {
++	compatible = "marvell,dove-sdhci";
++	reg = <0x92000 0x100>;
++	interrupts = <35>, <37>;
++};
+diff --git a/drivers/mmc/host/sdhci-dove.c b/drivers/mmc/host/sdhci-dove.c
+index a6e53a1..90140eb 100644
+--- a/drivers/mmc/host/sdhci-dove.c
++++ b/drivers/mmc/host/sdhci-dove.c
+@@ -24,6 +24,7 @@
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/mmc/host.h>
++#include <linux/of.h>
+ 
+ #include "sdhci-pltfm.h"
+ 
+@@ -126,11 +127,18 @@ static int __devexit sdhci_dove_remove(struct platform_device *pdev)
+ 	return sdhci_pltfm_unregister(pdev);
+ }
+ 
++static const struct of_device_id sdhci_dove_of_match_table[] __devinitdata = {
++	{ .compatible = "marvell,dove-sdhci", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, sdhci_dove_of_match_table);
++
+ static struct platform_driver sdhci_dove_driver = {
+ 	.driver		= {
+ 		.name	= "sdhci-dove",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= SDHCI_PLTFM_PMOPS,
++		.of_match_table = of_match_ptr(sdhci_dove_of_match_table),
+ 	},
+ 	.probe		= sdhci_dove_probe,
+ 	.remove		= __devexit_p(sdhci_dove_remove),
+-- 
+1.7.10.4
 
-> This looks like you designed the platform_data structs first and then
-> came up with device nodes to mirror the struct.
-
-Judging by most of the DT I review this seems idiomatic :)
