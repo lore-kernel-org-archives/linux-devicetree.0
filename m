@@ -1,49 +1,38 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
-Date: Mon, 30 Jul 2012 16:26:28 -0600
-Message-ID: <50170A14.6000201@wwwdotorg.org>
-References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <5016ABDD.5010809@gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 00/14] add imx usb driver based on Greg next tree
+Date: Mon, 30 Jul 2012 19:27:33 -0300
+Message-ID: <CAOMZO5Bg11-ocEXoOd5W+0hEAHvuVqP6_6CW=rANySDTiNo6SA@mail.gmail.com>
+References: <1340260875-21934-1-git-send-email-richard.zhao@freescale.com>
+	<CAOMZO5BEVrPrgZ7E5xUE-_3zXb317mzqoZXaxXw1SNACuRzOPw@mail.gmail.com>
+	<20120626023754.GJ2342@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5016ABDD.5010809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120626023754.GJ2342-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/30/2012 09:44 AM, Rob Herring wrote:
-> On 07/27/2012 07:05 AM, Alexandre Courbot wrote:
->> Some device drivers (panel backlights especially) need to follow precise
->> sequences for powering on and off, involving gpios, regulators, PWMs
->> with a precise powering order and delays to respect between each steps.
->> These sequences are board-specific, and do not belong to a particular
->> driver - therefore they have been performed by board-specific hook
->> functions to far.
+On Mon, Jun 25, 2012 at 11:37 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Jun 25, 2012 at 01:18:22PM -0300, Fabio Estevam wrote:
+>> Any suggestions as to how to make the driver work on mx23?
 >>
->> With the advent of the device tree and of ARM kernels that are not
->> board-tied, we cannot rely on these board-specific hooks anymore but
->> need a way to implement these sequences in a portable manner. This patch
->> introduces a simple interpreter that can execute such power sequences
->> encoded either as platform data or within the device tree.
->>
-> 
-> Why not? We'll always have some amount of board code. The key is to
-> limit parts that are just data. I'm not sure this is something that
-> should be in devicetree.
-> 
-> Perhaps what is needed is a better way to hook into the driver like
-> notifiers?
+> I won't be able to test it on my imx23-evk board, because the board
+> design is somehow odd on vbus supply, which probably requires a board
+> rework.
 
-I would answer that by asking the reverse question - why should we have
-to put some data in DT, and some data into board files still?
+Which board rework?
 
-I'd certainly argue that the sequence of which GPIOs/regulators/PWMs to
-manipulate is just data.
+It looks like the 2.6.35 FSL kernel supports USB host on mx23evk
+without the need of hardware rework.
 
-To be honest, if we're going to have to put some parts of a board's
-configuration into board files anyway, then the entirety of DT seems
-useless; I'd far rather see all the configuration in one cohesive place
-than arbitrarily split into two/n different locations - that would make
-everything harder to maintain.
+Can we try getting USB to work on mx23 too?
+
+Regards,
+
+Fabio Estevam
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
