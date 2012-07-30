@@ -1,49 +1,30 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: Re: [PATCH 3/6] OF: pinctrl: MIPS: lantiq: adds support for FALCON
- SoC
-Date: Mon, 30 Jul 2012 11:41:20 +0200
-Message-ID: <501656C0.9030609@openwrt.org>
-References: <1343112660-12245-1-git-send-email-blogic@openwrt.org>	<1343112660-12245-3-git-send-email-blogic@openwrt.org> <CACRpkdYP8PdcnS2h_-+n9ZdBmMuBPUv9so9WsUyS-X5rMz1qsQ@mail.gmail.com>
+From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Subject: Re: [PATCH v6 01/11] drivers: usb: otg: add a new driver for omap
+ usb2 phy
+Date: Mon, 30 Jul 2012 15:16:32 +0530
+Message-ID: <CAAe_U6LWEiAE8TVVEQ5LcKy0_+J7Er2vP71MrQVrg=ZteyAeCw@mail.gmail.com>
+References: <1343639400-28725-1-git-send-email-kishon@ti.com>
+	<1343639400-28725-2-git-send-email-kishon@ti.com>
+	<501655F2.7070900@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYP8PdcnS2h_-+n9ZdBmMuBPUv9so9WsUyS-X5rMz1qsQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Thomas Langer <thomas.langer@lantiq.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <501655F2.7070900@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Shubhrajyoti <shubhrajyoti@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/07/12 01:23, Linus Walleij wrote:
-> On Tue, Jul 24, 2012 at 8:50 AM, John Crispin <blogic@openwrt.org> wrote:
->
->> Implement support for pinctrl on lantiq/falcon socs. The FALCON has 5 banks
->> of up to 32 pins.
->>
->> Signed-off-by: John Crispin <blogic@openwrt.org>
->> Signed-off-by: Thomas Langer <thomas.langer@lantiq.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: linux-kernel@vger.kernel.org
-> No big issues and looking really sweet so:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
->> --- a/arch/mips/lantiq/Kconfig
->> +++ b/arch/mips/lantiq/Kconfig
->> @@ -20,6 +20,7 @@ config SOC_XWAY
->>
->>  config SOC_FALCON
->>         bool "FALCON"
->> +       select PINCTRL_FALCON
-> I think you need to add "select PINCTRL" above "select PINCTRL_FALCON"
-> for this to work.
->
-> Atleast I had to do that in the past to get things working.
+Hi,
 
-Hi Linus,
+On Mon, Jul 30, 2012 at 3:07 PM, Shubhrajyoti <shubhrajyoti@ti.com> wrote:
+> On Monday 30 July 2012 02:39 PM, Kishon Vijay Abraham I wrote:
+>> +                     writel(~PHY_PD, phy->control_dev);
+>> +                     /* XXX: add proper documentation for this delay */
+>> +                     mdelay(200);
+> Do you need this to be busy?
+This might be called from interrupt context. This delay was initially
+added in omap_phy_internal.c and I just inherited it.
 
-config LANTIQ selects PINCTRL  globally for all Lantiq SoC so an
-explicit select can be avoided here
-
-Thanks for the review,
-John
+Thanks
+Kishon
