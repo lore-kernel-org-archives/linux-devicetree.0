@@ -1,46 +1,33 @@
-From: =?euc-kr?B?x9S47cHW?= <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Gethering power management/policy hw drivers under drivers/power/?
- (Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences)
-Date: Mon, 30 Jul 2012 03:04:00 +0000 (GMT)
-Message-ID: <31696994.4431343617434187.JavaMail.weblogic@epml02>
-Reply-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Mon, 30 Jul 2012 12:57:25 +0800
+Message-ID: <20120730045715.GA31509@S2101-09.ap.freescale.net>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+ <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
+ <CAMQu2gw32LogXJJa+K5ZjmCZzBNK3FY2wYwZXU8fsftsVzEO2Q@mail.gmail.com>
+ <20120720123317.GA32263@S2101-09.ap.freescale.net>
+ <CAJOA=zMQKLTumW7Nx68+yxHC5Yk4QyiL2mf1+TSZfVOAtnXDWA@mail.gmail.com>
+ <CAMQu2gy4p+rL-sDAsGCnqSn_2eXwSqf---OS0BSXuDoacjd6_g@mail.gmail.com>
+ <20120721063811.GA619@S2101-09.ap.freescale.net>
+ <20120727020433.GA3347@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=euc-kr
-Content-Transfer-Encoding: base64
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-MIME-version: 1.0
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jean Pihet <j-pihet-l0cyMroinI0@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120727020433.GA3347@b20223-02.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Richard Zhao <richard.zhao@freescale.com>
+Cc: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "Turquette, Mike" <mturquette@ti.com>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiBPbiBNb24sIEp1bCAzMCwgMjAxMiBhdCAxMDo1MTo0MkFNICswOTAwLCBBbGV4IENvdXJib3Qg
-d3JvdGU6DQo+IFsuLi5dDQo+ID4gT24gdGhlIG90aGVyIGhhbmQgSSBoYXZlIGp1c3Qgbm90aWNl
-ZCB0aGF0IHRoZSBhcHBhcmVudGx5IHVucmVsYXRlZA0KPiA+IEFkYXB0aXZlIFZvbHRhZ2UgU2Nh
-bGluZyBkcml2ZXIganVzdCBhcHBlYXJlZCBpbiBkcml2ZXJzL3Bvd2VyL2F2cy4NCj4gPiBTbyBp
-ZiBBbnRvbiBhbmQgRGF2aWQgYXJlIG9rIHdpdGggdGhpcywgbWF5YmUgSSBjb3VsZCBwdXQgdGhl
-IHBvd2VyDQo+ID4gc2VxdWVuY2VzIGNvZGUgaW4gaXRzIG93biBzdWJkaXJlY3Rvcnkgd2l0aGlu
-IGRyaXZlcnMvcG93ZXIuDQo+IA0KPiBXZWxsLCBjdXJyZW50bHkgZHJpdmVycy9wb3dlci8gaXMg
-aW5kZWVkIGp1c3QgZm9yIHBvd2VyIHN1cHBseSBjbGFzcw0KPiBzdWJzeXN0ZW0gYW5kIGRyaXZl
-cnMuIEJ1dCBpZiB0aGUgdHJlbmQgaXMgdG8gZ2F0aGVyIHBvd2VyIG1hbmFnZW1lbnQNCj4gKCJw
-b2xpY3kiKSBzdHVmZiB1bmRlciBvbmUgZGlyZWN0b3J5LCBpLmUuDQo+IA0KPiBkcml2ZXJzLw0K
-PiAgIHBvd2VyLw0KPiAgICAgc3VwcGxpZXMvICAgIDwtIGZvcm1lciAicG93ZXIgc3VwcGx5IGNs
-YXNzIGFuZCBkcml2ZXJzIg0KPiAgICAgcmVndWxhdG9ycy8NCj4gICAgIGlkbGUvDQo+ICAgICBj
-cHVpZGxlLw0KPiAgICAgY3B1ZnJlcS8NCj4gICAgIGRldmZyZXEvDQo+ICAgICBhdnMvDQo+ICAg
-ICAuLi4NCj4gDQo+IFRoYXQgd291bGQgcHJvYmFibHkgbWFrZSBzZW5zZSwgd2UgY291bGQgZWFz
-aWx5IHNlZSB0aGUgYmlnIHBpY3R1cmUuDQo+IEJ1dCBpZiB3ZSdyZSBub3QgZ29pbmcgdG8gZG8g
-dGhpcyBsb25nLXRlcm0sIEkgd291bGQgc3VnZ2VzdCB0byBzdGljaw0KPiB0byBqdXN0IGEgbmV3
-IGRpcmVjdG9yeSB1bmRlciBkcml2ZXJzIChhbmQgbW92ZSBkcml2ZXJzL3Bvd2VyL2F2cy8gdG8N
-Cj4gZHJpdmVycy9hdnMpLg0KPiANCj4gQ2MnaW5nIHNvbWUgbW9yZSBwZW9wbGUuLi4NCj4gDQo+
-IFRoYW5rcywNCj4gDQo+IHAucy4gSmVhbiwgd2h5IGFtIEkgdGhlIGxhc3QgcGVyc29uIHdobyBk
-aXNjb3ZlcnMgZHJpdmVycy9wb3dlci9hdnMvPw0KPiBXb3VsZCBiZSBuaWNlIHRvIENjIG1lIG9u
-IHN1Y2ggcGF0Y2hlczsgYnkgbW92aW5nIEFWUyB1bmRlcg0KPiBkcml2ZXJzL3Bvd2VyLyB5b3Ug
-ZWZmZWN0aXZlbHkgbm9taW5hdGVkIG1lIGFzIGl0cyBtYWludGFpbmVyLiA6LSkNCj4gDQo+IC0t
-IA0KPiBBbnRvbiBWb3JvbnRzb3YNCj4gRW1haWw6IGNib3VhdG1haWxydUBnbWFpbC5jb20NCj4g
-DQoNCkhhdmluZyBwb3dlci1zdXBwbGllcyBhdCAvZHJpdmVycy9wb3dlci8gYW5kIG90aGVyIHBv
-d2VyLXJlbGF0ZWQgZHJpdmVycyBzcHJlYWQgYXQgL2RyaXZlcnMvIGhhdmUgYmVlbiBidWdnaW5n
-IG1lIGFzIHdlbGwuIEknZCBsaWtlIHRvIHNlZSB0aGUgY2hhbmdlIHlvdSd2ZSBzdWdnZXN0ZWQg
-dGhvdWdoIEknbSBub3Qgc3VyZSBob3cgc2lnbmlmaWNhbnQgdGhlIHNpZGUtZWZmZWN0IHdpbGwg
-YmUgYXQgdGhpcyBwb2ludC4NCg0KR2VuZXJhbGx5IHNwZWFraW5nLCB5ZXMsIEkgYWxzbyB0aGlu
-ayB0aGUgcHJvcG9zYWwgaXMgbW9yZSByZWFzb25hYmxlIHRoYW4gdGhlIGN1cnJlbnQgc3RydWN0
-dXJlLg0KDQoNCg0KQ2hlZXJzIQ0KTXl1bmdKb28NCg0KDQo=
+On Fri, Jul 27, 2012 at 10:04:34AM +0800, Richard Zhao wrote:
+> Are we going to support the case in the future that cores has
+> independent freq? If yes, maybe we should have a more common name.
+> 
+I do not think we should support that with this driver.  That's one of
+the reasons I named the driver this way.
+
+-- 
+Regards,
+Shawn
+
