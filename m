@@ -1,230 +1,74 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v6] ARM: mtd: nand: davinci: add OF support for davinci nand
- controller
-Date: Mon, 30 Jul 2012 09:22:24 +0200
-Message-ID: <1343632944-25971-1-git-send-email-hs@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH v3 2/2] lis3-spi: add DT matching table passthru code
+Date: Mon, 30 Jul 2012 09:36:15 +0200
+Message-ID: <1343633775-6268-2-git-send-email-zonque@gmail.com>
+References: <1343633775-6268-1-git-send-email-zonque@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1343633775-6268-1-git-send-email-zonque@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: eric.piel@tremplin-utc.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-add OF support for the davinci nand controller.
+If probed from a device tree, this driver now passes the node
+information to the generic part, so the runtime information can be
+derived.
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Successfully tested on a PXA3xx board.
 
+Signed-off-by: Daniel Mack <zonque@gmail.com>
 ---
-- changes for v2:
-  - add comments from Scott Wood:
-    - add "ti,davinci-" prefix
-    - Dashes are preferred to underscores
-    - rename "nandflash" to "nand"
-    - introduce new "ti,davinci" specific properties for setting
-      up ecc_mode, ecc_bits, options and bbt options, instead
-      using linux defines
-    - readme fixes
-- no changes for v3
-- changes for v4
-  remove "pinmux-handle" property as discussed here:
-  http://www.spinics.net/lists/arm-kernel/msg175701.html
-  with Nori Sekhar
-- no changes for v5
 
-- changes for v6:
-  add comments from Sekhar Nori:
-  - remove unnecessary includes
-  - use devm_kzalloc instead of kzalloc
-  - remove AEMIF timing specific bindings, as
-    this has to be done later.
+No changes from v1 and v2
 
- .../devicetree/bindings/arm/davinci/nand.txt       |   51 ++++++++++++++
- drivers/mtd/nand/davinci_nand.c                    |   72 +++++++++++++++++++-
- 2 files changed, 122 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
+ drivers/misc/lis3lv02d/lis3lv02d_spi.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-new file mode 100644
-index 0000000..e37241f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-@@ -0,0 +1,51 @@
-+* Texas Instruments Davinci NAND
-+
-+This file provides information, what the device node for the
-+davinci nand interface contain.
-+
-+Required properties:
-+- compatible: "ti,davinci-nand";
-+- reg : contain 2 offset/length values:
-+        - offset and length for the access window
-+        - offset and length for accessing the aemif control registers
-+- ti,davinci-chipselect: Indicates on the davinci_nand driver which
-+                         chipselect is used for accessing the nand.
-+
-+Recommended properties :
-+- ti,davinci-mask-ale: mask for ale
-+- ti,davinci-mask-cle: mask for cle
-+- ti,davinci-mask-chipsel: mask for chipselect
-+- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
-+		- "none"
-+		- "soft"
-+		- "hw"
-+- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
-+- ti,davinci-nand-buswidth: buswidth 8 or 16
-+- ti,davinci-nand-use-bbt: use flash based bad block table support.
-+
-+Example (enbw_cmc board):
-+aemif@60000000 {
-+	compatible = "ti,davinci-aemif";
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	reg = <0x68000000 0x80000>;
-+	ranges = <2 0 0x60000000 0x02000000
-+		  3 0 0x62000000 0x02000000
-+		  4 0 0x64000000 0x02000000
-+		  5 0 0x66000000 0x02000000
-+		  6 0 0x68000000 0x02000000>;
-+	nand@3,0 {
-+		compatible = "ti,davinci-nand";
-+		reg = <3 0x0 0x807ff
-+			6 0x0 0x8000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ti,davinci-chipselect = <1>;
-+		ti,davinci-mask-ale = <0>;
-+		ti,davinci-mask-cle = <0>;
-+		ti,davinci-mask-chipsel = <0>;
-+		ti,davinci-ecc-mode = "hw";
-+		ti,davinci-ecc-bits = <4>;
-+		ti,davinci-nand-use-bbt;
-+	};
+diff --git a/drivers/misc/lis3lv02d/lis3lv02d_spi.c b/drivers/misc/lis3lv02d/lis3lv02d_spi.c
+index 80880e9..8616054 100644
+--- a/drivers/misc/lis3lv02d/lis3lv02d_spi.c
++++ b/drivers/misc/lis3lv02d/lis3lv02d_spi.c
+@@ -17,6 +17,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/spi/spi.h>
+ #include <linux/pm.h>
++#include <linux/of_platform.h>
+ 
+ #include "lis3lv02d.h"
+ 
+@@ -58,6 +59,12 @@ static int lis3_spi_init(struct lis3lv02d *lis3)
+ static union axis_conversion lis3lv02d_axis_normal =
+ 	{ .as_array = { 1, 2, 3 } };
+ 
++static struct of_device_id lis302dl_spi_dt_ids[] = {
++	{ .compatible = "st,lis302dl-spi" },
++	{}
 +};
-diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-index d94b03c..f386b3c 100644
---- a/drivers/mtd/nand/davinci_nand.c
-+++ b/drivers/mtd/nand/davinci_nand.c
-@@ -33,6 +33,7 @@
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
- #include <linux/slab.h>
-+#include <linux/of_device.h>
- 
- #include <mach/nand.h>
- #include <mach/aemif.h>
-@@ -518,9 +519,75 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
- 	},
- };
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id davinci_nand_of_match[] = {
-+	{.compatible = "ti,davinci-nand", },
-+	{},
-+}
-+MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
++MODULE_DEVICE_TABLE(of, lis302dl_spi_dt_ids);
 +
-+static struct davinci_nand_pdata
-+	*nand_davinci_get_pdata(struct platform_device *pdev)
-+{
-+	if (!pdev->dev.platform_data && pdev->dev.of_node) {
-+		struct davinci_nand_pdata *pdata;
-+		const char *mode;
-+		u32 prop;
-+		int len;
+ static int __devinit lis302dl_spi_probe(struct spi_device *spi)
+ {
+ 	int ret;
+@@ -75,6 +82,12 @@ static int __devinit lis302dl_spi_probe(struct spi_device *spi)
+ 	lis3_dev.irq		= spi->irq;
+ 	lis3_dev.ac		= lis3lv02d_axis_normal;
+ 	lis3_dev.pdata		= spi->dev.platform_data;
 +
-+		pdata =  devm_kzalloc(&pdev->dev,
-+				sizeof(struct davinci_nand_pdata),
-+				GFP_KERNEL);
-+		pdev->dev.platform_data = pdata;
-+		if (!pdata)
-+			return NULL;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-chipselect", &prop))
-+			pdev->id = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-ale", &prop))
-+			pdata->mask_ale = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-cle", &prop))
-+			pdata->mask_cle = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-chipsel", &prop))
-+			pdata->mask_chipsel = prop;
-+		if (!of_property_read_string(pdev->dev.of_node,
-+			"ti,davinci-ecc-mode", &mode)) {
-+			if (!strncmp("none", mode, 4))
-+				pdata->ecc_mode = NAND_ECC_NONE;
-+			if (!strncmp("soft", mode, 4))
-+				pdata->ecc_mode = NAND_ECC_SOFT;
-+			if (!strncmp("hw", mode, 2))
-+				pdata->ecc_mode = NAND_ECC_HW;
-+		}
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-ecc-bits", &prop))
-+			pdata->ecc_bits = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-nand-buswidth", &prop))
-+			if (prop == 16)
-+				pdata->options |= NAND_BUSWIDTH_16;
-+		if (of_find_property(pdev->dev.of_node,
-+			"ti,davinci-nand-use-bbt", &len))
-+			pdata->bbt_options = NAND_BBT_USE_FLASH;
-+	}
-+
-+	return pdev->dev.platform_data;
-+}
-+#else
-+#define davinci_nand_of_match NULL
-+static struct davinci_nand_pdata
-+	*nand_davinci_get_pdata(struct platform_device *pdev)
-+{
-+	return pdev->dev.platform_data;
-+}
++#ifdef CONFIG_OF
++	if (of_match_device(lis302dl_spi_dt_ids, &spi->dev))
++		lis3_dev.of_node = spi->dev.of_node;
 +#endif
 +
- static int __init nand_davinci_probe(struct platform_device *pdev)
- {
--	struct davinci_nand_pdata	*pdata = pdev->dev.platform_data;
-+	struct davinci_nand_pdata	*pdata;
- 	struct davinci_nand_info	*info;
- 	struct resource			*res1;
- 	struct resource			*res2;
-@@ -530,6 +597,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
- 	uint32_t			val;
- 	nand_ecc_modes_t		ecc_mode;
+ 	spi_set_drvdata(spi, &lis3_dev);
  
-+	pdata = nand_davinci_get_pdata(pdev);
- 	/* insist on board-specific configuration */
- 	if (!pdata)
- 		return -ENODEV;
-@@ -816,6 +884,8 @@ static struct platform_driver nand_davinci_driver = {
- 	.remove		= __exit_p(nand_davinci_remove),
- 	.driver		= {
- 		.name	= "davinci_nand",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = davinci_nand_of_match,
+ 	return lis3lv02d_init_device(&lis3_dev);
+@@ -121,6 +134,7 @@ static struct spi_driver lis302dl_spi_driver = {
+ 		.name   = DRV_NAME,
+ 		.owner  = THIS_MODULE,
+ 		.pm	= &lis3lv02d_spi_pm,
++		.of_match_table = of_match_ptr(lis302dl_spi_dt_ids),
  	},
- };
- MODULE_ALIAS("platform:davinci_nand");
+ 	.probe	= lis302dl_spi_probe,
+ 	.remove	= __devexit_p(lis302dl_spi_remove),
 -- 
-1.7.7.6
+1.7.11.2
