@@ -1,34 +1,48 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Mon, 30 Jul 2012 17:24:42 +0800
-Message-ID: <20120730092440.GG31509@S2101-09.ap.freescale.net>
-References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
- <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
- <20120727063334.GC3347@b20223-02.ap.freescale.net>
- <20120730081750.GC31509@S2101-09.ap.freescale.net>
- <20120730085040.GG3347@b20223-02.ap.freescale.net>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v7] ARM: davinci: i2c: add OF support
+Date: Mon, 30 Jul 2012 11:31:05 +0200
+Message-ID: <50165459.4000507@denx.de>
+References: <1343632872-25896-1-git-send-email-hs@denx.de>
+ <CAM=Q2csb6pvU5WA6BeFMmBSXg9h_jacft5U8239ZtE=2dbyODw@mail.gmail.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120730085040.GG3347@b20223-02.ap.freescale.net>
-Sender: cpufreq-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@freescale.com>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAM=Q2csb6pvU5WA6BeFMmBSXg9h_jacft5U8239ZtE=2dbyODw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2012 at 04:50:41PM +0800, Richard Zhao wrote:
-> I think the real problem here is OPP only provide exact voltage but
-> regulator api needs a range.
-> 
-Maybe OPP will get improved on that when the real use cases occur.
+Hello Shubhrajyoti,
 
-> IIRC, cpufreq driver init is called every time a new cpu get online.
-> So things that only needs to be done once can be put in module init.
-> 
-Ah, right.  Something should be moved to module init then.
+On 30.07.2012 10:42, Shubhrajyoti Datta wrote:
+> On Mon, Jul 30, 2012 at 12:51 PM, Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>  wrote:
+>> add of support for the davinci i2c driver.
+[...]
+>> diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
+>> index 79b4bcb..b6185dc 100644
+>> --- a/drivers/i2c/busses/i2c-davinci.c
+>> +++ b/drivers/i2c/busses/i2c-davinci.c
+[...]
+>> @@ -635,6 +633,12 @@ static struct i2c_algorithm i2c_davinci_algo = {
+>>          .functionality  = i2c_davinci_func,
+>>   };
+>>
+>> +static const struct of_device_id davinci_i2c_of_match[] = {
+>> +       {.compatible = "ti,davinci-i2c", },
+>> +       {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, davinci_i2c_of_match);
+>> +
+>
+> Should this be protected under OF flag?
 
+No, as I know, this is not needed.
+
+bye,
+Heiko
 -- 
-Regards,
-Shawn
-
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
