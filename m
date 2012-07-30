@@ -1,84 +1,62 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Subject: [PATCH 1/1] ARM: dove: DT support for sdhci-dove
-Date: Mon, 30 Jul 2012 18:35:34 +0200
-Message-ID: <1343666134-21205-1-git-send-email-sebastian.hesselbarth@googlemail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Manuel Lauss <manuel.lauss@googlemail.com>, David Brown <davidb@codeaurora.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Mon, 30 Jul 2012 19:53:45 +0100
+Message-ID: <20120730185344.GT4468@opensource.wolfsonmicro.com>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+ <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
+ <20120726131121.GB7306@sirena.org.uk>
+ <20120730065218.GB31509@S2101-09.ap.freescale.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120730065218.GB31509@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support and binding documentiation for
-sdhci-dove.
+On Mon, Jul 30, 2012 at 02:52:20PM +0800, Shawn Guo wrote:
+> On Thu, Jul 26, 2012 at 02:11:21PM +0100, Mark Brown wrote:
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Chris Ball <cjb@laptop.org>
-Cc: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Manuel Lauss <manuel.lauss@googlemail.com>
-Cc: David Brown <davidb@codeaurora.org>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mmc@vger.kernel.org
+> > This should make it clear that the transition latency being documented
+> > here is just that for the core clock change itself, there may be other
+> > sources of latency like the regulator ramp time or reprogramming PLLs.
 
----
- Documentation/devicetree/bindings/mmc/sdhci-dove.txt |   12 ++++++++++++
- drivers/mmc/host/sdhci-dove.c                        |    8 ++++++++
- 2 files changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-dove.txt
+> I intended to make it be the total latency from whatever sources that
+> should be counted on particular system.  Rather than adding complexity
+> for the driver to figure out these latencies from every single source,
+> I would expect that people know the possible maximum latency in total
+> for their systems and specify it in device tree.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-dove.txt b/Documentation/devicetree/bindings/mmc/sdhci-dove.txt
-new file mode 100644
-index 0000000..3dd42552
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-dove.txt
-@@ -0,0 +1,12 @@
-+* Marvell sdhci-dove controller
-+
-+Required properties:
-+- compatible: Should be "marvell,dove-sdhci".
-+
-+Example:
-+
-+sdio0: sdio@92000 {
-+	compatible = "marvell,dove-sdhci";
-+	reg = <0x92000 0x100>;
-+	interrupts = <35>, <37>;
-+};
-diff --git a/drivers/mmc/host/sdhci-dove.c b/drivers/mmc/host/sdhci-dove.c
-index a6e53a1..90140eb 100644
---- a/drivers/mmc/host/sdhci-dove.c
-+++ b/drivers/mmc/host/sdhci-dove.c
-@@ -24,6 +24,7 @@
- #include <linux/err.h>
- #include <linux/module.h>
- #include <linux/mmc/host.h>
-+#include <linux/of.h>
- 
- #include "sdhci-pltfm.h"
- 
-@@ -126,11 +127,18 @@ static int __devexit sdhci_dove_remove(struct platform_device *pdev)
- 	return sdhci_pltfm_unregister(pdev);
- }
- 
-+static const struct of_device_id sdhci_dove_of_match_table[] __devinitdata = {
-+	{ .compatible = "marvell,dove-sdhci", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sdhci_dove_of_match_table);
-+
- static struct platform_driver sdhci_dove_driver = {
- 	.driver		= {
- 		.name	= "sdhci-dove",
- 		.owner	= THIS_MODULE,
- 		.pm	= SDHCI_PLTFM_PMOPS,
-+		.of_match_table = of_match_ptr(sdhci_dove_of_match_table),
- 	},
- 	.probe		= sdhci_dove_probe,
- 	.remove		= __devexit_p(sdhci_dove_remove),
--- 
-1.7.10.4
+Quite honestly this seems totally unrealistic for the majority of users,
+especially given the very poor documentation for this stuff which SoC
+vendors typically provide.  It's a reasonable amount of work to go back
+and figure this stuff out (especially given that it should be varying
+depending on the transition in question), and it's going to give us a
+bunch of magic numbers in people's bindings.
 
+> > > +	if (cpu_reg && freqs.new > freqs.old) {
+> > > +		if (regulator_set_voltage(cpu_reg, volt - tol, volt + tol)) {
+
+> > This is a totally sane and sensible use case for specifying a voltage
+> > range, we should move it into the regulator core for other users so you
+> > can just specify the voltage and the tolerance directly.
+
+> Are you asking for a change on regulator_set_voltage API?  While I agree
+> with your comment, it's not a thing we need to necessarily do in this
+> series.  The change on the API requires a touch on all the existing
+> users.  I do not think it's nice to carry such a patch in this series.
+
+No, add a new API.
+
+> > It is a little sad here as it means that we loose the ability to do
+> > frequency only scaling if there's no regulator which is nice.
+
+> I do not understand it.  The regulator is optional for the driver, and
+> we can still scale frequency even if there is no regulator.
+
+As soon as a regulator is available your code will insist that we're
+able to set the voltage specified to set the frequency, and since it's
+using tolerances not ranges to whatever the chip maximum is that'll mean
+it'll stop doing frequency scaling at all.
