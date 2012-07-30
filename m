@@ -1,122 +1,121 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v4 3/6] tegra: fdt: Add NAND controller binding and
-	definitions
-Date: Sun, 29 Jul 2012 23:53:27 -0700
-Message-ID: <1343631210-22278-4-git-send-email-sjg@chromium.org>
-References: <1343631210-22278-1-git-send-email-sjg@chromium.org>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v6] ARM: davinci: i2c: add OF support
+Date: Mon, 30 Jul 2012 09:02:14 +0200
+Message-ID: <50163176.3000408@denx.de>
+References: <1342514447-30810-1-git-send-email-hs@denx.de>
+ <20120720105208.GB5971@pengutronix.de>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1343631210-22278-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Stephen Warren <swarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>, Scott Wood <scottwood@freescale.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20120720105208.GB5971-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a NAND controller along with a bindings file for review.
+Hello Wolfram,
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
-Changes in v2:
-- Update NAND binding to add "nvidia," prefix
+On 20.07.2012 12:52, Wolfram Sang wrote:
+> Hi,
+>
+> On Tue, Jul 17, 2012 at 10:40:47AM +0200, Heiko Schocher wrote:
+>> add of support for the davinci i2c driver.
+>>
+>> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+>> Signed-off-by: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: Ben Dooks<ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+>> Cc: Wolfram Sang<w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
+>> Cc: Sylwester Nawrocki<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> ---
+>> - changes for v2:
+>> - add comments from Sylwester Nawrocki<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+>>    - use "cell-index" instead "id"
+>>    - OF_DEV_AUXDATA in the machine code, instead pre-define platform
+>>      device name
+>> - add comment from Grant Likely:
+>>    - removed "id" resp. "cell-index" completely
+>>    - fixed documentation
+>>    - use of_match_ptr()
+>>    - use devm_kzalloc() for allocating plattform data mem
+>>    - fixed a whitespace issue
+>> - no changes for v3
+>> - changes for v4
+>>    remove "pinmux-handle" property as discussed here:
+>>    http://www.spinics.net/lists/arm-kernel/msg175701.html
+>>    with Nori Sekhar
+>>
+>> - changes for v5
+>>    add comments from Grant Likely:
+>>    - do not change value of dev->dev->platform_data, instead
+>>      hold a copy in davinci_i2c_dev.
+>>
+>> - changes for v6:
+>>    add comments from Sekhar Nori:
+>>    - removed unneccessary include
+>>    - merge patch from Sekhar Nori:
+>>      setup the newly introduced dev->pdata member correctly once in
+>>      probe ->  i2c_get_plattformdata(() not needed, remove a lot of
+>>      checks for pdata in code
+>>    - add Signed-off-by: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+>>    - patch no longer in patchserie, as it has no dependencies.
+>> ---
+>>   .../devicetree/bindings/arm/davinci/i2c.txt        |   31 ++++++++++++
+>>   drivers/i2c/busses/i2c-davinci.c                   |   50 +++++++++++++++----
+>>   2 files changed, 70 insertions(+), 11 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/davinci/i2c.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/davinci/i2c.txt b/Documentation/devicetree/bindings/arm/davinci/i2c.txt
+>> new file mode 100644
+>> index 0000000..e98a025
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/davinci/i2c.txt
+>
+> This should go bindings/i2c/...
 
-Changes in v3:
-- Add reg property for unit address (should be used for chip select)
-- Change note in fdt binding about the need for a hardware-specific binding
-- Fix up typos in fdt binding, and rename the file
-- Update fdt binding to make everything Nvidia-specific
+Ok, done.
 
-Changes in v4:
-- Remove fdt bindings related to page structure
+>> @@ -0,0 +1,31 @@
+>> +* Texas Instruments Davinci I2C
+>> +
+>> +This file provides information, what the device node for the
+>> +davinci i2c interface contain.
+>> +
+>> +Required properties:
+>> +- compatible: "ti,davinci-i2c";
+>> +- reg : Offset and length of the register set for the device
+>> +
+>> +Recommended properties :
+>> +- interrupts :<a>  standard interrupt property.
+>> +- clock-frequency : desired I2C bus clock frequency in Hz.
+>> +
+>> +Optional properties:
+>> +- bus-delay: bus delay in usec
+>
+> See my mail to Andrew regarding the timeout property in the mv64xxx
+> driver. I'd like to skip the binding discussion for now in order to make
+> it into 3.6. Is it okay for you to drop this binding and use a sane
+> default?
 
- arch/arm/dts/tegra20.dtsi                          |    7 +++
- .../nand/nvidia,tegra20-nand.txt                   |   53 ++++++++++++++++++++
- 2 files changed, 60 insertions(+), 0 deletions(-)
- create mode 100644 doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
+Hmm.. current none of code uses 0 as default. This works for the
+enbw_cmc board. So I use 0 as default, and remove this property.
 
-diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-index f95be58..d936b1e 100644
---- a/arch/arm/dts/tegra20.dtsi
-+++ b/arch/arm/dts/tegra20.dtsi
-@@ -204,4 +204,11 @@
- 		compatible = "nvidia,tegra20-kbc";
- 		reg = <0x7000e200 0x0078>;
- 	};
-+
-+	nand: nand-controller@70008000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-nand";
-+		reg = <0x70008000 0x100>;
-+	};
- };
-diff --git a/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt b/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-new file mode 100644
-index 0000000..86ae408
---- /dev/null
-+++ b/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-@@ -0,0 +1,53 @@
-+NAND Flash
-+----------
-+
-+(there isn't yet a generic binding in Linux, so this describes what is in
-+U-Boot. There should not be Linux-specific or U-Boot specific binding, just
-+a binding that describes this hardware. But agreeing a binding in Linux in
-+the absence of a driver may be beyond my powers.)
-+
-+The device node for a NAND flash device is as follows:
-+
-+Required properties :
-+ - compatible : Should be "manufacturer,device", "nand-flash"
-+
-+This node should sit inside its controller.
-+
-+
-+Nvidia NAND Controller
-+----------------------
-+
-+The device node for a NAND flash controller is as follows:
-+
-+Optional properties:
-+
-+nvidia,wp-gpios : GPIO of write-protect line, three cells in the format:
-+		phandle, parameter, flags
-+nvidia,nand-width : bus width of the NAND device in bits
-+
-+ - nvidia,nand-timing : Timing parameters for the NAND. Each is in ns.
-+	Order is: MAX_TRP_TREA, TWB, Max(tCS, tCH, tALS, tALH),
-+	TWHR, Max(tCS, tCH, tALS, tALH), TWH, TWP, TRH, TADL
-+
-+	MAX_TRP_TREA is:
-+		non-EDO mode: Max(tRP, tREA) + 6ns
-+		EDO mode: tRP timing
-+
-+The 'reg' property should provide the chip select used by the flash chip.
-+
-+
-+Example
-+-------
-+
-+nand-controller@0x70008000 {
-+	compatible = "nvidia,tegra20-nand";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	nvidia,wp-gpios = <&gpio 59 0>;		/* PH3 */
-+	nvidia,nand-width = <8>;
-+	nvidia,timing = <26 100 20 80 20 10 12 10 70>;
-+	nand@0 {
-+		reg = <0>;
-+		compatible = "hynix,hy27uf4g2b", "nand-flash";
-+	};
-+};
+>
+> Rest looks good (from a visual review),
+
+Thanks for the review.
+
+bye,
+Heiko
 -- 
-1.7.7.3
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
