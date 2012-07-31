@@ -1,59 +1,101 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 08/10] of/address: Handle #address-cells > 2 specially
-Date: Tue, 31 Jul 2012 15:18:43 -0500
-Message-ID: <50183DA3.8020308@gmail.com>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de> <1343332512-28762-9-git-send-email-thierry.reding@avionic-design.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC] media DT bindings
+Date: Tue, 31 Jul 2012 23:22:51 +0200
+Message-ID: <1853410.hC8HZhzZI6@avalon>
+References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <2642313.6bQqiyFNFL@avalon> <Pine.LNX.4.64.1207311432590.27888@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1343332512-28762-9-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1207311432590.27888@axis700.grange>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2012 02:55 PM, Thierry Reding wrote:
-> When a bus specifies #address-cells > 2, of_bus_default_map() now
-> assumes that the mapping isn't for a physical address but rather an
-> identifier that needs to match exactly.
-> 
-> This is required by bindings that use multiple cells to translate a
-> resource to the parent bus (device index, type, ...).
-> 
-> See here for the discussion:
-> 
-> 	https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-June/016577.html
-> 
-> Originally-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Hi Guennadi,
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Tuesday 31 July 2012 14:39:07 Guennadi Liakhovetski wrote:
+> On Tue, 31 Jul 2012, Laurent Pinchart wrote:
+> > On Tuesday 31 July 2012 11:26:27 Guennadi Liakhovetski wrote:
+> > > On Fri, 27 Jul 2012, Laurent Pinchart wrote:
+> > > > On Wednesday 18 July 2012 19:00:15 Sylwester Nawrocki wrote:
+> > > > > On 07/16/2012 01:41 PM, Guennadi Liakhovetski wrote:
+> > > [snip]
+> > > 
+> > > > > >>> An sh-mobile CEU DT node could look like
+> > > > > >>> 
+> > > > > >>> 	ceu0@0xfe910000 = {
+> > > > > >>> 	
+> > > > > >>> 		compatible = "renesas,sh-mobile-ceu";
+> > > > > >>> 		reg =<0xfe910000 0xa0>;
+> > > > > >>> 		interrupts =<0x880>;
+> > > > > >>> 		bus-width =<16>;		/* #lines routed on the board */
+> > > > > >>> 		clock-frequency =<50000000>;	/* max clock */
+> > > > > >>> 		#address-cells =<1>;
+> > > > > >>> 		#size-cells =<0>;
+> > > > > >>> 		...
+> > > > > >>> 		ov772x-1 = {
+> > > > > >>> 		
+> > > > > >>> 			reg =<0>;
+> > > > > 
+> > > > > This property might be redundant, we already have the "client"
+> > > > > phandle pointing to "ov772x@0x21-0", which has all interesting
+> > > > > properties inside it. Other than there is probably no reasonable
+> > > > > usage for it under "ceu0@0xfe910000" node ?
+> > > > > 
+> > > > > >>> 			client =<&ov772x@0x21-0>;
+> > > > > >>> 			local-pad = "parallel-sink";
+> > > > > >>> 			remote-pad = "parallel-source";
+> > > > > >> 
+> > > > > >> I'm not sure I like that. Is it really needed when we already
+> > > > > >> have the child/parent properties around ?
+> > > > > > 
+> > > > > > I think it is. Both the host and the client can have multiple pads
+> > > > > > (e.g., parallel / serial). These properties specify which pads are
+> > > > > > used and make the translation between DT data and our subdev / pad
+> > > > > > APIs simpler.
+> > > > > 
+> > > > > OK, sorry, but isn't it all about just specifying what sort of data
+> > > > > bus is used ? :-)
+> > > > 
+> > > > In some (many/most ?) cases probably, but not in all of them.
+> > > > 
+> > > > What about merging the client and remote-pad properties ? The
+> > > > resulting property would then reference a pad with <&ov772x@0x21-0 0>.
+> > > 
+> > > What would the "0" parameter mean then? Pad #0?
+> > 
+> > Yes.
+> > 
+> > > But aren't these numbers device specific? Maybe not a huge deal, but
+> > > these numbers are defind by the driver, right? Not the DT itself. So,
+> > > drivers then will have to take care not to change their pad numbering.
+> > > Whereas using strings, we can fix strings in the common V4L DT spec and
+> > > keep them standard across devices and drivers. Then drivers might be
+> > > less likely to change these assignments randomly ;-)
+> > 
+> > Userspace applications usually rely on pad numbers as well, so I consider
+> > them as more or less part of the ABI. If we really need to, we could add
+> > a DT pad number -> media controller pad number conversion in the driver,
+> > that would be less expensive than pad name -> pad number conversion
+> > (especially since it would be skipped in most cases).
+> 
+> Ok, then, how about
+> 
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 		...
+> 		ov772x-1 = {
+> 			reg = <1>;			/* local pad # */
+> 			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
 
-> ---
-> Changes in v3:
-> - new patch
-> 
->  drivers/of/address.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 7e262a6..2776119 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -69,6 +69,14 @@ static u64 of_bus_default_map(u32 *addr, const __be32 *range,
->  		 (unsigned long long)cp, (unsigned long long)s,
->  		 (unsigned long long)da);
->  
-> +	/*
-> +	 * If the number of address cells is larger than 2 we assume the
-> +	 * mapping doesn't specify a physical address. Rather, the address
-> +	 * specifies an identifier that must match exactly.
-> +	 */
-> +	if (na > 2 && memcmp(range, addr, na * 4) != 0)
-> +		return OF_BAD_ADDR;
-> +
->  	if (da < cp || da >= (cp + s))
->  		return OF_BAD_ADDR;
->  	return da - cp;
-> 
+The client property looks good, but isn't such a usage of the reg property an 
+abuse ? Maybe the local pad # should be a device-specific property. Many hosts 
+won't need it, and on others it would actually need to reference a subdev, not 
+just a pad.
+
+-- 
+Regards,
+
+Laurent Pinchart
