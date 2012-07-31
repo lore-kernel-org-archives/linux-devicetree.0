@@ -1,62 +1,34 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for Tegra
-Date: Tue, 31 Jul 2012 10:12:35 -0600
-Message-ID: <501803F3.6090803@wwwdotorg.org>
-References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
- <1342106718-3058-7-git-send-email-sjg@chromium.org>
- <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
+Date: Tue, 31 Jul 2012 10:18:15 -0600
+Message-ID: <50180547.9040603@wwwdotorg.org>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1343332512-28762-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2012 03:27 AM, Simon Glass wrote:
-> On Thu, Jul 12, 2012 at 4:25 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> Add LCD definitions and also a proposed binding for LCD displays.
->>
->> The PWM is as per what will likely be committed to linux-next soon.
->>
->> The displaymode binding comes from a proposal here:
->>
->> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
->>
->> The panel binding is new, and fills a need to specify the panel
->> timings and other tegra-specific information. Should a binding appear
->> that allows the pwm to handle this automatically, we can revisit
->> this.
-> 
-> Any comments on this binding please? The main addition from Thierry's
-> one posted on LMKL is the LCD resolution selection.
+On 07/26/2012 01:55 PM, Thierry Reding wrote:
+> This patch series adds support for device tree based probing of the PCIe
+> controller found on Tegra SoCs.
 
-I have some concerns about the way the mode is represented in the
-binding; the timing parameters are quite different to how e.g. an EDID
-DTD would represent them, which I think will lead to conversion mistakes
-when writing the DT.
+Thierry,
 
-I'm trying to get along of Sascha's original email so I can join in on
-that discussion.
+I think one thing that would help here would be to split up this series
+into one per subsystem, and to get all the dependencies merged by the
+respective maintainers. Preferably, each subsystem would export a stable
+branch (perhaps consisting of just these patches) that I can then merge
+into the Tegra tree and use as a basis for the PCIe driver itself.
+Hopefully this approach will get more traction on all the non-Tegra
+changes. Does that sound like a good plan?
 
->> diff --git a/doc/device-tree-bindings/video/tegra20-dc.txt b/doc/device-tree-bindings/video/tegra20-dc.txt
-
->> +Optional properties (rgb):
->> + - nvidia,frame-buffer: address of frame buffer (if omitted it will be
->> +               calculated)
->> +       - This may be useful to share an address between U-Boot and Linux and
->> +               avoid boot-time corruption / flicker
-
-Why can't the display driver read this out of the display registers,
-instead of requiring the same information to be passed using DT too?
+Or, I can just take it all through the Tegra tree, but I'll definitely
+need acks on all/most of the non-Tegra patches, since although the
+patches themselves are quite small, I'd like to be sure that maintainers
+are OK with the conceptual changes, like initializing PCI controllers
+later than at present etc.
