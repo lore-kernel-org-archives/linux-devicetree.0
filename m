@@ -1,86 +1,69 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] tegra: fdt: Add NAND definitions to fdt
-Date: Tue, 31 Jul 2012 10:15:45 +0100
-Message-ID: <CAPnjgZ2-MBrXh2FoZnTL-tU+U4e_rqR4CRKoquLw3YE+VG=xCg@mail.gmail.com>
-References: <1343631210-22278-1-git-send-email-sjg@chromium.org>
- <1343631210-22278-5-git-send-email-sjg@chromium.org>
- <50170F63.70403@freescale.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Tue, 31 Jul 2012 11:16:18 +0200
+Message-ID: <20120731091618.GB15557@avionic-0098.adnet.avionic-design.de>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
+ <1343390750-3642-2-git-send-email-acourbot@nvidia.com>
+ <5016ABDD.5010809@gmail.com>
+ <20120730154706.GL4468@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50170F63.70403-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lEGEL1/lMxI0MVQ2"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120730154706.GL4468-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Scott,
 
-On Mon, Jul 30, 2012 at 11:49 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On 07/30/2012 01:53 AM, Simon Glass wrote:
->> Add a flash node to handle the NAND, including memory timings and
->> page / block size information.
->>
->> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->> Changes in v2:
->> - Update NAND binding to add "nvidia," prefix
->>
->> Changes in v3:
->> - Add reg property for unit address (should be used for chip select)
->> - Update fdt binding to make everything Nvidia-specific
->>
->> Changes in v4:
->> - Remove fdt bindings related to page structure
->>
->>  board/nvidia/dts/tegra20-seaboard.dts |   10 ++++++++++
->>  1 files changed, 10 insertions(+), 0 deletions(-)
->>
->> diff --git a/board/nvidia/dts/tegra20-seaboard.dts b/board/nvidia/dts/tegra20-seaboard.dts
->> index 3352539..25a63a0 100644
->> --- a/board/nvidia/dts/tegra20-seaboard.dts
->> +++ b/board/nvidia/dts/tegra20-seaboard.dts
->> @@ -153,4 +153,14 @@
->>                       0x1f04008a>;
->>               linux,fn-keymap = <0x05040002>;
->>       };
->> +
->> +     nand-controller@70008000 {
->> +             nvidia,wp-gpios = <&gpio 59 0>;         /* PH3 */
->> +             nvidia,width = <8>;
->> +             nvidia,timing = <26 100 20 80 20 10 12 10 70>;
->> +             nand@0 {
->> +                     reg = <0>;
->> +                     compatible = "hynix,hy27uf4g2b", "nand-flash";
->> +             };
->> +     };
->
-> Are #address-cells, #size-cells, and reg on the controller node provided
-> by an /include/?
+--lEGEL1/lMxI0MVQ2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes that's right, in the previous patch:
+On Mon, Jul 30, 2012 at 04:47:06PM +0100, Mark Brown wrote:
+> On Mon, Jul 30, 2012 at 10:44:29AM -0500, Rob Herring wrote:
+> > On 07/27/2012 07:05 AM, Alexandre Courbot wrote:
+>=20
+> > > +		power-on-sequence {
+> > > +			regulator@0 {
+> > > +				id =3D "power";
+> > > +				enable;
+>=20
+> > What do this mean? Isn't this implied for a regulator?
+>=20
+> I assume you might have some sequences which need some things to be
+> turned off for some reason; it at least seems to be something you'd want
+> to design for.
 
-	nand: nand-controller@70008000 {
-		#address-cells = <1>;
-		#size-cells = <0>;
-		compatible = "nvidia,tegra20-nand";
-		reg = <0x70008000 0x100>;
-	};
+Furthermore there is the power-off-sequence equivalent, which you use
+for instance when you turn off the panel. Typically they would do the
+inverse of the power-on-sequence, so turning off a regulator is
+definitiely required.
 
-Regards,
-Simon
+Thierry
 
->
-> -Scott
->
->
+--lEGEL1/lMxI0MVQ2
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQF6JiAAoJEN0jrNd/PrOhN58QALwBuu3RhOw7GdcEqzI7luDn
+qeYTY2gU2pl6F+NnSiws9VNUoYX387YP/3ocnbV6u7PDRdM6NuXGwLbDGRUHft3z
+ohve7zzj0kxD1bG2LTR2qq2/MQFsXPajjEch5eEeobalEyVOsiBp37UxTGFC8+tc
+BPpWwACM2ZI8HXgo3sP0YEuSwVxJuUN8UUIpCDWAoRAFkj5iRgRpC9XLf2vr7KeA
+uV0Q6P1FlrhfUMS6BXCYPeIVj6mKjg7xOy/602FjGFVJeWlEpKVF40hjcmg8HspX
+VeP5KOgtNwk/J/10mZRbHw2TO+zYN13U7bsc6GwnlSJSyrMA7Farb0jDZub5Dcs8
+H2dmBx/uTdOiy8S4aLdzfSDDwnqaN3VW854QpYT+JoKZNAEbXAFXMDL4foEkKFLw
+r/Ul6E5uxz/D302F3esgzMfbSiBzltI7/o0ZkjfqoBDVTHJH50fuvOkO55xBomW1
+t/OlMGZZrXNLkOur4T8dAQHS+X1kzE01BrMnir5lVjzNGnj30G2bS/l7ey7Th4Wn
+sfWNX+ELYM4D1qdV3IgS06q+vUlRH0uzY85sIwlA5DTcjWFdHww8IekVl+Qh6FTw
+DGm/VmQRJhdBY2mLd3X3PyFPfisfBy9SO1hYBEHZVMxsbA0z2MMV2Bqnqsm2BcYk
+gFDefs0kZM2k3Im2pOtZ
+=sKXC
+-----END PGP SIGNATURE-----
+
+--lEGEL1/lMxI0MVQ2--
