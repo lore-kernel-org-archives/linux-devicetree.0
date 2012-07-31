@@ -1,83 +1,98 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree
- based instantiation
-Date: Tue, 31 Jul 2012 11:56:44 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207311144470.27888@axis700.grange>
-References: <4FBFE1EC.9060209@samsung.com> <Pine.LNX.4.64.1207161122390.12302@axis700.grange>
- <50067F69.6080501@gmail.com> <6250402.9RzN62tRPe@avalon>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Tue, 31 Jul 2012 19:11:41 +0900
+Message-ID: <5017AF5D.2010204@nvidia.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <CAPnjgZ0H2xrJcL-ytMaX11iYrrhCg7LEM00u_NgEaveM4gHMPw@mail.gmail.com> <50179933.9090501@nvidia.com> <20120731091324.GA15557@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <6250402.9RzN62tRPe@avalon>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120731091324.GA15557-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Jul 2012, Laurent Pinchart wrote:
+On 07/31/2012 06:13 PM, Thierry Reding wrote:
+>> I don't see any need for microseconds myself - anybody sees use for
+>> finer-grained delays?
+>>
+>> Btw, I noticed I was using mdelay instead of msleep - caught and fixed that.
+>
+> You might want to take a look at Documentation/timers/timers-howto.txt.
+> msleep() isn't very accurate for periods shorter than 20 ms.
 
-> Hi Sylwester,
-> 
-> On Wednesday 18 July 2012 11:18:33 Sylwester Nawrocki wrote:
-> > On 07/16/2012 11:42 AM, Guennadi Liakhovetski wrote:
-> > > On Fri, 25 May 2012, Sylwester Nawrocki wrote:
-> > >> The driver initializes all board related properties except the s_power()
-> > >> callback to board code. The platforms that require this callback are not
-> > >> supported by this driver yet for CONFIG_OF=y.
-> > >> 
-> > >> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
-> > >> Signed-off-by: Bartlomiej Zolnierkiewicz<b.zolnierkie@samsung.com>
-> > >> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
-> > >> ---
-> > >> 
-> > >>   .../bindings/camera/samsung-s5k6aafx.txt           |   57 +++++++++
-> > >>   drivers/media/video/s5k6aa.c                       |  129
-> > >>   ++++++++++++++------ 2 files changed, 146 insertions(+), 40
-> > >>   deletions(-)
-> > >>   create mode 100644
-> > >>   Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt>> 
-> > >> diff --git
-> > >> a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
-> > >> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt new file
-> > >> mode 100644
-> > >> index 0000000..6685a9c
-> > >> --- /dev/null
-> > >> +++ b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
-> > >> @@ -0,0 +1,57 @@
-> > >> +Samsung S5K6AAFX camera sensor
-> > >> +------------------------------
-> > >> +
-> > >> +Required properties:
-> > >> +
-> > >> +- compatible : "samsung,s5k6aafx";
-> > >> +- reg : base address of the device on I2C bus;
-> > > 
-> > > You said you ended up putting your sensors outside of I2C busses, is this
-> > > one of changes, that are present in your git-tree but not in this series?
-> > 
-> > No, I must have been not clear enough on that. Our idea was to keep
-> > I2C slave device nodes as an I2C controller's child nodes, according
-> > to the current convention.
-> > The 'sensor' nodes (the 'camera''s children) would only contain a phandle
-> > to a respective I2C slave node.
-> > 
-> > This implies that we cannot access I2C bus in I2C client's device probe()
-> > callback. An actual H/W access could begin only from within and after
-> > invocation of v4l2_subdev .registered callback..
-> 
-> That's how I've envisioned the DT bindings for sensors as well, this sounds 
-> good. The real challenge will be to get hold of the subdev to register it 
-> without race conditions.
+Ok, looks like usleep_range is the way to go here. In that case it would 
+probably not hurt to specify delays in microseconds in the DT and 
+platform data as well.
 
-Hrm... That's how early pre-subdev versions of soc-camera used to work, 
-that's where all the <device>_video_probe() functions come from. But then 
-we switched to dynamic i2c device registration. Do we want to switch all 
-drivers back now?... Couldn't we "temporarily" use references from subdevs 
-to hosts until the clock API is available?
+>>>> +Device tree
+>>>> +-----------
+>>>> +All the same, power sequences can be encoded as device tree nodes. The following
+>>>> +properties and nodes are equivalent to the platform data defined previously:
+>>>> +
+>>>> +               power-supply = <&mydevice_reg>;
+>>>> +               enable-gpio = <&gpio 6 0>;
+>>>> +
+>>>> +               power-on-sequence {
+>>>> +                       regulator@0 {
+>>>> +                               id = "power";
+>>>
+>>> Is there a reason not to put the phandle here, like:
+>>>
+>>>                                     id = <&mydevice_reg>;
+>>>
+>>> (or maybe 'device' instead of id?)
+>>
+>> There is one reason, but it might be a bad one. On Tegra, PWM
+>> phandle uses an extra cell to encode the duty-cycle the PWM should
+>> have when we call get_pwm().
+>
+> This is not only the case on Tegra, but it is the default unless a
+> driver specifically overrides it. The second cell specifies the index of
+> the PWM device within the PWM chip.  The third cell doesn't specify the
+> duty cycle but the period of the PWM.
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Then I think there is a mistake in 
+Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt:
+
+"the second cell is the duty cycle in nanoseconds."
+
+>> This makes it possible to address the
+>> same PWM with different phandles (and different duty cycles),
+>
+> How so? A phandle will always refer to a PWM chip. Paired with the
+> second cell, of_pwm_request() will resolve that into the correct PWM
+> device.
+
+For tegra, we can only address PWMs this way IIRC:
+
+pwm = <&pwm 2 5000000>;
+
+If we had <&pwm 2>, I agree that there would be no problem. But here the 
+period of the PWM is also given - and in practice, we can request the 
+same PWM using different phandles. For instance, if the above property 
+was part of the power-on sequence, and the following
+
+pwm = <&pwm 2 0>;
+
+was part of power-off, how can I know that these two different phandles 
+refer to the same PWM without calling pwm_get a second time and getting 
+-EBUSY?
+
+Of course if the same period is specified for both, I will not have this 
+issue as the phandles will be identical, but the possibility remains 
+open that we are given a faulty tree here.
+
+More generally speaking, wouldn't it make more sense to have the 
+period/duty cycle of a PWM encoded into separate properties when needed 
+and have the phandle just reference the PWM instance? This also seems to 
+stand from an API point of view, since the period is not specified when 
+invoking pwm_request or pwm_get, but set by its own pwm_set_period function?
+
+On an unrelated note, I also don't understand why the period is also a 
+parameter of pwm_config and why pwm_set_period does not do anything 
+beyond setting a struct member that is returned by pwm_get_period (but 
+maybe I am missing something here).
+
+Alex.
