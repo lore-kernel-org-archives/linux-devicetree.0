@@ -1,105 +1,47 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
 Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Tue, 31 Jul 2012 17:03:05 -0500
-Message-ID: <50185619.5090706@gmail.com>
-References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
- <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
- <20120730074714.GC15245@avionic-0098.mockup.avionic-design.de>
+Date: Tue, 31 Jul 2012 17:22:40 -0600
+Message-ID: <501868C0.3090806@wwwdotorg.org>
+References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de> <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com> <20120730074714.GC15245@avionic-0098.mockup.avionic-design.de> <50185619.5090706@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120730074714.GC15245-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50185619.5090706@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@stericsson.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/30/2012 02:47 AM, Thierry Reding wrote:
-> On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
->> On Mon, Jul 23, 2012 at 1:59 PM, Thierry Reding
->> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
->>
->>> This commit adds a driver for the Avionic Design N-bit GPIO expander.
->>> The expander provides a variable number of GPIO pins with interrupt
->>> support.
->> (...)
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
->>> new file mode 100644
->>> index 0000000..513a18e
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
->>> @@ -0,0 +1,38 @@
->>> +Avionic Design N-bit GPIO expander bindings
->>> +
->>> +Required properties:
->>> +- compatible: should be "ad,gpio-adnp"
->>> +- reg: The I2C slave address for this device.
->>> +- interrupt-parent: phandle of the parent interrupt controller.
->>> +- interrupts: Interrupt specifier for the controllers interrupt.
->>> +- #gpio-cells: Should be 2. The first cell is the GPIO number and the
->>> +  second cell is used to specify optional parameters:
->>> +  - bit 0: polarity (0: normal, 1: inverted)
->>> +- gpio-controller: Marks the device as a GPIO controller
->>> +- #interrupt-cells: Should be 2. The first cell contains the GPIO number,
->>> +  whereas the second cell is used to specify flags:
->>> +    bits[3:0] trigger type and level flags
->>> +      1 = low-to-high edge triggered
->>> +      2 = high-to-low edge triggered
->>> +      4 = active high level-sensitive
->>> +      8 = active low level-sensitive
->>
->> Why on earth would a bunch of flags be an "interrupt cell"?
->>
->> Maybe there is something about DT bindings I don't get so
->> please educate me.
->>
->> I can see that OMAP is doing this, but is it a good idea?
->> I really need Rob/Grant to comment on this.
->>
->>> +- interrupt-controller: Marks the device as an interrupt controller.
->>> +- nr-gpios: The number of pins supported by the controller.
->>
->> These two last things look very generic, like something every GPIO
->> driver could want to expose.
+On 07/31/2012 04:03 PM, Rob Herring wrote:
+> On 07/30/2012 02:47 AM, Thierry Reding wrote:
+>> On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
+>>> On Mon, Jul 23, 2012 at 1:59 PM, Thierry Reding
+>>> <thierry.reding@avionic-design.de> wrote:
+>>>
+>>>> This commit adds a driver for the Avionic Design N-bit GPIO expander.
+>>>> The expander provides a variable number of GPIO pins with interrupt
+>>>> support.
+
+>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
+
+>>>> +Required properties:
+
+>>>> +- nr-gpios: The number of pins supported by the controller.
+
+> For nr-gpios, I think it is typically not needed. Generally, you will
+> know how many gpio lines the h/w has based on the compatible string. If
+> this part really is the same part but different packages with different
+> numbers of gpio, then this property makes sense. Otherwise, I would say
+> drop it.
 > 
-> As Arnd mentioned, interrupt-controller is a generic property required
-> by all interrupt controller nodes. Perhaps it shouldn't be listed in the
-> DT binding for this driver.
+> If your goal is how many gpios are you using, you really need a bitmap
+> instead if you want it to be generic.
 > 
-> As to the nr-gpios property, this is actually not only for informational
-> purposes, but it also allows the driver to be configured to handle any
-> number of bits (powers of two). However since this is also a description
-> of the hardware it may be useful to make this into a generic property
-> for GPIO controllers.
-> 
->> I'd really like to have Grant's word on GPIO DT bindings and how these
->> should look, I had some discussion with Wolfram (the I2C maintainer)
->> about bindings turning out less generic than they ought to be, so we
->> need some discussion on this.
->>
->> Arnd recently consolidated some MMC props, maybe we need to do
->> the same for GPIO drivers.
+> IIRC, Tegra also needed this in that they N instances of some number of
+> bits and the registers are interleaved so they can't have separate nodes.
 
-For nr-gpios, I think it is typically not needed. Generally, you will
-know how many gpio lines the h/w has based on the compatible string. If
-this part really is the same part but different packages with different
-numbers of gpio, then this property makes sense. Otherwise, I would say
-drop it.
-
-If your goal is how many gpios are you using, you really need a bitmap
-instead if you want it to be generic.
-
-IIRC, Tegra also needed this in that they N instances of some number of
-bits and the registers are interleaved so they can't have separate nodes.
-
-Rob
+In the end, I got away without having a separate property to represent
+this. Instead, the code keys off the number of interrupts listed in the
+interrupts property, there being one interrupt per GPIO bank, and hence
+dynamically instantiates the number of banks based on that.
