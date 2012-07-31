@@ -1,100 +1,311 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [RFC] media DT bindings
-Date: Tue, 31 Jul 2012 11:26:27 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207311058140.27888@axis700.grange>
-References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange>
- <Pine.LNX.4.64.1207161257590.18978@axis700.grange> <5006EB9F.5010408@gmail.com>
- <1537713.eFPuk01afu@avalon>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for Tegra
+Date: Tue, 31 Jul 2012 10:27:23 +0100
+Message-ID: <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
+References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
+ <1342106718-3058-7-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1537713.eFPuk01afu@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1342106718-3058-7-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Jul 2012, Laurent Pinchart wrote:
++Thierry
 
-> Hi Sylwester,
-> 
-> On Wednesday 18 July 2012 19:00:15 Sylwester Nawrocki wrote:
-> > On 07/16/2012 01:41 PM, Guennadi Liakhovetski wrote:
+Hi,
 
-[snip]
+On Thu, Jul 12, 2012 at 4:25 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Add LCD definitions and also a proposed binding for LCD displays.
+>
+> The PWM is as per what will likely be committed to linux-next soon.
+>
+> The displaymode binding comes from a proposal here:
+>
+> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
+>
+> The panel binding is new, and fills a need to specify the panel
+> timings and other tegra-specific information. Should a binding appear
+> that allows the pwm to handle this automatically, we can revisit
+> this.
+>
 
-> > >>> An sh-mobile CEU DT node could look like
-> > >>> 
-> > >>> 	ceu0@0xfe910000 = {
-> > >>> 	
-> > >>> 		compatible = "renesas,sh-mobile-ceu";
-> > >>> 		reg =<0xfe910000 0xa0>;
-> > >>> 		interrupts =<0x880>;
-> > >>> 		bus-width =<16>;		/* #lines routed on the board */
-> > >>> 		clock-frequency =<50000000>;	/* max clock */
-> > >>> 		#address-cells =<1>;
-> > >>> 		#size-cells =<0>;
-> > >>> 		...
-> > >>> 		ov772x-1 = {
-> > >>> 		
-> > >>> 			reg =<0>;
-> > 
-> > This property might be redundant, we already have the "client" phandle
-> > pointing to "ov772x@0x21-0", which has all interesting properties inside
-> > it. Other than there is probably no reasonable usage for it under
-> > "ceu0@0xfe910000" node ?
-> > 
-> > >>> 			client =<&ov772x@0x21-0>;
-> > >>> 			local-pad = "parallel-sink";
-> > >>> 			remote-pad = "parallel-source";
-> > >> 
-> > >> I'm not sure I like that. Is it really needed when we already have
-> > >> the child/parent properties around ?
-> > > 
-> > > I think it is. Both the host and the client can have multiple pads (e.g.,
-> > > parallel / serial). These properties specify which pads are used and make
-> > > the translation between DT data and our subdev / pad APIs simpler.
-> > 
-> > OK, sorry, but isn't it all about just specifying what sort of data bus
-> > is used ? :-)
-> 
-> In some (many/most ?) cases probably, but not in all of them.
-> 
-> What about merging the client and remote-pad properties ? The resulting 
-> property would then reference a pad with <&ov772x@0x21-0 0>.
+Any comments on this binding please? The main addition from Thierry's
+one posted on LMKL is the LCD resolution selection.
 
-What would the "0" parameter mean then? Pad #0? But aren't these numbers 
-device specific? Maybe not a huge deal, but these numbers are defind by 
-the driver, right? Not the DT itself. So, drivers then will have to take 
-care not to change their pad numbering. Whereas using strings, we can fix 
-strings in the common V4L DT spec and keep them standard across devices 
-and drivers. Then drivers might be less likely to change these assignments 
-randomly;-)
+Regards,
+Simon
 
-[snip]
-
-> > I'd like just to point one detail here, as sensor subdev drivers control
-> > their voltage regulators and RESET/STANDBY (gpio) signals, they should
-> > also be able to control the master clock. In order to ensure proper power
-> > up/down sequences. It is a bad practice to enable clocks before voltage
-> > supplies are switched on and we shouldn't have that as a general
-> > assumption at the kernel frameworks.
-> > 
-> > One possible solution would be to have host/bridge drivers to register
-> > a clkdev entry for I2C client device, so it can acquire the clock through
-> > just clk_get(). We would have to ensure the clock is not tried to be
-> > accessed before it is registered by a bridge. This would require to add
-> > clock handling code to all sensor/encoder subdev drivers though..
-> 
-> I thik it's a good practice to add clock management to subdevs anyway, and the 
-> common clock framework should make that easy (or at least not too difficult). 
-> We can migrate subdevs one by one as we add DT support for them.
-
-Yes, this would be good.
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> Changes in v2:
+> - Add nvidia prefix to device tree properties
+>
+> Changes in v3:
+> - Add new panel binding to fit with tegra display controller binding
+> - Bring in proposed tegra display controller binding
+> - Use displaymode binding for fdt
+>
+>  arch/arm/dts/tegra20.dtsi                      |   89 ++++++++++++++++++++++++
+>  doc/device-tree-bindings/video/displaymode.txt |   42 +++++++++++
+>  doc/device-tree-bindings/video/tegra20-dc.txt  |   89 ++++++++++++++++++++++++
+>  3 files changed, 220 insertions(+), 0 deletions(-)
+>  create mode 100644 doc/device-tree-bindings/video/displaymode.txt
+>  create mode 100644 doc/device-tree-bindings/video/tegra20-dc.txt
+>
+> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+> index e7d1688..0b2ca3b 100644
+> --- a/arch/arm/dts/tegra20.dtsi
+> +++ b/arch/arm/dts/tegra20.dtsi
+> @@ -211,4 +211,93 @@
+>                 #pwm-cells = <2>;
+>         };
+>
+> +       host1x {
+> +               compatible = "nvidia,tegra20-host1x", "simple-bus";
+> +               reg = <0x50000000 0x00024000>;
+> +               interrupts = <0 65 0x04   /* mpcore syncpt */
+> +                             0 67 0x04>; /* mpcore general */
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               ranges = <0x54000000 0x54000000 0x04000000>;
+> +
+> +               /* video-encoding/decoding */
+> +               mpe {
+> +                       reg = <0x54040000 0x00040000>;
+> +                       interrupts = <0 68 0x04>;
+> +               };
+> +
+> +               /* video input */
+> +               vi {
+> +                       reg = <0x54080000 0x00040000>;
+> +                       interrupts = <0 69 0x04>;
+> +               };
+> +
+> +               /* EPP */
+> +               epp {
+> +                       reg = <0x540c0000 0x00040000>;
+> +                       interrupts = <0 70 0x04>;
+> +               };
+> +
+> +               /* ISP */
+> +               isp {
+> +                       reg = <0x54100000 0x00040000>;
+> +                       interrupts = <0 71 0x04>;
+> +               };
+> +
+> +               /* 2D engine */
+> +               gr2d {
+> +                       reg = <0x54140000 0x00040000>;
+> +                       interrupts = <0 72 0x04>;
+> +               };
+> +
+> +               /* 3D engine */
+> +               gr3d {
+> +                       reg = <0x54180000 0x00040000>;
+> +               };
+> +
+> +               /* display controllers */
+> +               dc@54200000 {
+> +                       compatible = "nvidia,tegra20-dc";
+> +                       reg = <0x54200000 0x00040000>;
+> +                       interrupts = <0 73 0x04>;
+> +
+> +                       rgb {
+> +                               status = "disabled";
+> +                       };
+> +               };
+> +
+> +               dc@54240000 {
+> +                       compatible = "nvidia,tegra20-dc";
+> +                       reg = <0x54240000 0x00040000>;
+> +                       interrupts = <0 74 0x04>;
+> +
+> +                       rgb {
+> +                               status = "disabled";
+> +                       };
+> +               };
+> +
+> +               /* outputs */
+> +               hdmi {
+> +                       compatible = "nvidia,tegra20-hdmi";
+> +                       reg = <0x54280000 0x00040000>;
+> +                       interrupts = <0 75 0x04>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               tvo {
+> +                       compatible = "nvidia,tegra20-tvo";
+> +                       reg = <0x542c0000 0x00040000>;
+> +                       interrupts = <0 76 0x04>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               dsi {
+> +                       compatible = "nvidia,tegra20-dsi";
+> +                       reg = <0x54300000 0x00040000>;
+> +                       status = "disabled";
+> +               };
+> +       };
+> +
+>  };
+> diff --git a/doc/device-tree-bindings/video/displaymode.txt b/doc/device-tree-bindings/video/displaymode.txt
+> new file mode 100644
+> index 0000000..45ca42d
+> --- /dev/null
+> +++ b/doc/device-tree-bindings/video/displaymode.txt
+> @@ -0,0 +1,42 @@
+> +videomode bindings
+> +==================
+> +
+> +(from http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html)
+> +
+> +Required properties:
+> + - xres, yres: Display resolution
+> + - left-margin, right-margin, hsync-len: Horizontal Display timing
+> +   parameters in pixels
+> + - upper-margin, lower-margin, vsync-len: Vertical display timing
+> +   parameters in lines
+> + - clock: display clock in Hz
+> +
+> +Optional properties:
+> + - width-mm, height-mm: Display dimensions in mm
+> + - hsync-active-high (bool): Hsync pulse is active high
+> + - vsync-active-high (bool): Vsync pulse is active high
+> + - interlaced (bool): This is an interlaced mode
+> + - doublescan (bool): This is a doublescan mode
+> +
+> +There are different ways of describing a display mode. The devicetree
+> +representation corresponds to the one used by the Linux Framebuffer
+> +framework described here in Documentation/fb/framebuffer.txt. This
+> +representation has been chosen because it's the only format which does
+> +not allow for inconsistent parameters. Unlike the Framebuffer framework
+> +the devicetree has the clock in Hz instead of ps.
+> +
+> +Example:
+> +
+> +       display@0 {
+> +               /* 1920x1080p24 */
+> +               clock = <52000000>;
+> +               xres = <1920>;
+> +               yres = <1080>;
+> +               left-margin = <25>;
+> +               right-margin = <25>;
+> +               hsync-len = <25>;
+> +               lower-margin = <2>;
+> +               upper-margin = <2>;
+> +               vsync-len = <2>;
+> +               hsync-active-high;
+> +       };
+> diff --git a/doc/device-tree-bindings/video/tegra20-dc.txt b/doc/device-tree-bindings/video/tegra20-dc.txt
+> new file mode 100644
+> index 0000000..dcfd652
+> --- /dev/null
+> +++ b/doc/device-tree-bindings/video/tegra20-dc.txt
+> @@ -0,0 +1,89 @@
+> +Display Controller
+> +------------------
+> +
+> +(there isn't yet a generic binding in Linux, so this describes what is in
+> +U-Boot, and may change based on Linux activity)
+> +
+> +The device node for a display device is as described in the document
+> +"Open Firmware Recommended Practice : Universal Serial Bus" with the
+> +following modifications and additions :
+> +
+> +Required properties :
+> + - compatible : Should be "nvidia,tegra20-dc"
+> +
+> +Required subnode 'rgb'. This has the properties listed in displaymode.txt
+> +as well as:
+> +
+> +Required properties (rgb) :
+> + - nvidia,panel : phandle of LCD panel information
+> + - nvidia,bits-per-pixel: number of bits per pixel (depth)
+> +
+> +Optional properties (rgb):
+> + - nvidia,frame-buffer: address of frame buffer (if omitted it will be
+> +               calculated)
+> +       - This may be useful to share an address between U-Boot and Linux and
+> +               avoid boot-time corruption / flicker
+> +
+> +
+> +The panel node describes the panel itself.
+> +
+> +Required properties (panel) :
+> + - nvidia,pwm : pwm to use to set display contrast (see tegra20-pwm.txt)
+> + - nvidia,panel-timings: 4 cells containing required timings in ms:
+> +       * delay between panel_vdd-rise and data-rise
+> +       * delay between data-rise and backlight_vdd-rise
+> +       * delay between backlight_vdd and pwm-rise
+> +       * delay between pwm-rise and backlight_en-rise
+> +
+> +Optional GPIO properies all have (phandle, GPIO number, flags):
+> + - nvidia,backlight-enable-gpios: backlight enable GPIO
+> + - nvidia,lvds-shutdown-gpios: LVDS power shutdown GPIO
+> + - nvidia,backlight-vdd-gpios: backlight power GPIO
+> + - nvidia,panel-vdd-gpios: panel power GPIO
+> +
+> +Example:
+> +
+> +host1x {
+> +       compatible = "nvidia,tegra20-host1x", "simple-bus";
+> +       reg = <0x50000000 0x00024000>;
+> +       interrupts = <0 65 0x04   /* mpcore syncpt */
+> +                       0 67 0x04>; /* mpcore general */
+> +
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       ranges = <0x54000000 0x54000000 0x04000000>;
+> +
+> +       dc@54200000 {
+> +               compatible = "nvidia,tegra20-dc";
+> +               reg = <0x54200000 0x00040000>;
+> +               interrupts = <0 73 0x04>;
+> +
+> +               rgb {
+> +                       status = "okay";
+> +                       /* Seaboard has 1366x768 */
+> +                       clock = <70600000>;
+> +                       xres = <1366>;
+> +                       yres = <768>;
+> +                       left-margin = <58>;
+> +                       right-margin = <58>;
+> +                       hsync-len = <58>;
+> +                       lower-margin = <4>;
+> +                       upper-margin = <4>;
+> +                       vsync-len = <4>;
+> +                       hsync-active-high;
+> +                       nvidia,frame-buffer = <0x2f680000>;
+> +                       nvidia,bits-per-pixel = <16>;
+> +                       nvidia,panel = <&lcd_panel>;
+> +               };
+> +       };
+> +};
+> +
+> +lcd_panel: panel {
+> +       nvidia,pwm = <&pwm 2 0>;
+> +       nvidia,backlight-enable-gpios = <&gpio 28 0>;   /* PD4 */
+> +       nvidia,lvds-shutdown-gpios = <&gpio 10 0>;      /* PB2 */
+> +       nvidia,backlight-vdd-gpios = <&gpio 176 0>;     /* PW0 */
+> +       nvidia,panel-vdd-gpios = <&gpio 22 0>;          /* PC6 */
+> +       nvidia,panel-timings = <4 203 17 15>;
+> +};
+> --
+> 1.7.7.3
+>
