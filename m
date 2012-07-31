@@ -1,112 +1,77 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC] media DT bindings
-Date: Tue, 31 Jul 2012 14:08:29 +0200
-Message-ID: <2642313.6bQqiyFNFL@avalon>
-References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <1537713.eFPuk01afu@avalon> <Pine.LNX.4.64.1207311058140.27888@axis700.grange>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Tue, 31 Jul 2012 20:22:17 +0800
+Message-ID: <5017CDF9.2060304@firmworks.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <50170EA0.1010408@wwwdotorg.org> <5017B434.2010706@nvidia.com> <20120731105640.GD16155@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1207311058140.27888@axis700.grange>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120731105640.GD16155-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
-
-On Tuesday 31 July 2012 11:26:27 Guennadi Liakhovetski wrote:
-> On Fri, 27 Jul 2012, Laurent Pinchart wrote:
-> > Hi Sylwester,
-> > 
-> > On Wednesday 18 July 2012 19:00:15 Sylwester Nawrocki wrote:
-> > > On 07/16/2012 01:41 PM, Guennadi Liakhovetski wrote:
-> [snip]
+On 7/31/2012 6:56 PM, Thierry Reding wrote:
+> On Tue, Jul 31, 2012 at 07:32:20PM +0900, Alex Courbot wrote:
+>> On 07/31/2012 07:45 AM, Stephen Warren wrote:
+>>> I wonder if using the same structure/array as input and output would
+>>> simplify the API; the platform data would fill in the fields mentioned
+>>> above, and power_seq_build() would parse those, then set other fields in
+>>> the same structs to the looked-up handle values?
+>>
+>> The thing is that I am not sure what happens to the platform data
+>> once probe() is done. Isn't it customary to mark it with __devinit
+>> and have it freed after probing is successful?
 > 
-> > > >>> An sh-mobile CEU DT node could look like
-> > > >>> 
-> > > >>> 	ceu0@0xfe910000 = {
-> > > >>> 	
-> > > >>> 		compatible = "renesas,sh-mobile-ceu";
-> > > >>> 		reg =<0xfe910000 0xa0>;
-> > > >>> 		interrupts =<0x880>;
-> > > >>> 		bus-width =<16>;		/* #lines routed on the board */
-> > > >>> 		clock-frequency =<50000000>;	/* max clock */
-> > > >>> 		#address-cells =<1>;
-> > > >>> 		#size-cells =<0>;
-> > > >>> 		...
-> > > >>> 		ov772x-1 = {
-> > > >>> 		
-> > > >>> 			reg =<0>;
-> > > 
-> > > This property might be redundant, we already have the "client" phandle
-> > > pointing to "ov772x@0x21-0", which has all interesting properties inside
-> > > it. Other than there is probably no reasonable usage for it under
-> > > "ceu0@0xfe910000" node ?
-> > > 
-> > > >>> 			client =<&ov772x@0x21-0>;
-> > > >>> 			local-pad = "parallel-sink";
-> > > >>> 			remote-pad = "parallel-source";
-> > > >> 
-> > > >> I'm not sure I like that. Is it really needed when we already have
-> > > >> the child/parent properties around ?
-> > > > 
-> > > > I think it is. Both the host and the client can have multiple pads
-> > > > (e.g.,
-> > > > parallel / serial). These properties specify which pads are used and
-> > > > make
-> > > > the translation between DT data and our subdev / pad APIs simpler.
-> > > 
-> > > OK, sorry, but isn't it all about just specifying what sort of data bus
-> > > is used ? :-)
-> > 
-> > In some (many/most ?) cases probably, but not in all of them.
-> > 
-> > What about merging the client and remote-pad properties ? The resulting
-> > property would then reference a pad with <&ov772x@0x21-0 0>.
+> No, platform data should stay around forever. Otherwise, consider what
+> would happen if your driver is built as a module and you unload and load
+> it again.
 > 
-> What would the "0" parameter mean then? Pad #0?
-
-Yes.
-
-> But aren't these numbers device specific? Maybe not a huge deal, but these
-> numbers are defind by the driver, right? Not the DT itself. So, drivers then
-> will have to take care not to change their pad numbering. Whereas using
-> strings, we can fix strings in the common V4L DT spec and keep them standard
-> across devices and drivers. Then drivers might be less likely to change
-> these assignments randomly ;-)
-
-Userspace applications usually rely on pad numbers as well, so I consider them 
-as more or less part of the ABI. If we really need to, we could add a DT pad 
-number -> media controller pad number conversion in the driver, that would be 
-less expensive than pad name -> pad number conversion (especially since it 
-would be skipped in most cases).
-
-> [snip]
+>> More generally, I think it is a good practice to have data
+>> structures tailored right for what they need to do - code with
+>> members that are meaningful only at given points of an instance's
+>> life tends to be more confusing.
 > 
-> > > I'd like just to point one detail here, as sensor subdev drivers control
-> > > their voltage regulators and RESET/STANDBY (gpio) signals, they should
-> > > also be able to control the master clock. In order to ensure proper
-> > > power
-> > > up/down sequences. It is a bad practice to enable clocks before voltage
-> > > supplies are switched on and we shouldn't have that as a general
-> > > assumption at the kernel frameworks.
-> > > 
-> > > One possible solution would be to have host/bridge drivers to register
-> > > a clkdev entry for I2C client device, so it can acquire the clock
-> > > through
-> > > just clk_get(). We would have to ensure the clock is not tried to be
-> > > accessed before it is registered by a bridge. This would require to add
-> > > clock handling code to all sensor/encoder subdev drivers though..
-> > 
-> > I thik it's a good practice to add clock management to subdevs anyway, and
-> > the common clock framework should make that easy (or at least not too
-> > difficult). We can migrate subdevs one by one as we add DT support for
-> > them.
+> I agree. Furthermore the driver unload/reload would be another reason
+> not to reuse platform data as the output of the build() function.
 > 
-> Yes, this would be good.
+> But maybe what Stephen meant was more like filling a structure with data
+> taken from the platform data and pass that to a resolve() function which
+> would fill in the missing pieces like pointers to actual resources. I
+> imagine a managed interface would become a little trickier to do using
+> such an approach.
+> 
+>>> If the nodes have a unit address (i.e. end in "@n"), which they will
+>>> have to if all named "step" and there's more than one of them, then they
+>>> will need a matching reg property. Equally, the parent node will need
+>>> #address-cells and #size-cells too. So, the last couple lines would be:
+>>>
+>>> 		power-on-sequence {
+>>> 			#address-cells = <1>;
+>>> 			#size-cells = <0>;
+>>> 			step@0 {
+>>> 				reg = <0>;
+>>
+>> That's precisely what I would like to avoid - I don't need the steps
+>> to be numbered and I certainly have no use for a reg property. Isn't
+>> there a way to make it simpler?
+> 
+> It's not technically valid to not have the reg property. Or
+> #address-cells and #size-cells properties for that matter.
 
--- 
-Regards,
+I'm not keen on this representation where individual steps are nodes.
+That seems like it could end up being too "heavyweight" for a long sequence.
 
-Laurent Pinchart
+
+> 
+> Thierry
+> 
+> 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
