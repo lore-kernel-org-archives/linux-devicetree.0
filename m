@@ -1,311 +1,120 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for Tegra
-Date: Tue, 31 Jul 2012 10:27:23 +0100
-Message-ID: <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
-References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
- <1342106718-3058-7-git-send-email-sjg@chromium.org>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [RFC/PATCH 02/13] media: s5p-csis: Add device tree support
+Date: Tue, 31 Jul 2012 11:34:43 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1207311134000.27888@axis700.grange>
+References: <4FBFE1EC.9060209@samsung.com> <Pine.LNX.4.64.1207161031000.12302@axis700.grange>
+ <5005ABF7.6020008@gmail.com> <24426306.kyhKLGOJzl@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1342106718-3058-7-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <24426306.kyhKLGOJzl@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-+Thierry
+On Thu, 26 Jul 2012, Laurent Pinchart wrote:
 
-Hi,
+> Hi Sylwester,
+> 
+> On Tuesday 17 July 2012 20:16:23 Sylwester Nawrocki wrote:
+> > On 07/16/2012 10:55 AM, Guennadi Liakhovetski wrote:
+> > > Hi Sylwester
+> > > 
+> > > Thanks for your comments to my RFC and for pointing out to this your
+> > > earlier patch series. Unfortunately, I missed in in May, let me try to
+> > > provide some thoughts about this, we should really try to converge our
+> > > proposals. Maybe a discussion at KS would help too.
+> > 
+> > Thank you for the review. I was happy to see your RFC, as previously
+> > there seemed to be not much interest in DT among the media guys.
+> > Certainly, we need to work on a common approach to ensure interoperability
+> > of existing drivers and to avoid having people inventing different
+> > bindings for common features. I would also expect some share of device
+> > specific bindings, as diversity of media devices is significant.
+> > 
+> > I'd be great to discuss these things at KS, especially support for
+> > proper suspend/resume sequences. Also having common sessions with
+> > other subsystems folks, like ASoC, for example, might be a good idea.
+> > 
+> > I'm not sure if I'll be travelling to the KS though. :)
+> > 
+> > > On Fri, 25 May 2012, Sylwester Nawrocki wrote:
+> > >> s5p-csis is platform device driver for MIPI-CSI frontend to the FIMC
+> > >> (camera host interface DMA engine and image processor). This patch
+> > >> adds support for instantiating the MIPI-CSIS devices from DT and
+> > >> parsing all SoC and board specific properties from device tree.
+> > >> The MIPI DPHY control callback is now called directly from within
+> > >> the driver, the platform code must ensure this callback does the
+> > >> right thing for each SoC.
+> > >> 
+> > >> The cell-index property is used to ensure proper signal routing,
+> > >> from physical camera port, through MIPI-CSI2 receiver to the DMA
+> > >> engine (FIMC?). It's also helpful in exposing the device topology
+> > >> in user space at /dev/media? devnode (Media Controller API).
+> > >> 
+> > >> This patch also defines a common property ("data-lanes") for MIPI-CSI
+> > >> receivers and transmitters.
+> > >> 
+> > >> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+> > >> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
+> > >> ---
+> > >> 
+> > >>   Documentation/devicetree/bindings/video/mipi.txt   |    5 +
+> > >>   .../bindings/video/samsung-mipi-csis.txt           |   47 ++++++++++
+> > >>   drivers/media/video/s5p-fimc/mipi-csis.c           |   97
+> > >>   +++++++++++++++----- drivers/media/video/s5p-fimc/mipi-csis.h         
+> > >>    |    1 +
+> > >>   4 files changed, 126 insertions(+), 24 deletions(-)
+> > >>   create mode 100644 Documentation/devicetree/bindings/video/mipi.txt
+> > >>   create mode 100644
+> > >>   Documentation/devicetree/bindings/video/samsung-mipi-csis.txt>> 
+> > >> diff --git a/Documentation/devicetree/bindings/video/mipi.txt
+> > >> b/Documentation/devicetree/bindings/video/mipi.txt new file mode 100644
+> > >> index 0000000..5aed285
+> > >> --- /dev/null
+> > >> +++ b/Documentation/devicetree/bindings/video/mipi.txt
+> > >> @@ -0,0 +1,5 @@
+> > >> +Common properties of MIPI-CSI1 and MIPI-CSI2 receivers and transmitters
+> > >> +
+> > >> + - data-lanes : number of differential data lanes wired and actively
+> > >> used in
+> > >> +		communication between the transmitter and the receiver, this
+> > >> +		excludes the clock lane;
+> > > 
+> > > Wouldn't it be better to use the standard "bus-width" DT property?
+> > 
+> > I can't see any problems with using "bus-width". It seems sufficient
+> > and could indeed be better, without a need to invent new MIPI-CSI
+> > specific names. That was my first RFC on that and my perspective
+> > wasn't probably broad enough. :)
+> 
+> What about CSI receivers that can reroute the lanes internally ? We would need 
+> to specify lane indices for each lane then, maybe with something like
+> 
+> clock-lane = <0>;
 
-On Thu, Jul 12, 2012 at 4:25 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Add LCD definitions and also a proposed binding for LCD displays.
->
-> The PWM is as per what will likely be committed to linux-next soon.
->
-> The displaymode binding comes from a proposal here:
->
-> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
->
-> The panel binding is new, and fills a need to specify the panel
-> timings and other tegra-specific information. Should a binding appear
-> that allows the pwm to handle this automatically, we can revisit
-> this.
->
+"clock-lanes" for uniformity?
 
-Any comments on this binding please? The main addition from Thierry's
-one posted on LMKL is the LCD resolution selection.
+> data-lanes = <2 3 1>;
 
-Regards,
-Simon
+Are there transmitters, that can reroute lanes too?
 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> Changes in v2:
-> - Add nvidia prefix to device tree properties
->
-> Changes in v3:
-> - Add new panel binding to fit with tegra display controller binding
-> - Bring in proposed tegra display controller binding
-> - Use displaymode binding for fdt
->
->  arch/arm/dts/tegra20.dtsi                      |   89 ++++++++++++++++++++++++
->  doc/device-tree-bindings/video/displaymode.txt |   42 +++++++++++
->  doc/device-tree-bindings/video/tegra20-dc.txt  |   89 ++++++++++++++++++++++++
->  3 files changed, 220 insertions(+), 0 deletions(-)
->  create mode 100644 doc/device-tree-bindings/video/displaymode.txt
->  create mode 100644 doc/device-tree-bindings/video/tegra20-dc.txt
->
-> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-> index e7d1688..0b2ca3b 100644
-> --- a/arch/arm/dts/tegra20.dtsi
-> +++ b/arch/arm/dts/tegra20.dtsi
-> @@ -211,4 +211,93 @@
->                 #pwm-cells = <2>;
->         };
->
-> +       host1x {
-> +               compatible = "nvidia,tegra20-host1x", "simple-bus";
-> +               reg = <0x50000000 0x00024000>;
-> +               interrupts = <0 65 0x04   /* mpcore syncpt */
-> +                             0 67 0x04>; /* mpcore general */
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +
-> +               ranges = <0x54000000 0x54000000 0x04000000>;
-> +
-> +               /* video-encoding/decoding */
-> +               mpe {
-> +                       reg = <0x54040000 0x00040000>;
-> +                       interrupts = <0 68 0x04>;
-> +               };
-> +
-> +               /* video input */
-> +               vi {
-> +                       reg = <0x54080000 0x00040000>;
-> +                       interrupts = <0 69 0x04>;
-> +               };
-> +
-> +               /* EPP */
-> +               epp {
-> +                       reg = <0x540c0000 0x00040000>;
-> +                       interrupts = <0 70 0x04>;
-> +               };
-> +
-> +               /* ISP */
-> +               isp {
-> +                       reg = <0x54100000 0x00040000>;
-> +                       interrupts = <0 71 0x04>;
-> +               };
-> +
-> +               /* 2D engine */
-> +               gr2d {
-> +                       reg = <0x54140000 0x00040000>;
-> +                       interrupts = <0 72 0x04>;
-> +               };
-> +
-> +               /* 3D engine */
-> +               gr3d {
-> +                       reg = <0x54180000 0x00040000>;
-> +               };
-> +
-> +               /* display controllers */
-> +               dc@54200000 {
-> +                       compatible = "nvidia,tegra20-dc";
-> +                       reg = <0x54200000 0x00040000>;
-> +                       interrupts = <0 73 0x04>;
-> +
-> +                       rgb {
-> +                               status = "disabled";
-> +                       };
-> +               };
-> +
-> +               dc@54240000 {
-> +                       compatible = "nvidia,tegra20-dc";
-> +                       reg = <0x54240000 0x00040000>;
-> +                       interrupts = <0 74 0x04>;
-> +
-> +                       rgb {
-> +                               status = "disabled";
-> +                       };
-> +               };
-> +
-> +               /* outputs */
-> +               hdmi {
-> +                       compatible = "nvidia,tegra20-hdmi";
-> +                       reg = <0x54280000 0x00040000>;
-> +                       interrupts = <0 75 0x04>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               tvo {
-> +                       compatible = "nvidia,tegra20-tvo";
-> +                       reg = <0x542c0000 0x00040000>;
-> +                       interrupts = <0 76 0x04>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               dsi {
-> +                       compatible = "nvidia,tegra20-dsi";
-> +                       reg = <0x54300000 0x00040000>;
-> +                       status = "disabled";
-> +               };
-> +       };
-> +
->  };
-> diff --git a/doc/device-tree-bindings/video/displaymode.txt b/doc/device-tree-bindings/video/displaymode.txt
-> new file mode 100644
-> index 0000000..45ca42d
-> --- /dev/null
-> +++ b/doc/device-tree-bindings/video/displaymode.txt
-> @@ -0,0 +1,42 @@
-> +videomode bindings
-> +==================
-> +
-> +(from http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html)
-> +
-> +Required properties:
-> + - xres, yres: Display resolution
-> + - left-margin, right-margin, hsync-len: Horizontal Display timing
-> +   parameters in pixels
-> + - upper-margin, lower-margin, vsync-len: Vertical display timing
-> +   parameters in lines
-> + - clock: display clock in Hz
-> +
-> +Optional properties:
-> + - width-mm, height-mm: Display dimensions in mm
-> + - hsync-active-high (bool): Hsync pulse is active high
-> + - vsync-active-high (bool): Vsync pulse is active high
-> + - interlaced (bool): This is an interlaced mode
-> + - doublescan (bool): This is a doublescan mode
-> +
-> +There are different ways of describing a display mode. The devicetree
-> +representation corresponds to the one used by the Linux Framebuffer
-> +framework described here in Documentation/fb/framebuffer.txt. This
-> +representation has been chosen because it's the only format which does
-> +not allow for inconsistent parameters. Unlike the Framebuffer framework
-> +the devicetree has the clock in Hz instead of ps.
-> +
-> +Example:
-> +
-> +       display@0 {
-> +               /* 1920x1080p24 */
-> +               clock = <52000000>;
-> +               xres = <1920>;
-> +               yres = <1080>;
-> +               left-margin = <25>;
-> +               right-margin = <25>;
-> +               hsync-len = <25>;
-> +               lower-margin = <2>;
-> +               upper-margin = <2>;
-> +               vsync-len = <2>;
-> +               hsync-active-high;
-> +       };
-> diff --git a/doc/device-tree-bindings/video/tegra20-dc.txt b/doc/device-tree-bindings/video/tegra20-dc.txt
-> new file mode 100644
-> index 0000000..dcfd652
-> --- /dev/null
-> +++ b/doc/device-tree-bindings/video/tegra20-dc.txt
-> @@ -0,0 +1,89 @@
-> +Display Controller
-> +------------------
-> +
-> +(there isn't yet a generic binding in Linux, so this describes what is in
-> +U-Boot, and may change based on Linux activity)
-> +
-> +The device node for a display device is as described in the document
-> +"Open Firmware Recommended Practice : Universal Serial Bus" with the
-> +following modifications and additions :
-> +
-> +Required properties :
-> + - compatible : Should be "nvidia,tegra20-dc"
-> +
-> +Required subnode 'rgb'. This has the properties listed in displaymode.txt
-> +as well as:
-> +
-> +Required properties (rgb) :
-> + - nvidia,panel : phandle of LCD panel information
-> + - nvidia,bits-per-pixel: number of bits per pixel (depth)
-> +
-> +Optional properties (rgb):
-> + - nvidia,frame-buffer: address of frame buffer (if omitted it will be
-> +               calculated)
-> +       - This may be useful to share an address between U-Boot and Linux and
-> +               avoid boot-time corruption / flicker
-> +
-> +
-> +The panel node describes the panel itself.
-> +
-> +Required properties (panel) :
-> + - nvidia,pwm : pwm to use to set display contrast (see tegra20-pwm.txt)
-> + - nvidia,panel-timings: 4 cells containing required timings in ms:
-> +       * delay between panel_vdd-rise and data-rise
-> +       * delay between data-rise and backlight_vdd-rise
-> +       * delay between backlight_vdd and pwm-rise
-> +       * delay between pwm-rise and backlight_en-rise
-> +
-> +Optional GPIO properies all have (phandle, GPIO number, flags):
-> + - nvidia,backlight-enable-gpios: backlight enable GPIO
-> + - nvidia,lvds-shutdown-gpios: LVDS power shutdown GPIO
-> + - nvidia,backlight-vdd-gpios: backlight power GPIO
-> + - nvidia,panel-vdd-gpios: panel power GPIO
-> +
-> +Example:
-> +
-> +host1x {
-> +       compatible = "nvidia,tegra20-host1x", "simple-bus";
-> +       reg = <0x50000000 0x00024000>;
-> +       interrupts = <0 65 0x04   /* mpcore syncpt */
-> +                       0 67 0x04>; /* mpcore general */
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +
-> +       ranges = <0x54000000 0x54000000 0x04000000>;
-> +
-> +       dc@54200000 {
-> +               compatible = "nvidia,tegra20-dc";
-> +               reg = <0x54200000 0x00040000>;
-> +               interrupts = <0 73 0x04>;
-> +
-> +               rgb {
-> +                       status = "okay";
-> +                       /* Seaboard has 1366x768 */
-> +                       clock = <70600000>;
-> +                       xres = <1366>;
-> +                       yres = <768>;
-> +                       left-margin = <58>;
-> +                       right-margin = <58>;
-> +                       hsync-len = <58>;
-> +                       lower-margin = <4>;
-> +                       upper-margin = <4>;
-> +                       vsync-len = <4>;
-> +                       hsync-active-high;
-> +                       nvidia,frame-buffer = <0x2f680000>;
-> +                       nvidia,bits-per-pixel = <16>;
-> +                       nvidia,panel = <&lcd_panel>;
-> +               };
-> +       };
-> +};
-> +
-> +lcd_panel: panel {
-> +       nvidia,pwm = <&pwm 2 0>;
-> +       nvidia,backlight-enable-gpios = <&gpio 28 0>;   /* PD4 */
-> +       nvidia,lvds-shutdown-gpios = <&gpio 10 0>;      /* PB2 */
-> +       nvidia,backlight-vdd-gpios = <&gpio 176 0>;     /* PW0 */
-> +       nvidia,panel-vdd-gpios = <&gpio 22 0>;          /* PC6 */
-> +       nvidia,panel-timings = <4 203 17 15>;
-> +};
-> --
-> 1.7.7.3
->
+Thanks
+Guennadi
+
+> For receivers that can't reroute lanes internally, the data-lanes property 
+> would be need to specify lanes in sequence.
+> 
+> data-lanes = <1 2 3>;
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
