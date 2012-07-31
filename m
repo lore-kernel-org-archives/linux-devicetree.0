@@ -1,103 +1,49 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [RFC] media DT bindings
-Date: Tue, 31 Jul 2012 14:39:07 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1207311432590.27888@axis700.grange>
-References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange>
- <1537713.eFPuk01afu@avalon> <Pine.LNX.4.64.1207311058140.27888@axis700.grange>
- <2642313.6bQqiyFNFL@avalon>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree based
+ instantiation
+Date: Tue, 31 Jul 2012 14:46:29 +0200
+Message-ID: <5017D3A5.5000503@samsung.com>
+References: <4FBFE1EC.9060209@samsung.com> <3336686.TMIyoLDix4@avalon>
+ <Pine.LNX.4.64.1207311326250.27888@axis700.grange> <7305269.IxTKyOjUBg@avalon>
+ <Pine.LNX.4.64.1207311416160.27888@axis700.grange>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2642313.6bQqiyFNFL@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <Pine.LNX.4.64.1207311416160.27888@axis700.grange>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 31 Jul 2012, Laurent Pinchart wrote:
-
-> Hi Guennadi,
+On 07/31/2012 02:26 PM, Guennadi Liakhovetski wrote:
+>>>> But should we allow host probe() to succeed if the sensor isn't present ?
+>>>
+>>> I think we should, yes. The host hardware is there and functional -
+>>> whether or not all or some of the clients are failing. Theoretically
+>>> clients can also be hot-plugged. Whether and how many video device nodes
+>>> we create, that's a different question.
+>>
+>> I think I can agree with you on this (although I could change my mind if this 
+>> architecture turns out to result in unsolvable technical issues). That will 
+>> involve a lot of work though.
 > 
-> On Tuesday 31 July 2012 11:26:27 Guennadi Liakhovetski wrote:
-> > On Fri, 27 Jul 2012, Laurent Pinchart wrote:
-> > > Hi Sylwester,
-> > > 
-> > > On Wednesday 18 July 2012 19:00:15 Sylwester Nawrocki wrote:
-> > > > On 07/16/2012 01:41 PM, Guennadi Liakhovetski wrote:
-> > [snip]
-> > 
-> > > > >>> An sh-mobile CEU DT node could look like
-> > > > >>> 
-> > > > >>> 	ceu0@0xfe910000 = {
-> > > > >>> 	
-> > > > >>> 		compatible = "renesas,sh-mobile-ceu";
-> > > > >>> 		reg =<0xfe910000 0xa0>;
-> > > > >>> 		interrupts =<0x880>;
-> > > > >>> 		bus-width =<16>;		/* #lines routed on the board */
-> > > > >>> 		clock-frequency =<50000000>;	/* max clock */
-> > > > >>> 		#address-cells =<1>;
-> > > > >>> 		#size-cells =<0>;
-> > > > >>> 		...
-> > > > >>> 		ov772x-1 = {
-> > > > >>> 		
-> > > > >>> 			reg =<0>;
-> > > > 
-> > > > This property might be redundant, we already have the "client" phandle
-> > > > pointing to "ov772x@0x21-0", which has all interesting properties inside
-> > > > it. Other than there is probably no reasonable usage for it under
-> > > > "ceu0@0xfe910000" node ?
-> > > > 
-> > > > >>> 			client =<&ov772x@0x21-0>;
-> > > > >>> 			local-pad = "parallel-sink";
-> > > > >>> 			remote-pad = "parallel-source";
-> > > > >> 
-> > > > >> I'm not sure I like that. Is it really needed when we already have
-> > > > >> the child/parent properties around ?
-> > > > > 
-> > > > > I think it is. Both the host and the client can have multiple pads
-> > > > > (e.g.,
-> > > > > parallel / serial). These properties specify which pads are used and
-> > > > > make
-> > > > > the translation between DT data and our subdev / pad APIs simpler.
-> > > > 
-> > > > OK, sorry, but isn't it all about just specifying what sort of data bus
-> > > > is used ? :-)
-> > > 
-> > > In some (many/most ?) cases probably, but not in all of them.
-> > > 
-> > > What about merging the client and remote-pad properties ? The resulting
-> > > property would then reference a pad with <&ov772x@0x21-0 0>.
-> > 
-> > What would the "0" parameter mean then? Pad #0?
-> 
-> Yes.
-> 
-> > But aren't these numbers device specific? Maybe not a huge deal, but these
-> > numbers are defind by the driver, right? Not the DT itself. So, drivers then
-> > will have to take care not to change their pad numbering. Whereas using
-> > strings, we can fix strings in the common V4L DT spec and keep them standard
-> > across devices and drivers. Then drivers might be less likely to change
-> > these assignments randomly ;-)
-> 
-> Userspace applications usually rely on pad numbers as well, so I consider them 
-> as more or less part of the ABI. If we really need to, we could add a DT pad 
-> number -> media controller pad number conversion in the driver, that would be 
-> less expensive than pad name -> pad number conversion (especially since it 
-> would be skipped in most cases).
+> There's however at least one more gotcha that occurs to me with this 
+> approach: if clients fail to probe, how do we find out about that and turn 
+> clocks back off? One improvement to turning clocks on immediately in 
 
-Ok, then, how about
+Hmm, wouldn't it be the client that turns a clock on/off when needed ?
+I'd like to preserve this functionality, so client drivers can have
+full control on the power up/down sequences. While we are trying to
+improve the current situation...
 
-		#address-cells = <1>;
-		#size-cells = <0>;
-		...
-		ov772x-1 = {
-			reg = <1>;			/* local pad # */
-			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
+> host's probe() is to only do it in a BUS_NOTIFY_BIND_DRIVER notifier. But 
+> how do we find out, that probing failed? No notifier is called in this 
+> case. We could use a time-out, but that's ugly. I think, we could ever 
+> request a new notifier for this case. We could also require client drivers 
+> to call a V4L2 function in this case, but that's not very pretty either.
 
+--
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Regards,
+Sylwester
