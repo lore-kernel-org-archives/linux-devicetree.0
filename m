@@ -1,92 +1,79 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Subject: [PATCH v2 1/1] ARM: dove: DT support for sdhci-dove
-Date: Tue, 31 Jul 2012 10:12:59 +0200
-Message-ID: <1343722379-32699-1-git-send-email-sebastian.hesselbarth@googlemail.com>
-References: <1343666134-21205-1-git-send-email-sebastian.hesselbarth@googlemail.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1343666134-21205-1-git-send-email-sebastian.hesselbarth@googlemail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Manuel Lauss <manuel.lauss@googlemail.com>, David Brown <davidb@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Tue, 31 Jul 2012 17:37:07 +0900
+Message-ID: <50179933.9090501@nvidia.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <CAPnjgZ0H2xrJcL-ytMaX11iYrrhCg7LEM00u_NgEaveM4gHMPw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPnjgZ0H2xrJcL-ytMaX11iYrrhCg7LEM00u_NgEaveM4gHMPw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Glass <sjg@chromium.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support and binding documentiation for
-sdhci-dove.
+Hi Simon,
 
-v2: extended documentation and removed second interrupt as it is marked 
-    'reserved' in dove datasheet.
+On 07/30/2012 08:00 PM, Simon Glass wrote:
+> For the delay, I think milliseconds is reasonable. I suppose there is
+> no reasonable need for microseconds?
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Chris Ball <cjb@laptop.org>
-Cc: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Manuel Lauss <manuel.lauss@googlemail.com>
-Cc: David Brown <davidb@codeaurora.org>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mmc@vger.kernel.org
+I don't see any need for microseconds myself - anybody sees use for 
+finer-grained delays?
 
----
- Documentation/devicetree/bindings/mmc/sdhci-dove.txt |   14 ++++++++++++++
- drivers/mmc/host/sdhci-dove.c                        |    8 ++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-dove.txt
+Btw, I noticed I was using mdelay instead of msleep - caught and fixed that.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-dove.txt b/Documentation/devicetree/bindings/mmc/sdhci-dove.txt
-new file mode 100644
-index 0000000..f08bb30
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-dove.txt
-@@ -0,0 +1,14 @@
-+* Marvell sdhci-dove controller
-+
-+Required properties:
-+- compatible: Should be "marvell,dove-sdhci".
-+- reg: Physical base address of the sdhci controller.
-+- interrupts: interrupt nr of the sdhci controller.
-+
-+Example:
-+
-+sdio0: sdio@92000 {
-+	compatible = "marvell,dove-sdhci";
-+	reg = <0x92000 0x100>;
-+	interrupts = <35>;
-+};
-diff --git a/drivers/mmc/host/sdhci-dove.c b/drivers/mmc/host/sdhci-dove.c
-index a6e53a1..90140eb 100644
---- a/drivers/mmc/host/sdhci-dove.c
-+++ b/drivers/mmc/host/sdhci-dove.c
-@@ -24,6 +24,7 @@
- #include <linux/err.h>
- #include <linux/module.h>
- #include <linux/mmc/host.h>
-+#include <linux/of.h>
- 
- #include "sdhci-pltfm.h"
- 
-@@ -126,11 +127,18 @@ static int __devexit sdhci_dove_remove(struct platform_device *pdev)
- 	return sdhci_pltfm_unregister(pdev);
- }
- 
-+static const struct of_device_id sdhci_dove_of_match_table[] __devinitdata = {
-+	{ .compatible = "marvell,dove-sdhci", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sdhci_dove_of_match_table);
-+
- static struct platform_driver sdhci_dove_driver = {
- 	.driver		= {
- 		.name	= "sdhci-dove",
- 		.owner	= THIS_MODULE,
- 		.pm	= SDHCI_PLTFM_PMOPS,
-+		.of_match_table = of_match_ptr(sdhci_dove_of_match_table),
- 	},
- 	.probe		= sdhci_dove_probe,
- 	.remove		= __devexit_p(sdhci_dove_remove),
--- 
-1.7.10.4
+>> +Device tree
+>> +-----------
+>> +All the same, power sequences can be encoded as device tree nodes. The following
+>> +properties and nodes are equivalent to the platform data defined previously:
+>> +
+>> +               power-supply = <&mydevice_reg>;
+>> +               enable-gpio = <&gpio 6 0>;
+>> +
+>> +               power-on-sequence {
+>> +                       regulator@0 {
+>> +                               id = "power";
+>
+> Is there a reason not to put the phandle here, like:
+>
+>                                     id = <&mydevice_reg>;
+>
+> (or maybe 'device' instead of id?)
 
+There is one reason, but it might be a bad one. On Tegra, PWM phandle 
+uses an extra cell to encode the duty-cycle the PWM should have when we 
+call get_pwm(). This makes it possible to address the same PWM with 
+different phandles (and different duty cycles), which causes an issue to 
+know whether a PWM is already used in a sequence (potentially resulting 
+in multiple get_pwm calls on the same PWM, and also opens the door to 
+ambiguities in behavior (what is the correct duty-cycle to use if 
+several different values are passed?)
+
+Maybe the problem lies in how PWM phandles are handled - if duty-cycle 
+was not part of the information, we would not have this problem.
+
+>> +Note that first, the phandles of the regulator and gpio used in the sequences
+>> +are defined as properties. Then the sequence references them through the id
+>> +property of every step. The name of sub-properties defines the type of the step.
+>> +Valid names are "regulator", "gpio" and "pwm". Steps must be numbered
+>> +sequentially.
+>
+> For the regulator and gpio types I think you only have an enable. For
+> the pwm, what is the intended binding? Is that documented elsewhere?
+
+Same thing, enable/disable which would call pwm_enable and pwm_disable. 
+One could also image an additional property to set the duty cycle if it 
+can be taken off the phandle.
+
+> Also it might be worth mentioning how you get a struct power_seq from
+> an fdt node, and perhaps given an example of a device which has an
+> attached node, so we can see how it is referenced from the device
+> (of_parse_power_seq I think). Do put the sequence inside the device
+> node or reference it with a phandle?
+
+Yes, this definitely needs more documentation - especially the DT part.
+
+Thanks,
+Alex.
