@@ -1,56 +1,55 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH RESEND v2 1/2] arm/dts: Add AM33XX basic pinctrl support
-Date: Tue, 31 Jul 2012 13:37:38 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA06E4B@DBDE01.ent.ti.com>
-References: <1343144719-26352-1-git-send-email-anilkumar@ti.com>
- <1343144719-26352-2-git-send-email-anilkumar@ti.com>
- <50125B1C.8000209@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Tue, 31 Jul 2012 14:40:26 +0100
+Message-ID: <20120731134026.GI4468@opensource.wolfsonmicro.com>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+ <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
+ <20120726131121.GB7306@sirena.org.uk>
+ <20120730065218.GB31509@S2101-09.ap.freescale.net>
+ <20120730185344.GT4468@opensource.wolfsonmicro.com>
+ <20120731042050.GF762@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50125B1C.8000209@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120731042050.GF762@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On Tue, Jul 31, 2012 at 12:20:52PM +0800, Shawn Guo wrote:
+> On Mon, Jul 30, 2012 at 07:53:45PM +0100, Mark Brown wrote:
 
-On Fri, Jul 27, 2012 at 14:40:52, Ujfalusi, Peter wrote:
-> Hi,
-> 
-> On 07/24/2012 06:45 PM, AnilKumar Ch wrote:
-> > Adds basic pinctrl support for AM33XX family of devices. This patch
-> > is based on the pinctrl-simple driver submitted by Tony Lindgren's
-> > here: http://lwn.net/Articles/496075/
-> > 
-> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> > ---
-> >  arch/arm/boot/dts/am33xx.dtsi |    9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> > index 59509c4..9b974dc 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -40,6 +40,15 @@
-> >  		};
-> >  	};
-> >  
-> > +	am3358_pinmux: pinmux@44E10800 {
-> > +		compatible = "pinctrl-single";
-> > +		reg = <0x44E10800 0x0338>;
-> 
-> I'm just curious about the size here: how it ended up as 0x0338?
-> While looking at the TRM of AM335x I can come up with 0x0238 (0x44e10800 -
-> 0x44e10a38), but I don't see any sings of the remaining 0x0100 to be
-> documented at least.
+> > Quite honestly this seems totally unrealistic for the majority of users,
 
-No, pinmux registers are available till 0x44E10B38, look at AM335x latest TRM
-or pinmux utility (we cannot find the exact offsets but pins we can find after
-0x0A38, conf_ddr_resetn) at http://www.ti.com/tool/pinmuxtool
+> I doubt that.  Searching drivers/cpufreq folder, I can see there are
+> several cpufreq drivers scaling voltage with regulator API, but none
+> of them is calling regulator_set_voltage_time to find voltage latency.
+> That said, all these users are specify transition latency on their own.
 
-Regards
-AnilKumar
+This is more a sign of poor quality of implementation than anything
+else, and obviously the fact that DT is supposed to be an ABI makes it
+much more important to get things right.
+
+There's also a bunch of problems in ondemand, it really doesn't cope
+terribly well if you actually tell it what the latencies are for most
+systems as it becomes absurdly conservative about not ramping.
+
+> > especially given the very poor documentation for this stuff which SoC
+> > vendors typically provide.  It's a reasonable amount of work to go back
+> > and figure this stuff out (especially given that it should be varying
+> > depending on the transition in question), and it's going to give us a
+> > bunch of magic numbers in people's bindings.
+
+> There will be only one magic number, and it can easily become "magic"
+> with some comments put there.
+
+This doesn't sound like a recipie for success..
+
+> > No, add a new API.
+
+> Is the following patch what you are ordering here?
+
+Yes.  I'd go with _tol rather than _tolerance probably but something
+like that, yes.
