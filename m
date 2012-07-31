@@ -1,68 +1,98 @@
-From: Vinod Koul <vinod.koul@linux.intel.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Tue, 31 Jul 2012 16:42:12 +0530
-Message-ID: <1343733132.1726.14418.camel@vkoul-udesk3>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	 <201207171924.33756.arnd@arndb.de> <1342756850.1726.74.camel@vkoul-udesk3>
-	 <201207200839.24259.arnd@arndb.de> <1342777047.1726.435.camel@vkoul-udesk3>
-	 <500EF27F.6050905@ti.com> <1343284960.1726.8978.camel@vkoul-udesk3>
-	 <501181C3.1020301@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree
+ based instantiation
+Date: Tue, 31 Jul 2012 13:14:13 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1207311312580.27888@axis700.grange>
+References: <4FBFE1EC.9060209@samsung.com> <6250402.9RzN62tRPe@avalon>
+ <Pine.LNX.4.64.1207311144470.27888@axis700.grange> <2642305.FyjWrDc1Fo@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <501181C3.1020301@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2642305.FyjWrDc1Fo@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2012-07-26 at 12:43 -0500, Jon Hunter wrote:
-> >> So yes I can see that a channel itself could be configured to
-> support a
-> >> given direction, but when we ask for a channel via
-> dma_request_channel()
-> >> we are going to get a channel that matches the criteria we pass
-> using
-> >> the filter parameter. So here the thinking was that "flags" is a
-> filter
-> >> parameter that the user could specify and one example being
-> direction
-> >> but it could be something else too.
-> > Yes that can be done, but I am leaning towards clients not have to
-> do
-> > anything :) DMAEngine needs to know mapping and when
-> > dma_request_channel() is called it _always_ gives you the right
-> channel.
-> 
-> Ok, so are you proposing to remove the filter function and parameter
-> from the dma_request_channel()?
-No. But add a new request call, dma_request_slave_channel() which is
-exclusive for slave usages and takes into account the mapping to be done
-for channels
-> 
-> > Maybe for slave case we need to create dma_request_slave_channel()
-> which
-> > has additional arguments for dmaengine to do the filtering.
-Yup
-> 
-> Ok, so what is not clear to me is if you envision that
-> dma_request_slave_channel() is using a mapping table based look-up or
-> the DT scheme or both.
-The API should not worry about it. It would be good to have DT/ other be
-behind this API, so it is transparent to users. They just request a
-slave channel.
-> 
-> As Arnd highlighted the DT convention is to store the DMA info in each
-> of the device nodes and not store in a global mapping table which
-> conflicts with having a mapping table approach for non-DT usage. So I
-> am
-> still not sure how you envision this function working for both the
-> non-DT and DT use-cases. 
-I expect the clients to pass the mapping information to dmaengine in way
-dmaengine understands. This information can come from DT or other
-places. That way dmaengine gets info from any system being used and be
-able to allocate slave channel properly.
--- 
-~Vinod
+On Tue, 31 Jul 2012, Laurent Pinchart wrote:
 
+> Hi Guennadi,
+> 
+> On Tuesday 31 July 2012 11:56:44 Guennadi Liakhovetski wrote:
+> > On Thu, 26 Jul 2012, Laurent Pinchart wrote:
+> > > On Wednesday 18 July 2012 11:18:33 Sylwester Nawrocki wrote:
+> > > > On 07/16/2012 11:42 AM, Guennadi Liakhovetski wrote:
+> > > > > On Fri, 25 May 2012, Sylwester Nawrocki wrote:
+> > > > >> The driver initializes all board related properties except the
+> > > > >> s_power() callback to board code. The platforms that require this
+> > > > >> callback are not supported by this driver yet for CONFIG_OF=y.
+> > > > >> 
+> > > > >> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+> > > > >> Signed-off-by: Bartlomiej Zolnierkiewicz<b.zolnierkie@samsung.com>
+> > > > >> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
+> > > > >> ---
+> > > > >> 
+> > > > >>   .../bindings/camera/samsung-s5k6aafx.txt           |   57 +++++++++
+> > > > >>   drivers/media/video/s5k6aa.c                       |  129
+> > > > >>   ++++++++++++++------ 2 files changed, 146 insertions(+), 40
+> > > > >>   deletions(-)
+> > > > >>   create mode 100644
+> > > > >>   Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt>>
+> > > > >> 
+> > > > >> diff --git
+> > > > >> a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
+> > > > >> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt new
+> > > > >> file
+> > > > >> mode 100644
+> > > > >> index 0000000..6685a9c
+> > > > >> --- /dev/null
+> > > > >> +++ b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
+> > > > >> @@ -0,0 +1,57 @@
+> > > > >> +Samsung S5K6AAFX camera sensor
+> > > > >> +------------------------------
+> > > > >> +
+> > > > >> +Required properties:
+> > > > >> +
+> > > > >> +- compatible : "samsung,s5k6aafx";
+> > > > >> +- reg : base address of the device on I2C bus;
+> > > > > 
+> > > > > You said you ended up putting your sensors outside of I2C busses, is
+> > > > > this
+> > > > > one of changes, that are present in your git-tree but not in this
+> > > > > series?
+> > > > 
+> > > > No, I must have been not clear enough on that. Our idea was to keep
+> > > > I2C slave device nodes as an I2C controller's child nodes, according
+> > > > to the current convention.
+> > > > The 'sensor' nodes (the 'camera''s children) would only contain a
+> > > > phandle to a respective I2C slave node.
+> > > > 
+> > > > This implies that we cannot access I2C bus in I2C client's device
+> > > > probe() callback. An actual H/W access could begin only from within and
+> > > > after invocation of v4l2_subdev .registered callback..
+> > > 
+> > > That's how I've envisioned the DT bindings for sensors as well, this
+> > > sounds good. The real challenge will be to get hold of the subdev to
+> > > register it without race conditions.
+> > 
+> > Hrm... That's how early pre-subdev versions of soc-camera used to work,
+> > that's where all the <device>_video_probe() functions come from. But then
+> > we switched to dynamic i2c device registration. Do we want to switch all
+> > drivers back now?... Couldn't we "temporarily" use references from subdevs
+> > to hosts until the clock API is available?
+> 
+> I don't think that requires a reference from subdevs to hosts in the DT. The 
+> subdev will need the host to be probed before a clock can be available so you 
+> won't be able to access the hardware in the probe() function in the generic 
+> case. You will need to wait until the registered() subdev operation is called, 
+> at which point the host can be accessed through the v4l2_device.
+
+Sure, I understand, but that's exactly what we wanted to avoid - 
+succeeding client's i2c .probe() without even touching the hardware.
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
