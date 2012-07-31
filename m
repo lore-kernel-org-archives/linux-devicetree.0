@@ -1,60 +1,103 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC/PATCH 02/13] media: s5p-csis: Add device tree support
-Date: Tue, 31 Jul 2012 14:38:35 +0200
-Message-ID: <5017D1CB.80709@samsung.com>
-References: <4FBFE1EC.9060209@samsung.com> <24452426.AaRH9zzLOy@avalon>
- <Pine.LNX.4.64.1207311257020.27888@axis700.grange> <4835930.8zRiqxUPR0@avalon>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [RFC] media DT bindings
+Date: Tue, 31 Jul 2012 14:39:07 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1207311432590.27888@axis700.grange>
+References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange>
+ <1537713.eFPuk01afu@avalon> <Pine.LNX.4.64.1207311058140.27888@axis700.grange>
+ <2642313.6bQqiyFNFL@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <4835930.8zRiqxUPR0@avalon>
+In-Reply-To: <2642313.6bQqiyFNFL@avalon>
 Sender: linux-media-owner@vger.kernel.org
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2012 01:05 PM, Laurent Pinchart wrote:
->>>>> What about CSI receivers that can reroute the lanes internally ? We
->>>>> would
->>>>> need to specify lane indices for each lane then, maybe with something
->>>>> like
->>>>>
->>>>> clock-lane =<0>;
->>>>> data-lanes =<2 3 1>;
->>>>
->>>> Sounds good to me. And the clock-lane could be made optional, as not all
->>>> devices would need it.
->>>>
->>>> However, as far as I can see, there is currently no generic API for
->>>> handling this kind of data structure. E.g. number of cells for the
->>>> "interrupts" property is specified with an additional
->>>> "#interrupt-cells" property.
->>>>
->>>> It would have been much easier to handle something like:
->>>>
->>>> data-lanes = <2>, <3>, <1>;
->>>>
->>>> i.e. an array of the lane indexes.
->>>
->>> I'm fine with that.
->>
->> ...on a second thought: shouldn't this be handled by pinctrl? Or is it
->> some CSI-2 module internal lane switching, not the global SoC pin function
->> configuration?
+On Tue, 31 Jul 2012, Laurent Pinchart wrote:
+
+> Hi Guennadi,
 > 
-> On the hardware I came across, it's handled by the CSI2 receiver, not the SoC 
-> pinmux feature.
+> On Tuesday 31 July 2012 11:26:27 Guennadi Liakhovetski wrote:
+> > On Fri, 27 Jul 2012, Laurent Pinchart wrote:
+> > > Hi Sylwester,
+> > > 
+> > > On Wednesday 18 July 2012 19:00:15 Sylwester Nawrocki wrote:
+> > > > On 07/16/2012 01:41 PM, Guennadi Liakhovetski wrote:
+> > [snip]
+> > 
+> > > > >>> An sh-mobile CEU DT node could look like
+> > > > >>> 
+> > > > >>> 	ceu0@0xfe910000 = {
+> > > > >>> 	
+> > > > >>> 		compatible = "renesas,sh-mobile-ceu";
+> > > > >>> 		reg =<0xfe910000 0xa0>;
+> > > > >>> 		interrupts =<0x880>;
+> > > > >>> 		bus-width =<16>;		/* #lines routed on the board */
+> > > > >>> 		clock-frequency =<50000000>;	/* max clock */
+> > > > >>> 		#address-cells =<1>;
+> > > > >>> 		#size-cells =<0>;
+> > > > >>> 		...
+> > > > >>> 		ov772x-1 = {
+> > > > >>> 		
+> > > > >>> 			reg =<0>;
+> > > > 
+> > > > This property might be redundant, we already have the "client" phandle
+> > > > pointing to "ov772x@0x21-0", which has all interesting properties inside
+> > > > it. Other than there is probably no reasonable usage for it under
+> > > > "ceu0@0xfe910000" node ?
+> > > > 
+> > > > >>> 			client =<&ov772x@0x21-0>;
+> > > > >>> 			local-pad = "parallel-sink";
+> > > > >>> 			remote-pad = "parallel-source";
+> > > > >> 
+> > > > >> I'm not sure I like that. Is it really needed when we already have
+> > > > >> the child/parent properties around ?
+> > > > > 
+> > > > > I think it is. Both the host and the client can have multiple pads
+> > > > > (e.g.,
+> > > > > parallel / serial). These properties specify which pads are used and
+> > > > > make
+> > > > > the translation between DT data and our subdev / pad APIs simpler.
+> > > > 
+> > > > OK, sorry, but isn't it all about just specifying what sort of data bus
+> > > > is used ? :-)
+> > > 
+> > > In some (many/most ?) cases probably, but not in all of them.
+> > > 
+> > > What about merging the client and remote-pad properties ? The resulting
+> > > property would then reference a pad with <&ov772x@0x21-0 0>.
+> > 
+> > What would the "0" parameter mean then? Pad #0?
+> 
+> Yes.
+> 
+> > But aren't these numbers device specific? Maybe not a huge deal, but these
+> > numbers are defind by the driver, right? Not the DT itself. So, drivers then
+> > will have to take care not to change their pad numbering. Whereas using
+> > strings, we can fix strings in the common V4L DT spec and keep them standard
+> > across devices and drivers. Then drivers might be less likely to change
+> > these assignments randomly ;-)
+> 
+> Userspace applications usually rely on pad numbers as well, so I consider them 
+> as more or less part of the ABI. If we really need to, we could add a DT pad 
+> number -> media controller pad number conversion in the driver, that would be 
+> less expensive than pad name -> pad number conversion (especially since it 
+> would be skipped in most cases).
 
-Same here. Is there any hardware known to mux those MIPI-CSI
-D-PHY high speed differential signals with general purpose IO pins ?
+Ok, then, how about
 
-Or are there mostly dedicated pins used ?
+		#address-cells = <1>;
+		#size-cells = <0>;
+		...
+		ov772x-1 = {
+			reg = <1>;			/* local pad # */
+			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
 
-However, if there are cases the lane configuration is done solely at CSI2
-receiver level, there seems little point in involving the pinctrl API.
 
---
-
-Regards,
-Sylwester
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
