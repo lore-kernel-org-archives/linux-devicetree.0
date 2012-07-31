@@ -1,85 +1,61 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v4 3/6] tegra: fdt: Add NAND controller binding
-	and definitions
-Date: Mon, 30 Jul 2012 18:05:21 -0500
-Message-ID: <50171331.8060708@freescale.com>
-References: <1343631210-22278-1-git-send-email-sjg@chromium.org>
-	<1343631210-22278-4-git-send-email-sjg@chromium.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Tue, 31 Jul 2012 12:20:52 +0800
+Message-ID: <20120731042050.GF762@S2101-09.ap.freescale.net>
+References: <1342713281-31114-1-git-send-email-shawn.guo@linaro.org>
+ <1342713281-31114-4-git-send-email-shawn.guo@linaro.org>
+ <20120726131121.GB7306@sirena.org.uk>
+ <20120730065218.GB31509@S2101-09.ap.freescale.net>
+ <20120730185344.GT4468@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1343631210-22278-4-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: Stephen Warren <swarren@nvidia.com>, Devicetree@theia.denx.de, Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120730185344.GT4468@opensource.wolfsonmicro.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/30/2012 01:53 AM, Simon Glass wrote:
-> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-> index f95be58..d936b1e 100644
-> --- a/arch/arm/dts/tegra20.dtsi
-> +++ b/arch/arm/dts/tegra20.dtsi
-> @@ -204,4 +204,11 @@
->  		compatible = "nvidia,tegra20-kbc";
->  		reg = <0x7000e200 0x0078>;
->  	};
-> +
-> +	nand: nand-controller@70008000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "nvidia,tegra20-nand";
-> +		reg = <0x70008000 0x100>;
-> +	};
->  };
-> diff --git a/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt b/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-> new file mode 100644
-> index 0000000..86ae408
-> --- /dev/null
-> +++ b/doc/device-tree-bindings/nand/nvidia,tegra20-nand.txt
-> @@ -0,0 +1,53 @@
-> +NAND Flash
-> +----------
-> +
-> +(there isn't yet a generic binding in Linux, so this describes what is in
-> +U-Boot. There should not be Linux-specific or U-Boot specific binding, just
-> +a binding that describes this hardware. But agreeing a binding in Linux in
-> +the absence of a driver may be beyond my powers.)
+On Mon, Jul 30, 2012 at 07:53:45PM +0100, Mark Brown wrote:
+> Quite honestly this seems totally unrealistic for the majority of users,
 
-Please at least attempt to get a binding accepted in Linux, or perhaps
-in a neutral repository such as devicetree.org (but point out on
-devicetree-discuss that you've posted it there).  The device tree is
-supposed to describe the hardware, not what Linux currently uses.
+I doubt that.  Searching drivers/cpufreq folder, I can see there are
+several cpufreq drivers scaling voltage with regulator API, but none
+of them is calling regulator_set_voltage_time to find voltage latency.
+That said, all these users are specify transition latency on their own.
 
-> +Example
-> +-------
-> +
-> +nand-controller@0x70008000 {
-> +	compatible = "nvidia,tegra20-nand";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	nvidia,wp-gpios = <&gpio 59 0>;		/* PH3 */
-> +	nvidia,nand-width = <8>;
-> +	nvidia,timing = <26 100 20 80 20 10 12 10 70>;
-> +	nand@0 {
-> +		reg = <0>;
-> +		compatible = "hynix,hy27uf4g2b", "nand-flash";
-> +	};
-> +};
+> especially given the very poor documentation for this stuff which SoC
+> vendors typically provide.  It's a reasonable amount of work to go back
+> and figure this stuff out (especially given that it should be varying
+> depending on the transition in question), and it's going to give us a
+> bunch of magic numbers in people's bindings.
+> 
+There will be only one magic number, and it can easily become "magic"
+with some comments put there.
 
-Where is "reg" in the parent node?  You're not supposed to have a unit
-address without reg.   Also, most bus bindings don't put 0x in the unit
-address).
+> No, add a new API.
+> 
+Is the following patch what you are ordering here?
 
-I see that it's OK in the actual .dtsi -- it's just the example that
-needs fixing.
+diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
+index da339fd..bfd3cfb 100644
+--- a/include/linux/regulator/consumer.h
++++ b/include/linux/regulator/consumer.h
+@@ -352,4 +352,11 @@ static inline void regulator_set_drvdata(struct regulator *regulator,
 
--Scott
+ #endif
+
++static inline int regulator_set_voltage_tolerance(struct regulator *regulator,
++                                                 int new_uV, int tol_uV)
++{
++       return regulator_set_voltage(regulator,
++                                    new_uV - tol_uV, new_uV + tol_uV);
++}
++
+ #endif
+
+-- 
+Regards,
+Shawn
+
