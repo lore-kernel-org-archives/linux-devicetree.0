@@ -1,77 +1,133 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
-Date: Tue, 31 Jul 2012 20:22:17 +0800
-Message-ID: <5017CDF9.2060304@firmworks.com>
-References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <50170EA0.1010408@wwwdotorg.org> <5017B434.2010706@nvidia.com> <20120731105640.GD16155@avionic-0098.adnet.avionic-design.de>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree
+ based instantiation
+Date: Tue, 31 Jul 2012 14:26:46 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1207311416160.27888@axis700.grange>
+References: <4FBFE1EC.9060209@samsung.com> <3336686.TMIyoLDix4@avalon>
+ <Pine.LNX.4.64.1207311326250.27888@axis700.grange> <7305269.IxTKyOjUBg@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120731105640.GD16155-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <7305269.IxTKyOjUBg@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 7/31/2012 6:56 PM, Thierry Reding wrote:
-> On Tue, Jul 31, 2012 at 07:32:20PM +0900, Alex Courbot wrote:
->> On 07/31/2012 07:45 AM, Stephen Warren wrote:
->>> I wonder if using the same structure/array as input and output would
->>> simplify the API; the platform data would fill in the fields mentioned
->>> above, and power_seq_build() would parse those, then set other fields in
->>> the same structs to the looked-up handle values?
->>
->> The thing is that I am not sure what happens to the platform data
->> once probe() is done. Isn't it customary to mark it with __devinit
->> and have it freed after probing is successful?
-> 
-> No, platform data should stay around forever. Otherwise, consider what
-> would happen if your driver is built as a module and you unload and load
-> it again.
-> 
->> More generally, I think it is a good practice to have data
->> structures tailored right for what they need to do - code with
->> members that are meaningful only at given points of an instance's
->> life tends to be more confusing.
-> 
-> I agree. Furthermore the driver unload/reload would be another reason
-> not to reuse platform data as the output of the build() function.
-> 
-> But maybe what Stephen meant was more like filling a structure with data
-> taken from the platform data and pass that to a resolve() function which
-> would fill in the missing pieces like pointers to actual resources. I
-> imagine a managed interface would become a little trickier to do using
-> such an approach.
-> 
->>> If the nodes have a unit address (i.e. end in "@n"), which they will
->>> have to if all named "step" and there's more than one of them, then they
->>> will need a matching reg property. Equally, the parent node will need
->>> #address-cells and #size-cells too. So, the last couple lines would be:
->>>
->>> 		power-on-sequence {
->>> 			#address-cells = <1>;
->>> 			#size-cells = <0>;
->>> 			step@0 {
->>> 				reg = <0>;
->>
->> That's precisely what I would like to avoid - I don't need the steps
->> to be numbered and I certainly have no use for a reg property. Isn't
->> there a way to make it simpler?
-> 
-> It's not technically valid to not have the reg property. Or
-> #address-cells and #size-cells properties for that matter.
+On Tue, 31 Jul 2012, Laurent Pinchart wrote:
 
-I'm not keen on this representation where individual steps are nodes.
-That seems like it could end up being too "heavyweight" for a long sequence.
+> Hi Guennadi,
+> 
+> On Tuesday 31 July 2012 13:29:55 Guennadi Liakhovetski wrote:
+> > On Tue, 31 Jul 2012, Laurent Pinchart wrote:
+> > > On Tuesday 31 July 2012 13:14:13 Guennadi Liakhovetski wrote:
+> > > > On Tue, 31 Jul 2012, Laurent Pinchart wrote:
+> > > > > On Tuesday 31 July 2012 11:56:44 Guennadi Liakhovetski wrote:
+> > > > > > On Thu, 26 Jul 2012, Laurent Pinchart wrote:
+> > > > > > > On Wednesday 18 July 2012 11:18:33 Sylwester Nawrocki wrote:
+> > > > > > > > On 07/16/2012 11:42 AM, Guennadi Liakhovetski wrote:
+> > > > > > > > > On Fri, 25 May 2012, Sylwester Nawrocki wrote:
+> > > > > > > > >> The driver initializes all board related properties except
+> > > > > > > > >> the s_power() callback to board code. The platforms that
+> > > > > > > > >> require this callback are not supported by this driver yet
+> > > > > > > > >> for CONFIG_OF=y.
+> > > > > > > > >> 
+> > > > > > > > >> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+> > > > > > > > >> Signed-off-by: Bartlomiej
+> > > > > > > > >> Zolnierkiewicz<b.zolnierkie@samsung.com>
+> > > > > > > > >> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
+> > > > > > > > >> ---
+> > > > > > > > >> 
+> > > > > > > > >>   .../bindings/camera/samsung-s5k6aafx.txt           |   57
+> > > > > > > > >>   +++++++++
+> > > > > > > > >>   drivers/media/video/s5k6aa.c                       |  129
+> > > > > > > > >>   ++++++++++++++------ 2 files changed, 146 insertions(+), 40
+> > > > > > > > >>   deletions(-)
+> > > > > > > > >>   create mode 100644
+> > > > > > > > >>   Documentation/devicetree/bindings/camera/samsung-s5k6aafx.t
+> > > > > > > > >>   xt>>
+> > > > > > > > >> 
+> > > > > > > > >> diff --git
+> > > > > > > > >> a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.t
+> > > > > > > > >> xt
+> > > > > > > > >> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.t
+> > > > > > > > >> xt
+> > > > > > > > >> new
+> > > > > > > > >> file
+> > > > > > > > >> mode 100644
+> > > > > > > > >> index 0000000..6685a9c
+> > > > > > > > >> --- /dev/null
+> > > > > > > > >> +++
+> > > > > > > > >> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.t
+> > > > > > > > >> xt
+> > > > > > > > >> @@ -0,0 +1,57 @@
+> > > > > > > > >> +Samsung S5K6AAFX camera sensor
+> > > > > > > > >> +------------------------------
+> > > > > > > > >> +
+> > > > > > > > >> +Required properties:
+> > > > > > > > >> +
+> > > > > > > > >> +- compatible : "samsung,s5k6aafx";
+> > > > > > > > >> +- reg : base address of the device on I2C bus;
+> > > > > > > > > 
+> > > > > > > > > You said you ended up putting your sensors outside of I2C
+> > > > > > > > > busses, is this one of changes, that are present in your git-
+> > > > > > > > > tree but not in this series?
+> > > > > > > > 
+> > > > > > > > No, I must have been not clear enough on that. Our idea was to
+> > > > > > > > keep I2C slave device nodes as an I2C controller's child nodes,
+> > > > > > > > according to the current convention. The 'sensor' nodes (the
+> > > > > > > > 'camera''s children) would only contain a phandle to a
+> > > > > > > > respective I2C slave node.
+> > > > > > > > 
+> > > > > > > > This implies that we cannot access I2C bus in I2C client's
+> > > > > > > > device probe() callback. An actual H/W access could begin only
+> > > > > > > > from within and after invocation of v4l2_subdev .registered
+> > > > > > > > callback..
+> > > > > > > 
+> > > > > > > That's how I've envisioned the DT bindings for sensors as well,
+> > > > > > > this sounds good. The real challenge will be to get hold of the
+> > > > > > > subdev to register it without race conditions.
+> > > > > > 
+> > > > > > Hrm... That's how early pre-subdev versions of soc-camera used to
+> > > > > > work, that's where all the <device>_video_probe() functions come
+> > > > > > from. But then we switched to dynamic i2c device registration. Do we
+> > > > > > want to switch all drivers back now?... Couldn't we "temporarily"
+> > > > > > use references from subdevs to hosts until the clock API is
+> > > > > > available?
+> > > > > 
+> > > > > I don't think that requires a reference from subdevs to hosts in the
+> > > > > DT. The subdev will need the host to be probed before a clock can be
+> > > > > available so you won't be able to access the hardware in the probe()
+> > > > > function in the generic case. You will need to wait until the
+> > > > > registered() subdev operation is called, at which point the host can
+> > > > > be accessed through the v4l2_device.
+> > > > 
+> > > > Sure, I understand, but that's exactly what we wanted to avoid -
+> > > > succeeding client's i2c .probe() without even touching the hardware.
+> > > 
+> > > But should we allow host probe() to succeed if the sensor isn't present ?
+> > 
+> > I think we should, yes. The host hardware is there and functional -
+> > whether or not all or some of the clients are failing. Theoretically
+> > clients can also be hot-plugged. Whether and how many video device nodes
+> > we create, that's a different question.
+> 
+> I think I can agree with you on this (although I could change my mind if this 
+> architecture turns out to result in unsolvable technical issues). That will 
+> involve a lot of work though.
 
+There's however at least one more gotcha that occurs to me with this 
+approach: if clients fail to probe, how do we find out about that and turn 
+clocks back off? One improvement to turning clocks on immediately in 
+host's probe() is to only do it in a BUS_NOTIFY_BIND_DRIVER notifier. But 
+how do we find out, that probing failed? No notifier is called in this 
+case. We could use a time-out, but that's ugly. I think, we could ever 
+request a new notifier for this case. We could also require client drivers 
+to call a V4L2 function in this case, but that's not very pretty either.
 
-> 
-> Thierry
-> 
-> 
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
