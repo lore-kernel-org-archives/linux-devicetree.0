@@ -1,47 +1,61 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Tue, 31 Jul 2012 17:22:40 -0600
-Message-ID: <501868C0.3090806@wwwdotorg.org>
-References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de> <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com> <20120730074714.GC15245@avionic-0098.mockup.avionic-design.de> <50185619.5090706@gmail.com>
+Subject: Re: [RFC] media DT bindings
+Date: Tue, 31 Jul 2012 17:29:24 -0600
+Message-ID: <50186A54.3@wwwdotorg.org>
+References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <2642313.6bQqiyFNFL@avalon> <Pine.LNX.4.64.1207311432590.27888@axis700.grange> <1853410.hC8HZhzZI6@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50185619.5090706@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, Wolfram Sang <w.sang@pengutronix.de>, Linus Walleij <linus.walleij@stericsson.com>, linux-kernel@vger.kernel.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1853410.hC8HZhzZI6@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2012 04:03 PM, Rob Herring wrote:
-> On 07/30/2012 02:47 AM, Thierry Reding wrote:
->> On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
->>> On Mon, Jul 23, 2012 at 1:59 PM, Thierry Reding
->>> <thierry.reding@avionic-design.de> wrote:
->>>
->>>> This commit adds a driver for the Avionic Design N-bit GPIO expander.
->>>> The expander provides a variable number of GPIO pins with interrupt
->>>> support.
-
->>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
-
->>>> +Required properties:
-
->>>> +- nr-gpios: The number of pins supported by the controller.
-
-> For nr-gpios, I think it is typically not needed. Generally, you will
-> know how many gpio lines the h/w has based on the compatible string. If
-> this part really is the same part but different packages with different
-> numbers of gpio, then this property makes sense. Otherwise, I would say
-> drop it.
+On 07/31/2012 03:22 PM, Laurent Pinchart wrote:
+> On Tuesday 31 July 2012 14:39:07 Guennadi Liakhovetski wrote:
+...
+>> Ok, then, how about
+>>
+>> 		#address-cells = <1>;
+>> 		#size-cells = <0>;
+>> 		...
+>> 		ov772x-1 = {
+>> 			reg = <1>;			/* local pad # */
+>> 			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
 > 
-> If your goal is how many gpios are you using, you really need a bitmap
-> instead if you want it to be generic.
-> 
-> IIRC, Tegra also needed this in that they N instances of some number of
-> bits and the registers are interleaved so they can't have separate nodes.
+> The client property looks good, but isn't such a usage of the reg property an 
+> abuse ? Maybe the local pad # should be a device-specific property. Many hosts 
+> won't need it, and on others it would actually need to reference a subdev, not 
+> just a pad.
 
-In the end, I got away without having a separate property to represent
-this. Instead, the code keys off the number of interrupts listed in the
-interrupts property, there being one interrupt per GPIO bank, and hence
-dynamically instantiates the number of banks based on that.
+That's a very odd syntax the the phandle; I assume that "&ov772x@0x21-0"
+is supposed to reference some other DT node. However, other nodes are
+either referenced by:
+
+"&foo" where foo is a label, and the label name is unlikely to include
+the text "@0x21"; the @ symbol probably isn't even legal in label names.
+
+"&{/path/to/node}" which might include the "@0x21" syntax since it might
+be part of the node's name, but your example didn't include {}.
+
+I'm not sure what "-0" is meant to be in that string - a math
+expression, or ...? If it's intended to represent some separate field
+relative to the node the phandle references, it needs to be just another
+cell.
+
+So overall, perhaps:
+
+/ {
+   ...
+   pad: something { ... };
+   ...
+   ov772x@1 = { /* @1 not -1 would be canonical syntax */
+     reg = <1>;
+     client = <&pad 0 0>;
+   ...
+
+I'm sorry I haven't followed the thread; I'm wondering why a client is a
+pad, which to me means a pin/pad/ball on an IC package, so I'm still not
+entirely sure if even this makes sense.
