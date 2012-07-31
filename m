@@ -1,117 +1,110 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree based instantiation
-Date: Tue, 31 Jul 2012 13:48:33 +0200
-Message-ID: <7305269.IxTKyOjUBg@avalon>
-References: <4FBFE1EC.9060209@samsung.com> <3336686.TMIyoLDix4@avalon> <Pine.LNX.4.64.1207311326250.27888@axis700.grange>
+Subject: Re: [RFC] media DT bindings
+Date: Tue, 31 Jul 2012 14:08:29 +0200
+Message-ID: <2642313.6bQqiyFNFL@avalon>
+References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <1537713.eFPuk01afu@avalon> <Pine.LNX.4.64.1207311058140.27888@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1207311326250.27888@axis700.grange>
+In-Reply-To: <Pine.LNX.4.64.1207311058140.27888@axis700.grange>
 Sender: linux-media-owner@vger.kernel.org
 To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Guennadi,
 
-On Tuesday 31 July 2012 13:29:55 Guennadi Liakhovetski wrote:
-> On Tue, 31 Jul 2012, Laurent Pinchart wrote:
-> > On Tuesday 31 July 2012 13:14:13 Guennadi Liakhovetski wrote:
-> > > On Tue, 31 Jul 2012, Laurent Pinchart wrote:
-> > > > On Tuesday 31 July 2012 11:56:44 Guennadi Liakhovetski wrote:
-> > > > > On Thu, 26 Jul 2012, Laurent Pinchart wrote:
-> > > > > > On Wednesday 18 July 2012 11:18:33 Sylwester Nawrocki wrote:
-> > > > > > > On 07/16/2012 11:42 AM, Guennadi Liakhovetski wrote:
-> > > > > > > > On Fri, 25 May 2012, Sylwester Nawrocki wrote:
-> > > > > > > >> The driver initializes all board related properties except
-> > > > > > > >> the s_power() callback to board code. The platforms that
-> > > > > > > >> require this callback are not supported by this driver yet
-> > > > > > > >> for CONFIG_OF=y.
-> > > > > > > >> 
-> > > > > > > >> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
-> > > > > > > >> Signed-off-by: Bartlomiej
-> > > > > > > >> Zolnierkiewicz<b.zolnierkie@samsung.com>
-> > > > > > > >> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
-> > > > > > > >> ---
-> > > > > > > >> 
-> > > > > > > >>   .../bindings/camera/samsung-s5k6aafx.txt           |   57
-> > > > > > > >>   +++++++++
-> > > > > > > >>   drivers/media/video/s5k6aa.c                       |  129
-> > > > > > > >>   ++++++++++++++------ 2 files changed, 146 insertions(+), 40
-> > > > > > > >>   deletions(-)
-> > > > > > > >>   create mode 100644
-> > > > > > > >>   Documentation/devicetree/bindings/camera/samsung-s5k6aafx.t
-> > > > > > > >>   xt>>
-> > > > > > > >> 
-> > > > > > > >> diff --git
-> > > > > > > >> a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.t
-> > > > > > > >> xt
-> > > > > > > >> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.t
-> > > > > > > >> xt
-> > > > > > > >> new
-> > > > > > > >> file
-> > > > > > > >> mode 100644
-> > > > > > > >> index 0000000..6685a9c
-> > > > > > > >> --- /dev/null
-> > > > > > > >> +++
-> > > > > > > >> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.t
-> > > > > > > >> xt
-> > > > > > > >> @@ -0,0 +1,57 @@
-> > > > > > > >> +Samsung S5K6AAFX camera sensor
-> > > > > > > >> +------------------------------
-> > > > > > > >> +
-> > > > > > > >> +Required properties:
-> > > > > > > >> +
-> > > > > > > >> +- compatible : "samsung,s5k6aafx";
-> > > > > > > >> +- reg : base address of the device on I2C bus;
-> > > > > > > > 
-> > > > > > > > You said you ended up putting your sensors outside of I2C
-> > > > > > > > busses, is this one of changes, that are present in your git-
-> > > > > > > > tree but not in this series?
-> > > > > > > 
-> > > > > > > No, I must have been not clear enough on that. Our idea was to
-> > > > > > > keep I2C slave device nodes as an I2C controller's child nodes,
-> > > > > > > according to the current convention. The 'sensor' nodes (the
-> > > > > > > 'camera''s children) would only contain a phandle to a
-> > > > > > > respective I2C slave node.
-> > > > > > > 
-> > > > > > > This implies that we cannot access I2C bus in I2C client's
-> > > > > > > device probe() callback. An actual H/W access could begin only
-> > > > > > > from within and after invocation of v4l2_subdev .registered
-> > > > > > > callback..
-> > > > > > 
-> > > > > > That's how I've envisioned the DT bindings for sensors as well,
-> > > > > > this sounds good. The real challenge will be to get hold of the
-> > > > > > subdev to register it without race conditions.
-> > > > > 
-> > > > > Hrm... That's how early pre-subdev versions of soc-camera used to
-> > > > > work, that's where all the <device>_video_probe() functions come
-> > > > > from. But then we switched to dynamic i2c device registration. Do we
-> > > > > want to switch all drivers back now?... Couldn't we "temporarily"
-> > > > > use references from subdevs to hosts until the clock API is
-> > > > > available?
-> > > > 
-> > > > I don't think that requires a reference from subdevs to hosts in the
-> > > > DT. The subdev will need the host to be probed before a clock can be
-> > > > available so you won't be able to access the hardware in the probe()
-> > > > function in the generic case. You will need to wait until the
-> > > > registered() subdev operation is called, at which point the host can
-> > > > be accessed through the v4l2_device.
-> > > 
-> > > Sure, I understand, but that's exactly what we wanted to avoid -
-> > > succeeding client's i2c .probe() without even touching the hardware.
+On Tuesday 31 July 2012 11:26:27 Guennadi Liakhovetski wrote:
+> On Fri, 27 Jul 2012, Laurent Pinchart wrote:
+> > Hi Sylwester,
 > > 
-> > But should we allow host probe() to succeed if the sensor isn't present ?
+> > On Wednesday 18 July 2012 19:00:15 Sylwester Nawrocki wrote:
+> > > On 07/16/2012 01:41 PM, Guennadi Liakhovetski wrote:
+> [snip]
 > 
-> I think we should, yes. The host hardware is there and functional -
-> whether or not all or some of the clients are failing. Theoretically
-> clients can also be hot-plugged. Whether and how many video device nodes
-> we create, that's a different question.
+> > > >>> An sh-mobile CEU DT node could look like
+> > > >>> 
+> > > >>> 	ceu0@0xfe910000 = {
+> > > >>> 	
+> > > >>> 		compatible = "renesas,sh-mobile-ceu";
+> > > >>> 		reg =<0xfe910000 0xa0>;
+> > > >>> 		interrupts =<0x880>;
+> > > >>> 		bus-width =<16>;		/* #lines routed on the board */
+> > > >>> 		clock-frequency =<50000000>;	/* max clock */
+> > > >>> 		#address-cells =<1>;
+> > > >>> 		#size-cells =<0>;
+> > > >>> 		...
+> > > >>> 		ov772x-1 = {
+> > > >>> 		
+> > > >>> 			reg =<0>;
+> > > 
+> > > This property might be redundant, we already have the "client" phandle
+> > > pointing to "ov772x@0x21-0", which has all interesting properties inside
+> > > it. Other than there is probably no reasonable usage for it under
+> > > "ceu0@0xfe910000" node ?
+> > > 
+> > > >>> 			client =<&ov772x@0x21-0>;
+> > > >>> 			local-pad = "parallel-sink";
+> > > >>> 			remote-pad = "parallel-source";
+> > > >> 
+> > > >> I'm not sure I like that. Is it really needed when we already have
+> > > >> the child/parent properties around ?
+> > > > 
+> > > > I think it is. Both the host and the client can have multiple pads
+> > > > (e.g.,
+> > > > parallel / serial). These properties specify which pads are used and
+> > > > make
+> > > > the translation between DT data and our subdev / pad APIs simpler.
+> > > 
+> > > OK, sorry, but isn't it all about just specifying what sort of data bus
+> > > is used ? :-)
+> > 
+> > In some (many/most ?) cases probably, but not in all of them.
+> > 
+> > What about merging the client and remote-pad properties ? The resulting
+> > property would then reference a pad with <&ov772x@0x21-0 0>.
+> 
+> What would the "0" parameter mean then? Pad #0?
 
-I think I can agree with you on this (although I could change my mind if this 
-architecture turns out to result in unsolvable technical issues). That will 
-involve a lot of work though.
+Yes.
+
+> But aren't these numbers device specific? Maybe not a huge deal, but these
+> numbers are defind by the driver, right? Not the DT itself. So, drivers then
+> will have to take care not to change their pad numbering. Whereas using
+> strings, we can fix strings in the common V4L DT spec and keep them standard
+> across devices and drivers. Then drivers might be less likely to change
+> these assignments randomly ;-)
+
+Userspace applications usually rely on pad numbers as well, so I consider them 
+as more or less part of the ABI. If we really need to, we could add a DT pad 
+number -> media controller pad number conversion in the driver, that would be 
+less expensive than pad name -> pad number conversion (especially since it 
+would be skipped in most cases).
+
+> [snip]
+> 
+> > > I'd like just to point one detail here, as sensor subdev drivers control
+> > > their voltage regulators and RESET/STANDBY (gpio) signals, they should
+> > > also be able to control the master clock. In order to ensure proper
+> > > power
+> > > up/down sequences. It is a bad practice to enable clocks before voltage
+> > > supplies are switched on and we shouldn't have that as a general
+> > > assumption at the kernel frameworks.
+> > > 
+> > > One possible solution would be to have host/bridge drivers to register
+> > > a clkdev entry for I2C client device, so it can acquire the clock
+> > > through
+> > > just clk_get(). We would have to ensure the clock is not tried to be
+> > > accessed before it is registered by a bridge. This would require to add
+> > > clock handling code to all sensor/encoder subdev drivers though..
+> > 
+> > I thik it's a good practice to add clock management to subdevs anyway, and
+> > the common clock framework should make that easy (or at least not too
+> > difficult). We can migrate subdevs one by one as we add DT support for
+> > them.
+> 
+> Yes, this would be good.
 
 -- 
 Regards,
