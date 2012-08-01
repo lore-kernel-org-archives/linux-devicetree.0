@@ -1,80 +1,60 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 2/2] ARM: EXYNOS: Add Gscaler device from DT
-Date: Wed, 01 Aug 2012 18:00:16 +0900
-Message-ID: <036f01cd6fc4$120a9910$361fcb30$%kim@samsung.com>
-References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com>
- <1342789723-3949-3-git-send-email-shaik.ameer@samsung.com>
- <033301cd6fb0$7ac4af90$704e0eb0$%kim@samsung.com>
- <CAJuYYwTy5zkeM_cJO7HMm+=v=ORPHD26nQYZwXK6v1noWm1EuA@mail.gmail.com>
- <5018E656.3070803@samsung.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v6 04/11] usb: otg: nop: add support for multiple
+ tranceiver
+Date: Wed, 1 Aug 2012 13:26:04 +0300
+Message-ID: <20120801102603.GF12869@arwen.pp.htv.fi>
+References: <1343377927-7850-1-git-send-email-ravibabu@ti.com>
+ <1343377927-7850-4-git-send-email-ravibabu@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5018E656.3070803@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sachin.kamat@linaro.org, joshi@samsung.com, shaik.samsung@gmail.com, sungchun.kang@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XStn23h1fwudRqtG"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1343377927-7850-4-git-send-email-ravibabu@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ravi B <ravibabu@ti.com>
+Cc: linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, ajayguptaj@gmail.com, Ajay Kumar Gupta <ajay.gupta@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Sylwester Nawrocki wrote:
-> 
-> On 08/01/2012 09:48 AM, Thomas Abraham wrote:
-> > On 1 August 2012 12:10, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> >> Shaik Ameer Basha wrote:
-> >
-> > [...]
-> >
-> >>> +* Samsung Exynos5 Gscaler device
-> >>> +
-> >>> +Gscaler is used for scaling and color space conversion on EXYNOS5
-> SoCs.
-> >>> +
-> >>> +Required properties:
-> >>> +- compatible: should be "samsung,exynos5250-gsc"
-> >>
-> >> IMO, should be "samsung,exynos5-gsc" because upcoming EXYNOS5 SoCs can
-> use
-> >> same gscaler driver.
-> 
-> In addition to the below explanation, perhaps it's obvious, but the driver
-> can claim compatibility with multiple devices, i.e. match with multiple
-> 'compatible' properties.
-> 
 
-The name of exact model is 'gscaler' for EXYNOS5 SoCs not only for
-EXYNOS5250. So the driver which has been submitted is also 'exynos-gsc' not
-'exynos5250-gsc'. Note that there is no gscaler on EXYNOS4 SoCs now, it can
-be either 'exynos5-gsc' or 'exynos-gsc'. In addition, since some
-peripherals/drivers can be used for multiple SoCs and actually it does, I'm
-still thinking the compatible should be represent its usage. I don't know
-why restricted name is much clearer. And if multiple 'compatible' is
-required, we can add it later.
+--XStn23h1fwudRqtG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+On Fri, Jul 27, 2012 at 02:02:00PM +0530, Ravi B wrote:
+> +static void nop_put_id(int id)
+> +{
+> +
+> +	pr_info("removing id %d\n", id);
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+not pr_info. I guess pr_vdebug() is better. We don't want to know about
+every new nop ID requested.
 
-> 
-> > The compatible string should always be specific and it should clearly
-> > identify the type of the controller. If there are other variants of
-> > the GSC controller in previous of upcoming SoC's, then those
-> > controllers will have a different compatible value.
-> >
-> > This allows device drivers to know the type of the controller and
-> > handle the differences among them. And, the node in the dts/dtsi file
-> > should always claim compatibility to the base version of the
-> > controller that the platform supports.
-> >
-> > So the compatible value "samsung,exynos5250-gsc" is right one. If a
-> > new SoC in the Exynos5 family has the same GSC controller as that in
-> > Exynos5250 (no difference at all), then GSC device node in its dts
-> > file can continue to claim compatibility to Exynos5250 type. The
-> > "samsung,s3c2410-wdt is an example of this case which has been used on
-> > all Samsung SoC's .
-> >
+--=20
+balbi
+
+--XStn23h1fwudRqtG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQGQQ7AAoJEIaOsuA1yqRE1SsQALEEWa4WhL2yrfSsvyRKE4et
+svHm7Mi3q52zjbx4AARDSjOquLjG+XvCNRJjZFbo8R04Vn/vZ0XIwu3XLIKobTJz
+P6l/RsHsOzAGcP595geRMtEX50wUj2D2NvaTLZvQcKl9Nc8kz8wfdY6FZofqywgQ
+e3mKdwl/OzZw3FJQDpFIkx1w8OOk3Q5OOq9xiV+uUu9qlt/FiflrLYoC8HFzVe0Y
+5v77p6zRqYOOBtu9hLxvj6kgRlF5YSqDPbKo0xXvwHuJixgqh0MkuA/jMnLtGnTU
+mTYmCpYP8QPt2ddvj7CtWVcjZHA7uanQv7FfO2cFjV4I+WwWC1SgO9NdhNCOOjwW
+870xDeiN2z1MXm7tAVosfx+wZiHFvpjf2mMNQ2g4gudtNoNJaB0RR3YkaXKHmoRX
+0zdvaAUyUdASWkRaolbH/HaH9yS4+V+HQm9decM/jMMFDVYp49R4Et2sGDiSL40m
+efWibfVWG6g1LzQDWUKcCah4SSogFNHgDrgTLTdHZSEHKM7RfXZiFnLpy9IKm7dc
+ZADXv3bgHuI+TEUfwFkC5ejCpvhlWHMz0u+g7gccGMAtkvrAqREFaiVW4H0pW4UH
+Wmuf2PaCis6SDQIdhY1MOGW9bapE925EoqRah2TPDu8cwqNJ/TpEql4roA9NFI3z
+pO9j11U3uKFh6419wdOg
+=w6vp
+-----END PGP SIGNATURE-----
+
+--XStn23h1fwudRqtG--
