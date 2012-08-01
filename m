@@ -1,141 +1,90 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 1/2] ARM: EXYNOS: Add clock support for Gscaler
-Date: Wed, 01 Aug 2012 15:24:38 +0900
-Message-ID: <033101cd6fae$53b4c180$fb1e4480$%kim@samsung.com>
-References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com>
- <1342789723-3949-2-git-send-email-shaik.ameer@samsung.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
+Date: Wed, 1 Aug 2012 08:35:45 +0200
+Message-ID: <20120801063545.GA26791@avionic-0098.adnet.avionic-design.de>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <50180547.9040603@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1342789723-3949-2-git-send-email-shaik.ameer@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, sachin.kamat@linaro.org, joshi@samsung.com, shaik.samsung@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50180547.9040603-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Shaik Ameer Basha wrote:
-> 
-> Add required clock support for Gscaler for exynos5
-> 
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> Signed-off-by: Prathyush K <prathyush.k@samsung.com>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> ---
->  arch/arm/mach-exynos/clock-exynos5.c |  100
-> ++++++++++++++++++++++++++++++++++
->  1 files changed, 100 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-
-> exynos/clock-exynos5.c
-> index 774533c..49a76b1 100644
-> --- a/arch/arm/mach-exynos/clock-exynos5.c
-> +++ b/arch/arm/mach-exynos/clock-exynos5.c
-> @@ -552,6 +552,81 @@ static struct clksrc_clk exynos5_clk_aclk_66 = {
->  	.reg_div = { .reg = EXYNOS5_CLKDIV_TOP0, .shift = 0, .size = 3 },
->  };
-> 
-> +/* for aclk_300_gscl_mid */
 
-No need above comment which is certain.
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl_mid = {
-> +	.clk = {
-> +		.name		= "mout_aclk_300_gscl_mid",
-> +	},
-> +	.sources = &exynos5_clkset_aclk,
-> +	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 24, .size = 1 },
-> +};
-> +
-> +/* for aclk_300_gscl_mid1 */
+On Tue, Jul 31, 2012 at 10:18:15AM -0600, Stephen Warren wrote:
+> On 07/26/2012 01:55 PM, Thierry Reding wrote:
+> > This patch series adds support for device tree based probing of the PCIe
+> > controller found on Tegra SoCs.
+>=20
+> Thierry,
+>=20
+> I think one thing that would help here would be to split up this series
+> into one per subsystem, and to get all the dependencies merged by the
+> respective maintainers. Preferably, each subsystem would export a stable
+> branch (perhaps consisting of just these patches) that I can then merge
+> into the Tegra tree and use as a basis for the PCIe driver itself.
+> Hopefully this approach will get more traction on all the non-Tegra
+> changes. Does that sound like a good plan?
 
-Same as above.
+I don't understand. The series is already split up into per-subsystem
+patches. I just didn't want to post them separately so everybody on Cc
+would be able to see the big picture and the reason why the patch was
+required.
 
-> +static struct clk *exynos5_clkset_aclk_300_gscl_mid1_list[] = {
-> +	[0] = &exynos5_clk_sclk_vpll.clk,
-> +	[1] = &exynos5_clk_mout_cpll.clk,
-> +};
+> Or, I can just take it all through the Tegra tree, but I'll definitely
+> need acks on all/most of the non-Tegra patches, since although the
+> patches themselves are quite small, I'd like to be sure that maintainers
+> are OK with the conceptual changes, like initializing PCI controllers
+> later than at present etc.
 
-In this case, the above sources can be used for gscl_mid1 and disp1_mid as
-well. So how about exynos5_clkset_mid1_list?
+Taking the patches through the individual trees should be fine. Only so
+far other subsystem maintainers haven't commented on this.
 
-> +
-> +static struct clksrc_sources exynos5_clkset_aclk_300_gscl_mid1 = {
-> +	.sources	= exynos5_clkset_aclk_300_gscl_mid1_list,
-> +	.nr_sources	=
-ARRAY_SIZE(exynos5_clkset_aclk_300_gscl_mid1_list),
-> +};
+As to when the PCI controller is initialized, there really aren't many
+options. On Harmony (and TEC, which in this respect, and others, is very
+similar) the VDD is supplied by a GPIO of the PMU, so it is currently
+necessary to probe it at least after the PMU. And unless we want to
+work around these issues using different initcall ordering we need to
+rely on deferred probing, which turns out to be done after the init
+phase often (always?).
 
-If so, need to update this.
+Also I had been toying with making the Tegra PCIe driver work as a
+module, but that doesn't work currently with MSI support. However it
+might be nice to allow MSI controllers to register at runtime generally,
+which wouldn't be all that difficult to do I think. Of course somebody
+more knowledgeable may disagree.
 
-> +
-> +
+Thierry
 
-no need double empty lines.
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature
 
-> +static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl_mid1 = {
-> +	.clk    = {
-> +		.name		= "mout_aclk_300_gscl_mid1",
-> +	},
-> +	.sources = &exynos5_clkset_aclk_300_gscl_mid1,
-> +	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP1, .shift = 12, .size = 1 },
-> +};
-> +
-> +/* for aclk_300_gscl */
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-no need useless comment.
+iQIcBAEBAgAGBQJQGM5BAAoJEN0jrNd/PrOhMMsP/jXL0GKN5NUE7OdHFwUV/DrX
+05Qvq8qUl/K61phGiq8Q1hw6HSZJPBcX5ROaIVwvtu21CDCULnO5XOXAdGx3pP0y
+gwzdPF/BL1AWsRFbtwu4wV0PpYeG+x0mNuZ3K04zKJc2qXtcgonNPFBG47cdJw+N
+BaeslBXB//3Dh+QBMMvRE+mTnV81YsavdZTxfhonNjziCvwGYU/qbGh1C6cQpoHy
+nhvVYnx7y2yDFe3dndDOE5XeeuhFSFzT6E6/eBXWkhKhVSDvf9me8CUuRtnWToXX
+3bWwgysu+J5KvggtH4nva3qK4VUdoAW7came4i0+gAwBp+mZM5wewDR5hqTor4EG
+AfBF4y30S9+/b4hIrtW17uBqeuEPFaw76rteRA7QIGtbY19suPXAtMrWFeV6HzvT
+TDnFO6kRU2pf3CUkDkXGloMd9ZdRZixTyH5X6CzCF29qUj+AUfctuQdkxM/7q/sH
+v55Xdts8y0MVV+1WC68NvDZ8u6rqvycbWPlxfCsgAO9t1siGhn14cRwRc82BAl5J
+7kiIVM0ea/RrBeSz2WLIInCfjgPXik/VN02Imi98wlyShRT3yobwORqmCfBfNEA2
+HIWAycTaMNjSz0McvENffc0YTlSzY+krKiAlEfe3jJk+x0ewWvbXQ8Rf4N52MBaH
+z2Uqv+g94+PkJXSasFnU
+=lXfK
+-----END PGP SIGNATURE-----
 
-> +static struct clk *exynos5_clkset_aclk_300_gscl_list[] = {
-> +	[0] = &exynos5_clk_mout_aclk_300_gscl_mid.clk,
-> +	[1] = &exynos5_clk_mout_aclk_300_gscl_mid1.clk,
-> +};
-> +
-> +static struct clksrc_sources exynos5_clkset_aclk_300_gscl = {
-> +	.sources	= exynos5_clkset_aclk_300_gscl_list,
-> +	.nr_sources	= ARRAY_SIZE(exynos5_clkset_aclk_300_gscl_list),
-> +};
-> +
-> +static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl = {
-> +	.clk    = {
-            ^^^^
-Tap please.
-
-> +		.name		= "mout_aclk_300_gscl",
-> +	},
-> +	.sources = &exynos5_clkset_aclk_300_gscl,
-> +	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 25, .size = 1 },
-> +};
-> +
-> +static struct clksrc_clk exynos5_clk_dout_aclk_300_gscl = {
-> +	.clk    = {
-            ^^^^
-Same as above.
-
-> +		.name		= "dout_aclk_300_gscl",
-> +		.parent		= &exynos5_clk_mout_aclk_300_gscl.clk,
-> +	},
-> +	.reg_div = { .reg = EXYNOS5_CLKDIV_TOP1, .shift = 12, .size = 3 },
-> +};
-
-And I think, we don't need to define above 'clksrc_clk's?
-
-+static struct clksrc_clk exynos5_clk_mdout_aclk_300_gscl = {
-+	.clk    = {
-+		.name		= "mdout_aclk_300_gscl",
-+	},
-+	.sources = &exynos5_clkset_aclk_300_gscl,
-+	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 25, .size = 1 },
-> +	.reg_div = { .reg = EXYNOS5_CLKDIV_TOP1, .shift = 12, .size = 3 },
-+};
-
-[...]
-
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+--yrj/dFKFPuw6o+aM--
