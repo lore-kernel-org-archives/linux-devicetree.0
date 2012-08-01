@@ -1,143 +1,112 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH] pwm_backlight: Add device tree support for Low
- Threshold Brightness
-Date: Wed, 1 Aug 2012 06:51:21 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E97C4C9@DBDE01.ent.ti.com>
-References: <1343219042-4371-1-git-send-email-avinashphilip@ti.com>
- <20120730065805.GB15245@avionic-0098.mockup.avionic-design.de>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3 09/10] of: Add of_pci_parse_ranges()
+Date: Wed, 1 Aug 2012 08:54:37 +0200
+Message-ID: <20120801065437.GB26791@avionic-0098.adnet.avionic-design.de>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343332512-28762-10-git-send-email-thierry.reding@avionic-design.de>
+ <50183B03.2090809@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120730065805.GB15245@avionic-0098.mockup.avionic-design.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50183B03.2090809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2012 at 12:28:05, Thierry Reding wrote:
-> On Wed, Jul 25, 2012 at 05:54:02PM +0530, Philip, Avinash wrote:
-> > Low Threshold Brightness should be configured to have a linear relation
-> > in brightness scale. This patch adds device tree support for low
-> > threshold brightness as optional one for pwm_backlight.
-> 
-> I think this should be more explicit as to why this is required, perhaps
-> something like this:
-> 
-> 	Some backlights perform poorly when driven by a PWM with a short
-> 	duty-cycle. For such devices, the low threshold can be used to
-> 	specify a lower bound for the duty-cycle and should be chosen to
-> 	exclude the problematic range.
-> 
-> 	This patch adds support for an optional low-threshold-brightness
-> 	property.
 
-Ok I will correct it.
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Perhaps a similar explanation should be given somewhere else instead of
-> just the changelog. It took me some time to understand what exactly this
-> low threshold means and I think it'd make sense to write this kind of
-> information down somewhere. I'll see if I can make time to add a bit of
-> documentation somewhere below Documentation/backlight perhaps.
-> 
-> > Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+On Tue, Jul 31, 2012 at 03:07:31PM -0500, Rob Herring wrote:
+> On 07/26/2012 02:55 PM, Thierry Reding wrote:
+> > This new function parses the ranges property of PCI device nodes into
+> > an array of struct resource elements. It is useful in multiple-port PCI
+> > host controller drivers to collect information about the ranges that it
+> > needs to forward to the respective ports.
+>=20
+> It seems to me that some of the DT PCI code in arch/powerpc/kernel/pci*
+> like pci_process_bridge_OF_ranges() should apply for ARM as well.
+>=20
+> Each arch defining their own pci controller structs complicates this,
+> but I would think at least the DT parsing can be common.
+
+Yes, there's quite a lot of room for refactoring. When I first started
+work on this there had been some discussion about whether it would make
+sense to move PCI controller drivers into a common location to make it
+easier to refactor but the consensus at the time was that this should
+not be done.
+
+I still think this might be worthwhile, but I have other things that I
+need to finish first.
+
+> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 > > ---
-> > :100644 100644 1e4fc72... 5c54380... M	Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> > :100644 100644 995f016... 4965408... M	drivers/video/backlight/pwm_bl.c
-> >  .../bindings/video/backlight/pwm-backlight.txt     |   21 ++++++++++++++++++++
-> >  drivers/video/backlight/pwm_bl.c                   |    5 ++++
-> >  2 files changed, 26 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> > index 1e4fc72..5c54380 100644
-> > --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> > +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> > @@ -14,6 +14,8 @@ Required properties:
-> >  Optional properties:
-> >    - pwm-names: a list of names for the PWM devices specified in the
-> >                 "pwms" property (see PWM binding[0])
-> > +  - low_threshold_brightness: brightness threshold low level. (get linear
-> > +		 scales in brightness in low end of brightness levels)
-> 
-> The convention is to use dashes, not underscores, in device tree
-> property names, so this should be "low-threshold-brightness". I'd also
-> omit the comment in parentheses because the DT binding document
-> shouldn't specify any particular use-case. However I think it'd make
-> sense to add some information about the number space of the low
-> threshold value.
-
-Ok, I will correct it.
-
-> 
-> Maybe we should also rethink how the low threshold is handled in cases
-> where the brightness levels are used. I'm not sure it makes sense to
-> specify the low threshold as a value relative to the range given by the
-> levels. Perhaps it is more meaningful to specify it as relative to the
-> period/duty-cycle.
-> 
-> >  
-> >  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
-> >  
-> > @@ -26,3 +28,22 @@ Example:
-> >  		brightness-levels = <0 4 8 16 32 64 128 255>;
-> >  		default-brightness-level = <6>;
-> >  	};
+> > Changes in v3:
+> > - new patch
+> >=20
+> >  drivers/of/of_pci.c    | 84 ++++++++++++++++++++++++++++++++++++++++++=
++++++++-
+> >  include/linux/of_pci.h |  2 ++
+> >  2 files changed, 85 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> > index 13e37e2..bcff301 100644
+> > --- a/drivers/of/of_pci.c
+> > +++ b/drivers/of/of_pci.c
+> > @@ -1,7 +1,8 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/export.h>
+> > -#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> >  #include <linux/of_pci.h>
+> > +#include <linux/slab.h>
+> >  #include <asm/prom.h>
+> > =20
+> >  static inline int __of_pci_pci_compare(struct device_node *node,
+> > @@ -40,3 +41,84 @@ struct device_node *of_pci_find_child_device(struct =
+device_node *parent,
+> >  	return NULL;
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_pci_find_child_device);
 > > +
-> > +Example for brightness_threshold_level:
-> > +
-> > +	backlight {
-> > +		compatible	= "pwm-backlight";
-> > +		pwms = <&pwm 0 50000>;
-> > +
-> > +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> > +		default-brightness-level = <6>;
-> > +		low_threshold_brightness = <50>;
-> > +	};
-> > +};
-> 
-> I think you can just merge the low-threshold-brightness with the
-> previous example.
+> > +struct resource *of_pci_parse_ranges(struct device_node *node,
+> > +				     unsigned int *countp)
+> > +{
+> > +	unsigned int count, i =3D 0;
+> > +	struct resource *ranges;
+>=20
+> I think res or pci_res would be clearer than ranges that this is a
+> struct resource.
 
-Ok I will check and correct it.
+"range" is the term used by the PCI specifications to denote these
+regions. I don't see what's wrong with using it as a variable name.
 
-> 
-> > +Note:
-> > +Low threshold support is required to have linear brightness scale from
-> > +0 to max. For some panels, backlight absent on low end of brightness
-> > +scale. So support for Low Threshold been required. So that the scale of
-> > +brightness changed from Low Threshold to Max in scales defined in
-> > +brightness-levels. In this example 20% maximum brightness scale should
-> > +be required to turn on panel backlight.
-> 
-> I think this kind of documentation doesn't belong in the device tree
-> binding. I'll work something like that into the proper documentation.
-> 
-> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> > index 995f016..4965408 100644
-> > --- a/drivers/video/backlight/pwm_bl.c
-> > +++ b/drivers/video/backlight/pwm_bl.c
-> > @@ -143,6 +143,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
-> >  
-> >  		data->dft_brightness = value;
-> >  		data->max_brightness--;
-> > +
-> > +		ret = of_property_read_u32(node, "low_threshold_brightness",
-> > +					   &value);
-> > +		if (!ret)
-> > +			data->lth_brightness = value;
-> >  	}
-> 
-> This obviously should also be low-threshold-brightness.
+Thierry
 
-I will change to
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature
 
-ret = of_property_read_u32(node, " low-threshold-brightness ",
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-Thanks
-Avinash
+iQIcBAEBAgAGBQJQGNKtAAoJEN0jrNd/PrOh1IIP/04wyxMUrXfPzYMwNaIJOFpD
+NvXK508GfgkG/r4KqpUxZ3EIZxJvPuGZWVcd+YS1KQw47BpLSCjTRqKRwX/T98kM
+zEA34DLi99TNTMDF8CNfF1FkjaZ1hhr1Sto5OKWTjp4vXZpDUWskbfIWLjVPNjZ7
+VzGby5gbDI+GDiXS0xIEWc54j4oYm3xpbIGUgRGH1DG4G70bGEhW7OnZ1XUq6X3B
+u0MXz3RZ9FU2lAoA7/GXnuTjyiZJ03AMHQjs3AEzUrkWRWqeniK7kIE2iJ9TG/8k
+9xAAFz7pyjoNbYnjyHNpUbasDQF2qty+WCx7DQx0+7rj0vwN28cqrn2ct4/1xG22
+OHIrALGTxAjYKOjD0vDo/hQpfOe05cdv53iv9Klsje5ZpndVDdNdFoHNTBWet5ip
+HXLcJI/4D6G32bx4cosO4qZ/MClh4e//nu1FtEVryGSpanmP7dHEUG/eR67HPhDZ
+HzrzX+al2rYZteodoBAs+bDiIoFPKkQf+Eiae4D8bRiiBTkR6vGGQyb7YLwqX9Pu
+UGLkGXcdNm8dxpqOhDq/gN8uyzRiYtqR2cpXjGAGOLV0Exj6l4zdht/jihgMmg65
+DsHnX1hxAAThLXN4a0xEgCSsHQa8JFQLdjiY1W+h3VbOBrrgL2xKA9Bia5kNpGdm
+WEUFAp0CiYVQ7/pkg2GI
+=e139
+-----END PGP SIGNATURE-----
 
-> 
-> Thierry
-> 
+--oLBj+sq0vYjzfsbl--
