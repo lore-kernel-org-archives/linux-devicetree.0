@@ -1,49 +1,68 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
-Date: Wed, 01 Aug 2012 11:02:18 -0600
-Message-ID: <5019611A.2060804@wwwdotorg.org>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de> <50180547.9040603@wwwdotorg.org> <20120801063545.GA26791@avionic-0098.adnet.avionic-design.de>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v3 2/2] ARM: EXYNOS: Add Gscaler device from DT
+Date: Wed, 01 Aug 2012 21:03:02 +0200
+Message-ID: <50197D66.1050108@gmail.com>
+References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com> <1342789723-3949-3-git-send-email-shaik.ameer@samsung.com> <033301cd6fb0$7ac4af90$704e0eb0$%kim@samsung.com> <CAJuYYwTy5zkeM_cJO7HMm+=v=ORPHD26nQYZwXK6v1noWm1EuA@mail.gmail.com> <5018E656.3070803@samsung.com> <036f01cd6fc4$120a9910$361fcb30$%kim@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120801063545.GA26791-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <036f01cd6fc4$120a9910$361fcb30$%kim@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sachin.kamat@linaro.org, joshi@samsung.com, shaik.samsung@gmail.com, sungchun.kang@samsung.com, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/2012 12:35 AM, Thierry Reding wrote:
-> On Tue, Jul 31, 2012 at 10:18:15AM -0600, Stephen Warren wrote:
->> On 07/26/2012 01:55 PM, Thierry Reding wrote:
->>> This patch series adds support for device tree based probing of
->>> the PCIe controller found on Tegra SoCs.
->> 
->> Thierry,
->> 
->> I think one thing that would help here would be to split up this
->> series into one per subsystem, and to get all the dependencies
->> merged by the respective maintainers. Preferably, each subsystem
->> would export a stable branch (perhaps consisting of just these
->> patches) that I can then merge into the Tegra tree and use as a
->> basis for the PCIe driver itself. Hopefully this approach will
->> get more traction on all the non-Tegra changes. Does that sound
->> like a good plan?
+Hi Kgene,
+
+Cc: Rob Herring
+
+On 08/01/2012 11:00 AM, Kukjin Kim wrote:
+>>>>> +* Samsung Exynos5 Gscaler device
+>>>>> +
+>>>>> +Gscaler is used for scaling and color space conversion on EXYNOS5
+>> SoCs.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible: should be "samsung,exynos5250-gsc"
+>>>>
+>>>> IMO, should be "samsung,exynos5-gsc" because upcoming EXYNOS5 SoCs can
+>> use
+>>>> same gscaler driver.
+>>
+>> In addition to the below explanation, perhaps it's obvious, but the driver
+>> can claim compatibility with multiple devices, i.e. match with multiple
+>> 'compatible' properties.
+>>
 > 
-> I don't understand. The series is already split up into
-> per-subsystem patches. I just didn't want to post them separately
-> so everybody on Cc would be able to see the big picture and the
-> reason why the patch was required.
+> The name of exact model is 'gscaler' for EXYNOS5 SoCs not only for
+> EXYNOS5250. So the driver which has been submitted is also 'exynos-gsc' not
+> 'exynos5250-gsc'. Note that there is no gscaler on EXYNOS4 SoCs now, it can
+> be either 'exynos5-gsc' or 'exynos-gsc'. In addition, since some
+> peripherals/drivers can be used for multiple SoCs and actually it does, I'm
+> still thinking the compatible should be represent its usage. I don't know
+> why restricted name is much clearer. And if multiple 'compatible' is
+> required, we can add it later.
 
-There are separate patches that touch the different subsystems, but
-they're all scattered throughout the one series, rather than having e.g.:
+Sorry, but I cannot agree with that. :) There is no exynos5 SoC, it's just
+a common name for the whole series that includes: exynos5250, exynos5450 ones 
+and more. We shouldn't use such common name for just a subset of exynos5 chips, 
+in case different GScaler versions get deployed in future SoCs.
 
-* a series for the PCI tree
-* a series for the ARM core tree
-* a series for the OF/DT tree
-* a series for the Tegra tree, which indicates it depends on all of those.
+It wouldn't be clear what specific SoCs the "samsung,exynos5-gsc" compatible 
+string applies to, would it ? I believe there are already minor differences
+in GScaler parameters on currently available exynos5 SoC. The variant data
+structures are used to handle this and the compatible string determines which
+variant data structure is selected during driver's initialization.
+If you use a wildcard 'compatible' string this won't be possible any more.
 
-I'm wondering if the reason you haven't seen much discussion/Acks from
-the maintainers of the non-Tegra trees is because this is a big scary
-series that touches a lot of stuff, and it's not necessarily clear for
-people unfamiliar with it why they're being CCd on it.
+Also it would look odd IMO to have two compatible strings like:
+compatible = "samsung,exynos5-gsc", "samsung,exynos5400-gsc";
+
+Please also see:
+http://devicetree.org/Device_Tree_Usage#Understanding_the_compatible_Property
+
+--
+
+Regards,
+Sylwester
