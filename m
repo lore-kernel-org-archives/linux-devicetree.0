@@ -1,45 +1,53 @@
-From: "B, Ravi" <ravibabu-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v6 04/11] usb: otg: nop: add support for multiple
- tranceiver
-Date: Wed, 1 Aug 2012 11:08:17 +0000
-Message-ID: <6C6B28D4DC342643927BEAFCE8707BF63E9DA02C@DBDE01.ent.ti.com>
-References: <1343377927-7850-1-git-send-email-ravibabu@ti.com>
- <1343377927-7850-4-git-send-email-ravibabu@ti.com>
- <20120801102603.GF12869@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/5] usb: phy: samsung: Introducing usb phy driver for samsung
+ SoCs
+Date: Wed, 01 Aug 2012 18:35:46 +0530
+Message-ID: <1343826351-8756-1-git-send-email-p.paneri@samsung.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120801102603.GF12869-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-Content-Language: en-US
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Gupta, Ajay Kumar" <ajay.gupta-l0cyMroinI0@public.gmane.org>
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- 
-Hi
+This patch set introduces a phy driver for samsung SoCs. It uses the existing
+transceiver infrastructure to provide phy control functions. Use of this driver
+can be extended for usb host phy as well. Over the period of time all the phy
+related code for most of the samsung SoCs can be integrated here.
+Removing the existing phy code from mach-s3c64xx but not from other machine 
+code.This driver is tested with smdk6410 and Exynos4210(with DT).
 
-> Subject: Re: [PATCH v6 04/11] usb: otg: nop: add support for 
-> multiple tranceiver
-> 
-> On Fri, Jul 27, 2012 at 02:02:00PM +0530, Ravi B wrote:
-> > +static void nop_put_id(int id)
-> > +{
-> > +
-> > +	pr_info("removing id %d\n", id);
-> 
-> not pr_info. I guess pr_vdebug() is better. We don't want to 
-> know about every new nop ID requested.
+Praveen Paneri (5):
+  usb: phy: samsung: Introducing usb phy driver for hsotg
+  usb: s3c-hsotg: Adding phy driver support
+  ARM: S3C64XX: Removing old phy setup code
+  ARM: S3C64XX: Enabling sec_usbphy driver
+  ARM: Exynos4210: Enabling sec_usbphy driver
 
-Ok. Agreed. 
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |    9 +
+ arch/arm/boot/dts/exynos4210.dtsi                  |    5 +
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |    8 +
+ arch/arm/mach-exynos/setup-usb-phy.c               |   13 +
+ arch/arm/mach-s3c64xx/include/mach/map.h           |    2 +
+ arch/arm/mach-s3c64xx/mach-crag6410.c              |    5 +-
+ arch/arm/mach-s3c64xx/mach-smartq.c                |    6 +-
+ arch/arm/mach-s3c64xx/mach-smdk6410.c              |    5 +-
+ arch/arm/mach-s3c64xx/setup-usb-phy.c              |   79 +----
+ arch/arm/plat-samsung/devs.c                       |   32 ++
+ arch/arm/plat-samsung/include/plat/devs.h          |    1 +
+ arch/arm/plat-samsung/include/plat/usb-phy.h       |    1 +
+ drivers/usb/gadget/s3c-hsotg.c                     |   38 ++-
+ drivers/usb/phy/Kconfig                            |    8 +
+ drivers/usb/phy/Makefile                           |    1 +
+ drivers/usb/phy/sec_usbphy.c                       |  354 ++++++++++++++++++++
+ drivers/usb/phy/sec_usbphy.h                       |   48 +++
+ include/linux/platform_data/s3c-hsotg.h            |    5 +
+ 19 files changed, 533 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+ create mode 100644 drivers/usb/phy/sec_usbphy.c
+ create mode 100644 drivers/usb/phy/sec_usbphy.h
 
-Thanks
-Ravibabu
-> 
-> --
-> balbi
-> --
+--
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
