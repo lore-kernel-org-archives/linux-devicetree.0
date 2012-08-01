@@ -1,50 +1,83 @@
-From: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Gethering power management/policy hw drivers under
- drivers/power/? (Re: [RFC][PATCH v3 1/3] runtime interpreted power
- sequences)
-Date: Tue, 31 Jul 2012 17:51:17 -0700
-Message-ID: <20120801005117.GA1798@lizard>
-References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
- <5015E8AE.8060404@nvidia.com>
- <20120730024049.GA10442@lizard>
- <201207302259.39396.rjw@sisk.pl>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Wed, 1 Aug 2012 10:42:34 +0900
+Message-ID: <5018898A.4050700@nvidia.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <50170EA0.1010408@wwwdotorg.org> <5017B434.2010706@nvidia.com> <20120731105640.GD16155@avionic-0098.adnet.avionic-design.de> <5017CDF9.2060304@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201207302259.39396.rjw-KKrjLPT3xs0@public.gmane.org>
+In-Reply-To: <5017CDF9.2060304-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
-Cc: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jean Pihet <j-pihet-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2012 at 10:59:39PM +0200, Rafael J. Wysocki wrote:
-[...]
-> > Well, currently drivers/power/ is indeed just for power supply class
-> > subsystem and drivers. But if the trend is to gather power management
-> > ("policy") stuff under one directory, i.e.
-> > 
-> > drivers/
-> >   power/
-> >     supplies/    <- former "power supply class and drivers"
-> >     regulators/
-> >     idle/
-> >     cpuidle/
-> >     cpufreq/
-> >     devfreq/
-> >     avs/
-> >     ...
-> > 
-> > That would probably make sense, we could easily see the big picture.
-> > But if we're not going to do this long-term,
-> 
-> Yes, we may do this eventually, but surely not right now.
+On 07/31/2012 09:22 PM, Mitch Bradley wrote:
+> On 7/31/2012 6:56 PM, Thierry Reding wrote:
+>> On Tue, Jul 31, 2012 at 07:32:20PM +0900, Alex Courbot wrote:
+>>> On 07/31/2012 07:45 AM, Stephen Warren wrote:
+>>>> I wonder if using the same structure/array as input and output would
+>>>> simplify the API; the platform data would fill in the fields mentioned
+>>>> above, and power_seq_build() would parse those, then set other fields in
+>>>> the same structs to the looked-up handle values?
+>>>
+>>> The thing is that I am not sure what happens to the platform data
+>>> once probe() is done. Isn't it customary to mark it with __devinit
+>>> and have it freed after probing is successful?
+>>
+>> No, platform data should stay around forever. Otherwise, consider what
+>> would happen if your driver is built as a module and you unload and load
+>> it again.
+>>
+>>> More generally, I think it is a good practice to have data
+>>> structures tailored right for what they need to do - code with
+>>> members that are meaningful only at given points of an instance's
+>>> life tends to be more confusing.
+>>
+>> I agree. Furthermore the driver unload/reload would be another reason
+>> not to reuse platform data as the output of the build() function.
+>>
+>> But maybe what Stephen meant was more like filling a structure with data
+>> taken from the platform data and pass that to a resolve() function which
+>> would fill in the missing pieces like pointers to actual resources. I
+>> imagine a managed interface would become a little trickier to do using
+>> such an approach.
+>>
+>>>> If the nodes have a unit address (i.e. end in "@n"), which they will
+>>>> have to if all named "step" and there's more than one of them, then they
+>>>> will need a matching reg property. Equally, the parent node will need
+>>>> #address-cells and #size-cells too. So, the last couple lines would be:
+>>>>
+>>>> 		power-on-sequence {
+>>>> 			#address-cells = <1>;
+>>>> 			#size-cells = <0>;
+>>>> 			step@0 {
+>>>> 				reg = <0>;
+>>>
+>>> That's precisely what I would like to avoid - I don't need the steps
+>>> to be numbered and I certainly have no use for a reg property. Isn't
+>>> there a way to make it simpler?
+>>
+>> It's not technically valid to not have the reg property. Or
+>> #address-cells and #size-cells properties for that matter.
+>
+> I'm not keen on this representation where individual steps are nodes.
+> That seems like it could end up being too "heavyweight" for a long sequence.
 
-OK, great! Then I'll probably start thinking about moving power supply
-drivers into its own directory, maybe in 3.7.
+Using nodes has a big advantage though: we can use any arbitrary 
+property to add extra parameters to the resource being controlled. Right 
+now we only use enable/disable, but for example one can imagine an 
+optional voltage setting for a regulator. It is much more future-proof 
+than a design where the number of parameters would be fixed and could 
+not be extended without breaking compatibility.
 
-Thanks!
+I experimented encoding the whole sequence within a single property. It 
+works of course, but is not really flexible, hard to read, and quite 
+error-prone overall. The memory footprint gain was not so obvious 
+neither (although it was indeed more compact).
 
--- 
-Anton Vorontsov
-Email: cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+What bothers me is to have to specify the cells layout and reg property 
+for *every single sequence*, but well, I guess we can live with that.
+
+Alex.
