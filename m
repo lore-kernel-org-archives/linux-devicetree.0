@@ -1,126 +1,147 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
-Date: Wed, 1 Aug 2012 09:17:43 +0200
-Message-ID: <20120801071743.GC29673@avionic-0098.adnet.avionic-design.de>
-References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
- <1343390750-3642-2-git-send-email-acourbot@nvidia.com>
- <20120730113323.GA7303@avionic-0098.adnet.avionic-design.de>
- <5017AA87.2040503@nvidia.com>
- <20120731101931.GB16155@avionic-0098.adnet.avionic-design.de>
- <5018997B.7010808@nvidia.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC] media DT bindings
+Date: Wed, 01 Aug 2012 09:19:04 +0200
+Message-ID: <4037827.9ZKAOTeRMD@avalon>
+References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <1853410.hC8HZhzZI6@avalon> <Pine.LNX.4.64.1208010828030.5406@axis700.grange>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0458671159872084231=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5018997B.7010808-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1208010828030.5406@axis700.grange>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Guennadi,
 
---===============0458671159872084231==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
-Content-Disposition: inline
+On Wednesday 01 August 2012 08:47:20 Guennadi Liakhovetski wrote:
+> On Tue, 31 Jul 2012, Laurent Pinchart wrote:
+> > On Tuesday 31 July 2012 14:39:07 Guennadi Liakhovetski wrote:
+> > > On Tue, 31 Jul 2012, Laurent Pinchart wrote:
+> > > > On Tuesday 31 July 2012 11:26:27 Guennadi Liakhovetski wrote:
+> > > > > On Fri, 27 Jul 2012, Laurent Pinchart wrote:
+> > > > > > On Wednesday 18 July 2012 19:00:15 Sylwester Nawrocki wrote:
+> > > > > > > On 07/16/2012 01:41 PM, Guennadi Liakhovetski wrote:
+> > > > > [snip]
+> > > > > 
+> > > > > > > >>> An sh-mobile CEU DT node could look like
+> > > > > > > >>> 
+> > > > > > > >>> 	ceu0@0xfe910000 = {
+> > > > > > > >>> 	
+> > > > > > > >>> 		compatible = "renesas,sh-mobile-ceu";
+> > > > > > > >>> 		reg =<0xfe910000 0xa0>;
+> > > > > > > >>> 		interrupts =<0x880>;
+> > > > > > > >>> 		bus-width =<16>;		/* #lines routed on the board */
+> > > > > > > >>> 		clock-frequency =<50000000>;	/* max clock */
+> > > > > > > >>> 		#address-cells =<1>;
+> > > > > > > >>> 		#size-cells =<0>;
+> > > > > > > >>> 		...
+> > > > > > > >>> 		ov772x-1 = {
+> > > > > > > >>> 		
+> > > > > > > >>> 			reg =<0>;
+> > > > > > > 
+> > > > > > > This property might be redundant, we already have the "client"
+> > > > > > > phandle pointing to "ov772x@0x21-0", which has all interesting
+> > > > > > > properties inside it. Other than there is probably no reasonable
+> > > > > > > usage for it under "ceu0@0xfe910000" node ?
+> > > > > > > 
+> > > > > > > >>> 			client =<&ov772x@0x21-0>;
+> > > > > > > >>> 			local-pad = "parallel-sink";
+> > > > > > > >>> 			remote-pad = "parallel-source";
+> > > > > > > >> 
+> > > > > > > >> I'm not sure I like that. Is it really needed when we already
+> > > > > > > >> have the child/parent properties around ?
+> > > > > > > > 
+> > > > > > > > I think it is. Both the host and the client can have multiple
+> > > > > > > > pads (e.g., parallel / serial). These properties specify which
+> > > > > > > > pads are used and make the translation between DT data and our
+> > > > > > > > subdev / pad APIs simpler.
+> > > > > > > 
+> > > > > > > OK, sorry, but isn't it all about just specifying what sort of
+> > > > > > > data bus is used ? :-)
+> > > > > > 
+> > > > > > In some (many/most ?) cases probably, but not in all of them.
+> > > > > > 
+> > > > > > What about merging the client and remote-pad properties ? The
+> > > > > > resulting property would then reference a pad with <&ov772x@0x21-0
+> > > > > > 0>.
+> > > > > 
+> > > > > What would the "0" parameter mean then? Pad #0?
+> > > > 
+> > > > Yes.
+> > > > 
+> > > > > But aren't these numbers device specific? Maybe not a huge deal, but
+> > > > > these numbers are defind by the driver, right? Not the DT itself.
+> > > > > So, drivers then will have to take care not to change their pad
+> > > > > numbering. Whereas using strings, we can fix strings in the common
+> > > > > V4L DT spec and keep them standard across devices and drivers. Then
+> > > > > drivers might be less likely to change these assignments randomly
+> > > > > ;-)
+> > > > 
+> > > > Userspace applications usually rely on pad numbers as well, so I
+> > > > consider them as more or less part of the ABI. If we really need to,
+> > > > we could add a DT pad number -> media controller pad number conversion
+> > > > in the driver, that would be less expensive than pad name -> pad
+> > > > number conversion (especially since it would be skipped in most
+> > > > cases).
+> > > 
+> > > Ok, then, how about
+> > > 
+> > > 		#address-cells = <1>;
+> > > 		#size-cells = <0>;
+> > > 		...
+> > > 		ov772x-1 = {
+> > > 		
+> > > 			reg = <1>;			/* local pad # */
+> > > 			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
+> > 
+> > The client property looks good, but isn't such a usage of the reg property
+> > an abuse ?
+> 
+> Don't know, is it?
+> 
+> > Maybe the local pad # should be a device-specific property. Many hosts
+> > won't need it, and on others it would actually need to reference a subdev,
+> > not just a pad.
+> 
+> Wait, the correspondence cannot be one pad to many subdevs, right?
+> So, we always can assign at least 1 pad to each subdev. Hm, or you mean
+> subdevs like flash, that don't access data, in which case they don't need
+> pads? but then we also don't need links to them. Those child nodes are
+> links, and links always run between 2 pads, right? So, in the above
+> representation child devices are pads of the parent node, to which other
+> entities are linked.
+> 
+> But while writing this, another question occurred to me: what if several
+> entities are connected to one pad (activated selectively by a switch)? We
+> cannot have several child nodes with the same address. But in such a case
+> we could use
+> 
+> 	#address-cells = <2>;
+> 	...
+> 	subdev1 = {
+> 		reg = <1 1>; /* first client on pad 1 */
+> 	};
+> 
+> 	subdev2 = {
+> 		reg = <1 2>; /* second client on pad 1 */
+> 	};
+> 
+> But I'm not particularly attached to this idea. If we decide, that it's an
+> abuse, we can switch back to some property.
 
+I think that would be an abuse :-)
 
---E/DnYTRukya0zdZ1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My point was that a host represented by a single DT node might contain several 
+media entities. For instance the OMAP3 ISP contains two CSI2 receivers. Each 
+of them has a single sink pad, both numbered 0. The DT link representation 
+thus needs to mention which sink entity the sensor is connected to, in 
+addition to the pad number in that entity (and in the OMAP3 ISP case the pad 
+number could be omitted completely, as the CSI2 receivers have a single sink 
+pad).
 
-On Wed, Aug 01, 2012 at 11:50:35AM +0900, Alex Courbot wrote:
-> On 07/31/2012 07:19 PM, Thierry Reding wrote:
-> >* PGP Signed by an unknown key
-> >
-> >On Tue, Jul 31, 2012 at 06:51:03PM +0900, Alex Courbot wrote:
-> >>I would like to do that actually. The issue is that it did not work
-> >>go well with the legacy pwm_backlight behavior: a power sequence
-> >>needs to be constructed out of a PWM obtained through
-> >>pwm_request(int pwm_id, char *label) and this behavior cannot be
-> >>emulated using the new platform data interface (which only works
-> >>with pwm_get()). But if I remove this old behavior, then I could
-> >>make power_seq opaque. I don't think many drivers are using it. What
-> >>do you think?
-> >
-> >I don't see how that is relevant here, since this power-sequencing code
-> >is supposed to be generic and not tied to any specific implementation.
-> >Can you explain further?
-> >
-> >In any case you shouldn't be using pwm_request() in new code.
->=20
-> Power sequences only rely on pwm_get, and never call pwm_request
-> since it is, as you stated, deprecated. However there are still
-> boards that use the old pwm_id member of the
-> pwm_backlight_platform_data. For these, we must call pwm_request
-> from the pwm_backlight driver in order to resolve the PWM (see
-> pwm_backlight_legacy_probe of the seconds patch). As the PWM is
-> being resolved by the backlight driver, and not within the power
-> sequences parser, the resolved data structure must be visible to
-> pwm_backlight so it can construct it. There are two ways to solve
-> this and keep the power sequences structure private:
->=20
-> 1) Add a way to resolve a PWM by id using pwm_request in the power
-> sequences (we probably should not do that)
+-- 
+Regards,
 
-No. But I think we don't need that either. If you use power sequences,
-then you shouldn't be using the pwm_id member. Both methods should be
-exclusive.
-
-> 2) Port the old platform pwm_request code to use pwm_add_table and
-> pwm_get instead.
-
-In the long term, every PWM user should move to pwm_add_table() and
-pwm_get(), but there are quite a lot of boards that need conversion.
-
-> Do I get points if I do 2)? :)
-
-Yes. =3D) I have a sample patch for PXA EZX, but as I said, many more
-boards need conversion.
-
-Thierry
-
---E/DnYTRukya0zdZ1
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQGNgXAAoJEN0jrNd/PrOhjH8P/jwFMsjOzjdLlk6En+dhimdc
-hEwsfudds/LWNomPtCaFV99BAe14Sa2iV8G23zdIoR2x5MkWJ7AQJkozrw+BRyzO
-F9NoeA+MGsKmBtQAMic5t44JrD1F7ttxtY/hTdBrL+Vhnptp1f2h3Jb7eSeNuRFQ
-eFHf+gMRS4agDExjEJv9pTLjmlQKnehFvUjpqcfr5XLmenYKCeY0urQO7ytuJd3F
-EF54kEqPj8xS5JW3y5swJYgwJH2IJe+5Z1CkhF3QpgL8ZcPowF9MOVjUiq39GYlg
-4ODENbljxqqtgxPKZt2aHQC6m9erw00WL/1GE4X/n5N8kqdaie+vKS+UvRYgTXEq
-3A6yL+xXLcTO3CEkkCyRCKuIo2KnwK8mQm416ElshRUFY3G+inCak/PS5osFDItt
-DYJFBvy3ZnqjC8N3nAHsq6tLoJSx7lKxhLSNaa+5wugG3w68gT/OMiLvu9WpA4Yr
-v1eNrHe7Mwvn2ePpicW2zD/YtMhPv5X41b9UtYGrIHds7jzZ8tpY/uTZoxwIPojf
-SF6Tv3ckw5WWnLKL8EBwtRvl60t91jXNIPbobsPJsHhS4ZcohSDdUoIReXeAeYmF
-uRu04rX2YCqvb5Uwv/fs4QmK6+YNxB5Nf23ZGDEvPJHQYdn82AELyzTFTKqrFmYp
-wc0BBKfaNplIr5dq+2b+
-=FkVc
------END PGP SIGNATURE-----
-
---E/DnYTRukya0zdZ1--
-
---===============0458671159872084231==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0458671159872084231==--
+Laurent Pinchart
