@@ -1,80 +1,141 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC] media DT bindings
-Date: Wed, 01 Aug 2012 07:59:59 +0200
-Message-ID: <3134777.Df1peamEaY@avalon>
-References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <1853410.hC8HZhzZI6@avalon> <50186A54.3@wwwdotorg.org>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v3 1/2] ARM: EXYNOS: Add clock support for Gscaler
+Date: Wed, 01 Aug 2012 15:24:38 +0900
+Message-ID: <033101cd6fae$53b4c180$fb1e4480$%kim@samsung.com>
+References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com>
+ <1342789723-3949-2-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <50186A54.3@wwwdotorg.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1342789723-3949-2-git-send-email-shaik.ameer@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, sachin.kamat@linaro.org, joshi@samsung.com, shaik.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Shaik Ameer Basha wrote:
+> 
+> Add required clock support for Gscaler for exynos5
+> 
+> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>  arch/arm/mach-exynos/clock-exynos5.c |  100
+> ++++++++++++++++++++++++++++++++++
+>  1 files changed, 100 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-
+> exynos/clock-exynos5.c
+> index 774533c..49a76b1 100644
+> --- a/arch/arm/mach-exynos/clock-exynos5.c
+> +++ b/arch/arm/mach-exynos/clock-exynos5.c
+> @@ -552,6 +552,81 @@ static struct clksrc_clk exynos5_clk_aclk_66 = {
+>  	.reg_div = { .reg = EXYNOS5_CLKDIV_TOP0, .shift = 0, .size = 3 },
+>  };
+> 
+> +/* for aclk_300_gscl_mid */
 
-On Tuesday 31 July 2012 17:29:24 Stephen Warren wrote:
-> On 07/31/2012 03:22 PM, Laurent Pinchart wrote:
-> > On Tuesday 31 July 2012 14:39:07 Guennadi Liakhovetski wrote:
-> ...
-> 
-> >> Ok, then, how about
-> >> 
-> >> 		#address-cells = <1>;
-> >> 		#size-cells = <0>;
-> >> 		...
-> >> 		ov772x-1 = {
-> >> 		
-> >> 			reg = <1>;			/* local pad # */
-> >> 			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
-> > 
-> > The client property looks good, but isn't such a usage of the reg property
-> > an abuse ? Maybe the local pad # should be a device-specific property.
-> > Many hosts won't need it, and on others it would actually need to
-> > reference a subdev, not just a pad.
-> 
-> That's a very odd syntax the the phandle; I assume that "&ov772x@0x21-0"
-> is supposed to reference some other DT node. However, other nodes are
-> either referenced by:
-> 
-> "&foo" where foo is a label, and the label name is unlikely to include
-> the text "@0x21"; the @ symbol probably isn't even legal in label names.
-> 
-> "&{/path/to/node}" which might include the "@0x21" syntax since it might
-> be part of the node's name, but your example didn't include {}.
-> 
-> I'm not sure what "-0" is meant to be in that string - a math
-> expression, or ...? If it's intended to represent some separate field
-> relative to the node the phandle references, it needs to be just another
-> cell.
+No need above comment which is certain.
 
-I'm actually not sure what -0 represents, and I don't think we need the 
-@0x21-0 at all. I believe &ov772x@0x21-0 is supposed to just be a label. We 
-don't need an extra cell.
+> +static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl_mid = {
+> +	.clk = {
+> +		.name		= "mout_aclk_300_gscl_mid",
+> +	},
+> +	.sources = &exynos5_clkset_aclk,
+> +	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 24, .size = 1 },
+> +};
+> +
+> +/* for aclk_300_gscl_mid1 */
 
-> So overall, perhaps:
-> 
-> / {
->    ...
->    pad: something { ... };
->    ...
->    ov772x@1 = { /* @1 not -1 would be canonical syntax */
->      reg = <1>;
->      client = <&pad 0 0>;
->    ...
-> 
-> I'm sorry I haven't followed the thread; I'm wondering why a client is a
-> pad, which to me means a pin/pad/ball on an IC package, so I'm still not
-> entirely sure if even this makes sense.
+Same as above.
 
-Client references an image source (which is usually an I2C client, but can be 
-a different type of device) and a pad. Pad refers here to a media entity pad 
-(see http://linuxtv.org/downloads/v4l-dvb-apis/media-controller-model.html), 
-not a physical pin on an IC package.
+> +static struct clk *exynos5_clkset_aclk_300_gscl_mid1_list[] = {
+> +	[0] = &exynos5_clk_sclk_vpll.clk,
+> +	[1] = &exynos5_clk_mout_cpll.clk,
+> +};
 
--- 
-Regards,
+In this case, the above sources can be used for gscl_mid1 and disp1_mid as
+well. So how about exynos5_clkset_mid1_list?
 
-Laurent Pinchart
+> +
+> +static struct clksrc_sources exynos5_clkset_aclk_300_gscl_mid1 = {
+> +	.sources	= exynos5_clkset_aclk_300_gscl_mid1_list,
+> +	.nr_sources	=
+ARRAY_SIZE(exynos5_clkset_aclk_300_gscl_mid1_list),
+> +};
+
+If so, need to update this.
+
+> +
+> +
+
+no need double empty lines.
+
+> +static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl_mid1 = {
+> +	.clk    = {
+> +		.name		= "mout_aclk_300_gscl_mid1",
+> +	},
+> +	.sources = &exynos5_clkset_aclk_300_gscl_mid1,
+> +	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP1, .shift = 12, .size = 1 },
+> +};
+> +
+> +/* for aclk_300_gscl */
+
+no need useless comment.
+
+> +static struct clk *exynos5_clkset_aclk_300_gscl_list[] = {
+> +	[0] = &exynos5_clk_mout_aclk_300_gscl_mid.clk,
+> +	[1] = &exynos5_clk_mout_aclk_300_gscl_mid1.clk,
+> +};
+> +
+> +static struct clksrc_sources exynos5_clkset_aclk_300_gscl = {
+> +	.sources	= exynos5_clkset_aclk_300_gscl_list,
+> +	.nr_sources	= ARRAY_SIZE(exynos5_clkset_aclk_300_gscl_list),
+> +};
+> +
+> +static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl = {
+> +	.clk    = {
+            ^^^^
+Tap please.
+
+> +		.name		= "mout_aclk_300_gscl",
+> +	},
+> +	.sources = &exynos5_clkset_aclk_300_gscl,
+> +	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 25, .size = 1 },
+> +};
+> +
+> +static struct clksrc_clk exynos5_clk_dout_aclk_300_gscl = {
+> +	.clk    = {
+            ^^^^
+Same as above.
+
+> +		.name		= "dout_aclk_300_gscl",
+> +		.parent		= &exynos5_clk_mout_aclk_300_gscl.clk,
+> +	},
+> +	.reg_div = { .reg = EXYNOS5_CLKDIV_TOP1, .shift = 12, .size = 3 },
+> +};
+
+And I think, we don't need to define above 'clksrc_clk's?
+
++static struct clksrc_clk exynos5_clk_mdout_aclk_300_gscl = {
++	.clk    = {
++		.name		= "mdout_aclk_300_gscl",
++	},
++	.sources = &exynos5_clkset_aclk_300_gscl,
++	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 25, .size = 1 },
+> +	.reg_div = { .reg = EXYNOS5_CLKDIV_TOP1, .shift = 12, .size = 3 },
++};
+
+[...]
+
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
