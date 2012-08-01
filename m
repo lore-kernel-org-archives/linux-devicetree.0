@@ -1,102 +1,136 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 2/2] ARM: EXYNOS: Add Gscaler device from DT
-Date: Wed, 01 Aug 2012 15:40:01 +0900
-Message-ID: <033301cd6fb0$7ac4af90$704e0eb0$%kim@samsung.com>
-References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com>
- <1342789723-3949-3-git-send-email-shaik.ameer@samsung.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [RFC] media DT bindings
+Date: Wed, 1 Aug 2012 08:47:20 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1208010828030.5406@axis700.grange>
+References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange>
+ <2642313.6bQqiyFNFL@avalon> <Pine.LNX.4.64.1207311432590.27888@axis700.grange>
+ <1853410.hC8HZhzZI6@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1342789723-3949-3-git-send-email-shaik.ameer@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, sachin.kamat@linaro.org, joshi@samsung.com, shaik.samsung@gmail.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1853410.hC8HZhzZI6@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Shaik Ameer Basha wrote:
+On Tue, 31 Jul 2012, Laurent Pinchart wrote:
+
+> Hi Guennadi,
 > 
-> This patch adds,
-> - 4 Gscaler devices to the DT device list
-> - Gscaler specific entries to the machine file
-> - binding documentation for Gscaler entries
+> On Tuesday 31 July 2012 14:39:07 Guennadi Liakhovetski wrote:
+> > On Tue, 31 Jul 2012, Laurent Pinchart wrote:
+> > > On Tuesday 31 July 2012 11:26:27 Guennadi Liakhovetski wrote:
+> > > > On Fri, 27 Jul 2012, Laurent Pinchart wrote:
+> > > > > On Wednesday 18 July 2012 19:00:15 Sylwester Nawrocki wrote:
+> > > > > > On 07/16/2012 01:41 PM, Guennadi Liakhovetski wrote:
+> > > > [snip]
+> > > > 
+> > > > > > >>> An sh-mobile CEU DT node could look like
+> > > > > > >>> 
+> > > > > > >>> 	ceu0@0xfe910000 = {
+> > > > > > >>> 	
+> > > > > > >>> 		compatible = "renesas,sh-mobile-ceu";
+> > > > > > >>> 		reg =<0xfe910000 0xa0>;
+> > > > > > >>> 		interrupts =<0x880>;
+> > > > > > >>> 		bus-width =<16>;		/* #lines routed on the board */
+> > > > > > >>> 		clock-frequency =<50000000>;	/* max clock */
+> > > > > > >>> 		#address-cells =<1>;
+> > > > > > >>> 		#size-cells =<0>;
+> > > > > > >>> 		...
+> > > > > > >>> 		ov772x-1 = {
+> > > > > > >>> 		
+> > > > > > >>> 			reg =<0>;
+> > > > > > 
+> > > > > > This property might be redundant, we already have the "client"
+> > > > > > phandle pointing to "ov772x@0x21-0", which has all interesting
+> > > > > > properties inside it. Other than there is probably no reasonable
+> > > > > > usage for it under "ceu0@0xfe910000" node ?
+> > > > > > 
+> > > > > > >>> 			client =<&ov772x@0x21-0>;
+> > > > > > >>> 			local-pad = "parallel-sink";
+> > > > > > >>> 			remote-pad = "parallel-source";
+> > > > > > >> 
+> > > > > > >> I'm not sure I like that. Is it really needed when we already
+> > > > > > >> have the child/parent properties around ?
+> > > > > > > 
+> > > > > > > I think it is. Both the host and the client can have multiple pads
+> > > > > > > (e.g., parallel / serial). These properties specify which pads are
+> > > > > > > used and make the translation between DT data and our subdev / pad
+> > > > > > > APIs simpler.
+> > > > > > 
+> > > > > > OK, sorry, but isn't it all about just specifying what sort of data
+> > > > > > bus is used ? :-)
+> > > > > 
+> > > > > In some (many/most ?) cases probably, but not in all of them.
+> > > > > 
+> > > > > What about merging the client and remote-pad properties ? The
+> > > > > resulting property would then reference a pad with <&ov772x@0x21-0 0>.
+> > > > 
+> > > > What would the "0" parameter mean then? Pad #0?
+> > > 
+> > > Yes.
+> > > 
+> > > > But aren't these numbers device specific? Maybe not a huge deal, but
+> > > > these numbers are defind by the driver, right? Not the DT itself. So,
+> > > > drivers then will have to take care not to change their pad numbering.
+> > > > Whereas using strings, we can fix strings in the common V4L DT spec and
+> > > > keep them standard across devices and drivers. Then drivers might be
+> > > > less likely to change these assignments randomly ;-)
+> > > 
+> > > Userspace applications usually rely on pad numbers as well, so I consider
+> > > them as more or less part of the ABI. If we really need to, we could add
+> > > a DT pad number -> media controller pad number conversion in the driver,
+> > > that would be less expensive than pad name -> pad number conversion
+> > > (especially since it would be skipped in most cases).
+> > 
+> > Ok, then, how about
+> > 
+> > 		#address-cells = <1>;
+> > 		#size-cells = <0>;
+> > 		...
+> > 		ov772x-1 = {
+> > 			reg = <1>;			/* local pad # */
+> > 			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
 > 
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> ---
->  .../devicetree/bindings/media/exynos5-gsc.txt      |   32
-> ++++++++++++++++++++
->  arch/arm/boot/dts/exynos5250.dtsi                  |   28
-+++++++++++++++++
->  arch/arm/mach-exynos/include/mach/map.h            |    3 ++
->  arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 +++++
->  4 files changed, 71 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/exynos5-
-> gsc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-> b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-> new file mode 100644
-> index 0000000..1cb4ea0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-> @@ -0,0 +1,32 @@
-> +* Samsung Exynos5 Gscaler device
-> +
-> +Gscaler is used for scaling and color space conversion on EXYNOS5 SoCs.
-> +
-> +Required properties:
-> +- compatible: should be "samsung,exynos5250-gsc"
+> The client property looks good, but isn't such a usage of the reg property an 
+> abuse ?
 
-IMO, should be "samsung,exynos5-gsc" because upcoming EXYNOS5 SoCs can use
-same gscaler driver.
+Don't know, is it?
 
-> +- reg: should contain Gscaler physical address location and length.
-> +- interrupts: should contain Gscaler interrupt number
-> +
-> +Example:
-> +
-> +gsc_0:  gsc@0x13e00000 {
-> +	compatible = "samsung,exynos5250-gsc";
+> Maybe the local pad # should be a device-specific property. Many hosts 
+> won't need it, and on others it would actually need to reference a subdev, not 
+> just a pad.
 
-+	compatible = "samsung,exynos5-gsc";
+Wait, the correspondence cannot be one pad to many subdevs, right? So, we 
+always can assign at least 1 pad to each subdev. Hm, or you mean subdevs 
+like flash, that don't access data, in which case they don't need pads? 
+but then we also don't need links to them. Those child nodes are links, 
+and links always run between 2 pads, right? So, in the above 
+representation child devices are pads of the parent node, to which other 
+entities are linked.
 
-> +	reg = <0x13e00000 0x1000>;
-> +	interrupts = <0 85 0>;
-> +};
-> +
+But while writing this, another question occurred to me: what if several 
+entities are connected to one pad (activated selectively by a switch)? We 
+cannot have several child nodes with the same address. But in such a case 
+we could use
 
-[...]
+	#address-cells = <2>;
+	...
+	subdev1 = {
+		reg = <1 1>; /* first client on pad 1 */
+	};
 
+	subdev2 = {
+		reg = <1 2>; /* second client on pad 1 */
+	};
 
-> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-
-> exynos/include/mach/map.h
-> index c72b675..217e470 100644
-> --- a/arch/arm/mach-exynos/include/mach/map.h
-> +++ b/arch/arm/mach-exynos/include/mach/map.h
-> @@ -121,6 +121,9 @@
->  #define EXYNOS4_PA_SYSMMU_MFC_L		0x13620000
->  #define EXYNOS4_PA_SYSMMU_MFC_R		0x13630000
-> 
-> +/* x = 0...3 */
-> +#define EXYNOS5_PA_GSC(x)		(0x13e00000 + ((x) * 0x10000))
+But I'm not particularly attached to this idea. If we decide, that it's an 
+abuse, we can switch back to some property.
 
-I think, separated definitions would be nice because the number of channel
-can be changed on other upcoming EXYNOS5 SoCs.
-
-+#define EXYNOS5_PA_GSC0			0x13E00000
-+#define EXYNOS5_PA_GSC1			0x13E10000
-+#define EXYNOS5_PA_GSC2			0x13E20000
-+#define EXYNOS5_PA_GSC3			0x13E30000
-
-[...]
-
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
