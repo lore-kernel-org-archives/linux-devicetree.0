@@ -1,49 +1,80 @@
-From: Joonyoung Shim <jy0922.shim@samsung.com>
-Subject: Re: [PATCH 2/8 v2] ARM: EXYNOS5: Add machine data for USB 2.0
-Date: Wed, 01 Aug 2012 12:02:41 +0900
-Message-ID: <50189C51.8080409@samsung.com>
-References: <1342866729-30460-1-git-send-email-gautam.vivek@samsung.com>
- <201207261124.50141.arnd@arndb.de>
- <CAFp+6iH0c=LogUXnpg0pD05X+mMGP9XiWDDxiTyNQAxJq_srJg@mail.gmail.com>
- <201207291311.08012.arnd@arndb.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC] media DT bindings
+Date: Wed, 01 Aug 2012 07:59:59 +0200
+Message-ID: <3134777.Df1peamEaY@avalon>
+References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <1853410.hC8HZhzZI6@avalon> <50186A54.3@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <201207291311.08012.arnd@arndb.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vivek Gautam <gautamvivek1987@gmail.com>, yulgon.kim@samsung.com, kgene.kim@samsung.com, prashanth.g@samsung.com, olofj@google.com, devicetree-discuss@lists.ozlabs.org, l.majewski@samsung.com, joshi@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, Vivek Gautam <gautam.vivek@samsung.com>, a.kesavan@samsung.com, av.tikhomirov@samsung.com, boyko.lee@samsung.com, ajaykumar.rs@samsung.com, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <50186A54.3@wwwdotorg.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/29/2012 10:11 PM, Arnd Bergmann wrote:
-> On Saturday 28 July 2012, Vivek Gautam wrote:
->>> Can you pleae explain why this is done in the changelog?
->>>
->>> We try hard to do such mappings from the device driver instead,
->>> so I'm surprised that this is necessary fo rthe USB phy.
->>>
->> We are doing the mapping for device address in the driver, but this memory
->> mapping for USB PHY registers that need to be programmed by the software
->> is done here. This is similar to what we see for exynos4 also. Is it
->> something
->> that i can still change? Please suggest.
->
-> Yes, I think the USB PHY handling for all exynos chips should be changed
-> from an ad-hoc method to a more formal device driver. As I commented
-> in another patch of this series, I think the main problem is that
-> treat the USB PHY as a property of the "platform", which it really isn't.
->
-> We have a bunch of other USB PHY drivers for other platforms that are
-> inside of the drivers/usb hierarchy. For all I know, there is no formal
-> USB PHY driver API yet, and it seems that it would be a good idea to
-> introduce one now, but for now, just move the code to
-> drivers/usb/phy/ and make it one file per different kind of PHY.
->
+Hi Stephen,
 
-Totally agree. I think that two PHY drivers need for usb2.0 PHY and
-usb3.0 PHY in drivers/usb/phy directory. First, let's make usb2.0 PHY
-driver for samsung SoCs from phy control codes of arch/arm, then add to
-support usb2.0 PHY for exynos5 and make usb3.0 PHY driver for exynos.
+On Tuesday 31 July 2012 17:29:24 Stephen Warren wrote:
+> On 07/31/2012 03:22 PM, Laurent Pinchart wrote:
+> > On Tuesday 31 July 2012 14:39:07 Guennadi Liakhovetski wrote:
+> ...
+> 
+> >> Ok, then, how about
+> >> 
+> >> 		#address-cells = <1>;
+> >> 		#size-cells = <0>;
+> >> 		...
+> >> 		ov772x-1 = {
+> >> 		
+> >> 			reg = <1>;			/* local pad # */
+> >> 			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
+> > 
+> > The client property looks good, but isn't such a usage of the reg property
+> > an abuse ? Maybe the local pad # should be a device-specific property.
+> > Many hosts won't need it, and on others it would actually need to
+> > reference a subdev, not just a pad.
+> 
+> That's a very odd syntax the the phandle; I assume that "&ov772x@0x21-0"
+> is supposed to reference some other DT node. However, other nodes are
+> either referenced by:
+> 
+> "&foo" where foo is a label, and the label name is unlikely to include
+> the text "@0x21"; the @ symbol probably isn't even legal in label names.
+> 
+> "&{/path/to/node}" which might include the "@0x21" syntax since it might
+> be part of the node's name, but your example didn't include {}.
+> 
+> I'm not sure what "-0" is meant to be in that string - a math
+> expression, or ...? If it's intended to represent some separate field
+> relative to the node the phandle references, it needs to be just another
+> cell.
 
-Thanks.
+I'm actually not sure what -0 represents, and I don't think we need the 
+@0x21-0 at all. I believe &ov772x@0x21-0 is supposed to just be a label. We 
+don't need an extra cell.
+
+> So overall, perhaps:
+> 
+> / {
+>    ...
+>    pad: something { ... };
+>    ...
+>    ov772x@1 = { /* @1 not -1 would be canonical syntax */
+>      reg = <1>;
+>      client = <&pad 0 0>;
+>    ...
+> 
+> I'm sorry I haven't followed the thread; I'm wondering why a client is a
+> pad, which to me means a pin/pad/ball on an IC package, so I'm still not
+> entirely sure if even this makes sense.
+
+Client references an image source (which is usually an I2C client, but can be 
+a different type of device) and a pad. Pad refers here to a media entity pad 
+(see http://linuxtv.org/downloads/v4l-dvb-apis/media-controller-model.html), 
+not a physical pin on an IC package.
+
+-- 
+Regards,
+
+Laurent Pinchart
