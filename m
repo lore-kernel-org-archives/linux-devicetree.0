@@ -1,74 +1,149 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Wed, 1 Aug 2012 15:43:02 -0500
-Message-ID: <501994D6.6070508@ti.com>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>  <201207171924.33756.arnd@arndb.de> <1342756850.1726.74.camel@vkoul-udesk3>  <201207200839.24259.arnd@arndb.de> <1342777047.1726.435.camel@vkoul-udesk3>  <500EF27F.6050905@ti.com> <1343284960.1726.8978.camel@vkoul-udesk3>  <501181C3.1020301@ti.com> <1343733132.1726.14418.camel@vkoul-udesk3>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] SPI: spi-gpio: store chipselect information in private
+	structure
+Date: Wed, 01 Aug 2012 22:45:19 +0200
+Message-ID: <5019955F.3030108@gmail.com>
+References: <1343216652-1463-1-git-send-email-zonque@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1343733132.1726.14418.camel@vkoul-udesk3>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linux.intel.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1343216652-1463-1-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Mark,
 
-On 07/31/2012 06:12 AM, Vinod Koul wrote:
-> On Thu, 2012-07-26 at 12:43 -0500, Jon Hunter wrote:
->>>> So yes I can see that a channel itself could be configured to
->> support a
->>>> given direction, but when we ask for a channel via
->> dma_request_channel()
->>>> we are going to get a channel that matches the criteria we pass
->> using
->>>> the filter parameter. So here the thinking was that "flags" is a
->> filter
->>>> parameter that the user could specify and one example being
->> direction
->>>> but it could be something else too.
->>> Yes that can be done, but I am leaning towards clients not have to
->> do
->>> anything :) DMAEngine needs to know mapping and when
->>> dma_request_channel() is called it _always_ gives you the right
->> channel.
->>
->> Ok, so are you proposing to remove the filter function and parameter
->> from the dma_request_channel()?
-> No. But add a new request call, dma_request_slave_channel() which is
-> exclusive for slave usages and takes into account the mapping to be done
-> for channels
->>
->>> Maybe for slave case we need to create dma_request_slave_channel()
->> which
->>> has additional arguments for dmaengine to do the filtering.
-> Yup
->>
->> Ok, so what is not clear to me is if you envision that
->> dma_request_slave_channel() is using a mapping table based look-up or
->> the DT scheme or both.
-> The API should not worry about it. It would be good to have DT/ other be
-> behind this API, so it is transparent to users. They just request a
-> slave channel.
+could you have another look at these patches maybe? They aren't urgent,
+I just want to avoid the get lost.
 
-So would you envision something like (copying from Guennadi's API but
-changing direction to flags) ...
+Thanks for your time,
+Daniel
 
-struct dma_chan *dma_request_slave_channel(struct device *dev,
-					char *name, unsigned int flags)
-{
-	/* If device-tree is present get slave info from here */
-	if (dev->of_node)
-		return of_dma_request_slave_channel(dev, name, flags);
 
-	return NULL;
-}
+On 25.07.2012 13:44, Daniel Mack wrote:
+> The spi-gpio driver currently assumes the chipselect gpio number is
+> stored in ->controller_data of the device's static board information.
+> 
+> In devicetree environments, this information is unavailable and has to
+> be derived from the DT node.
+> 
+> This patch moves the gpio storage to the controller's private data so
+> the DT bindings can easily build upon the driver.
+> 
+> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/spi/spi-gpio.c |   34 ++++++++++++++++++++++++----------
+>  1 file changed, 24 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+> index 0094c64..e79e311 100644
+> --- a/drivers/spi/spi-gpio.c
+> +++ b/drivers/spi/spi-gpio.c
+> @@ -46,6 +46,7 @@ struct spi_gpio {
+>  	struct spi_bitbang		bitbang;
+>  	struct spi_gpio_platform_data	pdata;
+>  	struct platform_device		*pdev;
+> +	int				cs_gpios[0];
+>  };
+>  
+>  /*----------------------------------------------------------------------*/
+> @@ -89,15 +90,21 @@ struct spi_gpio {
+>  
+>  /*----------------------------------------------------------------------*/
+>  
+> -static inline const struct spi_gpio_platform_data * __pure
+> -spi_to_pdata(const struct spi_device *spi)
+> +static inline struct spi_gpio * __pure
+> +spi_to_spi_gpio(const struct spi_device *spi)
+>  {
+>  	const struct spi_bitbang	*bang;
+> -	const struct spi_gpio		*spi_gpio;
+> +	struct spi_gpio			*spi_gpio;
+>  
+>  	bang = spi_master_get_devdata(spi->master);
+>  	spi_gpio = container_of(bang, struct spi_gpio, bitbang);
+> -	return &spi_gpio->pdata;
+> +	return spi_gpio;
+> +}
+> +
+> +static inline struct spi_gpio_platform_data * __pure
+> +spi_to_pdata(const struct spi_device *spi)
+> +{
+> +	return &spi_to_spi_gpio(spi)->pdata;
+>  }
+>  
+>  /* this is #defined to avoid unused-variable warnings when inlining */
+> @@ -210,7 +217,8 @@ static u32 spi_gpio_spec_txrx_word_mode3(struct spi_device *spi,
+>  
+>  static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
+>  {
+> -	unsigned long cs = (unsigned long) spi->controller_data;
+> +	struct spi_gpio *spi_gpio = spi_to_spi_gpio(spi);
+> +	unsigned int cs = spi_gpio->cs_gpios[spi->chip_select];
+>  
+>  	/* set initial clock polarity */
+>  	if (is_active)
+> @@ -224,8 +232,9 @@ static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
+>  
+>  static int spi_gpio_setup(struct spi_device *spi)
+>  {
+> -	unsigned long	cs = (unsigned long) spi->controller_data;
+> -	int		status = 0;
+> +	unsigned int		cs = (unsigned int) spi->controller_data;
+> +	int			status = 0;
+> +	struct spi_gpio		*spi_gpio = spi_to_spi_gpio(spi);
+>  
+>  	if (spi->bits_per_word > 32)
+>  		return -EINVAL;
+> @@ -238,8 +247,11 @@ static int spi_gpio_setup(struct spi_device *spi)
+>  			status = gpio_direction_output(cs, spi->mode & SPI_CS_HIGH);
+>  		}
+>  	}
+> -	if (!status)
+> +	if (!status) {
+>  		status = spi_bitbang_setup(spi);
+> +		spi_gpio->cs_gpios[spi->chip_select] = cs;
+> +	}
+> +
+>  	if (status) {
+>  		if (!spi->controller_state && cs != SPI_GPIO_NO_CHIPSELECT)
+>  			gpio_free(cs);
+> @@ -249,7 +261,8 @@ static int spi_gpio_setup(struct spi_device *spi)
+>  
+>  static void spi_gpio_cleanup(struct spi_device *spi)
+>  {
+> -	unsigned long	cs = (unsigned long) spi->controller_data;
+> +	struct spi_gpio *spi_gpio = spi_to_spi_gpio(spi);
+> +	unsigned int cs = spi_gpio->cs_gpios[spi->chip_select];
+>  
+>  	if (cs != SPI_GPIO_NO_CHIPSELECT)
+>  		gpio_free(cs);
+> @@ -330,7 +343,8 @@ static int __devinit spi_gpio_probe(struct platform_device *pdev)
+>  	if (status < 0)
+>  		return status;
+>  
+> -	master = spi_alloc_master(&pdev->dev, sizeof *spi_gpio);
+> +	master = spi_alloc_master(&pdev->dev, sizeof(*spi_gpio) +
+> +					(sizeof(int) * SPI_N_CHIPSEL));
+>  	if (!master) {
+>  		status = -ENOMEM;
+>  		goto gpio_free;
+> 
 
-Ok, so right now the above is nothing more than a simple wrapper around
-a DT dma function to extract the slave info. However, it would allow us
-to add another means for getting the slave info in the future if
-necessary by adding an else part to the above.
 
-Cheers
-Jon
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
