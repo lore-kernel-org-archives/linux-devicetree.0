@@ -1,114 +1,38 @@
-From: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 5/5] ARM: Exynos4210: Enabling sec_usbphy driver
-Date: Wed, 01 Aug 2012 18:35:51 +0530
-Message-ID: <1343826351-8756-6-git-send-email-p.paneri@samsung.com>
-References: <1343826351-8756-1-git-send-email-p.paneri@samsung.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1343826351-8756-1-git-send-email-p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [alsa-devel] [PATCH 1/2] ASOC: SAMSUNG: Add DT support for i2s
+Date: Wed, 1 Aug 2012 18:42:03 +0530
+Message-ID: <CAAgF-Bf7kJeA6gdy7Ri_bA8AHxSWwp5i8Tv0pWSXumebM5NX7g@mail.gmail.com>
+References: <1343218170-30483-1-git-send-email-padma.v@samsung.com>
+	<1343218170-30483-2-git-send-email-padma.v@samsung.com>
+	<08da01cd6fbf$cd9b5c00$68d21400$@com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <08da01cd6fbf$cd9b5c00$68d21400$@com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, rcsekar@samsung.com, sangsu4u.park@samsung.com, joshi@samsung.com, thutt@chromium.org, ben-linux@fluff.org, olofj@google.com
 List-Id: devicetree@vger.kernel.org
 
-Adding usbphy node for Exynos4210 along with the platform data.
-
-Signed-off-by: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos4210.dtsi       |    5 +++++
- arch/arm/mach-exynos/include/mach/map.h |    1 +
- arch/arm/mach-exynos/mach-exynos4-dt.c  |    8 ++++++++
- arch/arm/mach-exynos/setup-usb-phy.c    |   13 +++++++++++++
- 4 files changed, 27 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index a1dd2ee..fc9e00f 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -45,6 +45,11 @@
- 		interrupts = <0 44 0>, <0 45 0>;
- 	};
- 
-+	usbphy@125B0000 {
-+		compatible = "samsung,exynos4210-usbphy";
-+		reg = <0x125B0000 0x100>;
-+	};
-+
- 	keypad@100A0000 {
- 		compatible = "samsung,s5pv210-keypad";
- 		reg = <0x100A0000 0x100>;
-diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-index ca4aa89..a265634 100644
---- a/arch/arm/mach-exynos/include/mach/map.h
-+++ b/arch/arm/mach-exynos/include/mach/map.h
-@@ -231,6 +231,7 @@
- #define S3C_PA_SPI1			EXYNOS4_PA_SPI1
- #define S3C_PA_SPI2			EXYNOS4_PA_SPI2
- #define S3C_PA_USB_HSOTG		EXYNOS4_PA_HSOTG
-+#define S3C_PA_USB_PHY			EXYNOS4_PA_HSPHY
- 
- #define S5P_PA_EHCI			EXYNOS4_PA_EHCI
- #define S5P_PA_FIMC0			EXYNOS4_PA_FIMC0
-diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
-index e7e9743..9126637 100644
---- a/arch/arm/mach-exynos/mach-exynos4-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/of_platform.h>
- #include <linux/serial_core.h>
-+#include <linux/platform_data/s3c-hsotg.h>
- 
- #include <asm/mach/arch.h>
- #include <asm/hardware/gic.h>
-@@ -20,9 +21,14 @@
- 
- #include <plat/cpu.h>
- #include <plat/regs-serial.h>
-+#include <plat/usb-phy.h>
- 
- #include "common.h"
- 
-+static struct s3c_usbphy_plat exynos4_usbphy_pdata = {
-+	.pmu_isolation = s5p_usb_phy_pmu_isolation,
-+};
-+
- /*
-  * The following lookup table is used to override device names when devices
-  * are registered from device tree. This is temporarily added to enable
-@@ -57,6 +63,8 @@ static const struct of_dev_auxdata exynos4210_auxdata_lookup[] __initconst = {
- 				"s3c2440-i2c.0", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_PDMA0, "dma-pl330.0", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_PDMA1, "dma-pl330.1", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4210-usbphy", EXYNOS4_PA_HSPHY,
-+			"s3c-usbphy", &exynos4_usbphy_pdata),
- 	{},
- };
- 
-diff --git a/arch/arm/mach-exynos/setup-usb-phy.c b/arch/arm/mach-exynos/setup-usb-phy.c
-index 1af0a7f..3fca203 100644
---- a/arch/arm/mach-exynos/setup-usb-phy.c
-+++ b/arch/arm/mach-exynos/setup-usb-phy.c
-@@ -193,3 +193,16 @@ int s5p_usb_phy_exit(struct platform_device *pdev, int type)
- 
- 	return -EINVAL;
- }
-+
-+void s5p_usb_phy_pmu_isolation(int on)
-+{
-+	if (on) {
-+		writel(readl(S5P_USBDEVICE_PHY_CONTROL)
-+			& ~S5P_USBDEVICE_PHY_ENABLE,
-+				S5P_USBDEVICE_PHY_CONTROL);
-+	} else {
-+		writel(readl(S5P_USBDEVICE_PHY_CONTROL)
-+			| S5P_USBDEVICE_PHY_ENABLE,
-+				S5P_USBDEVICE_PHY_CONTROL);
-+	}
-+}
--- 
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+On Wed, Aug 1, 2012 at 1:59 PM, Sangbeom Kim <sbkim73@samsung.com> wrote:
+> Hi,
+> On Wednesday, July 25, 2012 9:09 PM, Padmavathi Venna wrote:
+>
+>> Add support for device based discovery.
+>>
+> Currently, I'm reviewing your patch set.
+> Your patch can support device tree for Samsung's i2s.
+> But I wonder that Your patch can support non-dt too,
+> So, Please test your patch on non-dt environment.
+> It looks unclear handling of clock source.
+> After code review, I will give you more detail comments,
+Okey. I will test these patches in non-dt environment.
+>
+> Thanks,
+> Sangbeom.
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
