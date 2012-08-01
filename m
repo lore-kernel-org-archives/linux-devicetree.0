@@ -1,14 +1,15 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 0/5] usb: phy: samsung: Introducing usb phy driver for
- samsung SoCs
-Date: Wed, 1 Aug 2012 15:20:01 +0000
-Message-ID: <201208011520.02353.arnd@arndb.de>
-References: <1343826351-8756-1-git-send-email-p.paneri@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] media DT bindings
+Date: Wed, 01 Aug 2012 09:57:24 -0600
+Message-ID: <501951E4.7000208@wwwdotorg.org>
+References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange>
+ <1853410.hC8HZhzZI6@avalon> <50186A54.3@wwwdotorg.org>
+ <3134777.Df1peamEaY@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1343826351-8756-1-git-send-email-p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <3134777.Df1peamEaY@avalon>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,30 +20,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 01 August 2012, Praveen Paneri wrote:
-> This patch set introduces a phy driver for samsung SoCs. It uses the existing
-> transceiver infrastructure to provide phy control functions. Use of this driver
-> can be extended for usb host phy as well. Over the period of time all the phy
-> related code for most of the samsung SoCs can be integrated here.
-> Removing the existing phy code from mach-s3c64xx but not from other machine 
-> code.This driver is tested with smdk6410 and Exynos4210(with DT).
+On 07/31/2012 11:59 PM, Laurent Pinchart wrote:
+> Hi Stephen,
+> 
+> On Tuesday 31 July 2012 17:29:24 Stephen Warren wrote:
+>> On 07/31/2012 03:22 PM, Laurent Pinchart wrote:
+>>> On Tuesday 31 July 2012 14:39:07 Guennadi Liakhovetski wrote:
+>> ...
+>>
+>>>> Ok, then, how about
+>>>>
+>>>> 		#address-cells = <1>;
+>>>> 		#size-cells = <0>;
+>>>> 		...
+>>>> 		ov772x-1 = {
+>>>> 		
+>>>> 			reg = <1>;			/* local pad # */
+>>>> 			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
+>>>
+>>> The client property looks good, but isn't such a usage of the reg property
+>>> an abuse ? Maybe the local pad # should be a device-specific property.
+>>> Many hosts won't need it, and on others it would actually need to
+>>> reference a subdev, not just a pad.
+>>
+>> That's a very odd syntax the the phandle; I assume that "&ov772x@0x21-0"
+>> is supposed to reference some other DT node. However, other nodes are
+>> either referenced by:
+>>
+>> "&foo" where foo is a label, and the label name is unlikely to include
+>> the text "@0x21"; the @ symbol probably isn't even legal in label names.
+>>
+>> "&{/path/to/node}" which might include the "@0x21" syntax since it might
+>> be part of the node's name, but your example didn't include {}.
+>>
+>> I'm not sure what "-0" is meant to be in that string - a math
+>> expression, or ...? If it's intended to represent some separate field
+>> relative to the node the phandle references, it needs to be just another
+>> cell.
+> 
+> I'm actually not sure what -0 represents, and I don't think we need the 
+> @0x21-0 at all. I believe &ov772x@0x21-0 is supposed to just be a label. We 
+> don't need an extra cell.
 
-This looks very nice overall, great work!
+Ah, OK. The lexer in dtc has the following definition for label names:
 
-We will still have to take care of the pmu isolation callback in the
-long run, when we get to the point of removing all auxdata. Do you
-have a plan on how to do that? If yes, it would be good to mention
-that in the changelog.
-
-My guess is that the PMU code should be moved into a higher-level
-abstraction. I don't know if you would use one of those we already
-have or whether you'd introduce a new subsystem for those. Apparently
-other platforms have similar issues, so I'd suggest you leave the
-callback for now, but we should at some point discuss what to to
-about it.
-
-	Arnd
+LABEL		[a-zA-Z_][a-zA-Z0-9_]*
