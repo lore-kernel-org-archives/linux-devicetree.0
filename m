@@ -1,61 +1,50 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC] media DT bindings
-Date: Tue, 31 Jul 2012 17:29:24 -0600
-Message-ID: <50186A54.3@wwwdotorg.org>
-References: <Pine.LNX.4.64.1207110854290.18999@axis700.grange> <2642313.6bQqiyFNFL@avalon> <Pine.LNX.4.64.1207311432590.27888@axis700.grange> <1853410.hC8HZhzZI6@avalon>
+From: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Gethering power management/policy hw drivers under
+ drivers/power/? (Re: [RFC][PATCH v3 1/3] runtime interpreted power
+ sequences)
+Date: Tue, 31 Jul 2012 17:51:17 -0700
+Message-ID: <20120801005117.GA1798@lizard>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
+ <5015E8AE.8060404@nvidia.com>
+ <20120730024049.GA10442@lizard>
+ <201207302259.39396.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1853410.hC8HZhzZI6@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201207302259.39396.rjw-KKrjLPT3xs0@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
+Cc: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jean Pihet <j-pihet-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2012 03:22 PM, Laurent Pinchart wrote:
-> On Tuesday 31 July 2012 14:39:07 Guennadi Liakhovetski wrote:
-...
->> Ok, then, how about
->>
->> 		#address-cells = <1>;
->> 		#size-cells = <0>;
->> 		...
->> 		ov772x-1 = {
->> 			reg = <1>;			/* local pad # */
->> 			client = <&ov772x@0x21-0 0>;	/* remote phandle and pad */
+On Mon, Jul 30, 2012 at 10:59:39PM +0200, Rafael J. Wysocki wrote:
+[...]
+> > Well, currently drivers/power/ is indeed just for power supply class
+> > subsystem and drivers. But if the trend is to gather power management
+> > ("policy") stuff under one directory, i.e.
+> > 
+> > drivers/
+> >   power/
+> >     supplies/    <- former "power supply class and drivers"
+> >     regulators/
+> >     idle/
+> >     cpuidle/
+> >     cpufreq/
+> >     devfreq/
+> >     avs/
+> >     ...
+> > 
+> > That would probably make sense, we could easily see the big picture.
+> > But if we're not going to do this long-term,
 > 
-> The client property looks good, but isn't such a usage of the reg property an 
-> abuse ? Maybe the local pad # should be a device-specific property. Many hosts 
-> won't need it, and on others it would actually need to reference a subdev, not 
-> just a pad.
+> Yes, we may do this eventually, but surely not right now.
 
-That's a very odd syntax the the phandle; I assume that "&ov772x@0x21-0"
-is supposed to reference some other DT node. However, other nodes are
-either referenced by:
+OK, great! Then I'll probably start thinking about moving power supply
+drivers into its own directory, maybe in 3.7.
 
-"&foo" where foo is a label, and the label name is unlikely to include
-the text "@0x21"; the @ symbol probably isn't even legal in label names.
+Thanks!
 
-"&{/path/to/node}" which might include the "@0x21" syntax since it might
-be part of the node's name, but your example didn't include {}.
-
-I'm not sure what "-0" is meant to be in that string - a math
-expression, or ...? If it's intended to represent some separate field
-relative to the node the phandle references, it needs to be just another
-cell.
-
-So overall, perhaps:
-
-/ {
-   ...
-   pad: something { ... };
-   ...
-   ov772x@1 = { /* @1 not -1 would be canonical syntax */
-     reg = <1>;
-     client = <&pad 0 0>;
-   ...
-
-I'm sorry I haven't followed the thread; I'm wondering why a client is a
-pad, which to me means a pin/pad/ball on an IC package, so I'm still not
-entirely sure if even this makes sense.
+-- 
+Anton Vorontsov
+Email: cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
