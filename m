@@ -1,90 +1,78 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Thu, 02 Aug 2012 13:43:55 -0600
-Message-ID: <501AD87B.8000408@wwwdotorg.org>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
- <4FF5A9FB.7010004@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4FF5A9FB.7010004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH 1/2] net: davinci_mdio: enable and disable clock
+Date: Thu,  2 Aug 2012 21:43:35 +0200
+Message-ID: <1343936616-29318-1-git-send-email-zonque@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, koen@dominion.thruhere.net, mugunthanvnm@ti.com, linux-arm-kernel@lists.infradead.org, paul@pwsan.com, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2012 08:51 AM, Rob Herring wrote:
-> On 07/04/2012 02:56 AM, Sascha Hauer wrote:
->> This patch adds a helper function for parsing videomodes from the devicetree.
->> The videomode can be either converted to a struct drm_display_mode or a
->> struct fb_videomode.
+Make the driver control the device clocks. Appearantly, the Davinci
+platform probes this driver with the clock all powered up, but on OMAP,
+this isn't the case.
 
->> diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+---
+ drivers/net/ethernet/ti/davinci_mdio.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
->> +Example:
->> +
->> +     display@0 {
->> +             /* 1920x1080p24 */
->> +             clock = <52000000>;
-> 
-> Should this use the clock binding? You probably need both constraints
-> and clock binding though.
-
-I don't think the clock binding is appropriate here. This binding
-specifies a desired video mode, and should specify just the expected
-clock frequency for that mode. Perhaps any tolerance imposed by the
-specification used to calculate the mode timing could be specified too,
-but the allowed tolerance (for a mode to be recognized by the dispaly)
-is more driven by the receiving device than the transmitting device.
-
-The clock bindings should come into play in the display controller that
-sends a signal in that display mode. Something like:
-
-mode: hd1080p {
-    clock = <52000000>;
-    xres = <1920>;
-    yres = <1080>;
-    ....
-};
-
-display-controller {
-    pixel-clock-source = <&clk ...>; // common clock bindings here
-    default-mode = <&mode>;
-
-> Often you don't know the frequency up front and/or have limited control
-> of the frequency (i.e. integer dividers). Then you have to adjust the
-> margins to get the desired refresh rate. To do that, you need to know
-> the ranges of values a panel can support. Perhaps you just assume you
-> can increase the right-margin and lower-margins as I think you will hit
-> pixel clock frequency max before any limit on margins.
-
-I think this is more usually dealt with in HW design and matching
-components.
-
-The PLL/... feeding the display controller is going to have some known
-specifications that imply which pixel clocks it can generate. HW
-designers will pick a panel that accepts a clock the display controller
-can generate. The driver for the display controller will just generate
-as near of a pixel clock as it can to the rate specified in the mode
-definition. I believe it'd be unusual for a display driver to start
-fiddling with front-back porch (or margin) widths to munge the timing;
-that kind of thing probably worked OK with analog displays, but with
-digital displays where each pixel is clocked even in the margins, I
-think that would cause more problems than it solved.
-
-Similarly for external displays, the display controller will just pick
-the nearest clock it can. If it can't generate a close enough clock, it
-will just refuse to set the mode. In fact, a display controller driver
-would typically validate this when the set of legal modes was enumerated
-when initially detecting the display, so user-space typically wouldn't
-even request invalid modes.
+diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
+index cd7ee20..b4b6015 100644
+--- a/drivers/net/ethernet/ti/davinci_mdio.c
++++ b/drivers/net/ethernet/ti/davinci_mdio.c
+@@ -332,6 +332,8 @@ static int __devinit davinci_mdio_probe(struct platform_device *pdev)
+ 		goto bail_out;
+ 	}
+ 
++	clk_enable(data->clk);
++
+ 	dev_set_drvdata(dev, data);
+ 	data->dev = dev;
+ 	spin_lock_init(&data->lock);
+@@ -379,8 +381,11 @@ bail_out:
+ 	if (data->bus)
+ 		mdiobus_free(data->bus);
+ 
+-	if (data->clk)
++	if (data->clk) {
++		clk_disable(data->clk);
+ 		clk_put(data->clk);
++	}
++
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 
+@@ -397,8 +402,11 @@ static int __devexit davinci_mdio_remove(struct platform_device *pdev)
+ 	if (data->bus)
+ 		mdiobus_free(data->bus);
+ 
+-	if (data->clk)
++	if (data->clk) {
++		clk_disable(data->clk);
+ 		clk_put(data->clk);
++	}
++
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 
+@@ -427,6 +435,8 @@ static int davinci_mdio_suspend(struct device *dev)
+ 	data->suspended = true;
+ 	spin_unlock(&data->lock);
+ 
++	clk_disable(data->clk);
++
+ 	return 0;
+ }
+ 
+@@ -435,6 +445,8 @@ static int davinci_mdio_resume(struct device *dev)
+ 	struct davinci_mdio_data *data = dev_get_drvdata(dev);
+ 	u32 ctrl;
+ 
++	clk_enable(data->clk);
++
+ 	spin_lock(&data->lock);
+ 	pm_runtime_put_sync(data->dev);
+ 
+-- 
+1.7.11.2
