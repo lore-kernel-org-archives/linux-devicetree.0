@@ -1,94 +1,101 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] can: c_can: Add device tree support to Bosch
- C_CAN/D_CAN controller
-Date: Thu, 02 Aug 2012 09:59:44 +0200
-Message-ID: <501A3370.5090906@pengutronix.de>
-References: <1343218729-16954-1-git-send-email-anilkumar@ti.com>
- <1343218729-16954-2-git-send-email-anilkumar@ti.com>
- <500FF908.1000307@pengutronix.de>
- <331ABD5ECB02734CA317220B2BBEABC13EA037AA@DBDE01.ent.ti.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Thu, 2 Aug 2012 10:21:57 +0200
+Message-ID: <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
+ <1343390750-3642-2-git-send-email-acourbot@nvidia.com>
+ <50170EA0.1010408@wwwdotorg.org>
+ <501A338D.7080105@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0489769713302232033=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA037AA-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Gole,
- Anant" <anantgole-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <501A338D.7080105-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---===============0489769713302232033==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig2A9138F53A577644A316FEB5"
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig2A9138F53A577644A316FEB5
-Content-Type: text/plain; charset=ISO-8859-1
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 07/25/2012 04:12 PM, AnilKumar, Chimata wrote:
-> Marc,
+On Thu, Aug 02, 2012 at 05:00:13PM +0900, Alex Courbot wrote:
+> On 07/31/2012 07:45 AM, Stephen Warren wrote:
+> >Oh I see. That's a little confusing. Why not just reference the relevant
+> >resources directly in each step; something more like:
+> >
+> >		gpio@1 {
+> >			action =3D "enable-gpio";
+> >			gpio =3D <&gpio 1 0>;
+> >		};
+> >
+> >I guess that might make parsing/building a little harder, since you'd
+> >have to detect when you'd already done gpio_request() on a given GPIO
+> >and not repeat it or something like that, but to me this makes the DT a
+> >lot easier to comprehend.
 >=20
-> On Wed, Jul 25, 2012 at 19:17:52, Marc Kleine-Budde wrote:
->> On 07/25/2012 02:18 PM, AnilKumar Ch wrote:
->>> Add device tree support to C_CAN/D_CAN controller and usage details
->>> are added to device tree documentation. Driver was tested on AM335x
->>> EVM.
->>
->> Does not apply to linux-can-next, as Viresh Kumar's patch "net/c_can:
->> remove conditional compilation of clk code" is not yet included. I
->> suggest to delay this patch until we have Viresh's patch in net-next.
->>
->> See comment inline.
+> I tried to move towards having the phandles directly in the
+> sequences themselves - that reminded me why I did not do that in the
+> first place. Let's say we have a sequence like this (reg property
+> omitted on purpose):
 >=20
-> Ok, I will wait till net-next is updated with Viresh Kumar's patch.
+> 	power-on-sequence {
+> 		step@0 {
+> 			regulator =3D <&backlight_reg>;
+> 			enable;
+> 		};
+> 		step@1 {
+> 			delay =3D <10000>;
+> 		};
+> 		step@2 {
+> 			pwm =3D <&pwm 2 5000000>;
+> 			enable;
+> 		};
+> 		step@3 {
+> 			gpio =3D <&gpio 28 0>;
+> 			enable;
+> 		};
+> 	};
+>=20
+> The problem is, how do we turn these phandles into the resource of
+> interest. The type of the resource can be infered by the name of the
+> property. The hard part is resolving the resource from the phandle -
+> it seems like the API just does not allow to do this. GPIO has
+> of_get_named_gpio, but AFAIK there are no equivalent for regulator
+> consumer and PWM: the only way to use the DT with them is through
+> get_regulator and get_pwm which work at the device level.
+>=20
+> Or is there a way that I overlooked?
 
-Now Viresh's patch is in net-next, feel free to post your new patches.
+No, you are right. Perhaps we should add exported functions that do the
+equivalent of of_pwm_request() or the regulator_dev_lookup() and
+of_get_regulator() pair.
 
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Thierry
 
-
---------------enig2A9138F53A577644A316FEB5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-iEYEARECAAYFAlAaM3AACgkQjTAFq1RaXHPnWACgghpOA6YZsNQv1uWMqNryJdmt
-fXIAn1pJq3Weh0BBdEpLSbswoWAlAYG1
-=xPxJ
+iQIcBAEBAgAGBQJQGjilAAoJEN0jrNd/PrOhWQIP/ia8nbamFqB7B7+uXDeV7vqy
+GRrn/b9KIIWdIIij79MoJKaoljC2Cwf+i5gviN5IrbN/wvLlZtPXLbO6du3u+YF6
+4+b48S8oEysitxKCw3/9t1GGRZVbcLuC2ulHr+GOAsH42J5tD/X8NsSOPBMiL6Zm
+jqNP56WcuDAyAG1maCu3cBX66rp8K3ErfOb6QveFmzAWZKGajvQY+/bkdp+bQRPX
+gAe7SOqVp1n9u4Tj8gqJC6UQyp+hDulDEZ4yQx/fyRJbxuy1i0gu+33FWhFSVolQ
++aHDIhSZdClv9AnCp2HM8FrXh4BWTh2h31wu+P3h+IV2D0OzQ45SJ/uptMPkwhoT
+CjeGIsDxfOI7yriCUxZ65zHnhdlPRJP9FSF+5qknRthgxP4LCidEcdMidPU5lLQa
+ditQPl8iiuMq3gDr/GTkOQpiSThAP6GOqhdRVWz8wJgnxKibKMMNvV8mgz+kfMSW
+N+N38Lj/njak7rIqkdrDilxrtpqFJq3kqOY97O0wVGdelpx8lT8Qu7NoOIsanDdh
+IL1UO5pXgCX1QzS/M++hNnx6riRjIUood1cYyzyd8J/qOY9Sl9MT+9gOMcwfRevh
+oaR18VD5uPrSxtYufrvO/tXFB90hucHfosEnDuKP3uB45tUhddgRsUi1iKIjr7MO
+yEb1u6FLcbdCIbqD49rQ
+=HfNb
 -----END PGP SIGNATURE-----
 
---------------enig2A9138F53A577644A316FEB5--
-
---===============0489769713302232033==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0489769713302232033==--
+--OgqxwSJOaUobr8KG--
