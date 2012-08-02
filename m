@@ -1,263 +1,118 @@
-From: Ravi Babu <ravibabu@ti.com>
-Subject: [PATCH v7 04/11] usb: otg: nop: add support for multiple tranceiver
-Date: Thu, 2 Aug 2012 17:42:47 +0530
-Message-ID: <1343909574-15633-5-git-send-email-ravibabu@ti.com>
-References: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
+From: AnilKumar Ch <anilkumar@ti.com>
+Subject: [PATCH v4 1/3] can: c_can: Modify c_can device names
+Date: Thu, 2 Aug 2012 18:43:09 +0530
+Message-ID: <1343913191-14722-2-git-send-email-anilkumar@ti.com>
+References: <1343913191-14722-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, ajayguptaj@gmail.com
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1343913191-14722-1-git-send-email-anilkumar@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: wg@grandegger.com, mkl@pengutronix.de, linux-can@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, anantgole@ti.com, nsekhar@ti.com, AnilKumar Ch <anilkumar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Modify c_can device names from *_CAN_DEVTYPE to BOSCH_*_CAN to make
+use of same names for array indexes in c_can_id_table[] as well as
+device names.
 
-Currently we have one single nop transceiver support as same is
-defined as a global variable in drivers/usb/otg/nop-usb-xceiv.c.
-This need to be changed to support multiple otg controller each
-using nop transceiver on a platform such as am335x.
+This patch also add indexes to c_can_id_table array.
 
-Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
-Signed-off-by: Ravi Babu <ravibabu@ti.com>
+Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
 ---
- drivers/usb/musb/am35x.c        |    2 +-
- drivers/usb/musb/blackfin.c     |    2 +-
- drivers/usb/musb/da8xx.c        |    2 +-
- drivers/usb/musb/davinci.c      |    4 +-
- drivers/usb/musb/musb_dsps.c    |    8 +++---
- drivers/usb/musb/tusb6010.c     |    4 +-
- drivers/usb/otg/nop-usb-xceiv.c |   54 +++++++++++++++++++++++++++++++++-----
- include/linux/usb/otg.h         |    4 +-
- 8 files changed, 60 insertions(+), 20 deletions(-)
+ drivers/net/can/c_can/c_can.h          |    5 +++--
+ drivers/net/can/c_can/c_can_pci.c      |    6 +++---
+ drivers/net/can/c_can/c_can_platform.c |   18 ++++++++++--------
+ 3 files changed, 16 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/usb/musb/am35x.c b/drivers/usb/musb/am35x.c
-index 01203eb..984e439 100644
---- a/drivers/usb/musb/am35x.c
-+++ b/drivers/usb/musb/am35x.c
-@@ -408,7 +408,7 @@ static int am35x_musb_exit(struct musb *musb)
- 		data->set_phy_power(0);
- 
- 	usb_put_phy(musb->xceiv);
--	usb_nop_xceiv_unregister();
-+	usb_nop_xceiv_unregister(musb->xceiv);
- 
- 	return 0;
- }
-diff --git a/drivers/usb/musb/blackfin.c b/drivers/usb/musb/blackfin.c
-index c848b82..f1fe728 100644
---- a/drivers/usb/musb/blackfin.c
-+++ b/drivers/usb/musb/blackfin.c
-@@ -442,7 +442,7 @@ static int bfin_musb_exit(struct musb *musb)
- 	gpio_free(musb->config->gpio_vrsel);
- 
- 	usb_put_phy(musb->xceiv);
--	usb_nop_xceiv_unregister();
-+	usb_nop_xceiv_unregister(musb->xceiv);
- 	return 0;
- }
- 
-diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
-index cebd9d7..a5260b6 100644
---- a/drivers/usb/musb/da8xx.c
-+++ b/drivers/usb/musb/da8xx.c
-@@ -460,7 +460,7 @@ static int da8xx_musb_exit(struct musb *musb)
- 	phy_off();
- 
- 	usb_put_phy(musb->xceiv);
--	usb_nop_xceiv_unregister();
-+	usb_nop_xceiv_unregister(musb->xceiv);
- 
- 	return 0;
- }
-diff --git a/drivers/usb/musb/davinci.c b/drivers/usb/musb/davinci.c
-index 3f094f2..c7ef654 100644
---- a/drivers/usb/musb/davinci.c
-+++ b/drivers/usb/musb/davinci.c
-@@ -447,7 +447,7 @@ static int davinci_musb_init(struct musb *musb)
- fail:
- 	usb_put_phy(musb->xceiv);
- unregister:
--	usb_nop_xceiv_unregister();
-+	usb_nop_xceiv_unregister(musb->xceiv);
- 	return -ENODEV;
- }
- 
-@@ -496,7 +496,7 @@ static int davinci_musb_exit(struct musb *musb)
- 	phy_off();
- 
- 	usb_put_phy(musb->xceiv);
--	usb_nop_xceiv_unregister();
-+	usb_nop_xceiv_unregister(musb->xceiv);
- 
- 	return 0;
- }
-diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
-index 7a09d55..c529ccb 100644
---- a/drivers/usb/musb/musb_dsps.c
-+++ b/drivers/usb/musb/musb_dsps.c
-@@ -420,7 +420,7 @@ static int dsps_musb_init(struct musb *musb)
- 	/* mentor core register starts at offset of 0x400 from musb base */
- 	musb->mregs += wrp->musb_core_offset;
- 
--	/* NOP driver needs change if supporting dual instance */
-+	/* Register NOP driver */
- 	usb_nop_xceiv_register();
- 	musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
- 	if (IS_ERR_OR_NULL(musb->xceiv))
-@@ -456,7 +456,7 @@ static int dsps_musb_init(struct musb *musb)
- 	return 0;
- err0:
- 	usb_put_phy(musb->xceiv);
--	usb_nop_xceiv_unregister();
-+	usb_nop_xceiv_unregister(musb->xceiv);
- 	return status;
- }
- 
-@@ -472,9 +472,9 @@ static int dsps_musb_exit(struct musb *musb)
- 	/* Shutdown the on-chip PHY and its PLL. */
- 	musb_dsps_phy_control(glue, pdev->id, 0);
- 
--	/* NOP driver needs change if supporting dual instance */
-+	/* Unregister NOP driver */
- 	usb_put_phy(musb->xceiv);
--	usb_nop_xceiv_unregister();
-+	usb_nop_xceiv_unregister(musb->xceiv);
- 
- 	return 0;
- }
-diff --git a/drivers/usb/musb/tusb6010.c b/drivers/usb/musb/tusb6010.c
-index 64a0e95..3a12330 100644
---- a/drivers/usb/musb/tusb6010.c
-+++ b/drivers/usb/musb/tusb6010.c
-@@ -1132,7 +1132,7 @@ done:
- 			iounmap(sync);
- 
- 		usb_put_phy(musb->xceiv);
--		usb_nop_xceiv_unregister();
-+		usb_nop_xceiv_unregister(musb->xceiv);
- 	}
- 	return ret;
- }
-@@ -1148,7 +1148,7 @@ static int tusb_musb_exit(struct musb *musb)
- 	iounmap(musb->sync_va);
- 
- 	usb_put_phy(musb->xceiv);
--	usb_nop_xceiv_unregister();
-+	usb_nop_xceiv_unregister(musb->xceiv);
- 	return 0;
- }
- 
-diff --git a/drivers/usb/otg/nop-usb-xceiv.c b/drivers/usb/otg/nop-usb-xceiv.c
-index 803f958..04ddcee 100644
---- a/drivers/usb/otg/nop-usb-xceiv.c
-+++ b/drivers/usb/otg/nop-usb-xceiv.c
-@@ -31,30 +31,69 @@
- #include <linux/dma-mapping.h>
- #include <linux/usb/otg.h>
- #include <linux/slab.h>
-+#include <linux/idr.h>
- 
- struct nop_usb_xceiv {
- 	struct usb_phy		phy;
- 	struct device		*dev;
-+	struct platform_device	*pd;
+diff --git a/drivers/net/can/c_can/c_can.h b/drivers/net/can/c_can/c_can.h
+index 01a7049..4e56baa 100644
+--- a/drivers/net/can/c_can/c_can.h
++++ b/drivers/net/can/c_can/c_can.h
+@@ -143,8 +143,9 @@ static const u16 reg_map_d_can[] = {
  };
  
--static struct platform_device *pd;
-+static DEFINE_IDA(nop_ida);
+ enum c_can_dev_id {
+-	C_CAN_DEVTYPE,
+-	D_CAN_DEVTYPE,
++	BOSCH_C_CAN_PLATFORM,
++	BOSCH_C_CAN,
++	BOSCH_D_CAN,
+ };
  
--void usb_nop_xceiv_register(void)
-+static int nop_get_id(gfp_t gfp_mask)
- {
--	if (pd)
-+	int ret, id;
-+
-+	ret = ida_pre_get(&nop_ida, gfp_mask);
-+	if (!ret) {
-+		pr_err("failed to reserve resource for id\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = ida_get_new(&nop_ida, &id);
-+	if (ret < 0) {
-+		pr_err("failed to allocate a new id\n");
-+		return ret;
-+	}
-+
-+	return id;
-+}
-+
-+static void nop_put_id(int id)
-+{
-+
-+	pr_debug("removing id %d\n", id);
-+	ida_remove(&nop_ida, id);
-+}
-+
-+void usb_nop_xceiv_register()
-+{
-+	struct platform_device *pd;
-+	int id;
-+
-+	id = nop_get_id(GFP_KERNEL);
-+	if (id < 0) {
-+		pr_err("failed to allocate a new id\n");
- 		return;
--	pd = platform_device_register_simple("nop_usb_xceiv", -1, NULL, 0);
-+	}
-+
-+	pd = platform_device_register_simple("nop_usb_xceiv", id, NULL, 0);
- 	if (!pd) {
--		printk(KERN_ERR "Unable to register usb nop transceiver\n");
-+		pr_err("Unable to register usb nop transceiver\n");
- 		return;
+ /* c_can private data structure */
+diff --git a/drivers/net/can/c_can/c_can_pci.c b/drivers/net/can/c_can/c_can_pci.c
+index 1011146..3d7830b 100644
+--- a/drivers/net/can/c_can/c_can_pci.c
++++ b/drivers/net/can/c_can/c_can_pci.c
+@@ -120,10 +120,10 @@ static int __devinit c_can_pci_probe(struct pci_dev *pdev,
+ 
+ 	/* Configure CAN type */
+ 	switch (c_can_pci_data->type) {
+-	case C_CAN_DEVTYPE:
++	case BOSCH_C_CAN:
+ 		priv->regs = reg_map_c_can;
+ 		break;
+-	case D_CAN_DEVTYPE:
++	case BOSCH_D_CAN:
+ 		priv->regs = reg_map_d_can;
+ 		priv->can.ctrlmode_supported |= CAN_CTRLMODE_3_SAMPLES;
+ 		break;
+@@ -192,7 +192,7 @@ static void __devexit c_can_pci_remove(struct pci_dev *pdev)
+ }
+ 
+ static struct c_can_pci_data c_can_sta2x11= {
+-	.type = C_CAN_DEVTYPE,
++	.type = BOSCH_C_CAN,
+ 	.reg_align = C_CAN_REG_ALIGN_32,
+ 	.freq = 52000000, /* 52 Mhz */
+ };
+diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
+index 6ff7ad0..5c46d1c 100644
+--- a/drivers/net/can/c_can/c_can_platform.c
++++ b/drivers/net/can/c_can/c_can_platform.c
+@@ -116,7 +116,7 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
+ 	priv = netdev_priv(dev);
+ 	id = platform_get_device_id(pdev);
+ 	switch (id->driver_data) {
+-	case C_CAN_DEVTYPE:
++	case BOSCH_C_CAN:
+ 		priv->regs = reg_map_c_can;
+ 		switch (mem->flags & IORESOURCE_MEM_TYPE_MASK) {
+ 		case IORESOURCE_MEM_32BIT:
+@@ -130,7 +130,7 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
+ 			break;
+ 		}
+ 		break;
+-	case D_CAN_DEVTYPE:
++	case BOSCH_D_CAN:
+ 		priv->regs = reg_map_d_can;
+ 		priv->can.ctrlmode_supported |= CAN_CTRLMODE_3_SAMPLES;
+ 		priv->read_reg = c_can_plat_read_reg_aligned_to_16bit;
+@@ -196,15 +196,17 @@ static int __devexit c_can_plat_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct platform_device_id c_can_id_table[] = {
+-	{
++	[BOSCH_C_CAN_PLATFORM] = {
+ 		.name = KBUILD_MODNAME,
+-		.driver_data = C_CAN_DEVTYPE,
+-	}, {
++		.driver_data = BOSCH_C_CAN,
++	},
++	[BOSCH_C_CAN] = {
+ 		.name = "c_can",
+-		.driver_data = C_CAN_DEVTYPE,
+-	}, {
++		.driver_data = BOSCH_C_CAN,
++	},
++	[BOSCH_D_CAN] = {
+ 		.name = "d_can",
+-		.driver_data = D_CAN_DEVTYPE,
++		.driver_data = BOSCH_D_CAN,
+ 	}, {
  	}
- }
- EXPORT_SYMBOL(usb_nop_xceiv_register);
- 
--void usb_nop_xceiv_unregister(void)
-+void usb_nop_xceiv_unregister(struct usb_phy *phy)
- {
-+	struct nop_usb_xceiv *nop = container_of(phy,
-+			struct nop_usb_xceiv, phy);
-+	struct platform_device *pd = nop->pd;
-+
- 	platform_device_unregister(pd);
--	pd = NULL;
-+	nop_put_id(pd->id);
- }
- EXPORT_SYMBOL(usb_nop_xceiv_unregister);
- 
-@@ -107,6 +146,7 @@ static int __devinit nop_usb_xceiv_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	nop->pd			= pdev;
- 	nop->dev		= &pdev->dev;
- 	nop->phy.dev		= nop->dev;
- 	nop->phy.label		= "nop-xceiv";
-diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-index 4636d39..2d7704e 100644
---- a/include/linux/usb/otg.h
-+++ b/include/linux/usb/otg.h
-@@ -138,13 +138,13 @@ extern void usb_remove_phy(struct usb_phy *);
- #if defined(CONFIG_NOP_USB_XCEIV) || (defined(CONFIG_NOP_USB_XCEIV_MODULE) && defined(MODULE))
- /* sometimes transceivers are accessed only through e.g. ULPI */
- extern void usb_nop_xceiv_register(void);
--extern void usb_nop_xceiv_unregister(void);
-+extern void usb_nop_xceiv_unregister(struct usb_phy *);
- #else
- static inline void usb_nop_xceiv_register(void)
- {
- }
- 
--static inline void usb_nop_xceiv_unregister(void)
-+static inline void usb_nop_xceiv_unregister(struct usb_phy *phy)
- {
- }
- #endif
+ };
 -- 
-1.7.0.4
+1.7.9.5
 
