@@ -1,39 +1,55 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: am33xx: default to status = "disabled"?
-Date: Thu, 2 Aug 2012 23:28:16 +0000
-Message-ID: <201208022328.17095.arnd@arndb.de>
-References: <501B061A.6080008@gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v3 2/2] ARM: EXYNOS: Add Gscaler device from DT
+Date: Fri, 03 Aug 2012 01:40:51 +0200
+Message-ID: <501B1003.1090003@gmail.com>
+References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com> <1342789723-3949-3-git-send-email-shaik.ameer@samsung.com> <033301cd6fb0$7ac4af90$704e0eb0$%kim@samsung.com> <CAJuYYwTy5zkeM_cJO7HMm+=v=ORPHD26nQYZwXK6v1noWm1EuA@mail.gmail.com> <5018E656.3070803@samsung.com> <036f01cd6fc4$120a9910$361fcb30$%kim@samsung.com> <50197D66.1050108@gmail.com> <CAOesGMiZMrv4GY=v1WPn_qGZgg=vduO2TbsUOQ6sCah-ZvOg_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <501B061A.6080008-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMiZMrv4GY=v1WPn_qGZgg=vduO2TbsUOQ6sCah-ZvOg_A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sachin.kamat@linaro.org, joshi@samsung.com, shaik.samsung@gmail.com, sungchun.kang@samsung.com, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 August 2012, Daniel Mack wrote:
-> currently, all devices in arch/arm/boot/dts/am33xx.dtsi are enabled by
-> default. However, depending on the actual board dts, only some of the
-> devices should actually be initialized, given that they only make sense
-> if their pins are actually wired on the board.
+On 08/02/2012 06:33 PM, Olof Johansson wrote:
+> On Wed, Aug 1, 2012 at 12:03 PM, Sylwester Nawrocki
+> <sylvester.nawrocki@gmail.com>  wrote:
 > 
-> On other platform, such devices are marked with status = "disabled", and
-> the board files re-enable those they really use by overriding that
-> status again. That approach seems to make sense - shouldn't the same be
-> done in am33xx.dtsi or am I missing something?
+>> It wouldn't be clear what specific SoCs the "samsung,exynos5-gsc" compatible
+>> string applies to, would it ? I believe there are already minor differences
+>> in GScaler parameters on currently available exynos5 SoC. The variant data
+>> structures are used to handle this and the compatible string determines which
+>> variant data structure is selected during driver's initialization.
+>> If you use a wildcard 'compatible' string this won't be possible any more.
+>>
+>> Also it would look odd IMO to have two compatible strings like:
+>> compatible = "samsung,exynos5-gsc", "samsung,exynos5400-gsc";
+> 
+> In this particular case, since you're saying that there are subtle
+> differences between different part numbers, I'm guessing there's good
+> reason to go specific, but in general there's no need to avoid
+> exynos5-gsc.
+> 
+> Your example is also false, since the strings would be in reverse
+> order (from specific to generic). That would look perfectly normal.
 
-I agree, they should be disabled, at least the serial ports, and probably
-also the i2c controllers.
+You're right, but my intention was more to say that there would have been 
+two entries in the driver's of_match_table, where "samsung,exynos5-gsc"
+wouldn't have obvious meaning. Devices within these SoCs tend to differ 
+across part numbers and usually there is one common driver handling them.
 
-	Arnd
+I can't tell for sure now there are differences, but I would have been
+surprised if there wouldn't.
+
+> So, bottom line: I agree in this particular instance, but I disagree
+> that it's a hard generic rule.
+
+Thanks, sorry if it sounded like I'm advocating it as a general rule. 
+I'm no DT expert whatsoever, but in this particular case it just sounded 
+messy to use only exynos5-gsc.
+
+--
+Regards,
+Sylwester
