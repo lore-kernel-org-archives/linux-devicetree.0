@@ -1,96 +1,38 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v3 0/3] Add DT support to C_CAN/D_CAN controller
-Date: Thu, 02 Aug 2012 13:23:38 +0200
-Message-ID: <501A633A.5000100@pengutronix.de>
-References: <1343905339-4642-1-git-send-email-anilkumar@ti.com> <501A60C0.1040504@pengutronix.de> <331ABD5ECB02734CA317220B2BBEABC13EA081AD@DBDE01.ent.ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 0/5] usb: phy: samsung: Introducing usb phy driver for samsung SoCs
+Date: Thu, 2 Aug 2012 11:26:52 +0000
+Message-ID: <201208021126.52307.arnd@arndb.de>
+References: <1343826351-8756-1-git-send-email-p.paneri@samsung.com> <201208011520.02353.arnd@arndb.de> <CAD6zSYN-prJO=dp8tJT8+4qcC3TxCXyVTU6-Xf5p20650Zb-ow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig85FD69EC1385C1FE02BA3DE5"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA081AD@DBDE01.ent.ti.com>
-Sender: linux-can-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "wg@grandegger.com" <wg@grandegger.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "Gole, Anant" <anantgole@ti.com>, "Nori, Sekhar" <nsekhar@ti.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD6zSYN-prJO=dp8tJT8+4qcC3TxCXyVTU6-Xf5p20650Zb-ow@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Praveen Paneri <p.paneri@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, l.majewski@samsung.com, kgene.kim@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, balbi@ti.com, grant.likely@secretlab.ca, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig85FD69EC1385C1FE02BA3DE5
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thursday 02 August 2012, Praveen Paneri wrote:
+> Yes! I understand this problem and this is the reason these patches
+> were sitting in my system for couple of weeks. In a  discussion with
+> Thomas an idea of using the existing regulator framework to
+> enable/disable numerous PHYs came up. For example the PMU unit
+> of Exynos4210 has a register set dedicated just to control USBD_PHY,
+> HDMI_PHY, MIPI_PHY, DAC_PHY and more. If a regulator with
+> each phy control register as LDO is written, the phy driver becomes a
+> static consumer and will modify as below.
 
-On 08/02/2012 01:21 PM, AnilKumar, Chimata wrote:
-> Marc,
->=20
-> On Thu, Aug 02, 2012 at 16:43:04, Marc Kleine-Budde wrote:
->> On 08/02/2012 01:02 PM, AnilKumar Ch wrote:
->>> This patch series adds the device tree support and Runtime PM support=
+This is roughly what I had in mind, yes. The part I'm not sure about
+is the subsystem to use. One could obviously express the same logic
+using the clock or gpio framework, which would work but be conceptually
+wrong.
 
->>> to C_CAN/D_CAN controller.
->>>
->>> These patches have been tested on AM335x EVM using some additional
->>> patches to add device tree data to EVM dts files and to initialize
->>> D_CAN RAM. D_CAN raminit is controlled from control module register.
->>> This patch will be submitted once control module MFD driver support
->>> is added.
->>>
->>> These patches are based on linx-can-next tree.
->>>
->>> Due to lack of hardware I am not able to test c_can functionality.
->>> I appreciate if anyone can test c_can functionality with this patch
->>> series.
->>>
->>> Changes from v2:
->>> 	- Incorporated Marcs on v2
->>> 	  * Fix compilation errors in pci due to device name changes
->>> 	  in v2 by adding new patch.
->>>
->>> Changes from v1:
->>> 	- Separated 4 patches into CAN driver specific and device
->>> 	  tree data addition specific.
->>> 	- Incorporated Marc's comments on v1
->>> 	  * Modified c_can_dev_id enum to handle both devtype and
->>> 	    platform device id index.
->>> 	  * Removed "legacy bosch,c_can_platform" from DT bindings
->>>
->>> AnilKumar Ch (3):
->>>   can: c_can: Add device tree support to Bosch C_CAN/D_CAN controller=
+Some other parts of the PMU functionality are provided through
+pm-domains rather than regulators and I guess in theory it could
+all be controlled through pm-domains. Maybe someone else has a better
+understanding than me what the tradeoffs are here and which subsystem
+should be used for the PMU.
 
->>>   can: c_can: Modify c_can device names in c_can_pci driver
->>
->> You break bisectability here. After patch 1 the pci driver will not
->> compile anymore. I suggest to do the renaming of enum c_can_dev_id and=
-
->> all it's users in patch 1.
->>
->=20
-> I will merge patch 1 and 2 and submit v4.
-
-But changing the pci driver has nothing to do with the subject ("Add
-device tree support to Bosch C_CAN/D_CAN controller").
-
-It's considered bad practise to do so.
-
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---------------enig85FD69EC1385C1FE02BA3DE5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
-
-iEYEARECAAYFAlAaYz0ACgkQjTAFq1RaXHNIJgCeIraD3S/GI+JlScMCEFPt2yW+
-XSQAn2y+5QmR+K5JwDh5neftpEvp6qlL
-=qVhI
------END PGP SIGNATURE-----
-
---------------enig85FD69EC1385C1FE02BA3DE5--
+	Arnd
