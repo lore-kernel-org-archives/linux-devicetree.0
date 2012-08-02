@@ -1,25 +1,38 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] mfd: add MAX8907 core driver
-Date: Thu, 2 Aug 2012 18:56:46 +0100
-Message-ID: <20120802175646.GG4537@opensource.wolfsonmicro.com>
-References: <1343854085-29663-1-git-send-email-swarren@wwwdotorg.org>
- <20120802161544.GE4537@opensource.wolfsonmicro.com>
- <501AB4B9.5030805@wwwdotorg.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Thu, 2 Aug 2012 19:11:12 +0100
+Message-ID: <20120802181111.GM4537@opensource.wolfsonmicro.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
+ <1343390750-3642-2-git-send-email-acourbot@nvidia.com>
+ <50170EA0.1010408@wwwdotorg.org>
+ <501A338D.7080105@nvidia.com>
+ <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <501AB4B9.5030805@wwwdotorg.org>
+In-Reply-To: <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lrg@ti.com>, Laxman Dewangan <ldewangan@nvidia.com>, Gyungoh Yoo <jack.yoo@maxim-ic.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Alex Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 02, 2012 at 11:11:21AM -0600, Stephen Warren wrote:
+On Thu, Aug 02, 2012 at 10:21:57AM +0200, Thierry Reding wrote:
+> On Thu, Aug 02, 2012 at 05:00:13PM +0900, Alex Courbot wrote:
 
-> Samuel, please don't apply this just yet though - it looks like I need
-> to make some minor changes to the header file and DT binding
-> documentation to add in a definition for one more regulator. I'll repost
-> the amended version along with the regulator driver later.
+> > The problem is, how do we turn these phandles into the resource of
+> > interest. The type of the resource can be infered by the name of the
+> > property. The hard part is resolving the resource from the phandle -
+> > it seems like the API just does not allow to do this. GPIO has
+> > of_get_named_gpio, but AFAIK there are no equivalent for regulator
+> > consumer and PWM: the only way to use the DT with them is through
+> > get_regulator and get_pwm which work at the device level.
 
-Please carry my review forward on the next submission.
+> > Or is there a way that I overlooked?
+
+> No, you are right. Perhaps we should add exported functions that do the
+> equivalent of of_pwm_request() or the regulator_dev_lookup() and
+> of_get_regulator() pair.
+
+I missed some of the earlier bits of the thread here but why can't we do
+device based lookups?
