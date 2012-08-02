@@ -1,58 +1,35 @@
 From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 00/11] usb: musb: adding multi instance support
-Date: Fri, 03 Aug 2012 00:08:43 +0200
-Message-ID: <501AFA6B.4010005@gmail.com>
-References: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
+Subject: am33xx: default to status = "disabled"?
+Date: Fri, 03 Aug 2012 00:58:34 +0200
+Message-ID: <501B061A.6080008@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1343909574-15633-1-git-send-email-ravibabu-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ravi,
+Hi,
 
-On 02.08.2012 14:12, Ravi Babu wrote:
-> This series of patches adds,
-> a) Multi instances support in musb driver
-> b) DT support for musb_dsps glue layer
-> c) DT support for NOP transceiver
-> 
-> AM33xx and TI81xx has dual musb controller and has two usb PHY of same type.
-> This patch series uses 'phandle' based API devm_usb_get_phy_by_phandle() to
-> get the PHY of same type. This API support is being added by Kishon's patch
-> discussed at [1]
-> 
-> The series applies to linux-omap (master branch)
-> 	+ Vaibhav baseport patches on his tree at [3]
-> 	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
-> 	+ Kishon's patch on phandle at [1]
-> 	+ AM33xx musb glue compile and bugfix patches at [4], [5], [6] and [7]
-> 	+ Damodar's recent patch at [2] 
-> 
-> and have been tested on Beaglebone board.
+currently, all devices in arch/arm/boot/dts/am33xx.dtsi are enabled by
+default. However, depending on the actual board dts, only some of the
+devices should actually be initialized, given that they only make sense
+if their pins are actually wired on the board.
 
-I would like to test these patches on a custom AM33xx board, but I'm
-having trouble applying them. I am based on Linus' master tree, and "git
-am" fails for drivers/usb/musb/musb_dsps.c. The commits I got for that
-file are:
-
-ded017ee6 usb: phy: fix return value check of usb_get_phy
-662dca54c usb: otg: support for multiple transceivers by a single controller
-721002ec1 usb: otg: utils: rename function name in OTG utils
-9ecb88752 usb: musb: Add support for ti81xx platform
-
-I wonder which branch you are based on and which tree those patches
-should go thru eventually.
+On other platform, such devices are marked with status = "disabled", and
+the board files re-enable those they really use by overriding that
+status again. That approach seems to make sense - shouldn't the same be
+done in am33xx.dtsi or am I missing something?
 
 
-Thanks,
 Daniel
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
