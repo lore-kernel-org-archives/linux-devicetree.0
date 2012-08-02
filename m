@@ -1,50 +1,33 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v3 1/3] can: c_can: Add device tree support to Bosch
- C_CAN/D_CAN controller
-Date: Thu, 2 Aug 2012 12:01:37 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA08249@DBDE01.ent.ti.com>
-References: <1343905339-4642-1-git-send-email-anilkumar@ti.com>
- <1343905339-4642-2-git-send-email-anilkumar@ti.com>
- <3432187.NhmxBJqHyV@wuerfel>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH] regulator: tps6586x: add support for SYS rail
+Date: Thu, 2 Aug 2012 17:21:38 +0530
+Message-ID: <501A69CA.2070507@nvidia.com>
+References: <1343906193-8309-1-git-send-email-ldewangan@nvidia.com> <20120802114046.GK29157@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <3432187.NhmxBJqHyV@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Gole, Anant" <anantgole-l0cyMroinI0@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120802114046.GK29157@opensource.wolfsonmicro.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Thursday 02 August 2012 05:10 PM, Mark Brown wrote:
+> On Thu, Aug 02, 2012 at 04:46:33PM +0530, Laxman Dewangan wrote:
+>
+>> +static const unsigned int tps6586x_sys_voltages[] = {
+>> +	5000000,
+>> +};
+> Is the system rail actually regulated or is it just a nominal 5V?
+> Normally it's just the raw, unregulated input switched in with FETs or
+> whatever.
 
-Thanks for the review
+It is unregulated with FET.
+The typical range (min-max) shows in data sheet
 
-On Thu, Aug 02, 2012 at 17:03:59, Arnd Bergmann wrote:
-> On Thursday 02 August 2012 16:32:17 AnilKumar Ch wrote:
-> > +- interrupt-parent     : The parent interrupt controller
-> > +
-> > +Optional properties:
-> > +- ti,hwmods            : Must be "d_can<n>" or "c_can<n>", n being the
-> > +                         instance number
-> 
-> interrupt-parent should be optional, not mandatory. It's usually implied
-> by the parent's interrupt-parent.
-> 
+V(SYS) with respect to AGND1: 2.9V(min) 5.5V(max).
+althoguh USB or AC have 4.30V(Min) 16.5V(max)
 
-In case of AM33XX specific we need to connect interrupt to interrupt
-controller so I added to mandatory list. Yes I agree with you, in generic
-case this should be optional I will change.
 
-Thanks
-AnilKumar
+
