@@ -1,38 +1,127 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
-Date: Thu, 2 Aug 2012 19:11:12 +0100
-Message-ID: <20120802181111.GM4537@opensource.wolfsonmicro.com>
-References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
- <1343390750-3642-2-git-send-email-acourbot@nvidia.com>
- <50170EA0.1010408@wwwdotorg.org>
- <501A338D.7080105@nvidia.com>
- <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2] of: Add videomode helper
+Date: Thu, 02 Aug 2012 13:35:40 -0600
+Message-ID: <501AD68C.1000904@wwwdotorg.org>
+References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Alex Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1341388595-30672-1-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 02, 2012 at 10:21:57AM +0200, Thierry Reding wrote:
-> On Thu, Aug 02, 2012 at 05:00:13PM +0900, Alex Courbot wrote:
+On 07/04/2012 01:56 AM, Sascha Hauer wrote:
+> This patch adds a helper function for parsing videomodes from the devicetree.
+> The videomode can be either converted to a struct drm_display_mode or a
+> struct fb_videomode.
 
-> > The problem is, how do we turn these phandles into the resource of
-> > interest. The type of the resource can be infered by the name of the
-> > property. The hard part is resolving the resource from the phandle -
-> > it seems like the API just does not allow to do this. GPIO has
-> > of_get_named_gpio, but AFAIK there are no equivalent for regulator
-> > consumer and PWM: the only way to use the DT with them is through
-> > get_regulator and get_pwm which work at the device level.
+> diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
 
-> > Or is there a way that I overlooked?
+> +Required properties:
+> + - xres, yres: Display resolution
+> + - left-margin, right-margin, hsync-len: Horizontal Display timing parameters
+> +   in pixels
+> +   upper-margin, lower-margin, vsync-len: Vertical display timing parameters in
+> +   lines
 
-> No, you are right. Perhaps we should add exported functions that do the
-> equivalent of of_pwm_request() or the regulator_dev_lookup() and
-> of_get_regulator() pair.
+Perhaps bike-shedding, but...
 
-I missed some of the earlier bits of the thread here but why can't we do
-device based lookups?
+For the margin property names, wouldn't it be better to use terminology
+more commonly used for video timings rather than Linux FB naming. In
+other words naming like:
+
+hactive, hsync-len, hfront-porch, hback-porch?
+
+> + - clock: displayclock in Hz
+> +
+> +Optional properties:
+> + - width-mm, height-mm: Display dimensions in mm
+> + - hsync-active-high (bool): Hsync pulse is active high
+> + - vsync-active-high (bool): Vsync pulse is active high
+> + - interlaced (bool): This is an interlaced mode
+> + - doublescan (bool): This is a doublescan mode
+> +
+> +There are different ways of describing a display mode. The devicetree representation
+> +corresponds to the one used by the Linux Framebuffer framework described here in
+> +Documentation/fb/framebuffer.txt. This representation has been chosen because it's
+> +the only format which does not allow for inconsistent parameters.Unlike the Framebuffer
+> +framework the devicetree has the clock in Hz instead of ps.
+
+As Rob mentioned, I think there shouldn't be any mention of Linux FB here.
+
+> +
+> +Example:
+> +
+> +	display@0 {
+
+This node appears to describe a video mode, not a display, hence the
+node name seems wrong.
+
+Many displays can support multiple different video modes. As mentioned
+elsewhere, properties like display width/height are properties of the
+display not the mode.
+
+So, I might expect something more like the following (various overhead
+properties like reg/#address-cells etc. elided for simplicity):
+
+disp: display {
+    width-mm = <...>;
+    height-mm = <...>;
+    modes {
+        mode@0 {
+		/* 1920x1080p24 */
+		clock = <52000000>;
+		xres = <1920>;
+		yres = <1080>;
+		left-margin = <25>;
+		right-margin = <25>;
+		hsync-len = <25>;
+		lower-margin = <2>;
+		upper-margin = <2>;
+		vsync-len = <2>;
+		hsync-active-high;
+        };
+        mode@1 {
+        };
+    };
+};
+
+display-connector {
+    display = <&disp>;
+    // interface-specific properties such as pixel format here
+};
+
+Finally, have you considered just using an EDID instead of creating
+something custom? I know that creating an EDID is harder than writing a
+few simple properties into a DT, but EDIDs have the following advantages:
+
+a) They're already standardized and very common.
+
+b) They allow other information such as a display's HDMI audio
+capabilities to be represented, which can then feed into an ALSA driver.
+
+c) The few LCD panel datasheets I've seen actually quote their
+specification as an EDID already, so deriving the EDID may actually be easy.
+
+d) People familiar with displays are almost certainly familiar with
+EDID's mode representation. There are many ways of representing display
+modes (sync position vs. porch widths, htotal specified rather than
+specifying all the components and hence htotal being calculated etc.).
+Not everyone will be familiar with all representations. Conversion
+errors are less likely if the target is EDID's familiar format.
+
+e) You'll end up with exactly the same data as if you have a DDC-based
+external monitor rather than an internal panel, so you end up getting to
+a common path in display handling code much more quickly.
