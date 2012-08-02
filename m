@@ -1,63 +1,58 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH 1/2] net: davinci_mdio: enable and disable clock
-Date: Thu, 02 Aug 2012 22:28:48 +0200
-Message-ID: <501AE300.2090707@gmail.com>
-References: <1343936616-29318-1-git-send-email-zonque@gmail.com> <alpine.DEB.2.00.1208021416550.18867@utopia.booyaka.com>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 00/11] usb: musb: adding multi instance support
+Date: Fri, 03 Aug 2012 00:08:43 +0200
+Message-ID: <501AFA6B.4010005@gmail.com>
+References: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.00.1208021416550.18867@utopia.booyaka.com>
-Sender: netdev-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, koen@dominion.thruhere.net, mugunthanvnm@ti.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1343909574-15633-1-git-send-email-ravibabu-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.08.2012 22:20, Paul Walmsley wrote:
-> Hi
+Hi Ravi,
+
+On 02.08.2012 14:12, Ravi Babu wrote:
+> This series of patches adds,
+> a) Multi instances support in musb driver
+> b) DT support for musb_dsps glue layer
+> c) DT support for NOP transceiver
 > 
-> On Thu, 2 Aug 2012, Daniel Mack wrote:
+> AM33xx and TI81xx has dual musb controller and has two usb PHY of same type.
+> This patch series uses 'phandle' based API devm_usb_get_phy_by_phandle() to
+> get the PHY of same type. This API support is being added by Kishon's patch
+> discussed at [1]
 > 
->> Make the driver control the device clocks. Appearantly, the Davinci
->> platform probes this driver with the clock all powered up, but on OMAP,
->> this isn't the case.
->>
->> Signed-off-by: Daniel Mack <zonque@gmail.com>
+> The series applies to linux-omap (master branch)
+> 	+ Vaibhav baseport patches on his tree at [3]
+> 	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
+> 	+ Kishon's patch on phandle at [1]
+> 	+ AM33xx musb glue compile and bugfix patches at [4], [5], [6] and [7]
+> 	+ Damodar's recent patch at [2] 
 > 
->> ---
->>  drivers/net/ethernet/ti/davinci_mdio.c | 16 ++++++++++++++--
->>  1 file changed, 14 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
->> index cd7ee20..b4b6015 100644
->> --- a/drivers/net/ethernet/ti/davinci_mdio.c
->> +++ b/drivers/net/ethernet/ti/davinci_mdio.c
->> @@ -332,6 +332,8 @@ static int __devinit davinci_mdio_probe(struct platform_device *pdev)
->>  		goto bail_out;
->>  	}
->>  
->> +	clk_enable(data->clk);
->> +
-> 
-> This doesn't look right.  This clock should be enabled by the
-> pm_runtime_get_sync() call just above this.  It shouldn't be necessary
-> to enable it again unless something isn't right with the integration
-> data. Likewise the pm_runtime_put_sync() calls should be superfluous.
+> and have been tested on Beaglebone board.
 
-Aah, thanks for the heads-up. To explain, I first worked with a dirty
-hack to alias the clock, and I definitely needed these extra calls then.
+I would like to test these patches on a custom AM33xx board, but I'm
+having trouble applying them. I am based on Linus' master tree, and "git
+am" fails for drivers/usb/musb/musb_dsps.c. The commits I got for that
+file are:
 
-> What hwmod data/device tree file are you using with this?
+ded017ee6 usb: phy: fix return value check of usb_get_phy
+662dca54c usb: otg: support for multiple transceivers by a single controller
+721002ec1 usb: otg: utils: rename function name in OTG utils
+9ecb88752 usb: musb: Add support for ti81xx platform
 
-Later, I added the hwmod to move away from these hacks, and indeed, that
-lets the pm runtime code handle the clock enabling. With that in place,
-the patch we're talking about here is in fact unnecessary.
-
-The second one though (the one that adds DT bindings) should go in.
-
-I will send a separate one later that fixes the IS_ERR(data->clk) error
-that Russell spotted. But that's now unrelated.
+I wonder which branch you are based on and which tree those patches
+should go thru eventually.
 
 
-Thanks for the review,
+Thanks,
 Daniel
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
