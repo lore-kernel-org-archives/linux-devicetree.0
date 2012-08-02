@@ -1,57 +1,84 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] can: c_can: Add device tree support to Bosch
- C_CAN/D_CAN controller
-Date: Thu, 2 Aug 2012 08:51:06 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA0802C@DBDE01.ent.ti.com>
-References: <1343218729-16954-1-git-send-email-anilkumar@ti.com>
- <1343218729-16954-2-git-send-email-anilkumar@ti.com>
- <500FF908.1000307@pengutronix.de>
- <331ABD5ECB02734CA317220B2BBEABC13EA037AA@DBDE01.ent.ti.com>
- <501A3370.5090906@pengutronix.de>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Thu, 2 Aug 2012 18:20:41 +0900
+Message-ID: <501A4669.9090707@nvidia.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <50170EA0.1010408@wwwdotorg.org> <501A338D.7080105@nvidia.com> <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de> <501A3A00.7070207@nvidia.com> <20120802084541.GA15042@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <501A3370.5090906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Gole,
- Anant" <anantgole-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120802084541.GA15042@avionic-0098.adnet.avionic-design.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+On Thu 02 Aug 2012 05:45:41 PM JST, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+>
+> On Thu, Aug 02, 2012 at 05:27:44PM +0900, Alex Courbot wrote:
+>> On Thu 02 Aug 2012 05:21:57 PM JST, Thierry Reding wrote:
+>>>> Old Signed by an unknown key
+>>>
+>>> On Thu, Aug 02, 2012 at 05:00:13PM +0900, Alex Courbot wrote:
+>>>> On 07/31/2012 07:45 AM, Stephen Warren wrote:
+>>>>> Oh I see. That's a little confusing. Why not just reference the relevant
+>>>>> resources directly in each step; something more like:
+>>>>>
+>>>>> 		gpio@1 {
+>>>>> 			action = "enable-gpio";
+>>>>> 			gpio = <&gpio 1 0>;
+>>>>> 		};
+>>>>>
+>>>>> I guess that might make parsing/building a little harder, since you'd
+>>>>> have to detect when you'd already done gpio_request() on a given GPIO
+>>>>> and not repeat it or something like that, but to me this makes the DT a
+>>>>> lot easier to comprehend.
+>>>>
+>>>> I tried to move towards having the phandles directly in the
+>>>> sequences themselves - that reminded me why I did not do that in the
+>>>> first place. Let's say we have a sequence like this (reg property
+>>>> omitted on purpose):
+>>>>
+>>>> 	power-on-sequence {
+>>>> 		step@0 {
+>>>> 			regulator = <&backlight_reg>;
+>>>> 			enable;
+>>>> 		};
+>>>> 		step@1 {
+>>>> 			delay = <10000>;
+>>>> 		};
+>>>> 		step@2 {
+>>>> 			pwm = <&pwm 2 5000000>;
+>>>> 			enable;
+>>>> 		};
+>>>> 		step@3 {
+>>>> 			gpio = <&gpio 28 0>;
+>>>> 			enable;
+>>>> 		};
+>>>> 	};
+>>>>
+>>>> The problem is, how do we turn these phandles into the resource of
+>>>> interest. The type of the resource can be infered by the name of the
+>>>> property. The hard part is resolving the resource from the phandle -
+>>>> it seems like the API just does not allow to do this. GPIO has
+>>>> of_get_named_gpio, but AFAIK there are no equivalent for regulator
+>>>> consumer and PWM: the only way to use the DT with them is through
+>>>> get_regulator and get_pwm which work at the device level.
+>>>>
+>>>> Or is there a way that I overlooked?
+>>>
+>>> No, you are right. Perhaps we should add exported functions that do the
+>>> equivalent of of_pwm_request() or the regulator_dev_lookup() and
+>>> of_get_regulator() pair.
+>>
+>> How would that be looked with respect to "good DT practices"? I can
+>> somehow understand the wish to restrain DT access to these functions
+>> that integrate well with current workflows. Aren't we going to be
+>> frowned upon if we make more low-level functions public?
+>
+> Yes, I think that's exactly what will happen.
 
-On Thu, Aug 02, 2012 at 13:29:44, Marc Kleine-Budde wrote:
-> On 07/25/2012 04:12 PM, AnilKumar, Chimata wrote:
-> > Marc,
-> > 
-> > On Wed, Jul 25, 2012 at 19:17:52, Marc Kleine-Budde wrote:
-> >> On 07/25/2012 02:18 PM, AnilKumar Ch wrote:
-> >>> Add device tree support to C_CAN/D_CAN controller and usage details
-> >>> are added to device tree documentation. Driver was tested on AM335x
-> >>> EVM.
-> >>
-> >> Does not apply to linux-can-next, as Viresh Kumar's patch "net/c_can:
-> >> remove conditional compilation of clk code" is not yet included. I
-> >> suggest to delay this patch until we have Viresh's patch in net-next.
-> >>
-> >> See comment inline.
-> > 
-> > Ok, I will wait till net-next is updated with Viresh Kumar's patch.
-> 
-> Now Viresh's patch is in net-next, feel free to post your new patches.
+Probably not worth to try this then?
 
-I will send the patches.
-
-Thanks
-AnilKumar
+Alex.
