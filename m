@@ -1,69 +1,52 @@
-From: "B, Ravi" <ravibabu-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v7 00/11] usb: musb: adding multi instance support
-Date: Fri, 3 Aug 2012 00:54:24 +0000
-Message-ID: <6C6B28D4DC342643927BEAFCE8707BF63E9DB6AE@DBDE01.ent.ti.com>
-References: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
- <501AFA6B.4010005@gmail.com>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Fri, 3 Aug 2012 10:15:46 +0900
+Message-ID: <501B2642.4080805@nvidia.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <50170EA0.1010408@wwwdotorg.org> <501A338D.7080105@nvidia.com> <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de> <20120802181111.GM4537@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <501AFA6B.4010005-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120802181111.GM4537-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Fri 03 Aug 2012 03:11:12 AM JST, Mark Brown wrote:
+> On Thu, Aug 02, 2012 at 10:21:57AM +0200, Thierry Reding wrote:
+>> On Thu, Aug 02, 2012 at 05:00:13PM +0900, Alex Courbot wrote:
+>
+>>> The problem is, how do we turn these phandles into the resource of
+>>> interest. The type of the resource can be infered by the name of the
+>>> property. The hard part is resolving the resource from the phandle -
+>>> it seems like the API just does not allow to do this. GPIO has
+>>> of_get_named_gpio, but AFAIK there are no equivalent for regulator
+>>> consumer and PWM: the only way to use the DT with them is through
+>>> get_regulator and get_pwm which work at the device level.
+>
+>>> Or is there a way that I overlooked?
+>
+>> No, you are right. Perhaps we should add exported functions that do the
+>> equivalent of of_pwm_request() or the regulator_dev_lookup() and
+>> of_get_regulator() pair.
+>
+> I missed some of the earlier bits of the thread here but why can't we do
+> device based lookups?
 
-> 
-> On 02.08.2012 14:12, Ravi Babu wrote:
-> > This series of patches adds,
-> > a) Multi instances support in musb driver
-> > b) DT support for musb_dsps glue layer
-> > c) DT support for NOP transceiver
-> > 
-> > AM33xx and TI81xx has dual musb controller and has two usb 
-> PHY of same type.
-> > This patch series uses 'phandle' based API 
-> > devm_usb_get_phy_by_phandle() to get the PHY of same type. This API 
-> > support is being added by Kishon's patch discussed at [1]
-> > 
-> > The series applies to linux-omap (master branch)
-> > 	+ Vaibhav baseport patches on his tree at [3]
-> > 	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
-> > 	+ Kishon's patch on phandle at [1]
-> > 	+ AM33xx musb glue compile and bugfix patches at [4], 
-> [5], [6] and [7]
-> > 	+ Damodar's recent patch at [2]
-> > 
-> > and have been tested on Beaglebone board.
+That is because the phandles would not be properties of the device node 
+but rather of its sub-nodes:
 
-Have you applied the above patches before applying these patches.
+backlight {
+     compatible = "pwm-backlight";
+     ...
+     power-on-sequence {
+         step@0 {
+             regulator = <&backlight_reg>;
+             enable;
+         };
 
-Ravi Babu
 
-> 
-> I would like to test these patches on a custom AM33xx board, 
-> but I'm having trouble applying them. I am based on Linus' 
-> master tree, and "git am" fails for 
-> drivers/usb/musb/musb_dsps.c. The commits I got for that file are:
-> 
-> ded017ee6 usb: phy: fix return value check of usb_get_phy 
-> 662dca54c usb: otg: support for multiple transceivers by a 
-> single controller
-> 721002ec1 usb: otg: utils: rename function name in OTG utils
-> 9ecb88752 usb: musb: Add support for ti81xx platform
-> 
-> I wonder which branch you are based on and which tree those 
-> patches should go thru eventually.
-> 
-> 
-> Thanks,
-> Daniel
-> 
-> --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So here simply using regulator_get on the backlight device would not work.
+
+Alex.
