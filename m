@@ -1,15 +1,21 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: <Query> How to read arguments from a gpio handle
-Date: Fri, 03 Aug 2012 09:34:57 -0600
-Message-ID: <501BEFA1.8030303@wwwdotorg.org>
-References: <CAL1wa8fdYCmTNpO=7v5S7o-Oi3nRD_7uUgCCVpM5TEP9ZUXedw@mail.gmail.com>
- <501B6190.9060101@wwwdotorg.org>
- <CAL1wa8cJpcnNZ_p6Ueu07GQ=m2zP6MpQHKqC4dKGDFVO7zRY2w@mail.gmail.com>
+From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v7 00/11] usb: musb: adding multi instance support
+Date: Fri, 3 Aug 2012 15:48:39 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EA7FB18@DBDE01.ent.ti.com>
+References: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
+ <501AFA6B.4010005@gmail.com>
+ <6C6B28D4DC342643927BEAFCE8707BF63E9DB6AE@DBDE01.ent.ti.com>
+ <501B8997.2070307@gmail.com>
+ <F20D4CDD972CFA4D89D3A083D2D561967FF1F67DE3@BGMAIL01.nvidia.com>
+ <501B93AB.7050501@gmail.com>
+ <79CD15C6BA57404B839C016229A409A83EA7F4A3@DBDE01.ent.ti.com>
+ <501BB8F2.8030909@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAL1wa8cJpcnNZ_p6Ueu07GQ=m2zP6MpQHKqC4dKGDFVO7zRY2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <501BB8F2.8030909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,43 +26,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Leela Krishna Amudala <leelakrishna.a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ajay Gupta <ajayg-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi,
+ Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "B,
+ Ravi" <ravibabu-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2012 02:47 AM, Leela Krishna Amudala wrote:
-> Hello,
+On Fri, Aug 03, 2012 at 17:11:38, Daniel Mack wrote:
+> On 03.08.2012 11:07, Hiremath, Vaibhav wrote:
+> > I have just pushed the code (V7 which Ravi submitted), so can you please try 
+> > with below branch? 
+> > 
+> > https://github.com/hvaibhav/am335x-linux/tree/am335x-upstream-staging-usb
 > 
-> On Fri, Aug 3, 2012 at 10:58 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 08/02/2012 09:39 PM, Leela Krishna Amudala wrote:
->>> Hello,
->>>
->>> Can some one please tell me how to read the args from the gpio handle
->>>
->>> For example:
->>> Consider    lcd-reset-gpio = <&gpx0 1 2 3 4>; as my phandle.
->>>
->>> The 4 args in the above handle denotes
->>>
->>> <[phandle of the gpio controller node]
->>>       [pin number within the gpio controller]
->>>       [mux function]
->>>       [pull up/down]
->>>       [drive strength]>
->>>
->>> My intention is to read the "mux function" and "pull up/down" values
->>> from the above handle and do the corresponding operations on that
->>> particular gpio.
->>>
->>> I tried using   of_get_named_gpio_flags(struct device_node *np, const
->>> char *propname,
->>>                            int index, enum of_gpio_flags *flags);
->>> function and I always gets the flags value as '0' irrespective of the
->>> values present in phandle of GPIO.
-...
-> I got the required values using of_parse_phandle_with_args() function.
+> Thanks for doing this, but I'm unfortunately getting tons of merge
+> conflicts when I try to put this on top of 3.6-rc1. Still pondering
+> which way around is the easiest to get this solved.
+> 
+> OTOH, I wonder whether your staging branches would need to rebased
+> sooner or later anyway?
+> 
 
-OK, you can certainly do that, but I fully expect pushback on such code
-if you try and upstream it. Also, it's most likely fragile if your DT
-property needs to represent a list of GPIOs rather than just 1, given
-that of_get_named_gpio_flags() doesn't do what you'd expect.
+I have already pushed branch based on v3.6-rc1 (boot tested),
+
+https://github.com/hvaibhav/am335x-linux/tree/am335x-linux-next-master
+
+Thanks,
+Vaibhav
