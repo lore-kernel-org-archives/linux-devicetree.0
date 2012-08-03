@@ -1,116 +1,92 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Fri, 03 Aug 2012 12:30:57 -0600
-Message-ID: <501C18E1.3020901@wwwdotorg.org>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
- <501AD68C.1000904@wwwdotorg.org> <20120803073844.GK1451@pengutronix.de>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4 3/3] can: c_can: Add runtime PM support to Bosch C_CAN/D_CAN
+ controller
+Date: Fri, 03 Aug 2012 21:09:25 +0200
+Message-ID: <501C21E5.9080106@pengutronix.de>
+References: <1343913191-14722-1-git-send-email-anilkumar@ti.com> <1343913191-14722-4-git-send-email-anilkumar@ti.com> <79CD15C6BA57404B839C016229A409A83EA7F150@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120803073844.GK1451-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enig06AFB5DFAF6BDBF027AD5AF2"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EA7F150@DBDE01.ent.ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Cc: "AnilKumar, Chimata" <anilkumar@ti.com>, "wg@grandegger.com" <wg@grandegger.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Gole, Anant" <anantgole@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2012 01:38 AM, Sascha Hauer wrote:
-> Hi Stephen,
-> 
-> On Thu, Aug 02, 2012 at 01:35:40PM -0600, Stephen Warren wrote:
->> On 07/04/2012 01:56 AM, Sascha Hauer wrote:
->>> This patch adds a helper function for parsing videomodes from the devicetree.
->>> The videomode can be either converted to a struct drm_display_mode or a
->>> struct fb_videomode.
->>
->>> diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
->>
->>> +Required properties:
->>> + - xres, yres: Display resolution
->>> + - left-margin, right-margin, hsync-len: Horizontal Display timing parameters
->>> +   in pixels
->>> +   upper-margin, lower-margin, vsync-len: Vertical display timing parameters in
->>> +   lines
->>
->> Perhaps bike-shedding, but...
->>
->> For the margin property names, wouldn't it be better to use terminology
->> more commonly used for video timings rather than Linux FB naming. In
->> other words naming like:
->>
->> hactive, hsync-len, hfront-porch, hback-porch?
-> 
-> Can do. Just to make sure:
-> 
-> hactive == xres
-> hsync-len == hsync-len
-> hfront-porch == right-margin
-> hback-porch == left-margin
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig06AFB5DFAF6BDBF027AD5AF2
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I believe so yes.
-
->> a) They're already standardized and very common.
-> 
-> Indeed, that's a big plus for EDID. I have no intention of removing EDID
-> data from the devicetree. There are situations where EDID is handy, for
-> example when you get EDID data provided by your vendor.
-> 
+On 08/03/2012 08:32 AM, Hiremath, Vaibhav wrote:
+> On Thu, Aug 02, 2012 at 18:43:11, AnilKumar, Chimata wrote:
+>> Add Runtime PM support to C_CAN/D_CAN controller. The runtime PM
+>> APIs control clocks for C_CAN/D_CAN IP and prevent access to the
+>> register of C_CAN/D_CAN IP when clock is turned off.
 >>
->> b) They allow other information such as a display's HDMI audio
->> capabilities to be represented, which can then feed into an ALSA driver.
+>> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+>> ---
+>>  drivers/net/can/c_can/c_can_platform.c |    8 ++++++++
+>>  1 file changed, 8 insertions(+)
 >>
->> c) The few LCD panel datasheets I've seen actually quote their
->> specification as an EDID already, so deriving the EDID may actually be easy.
->>
->> d) People familiar with displays are almost certainly familiar with
->> EDID's mode representation. There are many ways of representing display
->> modes (sync position vs. porch widths, htotal specified rather than
->> specifying all the components and hence htotal being calculated etc.).
->> Not everyone will be familiar with all representations. Conversion
->> errors are less likely if the target is EDID's familiar format.
-> 
-> You seem to think about a different class of displays for which EDID
-> indeed is a better way to handle. What I have to deal with here mostly
-> are dumb displays which:
-> 
-> - can only handle their native resolution
-> - Have no audio capabilities at all
-> - come with a datasheet which specify a min/typ/max triplet for
->   xres,hsync,..., often enough they are scanned to pdf from some previously
->   printed paper.
-> 
-> These displays are very common on embedded devices, probably that's the
-> reason I did not even think about the possibility that a single display
-> might have different modes.
+>> diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/=
+c_can/c_can_platform.c
+>> index d0a66cf..83a1e17 100644
+>> --- a/drivers/net/can/c_can/c_can_platform.c
+>> +++ b/drivers/net/can/c_can/c_can_platform.c
+>> @@ -32,6 +32,7 @@
+>>  #include <linux/clk.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_device.h>
+>> +#include <linux/pm_runtime.h>
+>> =20
+>>  #include <linux/can/dev.h>
+>> =20
+>> @@ -177,6 +178,9 @@ static int __devinit c_can_plat_probe(struct platf=
+orm_device *pdev)
+>>  		goto exit_free_device;
+>>  	}
+>> =20
+>> +	pm_runtime_enable(&pdev->dev);
+>> +	pm_runtime_get_sync(&pdev->dev);
+>> +
+>=20
+> If module is inserted or built into the kernel, module stays in enabled=
+=20
+> state always, isn't that wrong?
+> Ideally, you should enable the module when it is required or being used=
+=2E
 
-That's true, but as I mentioned, there are at least some dumb panels
-(both I've seen recently) whose specification provides the EDID. I don't
-know how common that is though, I must admit.
+Good point.
 
->> e) You'll end up with exactly the same data as if you have a DDC-based
->> external monitor rather than an internal panel, so you end up getting to
->> a common path in display handling code much more quickly.
-> 
-> All we have in our display driver currently is:
-> 
-> 	edidp = of_get_property(np, "edid", &imxpd->edid_len);
-> 	if (edidp) {
-> 		imxpd->edid = kmemdup(edidp, imxpd->edid_len, GFP_KERNEL);
-> 	} else {
-> 		ret = of_get_video_mode(np, &imxpd->mode, NULL);
-> 		if (!ret)
-> 			imxpd->mode_valid = 1;
-> 	}
+If you don't access the module's registers in the probe- (or its
+subroutines) it should be enough to enable the module in the open()
+function. Have a look at clk_prepare_enable / clk_disable_unprepare in
+the flexcan driver.
 
-Presumably there's more to it though; something later checks
-imxpd->mode_valid and if false, parses the EDID and sets up imxpd->mode,
-etc.
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--------------enig06AFB5DFAF6BDBF027AD5AF2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+
+iEYEARECAAYFAlAcIekACgkQjTAFq1RaXHNSFwCfdR+CAddUCFCxosRzNC2Jbt8C
+QYsAoIi+2Ooi+2fMa7eIAs5mqU5bMs4l
+=36ot
+-----END PGP SIGNATURE-----
+
+--------------enig06AFB5DFAF6BDBF027AD5AF2--
