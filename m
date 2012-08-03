@@ -1,85 +1,35 @@
-From: Vinod Koul <vinod.koul@linux.intel.com>
-Subject: Re: [PATCH V3 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 03 Aug 2012 15:25:41 +0530
-Message-ID: <1343987741.1726.14420.camel@vkoul-udesk3>
-References: <1335820679-28721-1-git-send-email-jon-hunter@ti.com>
-	 <201207171924.33756.arnd@arndb.de> <1342756850.1726.74.camel@vkoul-udesk3>
-	 <201207200839.24259.arnd@arndb.de> <1342777047.1726.435.camel@vkoul-udesk3>
-	 <500EF27F.6050905@ti.com> <1343284960.1726.8978.camel@vkoul-udesk3>
-	 <501181C3.1020301@ti.com> <1343733132.1726.14418.camel@vkoul-udesk3>
-	 <501994D6.6070508@ti.com>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 00/11] usb: musb: adding multi instance support
+Date: Fri, 03 Aug 2012 13:41:38 +0200
+Message-ID: <501BB8F2.8030909@gmail.com>
+References: <1343909574-15633-1-git-send-email-ravibabu@ti.com> <501AFA6B.4010005@gmail.com> <6C6B28D4DC342643927BEAFCE8707BF63E9DB6AE@DBDE01.ent.ti.com> <501B8997.2070307@gmail.com> <F20D4CDD972CFA4D89D3A083D2D561967FF1F67DE3@BGMAIL01.nvidia.com> <501B93AB.7050501@gmail.com> <79CD15C6BA57404B839C016229A409A83EA7F4A3@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <501994D6.6070508@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jassi Brar <jaswinder.singh@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dan.j.williams@intel.com, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EA7F4A3-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Cc: Ajay Gupta <ajayg-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "B, Ravi" <ravibabu-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-08-01 at 15:43 -0500, Jon Hunter wrote:
-> Hi Vinod,
+On 03.08.2012 11:07, Hiremath, Vaibhav wrote:
+> I have just pushed the code (V7 which Ravi submitted), so can you please try 
+> with below branch? 
 > 
-> On 07/31/2012 06:12 AM, Vinod Koul wrote:
-> > On Thu, 2012-07-26 at 12:43 -0500, Jon Hunter wrote:
-> >>>> So yes I can see that a channel itself could be configured to
-> >> support a
-> >>>> given direction, but when we ask for a channel via
-> >> dma_request_channel()
-> >>>> we are going to get a channel that matches the criteria we pass
-> >> using
-> >>>> the filter parameter. So here the thinking was that "flags" is a
-> >> filter
-> >>>> parameter that the user could specify and one example being
-> >> direction
-> >>>> but it could be something else too.
-> >>> Yes that can be done, but I am leaning towards clients not have to
-> >> do
-> >>> anything :) DMAEngine needs to know mapping and when
-> >>> dma_request_channel() is called it _always_ gives you the right
-> >> channel.
-> >>
-> >> Ok, so are you proposing to remove the filter function and parameter
-> >> from the dma_request_channel()?
-> > No. But add a new request call, dma_request_slave_channel() which is
-> > exclusive for slave usages and takes into account the mapping to be done
-> > for channels
-> >>
-> >>> Maybe for slave case we need to create dma_request_slave_channel()
-> >> which
-> >>> has additional arguments for dmaengine to do the filtering.
-> > Yup
-> >>
-> >> Ok, so what is not clear to me is if you envision that
-> >> dma_request_slave_channel() is using a mapping table based look-up or
-> >> the DT scheme or both.
-> > The API should not worry about it. It would be good to have DT/ other be
-> > behind this API, so it is transparent to users. They just request a
-> > slave channel.
-> 
-> So would you envision something like (copying from Guennadi's API but
-> changing direction to flags) ...
-> 
-> struct dma_chan *dma_request_slave_channel(struct device *dev,
-> 					char *name, unsigned int flags)
-> {
-> 	/* If device-tree is present get slave info from here */
-> 	if (dev->of_node)
-> 		return of_dma_request_slave_channel(dev, name, flags);
-> 
-> 	return NULL;
-> }
-> 
-> Ok, so right now the above is nothing more than a simple wrapper around
-> a DT dma function to extract the slave info. However, it would allow us
-> to add another means for getting the slave info in the future if
-> necessary by adding an else part to the above.
-> 
-Yup, something like above should work well. But without any dependency
-from dmac's (unlike the RFC propsed)
+> https://github.com/hvaibhav/am335x-linux/tree/am335x-upstream-staging-usb
+
+Thanks for doing this, but I'm unfortunately getting tons of merge
+conflicts when I try to put this on top of 3.6-rc1. Still pondering
+which way around is the easiest to get this solved.
+
+OTOH, I wonder whether your staging branches would need to rebased
+sooner or later anyway?
 
 
--- 
-~Vinod
+Daniel
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
