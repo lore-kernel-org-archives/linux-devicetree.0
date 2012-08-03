@@ -1,16 +1,14 @@
-From: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] arm/dts: AM33XX: Add D_CAN device tree data
-Date: Fri, 3 Aug 2012 14:44:10 +0530
-Message-ID: <501B9662.6000406@ti.com>
-References: <1343219012-19472-1-git-send-email-anilkumar@ti.com>
- <1343219012-19472-2-git-send-email-anilkumar@ti.com>
- <500FE9FC.7070303@mvista.com> <501101A7.2030503@gmail.com>
- <50114069.7070605@mvista.com>
+From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Subject: RE: am33xx: default to status = "disabled"?
+Date: Fri, 3 Aug 2012 09:31:50 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EA7F557@DBDE01.ent.ti.com>
+References: <501B061A.6080008@gmail.com> <201208022328.17095.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50114069.7070605-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <201208022328.17095.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,57 +19,27 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 7/26/2012 6:34 PM, Sergei Shtylyov wrote:
-> Hello.
+On Fri, Aug 03, 2012 at 04:58:16, Arnd Bergmann wrote:
+> On Thursday 02 August 2012, Daniel Mack wrote:
+> > currently, all devices in arch/arm/boot/dts/am33xx.dtsi are enabled by
+> > default. However, depending on the actual board dts, only some of the
+> > devices should actually be initialized, given that they only make sense
+> > if their pins are actually wired on the board.
+> > 
+> > On other platform, such devices are marked with status = "disabled", and
+> > the board files re-enable those they really use by overriding that
+> > status again. That approach seems to make sense - shouldn't the same be
+> > done in am33xx.dtsi or am I missing something?
 > 
-> On 26-07-2012 12:36, Daniel Mack wrote:
-> 
->>>> Add Bosch D_CAN controller device tree data to AM33XX dtsi file
->>>> by adding d_can device node with all the necessary parameters.
-> 
->>>> Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>>    arch/arm/boot/dts/am33xx.dtsi |    5 +++++
->>>>    1 file changed, 5 insertions(+)
-> 
->>>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->>>> index 9b974dc..2db2ffb 100644
->>>> --- a/arch/arm/boot/dts/am33xx.dtsi
->>>> +++ b/arch/arm/boot/dts/am33xx.dtsi
->>>> @@ -163,5 +163,10 @@
->>>>    			#size-cells = <0>;
->>>>    			ti,hwmods = "i2c3";
->>>>    		};
->>>> +
->>>> +		dcan1: d_can@481D0000 {
->>>
->>>      Address postfix in the node name and no "reg" property?
-> 
->> This still works due to the hwmod mappings OMAP relies on.
-> 
->     I.e. the "reg" property is populated in runtime?
-> 
->> I would still
->> put it there, so the switch to real DT definitions will be less painful.
-> 
->     How it helps anything?
+> I agree, they should be disabled, at least the serial ports, and probably
+> also the i2c controllers.
 > 
 
-This is required field if you want to use "of_dev_auxdata", without
-"reg" property OF layer fails to create dev_id (name) bindings with what
-you have specified as part of "of_dev_auxdata".
-
-And with respect to CAN driver, even though we are using hwmod, I would
-want to create dev_id = d_can.0 and d_can.1. And this is only possible
-if Address and compatible string matches.
-
-So this field is important and required in this case.
+You are right, it needs to be disabled. I will create a patch and submit it.
 
 Thanks,
 Vaibhav
