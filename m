@@ -1,49 +1,116 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH 1/4] arm/dts: omap5-evm: Add I2C support
-Date: Fri, 03 Aug 2012 21:22:19 +0400
-Message-ID: <501C08CB.3060701@mvista.com>
-References: <1343997486-710-1-git-send-email-sourav.poddar@ti.com> <1343997486-710-2-git-send-email-sourav.poddar@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2] of: Add videomode helper
+Date: Fri, 03 Aug 2012 12:30:57 -0600
+Message-ID: <501C18E1.3020901@wwwdotorg.org>
+References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
+ <501AD68C.1000904@wwwdotorg.org> <20120803073844.GK1451@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1343997486-710-2-git-send-email-sourav.poddar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Benoit Cousson <b-cousson@ti.com>, Felipe Balbi <balbi@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120803073844.GK1451-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 08/03/2012 01:38 AM, Sascha Hauer wrote:
+> Hi Stephen,
+> 
+> On Thu, Aug 02, 2012 at 01:35:40PM -0600, Stephen Warren wrote:
+>> On 07/04/2012 01:56 AM, Sascha Hauer wrote:
+>>> This patch adds a helper function for parsing videomodes from the devicetree.
+>>> The videomode can be either converted to a struct drm_display_mode or a
+>>> struct fb_videomode.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
+>>
+>>> +Required properties:
+>>> + - xres, yres: Display resolution
+>>> + - left-margin, right-margin, hsync-len: Horizontal Display timing parameters
+>>> +   in pixels
+>>> +   upper-margin, lower-margin, vsync-len: Vertical display timing parameters in
+>>> +   lines
+>>
+>> Perhaps bike-shedding, but...
+>>
+>> For the margin property names, wouldn't it be better to use terminology
+>> more commonly used for video timings rather than Linux FB naming. In
+>> other words naming like:
+>>
+>> hactive, hsync-len, hfront-porch, hback-porch?
+> 
+> Can do. Just to make sure:
+> 
+> hactive == xres
+> hsync-len == hsync-len
+> hfront-porch == right-margin
+> hback-porch == left-margin
 
-On 08/03/2012 04:38 PM, Sourav Poddar wrote:
+I believe so yes.
 
-> Add I2C data node in omap5 device tree file.
+>> a) They're already standardized and very common.
+> 
+> Indeed, that's a big plus for EDID. I have no intention of removing EDID
+> data from the devicetree. There are situations where EDID is handy, for
+> example when you get EDID data provided by your vendor.
+> 
+>>
+>> b) They allow other information such as a display's HDMI audio
+>> capabilities to be represented, which can then feed into an ALSA driver.
+>>
+>> c) The few LCD panel datasheets I've seen actually quote their
+>> specification as an EDID already, so deriving the EDID may actually be easy.
+>>
+>> d) People familiar with displays are almost certainly familiar with
+>> EDID's mode representation. There are many ways of representing display
+>> modes (sync position vs. porch widths, htotal specified rather than
+>> specifying all the components and hence htotal being calculated etc.).
+>> Not everyone will be familiar with all representations. Conversion
+>> errors are less likely if the target is EDID's familiar format.
+> 
+> You seem to think about a different class of displays for which EDID
+> indeed is a better way to handle. What I have to deal with here mostly
+> are dumb displays which:
+> 
+> - can only handle their native resolution
+> - Have no audio capabilities at all
+> - come with a datasheet which specify a min/typ/max triplet for
+>   xres,hsync,..., often enough they are scanned to pdf from some previously
+>   printed paper.
+> 
+> These displays are very common on embedded devices, probably that's the
+> reason I did not even think about the possibility that a single display
+> might have different modes.
 
-> Tested on omap5430 sdp.
+That's true, but as I mentioned, there are at least some dumb panels
+(both I've seen recently) whose specification provides the EDID. I don't
+know how common that is though, I must admit.
 
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Acked-by: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-> ---
->  arch/arm/boot/dts/omap5.dtsi |   35 +++++++++++++++++++++++++++++++++++
->  1 files changed, 35 insertions(+), 0 deletions(-)
+>> e) You'll end up with exactly the same data as if you have a DDC-based
+>> external monitor rather than an internal panel, so you end up getting to
+>> a common path in display handling code much more quickly.
+> 
+> All we have in our display driver currently is:
+> 
+> 	edidp = of_get_property(np, "edid", &imxpd->edid_len);
+> 	if (edidp) {
+> 		imxpd->edid = kmemdup(edidp, imxpd->edid_len, GFP_KERNEL);
+> 	} else {
+> 		ret = of_get_video_mode(np, &imxpd->mode, NULL);
+> 		if (!ret)
+> 			imxpd->mode_valid = 1;
+> 	}
 
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index 57e5270..6b68dfe 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -145,6 +145,41 @@
->  			#interrupt-cells = <1>;
->  		};
->  
-> +		i2c1: i2c@48070000 {
-> +			compatible = "ti,omap4-i2c";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			ti,hwmods = "i2c1";
-
-   Address postfix in the node name and no "reg" property?
-
-WBR, Sergei
+Presumably there's more to it though; something later checks
+imxpd->mode_valid and if false, parses the EDID and sets up imxpd->mode,
+etc.
