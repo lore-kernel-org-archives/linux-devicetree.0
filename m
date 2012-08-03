@@ -1,31 +1,52 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH] regulator: tps6586x: add support for SYS rail
-Date: Fri, 3 Aug 2012 11:39:49 +0530
-Message-ID: <501B6B2D.90508@nvidia.com>
-References: <1343906193-8309-1-git-send-email-ldewangan@nvidia.com> <501AAE55.3080504@wwwdotorg.org>
+From: Vaibhav Hiremath <hvaibhav@ti.com>
+Subject: Re: [PATCH v2 1/2] arm/dts: AM33XX: Add D_CAN device tree data
+Date: Fri, 3 Aug 2012 11:58:41 +0530
+Message-ID: <501B6F99.4020506@ti.com>
+References: <1343219012-19472-1-git-send-email-anilkumar@ti.com> <1343219012-19472-2-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <501AAE55.3080504@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1343219012-19472-2-git-send-email-anilkumar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: AnilKumar Ch <anilkumar@ti.com>
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mkl@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 August 2012 10:14 PM, Stephen Warren wrote:
-> On 08/02/2012 05:16 AM, Laxman Dewangan wrote:
-> I believe you need to following patch on top of this, or the sys-supply
-> property is not used:
 
-yes, it was missed. I tested with this and it worked fine. Thanks for 
-pointing this.
 
->
-> BTW, this patch touches both the regulator and MFD trees. I'm not sure
-> who will apply it. I think it relies on the patch to this driver Mark
-> recently applied in the regulator tree (for 3.7 I think) doesn't it, at
-> least for context?
+On 7/25/2012 5:53 PM, AnilKumar Ch wrote:
+> Add Bosch D_CAN controller device tree data to AM33XX dtsi file
+> by adding d_can device node with all the necessary parameters.
+> 
+> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> ---
+>  arch/arm/boot/dts/am33xx.dtsi |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index 9b974dc..2db2ffb 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -163,5 +163,10 @@
+>  			#size-cells = <0>;
+>  			ti,hwmods = "i2c3";
+>  		};
+> +
+> +		dcan1: d_can@481D0000 {
+> +			compatible = "bosch,d_can";
+> +			ti,hwmods = "d_can1";
+> +		};
 
-I looked Mark's regulator for-next and all changes from MFD from Samuel 
-is available so I think it will not be issue to apply.
+Anil,
+
+Any reason why we are only specifying dcan1 instance? Shouldn't we
+specify dcan0 as well here?
+
+Thanks,
+Vaibhav
+
+
+>  	};
+>  };
+> 
