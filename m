@@ -1,55 +1,69 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v3 2/2] ARM: EXYNOS: Add Gscaler device from DT
-Date: Fri, 03 Aug 2012 01:40:51 +0200
-Message-ID: <501B1003.1090003@gmail.com>
-References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com> <1342789723-3949-3-git-send-email-shaik.ameer@samsung.com> <033301cd6fb0$7ac4af90$704e0eb0$%kim@samsung.com> <CAJuYYwTy5zkeM_cJO7HMm+=v=ORPHD26nQYZwXK6v1noWm1EuA@mail.gmail.com> <5018E656.3070803@samsung.com> <036f01cd6fc4$120a9910$361fcb30$%kim@samsung.com> <50197D66.1050108@gmail.com> <CAOesGMiZMrv4GY=v1WPn_qGZgg=vduO2TbsUOQ6sCah-ZvOg_A@mail.gmail.com>
+From: "B, Ravi" <ravibabu-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v7 00/11] usb: musb: adding multi instance support
+Date: Fri, 3 Aug 2012 00:54:24 +0000
+Message-ID: <6C6B28D4DC342643927BEAFCE8707BF63E9DB6AE@DBDE01.ent.ti.com>
+References: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
+ <501AFA6B.4010005@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMiZMrv4GY=v1WPn_qGZgg=vduO2TbsUOQ6sCah-ZvOg_A@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sachin.kamat@linaro.org, joshi@samsung.com, shaik.samsung@gmail.com, sungchun.kang@samsung.com, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <501AFA6B.4010005-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/2012 06:33 PM, Olof Johansson wrote:
-> On Wed, Aug 1, 2012 at 12:03 PM, Sylwester Nawrocki
-> <sylvester.nawrocki@gmail.com>  wrote:
+Hi
+
 > 
->> It wouldn't be clear what specific SoCs the "samsung,exynos5-gsc" compatible
->> string applies to, would it ? I believe there are already minor differences
->> in GScaler parameters on currently available exynos5 SoC. The variant data
->> structures are used to handle this and the compatible string determines which
->> variant data structure is selected during driver's initialization.
->> If you use a wildcard 'compatible' string this won't be possible any more.
->>
->> Also it would look odd IMO to have two compatible strings like:
->> compatible = "samsung,exynos5-gsc", "samsung,exynos5400-gsc";
+> On 02.08.2012 14:12, Ravi Babu wrote:
+> > This series of patches adds,
+> > a) Multi instances support in musb driver
+> > b) DT support for musb_dsps glue layer
+> > c) DT support for NOP transceiver
+> > 
+> > AM33xx and TI81xx has dual musb controller and has two usb 
+> PHY of same type.
+> > This patch series uses 'phandle' based API 
+> > devm_usb_get_phy_by_phandle() to get the PHY of same type. This API 
+> > support is being added by Kishon's patch discussed at [1]
+> > 
+> > The series applies to linux-omap (master branch)
+> > 	+ Vaibhav baseport patches on his tree at [3]
+> > 	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
+> > 	+ Kishon's patch on phandle at [1]
+> > 	+ AM33xx musb glue compile and bugfix patches at [4], 
+> [5], [6] and [7]
+> > 	+ Damodar's recent patch at [2]
+> > 
+> > and have been tested on Beaglebone board.
+
+Have you applied the above patches before applying these patches.
+
+Ravi Babu
+
 > 
-> In this particular case, since you're saying that there are subtle
-> differences between different part numbers, I'm guessing there's good
-> reason to go specific, but in general there's no need to avoid
-> exynos5-gsc.
+> I would like to test these patches on a custom AM33xx board, 
+> but I'm having trouble applying them. I am based on Linus' 
+> master tree, and "git am" fails for 
+> drivers/usb/musb/musb_dsps.c. The commits I got for that file are:
 > 
-> Your example is also false, since the strings would be in reverse
-> order (from specific to generic). That would look perfectly normal.
-
-You're right, but my intention was more to say that there would have been 
-two entries in the driver's of_match_table, where "samsung,exynos5-gsc"
-wouldn't have obvious meaning. Devices within these SoCs tend to differ 
-across part numbers and usually there is one common driver handling them.
-
-I can't tell for sure now there are differences, but I would have been
-surprised if there wouldn't.
-
-> So, bottom line: I agree in this particular instance, but I disagree
-> that it's a hard generic rule.
-
-Thanks, sorry if it sounded like I'm advocating it as a general rule. 
-I'm no DT expert whatsoever, but in this particular case it just sounded 
-messy to use only exynos5-gsc.
-
---
-Regards,
-Sylwester
+> ded017ee6 usb: phy: fix return value check of usb_get_phy 
+> 662dca54c usb: otg: support for multiple transceivers by a 
+> single controller
+> 721002ec1 usb: otg: utils: rename function name in OTG utils
+> 9ecb88752 usb: musb: Add support for ti81xx platform
+> 
+> I wonder which branch you are based on and which tree those 
+> patches should go thru eventually.
+> 
+> 
+> Thanks,
+> Daniel
+> 
+> --
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
