@@ -1,15 +1,15 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Fri, 3 Aug 2012 09:38:44 +0200
-Message-ID: <20120803073844.GK1451@pengutronix.de>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
- <501AD68C.1000904@wwwdotorg.org>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 00/11] usb: musb: adding multi instance support
+Date: Fri, 03 Aug 2012 10:19:35 +0200
+Message-ID: <501B8997.2070307@gmail.com>
+References: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
+ <501AFA6B.4010005@gmail.com>
+ <6C6B28D4DC342643927BEAFCE8707BF63E9DB6AE@DBDE01.ent.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <501AD68C.1000904-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <6C6B28D4DC342643927BEAFCE8707BF63E9DB6AE-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,152 +20,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: "B, Ravi" <ravibabu-l0cyMroinI0@public.gmane.org>
+Cc: "ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi,
+ Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Thu, Aug 02, 2012 at 01:35:40PM -0600, Stephen Warren wrote:
-> On 07/04/2012 01:56 AM, Sascha Hauer wrote:
-> > This patch adds a helper function for parsing videomodes from the devicetree.
-> > The videomode can be either converted to a struct drm_display_mode or a
-> > struct fb_videomode.
+On 03.08.2012 02:54, B, Ravi wrote:
+>> On 02.08.2012 14:12, Ravi Babu wrote:
+>>> This series of patches adds,
+>>> a) Multi instances support in musb driver
+>>> b) DT support for musb_dsps glue layer
+>>> c) DT support for NOP transceiver
+>>>
+>>> AM33xx and TI81xx has dual musb controller and has two usb 
+>> PHY of same type.
+>>> This patch series uses 'phandle' based API 
+>>> devm_usb_get_phy_by_phandle() to get the PHY of same type. This API 
+>>> support is being added by Kishon's patch discussed at [1]
+>>>
+>>> The series applies to linux-omap (master branch)
+>>> 	+ Vaibhav baseport patches on his tree at [3]
+>>> 	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
+>>> 	+ Kishon's patch on phandle at [1]
+>>> 	+ AM33xx musb glue compile and bugfix patches at [4], 
+>> [5], [6] and [7]
+>>> 	+ Damodar's recent patch at [2]
+>>>
+>>> and have been tested on Beaglebone board.
 > 
-> > diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
-> 
-> > +Required properties:
-> > + - xres, yres: Display resolution
-> > + - left-margin, right-margin, hsync-len: Horizontal Display timing parameters
-> > +   in pixels
-> > +   upper-margin, lower-margin, vsync-len: Vertical display timing parameters in
-> > +   lines
-> 
-> Perhaps bike-shedding, but...
-> 
-> For the margin property names, wouldn't it be better to use terminology
-> more commonly used for video timings rather than Linux FB naming. In
-> other words naming like:
-> 
-> hactive, hsync-len, hfront-porch, hback-porch?
+> Have you applied the above patches before applying these patches.
 
-Can do. Just to make sure:
+Somehow, I was missing some of Ajay's patches. I resolved that, and now
+the series applied.
 
-hactive == xres
-hsync-len == hsync-len
-hfront-porch == right-margin
-hback-porch == left-margin
+However, I needed to add a phandle "usb0-phy = <&usb0_phy>" to the
+usb_otg_hs DTSI block, otherwise devm_usb_get_phy_by_phandle() in
+drivers/usb/musb/musb_dsps.c would fail. Is that correct? I can't seem
+to find that in your patches.
 
-?
+With this addition, I see the following:
 
-> 
-> This node appears to describe a video mode, not a display, hence the
-> node name seems wrong.
-> 
-> Many displays can support multiple different video modes. As mentioned
-> elsewhere, properties like display width/height are properties of the
-> display not the mode.
-> 
-> So, I might expect something more like the following (various overhead
-> properties like reg/#address-cells etc. elided for simplicity):
-> 
-> disp: display {
->     width-mm = <...>;
->     height-mm = <...>;
->     modes {
->         mode@0 {
-> 		/* 1920x1080p24 */
-> 		clock = <52000000>;
-> 		xres = <1920>;
-> 		yres = <1080>;
-> 		left-margin = <25>;
-> 		right-margin = <25>;
-> 		hsync-len = <25>;
-> 		lower-margin = <2>;
-> 		upper-margin = <2>;
-> 		vsync-len = <2>;
-> 		hsync-active-high;
->         };
->         mode@1 {
->         };
->     };
-> };
+[    1.782180] musb-hdrc: version 6.0, ?dma?, otg (peripheral+host)
+[    1.809966] musb-hdrc musb-hdrc.0: MUSB HDRC host driver
+[    1.819068] musb-hdrc musb-hdrc.0: new USB bus registered, assigned
+bus number 1
+[    1.827970] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
+[    1.835184] usb usb1: New USB device strings: Mfr=3, Product=2,
+SerialNumber=1
+[    1.842818] usb usb1: Product: MUSB HDRC host driver
+[    1.848031] usb usb1: Manufacturer: Linux
+3.6.0-rc1-00038-g8a1ec8f-dirty musb-hcd
+[    1.855933] usb usb1: SerialNumber: musb-hdrc.0
+[    1.866913] hub 1-0:1.0: USB hub found
+[    1.871192] hub 1-0:1.0: 1 port detected
+[    1.878106] musb-hdrc musb-hdrc.0: USB Host mode controller at
+d08c0000 using PIO, IRQ 18
 
-Ok, we can do this.
+... but no USB functions. Also, every two seconds, the following message
+is printed:
 
-> 
-> display-connector {
->     display = <&disp>;
->     // interface-specific properties such as pixel format here
-> };
-> 
-> Finally, have you considered just using an EDID instead of creating
-> something custom? I know that creating an EDID is harder than writing a
-> few simple properties into a DT, but EDIDs have the following advantages:
+[   11.036608] musb_bus_suspend 2308: trying to suspend as a_wait_vrise
+while active
+[   13.044811] musb_bus_suspend 2308: trying to suspend as a_wait_vrise
+while active
+[   15.052196] musb_bus_suspend 2308: trying to suspend as a_wait_vrise
+while active
 
-I have considered using EDID and I also tried it. It's painful. There
-are no (open) tools available for creating EDID. That's something we
-could change of course. Then when generating a devicetree there is
-always an extra step involved creating the EDID blob. Once the EDID
-blob is in devicetree it is not parsable anymore by mere humans, so
-to see what we've got there is another tool involved to generate a
-readable form again.
 
-> 
-> a) They're already standardized and very common.
+Anything obvious that I'm missing?
 
-Indeed, that's a big plus for EDID. I have no intention of removing EDID
-data from the devicetree. There are situations where EDID is handy, for
-example when you get EDID data provided by your vendor.
 
-> 
-> b) They allow other information such as a display's HDMI audio
-> capabilities to be represented, which can then feed into an ALSA driver.
-> 
-> c) The few LCD panel datasheets I've seen actually quote their
-> specification as an EDID already, so deriving the EDID may actually be easy.
-> 
-> d) People familiar with displays are almost certainly familiar with
-> EDID's mode representation. There are many ways of representing display
-> modes (sync position vs. porch widths, htotal specified rather than
-> specifying all the components and hence htotal being calculated etc.).
-> Not everyone will be familiar with all representations. Conversion
-> errors are less likely if the target is EDID's familiar format.
-
-You seem to think about a different class of displays for which EDID
-indeed is a better way to handle. What I have to deal with here mostly
-are dumb displays which:
-
-- can only handle their native resolution
-- Have no audio capabilities at all
-- come with a datasheet which specify a min/typ/max triplet for
-  xres,hsync,..., often enough they are scanned to pdf from some previously
-  printed paper.
-
-These displays are very common on embedded devices, probably that's the
-reason I did not even think about the possibility that a single display
-might have different modes.
-
-> 
-> e) You'll end up with exactly the same data as if you have a DDC-based
-> external monitor rather than an internal panel, so you end up getting to
-> a common path in display handling code much more quickly.
-
-All we have in our display driver currently is:
-
-	edidp = of_get_property(np, "edid", &imxpd->edid_len);
-	if (edidp) {
-		imxpd->edid = kmemdup(edidp, imxpd->edid_len, GFP_KERNEL);
-	} else {
-		ret = of_get_video_mode(np, &imxpd->mode, NULL);
-		if (!ret)
-			imxpd->mode_valid = 1;
-	}
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Daniel
