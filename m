@@ -1,43 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend 2/2] SPI: spi-gpio: Add DT bindings
-Date: Sun, 5 Aug 2012 21:12:15 +0200
-Message-ID: <CACRpkdaanCLHjuG-+mPUN-FQbE+MJ=4_RRN85jAaL_FccgNCuA@mail.gmail.com>
-References: <1343854638-32563-1-git-send-email-zonque@gmail.com>
-	<1343854638-32563-2-git-send-email-zonque@gmail.com>
-	<CACRpkdYY9oFAJ5qdhY-hD+YAnhO3DxxhY_VQGS4sKuimLxWaHw@mail.gmail.com>
-	<501E5FA9.9050905@gmail.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [PATCH v7 00/11] usb: musb: adding multi instance support
+Date: Sun, 05 Aug 2012 21:52:53 +0200
+Message-ID: <501ECF15.2040409@gmail.com>
+References: <1343909574-15633-1-git-send-email-ravibabu@ti.com> <501AFA6B.4010005@gmail.com> <6C6B28D4DC342643927BEAFCE8707BF63E9DB6AE@DBDE01.ent.ti.com> <501B8997.2070307@gmail.com> <F20D4CDD972CFA4D89D3A083D2D561967FF1F67DE3@BGMAIL01.nvidia.com> <501B93AB.7050501@gmail.com> <79CD15C6BA57404B839C016229A409A83EA7F4A3@DBDE01.ent.ti.com> <501BB8F2.8030909@gmail.com> <79CD15C6BA57404B839C016229A409A83EA7FB18@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <501E5FA9.9050905-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EA7FB18@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Cc: Ajay Gupta <ajayg@nvidia.com>, "B, Ravi" <ravibabu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>, "ajayguptaj@gmail.com" <ajayguptaj@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 5, 2012 at 1:57 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 03.08.2012 17:48, Hiremath, Vaibhav wrote:
+> On Fri, Aug 03, 2012 at 17:11:38, Daniel Mack wrote:
+>> On 03.08.2012 11:07, Hiremath, Vaibhav wrote:
+>>> I have just pushed the code (V7 which Ravi submitted), so can you please try 
+>>> with below branch? 
+>>>
+>>> https://github.com/hvaibhav/am335x-linux/tree/am335x-upstream-staging-usb
+>>
+>> Thanks for doing this, but I'm unfortunately getting tons of merge
+>> conflicts when I try to put this on top of 3.6-rc1. Still pondering
+>> which way around is the easiest to get this solved.
+>>
+>> OTOH, I wonder whether your staging branches would need to rebased
+>> sooner or later anyway?
+>>
+> 
+> I have already pushed branch based on v3.6-rc1 (boot tested),
+> 
+> https://github.com/hvaibhav/am335x-linux/tree/am335x-linux-next-master
 
->> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Ok, thanks. Mark, did the patches reach you this time? I think they
-> should go thru the SPI tree.
+Sorry, I don't get it yet. Your am335x-linux-next-master can be merged
+into v3.6-rc1 without problems, but it doesn't contain Ravi's patches.
+And am335x-upstream-staging-usb doesn't apply on top of either
+am335x-linux-next-master or v3.6-rc1.
 
-Yeah no problem, Mark is always faster than me ...
+Maybe I just miss a detail here. Could you again explain which branch
+will you publish for merging in the 3.7 merge window, and what are its
+dependencies?
 
-Yours,
-Linus Walleij
 
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Thanks for your work,
+Daniel
