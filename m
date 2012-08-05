@@ -1,41 +1,316 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend 2/2] SPI: spi-gpio: Add DT bindings
-Date: Sun, 5 Aug 2012 02:14:59 +0200
-Message-ID: <CACRpkdYY9oFAJ5qdhY-hD+YAnhO3DxxhY_VQGS4sKuimLxWaHw@mail.gmail.com>
-References: <1343854638-32563-1-git-send-email-zonque@gmail.com>
- <1343854638-32563-2-git-send-email-zonque@gmail.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3] regulator: tps6586x: add support for SYS rail
+Date: Sun, 5 Aug 2012 13:11:58 +0530
+Message-ID: <1344152518-29378-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1343854638-32563-2-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, grant.likely@secretlab.ca
+Cc: rob.herring@calxeda.com, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 1, 2012 at 10:57 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Device have SYS rail which is always ON. It is system
+power bus. LDO5 and LDO_RTC get powered through this rail
+internally. Add support for this rail and make the
+LDO5/LDO_RTC input supply to "sys".
+Update document accordingly.
 
-> This patch adds DT bindings to the spi-gpio driver and some
-> documentation about how to use it.
->
-> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+Tested-by: Stephen Warren <swarren@wwwdotorg.org>
+---
+Changes from v1->v2:
+- Remove the voltage related apis from sys regulator ops.
+- Remove volta table for SYS regulator.
+- Add the supply name for SYS regulaotr's desc.
+- Remove apply_uV setting as it is no more require.
 
->From a GPIO point of view this looks good to me.
+Changes from V2->V3:
+- Rebased against
+    git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+- Removed the regulator-min-microvolt and regulator-max-microvolt.
+- Carrying forward the acked by Stephen.
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+ .../devicetree/bindings/regulator/tps6586x.txt     |   65 ++++++++++++--------
+ drivers/mfd/tps6586x.c                             |   13 ++++
+ drivers/regulator/tps6586x-regulator.c             |   20 ++++++-
+ include/linux/mfd/tps6586x.h                       |    1 +
+ 4 files changed, 71 insertions(+), 28 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/regulator/tps6586x.txt b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+index d156e1b..ec527d9 100644
+--- a/Documentation/devicetree/bindings/regulator/tps6586x.txt
++++ b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+@@ -8,7 +8,8 @@ Required properties:
+ - gpio-controller: mark the device as a GPIO controller
+ - regulators: list of regulators provided by this controller, must have
+   property "regulator-compatible" to match their hardware counterparts:
+-  sm[0-2], ldo[0-9] and ldo_rtc
++  sys, sm[0-2], ldo[0-9] and ldo_rtc
++- sys-supply: The input supply for SYS.
+ - sm0-supply: The input supply for the SM0.
+ - sm1-supply: The input supply for the SM1.
+ - sm2-supply: The input supply for the SM2.
+@@ -20,6 +21,9 @@ Required properties:
+ 
+ Each regulator is defined using the standard binding for regulators.
+ 
++Note: LDO5 and LDO_RTC is supplied by SYS regulator internally and driver
++      take care of making proper parent child relationship.
++
+ Example:
+ 
+ 	pmu: tps6586x@34 {
+@@ -30,6 +34,7 @@ Example:
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
+ 
++		sys-supply = <&some_reg>;
+ 		sm0-supply = <&some_reg>;
+ 		sm1-supply = <&some_reg>;
+ 		sm2-supply = <&some_reg>;
+@@ -43,8 +48,16 @@ Example:
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+-			sm0_reg: regulator@0 {
++			sys_reg: regulator@0 {
+ 				reg = <0>;
++				regulator-compatible = "sys";
++				regulator-name = "vdd_sys";
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sm0_reg: regulator@1 {
++				reg = <1>;
+ 				regulator-compatible = "sm0";
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+@@ -52,8 +65,8 @@ Example:
+ 				regulator-always-on;
+ 			};
+ 
+-			sm1_reg: regulator@1 {
+-				reg = <1>;
++			sm1_reg: regulator@2 {
++				reg = <2>;
+ 				regulator-compatible = "sm1";
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+@@ -61,8 +74,8 @@ Example:
+ 				regulator-always-on;
+ 			};
+ 
+-			sm2_reg: regulator@2 {
+-				reg = <2>;
++			sm2_reg: regulator@3 {
++				reg = <3>;
+ 				regulator-compatible = "sm2";
+ 				regulator-min-microvolt = <3000000>;
+ 				regulator-max-microvolt = <4550000>;
+@@ -70,72 +83,72 @@ Example:
+ 				regulator-always-on;
+ 			};
+ 
+-			ldo0_reg: regulator@3 {
+-				reg = <3>;
++			ldo0_reg: regulator@4 {
++				reg = <4>;
+ 				regulator-compatible = "ldo0";
+ 				regulator-name = "PCIE CLK";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo1_reg: regulator@4 {
+-				reg = <4>;
++			ldo1_reg: regulator@5 {
++				reg = <5>;
+ 				regulator-compatible = "ldo1";
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 			};
+ 
+-			ldo2_reg: regulator@5 {
+-				reg = <5>;
++			ldo2_reg: regulator@6 {
++				reg = <6>;
+ 				regulator-compatible = "ldo2";
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 			};
+ 
+-			ldo3_reg: regulator@6 {
+-				reg = <6>;
++			ldo3_reg: regulator@7 {
++				reg = <7>;
+ 				regulator-compatible = "ldo3";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo4_reg: regulator@7 {
+-				reg = <7>;
++			ldo4_reg: regulator@8 {
++				reg = <8>;
+ 				regulator-compatible = "ldo4";
+ 				regulator-min-microvolt = <1700000>;
+ 				regulator-max-microvolt = <2475000>;
+ 			};
+ 
+-			ldo5_reg: regulator@8 {
+-				reg = <8>;
++			ldo5_reg: regulator@9 {
++				reg = <9>;
+ 				regulator-compatible = "ldo5";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo6_reg: regulator@9 {
+-				reg = <9>;
++			ldo6_reg: regulator@10 {
++				reg = <10>;
+ 				regulator-compatible = "ldo6";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo7_reg: regulator@10 {
+-				reg = <10>;
++			ldo7_reg: regulator@11 {
++				reg = <11>;
+ 				regulator-compatible = "ldo7";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo8_reg: regulator@11 {
+-				reg = <11>;
++			ldo8_reg: regulator@12 {
++				reg = <12>;
+ 				regulator-compatible = "ldo8";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo9_reg: regulator@12 {
+-				reg = <12>;
++			ldo9_reg: regulator@13 {
++				reg = <13>;
+ 				regulator-compatible = "ldo9";
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+diff --git a/drivers/mfd/tps6586x.c b/drivers/mfd/tps6586x.c
+index 353c348..380a3c8 100644
+--- a/drivers/mfd/tps6586x.c
++++ b/drivers/mfd/tps6586x.c
+@@ -25,6 +25,7 @@
+ #include <linux/i2c.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/of_regulator.h>
++#include <linux/regulator/machine.h>
+ 
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/tps6586x.h>
+@@ -346,6 +347,7 @@ failed:
+ 
+ #ifdef CONFIG_OF
+ static struct of_regulator_match tps6586x_matches[] = {
++	{ .name = "sys",     .driver_data = (void *)TPS6586X_ID_SYS     },
+ 	{ .name = "sm0",     .driver_data = (void *)TPS6586X_ID_SM_0    },
+ 	{ .name = "sm1",     .driver_data = (void *)TPS6586X_ID_SM_1    },
+ 	{ .name = "sm2",     .driver_data = (void *)TPS6586X_ID_SM_2    },
+@@ -369,6 +371,7 @@ static struct tps6586x_platform_data *tps6586x_parse_dt(struct i2c_client *clien
+ 	struct tps6586x_platform_data *pdata;
+ 	struct tps6586x_subdev_info *devs;
+ 	struct device_node *regs;
++	const char *sys_rail_name = NULL;
+ 	unsigned int count;
+ 	unsigned int i, j;
+ 	int err;
+@@ -391,12 +394,22 @@ static struct tps6586x_platform_data *tps6586x_parse_dt(struct i2c_client *clien
+ 		return NULL;
+ 
+ 	for (i = 0, j = 0; i < num && j < count; i++) {
++		struct regulator_init_data *reg_idata;
++
+ 		if (!tps6586x_matches[i].init_data)
+ 			continue;
+ 
++		reg_idata  = tps6586x_matches[i].init_data;
+ 		devs[j].name = "tps6586x-regulator";
+ 		devs[j].platform_data = tps6586x_matches[i].init_data;
+ 		devs[j].id = (int)tps6586x_matches[i].driver_data;
++		if (devs[j].id == TPS6586X_ID_SYS)
++			sys_rail_name = reg_idata->constraints.name;
++
++		if ((devs[j].id == TPS6586X_ID_LDO_5) ||
++			(devs[j].id == TPS6586X_ID_LDO_RTC))
++			reg_idata->supply_regulator = sys_rail_name;
++
+ 		devs[j].of_node = tps6586x_matches[i].of_node;
+ 		j++;
+ 	}
+diff --git a/drivers/regulator/tps6586x-regulator.c b/drivers/regulator/tps6586x-regulator.c
+index 2855d0c..31ccaa6 100644
+--- a/drivers/regulator/tps6586x-regulator.c
++++ b/drivers/regulator/tps6586x-regulator.c
+@@ -107,6 +107,9 @@ static struct regulator_ops tps6586x_regulator_ops = {
+ 	.disable = regulator_disable_regmap,
+ };
+ 
++static struct regulator_ops tps6586x_sys_regulator_ops = {
++};
++
+ static const unsigned int tps6586x_ldo0_voltages[] = {
+ 	1200000, 1500000, 1800000, 2500000, 2700000, 2850000, 3100000, 3300000,
+ };
+@@ -176,15 +179,28 @@ static const unsigned int tps6586x_dvm_voltages[] = {
+ 	TPS6586X_REGULATOR_DVM_GOREG(goreg, gobit)			\
+ }
+ 
++#define TPS6586X_SYS_REGULATOR()					\
++{									\
++	.desc	= {							\
++		.supply_name = "sys",					\
++		.name	= "REG-SYS",					\
++		.ops	= &tps6586x_sys_regulator_ops,			\
++		.type	= REGULATOR_VOLTAGE,				\
++		.id	= TPS6586X_ID_SYS,				\
++		.owner	= THIS_MODULE,					\
++	},								\
++}
++
+ static struct tps6586x_regulator tps6586x_regulator[] = {
++	TPS6586X_SYS_REGULATOR(),
+ 	TPS6586X_LDO(LDO_0, "vinldo01", ldo0, SUPPLYV1, 5, 3, ENC, 0, END, 0),
+ 	TPS6586X_LDO(LDO_3, "vinldo23", ldo, SUPPLYV4, 0, 3, ENC, 2, END, 2),
+-	TPS6586X_LDO(LDO_5, NULL, ldo, SUPPLYV6, 0, 3, ENE, 6, ENE, 6),
++	TPS6586X_LDO(LDO_5, "REG-SYS", ldo, SUPPLYV6, 0, 3, ENE, 6, ENE, 6),
+ 	TPS6586X_LDO(LDO_6, "vinldo678", ldo, SUPPLYV3, 0, 3, ENC, 4, END, 4),
+ 	TPS6586X_LDO(LDO_7, "vinldo678", ldo, SUPPLYV3, 3, 3, ENC, 5, END, 5),
+ 	TPS6586X_LDO(LDO_8, "vinldo678", ldo, SUPPLYV2, 5, 3, ENC, 6, END, 6),
+ 	TPS6586X_LDO(LDO_9, "vinldo9", ldo, SUPPLYV6, 3, 3, ENE, 7, ENE, 7),
+-	TPS6586X_LDO(LDO_RTC, NULL, ldo, SUPPLYV4, 3, 3, V4, 7, V4, 7),
++	TPS6586X_LDO(LDO_RTC, "REG-SYS", ldo, SUPPLYV4, 3, 3, V4, 7, V4, 7),
+ 	TPS6586X_LDO(LDO_1, "vinldo01", dvm, SUPPLYV1, 0, 5, ENC, 1, END, 1),
+ 	TPS6586X_LDO(SM_2, "sm2", sm2, SUPPLYV2, 0, 5, ENC, 7, END, 7),
+ 
+diff --git a/include/linux/mfd/tps6586x.h b/include/linux/mfd/tps6586x.h
+index f350fd0..9451471 100644
+--- a/include/linux/mfd/tps6586x.h
++++ b/include/linux/mfd/tps6586x.h
+@@ -14,6 +14,7 @@
+ #define TPS6586X_SLEW_RATE_MASK         0x07
+ 
+ enum {
++	TPS6586X_ID_SYS,
+ 	TPS6586X_ID_SM_0,
+ 	TPS6586X_ID_SM_1,
+ 	TPS6586X_ID_SM_2,
+-- 
+1.7.1.1
+
