@@ -1,24 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V1 0/3] Extend TCA6424 support
-Date: Sun, 5 Aug 2012 01:39:17 +0200
-Message-ID: <CACRpkdZMKJhLd49Mz2iFK2FE=JYDAYzJBx_iDCP-V6-CLe3thg@mail.gmail.com>
-References: <cover.1341925681.git.cmahapatra@ti.com>
-	<cover.1343026861.git.cmahapatra@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH resend 2/2] SPI: spi-gpio: Add DT bindings
+Date: Sun, 5 Aug 2012 02:14:59 +0200
+Message-ID: <CACRpkdYY9oFAJ5qdhY-hD+YAnhO3DxxhY_VQGS4sKuimLxWaHw@mail.gmail.com>
+References: <1343854638-32563-1-git-send-email-zonque@gmail.com>
+ <1343854638-32563-2-git-send-email-zonque@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1343026861.git.cmahapatra@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chandrabhanu Mahapatra <cmahapatra@ti.com>
-Cc: linus.walleij@stericsson.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, tony@atomide.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, leed.aguilar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1343854638-32563-2-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 28, 2012 at 8:05 AM, Chandrabhanu Mahapatra
-<cmahapatra@ti.com> wrote:
+On Wed, Aug 1, 2012 at 10:57 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> These patches were based on mainline kernel v3.5rc7.
+> This patch adds DT bindings to the spi-gpio driver and some
+> documentation about how to use it.
+>
+> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 
-Aha. Rebase to v3.6-rc1 because much of this is now upstream.
+>From a GPIO point of view this looks good to me.
+
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Yours,
 Linus Walleij
