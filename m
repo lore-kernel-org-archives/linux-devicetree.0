@@ -1,346 +1,53 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Sun, 5 Aug 2012 12:50:54 +0200
-Message-ID: <CACRpkdbrdWw_HR91r72aB_S2+vxiaSBKHwW+Tsmi8pKk9VsgFg@mail.gmail.com>
-References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
- <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
- <20120730074714.GC15245@avionic-0098.mockup.avionic-design.de>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH resend 2/2] SPI: spi-gpio: Add DT bindings
+Date: Sun, 05 Aug 2012 13:57:29 +0200
+Message-ID: <501E5FA9.9050905@gmail.com>
+References: <1343854638-32563-1-git-send-email-zonque@gmail.com>
+	<1343854638-32563-2-git-send-email-zonque@gmail.com>
+	<CACRpkdYY9oFAJ5qdhY-hD+YAnhO3DxxhY_VQGS4sKuimLxWaHw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120730074714.GC15245-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <CACRpkdYY9oFAJ5qdhY-hD+YAnhO3DxxhY_VQGS4sKuimLxWaHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2012 at 9:47 AM, Thierry Reding
-<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
->> On Mon, Jul 23, 2012 at 1:59 PM, Thierry Reding
->> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-
->> > +- interrupt-controller: Marks the device as an interrupt controller.
->> > +- nr-gpios: The number of pins supported by the controller.
+On 05.08.2012 02:14, Linus Walleij wrote:
+> On Wed, Aug 1, 2012 at 10:57 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> This patch adds DT bindings to the spi-gpio driver and some
+>> documentation about how to use it.
 >>
->> These two last things look very generic, like something every GPIO
->> driver could want to expose.
->
-> As Arnd mentioned, interrupt-controller is a generic property required
-> by all interrupt controller nodes. Perhaps it shouldn't be listed in the
-> DT binding for this driver.
+>> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+> 
+> From a GPIO point of view this looks good to me.
+> 
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-After reading Rob's etc comments I think nr-gpios should be in this
-binding, but interrupt-controller seems like it should go into
-Documentation/devicetree/bindings/gpio/gpio.txt
-can you take care of this?
+Ok, thanks. Mark, did the patches reach you this time? I think they
+should go thru the SPI tree.
 
-(Anyone agains, beat me up...)
 
->> > +config GPIO_ADNP
->> > +       tristate "Avionic Design N-bit GPIO expander"
->> > +       depends on I2C && OF
->> > +       help
->> > +         This option enables support for N GPIOs found on Avionic Design
->> > +         I2C GPIO expanders. The register space will be extended by powers
->> > +         of two, so the controller will need to accomodate for that. For
->> > +         example: if a controller provides 48 pins, 6 registers will be
->> > +         enough to represent all pins, but the driver will assume a
->> > +         register layout for 64 pins (8 registers).
->> > +
->> > +config GPIO_ADNP_IRQ
->> > +       tristate "Interrupt controller support"
->> > +       depends on GPIO_ADNP
->> > +       help
->> > +         Say yes here to enable the Avionic Design N-bit GPIO expander to
->> > +         be used as an interrupt controller.
->>
->> First: please describe the usecase where the Avionic driver is used
->> without making use of the IRQ, and *why* it should be possible
->> to configure this out. E.g. is there a hardware which isn't using the
->> IRQ portions? If there is no non-irq usecase just drop this
->> config option.
->
-> This expander is used in a number of Tegra-based boards and handles
-> things like enabling or disabling power to a given IC but on other
-> boards it is also used to handle interrupts from input devices or
-> card-detect for example.
->
-> The controller is synthesized in a CPLD, which is one of the reasons for
-> the nr-gpios DT property. There is at least one platform that currently
-> doesn't use the interrupt functionality. Mainly I allowed this to be
-> configured out in order to reduce the number of interrupts required for
-> a platform. Another reason was that at the time I first wrote this, IRQ
-> domains hadn't been available, so the driver couldn't be built as a
-> module if interrupt support was required. This also no longer applies.
->
-> I'm actually fine either way, but I thought it'd be most flexible by
-> keeping the IRQ support optional for the above reasons.
+Thanks,
+Daniel
 
-We're working on a goal of a "single zImage" (one unified ARM
-kernel) which means your platform must be able to handle the
-case where this is turned on anyway, so I would suggest you
-drop the optional compile-time IRQ support, just make it
-optional at runtime instead.
 
->> > +       u8 *irq_mask;
->> > +       u8 *irq_mask_cur;
->> > +       u8 *irq_level;
->> > +       u8 *irq_rise;
->> > +       u8 *irq_fall;
->> > +       u8 *irq_high;
->> > +       u8 *irq_low;
->>
->> Some or all of this looks like a regmap reimplementation, see below.
->
-> Actually none of these represent actual registers, except for irq_mask
-> and irq_mask_cur. They are used to emulate various IRQ trigger modes.
-
-OK.
-
->> When I do this at several places in a driver I usually define
->> a macro like
->>
->> #define to_adnp(foo) container_of(foo, struct adnp, gpio)
->>
->> Used like so:
->>
->> struct adnp *adnp = to_adnp(chip);
->
-> Yes, I usually do that as well. I guess this driver has been in the
-> works in too many variants for too long. =)
-
-OK expect it to be changed in v3 then...
-
->> > +       unsigned int reg = offset >> gpio->reg_shift;
->> > +       unsigned int pos = offset & 7;
->> > +       u8 value;
->> > +       int err;
->> > +
->> > +       mutex_lock(&gpio->i2c_lock);
->>
->> The point of taking this mutex here avoids me.
->> adnp_read() only performs a single transaction.
->
-> I think that's a relic from an earlier version that used to access the
-> PTR (Pin Tristate Register) as well. At the time I used to return 2 here
-> to signify a tristated input, which was dependent on the contents of the
-> PTR. Tristating an output is, I believe, better done using pinmux/
-> pinctrl nowadays, so I took that code because the only platform where
-> this was ever used will probably never be mainlined.
-
-OK so will be gone in v3 I guess.
-
-> On that note, provided there is special additional circuitry, the GPIO
-> controller is able to detect tristate on an input. I'm not aware that
-> the pinctrl subsystem provides for that functionality yet, right?
-
-pinctrl is usually about *setting* things into tristate, but I'm all
-for adding support for getting it as well. But that depends on
-the generic pin configurations being adopted first (still most
-controllers have their own way of doing pin config, so this
-cannot be represented in a generic way).
-
->> > +       base = kzalloc(regs * 5, GFP_KERNEL);
->>
->> Why kzalloc()/kfree() when you can just use a
->>
->> static u8 base[N];
->>
->> where N is the max number of registers on any HW instead?
->
-> As I explained above, the number of pins is configurable, so it'd be
-> quite a waste to always assume a maximum of, say, 256 pins if the
-> hardware actually only uses 8.
-
-OK but atleast find a way to move this to the probe() function,
-what happens if the debugfs file is browsed and you run out
-of memory? Not nice, and you were using this to debug as
-well...
-
->> Usually we define the struct gpio_chip as a static const and have
->> the state containter hold a static const struct gpio_chip *chip;
->> entry assigned to point to the static const at probe time.
->
-> The problem with a static const is that you can no longer configure the
-> number of GPIOs at runtime, which is sort of essential for this driver.
-
-OK keep it like this...
-
->> All other GPIO drivers #ifdef their debugfs code, this probably
->> works fine too, but never saw it before.
->>
->> I'm ambivalent about this, I sort of like it because it avoids
->> #ifdefs and also makes sure the code is always compiled,
->> so if you like it like this, keep it.
->
-> I've started to use this wherever possible because otherwise you have to
-> build numerous configurations to ensure complete compile coverage. Then
-> again this also has the drawback to potentially hide issues if you don't
-> properly separate conditionalized code.
-
-OK I'll adopt to liking this.
-
->> (...)
->> > +static void adnp_irq_update_mask(struct adnp *gpio)
->> > +{
->> > +       unsigned int regs = 1 << gpio->reg_shift;
->> > +       bool equal = true;
->> > +       unsigned int i;
->> > +
->> > +       for (i = 0; i < regs; i++) {
->> > +               if (gpio->irq_mask[i] != gpio->irq_mask_cur[i]) {
->> > +                       equal = false;
->> > +                       break;
->> > +               }
->> > +       }
->>
->> This is not looking good. It looks like you're reimplementing
->> parts of regmap.
->>
->> In that case, please use <linux/regmap.h> to cache registers
->> instead.
->>
->> But I'm not sure ...
->>
->> (...)
->> > +static void adnp_irq_bus_lock(struct irq_data *data)
->> > +{
->> > +       struct adnp *gpio = irq_data_get_irq_chip_data(data);
->> > +       unsigned int regs = 1 << gpio->reg_shift;
->> > +
->> > +       mutex_lock(&gpio->irq_lock);
->> > +       memcpy(gpio->irq_mask_cur, gpio->irq_mask, regs);
->> > +}
->> > +
->> > +static void adnp_irq_bus_unlock(struct irq_data *data)
->> > +{
->> > +       struct adnp *gpio = irq_data_get_irq_chip_data(data);
->> > +
->> > +       adnp_irq_update_mask(gpio);
->> > +       mutex_unlock(&gpio->irq_lock);
->> > +}
->>
->> Actually I'm not following why the IRQ mask registers are shadowed
->> at bus_lock and restored at bus_unlock().
->>
->> A comment describing why that's needed and how it works is
->> definately needed.
->
-> I'm not sure that this is required anymore. IIRC I did copy this from
-> some other driver at the time. This is probably supposed to be an
-> optimization, but I think I can live without it.
-
-If it's an optimization, please see if you can live without it and
-add it back in using regmap if you want it later. regmap rocks...
-
->> > +       gpio->irq_mask = devm_kzalloc(chip->dev, regs * 7, GFP_KERNEL);
->> > +       if (!gpio->irq_mask)
->> > +               return -ENOMEM;
->> > +
->> > +       gpio->irq_mask_cur = gpio->irq_mask + (regs * 1);
->> > +       gpio->irq_level = gpio->irq_mask + (regs * 2);
->> > +       gpio->irq_rise = gpio->irq_mask + (regs * 3);
->> > +       gpio->irq_fall = gpio->irq_mask + (regs * 4);
->> > +       gpio->irq_high = gpio->irq_mask + (regs * 5);
->> > +       gpio->irq_low = gpio->irq_mask + (regs * 6);
->>
->> I'm not following this regs * 1, regs * 2 ... regs *7 stuff. What are you doing
->> here? Explain with some comment atleast.
->
-> Basically I need at least irq_level, irq_rise, irq_fall, irq_high and
-> irq_low to keep track of the current level and trigger modes for each
-> interrupt. Instead of allocating small chunks for each of these I
-> allocate one chunk and just make the others point into that.
-
-Maybe you said this would go away in this case not comments
-of course.
-
-But I wasn't getting the multiplication part. I understand the
-allocation, 7 registers time the number of registers (hm, there
-is something about the naming too....)
-
-You're storing the things in such an awkward way: all
-current masks for all registers sets, then all levels for
-all register etc.
-
-Instead could you store all the flags for *one* instance
-then the next set of registers etc.
-
->> > +       for (i = 0; i < regs; i++) {
->> > +               err = adnp_read(gpio, GPIO_PLR(gpio) + i, &gpio->irq_level[i]);
->> > +               if (err < 0)
->> > +                       return err;
->> > +       }
->>
->> Looks like regmap reimplementation.
->
-> This is used to obtain the initial pin levels, which in turn is required
-> to check for rising and falling edges.
-
-Yeah sorry I misread this code.
-
->> > +       err = request_threaded_irq(gpio->client->irq, NULL, adnp_irq,
->> > +                                  IRQF_TRIGGER_RISING | IRQF_ONESHOT,
->> > +                                  dev_name(chip->dev), gpio);
->>
->> Since you're using devm_* above use it here too:
->> devm_request_threaded_irq().
->> > (...)
->> > +static void adnp_irq_teardown(struct adnp *gpio)
->> > +{
->> > +       unsigned int irq, i;
->> > +
->> > +       free_irq(gpio->client->irq, gpio);
->>
->> If you're using devm to grab the IRQ this is not needed.
->
-> I don't think that'll work. In this case the interrupt needs to be freed
-> before cleaning up, because otherwise the interrupt handler may still be
-> run after the IRQ domain has already been removed.
-
-Hm. Paging Grant on this one.
-
-Grant: can't we add devm_* managed IRQ domains so this
-ordering etc goes into the core as well?
-
->> > +               return -EPROBE_DEFER;
->>
->> Why would you defer in this case? If the IRQ controller appear later
->> than the GPIO driver?
->
-> Yes. In particular when using DT it can happen that the parent interrupt
-> controller is probed later than this.
-
-OK.
-
->> > +       if (IS_ENABLED(CONFIG_GPIO_ADNP_IRQ)) {
->> > +               err = adnp_irq_setup(gpio);
->> > +               if (err < 0)
->> > +                       goto teardown;
->> > +       }
->>
->> And that activates the question why this should be conditional,
->> please elaborate.
->
-> I think I've answered this before.
-
-Yep, and I suggest to make this 100% runtime, not compile-time.
-
-> Thanks for reviewing. I'll fixup the problems you've pointed out and
-> will have to retest.
-
-Thanks, waiting for v3.
-
-Yours,
-Linus Walleij
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
