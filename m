@@ -1,72 +1,135 @@
-From: "Pihet-XID, Jean" <j-pihet-l0cyMroinI0@public.gmane.org>
-Subject: Re: Gethering power management/policy hw drivers under
- drivers/power/? (Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences)
-Date: Mon, 6 Aug 2012 10:45:02 +0200
-Message-ID: <CAN5iSWokvOPa775CNF2XXeg4vM5QTmViJwH32J_=353ckFyt7A@mail.gmail.com>
-References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
-	<1343390750-3642-2-git-send-email-acourbot@nvidia.com>
-	<20120727181923.GB23564@kroah.com>
-	<5015E8AE.8060404@nvidia.com>
-	<20120730024049.GA10442@lizard>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 01/11] drivers: usb: otg: add a new driver for omap
+ usb2 phy
+Date: Mon, 6 Aug 2012 11:49:30 +0300
+Message-ID: <20120806084928.GD17551@arwen.pp.htv.fi>
+References: <1343639400-28725-1-git-send-email-kishon@ti.com>
+ <1343639400-28725-2-git-send-email-kishon@ti.com>
+ <20120803132708.GC8269@arwen.pp.htv.fi>
+ <CAAe_U6K15Nm5aNs2Vn71G7ELZWka1zB2E3VGZWTc0VjyViJ6Yw@mail.gmail.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120730024049.GA10442@lizard>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, KEERTHY J <j-keerthy-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============4509637745874858589=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAAe_U6K15Nm5aNs2Vn71G7ELZWka1zB2E3VGZWTc0VjyViJ6Yw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anton,
 
-Sorry for the late reply. I was away and back now.
+--===============4509637745874858589==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
+Content-Disposition: inline
 
-On Mon, Jul 30, 2012 at 4:40 AM, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Jul 30, 2012 at 10:51:42AM +0900, Alex Courbot wrote:
-> [...]
->> On the other hand I have just noticed that the apparently unrelated
->> Adaptive Voltage Scaling driver just appeared in drivers/power/avs.
->> So if Anton and David are ok with this, maybe I could put the power
->> sequences code in its own subdirectory within drivers/power.
->
-> Well, currently drivers/power/ is indeed just for power supply class
-> subsystem and drivers. But if the trend is to gather power management
-> ("policy") stuff under one directory, i.e.
->
-> drivers/
->   power/
->     supplies/    <- former "power supply class and drivers"
->     regulators/
->     idle/
->     cpuidle/
->     cpufreq/
->     devfreq/
->     avs/
->     ...
->
-> That would probably make sense, we could easily see the big picture.
-> But if we're not going to do this long-term, I would suggest to stick
-> to just a new directory under drivers (and move drivers/power/avs/ to
-> drivers/avs).
->
-> Cc'ing some more people...
->
-> Thanks,
->
-> p.s. Jean, why am I the last person who discovers drivers/power/avs/?
-> Would be nice to Cc me on such patches; by moving AVS under
-> drivers/power/ you effectively nominated me as its maintainer. :-)
-Oops, I am really sorry about that ;-( . I wrongly assumed Rafael and
-Greg KH were the contact persons for drivers/power and so I contacted
-them before moving the code.
 
-Thanks for letting me know. Are you ok with the changes? Let me know
-if some more changes are needed.
+--VMt1DrMGOVs3KQwf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Jean
+Hi,
 
->
-> --
-> Anton Vorontsov
-> Email: cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+On Fri, Aug 03, 2012 at 08:01:44PM +0530, ABRAHAM, KISHON VIJAY wrote:
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +#ifdef CONFIG_PM_RUNTIME
+> >> +
+> >> +static int omap_usb2_runtime_suspend(struct device *dev)
+> >> +{
+> >> +     struct platform_device  *pdev =3D to_platform_device(dev);
+> >> +     struct omap_usb *phy =3D platform_get_drvdata(pdev);
+> >> +
+> >> +     clk_disable(phy->wkupclk);
+> >
+> > weird. I would expect the wakeup clock to be enabled on suspend and
+> > disabled on resume. Isn't this causing any unbalanced disable warnings ?
+>=20
+> Even I was expecting the wakeup clock to be enabled on suspend but if
+> we have this enabled coreaon domain is never
+> gated and core does not hit low power state. btw Why do think this is
+> unbalanced?
+
+because you never do a clk_enable() on probe(), so on your first
+suspend, you will disable the clock without having enabled it before,
+no? Unless pm_runtime forces a runtime_resume() when you call
+pm_runtime_enable()...
+
+> >> +static int omap_usb2_runtime_resume(struct device *dev)
+> >> +{
+> >> +     u32 ret =3D 0;
+> >> +     struct platform_device  *pdev =3D to_platform_device(dev);
+> >> +     struct omap_usb *phy =3D platform_get_drvdata(pdev);
+> >> +
+> >> +     ret =3D clk_enable(phy->wkupclk);
+> >> +     if (ret < 0)
+> >> +             dev_err(phy->dev, "Failed to enable wkupclk %d\n", ret);
+> >> +
+> >> +     return ret;
+> >> +}
+> >> +
+> >> +static const struct dev_pm_ops omap_usb2_pm_ops =3D {
+> >> +     SET_RUNTIME_PM_OPS(omap_usb2_runtime_suspend, omap_usb2_runtime_=
+resume,
+> >> +             NULL)
+> >
+> > only runtime ? What about static suspend ? We need this to work also
+> > after a traditional echo mem > /sys/power/state ;-)
+>=20
+> The static suspend case is handled by users of this phy using
+> set_suspend hooks.
+
+I'm not sure if that's too wise, what if your user enabled USB, but
+for whatever reason loaded only the phy driver and not musb or dwc3. It
+will fail, right ?
+
+--=20
+balbi
+
+--VMt1DrMGOVs3KQwf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQH4UYAAoJEIaOsuA1yqREFocP/i8C2ZsJXeF15dc8ODbWtT5L
+1K3bFJwKZCqXIxLi/vpOgMYrpcCmv0EpYx4rwYtnDwXL3cd/t9i6XcjiJz6bBv7W
+EwVfK185DNSf/nLM1lbiKiDSmNDZiMDe2MNYR6rts4jes9DjOr40mT2dhO1Xok5G
+L8LXNifwjb/YUYXhvQ99iFN9Z5wj8wY0V6xJypP+fhjcx9TQac8p7aQmpi3/vayt
+gXN8N3eXOozQeBACOprnhcQ6SXgOPWVojYE99gzjgYPaY0SD3LU1Hi2JjUT1ty0v
+fj6P82ykMVYBjQBuJp5ShKVKFRCchoA07mNs96S1cZGx6sv75fmGyyS5MOPWh0iM
+LmD8281A0Mw0oF6gP58iTSS5hyrAEgU6R7UVCJyYQsy5gTXIqy81pVaLJu5KSB5E
+T0F3ncojFbnCde46hRpPTVQdCQde7uubrwmm5/C1MVYob/yh9ibxPznNMygGFGmp
+/7pHw1we1wGE9J5MP8Im/1c6D8tWeI3yJogeUrf5YqCeYQz9ANuNyiZmGBezS+Oe
+jMqw35b/aaUfSU6PkMWj8c3wkCkTGhxwSbdB29+W4Ee1Q9m/DHRJND1OIOpaYTNX
+t4tOsLSjvYt4VyBli6rek6ehW2Jp/pY/2z0R8PGiwzPto6gKeh3/ASzu/J60Lr2P
+gCgnC/x8JY1a9/hc7VS5
+=8Oyd
+-----END PGP SIGNATURE-----
+
+--VMt1DrMGOVs3KQwf--
+
+--===============4509637745874858589==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4509637745874858589==--
