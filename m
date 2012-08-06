@@ -1,206 +1,208 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v7 7/7] arm: omap: phy: remove unused functions from omap-phy-internal.c
-Date: Mon, 6 Aug 2012 18:38:00 +0530
-Message-ID: <1344258480-4304-8-git-send-email-kishon@ti.com>
-References: <1344258480-4304-1-git-send-email-kishon@ti.com>
+Subject: [PATCH v4 1/2] drivers: bus: add a new driver for omap-ocp2scp
+Date: Mon, 6 Aug 2012 19:16:30 +0530
+Message-ID: <1344260791-6402-2-git-send-email-kishon@ti.com>
+References: <1344260791-6402-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1344258480-4304-1-git-send-email-kishon@ti.com>
+In-Reply-To: <1344260791-6402-1-git-send-email-kishon@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, b-cousson@ti.com, rnayak@ti.com, tony@atomide.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, balbi@ti.com, arnd@arndb.de
+Cc: rob@landley.net, linux@arm.linux.org.uk, ohad@wizery.com, linus.walleij@linaro.org, myungjoo.ham@samsung.com, rusty@rustcorp.com.au, swarren@nvidia.com, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-All the unnessary functions in omap-phy-internal is removed.
-These functionality are now handled by omap-usb2 phy driver.
+Adds a new driver *omap-ocp2scp*. This driver takes the responsibility of
+creating all the devices that is connected to OCP2SCP. In the case of OMAP4,
+USB2PHY is connected to ocp2scp.
 
-Cc: Felipe Balbi <balbi@ti.com>
+This also includes device tree support for ocp2scp driver and
+the documentation with device tree binding information is updated.
+
+Acked-by: Felipe Balbi <balbi@ti.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/mach-omap2/omap_phy_internal.c |  138 -------------------------------
- arch/arm/mach-omap2/twl-common.c        |    5 --
- arch/arm/mach-omap2/usb-musb.c          |    3 -
- 3 files changed, 146 deletions(-)
+ .../devicetree/bindings/bus/omap-ocp2scp.txt       |   10 +++
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    2 +
+ drivers/bus/Kconfig                                |   15 ++++
+ drivers/bus/Makefile                               |    5 ++
+ drivers/bus/omap-ocp2scp.c                         |   88 ++++++++++++++++++++
+ 6 files changed, 122 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
+ create mode 100644 drivers/bus/Kconfig
+ create mode 100644 drivers/bus/Makefile
+ create mode 100644 drivers/bus/omap-ocp2scp.c
 
-diff --git a/arch/arm/mach-omap2/omap_phy_internal.c b/arch/arm/mach-omap2/omap_phy_internal.c
-index d52651a..874aecc 100644
---- a/arch/arm/mach-omap2/omap_phy_internal.c
-+++ b/arch/arm/mach-omap2/omap_phy_internal.c
-@@ -31,144 +31,6 @@
- #include <plat/usb.h>
- #include "control.h"
+diff --git a/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt b/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
+new file mode 100644
+index 0000000..d2fe064
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
+@@ -0,0 +1,10 @@
++* OMAP OCP2SCP - ocp interface to scp interface
++
++properties:
++- compatible : Should be "ti,omap-ocp2scp"
++- #address-cells, #size-cells : Must be present if the device has sub-nodes
++- ranges : the child address space are mapped 1:1 onto the parent address space
++- ti,hwmods : must be "ocp2scp_usb_phy"
++
++Sub-nodes:
++All the devices connected to ocp2scp are described using sub-node to ocp2scp
+diff --git a/drivers/Kconfig b/drivers/Kconfig
+index ece958d..324e958 100644
+--- a/drivers/Kconfig
++++ b/drivers/Kconfig
+@@ -2,6 +2,8 @@ menu "Device Drivers"
  
--/* OMAP control module register for UTMI PHY */
--#define CONTROL_DEV_CONF		0x300
--#define PHY_PD				0x1
--
--#define USBOTGHS_CONTROL		0x33c
--#define	AVALID				BIT(0)
--#define	BVALID				BIT(1)
--#define	VBUSVALID			BIT(2)
--#define	SESSEND				BIT(3)
--#define	IDDIG				BIT(4)
--
--static struct clk *phyclk, *clk48m, *clk32k;
--static void __iomem *ctrl_base;
--static int usbotghs_control;
--
--int omap4430_phy_init(struct device *dev)
--{
--	ctrl_base = ioremap(OMAP443X_SCM_BASE, SZ_1K);
--	if (!ctrl_base) {
--		pr_err("control module ioremap failed\n");
--		return -ENOMEM;
--	}
--	/* Power down the phy */
--	__raw_writel(PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--
--	if (!dev) {
--		iounmap(ctrl_base);
--		return 0;
--	}
--
--	phyclk = clk_get(dev, "ocp2scp_usb_phy_ick");
--	if (IS_ERR(phyclk)) {
--		dev_err(dev, "cannot clk_get ocp2scp_usb_phy_ick\n");
--		iounmap(ctrl_base);
--		return PTR_ERR(phyclk);
--	}
--
--	clk48m = clk_get(dev, "ocp2scp_usb_phy_phy_48m");
--	if (IS_ERR(clk48m)) {
--		dev_err(dev, "cannot clk_get ocp2scp_usb_phy_phy_48m\n");
--		clk_put(phyclk);
--		iounmap(ctrl_base);
--		return PTR_ERR(clk48m);
--	}
--
--	clk32k = clk_get(dev, "usb_phy_cm_clk32k");
--	if (IS_ERR(clk32k)) {
--		dev_err(dev, "cannot clk_get usb_phy_cm_clk32k\n");
--		clk_put(phyclk);
--		clk_put(clk48m);
--		iounmap(ctrl_base);
--		return PTR_ERR(clk32k);
--	}
--	return 0;
--}
--
--int omap4430_phy_set_clk(struct device *dev, int on)
--{
--	static int state;
--
--	if (on && !state) {
--		/* Enable the phy clocks */
--		clk_enable(phyclk);
--		clk_enable(clk48m);
--		clk_enable(clk32k);
--		state = 1;
--	} else if (state) {
--		/* Disable the phy clocks */
--		clk_disable(phyclk);
--		clk_disable(clk48m);
--		clk_disable(clk32k);
--		state = 0;
--	}
--	return 0;
--}
--
--int omap4430_phy_power(struct device *dev, int ID, int on)
--{
--	if (on) {
--		if (ID)
--			/* enable VBUS valid, IDDIG groung */
--			__raw_writel(AVALID | VBUSVALID, ctrl_base +
--							USBOTGHS_CONTROL);
--		else
--			/*
--			 * Enable VBUS Valid, AValid and IDDIG
--			 * high impedance
--			 */
--			__raw_writel(IDDIG | AVALID | VBUSVALID,
--						ctrl_base + USBOTGHS_CONTROL);
--	} else {
--		/* Enable session END and IDIG to high impedance. */
--		__raw_writel(SESSEND | IDDIG, ctrl_base +
--					USBOTGHS_CONTROL);
--	}
--	return 0;
--}
--
--int omap4430_phy_suspend(struct device *dev, int suspend)
--{
--	if (suspend) {
--		/* Disable the clocks */
--		omap4430_phy_set_clk(dev, 0);
--		/* Power down the phy */
--		__raw_writel(PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--
--		/* save the context */
--		usbotghs_control = __raw_readl(ctrl_base + USBOTGHS_CONTROL);
--	} else {
--		/* Enable the internel phy clcoks */
--		omap4430_phy_set_clk(dev, 1);
--		/* power on the phy */
--		if (__raw_readl(ctrl_base + CONTROL_DEV_CONF) & PHY_PD) {
--			__raw_writel(~PHY_PD, ctrl_base + CONTROL_DEV_CONF);
--			mdelay(200);
--		}
--
--		/* restore the context */
--		__raw_writel(usbotghs_control, ctrl_base + USBOTGHS_CONTROL);
--	}
--
--	return 0;
--}
--
--int omap4430_phy_exit(struct device *dev)
--{
--	if (ctrl_base)
--		iounmap(ctrl_base);
--	if (phyclk)
--		clk_put(phyclk);
--	if (clk48m)
--		clk_put(clk48m);
--	if (clk32k)
--		clk_put(clk32k);
--
--	return 0;
--}
--
- void am35x_musb_reset(void)
- {
- 	u32	regval;
-diff --git a/arch/arm/mach-omap2/twl-common.c b/arch/arm/mach-omap2/twl-common.c
-index de47f17..e2cdf67 100644
---- a/arch/arm/mach-omap2/twl-common.c
-+++ b/arch/arm/mach-omap2/twl-common.c
-@@ -250,11 +250,6 @@ void __init omap3_pmic_get_config(struct twl4030_platform_data *pmic_data,
+ source "drivers/base/Kconfig"
  
- #if defined(CONFIG_ARCH_OMAP4)
- static struct twl4030_usb_data omap4_usb_pdata = {
--	.phy_init	= omap4430_phy_init,
--	.phy_exit	= omap4430_phy_exit,
--	.phy_power	= omap4430_phy_power,
--	.phy_set_clock	= omap4430_phy_set_clk,
--	.phy_suspend	= omap4430_phy_suspend,
- };
++source "drivers/bus/Kconfig"
++
+ source "drivers/connector/Kconfig"
  
- static struct regulator_init_data omap4_vdac_idata = {
-diff --git a/arch/arm/mach-omap2/usb-musb.c b/arch/arm/mach-omap2/usb-musb.c
-index c4a5768..e9b4b23 100644
---- a/arch/arm/mach-omap2/usb-musb.c
-+++ b/arch/arm/mach-omap2/usb-musb.c
-@@ -117,7 +117,4 @@ void __init usb_musb_init(struct omap_musb_board_data *musb_board_data)
- 	dev->dma_mask = &musb_dmamask;
- 	dev->coherent_dma_mask = musb_dmamask;
- 	put_device(dev);
--
--	if (cpu_is_omap44xx())
--		omap4430_phy_init(dev);
- }
+ source "drivers/mtd/Kconfig"
+diff --git a/drivers/Makefile b/drivers/Makefile
+index 5b42184..f8cdeeb 100644
+--- a/drivers/Makefile
++++ b/drivers/Makefile
+@@ -5,6 +5,8 @@
+ # Rewritten to use lists instead of if-statements.
+ #
+ 
++obj-y				+= bus/
++
+ # GPIO must come after pinctrl as gpios may need to mux pins etc
+ obj-y				+= pinctrl/
+ obj-y				+= gpio/
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+new file mode 100644
+index 0000000..6270415
+--- /dev/null
++++ b/drivers/bus/Kconfig
+@@ -0,0 +1,15 @@
++#
++# Bus Devices
++#
++
++menu "Bus devices"
++
++config OMAP_OCP2SCP
++	tristate "OMAP OCP2SCP DRIVER"
++	help
++	  Driver to enable ocp2scp module which transforms ocp interface
++	  protocol to scp protocol. In OMAP4, USB PHY is connected via
++	  OCP2SCP and in OMAP5, both USB PHY and SATA PHY is connected via
++	  OCP2SCP.
++
++endmenu
+diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+new file mode 100644
+index 0000000..0ec50bc
+--- /dev/null
++++ b/drivers/bus/Makefile
+@@ -0,0 +1,5 @@
++#
++# Makefile for the bus drivers.
++#
++
++obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
+diff --git a/drivers/bus/omap-ocp2scp.c b/drivers/bus/omap-ocp2scp.c
+new file mode 100644
+index 0000000..881d5bb
+--- /dev/null
++++ b/drivers/bus/omap-ocp2scp.c
+@@ -0,0 +1,88 @@
++/*
++ * omap-ocp2scp.c - transform ocp interface protocol to scp protocol
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Author: Kishon Vijay Abraham I <kishon@ti.com>
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/err.h>
++#include <linux/pm_runtime.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++
++static int ocp2scp_remove_devices(struct device *dev, void *c)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++
++	platform_device_unregister(pdev);
++
++	return 0;
++}
++
++static int __devinit omap_ocp2scp_probe(struct platform_device *pdev)
++{
++	int			ret;
++	struct device_node	*np = pdev->dev.of_node;
++
++	if (np) {
++		ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to add resources for ocp2scp child\n");
++			goto err0;
++		}
++	}
++	pm_runtime_enable(&pdev->dev);
++
++	return 0;
++
++err0:
++	device_for_each_child(&pdev->dev, NULL, ocp2scp_remove_devices);
++
++	return ret;
++}
++
++static int __devexit omap_ocp2scp_remove(struct platform_device *pdev)
++{
++	pm_runtime_disable(&pdev->dev);
++	device_for_each_child(&pdev->dev, NULL, ocp2scp_remove_devices);
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id omap_ocp2scp_id_table[] = {
++	{ .compatible = "ti,omap-ocp2scp" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
++#endif
++
++static struct platform_driver omap_ocp2scp_driver = {
++	.probe		= omap_ocp2scp_probe,
++	.remove		= __devexit_p(omap_ocp2scp_remove),
++	.driver		= {
++		.name	= "omap-ocp2scp",
++		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(omap_ocp2scp_id_table),
++	},
++};
++
++module_platform_driver(omap_ocp2scp_driver);
++
++MODULE_ALIAS("platform: omap-ocp2scp");
++MODULE_AUTHOR("Texas Instruments Inc.");
++MODULE_DESCRIPTION("OMAP OCP2SCP driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.7.9.5
 
