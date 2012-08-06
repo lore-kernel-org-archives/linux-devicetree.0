@@ -1,83 +1,161 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
-Date: Mon, 6 Aug 2012 11:27:54 +0900
-Message-ID: <501F2BAA.8000808@nvidia.com>
-References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <50170EA0.1010408@wwwdotorg.org> <501A338D.7080105@nvidia.com> <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de> <20120802181111.GM4537@opensource.wolfsonmicro.com> <501B2642.4080805@nvidia.com> <20120804141155.GJ10523@opensource.wolfsonmicro.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] PM / OPP: Initialize OPP table from device tree
+Date: Sun, 05 Aug 2012 21:50:32 -0500
+Message-ID: <501F30F8.1040105@gmail.com>
+References: <1344179121-17738-1-git-send-email-shawn.guo@linaro.org>
+ <1344179121-17738-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120804141155.GJ10523@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1344179121-17738-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/04/2012 11:12 PM, Mark Brown wrote:
-> On Fri, Aug 03, 2012 at 10:15:46AM +0900, Alex Courbot wrote:
->> On Fri 03 Aug 2012 03:11:12 AM JST, Mark Brown wrote:
->
->>> I missed some of the earlier bits of the thread here but why can't we do
->>> device based lookups?
->
->> That is because the phandles would not be properties of the device
->> node but rather of its sub-nodes:
->
->> backlight {
->>      compatible = "pwm-backlight";
->>      ...
->>      power-on-sequence {
->>          step@0 {
->>              regulator = <&backlight_reg>;
->>              enable;
->>          };
->>
->
->> So here simply using regulator_get on the backlight device would not work.
->
-> Ah, right.  DT isn't being terribly helpful here...  I think the thing
-> I'd expect to work here is that you have a reference back to the supply
-> property of the backlight device rather than direct to the regulator so
-> you end up writing "enable supply X" rather than "enable regulator X".
->
-> Not quite sure how exactly you'd accomplish that - I guess if
-> regulator_get() would recursively follow phandles until it hits a node
-> that'd do the trick?
+On 08/05/2012 10:05 AM, Shawn Guo wrote:
+> With a lot of devices booting from device tree nowadays, it requires
+> that OPP table can be initialized from device tree.  The patch adds
+> a helper function of_init_opp_table together with a binding doc for
+> that purpose.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/power/opp.txt |   25 +++++++++
+>  drivers/base/power/opp.c                        |   65 +++++++++++++++++++++++
+>  include/linux/opp.h                             |    8 +++
+>  3 files changed, 98 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/opp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> new file mode 100644
+> index 0000000..2238520
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -0,0 +1,25 @@
+> +* Generic OPP Interface
+> +
+> +SoCs have a standard set of tuples consisting of frequency and
+> +voltage pairs that the device will support per voltage domain. These
+> +are called Operating Performance Points or OPPs.
+> +
+> +Properties:
+> +- operating-points: An array of 3-tuples items, and each item consists
 
-Do you mean that regulator_get() would parse sub-nodes looking for a 
-match? That seems rather dangerous and error-prone, especially if one 
-has actual devices within the sub-nodes - their regulators could be 
-stolen by the parent device.
+3 tuples?
 
-I think we only have two choices for this:
+> +  of frequency and voltage like <freq-kHz vol-uV>.
+> +	freq: clock frequency in kHz
+> +	vol: voltage in microvolt
 
-1) Stick to the scheme where resources are declared at the device level, 
-such as they can be referenced by name in the sub-nodes (basically what 
-I did in this patch):
+Although maybe 3 fields would be good for a flags field? I'm concerned
+it's a pretty generic name and not very future proof. What about
+transition times? Not sure how you would represent that as it probably
+depends on which points you are changing between rather than a property
+of the opp.
 
-backlight {
-      compatible = "pwm-backlight";
-      ...
-      backlight-supply = <&backlight_reg>;
+I'm not saying we have to address that now, but just have some path in
+the future.
 
-      power-on-sequence {
-          step@0 {
-              regulator = "backlight";
-              enable;
-          };
+> +
+> +Examples:
+> +
+> +cpu@0 {
+> +	compatible = "arm,cortex-a9";
+> +	reg = <0>;
+> +	next-level-cache = <&L2>;
+> +	operating-points = <
+> +		/* kHz    uV */
+> +		792000  1100000
+> +		396000  950000
+> +		198000  850000
+> +	>;
+> +};
+> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+> index ac993ea..1bf1be8 100644
+> --- a/drivers/base/power/opp.c
+> +++ b/drivers/base/power/opp.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/rculist.h>
+>  #include <linux/rcupdate.h>
+>  #include <linux/opp.h>
+> +#include <linux/of.h>
+>  
+>  /*
+>   * Internal data structure organization with the OPP layer library is as
+> @@ -674,3 +675,67 @@ struct srcu_notifier_head *opp_get_notifier(struct device *dev)
+>  
+>  	return &dev_opp->head;
+>  }
+> +
+> +#ifdef CONFIG_OF
+> +/**
+> + * of_init_opp_table() - Initialize opp table from device tree
+> + * @dev:	device pointer used to lookup device OPPs.
+> + *
+> + * Register the initial OPP table with the OPP library for given device.
+> + */
+> +int of_init_opp_table(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	const char *propname = "operating-points";
+> +	const struct property *pp;
+> +	u32 *opp;
+> +	int ret, i, nr;
+> +
+> +	pp = of_find_property(np, propname, NULL);
+> +	if (!pp) {
+> +		dev_err(dev, "%s: Unable to find property", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	opp = kzalloc(pp->length, GFP_KERNEL);
+> +	if (!opp) {
+> +		dev_err(dev, "%s: Unable to allocate array\n", __func__);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	nr = pp->length / sizeof(u32);
+> +	ret = of_property_read_u32_array(np, propname, opp, nr);
+> +	if (ret) {
+> +		dev_err(dev, "%s: Unable to read OPPs\n", __func__);
+> +		goto out;
+> +	}
+> +
+> +	if (nr % 2) {
+> +		dev_err(dev, "%s: Invalid OPP list\n", __func__);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	nr /= 2;
+> +	for (i = 0; i < nr; i++) {
+> +		/*
+> +		 * Each OPP is a set of tuples consisting of frequency and
+> +		 * voltage like <freq-kHz vol-uV>.
+> +		 */
+> +		u32 *val = opp + i * 2;
+> +
+> +		val[0] *= 1000;
+> +		ret = opp_add(dev, val[0], val[1]);
+> +		if (ret) {
+> +			dev_warn(dev, "%s: Failed to add OPP %d: %d\n",
+> +				 __func__, val[0], ret);
+> +			continue;
+> +		}
+> +	}
 
-This would translate by a get_regulator(dev, "backlight") in the code 
-which would be properly resolved.
+I think this whole function can be written more concisely. Just iterate
+over the property and avoid the intermediate array allocation.
 
-2) Export a lower-level DT API for resolving phandles directly from a 
-property, similar to of_get_named_gpio. We would then have 
-of_get_named_regulator and of_get_named_pwm.
-
-If 2) is deemed acceptable, then I think we should go for it as it would 
-provide the most compact and readable DT syntax. Otherwise 1) is still 
-acceptable IMHO, as it should at least make sense to people already 
-familiar with how the DT works.
-
-Opinions from DT experts?
-
-Alex.
+Rob
