@@ -1,80 +1,70 @@
-From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Subject: RE: [PATCH v4 3/3] can: c_can: Add runtime PM support to Bosch
- C_CAN/D_CAN controller
-Date: Mon, 6 Aug 2012 06:48:32 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EA85CC3@DBDE01.ent.ti.com>
-References: <1343913191-14722-1-git-send-email-anilkumar@ti.com>
- <1343913191-14722-4-git-send-email-anilkumar@ti.com>
- <79CD15C6BA57404B839C016229A409A83EA7F150@DBDE01.ent.ti.com>
- <501C21E5.9080106@pengutronix.de>
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [PATCH] hwmon: tmp102: Add device tree support
+Date: Mon, 6 Aug 2012 13:05:34 +0530
+Message-ID: <CAKdam54Zshr-d502E_AS+vw5+vLQnTBrAGRPTy-9-hZy1QEFbA@mail.gmail.com>
+References: <1343997350-676-1-git-send-email-sourav.poddar@ti.com>
+	<501BE6B1.9000100@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <501C21E5.9080106@pengutronix.de>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "AnilKumar, Chimata" <anilkumar@ti.com>, "wg@grandegger.com" <wg@grandegger.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Gole, Anant" <anantgole@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <501BE6B1.9000100@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: khali@linux-fr.org, linux@roeck-us.net, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 04, 2012 at 00:39:25, Marc Kleine-Budde wrote:
-> On 08/03/2012 08:32 AM, Hiremath, Vaibhav wrote:
-> > On Thu, Aug 02, 2012 at 18:43:11, AnilKumar, Chimata wrote:
-> >> Add Runtime PM support to C_CAN/D_CAN controller. The runtime PM
-> >> APIs control clocks for C_CAN/D_CAN IP and prevent access to the
-> >> register of C_CAN/D_CAN IP when clock is turned off.
-> >>
-> >> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> >> ---
-> >>  drivers/net/can/c_can/c_can_platform.c |    8 ++++++++
-> >>  1 file changed, 8 insertions(+)
-> >>
-> >> diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
-> >> index d0a66cf..83a1e17 100644
-> >> --- a/drivers/net/can/c_can/c_can_platform.c
-> >> +++ b/drivers/net/can/c_can/c_can_platform.c
-> >> @@ -32,6 +32,7 @@
-> >>  #include <linux/clk.h>
-> >>  #include <linux/of.h>
-> >>  #include <linux/of_device.h>
-> >> +#include <linux/pm_runtime.h>
-> >>  
-> >>  #include <linux/can/dev.h>
-> >>  
-> >> @@ -177,6 +178,9 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
-> >>  		goto exit_free_device;
-> >>  	}
-> >>  
-> >> +	pm_runtime_enable(&pdev->dev);
-> >> +	pm_runtime_get_sync(&pdev->dev);
-> >> +
-> > 
-> > If module is inserted or built into the kernel, module stays in enabled 
-> > state always, isn't that wrong?
-> > Ideally, you should enable the module when it is required or being used.
-> 
-> Good point.
-> 
-> If you don't access the module's registers in the probe- (or its
-> subroutines) it should be enough to enable the module in the open()
-> function. Have a look at clk_prepare_enable / clk_disable_unprepare in
-> the flexcan driver.
-> 
+Hi Benoit,
 
-Yeah Marc, something similar, above runtime pm api's should be moved to 
-open-n-close.
+On Fri, Aug 3, 2012 at 8:26 PM, Benoit Cousson <b-cousson@ti.com> wrote:
+> Hi Sourav,
+>
+> On 08/03/2012 02:35 PM, Sourav Poddar wrote:
+>> update tmp102 temperature sensor to also use device tree.
+>>
+>> Cc: Benoit Cousson <b-cousson@ti.com>
+>> Cc: Felipe Balbi <balbi@ti.com>
+>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> Acked-by: Felipe Balbi <balbi@ti.com>
+>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+>> ---
+>>  drivers/hwmon/tmp102.c |   14 +++++++++++++-
+>>  1 files changed, 13 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
+>> index 0d466b9..a8a9060 100644
+>> --- a/drivers/hwmon/tmp102.c
+>> +++ b/drivers/hwmon/tmp102.c
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/err.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/device.h>
+>> +#include <linux/of.h>
+>>
+>>  #define      DRIVER_NAME "tmp102"
+>>
+>> @@ -284,8 +285,19 @@ static const struct i2c_device_id tmp102_id[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(i2c, tmp102_id);
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id temperature_dt_match[] = {
+>> +     { .compatible = "ti,tmp102" },
+>
+> Are you sure this is needed for this device?
+>
+> There is an automatic binding done for I2C devices in the of_i2c core
+> code. So in theory, DT will be able to bind to any I2C device using the
+> already existing table: MODULE_DEVICE_TABLE(i2c, tmp102_id).
+>
+> So I think this patch should not be needed.
+>
+Indeed. Checked it just now, this patch is not required and the already
+existing table is enough for the device to work fine.
 
-Thanks,
-Vaibhav
+Thanks for the information.
 
-> Marc
-> 
-> -- 
-> Pengutronix e.K.                  | Marc Kleine-Budde           |
-> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-> 
-> 
-
+This patch is abandoned.
+~Sourav
+> Regards,
+> Benoit
+>
