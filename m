@@ -1,17 +1,13 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: DT GPIO numbering?
-Date: Mon, 06 Aug 2012 19:10:00 +0800
-Message-ID: <501FA608.1030805@firmworks.com>
-References: <20120801152240.GA16388@sig21.net>
- <CACRpkdZryc95WpSXddCrLvZGDsv4x-ndX9XcVzoxaDCT53AFLw@mail.gmail.com>
- <501F296B.4070004@wwwdotorg.org>
- <CACRpkdZ8AO5SrjJvJxvpauEadQOKMNaW_Pxxzhjk5hWnVB1b+g@mail.gmail.com>
- <20120806095805.GA16607@sig21.net>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 2/2] arm/dts: omap4: Add ocp2scp data
+Date: Mon, 6 Aug 2012 16:55:31 +0530
+Message-ID: <1344252331-18456-3-git-send-email-kishon@ti.com>
+References: <1344252331-18456-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120806095805.GA16607-FF7aIK3TAVNeoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <1344252331-18456-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,66 +18,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Johannes Stezenbach <js-FF7aIK3TAVNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/6/2012 5:58 PM, Johannes Stezenbach wrote:
-> On Mon, Aug 06, 2012 at 08:35:51AM +0200, Linus Walleij wrote:
->> On Mon, Aug 6, 2012 at 4:18 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>
->>> I can't comment on the sysfs-vs-dev interface location, but I don't
->>> think it addresses Johannes' issue; finding out which GPIO IDs are
->>> provided by which devices.
->>>
->>> Perhaps in each device's sysfs node, there should be some information
->>> re: which GPIO range it provides. Right now, perhaps a text file with
->>> the GPIO base it it.
->>
->> Yes that could work ...
-> 
-> The method used by the gpio-mxs.c driver (of_alias_get_id)
-> would also work.  The question is which method is preferable.
-> 
-> Ideally I would like to use DT attributes to identify my GPIOs
-> in the same way as they appear in the schematics.  E.g.
-> one device may have GPIOs called PORT_A.0 to PORT_A.7,
-> another one may be EXT.0 to EXT.15.  But a single integer ID
-> is good enough since GPIO usage is platform specific anyway.
-> However, the mapping must be static and not depend e.g. on
-> module load order like now if you use pl061 and some i2c GPIO.
-> Software must be able to rely on that e.g. GPIO ID 11
-> always refers to EXT.3.
+Add ocp2scp data node in omap4 device tree file.
 
-There is precedence for a "slot-names" property that correlates specific
-hardware entities with physical labels.  It has been applied to PCI
-plug-in slots and to other devices.  See, for example,
-http://www.openfirmware.org/1275/proposals/Closed/Accepted/381-it.txt
+Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/omap4.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-
-> 
-> 
->>> With the new /dev interface you mention above,
->>> perhaps a symlink to the /dev file, or a file containing the /dev file's
->>> major/minor number. Or, is there such a thing already (other than
->>> debugfs's gpio file).
->>
->> Nothing I know of, but yes the day we come up with something,
->> it needs to be backward-compatible some way.
->>
->> The problem is that there is really no reference userspace
->> like "lsgpio" or so. Maybe the first step could be to create that.
-> 
-> I don't know much about OpenWrt, but I've seen they have
-> something:
-> https://dev.openwrt.org/browser/trunk/target/linux/generic/files/drivers/char/gpio_dev.c
-> https://dev.openwrt.org/browser/trunk/target/linux/generic/files/include/linux/gpio_dev.h
-> https://dev.openwrt.org/browser/trunk/package/gpioctl/src/main.c
-> 
-> 
-> Johannes
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 04cbbcb..8a780b2 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -295,5 +295,13 @@
+ 			interrupt-parent = <&gic>;
+ 			ti,hwmods = "dmic";
+ 		};
++
++		ocp2scp {
++			compatible = "ti,omap-ocp2scp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			ti,hwmods = "ocp2scp_usb_phy";
++		};
+ 	};
+ };
+-- 
+1.7.9.5
