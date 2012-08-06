@@ -1,101 +1,58 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] driver: misc: bmp085: remove "of_match_table" property.
-Date: Mon, 6 Aug 2012 12:30:34 +0300
-Message-ID: <20120806093033.GH17551@arwen.pp.htv.fi>
-References: <1344245324-16704-1-git-send-email-sourav.poddar@ti.com>
-Reply-To: balbi@ti.com
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4 1/3] can: c_can: Modify c_can device names
+Date: Mon, 06 Aug 2012 11:36:49 +0200
+Message-ID: <501F9031.8050709@pengutronix.de>
+References: <1343913191-14722-1-git-send-email-anilkumar@ti.com> <1343913191-14722-2-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="K1n7F7fSdjvFAEnM"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1344245324-16704-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, arnd@arndb.de, gregkh@linuxfoundation.org
+ protocol="application/pgp-signature";
+ boundary="------------enigC92103C594C96F3340F83AAD"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1343913191-14722-2-git-send-email-anilkumar@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: AnilKumar Ch <anilkumar@ti.com>
+Cc: wg@grandegger.com, linux-can@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, anantgole@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-
---K1n7F7fSdjvFAEnM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enigC92103C594C96F3340F83AAD
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 06, 2012 at 02:58:44PM +0530, Sourav Poddar wrote:
-> There is an automatic binding done for I2C devices in the of_i2c core
-> code. So, DT will be able to bind to any I2C device using the
-> already existing table: MODULE_DEVICE_TABLE(i2c, bmp085_id).
+On 08/02/2012 03:13 PM, AnilKumar Ch wrote:
+> Modify c_can device names from *_CAN_DEVTYPE to BOSCH_*_CAN to make
+> use of same names for array indexes in c_can_id_table[] as well as
+> device names.
 >=20
-> Tested on omap5430 evm.
+> This patch also add indexes to c_can_id_table array.
 >=20
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
 
-Acked-by: Felipe Balbi <balbi@ti.com>
+I'm taking patch 1 and 2. Runtime pm support seems to need discussion.
 
-> ---
->  drivers/misc/bmp085-i2c.c |    7 -------
->  1 files changed, 0 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/misc/bmp085-i2c.c b/drivers/misc/bmp085-i2c.c
-> index 9943971..a4f33c9 100644
-> --- a/drivers/misc/bmp085-i2c.c
-> +++ b/drivers/misc/bmp085-i2c.c
-> @@ -57,12 +57,6 @@ static int bmp085_i2c_remove(struct i2c_client *client)
->  	return bmp085_remove(&client->dev);
->  }
-> =20
-> -static const struct of_device_id bmp085_of_match[] =3D {
-> -	{ .compatible =3D "bosch,bmp085", },
-> -	{ },
-> -};
-> -MODULE_DEVICE_TABLE(of, bmp085_of_match);
-> -
->  static const struct i2c_device_id bmp085_id[] =3D {
->  	{ BMP085_NAME, 0 },
->  	{ "bmp180", 0 },
-> @@ -74,7 +68,6 @@ static struct i2c_driver bmp085_i2c_driver =3D {
->  	.driver =3D {
->  		.owner	=3D THIS_MODULE,
->  		.name	=3D BMP085_NAME,
-> -		.of_match_table =3D bmp085_of_match
->  	},
->  	.id_table	=3D bmp085_id,
->  	.probe		=3D bmp085_i2c_probe,
-> --=20
-> 1.7.1
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Applied to can-next/master
 
+Tnx,
+Marc
 --=20
-balbi
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
---K1n7F7fSdjvFAEnM
+
+--------------enigC92103C594C96F3340F83AAD
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
 
-iQIcBAEBAgAGBQJQH465AAoJEIaOsuA1yqREcJoQAJENziQpMBU4QPDfICJ8k1um
-38UederLGeC2zHMWOo0oKxTpSo7YGaA+gLjDgmnrOvuSRxvHsKrSh4AvQqrrMI65
-EsSrs6TeDZc7sYg+JQ/nRWPgRkW4Bs1lpCjeQwwCvEfyAxAoLO44Eum9DqNZOg0Z
-cDoPfk7Lifs7OacHYj4ZquM4QvtE0jjMUxYbTgTs6vIvhT/veSDZqVOha71sRpX/
-2gGVnGqR0P3Es0c7k+bTf4+d2+Oz3xgzr8L3J2+AD/8ZcUFKRVsG1mVDhPF0TtsJ
-CDGuT3DpoEIysmvXoHblWXXUFewm2nS3/bqjujcbdwTowhthVrDZiQARMrmvt+p5
-dM1g+ng31bVVKRBDjNZ0GQ087p8rtDEr8hzXsqolRrfYUkzwai1MKqThLJ4SlTk5
-kGvJqDvHbFhn1+DeUFBtA4VCP2B1jtqbLLSZn1Lrd4ksAjXUpmBj7GcnXySRZ+Nh
-1objbxZVodoiTMZsQcMUDGY0HoKHl8IlLLEukTfC5jUsvsQgD91kg7s8Ez4Zd78W
-NFus3ZcmTS6+fIMRmnCEOUBPs3w7pKweIShVyc02git407BPON9BC8s4W9A2SSk+
-7sSDyjPfwMIyJO1bKe62lrUW2+BUKNVBArJaekHacShtHuQabKnqeVcR8u2oes+P
-hh1fXXOEsxGcdUETKW2t
-=RKAD
+iEYEARECAAYFAlAfkDYACgkQjTAFq1RaXHNsAQCgjo5cDoubtN7G0SbGZfL491ZY
+zbEAn2EOCJm8H5VcqG7kMzBuae5lbaTr
+=ZVp6
 -----END PGP SIGNATURE-----
 
---K1n7F7fSdjvFAEnM--
+--------------enigC92103C594C96F3340F83AAD--
