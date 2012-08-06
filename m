@@ -1,47 +1,83 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: DT GPIO numbering?
-Date: Sun, 05 Aug 2012 20:18:19 -0600
-Message-ID: <501F296B.4070004@wwwdotorg.org>
-References: <20120801152240.GA16388@sig21.net> <CACRpkdZryc95WpSXddCrLvZGDsv4x-ndX9XcVzoxaDCT53AFLw@mail.gmail.com>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences
+Date: Mon, 6 Aug 2012 11:27:54 +0900
+Message-ID: <501F2BAA.8000808@nvidia.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com> <1343390750-3642-2-git-send-email-acourbot@nvidia.com> <50170EA0.1010408@wwwdotorg.org> <501A338D.7080105@nvidia.com> <20120802082157.GA14866@avionic-0098.adnet.avionic-design.de> <20120802181111.GM4537@opensource.wolfsonmicro.com> <501B2642.4080805@nvidia.com> <20120804141155.GJ10523@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZryc95WpSXddCrLvZGDsv4x-ndX9XcVzoxaDCT53AFLw@mail.gmail.com>
+In-Reply-To: <20120804141155.GJ10523@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Johannes Stezenbach <js@sig21.net>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On 08/05/2012 04:06 AM, Linus Walleij wrote:
-> On Wed, Aug 1, 2012 at 5:22 PM, Johannes Stezenbach <js@sig21.net> wrote:
-> 
->> I'm currently learning how Linux devicetree support works,
->> here is one question I couldn't find an answer for.
+On 08/04/2012 11:12 PM, Mark Brown wrote:
+> On Fri, Aug 03, 2012 at 10:15:46AM +0900, Alex Courbot wrote:
+>> On Fri 03 Aug 2012 03:11:12 AM JST, Mark Brown wrote:
+>
+>>> I missed some of the earlier bits of the thread here but why can't we do
+>>> device based lookups?
+>
+>> That is because the phandles would not be properties of the device
+>> node but rather of its sub-nodes:
+>
+>> backlight {
+>>      compatible = "pwm-backlight";
+>>      ...
+>>      power-on-sequence {
+>>          step@0 {
+>>              regulator = <&backlight_reg>;
+>>              enable;
+>>          };
 >>
->> I understand that within the devicetree GPIOs are referenced by phandle,
->> thus the numbers are irrelevant.  However, in sysfs the number is
->> what is used to access the GPIO, e.g. for debugging or
->> blinkenlight apps.  How does this fit together?
-> 
-> I think it simply does not fit together.
-> 
-> Grant & me has been claiming the GPIO sysfs interface is a bit
-> crazy from time to time.
-> 
-> My long-term plan would be to replace it with /dev/gpio/gpioN
-> device nodes per-gpiochip and use ioctl etc to control these
-> beasts instead. However one does not do that overnight,
-> and my life is too busy, and other refactorings also need to
-> happen :-/
+>
+>> So here simply using regulator_get on the backlight device would not work.
+>
+> Ah, right.  DT isn't being terribly helpful here...  I think the thing
+> I'd expect to work here is that you have a reference back to the supply
+> property of the backlight device rather than direct to the regulator so
+> you end up writing "enable supply X" rather than "enable regulator X".
+>
+> Not quite sure how exactly you'd accomplish that - I guess if
+> regulator_get() would recursively follow phandles until it hits a node
+> that'd do the trick?
 
-I can't comment on the sysfs-vs-dev interface location, but I don't
-think it addresses Johannes' issue; finding out which GPIO IDs are
-provided by which devices.
+Do you mean that regulator_get() would parse sub-nodes looking for a 
+match? That seems rather dangerous and error-prone, especially if one 
+has actual devices within the sub-nodes - their regulators could be 
+stolen by the parent device.
 
-Perhaps in each device's sysfs node, there should be some information
-re: which GPIO range it provides. Right now, perhaps a text file with
-the GPIO base it it. With the new /dev interface you mention above,
-perhaps a symlink to the /dev file, or a file containing the /dev file's
-major/minor number. Or, is there such a thing already (other than
-debugfs's gpio file).
+I think we only have two choices for this:
+
+1) Stick to the scheme where resources are declared at the device level, 
+such as they can be referenced by name in the sub-nodes (basically what 
+I did in this patch):
+
+backlight {
+      compatible = "pwm-backlight";
+      ...
+      backlight-supply = <&backlight_reg>;
+
+      power-on-sequence {
+          step@0 {
+              regulator = "backlight";
+              enable;
+          };
+
+This would translate by a get_regulator(dev, "backlight") in the code 
+which would be properly resolved.
+
+2) Export a lower-level DT API for resolving phandles directly from a 
+property, similar to of_get_named_gpio. We would then have 
+of_get_named_regulator and of_get_named_pwm.
+
+If 2) is deemed acceptable, then I think we should go for it as it would 
+provide the most compact and readable DT syntax. Otherwise 1) is still 
+acceptable IMHO, as it should at least make sense to people already 
+familiar with how the DT works.
+
+Opinions from DT experts?
+
+Alex.
