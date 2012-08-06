@@ -1,74 +1,79 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Mon, 6 Aug 2012 08:39:24 +0200
-Message-ID: <CACRpkdZDQLRDzxmkcrMQX+ZGwSgMwtBsD4sPr_S2jOyft1L37Q@mail.gmail.com>
-References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
- <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
- <20120730074714.GC15245@avionic-0098.mockup.avionic-design.de>
- <CACRpkdbrdWw_HR91r72aB_S2+vxiaSBKHwW+Tsmi8pKk9VsgFg@mail.gmail.com>
- <20120806051144.GA12642@avionic-0098.mockup.avionic-design.de>
+From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Subject: RE: [PATCH v7 00/11] usb: musb: adding multi instance support
+Date: Mon, 6 Aug 2012 06:40:54 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EA85C87@DBDE01.ent.ti.com>
+References: <1343909574-15633-1-git-send-email-ravibabu@ti.com>
+ <501AFA6B.4010005@gmail.com>
+ <6C6B28D4DC342643927BEAFCE8707BF63E9DB6AE@DBDE01.ent.ti.com>
+ <501B8997.2070307@gmail.com>
+ <F20D4CDD972CFA4D89D3A083D2D561967FF1F67DE3@BGMAIL01.nvidia.com>
+ <501B93AB.7050501@gmail.com>
+ <79CD15C6BA57404B839C016229A409A83EA7F4A3@DBDE01.ent.ti.com>
+ <501BB8F2.8030909@gmail.com>
+ <79CD15C6BA57404B839C016229A409A83EA7FB18@DBDE01.ent.ti.com>
+ <501ECF15.2040409@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120806051144.GA12642-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <501ECF15.2040409@gmail.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: Ajay Gupta <ajayg@nvidia.com>, "B, Ravi" <ravibabu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>, "ajayguptaj@gmail.com" <ajayguptaj@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 6, 2012 at 7:11 AM, Thierry Reding
-<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> On Sun, Aug 05, 2012 at 12:50:54PM +0200, Linus Walleij wrote:
+On Mon, Aug 06, 2012 at 01:22:53, Daniel Mack wrote:
+> On 03.08.2012 17:48, Hiremath, Vaibhav wrote:
+> > On Fri, Aug 03, 2012 at 17:11:38, Daniel Mack wrote:
+> >> On 03.08.2012 11:07, Hiremath, Vaibhav wrote:
+> >>> I have just pushed the code (V7 which Ravi submitted), so can you please try 
+> >>> with below branch? 
+> >>>
+> >>> https://github.com/hvaibhav/am335x-linux/tree/am335x-upstream-staging-usb
+> >>
+> >> Thanks for doing this, but I'm unfortunately getting tons of merge
+> >> conflicts when I try to put this on top of 3.6-rc1. Still pondering
+> >> which way around is the easiest to get this solved.
+> >>
+> >> OTOH, I wonder whether your staging branches would need to rebased
+> >> sooner or later anyway?
+> >>
+> > 
+> > I have already pushed branch based on v3.6-rc1 (boot tested),
+> > 
+> > https://github.com/hvaibhav/am335x-linux/tree/am335x-linux-next-master
+> 
+> Sorry, I don't get it yet. Your am335x-linux-next-master can be merged
+> into v3.6-rc1 without problems, but it doesn't contain Ravi's patches.
+> And am335x-upstream-staging-usb doesn't apply on top of either
+> am335x-linux-next-master or v3.6-rc1.
+> 
+> Maybe I just miss a detail here. Could you again explain which branch
+> will you publish for merging in the 3.7 merge window, and what are its
+> dependencies?
+> 
 
->> We're working on a goal of a "single zImage" (one unified ARM
->> kernel) which means your platform must be able to handle the
->> case where this is turned on anyway, so I would suggest you
->> drop the optional compile-time IRQ support, just make it
->> optional at runtime instead.
->
-> I don't quite understand. Do you want me to add a module parameter to
-> make it optional at runtime? Since the driver is now OF only I suppose I
-> could make it optional on the interrupt-controller property as well.
+Daniel,
 
-No, no module parameter. Just don't register the IRQ domain if there
-are not IRQ resources in the device tree, if the interrupt-controller
-property is not present I guess?
+Every developer is supposed to submit the patches on top of their 
+maintainer's repository, which may or may not be in-sync with latest linux-
+next or Linus's tree at given time OR their could be some extra dependency 
+from framework. For example, linux-omap is still not updated to v3.6-rc1, 
+but I have to use linux-omap/master for all patch submissions.
 
->> OK but atleast find a way to move this to the probe() function,
->> what happens if the debugfs file is browsed and you run out
->> of memory? Not nice, and you were using this to debug as
->> well...
->
-> Alright, I can do that. Alternatively I could probably drop the
-> allocations altogether and use local variables within the second loop to
-> store the variables:
->
->         for (i = 0; i < num_regs; i++) {
->                 u8 ddr, plr, ier, isr, ptr;
->
->                 err = adnp_read(gpio, GPIO_DDR(gpio) + i, &ddr);
->                 if (err < 0)
->                         goto out;
->
->                 ...
->         }
->
-> With the proper locking this shouldn't be a problem. The reason why I
-> used the block-wise approach in the first place was that the register
-> accesses were more "atomic". Of course without locking this is non-
-> sense.
+It becomes extra work for each developers to maintain branch for both, one 
+against their maintainer HEAD and one against linux-next/master.
 
-Either approach works, the above seems more elegant though!
+So I am just pushing the branch which is being tested/validated (on 
+BeagleBone) before submitting patches to the list.
 
-Yours,
-Linus Walleij
+I hope this clarifies all your confusion.
+
+Thanks,
+Vaibhav
+> 
+> Thanks for your work,
+> Daniel
+> 
+
