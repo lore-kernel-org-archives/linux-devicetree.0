@@ -1,118 +1,72 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] arm/dts: omap5-evm: Add I2C support
-Date: Mon, 6 Aug 2012 11:38:45 +0300
-Message-ID: <20120806083843.GA17612@arwen.pp.htv.fi>
-References: <1343997486-710-1-git-send-email-sourav.poddar@ti.com>
- <1343997486-710-2-git-send-email-sourav.poddar@ti.com>
- <501C08CB.3060701@mvista.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: "Pihet-XID, Jean" <j-pihet-l0cyMroinI0@public.gmane.org>
+Subject: Re: Gethering power management/policy hw drivers under
+ drivers/power/? (Re: [RFC][PATCH v3 1/3] runtime interpreted power sequences)
+Date: Mon, 6 Aug 2012 10:45:02 +0200
+Message-ID: <CAN5iSWokvOPa775CNF2XXeg4vM5QTmViJwH32J_=353ckFyt7A@mail.gmail.com>
+References: <1343390750-3642-1-git-send-email-acourbot@nvidia.com>
+	<1343390750-3642-2-git-send-email-acourbot@nvidia.com>
+	<20120727181923.GB23564@kroah.com>
+	<5015E8AE.8060404@nvidia.com>
+	<20120730024049.GA10442@lizard>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4099113542617135657=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <501C08CB.3060701-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120730024049.GA10442@lizard>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, KEERTHY J <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Anton,
 
---===============4099113542617135657==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
-Content-Disposition: inline
+Sorry for the late reply. I was away and back now.
 
+On Mon, Jul 30, 2012 at 4:40 AM, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Jul 30, 2012 at 10:51:42AM +0900, Alex Courbot wrote:
+> [...]
+>> On the other hand I have just noticed that the apparently unrelated
+>> Adaptive Voltage Scaling driver just appeared in drivers/power/avs.
+>> So if Anton and David are ok with this, maybe I could put the power
+>> sequences code in its own subdirectory within drivers/power.
+>
+> Well, currently drivers/power/ is indeed just for power supply class
+> subsystem and drivers. But if the trend is to gather power management
+> ("policy") stuff under one directory, i.e.
+>
+> drivers/
+>   power/
+>     supplies/    <- former "power supply class and drivers"
+>     regulators/
+>     idle/
+>     cpuidle/
+>     cpufreq/
+>     devfreq/
+>     avs/
+>     ...
+>
+> That would probably make sense, we could easily see the big picture.
+> But if we're not going to do this long-term, I would suggest to stick
+> to just a new directory under drivers (and move drivers/power/avs/ to
+> drivers/avs).
+>
+> Cc'ing some more people...
+>
+> Thanks,
+>
+> p.s. Jean, why am I the last person who discovers drivers/power/avs/?
+> Would be nice to Cc me on such patches; by moving AVS under
+> drivers/power/ you effectively nominated me as its maintainer. :-)
+Oops, I am really sorry about that ;-( . I wrongly assumed Rafael and
+Greg KH were the contact persons for drivers/power and so I contacted
+them before moving the code.
 
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for letting me know. Are you ok with the changes? Let me know
+if some more changes are needed.
 
-Hi,
+Regards,
+Jean
 
-On Fri, Aug 03, 2012 at 09:22:19PM +0400, Sergei Shtylyov wrote:
-> Hello.
->=20
-> On 08/03/2012 04:38 PM, Sourav Poddar wrote:
->=20
-> > Add I2C data node in omap5 device tree file.
->=20
-> > Tested on omap5430 sdp.
->=20
-> > Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-> > Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> > Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > Signed-off-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/omap5.dtsi |   35 +++++++++++++++++++++++++++++++++++
-> >  1 files changed, 35 insertions(+), 0 deletions(-)
->=20
-> > diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> > index 57e5270..6b68dfe 100644
-> > --- a/arch/arm/boot/dts/omap5.dtsi
-> > +++ b/arch/arm/boot/dts/omap5.dtsi
-> > @@ -145,6 +145,41 @@
-> >  			#interrupt-cells =3D <1>;
-> >  		};
-> > =20
-> > +		i2c1: i2c@48070000 {
-> > +			compatible =3D "ti,omap4-i2c";
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			ti,hwmods =3D "i2c1";
->=20
->    Address postfix in the node name and no "reg" property?
-
-that's because of the ti,hwmods attribute. OMAP is still not entirely
-converted to DT and there's this weird ti,hwmods attribute. OMAP's hwmod
-framework will fill up register addresses, irqs, etc when the device is
-created. Oh well...
-
---=20
-balbi
-
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQH4KTAAoJEIaOsuA1yqREyVoQAKKkTcGy302m5Gam9wnCP0Cb
-HXqBoaioUwfiXyV0sM4soLy4P1Q0yULDNzttzsYOhPMSSQx5ewbyh6sa1MJK8qvk
-bILOFDE3z6cYdjZQATlo7QcvxpcjSBaD0RxlEsdZBTtNPWN2dIrLmbl1iQy/UVkx
-oS4d5aKLj9LQLWjcG2d4FpbLu+oeLMIIF67tY4vr1JXscWoIX3XPZ/98CwmtTUXE
-yAL2hkCrX3jFc0FgR7oCNwdfkZ8BPpp3wbN7Mec6dI0cFcmoVU7XdT6tqXnaqtju
-p3I6CdDh9cBdMwte5zNFM6OB9Jhr97Xjsu7eQSmcO6O+R/6LtHRliRab52ZIw4ib
-h5kfSEEweWA4ypVqpF4z5p9tydkgtNoojdfErLyiPAW1mem7cgQ9ftRHShjBqJko
-hlKZH8doQe0ibLRsIXtdP3qugImbk96Fms7U/B0WZ6Ubo9CLWiJL+9/8517qmuYB
-50fdoLFMucafW49zoYzpjsGmCGrAMIRHPrXDCr4Z32Us5haOFpDFkR1vdDMHPpqU
-ymaFJhwNBOYzi7j3Gf9IH1FFadYOXxzRk/z7RRZ2GGEknut7bV0RoIDZtiXapZT8
-Xd5qdyxhs9sNV0DD7ihzriy7RFYYzNTD4zy12oGkdhNk334pFLI3xg4Xtk9hhQxQ
-HEWtrI6XeWWKmZ0Jrkp3
-=h60n
------END PGP SIGNATURE-----
-
---7JfCtLOvnd9MIVvH--
-
---===============4099113542617135657==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4099113542617135657==--
+>
+> --
+> Anton Vorontsov
+> Email: cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
