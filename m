@@ -1,73 +1,61 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: OMAP: Configuring CONTROL_DEVCONF0 register via DT with pinctrl
-Date: Tue, 7 Aug 2012 04:10:42 -0700
-Message-ID: <20120807111041.GY11011@atomide.com>
-References: <501262B5.1080004@ti.com>
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH v2 1/2] arm/dts: AM33XX: Add D_CAN device tree data
+Date: Tue, 7 Aug 2012 11:40:40 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA0D423@DBDE01.ent.ti.com>
+References: <1343219012-19472-1-git-send-email-anilkumar@ti.com>
+ <1343219012-19472-2-git-send-email-anilkumar@ti.com>
+ <501B6F99.4020506@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <501262B5.1080004@ti.com>
+In-Reply-To: <501B6F99.4020506@ti.com>
+Content-Language: en-US
 Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: linux-omap <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [120727 02:47]:
-> Hello,
+Vaibhav,
+
+Thanks for the review.
+
+On Fri, Aug 03, 2012 at 11:58:41, Hiremath, Vaibhav wrote:
 > 
-> I need to find a solution to control 2 bits in CONTROL_DEVCONF0 on OMAP2/3 for
-> McBSP1 CLKR/FSR signal routing.
-> In boards using McBSP1 we might need to change bit 3 and 4 based on the audio
-> setup (how the board has been wired).
 > 
-> So far I have come up with the following idea to handle to but not really sure
-> if it is the correct way (I have taken the idea from the arm/dts: Add AM33XX
-> basic pinctrl support series).
-
-You need to also consider that CONTROL_DEVCONF0 has the MMC/SDIO module input
-clock selection. So pinctrl-single binding would have to be expanded to also
-support one-bit-per-mux type registers in addition to one-register-per-mux
-registers. And then this could also be used for the MMC/SDIO module input clock.
-
-> In .dtsi file of the SoC:
+> On 7/25/2012 5:53 PM, AnilKumar Ch wrote:
+> > Add Bosch D_CAN controller device tree data to AM33XX dtsi file
+> > by adding d_can device node with all the necessary parameters.
+> > 
+> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> > ---
+> >  arch/arm/boot/dts/am33xx.dtsi |    5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > index 9b974dc..2db2ffb 100644
+> > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > @@ -163,5 +163,10 @@
+> >  			#size-cells = <0>;
+> >  			ti,hwmods = "i2c3";
+> >  		};
+> > +
+> > +		dcan1: d_can@481D0000 {
+> > +			compatible = "bosch,d_can";
+> > +			ti,hwmods = "d_can1";
+> > +		};
 > 
-> control_devconf0: pinmux@48002274 {
-> 	compatible = "pinctrl-single";
-> 	reg = <0x48002274 4>;	/* Single register */
-> 	#address-cells = <1>;
-> 	#size-cells = <0>;
-> 	pinctrl-single,register-width = <32>;
-> 	pinctrl-single,function-mask = <0x5F>;
-> };
-
-The pinctrl-single,function-mask is for all the registers in the range,
-we also need something to specify the device specific mux bits.
-
-> In the .dts file of the board which needs to change the CLKR/FSR configuration:
+> Anil,
 > 
-> &control_devconf0 {
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&mcbsp1_pins>;
+> Any reason why we are only specifying dcan1 instance? Shouldn't we
+> specify dcan0 as well here?
 > 
-> 	mcbsp1_pins: pinmux_mcbsp1_pins {
-> 		pinctrl-single,pins = <0x00 0x18>; /* CLKR/FSR from CLKX/FSX
-> 						    * pin */
-> 	};
-> 
-> };
 
-I think adding support for one-bit-per-mux would require adding something
-like this for the binding:
+Yes, I agree dcan0 needs to add because SoC support two instances. I
+have added d_can1 only because on AM335x-EVM d_can1 is available and
+in other case AM335x-bone have two instances available. I will send next
+version of these patches.
 
- 	mcbsp1_pins: pinmux_mcbsp1_pins {
-		/*                   offset bits mask */
- 		pinctrl-single,bits = <0x00 0x18 0x18>;
-	};
-
-As otherwise you would not know which bits to clear for alternative
-named modes. Or got any better ideas?
-
-Regards,
-
-Tony
+Regards
+AnilKumar
