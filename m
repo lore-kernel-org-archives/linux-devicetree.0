@@ -1,62 +1,70 @@
-From: Heiko =?iso-8859-15?q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v2 1/5] usb: phy: samsung: Introducing usb phy driver for hsotg
-Date: Tue, 7 Aug 2012 10:11:22 +0200
-Message-ID: <201208071011.23558.heiko@sntech.de>
-References: <1344324524-2286-1-git-send-email-p.paneri@samsung.com> <1344324524-2286-2-git-send-email-p.paneri@samsung.com>
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH RESEND v2 1/2] arm/dts: Add AM33XX basic pinctrl support
+Date: Tue, 7 Aug 2012 08:50:44 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA0D156@DBDE01.ent.ti.com>
+References: <1343144719-26352-1-git-send-email-anilkumar@ti.com>
+ <1343144719-26352-2-git-send-email-anilkumar@ti.com>
+ <50125B1C.8000209@ti.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA06E4B@DBDE01.ent.ti.com>
+ <20120807074348.GQ11011@atomide.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1344324524-2286-2-git-send-email-p.paneri@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Praveen Paneri <p.paneri@samsung.com>
-Cc: linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120807074348.GQ11011@atomide.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 7. August 2012, 09:28:40 schrieb Praveen Paneri:
-> This driver uses usb_phy interface to interact with s3c-hsotg. Supports
-> phy_init and phy_shutdown functions to enable/disable phy. Tested with
-> smdk6410 and smdkv310. More SoCs can be brought under later.
->
-> Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
-> ---
->  .../devicetree/bindings/usb/samsung-usbphy.txt     |    9 +
->  drivers/usb/phy/Kconfig                            |    8 +
->  drivers/usb/phy/Makefile                           |    1 +
->  drivers/usb/phy/samsung_usbphy.c                   |  355
-> ++++++++++++++++++++ drivers/usb/phy/samsung_usbphy.h                   | 
->  48 +++
->  include/linux/platform_data/s3c-hsotg.h            |    5 +
->  6 files changed, 426 insertions(+), 0 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/usb/samsung-usbphy.txt create mode
-> 100644 drivers/usb/phy/samsung_usbphy.c
->  create mode 100644 drivers/usb/phy/samsung_usbphy.h
+Hi Tony,
+
+On Tue, Aug 07, 2012 at 13:13:48, Tony Lindgren wrote:
+> * AnilKumar, Chimata <anilkumar@ti.com> [120731 06:37]:
+> > Hi Peter,
+> > 
+> > On Fri, Jul 27, 2012 at 14:40:52, Ujfalusi, Peter wrote:
+> > > Hi,
+> > > 
+> > > On 07/24/2012 06:45 PM, AnilKumar Ch wrote:
+> > > > Adds basic pinctrl support for AM33XX family of devices. This patch
+> > > > is based on the pinctrl-simple driver submitted by Tony Lindgren's
+> > > > here: http://lwn.net/Articles/496075/
+> > > > 
+> > > > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> > > > ---
+> > > >  arch/arm/boot/dts/am33xx.dtsi |    9 +++++++++
+> > > >  1 file changed, 9 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > > > index 59509c4..9b974dc 100644
+> > > > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > > > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > > > @@ -40,6 +40,15 @@
+> > > >  		};
+> > > >  	};
+> > > >  
+> > > > +	am3358_pinmux: pinmux@44E10800 {
+> > > > +		compatible = "pinctrl-single";
+> > > > +		reg = <0x44E10800 0x0338>;
+> > > 
+> > > I'm just curious about the size here: how it ended up as 0x0338?
+> > > While looking at the TRM of AM335x I can come up with 0x0238 (0x44e10800 -
+> > > 0x44e10a38), but I don't see any sings of the remaining 0x0100 to be
+> > > documented at least.
+> > 
+> > No, pinmux registers are available till 0x44E10B38, look at AM335x latest TRM
+> > or pinmux utility (we cannot find the exact offsets but pins we can find after
+> > 0x0A38, conf_ddr_resetn) at http://www.ti.com/tool/pinmuxtool
+> 
+> If you have a hole inbetween the registers it sounds like you also have core and
+> wkup domains? In that case those should be set up as separate controllers as other
+> SCM registers may be inbetween those domains.
 > 
 
-[...]
+In case of AM33XX we have only one padconf domain and it do not have any holes
+in between.
 
-> diff --git a/include/linux/platform_data/s3c-hsotg.h
-> b/include/linux/platform_data/s3c-hsotg.h index 8b79e09..25ed31e 100644
-> --- a/include/linux/platform_data/s3c-hsotg.h
-> +++ b/include/linux/platform_data/s3c-hsotg.h
-> @@ -35,6 +35,11 @@ struct s3c_hsotg_plat {
->  	int (*phy_exit)(struct platform_device *pdev, int type);
->  };
-> 
-> +struct s3c_usbphy_plat {
-> +	void (*pmu_isolation)(int on);
-> +};
-> +
->  extern void s3c_hsotg_set_platdata(struct s3c_hsotg_plat *pd);
-> +extern void s3c_usbphy_set_platdata(struct s3c_usbphy_plat *pd);
-> 
->  #endif /* __LINUX_USB_S3C_HSOTG_H */
-
-hmm, I'm not completely sure about this being in the s3c-hsotg header, as on 
-s3c2443/2416/2450 it's the s3c-hsudc that will be (hopefully) using the phy in 
-the future.
-
-
-Heiko
+Regards
+AnilKumar
