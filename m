@@ -1,237 +1,60 @@
-From: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 4/5] ARM: S3C64XX: Enabling samsung_usbphy driver
-Date: Tue, 07 Aug 2012 12:58:43 +0530
-Message-ID: <1344324524-2286-5-git-send-email-p.paneri@samsung.com>
-References: <1344324524-2286-1-git-send-email-p.paneri@samsung.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1344324524-2286-1-git-send-email-p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH RESEND v2 1/2] arm/dts: Add AM33XX basic pinctrl support
+Date: Tue, 7 Aug 2012 00:43:48 -0700
+Message-ID: <20120807074348.GQ11011@atomide.com>
+References: <1343144719-26352-1-git-send-email-anilkumar@ti.com>
+ <1343144719-26352-2-git-send-email-anilkumar@ti.com>
+ <50125B1C.8000209@ti.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA06E4B@DBDE01.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA06E4B@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Adding platform device for samsung_usbphy driver. Enabling it for
-s3c64xx based machines using s3c-hsotg.
+* AnilKumar, Chimata <anilkumar@ti.com> [120731 06:37]:
+> Hi Peter,
+> 
+> On Fri, Jul 27, 2012 at 14:40:52, Ujfalusi, Peter wrote:
+> > Hi,
+> > 
+> > On 07/24/2012 06:45 PM, AnilKumar Ch wrote:
+> > > Adds basic pinctrl support for AM33XX family of devices. This patch
+> > > is based on the pinctrl-simple driver submitted by Tony Lindgren's
+> > > here: http://lwn.net/Articles/496075/
+> > > 
+> > > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> > > ---
+> > >  arch/arm/boot/dts/am33xx.dtsi |    9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > > index 59509c4..9b974dc 100644
+> > > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > > @@ -40,6 +40,15 @@
+> > >  		};
+> > >  	};
+> > >  
+> > > +	am3358_pinmux: pinmux@44E10800 {
+> > > +		compatible = "pinctrl-single";
+> > > +		reg = <0x44E10800 0x0338>;
+> > 
+> > I'm just curious about the size here: how it ended up as 0x0338?
+> > While looking at the TRM of AM335x I can come up with 0x0238 (0x44e10800 -
+> > 0x44e10a38), but I don't see any sings of the remaining 0x0100 to be
+> > documented at least.
+> 
+> No, pinmux registers are available till 0x44E10B38, look at AM335x latest TRM
+> or pinmux utility (we cannot find the exact offsets but pins we can find after
+> 0x0A38, conf_ddr_resetn) at http://www.ti.com/tool/pinmuxtool
 
-Signed-off-by: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/mach-s3c64xx/include/mach/map.h     |    2 +
- arch/arm/mach-s3c64xx/mach-crag6410.c        |    3 ++
- arch/arm/mach-s3c64xx/mach-smartq.c          |    4 +++
- arch/arm/mach-s3c64xx/mach-smdk6410.c        |    3 ++
- arch/arm/mach-s3c64xx/setup-usb-phy.c        |   14 +++++++++++
- arch/arm/plat-samsung/devs.c                 |   32 ++++++++++++++++++++++++++
- arch/arm/plat-samsung/include/plat/devs.h    |    1 +
- arch/arm/plat-samsung/include/plat/usb-phy.h |    1 +
- 8 files changed, 60 insertions(+), 0 deletions(-)
+If you have a hole inbetween the registers it sounds like you also have core and
+wkup domains? In that case those should be set up as separate controllers as other
+SCM registers may be inbetween those domains.
 
-diff --git a/arch/arm/mach-s3c64xx/include/mach/map.h b/arch/arm/mach-s3c64xx/include/mach/map.h
-index 8e2097b..dc482bb 100644
---- a/arch/arm/mach-s3c64xx/include/mach/map.h
-+++ b/arch/arm/mach-s3c64xx/include/mach/map.h
-@@ -65,6 +65,7 @@
- 
- #define S3C64XX_PA_NAND		(0x70200000)
- #define S3C64XX_PA_FB		(0x77100000)
-+#define S3C64XX_PA_USB_HSPHY	(0x7C100000)
- #define S3C64XX_PA_USB_HSOTG	(0x7C000000)
- #define S3C64XX_PA_WATCHDOG	(0x7E004000)
- #define S3C64XX_PA_RTC		(0x7E005000)
-@@ -113,6 +114,7 @@
- #define S3C_PA_FB		S3C64XX_PA_FB
- #define S3C_PA_USBHOST		S3C64XX_PA_USBHOST
- #define S3C_PA_USB_HSOTG	S3C64XX_PA_USB_HSOTG
-+#define S3C_PA_USB_PHY		S3C64XX_PA_USB_HSPHY
- #define S3C_PA_RTC		S3C64XX_PA_RTC
- #define S3C_PA_WDT		S3C64XX_PA_WATCHDOG
- #define S3C_PA_SPI0		S3C64XX_PA_SPI0
-diff --git a/arch/arm/mach-s3c64xx/mach-crag6410.c b/arch/arm/mach-s3c64xx/mach-crag6410.c
-index 3bb0327..05e6e14 100644
---- a/arch/arm/mach-s3c64xx/mach-crag6410.c
-+++ b/arch/arm/mach-s3c64xx/mach-crag6410.c
-@@ -337,6 +337,7 @@ static struct platform_device wallvdd_device = {
- };
- 
- static struct platform_device *crag6410_devices[] __initdata = {
-+	&s3c_device_usbphy,
- 	&s3c_device_hsmmc0,
- 	&s3c_device_hsmmc2,
- 	&s3c_device_i2c0,
-@@ -766,6 +767,7 @@ static const struct gpio_led_platform_data gpio_leds_pdata = {
- 	.num_leds = ARRAY_SIZE(gpio_leds),
- };
- 
-+static struct s3c_usbphy_plat crag6410_usbphy_pdata;
- 
- static void __init crag6410_machine_init(void)
- {
-@@ -791,6 +793,7 @@ static void __init crag6410_machine_init(void)
- 	s3c_i2c0_set_platdata(&i2c0_pdata);
- 	s3c_i2c1_set_platdata(&i2c1_pdata);
- 	s3c_fb_set_platdata(&crag6410_lcd_pdata);
-+	s3c_usbphy_set_platdata(&crag6410_usbphy_pdata);
- 
- 	i2c_register_board_info(0, i2c_devs0, ARRAY_SIZE(i2c_devs0));
- 	i2c_register_board_info(1, i2c_devs1, ARRAY_SIZE(i2c_devs1));
-diff --git a/arch/arm/mach-s3c64xx/mach-smartq.c b/arch/arm/mach-s3c64xx/mach-smartq.c
-index 3647202..97751d5 100644
---- a/arch/arm/mach-s3c64xx/mach-smartq.c
-+++ b/arch/arm/mach-s3c64xx/mach-smartq.c
-@@ -235,6 +235,7 @@ static struct i2c_board_info smartq_i2c_devs[] __initdata = {
- };
- 
- static struct platform_device *smartq_devices[] __initdata = {
-+	&s3c_device_usbphy,
- 	&s3c_device_hsmmc1,	/* Init iNAND first, ... */
- 	&s3c_device_hsmmc0,	/* ... then the external SD card */
- 	&s3c_device_hsmmc2,
-@@ -381,9 +382,12 @@ void __init smartq_map_io(void)
- 	smartq_lcd_mode_set();
- }
- 
-+static struct s3c_usbphy_plat smartq_usbphy_pdata;
-+
- void __init smartq_machine_init(void)
- {
- 	s3c_i2c0_set_platdata(NULL);
-+	s3c_usbphy_set_platdata(&smartq_usbphy_pdata);
- 	s3c_hwmon_set_platdata(&smartq_hwmon_pdata);
- 	s3c_sdhci1_set_platdata(&smartq_internal_hsmmc_pdata);
- 	s3c_sdhci2_set_platdata(&smartq_internal_hsmmc_pdata);
-diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c b/arch/arm/mach-s3c64xx/mach-smdk6410.c
-index 1a2db14..e5c55ba 100644
---- a/arch/arm/mach-s3c64xx/mach-smdk6410.c
-+++ b/arch/arm/mach-s3c64xx/mach-smdk6410.c
-@@ -264,6 +264,7 @@ static struct samsung_keypad_platdata smdk6410_keypad_data __initdata = {
- static struct map_desc smdk6410_iodesc[] = {};
- 
- static struct platform_device *smdk6410_devices[] __initdata = {
-+	&s3c_device_usbphy,
- #ifdef CONFIG_SMDK6410_SD_CH0
- 	&s3c_device_hsmmc0,
- #endif
-@@ -627,6 +628,7 @@ static struct platform_pwm_backlight_data smdk6410_bl_data = {
- 	.pwm_id = 1,
- };
- 
-+static struct s3c_usbphy_plat smdk6410_usbphy_pdata;
- 
- static void __init smdk6410_map_io(void)
- {
-@@ -656,6 +658,7 @@ static void __init smdk6410_machine_init(void)
- 	s3c_i2c0_set_platdata(NULL);
- 	s3c_i2c1_set_platdata(NULL);
- 	s3c_fb_set_platdata(&smdk6410_lcd_pdata);
-+	s3c_usbphy_set_platdata(&smdk6410_usbphy_pdata);
- 
- 	samsung_keypad_set_platdata(&smdk6410_keypad_data);
- 
-diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c b/arch/arm/mach-s3c64xx/setup-usb-phy.c
-index 7a09553..3aee778 100644
---- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
-+++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
-@@ -9,3 +9,17 @@
-  *
-  */
- 
-+#include <linux/io.h>
-+#include <mach/map.h>
-+#include <mach/regs-sys.h>
-+
-+void s5p_usb_phy_pmu_isolation(int on)
-+{
-+	if (on) {
-+		writel(readl(S3C64XX_OTHERS) & ~S3C64XX_OTHERS_USBMASK,
-+			S3C64XX_OTHERS);
-+	} else {
-+		writel(readl(S3C64XX_OTHERS) | S3C64XX_OTHERS_USBMASK,
-+			S3C64XX_OTHERS);
-+	}
-+}
-diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
-index 74e31ce..10bc2bf 100644
---- a/arch/arm/plat-samsung/devs.c
-+++ b/arch/arm/plat-samsung/devs.c
-@@ -1343,6 +1343,35 @@ struct platform_device s5p_device_mixer = {
- 
- /* USB */
- 
-+#ifdef CONFIG_S3C_DEV_USB_HSOTG
-+/* USB PHY*/
-+static struct resource s3c_usbphy_resource[] = {
-+	[0] = {
-+		.start = S3C_PA_USB_PHY,
-+		.end   = S3C_PA_USB_PHY + SZ_16 - 1,
-+		.flags = IORESOURCE_MEM,
-+	},
-+};
-+
-+struct platform_device s3c_device_usbphy = {
-+	.name		= "s3c64xx-usbphy",
-+	.id		= -1,
-+	.num_resources	= ARRAY_SIZE(s3c_usbphy_resource),
-+	.resource	= s3c_usbphy_resource,
-+};
-+
-+void __init s3c_usbphy_set_platdata(struct s3c_usbphy_plat *pd)
-+{
-+	struct s3c_usbphy_plat *npd;
-+
-+	npd = s3c_set_platdata(pd, sizeof(struct s3c_usbphy_plat),
-+			&s3c_device_usbphy);
-+
-+	if (!npd->pmu_isolation)
-+		npd->pmu_isolation = s5p_usb_phy_pmu_isolation;
-+}
-+#endif
-+
- #ifdef CONFIG_S3C_DEV_USB_HOST
- static struct resource s3c_usb_resource[] = {
- 	[0] = DEFINE_RES_MEM(S3C_PA_USBHOST, SZ_256),
-@@ -1449,6 +1478,8 @@ struct platform_device s3c_device_usb_hsotg = {
- 	},
- };
- 
-+#ifndef CONFIG_ARCH_S3C64XX
-+/* TODO: To be removed later. Currently only S3C64XX is platform data free */
- void __init s3c_hsotg_set_platdata(struct s3c_hsotg_plat *pd)
- {
- 	struct s3c_hsotg_plat *npd;
-@@ -1461,6 +1492,7 @@ void __init s3c_hsotg_set_platdata(struct s3c_hsotg_plat *pd)
- 	if (!npd->phy_exit)
- 		npd->phy_exit = s5p_usb_phy_exit;
- }
-+#endif
- #endif /* CONFIG_S3C_DEV_USB_HSOTG */
- 
- /* USB High Spped 2.0 Device (Gadget) */
-diff --git a/arch/arm/plat-samsung/include/plat/devs.h b/arch/arm/plat-samsung/include/plat/devs.h
-index 5da4b4f..abc6942 100644
---- a/arch/arm/plat-samsung/include/plat/devs.h
-+++ b/arch/arm/plat-samsung/include/plat/devs.h
-@@ -71,6 +71,7 @@ extern struct platform_device s3c_device_spi1;
- extern struct platform_device s3c_device_ts;
- extern struct platform_device s3c_device_timer[];
- extern struct platform_device s3c_device_usbgadget;
-+extern struct platform_device s3c_device_usbphy;
- extern struct platform_device s3c_device_usb_hsotg;
- extern struct platform_device s3c_device_usb_hsudc;
- extern struct platform_device s3c_device_wdt;
-diff --git a/arch/arm/plat-samsung/include/plat/usb-phy.h b/arch/arm/plat-samsung/include/plat/usb-phy.h
-index 959bcdb..165ffe7 100644
---- a/arch/arm/plat-samsung/include/plat/usb-phy.h
-+++ b/arch/arm/plat-samsung/include/plat/usb-phy.h
-@@ -18,5 +18,6 @@ enum s5p_usb_phy_type {
- 
- extern int s5p_usb_phy_init(struct platform_device *pdev, int type);
- extern int s5p_usb_phy_exit(struct platform_device *pdev, int type);
-+extern void s5p_usb_phy_pmu_isolation(int on);
- 
- #endif /* __PLAT_SAMSUNG_USB_PHY_H */
--- 
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
