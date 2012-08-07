@@ -1,62 +1,78 @@
-From: Koen Kooi <koen@dominion.thruhere.net>
-Subject: Re: [PATCH 3/4] arm/dts: omap5-evm: Add keypad data
-Date: Tue, 7 Aug 2012 14:54:22 +0200
-Message-ID: <2AE404CF-E456-408A-B7A2-D9B3D331C58E@dominion.thruhere.net>
-References: <1343997486-710-1-git-send-email-sourav.poddar@ti.com> <1343997486-710-4-git-send-email-sourav.poddar@ti.com>
-Mime-Version: 1.0 (Mac OS X Mail 6.0 \(1485\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1343997486-710-4-git-send-email-sourav.poddar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v6] ARM: mtd: nand: davinci: add OF support for davinci
+ nand controller
+Date: Tue, 07 Aug 2012 16:34:40 +0200
+Message-ID: <50212780.5000809@denx.de>
+References: <1343632944-25971-1-git-send-email-hs@denx.de>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1343632944-25971-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-Op 3 aug. 2012, om 14:38 heeft Sourav Poddar <sourav.poddar@ti.com> het volgende geschreven:
-
-> Add keypad data node in omap5 device tree file.
-> Also fill the device tree binding parameters
-> with the required value in "omap5-evm" dts file.
-> 
-> Tested on omap5430 evm with 3.5 custom kernel.
-> 
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Acked-by: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+On 30.07.2012 09:22, Heiko Schocher wrote:
+> add OF support for the davinci nand controller.
+>
+> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: David Woodhouse<dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
+> Cc: Scott Wood<scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>
 > ---
-> arch/arm/boot/dts/omap5-evm.dts |   12 ++++++++++++
-> arch/arm/boot/dts/omap5.dtsi    |    5 +++++
-> 2 files changed, 17 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
-> index 45a8aeb..09fe941 100644
-> --- a/arch/arm/boot/dts/omap5-evm.dts
-> +++ b/arch/arm/boot/dts/omap5-evm.dts
-> @@ -17,6 +17,18 @@
-> 		device_type = "memory";
-> 		reg = <0x80000000 0x40000000>; /* 1 GB */
-> 	};
-> +
-> +	keypad {
-> +		keypad,num-rows = <8>;
-> +		keypad,num-columns = <8>;
-> +		linux,keymap = < 0x02020073
-> +			0x02030072
-> +			0x020400e7
-> +			0x02050066
-> +			0x0206006b
-> +			0x020700d9 >;
-> +		linux,input-no-autorepeat;
-> +	};
+> - changes for v2:
+>    - add comments from Scott Wood:
+>      - add "ti,davinci-" prefix
+>      - Dashes are preferred to underscores
+>      - rename "nandflash" to "nand"
+>      - introduce new "ti,davinci" specific properties for setting
+>        up ecc_mode, ecc_bits, options and bbt options, instead
+>        using linux defines
+>      - readme fixes
+> - no changes for v3
+> - changes for v4
+>    remove "pinmux-handle" property as discussed here:
+>    http://www.spinics.net/lists/arm-kernel/msg175701.html
+>    with Nori Sekhar
+> - no changes for v5
+>
+> - changes for v6:
+>    add comments from Sekhar Nori:
+>    - remove unnecessary includes
+>    - use devm_kzalloc instead of kzalloc
+>    - remove AEMIF timing specific bindings, as
+>      this has to be done later.
+>
+>   .../devicetree/bindings/arm/davinci/nand.txt       |   51 ++++++++++++++
+>   drivers/mtd/nand/davinci_nand.c                    |   72 +++++++++++++++++++-
+>   2 files changed, 122 insertions(+), 1 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
 
-Again not a coment on your patch, but on DT:
+ping ... any comments?
 
-If DT bindings must be OS independent, what then, is that linux keycode doing there?
-
-regards,
-
-Koen
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
