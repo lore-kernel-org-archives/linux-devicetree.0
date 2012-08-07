@@ -1,32 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] arm/dts: omap5: Add mmc controller nodes and board data
-Date: Tue, 7 Aug 2012 08:30:01 +0000
-Message-ID: <201208070830.01776.arnd@arndb.de>
-References: <1344323901-20342-1-git-send-email-balajitk@ti.com>
+From: Hui Wang <jason77.wang@gmail.com>
+Subject: [PATCH 1/2] Input: egalax_ts: get gpio from devicetree node
+Date: Tue, 7 Aug 2012 17:39:31 +0800
+Message-ID: <1344332372-9287-2-git-send-email-jason77.wang@gmail.com>
+References: <1344332372-9287-1-git-send-email-jason77.wang@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1344323901-20342-1-git-send-email-balajitk-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1344332372-9287-1-git-send-email-jason77.wang@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 August 2012, Balaji T K wrote:
-> 
-> Add OMAP MMC related device tree data for OMAP5.
-> 
-> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-> ---
+The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework and
+don't support this API anymore.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+The i.MX6q sabrelite platform equips an egalax touchscreen controller,
+and this platform already transfered to GENERIC_GPIO framework, to
+support this driver, we use a more generic way to get gpio.
+
+Signed-off-by: Hui Wang <jason77.wang@gmail.com>
+---
+ drivers/input/touchscreen/egalax_ts.c |   12 ++++++++++--
+ 1 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/touchscreen/egalax_ts.c
+index 70524dd..b94eb50 100644
+--- a/drivers/input/touchscreen/egalax_ts.c
++++ b/drivers/input/touchscreen/egalax_ts.c
+@@ -28,6 +28,7 @@
+ #include <linux/slab.h>
+ #include <linux/bitops.h>
+ #include <linux/input/mt.h>
++#include <linux/of_gpio.h>
+ 
+ /*
+  * Mouse Mode: some panel may configure the controller to mouse mode,
+@@ -122,8 +123,15 @@ static irqreturn_t egalax_ts_interrupt(int irq, void *dev_id)
+ /* wake up controller by an falling edge of interrupt gpio.  */
+ static int egalax_wake_up_device(struct i2c_client *client)
+ {
+-	int gpio = irq_to_gpio(client->irq);
+-	int ret;
++	struct device_node *np = client->dev.of_node;
++	int gpio, ret;
++
++	if (!np)
++		return -ENODEV;
++
++	gpio = of_get_named_gpio(np, "irq-gpio", 0);
++	if (!gpio_is_valid(gpio))
++		return -ENODEV;
+ 
+ 	ret = gpio_request(gpio, "egalax_irq");
+ 	if (ret < 0) {
+-- 
+1.7.6
+
