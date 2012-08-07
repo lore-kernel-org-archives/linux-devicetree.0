@@ -1,61 +1,62 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH v2 1/2] arm/dts: AM33XX: Add D_CAN device tree data
-Date: Tue, 7 Aug 2012 11:40:40 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA0D423@DBDE01.ent.ti.com>
-References: <1343219012-19472-1-git-send-email-anilkumar@ti.com>
- <1343219012-19472-2-git-send-email-anilkumar@ti.com>
- <501B6F99.4020506@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: Re: [PATCH 3/4] arm/dts: omap5-evm: Add keypad data
+Date: Tue, 7 Aug 2012 14:54:22 +0200
+Message-ID: <2AE404CF-E456-408A-B7A2-D9B3D331C58E@dominion.thruhere.net>
+References: <1343997486-710-1-git-send-email-sourav.poddar@ti.com> <1343997486-710-4-git-send-email-sourav.poddar@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 6.0 \(1485\))
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <501B6F99.4020506@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1343997486-710-4-git-send-email-sourav.poddar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Vaibhav,
 
-Thanks for the review.
+Op 3 aug. 2012, om 14:38 heeft Sourav Poddar <sourav.poddar@ti.com> het volgende geschreven:
 
-On Fri, Aug 03, 2012 at 11:58:41, Hiremath, Vaibhav wrote:
+> Add keypad data node in omap5 device tree file.
+> Also fill the device tree binding parameters
+> with the required value in "omap5-evm" dts file.
 > 
+> Tested on omap5430 evm with 3.5 custom kernel.
 > 
-> On 7/25/2012 5:53 PM, AnilKumar Ch wrote:
-> > Add Bosch D_CAN controller device tree data to AM33XX dtsi file
-> > by adding d_can device node with all the necessary parameters.
-> > 
-> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> > ---
-> >  arch/arm/boot/dts/am33xx.dtsi |    5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> > index 9b974dc..2db2ffb 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -163,5 +163,10 @@
-> >  			#size-cells = <0>;
-> >  			ti,hwmods = "i2c3";
-> >  		};
-> > +
-> > +		dcan1: d_can@481D0000 {
-> > +			compatible = "bosch,d_can";
-> > +			ti,hwmods = "d_can1";
-> > +		};
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Cc: Felipe Balbi <balbi@ti.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Acked-by: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> ---
+> arch/arm/boot/dts/omap5-evm.dts |   12 ++++++++++++
+> arch/arm/boot/dts/omap5.dtsi    |    5 +++++
+> 2 files changed, 17 insertions(+), 0 deletions(-)
 > 
-> Anil,
-> 
-> Any reason why we are only specifying dcan1 instance? Shouldn't we
-> specify dcan0 as well here?
-> 
+> diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
+> index 45a8aeb..09fe941 100644
+> --- a/arch/arm/boot/dts/omap5-evm.dts
+> +++ b/arch/arm/boot/dts/omap5-evm.dts
+> @@ -17,6 +17,18 @@
+> 		device_type = "memory";
+> 		reg = <0x80000000 0x40000000>; /* 1 GB */
+> 	};
+> +
+> +	keypad {
+> +		keypad,num-rows = <8>;
+> +		keypad,num-columns = <8>;
+> +		linux,keymap = < 0x02020073
+> +			0x02030072
+> +			0x020400e7
+> +			0x02050066
+> +			0x0206006b
+> +			0x020700d9 >;
+> +		linux,input-no-autorepeat;
+> +	};
 
-Yes, I agree dcan0 needs to add because SoC support two instances. I
-have added d_can1 only because on AM335x-EVM d_can1 is available and
-in other case AM335x-bone have two instances available. I will send next
-version of these patches.
+Again not a coment on your patch, but on DT:
 
-Regards
-AnilKumar
+If DT bindings must be OS independent, what then, is that linux keycode doing there?
+
+regards,
+
+Koen
