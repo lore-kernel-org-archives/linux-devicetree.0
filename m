@@ -1,556 +1,70 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH v3 1/2] lis3: add generic DT matching code
-Date: Tue, 07 Aug 2012 20:49:01 +0200
-Message-ID: <5021631D.1030505@gmail.com>
-References: <1343633775-6268-1-git-send-email-zonque@gmail.com> <501E9CE2.20500@gmail.com> <331ABD5ECB02734CA317220B2BBEABC13EA0B8A5@DBDE01.ent.ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] mv643xx.c: Add basic device tree support.
+Date: Tue, 7 Aug 2012 20:25:22 +0000
+Message-ID: <201208072025.22871.arnd@arndb.de>
+References: <1344350092-24050-1-git-send-email-ian.molton@codethink.co.uk>
+ <201208071456.41412.arnd@arndb.de> <50213ACB.6040301@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------010802010907030803000302"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA0B8A5@DBDE01.ent.ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "eric.piel@tremplin-utc.net" <eric.piel@tremplin-utc.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50213ACB.6040301-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dale Farnsworth <dale-1viX+2+OPRFcxvNqPlePQg@public.gmane.org>
+Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------010802010907030803000302
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-Hi,
-
-thanks for your review.
-
-On 06.08.2012 12:45, AnilKumar, Chimata wrote:
-> On Sun, Aug 05, 2012 at 21:48:42, Daniel Mack wrote:
->> On 30.07.2012 09:36, Daniel Mack wrote:
->>> This patch adds logic to parse lis3 properties from a device tree node
->>> and store them in a freshly allocated lis3lv02d_platform_data.
->>>
->>> Note that the actual match tables are left out here. This part should
->>> happen in the drivers that bind to the individual busses (SPI/I2C/PCI).
->>>
->>> Also adds some DT bindinds documentation.
->>>
->>> Signed-off-by: Daniel Mack <zonque@gmail.com>
->>> ---
->>> Changes from v2:
->>>  - kzalloc braino
->>>
->>> Changes from v1:
->>>  - some typos in properties fixed
->>>
->>>
->>>  Documentation/devicetree/bindings/misc/lis302.txt |  74 ++++++++++++
->>>  drivers/misc/lis3lv02d/lis3lv02d.c                | 137 ++++++++++++++++++++++
->>>  drivers/misc/lis3lv02d/lis3lv02d.h                |   4 +
->>>  3 files changed, 215 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/misc/lis302.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/misc/lis302.txt b/Documentation/devicetree/bindings/misc/lis302.txt
->>> new file mode 100644
->>> index 0000000..66230fd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/misc/lis302.txt
->>> @@ -0,0 +1,74 @@
->>> +LIS302 accelerometer devicetree bindings
->>> +
->>> +This device is matched via its bus drivers, and has a number of properties
->>> +that apply in on the generic device (independent from the bus).
->>> +
->>> +
->>> +Required properties for the SPI bindings:
->>> + - compatible: 		should be set to "st,lis3lv02d_spi"
->>> + - reg:			the chipselect index
->>> + - spi-max-frequency:	maximal bus speed, should be set to 1000000 unless
->>> +			constrained by external circuitry
->>> + - interrupts:		the interrupt generated by the device
->>> +
->>> +
->>> +Optional properties for all bus drivers:
->>> +
->>> + - st,click-single-{x,y,z}:	if present, tells the device to issue an
->>> +				interrupt on single click events on the
->>> +				x/y/z axis.
->>> + - st,click-double-{x,y,z}:	if present, tells the device to issue an
->>> +				interrupt on double click events on the
->>> +				x/y/z axis.
->>> + - st,click-thresh-{x,y,z}:	set the x/y/z axis threshold
->>> + - st,click-click-time-limit:	click time limit, from 0 to 127.5msec
->>> +				with step of 0.5 msec
->>> + - st,click-latency:		click latency, from 0 to 255 msec with
->>> +				step of 1 msec.
->>> + - st,click-window:		click window, from 0 to 255 msec with
->>> +				step of 1 msec.
->>> + - st,irq{1,2}-disable:		disable IRQ 1/2
->>> + - st,irq{1,2}-ff-wu-1:		raise IRQ 1/2 on FF_WU_1 condition
->>> + - st,irq{1,2}-ff-wu-2:		raise IRQ 1/2 on FF_WU_2 condition
->>> + - st,irq{1,2}-data-ready:	raise IRQ 1/2 on data ready contition
->>> + - st,irq{1,2}-click:		raise IRQ 1/2 on click condition
->>> + - st,irq-open-drain:		consider IRQ lines open-drain
->>> + - st,irq-active-low:		make IRQ lines active low
->>> + - st,wu-duration-1:		duration register for Free-Fall/Wake-Up
->>> +				interrupt 1
->>> + - st,wu-duration-2:		duration register for Free-Fall/Wake-Up
->>> +				interrupt 2
->>> + - st,wakeup-{x,y,z}-{lo,hi}:	set wakeup condition on x/y/z axis for
->>> +				upper/lower limit
->>> + - st,highpass-cutoff-hz=:	1, 2, 4 or 8 for 1Hz, 2Hz, 4Hz or 8Hz of
->>> +				highpass cut-off frequency
->>> + - st,hipass{1,2}-disable:	disable highpass 1/2.
->>> + - st,default-rate=:		set the default rate
->>> + - st,axis-{x,y,z}=:		set the axis to map to the three coordinates
+On Tuesday 07 August 2012, Ian Molton wrote:
+> > I think it documents some of the same thing,
 > 
-> Some more parameters missing, what about st_min_limits and st_max_limits
-> required for selftest.
-
-Right. Added them now.
-
->>> +
->>> +
->>> +Example for a SPI device node:
->>> +
->>> +	lis302@0 {
->>> +		compatible = "st,lis302dl-spi";
->>> +		reg = <0>;
->>> +		spi-max-frequency = <1000000>;
->>> +		interrupt-parent = <&gpio>;
->>> +		interrupts = <104 0>;
->>> +
->>> +		st,click-single-x;
->>> +		st,click-single-y;
->>> +		st,click-single-z;
->>> +		st,click-thresh-x = <10>;
->>> +		st,click-thresh-y = <10>;
->>> +		st,click-thresh-z = <10>;
->>> +		st,irq1-click;
->>> +		st,irq2-click;
->>> +		st,wakeup-x-lo;
->>> +		st,wakeup-x-hi;
->>> +		st,wakeup-y-lo;
->>> +		st,wakeup-y-hi;
->>> +		st,wakeup-z-lo;
->>> +		st,wakeup-z-hi;
->>> +	};
+> Not really. It documents some godawful hack that recycled the platform
+> device -based driver and provided a DT binding for it, just for PPC.
 > 
-> Why can't we add these flags in driver itself like below?
-> Is these parameters varies from SoC to SoC or accelerometer
-> - to - accelerometer?
+> I cant even find anything that implements code for whatever
+> "marvell,mv64360-mdio" might be. I'm sure it might exist somewhere.
 
-I don't understand, sorry. The point here is that the driver that is
-probed for device initialization are the PCI/I2C/SPI drivers. The
-generic part is not something the device tree knows about.
+The code dates back to when we had separate buses for platform devices
+and of devices, and then it was decided not to add support for both
+bus types to each of the marvell drivers. In hindsight it would have
+been better to do that, but that was impossible to tell back then.
 
-Hence I put the generic parsing of common DT bindings to the generic
-part of the driver, and made the SPI driver just pass through the
-of_node pointer.
-
-> #ifdef CONFIG_OF
-> static struct lis3lv02d_platform_data lis302dl_spi_pdata = {
->         .click_flags    = LIS3_CLICK_SINGLE_X |
->                           LIS3_CLICK_SINGLE_Y |
->                           LIS3_CLICK_SINGLE_Z,
->         .irq_cfg        = LIS3_IRQ1_CLICK | LIS3_IRQ2_CLICK,
->         .wakeup_flags   = LIS3_WAKEUP_X_LO | LIS3_WAKEUP_X_HI |
->                           LIS3_WAKEUP_Y_LO | LIS3_WAKEUP_Y_HI |
->                           LIS3_WAKEUP_Z_LO | LIS3_WAKEUP_Z_HI,
-> };
+> > We might also want to move some of the
+> > code from arch/powerpc/sysdev/mv64x60_dev.c to live in the same place
+> > as the device driver.
 > 
-> static struct lis3lv02d_platform_data lis331dlh_i2c_pdata = {
->         .click_flags    = LIS3_CLICK_SINGLE_X |
->                           LIS3_CLICK_SINGLE_Y |
->                           LIS3_CLICK_SINGLE_Z,
->         .irq_cfg        = LIS3_IRQ1_CLICK | LIS3_IRQ2_CLICK,
->         .wakeup_flags   = LIS3_WAKEUP_X_LO | LIS3_WAKEUP_X_HI |
->                           LIS3_WAKEUP_Y_LO | LIS3_WAKEUP_Y_HI |
->                           LIS3_WAKEUP_Z_LO | LIS3_WAKEUP_Z_HI,
-> };
+> I hope not. I don't really want to touch that stuff at all. If it works
+> the way it
+> is, then it can stay that way. If the PPC folk want to send patches to
+> add the
+> properties they use to the driver, then they can do. I'll send an email
+> their
+> way and see if they want to join in.
 > 
-> static const struct of_device_id lis3_of_match[] = {
->        {
->                .compatible = "st,lis302dl-spi",
->                .data = &lis302dl_spi_pdata,
->        },
->        {
->                .compatible = "st,lis331dlh-i2c",
->                .data = &lis331dlh_i2c_pdata,
->        },
->        { },
-> };
-> MODULE_DEVICE_TABLE(of, lis3_of_match);
-> #endif
-> 
-> Ignore if parameters between SoC - SoC are different. In
-> probe we can add these flags to pdata.
+> From my perspective, the next thing that needs to happen to the driver is
+> for it to be broken up into ethernet and mdio drivers, so that we can
+> get rid
+> of all this shared_smi craziness... But that's for another patch series.
 
-No. We want to expose all hardware features to DT so users can configure
-the device at wish. We can't ignore that SoCs want different device configs.
+Adding devicetree-discuss and linuxppc-dev, as well as Dale Farnsworth,
+who initially added the bindings for mv643xx.
 
->>> +
->>> diff --git a/drivers/misc/lis3lv02d/lis3lv02d.c b/drivers/misc/lis3lv02d/lis3lv02d.c
->>> index a981e2a..1411fdc 100644
->>> --- a/drivers/misc/lis3lv02d/lis3lv02d.c
->>> +++ b/drivers/misc/lis3lv02d/lis3lv02d.c
->>> @@ -39,6 +39,7 @@
->>>  #include <linux/miscdevice.h>
->>>  #include <linux/pm_runtime.h>
->>>  #include <linux/atomic.h>
->>> +#include <linux/of_device.h>
->>>  #include "lis3lv02d.h"
->>>  
->>>  #define DRIVER_NAME     "lis3lv02d"
->>> @@ -912,6 +913,138 @@ static void lis3lv02d_8b_configure(struct lis3lv02d *lis3,
->>>  	}
->>>  }
->>>  
->>> +#ifdef CONFIG_OF
->>> +static int lis3lv02d_init_dt(struct lis3lv02d *lis3)
->>> +{
->>> +	struct lis3lv02d_platform_data *pdata;
->>> +	struct device_node *np = lis3->of_node;
->>> +	u32 tmp;
-> 
-> Can you use some better name than tmp, if require?
+I would hope that at least some of the properties that are used on
+powerpc can be reused in the same way for other architectures.
+The method to find the phy address on powerpc does indeed make
+more sense than the "port_number" property you suggested, and the
+phandle for the phy node is usually called "phy" not "mdio".
 
-Yes, done.
+I'm not sure if the ethernet-group is required on ARM as well, but
+it does sound a lot like what you actually want instead of the
+shared_smi property.
 
-[...]
-
->>> +	if (of_get_property(np, "st,axis-x", NULL))
-> 
-> &tmp missed here.
-> 
->>> +		pdata->axis_x = tmp;
->>> +	if (of_get_property(np, "st,axis-y", NULL))
-> 
-> &tmp missed here.
-
-True, thanks.
-
-
-I fixed all these issues now and attached a v4.
-
-
-Best regards,
-Daniel
-
-
---------------010802010907030803000302
-Content-Type: text/x-patch;
- name="0001-lis3-add-generic-DT-matching-code.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-lis3-add-generic-DT-matching-code.patch"
-
->From 0926551982cb647f39cea4f4e904f4db2f435bd4 Mon Sep 17 00:00:00 2001
-From: Daniel Mack <zonque@gmail.com>
-Date: Mon, 23 Jul 2012 15:27:19 +0200
-Subject: [PATCH v4 1/2] lis3: add generic DT matching code
-
-This patch adds logic to parse lis3 properties from a device tree node
-and store them in a freshly allocated lis3lv02d_platform_data.
-
-Note that the actual match tables are left out here. This part should
-happen in the drivers that bind to the individual busses (SPI/I2C/PCI).
-
-Also adds some DT bindinds documentation.
-
-Signed-off-by: Daniel Mack <zonque@gmail.com>
----
-changes from v3:
- - fix 3 missing &tmp references in 3 calls
- - renamed 'tmp' to 'val'
- - added 'st,{min,max}-limit-{x,y,z}'
-
-Changes from v2:
- - kzalloc braino
-
-Changes from v1:
- - some typos in properties fixed
-
- Documentation/devicetree/bindings/misc/lis302.txt |  76 +++++++++++
- drivers/misc/lis3lv02d/lis3lv02d.c                | 152 ++++++++++++++++++++++
- drivers/misc/lis3lv02d/lis3lv02d.h                |   4 +
- 3 files changed, 232 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/lis302.txt
-
-diff --git a/Documentation/devicetree/bindings/misc/lis302.txt b/Documentation/devicetree/bindings/misc/lis302.txt
-new file mode 100644
-index 0000000..e18af9d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/lis302.txt
-@@ -0,0 +1,76 @@
-+LIS302 accelerometer devicetree bindings
-+
-+This device is matched via its bus drivers, and has a number of properties
-+that apply in on the generic device (independent from the bus).
-+
-+
-+Required properties for the SPI bindings:
-+ - compatible: 		should be set to "st,lis3lv02d_spi"
-+ - reg:			the chipselect index
-+ - spi-max-frequency:	maximal bus speed, should be set to 1000000 unless
-+			constrained by external circuitry
-+ - interrupts:		the interrupt generated by the device
-+
-+
-+Optional properties for all bus drivers:
-+
-+ - st,click-single-{x,y,z}:	if present, tells the device to issue an
-+				interrupt on single click events on the
-+				x/y/z axis.
-+ - st,click-double-{x,y,z}:	if present, tells the device to issue an
-+				interrupt on double click events on the
-+				x/y/z axis.
-+ - st,click-thresh-{x,y,z}:	set the x/y/z axis threshold
-+ - st,click-click-time-limit:	click time limit, from 0 to 127.5msec
-+				with step of 0.5 msec
-+ - st,click-latency:		click latency, from 0 to 255 msec with
-+				step of 1 msec.
-+ - st,click-window:		click window, from 0 to 255 msec with
-+				step of 1 msec.
-+ - st,irq{1,2}-disable:		disable IRQ 1/2
-+ - st,irq{1,2}-ff-wu-1:		raise IRQ 1/2 on FF_WU_1 condition
-+ - st,irq{1,2}-ff-wu-2:		raise IRQ 1/2 on FF_WU_2 condition
-+ - st,irq{1,2}-data-ready:	raise IRQ 1/2 on data ready contition
-+ - st,irq{1,2}-click:		raise IRQ 1/2 on click condition
-+ - st,irq-open-drain:		consider IRQ lines open-drain
-+ - st,irq-active-low:		make IRQ lines active low
-+ - st,wu-duration-1:		duration register for Free-Fall/Wake-Up
-+				interrupt 1
-+ - st,wu-duration-2:		duration register for Free-Fall/Wake-Up
-+				interrupt 2
-+ - st,wakeup-{x,y,z}-{lo,hi}:	set wakeup condition on x/y/z axis for
-+				upper/lower limit
-+ - st,highpass-cutoff-hz=:	1, 2, 4 or 8 for 1Hz, 2Hz, 4Hz or 8Hz of
-+				highpass cut-off frequency
-+ - st,hipass{1,2}-disable:	disable highpass 1/2.
-+ - st,default-rate=:		set the default rate
-+ - st,axis-{x,y,z}=:		set the axis to map to the three coordinates
-+ - st,{min,max}-limit-{x,y,z}	set the min/max limits for x/y/z axis
-+				(used by self-test)
-+
-+
-+Example for a SPI device node:
-+
-+	lis302@0 {
-+		compatible = "st,lis302dl-spi";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <104 0>;
-+
-+		st,click-single-x;
-+		st,click-single-y;
-+		st,click-single-z;
-+		st,click-thresh-x = <10>;
-+		st,click-thresh-y = <10>;
-+		st,click-thresh-z = <10>;
-+		st,irq1-click;
-+		st,irq2-click;
-+		st,wakeup-x-lo;
-+		st,wakeup-x-hi;
-+		st,wakeup-y-lo;
-+		st,wakeup-y-hi;
-+		st,wakeup-z-lo;
-+		st,wakeup-z-hi;
-+	};
-+
-diff --git a/drivers/misc/lis3lv02d/lis3lv02d.c b/drivers/misc/lis3lv02d/lis3lv02d.c
-index a981e2a..6292e8c 100644
---- a/drivers/misc/lis3lv02d/lis3lv02d.c
-+++ b/drivers/misc/lis3lv02d/lis3lv02d.c
-@@ -39,6 +39,7 @@
- #include <linux/miscdevice.h>
- #include <linux/pm_runtime.h>
- #include <linux/atomic.h>
-+#include <linux/of_device.h>
- #include "lis3lv02d.h"
- 
- #define DRIVER_NAME     "lis3lv02d"
-@@ -912,6 +913,153 @@ static void lis3lv02d_8b_configure(struct lis3lv02d *lis3,
- 	}
- }
- 
-+#ifdef CONFIG_OF
-+static int lis3lv02d_init_dt(struct lis3lv02d *lis3)
-+{
-+	struct lis3lv02d_platform_data *pdata;
-+	struct device_node *np = lis3->of_node;
-+	u32 val;
-+
-+	if (!lis3->of_node)
-+		return 0;
-+
-+	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	if (of_get_property(np, "st,click-single-x", NULL))
-+		pdata->click_flags |= LIS3_CLICK_SINGLE_X;
-+	if (of_get_property(np, "st,click-double-x", NULL))
-+		pdata->click_flags |= LIS3_CLICK_DOUBLE_X;
-+
-+	if (of_get_property(np, "st,click-single-y", NULL))
-+		pdata->click_flags |= LIS3_CLICK_SINGLE_Y;
-+	if (of_get_property(np, "st,click-double-y", NULL))
-+		pdata->click_flags |= LIS3_CLICK_DOUBLE_Y;
-+
-+	if (of_get_property(np, "st,click-single-z", NULL))
-+		pdata->click_flags |= LIS3_CLICK_SINGLE_Z;
-+	if (of_get_property(np, "st,click-double-z", NULL))
-+		pdata->click_flags |= LIS3_CLICK_DOUBLE_Z;
-+
-+	if (!of_property_read_u32(np, "st,click-threshold-x", &val))
-+		pdata->click_thresh_x = val;
-+	if (!of_property_read_u32(np, "st,click-threshold-y", &val))
-+		pdata->click_thresh_y = val;
-+	if (!of_property_read_u32(np, "st,click-threshold-z", &val))
-+		pdata->click_thresh_z = val;
-+
-+	if (!of_property_read_u32(np, "st,click-time-limit", &val))
-+		pdata->click_time_limit = val;
-+	if (!of_property_read_u32(np, "st,click-latency", &val))
-+		pdata->click_latency = val;
-+	if (!of_property_read_u32(np, "st,click-window", &val))
-+		pdata->click_window = val;
-+
-+	if (of_get_property(np, "st,irq1-disable", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ1_DISABLE;
-+	if (of_get_property(np, "st,irq1-ff-wu-1", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ1_FF_WU_1;
-+	if (of_get_property(np, "st,irq1-ff-wu-2", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ1_FF_WU_2;
-+	if (of_get_property(np, "st,irq1-data-ready", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ1_DATA_READY;
-+	if (of_get_property(np, "st,irq1-click", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ1_CLICK;
-+
-+	if (of_get_property(np, "st,irq2-disable", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ2_DISABLE;
-+	if (of_get_property(np, "st,irq2-ff-wu-1", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ2_FF_WU_1;
-+	if (of_get_property(np, "st,irq2-ff-wu-2", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ2_FF_WU_2;
-+	if (of_get_property(np, "st,irq2-data-ready", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ2_DATA_READY;
-+	if (of_get_property(np, "st,irq2-click", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ2_CLICK;
-+
-+	if (of_get_property(np, "st,irq-open-drain", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ_OPEN_DRAIN;
-+	if (of_get_property(np, "st,irq-active-low", NULL))
-+		pdata->irq_cfg |= LIS3_IRQ_ACTIVE_LOW;
-+
-+	if (!of_property_read_u32(np, "st,wu-duration-1", &val))
-+		pdata->duration1 = val;
-+	if (!of_property_read_u32(np, "st,wu-duration-2", &val))
-+		pdata->duration2 = val;
-+
-+	if (of_get_property(np, "st,wakeup-x-lo", NULL))
-+		pdata->wakeup_flags |= LIS3_WAKEUP_X_LO;
-+	if (of_get_property(np, "st,wakeup-x-hi", NULL))
-+		pdata->wakeup_flags |= LIS3_WAKEUP_X_HI;
-+	if (of_get_property(np, "st,wakeup-y-lo", NULL))
-+		pdata->wakeup_flags |= LIS3_WAKEUP_Y_LO;
-+	if (of_get_property(np, "st,wakeup-y-hi", NULL))
-+		pdata->wakeup_flags |= LIS3_WAKEUP_Y_HI;
-+	if (of_get_property(np, "st,wakeup-z-lo", NULL))
-+		pdata->wakeup_flags |= LIS3_WAKEUP_Z_LO;
-+	if (of_get_property(np, "st,wakeup-z-hi", NULL))
-+		pdata->wakeup_flags |= LIS3_WAKEUP_Z_HI;
-+
-+	if (!of_property_read_u32(np, "st,highpass-cutoff-hz", &val)) {
-+		switch (val) {
-+		case 1:
-+			pdata->hipass_ctrl = LIS3_HIPASS_CUTFF_1HZ;
-+			break;
-+		case 2:
-+			pdata->hipass_ctrl = LIS3_HIPASS_CUTFF_2HZ;
-+			break;
-+		case 4:
-+			pdata->hipass_ctrl = LIS3_HIPASS_CUTFF_4HZ;
-+			break;
-+		case 8:
-+			pdata->hipass_ctrl = LIS3_HIPASS_CUTFF_8HZ;
-+			break;
-+		}
-+	}
-+
-+	if (of_get_property(np, "st,hipass1-disable", NULL))
-+		pdata->hipass_ctrl |= LIS3_HIPASS1_DISABLE;
-+	if (of_get_property(np, "st,hipass2-disable", NULL))
-+		pdata->hipass_ctrl |= LIS3_HIPASS2_DISABLE;
-+
-+	if (of_get_property(np, "st,axis-x", &val))
-+		pdata->axis_x = val;
-+	if (of_get_property(np, "st,axis-y", &val))
-+		pdata->axis_y = val;
-+	if (of_get_property(np, "st,axis-z", &val))
-+		pdata->axis_z = val;
-+
-+	if (of_get_property(np, "st,default-rate", NULL))
-+		pdata->default_rate = val;
-+
-+	if (of_get_property(np, "st,min-limit-x", &val))
-+		pdata->st_min_limits[0] = val;
-+	if (of_get_property(np, "st,min-limit-y", &val))
-+		pdata->st_min_limits[1] = val;
-+	if (of_get_property(np, "st,min-limit-z", &val))
-+		pdata->st_min_limits[2] = val;
-+
-+	if (of_get_property(np, "st,max-limit-x", &val))
-+		pdata->st_max_limits[0] = val;
-+	if (of_get_property(np, "st,max-limit-y", &val))
-+		pdata->st_max_limits[1] = val;
-+	if (of_get_property(np, "st,max-limit-z", &val))
-+		pdata->st_max_limits[2] = val;
-+
-+
-+	lis3->pdata = pdata;
-+
-+	return 0;
-+}
-+
-+#else
-+static int lis3lv02d_init_dt(struct lis3lv02d *lis3)
-+{
-+	return 0;
-+}
-+#endif
-+
- /*
-  * Initialise the accelerometer and the various subsystems.
-  * Should be rather independent of the bus system.
-@@ -922,6 +1070,10 @@ int lis3lv02d_init_device(struct lis3lv02d *lis3)
- 	irq_handler_t thread_fn;
- 	int irq_flags = 0;
- 
-+	err = lis3lv02d_init_dt(lis3);
-+	if (err < 0)
-+		return err;
-+
- 	lis3->whoami = lis3lv02d_read_8(lis3, WHO_AM_I);
- 
- 	switch (lis3->whoami) {
-diff --git a/drivers/misc/lis3lv02d/lis3lv02d.h b/drivers/misc/lis3lv02d/lis3lv02d.h
-index 2b1482a..a296f1d 100644
---- a/drivers/misc/lis3lv02d/lis3lv02d.h
-+++ b/drivers/misc/lis3lv02d/lis3lv02d.h
-@@ -282,6 +282,10 @@ struct lis3lv02d {
- 
- 	struct lis3lv02d_platform_data *pdata;	/* for passing board config */
- 	struct mutex		mutex;     /* Serialize poll and selftest */
-+
-+#ifdef CONFIG_OF
-+	struct device_node	*of_node;
-+#endif
- };
- 
- int lis3lv02d_init_device(struct lis3lv02d *lis3);
--- 
-1.7.11.2
-
-
---------------010802010907030803000302--
+	Arnd
