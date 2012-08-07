@@ -1,34 +1,73 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] driver: misc: bmp085: remove "of_match_table" property.
-Date: Tue, 7 Aug 2012 11:52:26 +0100
-Message-ID: <20120807105225.GT16861@opensource.wolfsonmicro.com>
-References: <1344245324-16704-1-git-send-email-sourav.poddar@ti.com>
- <20120806093033.GH17551@arwen.pp.htv.fi>
- <20120806154214.GC29272@sirena.org.uk>
- <20120807054342.GF8468@arwen.pp.htv.fi>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: OMAP: Configuring CONTROL_DEVCONF0 register via DT with pinctrl
+Date: Tue, 7 Aug 2012 04:10:42 -0700
+Message-ID: <20120807111041.GY11011@atomide.com>
+References: <501262B5.1080004@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120807054342.GF8468@arwen.pp.htv.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Sourav Poddar <sourav.poddar@ti.com>, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <501262B5.1080004@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: linux-omap <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 07, 2012 at 08:43:44AM +0300, Felipe Balbi wrote:
-> On Mon, Aug 06, 2012 at 04:42:14PM +0100, Mark Brown wrote:
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [120727 02:47]:
+> Hello,
+> 
+> I need to find a solution to control 2 bits in CONTROL_DEVCONF0 on OMAP2/3 for
+> McBSP1 CLKR/FSR signal routing.
+> In boards using McBSP1 we might need to change bit 3 and 4 based on the audio
+> setup (how the board has been wired).
+> 
+> So far I have come up with the following idea to handle to but not really sure
+> if it is the correct way (I have taken the idea from the arm/dts: Add AM33XX
+> basic pinctrl support series).
 
-> > It's good practice to have an explict compatible string even if the
-> > default happens to work in order to avoid any name clashes.
+You need to also consider that CONTROL_DEVCONF0 has the MMC/SDIO module input
+clock selection. So pinctrl-single binding would have to be expanded to also
+support one-bit-per-mux type registers in addition to one-register-per-mux
+registers. And then this could also be used for the MMC/SDIO module input clock.
 
-> of_i2c.c makes no use whatsoever of the compatible string. See that it
-> will build an i2c_boardinfo and register a new device. That compatible
+> In .dtsi file of the SoC:
+> 
+> control_devconf0: pinmux@48002274 {
+> 	compatible = "pinctrl-single";
+> 	reg = <0x48002274 4>;	/* Single register */
+> 	#address-cells = <1>;
+> 	#size-cells = <0>;
+> 	pinctrl-single,register-width = <32>;
+> 	pinctrl-single,function-mask = <0x5F>;
+> };
 
-If that's all that's done it seems like a bug frankly, certainly based
-on previous discussions it ought to be.  There are collisions out there,
-they've just happened to not bite us yet
+The pinctrl-single,function-mask is for all the registers in the range,
+we also need something to specify the device specific mux bits.
 
-> string is just churn and has no use at all.
+> In the .dts file of the board which needs to change the CLKR/FSR configuration:
+> 
+> &control_devconf0 {
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&mcbsp1_pins>;
+> 
+> 	mcbsp1_pins: pinmux_mcbsp1_pins {
+> 		pinctrl-single,pins = <0x00 0x18>; /* CLKR/FSR from CLKX/FSX
+> 						    * pin */
+> 	};
+> 
+> };
 
-This is device tree we're talking about, there's a lot churn anyway.
+I think adding support for one-bit-per-mux would require adding something
+like this for the binding:
+
+ 	mcbsp1_pins: pinmux_mcbsp1_pins {
+		/*                   offset bits mask */
+ 		pinctrl-single,bits = <0x00 0x18 0x18>;
+	};
+
+As otherwise you would not know which bits to clear for alternative
+named modes. Or got any better ideas?
+
+Regards,
+
+Tony
