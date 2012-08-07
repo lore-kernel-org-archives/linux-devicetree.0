@@ -1,162 +1,89 @@
-From: Praveen Paneri <p.paneri@samsung.com>
-Subject: Re: [PATCH v2 2/5] usb: s3c-hsotg: Adding phy driver support
-Date: Tue, 7 Aug 2012 15:39:45 +0530
-Message-ID: <CAD6zSYPoSxVSrkgr9RMV03DwVvg70oxdTV_5SeUifMFtQA09cQ@mail.gmail.com>
-References: <1344324524-2286-1-git-send-email-p.paneri@samsung.com>
-	<1344324524-2286-3-git-send-email-p.paneri@samsung.com>
-	<CAK9yfHyJtM8p1wdS1B4LZPNL8SstP-tsgjKPyLtG4fQtBZyOUg@mail.gmail.com>
+From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v4 3/3] can: c_can: Add runtime PM support to Bosch
+ C_CAN/D_CAN controller
+Date: Tue, 7 Aug 2012 10:39:47 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA0D2EF@DBDE01.ent.ti.com>
+References: <1343913191-14722-1-git-send-email-anilkumar@ti.com>
+ <1343913191-14722-4-git-send-email-anilkumar@ti.com>
+ <79CD15C6BA57404B839C016229A409A83EA7F150@DBDE01.ent.ti.com>
+ <501C21E5.9080106@pengutronix.de>
+ <79CD15C6BA57404B839C016229A409A83EA85CC3@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHyJtM8p1wdS1B4LZPNL8SstP-tsgjKPyLtG4fQtBZyOUg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EA85CC3-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "Gole,
+ Anant" <anantgole-l0cyMroinI0@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Sachin! Will incorporate.
+Hi Vaibhav,
 
-On Tue, Aug 7, 2012 at 1:33 PM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Hi Praveen,
->
-> Some minor comments:
->
-> On 7 August 2012 12:58, Praveen Paneri <p.paneri@samsung.com> wrote:
->> Adding the transceiver to hsotg driver. Keeping the platform data
->> for continuing the smooth operation for boards which still uses it
->>
->> Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
->> ---
->>  drivers/usb/gadget/s3c-hsotg.c |   38 ++++++++++++++++++++++++++++----------
->>  1 files changed, 28 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
->> index b13e0bb..f4ba9a3 100644
->> --- a/drivers/usb/gadget/s3c-hsotg.c
->> +++ b/drivers/usb/gadget/s3c-hsotg.c
->> @@ -32,6 +32,7 @@
->>
->>  #include <linux/usb/ch9.h>
->>  #include <linux/usb/gadget.h>
->> +#include <linux/usb/otg.h>
->>  #include <linux/platform_data/s3c-hsotg.h>
->>
->>  #include <mach/map.h>
->> @@ -133,7 +134,9 @@ struct s3c_hsotg_ep {
->>   * struct s3c_hsotg - driver state.
->>   * @dev: The parent device supplied to the probe function
->>   * @driver: USB gadget driver
->> - * @plat: The platform specific configuration data.
->> + * @phy: The otg phy transeiver structure for phy control.
->
-> s/transeiver/transceiver
->
->> + * @plat: The platform specific configuration data. This can be removed once
->> + * all SoCs support usb transceiver.
->>   * @regs: The memory area mapped for accessing registers.
->>   * @irq: The IRQ number we are using
->>   * @supplies: Definition of USB power supplies
->> @@ -153,6 +156,7 @@ struct s3c_hsotg_ep {
->>  struct s3c_hsotg {
->>         struct device            *dev;
->>         struct usb_gadget_driver *driver;
->> +       struct usb_phy          *phy;
->>         struct s3c_hsotg_plat    *plat;
->>
->>         spinlock_t              lock;
->> @@ -2854,7 +2858,10 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
->>         struct platform_device *pdev = to_platform_device(hsotg->dev);
->>
->>         dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
->> -       if (hsotg->plat->phy_init)
->> +
->> +       if (hsotg->phy)
->> +               usb_phy_init(hsotg->phy);
->> +       else if (hsotg->plat->phy_init)
->>                 hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
->>  }
->>
->> @@ -2869,7 +2876,9 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
->>  {
->>         struct platform_device *pdev = to_platform_device(hsotg->dev);
->>
->> -       if (hsotg->plat->phy_exit)
->> +       if (hsotg->phy)
->> +               usb_phy_shutdown(hsotg->phy);
->> +       else if (hsotg->plat->phy_exit)
->>                 hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
->>  }
->>
->> @@ -3493,6 +3502,7 @@ static void s3c_hsotg_release(struct device *dev)
->>  static int __devinit s3c_hsotg_probe(struct platform_device *pdev)
->>  {
->>         struct s3c_hsotg_plat *plat = pdev->dev.platform_data;
->> +       struct usb_phy *phy;
->>         struct device *dev = &pdev->dev;
->>         struct s3c_hsotg_ep *eps;
->>         struct s3c_hsotg *hsotg;
->> @@ -3501,20 +3511,25 @@ static int __devinit s3c_hsotg_probe(struct platform_device *pdev)
->>         int ret;
->>         int i;
->>
->> -       plat = pdev->dev.platform_data;
->> -       if (!plat) {
->> -               dev_err(&pdev->dev, "no platform data defined\n");
->> -               return -EINVAL;
->> -       }
->> -
->>         hsotg = devm_kzalloc(&pdev->dev, sizeof(struct s3c_hsotg), GFP_KERNEL);
->>         if (!hsotg) {
->>                 dev_err(dev, "cannot get memory\n");
->>                 return -ENOMEM;
->>         }
->>
->> +       phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
->> +       if (!phy) {
->> +               /* Fallback for platform data */
->> +               plat = pdev->dev.platform_data;
->> +               if (!plat) {
->> +                       dev_err(&pdev->dev, "no platform data or transceiver defined\n");
->> +                       return -ENODEV;
->> +               } else
->> +                       hsotg->plat = plat;
->> +       } else
->> +               hsotg->phy = phy;
->
-> Braces needed around the above 2 else statements.
-> Please refer to: Documentation/CodingStyle
->
->
->> +
->>         hsotg->dev = dev;
->> -       hsotg->plat = plat;
->>
->>         hsotg->clk = clk_get(&pdev->dev, "otg");
->>         if (IS_ERR(hsotg->clk)) {
->> @@ -3689,6 +3704,9 @@ static int __devexit s3c_hsotg_remove(struct platform_device *pdev)
->>         s3c_hsotg_phy_disable(hsotg);
->>         regulator_bulk_free(ARRAY_SIZE(hsotg->supplies), hsotg->supplies);
->>
->> +       if (hsotg->phy)
->> +               devm_usb_put_phy(&pdev->dev, hsotg->phy);
->> +
->>         clk_disable_unprepare(hsotg->clk);
->>         clk_put(hsotg->clk);
->>
->> --
->> 1.7.1
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
-> --
-> With best regards,
-> Sachin
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for the review.
+
+On Mon, Aug 06, 2012 at 12:18:32, Hiremath, Vaibhav wrote:
+> On Sat, Aug 04, 2012 at 00:39:25, Marc Kleine-Budde wrote:
+> > On 08/03/2012 08:32 AM, Hiremath, Vaibhav wrote:
+> > > On Thu, Aug 02, 2012 at 18:43:11, AnilKumar, Chimata wrote:
+> > >> Add Runtime PM support to C_CAN/D_CAN controller. The runtime PM
+> > >> APIs control clocks for C_CAN/D_CAN IP and prevent access to the
+> > >> register of C_CAN/D_CAN IP when clock is turned off.
+> > >>
+> > >> Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+> > >> ---
+> > >>  drivers/net/can/c_can/c_can_platform.c |    8 ++++++++
+> > >>  1 file changed, 8 insertions(+)
+> > >>
+> > >> diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
+> > >> index d0a66cf..83a1e17 100644
+> > >> --- a/drivers/net/can/c_can/c_can_platform.c
+> > >> +++ b/drivers/net/can/c_can/c_can_platform.c
+> > >> @@ -32,6 +32,7 @@
+> > >>  #include <linux/clk.h>
+> > >>  #include <linux/of.h>
+> > >>  #include <linux/of_device.h>
+> > >> +#include <linux/pm_runtime.h>
+> > >>  
+> > >>  #include <linux/can/dev.h>
+> > >>  
+> > >> @@ -177,6 +178,9 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
+> > >>  		goto exit_free_device;
+> > >>  	}
+> > >>  
+> > >> +	pm_runtime_enable(&pdev->dev);
+> > >> +	pm_runtime_get_sync(&pdev->dev);
+> > >> +
+> > > 
+> > > If module is inserted or built into the kernel, module stays in enabled 
+> > > state always, isn't that wrong?
+> > > Ideally, you should enable the module when it is required or being used.
+> > 
+> > Good point.
+> > 
+> > If you don't access the module's registers in the probe- (or its
+> > subroutines) it should be enough to enable the module in the open()
+> > function. Have a look at clk_prepare_enable / clk_disable_unprepare in
+> > the flexcan driver.
+> > 
+> 
+> Yeah Marc, something similar, above runtime pm api's should be moved to 
+> open-n-close.
+> 
+
+Not all APIs, only *_get_sync and *_put_sync to appropriate positions.
+I will send next version after fixing this.
+
+Regards
+AnilKumar
