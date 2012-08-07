@@ -1,76 +1,54 @@
-From: "Poddar, Sourav" <sourav.poddar@ti.com>
-Subject: Re: [PATCH 3/4] arm/dts: omap5-evm: Add keypad data
-Date: Tue, 7 Aug 2012 21:19:15 +0530
-Message-ID: <CAKdam56BCGkfwM8XKnULJ0bXDu6UF+mZqcyMgdqDZJ=oLZp3Gg@mail.gmail.com>
-References: <1343997486-710-1-git-send-email-sourav.poddar@ti.com>
-	<1343997486-710-4-git-send-email-sourav.poddar@ti.com>
-	<2AE404CF-E456-408A-B7A2-D9B3D331C58E@dominion.thruhere.net>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH] netdev/phy: skip disabled mdio-mux nodes
+Date: Tue, 07 Aug 2012 09:59:25 -0700
+Message-ID: <5021496D.8070200@gmail.com>
+References: <1344358266-5450-1-git-send-email-timur@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <2AE404CF-E456-408A-B7A2-D9B3D331C58E@dominion.thruhere.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1344358266-5450-1-git-send-email-timur@freescale.com>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: david.daney@cavium.com, David Miller <davem@davemloft.net>, netdev@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Koen,
+On 08/07/2012 09:51 AM, Timur Tabi wrote:
+> The mdio-mux driver scans all child mdio nodes, without regard to whether
+> the node is actually used.  Some device trees include all possible
+> mdio-mux nodes and rely on the boot loader to disable those that are not
+> present, based on some run-time configuration.  Those nodes need to be
+> skipped.
+>
+> Signed-off-by: Timur Tabi<timur@freescale.com>
+> ---
+>   drivers/net/phy/mdio-mux.c |    9 +++++++++
+>   1 files changed, 9 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/net/phy/mdio-mux.c b/drivers/net/phy/mdio-mux.c
+> index 5c12018..d0c231e 100644
+> --- a/drivers/net/phy/mdio-mux.c
+> +++ b/drivers/net/phy/mdio-mux.c
+> @@ -135,6 +135,15 @@ int mdio_mux_init(struct device *dev,
+>   	for_each_child_of_node(dev->of_node, child_bus_node) {
+>   		u32 v;
+>
+> +		/*
+> +		 * Some device trees include all possible mdio-mux nodes and
+> +		 * rely on the boot loader to disable those that are not
+> +		 * present, based on some run-time configuration.  Those nodes
+> +		 * need to be skipped.
+> +		 */
+> +		if (!of_device_is_available(child_bus_node))
+> +			continue;
 
-On Tue, Aug 7, 2012 at 6:24 PM, Koen Kooi <koen@dominion.thruhere.net> wrote:
->
-> Op 3 aug. 2012, om 14:38 heeft Sourav Poddar <sourav.poddar@ti.com> het volgende geschreven:
->
->> Add keypad data node in omap5 device tree file.
->> Also fill the device tree binding parameters
->> with the required value in "omap5-evm" dts file.
->>
->> Tested on omap5430 evm with 3.5 custom kernel.
->>
->> Cc: Benoit Cousson <b-cousson@ti.com>
->> Cc: Felipe Balbi <balbi@ti.com>
->> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> Acked-by: Felipe Balbi <balbi@ti.com>
->> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
->> ---
->> arch/arm/boot/dts/omap5-evm.dts |   12 ++++++++++++
->> arch/arm/boot/dts/omap5.dtsi    |    5 +++++
->> 2 files changed, 17 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
->> index 45a8aeb..09fe941 100644
->> --- a/arch/arm/boot/dts/omap5-evm.dts
->> +++ b/arch/arm/boot/dts/omap5-evm.dts
->> @@ -17,6 +17,18 @@
->>               device_type = "memory";
->>               reg = <0x80000000 0x40000000>; /* 1 GB */
->>       };
->> +
->> +     keypad {
->> +             keypad,num-rows = <8>;
->> +             keypad,num-columns = <8>;
->> +             linux,keymap = < 0x02020073
->> +                     0x02030072
->> +                     0x020400e7
->> +                     0x02050066
->> +                     0x0206006b
->> +                     0x020700d9 >;
->> +             linux,input-no-autorepeat;
->> +     };
->
-> Again not a coment on your patch, but on DT:
->
-> If DT bindings must be OS independent, what then, is that linux keycode doing there?
->
-Currently, for all matrix connected keyboards the keymap are defined
-in the scope of the
-linux key code since that is a stable and standardized interface at this time.
 
-For the above reason , computation of the  keymap uses linux keycode
+Although this will get the job done, I don't think it is the cleanest 
+approach.
 
-  row << 24 | column << 16 | linux-key-code
-I think this is the primary reason for keeping "linux" prefix with this
-property.
-> regards,
->
-> Koen
->
+Would it be better to create a new iterator 
+(for_each_available_child_of_node perhaps) that skips the unavailable 
+nodes?  This seems like a general problem that is not restricted to mdio 
+multiplexers.
+
+David Daney
