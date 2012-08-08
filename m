@@ -1,65 +1,72 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [rtc-linux] [PATCH 8/8] ARM: vt8500: gpio: Devicetree support for arch-vt8500
-Date: Wed, 8 Aug 2012 09:19:52 +0000
-Message-ID: <201208080919.52592.arnd@arndb.de>
-References: <1344389967-8465-1-git-send-email-linux@prisktech.co.nz> <1344389967-8465-9-git-send-email-linux@prisktech.co.nz> <CACRpkdbYxpN9RCu8j8KMBgrb=-DsYZHq7hx-ifmHhJ0ZZcRYjw@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 00/11] MFD/ASoC/Input: twl4030-audio submodule
+	DT support
+Date: Wed,  8 Aug 2012 12:41:16 +0300
+Message-ID: <1344418887-5262-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbYxpN9RCu8j8KMBgrb=-DsYZHq7hx-ifmHhJ0ZZcRYjw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: vt8500-wm8505-linux-kernel@googlegroups.com, Tony Prisk <linux@prisktech.co.nz>, Russell King <linux@arm.linux.org.uk>, Alessandro Zummo <a.zummo@towertech.it>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Hauke Mehrtens <hauke@hauke-m.de>, Felipe Balbi <balbi@ti.com>, Neil Zhang <zhangwm@marvell.com>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Rob Landley <rob@landley.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, Eric Andersson <eric.andersson@unixphere.com>, Linus Walleij <linus.walleij@stericsson.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-usb@vger.kernel.or
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dtor@mail.ru>
+Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 August 2012, Linus Walleij wrote:
-> On Wed, Aug 8, 2012 at 3:39 AM, Tony Prisk <linux@prisktech.co.nz> wrote:
-> 
-> > Converted the existing arch-vt8500 gpio to a platform_device.
-> > Added support for WM8505 and WM8650 GPIO controllers.
-> (...)
-> > +++ b/drivers/gpio/gpio-vt8500.c
-> 
-> This driver looks very one-bit-per-gpio typed. Are you sure you cannot
-> just reuse drivers/gpio/gpio-generic.c? Make a compelling case please...
-> 
-> > +struct vt8500_gpio_bank_regs {
-> > +       int     en;
-> > +       int     dir;
-> > +       int     data_out;
-> > +       int     data_in;
-> 
-> Why are all these members int? They should be u8 from reading your code.
-> 
-> > +       int     ngpio;
-> > +};
+Hello,
 
-Not necessarily 8 bit, but definitely unsigned.
+The following series adds DT support for the twl4030 audio submodule which
+provides audio codec and vibra functionality.
 
-> > +static struct vt8500_gpio_data vt8500_data = {
-> > +       .num_banks      = 7,
-> > +       .banks  = {
-> > +               VT8500_BANK(0x00, 0x20, 0x40, 0x60, 26),
-> > +               VT8500_BANK(0x04, 0x24, 0x44, 0x64, 28),
-> > +               VT8500_BANK(0x08, 0x28, 0x48, 0x68, 31),
-> > +               VT8500_BANK(0x0C, 0x2C, 0x4C, 0x6C, 19),
-> > +               VT8500_BANK(0x10, 0x30, 0x50, 0x70, 19),
-> > +               VT8500_BANK(0x14, 0x34, 0x54, 0x74, 23),
-> > +               VT8500_BANK(-1, 0x3C, 0x5C, 0x7C, 9),    /* external gpio */
-> 
-> What on earth are all those magic numbers?
-> 
-> I *guess* they're enabling some default GPIO settings etc.
+The MFD core driver is probed via DT, it will create the needed child devices
+based on the provided information in the DT blob.
+Child drivers (vibra, ASoC codec) will parse the core's node if needed to get
+the needed parameters for their configuration.
 
-No, they are the register offsets you quoted above, per bank. There
-is no easy way to abstract these, and I suggested putting the
-values into the source code rather than describing each bank
-separately in the .dtsi file.
+In the ASoC codec driver the hs_extmute callback (which was used to toggle a
+GPIO line) has been removed. The codec driver will receive the GPIO number
+(if it is needed on the platform) and also the level to disable the mute.
 
-My feeling however is that the "vt8500_chip->regoff" is wrong, which
-would mean only the first bank works. The code adds the same offsets
-per bank once more that it sets in this bank table.
+If the series is OK (and no objections from the maintainers), it would be good
+if this can go via audio. Changed files are well contained within the
+twl4030-audio stack so I do not expect merge issues later.
 
-	Arnd
+The series has been tested on BeagleBoard (with the McBSP DT series, and with
+the upcoming DT audio support for BeagleBoard).
+
+Regards,
+Peter
+---
+Peter Ujfalusi (11):
+  MFD: twl4030-audio: Clean up MODULE_* and platform_driver part
+  MFD: twl4030-audio: Convert to use devm_kzalloc
+  MFD: twl4030-audio: Rearange and clean-up the probe function
+  MFD: twl4030-audio: Add DT support
+  Input: twl4030-vibra: Support for DT booted kernel
+  ASoC: twl4030: Move hs_extmute GPIO handling to driver
+  ARM: OMAP/ASoC: Zoom2: Let the codec to handle the hs_extmute GPIO
+  ASoC/MFD: twl4030: Remove set_hs_extmute callback from platform data
+  ASoC: twl4030: Convert to use devm_kzalloc
+  ASoC: twl4030: Add pointer to pdata within the private data
+  ASoC: twl4030: Support for DT booted kernel
+
+ .../devicetree/bindings/mfd/twl4030-audio.txt      |   51 +++++++++
+ arch/arm/mach-omap2/board-zoom-peripherals.c       |    9 +-
+ arch/arm/mach-omap2/include/mach/board-zoom.h      |    2 -
+ drivers/input/misc/twl4030-vibra.c                 |   20 +++-
+ drivers/mfd/twl4030-audio.c                        |  114 +++++++++++++------
+ include/linux/i2c/twl.h                            |    4 +-
+ sound/soc/codecs/twl4030.c                         |  117 ++++++++++++++++----
+ sound/soc/omap/zoom2.c                             |    4 -
+ 8 files changed, 250 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/twl4030-audio.txt
+
+-- 
+1.7.8.6
