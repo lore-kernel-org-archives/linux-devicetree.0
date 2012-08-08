@@ -1,94 +1,160 @@
-From: Hui Wang <jason77.wang@gmail.com>
-Subject: Re: [PATCH 1/2] Input: egalax_ts: get gpio from devicetree node
-Date: Wed, 8 Aug 2012 13:35:11 +0800
-Message-ID: <5021FA8F.5070308@gmail.com>
-References: <1344332372-9287-1-git-send-email-jason77.wang@gmail.com> <1344332372-9287-2-git-send-email-jason77.wang@gmail.com> <8CDC3AFB-52FC-40B1-8D83-FBB5C7AD76F7@freescale.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [PATCH v3 1/2] lis3: add generic DT matching code
+Date: Wed, 08 Aug 2012 08:57:51 +0200
+Message-ID: <50220DEF.1060508@gmail.com>
+References: <1343633775-6268-1-git-send-email-zonque@gmail.com> <501E9CE2.20500@gmail.com> <331ABD5ECB02734CA317220B2BBEABC13EA0B8A5@DBDE01.ent.ti.com> <5021631D.1030505@gmail.com> <331ABD5ECB02734CA317220B2BBEABC13EA0E257@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gb2312
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <8CDC3AFB-52FC-40B1-8D83-FBB5C7AD76F7@freescale.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Zhang Jiejing-B33651 <B33651@freescale.com>
-Cc: Hui Wang <jason77.wang@gmail.com>, "<dmitry.torokhov@gmail.com>" <dmitry.torokhov@gmail.com>, "<linux-input@vger.kernel.org>" <linux-input@vger.kernel.org>, "<devicetree-discuss@lists.ozlabs.org>" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA0E257@DBDE01.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "eric.piel@tremplin-utc.net" <eric.piel@tremplin-utc.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-OK, will add it in the V2.
+On 08.08.2012 07:19, AnilKumar, Chimata wrote:
+> Hi Mack,
 
-Thanks,
-Hui.
+Call me Daniel :)
 
-Zhang Jiejing-B33651 wrote:
-> Hi Hui,
->
-> You patch looks good to me, but can you add a check when it calling t=
-he egalax_wake_up_device() function in egalax_ts_probe() ? If some conf=
-igure gose wrong, the probe of driver will exit, rather than the suspen=
-d failure every time.
->
-> BR,
-> Jiejing
-> =D4=DA 2012-8-7=A3=AC=CF=C2=CE=E75:39=A3=ACHui Wang <jason77.wang@gma=
-il.com> =D0=B4=B5=C0=A3=BA
->
->  =20
->> The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework =
-and
->> don't support this API anymore.
->>
->> The i.MX6q sabrelite platform equips an egalax touchscreen controlle=
-r,
->> and this platform already transfered to GENERIC_GPIO framework, to
->> support this driver, we use a more generic way to get gpio.
->>
->> Signed-off-by: Hui Wang <jason77.wang@gmail.com>
->> ---
->> drivers/input/touchscreen/egalax_ts.c |   12 ++++++++++--
->> 1 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/t=
-ouchscreen/egalax_ts.c
->> index 70524dd..b94eb50 100644
->> --- a/drivers/input/touchscreen/egalax_ts.c
->> +++ b/drivers/input/touchscreen/egalax_ts.c
->> @@ -28,6 +28,7 @@
->> #include <linux/slab.h>
->> #include <linux/bitops.h>
->> #include <linux/input/mt.h>
->> +#include <linux/of_gpio.h>
->>
->> /*
->>  * Mouse Mode: some panel may configure the controller to mouse mode=
-,
->> @@ -122,8 +123,15 @@ static irqreturn_t egalax_ts_interrupt(int irq,=
- void *dev_id)
->> /* wake up controller by an falling edge of interrupt gpio.  */
->> static int egalax_wake_up_device(struct i2c_client *client)
->> {
->> -	int gpio =3D irq_to_gpio(client->irq);
->> -	int ret;
->> +	struct device_node *np =3D client->dev.of_node;
->> +	int gpio, ret;
->> +
->> +	if (!np)
->> +		return -ENODEV;
->> +
->> +	gpio =3D of_get_named_gpio(np, "irq-gpio", 0);
->> +	if (!gpio_is_valid(gpio))
->> +		return -ENODEV;
->>
->> 	ret =3D gpio_request(gpio, "egalax_irq");
->> 	if (ret < 0) {
->> --=20
->> 1.7.6
->>
->>
->>    =20
->
->  =20
+> On Wed, Aug 08, 2012 at 00:19:01, Daniel Mack wrote:
+>> On 06.08.2012 12:45, AnilKumar, Chimata wrote:
+>>> On Sun, Aug 05, 2012 at 21:48:42, Daniel Mack wrote:
+>>>> On 30.07.2012 09:36, Daniel Mack wrote:
+>>>>> This patch adds logic to parse lis3 properties from a device tree node
+>>>>> and store them in a freshly allocated lis3lv02d_platform_data.
+>>>>>
+>>>>> Note that the actual match tables are left out here. This part should
+>>>>> happen in the drivers that bind to the individual busses (SPI/I2C/PCI).
+>>>>>
+>>>>> Also adds some DT bindinds documentation.
+>>>>>
+>>>>> Signed-off-by: Daniel Mack <zonque@gmail.com>
+>>>>> ---
+>>>>> Changes from v2:
+>>>>>  - kzalloc braino
+>>>>>
+>>>>> Changes from v1:
+>>>>>  - some typos in properties fixed
+>>>>>
+>>>>>
+>>>>>  Documentation/devicetree/bindings/misc/lis302.txt |  74 ++++++++++++
+>>>>>  drivers/misc/lis3lv02d/lis3lv02d.c                | 137 ++++++++++++++++++++++
+>>>>>  drivers/misc/lis3lv02d/lis3lv02d.h                |   4 +
+>>>>>  3 files changed, 215 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/misc/lis302.txt
+>>>>>
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+>>>>> +Example for a SPI device node:
+>>>>> +
+>>>>> +	lis302@0 {
+>>>>> +		compatible = "st,lis302dl-spi";
+>>>>> +		reg = <0>;
+>>>>> +		spi-max-frequency = <1000000>;
+>>>>> +		interrupt-parent = <&gpio>;
+>>>>> +		interrupts = <104 0>;
+>>>>> +
+>>>>> +		st,click-single-x;
+>>>>> +		st,click-single-y;
+>>>>> +		st,click-single-z;
+>>>>> +		st,click-thresh-x = <10>;
+>>>>> +		st,click-thresh-y = <10>;
+>>>>> +		st,click-thresh-z = <10>;
+>>>>> +		st,irq1-click;
+>>>>> +		st,irq2-click;
+>>>>> +		st,wakeup-x-lo;
+>>>>> +		st,wakeup-x-hi;
+>>>>> +		st,wakeup-y-lo;
+>>>>> +		st,wakeup-y-hi;
+>>>>> +		st,wakeup-z-lo;
+>>>>> +		st,wakeup-z-hi;
+>>>>> +	};
+>>>
+>>> Why can't we add these flags in driver itself like below?
+>>> Is these parameters varies from SoC to SoC or accelerometer
+>>> - to - accelerometer?
+>>
+>> I don't understand, sorry. The point here is that the driver that is
+>> probed for device initialization are the PCI/I2C/SPI drivers. The
+> 
+> Look at the below example it has different drivers (SPI, I2C).
+> Compatible name changes form acc-acc so that we can use different
+> parameters corresponding to accelerometer, if it is acce specific.
+> 
+> Like
+> .compatible = "st,lis302dl-spi",
+> .compatible = "st,lis331dlh-i2c",
+> .compatible = "st,xx-spi",
+> .compatible = "st,xx-i2c",
+> 
+> If we do like this we can reduce lot of DT reads in driver.
+
+No, we can't. Look, this chip has a huge number of registers that can be
+set in order to accomplish a variety of different functions. It can be
+used as a free-fall detector or as a full-fledged accelerometer, with
+different settings per axis. None of them is specific to the bus this
+chip is connected through.
+
+Of course we want to leave it to the board vendor what functions to use,
+and hence all of them are exposed via DT. The whole idea of DT is to
+describe the hardware and the desired behaviour of each component as
+exact as possible, so vendors don't have to hack along in the source
+code but can boot a generic kernel.
+
+[...]
+
+>>> #ifdef CONFIG_OF
+>>> static struct lis3lv02d_platform_data lis302dl_spi_pdata = {
+>>>         .click_flags    = LIS3_CLICK_SINGLE_X |
+>>>                           LIS3_CLICK_SINGLE_Y |
+>>>                           LIS3_CLICK_SINGLE_Z,
+>>>         .irq_cfg        = LIS3_IRQ1_CLICK | LIS3_IRQ2_CLICK,
+>>>         .wakeup_flags   = LIS3_WAKEUP_X_LO | LIS3_WAKEUP_X_HI |
+>>>                           LIS3_WAKEUP_Y_LO | LIS3_WAKEUP_Y_HI |
+>>>                           LIS3_WAKEUP_Z_LO | LIS3_WAKEUP_Z_HI,
+>>> };
+>>>
+>>> static struct lis3lv02d_platform_data lis331dlh_i2c_pdata = {
+>>>         .click_flags    = LIS3_CLICK_SINGLE_X |
+>>>                           LIS3_CLICK_SINGLE_Y |
+>>>                           LIS3_CLICK_SINGLE_Z,
+>>>         .irq_cfg        = LIS3_IRQ1_CLICK | LIS3_IRQ2_CLICK,
+>>>         .wakeup_flags   = LIS3_WAKEUP_X_LO | LIS3_WAKEUP_X_HI |
+>>>                           LIS3_WAKEUP_Y_LO | LIS3_WAKEUP_Y_HI |
+>>>                           LIS3_WAKEUP_Z_LO | LIS3_WAKEUP_Z_HI,
+>>> };
+>>>
+>>> static const struct of_device_id lis3_of_match[] = {
+>>>        {
+>>>                .compatible = "st,lis302dl-spi",
+>>>                .data = &lis302dl_spi_pdata,
+>>>        },
+>>>        {
+>>>                .compatible = "st,lis331dlh-i2c",
+>>>                .data = &lis331dlh_i2c_pdata,
+>>>        },
+>>>        { },
+>>> };
+>>> MODULE_DEVICE_TABLE(of, lis3_of_match);
+>>> #endif
+>>>
+>>> Ignore if parameters between SoC - SoC are different. In
+>>> probe we can add these flags to pdata.
+>>
+>> No. We want to expose all hardware features to DT so users can configure
+>> the device at wish. We can't ignore that SoCs want different device configs.
+> 
+> Is it require is my question, how many SoCs take these different
+> parameters from platform data.
+
+We can't know, and it doesn't matter. The goal here is not to provide a
+way to boot the boards that are currently in mainline via DT with
+minimal effort, but to have DT bindings for this driver that reflect the
+features of this piece of hardware, so anything is possible.
+
+
+Regards,
+Daniel
