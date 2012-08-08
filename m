@@ -1,52 +1,51 @@
-From: Zhang Jiejing-B33651 <B33651@freescale.com>
-Subject: Re: [PATCH 1/2] Input: egalax_ts: get gpio from devicetree node
-Date: Wed, 8 Aug 2012 03:44:00 +0000
-Message-ID: <8CDC3AFB-52FC-40B1-8D83-FBB5C7AD76F7@freescale.com>
-References: <1344332372-9287-1-git-send-email-jason77.wang@gmail.com>
- <1344332372-9287-2-git-send-email-jason77.wang@gmail.com>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH v2 1/1] ARM: dove: DT support for sdhci-dove
+Date: Tue, 07 Aug 2012 23:53:08 -0400
+Message-ID: <87boimvy3f.fsf@octavius.laptop.org>
+References: <1343666134-21205-1-git-send-email-sebastian.hesselbarth@googlemail.com>
+	<1343722379-32699-1-git-send-email-sebastian.hesselbarth@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1344332372-9287-2-git-send-email-jason77.wang@gmail.com>
-Content-Language: en-US
-Content-ID: <A2455582161E26499DC19108A3FBEA73@mgd.freescale.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Hui Wang <jason77.wang@gmail.com>
-Cc: "<dmitry.torokhov@gmail.com>" <dmitry.torokhov@gmail.com>, Zhang Jiejing-B33651 <B33651@freescale.com>, "<linux-input@vger.kernel.org>" <linux-input@vger.kernel.org>, "<devicetree-discuss@lists.ozlabs.org>" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1343722379-32699-1-git-send-email-sebastian.hesselbarth@googlemail.com>
+	(Sebastian Hesselbarth's message of "Tue, 31 Jul 2012 10:12:59 +0200")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Anton Vorontsov <cbouatmailru@gmail.com>, Manuel Lauss <manuel.lauss@googlemail.com>, David Brown <davidb@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSHVpLA0KDQpZb3UgcGF0Y2ggbG9va3MgZ29vZCB0byBtZSwgYnV0IGNhbiB5b3UgYWRkIGEg
-Y2hlY2sgd2hlbiBpdCBjYWxsaW5nIHRoZSBlZ2FsYXhfd2FrZV91cF9kZXZpY2UoKSBmdW5jdGlv
-biBpbiBlZ2FsYXhfdHNfcHJvYmUoKSA/IElmIHNvbWUgY29uZmlndXJlIGdvc2Ugd3JvbmcsIHRo
-ZSBwcm9iZSBvZiBkcml2ZXIgd2lsbCBleGl0LCByYXRoZXIgdGhhbiB0aGUgc3VzcGVuZCBmYWls
-dXJlIGV2ZXJ5IHRpbWUuDQoNCkJSLA0KSmllamluZw0K1NogMjAxMi04LTejrM/Czuc1OjM5o6xI
-dWkgV2FuZyA8amFzb243Ny53YW5nQGdtYWlsLmNvbT4g0LS1wKO6DQoNCj4gVGhlIGlycV90b19n
-cGlvKCkgaXMgb2xkLCBtb3N0IHBsYXRmb3JtcyB1c2UgR0VORVJJQ19HUElPIGZyYW1ld29yayBh
-bmQNCj4gZG9uJ3Qgc3VwcG9ydCB0aGlzIEFQSSBhbnltb3JlLg0KPiANCj4gVGhlIGkuTVg2cSBz
-YWJyZWxpdGUgcGxhdGZvcm0gZXF1aXBzIGFuIGVnYWxheCB0b3VjaHNjcmVlbiBjb250cm9sbGVy
-LA0KPiBhbmQgdGhpcyBwbGF0Zm9ybSBhbHJlYWR5IHRyYW5zZmVyZWQgdG8gR0VORVJJQ19HUElP
-IGZyYW1ld29yaywgdG8NCj4gc3VwcG9ydCB0aGlzIGRyaXZlciwgd2UgdXNlIGEgbW9yZSBnZW5l
-cmljIHdheSB0byBnZXQgZ3Bpby4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEh1aSBXYW5nIDxqYXNv
-bjc3LndhbmdAZ21haWwuY29tPg0KPiAtLS0NCj4gZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9l
-Z2FsYXhfdHMuYyB8ICAgMTIgKysrKysrKysrKy0tDQo+IDEgZmlsZXMgY2hhbmdlZCwgMTAgaW5z
-ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lu
-cHV0L3RvdWNoc2NyZWVuL2VnYWxheF90cy5jIGIvZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9l
-Z2FsYXhfdHMuYw0KPiBpbmRleCA3MDUyNGRkLi5iOTRlYjUwIDEwMDY0NA0KPiAtLS0gYS9kcml2
-ZXJzL2lucHV0L3RvdWNoc2NyZWVuL2VnYWxheF90cy5jDQo+ICsrKyBiL2RyaXZlcnMvaW5wdXQv
-dG91Y2hzY3JlZW4vZWdhbGF4X3RzLmMNCj4gQEAgLTI4LDYgKzI4LDcgQEANCj4gI2luY2x1ZGUg
-PGxpbnV4L3NsYWIuaD4NCj4gI2luY2x1ZGUgPGxpbnV4L2JpdG9wcy5oPg0KPiAjaW5jbHVkZSA8
-bGludXgvaW5wdXQvbXQuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9vZl9ncGlvLmg+DQo+IA0KPiAv
-Kg0KPiAgKiBNb3VzZSBNb2RlOiBzb21lIHBhbmVsIG1heSBjb25maWd1cmUgdGhlIGNvbnRyb2xs
-ZXIgdG8gbW91c2UgbW9kZSwNCj4gQEAgLTEyMiw4ICsxMjMsMTUgQEAgc3RhdGljIGlycXJldHVy
-bl90IGVnYWxheF90c19pbnRlcnJ1cHQoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0KPiAvKiB3YWtl
-IHVwIGNvbnRyb2xsZXIgYnkgYW4gZmFsbGluZyBlZGdlIG9mIGludGVycnVwdCBncGlvLiAgKi8N
-Cj4gc3RhdGljIGludCBlZ2FsYXhfd2FrZV91cF9kZXZpY2Uoc3RydWN0IGkyY19jbGllbnQgKmNs
-aWVudCkNCj4gew0KPiAtCWludCBncGlvID0gaXJxX3RvX2dwaW8oY2xpZW50LT5pcnEpOw0KPiAt
-CWludCByZXQ7DQo+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IGNsaWVudC0+ZGV2Lm9mX25v
-ZGU7DQo+ICsJaW50IGdwaW8sIHJldDsNCj4gKw0KPiArCWlmICghbnApDQo+ICsJCXJldHVybiAt
-RU5PREVWOw0KPiArDQo+ICsJZ3BpbyA9IG9mX2dldF9uYW1lZF9ncGlvKG5wLCAiaXJxLWdwaW8i
-LCAwKTsNCj4gKwlpZiAoIWdwaW9faXNfdmFsaWQoZ3BpbykpDQo+ICsJCXJldHVybiAtRU5PREVW
-Ow0KPiANCj4gCXJldCA9IGdwaW9fcmVxdWVzdChncGlvLCAiZWdhbGF4X2lycSIpOw0KPiAJaWYg
-KHJldCA8IDApIHsNCj4gLS0gDQo+IDEuNy42DQo+IA0KPiANCg0K
+Hi Sebastian,
 
+On Tue, Jul 31 2012, Sebastian Hesselbarth wrote:
+> This patch adds device tree support and binding documentiation for
+> sdhci-dove.
+>
+> v2: extended documentation and removed second interrupt as it is marked 
+>     'reserved' in dove datasheet.
+>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: Chris Ball <cjb@laptop.org>
+> Cc: Anton Vorontsov <cbouatmailru@gmail.com>
+> Cc: Manuel Lauss <manuel.lauss@googlemail.com>
+> Cc: David Brown <davidb@codeaurora.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+>
+> ---
+
+Looks good, pushed to mmc-next for 3.7.  In future, please use the area
+just below the "---" to describe your patch changelog v1->v2; that way
+it won't go into the commit message in git.
+
+Thanks,
+
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
