@@ -1,59 +1,47 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: <Query> Reg: Adding a gpio initialization sequence in dts is
- valid or not
-Date: Wed, 08 Aug 2012 09:38:09 -0600
-Message-ID: <502287E1.3040508@wwwdotorg.org>
-References: <CAL1wa8fjJg33vVM4ZOFuA2ACps55cahoK65MDf4ebAi9B6KUxg@mail.gmail.com>
- <502269EC.2070008@gmail.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH 04/11] MFD: twl4030-audio: Add DT support
+Date: Wed, 8 Aug 2012 17:41:47 +0200
+Message-ID: <502288BB.6020709@ti.com>
+References: <1344418887-5262-1-git-send-email-peter.ujfalusi@ti.com>
+ <1344418887-5262-5-git-send-email-peter.ujfalusi@ti.com>
+ <5022529D.3090406@ti.com>
+ <20120808125252.GR16861@opensource.wolfsonmicro.com>
+ <50227936.3040701@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <502269EC.2070008-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <50227936.3040701@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: alsa-devel@alsa-project.org, Samuel Ortiz <sameo@linux.intel.com>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dtor@mail.ru>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/2012 07:30 AM, Rob Herring wrote:
-> On 08/08/2012 04:52 AM, Leela Krishna Amudala wrote:
->> Hello All,
+On 08/08/2012 04:35 PM, Peter Ujfalusi wrote:
+> On 08/08/2012 03:52 PM, Mark Brown wrote:
+>> On Wed, Aug 08, 2012 at 01:50:53PM +0200, Benoit Cousson wrote:
 >>
->> I came across that to set power to an LCD, few panels require a pull
->> up/pull down operation on single GPIO line
->> and few panels need some gpio line setting sequence with some delay in between.
-...
->> Putting the sequence in dts file like below for an LCD which requires
->> gpio sequence
->>                lcd-reset-gpio = <&gpx1 5 1 3 0>,    (3 - for pull up)
->>                                       <&gpx1 5 1 1 0>,    (1 - for pull down)
->>                                       <&gpx1 5 1 3 0>;    (3 - for pull up)
->>                delay = x;
+>>> That being said, since we do have the clock binding now, maybe we should
+>>> create a clock provider at board level for the sys_clk and thus you will
+>>> just have to create a phandle to it in your audio description.
 >>
->> and only one gpio entry in the case of LCD which doesn't require gpio
->> sequence setting
->>                lcd-reset-gpio = <&gpx1 5 1 3 0>,    (3 - pull up)
->>
->> The 4 arguments in the above handle denotes
->>
->> <[phandle of the gpio controller node]
->>       [pin number within the gpio controller]
->>       [mux function]
->>       [pull up/down]
->>       [drive strength]>
+>> Yes, we should be doing this.
+> 
+> Does this needs the common clock framework on the platform? OMAP3 certainly
+> does not have it enabled since it has not been adopted.
+> 
 
-Mux function, pull-up/down and drive-strength should be handled by the
-pinctrl subsystem, and associated DT bindings.
+Yeah, good point, we are still not there yet. Rajendra is still working
+on it and I hope we can get something for 3.7, but let's avoid having a
+strong dependency on that migration for the moment.
 
-I suppose the proposal in the "runtime interpreted power sequences"
-thread could be extended to have an action for activating a particular
-pinctrl state too.
+Regards,
+Benoit
