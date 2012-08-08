@@ -1,160 +1,60 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH v3 1/2] lis3: add generic DT matching code
-Date: Wed, 08 Aug 2012 08:57:51 +0200
-Message-ID: <50220DEF.1060508@gmail.com>
-References: <1343633775-6268-1-git-send-email-zonque@gmail.com> <501E9CE2.20500@gmail.com> <331ABD5ECB02734CA317220B2BBEABC13EA0B8A5@DBDE01.ent.ti.com> <5021631D.1030505@gmail.com> <331ABD5ECB02734CA317220B2BBEABC13EA0E257@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA0E257@DBDE01.ent.ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "eric.piel@tremplin-utc.net" <eric.piel@tremplin-utc.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+From: Praveen Paneri <p.paneri@samsung.com>
+Subject: [PATCH v3 0/5] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Wed, 08 Aug 2012 13:10:56 +0530
+Message-ID: <1344411661-17821-1-git-send-email-p.paneri@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-On 08.08.2012 07:19, AnilKumar, Chimata wrote:
-> Hi Mack,
+Changes from v2:
+Changed the driver filenames to samsung-usbphy
+Changed 's3c' to 'samsung' for platform device as well as platform data
+Moved platform data structure to a separate file
+Rectified coding style related errors
 
-Call me Daniel :)
+Changes from v1:
+Rebased patches to latest usb-next branch
+Changed the name 'sec_usbphy' to 'samsung_usbphy'
 
-> On Wed, Aug 08, 2012 at 00:19:01, Daniel Mack wrote:
->> On 06.08.2012 12:45, AnilKumar, Chimata wrote:
->>> On Sun, Aug 05, 2012 at 21:48:42, Daniel Mack wrote:
->>>> On 30.07.2012 09:36, Daniel Mack wrote:
->>>>> This patch adds logic to parse lis3 properties from a device tree node
->>>>> and store them in a freshly allocated lis3lv02d_platform_data.
->>>>>
->>>>> Note that the actual match tables are left out here. This part should
->>>>> happen in the drivers that bind to the individual busses (SPI/I2C/PCI).
->>>>>
->>>>> Also adds some DT bindinds documentation.
->>>>>
->>>>> Signed-off-by: Daniel Mack <zonque@gmail.com>
->>>>> ---
->>>>> Changes from v2:
->>>>>  - kzalloc braino
->>>>>
->>>>> Changes from v1:
->>>>>  - some typos in properties fixed
->>>>>
->>>>>
->>>>>  Documentation/devicetree/bindings/misc/lis302.txt |  74 ++++++++++++
->>>>>  drivers/misc/lis3lv02d/lis3lv02d.c                | 137 ++++++++++++++++++++++
->>>>>  drivers/misc/lis3lv02d/lis3lv02d.h                |   4 +
->>>>>  3 files changed, 215 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/misc/lis302.txt
->>>>>
+This patch set introduces a phy driver for samsung SoCs. It uses the existing
+transceiver infrastructure to provide phy control functions. Use of this driver
+can be extended for usb host phy as well. Over the period of time all the phy
+related code for most of the samsung SoCs can be integrated here.
+Removing the existing phy code from mach-s3c64xx. Same can be done for other SoCs
+when they start supporting this phy driver. 
+This driver is tested with smdk6410 and Exynos4210(with DT).
 
-[...]
+Praveen Paneri (5):
+  usb: phy: samsung: Introducing usb phy driver for hsotg
+  usb: s3c-hsotg: Adding phy driver support
+  ARM: S3C64XX: Removing old phy setup code
+  ARM: S3C64XX: Enabling samsung-usbphy driver
+  ARM: Exynos4210: Enabling samsung-usbphy driver
 
->>>>> +Example for a SPI device node:
->>>>> +
->>>>> +	lis302@0 {
->>>>> +		compatible = "st,lis302dl-spi";
->>>>> +		reg = <0>;
->>>>> +		spi-max-frequency = <1000000>;
->>>>> +		interrupt-parent = <&gpio>;
->>>>> +		interrupts = <104 0>;
->>>>> +
->>>>> +		st,click-single-x;
->>>>> +		st,click-single-y;
->>>>> +		st,click-single-z;
->>>>> +		st,click-thresh-x = <10>;
->>>>> +		st,click-thresh-y = <10>;
->>>>> +		st,click-thresh-z = <10>;
->>>>> +		st,irq1-click;
->>>>> +		st,irq2-click;
->>>>> +		st,wakeup-x-lo;
->>>>> +		st,wakeup-x-hi;
->>>>> +		st,wakeup-y-lo;
->>>>> +		st,wakeup-y-hi;
->>>>> +		st,wakeup-z-lo;
->>>>> +		st,wakeup-z-hi;
->>>>> +	};
->>>
->>> Why can't we add these flags in driver itself like below?
->>> Is these parameters varies from SoC to SoC or accelerometer
->>> - to - accelerometer?
->>
->> I don't understand, sorry. The point here is that the driver that is
->> probed for device initialization are the PCI/I2C/SPI drivers. The
-> 
-> Look at the below example it has different drivers (SPI, I2C).
-> Compatible name changes form acc-acc so that we can use different
-> parameters corresponding to accelerometer, if it is acce specific.
-> 
-> Like
-> .compatible = "st,lis302dl-spi",
-> .compatible = "st,lis331dlh-i2c",
-> .compatible = "st,xx-spi",
-> .compatible = "st,xx-i2c",
-> 
-> If we do like this we can reduce lot of DT reads in driver.
-
-No, we can't. Look, this chip has a huge number of registers that can be
-set in order to accomplish a variety of different functions. It can be
-used as a free-fall detector or as a full-fledged accelerometer, with
-different settings per axis. None of them is specific to the bus this
-chip is connected through.
-
-Of course we want to leave it to the board vendor what functions to use,
-and hence all of them are exposed via DT. The whole idea of DT is to
-describe the hardware and the desired behaviour of each component as
-exact as possible, so vendors don't have to hack along in the source
-code but can boot a generic kernel.
-
-[...]
-
->>> #ifdef CONFIG_OF
->>> static struct lis3lv02d_platform_data lis302dl_spi_pdata = {
->>>         .click_flags    = LIS3_CLICK_SINGLE_X |
->>>                           LIS3_CLICK_SINGLE_Y |
->>>                           LIS3_CLICK_SINGLE_Z,
->>>         .irq_cfg        = LIS3_IRQ1_CLICK | LIS3_IRQ2_CLICK,
->>>         .wakeup_flags   = LIS3_WAKEUP_X_LO | LIS3_WAKEUP_X_HI |
->>>                           LIS3_WAKEUP_Y_LO | LIS3_WAKEUP_Y_HI |
->>>                           LIS3_WAKEUP_Z_LO | LIS3_WAKEUP_Z_HI,
->>> };
->>>
->>> static struct lis3lv02d_platform_data lis331dlh_i2c_pdata = {
->>>         .click_flags    = LIS3_CLICK_SINGLE_X |
->>>                           LIS3_CLICK_SINGLE_Y |
->>>                           LIS3_CLICK_SINGLE_Z,
->>>         .irq_cfg        = LIS3_IRQ1_CLICK | LIS3_IRQ2_CLICK,
->>>         .wakeup_flags   = LIS3_WAKEUP_X_LO | LIS3_WAKEUP_X_HI |
->>>                           LIS3_WAKEUP_Y_LO | LIS3_WAKEUP_Y_HI |
->>>                           LIS3_WAKEUP_Z_LO | LIS3_WAKEUP_Z_HI,
->>> };
->>>
->>> static const struct of_device_id lis3_of_match[] = {
->>>        {
->>>                .compatible = "st,lis302dl-spi",
->>>                .data = &lis302dl_spi_pdata,
->>>        },
->>>        {
->>>                .compatible = "st,lis331dlh-i2c",
->>>                .data = &lis331dlh_i2c_pdata,
->>>        },
->>>        { },
->>> };
->>> MODULE_DEVICE_TABLE(of, lis3_of_match);
->>> #endif
->>>
->>> Ignore if parameters between SoC - SoC are different. In
->>> probe we can add these flags to pdata.
->>
->> No. We want to expose all hardware features to DT so users can configure
->> the device at wish. We can't ignore that SoCs want different device configs.
-> 
-> Is it require is my question, how many SoCs take these different
-> parameters from platform data.
-
-We can't know, and it doesn't matter. The goal here is not to provide a
-way to boot the boards that are currently in mainline via DT with
-minimal effort, but to have DT bindings for this driver that reflect the
-features of this piece of hardware, so anything is possible.
-
-
-Regards,
-Daniel
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |    9 +
+ arch/arm/boot/dts/exynos4210.dtsi                  |    5 +
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |    8 +
+ arch/arm/mach-exynos/setup-usb-phy.c               |   13 +
+ arch/arm/mach-s3c64xx/include/mach/map.h           |    2 +
+ arch/arm/mach-s3c64xx/mach-crag6410.c              |    7 +-
+ arch/arm/mach-s3c64xx/mach-smartq.c                |    8 +-
+ arch/arm/mach-s3c64xx/mach-smdk6410.c              |    7 +-
+ arch/arm/mach-s3c64xx/setup-usb-phy.c              |   79 +----
+ arch/arm/plat-samsung/devs.c                       |   33 ++
+ arch/arm/plat-samsung/include/plat/devs.h          |    1 +
+ arch/arm/plat-samsung/include/plat/usb-phy.h       |    1 +
+ drivers/usb/gadget/s3c-hsotg.c                     |   40 ++-
+ drivers/usb/phy/Kconfig                            |    8 +
+ drivers/usb/phy/Makefile                           |    1 +
+ drivers/usb/phy/samsung-usbphy.c                   |  355 ++++++++++++++++++++
+ drivers/usb/phy/samsung-usbphy.h                   |   48 +++
+ include/linux/platform_data/samsung-usbphy.h       |   27 ++
+ 19 files changed, 562 insertions(+), 91 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+ create mode 100644 drivers/usb/phy/samsung-usbphy.c
+ create mode 100644 drivers/usb/phy/samsung-usbphy.h
+ create mode 100644 include/linux/platform_data/samsung-usbphy.h
