@@ -1,109 +1,76 @@
-From: Praveen Paneri <p.paneri@samsung.com>
-Subject: [PATCH v3 5/5] ARM: Exynos4210: Enabling samsung-usbphy driver
-Date: Wed, 08 Aug 2012 13:11:01 +0530
-Message-ID: <1344411661-17821-6-git-send-email-p.paneri@samsung.com>
-References: <1344411661-17821-1-git-send-email-p.paneri@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1344411661-17821-1-git-send-email-p.paneri@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de
+From: Hui Wang <jason77.wang@gmail.com>
+Subject: [PATCH v2 1/2] Input: egalax_ts: get gpio from devicetree node
+Date: Wed, 8 Aug 2012 17:10:33 +0800
+Message-ID: <1344417034-30175-2-git-send-email-jason77.wang@gmail.com>
+References: <1344417034-30175-1-git-send-email-jason77.wang@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1344417034-30175-1-git-send-email-jason77.wang@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Adding usbphy node for Exynos4210 along with the platform data.
+The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework
+and don't support this API anymore.
 
-Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
+The i.MX6q sabrelite platform equips an egalax touchscreen controller,
+and this platform already transfered to GENERIC_GPIO framework, to
+support this driver, we use a more generic way to get gpio.
+
+Add a return value checking for waking up the controller in the probe
+function, this guarantee only a workable device can pass init.
+
+Signed-off-by: Hui Wang <jason77.wang@gmail.com>
 ---
- arch/arm/boot/dts/exynos4210.dtsi       |    5 +++++
- arch/arm/mach-exynos/include/mach/map.h |    1 +
- arch/arm/mach-exynos/mach-exynos4-dt.c  |    8 ++++++++
- arch/arm/mach-exynos/setup-usb-phy.c    |   13 +++++++++++++
- 4 files changed, 27 insertions(+), 0 deletions(-)
+ drivers/input/touchscreen/egalax_ts.c |   19 ++++++++++++++++---
+ 1 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index 02891fe..e28cf10 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -62,6 +62,11 @@
- 		interrupts = <0 44 0>, <0 45 0>;
- 	};
+diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/touchscreen/egalax_ts.c
+index 70524dd..668b9ba 100644
+--- a/drivers/input/touchscreen/egalax_ts.c
++++ b/drivers/input/touchscreen/egalax_ts.c
+@@ -28,6 +28,7 @@
+ #include <linux/slab.h>
+ #include <linux/bitops.h>
+ #include <linux/input/mt.h>
++#include <linux/of_gpio.h>
  
-+	usbphy@125B0000 {
-+		compatible = "samsung,exynos4210-usbphy";
-+		reg = <0x125B0000 0x100>;
-+	};
-+
- 	keypad@100A0000 {
- 		compatible = "samsung,s5pv210-keypad";
- 		reg = <0x100A0000 0x100>;
-diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-index c72b675..0625c0a 100644
---- a/arch/arm/mach-exynos/include/mach/map.h
-+++ b/arch/arm/mach-exynos/include/mach/map.h
-@@ -234,6 +234,7 @@
- #define S3C_PA_SPI1			EXYNOS4_PA_SPI1
- #define S3C_PA_SPI2			EXYNOS4_PA_SPI2
- #define S3C_PA_USB_HSOTG		EXYNOS4_PA_HSOTG
-+#define S3C_PA_USB_PHY			EXYNOS4_PA_HSPHY
- 
- #define S5P_PA_EHCI			EXYNOS4_PA_EHCI
- #define S5P_PA_FIMC0			EXYNOS4_PA_FIMC0
-diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
-index b2b5d5f..a652db0 100644
---- a/arch/arm/mach-exynos/mach-exynos4-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/of_platform.h>
- #include <linux/serial_core.h>
-+#include <linux/platform_data/samsung-usbphy.h>
- 
- #include <asm/mach/arch.h>
- #include <asm/hardware/gic.h>
-@@ -20,9 +21,14 @@
- 
- #include <plat/cpu.h>
- #include <plat/regs-serial.h>
-+#include <plat/usb-phy.h>
- 
- #include "common.h"
- 
-+static struct samsung_usbphy_data exynos4_usbphy_pdata = {
-+	.pmu_isolation = s5p_usb_phy_pmu_isolation,
-+};
-+
  /*
-  * The following lookup table is used to override device names when devices
-  * are registered from device tree. This is temporarily added to enable
-@@ -63,6 +69,8 @@ static const struct of_dev_auxdata exynos4210_auxdata_lookup[] __initconst = {
- 				"exynos4210-spi.2", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_PDMA0, "dma-pl330.0", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_PDMA1, "dma-pl330.1", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4210-usbphy", EXYNOS4_PA_HSPHY,
-+			"s3c-usbphy", &exynos4_usbphy_pdata),
- 	{},
- };
- 
-diff --git a/arch/arm/mach-exynos/setup-usb-phy.c b/arch/arm/mach-exynos/setup-usb-phy.c
-index b81cc56..1c62d20 100644
---- a/arch/arm/mach-exynos/setup-usb-phy.c
-+++ b/arch/arm/mach-exynos/setup-usb-phy.c
-@@ -221,3 +221,16 @@ int s5p_usb_phy_exit(struct platform_device *pdev, int type)
- 
- 	return -EINVAL;
- }
+  * Mouse Mode: some panel may configure the controller to mouse mode,
+@@ -122,8 +123,15 @@ static irqreturn_t egalax_ts_interrupt(int irq, void *dev_id)
+ /* wake up controller by an falling edge of interrupt gpio.  */
+ static int egalax_wake_up_device(struct i2c_client *client)
+ {
+-	int gpio = irq_to_gpio(client->irq);
+-	int ret;
++	struct device_node *np = client->dev.of_node;
++	int gpio, ret;
 +
-+void s5p_usb_phy_pmu_isolation(int on)
-+{
-+	if (on) {
-+		writel(readl(S5P_USBDEVICE_PHY_CONTROL)
-+			& ~S5P_USBDEVICE_PHY_ENABLE,
-+				S5P_USBDEVICE_PHY_CONTROL);
-+	} else {
-+		writel(readl(S5P_USBDEVICE_PHY_CONTROL)
-+			| S5P_USBDEVICE_PHY_ENABLE,
-+				S5P_USBDEVICE_PHY_CONTROL);
++	if (!np)
++		return -ENODEV;
++
++	gpio = of_get_named_gpio(np, "irq-gpio", 0);
++	if (!gpio_is_valid(gpio))
++		return -ENODEV;
+ 
+ 	ret = gpio_request(gpio, "egalax_irq");
+ 	if (ret < 0) {
+@@ -181,7 +189,12 @@ static int __devinit egalax_ts_probe(struct i2c_client *client,
+ 	ts->input_dev = input_dev;
+ 
+ 	/* controller may be in sleep, wake it up. */
+-	egalax_wake_up_device(client);
++	ret = egalax_wake_up_device(client);
++	if (ret < 0) {
++		dev_err(&client->dev, "Failed to wake up the controller\n");
++		error = ret;
++		goto err_free_dev;
 +	}
-+}
+ 
+ 	ret = egalax_firmware_version(client);
+ 	if (ret < 0) {
 -- 
-1.7.1
+1.7.6
+
