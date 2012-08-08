@@ -1,53 +1,177 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 3/4] ARM: OMAP3: Switch to use the unified
- audio driver (omap-twl4030) for selected boards
-Date: Wed, 08 Aug 2012 15:29:41 +0300
-Message-ID: <50225BB5.3000407@ti.com>
-References: <1344419650-5389-1-git-send-email-peter.ujfalusi@ti.com>
- <1344419650-5389-4-git-send-email-peter.ujfalusi@ti.com>
- <50225A84.5010008@compulab.co.il>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2] of: Add videomode helper
+Date: Wed, 08 Aug 2012 14:40:37 +0200
+Message-ID: <1547685.ZrutaYKChk@avalon>
+References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
+ <501AD68C.1000904@wwwdotorg.org> <20120803073844.GK1451@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <50225A84.5010008@compulab.co.il>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Igor Grinberg <grinberg@compulab.co.il>
-Cc: alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anuj Aggarwal <anuj.aggarwal@ti.com>, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org, Steve Sakoman <steve@sakoman.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120803073844.GK1451-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Igor,
+Hi Sascha,
 
-On 08/08/2012 03:24 PM, Igor Grinberg wrote:
->> diff --git a/arch/arm/mach-omap2/board-cm-t35.c b/arch/arm/mach-omap2/bo=
-ard-cm-t35.c
->> index 97d7190..b73fa5c 100644
->> --- a/arch/arm/mach-omap2/board-cm-t35.c
->> +++ b/arch/arm/mach-omap2/board-cm-t35.c
->> @@ -731,6 +731,7 @@ static void __init cm_t3x_common_init(void)
->>  	cm_t35_init_ethernet();
->>  	cm_t35_init_led();
->>  	cm_t35_init_display();
->> +	omap_twl4030_audio_init("overo", 26000000);
-> =
+On Friday 03 August 2012 09:38:44 Sascha Hauer wrote:
+> On Thu, Aug 02, 2012 at 01:35:40PM -0600, Stephen Warren wrote:
+> > On 07/04/2012 01:56 AM, Sascha Hauer wrote:
+> > > This patch adds a helper function for parsing videomodes from the
+> > > devicetree. The videomode can be either converted to a struct
+> > > drm_display_mode or a struct fb_videomode.
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/video/displaymode
+> > > b/Documentation/devicetree/bindings/video/displaymode
+> > > 
+> > > +Required properties:
+> > > + - xres, yres: Display resolution
+> > > + - left-margin, right-margin, hsync-len: Horizontal Display timing
+> > > parameters +   in pixels
+> > > +   upper-margin, lower-margin, vsync-len: Vertical display timing
+> > > parameters in +   lines
+> > 
+> > Perhaps bike-shedding, but...
+> > 
+> > For the margin property names, wouldn't it be better to use terminology
+> > more commonly used for video timings rather than Linux FB naming. In
+> > other words naming like:
+> > 
+> > hactive, hsync-len, hfront-porch, hback-porch?
+> 
+> Can do. Just to make sure:
+> 
+> hactive == xres
+> hsync-len == hsync-len
+> hfront-porch == right-margin
+> hback-porch == left-margin
 
-> Can the card_name here be "cm-t3x" ?
+That's correct. On the vertical direction, vfront-porch == lower-margin and 
+vback-porch == upper-margin.
 
-I have used the "overo" as card name here since what I gathered is that cm-=
-t35
-used the sound/soc/omap/overo.c machine driver for audio support.
-If the card name is changing your existing user space might get confused by
-the card name change.
-But sure, I can change the card name to "cm-t3x" if it is better for you.
+> 
+> ?
+> 
+> > This node appears to describe a video mode, not a display, hence the
+> > node name seems wrong.
+> > 
+> > Many displays can support multiple different video modes. As mentioned
+> > elsewhere, properties like display width/height are properties of the
+> > display not the mode.
+> > 
+> > So, I might expect something more like the following (various overhead
+> > properties like reg/#address-cells etc. elided for simplicity):
+> > 
+> > disp: display {
+> > 
+> >     width-mm = <...>;
+> >     height-mm = <...>;
+> >     modes {
+> >     
+> >         mode@0 {
+> > 		
+> > 		/* 1920x1080p24 */
+> > 		clock = <52000000>;
+> > 		xres = <1920>;
+> > 		yres = <1080>;
+> > 		left-margin = <25>;
+> > 		right-margin = <25>;
+> > 		hsync-len = <25>;
+> > 		lower-margin = <2>;
+> > 		upper-margin = <2>;
+> > 		vsync-len = <2>;
+> > 		hsync-active-high;
+> > 		
+> >         };
+> >         mode@1 {
+> >         };
+> >     
+> >     };
+> > 
+> > };
+> 
+> Ok, we can do this.
+> 
+> > display-connector {
+> > 
+> >     display = <&disp>;
+> >     // interface-specific properties such as pixel format here
+> > 
+> > };
+> > 
+> > Finally, have you considered just using an EDID instead of creating
+> > something custom? I know that creating an EDID is harder than writing a
+> 
+> > few simple properties into a DT, but EDIDs have the following advantages:
+> I have considered using EDID and I also tried it. It's painful. There
+> are no (open) tools available for creating EDID. That's something we
+> could change of course. Then when generating a devicetree there is
+> always an extra step involved creating the EDID blob. Once the EDID
+> blob is in devicetree it is not parsable anymore by mere humans, so
+> to see what we've got there is another tool involved to generate a
+> readable form again.
+> 
+> > a) They're already standardized and very common.
+> 
+> Indeed, that's a big plus for EDID. I have no intention of removing EDID
+> data from the devicetree. There are situations where EDID is handy, for
+> example when you get EDID data provided by your vendor.
+> 
+> > b) They allow other information such as a display's HDMI audio
+> > capabilities to be represented, which can then feed into an ALSA driver.
+> > 
+> > c) The few LCD panel datasheets I've seen actually quote their
+> > specification as an EDID already, so deriving the EDID may actually be
+> > easy.
+> > 
+> > d) People familiar with displays are almost certainly familiar with
+> > EDID's mode representation. There are many ways of representing display
+> > modes (sync position vs. porch widths, htotal specified rather than
+> > specifying all the components and hence htotal being calculated etc.).
+> > Not everyone will be familiar with all representations. Conversion
+> > errors are less likely if the target is EDID's familiar format.
+> 
+> You seem to think about a different class of displays for which EDID
+> indeed is a better way to handle. What I have to deal with here mostly
+> are dumb displays which:
+> 
+> - can only handle their native resolution
+> - Have no audio capabilities at all
+> - come with a datasheet which specify a min/typ/max triplet for
+>   xres,hsync,..., often enough they are scanned to pdf from some previously
+>   printed paper.
+> 
+> These displays are very common on embedded devices, probably that's the
+> reason I did not even think about the possibility that a single display
+> might have different modes.
+> 
+> > e) You'll end up with exactly the same data as if you have a DDC-based
+> > external monitor rather than an internal panel, so you end up getting to
+> > a common path in display handling code much more quickly.
+> 
+> All we have in our display driver currently is:
+> 
+> 	edidp = of_get_property(np, "edid", &imxpd->edid_len);
+> 	if (edidp) {
+> 		imxpd->edid = kmemdup(edidp, imxpd->edid_len, GFP_KERNEL);
+> 	} else {
+> 		ret = of_get_video_mode(np, &imxpd->mode, NULL);
+> 		if (!ret)
+> 			imxpd->mode_valid = 1;
+> 	}
 
--- =
+-- 
+Regards,
 
-P=E9ter
+Laurent Pinchart
