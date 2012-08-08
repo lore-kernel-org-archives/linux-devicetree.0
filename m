@@ -1,220 +1,94 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v3 1/2] lis3: add generic DT matching code
-Date: Wed, 8 Aug 2012 05:19:15 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA0E257@DBDE01.ent.ti.com>
-References: <1343633775-6268-1-git-send-email-zonque@gmail.com>
- <501E9CE2.20500@gmail.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA0B8A5@DBDE01.ent.ti.com>
- <5021631D.1030505@gmail.com>
+From: Hui Wang <jason77.wang@gmail.com>
+Subject: Re: [PATCH 1/2] Input: egalax_ts: get gpio from devicetree node
+Date: Wed, 8 Aug 2012 13:35:11 +0800
+Message-ID: <5021FA8F.5070308@gmail.com>
+References: <1344332372-9287-1-git-send-email-jason77.wang@gmail.com> <1344332372-9287-2-git-send-email-jason77.wang@gmail.com> <8CDC3AFB-52FC-40B1-8D83-FBB5C7AD76F7@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5021631D.1030505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org" <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=gb2312
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <8CDC3AFB-52FC-40B1-8D83-FBB5C7AD76F7@freescale.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Zhang Jiejing-B33651 <B33651@freescale.com>
+Cc: Hui Wang <jason77.wang@gmail.com>, "<dmitry.torokhov@gmail.com>" <dmitry.torokhov@gmail.com>, "<linux-input@vger.kernel.org>" <linux-input@vger.kernel.org>, "<devicetree-discuss@lists.ozlabs.org>" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mack,
+OK, will add it in the V2.
 
-No attachments please.
+Thanks,
+Hui.
 
-On Wed, Aug 08, 2012 at 00:19:01, Daniel Mack wrote:
-> Hi,
-> 
-> thanks for your review.
-> 
-> On 06.08.2012 12:45, AnilKumar, Chimata wrote:
-> > On Sun, Aug 05, 2012 at 21:48:42, Daniel Mack wrote:
-> >> On 30.07.2012 09:36, Daniel Mack wrote:
-> >>> This patch adds logic to parse lis3 properties from a device tree node
-> >>> and store them in a freshly allocated lis3lv02d_platform_data.
-> >>>
-> >>> Note that the actual match tables are left out here. This part should
-> >>> happen in the drivers that bind to the individual busses (SPI/I2C/PCI).
-> >>>
-> >>> Also adds some DT bindinds documentation.
-> >>>
-> >>> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> ---
-> >>> Changes from v2:
-> >>>  - kzalloc braino
-> >>>
-> >>> Changes from v1:
-> >>>  - some typos in properties fixed
-> >>>
-> >>>
-> >>>  Documentation/devicetree/bindings/misc/lis302.txt |  74 ++++++++++++
-> >>>  drivers/misc/lis3lv02d/lis3lv02d.c                | 137 ++++++++++++++++++++++
-> >>>  drivers/misc/lis3lv02d/lis3lv02d.h                |   4 +
-> >>>  3 files changed, 215 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/misc/lis302.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/misc/lis302.txt b/Documentation/devicetree/bindings/misc/lis302.txt
-> >>> new file mode 100644
-> >>> index 0000000..66230fd
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/misc/lis302.txt
-> >>> @@ -0,0 +1,74 @@
-> >>> +LIS302 accelerometer devicetree bindings
-> >>> +
-> >>> +This device is matched via its bus drivers, and has a number of properties
-> >>> +that apply in on the generic device (independent from the bus).
-> >>> +
-> >>> +
-> >>> +Required properties for the SPI bindings:
-> >>> + - compatible: 		should be set to "st,lis3lv02d_spi"
-> >>> + - reg:			the chipselect index
-> >>> + - spi-max-frequency:	maximal bus speed, should be set to 1000000 unless
-> >>> +			constrained by external circuitry
-> >>> + - interrupts:		the interrupt generated by the device
-> >>> +
-> >>> +
-> >>> +Optional properties for all bus drivers:
-> >>> +
-> >>> + - st,click-single-{x,y,z}:	if present, tells the device to issue an
-> >>> +				interrupt on single click events on the
-> >>> +				x/y/z axis.
-> >>> + - st,click-double-{x,y,z}:	if present, tells the device to issue an
-> >>> +				interrupt on double click events on the
-> >>> +				x/y/z axis.
-> >>> + - st,click-thresh-{x,y,z}:	set the x/y/z axis threshold
-> >>> + - st,click-click-time-limit:	click time limit, from 0 to 127.5msec
-> >>> +				with step of 0.5 msec
-> >>> + - st,click-latency:		click latency, from 0 to 255 msec with
-> >>> +				step of 1 msec.
-> >>> + - st,click-window:		click window, from 0 to 255 msec with
-> >>> +				step of 1 msec.
-> >>> + - st,irq{1,2}-disable:		disable IRQ 1/2
-> >>> + - st,irq{1,2}-ff-wu-1:		raise IRQ 1/2 on FF_WU_1 condition
-> >>> + - st,irq{1,2}-ff-wu-2:		raise IRQ 1/2 on FF_WU_2 condition
-> >>> + - st,irq{1,2}-data-ready:	raise IRQ 1/2 on data ready contition
-> >>> + - st,irq{1,2}-click:		raise IRQ 1/2 on click condition
-> >>> + - st,irq-open-drain:		consider IRQ lines open-drain
-> >>> + - st,irq-active-low:		make IRQ lines active low
-> >>> + - st,wu-duration-1:		duration register for Free-Fall/Wake-Up
-> >>> +				interrupt 1
-> >>> + - st,wu-duration-2:		duration register for Free-Fall/Wake-Up
-> >>> +				interrupt 2
-> >>> + - st,wakeup-{x,y,z}-{lo,hi}:	set wakeup condition on x/y/z axis for
-> >>> +				upper/lower limit
-> >>> + - st,highpass-cutoff-hz=:	1, 2, 4 or 8 for 1Hz, 2Hz, 4Hz or 8Hz of
-> >>> +				highpass cut-off frequency
-> >>> + - st,hipass{1,2}-disable:	disable highpass 1/2.
-> >>> + - st,default-rate=:		set the default rate
-> >>> + - st,axis-{x,y,z}=:		set the axis to map to the three coordinates
-> > 
-> > Some more parameters missing, what about st_min_limits and st_max_limits
-> > required for selftest.
-> 
-> Right. Added them now.
-> 
-> >>> +
-> >>> +
-> >>> +Example for a SPI device node:
-> >>> +
-> >>> +	lis302@0 {
-> >>> +		compatible = "st,lis302dl-spi";
-> >>> +		reg = <0>;
-> >>> +		spi-max-frequency = <1000000>;
-> >>> +		interrupt-parent = <&gpio>;
-> >>> +		interrupts = <104 0>;
-> >>> +
-> >>> +		st,click-single-x;
-> >>> +		st,click-single-y;
-> >>> +		st,click-single-z;
-> >>> +		st,click-thresh-x = <10>;
-> >>> +		st,click-thresh-y = <10>;
-> >>> +		st,click-thresh-z = <10>;
-> >>> +		st,irq1-click;
-> >>> +		st,irq2-click;
-> >>> +		st,wakeup-x-lo;
-> >>> +		st,wakeup-x-hi;
-> >>> +		st,wakeup-y-lo;
-> >>> +		st,wakeup-y-hi;
-> >>> +		st,wakeup-z-lo;
-> >>> +		st,wakeup-z-hi;
-> >>> +	};
-> > 
-> > Why can't we add these flags in driver itself like below?
-> > Is these parameters varies from SoC to SoC or accelerometer
-> > - to - accelerometer?
-> 
-> I don't understand, sorry. The point here is that the driver that is
-> probed for device initialization are the PCI/I2C/SPI drivers. The
+Zhang Jiejing-B33651 wrote:
+> Hi Hui,
+>
+> You patch looks good to me, but can you add a check when it calling t=
+he egalax_wake_up_device() function in egalax_ts_probe() ? If some conf=
+igure gose wrong, the probe of driver will exit, rather than the suspen=
+d failure every time.
+>
+> BR,
+> Jiejing
+> =D4=DA 2012-8-7=A3=AC=CF=C2=CE=E75:39=A3=ACHui Wang <jason77.wang@gma=
+il.com> =D0=B4=B5=C0=A3=BA
+>
+>  =20
+>> The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework =
+and
+>> don't support this API anymore.
+>>
+>> The i.MX6q sabrelite platform equips an egalax touchscreen controlle=
+r,
+>> and this platform already transfered to GENERIC_GPIO framework, to
+>> support this driver, we use a more generic way to get gpio.
+>>
+>> Signed-off-by: Hui Wang <jason77.wang@gmail.com>
+>> ---
+>> drivers/input/touchscreen/egalax_ts.c |   12 ++++++++++--
+>> 1 files changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/t=
+ouchscreen/egalax_ts.c
+>> index 70524dd..b94eb50 100644
+>> --- a/drivers/input/touchscreen/egalax_ts.c
+>> +++ b/drivers/input/touchscreen/egalax_ts.c
+>> @@ -28,6 +28,7 @@
+>> #include <linux/slab.h>
+>> #include <linux/bitops.h>
+>> #include <linux/input/mt.h>
+>> +#include <linux/of_gpio.h>
+>>
+>> /*
+>>  * Mouse Mode: some panel may configure the controller to mouse mode=
+,
+>> @@ -122,8 +123,15 @@ static irqreturn_t egalax_ts_interrupt(int irq,=
+ void *dev_id)
+>> /* wake up controller by an falling edge of interrupt gpio.  */
+>> static int egalax_wake_up_device(struct i2c_client *client)
+>> {
+>> -	int gpio =3D irq_to_gpio(client->irq);
+>> -	int ret;
+>> +	struct device_node *np =3D client->dev.of_node;
+>> +	int gpio, ret;
+>> +
+>> +	if (!np)
+>> +		return -ENODEV;
+>> +
+>> +	gpio =3D of_get_named_gpio(np, "irq-gpio", 0);
+>> +	if (!gpio_is_valid(gpio))
+>> +		return -ENODEV;
+>>
+>> 	ret =3D gpio_request(gpio, "egalax_irq");
+>> 	if (ret < 0) {
+>> --=20
+>> 1.7.6
+>>
+>>
+>>    =20
+>
+>  =20
 
-Look at the below example it has different drivers (SPI, I2C).
-Compatible name changes form acc-acc so that we can use different
-parameters corresponding to accelerometer, if it is acce specific.
-
-Like
-.compatible = "st,lis302dl-spi",
-.compatible = "st,lis331dlh-i2c",
-.compatible = "st,xx-spi",
-.compatible = "st,xx-i2c",
-
-If we do like this we can reduce lot of DT reads in driver.
-
-> generic part is not something the device tree knows about.
-> 
-> Hence I put the generic parsing of common DT bindings to the generic
-> part of the driver, and made the SPI driver just pass through the
-> of_node pointer.
-> 
-> > #ifdef CONFIG_OF
-> > static struct lis3lv02d_platform_data lis302dl_spi_pdata = {
-> >         .click_flags    = LIS3_CLICK_SINGLE_X |
-> >                           LIS3_CLICK_SINGLE_Y |
-> >                           LIS3_CLICK_SINGLE_Z,
-> >         .irq_cfg        = LIS3_IRQ1_CLICK | LIS3_IRQ2_CLICK,
-> >         .wakeup_flags   = LIS3_WAKEUP_X_LO | LIS3_WAKEUP_X_HI |
-> >                           LIS3_WAKEUP_Y_LO | LIS3_WAKEUP_Y_HI |
-> >                           LIS3_WAKEUP_Z_LO | LIS3_WAKEUP_Z_HI,
-> > };
-> > 
-> > static struct lis3lv02d_platform_data lis331dlh_i2c_pdata = {
-> >         .click_flags    = LIS3_CLICK_SINGLE_X |
-> >                           LIS3_CLICK_SINGLE_Y |
-> >                           LIS3_CLICK_SINGLE_Z,
-> >         .irq_cfg        = LIS3_IRQ1_CLICK | LIS3_IRQ2_CLICK,
-> >         .wakeup_flags   = LIS3_WAKEUP_X_LO | LIS3_WAKEUP_X_HI |
-> >                           LIS3_WAKEUP_Y_LO | LIS3_WAKEUP_Y_HI |
-> >                           LIS3_WAKEUP_Z_LO | LIS3_WAKEUP_Z_HI,
-> > };
-> > 
-> > static const struct of_device_id lis3_of_match[] = {
-> >        {
-> >                .compatible = "st,lis302dl-spi",
-> >                .data = &lis302dl_spi_pdata,
-> >        },
-> >        {
-> >                .compatible = "st,lis331dlh-i2c",
-> >                .data = &lis331dlh_i2c_pdata,
-> >        },
-> >        { },
-> > };
-> > MODULE_DEVICE_TABLE(of, lis3_of_match);
-> > #endif
-> > 
-> > Ignore if parameters between SoC - SoC are different. In
-> > probe we can add these flags to pdata.
-> 
-> No. We want to expose all hardware features to DT so users can configure
-> the device at wish. We can't ignore that SoCs want different device configs.
-
-Is it require is my question, how many SoCs take these different
-parameters from platform data.
-
-Regards
-AnilKumar
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
