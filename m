@@ -1,47 +1,59 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 04/11] MFD: twl4030-audio: Add DT support
-Date: Wed, 8 Aug 2012 15:49:34 +0100
-Message-ID: <20120808144933.GC24328@opensource.wolfsonmicro.com>
-References: <1344418887-5262-1-git-send-email-peter.ujfalusi@ti.com>
- <1344418887-5262-5-git-send-email-peter.ujfalusi@ti.com>
- <20120808131356.GS16861@opensource.wolfsonmicro.com>
- <50226CF4.1010202@ti.com>
- <20120808135253.GC16861@opensource.wolfsonmicro.com>
- <502274DA.9020204@ti.com>
- <20120808141849.GA24328@opensource.wolfsonmicro.com>
- <50227837.10400@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: <Query> Reg: Adding a gpio initialization sequence in dts is
+ valid or not
+Date: Wed, 08 Aug 2012 09:38:09 -0600
+Message-ID: <502287E1.3040508@wwwdotorg.org>
+References: <CAL1wa8fjJg33vVM4ZOFuA2ACps55cahoK65MDf4ebAi9B6KUxg@mail.gmail.com>
+ <502269EC.2070008@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <50227837.10400@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: alsa-devel@alsa-project.org, Samuel Ortiz <sameo@linux.intel.com>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dtor@mail.ru>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <502269EC.2070008-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2012 at 05:31:19PM +0300, Peter Ujfalusi wrote:
-> On 08/08/2012 05:18 PM, Mark Brown wrote:
+On 08/08/2012 07:30 AM, Rob Herring wrote:
+> On 08/08/2012 04:52 AM, Leela Krishna Amudala wrote:
+>> Hello All,
+>>
+>> I came across that to set power to an LCD, few panels require a pull
+>> up/pull down operation on single GPIO line
+>> and few panels need some gpio line setting sequence with some delay in between.
+...
+>> Putting the sequence in dts file like below for an LCD which requires
+>> gpio sequence
+>>                lcd-reset-gpio = <&gpx1 5 1 3 0>,    (3 - for pull up)
+>>                                       <&gpx1 5 1 1 0>,    (1 - for pull down)
+>>                                       <&gpx1 5 1 3 0>;    (3 - for pull up)
+>>                delay = x;
+>>
+>> and only one gpio entry in the case of LCD which doesn't require gpio
+>> sequence setting
+>>                lcd-reset-gpio = <&gpx1 5 1 3 0>,    (3 - pull up)
+>>
+>> The 4 arguments in the above handle denotes
+>>
+>> <[phandle of the gpio controller node]
+>>       [pin number within the gpio controller]
+>>       [mux function]
+>>       [pull up/down]
+>>       [drive strength]>
 
-> > I'm struggling to see any reason not to just hold the external mute on
-> > for the entire time the headset is powered off?
+Mux function, pull-up/down and drive-strength should be handled by the
+pinctrl subsystem, and associated DT bindings.
 
-> I think because it would mean in most cases that we keep a GPIO line enabled
-> during the time the HS is not in use, which burns power.
-> In most cases the mute is enabled when the GPIO line is up.
-
-That makes sense if the GPIO is actively driven, open drain should be
-better here, but it's still a generic thing which it'd be nice to
-extract.
-
-Still, the main thing here was the fact that we should be able to drop
-the flag for the feature in the first place.
+I suppose the proposal in the "runtime interpreted power sequences"
+thread could be extended to have an action for activating a particular
+pinctrl state too.
