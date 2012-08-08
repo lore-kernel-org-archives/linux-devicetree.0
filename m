@@ -1,53 +1,53 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 04/11] MFD: twl4030-audio: Add DT support
-Date: Wed, 8 Aug 2012 14:13:56 +0100
-Message-ID: <20120808131356.GS16861@opensource.wolfsonmicro.com>
-References: <1344418887-5262-1-git-send-email-peter.ujfalusi@ti.com>
- <1344418887-5262-5-git-send-email-peter.ujfalusi@ti.com>
+From: Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [PATCH 08/11] ARM: OMAP3: Remove callback for
+ McBSP sidetone ICLK workaround
+Date: Wed, 08 Aug 2012 16:25:05 +0300
+Message-ID: <502268B1.9040506@bitmer.com>
+References: <1344417101-5015-1-git-send-email-peter.ujfalusi@ti.com>
+ <1344417101-5015-9-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1344418887-5262-5-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-input-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1344417101-5015-9-git-send-email-peter.ujfalusi@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
 To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dtor@mail.ru>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
+Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2012 at 12:41:20PM +0300, Peter Ujfalusi wrote:
+On 08/08/2012 12:11 PM, Peter Ujfalusi wrote:
+> We can achieve the same result with SIDLEMODE field within McBSP SYSCONFIG
+> register.
+> The ASoC driver has been modified to use this method and we can now remove
+> the workaround using the control module register.
+> 
+Are you sure it works without any changes to sidetone audio quality or
+current consumption? What I remember idlemode was broken at least on
+3430 and caused bad sidetone audio if autoidle was set and a little bit
+higher current consumption (something like 2-3 mA higher where reference
+consumption was around 10 mA) when McBSP was set to no-idle.
 
-> +Required properties:
-> +- compatible : must be "ti,twl4030-audio"
+Here's the old thread:
 
-So, as I mentioned before I find this sort of direct mapping of the
-Linux device representation into the device tree really troubling.
-I'm just way too aware of the fact that even the Linux split of these
-things can change over time and often represents internal Linux
-considerations.
+http://www.mail-archive.com/linux-omap@vger.kernel.org/msg52024.html
 
-> +-ti,hs_extmute: Use external mute for HS pop reduction
-> +-ti,hs_extmute_gpio: Use external GPIO to control the external mute
-> +-ti,hs_extmute_disable_level: The desired level of the GPIO line when the
-> +			      external mute is disabled. valuse: 0 or 1
+I think I tested all of this by using arecord >/dev/null | aplay
+/dev/zero with threshold based DMA transfers with all bells and whistles
+set for dynamic retention idle in order to hear only McBSP sidetone
+while measuring current consumption.
 
-This doesn't seem like something that should be in the CODEC driver
-really, there's a general need for something which can unmute controls
-at the end of the power up sequence and mute before power down.  Also,
-if this is going to be part of the binding shouldn't we just omit the
-first property and simply check for the presence of the property which
-specifies the GPIO?
+But I guess 2-3 mA higher consumption is ok if it simplifies SW a lot
+and base consumption is anyway much higher than 10 mA when sidetone is
+in real use (my test above was artificial where actual use is under a
+phone call with heavy consumption from cellular modem etc).
 
-> +#ifdef CONFIG_OF
-> +	if (of_find_node_by_name(node, "codec"))
-> +		return true;
-> +#endif
-
-This really seems like we should be stubbing out of_find_node_by_name()
-to return false in non-OF cases.
-
-> +#ifdef CONFIG_OF
-> +	if (!of_property_read_u32(node, "ti,enable-vibra", &vibra) && vibra)
-> +		return true;
-> +#endif
-
-Similarly here.
+-- 
+Jarkko
