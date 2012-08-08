@@ -1,31 +1,51 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 0/2] Add device tree support for davinci_mdio driver
- and fix cpsw DT binding documentation
-Date: Tue, 07 Aug 2012 16:25:20 -0700 (PDT)
-Message-ID: <20120807.162520.1932972414873138617.davem@davemloft.net>
-References: <1344265558-5724-1-git-send-email-mugunthanvnm@ti.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1344265558-5724-1-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: mugunthanvnm@ti.com
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: [PATCH 2/8] rtc: vt8500: Add devicetree support for vt8500-rtc
+Date: Wed,  8 Aug 2012 13:39:20 +1200
+Message-ID: <1344389967-8465-3-git-send-email-linux@prisktech.co.nz>
+References: <1344389967-8465-1-git-send-email-linux@prisktech.co.nz>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1344389967-8465-1-git-send-email-linux@prisktech.co.nz>
+Sender: linux-doc-owner@vger.kernel.org
+To: vt8500-wm8505-linux-kernel@googlegroups.com
+Cc: Tony Prisk <linux@prisktech.co.nz>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Alessandro Zummo <a.zummo@towertech.it>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Hauke Mehrtens <hauke@hauke-m.de>, Felipe Balbi <balbi@ti.com>, Neil Zhang <zhangwm@marvell.com>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Rob Landley <rob@landley.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, Eric Andersson <eric.andersson@unixphere.com>, Linus Walleij <linus.walleij@stericsson.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-serial@
 List-Id: devicetree@vger.kernel.org
 
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Date: Mon, 6 Aug 2012 20:35:56 +0530
+Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+---
+ drivers/rtc/rtc-vt8500.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> This patch set adds support for device tree for Davinci MDIO driver and fixes
-> CPSW DT binding documentation to make it copy pastable to dts file.
-> 
-> This patch set is tested with the following git tree on AM335X Beagle Bone
-> https://github.com/hvaibhav/am335x-linux/tree/am335x-upstream-staging-cpsw
-> 
-> Mugunthan V N (2):
->   drivers: net: ethernet: davince_mdio: device tree implementation
->   documentation: dt: bindings: cpsw: fixing the examples for directly
->     using it in dts file
+diff --git a/drivers/rtc/rtc-vt8500.c b/drivers/rtc/rtc-vt8500.c
+index 9e94fb1..7364564 100644
+--- a/drivers/rtc/rtc-vt8500.c
++++ b/drivers/rtc/rtc-vt8500.c
+@@ -23,6 +23,7 @@
+ #include <linux/bcd.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
+ 
+ /*
+  * Register definitions
+@@ -302,12 +303,18 @@ static int __devexit vt8500_rtc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id wmt_dt_ids[] = {
++	{ .compatible = "via,vt8500-rtc", },
++	{}
++};
++
+ static struct platform_driver vt8500_rtc_driver = {
+ 	.probe		= vt8500_rtc_probe,
+ 	.remove		= __devexit_p(vt8500_rtc_remove),
+ 	.driver		= {
+ 		.name	= "vt8500-rtc",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(wmt_dt_ids),
+ 	},
+ };
+ 
+-- 
+1.7.9.5
 
-Applied to net-next, thanks.
