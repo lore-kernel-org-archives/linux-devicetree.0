@@ -1,22 +1,16 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 04/11] MFD: twl4030-audio: Add DT support
-Date: Thu, 09 Aug 2012 16:53:26 +0300
-Message-ID: <5023C0D6.8040600@ti.com>
-References: <1344418887-5262-1-git-send-email-peter.ujfalusi@ti.com>
- <1344418887-5262-5-git-send-email-peter.ujfalusi@ti.com>
- <20120808131356.GS16861@opensource.wolfsonmicro.com>
- <50226CF4.1010202@ti.com>
- <20120808135253.GC16861@opensource.wolfsonmicro.com>
- <502274DA.9020204@ti.com>
- <20120808141849.GA24328@opensource.wolfsonmicro.com> <50227837.10400@ti.com>
- <20120808144933.GC24328@opensource.wolfsonmicro.com>
- <50238E8A.5030902@ti.com>
- <20120809103600.GI24328@opensource.wolfsonmicro.com>
+From: Ricardo Neri <ricardo.neri@ti.com>
+Subject: Re: [PATCH 07/11] ASoC: omap-mcbsp: Sidetone: Use
+ SIDLE bits in SYSCONFIG register to select noidle mode
+Date: Thu, 9 Aug 2012 10:15:39 -0500
+Message-ID: <5023D41B.7090104@ti.com>
+References: <1344417101-5015-1-git-send-email-peter.ujfalusi@ti.com>
+ <1344417101-5015-8-git-send-email-peter.ujfalusi@ti.com>
+ <5022E46A.4010909@ti.com> <5023614E.3030308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20120809103600.GI24328@opensource.wolfsonmicro.com>
+In-Reply-To: <5023614E.3030308@ti.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -26,77 +20,92 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: alsa-devel@alsa-project.org, Samuel Ortiz <sameo@linux.intel.com>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dtor@mail.ru>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2012 01:36 PM, Mark Brown wrote:
-> On Thu, Aug 09, 2012 at 01:18:50PM +0300, Peter Ujfalusi wrote:
->> On 08/08/2012 05:49 PM, Mark Brown wrote:
-> =
+Hi Peter,
 
->>> That makes sense if the GPIO is actively driven, open drain should be
->>> better here, but it's still a generic thing which it'd be nice to
->>> extract.
-> =
+On 08/09/2012 02:05 AM, Peter Ujfalusi wrote:
+> Hi Ricardo,
+>
+> On 08/09/2012 01:12 AM, Ricardo Neri wrote:
+>> Is this another case in which it is required to change the idle-mode on a
+>> per-use-case basis? In the past I was trying to do the same with HDMI [1]. In
+>> that case it was decided to add the HWMOD_SWSUP_SIDLE to hwmod data with the
+>> drawback of using no-idle/force-idle rather than smart-idle[2][3].
+>
+> This only concerns use case on OMAP3 when the sidetone is in use. In all other
+> use cases we want to use smart-idle (music playback, FM TX/RX, etc).
+> The main problem here is that the sidetone block have broken sidle line, it
+> can not prevent McBSP iclk to be gated.
+> The sidetone block is using the ICLK of the McBSP port (OMAP3 has ST block
+> attached to McBSP2 and 3 ports only).
 
->> To cover all of this in a generic way is not that straight forward IMHO.
-> =
+The situation was similar with HDMI. We need no-idle only when playing 
+audio and smart-idle in all other use cases. With HWMOD_SWSUP_SIDLE we 
+are in no-idle/force-idle all the time. :/
+>
+>
+>> [1] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg60226.html
+>> [2] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg70463.html
+>> [3] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg70653.html
+>>>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> ---
+>>>    sound/soc/omap/mcbsp.c |   18 ++++++++++++++----
+>>>    sound/soc/omap/mcbsp.h |    1 +
+>>>    2 files changed, 15 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/sound/soc/omap/mcbsp.c b/sound/soc/omap/mcbsp.c
+>>> index c870023..e008898 100644
+>>> --- a/sound/soc/omap/mcbsp.c
+>>> +++ b/sound/soc/omap/mcbsp.c
+>>> @@ -257,8 +257,15 @@ static void omap_st_on(struct omap_mcbsp *mcbsp)
+>>>    {
+>>>        unsigned int w;
+>>>
+>>> -    if (mcbsp->pdata->enable_st_clock)
+>>> -        mcbsp->pdata->enable_st_clock(mcbsp->id, 1);
+>>> +    /*
+>>> +     * Sidetone uses McBSP ICLK - which must not idle when sidetones
+>>> +     * are enabled or sidetones start sounding ugly.
+>>> +     */
+>>> +    w = MCBSP_READ(mcbsp, SYSCON);
+>>> +    mcbsp->st_data->mcbsp_sidle = (w >> 3) & 0x3;
+>>> +    w &= ~SIDLEMODE(0x3);
+>>> +    w |= SIDLEMODE(0x1);
+>>> +    MCBSP_WRITE(mcbsp, SYSCON, w);
+>>
+>> Wouldn't this create a mismatch between the SYSCONFIG register and McBSP
+>> omap_hwmod._sysc_cache?
+>
+> We modify the bits runtime (if the ST is enabled), after the hwmod already
+> configured the McBSP port to s-idle. We change the McBSP port's s-idle mode
+> back to it's original before pm_runtime_put().
+>
+> Previously we did the same thing in PRCM level which was as ugly as this
+> workaround with the penalty of a callback function to mach-omap2 since we can
+> only got access to PRCM register API there.
+>
+>> Perhaps this could be done with a future omap_hwmod API?
+>
+> But there's no such an API and I'm not aware any ongoing effort to have one.
+> Still the issue mostly remains since we need to modify other block's s-idle
+> mode. If sidetone block is enabled we need to change the McBSP port's s-idle
+> mode to no-idle.
 
-> The sequence is just:
-> =
+Would omap_hwmod_set_slave_idlemode make the workaround look less ugly? 
+In this case you are changing other block's idle-mode, though.
+>
+> In most of the use cases the McBSP need to be in smart-idle mode since it
+> provides significant power saving.
 
->   1. Enable mutes (at _PRE time)
->   2. Do whatever the device needs
->   3. Disable the mutes (at _POST time)
-> =
+Yes, I was just trying to use this case to justify the need of a driver 
+to be able to set the idle-mode for particular use cases. It would be 
+nice to be able to use an API (present or future) to set to no-idle if 
+required by a particular use-case and still be able to take advantage of 
+smart-idle in other use cases.
 
-> I'm not sure there's any reason for you not to use the internal mute
-> even if the external mute is present but if there is that's the only
-> thing that's weird here.  If there's no reason not to do it it just goes
-> into step 2 and then it's fine, even if there is you can make it
-> conditional in step 2.
-
-Not sure, but it should not cause issues. The PIN is multiplexed between
-GPIO6/PWM0/MUTE functionality.
-For that matter probably I could just don't care about flags here and
-configure the extmute (the internal one) all the time. Not sure, it has bee=
-n a
-long time I have dealt with the twl4030...
-
->> Sure I could do this:
->> hs_extmute: if only this is set we shall use the chip built in functiona=
-lity
->> hs_extmute_gpio: if this is set we use the extmute feature but with exte=
-rnal
->>                  GPIO.
-> =
-
->> But both need to be documented and supported.
-> =
-
-> Is there any actual case where an external mute is supplied via a
-> mechanism other than a GPIO, and if there is would it not either need
-> its own DT property or already need to interact with the driver from
-> code, making the DT property redundant?
-
-Not with my knowledge. The only board using it is the zoom2 upstream. I know
-other boards (not in upstream) which either uses the internal mute or GPIO.
-
-> My thinking here is that the
-> flag should be redundant because we already need to specify how we do
-> the mute, what I'd expect is that we activate the external mute
-> functionality as a result of being given another way of doing it so we
-> don't need to provide a flag.
-
-I perfectly understand your point. However how would you imagine this in th=
-e core?
-We should have something similar to DAPM_SUPPLY which we can attach to the
-widget which needs this sort of mute, but how big change we would need in t=
-he
-core to do this I'm not sure.
-I can take a look at this, but I would do it as a follow up series.
-
--- =
-
-P=E9ter
+Ricardo
+>
