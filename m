@@ -1,32 +1,34 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/3] mfd: twl6040: Add twl6040-gpio child
-Date: Thu, 9 Aug 2012 12:55:31 +0100
-Message-ID: <20120809115531.GB8474@sirena.org.uk>
-References: <1342603220-13287-1-git-send-email-peter.ujfalusi@ti.com>
- <1342603220-13287-3-git-send-email-peter.ujfalusi@ti.com>
- <CACRpkdZJcy5HOZkjMCVJW5beExoCHOBb=BiB4GOGR7sM+5Xsww@mail.gmail.com>
- <5016967D.2020104@ti.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: How to get the irq flags from the dts file
+Date: Thu, 9 Aug 2012 13:05:30 +0100
+Message-ID: <20120809120530.GC8474@sirena.org.uk>
+References: <1344509006.2295.148.camel@tegra-chromium-2>
+ <201208091148.42748.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5016967D.2020104@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sergio Aguirre <saaguirre@ti.com>, Linus Walleij <linus.walleij@stericsson.com>
+In-Reply-To: <201208091148.42748.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2012 at 05:13:17PM +0300, Peter Ujfalusi wrote:
+On Thu, Aug 09, 2012 at 11:48:42AM +0000, Arnd Bergmann wrote:
+> On Thursday 09 August 2012, Wei Ni wrote:
 
-> If the board needs the gpo driver, but in the driver(s) I need to check for
-> the existence of the "ti,twl6040-gpo" node and check if the status is "okay".
-> I think it is easier to just get the value of "ti,use-gpo", if it exist and it
-> is 1 I enable the GPIO driver otherwise I don't.
+> > The wlan driver wish this flags include the IRQF_TRGGER_* information,
+> > and it will use this flags to configure other hw settings. If it is
+> > wrong, the wlan can't work.
 
-Will having the GPIO driver actually cause any problems if it's not in
-use?  It's not like things like RTC which are directly visible to
-userspace and so can create problems if they're non-functional, unless
-it does something like grab resources that might be needed by another
-subfunction driver there's not really a substantial cost in just
-instantiating it (people who are really space pressured probably won't
-build the driver in in the first place).
+You can read the configuration with irqd_get_trigger_type() - see the OF
+code in sound/soc/codecs/wm8903.c for an example.
+
+> The driver should not need to know about thie flag. It gets read
+> by irq_create_of_mapping when calling teh xlate function and
+> gets set using irq_set_irq_type from there too.
+
+That only helps the interrupt controller, it doesn't help the interrupt
+source.  A good proportion of embedded devices have a great deal of
+flexibility in how they signal interrupts so they need to know what mode
+to pick.
