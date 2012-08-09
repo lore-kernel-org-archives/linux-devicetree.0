@@ -1,53 +1,28 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/8] of/irq: Create stub for of_irq_find_parent when !CONFIG_OF
-Date: Thu, 09 Aug 2012 11:20:54 -0500
-Message-ID: <5023E366.9010603@gmail.com>
-References: <1344527635-6163-1-git-send-email-lee.jones@linaro.org> <1344527635-6163-2-git-send-email-lee.jones@linaro.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V3] regulator: tps6586x: add support for SYS rail
+Date: Thu, 09 Aug 2012 11:10:58 -0600
+Message-ID: <5023EF22.8010206@wwwdotorg.org>
+References: <1344152518-29378-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1344527635-6163-2-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@stericsson.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, STEricsson_nomadik_linux@list.st.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1344152518-29378-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2012 10:53 AM, Lee Jones wrote:
-> of_irq_find_parent is a handy function to use outside the confines of
-> the Open Firmware subsystem. One such use-case is when the IRQ Domain
-> wishes to find an IRQ domain for a given device node. Currently it can
-> not take any notice of the 'interrupt-parent' property. Instead it
-> just uses the first IRQ controller as it climbs the Device Tree. If
-> we were to use this as a precursor the resultant controller is more
-> likely to be correct.
+On 08/05/2012 01:41 AM, Laxman Dewangan wrote:
+> Device have SYS rail which is always ON. It is system
+> power bus. LDO5 and LDO_RTC get powered through this rail
+> internally. Add support for this rail and make the
+> LDO5/LDO_RTC input supply to "sys".
+> Update document accordingly.
 
-Where are you using this? I don't have all the patches in the series.
+Sorry to bug people, but is everyone OK with this patch? I'm holding off
+checking in the Tegra-side device tree changes that add regulators until
+this patch is checked in (or at least approved) to make sure the Tegra
+.dts patches don't need any more changes.
 
-Rob
-
-> 
-> CC: Rob Herring <rob.herring@calxeda.com>
-> CC: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  include/linux/of_irq.h |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 1717cd9..b8e2411 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -83,6 +83,11 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
->  {
->  	return 0;
->  }
-> +
-> +static inline void *of_irq_find_parent(struct device_node *child)
-> +{
-> +	return NULL;
-> +}
->  #endif /* !CONFIG_OF */
->  
->  #endif /* __OF_IRQ_H */
-> 
+Thanks.
