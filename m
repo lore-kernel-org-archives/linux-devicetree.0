@@ -1,85 +1,34 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Thu, 9 Aug 2012 08:27:57 +0200
-Message-ID: <20120809062757.GA3151@avionic-0098.mockup.avionic-design.de>
-References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
- <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
- <20120730074714.GC15245@avionic-0098.mockup.avionic-design.de>
- <CACRpkdbrdWw_HR91r72aB_S2+vxiaSBKHwW+Tsmi8pKk9VsgFg@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: OMAP: Configuring CONTROL_DEVCONF0 register via DT with pinctrl
+Date: Wed, 8 Aug 2012 23:36:13 -0700
+Message-ID: <20120809063612.GL11011@atomide.com>
+References: <501262B5.1080004@ti.com>
+ <20120807111041.GY11011@atomide.com>
+ <5022532C.9060804@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbrdWw_HR91r72aB_S2+vxiaSBKHwW+Tsmi8pKk9VsgFg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, Rob Herring <rob.herring@calxeda.com>, Wolfram Sang <w.sang@pengutronix.de>
+In-Reply-To: <5022532C.9060804@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: linux-omap <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [120808 04:53]:
+> On 08/07/2012 02:10 PM, Tony Lindgren wrote:
+> > You need to also consider that CONTROL_DEVCONF0 has the MMC/SDIO module input
+> > clock selection. So pinctrl-single binding would have to be expanded to also
+> > support one-bit-per-mux type registers in addition to one-register-per-mux
+> > registers. And then this could also be used for the MMC/SDIO module input clock.
+> 
+> Or if the clock selection for MMC/SDIO also static on a board we can just do
+> the mux config once, configuring McBSP1 and MMC/SDIO at the same time?
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Although the DEVCONF0 and 1 seem static, at least with pinctrl framework we
+can keep it dynamic if needed and we're not relying on buggy bootloaders to
+set it up.
 
-On Sun, Aug 05, 2012 at 12:50:54PM +0200, Linus Walleij wrote:
-> On Mon, Jul 30, 2012 at 9:47 AM, Thierry Reding
-> <thierry.reding@avionic-design.de> wrote:
-> > On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
-> >> On Mon, Jul 23, 2012 at 1:59 PM, Thierry Reding
-> >> <thierry.reding@avionic-design.de> wrote:
->=20
-> >> > +- interrupt-controller: Marks the device as an interrupt controller.
-> >> > +- nr-gpios: The number of pins supported by the controller.
-> >>
-> >> These two last things look very generic, like something every GPIO
-> >> driver could want to expose.
-> >
-> > As Arnd mentioned, interrupt-controller is a generic property required
-> > by all interrupt controller nodes. Perhaps it shouldn't be listed in the
-> > DT binding for this driver.
->=20
-> After reading Rob's etc comments I think nr-gpios should be in this
-> binding, but interrupt-controller seems like it should go into
-> Documentation/devicetree/bindings/gpio/gpio.txt
-> can you take care of this?
->=20
-> (Anyone agains, beat me up...)
+Regards,
 
-Perhaps this should go into some more generic document (perhaps
-something like Documentation/devicetree/bindings/interrupts.txt) to
-describe the common properties for interrupt controllers and refer to
-that document in bindings that use them.
-
-It might be good to document the #interrupt-cells property as well, with
-the common meaning as defined by the various irq_domain_ops.xlate()
-callbacks.
-
-Do you want me to replace occurrences of this in other binding documents
-by a reference to the new document while I'm at it?
-
-Thierry
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQI1htAAoJEN0jrNd/PrOhp7MP/jTWKrSg9b+Bj9Xcs6fTR2y9
-OBjcNoH7RVr0lpL9n8y2K31CIFkppB4GJeIBrcpYUp6Mfh/rxYSMZTtbvr75yngb
-tktikjE9q8k8iTTvh4zMi1zE94VK4frhyYDkJzfWtP9VKmQ6AuYcVcUTHpvUClid
-h/tIcLhooOvbDuhDeU12uiX9YHXHAm6rH6PuWo6XSYkTgHNVWBxYYHehkVmvmg3U
-TRoXWdwE8dJEJqT5QnEZReb/6qeLL1gCmiXCnN3yE+uBIYaPzBw7qvad3xDU8Grw
-iaewm7Nxe97eGU67azC3ZP5+XDDURlW+vwCa5T8Ox6toO7rBeB1gd64zUnyfdFyE
-RdrNVV+XEPXn9F7N9JAviVl1Kb96gXheCNApv87Zf0Eq4aJ6a4SVEqbDAxQkMfKP
-x9odgbnx54oHKI7ScfakNJ2iNGlcMPzZh1+C+dK1wFf8t5nIJ3K6rWjXdgfNOTq9
-QH428WFJ6mUhvulZWdg/RhYCs2jqMiQSfUQm7GlNSyEmRBRX6qi2BQPsCEh9cFHi
-1eStde60I7jfXUdXlC21tDeQ/VBWZI6jprZbBt2nPamvJNsIrnu+o7CjQAqj7Umu
-kcWKixfOw6vdQQNzpzImO2tPzhtvPs2Mi04ayXe4Zmx/M/yvx2YJttjboRqLMZlc
-voxNQK1GAi7l+FRy/QPm
-=lzOn
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+Tony
