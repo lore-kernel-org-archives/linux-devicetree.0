@@ -1,44 +1,34 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: How to get the irq flags from the dts file
-Date: Thu, 9 Aug 2012 18:43:26 +0800
-Message-ID: <1344509006.2295.148.camel@tegra-chromium-2>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 3/4] regulator: add a new API
+ regulator_set_voltage_tol()
+Date: Thu, 9 Aug 2012 11:53:50 +0100
+Message-ID: <20120809105349.GL24328@opensource.wolfsonmicro.com>
+References: <1344179121-17738-1-git-send-email-shawn.guo@linaro.org>
+ <1344179121-17738-4-git-send-email-shawn.guo@linaro.org>
+ <20120808133540.GB16861@opensource.wolfsonmicro.com>
+ <20120808143004.GB14718@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120808143004.GB14718@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Shilimkar Santosh <santosh.shilimkar@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, all
-I'm working on tegra wlan upstream issue.
-The tegra board use the Broadcom 4329 as wlan device, and the driver is
-the brcmfmac. 
+On Wed, Aug 08, 2012 at 10:30:07PM +0800, Shawn Guo wrote:
+> On Wed, Aug 08, 2012 at 02:35:40PM +0100, Mark Brown wrote:
 
-This wlan driver support out-band-interrupt (OOB), I want to add DT
-support to use this OOB.
-I can add following lines in the dts file to create platform device and
-pass the interrupt resource to the driver.
+> > Applied, thanks!  It's on a separate branch so can easily be either
+> > applied somewhere else or merged into another tree if required for
+> > dependencies, just let me know.
 
-wlan {
-        compatible = "broadcome, brcmf_sdio_pd";
-        interrupt-parten = <&gpio>;
-        interrupts = <144, 0x04>; /* IRQF_TRIGGER_HIGH */
-};
+> I intended to have the whole series go via cpufreq tree with your ack
+> on this patch.  But I could also ask Rafael to merge your branch to
+> resolve the dependency.
 
-In the wlan driver, it will use platform_get_resource() to get the
-res->irq, res->flags, the irq number is right, but the flags will be
-IORESOURCE_IRQ, not the 0x04 (IRQF_TRIGGER_HIGH).
-The wlan driver wish this flags include the IRQF_TRGGER_* information,
-and it will use this flags to configure other hw settings. If it is
-wrong, the wlan can't work.
-
-I checked drivers/of/irq.c, in function of_irq_to_resource(), it will
-set r->flags = IORESOURCE_IRQ directly, not read the flags from the dtb
-file. And I didn't find any of_xx api to get this flags.
-
-How can I get this flags, does anyone has suggestion?
-
-Thanks.
-Wei.
+I anticipate wanting the new API in other trees too (I have one likely
+use in mind) so having it only in the cpufreq tree would be inconvenient.
+The whole reason to have this in the regulator API is that it's
+something that's useful outside your cpufreq code!
