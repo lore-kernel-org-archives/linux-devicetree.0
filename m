@@ -1,53 +1,71 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/8] of/irq: Create stub for of_irq_find_parent when !CONFIG_OF
-Date: Thu, 09 Aug 2012 14:53:23 -0500
-Message-ID: <50241533.3080709@gmail.com>
-References: <1344527635-6163-1-git-send-email-lee.jones@linaro.org> <1344527635-6163-2-git-send-email-lee.jones@linaro.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
+Date: Thu, 9 Aug 2012 22:20:54 +0200
+Message-ID: <20120809202054.GA24503@avionic-0098.mockup.avionic-design.de>
+References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
+ <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1344527635-6163-2-git-send-email-lee.jones@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@stericsson.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, Rob Herring <rob.herring@calxeda.com>, STEricsson_nomadik_linux@list.st.com
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, Rob Herring <rob.herring@calxeda.com>, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2012 10:53 AM, Lee Jones wrote:
-> of_irq_find_parent is a handy function to use outside the confines of
-> the Open Firmware subsystem. One such use-case is when the IRQ Domain
-> wishes to find an IRQ domain for a given device node. Currently it can
-> not take any notice of the 'interrupt-parent' property. Instead it
-> just uses the first IRQ controller as it climbs the Device Tree. If
-> we were to use this as a precursor the resultant controller is more
-> likely to be correct.
-> 
-> CC: Rob Herring <rob.herring@calxeda.com>
-> CC: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
+> On Mon, Jul 23, 2012 at 1:59 PM, Thierry Reding
+> <thierry.reding@avionic-design.de> wrote:
+> > +static __devinit int adnp_i2c_probe(struct i2c_client *client,
+> > +                                   const struct i2c_device_id *id)
+> > +{
+> > +       struct adnp *gpio;
+> > +       u32 num_gpios;
+> > +       int err;
+> > +
+> > +       err =3D of_property_read_u32(client->dev.of_node, "nr-gpios",
+> > +                                  &num_gpios);
+> > +       if (err < 0)
+> > +               return err;
+> > +
+> > +       client->irq =3D irq_of_parse_and_map(client->dev.of_node, 0);
+> > +       if (client->irq =3D=3D NO_IRQ)
+>=20
+> Just if (!client->irq) since NO_IRQ is 0 nowadays.
 
-> ---
->  include/linux/of_irq.h |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 1717cd9..b8e2411 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -83,6 +83,11 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
->  {
->  	return 0;
->  }
-> +
-> +static inline void *of_irq_find_parent(struct device_node *child)
-> +{
-> +	return NULL;
-> +}
->  #endif /* !CONFIG_OF */
->  
->  #endif /* __OF_IRQ_H */
-> 
+At the risk of seeming pedantic, NO_IRQ is in fact quite often not 0.
+However, irq_of_parse_and_map() returns 0 if the interrupt cannot be
+parsed or mapped, so checking for !client->irq is, as you say, correct.
+
+Thierry
+
+--5vNYLRcllDrimb99
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQJBumAAoJEN0jrNd/PrOh1y0P/irlDC0+1fDn0uL2BEKwhQKj
+R2vI9jIpAzWSifYnqSJ8ivrC3//pmP1ggrPYB/fpo+BHhodPmxTqhP7dTSGMKiL3
+uycQXTfHY6FgqWpziYzLCOdcisTDmseqTDzCU87CKFDQzWOU/wZX2WsHS1Z/hByN
+D464xLzbWi6Yhzbiu0nWhhHLKwasjo38r7/eU1WxucH7Z/74xZF8Y6rEh/GXDvER
+Mk72xcVkdI15jdr5gGgg7aFlwBuXQdhZrbFnX9Om4KovV2ia+B9TpfxE0BMerDFV
+Gonr8caeyd6qxBuSWP1qptYmpW9Zz5q0AsIPOr0ryTB00PxgBj7dEhv3uqwZMgtJ
+SmpKQchTdDulg5Avl1nGIC6IFkAnNi/5ciA6mF6GNn6xbXlSEoPPehfEs2G2r78B
+zD1eUFjbN5+jD4gWm7yqloMgr7g7XgHQ9ro6Dd+b/Za1P/tQY4MDpSp5Cno4Lnt2
+B0C4p9mDUl30yr8yyHVRyF8Ng7ebDfqv/latmMuQNyQZcihlQriIAQ9ZBrTftJG1
+5YgHtzqytppF9JlO/JQayqewWQ4tNG0ooM+OORagiUDpU7He7rPtlDN0BBkMHPbg
+kaxhtzIRIbZeocfoUymSeLw8d9U5HoQkXdZtKxO5b0thrnki2WxFvHrTO8nlr6QH
+z6B3rW8luv8dhoOPJZv/
+=gTxF
+-----END PGP SIGNATURE-----
+
+--5vNYLRcllDrimb99--
