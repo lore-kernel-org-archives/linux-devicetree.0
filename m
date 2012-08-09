@@ -1,41 +1,29 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 2/3] mfd: twl6040: Add twl6040-gpio child
-Date: Thu, 09 Aug 2012 15:10:22 +0300
-Message-ID: <5023A8AE.5050300@ti.com>
-References: <1342603220-13287-1-git-send-email-peter.ujfalusi@ti.com> <1342603220-13287-3-git-send-email-peter.ujfalusi@ti.com> <CACRpkdZJcy5HOZkjMCVJW5beExoCHOBb=BiB4GOGR7sM+5Xsww@mail.gmail.com> <5016967D.2020104@ti.com> <20120809115531.GB8474@sirena.org.uk>
+From: Igor Grinberg <grinberg@compulab.co.il>
+Subject: Re: [PATCH 3/4] ARM: OMAP3: Switch to use the unified audio driver
+ (omap-twl4030) for selected boards
+Date: Thu, 09 Aug 2012 16:12:13 +0300
+Message-ID: <5023B72D.9030005@compulab.co.il>
+References: <1344419650-5389-1-git-send-email-peter.ujfalusi@ti.com> <1344419650-5389-4-git-send-email-peter.ujfalusi@ti.com> <50225A84.5010008@compulab.co.il> <50225BB5.3000407@ti.com> <50226444.4060100@compulab.co.il> <50238F37.2030302@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120809115531.GB8474@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sergio Aguirre <saaguirre@ti.com>, Linus Walleij <linus.walleij@stericsson.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50238F37.2030302@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Steve Sakoman <steve@sakoman.com>, Anuj Aggarwal <anuj.aggarwal@ti.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2012 02:55 PM, Mark Brown wrote:
-> On Mon, Jul 30, 2012 at 05:13:17PM +0300, Peter Ujfalusi wrote:
->=20
->> If the board needs the gpo driver, but in the driver(s) I need to ch=
-eck for
->> the existence of the "ti,twl6040-gpo" node and check if the status i=
-s "okay".
->> I think it is easier to just get the value of "ti,use-gpo", if it ex=
-ist and it
->> is 1 I enable the GPIO driver otherwise I don't.
->=20
-> Will having the GPIO driver actually cause any problems if it's not i=
-n
-> use?  It's not like things like RTC which are directly visible to
-> userspace and so can create problems if they're non-functional, unles=
-s
-> it does something like grab resources that might be needed by another
-> subfunction driver there's not really a substantial cost in just
-> instantiating it (people who are really space pressured probably won'=
-t
-> build the driver in in the first place).
+On 08/09/12 13:21, Peter Ujfalusi wrote:
+> On 08/08/2012 04:06 PM, Igor Grinberg wrote:
+>> Well, yes I know we will need to adjust the user space.
+>> I wanted to change that for a long time and did not get to it...
+>> Now, with your patches, it seems like the best time for doing this.
+> 
+> Done for the v2. You will have card named "cm-t3x".
 
-=46air enough, I'll make the change for the v2.
+Thanks!
 
---=20
-P=E9ter
+-- 
+Regards,
+Igor.
