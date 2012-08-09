@@ -1,43 +1,84 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: How to get the irq flags from the dts file
-Date: Thu, 9 Aug 2012 11:48:42 +0000
-Message-ID: <201208091148.42748.arnd@arndb.de>
-References: <1344509006.2295.148.camel@tegra-chromium-2>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2] usb: gadget: composite: parse dt values
+Date: Thu, 9 Aug 2012 14:49:02 +0300
+Message-ID: <20120809114901.GV12174@arwen.pp.htv.fi>
+References: <1343135720-26559-1-git-send-email-aletes.xgr@gmail.com>
+ <20120809114242.GA4689@breakpoint.cc>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1344509006.2295.148.camel@tegra-chromium-2>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iytlPraCFSCqrfnM"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120809114242.GA4689@breakpoint.cc>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Nazarewicz <mina86@mina86.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 August 2012, Wei Ni wrote:
-> In the wlan driver, it will use platform_get_resource() to get the
-> res->irq, res->flags, the irq number is right, but the flags will be
-> IORESOURCE_IRQ, not the 0x04 (IRQF_TRIGGER_HIGH).
-> The wlan driver wish this flags include the IRQF_TRGGER_* information,
-> and it will use this flags to configure other hw settings. If it is
-> wrong, the wlan can't work.
-> 
-> I checked drivers/of/irq.c, in function of_irq_to_resource(), it will
-> set r->flags = IORESOURCE_IRQ directly, not read the flags from the dtb
-> file. And I didn't find any of_xx api to get this flags.
-> 
-> How can I get this flags, does anyone has suggestion?
 
-The driver should not need to know about thie flag. It gets read
-by irq_create_of_mapping when calling teh xlate function and
-gets set using irq_set_irq_type from there too.
+--iytlPraCFSCqrfnM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Arnd
+Hi,
+
+On Thu, Aug 09, 2012 at 01:42:42PM +0200, Sebastian Andrzej Siewior wrote:
+> On Tue, Jul 24, 2012 at 10:15:20AM -0300, Alexandre Pereira da Silva wrot=
+e:
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/gadget.txt
+> > @@ -0,0 +1,20 @@
+> > +Usb Gadget DeviceTree bindings
+> > +
+> > +These optional properties inside the usb device controller node are us=
+ed to
+> > +change some of the gadget drivers configuration:
+> > +- vendor-id: Usb vendor id
+> > +- product-id: Usb product id
+> > +- release: Version of this device
+> > +- vendor: Textual description of the vendor
+> > +- device: Textual description of this device
+> > +- serial: Textual representation of the device's serial number
+> > +
+> > +Binding Example:
+> > +	usbd@31020000 {
+> > +		vendor-id =3D <0x0525>;
+> > +		product-id =3D <0xa4a6>;
+> > +		release =3D <1>;
+> > +		vendor =3D "Some Corp";
+> > +		device =3D "Test Device";
+> > +		serial =3D "12345";
+
+on top of everything Sebastian said, I think we should stick to the
+field names set forth on the USB specification meaning that instead of
+vendor-id we should use idVendor, instead of vendor we should use
+iManufacturer, and so on.
+
+--=20
+balbi
+
+--iytlPraCFSCqrfnM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQI6OsAAoJEIaOsuA1yqREiFMQAJ3Mp6FHOV9tBsDWhdTXTO/s
+8Jly2fYs8rH7JBqJNvyCw9mPNuKQUxRxUgW6cRM5XbScG21QMkOvo+y1gxYWjzhI
+iWhgoRTODPeyaE1L/c4vUlWoNTWpET6BeS3MRv9vYRVFHSlf6nP8+suF5nlM87sC
+TLuzXfXJdUdLC7gwQaczxfsFBAk3rd2MIBtZt4cMDHx7fgqgrbpMXoxTcKlpzH69
+9pLk4b/OcdRxassEv5Hwgu4f5wgUoaSNF3HzhM7nT1ruXL2jTAV2h3ydUV540+IJ
+nzy8RMvbpUpfCvhPqwvrfvjK5BcAQgTTihPq33XEpJiWIDeAmdJpnhkiyqkxEFcJ
+DD709eLhgFbeulWQ0G+k8UhOxHiJlNNcjjB+R6/0xNDrM5ODjsYQx2qg8I6f5m3H
+pFORORod9zysVO7DX6DvJVL8WdpRw5jDyCR0GvIpg0Uo/BMZ8JjWXTAaUMF16KWu
+4ugn+1ST0/wtUU2u7RaVcupni+XKMIgQXjZQRv6bC/siLv+Gxj4hBWhCNBU5Ers0
+v3FkFzBIEsCNNgVdh4DQC/f0XTs2XJQ3Q8iHFLLb/M8iHcD3yH3RsTnlzissIfn+
+uvthC20fM4eE/umxpgBf14wrDAM8rn5ZbDH3v3czuC7g2c60ec9NI744m8gCPKYp
+mWOyi0hqqqBDFb9LDFwQ
+=m9Ux
+-----END PGP SIGNATURE-----
+
+--iytlPraCFSCqrfnM--
