@@ -1,103 +1,58 @@
-From: Ricardo Neri <ricardo.neri@ti.com>
-Subject: Re: [PATCH 07/11] ASoC: omap-mcbsp: Sidetone: Use
- SIDLE bits in SYSCONFIG register to select noidle mode
-Date: Wed, 8 Aug 2012 17:12:58 -0500
-Message-ID: <5022E46A.4010909@ti.com>
-References: <1344417101-5015-1-git-send-email-peter.ujfalusi@ti.com>
- <1344417101-5015-8-git-send-email-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1344417101-5015-8-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: [PATCHv2 2/8] rtc: vt8500: Add devicetree support for vt8500-rtc
+Date: Thu,  9 Aug 2012 13:54:54 +1200
+Message-ID: <1344477300-25251-3-git-send-email-linux@prisktech.co.nz>
+References: <1344477300-25251-1-git-send-email-linux@prisktech.co.nz>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1344477300-25251-1-git-send-email-linux@prisktech.co.nz>
+Sender: linux-serial-owner@vger.kernel.org
+To: vt8500-wm8505-linux-kernel@googlegroups.com
+Cc: Tony Prisk <linux@prisktech.co.nz>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Alessandro Zummo <a.zummo@towertech.it>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Hauke Mehrtens <hauke@hauke-m.de>, Felipe Balbi <balbi@ti.com>, Neil Zhang <zhangwm@marvell.com>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Rob Landley <rob@landley.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, Eric Andersson <eric.andersson@unixphere.com>, Linus Walleij <linus.walleij@stericsson.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, rtc-linux@
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/2012 04:11 AM, Peter Ujfalusi wrote:
-> Instead of the callback (which modifies control module register) use the
-> McBSP module's SYSCONFIG register to disable smart-idle mode when the
-> sidetone is enabled.
-> Store the original SIDLEMODE configuration and restore it when the sidetone
-> has been disabled.
+Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+---
+ drivers/rtc/rtc-vt8500.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Is this another case in which it is required to change the idle-mode on 
-a per-use-case basis? In the past I was trying to do the same with HDMI 
-[1]. In that case it was decided to add the HWMOD_SWSUP_SIDLE to hwmod 
-data with the drawback of using no-idle/force-idle rather than 
-smart-idle[2][3].
+diff --git a/drivers/rtc/rtc-vt8500.c b/drivers/rtc/rtc-vt8500.c
+index 9e94fb1..07bf193 100644
+--- a/drivers/rtc/rtc-vt8500.c
++++ b/drivers/rtc/rtc-vt8500.c
+@@ -23,6 +23,7 @@
+ #include <linux/bcd.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
+ 
+ /*
+  * Register definitions
+@@ -302,12 +303,18 @@ static int __devexit vt8500_rtc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id wmt_dt_ids[] = {
++	{ .compatible = "via,vt8500-rtc", },
++	{}
++};
++
+ static struct platform_driver vt8500_rtc_driver = {
+ 	.probe		= vt8500_rtc_probe,
+ 	.remove		= __devexit_p(vt8500_rtc_remove),
+ 	.driver		= {
+ 		.name	= "vt8500-rtc",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(wmt_dt_ids),
+ 	},
+ };
+ 
+@@ -315,5 +322,5 @@ module_platform_driver(vt8500_rtc_driver);
+ 
+ MODULE_AUTHOR("Alexey Charkov <alchark@gmail.com>");
+ MODULE_DESCRIPTION("VIA VT8500 SoC Realtime Clock Driver (RTC)");
+-MODULE_LICENSE("GPL");
++MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("platform:vt8500-rtc");
+-- 
+1.7.9.5
 
-[1] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg60226.html
-[2] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg70463.html
-[3] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg70653.html
->
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->   sound/soc/omap/mcbsp.c |   18 ++++++++++++++----
->   sound/soc/omap/mcbsp.h |    1 +
->   2 files changed, 15 insertions(+), 4 deletions(-)
->
-> diff --git a/sound/soc/omap/mcbsp.c b/sound/soc/omap/mcbsp.c
-> index c870023..e008898 100644
-> --- a/sound/soc/omap/mcbsp.c
-> +++ b/sound/soc/omap/mcbsp.c
-> @@ -257,8 +257,15 @@ static void omap_st_on(struct omap_mcbsp *mcbsp)
->   {
->   	unsigned int w;
->
-> -	if (mcbsp->pdata->enable_st_clock)
-> -		mcbsp->pdata->enable_st_clock(mcbsp->id, 1);
-> +	/*
-> +	 * Sidetone uses McBSP ICLK - which must not idle when sidetones
-> +	 * are enabled or sidetones start sounding ugly.
-> +	 */
-> +	w = MCBSP_READ(mcbsp, SYSCON);
-> +	mcbsp->st_data->mcbsp_sidle = (w >> 3) & 0x3;
-> +	w &= ~SIDLEMODE(0x3);
-> +	w |= SIDLEMODE(0x1);
-> +	MCBSP_WRITE(mcbsp, SYSCON, w);
-
-Wouldn't this create a mismatch between the SYSCONFIG register and McBSP 
-omap_hwmod._sysc_cache? Perhaps this could be done with a future 
-omap_hwmod API?
-
-Ricardo
->
->   	/* Enable McBSP Sidetone */
->   	w = MCBSP_READ(mcbsp, SSELCR);
-> @@ -279,8 +286,11 @@ static void omap_st_off(struct omap_mcbsp *mcbsp)
->   	w = MCBSP_READ(mcbsp, SSELCR);
->   	MCBSP_WRITE(mcbsp, SSELCR, w & ~(SIDETONEEN));
->
-> -	if (mcbsp->pdata->enable_st_clock)
-> -		mcbsp->pdata->enable_st_clock(mcbsp->id, 0);
-> +	/* Restore the SIDLEMODE as it was before the ST has been started */
-> +	w = MCBSP_READ(mcbsp, SYSCON);
-> +	w &= ~SIDLEMODE(0x3);
-> +	w |= SIDLEMODE(mcbsp->st_data->mcbsp_sidle);
-> +	MCBSP_WRITE(mcbsp, SYSCON, w);
->   }
->
->   static void omap_st_fir_write(struct omap_mcbsp *mcbsp, s16 *fir)
-> diff --git a/sound/soc/omap/mcbsp.h b/sound/soc/omap/mcbsp.h
-> index 49a6725..ba82846 100644
-> --- a/sound/soc/omap/mcbsp.h
-> +++ b/sound/soc/omap/mcbsp.h
-> @@ -280,6 +280,7 @@ struct omap_mcbsp_st_data {
->   	int nr_taps;	/* Number of filter coefficients in use */
->   	s16 ch0gain;
->   	s16 ch1gain;
-> +	unsigned int mcbsp_sidle;
->   };
->
->   struct omap_mcbsp {
->
