@@ -1,74 +1,126 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 08/11] ARM: OMAP3: Remove callback for
- McBSP sidetone ICLK workaround
-Date: Fri, 10 Aug 2012 18:39:11 +0300
-Message-ID: <50252B1F.2040107@ti.com>
-References: <1344417101-5015-1-git-send-email-peter.ujfalusi@ti.com>
- <1344417101-5015-9-git-send-email-peter.ujfalusi@ti.com>
- <502268B1.9040506@bitmer.com> <50227104.3040506@ti.com>
- <502505D4.2030308@bitmer.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
+Date: Fri, 10 Aug 2012 14:21:45 -0500
+Message-ID: <50255F49.5050500@freescale.com>
+References: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <502505D4.2030308@bitmer.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jarkko Nikula <jarkko.nikula@bitmer.com>
-Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1344578002-8057-1-git-send-email-Dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kumar.gala-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jarkko,
+On 08/10/2012 12:53 AM, Dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> From: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Add a description of the OPEN-PIC global timer in the OPEN-PIC document.
+> 
+> Moidfy mpic-timer document. 1.Add a TFRR register region. This register
+> is written by software to report the clocking frequency of the PIC timers.
+> 2.Add a device_type. The global timer in line with the OPEN-PIC specification.
+> 
+> Signed-off-by: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/open-pic.txt     |   46 ++++++++++++++++++++
+>  .../devicetree/bindings/powerpc/fsl/mpic-timer.txt |   21 +++++----
+>  arch/powerpc/boot/dts/fsl/pq3-mpic-timer-B.dtsi    |    7 ++-
+>  arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi            |    7 ++-
+>  4 files changed, 66 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/open-pic.txt b/Documentation/devicetree/bindings/open-pic.txt
+> index 909a902..045c2e9 100644
+> --- a/Documentation/devicetree/bindings/open-pic.txt
+> +++ b/Documentation/devicetree/bindings/open-pic.txt
+> @@ -92,6 +92,52 @@ Example 2:
+>  
+>  * References
+>  
+> +* Open PIC global timers
+> +
+> +Required properties:
+> +- compatible: "open-pic,global-timer"
 
-On 08/10/2012 04:00 PM, Jarkko Nikula wrote:
-> I got some odd current consumption results from Beagle to really compare
-> different kernel versions but I was able get sensible results from N900.
+open-pic isn't a vendor (or software project that acts like a
+pseudo-vendor) -- I'd go with "open-pic-global-timer".
 
-I still use my n900 as a main phone so I can not really hack on it :(
+> +- reg : Contains two regions.  The first is the timer frequency reporting
+> +  register for the group.  The second is the main timer register bank
+> +  (GTCCR, GTBCR, GTVPR, GTDR).
 
-> I tested your set on top of 196973c of sound.git.
-> =
+Why not just put clock-frequency in the node, instead of describing
+TFRR?  I don't think U-Boot currently sets TFRR.
 
-> First consumption when using threshold based transfer has remained the
-> same between 2.6.38-3.6.0-rc1 (wau!).
+> +- available-ranges: use <start count> style section to define which
+> +  timer interrupts can be used.  This property is optional; without this,
+> +  all timers within the group can be used.
+> +
+> +- interrupts: one interrupt per timer in the group, in order, starting
+> +  with timer zero.  If available-ranges is present, only the interrupts
+> +  that correspond to available timers shall be present.
+> +
+> +* Examples
+> +
+> +Example 1:
+> +
+> +	/* Note that this requires #interrupt-cells to be 4 */
+> +	timer: timer@010f0 {
 
-Cool!
+Unit addres shouldn't have leading zeroes.
 
-> Active sidetone under "arecord -f
-> dat >/dev/null |aplay -f dat /dev/zero" test increases consumption from
-> plain playback about 17 mA in 3.4 and 3.6.0-rc1.
-> =
+> +		compatible = "open-pic,global-timer";
+> +		device_type = "open-pic";
 
-> With your set applied consumption increases 28 mA when the sidetone is
-> active (i.e. +11 mA higher than on top of 196973c). Plain threshold
-> based playback remains still the same.
+Remove device_type.  Not only is it deprecated outside of real OF, it's
+wrong -- this isn't an openpic, it's just a subset of it.
 
-Oh. 11mA is huge... Really strange. I would expected smaller (actually zero)
-difference since in essence both workaround should be doing the same.
-Only if the OMAP pm core making different decisions runtime when it see that
-the no-idle is selected in the SYSCONFIG register of McBSP2. But the
-autogating of clocks should work without SW.
+> +		reg = <0x010f0 4 0x01100 0x100>;
+> +
+> +		/* Another AMP partition is using timer */
+> +		available-ranges = <2 2>;
+>
+> +
+> +		interrupts = <2 0 3 0
+> +		              3 0 3 0>;
+> +	};
+> +
+> +Example 2:
+> +
+> +	timer: timer@010f0 {
+> +		compatible = "open-pic,global-timer";
+> +		device_type = "open-pic";
+> +		reg = <0x010f0 4 0x01100 0x100>;
+> +		interrupts = <0 0 3 0
+> +			      1 0 3 0
+> +			      2 0 3 0
+> +		              3 0 3 0>;
+> +	};
 
-So it seams that we need to do this down at PRCM level?
+4-cell interrupt specifiers are specific to Freescale MPICs.  This means
+there's no way to describe the timer interrupt on a non-Freescale
+openpic.  Again, I suggest we not bother with this in the absence of an
+actual need to support the timer on non-Freescale openpic in partitioned
+scenarios.  The existing openpic node is sufficient to describe the
+hardware in the absence of partitioning.   We could have an
+"openpic-no-timer" property to indicate that we're describing it
+separately, so that the absence of a timer node isn't ambiguous as to
+whether it's an old tree or a partitioned scenario.  An fsl,mpic
+compatible would imply openpic-no-timer.
 
->> I'm doing the same test on BeagleBoard, but this thing does not want to =
-hit
->> retention despite all the effort :(
->>
-> Could it be display subsystem which keeps it active? At least on N900 I
-> need to get DSS drivers activated in order to be able to blank the
-> display after bootloader and thus be able to reach the retention idle.
+Note that I believe many of the non-Freescale openpic nodes are going to
+be found on systems with real Open Firmware, so we can't go changing the
+device tree for them.
 
-I tried that as well, but nothing helps. It must be something else which I
-have overlooked...
-
--- =
-
-P=E9ter
+-Scott
