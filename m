@@ -1,126 +1,59 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
-Date: Fri, 10 Aug 2012 14:21:45 -0500
-Message-ID: <50255F49.5050500@freescale.com>
-References: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] omap-am33xx rtc dt support
+Date: Sat, 11 Aug 2012 01:27:11 +0530
+Message-ID: <50256797.3020505@ti.com>
+References: <cover.1343383616.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1344578002-8057-1-git-send-email-Dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kumar.gala-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <cover.1343383616.git.afzal-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: khilman-l0cyMroinI0@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2012 12:53 AM, Dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 7/27/2012 5:53 PM, Afzal Mohammed wrote:
+> Hi,
 > 
-> Add a description of the OPEN-PIC global timer in the OPEN-PIC document.
+> This series makes rtc-omap driver DT capable, adds AM33xx
+> RTC DT support along with a few enchancments to the driver.
 > 
-> Moidfy mpic-timer document. 1.Add a TFRR register region. This register
-> is written by software to report the clocking frequency of the PIC timers.
-> 2.Add a device_type. The global timer in line with the OPEN-PIC specification.
+> rtc-omap driver is made intelligent enough to handle kicker
+> mechanism. This helps in removing kicker mechanism support
+> done for DaVinci at platform level.
 > 
-> Signed-off-by: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/open-pic.txt     |   46 ++++++++++++++++++++
->  .../devicetree/bindings/powerpc/fsl/mpic-timer.txt |   21 +++++----
->  arch/powerpc/boot/dts/fsl/pq3-mpic-timer-B.dtsi    |    7 ++-
->  arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi            |    7 ++-
->  4 files changed, 66 insertions(+), 15 deletions(-)
+> This has been tested on Beaglebone (AM33xx platform) and on
+> DaVinci DA850 EVM.
 > 
-> diff --git a/Documentation/devicetree/bindings/open-pic.txt b/Documentation/devicetree/bindings/open-pic.txt
-> index 909a902..045c2e9 100644
-> --- a/Documentation/devicetree/bindings/open-pic.txt
-> +++ b/Documentation/devicetree/bindings/open-pic.txt
-> @@ -92,6 +92,52 @@ Example 2:
->  
->  * References
->  
-> +* Open PIC global timers
-> +
-> +Required properties:
-> +- compatible: "open-pic,global-timer"
+> This series is based over linux-omap master and can be
+> directly applied over linux-next, except for
+> [PATCH 6/6] arm/dts: am33xx rtc node.
+> 
+> PATCH 6/6 should go through linux-omap tree and needs
+> http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg71644.html
+> (arm/dts: am33xx wdt node) to get applied cleanly
 
-open-pic isn't a vendor (or software project that acts like a
-pseudo-vendor) -- I'd go with "open-pic-global-timer".
+I tested patches 1-5 on AM18x EVM using rtcwake and hwclock commands.
+Also tested on DT enabled AM18x EVM using hwclock.
 
-> +- reg : Contains two regions.  The first is the timer frequency reporting
-> +  register for the group.  The second is the main timer register bank
-> +  (GTCCR, GTBCR, GTVPR, GTDR).
+For patched 1-5:
 
-Why not just put clock-frequency in the node, instead of describing
-TFRR?  I don't think U-Boot currently sets TFRR.
+Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 
-> +- available-ranges: use <start count> style section to define which
-> +  timer interrupts can be used.  This property is optional; without this,
-> +  all timers within the group can be used.
-> +
-> +- interrupts: one interrupt per timer in the group, in order, starting
-> +  with timer zero.  If available-ranges is present, only the interrupts
-> +  that correspond to available timers shall be present.
-> +
-> +* Examples
-> +
-> +Example 1:
-> +
-> +	/* Note that this requires #interrupt-cells to be 4 */
-> +	timer: timer@010f0 {
+Alessandro,
 
-Unit addres shouldn't have leading zeroes.
+I assume you would want me to queue 2/6 through DaVinci tree. That patch
+depends on 1/6 being accepted and merged by you. Let me know how you
+want to move forward here.
 
-> +		compatible = "open-pic,global-timer";
-> +		device_type = "open-pic";
-
-Remove device_type.  Not only is it deprecated outside of real OF, it's
-wrong -- this isn't an openpic, it's just a subset of it.
-
-> +		reg = <0x010f0 4 0x01100 0x100>;
-> +
-> +		/* Another AMP partition is using timer */
-> +		available-ranges = <2 2>;
->
-> +
-> +		interrupts = <2 0 3 0
-> +		              3 0 3 0>;
-> +	};
-> +
-> +Example 2:
-> +
-> +	timer: timer@010f0 {
-> +		compatible = "open-pic,global-timer";
-> +		device_type = "open-pic";
-> +		reg = <0x010f0 4 0x01100 0x100>;
-> +		interrupts = <0 0 3 0
-> +			      1 0 3 0
-> +			      2 0 3 0
-> +		              3 0 3 0>;
-> +	};
-
-4-cell interrupt specifiers are specific to Freescale MPICs.  This means
-there's no way to describe the timer interrupt on a non-Freescale
-openpic.  Again, I suggest we not bother with this in the absence of an
-actual need to support the timer on non-Freescale openpic in partitioned
-scenarios.  The existing openpic node is sufficient to describe the
-hardware in the absence of partitioning.   We could have an
-"openpic-no-timer" property to indicate that we're describing it
-separately, so that the absence of a timer node isn't ambiguous as to
-whether it's an old tree or a partitioned scenario.  An fsl,mpic
-compatible would imply openpic-no-timer.
-
-Note that I believe many of the non-Freescale openpic nodes are going to
-be found on systems with real Open Firmware, so we can't go changing the
-device tree for them.
-
--Scott
+Thanks,
+Sekhar
