@@ -1,114 +1,104 @@
-From: Praveen Paneri <p.paneri@samsung.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v3 0/5] usb: phy: samsung: Introducing usb phy driver for
  samsung SoCs
-Date: Fri, 10 Aug 2012 11:17:29 +0530
-Message-ID: <CAD6zSYP33PDrXwifQM=7q+Esk1X7m5+DNG_=A2a-qTENk4zq8w@mail.gmail.com>
+Date: Fri, 10 Aug 2012 09:16:17 +0300
+Message-ID: <20120810061616.GC1689@arwen.pp.htv.fi>
 References: <1344411661-17821-1-git-send-email-p.paneri@samsung.com>
  <502464FE.3000908@samsung.com>
+ <CAD6zSYP33PDrXwifQM=7q+Esk1X7m5+DNG_=A2a-qTENk4zq8w@mail.gmail.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <502464FE.3000908@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joonyoung Shim <jy0922.shim@samsung.com>
-Cc: l.majewski@samsung.com, kgene.kim@samsung.com, heiko@sntech.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8nsIa27JVQLqB7/C"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD6zSYP33PDrXwifQM=7q+Esk1X7m5+DNG_=A2a-qTENk4zq8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 10, 2012 at 7:03 AM, Joonyoung Shim <jy0922.shim@samsung.com> wrote:
-> Hi, Praveen.
->
->
-> On 08/08/2012 04:40 PM, Praveen Paneri wrote:
->>
->> Changes from v2:
->> Changed the driver filenames to samsung-usbphy
->> Changed 's3c' to 'samsung' for platform device as well as platform data
->> Moved platform data structure to a separate file
->> Rectified coding style related errors
->>
->> Changes from v1:
->> Rebased patches to latest usb-next branch
->> Changed the name 'sec_usbphy' to 'samsung_usbphy'
->>
->> This patch set introduces a phy driver for samsung SoCs. It uses the
->> existing
->> transceiver infrastructure to provide phy control functions. Use of this
->> driver
->> can be extended for usb host phy as well.
->
->
-> How can you support usb host phy? I cannot choose to use which phy when
-> call init or shutdown of phy at current phy framework.
-If you are talking about choosing between PHY0 (for device) and PHY1
-(for host), I think you can make use of the flags available in usb_phy
-to pass that information to phy driver and that can be handled there.
-This is just one way I have successfully implement two different phy
-control. There might be a better way to do that.
 
-Thanks
-Praveen
->
-> Thanks.
->
->> Over the period of time all the phy
->> related code for most of the samsung SoCs can be integrated here.
->> Removing the existing phy code from mach-s3c64xx. Same can be done for
->> other SoCs
->> when they start supporting this phy driver.
->> This driver is tested with smdk6410 and Exynos4210(with DT).
->>
->> Praveen Paneri (5):
->>    usb: phy: samsung: Introducing usb phy driver for hsotg
->>    usb: s3c-hsotg: Adding phy driver support
->>    ARM: S3C64XX: Removing old phy setup code
->>    ARM: S3C64XX: Enabling samsung-usbphy driver
->>    ARM: Exynos4210: Enabling samsung-usbphy driver
->>
->>   .../devicetree/bindings/usb/samsung-usbphy.txt     |    9 +
->>   arch/arm/boot/dts/exynos4210.dtsi                  |    5 +
->>   arch/arm/mach-exynos/include/mach/map.h            |    1 +
->>   arch/arm/mach-exynos/mach-exynos4-dt.c             |    8 +
->>   arch/arm/mach-exynos/setup-usb-phy.c               |   13 +
->>   arch/arm/mach-s3c64xx/include/mach/map.h           |    2 +
->>   arch/arm/mach-s3c64xx/mach-crag6410.c              |    7 +-
->>   arch/arm/mach-s3c64xx/mach-smartq.c                |    8 +-
->>   arch/arm/mach-s3c64xx/mach-smdk6410.c              |    7 +-
->>   arch/arm/mach-s3c64xx/setup-usb-phy.c              |   79 +----
->>   arch/arm/plat-samsung/devs.c                       |   33 ++
->>   arch/arm/plat-samsung/include/plat/devs.h          |    1 +
->>   arch/arm/plat-samsung/include/plat/usb-phy.h       |    1 +
->>   drivers/usb/gadget/s3c-hsotg.c                     |   40 ++-
->>   drivers/usb/phy/Kconfig                            |    8 +
->>   drivers/usb/phy/Makefile                           |    1 +
->>   drivers/usb/phy/samsung-usbphy.c                   |  355
->> ++++++++++++++++++++
->>   drivers/usb/phy/samsung-usbphy.h                   |   48 +++
->>   include/linux/platform_data/samsung-usbphy.h       |   27 ++
->>   19 files changed, 562 insertions(+), 91 deletions(-)
->>   create mode 100644
->> Documentation/devicetree/bindings/usb/samsung-usbphy.txt
->>   create mode 100644 drivers/usb/phy/samsung-usbphy.c
->>   create mode 100644 drivers/usb/phy/samsung-usbphy.h
->>   create mode 100644 include/linux/platform_data/samsung-usbphy.h
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
-> in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--8nsIa27JVQLqB7/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+HI,
+
+On Fri, Aug 10, 2012 at 11:17:29AM +0530, Praveen Paneri wrote:
+> On Fri, Aug 10, 2012 at 7:03 AM, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>=
+ wrote:
+> > Hi, Praveen.
+> >
+> >
+> > On 08/08/2012 04:40 PM, Praveen Paneri wrote:
+> >>
+> >> Changes from v2:
+> >> Changed the driver filenames to samsung-usbphy
+> >> Changed 's3c' to 'samsung' for platform device as well as platform data
+> >> Moved platform data structure to a separate file
+> >> Rectified coding style related errors
+> >>
+> >> Changes from v1:
+> >> Rebased patches to latest usb-next branch
+> >> Changed the name 'sec_usbphy' to 'samsung_usbphy'
+> >>
+> >> This patch set introduces a phy driver for samsung SoCs. It uses the
+> >> existing
+> >> transceiver infrastructure to provide phy control functions. Use of th=
+is
+> >> driver
+> >> can be extended for usb host phy as well.
+> >
+> >
+> > How can you support usb host phy? I cannot choose to use which phy when
+> > call init or shutdown of phy at current phy framework.
+
+correct. Curretly that's not supported. We are trying to come up with
+proper DeviceTree bindings to allow that. Kishon has been working on
+providing devm_usb_get_phy_by_phandle() would should help achieving what
+you need.
+
+> If you are talking about choosing between PHY0 (for device) and PHY1
+> (for host), I think you can make use of the flags available in usb_phy
+> to pass that information to phy driver and that can be handled there.
+
+I rather you didn't do it that way. Those flags are used to pass
+features to the PHY. See drivers/usb/otg/ulpi.c, for instance.
+
+> This is just one way I have successfully implement two different phy
+> control. There might be a better way to do that.
+
+I guess using DT phandles is the way to go here.
+
+--=20
+balbi
+
+--8nsIa27JVQLqB7/C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQJKcwAAoJEIaOsuA1yqREwpUP/jgZ9fCw+IKaJ5J8os0uf+/E
+eqn0E7/54jFF71MacEZdIm+5zhXUrDguz7WIcxFntkTg3q1/zfe33Z742gUMZ2FU
+UexuDuxG2lHna6fS6WVe/QKmf78cL23jJfhf9EBZJAbS1Nas2yvpJ2mwtWYeSN/I
+MrVZhP2YlMW5x5zRUyMpV3e57yAdo8TVcexvNGtxyZ7Qyc0kiD5LVOhKtyTVMqoJ
+ixTtppLH2yZPFb0cHOfs0m4gdeiuzVGOya8wHJUGkH3l+/AbmC34l9/77/Q8iFzH
+9xgkYY1dU37RABFyle9P3rCEKDnQq91889FCXSRdOsZZC1KQT1Qo6kB3XlHpTopj
+0HKRojQ/a4m07Rn25qVvkQ7V9Vu35AVwa1oeCiIaeuMYnWqo71nk71iNbbvLwh2Q
+87mflhhSNisDSJFYZGu41xoctWtCI6GLdqZIAwlawraXQkg9qH+yiuiaR+Ng+XLy
+1RMeVPGIk3zU9n3C17JqbpckL59bnCrVH2KbhwpGjZBIqO8nVLEU0i6RpsCtf3T1
+cQW7ZsjlCEQdZ7LKaYkarGawHSIl6Y8m73KTYzVyGrsMpPc5eNt4jPHa/AzlfNpS
+l2vW49Kr0Uy7FHLHjm1L+Co9Y6M7+NoTAI9hunIwfo1wCwzj4znCAJyt/stijiMO
+NGmQtRomFGyhhdHFTlxj
+=1O2f
+-----END PGP SIGNATURE-----
+
+--8nsIa27JVQLqB7/C--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
