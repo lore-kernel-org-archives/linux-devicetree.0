@@ -1,71 +1,82 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Thu, 9 Aug 2012 22:20:54 +0200
-Message-ID: <20120809202054.GA24503@avionic-0098.mockup.avionic-design.de>
-References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
- <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
+From: Joonyoung Shim <jy0922.shim@samsung.com>
+Subject: Re: [PATCH v3 0/5] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Fri, 10 Aug 2012 10:33:50 +0900
+Message-ID: <502464FE.3000908@samsung.com>
+References: <1344411661-17821-1-git-send-email-p.paneri@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, Rob Herring <rob.herring@calxeda.com>, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1344411661-17821-1-git-send-email-p.paneri@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Praveen Paneri <p.paneri@samsung.com>
+Cc: linux-usb@vger.kernel.org, l.majewski@samsung.com, kgene.kim@samsung.com, heiko@sntech.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, balbi@ti.com, grant.likely@secretlab.ca, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi, Praveen.
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 08/08/2012 04:40 PM, Praveen Paneri wrote:
+> Changes from v2:
+> Changed the driver filenames to samsung-usbphy
+> Changed 's3c' to 'samsung' for platform device as well as platform data
+> Moved platform data structure to a separate file
+> Rectified coding style related errors
+>
+> Changes from v1:
+> Rebased patches to latest usb-next branch
+> Changed the name 'sec_usbphy' to 'samsung_usbphy'
+>
+> This patch set introduces a phy driver for samsung SoCs. It uses the existing
+> transceiver infrastructure to provide phy control functions. Use of this driver
+> can be extended for usb host phy as well.
 
-On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
-> On Mon, Jul 23, 2012 at 1:59 PM, Thierry Reding
-> <thierry.reding@avionic-design.de> wrote:
-> > +static __devinit int adnp_i2c_probe(struct i2c_client *client,
-> > +                                   const struct i2c_device_id *id)
-> > +{
-> > +       struct adnp *gpio;
-> > +       u32 num_gpios;
-> > +       int err;
-> > +
-> > +       err =3D of_property_read_u32(client->dev.of_node, "nr-gpios",
-> > +                                  &num_gpios);
-> > +       if (err < 0)
-> > +               return err;
-> > +
-> > +       client->irq =3D irq_of_parse_and_map(client->dev.of_node, 0);
-> > +       if (client->irq =3D=3D NO_IRQ)
->=20
-> Just if (!client->irq) since NO_IRQ is 0 nowadays.
+How can you support usb host phy? I cannot choose to use which phy when
+call init or shutdown of phy at current phy framework.
 
-At the risk of seeming pedantic, NO_IRQ is in fact quite often not 0.
-However, irq_of_parse_and_map() returns 0 if the interrupt cannot be
-parsed or mapped, so checking for !client->irq is, as you say, correct.
+Thanks.
 
-Thierry
-
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQJBumAAoJEN0jrNd/PrOh1y0P/irlDC0+1fDn0uL2BEKwhQKj
-R2vI9jIpAzWSifYnqSJ8ivrC3//pmP1ggrPYB/fpo+BHhodPmxTqhP7dTSGMKiL3
-uycQXTfHY6FgqWpziYzLCOdcisTDmseqTDzCU87CKFDQzWOU/wZX2WsHS1Z/hByN
-D464xLzbWi6Yhzbiu0nWhhHLKwasjo38r7/eU1WxucH7Z/74xZF8Y6rEh/GXDvER
-Mk72xcVkdI15jdr5gGgg7aFlwBuXQdhZrbFnX9Om4KovV2ia+B9TpfxE0BMerDFV
-Gonr8caeyd6qxBuSWP1qptYmpW9Zz5q0AsIPOr0ryTB00PxgBj7dEhv3uqwZMgtJ
-SmpKQchTdDulg5Avl1nGIC6IFkAnNi/5ciA6mF6GNn6xbXlSEoPPehfEs2G2r78B
-zD1eUFjbN5+jD4gWm7yqloMgr7g7XgHQ9ro6Dd+b/Za1P/tQY4MDpSp5Cno4Lnt2
-B0C4p9mDUl30yr8yyHVRyF8Ng7ebDfqv/latmMuQNyQZcihlQriIAQ9ZBrTftJG1
-5YgHtzqytppF9JlO/JQayqewWQ4tNG0ooM+OORagiUDpU7He7rPtlDN0BBkMHPbg
-kaxhtzIRIbZeocfoUymSeLw8d9U5HoQkXdZtKxO5b0thrnki2WxFvHrTO8nlr6QH
-z6B3rW8luv8dhoOPJZv/
-=gTxF
------END PGP SIGNATURE-----
-
---5vNYLRcllDrimb99--
+> Over the period of time all the phy
+> related code for most of the samsung SoCs can be integrated here.
+> Removing the existing phy code from mach-s3c64xx. Same can be done for other SoCs
+> when they start supporting this phy driver.
+> This driver is tested with smdk6410 and Exynos4210(with DT).
+>
+> Praveen Paneri (5):
+>    usb: phy: samsung: Introducing usb phy driver for hsotg
+>    usb: s3c-hsotg: Adding phy driver support
+>    ARM: S3C64XX: Removing old phy setup code
+>    ARM: S3C64XX: Enabling samsung-usbphy driver
+>    ARM: Exynos4210: Enabling samsung-usbphy driver
+>
+>   .../devicetree/bindings/usb/samsung-usbphy.txt     |    9 +
+>   arch/arm/boot/dts/exynos4210.dtsi                  |    5 +
+>   arch/arm/mach-exynos/include/mach/map.h            |    1 +
+>   arch/arm/mach-exynos/mach-exynos4-dt.c             |    8 +
+>   arch/arm/mach-exynos/setup-usb-phy.c               |   13 +
+>   arch/arm/mach-s3c64xx/include/mach/map.h           |    2 +
+>   arch/arm/mach-s3c64xx/mach-crag6410.c              |    7 +-
+>   arch/arm/mach-s3c64xx/mach-smartq.c                |    8 +-
+>   arch/arm/mach-s3c64xx/mach-smdk6410.c              |    7 +-
+>   arch/arm/mach-s3c64xx/setup-usb-phy.c              |   79 +----
+>   arch/arm/plat-samsung/devs.c                       |   33 ++
+>   arch/arm/plat-samsung/include/plat/devs.h          |    1 +
+>   arch/arm/plat-samsung/include/plat/usb-phy.h       |    1 +
+>   drivers/usb/gadget/s3c-hsotg.c                     |   40 ++-
+>   drivers/usb/phy/Kconfig                            |    8 +
+>   drivers/usb/phy/Makefile                           |    1 +
+>   drivers/usb/phy/samsung-usbphy.c                   |  355 ++++++++++++++++++++
+>   drivers/usb/phy/samsung-usbphy.h                   |   48 +++
+>   include/linux/platform_data/samsung-usbphy.h       |   27 ++
+>   19 files changed, 562 insertions(+), 91 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+>   create mode 100644 drivers/usb/phy/samsung-usbphy.c
+>   create mode 100644 drivers/usb/phy/samsung-usbphy.h
+>   create mode 100644 include/linux/platform_data/samsung-usbphy.h
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
