@@ -1,103 +1,50 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 0/5] usb: phy: samsung: Introducing usb phy driver for
- samsung SoCs
-Date: Fri, 10 Aug 2012 10:40:55 +0300
-Message-ID: <20120810074055.GD5755@arwen.pp.htv.fi>
-References: <1344582631-13658-1-git-send-email-p.paneri@samsung.com>
- <20120810070623.GL1689@arwen.pp.htv.fi>
- <CAD6zSYPT_K9bTP=8k-Q+5N-yAVjDx86Haay27OLuPsqz38pczA@mail.gmail.com>
-Reply-To: balbi@ti.com
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
+Date: Fri, 10 Aug 2012 10:19:02 +0200
+Message-ID: <CACRpkdaSk9xBaiSAKCj4Pa2kyyfP178XN53i2Q2+CBFx=RoE0g@mail.gmail.com>
+References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
+ <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
+ <20120809202054.GA24503@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lc9FT7cWel8HagAv"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD6zSYPT_K9bTP=8k-Q+5N-yAVjDx86Haay27OLuPsqz38pczA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Praveen Paneri <p.paneri@samsung.com>
-Cc: balbi@ti.com, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120809202054.GA24503-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 9, 2012 at 10:20 PM, Thierry Reding
+<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
+>> > +       client->irq = irq_of_parse_and_map(client->dev.of_node, 0);
+>> > +       if (client->irq == NO_IRQ)
+>>
+>> Just if (!client->irq) since NO_IRQ is 0 nowadays.
+>
+> At the risk of seeming pedantic, NO_IRQ is in fact quite often not 0.
 
---lc9FT7cWel8HagAv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No. A year back, yes, but not anymore. We went to great lengths in the
+ARM architecture to ensure NO_IRQ is *always 0. Russell spent
+a lot of time on this.
 
-On Fri, Aug 10, 2012 at 01:04:48PM +0530, Praveen Paneri wrote:
-> On Fri, Aug 10, 2012 at 12:36 PM, Felipe Balbi <balbi@ti.com> wrote:
-> > On Fri, Aug 10, 2012 at 12:40:26PM +0530, Praveen Paneri wrote:
-> >> Changes from v3:
-> >> Replaced susbsys_initcall()/module_exit() by module_platform_driver().
-> >> Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
-> >> is registered
-> >> Removed unnecessary devm_usb_put_phy() call from the hsotg driver remo=
-ve.
-> >>
-> >> Changes from v2:
-> >> Changed the driver filenames to samsung-usbphy
-> >> Changed 's3c' to 'samsung' for platform device as well as platform data
-> >> Moved platform data structure to a separate file
-> >> Rectified coding style related errors
-> >>
-> >> Changes from v1:
-> >> Rebased patches to latest usb-next branch
-> >> Changed the name 'sec_usbphy' to 'samsung_usbphy'
-> >>
-> >> This patch set introduces a phy driver for samsung SoCs. It uses the e=
-xisting
-> >> transceiver infrastructure to provide phy control functions. Use of th=
-is driver
-> >> can be extended for usb host phy as well. Over the period of time all =
-the phy
-> >> related code for most of the samsung SoCs can be integrated here.
-> >> Removing the existing phy code from mach-s3c64xx. Same can be done for=
- other SoCs
-> >> when they start supporting this phy driver.
-> >> This driver is tested with smdk6410 and Exynos4210(with DT).
-> >>
-> >> Praveen Paneri (5):
-> >>   usb: phy: samsung: Introducing usb phy driver for hsotg
-> >>   usb: s3c-hsotg: Adding phy driver support
-> >>   ARM: S3C64XX: Removing old phy setup code
-> >>   ARM: S3C64XX: Enabling samsung-usbphy driver
-> >>   ARM: Exynos4210: Enabling samsung-usbphy driver
-> >
-> > just one idea. It looks like after introducing the PHY, you converted
-> > all users to create the phy device. I wonder if you should have a
-> Not all
-> > patch 6/6 which will remove pdata->init support from s3c_hsotg.c and
-> > stick to using phy driver.
-> This will make the hsotg driver unusable for others (in mach-s5pv210
-> and mach-exynos) which are not supported in the phy driver as of now.
-> My idea was to drop the pdata->init when the last user gets the phy
-> support. Need some time for that :-)
+Consult the following article on LWN:
+http://lwn.net/Articles/470820/
 
-makes sense. wasn't aware there were more users. no problem then ;-)
+Then grep your gitlog and you'll see we got rid of it from ARM.
 
---=20
-balbi
+If this driver is for some other arch like openrisc I might accept
+it but please reconsider.
 
---lc9FT7cWel8HagAv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQJLsHAAoJEIaOsuA1yqREgWQP/3FMXf2TeLZjWsltATtfepa/
-zbmd9Rimic3D24WFVQSIo/7rs+jcR9ae0KxdEqL1hS+P5YigfPDvc3Nvuy+rzhtc
-3nBXkZaPtU6VmN+iRVYR/mdHtTFXRwAfj/DpaDQtSiMkzN/E9L2EeYYRuvU2glUV
-FAm5rlJEO1mLaVuEVVDNwRngUM8eqpewK8hWAuGoCirssJcvHigS2H3XlC4xnKhl
-5kPFx3fpwVCss3WoIKnNgGSnS+P4QD8++rRByCYy99dcU67xQIwBYM3tbbo52Oqn
-atdAsWEAm696py9uvA/C7FeFTx6PkOmILN2kjUei1+ZPn7uReZxcLA/325ku9ceS
-Jak33g2pc6Xg0ctOxqSfv+HIiBE1piga4Z5SSY42b4k1nUoq2Lrmd2t8Jdcuvk1g
-GQECA5Da5w32rWnHx51oJ68K5P/m4Mo3hI0PA2dK01RLotQJq9/d02JmJhLm7dEO
-Ura89r/im3UNOim6ZU233Sk1vOQulidhPEfOD+6jO3kFHvCOLFw7JWu2pxqA/cuX
-vqEB3dMAt+3GXz5ktkhIJJaztiFC2Hslxz1nRegGLgFfKuEpPZ1z9aJZ53eYBV+i
-BOJlwPJ68sLboD3epEjEnlgMKDluv72lUIlsX8n0ZbCt+/z5JVI+iyvFtF7DSWF9
-dfthb8UNDCJErtEMKMAz
-=NI1z
------END PGP SIGNATURE-----
-
---lc9FT7cWel8HagAv--
+Yours,
+Linus Walleij
