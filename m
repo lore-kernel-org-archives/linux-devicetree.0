@@ -1,50 +1,88 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
 Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Fri, 10 Aug 2012 10:19:02 +0200
-Message-ID: <CACRpkdaSk9xBaiSAKCj4Pa2kyyfP178XN53i2Q2+CBFx=RoE0g@mail.gmail.com>
+Date: Fri, 10 Aug 2012 10:35:08 +0200
+Message-ID: <20120810083508.GA16251@avionic-0098.mockup.avionic-design.de>
 References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
  <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
  <20120809202054.GA24503@avionic-0098.mockup.avionic-design.de>
+ <CACRpkdaSk9xBaiSAKCj4Pa2kyyfP178XN53i2Q2+CBFx=RoE0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120809202054.GA24503-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaSk9xBaiSAKCj4Pa2kyyfP178XN53i2Q2+CBFx=RoE0g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, Rob Herring <rob.herring@calxeda.com>, Wolfram Sang <w.sang@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 9, 2012 at 10:20 PM, Thierry Reding
-<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
->> > +       client->irq = irq_of_parse_and_map(client->dev.of_node, 0);
->> > +       if (client->irq == NO_IRQ)
->>
->> Just if (!client->irq) since NO_IRQ is 0 nowadays.
->
-> At the risk of seeming pedantic, NO_IRQ is in fact quite often not 0.
 
-No. A year back, yes, but not anymore. We went to great lengths in the
-ARM architecture to ensure NO_IRQ is *always 0. Russell spent
-a lot of time on this.
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Consult the following article on LWN:
-http://lwn.net/Articles/470820/
+On Fri, Aug 10, 2012 at 10:19:02AM +0200, Linus Walleij wrote:
+> On Thu, Aug 9, 2012 at 10:20 PM, Thierry Reding
+> <thierry.reding@avionic-design.de> wrote:
+> > On Sun, Jul 29, 2012 at 07:13:57PM +0200, Linus Walleij wrote:
+> >> > +       client->irq =3D irq_of_parse_and_map(client->dev.of_node, 0);
+> >> > +       if (client->irq =3D=3D NO_IRQ)
+> >>
+> >> Just if (!client->irq) since NO_IRQ is 0 nowadays.
+> >
+> > At the risk of seeming pedantic, NO_IRQ is in fact quite often not 0.
+>=20
+> No. A year back, yes, but not anymore. We went to great lengths in the
+> ARM architecture to ensure NO_IRQ is *always 0. Russell spent
+> a lot of time on this.
+>=20
+> Consult the following article on LWN:
+> http://lwn.net/Articles/470820/
+>=20
+> Then grep your gitlog and you'll see we got rid of it from ARM.
 
-Then grep your gitlog and you'll see we got rid of it from ARM.
+Then why is there still the following in arch/arm/include/asm/irq.h?
 
-If this driver is for some other arch like openrisc I might accept
-it but please reconsider.
+	/*
+	 * Use this value to indicate lack of interrupt
+	 * capability
+	 */
+	#ifndef NO_IRQ
+	#define NO_IRQ	((unsigned int)(-1))
+	#endif
 
-Yours,
-Linus Walleij
+> If this driver is for some other arch like openrisc I might accept
+> it but please reconsider.
+
+There's nothing in the driver that makes it ARM specific, so it could be
+used on other platforms just as well. But as I also said in my previous
+mail, in this particular case the value for the interrupt comes from the
+call to irq_of_parse_and_map(), which will return 0 on failure,
+regardless of the architecture, so there is actually no problem.
+
+Thierry
+
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQJMe8AAoJEN0jrNd/PrOh3U4P/1b0dVJvswKWXZTT5eLfC70W
+dU6WnEF8cQ0IFeQ0aHbnXOc2f1e7aYVO+YWMmmbvle3Mf1KIpkgCD2zDLss7TvDJ
+1Rt5Csuw1yZQx6U3vgGg3/Za0DUXtem3rEmyAd3gXGHT8ujzf4UttnhaZWCx7LVV
+00b7OP14MkccTZJ+cZQIatPnlXR3eHIHp0Aediwp0B9HmuQj7GSbibHRfJJPJ7PS
+Uqpp+KKIdvXgal1E79w2+Judkw4Pv+EblQy1L8fvxTYpgAYQzCu05JKN3a+jXxsu
+SI9ORm/9HcC50zr7upiY3bWRFpvk7z5Aoe87xWYnKE4YtwqP/TWQ1t7ewXs9H/Ho
+Biece1PN6XwOtcoBZCCzfpV5RWsOuRuYa+yn/xUiDOk8V45nNAYPu2K1ScQi5He5
+ROzbusYMu7IWCNpOMREfdeRyY7CMLdU9W3zwEeFfKAuMUwlpLBGJ9HR4SyxmFX7n
+vLQgFuGl0mNj4ty9xmv4d5PIDTfCaTHHunESvOJ/jEcR4wsPxg5fyqjQImrc2etS
+4OX/lWXAz2dcyD561Jloa1+ejMxUSiachtl64CaCHe/hYCFrWTk235q8nRrDk0o3
+9M4x6DlfYqpX4qyXTbiKt9KT5+8Ji5hj3PbpBpSNk76GTsIufPLmrv9vIO6Rd/W7
+TRzCrCVgotVaBLcZLP+V
+=33ZC
+-----END PGP SIGNATURE-----
+
+--BXVAT5kNtrzKuDFl--
