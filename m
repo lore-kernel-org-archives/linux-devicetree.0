@@ -1,184 +1,70 @@
-From: <Dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
-Date: Fri, 10 Aug 2012 13:53:22 +0800
-Message-ID: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
+From: Praveen Paneri <p.paneri@samsung.com>
+Subject: Re: [PATCH v3 0/5] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Fri, 10 Aug 2012 11:54:32 +0530
+Message-ID: <CAD6zSYMC072bMqMPTmsH4ZzTAd4OmFk5TVpcxAAu82b7J9jNHw@mail.gmail.com>
+References: <1344411661-17821-1-git-send-email-p.paneri@samsung.com>
+	<502464FE.3000908@samsung.com>
+	<CAD6zSYP33PDrXwifQM=7q+Esk1X7m5+DNG_=A2a-qTENk4zq8w@mail.gmail.com>
+	<20120810061616.GC1689@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kumar.gala-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20120810061616.GC1689@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Joonyoung Shim <jy0922.shim@samsung.com>, linux-usb@vger.kernel.org, l.majewski@samsung.com, kgene.kim@samsung.com, heiko@sntech.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Fri, Aug 10, 2012 at 11:46 AM, Felipe Balbi <balbi@ti.com> wrote:
+> HI,
+>
+> On Fri, Aug 10, 2012 at 11:17:29AM +0530, Praveen Paneri wrote:
+>> On Fri, Aug 10, 2012 at 7:03 AM, Joonyoung Shim <jy0922.shim@samsung.com> wrote:
+>> > Hi, Praveen.
+>> >
+>> >
+>> > On 08/08/2012 04:40 PM, Praveen Paneri wrote:
+>> >>
+>> >> Changes from v2:
+>> >> Changed the driver filenames to samsung-usbphy
+>> >> Changed 's3c' to 'samsung' for platform device as well as platform data
+>> >> Moved platform data structure to a separate file
+>> >> Rectified coding style related errors
+>> >>
+>> >> Changes from v1:
+>> >> Rebased patches to latest usb-next branch
+>> >> Changed the name 'sec_usbphy' to 'samsung_usbphy'
+>> >>
+>> >> This patch set introduces a phy driver for samsung SoCs. It uses the
+>> >> existing
+>> >> transceiver infrastructure to provide phy control functions. Use of this
+>> >> driver
+>> >> can be extended for usb host phy as well.
+>> >
+>> >
+>> > How can you support usb host phy? I cannot choose to use which phy when
+>> > call init or shutdown of phy at current phy framework.
+>
+> correct. Curretly that's not supported. We are trying to come up with
+> proper DeviceTree bindings to allow that. Kishon has been working on
+> providing devm_usb_get_phy_by_phandle() would should help achieving what
+> you need.
+>
+>> If you are talking about choosing between PHY0 (for device) and PHY1
+>> (for host), I think you can make use of the flags available in usb_phy
+>> to pass that information to phy driver and that can be handled there.
+>
+> I rather you didn't do it that way. Those flags are used to pass
+> features to the PHY. See drivers/usb/otg/ulpi.c, for instance.
+>
+>> This is just one way I have successfully implement two different phy
+>> control. There might be a better way to do that.
+>
+> I guess using DT phandles is the way to go here.
+off-course! That is why I haven't included host support as of now.
 
-Add a description of the OPEN-PIC global timer in the OPEN-PIC document.
-
-Moidfy mpic-timer document. 1.Add a TFRR register region. This register
-is written by software to report the clocking frequency of the PIC timers.
-2.Add a device_type. The global timer in line with the OPEN-PIC specification.
-
-Signed-off-by: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- Documentation/devicetree/bindings/open-pic.txt     |   46 ++++++++++++++++++++
- .../devicetree/bindings/powerpc/fsl/mpic-timer.txt |   21 +++++----
- arch/powerpc/boot/dts/fsl/pq3-mpic-timer-B.dtsi    |    7 ++-
- arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi            |    7 ++-
- 4 files changed, 66 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/open-pic.txt b/Documentation/devicetree/bindings/open-pic.txt
-index 909a902..045c2e9 100644
---- a/Documentation/devicetree/bindings/open-pic.txt
-+++ b/Documentation/devicetree/bindings/open-pic.txt
-@@ -92,6 +92,52 @@ Example 2:
- 
- * References
- 
-+* Open PIC global timers
-+
-+Required properties:
-+- compatible: "open-pic,global-timer"
-+
-+- reg : Contains two regions.  The first is the timer frequency reporting
-+  register for the group.  The second is the main timer register bank
-+  (GTCCR, GTBCR, GTVPR, GTDR).
-+
-+- available-ranges: use <start count> style section to define which
-+  timer interrupts can be used.  This property is optional; without this,
-+  all timers within the group can be used.
-+
-+- interrupts: one interrupt per timer in the group, in order, starting
-+  with timer zero.  If available-ranges is present, only the interrupts
-+  that correspond to available timers shall be present.
-+
-+* Examples
-+
-+Example 1:
-+
-+	/* Note that this requires #interrupt-cells to be 4 */
-+	timer: timer@010f0 {
-+		compatible = "open-pic,global-timer";
-+		device_type = "open-pic";
-+		reg = <0x010f0 4 0x01100 0x100>;
-+
-+		/* Another AMP partition is using timer */
-+		available-ranges = <2 2>;
-+
-+		interrupts = <2 0 3 0
-+		              3 0 3 0>;
-+	};
-+
-+Example 2:
-+
-+	timer: timer@010f0 {
-+		compatible = "open-pic,global-timer";
-+		device_type = "open-pic";
-+		reg = <0x010f0 4 0x01100 0x100>;
-+		interrupts = <0 0 3 0
-+			      1 0 3 0
-+			      2 0 3 0
-+		              3 0 3 0>;
-+	};
-+
- [1] Power.org (TM) Standard for Embedded Power Architecture (TM) Platform
-     Requirements (ePAPR), Version 1.0, July 2008.
-     (http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf)
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt b/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-index df41958..5aafca0 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-@@ -1,13 +1,14 @@
- * Freescale MPIC timers
- 
- Required properties:
--- compatible: "fsl,mpic-global-timer"
-+- compatible: "fsl,global-timer"
- 
--- reg : Contains two regions.  The first is the main timer register bank
--  (GTCCRxx, GTBCRxx, GTVPRxx, GTDRxx).  The second is the timer control
-+- reg : Contains three regions.  The first is the timer frequency reporting
-+  register (TFRRx) for the group.  The second is the main timer register
-+  bank (GTCCRxx, GTBCRxx, GTVPRxx, GTDRxx).  The third is the timer control
-   register (TCRx) for the group.
- 
--- fsl,available-ranges: use <start count> style section to define which
-+- available-ranges: use <start count> style section to define which
-   timer interrupts can be used.  This property is optional; without this,
-   all timers within the group can be used.
- 
-@@ -18,19 +19,21 @@ Required properties:
- Example:
- 	/* Note that this requires #interrupt-cells to be 4 */
- 	timer0: timer@41100 {
--		compatible = "fsl,mpic-global-timer";
--		reg = <0x41100 0x100 0x41300 4>;
-+		compatible = "fsl,global-timer";
-+		device_type = "open-pic";
-+		reg = <0x410f0 4 0x41100 0x100 0x41300 4>;
- 
- 		/* Another AMP partition is using timers 0 and 1 */
--		fsl,available-ranges = <2 2>;
-+		available-ranges = <2 2>;
- 
- 		interrupts = <2 0 3 0
- 		              3 0 3 0>;
- 	};
- 
- 	timer1: timer@42100 {
--		compatible = "fsl,mpic-global-timer";
--		reg = <0x42100 0x100 0x42300 4>;
-+		compatible = "fsl,global-timer";
-+		device_type = "open-pic";
-+		reg = <0x420f0 4 0x42100 0x100 0x42300 4>;
- 		interrupts = <4 0 3 0
- 		              5 0 3 0
- 		              6 0 3 0
-diff --git a/arch/powerpc/boot/dts/fsl/pq3-mpic-timer-B.dtsi b/arch/powerpc/boot/dts/fsl/pq3-mpic-timer-B.dtsi
-index 8734cff..01cd33c 100644
---- a/arch/powerpc/boot/dts/fsl/pq3-mpic-timer-B.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/pq3-mpic-timer-B.dtsi
-@@ -32,9 +32,10 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
--timer@42100 {
--	compatible = "fsl,mpic-global-timer";
--	reg = <0x42100 0x100 0x42300 4>;
-+timer@420f0 {
-+	compatible = "fsl,global-timer";
-+	device_type = "open-pic";
-+	reg = <0x420f0 4 0x42100 0x100 0x42300 4>;
- 	interrupts = <4 0 3 0
- 		      5 0 3 0
- 		      6 0 3 0
-diff --git a/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi b/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-index 71c30eb..c71d8e0 100644
---- a/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-@@ -44,9 +44,10 @@ mpic: pic@40000 {
- 	last-interrupt-source = <255>;
- };
- 
--timer@41100 {
--	compatible = "fsl,mpic-global-timer";
--	reg = <0x41100 0x100 0x41300 4>;
-+timer@410f0 {
-+	compatible = "fsl,global-timer";
-+	device_type = "open-pic";
-+	reg = <0x410f0 4 0x41100 0x100 0x41300 4>;
- 	interrupts = <0 0 3 0
- 		      1 0 3 0
- 		      2 0 3 0
--- 
-1.7.5.1
+Praveen
+>
+> --
+> balbi
