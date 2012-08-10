@@ -1,74 +1,83 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
 Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Fri, 10 Aug 2012 10:41:58 +0200
-Message-ID: <CACRpkdaGWhTR3Zr40dtigQqPPkxQZ=zYqYVBfpwbnkf3P2Qhhg@mail.gmail.com>
+Date: Fri, 10 Aug 2012 10:48:59 +0200
+Message-ID: <20120810084859.GA16550@avionic-0098.mockup.avionic-design.de>
 References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
  <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
  <20120809202054.GA24503@avionic-0098.mockup.avionic-design.de>
  <CACRpkdaSk9xBaiSAKCj4Pa2kyyfP178XN53i2Q2+CBFx=RoE0g@mail.gmail.com>
  <20120810083508.GA16251@avionic-0098.mockup.avionic-design.de>
+ <CACRpkdaGWhTR3Zr40dtigQqPPkxQZ=zYqYVBfpwbnkf3P2Qhhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120810083508.GA16251-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaGWhTR3Zr40dtigQqPPkxQZ=zYqYVBfpwbnkf3P2Qhhg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, Rob Herring <rob.herring@calxeda.com>, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 10, 2012 at 10:35 AM, Thierry Reding
-<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
->> Consult the following article on LWN:
->> http://lwn.net/Articles/470820/
->>
->> Then grep your gitlog and you'll see we got rid of it from ARM.
->
-> Then why is there still the following in arch/arm/include/asm/irq.h?
->
->         /*
->          * Use this value to indicate lack of interrupt
->          * capability
->          */
->         #ifndef NO_IRQ
->         #define NO_IRQ  ((unsigned int)(-1))
->         #endif
 
-That's a question for Russell but I think it's basically there for
-old platforms, on a "don't use it"-basis. (Maybe a comment could
-be good.)
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As you see non-sparse platforms can redefine NO_IRQS in their
-<mach/irqs.h> file, but in practice things like the VIC and GIC
-drivers have been switched over to using irqdomain which
-in turn does *not* allow IRQ 0 to be used, so most platforms
-are indirectly disallowed to use IRQ 0 anyway. In fact I think
-some of them are just broken now.
+On Fri, Aug 10, 2012 at 10:41:58AM +0200, Linus Walleij wrote:
+> On Fri, Aug 10, 2012 at 10:35 AM, Thierry Reding
+> <thierry.reding@avionic-design.de> wrote:
+> >> Consult the following article on LWN:
+> >> http://lwn.net/Articles/470820/
+> >>
+> >> Then grep your gitlog and you'll see we got rid of it from ARM.
+> >
+> > Then why is there still the following in arch/arm/include/asm/irq.h?
+> >
+> >         /*
+> >          * Use this value to indicate lack of interrupt
+> >          * capability
+> >          */
+> >         #ifndef NO_IRQ
+> >         #define NO_IRQ  ((unsigned int)(-1))
+> >         #endif
+>=20
+> That's a question for Russell but I think it's basically there for
+> old platforms, on a "don't use it"-basis. (Maybe a comment could
+> be good.)
+>=20
+> As you see non-sparse platforms can redefine NO_IRQS in their
+> <mach/irqs.h> file, but in practice things like the VIC and GIC
+> drivers have been switched over to using irqdomain which
+> in turn does *not* allow IRQ 0 to be used, so most platforms
+> are indirectly disallowed to use IRQ 0 anyway. In fact I think
+> some of them are just broken now.
 
->> If this driver is for some other arch like openrisc I might accept
->> it but please reconsider.
->
-> There's nothing in the driver that makes it ARM specific, so it could be
-> used on other platforms just as well.
+In that case it might be better to just drop it altogether and wait
+until people with the broken platforms start complaining.
 
-The linked article makes it clear that the direction for the entire
-kernel is to get rid of NO_IRQ and !irq is used all over the place.
+Thierry
 
-> But as I also said in my previous
-> mail, in this particular case the value for the interrupt comes from the
-> call to irq_of_parse_and_map(), which will return 0 on failure,
-> regardless of the architecture, so there is actually no problem.
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature
 
-OK cool.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-Yours,
-Linus Walleij
+iQIcBAEBAgAGBQJQJMr7AAoJEN0jrNd/PrOhlZ8QAIZ8855/Wm9g5454USc2T8zv
+PyM8+aOF9dSCiQBcZb8BG6A+figj60DhcEZtoVCzni9IrQHJY0NKZhOpCro9qinz
+A61QQ7GjvEvNOpp/wbtG+BUNmFCRSGn5gGhszMlsngMVIrOerGNmwlT+A1F95Sqz
+kaIUS636qOJaPucTYD9rgin3UIesoZmrzxwE8fdflx93lV4xYXzdYWkZXZey8Nx1
+D1oLLU6MLjQwQvKix5XBu0CNCP0Xe2og0GTKJtuqI8sbQNunxzYIGzEeUDUvH6Qa
+0duXUhxbc3vsVgtn1BmBWMT5Cy7ppi3UIYzdujIRmBChBl1Sj8O+KG1tBBv4pvVD
+Tyj0pt1q8M22KRsS5pT5O29OwP8Wnb7Q8UqTona5f88T7KTjD59GC/0/cFilYELO
+Z4+I38+HNUuUBfoQo1r2ZKtvQhuTYkXOULAY+sARFycaiAx6n+F0WmNRnpiNRjgY
+EPjTIFp+MqBTRhEWFZln+Xcv7FSXAleSDyVJfGQhTjFoUTO1RaAAUecdpXkAKCLs
+1K5NHadOSyVcoVoo5MdalludVpjTHnpyhGzI+RUfFb1USzIhZH+m+SsNAG7nKYpi
+YsHSufdRohdA+DsSKaGu/oEMxsVLdHMNw7bLv01Plrk+4j4yx7iswxFSOs2+TQg0
+qQDY4iEL6wFTzxYkyukn
+=TiLA
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
