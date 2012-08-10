@@ -1,83 +1,42 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Fri, 10 Aug 2012 10:48:59 +0200
-Message-ID: <20120810084859.GA16550@avionic-0098.mockup.avionic-design.de>
-References: <1343044770-6591-1-git-send-email-thierry.reding@avionic-design.de>
- <CACRpkdaZcUvcJMUZTqCEU5FQYhE3EvSSfUEnEx0dYRt-6x5Nig@mail.gmail.com>
- <20120809202054.GA24503@avionic-0098.mockup.avionic-design.de>
- <CACRpkdaSk9xBaiSAKCj4Pa2kyyfP178XN53i2Q2+CBFx=RoE0g@mail.gmail.com>
- <20120810083508.GA16251@avionic-0098.mockup.avionic-design.de>
- <CACRpkdaGWhTR3Zr40dtigQqPPkxQZ=zYqYVBfpwbnkf3P2Qhhg@mail.gmail.com>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: How to get the irq flags from the dts file
+Date: Fri, 10 Aug 2012 17:11:56 +0800
+Message-ID: <1344589916.21467.1.camel@tegra-chromium-2>
+References: <1344509006.2295.148.camel@tegra-chromium-2>
+	 <201208091148.42748.arnd@arndb.de>  <20120809120530.GC8474@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaGWhTR3Zr40dtigQqPPkxQZ=zYqYVBfpwbnkf3P2Qhhg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, Rob Herring <rob.herring@calxeda.com>, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120809120530.GC8474-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2012-08-09 at 20:05 +0800, Mark Brown wrote:
+> On Thu, Aug 09, 2012 at 11:48:42AM +0000, Arnd Bergmann wrote:
+> > On Thursday 09 August 2012, Wei Ni wrote:
+> 
+> > > The wlan driver wish this flags include the IRQF_TRGGER_* information,
+> > > and it will use this flags to configure other hw settings. If it is
+> > > wrong, the wlan can't work.
+> 
+> You can read the configuration with irqd_get_trigger_type() - see the OF
+> code in sound/soc/codecs/wm8903.c for an example.
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I tried it, it worked fine. thanks for your help.
 
-On Fri, Aug 10, 2012 at 10:41:58AM +0200, Linus Walleij wrote:
-> On Fri, Aug 10, 2012 at 10:35 AM, Thierry Reding
-> <thierry.reding@avionic-design.de> wrote:
-> >> Consult the following article on LWN:
-> >> http://lwn.net/Articles/470820/
-> >>
-> >> Then grep your gitlog and you'll see we got rid of it from ARM.
-> >
-> > Then why is there still the following in arch/arm/include/asm/irq.h?
-> >
-> >         /*
-> >          * Use this value to indicate lack of interrupt
-> >          * capability
-> >          */
-> >         #ifndef NO_IRQ
-> >         #define NO_IRQ  ((unsigned int)(-1))
-> >         #endif
->=20
-> That's a question for Russell but I think it's basically there for
-> old platforms, on a "don't use it"-basis. (Maybe a comment could
-> be good.)
->=20
-> As you see non-sparse platforms can redefine NO_IRQS in their
-> <mach/irqs.h> file, but in practice things like the VIC and GIC
-> drivers have been switched over to using irqdomain which
-> in turn does *not* allow IRQ 0 to be used, so most platforms
-> are indirectly disallowed to use IRQ 0 anyway. In fact I think
-> some of them are just broken now.
-
-In that case it might be better to just drop it altogether and wait
-until people with the broken platforms start complaining.
-
-Thierry
-
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQJMr7AAoJEN0jrNd/PrOhlZ8QAIZ8855/Wm9g5454USc2T8zv
-PyM8+aOF9dSCiQBcZb8BG6A+figj60DhcEZtoVCzni9IrQHJY0NKZhOpCro9qinz
-A61QQ7GjvEvNOpp/wbtG+BUNmFCRSGn5gGhszMlsngMVIrOerGNmwlT+A1F95Sqz
-kaIUS636qOJaPucTYD9rgin3UIesoZmrzxwE8fdflx93lV4xYXzdYWkZXZey8Nx1
-D1oLLU6MLjQwQvKix5XBu0CNCP0Xe2og0GTKJtuqI8sbQNunxzYIGzEeUDUvH6Qa
-0duXUhxbc3vsVgtn1BmBWMT5Cy7ppi3UIYzdujIRmBChBl1Sj8O+KG1tBBv4pvVD
-Tyj0pt1q8M22KRsS5pT5O29OwP8Wnb7Q8UqTona5f88T7KTjD59GC/0/cFilYELO
-Z4+I38+HNUuUBfoQo1r2ZKtvQhuTYkXOULAY+sARFycaiAx6n+F0WmNRnpiNRjgY
-EPjTIFp+MqBTRhEWFZln+Xcv7FSXAleSDyVJfGQhTjFoUTO1RaAAUecdpXkAKCLs
-1K5NHadOSyVcoVoo5MdalludVpjTHnpyhGzI+RUfFb1USzIhZH+m+SsNAG7nKYpi
-YsHSufdRohdA+DsSKaGu/oEMxsVLdHMNw7bLv01Plrk+4j4yx7iswxFSOs2+TQg0
-qQDY4iEL6wFTzxYkyukn
-=TiLA
------END PGP SIGNATURE-----
-
---2oS5YaxWCcQjTEyO--
+> 
+> > The driver should not need to know about thie flag. It gets read
+> > by irq_create_of_mapping when calling teh xlate function and
+> > gets set using irq_set_irq_type from there too.
+> 
+> That only helps the interrupt controller, it doesn't help the interrupt
+> source.  A good proportion of embedded devices have a great deal of
+> flexibility in how they signal interrupts so they need to know what mode
+> to pick.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
