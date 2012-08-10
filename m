@@ -1,66 +1,72 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 0/7] mv643xx.c: Add basic device tree support.
-Date: Fri, 10 Aug 2012 10:49:57 +0000
-Message-ID: <201208101049.57586.arnd@arndb.de>
-References: <1344350092-24050-1-git-send-email-ian.molton@codethink.co.uk> <201208091143.32972.arnd@arndb.de> <5023D577.8090001@codethink.co.uk>
+From: Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [PATCH 08/11] ARM: OMAP3: Remove callback for
+ McBSP sidetone ICLK workaround
+Date: Fri, 10 Aug 2012 16:00:04 +0300
+Message-ID: <502505D4.2030308@bitmer.com>
+References: <1344417101-5015-1-git-send-email-peter.ujfalusi@ti.com>
+ <1344417101-5015-9-git-send-email-peter.ujfalusi@ti.com>
+ <502268B1.9040506@bitmer.com> <50227104.3040506@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5023D577.8090001@codethink.co.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Ian Molton <ian.molton@codethink.co.uk>
-Cc: linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, ben.dooks@codethink.co.uk, dale@farnsworth.org, linuxppc-dev@lists.ozlabs.org, David Miller <davem@davemloft.net>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <50227104.3040506@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 August 2012, Ian Molton wrote:
-> >  I think showing one
-> > parent device with children at address 0, 1 and 2 is ok.
-> Is it acceptable for the child devices to directly access the
-> parents register space? because there would be no other
-> way for that to work.
+Hi Peter
 
-Yes, I see no problem with that. As long as all the drivers
-agree on who can access what.
-
-> >  The driver
-> > already knows all those offsets and they are always the same
-> > for all variants of mv643xx, right?
-> Yes, but its not clean. And no amount of refactoring is
-> really going to make a nice driver that also fits the ancient
-> (and badly thought out) OF bindings.
-
-In what way is it badly though out, or not clean? The use of
-underscores in the properties, and the way that the sram
-is configured is problematic, I agree. But The way that
-the three ports are addressed and how the PHY is found
-seems quite clever.
-
-> If we have to break things, we can at least go for a nice
-> clean design, surely?
+On 08/08/2012 05:00 PM, Peter Ujfalusi wrote:
+>> Are you sure it works without any changes to sidetone audio quality or
+>> current consumption? What I remember idlemode was broken at least on
+>> 3430 and caused bad sidetone audio if autoidle was set and a little bit
+>> higher current consumption (something like 2-3 mA higher where reference
+>> consumption was around 10 mA) when McBSP was set to no-idle.
 > 
-> The ports arent really child devices of the MAC. The MAC
-> just has 3 ports.
-
-I don't see the difference between those two things.
-
-> Luckily, it looks like the existing users don't actually use
-> the device tree to set up the driver at all, preferring to
-> translate their D-T bindings to calls to
-> platform_device_register() so all we'd need to do to
-> support them is completely ignore them.
+> Yes, the idelmode settings are still broken in the sidetone block. However we
+> are toggling the SIDLEMODE of the corresponding McBSP instance where the ST
+> block is attached.
+> This should have the same effect as doing the same down in PRCM level since
+> the McBSP SIDLEMODE does work correctly preventing ICLK to be gated when it is
+> set to no-idle.
 > 
-> We're going to have to maintain a legacy
-> platform_device -> DT bindings hack somewhere anyway,
-> at least until the remaining other users of the driver
-> convert to D-T.
+> Unfortunately I can not get my BeagleBoard to start gating iclk even if I
+> remove the ICLK gating prevention (on top of 3.6-rc1). So I can not really say
+> for 100% this is equivalent to the the PRCM level workaround.
+> However I have also spend long time hacking around in McBSP, and I know that
+> the SIDLEMODE in McBSP is working correctly.
+> Do you know how can I get OMAP3 to start gating the clocks (to idle)?
+> 
+I got some odd current consumption results from Beagle to really compare
+different kernel versions but I was able get sensible results from N900.
 
-I don't understand why you describe the method used in
-powerpc as a hack. It was the normal way to introduce
-DT support for platform devices back when it was implemented.
-It also had the advantage of not requiring any modifications
-to the generic driver, because it was shared between one
-architecture using DT (powerpc) and one that didn't (ARM).
+I tested your set on top of 196973c of sound.git.
 
-	Arnd
+First consumption when using threshold based transfer has remained the
+same between 2.6.38-3.6.0-rc1 (wau!). Active sidetone under "arecord -f
+dat >/dev/null |aplay -f dat /dev/zero" test increases consumption from
+plain playback about 17 mA in 3.4 and 3.6.0-rc1.
+
+With your set applied consumption increases 28 mA when the sidetone is
+active (i.e. +11 mA higher than on top of 196973c). Plain threshold
+based playback remains still the same.
+
+> I'm doing the same test on BeagleBoard, but this thing does not want to hit
+> retention despite all the effort :(
+> 
+Could it be display subsystem which keeps it active? At least on N900 I
+need to get DSS drivers activated in order to be able to blank the
+display after bootloader and thus be able to reach the retention idle.
+
+-- 
+Jarkko
