@@ -1,60 +1,99 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 2/2] ARM: EXYNOS: Add Gscaler device from DT
-Date: Sat, 11 Aug 2012 13:08:20 +0900
-Message-ID: <0efb01cd7776$f1b6fcc0$d524f640$%kim@samsung.com>
-References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com>
- <1342789723-3949-3-git-send-email-shaik.ameer@samsung.com>
- <033301cd6fb0$7ac4af90$704e0eb0$%kim@samsung.com>
- <CAJuYYwTy5zkeM_cJO7HMm+=v=ORPHD26nQYZwXK6v1noWm1EuA@mail.gmail.com>
- <5018E656.3070803@samsung.com>
- <036f01cd6fc4$120a9910$361fcb30$%kim@samsung.com> <50197D66.1050108@gmail.com>
- <CAOesGMiZMrv4GY=v1WPn_qGZgg=vduO2TbsUOQ6sCah-ZvOg_A@mail.gmail.com>
- <501B1003.1090003@gmail.com>
- <CAOD6ATomKE3WYtGrBTSyjfkNr5ZK+3=NRrZLX0p5pOzPykOikQ@mail.gmail.com>
- <5020164E.90007@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: 
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, 'Shaik Ameer Basha' <shaik.samsung@gmail.com>
-Cc: 'Olof Johansson' <olof@lixom.net>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sachin.kamat@linaro.org, joshi@samsung.com, sungchun.kang@samsung.com, 'Rob Herring' <rob.herring@calxeda.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 00/11] pinctrl: mvebu: pinctrl driver
+Date: Sat, 11 Aug 2012 14:56:38 +0200
+Message-ID: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Kukjin Kim wrote:
-> 
-> Sylwester Nawrocki wrote:
-> >
-> > On 08/06/2012 08:27 AM, Shaik Ameer Basha wrote:
-> > > After all this discussion, I can see two possibilities here.
-> > > 1] If Kukjin Kim is sure about G-Scaler remains unchanged, across all
-> > > the exynos5 series SoCs,
-> > >          It is fine to go with the compatible string
-"samsung,exynos5-
-> gsc".
-> > > 2] Otherwise in case of any doubts about G-Scaler is going to change,
-> > >          It is safe to go with the compatible string specific to
-> > > current SoC i.e., "samsung,exynos5250-gsc".
-> > >
-> > > If we all can agree on this, lets Kukjin Kim decide which string to
-> > > use as he has good knowledge about upcoming exynos5 series SoCs.
-> >
-> > I don't have strong opinion on this, but my vote goes for using more
-> > specific properties. Of course the final word belongs to Mr. Kim.
-> >
-> Thanks, and I will discuss with exynos hardware chip designers about that,
-> then let you know.
-> 
-'exynos5-gsc' should be ok on EXYNOS5250 and upcoming EXYNOS5 SoCs.
+This patch set adds a core pinctrl driver for Marvell MVEBU SoCs and
+SoC specific stubs for Armada 370, Armada XP, Dove, and Kirkwood.
+The SoC specific stubs use the pinctrl-mvebu core driver that handles
+pinctrl API and register accesses for common pinctrl registers.
 
-If any updates, I'll let you know.
+As especially Dove has some pinctrl registers that do not match the
+common pinctrl register layout the core driver has been extended by
+some callbacks to allow uncommon Dove pinctrl registers.
 
-Thanks.
+DT binding documentation is added for all supported SoCs but as
+Dove and Kirkwood are not yet ready for full DT support, the pinctrl
+driver is only activated for Armada 370 and XP.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+The driver has been tested on Dove, 88f6281 variant of Kirkwood,
+Armada 370, and XP.
+
+Sebastian Hesselbarth (3):
+  pinctrl: mvebu: pinctrl driver core
+  pinctrl: mvebu: dove pinctrl driver
+  pinctrl: mvebu: kirkwood pinctrl driver
+
+Thomas Petazzoni (8):
+  pinctrl: mvebu: add pinctrl driver for Armada 370
+  pinctrl: mvebu: add pinctrl driver for Armada XP
+  ARM: mvebu: add pinctrl device in DT for Armada 370/XP SoCs
+  ARM: mvebu: Add pinctrl support to Armada XP SoCs
+  ARM: mvebu: Add pinctrl support to Armada 370 SoC
+  ARM: mvebu: adjust Armada XP evaluation board DTS
+  arm: mvebu: enable PINCTRL usage
+  arm: mvebu: add pinctrl support in defconfig
+
+ .../pinctrl/marvell,armada-370-pinctrl.txt         |   95 +++
+ .../bindings/pinctrl/marvell,armada-xp-pinctrl.txt |  100 +++
+ .../bindings/pinctrl/marvell,dove-pinctrl.txt      |   71 ++
+ .../bindings/pinctrl/marvell,kirkwood-pinctrl.txt  |  279 +++++++
+ .../bindings/pinctrl/marvell,mvebu-pinctrl.txt     |   46 ++
+ arch/arm/Kconfig                                   |    3 +
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    7 +
+ arch/arm/boot/dts/armada-370.dtsi                  |    4 +
+ arch/arm/boot/dts/armada-xp-db.dts                 |    4 +-
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi           |   27 +
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi           |   27 +
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi           |   27 +
+ arch/arm/configs/mvebu_defconfig                   |    2 +
+ drivers/pinctrl/Kconfig                            |   34 +
+ drivers/pinctrl/Makefile                           |    5 +
+ drivers/pinctrl/pinctrl-armada-370.c               |  421 +++++++++++
+ drivers/pinctrl/pinctrl-armada-xp.c                |  466 ++++++++++++
+ drivers/pinctrl/pinctrl-dove.c                     |  622 ++++++++++++++++
+ drivers/pinctrl/pinctrl-kirkwood.c                 |  460 ++++++++++++
+ drivers/pinctrl/pinctrl-mvebu.c                    |  758 ++++++++++++++++++++
+ drivers/pinctrl/pinctrl-mvebu.h                    |  175 +++++
+ 21 files changed, 3631 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-370-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-xp-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt
+ create mode 100644 arch/arm/boot/dts/armada-xp-mv78230.dtsi
+ create mode 100644 arch/arm/boot/dts/armada-xp-mv78260.dtsi
+ create mode 100644 arch/arm/boot/dts/armada-xp-mv78460.dtsi
+ create mode 100644 drivers/pinctrl/pinctrl-armada-370.c
+ create mode 100644 drivers/pinctrl/pinctrl-armada-xp.c
+ create mode 100644 drivers/pinctrl/pinctrl-dove.c
+ create mode 100644 drivers/pinctrl/pinctrl-kirkwood.c
+ create mode 100644 drivers/pinctrl/pinctrl-mvebu.c
+ create mode 100644 drivers/pinctrl/pinctrl-mvebu.h
+
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lior Amsalem <alior@marvell.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+-- 
+1.7.10.4
+
