@@ -1,59 +1,60 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] omap-am33xx rtc dt support
-Date: Sat, 11 Aug 2012 01:27:11 +0530
-Message-ID: <50256797.3020505@ti.com>
-References: <cover.1343383616.git.afzal@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v3 2/2] ARM: EXYNOS: Add Gscaler device from DT
+Date: Sat, 11 Aug 2012 13:08:20 +0900
+Message-ID: <0efb01cd7776$f1b6fcc0$d524f640$%kim@samsung.com>
+References: <1342789723-3949-1-git-send-email-shaik.ameer@samsung.com>
+ <1342789723-3949-3-git-send-email-shaik.ameer@samsung.com>
+ <033301cd6fb0$7ac4af90$704e0eb0$%kim@samsung.com>
+ <CAJuYYwTy5zkeM_cJO7HMm+=v=ORPHD26nQYZwXK6v1noWm1EuA@mail.gmail.com>
+ <5018E656.3070803@samsung.com>
+ <036f01cd6fc4$120a9910$361fcb30$%kim@samsung.com> <50197D66.1050108@gmail.com>
+ <CAOesGMiZMrv4GY=v1WPn_qGZgg=vduO2TbsUOQ6sCah-ZvOg_A@mail.gmail.com>
+ <501B1003.1090003@gmail.com>
+ <CAOD6ATomKE3WYtGrBTSyjfkNr5ZK+3=NRrZLX0p5pOzPykOikQ@mail.gmail.com>
+ <5020164E.90007@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <cover.1343383616.git.afzal-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: khilman-l0cyMroinI0@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: 
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, 'Shaik Ameer Basha' <shaik.samsung@gmail.com>
+Cc: 'Olof Johansson' <olof@lixom.net>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sy0816.kang@samsung.com, olofj@google.com, thomas.ab@samsung.com, sachin.kamat@linaro.org, joshi@samsung.com, sungchun.kang@samsung.com, 'Rob Herring' <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7/27/2012 5:53 PM, Afzal Mohammed wrote:
-> Hi,
+Kukjin Kim wrote:
 > 
-> This series makes rtc-omap driver DT capable, adds AM33xx
-> RTC DT support along with a few enchancments to the driver.
+> Sylwester Nawrocki wrote:
+> >
+> > On 08/06/2012 08:27 AM, Shaik Ameer Basha wrote:
+> > > After all this discussion, I can see two possibilities here.
+> > > 1] If Kukjin Kim is sure about G-Scaler remains unchanged, across all
+> > > the exynos5 series SoCs,
+> > >          It is fine to go with the compatible string
+"samsung,exynos5-
+> gsc".
+> > > 2] Otherwise in case of any doubts about G-Scaler is going to change,
+> > >          It is safe to go with the compatible string specific to
+> > > current SoC i.e., "samsung,exynos5250-gsc".
+> > >
+> > > If we all can agree on this, lets Kukjin Kim decide which string to
+> > > use as he has good knowledge about upcoming exynos5 series SoCs.
+> >
+> > I don't have strong opinion on this, but my vote goes for using more
+> > specific properties. Of course the final word belongs to Mr. Kim.
+> >
+> Thanks, and I will discuss with exynos hardware chip designers about that,
+> then let you know.
 > 
-> rtc-omap driver is made intelligent enough to handle kicker
-> mechanism. This helps in removing kicker mechanism support
-> done for DaVinci at platform level.
-> 
-> This has been tested on Beaglebone (AM33xx platform) and on
-> DaVinci DA850 EVM.
-> 
-> This series is based over linux-omap master and can be
-> directly applied over linux-next, except for
-> [PATCH 6/6] arm/dts: am33xx rtc node.
-> 
-> PATCH 6/6 should go through linux-omap tree and needs
-> http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg71644.html
-> (arm/dts: am33xx wdt node) to get applied cleanly
+'exynos5-gsc' should be ok on EXYNOS5250 and upcoming EXYNOS5 SoCs.
 
-I tested patches 1-5 on AM18x EVM using rtcwake and hwclock commands.
-Also tested on DT enabled AM18x EVM using hwclock.
+If any updates, I'll let you know.
 
-For patched 1-5:
+Thanks.
 
-Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-
-Alessandro,
-
-I assume you would want me to queue 2/6 through DaVinci tree. That patch
-depends on 1/6 being accepted and merged by you. Let me know how you
-want to move forward here.
-
-Thanks,
-Sekhar
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
