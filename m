@@ -1,43 +1,46 @@
-From: Wang Dongsheng-B40534 <B40534@freescale.com>
-Subject: RE: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
-Date: Mon, 13 Aug 2012 04:10:06 +0000
-Message-ID: <ABB05CD9C9F68C46A5CEDC7F15439259DB1407@039-SN2MPN1-022.039d.mgd.msft.net>
-References: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
- <94D8FBCC-7AA8-4F50-90A3-2A11F579AC34@freescale.com>
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH RESEND v2 1/2] arm/dts: Add AM33XX basic pinctrl support
+Date: Mon, 13 Aug 2012 04:33:59 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA10824@DBDE01.ent.ti.com>
+References: <1343144719-26352-1-git-send-email-anilkumar@ti.com>
+ <1343144719-26352-2-git-send-email-anilkumar@ti.com>
+ <50125B1C.8000209@ti.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA06E4B@DBDE01.ent.ti.com>
+ <50225618.9070501@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <94D8FBCC-7AA8-4F50-90A3-2A11F579AC34@freescale.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50225618.9070501@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Gala Kumar-B11780 <B11780@freescale.com>
-Cc: Wood Scott-B07421 <B07421@freescale.com>, "devicetree-discuss@lists.ozlabs.org Discuss" <devicetree-discuss@lists.ozlabs.org>, Paul Mackerras <paulus@samba.org>, "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
+Peter,
+
+On Wed, Aug 08, 2012 at 17:35:44, Ujfalusi, Peter wrote:
+> On 07/31/2012 04:37 PM, AnilKumar, Chimata wrote:
+> >> I'm just curious about the size here: how it ended up as 0x0338?
+> >> While looking at the TRM of AM335x I can come up with 0x0238 (0x44e10800 -
+> >> 0x44e10a38), but I don't see any sings of the remaining 0x0100 to be
+> >> documented at least.
+> > 
+> > No, pinmux registers are available till 0x44E10B38, look at AM335x latest TRM
+> > or pinmux utility (we cannot find the exact offsets but pins we can find after
+> > 0x0A38, conf_ddr_resetn) at http://www.ti.com/tool/pinmuxtool
 > 
-> > a/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-> > b/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-> > index df41958..5aafca0 100644
-> > --- a/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/mpic-timer.txt
-> > @@ -1,13 +1,14 @@
-> > * Freescale MPIC timers
-> >
-> > Required properties:
-> > -- compatible: "fsl,mpic-global-timer"
-> > +- compatible: "fsl,global-timer"
+> I have looked at the latest TRM (Rev F, SPRUH73F -  public TRM) and there is
+> not mention of registers between 0x0a34 and 0x0e00.
+> I can not even find any reference of conf_ddr_resetn register either in the TRM.
+> I can not check with the pinmuxtool since it is crashing with wine under Linux.
+> There could be registers after 0x0a34, but they are not publicly documented...
 > 
-> Why are renaming?.. also use of fsl,global-timer is to generic of a name
-> for the this.
-> 
-[Wang Dongsheng] "fsl,global-timer" is generic of a name.
+
+Thanks for pointing this, I was referring older version (Rev C) of TRM which have
+the details which is not present in latest TRM. These pins are dedicated ones so
+pinmuxing is not required. I will submit new version.
+
+Thanks
+AnilKumar
