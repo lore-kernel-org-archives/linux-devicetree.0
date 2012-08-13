@@ -1,177 +1,135 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: [RFC:PATCH 3.6.0-rc1] dtc: Add -P option to dtc for Pre-Processing.
-Date: Mon, 13 Aug 2012 09:01:53 +0100
-Message-ID: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: linux-kbuild@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, srinivas.kandagatla@st.com, mmarek@suse.cz, dwg@au1.ibm.com
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v4 1/2] ARM: EXYNOS: Add clock support for G-Scaler
+Date: Mon, 13 Aug 2012 15:32:23 +0530
+Message-ID: <1344852144-25598-2-git-send-email-shaik.ameer@samsung.com>
+References: <1344852144-25598-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1344852144-25598-1-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, joshi@samsung.com, shaik.samsung@gmail.com, shaik.ameer@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Add required clock support for G-Scaler for exynos5
 
-This patch add pre-processing capablity to dtc based on status property.
-Now the dtc has additional option -P to enable Pre-processing based on
-status property.
-
-The SOCS have lot of device tree infrastructure files which mark the
-device nodes as disabled and the board level device tree enables them if
-required. However while creating device tree blob, the compiler can
-preprocess the nodes and exclude nodes marked as disabled, doing this
-way will reduce the size of device tree blob.
-
-In our case this has reduced the blob size from 29K to 15K.
-
-Also nodes with status="disabled" is are never probed by dt platform bus
-code.
-
-Again, Preprocessing is optional parameter to dtc.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
 ---
-Hi All, 
+ arch/arm/mach-exynos/clock-exynos5.c |   86 ++++++++++++++++++++++++++++++++++
+ 1 files changed, 86 insertions(+), 0 deletions(-)
 
-I have noticed that the dtb blob also contains device nodes with property status = "disabled", 
-But these device nodes are not used by device tree platform bus probe code or any of the kernel code.
-Are these type of nodes ever used by the kernel code? 
-If they are not it might be nice to get them out of dtb to reduce the overall size of dtb.
-
-The size change will be significant once the SOC adds all the possible devices in to the device trees.
-
-My patch adds option -P to dtc to skip such nodes, resulting in only nodes which are supposed to be instantiated.
-
-Comments?
-
-Thanks,
-srini
-
- scripts/dtc/dtc.c        |    9 ++++++++-
- scripts/dtc/dtc.h        |    3 +++
- scripts/dtc/flattree.c   |    3 +++
- scripts/dtc/livetree.c   |   17 +++++++++++++++++
- scripts/dtc/treesource.c |    3 +++
- 5 files changed, 34 insertions(+), 1 deletions(-)
-
-diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
-index 2ef5e2e..f20d4e0 100644
---- a/scripts/dtc/dtc.c
-+++ b/scripts/dtc/dtc.c
-@@ -30,6 +30,7 @@ int quiet;		/* Level of quietness */
- int reservenum;		/* Number of memory reservation slots */
- int minsize;		/* Minimum blob size */
- int padsize;		/* Additional padding to blob */
-+int preprocess;		/* Preprocess output */
- int phandle_format = PHANDLE_BOTH;	/* Use linux,phandle or phandle properties */
+diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-exynos/clock-exynos5.c
+index 3b00e29..eb3f4fc 100644
+--- a/arch/arm/mach-exynos/clock-exynos5.c
++++ b/arch/arm/mach-exynos/clock-exynos5.c
+@@ -547,6 +547,68 @@ static struct clksrc_clk exynos5_clk_aclk_66 = {
+ 	.reg_div = { .reg = EXYNOS5_CLKDIV_TOP0, .shift = 0, .size = 3 },
+ };
  
- static void fill_fullpaths(struct node *tree, const char *prefix)
-@@ -84,6 +85,8 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t\tForce - try to produce output even if the input tree has errors\n");
- 	fprintf(stderr, "\t-s\n");
- 	fprintf(stderr, "\t\tSort nodes and properties before outputting (only useful for\n\t\tcomparing trees)\n");
-+	fprintf(stderr, "\t-P\n");
-+	fprintf(stderr, "\t\tPre-Process nodes based on status property\n");
- 	fprintf(stderr, "\t-v\n");
- 	fprintf(stderr, "\t\tPrint DTC version and exit\n");
- 	fprintf(stderr, "\t-H <phandle format>\n");
-@@ -108,12 +111,13 @@ int main(int argc, char *argv[])
- 	int outversion = DEFAULT_FDT_VERSION;
- 	long long cmdline_boot_cpuid = -1;
- 
-+	preprocess = 0;
- 	quiet      = 0;
- 	reservenum = 0;
- 	minsize    = 0;
- 	padsize    = 0;
- 
--	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fcqb:vH:s"))
-+	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fcqb:vH:s:P"))
- 			!= EOF) {
- 		switch (opt) {
- 		case 'I':
-@@ -167,6 +171,9 @@ int main(int argc, char *argv[])
- 		case 's':
- 			sort = 1;
- 			break;
-+		case 'P':
-+			preprocess = 1;
-+			break;
- 
- 		case 'h':
- 		default:
-diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
-index f37c97e..a1b525c 100644
---- a/scripts/dtc/dtc.h
-+++ b/scripts/dtc/dtc.h
-@@ -52,6 +52,7 @@ extern int quiet;		/* Level of quietness */
- extern int reservenum;		/* Number of memory reservation slots */
- extern int minsize;		/* Minimum blob size */
- extern int padsize;		/* Additional padding to blob */
-+extern int preprocess;		/* Preprocess output */
- extern int phandle_format;	/* Use linux,phandle or phandle properties */
- 
- #define PHANDLE_LEGACY	0x1
-@@ -222,6 +223,8 @@ struct boot_info *build_boot_info(struct reserve_info *reservelist,
- 				  struct node *tree, uint32_t boot_cpuid_phys);
- void sort_tree(struct boot_info *bi);
- 
-+int is_device_node_avaiable(struct node *node);
++static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl_mid = {
++	.clk	= {
++		.name		= "mout_aclk_300_gscl_mid",
++	},
++	.sources = &exynos5_clkset_aclk,
++	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 24, .size = 1 },
++};
 +
- /* Checks */
- 
- void process_checks(int force, struct boot_info *bi);
-diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
-index 28d0b23..162066d 100644
---- a/scripts/dtc/flattree.c
-+++ b/scripts/dtc/flattree.c
-@@ -304,6 +304,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
- 	}
- 
- 	for_each_child(tree, child) {
-+		if (preprocess && !is_device_node_avaiable(child))
-+			continue;
++static struct clk *exynos5_clkset_aclk_300_mid1_list[] = {
++	[0] = &exynos5_clk_sclk_vpll.clk,
++	[1] = &exynos5_clk_mout_cpll.clk,
++};
 +
- 		flatten_tree(child, emit, etarget, strbuf, vi);
- 	}
- 
-diff --git a/scripts/dtc/livetree.c b/scripts/dtc/livetree.c
-index 26d0e1e..37617d5 100644
---- a/scripts/dtc/livetree.c
-+++ b/scripts/dtc/livetree.c
-@@ -607,3 +607,20 @@ void sort_tree(struct boot_info *bi)
- 	sort_reserve_entries(bi);
- 	sort_node(bi->dt);
- }
++static struct clksrc_sources exynos5_clkset_aclk_300_gscl_mid1 = {
++	.sources	= exynos5_clkset_aclk_300_mid1_list,
++	.nr_sources	= ARRAY_SIZE(exynos5_clkset_aclk_300_mid1_list),
++};
 +
-+int is_device_node_avaiable(struct node *node)
-+{
-+	struct property *status;
++static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl_mid1 = {
++	.clk	= {
++		.name		= "mout_aclk_300_gscl_mid1",
++	},
++	.sources = &exynos5_clkset_aclk_300_gscl_mid1,
++	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP1, .shift = 12, .size = 1 },
++};
 +
-+	status = get_property(node, "status");
-+	if (status == NULL)
-+		return 1;
++static struct clk *exynos5_clkset_aclk_300_gscl_list[] = {
++	[0] = &exynos5_clk_mout_aclk_300_gscl_mid.clk,
++	[1] = &exynos5_clk_mout_aclk_300_gscl_mid1.clk,
++};
 +
-+	if (status->val.len > 0) {
-+		if (!strcmp(status->val.val, "okay") ||
-+			 !strcmp(status->val.val, "ok"))
-+			return 1;
-+	}
++static struct clksrc_sources exynos5_clkset_aclk_300_gscl = {
++	.sources	= exynos5_clkset_aclk_300_gscl_list,
++	.nr_sources	= ARRAY_SIZE(exynos5_clkset_aclk_300_gscl_list),
++};
 +
-+	return 0;
-+}
-diff --git a/scripts/dtc/treesource.c b/scripts/dtc/treesource.c
-index c09aafa..febb622 100644
---- a/scripts/dtc/treesource.c
-+++ b/scripts/dtc/treesource.c
-@@ -253,6 +253,9 @@ static void write_tree_source_node(FILE *f, struct node *tree, int level)
- 		write_propval(f, prop);
- 	}
- 	for_each_child(tree, child) {
-+		if (preprocess && !is_device_node_avaiable(child))
-+			continue;
++static struct clksrc_clk exynos5_clk_mout_aclk_300_gscl = {
++	.clk	= {
++		.name		= "mout_aclk_300_gscl",
++	},
++	.sources = &exynos5_clkset_aclk_300_gscl,
++	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP0, .shift = 25, .size = 1 },
++};
 +
- 		fprintf(f, "\n");
- 		write_tree_source_node(f, child, level+1);
- 	}
++static struct clk *exynos5_clk_src_gscl_300_list[] = {
++	[0] = &clk_ext_xtal_mux,
++	[1] = &exynos5_clk_mout_aclk_300_gscl.clk,
++};
++
++static struct clksrc_sources exynos5_clk_src_gscl_300 = {
++	.sources	= exynos5_clk_src_gscl_300_list,
++	.nr_sources	= ARRAY_SIZE(exynos5_clk_src_gscl_300_list),
++};
++
++static struct clksrc_clk exynos5_clk_aclk_300_gscl = {
++	.clk	= {
++		.name		= "aclk_300_gscl",
++	},
++	.sources = &exynos5_clk_src_gscl_300,
++	.reg_src = { .reg = EXYNOS5_CLKSRC_TOP3, .shift = 10, .size = 1 },
++};
++
+ static struct clk exynos5_init_clocks_off[] = {
+ 	{
+ 		.name		= "timers",
+@@ -755,6 +817,26 @@ static struct clk exynos5_init_clocks_off[] = {
+ 		.enable		= exynos5_clk_ip_peric_ctrl,
+ 		.ctrlbit	= (1 << 18),
+ 	}, {
++		.name		= "gscl",
++		.devname	= "exynos-gsc.0",
++		.enable		= exynos5_clk_ip_gscl_ctrl,
++		.ctrlbit	= (1 << 0),
++	}, {
++		.name		= "gscl",
++		.devname	= "exynos-gsc.1",
++		.enable		= exynos5_clk_ip_gscl_ctrl,
++		.ctrlbit	= (1 << 1),
++	}, {
++		.name		= "gscl",
++		.devname	= "exynos-gsc.2",
++		.enable		= exynos5_clk_ip_gscl_ctrl,
++		.ctrlbit	= (1 << 2),
++	}, {
++		.name		= "gscl",
++		.devname	= "exynos-gsc.3",
++		.enable		= exynos5_clk_ip_gscl_ctrl,
++		.ctrlbit	= (1 << 3),
++	}, {
+ 		.name		= SYSMMU_CLOCK_NAME,
+ 		.devname	= SYSMMU_CLOCK_DEVNAME(mfc_l, 0),
+ 		.enable		= &exynos5_clk_ip_mfc_ctrl,
+@@ -1216,6 +1298,10 @@ static struct clksrc_clk *exynos5_sysclks[] = {
+ 	&exynos5_clk_aclk_266,
+ 	&exynos5_clk_aclk_200,
+ 	&exynos5_clk_aclk_166,
++	&exynos5_clk_aclk_300_gscl,
++	&exynos5_clk_mout_aclk_300_gscl,
++	&exynos5_clk_mout_aclk_300_gscl_mid,
++	&exynos5_clk_mout_aclk_300_gscl_mid1,
+ 	&exynos5_clk_aclk_66_pre,
+ 	&exynos5_clk_aclk_66,
+ 	&exynos5_clk_dout_mmc0,
 -- 
 1.7.0.4
-
