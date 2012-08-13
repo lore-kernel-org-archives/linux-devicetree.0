@@ -1,73 +1,177 @@
-From: Li Yang-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v2 2/2] powerpc/mpic: add global timer support
-Date: Mon, 13 Aug 2012 06:17:36 +0000
-Message-ID: <94F013E7935FF44C83EBE7784D62AD3F093AEC18@039-SN2MPN1-023.039d.mgd.msft.net>
-References: <1344578081-8095-1-git-send-email-Dongsheng.wang@freescale.com>
- <5025639F.4070203@freescale.com>
- <ABB05CD9C9F68C46A5CEDC7F15439259DB147E@039-SN2MPN1-022.039d.mgd.msft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <ABB05CD9C9F68C46A5CEDC7F15439259DB147E-RL0Hj/+nBVC81RJBUSuqCa4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wang Dongsheng-B40534 <B40534-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Gala Kumar-B11780 <B11780-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org" <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [RFC:PATCH 3.6.0-rc1] dtc: Add -P option to dtc for Pre-Processing.
+Date: Mon, 13 Aug 2012 09:01:53 +0100
+Message-ID: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: linux-kbuild@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, srinivas.kandagatla@st.com, mmarek@suse.cz, dwg@au1.ibm.com
 List-Id: devicetree@vger.kernel.org
 
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
+This patch add pre-processing capablity to dtc based on status property.
+Now the dtc has additional option -P to enable Pre-processing based on
+status property.
 
-> -----Original Message-----
-> From: Wang Dongsheng-B40534
-> Sent: Monday, August 13, 2012 1:54 PM
-> To: Wood Scott-B07421
-> Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org; linuxppc-
-> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Gala Kumar-B11780; Li Yang-R58472
-> Subject: RE: [PATCH v2 2/2] powerpc/mpic: add global timer support
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Saturday, August 11, 2012 3:40 AM
-> > To: Wang Dongsheng-B40534
-> > Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org; linuxppc-
-> > dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Gala Kumar-B11780; Li Yang-R58472
-> > Subject: Re: [PATCH v2 2/2] powerpc/mpic: add global timer support
-> >
-> > On 08/10/2012 12:54 AM, Dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> > > +static const struct of_device_id mpic_timer_ids[] = {
-> > > +	{ .compatible = "open-pic,global-timer", },
-> > > +	{ .compatible = "fsl,global-timer", },
-> > > +	{},
-> > > +};
-> > > +
-> > > +static int __init mpic_timer_init(void) {
-> > > +	struct device_node *np = NULL;
-> > > +
-> > > +	for_each_node_by_type(np, "open-pic")
-> > > +		if (of_match_node(mpic_timer_ids, np))
-> > > +			group_init(np);
-> > > +
-> > > +	if (list_empty(&group_list))
-> > > +		return -ENODEV;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +arch_initcall(mpic_timer_init);
-> >
-> > Oh, and don't probe by device_type.
+The SOCS have lot of device tree infrastructure files which mark the
+device nodes as disabled and the board level device tree enables them if
+required. However while creating device tree blob, the compiler can
+preprocess the nodes and exclude nodes marked as disabled, doing this
+way will reduce the size of device tree blob.
 
-Actually it does match the compatible.  The device_type is just to speed up the search.  I don't think it's a problem unless the device type is not mandatory any more for defined types.
+In our case this has reduced the blob size from 29K to 15K.
 
-- Leo
+Also nodes with status="disabled" is are never probed by dt platform bus
+code.
+
+Again, Preprocessing is optional parameter to dtc.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+---
+Hi All, 
+
+I have noticed that the dtb blob also contains device nodes with property status = "disabled", 
+But these device nodes are not used by device tree platform bus probe code or any of the kernel code.
+Are these type of nodes ever used by the kernel code? 
+If they are not it might be nice to get them out of dtb to reduce the overall size of dtb.
+
+The size change will be significant once the SOC adds all the possible devices in to the device trees.
+
+My patch adds option -P to dtc to skip such nodes, resulting in only nodes which are supposed to be instantiated.
+
+Comments?
+
+Thanks,
+srini
+
+ scripts/dtc/dtc.c        |    9 ++++++++-
+ scripts/dtc/dtc.h        |    3 +++
+ scripts/dtc/flattree.c   |    3 +++
+ scripts/dtc/livetree.c   |   17 +++++++++++++++++
+ scripts/dtc/treesource.c |    3 +++
+ 5 files changed, 34 insertions(+), 1 deletions(-)
+
+diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
+index 2ef5e2e..f20d4e0 100644
+--- a/scripts/dtc/dtc.c
++++ b/scripts/dtc/dtc.c
+@@ -30,6 +30,7 @@ int quiet;		/* Level of quietness */
+ int reservenum;		/* Number of memory reservation slots */
+ int minsize;		/* Minimum blob size */
+ int padsize;		/* Additional padding to blob */
++int preprocess;		/* Preprocess output */
+ int phandle_format = PHANDLE_BOTH;	/* Use linux,phandle or phandle properties */
+ 
+ static void fill_fullpaths(struct node *tree, const char *prefix)
+@@ -84,6 +85,8 @@ static void  __attribute__ ((noreturn)) usage(void)
+ 	fprintf(stderr, "\t\tForce - try to produce output even if the input tree has errors\n");
+ 	fprintf(stderr, "\t-s\n");
+ 	fprintf(stderr, "\t\tSort nodes and properties before outputting (only useful for\n\t\tcomparing trees)\n");
++	fprintf(stderr, "\t-P\n");
++	fprintf(stderr, "\t\tPre-Process nodes based on status property\n");
+ 	fprintf(stderr, "\t-v\n");
+ 	fprintf(stderr, "\t\tPrint DTC version and exit\n");
+ 	fprintf(stderr, "\t-H <phandle format>\n");
+@@ -108,12 +111,13 @@ int main(int argc, char *argv[])
+ 	int outversion = DEFAULT_FDT_VERSION;
+ 	long long cmdline_boot_cpuid = -1;
+ 
++	preprocess = 0;
+ 	quiet      = 0;
+ 	reservenum = 0;
+ 	minsize    = 0;
+ 	padsize    = 0;
+ 
+-	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fcqb:vH:s"))
++	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fcqb:vH:s:P"))
+ 			!= EOF) {
+ 		switch (opt) {
+ 		case 'I':
+@@ -167,6 +171,9 @@ int main(int argc, char *argv[])
+ 		case 's':
+ 			sort = 1;
+ 			break;
++		case 'P':
++			preprocess = 1;
++			break;
+ 
+ 		case 'h':
+ 		default:
+diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
+index f37c97e..a1b525c 100644
+--- a/scripts/dtc/dtc.h
++++ b/scripts/dtc/dtc.h
+@@ -52,6 +52,7 @@ extern int quiet;		/* Level of quietness */
+ extern int reservenum;		/* Number of memory reservation slots */
+ extern int minsize;		/* Minimum blob size */
+ extern int padsize;		/* Additional padding to blob */
++extern int preprocess;		/* Preprocess output */
+ extern int phandle_format;	/* Use linux,phandle or phandle properties */
+ 
+ #define PHANDLE_LEGACY	0x1
+@@ -222,6 +223,8 @@ struct boot_info *build_boot_info(struct reserve_info *reservelist,
+ 				  struct node *tree, uint32_t boot_cpuid_phys);
+ void sort_tree(struct boot_info *bi);
+ 
++int is_device_node_avaiable(struct node *node);
++
+ /* Checks */
+ 
+ void process_checks(int force, struct boot_info *bi);
+diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
+index 28d0b23..162066d 100644
+--- a/scripts/dtc/flattree.c
++++ b/scripts/dtc/flattree.c
+@@ -304,6 +304,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
+ 	}
+ 
+ 	for_each_child(tree, child) {
++		if (preprocess && !is_device_node_avaiable(child))
++			continue;
++
+ 		flatten_tree(child, emit, etarget, strbuf, vi);
+ 	}
+ 
+diff --git a/scripts/dtc/livetree.c b/scripts/dtc/livetree.c
+index 26d0e1e..37617d5 100644
+--- a/scripts/dtc/livetree.c
++++ b/scripts/dtc/livetree.c
+@@ -607,3 +607,20 @@ void sort_tree(struct boot_info *bi)
+ 	sort_reserve_entries(bi);
+ 	sort_node(bi->dt);
+ }
++
++int is_device_node_avaiable(struct node *node)
++{
++	struct property *status;
++
++	status = get_property(node, "status");
++	if (status == NULL)
++		return 1;
++
++	if (status->val.len > 0) {
++		if (!strcmp(status->val.val, "okay") ||
++			 !strcmp(status->val.val, "ok"))
++			return 1;
++	}
++
++	return 0;
++}
+diff --git a/scripts/dtc/treesource.c b/scripts/dtc/treesource.c
+index c09aafa..febb622 100644
+--- a/scripts/dtc/treesource.c
++++ b/scripts/dtc/treesource.c
+@@ -253,6 +253,9 @@ static void write_tree_source_node(FILE *f, struct node *tree, int level)
+ 		write_propval(f, prop);
+ 	}
+ 	for_each_child(tree, child) {
++		if (preprocess && !is_device_node_avaiable(child))
++			continue;
++
+ 		fprintf(f, "\n");
+ 		write_tree_source_node(f, child, level+1);
+ 	}
+-- 
+1.7.0.4
+
