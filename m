@@ -1,46 +1,105 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH RESEND v2 1/2] arm/dts: Add AM33XX basic pinctrl support
-Date: Mon, 13 Aug 2012 04:33:59 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA10824@DBDE01.ent.ti.com>
-References: <1343144719-26352-1-git-send-email-anilkumar@ti.com>
- <1343144719-26352-2-git-send-email-anilkumar@ti.com>
- <50125B1C.8000209@ti.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA06E4B@DBDE01.ent.ti.com>
- <50225618.9070501@ti.com>
+From: Wang Dongsheng-B40534 <B40534@freescale.com>
+Subject: RE: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
+Date: Mon, 13 Aug 2012 05:40:27 +0000
+Message-ID: <ABB05CD9C9F68C46A5CEDC7F15439259DB1450@039-SN2MPN1-022.039d.mgd.msft.net>
+References: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
+ <50255F49.5050500@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50225618.9070501@ti.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <50255F49.5050500@freescale.com>
 Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: Li Yang-R58472 <r58472@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "paulus@samba.org" <paulus@samba.org>, Gala Kumar-B11780 <B11780@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Peter,
-
-On Wed, Aug 08, 2012 at 17:35:44, Ujfalusi, Peter wrote:
-> On 07/31/2012 04:37 PM, AnilKumar, Chimata wrote:
-> >> I'm just curious about the size here: how it ended up as 0x0338?
-> >> While looking at the TRM of AM335x I can come up with 0x0238 (0x44e10800 -
-> >> 0x44e10a38), but I don't see any sings of the remaining 0x0100 to be
-> >> documented at least.
-> > 
-> > No, pinmux registers are available till 0x44E10B38, look at AM335x latest TRM
-> > or pinmux utility (we cannot find the exact offsets but pins we can find after
-> > 0x0A38, conf_ddr_resetn) at http://www.ti.com/tool/pinmuxtool
+> > diff --git a/Documentation/devicetree/bindings/open-pic.txt
+> > b/Documentation/devicetree/bindings/open-pic.txt
+> > index 909a902..045c2e9 100644
+> > --- a/Documentation/devicetree/bindings/open-pic.txt
+> > +++ b/Documentation/devicetree/bindings/open-pic.txt
+> > @@ -92,6 +92,52 @@ Example 2:
+> >
+> >  * References
+> >
+> > +* Open PIC global timers
+> > +
+> > +Required properties:
+> > +- compatible: "open-pic,global-timer"
 > 
-> I have looked at the latest TRM (Rev F, SPRUH73F -  public TRM) and there is
-> not mention of registers between 0x0a34 and 0x0e00.
-> I can not even find any reference of conf_ddr_resetn register either in the TRM.
-> I can not check with the pinmuxtool since it is crashing with wine under Linux.
-> There could be registers after 0x0a34, but they are not publicly documented...
+> open-pic isn't a vendor (or software project that acts like a
+> pseudo-vendor) -- I'd go with "open-pic-global-timer".
 > 
+[Wang Dongsheng] yes, "open-pic-global-timer" looks good.
 
-Thanks for pointing this, I was referring older version (Rev C) of TRM which have
-the details which is not present in latest TRM. These pins are dedicated ones so
-pinmuxing is not required. I will submit new version.
+> > +- reg : Contains two regions.  The first is the timer frequency
+> > +reporting
+> > +  register for the group.  The second is the main timer register bank
+> > +  (GTCCR, GTBCR, GTVPR, GTDR).
+> 
+> Why not just put clock-frequency in the node, instead of describing TFRR?
+> I don't think U-Boot currently sets TFRR.
+> 
+[Wang Dongsheng] If during startup U-Boot do not set TFRR that is unreasonable.
+In Open-PIC this is not allowed. We used is the CCB frequency in FSL chip.
+We do not need to care about the value of this register. But we must support 
+TFRR.
 
-Thanks
-AnilKumar
+> > +		reg = <0x010f0 4 0x01100 0x100>;
+> > +
+> > +		/* Another AMP partition is using timer */
+> > +		available-ranges = <2 2>;
+> >
+> > +
+> > +		interrupts = <2 0 3 0
+> > +		              3 0 3 0>;
+> > +	};
+> > +
+> > +Example 2:
+> > +
+> > +	timer: timer@010f0 {
+> > +		compatible = "open-pic,global-timer";
+> > +		device_type = "open-pic";
+> > +		reg = <0x010f0 4 0x01100 0x100>;
+> > +		interrupts = <0 0 3 0
+> > +			      1 0 3 0
+> > +			      2 0 3 0
+> > +		              3 0 3 0>;
+> > +	};
+> 
+> 4-cell interrupt specifiers are specific to Freescale MPICs.  This means
+> there's no way to describe the timer interrupt on a non-Freescale openpic.
+> Again, I suggest we not bother with this in the absence of an actual need
+> to support the timer on non-Freescale openpic in partitioned scenarios.
+> The existing openpic node is sufficient to describe the
+> hardware in the absence of partitioning.   We could have an
+> "openpic-no-timer" property to indicate that we're describing it
+> separately, so that the absence of a timer node isn't ambiguous as to
+> whether it's an old tree or a partitioned scenario.  An fsl,mpic
+> compatible would imply openpic-no-timer.
+> 
+> Note that I believe many of the non-Freescale openpic nodes are going to
+> be found on systems with real Open Firmware, so we can't go changing the
+> device tree for them.
+[Wang Dongsheng] In the Open-PIC specification, there are four timer.
+		interrupts = <0 0 3 0
+			      1 0 3 0
+			      2 0 3 0
+		              3 0 3 0>;
+
+The "interrupts" just let user know there are four timers. Usage based "interrupts"
+binding to change dts.
+
+> 
+> -Scott
