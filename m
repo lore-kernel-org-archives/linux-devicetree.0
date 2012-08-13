@@ -1,97 +1,200 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
-Date: Mon, 13 Aug 2012 12:39:54 -0500
-Message-ID: <50293BEA.90401@freescale.com>
-References: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
- <50255F49.5050500@freescale.com>
- <ABB05CD9C9F68C46A5CEDC7F15439259DB1450@039-SN2MPN1-022.039d.mgd.msft.net>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
+Date: Mon, 13 Aug 2012 19:40:03 +0200
+Message-ID: <20120813174003.GA2527@avionic-0098.mockup.avionic-design.de>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <50201E1D.5060200@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <ABB05CD9C9F68C46A5CEDC7F15439259DB1450@039-SN2MPN1-022.039d.mgd.msft.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Wang Dongsheng-B40534 <B40534@freescale.com>
-Cc: Wood Scott-B07421 <B07421@freescale.com>, Li Yang-R58472 <r58472@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "paulus@samba.org" <paulus@samba.org>, Gala Kumar-B11780 <B11780@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yLVHuoLXiP9kZBkt"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50201E1D.5060200@wwwdotorg.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Russell King <linux@arm.linux.org.uk>, linux-tegra@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Mitch Bradley <wmb@firmworks.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 08/13/2012 12:40 AM, Wang Dongsheng-B40534 wrote:
->>> diff --git a/Documentation/devicetree/bindings/open-pic.txt
->>> b/Documentation/devicetree/bindings/open-pic.txt
->>> index 909a902..045c2e9 100644
->>> --- a/Documentation/devicetree/bindings/open-pic.txt
->>> +++ b/Documentation/devicetree/bindings/open-pic.txt
->>> @@ -92,6 +92,52 @@ Example 2:
->>>
->>>  * References
->>>
->>> +* Open PIC global timers
->>> +
->>> +Required properties:
->>> +- compatible: "open-pic,global-timer"
->>
->> open-pic isn't a vendor (or software project that acts like a
->> pseudo-vendor) -- I'd go with "open-pic-global-timer".
->>
-> [Wang Dongsheng] yes, "open-pic-global-timer" looks good.
-> 
->>> +- reg : Contains two regions.  The first is the timer frequency
->>> +reporting
->>> +  register for the group.  The second is the main timer register bank
->>> +  (GTCCR, GTBCR, GTVPR, GTDR).
->>
->> Why not just put clock-frequency in the node, instead of describing TFRR?
->> I don't think U-Boot currently sets TFRR.
->>
-> [Wang Dongsheng] If during startup U-Boot do not set TFRR that is unreasonable.
 
-Too bad, it's what happens and we're not going to force users to update
-U-Boot because of this.
+--yLVHuoLXiP9kZBkt
+Content-Type: multipart/mixed; boundary="6sX45UoQRIJXqkqR"
+Content-Disposition: inline
 
->>> +Example 2:
->>> +
->>> +	timer: timer@010f0 {
->>> +		compatible = "open-pic,global-timer";
->>> +		device_type = "open-pic";
->>> +		reg = <0x010f0 4 0x01100 0x100>;
->>> +		interrupts = <0 0 3 0
->>> +			      1 0 3 0
->>> +			      2 0 3 0
->>> +		              3 0 3 0>;
->>> +	};
->>
->> 4-cell interrupt specifiers are specific to Freescale MPICs.  This means
->> there's no way to describe the timer interrupt on a non-Freescale openpic.
->> Again, I suggest we not bother with this in the absence of an actual need
->> to support the timer on non-Freescale openpic in partitioned scenarios.
->> The existing openpic node is sufficient to describe the
->> hardware in the absence of partitioning.   We could have an
->> "openpic-no-timer" property to indicate that we're describing it
->> separately, so that the absence of a timer node isn't ambiguous as to
->> whether it's an old tree or a partitioned scenario.  An fsl,mpic
->> compatible would imply openpic-no-timer.
->>
->> Note that I believe many of the non-Freescale openpic nodes are going to
->> be found on systems with real Open Firmware, so we can't go changing the
->> device tree for them.
-> [Wang Dongsheng] In the Open-PIC specification, there are four timer.
-> 		interrupts = <0 0 3 0
-> 			      1 0 3 0
-> 			      2 0 3 0
-> 		              3 0 3 0>;
-> 
-> The "interrupts" just let user know there are four timers. Usage based "interrupts"
-> binding to change dts.
 
-I can't understand the above or how it's a response to what I wrote.
+--6sX45UoQRIJXqkqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Scott
+On Mon, Aug 06, 2012 at 01:42:21PM -0600, Stephen Warren wrote:
+> On 07/26/2012 01:55 PM, Thierry Reding wrote:
+> > This patch series adds support for device tree based probing of the PCIe
+> > controller found on Tegra SoCs.
+>=20
+> Thierry, I just tested all Tegra boards in v3.6-rc1, and noticed that
+> PCIe doesn't work on TrimSlice when booting use device tree. I think I
+> found the cause, and I can't see why the same problem doesn't affect
+> this series. Perhaps you can enlighten me?
+>=20
+> When booting TrimSlice (or Harmony) using board files, Tegra's PCIe is
+> initialized using a subsys_initcall to tegra_pcie_init() directly (or
+> for Harmony to harmony_pcie_init() which then calls tegra_pcie_init()).
+>=20
+> The final thing tegra_pcie_init() does is call pci_common_init(). This
+> calls pcibios_init_hw() which calls hw->scan() which calls
+> pci_scan_root_bus() which adds a device object for each device on the
+> PCIe bus. However, since this happens very early in the boot sequence, I
+> believe the enumerated PCIe devices don't immediately get probed.
+> Instead, control gets returned to pci_common_init() which I believe then
+> calls pci_bus_assign_resources() which actually sets up the resources
+> for those devices. Later, the PCIe devices actually get probed, and
+> everything works.
+>=20
+> However, when booting using device tree, with the code currently in
+> v3.6-rc1, tegra_pcie_init() is called late in the boot sequence, and so
+> in the sequence described above, as soon as pci_scan_root_bus() adds a
+> device, it gets probed, before the device object's resources have been
+> set up, which results in the following failure:
+>=20
+> PCI: Device 0000:01:00.0 not available because of resource collisions
+>=20
+> ... because of the following code in pcibios_enable_device():
+>=20
+> > 	for (idx =3D 0; idx < 6; idx++) {
+> > 		/* Only set up the requested stuff */
+> > 		if (!(mask & (1 << idx)))
+> > 			continue;
+> >=20
+> > 		r =3D dev->resource + idx;
+> > 		if (!r->start && r->end) {
+> > 			printk(KERN_ERR "PCI: Device %s not available because"
+> > 			       " of resource collisions\n", pci_name(dev));
+>=20
+> Doesn't this same problem exist when instantiating the PCIe device
+> itself from device tree as in your patch series? If not, can you explain
+> why?
+>=20
+> Now, the obvious solution in v3.6 would be to simply have
+> tegra_pcie_init() be called at the same early stage in the boot process
+> when booting using device tree as it is when booting using board files.
+> This works for TrimSlice.
+>=20
+> However, on Harmony, it doesn't work, because PCIe on Harmony depends on
+> regulators, and the regulators are accessed using an I2C bus that is
+> instantiated from DT, and the instantiation of the I2C bus happens
+> fairly late in the boot process so can't be found early during the boot
+> sequence. See harmony_regulator_init() for the failing code.
+>=20
+> Does anyone have any good ideas (small, self-contained patches) for
+> solving this in v3.6 in such a way that PCIe works on both TrimSlice and
+> Harmony?
+>=20
+> Thanks.
+
+I've looked into this a bit, and it seems like ARM is using an open-
+coded version of the pci_enable_resources() function here, with the only
+difference being the unconditional enabling of both I/O and memory-
+mapped access for bridges. On Tegra there is already a PCI fixup to do
+this, so pci_enable_resources() can be used as-is. I came up with the
+attached patch but haven't been able to test it yet.
+
+Thierry
+
+--6sX45UoQRIJXqkqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline; filename="0001-ARM-PCI-refactor-pcibios_enable_device.patch"
+Content-Transfer-Encoding: quoted-printable
+
+=46rom ebd69ae0a3d076e574da74d963cb3834b71dc6ad Mon Sep 17 00:00:00 2001
+=46rom: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Mon, 13 Aug 2012 18:49:28 +0200
+Subject: [PATCH] ARM: PCI: refactor pcibios_enable_device()
+
+The implementation is an open-coded version on pci_enable_resources()
+with a special case to enable I/O and memory-mapped functionality on
+bridges. This commit reuses the existing PCI core implementation of the
+pci_enable_resources() function. This also means that bridges no longer
+enable I/O and memory-mapped functionality unconditionally. Platforms
+where this is really required can add a corresponding fixup.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ arch/arm/kernel/bios32.c | 36 +-----------------------------------
+ 1 file changed, 1 insertion(+), 35 deletions(-)
+
+diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+index 13fd97b..dfe25f7 100644
+--- a/arch/arm/kernel/bios32.c
++++ b/arch/arm/kernel/bios32.c
+@@ -601,41 +601,7 @@ resource_size_t pcibios_align_resource(void *data, con=
+st struct resource *res,
+  */
+ int pcibios_enable_device(struct pci_dev *dev, int mask)
+ {
+-	u16 cmd, old_cmd;
+-	int idx;
+-	struct resource *r;
+-
+-	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+-	old_cmd =3D cmd;
+-	for (idx =3D 0; idx < 6; idx++) {
+-		/* Only set up the requested stuff */
+-		if (!(mask & (1 << idx)))
+-			continue;
+-
+-		r =3D dev->resource + idx;
+-		if (!r->start && r->end) {
+-			printk(KERN_ERR "PCI: Device %s not available because"
+-			       " of resource collisions\n", pci_name(dev));
+-			return -EINVAL;
+-		}
+-		if (r->flags & IORESOURCE_IO)
+-			cmd |=3D PCI_COMMAND_IO;
+-		if (r->flags & IORESOURCE_MEM)
+-			cmd |=3D PCI_COMMAND_MEMORY;
+-	}
+-
+-	/*
+-	 * Bridges (eg, cardbus bridges) need to be fully enabled
+-	 */
+-	if ((dev->class >> 16) =3D=3D PCI_BASE_CLASS_BRIDGE)
+-		cmd |=3D PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
+-
+-	if (cmd !=3D old_cmd) {
+-		printk("PCI: enabling device %s (%04x -> %04x)\n",
+-		       pci_name(dev), old_cmd, cmd);
+-		pci_write_config_word(dev, PCI_COMMAND, cmd);
+-	}
+-	return 0;
++	return pci_enable_resources(dev, mask);
+ }
+=20
+ int pci_mmap_page_range(struct pci_dev *dev, struct vm_area_struct *vma,
+--=20
+1.7.11.4
+
+
+--6sX45UoQRIJXqkqR--
+
+--yLVHuoLXiP9kZBkt
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQKTvzAAoJEN0jrNd/PrOhJfIQAIFJN+tWZY0ayZJIzdP5EtbL
+kcWpeldQaJhutoP4eOrgwGBqhzgtdp7XAyL4UnrRpHTXpDJfory5YRQ1MUucaXSy
+Jafp7kDIfLLAqJsHpXHviblroxiPhvn+ODNY6Iv0sgcvSr9rQo8zdk+KKUzZYZ8F
+MPFeWjRrK8/spN+u2vRyYzA8T81R1m5g4i0yJKu8wCiEu45iEIBYZOe1i8idk6+o
+TxbfvP/I+8ypZwGs843ecIAC/EkZmev440r+App9q6ABFiAL3Xdu9G0sdiaTM2+y
+lnnpRUSjKJf+wE9gw2ZdbR6DMTGkzt8SQX3Vx7BNkxTPFSUNKdjrMoIlt3Kvdql+
+zXMHMz9E2uf3L6Q6E7tobnXSW9Xc5boj7iuTyS5UHhC5+qpQn79pIH76SThrxew1
+xuxAFRf7KQ/Apm5gOGbn3P/3D9DNdl/LXGIHT1TPUNmPKCQD5eOQJQblVA9heGRE
+hzTrbB498ZvkJ8FMK6bydy3JwuOI+QxK8pBxHkIFvgFsGb/eGrBy6c0OhT9lnXQP
++wI7koj2VcX4aQ8tOECRMvLMpkX5bz02ioA7tEQUKVM2OBTUsvFQ38Fga4koLuMQ
+YXdEWx+mUzOJU/B5cuEh4uLFsQYAQmMkDPw4Mnc97Bzd/xSFH6+rGGnh3qRhIl5m
+fx86W+wOoRdQH4PVZrFY
+=DYZw
+-----END PGP SIGNATURE-----
+
+--yLVHuoLXiP9kZBkt--
