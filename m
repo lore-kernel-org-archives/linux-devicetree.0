@@ -1,13 +1,17 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v3 10/10] ARM: tegra: pcie: Add device tree support
-Date: Tue, 14 Aug 2012 22:12:15 +0200
-Message-ID: <20120814201215.GA10542@avionic-0098.mockup.avionic-design.de>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
- <1343332512-28762-11-git-send-email-thierry.reding@avionic-design.de>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
+Date: Tue, 14 Aug 2012 16:18:40 -0500
+Message-ID: <502AC0B0.5030801@freescale.com>
+References: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
+ <50255F49.5050500@freescale.com>
+ <ABB05CD9C9F68C46A5CEDC7F15439259DB1450@039-SN2MPN1-022.039d.mgd.msft.net>
+ <50293BEA.90401@freescale.com>
+ <ABB05CD9C9F68C46A5CEDC7F15439259DB1A08@039-SN2MPN1-022.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4807180548327052846=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1343332512-28762-11-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+In-Reply-To: <ABB05CD9C9F68C46A5CEDC7F15439259DB1A08-RL0Hj/+nBVC81RJBUSuqCa4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,150 +22,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Wang Dongsheng-B40534 <B40534-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Yang-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org" <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Gala Kumar-B11780 <B11780-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/13/2012 09:40 PM, Wang Dongsheng-B40534 wrote:
+>>>> +Example 2:
+>>>>> +
+>>>>> +	timer: timer@010f0 {
+>>>>> +		compatible = "open-pic,global-timer";
+>>>>> +		device_type = "open-pic";
+>>>>> +		reg = <0x010f0 4 0x01100 0x100>;
+>>>>> +		interrupts = <0 0 3 0
+>>>>> +			      1 0 3 0
+>>>>> +			      2 0 3 0
+>>>>> +		              3 0 3 0>;
+>>>>> +	};
+>>>>
+>>>> 4-cell interrupt specifiers are specific to Freescale MPICs.  This
+>>>> means there's no way to describe the timer interrupt on a non-
+>> Freescale openpic.
+>>>> Again, I suggest we not bother with this in the absence of an actual
+>>>> need to support the timer on non-Freescale openpic in partitioned
+>> scenarios.
+>>>> The existing openpic node is sufficient to describe the
+>>>> hardware in the absence of partitioning.   We could have an
+>>>> "openpic-no-timer" property to indicate that we're describing it
+>>>> separately, so that the absence of a timer node isn't ambiguous as to
+>>>> whether it's an old tree or a partitioned scenario.  An fsl,mpic
+>>>> compatible would imply openpic-no-timer.
+>>>>
+>>>> Note that I believe many of the non-Freescale openpic nodes are going
+>>>> to be found on systems with real Open Firmware, so we can't go
+>>>> changing the device tree for them.
+>>> [Wang Dongsheng] In the Open-PIC specification, there are four timer.
+>>> 		interrupts = <0 0 3 0
+>>> 			      1 0 3 0
+>>> 			      2 0 3 0
+>>> 		              3 0 3 0>;
+>>>
+>>> The "interrupts" just let user know there are four timers. Usage based
+>> "interrupts"
+>>> binding to change dts.
+>>
+>> I can't understand the above or how it's a response to what I wrote.
+>>
+> [Wang Dongsheng] I mean this just to tell how many timers to support in Open-PIC
+> specification. If someone needs to write "interrupts" into dts, this must comply
+> with the specification of the interrupt to write. this is based on the pic driver
+> should be changed in different platforms.
 
---===============4807180548327052846==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
-Content-Disposition: inline
+My point (beyond that examples provided should be valid for *some*
+system) is there is no valid thing to put in the interrupts property
+here when the interrupt controller is not "fsl,mpic", so this doesn't work.
 
-
---d6Gm4EdcadzBjdND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 26, 2012 at 09:55:12PM +0200, Thierry Reding wrote:
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.d=
-tsi
-> index a094c97..c886dff 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -199,6 +199,68 @@
->  		#size-cells =3D <0>;
->  	};
-> =20
-> +	pcie-controller {
-> +		compatible =3D "nvidia,tegra20-pcie";
-> +		reg =3D <0x80003000 0x00000800   /* PADS registers */
-> +		       0x80003800 0x00000200   /* AFI registers */
-> +		       0x81000000 0x01000000   /* configuration space */
-> +		       0x90000000 0x10000000>; /* extended configuration space */
-> +		interrupts =3D <0 98 0x04   /* controller interrupt */
-> +		              0 99 0x04>; /* MSI interrupt */
-> +		status =3D "disabled";
-> +
-> +		ranges =3D <0 0 0  0x80000000 0x00001000   /* root port 0 */
-> +			  0 1 0  0x81000000 0x00800000   /* port 0 config space */
-> +			  0 2 0  0x90000000 0x08000000   /* port 0 ext config space */
-> +			  0 3 0  0x82000000 0x00010000   /* port 0 downstream I/O */
-> +			  0 4 0  0xa0000000 0x08000000   /* port 0 non-prefetchable memory */
-> +			  0 5 0  0xb0000000 0x08000000   /* port 0 prefetchable memory */
-> +
-> +			  1 0 0  0x80001000 0x00001000   /* root port 1 */
-> +			  1 1 0  0x81800000 0x00800000   /* port 1 config space */
-> +			  1 2 0  0x98000000 0x08000000   /* port 1 ext config space */
-> +			  1 3 0  0x82010000 0x00010000   /* port 1 downstream I/O */
-> +			  1 4 0  0xa8000000 0x08000000   /* port 1 non-prefetchable memory */
-> +			  1 5 0  0xb8000000 0x08000000>; /* port 1 prefetchable memory */
-
-I've been thinking about this some more. The translations for both the
-regular and extended configuration spaces are configured in the top-
-level PCIe controller. It is therefore wrong how they are passed to the
-PCI host bridges via the ranges property.
-
-I remember Mitch saying that it should be passed down to the children
-because it is partitioned among them, but since the layout is compatible
-with ECAM, the partitioning isn't as simple as what's in the tree. In
-fact the partitions will be dependent on the number of devices attached
-to the host bridges.
-
-> +
-> +		#address-cells =3D <3>;
-> +		#size-cells =3D <1>;
-> +
-> +		pci@0 {
-> +			device_type =3D "pciex";
-> +			reg =3D <0 0 0 0x1000>;
-> +			status =3D "disabled";
-> +
-> +			#address-cells =3D <3>;
-> +			#size-cells =3D <2>;
-> +
-> +			ranges =3D <0x80000000 0 0  0 1 0  0 0x00800000   /* config space */
-> +				  0x90000000 0 0  0 2 0  0 0x08000000   /* ext config space */
-> +				  0x81000000 0 0  0 3 0  0 0x00010000   /* I/O */
-> +				  0x82000000 0 0  0 4 0  0 0x08000000   /* non-prefetchable memory */
-> +				  0xc2000000 0 0  0 5 0  0 0x08000000>; /* prefetchable memory */
-> +
-> +			nvidia,num-lanes =3D <2>;
-> +		};
-> +
-> +		pci@1 {
-> +			device_type =3D "pciex";
-> +			reg =3D <1 0 0 0x1000>;
-> +			status =3D "disabled";
-> +
-> +			#address-cells =3D <3>;
-> +			#size-cells =3D <2>;
-> +
-> +			ranges =3D <0x80000000 0 0  1 1 0  0 0x00800000   /* config space */
-> +				  0x90000000 0 0  1 2 0  0 0x08000000   /* ext config space */
-> +				  0x81000000 0 0  1 3 0  0 0x00010000   /* I/O */
-> +				  0x82000000 0 0  1 4 0  0 0x08000000   /* non-prefetchable memory */
-> +				  0xc2000000 0 0  1 5 0  0 0x08000000>; /* prefetchable memory */
-> +
-> +			nvidia,num-lanes =3D <2>;
-> +		};
-> +	};
-
-The same is true for the ranges properties of the PCI host bridge nodes.
-Which part of the configuration spaces maps to the children of the
-respective host bridge depends on the actual device hierarchy.
-
-Would it be possible to alternatively pass the complete range to the
-children without further partitioning?
-
-The driver doesn't actually care about the ranges property and only uses
-the values specified in the reg property of the pcie-controller node.
-
-Thierry
-
---d6Gm4EdcadzBjdND
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQKrEfAAoJEN0jrNd/PrOhPmMQALt4izwmLsNjMlYFcqX1w521
-J0JpuuT4ogI9TvnLLE7g5enTcMyNT0jH58dWF6LzlKCMAfPj8X5sFsFMn6UBo1Fi
-DSBOvROYBNFw7aBMQvniI+noIMHQLO1UaAJnhjghAY4/4aS52mkxVcHmNv/f88wq
-8C3nATkeEgzgysXyvIC6uLPsG53EaaFShloYDakTDl1iUfsEdK7zelzRHlIrVpzo
-m8GFd20QBNjqwN62wkZcFvAxYHu1K+7wGN0U/5LOgnKZe1RjxwxXWdLKXkiSSLJY
-4qqbkY5soUkg/3uFXfqH7ruuTyDa2rqsc6PbDnE9Ljeaydq50q+7r/gTILY1k1Xa
-GIIhvzphd/g457TzQKp9EXHxRKqTvSlXTMsu/e0VQ+w4dc86gcDYv3IRnF1gIhMT
-SMNEEr7kBrcYCUsrwDRXKGQyqrAZdweIAbGUSUiob6Ogji8FsghqyI/h/TY/Z2W5
-fkLddNakaoyVs8vr5VDpInr5ASPQSIbArx4CiLi0ALPMwLY8Ai/M2+eQSE+zD7h1
-+4swgf/o15GBkZqtAMePELx11yCN9E7olWWI9xkDIVwkjNCjD4CQJ4UVCtup5F24
-nq6l0VsxcX+ydMRQA9NZmf1XXdSMwoO2NrpmQBOvCRoy0j2QXhgxuiZut0aXF71u
-RNK269viHeqbMBRiDLc8
-=XyB7
------END PGP SIGNATURE-----
-
---d6Gm4EdcadzBjdND--
-
---===============4807180548327052846==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4807180548327052846==--
+-Scott
