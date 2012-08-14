@@ -1,131 +1,122 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
-Date: Mon, 13 Aug 2012 16:18:16 -0700
-Message-ID: <CAErSpo7og1XgOSv_mFCQ=hP7pq0j3gXWh2QFL2wBJjz7kcAq=g@mail.gmail.com>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
- <50201E1D.5060200@wwwdotorg.org> <20120813174003.GA2527@avionic-0098.mockup.avionic-design.de>
- <50294BCA.1070807@wwwdotorg.org>
+From: Wang Dongsheng-B40534 <B40534@freescale.com>
+Subject: RE: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
+Date: Tue, 14 Aug 2012 02:40:22 +0000
+Message-ID: <ABB05CD9C9F68C46A5CEDC7F15439259DB1A08@039-SN2MPN1-022.039d.mgd.msft.net>
+References: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
+ <50255F49.5050500@freescale.com>
+ <ABB05CD9C9F68C46A5CEDC7F15439259DB1450@039-SN2MPN1-022.039d.mgd.msft.net>
+ <50293BEA.90401@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50294BCA.1070807-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <50293BEA.90401@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: Li Yang-R58472 <r58472@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "paulus@samba.org" <paulus@samba.org>, Gala Kumar-B11780 <B11780@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 13, 2012 at 11:47 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 08/13/2012 11:40 AM, Thierry Reding wrote:
->> On Mon, Aug 06, 2012 at 01:42:21PM -0600, Stephen Warren wrote:
->>> On 07/26/2012 01:55 PM, Thierry Reding wrote:
->>>> This patch series adds support for device tree based probing of
->>>> the PCIe controller found on Tegra SoCs.
->>>
->>> Thierry, I just tested all Tegra boards in v3.6-rc1, and noticed
->>> that PCIe doesn't work on TrimSlice when booting use device tree.
->>> I think I found the cause, and I can't see why the same problem
->>> doesn't affect this series. Perhaps you can enlighten me?
-> ...
->>> PCI: Device 0000:01:00.0 not available because of resource
->>> collisions
-> ...
->> I've looked into this a bit, and it seems like ARM is using an
->> open- coded version of the pci_enable_resources() function here,
->> with the only difference being the unconditional enabling of both
->> I/O and memory- mapped access for bridges. On Tegra there is
->> already a PCI fixup to do this, so pci_enable_resources() can be
->> used as-is.
 
-I'd prefer that bridge I/O & memory access enabling be done in a
-mainline path, not in a fixup.  Fixups are intended for working around
-defects in specific devices, not for the normal path.  I know various
-architectures have fixups that are used in the normal path, but I've
-been working on eliminating them.
 
-> The patch did alter the behavior a little for TrimSlice, but didn't
-> solve the problem. The old error messages:
->
->> [    2.173971] PCI: Device 0000:01:00.0 not available because of resource collisions
->> [    2.181453] r8169 0000:01:00.0: (unregistered net_device): enable failure
->> [    2.188254] r8169: probe of 0000:01:00.0 failed with error -22
->
-> Were replaced with the following with your patch:
->
->> [    2.174010] r8169 0000:01:00.0: device not available (can't reserve [io  0x0000-0x00ff])
->> [    2.182098] r8169 0000:01:00.0: (unregistered net_device): enable failure
->> [    2.188900] r8169: probe of 0000:01:00.0 failed with error -22
->
-> This message appears from drivers/pci/setup-res.c pci_enable_resources()
-> due to:
->
->>               if (!r->parent) {
->>                       dev_err(&dev->dev, "device not available "
->>                               "(can't reserve %pR)\n", r);
->>                       return -EINVAL;
->>               }
->
-> That check doesn't appear in ARM's custom pcibios_enable_device().
-> Disabling that check yields:
->
->> [    2.174192] r8169 0000:01:00.0: enabling device (0140 -> 0143)
->> [    2.180041] r8169 0000:01:00.0: BAR 2: can't reserve [mem 0x00000000-0x00000fff 64bit pref]
->> [    2.188386] r8169 0000:01:00.0: (unregistered net_device): could not request regions
->> [    2.196140] r8169: probe of 0000:01:00.0 failed with error -16
->
-> I think that's because the pci_dev's resources are initially assigned
-> PCI-aperture-relative addresses, and then these are later patched up to
-> take account of where the aperture is mapped into the CPU's address space.
+> -----Original Message-----
+> From: Wood Scott-B07421
+> Sent: Tuesday, August 14, 2012 1:40 AM
+> To: Wang Dongsheng-B40534
+> Cc: Wood Scott-B07421; benh@kernel.crashing.org; paulus@samba.org;
+> linuxppc-dev@lists.ozlabs.org; devicetree-discuss@lists.ozlabs.org; Gala
+> Kumar-B11780; Li Yang-R58472
+> Subject: Re: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer
+> document
+> 
+> On 08/13/2012 12:40 AM, Wang Dongsheng-B40534 wrote:
+> >>> diff --git a/Documentation/devicetree/bindings/open-pic.txt
+> >>> b/Documentation/devicetree/bindings/open-pic.txt
+> >>> index 909a902..045c2e9 100644
+> >>> --- a/Documentation/devicetree/bindings/open-pic.txt
+> >>> +++ b/Documentation/devicetree/bindings/open-pic.txt
+> >>> @@ -92,6 +92,52 @@ Example 2:
+> >>>
+> >>>  * References
+> >>>
+> >>> +* Open PIC global timers
+> >>> +
+> >>> +Required properties:
+> >>> +- compatible: "open-pic,global-timer"
+> >>
+> >> open-pic isn't a vendor (or software project that acts like a
+> >> pseudo-vendor) -- I'd go with "open-pic-global-timer".
+> >>
+> > [Wang Dongsheng] yes, "open-pic-global-timer" looks good.
+> >
+> >>> +- reg : Contains two regions.  The first is the timer frequency
+> >>> +reporting
+> >>> +  register for the group.  The second is the main timer register
+> >>> +bank
+> >>> +  (GTCCR, GTBCR, GTVPR, GTDR).
+> >>
+> >> Why not just put clock-frequency in the node, instead of describing
+> TFRR?
+> >> I don't think U-Boot currently sets TFRR.
+> >>
+> > [Wang Dongsheng] If during startup U-Boot do not set TFRR that is
+> unreasonable.
+> 
+> Too bad, it's what happens and we're not going to force users to update
+> U-Boot because of this.
+> 
+> >>> +Example 2:
+> >>> +
+> >>> +	timer: timer@010f0 {
+> >>> +		compatible = "open-pic,global-timer";
+> >>> +		device_type = "open-pic";
+> >>> +		reg = <0x010f0 4 0x01100 0x100>;
+> >>> +		interrupts = <0 0 3 0
+> >>> +			      1 0 3 0
+> >>> +			      2 0 3 0
+> >>> +		              3 0 3 0>;
+> >>> +	};
+> >>
+> >> 4-cell interrupt specifiers are specific to Freescale MPICs.  This
+> >> means there's no way to describe the timer interrupt on a non-
+> Freescale openpic.
+> >> Again, I suggest we not bother with this in the absence of an actual
+> >> need to support the timer on non-Freescale openpic in partitioned
+> scenarios.
+> >> The existing openpic node is sufficient to describe the
+> >> hardware in the absence of partitioning.   We could have an
+> >> "openpic-no-timer" property to indicate that we're describing it
+> >> separately, so that the absence of a timer node isn't ambiguous as to
+> >> whether it's an old tree or a partitioned scenario.  An fsl,mpic
+> >> compatible would imply openpic-no-timer.
+> >>
+> >> Note that I believe many of the non-Freescale openpic nodes are going
+> >> to be found on systems with real Open Firmware, so we can't go
+> >> changing the device tree for them.
+> > [Wang Dongsheng] In the Open-PIC specification, there are four timer.
+> > 		interrupts = <0 0 3 0
+> > 			      1 0 3 0
+> > 			      2 0 3 0
+> > 		              3 0 3 0>;
+> >
+> > The "interrupts" just let user know there are four timers. Usage based
+> "interrupts"
+> > binding to change dts.
+> 
+> I can't understand the above or how it's a response to what I wrote.
+> 
+[Wang Dongsheng] I mean this just to tell how many timers to support in Open-PIC
+specification. If someone needs to write "interrupts" into dts, this must comply
+with the specification of the interrupt to write. this is based on the pic driver
+should be changed in different platforms.
 
-We definitely shouldn't be calling the driver probe routine before the
-device BARs are assigned.
-
-> Boot log using board files:
->
->> [    1.146145] pci 0000:01:00.0: reg 10: [io  0x0000-0x00ff]
->> [    1.151745] pci 0000:01:00.0: reg 18: [mem 0x00000000-0x00000fff 64bit pref]
->> [    1.159007] pci 0000:01:00.0: reg 20: [mem 0x00000000-0x00003fff 64bit pref]
->> [    1.166270] pci 0000:01:00.0: reg 30: [mem 0x00000000-0x0001ffff pref]
-> ...
->> [    1.217829] pci 0000:01:00.0: BAR 6: assigned [mem 0xa0000000-0xa001ffff pref]
->> [    1.225264] pci 0000:01:00.0: BAR 4: assigned [mem 0xa0020000-0xa0023fff 64bit pref]
->> [    1.233236] pci 0000:01:00.0: BAR 2: assigned [mem 0xa0024000-0xa0024fff 64bit pref]
->> [    1.241206] pci 0000:01:00.0: BAR 0: assigned [io  0x1000-0x10ff]
-> ... (I added some extra printks:)
->> [    1.488007] r8169 0000:01:00.0: BAR 0: requesting [io  0x1000-0x10ff]
->> [    1.501483] r8169 0000:01:00.0: BAR 2: requesting [mem 0xa0024000-0xa0024fff 64bit pref]
->> [    1.516611] r8169 0000:01:00.0: BAR 4: requesting [mem 0xa0020000-0xa0023fff 64bit pref]
->
-> whereas for a device tree boot:
->
-> (same):
->> [    2.112217] pci 0000:01:00.0: reg 10: [io  0x0000-0x00ff]
->> [    2.117635] pci 0000:01:00.0: reg 18: [mem 0x00000000-0x00000fff 64bit pref]
->> [    2.124690] pci 0000:01:00.0: reg 20: [mem 0x00000000-0x00003fff 64bit pref]
->> [    2.131731] pci 0000:01:00.0: reg 30: [mem 0x00000000-0x0001ffff pref]
-> ... (request region happens early)
->> [    2.179838] r8169 0000:01:00.0: BAR 0: requesting [io  0x0000-0x00ff]
->> [    2.193312] r8169 0000:01:00.0: BAR 2: requesting [mem 0x00000000-0x00000fff 64bit pref]
->> [    2.201397] r8169 0000:01:00.0: BAR 2: can't reserve [mem 0x00000000-0x00000fff 64bit pref]
->> [    2.209742] r8169 0000:01:00.0: (unregistered net_device): could not request regions
-> ... (same, just happens too late)
->> [    2.236818] pci 0000:01:00.0: BAR 6: assigned [mem 0xa0000000-0xa001ffff pref]
->> [    2.244027] pci 0000:01:00.0: BAR 4: assigned [mem 0xa0020000-0xa0023fff 64bit pref]
->> [    2.251794] pci 0000:01:00.0: BAR 2: assigned [mem 0xa0024000-0xa0024fff 64bit pref]
->> [    2.259542] pci 0000:01:00.0: BAR 0: assigned [io  0x1000-0x10ff]
->
-> I suspect this is all still related to the PCI devices themselves being
-> probed much earlier in the overall PCI initialization sequence when the
-> PCI controller is probed later in the boot sequence, whereas PCI device
-> probe is deferred until the overall PCI initialization sequence is
-> complete if the PCI controller is probed very early in the boot sequence.
-
-I don't know what to apply your patches to (they don't apply cleanly
-to v3.6-rc2), so I can't see exactly what you're doing.  But it looks
-like you might be calling pci_bus_add_devices() before
-pci_bus_assign_resource(), which isn't going to work.
-
-I don't know what it means to probe PCI devices before probing the PCI
-controller (the host bridge) -- that shouldn't happen either.  In
-order to probe PCI devices, we have to first know about the host
-bridge so we know how to do config accesses and what the bridge
-apertures are.
+> -Scott
