@@ -1,129 +1,79 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 08/23] spi/atmel: add DT support
-Date: Tue, 14 Aug 2012 15:49:22 +0200
-Message-ID: <1344952177-18385-9-git-send-email-richard.genoud@gmail.com>
-References: <1344952177-18385-1-git-send-email-richard.genoud@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1344952177-18385-1-git-send-email-richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v2 00/14] MFD/ASoC/Input: twl4030-audio submodule DT support
+Date: Tue, 14 Aug 2012 17:22:28 +0300
+Message-ID: <1344954162-7985-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: Tero Kristo <t-kristo@ti.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Hello,
 
-The atmel_spi use only gpio for chip select.
+Changes since v1:
+- Get the MCLK frequencey from twl-core driver (via new API)
+- hs_extmute_disable_level parameter has been removed
+- empty of_find_node_by_name() in of.h for !CONFIG_OF builds
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Mark: the extmute GPIO handling (when it is used) remained in the codec driver
+for now. I can think more on how to add support for this type of mute control.
+If you can point me to other codec needing this it would help on designing
+something which is common enough for other users.
+As for now I have a separate series to add GPIO controlled output amps (hp/spk).
+I will send that to review soon.
+
+Introl mail from v1:
+
+The following series adds DT support for the twl4030 audio submodule which
+provides audio codec and vibra functionality.
+
+The MFD core driver is probed via DT, it will create the needed child devices
+based on the provided information in the DT blob.
+Child drivers (vibra, ASoC codec) will parse the core's node if needed to get
+the needed parameters for their configuration.
+
+In the ASoC codec driver the hs_extmute callback (which was used to toggle a
+GPIO line) has been removed. The codec driver will receive the GPIO number
+(if it is needed on the platform).
+
+If the series is OK (and no objections from the maintainers), it would be good
+if this can go via audio. Changed files are well contained within the
+twl4030-audio stack so I do not expect merge issues later.
+
+The series has been tested on BeagleBoard (with the McBSP DT series, and with
+the upcoming DT audio support for BeagleBoard).
+
+Regards,
+Peter
 ---
- .../devicetree/bindings/spi/spi_atmel.txt          |    6 +++++
- drivers/spi/spi-atmel.c                            |   21 ++++++++++++++++---
- 2 files changed, 23 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel.txt
+Peter Ujfalusi (14):
+  MFD: twl4030-audio: Clean up MODULE_* and platform_driver part
+  MFD: twl4030-audio: Convert to use devm_kzalloc
+  MFD: twl4030-audio: Rearange and clean-up the probe function
+  MFD: twl-core: Add API to query the HFCLK rate
+  MFD: twl4030-audio: Get audio MCLK via twl-core API instead of pdata
+  dt: Add empty of_find_node_by_name() function
+  MFD: twl4030-audio: Add DT support
+  Input: twl4030-vibra: Support for DT booted kernel
+  ASoC: twl4030: Move hs_extmute GPIO handling to driver
+  ARM: OMAP/ASoC: Zoom2: Let the codec to handle the hs_extmute GPIO
+  ASoC/MFD: twl4030: Remove set_hs_extmute callback from platform data
+  ASoC: twl4030: Convert to use devm_kzalloc
+  ASoC: twl4030: Add pointer to pdata within the private data
+  ASoC: twl4030: Support for DT booted kernel
 
-diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-new file mode 100644
-index 0000000..7ec3d8d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-@@ -0,0 +1,6 @@
-+Atmel SPI device
-+
-+Required properties:
-+- compatible : should be "atmel,at91rm9200-spi".
-+- reg: Address and length of the register set for the device
-+- interrupts: Should contain macb interrupt
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index 70f7bfa..ad47b6d 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -19,6 +19,7 @@
- #include <linux/interrupt.h>
- #include <linux/spi/spi.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- 
- #include <asm/io.h>
- #include <mach/board.h>
-@@ -711,7 +712,7 @@ static int atmel_spi_setup(struct spi_device *spi)
- 	u32			scbr, csr;
- 	unsigned int		bits = spi->bits_per_word;
- 	unsigned long		bus_hz;
--	unsigned int		npcs_pin;
-+	int			npcs_pin;
- 	int			ret;
- 
- 	as = spi_master_get_devdata(spi->master);
-@@ -783,7 +784,9 @@ static int atmel_spi_setup(struct spi_device *spi)
- 	csr |= SPI_BF(DLYBCT, 0);
- 
- 	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
--	npcs_pin = (unsigned int)spi->controller_data;
-+	if (!gpio_is_valid(spi->cs_gpio))
-+		spi->cs_gpio = (int)spi->controller_data;
-+	npcs_pin = spi->cs_gpio;
- 	asd = spi->controller_state;
- 	if (!asd) {
- 		asd = kzalloc(sizeof(struct atmel_spi_device), GFP_KERNEL);
-@@ -900,7 +903,7 @@ static void atmel_spi_cleanup(struct spi_device *spi)
- {
- 	struct atmel_spi	*as = spi_master_get_devdata(spi->master);
- 	struct atmel_spi_device	*asd = spi->controller_state;
--	unsigned		gpio = (unsigned) spi->controller_data;
-+	unsigned		gpio = spi->cs_gpio;
- 
- 	if (!asd)
- 		return;
-@@ -950,7 +953,8 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
- 
- 	master->bus_num = pdev->id;
--	master->num_chipselect = 4;
-+	master->dev.of_node = pdev->dev.of_node;
-+	master->num_chipselect = master->dev.of_node ? 0 : 4;
- 	master->setup = atmel_spi_setup;
- 	master->transfer = atmel_spi_transfer;
- 	master->cleanup = atmel_spi_cleanup;
-@@ -1079,11 +1083,20 @@ static int atmel_spi_resume(struct platform_device *pdev)
- #define	atmel_spi_resume	NULL
- #endif
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id atmel_spi_dt_ids[] = {
-+	{ .compatible = "atmel,at91rm9200-spi" },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, atmel_spi_dt_ids);
-+#endif
- 
- static struct platform_driver atmel_spi_driver = {
- 	.driver		= {
- 		.name	= "atmel_spi",
- 		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(atmel_spi_dt_ids),
- 	},
- 	.suspend	= atmel_spi_suspend,
- 	.resume		= atmel_spi_resume,
+ .../devicetree/bindings/mfd/twl4030-audio.txt      |   46 +++++++++
+ arch/arm/mach-omap2/board-zoom-peripherals.c       |    9 +--
+ arch/arm/mach-omap2/include/mach/board-zoom.h      |    2 -
+ drivers/input/misc/twl4030-vibra.c                 |   20 ++++-
+ drivers/mfd/twl-core.c                             |   32 ++++++
+ drivers/mfd/twl4030-audio.c                        |  107 +++++++++++++-------
+ include/linux/i2c/twl.h                            |    3 +-
+ include/linux/of.h                                 |    6 +
+ sound/soc/codecs/twl4030.c                         |  103 +++++++++++++++----
+ sound/soc/omap/zoom2.c                             |    4 -
+ 10 files changed, 261 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/twl4030-audio.txt
+
 -- 
-1.7.2.5
-
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+1.7.8.6
