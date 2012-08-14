@@ -1,78 +1,98 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCHv3 3/4] arm/dts: omap5-evm: Add keypad data
-Date: Tue, 14 Aug 2012 21:54:32 +0530
-Message-ID: <1344961473-13675-4-git-send-email-sourav.poddar@ti.com>
-References: <1344961473-13675-1-git-send-email-sourav.poddar@ti.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 05/10] resource: add PCI configuration space support
+Date: Tue, 14 Aug 2012 10:38:08 -0700
+Message-ID: <CAErSpo6LYpkC5wop53S1r1z3ov4+w4soqrQARzbbouVs1trzUg@mail.gmail.com>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343332512-28762-6-git-send-email-thierry.reding@avionic-design.de>
+ <CAErSpo4qg45brVRwEbw3=R04VsbnvUowSMWcT+M6VoAxbf3Cqg@mail.gmail.com> <20120814055542.GB16181@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1344961473-13675-1-git-send-email-sourav.poddar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sourav Poddar <sourav.poddar@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Benoit Cousson <b-cousson@ti.com>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20120814055542.GB16181@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Mitch Bradley <wmb@firmworks.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Add keypad data node in omap5 device tree file.
-Also fill the device tree binding parameters
-with the required value in "omap5-evm" dts file.
+On Mon, Aug 13, 2012 at 10:55 PM, Thierry Reding
+<thierry.reding@avionic-design.de> wrote:
+> On Mon, Aug 13, 2012 at 10:00:45PM -0700, Bjorn Helgaas wrote:
+>> On Thu, Jul 26, 2012 at 12:55 PM, Thierry Reding
+>> <thierry.reding@avionic-design.de> wrote:
+>> > This commit adds a new flag that allows marking resources as PCI
+>> > configuration space.
+>> >
+>> > Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+>> > ---
+>> > Changes in v3:
+>> > - new patch
+>> >
+>> >  include/linux/ioport.h | 2 +-
+>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >
+>> > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>> > index 589e0e7..3314843 100644
+>> > --- a/include/linux/ioport.h
+>> > +++ b/include/linux/ioport.h
+>> > @@ -102,7 +102,7 @@ struct resource {
+>> >
+>> >  /* PCI control bits.  Shares IORESOURCE_BITS with above PCI ROM.  */
+>> >  #define IORESOURCE_PCI_FIXED           (1<<4)  /* Do not move resource */
+>> > -
+>> > +#define IORESOURCE_PCI_CS              (1<<5)  /* PCI configuration space */
+>>
+>> What is the purpose of this?  It seems that you are marking regions
+>> that we call MMCONFIG on x86, or ECAM-type regions in the language of
+>> the PCIe spec.  I see that you set it in several places, but I don't
+>> see anything that ever looks for it.  Do you have plans to use it in
+>> the future?  If it really does correspond to MMCONFIG/ECAM, we should
+>> handle those regions consistently across all architectures.
+>
+> The purpose is ultimately to obtain the MMCONFIG/ECAM resources assigned
+> to a PCI host controller. I've used this in the of_pci_parse_ranges()
+> and in the static board setup code to mark ranges as such. Perhaps
+> IORESOURCE_ECAM or IORESOURCE_MMCONFIG might have been better names. I
+> also just noticed that I'm not using this anywhere, but the plan was to
+> eventually use it with platform_get_resource(). However that doesn't
+> seem to work either because the lower bits of the flags aren't use for
+> comparison in that function.
+>
+> Any other ideas how that could be handled? Basically what I need is a
+> way to mark a resource as an MMCONFIG/ECAM range so that it can be used
+> to program the PCI host controller accordingly. I don't know how these
+> are assigned on x86. I was under the impression that the MMCONFIG/ECAM
+> space was accessed through a single single address/data register pair.
 
-Tested on omap5430 evm with 3.5 custom kernel.
+The legacy config access mechanism (CF8h/CFCh registers described in
+PCI 3.0 spec sec 3.2.2.3.2) is a single address/data pair, but this is
+mostly x86-specific.  The ECAM mechanism (described in the PCIe 3.0
+spec sec 7.2.2) is not a single address/data pair; instead, each byte
+of config space is directly mapped into the host's MMIO space.
 
-Cc: Benoit Cousson <b-cousson@ti.com>
-Cc: Felipe Balbi <balbi@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Acked-by: Felipe Balbi <balbi@ti.com>
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
- arch/arm/boot/dts/omap5-evm.dts |   12 ++++++++++++
- arch/arm/boot/dts/omap5.dtsi    |    5 +++++
- 2 files changed, 17 insertions(+), 0 deletions(-)
+Here's what we do on x86 (omitting some historical grunge that
+complicates things):
 
-diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
-index b302802..8835026 100644
---- a/arch/arm/boot/dts/omap5-evm.dts
-+++ b/arch/arm/boot/dts/omap5-evm.dts
-@@ -17,6 +17,18 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x40000000>; /* 1 GB */
- 	};
-+
-+	keypad {
-+		keypad,num-rows = <8>;
-+		keypad,num-columns = <8>;
-+		linux,keymap = < 0x02020073  /* VOLUP */
-+			0x02030072  /* VOLDOWM */
-+			0x020400e7  /* SEND */
-+			0x02050066  /* HOME */
-+			0x0206006b  /* END */
-+			0x020700d9 >; /* SEARCH */
-+		linux,input-no-autorepeat;
-+	};
- };
- 
- &i2c4 {
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 6b68dfe..c38b823 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -216,4 +216,9 @@
- 			clock-frequency = <48000000>;
- 		};
- 	};
-+
-+	keypad {
-+		compatible = "ti,omap4-keypad";
-+		ti,hwmods = "kbd";
-+	};
- };
--- 
-1.7.1
+  - Discover the host bridge via a PNP0A08 device in the ACPI namespace.
+  - Discover the bus number range behind the bridge using a _CRS
+method in the PNP0A08 device.
+  - Discover the ECAM space for those buses via a _CBA method in the
+PNP0A08 device.
+  - Tell the config accessors (struct pci_ops) that the ECAM space for
+buses A-B is at address X.
+  - Enumerate the devices behind the host bridge by calling
+pci_scan_root_bus(), passing the config accessors.
+
+It sounds like you want a way to parse the resources at one point,
+saving them and marking the ECAM region, then at a later point, look
+up the ECAM from a saved list.  We don't do that on x86 because the
+config accessors keep an internal list of the ECAM area for each bus.
+
+We do of course want to put this ECAM space in the IORESOURCE_MEM tree
+because it consumes address space and we have to make sure we don't
+put anything else on top of it.  But we don't have any reason to
+describe the MMIO -> config space function in that tree.  From the
+point of view of the rest of the system, it's just MMIO space that's
+consumed by the PCI host bridge, just like any other device-specific
+MMIO area.
+
+Bjorn
