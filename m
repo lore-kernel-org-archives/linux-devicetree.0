@@ -1,220 +1,137 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
-Date: Tue, 14 Aug 2012 08:14:08 +0200
-Message-ID: <20120814061408.GC16181@avionic-0098.mockup.avionic-design.de>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
- <50201E1D.5060200@wwwdotorg.org>
- <20120813174003.GA2527@avionic-0098.mockup.avionic-design.de>
- <50294BCA.1070807@wwwdotorg.org>
- <20120813203300.GA8891@avionic-0098.mockup.avionic-design.de>
- <502973E5.6000303@gmail.com>
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [PATCHv7] arm/dts: omap4-sdp: Add keypad data
+Date: Tue, 14 Aug 2012 11:53:18 +0530
+Message-ID: <CAKdam54ifAW=W86qLj3+JR6k7i00EjDSQgK5B1X--NCg18jJmw@mail.gmail.com>
+References: <1342780715-25618-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tqI+Z3u+9OQ7kwn0"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <502973E5.6000303@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Bjorn Helgaas <bhelgaas@google.com>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1342780715-25618-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kishon@ti.com, Sourav Poddar <sourav.poddar@ti.com>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---tqI+Z3u+9OQ7kwn0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 20, 2012 at 4:08 PM, Sourav Poddar <sourav.poddar@ti.com> wrote:
+> Add keypad data node in omap4 device tree file.
+> Also fill the device tree binding parameters
+> with the required value in "omap4-sdp" dts file.
+>
+> Tested on omap4430 sdp with 3.5-rc6 kernel.
+>
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> ---
+> Changes since v6:
+> -remove address from the node since reg property
+> is not used.
+>  arch/arm/boot/dts/omap4-sdp.dts |   70 +++++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi    |    5 +++
+>  2 files changed, 75 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+> index 72216e9..80cd016 100644
+> --- a/arch/arm/boot/dts/omap4-sdp.dts
+> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+> @@ -113,6 +113,76 @@
+>                         "DMic", "Digital Mic",
+>                         "Digital Mic", "Digital Mic1 Bias";
+>         };
+> +
+> +       keypad {
+> +               keypad,num-rows = <8>;
+> +               keypad,num-columns = <8>;
+> +               linux,keymap = < 0x00000012
+> +                       0x00010013
+> +                       0x00020014
+> +                       0x00030066
+> +                       0x0004003f
+> +                       0x000500f0
+> +                       0x00060017
+> +                       0x0007002a
+> +                       0x01000020
+> +                       0x01010021
+> +                       0x01020022
+> +                       0x010300e7
+> +                       0x01040040
+> +                       0x010500f0
+> +                       0x01060025
+> +                       0x0107001c
+> +                       0x0200002d
+> +                       0x0201002e
+> +                       0x0202002f
+> +                       0x0203006b
+> +                       0x02040041
+> +                       0x020500f0
+> +                       0x02060034
+> +                       0x0207003a
+> +                       0x0300002c
+> +                       0x0301004e
+> +                       0x03020030
+> +                       0x0303003b
+> +                       0x03040042
+> +                       0x030500f0
+> +                       0x03060018
+> +                       0x03070039
+> +                       0x04000011
+> +                       0x04010015
+> +                       0x04020016
+> +                       0x0403003c
+> +                       0x04040073
+> +                       0x040500f0
+> +                       0x04060026
+> +                       0x04070069
+> +                       0x0500001f
+> +                       0x05010023
+> +                       0x05020024
+> +                       0x0503003d
+> +                       0x05040043
+> +                       0x05050072
+> +                       0x05060032
+> +                       0x0507006a
+> +                       0x06000010
+> +                       0x0601001e
+> +                       0x06020031
+> +                       0x0603009e
+> +                       0x0604000e
+> +                       0x060500f0
+> +                       0x06060019
+> +                       0x06070067
+> +                       0x07000094
+> +                       0x07010095
+> +                       0x070200ca
+> +                       0x070300cb
+> +                       0x0704003e
+> +                       0x070500f0
+> +                       0x07060160
+> +                       0x0707006c >;
+> +               linux,input-no-autorepeat;
+> +       };
+>  };
+>
+>  &i2c1 {
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index 04cbbcb..e78a1f1 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -296,4 +296,9 @@
+>                         ti,hwmods = "dmic";
+>                 };
+>         };
+> +
+> +       keypad {
+> +               compatible = "ti,omap4-keypad";
+> +               ti,hwmods = "kbd";
+> +       };
+>  };
+> --
+> 1.7.1
+>
+Any more comments on this patch?
 
-On Mon, Aug 13, 2012 at 04:38:45PM -0500, Rob Herring wrote:
-> On 08/13/2012 03:33 PM, Thierry Reding wrote:
-> > On Mon, Aug 13, 2012 at 12:47:38PM -0600, Stephen Warren wrote:
-> >> On 08/13/2012 11:40 AM, Thierry Reding wrote:
-> >>> On Mon, Aug 06, 2012 at 01:42:21PM -0600, Stephen Warren wrote:
-> >>>> On 07/26/2012 01:55 PM, Thierry Reding wrote:
-> >>>>> This patch series adds support for device tree based probing of
-> >>>>> the PCIe controller found on Tegra SoCs.
-> >>>>
-> >>>> Thierry, I just tested all Tegra boards in v3.6-rc1, and noticed
-> >>>> that PCIe doesn't work on TrimSlice when booting use device tree.
-> >>>> I think I found the cause, and I can't see why the same problem
-> >>>> doesn't affect this series. Perhaps you can enlighten me?
-> >> ...
-> >>>> PCI: Device 0000:01:00.0 not available because of resource
-> >>>> collisions
-> >> ...
-> >>> I've looked into this a bit, and it seems like ARM is using an
-> >>> open- coded version of the pci_enable_resources() function here,
-> >>> with the only difference being the unconditional enabling of both
-> >>> I/O and memory- mapped access for bridges. On Tegra there is
-> >>> already a PCI fixup to do this, so pci_enable_resources() can be
-> >>> used as-is. I came up with the attached patch but haven't been able
-> >>> to test it yet.
-> >>
-> >> Thanks very much for looking into this.
-> >>
-> >> The patch did alter the behavior a little for TrimSlice, but didn't
-> >> solve the problem. The old error messages:
-> >>
-> >>> [    2.173971] PCI: Device 0000:01:00.0 not available because of reso=
-urce collisions
-> >>> [    2.181453] r8169 0000:01:00.0: (unregistered net_device): enable =
-failure
-> >>> [    2.188254] r8169: probe of 0000:01:00.0 failed with error -22
-> >>
-> >> Were replaced with the following with your patch:
-> >>
-> >>> [    2.174010] r8169 0000:01:00.0: device not available (can't reserv=
-e [io  0x0000-0x00ff])
-> >>> [    2.182098] r8169 0000:01:00.0: (unregistered net_device): enable =
-failure
-> >>> [    2.188900] r8169: probe of 0000:01:00.0 failed with error -22
-> >>
-> >> This message appears from drivers/pci/setup-res.c pci_enable_resources=
-()
-> >> due to:
-> >>
-> >>> 		if (!r->parent) {
-> >>> 			dev_err(&dev->dev, "device not available "
-> >>> 				"(can't reserve %pR)\n", r);
-> >>> 			return -EINVAL;
-> >>> 		}
-> >=20
-> > Looking at the code some more, this may be caused by the pci_remap_io()
-> > patch series, so you might want to revert that patch and see if it fixes
-> > the I/O resources.
-> >=20
->=20
-> Humm... But this patch deals with the i/o space and it is failing below
-> on the memory space.
-
-But above it also fails for I/O. Looking at this some more, it seems
-like your patch isn't at fault. Rather there seems to be a general
-resource assignment problem.
-
->=20
-> >> That check doesn't appear in ARM's custom pcibios_enable_device().
-> >> Disabling that check yields:
-> >>
-> >>> [    2.174192] r8169 0000:01:00.0: enabling device (0140 -> 0143)
-> >>> [    2.180041] r8169 0000:01:00.0: BAR 2: can't reserve [mem 0x000000=
-00-0x00000fff 64bit pref]
-> >>> [    2.188386] r8169 0000:01:00.0: (unregistered net_device): could n=
-ot request regions
-> >>> [    2.196140] r8169: probe of 0000:01:00.0 failed with error -16
-> >>
-> >> I think that's because the pci_dev's resources are initially assigned
-> >> PCI-aperture-relative addresses, and then these are later patched up to
-> >> take account of where the aperture is mapped into the CPU's address sp=
-ace.
-> >>
-> >> Boot log using board files:
-> >>
-> >>> [    1.146145] pci 0000:01:00.0: reg 10: [io  0x0000-0x00ff]
-> >>> [    1.151745] pci 0000:01:00.0: reg 18: [mem 0x00000000-0x00000fff 6=
-4bit pref]
-> >>> [    1.159007] pci 0000:01:00.0: reg 20: [mem 0x00000000-0x00003fff 6=
-4bit pref]
-> >>> [    1.166270] pci 0000:01:00.0: reg 30: [mem 0x00000000-0x0001ffff p=
-ref]
-> >> ...
-> >>> [    1.217829] pci 0000:01:00.0: BAR 6: assigned [mem 0xa0000000-0xa0=
-01ffff pref]
-> >>> [    1.225264] pci 0000:01:00.0: BAR 4: assigned [mem 0xa0020000-0xa0=
-023fff 64bit pref]
-> >>> [    1.233236] pci 0000:01:00.0: BAR 2: assigned [mem 0xa0024000-0xa0=
-024fff 64bit pref]
-> >>> [    1.241206] pci 0000:01:00.0: BAR 0: assigned [io  0x1000-0x10ff]
-> >> ... (I added some extra printks:)
-> >>> [    1.488007] r8169 0000:01:00.0: BAR 0: requesting [io  0x1000-0x10=
-ff]
-> >>> [    1.501483] r8169 0000:01:00.0: BAR 2: requesting [mem 0xa0024000-=
-0xa0024fff 64bit pref]
-> >>> [    1.516611] r8169 0000:01:00.0: BAR 4: requesting [mem 0xa0020000-=
-0xa0023fff 64bit pref]
-> >>
-> >> whereas for a device tree boot:
-> >>
-> >> (same):
-> >>> [    2.112217] pci 0000:01:00.0: reg 10: [io  0x0000-0x00ff]
-> >>> [    2.117635] pci 0000:01:00.0: reg 18: [mem 0x00000000-0x00000fff 6=
-4bit pref]
-> >>> [    2.124690] pci 0000:01:00.0: reg 20: [mem 0x00000000-0x00003fff 6=
-4bit pref]
-> >>> [    2.131731] pci 0000:01:00.0: reg 30: [mem 0x00000000-0x0001ffff p=
-ref]
-> >> ... (request region happens early)
-> >>> [    2.179838] r8169 0000:01:00.0: BAR 0: requesting [io  0x0000-0x00=
-ff]
-> >>> [    2.193312] r8169 0000:01:00.0: BAR 2: requesting [mem 0x00000000-=
-0x00000fff 64bit pref]
-> >>> [    2.201397] r8169 0000:01:00.0: BAR 2: can't reserve [mem 0x000000=
-00-0x00000fff 64bit pref]
-> >>> [    2.209742] r8169 0000:01:00.0: (unregistered net_device): could n=
-ot request regions
-> >> ... (same, just happens too late)
-> >>> [    2.236818] pci 0000:01:00.0: BAR 6: assigned [mem 0xa0000000-0xa0=
-01ffff pref]
-> >>> [    2.244027] pci 0000:01:00.0: BAR 4: assigned [mem 0xa0020000-0xa0=
-023fff 64bit pref]
-> >>> [    2.251794] pci 0000:01:00.0: BAR 2: assigned [mem 0xa0024000-0xa0=
-024fff 64bit pref]
-> >>> [    2.259542] pci 0000:01:00.0: BAR 0: assigned [io  0x1000-0x10ff]
-> >>
-> >> I suspect this is all still related to the PCI devices themselves being
-> >> probed much earlier in the overall PCI initialization sequence when the
-> >> PCI controller is probed later in the boot sequence, whereas PCI device
-> >> probe is deferred until the overall PCI initialization sequence is
-> >> complete if the PCI controller is probed very early in the boot sequen=
-ce.
-> >>
-> >> Does anyone know where/what that "probe now" vs. "probe later" decision
-> >> point is? I'll try and track it down if nobody beats me to it.
-> >=20
-> > There's the io_offset and mem_offset fields that I've completely ignored
-> > up to now. Can you try the patch below to see if it changes anything?
-> > I'm sorry but I can't test any of this myself right now.
->=20
-> Arnd and I discussed io_offset some. I don't think either of us can
-> figure out when it should be anything but 0 at least if pci i/o bus
-> addresses start at 0.
->=20
-> I don't think mem_offset is the issue. I think perhaps you need to set
-> pcibios_min_mem to the memory window base (0xa0000000), but that's just
-> a guess.
-
-I'm having trouble understanding how that's supposed to work for regions
-of prefetchable memory. At least on Tegra these can arbitrarily assigned
-and I thought I had seen other platforms where this was also the case.
-
-However the pcibios_min_mem (or the equivalent macro PCIBIOS_MIN_MEM) is
-used while assigning the resources in the __pci_assign_resources() in
-drivers/pci/setup-res.c, so it may influence things.
-
-But I think the more fundamental issue here is that BARs are assigned
-properly, only they are assigned too late in the DT case as opposed to
-the board files case. I don't understand why that happens.
-
-Thierry
-
---tqI+Z3u+9OQ7kwn0
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQKeywAAoJEN0jrNd/PrOh6KYQAL7HB7sNBuySxYY4XTLn42sK
-qadLxzaWP+fyjXCALe1FHfbvWiX17SjnwaV/+3XRhm6GD533bgDkOykcw9N+ApZj
-eFzAk0sRMcAPJzKDlZ+ojuOPR1R5jth0qYWwXGEQIVitNX/5NCauhvDgnfwzQRKf
-f54zRJ1YRkDj+r6/cQXYrurF8ErDP554uAHwAj2v1TXsRh8c6cY6g4o0+K7bWmdo
-1IvY0Z6B6uVmq8QejcyBuqbjy3PxiqRAjPLvsllWLm+yiy759PPLqiRzlJBeh8BX
-sIhQJ+Vjzot97XskGUT5jDfEOZ6PplFHb9Aa7plaApvoRExgFpGt/p2qNEhXuGea
-6FqeqxfKptZU9r1zKb8uXIJXbDGltI8rFzR0n6W8LEyL5Hk5QPQzaEnjijvZ51QM
-tK9AZdo+xQmkjysLcr85egAfY9yCL50EvVv5Nh3Dh6OyvNzMm4DXo1G6GcHv6VFY
-wVbRxd26JBQmOqUslMDk4NyQGBo3f+8ASYTcxAtl7OufMFS9rahGUBtqenxlRtSo
-IL3352sV/7a5Fbat+ejlffZYbbIztCyTNWrSdwZnJgvtD0yQ+yJqPnCM0Aw1pVFX
-VPO5R23tiWmpPRZztbM4e+KkO+0D3CLNyiXVkcncdmkQ7Q0lfJ5jDecCrMXB6wIA
-wymhc3hu4Sq2HUFweSX9
-=ysxE
------END PGP SIGNATURE-----
-
---tqI+Z3u+9OQ7kwn0--
+~Sourav
