@@ -1,52 +1,48 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCHv2 2/4] arm/dts: omap5-evm: Add tmp102 sensor support
-Date: Tue, 14 Aug 2012 11:56:45 +0200
-Message-ID: <502A20DD.5030707@ti.com>
-References: <1344852313-30484-1-git-send-email-sourav.poddar@ti.com> <1344852313-30484-3-git-send-email-sourav.poddar@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: DT GPIO numbering?
+Date: Tue, 14 Aug 2012 12:00:23 +0200
+Message-ID: <CACRpkdbQVHFWej=CPv0QOjH7OUr8Jj7wVjG=eRqkM=cbih1vAQ@mail.gmail.com>
+References: <20120801152240.GA16388@sig21.net>
+	<CACRpkdZryc95WpSXddCrLvZGDsv4x-ndX9XcVzoxaDCT53AFLw@mail.gmail.com>
+	<501F296B.4070004@wwwdotorg.org>
+	<CACRpkdZ8AO5SrjJvJxvpauEadQOKMNaW_Pxxzhjk5hWnVB1b+g@mail.gmail.com>
+	<20120806095805.GA16607@sig21.net>
+	<501FA608.1030805@firmworks.com>
+	<20120810093458.GA13192@sig21.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1344852313-30484-3-git-send-email-sourav.poddar@ti.com>
+In-Reply-To: <20120810093458.GA13192@sig21.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+To: Johannes Stezenbach <js@sig21.net>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Mitch Bradley <wmb@firmworks.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/13/2012 12:05 PM, Sourav Poddar wrote:
-> Add tmp102 temperature sensor data in omap5 evm dts file.
-> 
-> Tested on omap5430 evm with 3.5 custom kernel.
-> 
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Acked-by: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-> ---
->  arch/arm/boot/dts/omap5-evm.dts |    9 +++++++++
->  1 files changed, 9 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
-> index 200c39a..45a8aeb 100644
-> --- a/arch/arm/boot/dts/omap5-evm.dts
-> +++ b/arch/arm/boot/dts/omap5-evm.dts
-> @@ -18,3 +18,12 @@
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
->  	};
->  };
-> +
-> +&i2c4 {
-> +	clock-frequency = <400000>;
+On Fri, Aug 10, 2012 at 11:34 AM, Johannes Stezenbach <js@sig21.net> wrote:
 
-Have you checked if we cannot run at faster speed? Reducing the speed
-will impact every devices on the bus.
-It might be needed, I just wanted to be sure.
+> Actually I think the kernel internal GPIO numbers shouldn't be in the
+> sysfs API, instead userspace should use the names.
 
-You should maybe just add a small comment to explain what the device is
-doing with potentially a link to the HW spec if available.
+This is true, but we cannot remove these numbers because they
+are now in Documentation/ABI/testing/sysfs-gpio
 
-The same comments are applicable to the bmp085 patch.
+And while the "testing" ABI is, well for testing, it would probably
+break a lot of stuff it we removed it.
 
-Regards,
-Benoit
+But we can sure add names. However these would still sit under
+/sys/class/gpio/gpioN/name
+
+Or do you suggest we simply duplicate all GPIOs which have
+names under /sys/class/gpio/named/<name>
+or something like that?
+
+I know Grant may have opinions on this...
+
+>  Probably it's
+> best to not use /sys/class/gpio/export but instead let the board
+> init code export the GPIOs available to userspace with proper names.
+
+This sounds true.
+
+Yours,
+Linus Walleij
