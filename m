@@ -1,79 +1,137 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] powerpc/mpic: Add Open-PIC global timer document
-Date: Tue, 14 Aug 2012 16:18:40 -0500
-Message-ID: <502AC0B0.5030801@freescale.com>
-References: <1344578002-8057-1-git-send-email-Dongsheng.wang@freescale.com>
- <50255F49.5050500@freescale.com>
- <ABB05CD9C9F68C46A5CEDC7F15439259DB1450@039-SN2MPN1-022.039d.mgd.msft.net>
- <50293BEA.90401@freescale.com>
- <ABB05CD9C9F68C46A5CEDC7F15439259DB1A08@039-SN2MPN1-022.039d.mgd.msft.net>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 05/10] resource: add PCI configuration space support
+Date: Tue, 14 Aug 2012 14:44:24 -0700
+Message-ID: <CAErSpo4Efy-Dt67rktzNiYfZfOTSu=pmYtyGd3tR-zZQ3jDGtA@mail.gmail.com>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343332512-28762-6-git-send-email-thierry.reding@avionic-design.de>
+ <CAErSpo4qg45brVRwEbw3=R04VsbnvUowSMWcT+M6VoAxbf3Cqg@mail.gmail.com>
+ <20120814055542.GB16181@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo6LYpkC5wop53S1r1z3ov4+w4soqrQARzbbouVs1trzUg@mail.gmail.com> <20120814180142.GA9430@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <ABB05CD9C9F68C46A5CEDC7F15439259DB1A08-RL0Hj/+nBVC81RJBUSuqCa4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wang Dongsheng-B40534 <B40534-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Yang-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org" <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Gala Kumar-B11780 <B11780-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20120814180142.GA9430@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Mitch Bradley <wmb@firmworks.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 08/13/2012 09:40 PM, Wang Dongsheng-B40534 wrote:
->>>> +Example 2:
->>>>> +
->>>>> +	timer: timer@010f0 {
->>>>> +		compatible = "open-pic,global-timer";
->>>>> +		device_type = "open-pic";
->>>>> +		reg = <0x010f0 4 0x01100 0x100>;
->>>>> +		interrupts = <0 0 3 0
->>>>> +			      1 0 3 0
->>>>> +			      2 0 3 0
->>>>> +		              3 0 3 0>;
->>>>> +	};
->>>>
->>>> 4-cell interrupt specifiers are specific to Freescale MPICs.  This
->>>> means there's no way to describe the timer interrupt on a non-
->> Freescale openpic.
->>>> Again, I suggest we not bother with this in the absence of an actual
->>>> need to support the timer on non-Freescale openpic in partitioned
->> scenarios.
->>>> The existing openpic node is sufficient to describe the
->>>> hardware in the absence of partitioning.   We could have an
->>>> "openpic-no-timer" property to indicate that we're describing it
->>>> separately, so that the absence of a timer node isn't ambiguous as to
->>>> whether it's an old tree or a partitioned scenario.  An fsl,mpic
->>>> compatible would imply openpic-no-timer.
->>>>
->>>> Note that I believe many of the non-Freescale openpic nodes are going
->>>> to be found on systems with real Open Firmware, so we can't go
->>>> changing the device tree for them.
->>> [Wang Dongsheng] In the Open-PIC specification, there are four timer.
->>> 		interrupts = <0 0 3 0
->>> 			      1 0 3 0
->>> 			      2 0 3 0
->>> 		              3 0 3 0>;
->>>
->>> The "interrupts" just let user know there are four timers. Usage based
->> "interrupts"
->>> binding to change dts.
+On Tue, Aug 14, 2012 at 11:01 AM, Thierry Reding
+<thierry.reding@avionic-design.de> wrote:
+> On Tue, Aug 14, 2012 at 10:38:08AM -0700, Bjorn Helgaas wrote:
+>> On Mon, Aug 13, 2012 at 10:55 PM, Thierry Reding
+>> <thierry.reding@avionic-design.de> wrote:
+>> > On Mon, Aug 13, 2012 at 10:00:45PM -0700, Bjorn Helgaas wrote:
+>> >> On Thu, Jul 26, 2012 at 12:55 PM, Thierry Reding
+>> >> <thierry.reding@avionic-design.de> wrote:
+>> >> > This commit adds a new flag that allows marking resources as PCI
+>> >> > configuration space.
+>> >> >
+>> >> > Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+>> >> > ---
+>> >> > Changes in v3:
+>> >> > - new patch
+>> >> >
+>> >> >  include/linux/ioport.h | 2 +-
+>> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >> >
+>> >> > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>> >> > index 589e0e7..3314843 100644
+>> >> > --- a/include/linux/ioport.h
+>> >> > +++ b/include/linux/ioport.h
+>> >> > @@ -102,7 +102,7 @@ struct resource {
+>> >> >
+>> >> >  /* PCI control bits.  Shares IORESOURCE_BITS with above PCI ROM.  */
+>> >> >  #define IORESOURCE_PCI_FIXED           (1<<4)  /* Do not move resource */
+>> >> > -
+>> >> > +#define IORESOURCE_PCI_CS              (1<<5)  /* PCI configuration space */
+>> >>
+>> >> What is the purpose of this?  It seems that you are marking regions
+>> >> that we call MMCONFIG on x86, or ECAM-type regions in the language of
+>> >> the PCIe spec.  I see that you set it in several places, but I don't
+>> >> see anything that ever looks for it.  Do you have plans to use it in
+>> >> the future?  If it really does correspond to MMCONFIG/ECAM, we should
+>> >> handle those regions consistently across all architectures.
+>> >
+>> > The purpose is ultimately to obtain the MMCONFIG/ECAM resources assigned
+>> > to a PCI host controller. I've used this in the of_pci_parse_ranges()
+>> > and in the static board setup code to mark ranges as such. Perhaps
+>> > IORESOURCE_ECAM or IORESOURCE_MMCONFIG might have been better names. I
+>> > also just noticed that I'm not using this anywhere, but the plan was to
+>> > eventually use it with platform_get_resource(). However that doesn't
+>> > seem to work either because the lower bits of the flags aren't use for
+>> > comparison in that function.
+>> >
+>> > Any other ideas how that could be handled? Basically what I need is a
+>> > way to mark a resource as an MMCONFIG/ECAM range so that it can be used
+>> > to program the PCI host controller accordingly. I don't know how these
+>> > are assigned on x86. I was under the impression that the MMCONFIG/ECAM
+>> > space was accessed through a single single address/data register pair.
 >>
->> I can't understand the above or how it's a response to what I wrote.
+>> The legacy config access mechanism (CF8h/CFCh registers described in
+>> PCI 3.0 spec sec 3.2.2.3.2) is a single address/data pair, but this is
+>> mostly x86-specific.  The ECAM mechanism (described in the PCIe 3.0
+>> spec sec 7.2.2) is not a single address/data pair; instead, each byte
+>> of config space is directly mapped into the host's MMIO space.
 >>
-> [Wang Dongsheng] I mean this just to tell how many timers to support in Open-PIC
-> specification. If someone needs to write "interrupts" into dts, this must comply
-> with the specification of the interrupt to write. this is based on the pic driver
-> should be changed in different platforms.
+>> Here's what we do on x86 (omitting some historical grunge that
+>> complicates things):
+>>
+>>   - Discover the host bridge via a PNP0A08 device in the ACPI namespace.
+>>   - Discover the bus number range behind the bridge using a _CRS
+>> method in the PNP0A08 device.
+>>   - Discover the ECAM space for those buses via a _CBA method in the
+>> PNP0A08 device.
+>>   - Tell the config accessors (struct pci_ops) that the ECAM space for
+>> buses A-B is at address X.
+>>   - Enumerate the devices behind the host bridge by calling
+>> pci_scan_root_bus(), passing the config accessors.
+>>
+>> It sounds like you want a way to parse the resources at one point,
+>> saving them and marking the ECAM region, then at a later point, look
+>> up the ECAM from a saved list.  We don't do that on x86 because the
+>> config accessors keep an internal list of the ECAM area for each bus.
+>>
+>> We do of course want to put this ECAM space in the IORESOURCE_MEM tree
+>> because it consumes address space and we have to make sure we don't
+>> put anything else on top of it.  But we don't have any reason to
+>> describe the MMIO -> config space function in that tree.  From the
+>> point of view of the rest of the system, it's just MMIO space that's
+>> consumed by the PCI host bridge, just like any other device-specific
+>> MMIO area.
+>
+> What I currently do is pass the ECAM space as a resource to the PCI host
+> bridge platform device. Regular and extended configuration spaces are
+> given by the third and fourth resources, respectively. If I understand
+> correctly, you're saying that nothing beyond that needs to be encoded.
+> In other words it is enough for the PCI host bridge driver to know where
+> to take the data from.
 
-My point (beyond that examples provided should be valid for *some*
-system) is there is no valid thing to put in the interrupts property
-here when the interrupt controller is not "fsl,mpic", so this doesn't work.
+Yes, I think so.
 
--Scott
+I'd like to someday make ECAM support generic, since it's specified by
+the PCIe spec.  The spec doesn't differentiate between PCI
+configuration space (offsets 0-0xff) and PCI Express *extended*
+configuration space (offsets 0x100-0xfff).  But it sounds like Tegra
+might have a memory-mapped configuration mechanism that is similar to
+ECAM but with a different address map, since you mention two resources
+(third and fourth).  That's not a problem, since you're doing a
+Tegra-specific solution right now anyway, but something to keep in the
+back of your mind if we ever do make a generic ECAM solution.
+
+> I'll have to see what this means for the DT binding. There are other
+> issues that I need to think about, like for example how to pass the ECAM
+> space from the PCI host controller to each of the two bridges via the
+> ranges property. This no longer makes sense in the current form, as the
+> ECAM covers the configuration spaces for devices of both bridges and
+> cannot really be split among them.
+
+We have the same situation on x86.  Part of the historical grunge that
+I omitted is that there's a static ACPI table (MCFG) that can tell you
+the ECAM range for a bus number range.  Often that bus number range
+includes several host bridges.  On x86, we have a single set of ECAM
+config accessors (see pci_mmcfg), and they maintain a list of "bus
+number -> ECAM addr" mappings internally, independent of which host
+bridge leads to the buses.
+
+Bjorn
