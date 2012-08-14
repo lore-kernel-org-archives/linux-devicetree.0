@@ -1,55 +1,42 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 12/14] ASoC: twl4030: Convert to use
-	devm_kzalloc
-Date: Tue, 14 Aug 2012 17:22:40 +0300
-Message-ID: <1344954162-7985-13-git-send-email-peter.ujfalusi@ti.com>
-References: <1344954162-7985-1-git-send-email-peter.ujfalusi@ti.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCH] Documentation: dt: hwmon: Update for tmp102
+Date: Tue, 14 Aug 2012 21:53:32 +0530
+Message-ID: <1344961412-13622-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1344954162-7985-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sourav Poddar <sourav.poddar@ti.com>, Benoit Cousson <b-cousson@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Allocate the private data with devm_kzalloc.
+Add Documentation for tmp102 temperature sensor.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>
+Cc: Felipe Balbi <balbi@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
 ---
- sound/soc/codecs/twl4030.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/hwmon/tmp102.txt |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/tmp102.txt
 
-diff --git a/sound/soc/codecs/twl4030.c b/sound/soc/codecs/twl4030.c
-index 27ccea4..413e698 100644
---- a/sound/soc/codecs/twl4030.c
-+++ b/sound/soc/codecs/twl4030.c
-@@ -2231,7 +2231,8 @@ static int twl4030_soc_probe(struct snd_soc_codec *codec)
- {
- 	struct twl4030_priv *twl4030;
- 
--	twl4030 = kzalloc(sizeof(struct twl4030_priv), GFP_KERNEL);
-+	twl4030 = devm_kzalloc(codec->dev, sizeof(struct twl4030_priv),
-+			       GFP_KERNEL);
- 	if (twl4030 == NULL) {
- 		dev_err(codec->dev, "Can not allocate memory\n");
- 		return -ENOMEM;
-@@ -2253,7 +2254,6 @@ static int twl4030_soc_remove(struct snd_soc_codec *codec)
- 	/* Reset registers to their chip default before leaving */
- 	twl4030_reset_registers(codec);
- 	twl4030_set_bias_level(codec, SND_SOC_BIAS_OFF);
--	kfree(twl4030);
- 
- 	if (pdata && pdata->hs_extmute && gpio_is_valid(pdata->hs_extmute_gpio))
- 		gpio_free(pdata->hs_extmute_gpio);
+diff --git a/Documentation/devicetree/bindings/hwmon/tmp102.txt b/Documentation/devicetree/bindings/hwmon/tmp102.txt
+new file mode 100644
+index 0000000..df1342b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/tmp102.txt
+@@ -0,0 +1,11 @@
++TMP102 Temperature sensor
++
++Required properties:
++- compatible: ti,tmp102
++
++Example:
++
++tmp102@48 {
++        compatible = "ti,tmp102";
++        reg = <0x48>;
++};
 -- 
-1.7.8.6
+1.7.1
