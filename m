@@ -1,239 +1,58 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
-Date: Wed, 15 Aug 2012 17:25:40 +0800
-Message-ID: <20120815092539.GH19681@shlinux2.ap.freescale.net>
-References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
- <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
- <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
- <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
- <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
- <20120815054436.GK2232@pengutronix.de>
- <20120815065526.GG19681@shlinux2.ap.freescale.net>
- <20120815075117.GL2232@pengutronix.de>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [RFC:PATCH 3.6.0-rc1] dtc: Add -P option to dtc for Pre-Processing.
+Date: Wed, 15 Aug 2012 10:33:04 +0100
+Message-ID: <502B6CD0.4060102@st.com>
+References: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com> <20120815011149.GF8136@truffula.fritz.box>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120815075117.GL2232-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <20120815011149.GF8136@truffula.fritz.box>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: David Gibson <dwg@au1.ibm.com>
+Cc: linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mmarek@suse.cz, B04825@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2012 at 03:51:17PM +0800, Uwe Kleine-K=F6nig wrote:
-> Hello,
-> =
+On 15/08/12 02:11, David Gibson wrote:
+> On Mon, Aug 13, 2012 at 09:01:53AM +0100, Srinivas KANDAGATLA wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>
+>> This patch add pre-processing capablity to dtc based on status property.
+>> Now the dtc has additional option -P to enable Pre-processing based on
+>> status property.
+>>
+>> The SOCS have lot of device tree infrastructure files which mark the
+>> device nodes as disabled and the board level device tree enables them if
+>> required. However while creating device tree blob, the compiler can
+>> preprocess the nodes and exclude nodes marked as disabled, doing this
+>> way will reduce the size of device tree blob.
+>>
+>> In our case this has reduced the blob size from 29K to 15K.
+>>
+>> Also nodes with status="disabled" is are never probed by dt platform bus
+>> code.
+>>
+>> Again, Preprocessing is optional parameter to dtc.
+> Hrm.
+>
+> 1) Changes to dtc should be made first against upstream dtc at
+> git://git.jdl.com/software/dtc.git.  The version in the kernel is just
+> a snapshot of the upstream tree which is updated periodically.
+I agree, will re-base the patch against
+git://git.jdl.com/software/dtc.git and add Jon Loeliger (dtc maintainer)
+to CC.
+> 2) I'm not convinced this filtering-by-status is something that
+> belongs in dtc, but I'm willing to be persuaded.
+As its not a default dtc behavior, Adding filtering-by-status as
+optional to dtc would a good addition towards reducing overall dtb sizes.
+>
+> 3) The name has to change.  "preprocess" is far to general a term for
+> the very specific function you're implementing here.  Especially when
+> there are serious discussions ongoing about having dtc use cpp or a
+> similar preprocessor in a general capacity.
+Yes, Pre-process looks very generic, As Tabi suggested --strip-disabled
+would be more appropriate.
+Will repost the patch with this change.
+>
 
-> On Wed, Aug 15, 2012 at 02:55:27PM +0800, Dong Aisheng wrote:
-> > On Wed, Aug 15, 2012 at 07:44:36AM +0200, Uwe Kleine-K=F6nig wrote:
-> > > Hello,
-> > > =
-
-> > > (Cc +=3D devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org)
-> > > =
-
-> > > On Wed, Aug 15, 2012 at 11:59:18AM +0800, Dong Aisheng wrote:
-> > > > On 15 August 2012 03:37, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
-> > > > > On Tue, Aug 14, 2012 at 2:20 AM, Dong Aisheng <dong.aisheng@linar=
-o.org> wrote:
-> > > > >> On 13 August 2012 23:12, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
-> > > > >>> I have a minor nit; while renumbering the pinctrl definitions is
-> > > > >>> laudable and device trees can match, there are 16 other pin con=
-trols
-> > > > >>> below EIM_D16 - this makes the start of the IOMUXC pin definiti=
-ons
-> > > > >>> actually be the value calculated by (iomuxc_base + 0x300 + (4*1=
-6) +
-> > > > >>> (pin_id*4)).
-> > > > >>
-> > > > >> What do you mean of this value calculated?
-> > > > >
-> > > > > Well, it just seems the datasheet has been read from the point of=
- view
-> > > > > of the SW_CTRL settings (pad pullups, drive strength etc.) to def=
-ine
-> > > > > the enums; every pin setting in order from IOMUXC_BASE + 0x3f0 (s=
-orry
-> > > > > I mistyped) has been entered as an enum into this list. Then a ta=
-ble
-> > > > > has been generated using these enums to supply a pin id. Then thi=
-s pin
-> > > > > id is not relevant anymore; it actually gets referenced by it's
-> > > > > *offset into the table*.
-> > > > >
-> > > > Not exactly, probably.
-> > > > Basically we follow the mux reigster offset to define pin id, howev=
-er,
-> > > > there're also some pads may not have mux function but only config
-> > > > which also has a pin id
-> > > > and vice versa.
-> > > > Those pins are not ordered by it's mux regsiter offset.
-> > > > =
-
-> > > > Actually I did not manually search all those pins, instead, i just
-> > > > using the exist ones:
-> > > > arch/arm/plat-mxc/include/mach/iomux-mx51.h
-> > > > Since this exist headfile already covers this case.
-> > > > =
-
-> > > > > In this case, basically the code misses a few pins which have ALT
-> > > > > settings but perhaps not always the ability to change pad control=
- -
-> > > > > EIM_DA5 to 15 are a good example.
-> > > > >
-> > > > As i said, we already defined those pin ids.
-> > > > =
-
-> > > > > Probably better would be to define the binding almost exactly as =
-it
-> > > > > was done in the old method; iomux_v3_cfg_t took into account the =
-three
-> > > > > register offsets possible for the pin (SW_MUX_CTL, SW_PAD_CTL and=
- IPP)
-> > > > > and the three values to be put into those registers.
-> > > > >
-> > > > > This has been reduced down in pinctrl to what I find quite strang=
-e,
-> > > > > which is a completely arbitrary pin "id" mapping, which indirectly
-> > > > > references an entry in a table by index which is why pin 1 as a s=
-tart
-> > > > > looks odd.
-> > > > >
-> > > > Start with pin 1 is a bug which caused by my mistake during the ear=
-ly
-> > > > data conversion.
-> > > > =
-
-> > > > > If the binding is entirely i.MX-specific or even i.MX51-specific =
-then
-> > > > > why not define the pins in the device tree the "old" iomux_v3_cfg=
-_t
-> > > > > way, which is the way they are in the table of imx_pin_regs;
-> > > > >
-> > > > >       IMX_PIN_REG(MX51_PAD_EIM_D16, 0x3f0, 0x05c, 5, 0x000, 0), /*
-> > > > > MX51_PAD_EIM_D16__AUD4_RXFS */
-> > > > >
-> > > > > 0x3f0 is the SW_PAD_CTL, 0x05c is the SW_MUX_CTL, 5 is the ALT mo=
-de,
-> > > > > 0x000 is the IPP reg, and 0 the IPP value.
-> > > > >
-> > > > > So fsl,iomux-pins =3D <0x3f0 0x85 0x05c 5 0 0 ... > (PAD, setting=
-s, MUX,
-> > > > > mode/sion, IPP, select - in that order) would be a valid pin
-> > > > > definition and require no table. Sure, the offsets are device spe=
-cific
-> > > > > but then the arbitrary numbering is too.
-> > > > > This way old iomux controls
-> > > > > can be re-derived for people who use the old method in old kernel=
-s, or
-> > > > > use U-Boot with iomux-v3.h taken from Linux (MX6 got ported, I am
-> > > > > porting the Efika to it on MX5 for U-Boot right now). Also that h=
-uge
-> > > > > table goes away - it can be built at runtime, along with the
-> > > > > PAD_NAME__ALT_MODE_NAME description.
-> > > > >
-> > > > I can't agree this is better than the exist one now.
-> > > > It's hard to use in device tree.
-> > > > And how would you parse the pin id from this data array?
-> > > I admit I didn't follow completely the calculation suggestion by Matt,
-> > > but I think in general he has a point. This is more or less what I
-> > > thought when I built the imx35 pinctrl driver.
-> > > =
-
-> > > With the current approach (i.e. put the pinfuncs in some order that
-> > > seems sensible today and then referencing them by index according to
-> > > that ordering) you really get into troubles if you have to add a new
-> > > function. You have to add it to the end to not break existing device
-> > > trees and so the ordering is broken.
-> > > =
-
-> > Actually, we do not mean to maintain the ordering in driver.
-> > It just needs to be align with the pin func ids definitions in binding
-> > doc. So the ordering broken in driver is not an issue, it just looks
-> > not so better if we really have to add a new pin function to the end
-> > due to mistake but this does not break anything to work.
-> Well, if you add a function between say current function 11 and 12 all
-> device trees need fixing, i.e. increase all function ids >=3D 12 by one.
-> You obviously cannot fix out-of-tree users and even fixing the in-tree
-> users is ugly.
->  =
-
-For such case, we should add it to the end since the exist ids are already
-taken. It will not break any user.
-
-> > > Also "11" has no obvious relation to MX35_PAD_COMPARE__SDMA_EXTDMA_2
-> > > other than a match if you grep over the binding docs (or the driver).
-> > > While "0x32c, 0x008, 7, 0x0, 0" is longer and looks more ugly the
-> > > mapping is obvious and so IMHO preferable.
-> > > =
-
-> > Also, don't you think this is hard to use for devicetree?
-> Not harder than the current approach. Obviously macro support would be
-> nice, but this applies to both approaches.
-> =
-
-> > And we need to reference datasheet to fill these values.
-> I'd list the explicit values in the binding docs as the indexes are
-> documented there now. So the difference for a device-tree writer is just
-> the content that is copy-and-pasted.
-> =
-
-> > I just keep using as the old way at best and i remember Sascha also sug=
-gested
-> > before that we don't want to lose using the macro way as
-> > MX35_PAD_COMPARE__SDMA_EXTDMA_2 to make easy use.
-> > In the future, we will switch to macro when dt supports.
-> > For the way "0x32c, 0x008, 7, 0x0, 0", it's very unconveniently to use =
-macro.
-> That is just
-> =
-
-> 	#define MX35_PAD_COMPARE__SDMA_EXTDMA_2 11
-> =
-
-> vs.
-> =
-
-> 	#define MX35_PAD_COMPARE__SDMA_EXTDMA_2 0x32c, 0x008, 7, 0x0, 0
-> =
-
-> isn't it? (Actually I'd not go for cpp as preprocessor, but that's a
-> different story.)
-> =
-
-Hmm, not sure if dt macro may support this kind of syntax but yes if it sup=
-ports.
-Grant,
-Do you know if dt macro can support it?
-
-Now I'm a bit intend to admit that we probably could do like that if it sup=
-ports.
-The benefit i see is that it could save much code lines in driver while hav=
-ing
-no using experience downgrade.
-
-The left question is that how do we get the pin id from this kind of format=
- data
-(0x32c, 0x008, 7, 0x0, 0), probably one way may be:
-For normal pads and NO_CONFIG pads, we could get it via:
-mux_reg_offset / 4
-for NO_MUX pads but have CONFIG pads, we may get it via:
-mux_reg_offset / 4 + PIN_NO_MUX_ID_BASE + config_reg_offset /4
-That may fix getting pin id issue from dt.
-
-Another known issue is that via this way, that means the pinctrl subsystem
-can only see the using pads, this is a bit not align with the pinctrl
-subsystem design. No sure if Linus would like to see it.
-
-Regards
-Dong Aisheng
