@@ -1,43 +1,124 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH] spi: spi-altera: Use of_match_ptr
-Date: Wed, 15 Aug 2012 15:00:19 +0100
-Message-ID: <20120815140019.GB13544@opensource.wolfsonmicro.com>
-References: <1345015828-8444-1-git-send-email-tklauser@distanz.ch>
-	<502B9F73.4040508@gmail.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 10/10] ARM: tegra: pcie: Add device tree support
+Date: Wed, 15 Aug 2012 07:36:24 -0700
+Message-ID: <CAErSpo7c4L=Ny=CtZwLB_XWTcN8tVWs_quuE_T+XLEGyhWwHkg@mail.gmail.com>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343332512-28762-11-git-send-email-thierry.reding@avionic-design.de>
+ <20120814201215.GA10542@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo6Awbx9-DWM3V02HUg7Xv4tWAhcLO7UKuT_0uXbpZ+nKw@mail.gmail.com>
+ <20120815063718.GA15665@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo7Y9ADYHwZMjQjDwd7m8jtwgcxsE-NE_K5X_Z+PuV=C4w@mail.gmail.com> <20120815123022.GA8678@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <502B9F73.4040508-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120815123022.GA8678-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2012 at 08:09:07AM -0500, Rob Herring wrote:
-> On 08/15/2012 02:30 AM, Tobias Klauser wrote:
-> > Instead of having to define the match table to NULL if CONFIG_OF isn't
-> > set, use the of_match_ptr() macro which will do this for us.
-> > 
-> > Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+On Wed, Aug 15, 2012 at 5:30 AM, Thierry Reding
+<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> On Wed, Aug 15, 2012 at 05:18:04AM -0700, Bjorn Helgaas wrote:
+>> On Tue, Aug 14, 2012 at 11:37 PM, Thierry Reding
+>> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+>> > On Tue, Aug 14, 2012 at 04:50:26PM -0700, Bjorn Helgaas wrote:
+>> >> On Tue, Aug 14, 2012 at 1:12 PM, Thierry Reding
+>> >> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+>> >> > On Thu, Jul 26, 2012 at 09:55:12PM +0200, Thierry Reding wrote:
+>> >> >> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+>> >> >> index a094c97..c886dff 100644
+>> >> >> --- a/arch/arm/boot/dts/tegra20.dtsi
+>> >> >> +++ b/arch/arm/boot/dts/tegra20.dtsi
+>> >> >> @@ -199,6 +199,68 @@
+>> >> >>               #size-cells = <0>;
+>> >> >>       };
+>> >> >>
+>> >> >> +     pcie-controller {
+>> >> >> +             compatible = "nvidia,tegra20-pcie";
+>> >> >> +             reg = <0x80003000 0x00000800   /* PADS registers */
+>> >> >> +                    0x80003800 0x00000200   /* AFI registers */
+>> >> >> +                    0x81000000 0x01000000   /* configuration space */
+>> >> >> +                    0x90000000 0x10000000>; /* extended configuration space */
+>> >> >> +             interrupts = <0 98 0x04   /* controller interrupt */
+>> >> >> +                           0 99 0x04>; /* MSI interrupt */
+>> >> >> +             status = "disabled";
+>> >> >> +
+>> >> >> +             ranges = <0 0 0  0x80000000 0x00001000   /* root port 0 */
+>> >> >> +                       0 1 0  0x81000000 0x00800000   /* port 0 config space */
+>> >> >> +                       0 2 0  0x90000000 0x08000000   /* port 0 ext config space */
+>> >> >> +                       0 3 0  0x82000000 0x00010000   /* port 0 downstream I/O */
+>> >> >> +                       0 4 0  0xa0000000 0x08000000   /* port 0 non-prefetchable memory */
+>> >> >> +                       0 5 0  0xb0000000 0x08000000   /* port 0 prefetchable memory */
+>> >> >> +
+>> >> >> +                       1 0 0  0x80001000 0x00001000   /* root port 1 */
+>> >> >> +                       1 1 0  0x81800000 0x00800000   /* port 1 config space */
+>> >> >> +                       1 2 0  0x98000000 0x08000000   /* port 1 ext config space */
+>> >> >> +                       1 3 0  0x82010000 0x00010000   /* port 1 downstream I/O */
+>> >> >> +                       1 4 0  0xa8000000 0x08000000   /* port 1 non-prefetchable memory */
+>> >> >> +                       1 5 0  0xb8000000 0x08000000>; /* port 1 prefetchable memory */
+>> >> >
+>> >> > I've been thinking about this some more. The translations for both the
+>> >> > regular and extended configuration spaces are configured in the top-
+>> >> > level PCIe controller. It is therefore wrong how they are passed to the
+>> >> > PCI host bridges via the ranges property.
+>> >> >
+>> >> > I remember Mitch saying that it should be passed down to the children
+>> >> > because it is partitioned among them, but since the layout is compatible
+>> >> > with ECAM, the partitioning isn't as simple as what's in the tree. In
+>> >> > fact the partitions will be dependent on the number of devices attached
+>> >> > to the host bridges.
+>> >>
+>> >> I don't understand this last bit about the number of devices attached
+>> >> to the host bridges.  Logically, the host bridge has a bus number
+>> >> aperture that you can know up front, even before you know anything
+>> >> about what devices are below it.  On x86, for example, the ACPI _CRS
+>> >> method has something like "[bus 00-7f]" in it, which means that any
+>> >> buses in that range are below this bridge.  That doesn't tell us
+>> >> anything about which buses actually have devices on them, of course;
+>> >> it's just analogous to the secondary and subordinate bus number
+>> >> registers in a P2P bridge.
+>> >
+>> > That's one of the issues I still need to take care of. Currently no bus
+>> > resource is attached to the individual bridges (nor the PCI controller
+>> > for that matter), so the PCI core will assign them dynamically.
+>>
+>> So your PCI controller driver knows how to program the controller bus
+>> number aperture?  Sometimes people start by assuming that two host
+>> bridges both have [bus 00-ff] apertures, then they enumerate below the
+>> first and adjust the bus number apertures based on what they found.
+>> For example, if they found buses 00-12 behind the first bridge, they
+>> make the apertures [bus 00-12] for the first bridge and [bus 13-ff]
+>> for the second.  That might be the case, depending on what firmware
+>> set up, but it seems like a dubious way to do it, and of course it
+>> precludes a lot of hot-plug scenarios.
+>
+> No, that's not what I meant. What happens is that no pre-assigned bus
+> range is specified for either of the host bridges, so that the range
+> 0x00-0xff will be assigned by default in pci_scan_root_bus().
 
-> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+My concern is about making the kernel's idea of the host bridge bus
+number aperture match what the hardware is doing.  I'm pretty sure
+that the default [bus 00-ff] range assigned by pci_scan_root_bus()
+doesn't actually match the hardware in most cases, at least when we
+have multiple host bridges in the same PCI domain.
 
-> Adding Mark B. as he is helping Grant out with spi.
+For example, if you don't supply a bus number range,
+pci_scan_root_bus() will assume [bus 00-ff] for both host bridges.
+But if you could put an analyzer on each of the root buses and then
+read bus 0 config space, will you see that config transaction on
+*both* buses?  I doubt it.
 
-Please send me the patch directly (ie, not quoted).
+You have to know at least the bus number of the root bus up front
+before you can even start enumerating it.  The only way to learn that
+is by reading registers in the host bridge or by some external
+mechanism like ACPI or device tree.  That's the beginning of the bus
+number aperture.  The end of the aperture is similar: we can't
+reliably determine it by enumerating devices below the host bridge, so
+we have to know it up front.  You can enumerate starting with the root
+bus number and assigning new subordinate bus numbers as necessary, but
+unless you know the host bridge aperture to begin with, you could
+inadvertently assign a new bus number that actually belongs to a
+different host bridge.
 
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Bjorn
