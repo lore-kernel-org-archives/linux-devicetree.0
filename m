@@ -1,58 +1,54 @@
 From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
 Subject: Re: [RFC:PATCH 3.6.0-rc1] dtc: Add -P option to dtc for Pre-Processing.
-Date: Wed, 15 Aug 2012 10:33:04 +0100
-Message-ID: <502B6CD0.4060102@st.com>
-References: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com> <20120815011149.GF8136@truffula.fritz.box>
+Date: Wed, 15 Aug 2012 10:49:44 +0100
+Message-ID: <502B70B8.1030709@st.com>
+References: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com> <20120815011149.GF8136@truffula.fritz.box> <CAOZdJXUxguEBJG44kyKH0NW1999a9OBj2M=DEhmf_uSYM6nGaQ@mail.gmail.com>
 Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <20120815011149.GF8136@truffula.fritz.box>
+In-Reply-To: <CAOZdJXUxguEBJG44kyKH0NW1999a9OBj2M=DEhmf_uSYM6nGaQ@mail.gmail.com>
 Sender: linux-kbuild-owner@vger.kernel.org
-To: David Gibson <dwg@au1.ibm.com>
-Cc: linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mmarek@suse.cz, B04825@freescale.com
+To: Tabi Timur-B04825 <B04825@freescale.com>
+Cc: David Gibson <dwg@au1.ibm.com>, "mmarek@suse.cz" <mmarek@suse.cz>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/08/12 02:11, David Gibson wrote:
-> On Mon, Aug 13, 2012 at 09:01:53AM +0100, Srinivas KANDAGATLA wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->>
->> This patch add pre-processing capablity to dtc based on status property.
->> Now the dtc has additional option -P to enable Pre-processing based on
->> status property.
->>
->> The SOCS have lot of device tree infrastructure files which mark the
->> device nodes as disabled and the board level device tree enables them if
->> required. However while creating device tree blob, the compiler can
->> preprocess the nodes and exclude nodes marked as disabled, doing this
->> way will reduce the size of device tree blob.
->>
->> In our case this has reduced the blob size from 29K to 15K.
->>
->> Also nodes with status="disabled" is are never probed by dt platform bus
->> code.
->>
->> Again, Preprocessing is optional parameter to dtc.
-> Hrm.
+On 15/08/12 03:12, Tabi Timur-B04825 wrote:
+> On Tue, Aug 14, 2012 at 8:11 PM, David Gibson <dwg@au1.ibm.com> wrote:
+>> On Mon, Aug 13, 2012 at 09:01:53AM +0100, Srinivas KANDAGATLA wrote:
+>>> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>>
+>>> This patch add pre-processing capablity to dtc based on status property.
+>>> Now the dtc has additional option -P to enable Pre-processing based on
+>>> status property.
+>>>
+>>> The SOCS have lot of device tree infrastructure files which mark the
+>>> device nodes as disabled and the board level device tree enables them if
+>>> required. However while creating device tree blob, the compiler can
+>>> preprocess the nodes and exclude nodes marked as disabled, doing this
+>>> way will reduce the size of device tree blob.
+> IMHO, many devices that are marked as "disabled" in the DTS are
+> expecting to be enabled by the boot loader, so just because a node is
+> disabled in the DTS does not mean that it will be disabled when Linux
+> sees it.
+Good to know that,
+But some of the secured bootloaders like the one's we use don't even
+touch the dt blob.
 >
-> 1) Changes to dtc should be made first against upstream dtc at
-> git://git.jdl.com/software/dtc.git.  The version in the kernel is just
-> a snapshot of the upstream tree which is updated periodically.
-I agree, will re-base the patch against
-git://git.jdl.com/software/dtc.git and add Jon Loeliger (dtc maintainer)
-to CC.
-> 2) I'm not convinced this filtering-by-status is something that
-> belongs in dtc, but I'm willing to be persuaded.
-As its not a default dtc behavior, Adding filtering-by-status as
-optional to dtc would a good addition towards reducing overall dtb sizes.
+>>> In our case this has reduced the blob size from 29K to 15K.
+> I don't see that as significant.
 >
-> 3) The name has to change.  "preprocess" is far to general a term for
-> the very specific function you're implementing here.  Especially when
-> there are serious discussions ongoing about having dtc use cpp or a
-> similar preprocessor in a general capacity.
-Yes, Pre-process looks very generic, As Tabi suggested --strip-disabled
-would be more appropriate.
-Will repost the patch with this change.
->
+>>> Also nodes with status="disabled" is are never probed by dt platform bus
+>>> code.
+>>>
+>>> Again, Preprocessing is optional parameter to dtc.
+> Using this option would break a lot of our device trees.
+As this is optional parameter, I did not expect it to break the
+default/existing behavior.
+Correct me am missing anything?
+>   Perhaps it
+> should be given a better name, like --strip-disabled.
+Thanks for the advice. I agree, Will be reposting the patch making this
+option as --strip-disabled with CC to Jon Loeliger (dtc maintainer).
 
