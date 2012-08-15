@@ -1,143 +1,66 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
-Date: Wed, 15 Aug 2012 11:49:01 -0500
-Message-ID: <CAKGA1bkNEJbQgwcdZs8PozCgVyOfUE=bDCGkRkKV3VMfbvRMgw@mail.gmail.com>
-References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
- <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
- <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
- <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
- <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
- <20120815054436.GK2232@pengutronix.de>
- <20120815065526.GG19681@shlinux2.ap.freescale.net>
- <20120815075117.GL2232@pengutronix.de>
- <20120815092539.GH19681@shlinux2.ap.freescale.net>
- <20120815135947.GC2258@S2101-09.ap.freescale.net>
- <20120815153107.GG2258@S2101-09.ap.freescale.net>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 01/10] PCI: Keep pci_fixup_irqs() around after init
+Date: Wed, 15 Aug 2012 10:06:27 -0700
+Message-ID: <CAErSpo7v+i8i=mXCs7ZW8DtGTDN_4AEntwYLqGG8FcCzweySFg@mail.gmail.com>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343332512-28762-2-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120815153107.GG2258-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1343332512-28762-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMTUsIDIwMTIgYXQgMTA6MzEgQU0sIFNoYXduIEd1byA8c2hhd24uZ3VvQGxp
-bmFyby5vcmc+IHdyb3RlOgo+IE9uIFdlZCwgQXVnIDE1LCAyMDEyIGF0IDA5OjU5OjUwUE0gKzA4
-MDAsIFNoYXduIEd1byB3cm90ZToKPj4gT24gV2VkLCBBdWcgMTUsIDIwMTIgYXQgMDU6MjU6NDBQ
-TSArMDgwMCwgRG9uZyBBaXNoZW5nIHdyb3RlOgo+PiA+IE9uIFdlZCwgQXVnIDE1LCAyMDEyIGF0
-IDAzOjUxOjE3UE0gKzA4MDAsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOgo+PiA+IEhtbSwgbm90
-IHN1cmUgaWYgZHQgbWFjcm8gbWF5IHN1cHBvcnQgdGhpcyBraW5kIG9mIHN5bnRheCBidXQgeWVz
-IGlmIGl0IHN1cHBvcnRzLgo+PiA+IEdyYW50LAo+PiA+Cj4+ID4gRG8geW91IGtub3cgaWYgZHQg
-bWFjcm8gY2FuIHN1cHBvcnQgaXQ/Cj4+Cj4+IEkgaGF2ZSB0aGUgc2FtZSBkb3VidCB0aGVyZS4g
-IENvcGllZCBTdGVwaGVuIHdobyBtaWdodCBoYXZlIGEgYmV0dGVyCj4+IGluc2lnaHQgb24gdGhp
-cy4KPj4KPiBSYXRoZXIgdGhhbiBiZXR0aW5nIGhvdyBEVEMgd2lsbCBpbXBsZW1lbnQgbWFjcm8s
-IHdlJ2QgYmV0dGVyIG1ha2UgdGhlCj4gdGhlIHNhZmVzdCBhc3N1bXB0aW9uIC0gaXQgd2lsbCBu
-b3Qgc3VwcG9ydCB0aGF0IHN5bnRheC4KCkl0IHdvbid0LiBEVCBpcyBkZWZpbmVkIGJ5IHByb3Bl
-cnRpZXMgYW5kIHRob3NlIHByb3BlcnRpZXMgaGF2ZSBjZWxscy4KUHJvcGVydGllcwp0aGF0IGhh
-dmUgbW9yZSB0aGFuIG9uZSBjZWxsIG9yIG11bHRpcGxlIGRlZmluaXRpb25zIGluIHRoZW0gaGF2
-ZSB0byBoYXZlIGEKI3NpemUtY2VsbHMgcHJvcGVydHkgdG8gZ28gd2l0aCBpdCBzb21laG93LgoK
-SSBkb24ndCBzZWUgd2hhdCB0aGUgcHJvYmxlbSB3b3VsZCBiZSBoZXJlOyB5b3Ugd2FudCB0byBk
-ZWZpbmUgcGluIHByb3BlcnRpZXMsCnN1cmUsIHRoZXkgYXJlIGludHJpbnNpY2FsbHkgZGVmaW5l
-ZCBieSAzIHBvc3NpYmxlIHJlZ2lzdGVycyBhbmQgdmFsdWUgcGFpcnMuIEluCmFjdHVhbCBmYWN0
-IGlmIHlvdSBkcmlsbCBkb3duIHRvIHRoaXMsIHdoYXQgaGFwcGVucyBpcyB5b3UgZ2V0IGEgcGlu
-IHByb3BlcnR5CndoaWNoIGRlZmluZXMgb2Zmc2V0cyBpbnRvIHRoZSB1bml0LCBhbmQgdmFsdWVz
-IHRvIHN0dWZmIGludG8gdGhvc2UKcmVnaXN0ZXJzLCBzbwp5b3UgY291bGQgZWl0aGVyIGRpY3Rh
-dGUgYSBzaXplLWNlbGwgb2YgNiAoMyBwYWlycyBvZiByZWctdmFsdWUpIG9yIDIKKHJlZywgdmFs
-dWUpLgpJdCB3b3VsZCBiZSBtb3JlIGNvbnZlbmllbnQgZm9yIGEgZHJpdmVyIHRvIGtub3cgd2hh
-dCB0aG9zZSBwYWlycyBhcmUgbWF5YmUsCnNvIDYgaXMgYmV0dGVyLgoKPiBzdGlsbCB3b3JrIG91
-ciBpc3N1ZSwgSSBndWVzcy4gIEFjdHVhbGx5LCB0aGUgZ29hbCBpcyBhbGwgYWJvdXQKPiBlbmNv
-ZGluZyB0aGUgZGF0YSB0aGF0IGlzIGN1cnJlbnRseSBkZWZpbmVkIGluIGRyaXZlciBhcyBhIGJp
-ZyBhcnJheSBvZgo+IHN0cnVjdCBpbXhfcGluX3JlZyBpbiBkZXZpY2UgdHJlZS4KCkFic29sdXRl
-bHkhCgo+IHN0cnVjdCBpbXhfcGluX3JlZyB7Cj4gICAgICAgICB1MTYgcGlkOwo+ICAgICAgICAg
-dTE2IG11eF9yZWc7Cj4gICAgICAgICB1MTYgY29uZl9yZWc7Cj4gICAgICAgICB1OCBtdXhfbW9k
-ZTsKPiAgICAgICAgIHUxNiBpbnB1dF9yZWc7Cj4gICAgICAgICB1OCBpbnB1dF92YWw7Cj4gfTsK
-Pgo+IEFzIHdlIHdpbGwgZmlndXJlIG91dCB0aGUgcGlkIGZyb20gdGhlIG11eF9yZWcgYW5kIGNv
-bmZfcmVnIGFzIGJlbG93LAo+IGl0IGJlY29tZXMgaG93IHdlIGVuY29kZSBvdGhlciBmaWVsZHMu
-ICBBbiB1NjQgY2FuIGp1c3QgY292ZXIgdGhlbS4KCk9yIDMgcGFpcnMgb2YgdmFsdWVzIGNhbiBl
-bmNvZGUgdGhlbS4gRG9uJ3QgbmVlZGxlc3NseSBlbmNvZGUgZGF0YSBpbgp0aGUgZGV2aWNlIHRy
-ZWUgdGhhdCBjYW4ganVzdCBleGlzdCBpbiBhIGNlbGwgb2YgYSBwcm9wZXJ0eS4KCj4gVGhhdCBz
-YWlkLCB0aGUgbGluZSBiZWxvdyBpbiBiaW5kaW5nIGRvYwo+Cj4gICBNWDM1X1BBRF9DT01QQVJF
-X19TRE1BX0VYVERNQV8yIDExCj4KPiBiZWNvbWVzCj4KPiAgIE1YMzVfUEFEX0NPTVBBUkVfX1NE
-TUFfRVhURE1BXzIgMHgwMzJjMDAwODA3MDAwMDAwCgpJIGNhbiBvbmx5IGdpdmUgYSBxdWljayBl
-eGFtcGxlIG9uIE1YNTEsIE1YNTMgb3IgTVg2IHNpbmNlIHRoYXQncyBteQpleHBlcmllbmNlLCBi
-dXQgZXNzZW50aWFsbHkuLiB5b3UncmUgb3ZlcnRoaW5raW5nIGl0LgoKV2hhdCBpdCBiZWNvbWVz
-IGlzCgppb211eGNAMHg3M2YwODAwMCB7CiAgZnNsLGlvbXV4LXBpbnMgPSA8bXV4IHZhbHVlIGN0
-cmwgdmFsdWUgaXBwIHZhbHVlCi8qIE1YNTNfUElOX1NENF9DTURfX1NENF9DTUQgKi8KICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIG11eCB2YWx1ZSBjdHJsIHZhbHVlIGlwcCB2YWx1ZQogICAg
-ICAgLyogZXRjLiAqLwogICAgICAgICAgICAgICAgICAgICAgICAgICAgLi4uPjsKCllvdSBjYW4g
-ZW5jb2RlIHRob3NlIHZhbHVlcyAqaW4gdGhlIGRyaXZlciogYXMgYSBoYXNoIG9yIGxvb2t1cCB0
-byBnZXQKbmFtZXMgZm9yIHRoZW0gaWYgeW91IGxpa2UgaW4gdGhlIGRyaXZlci4uIG9yIGJ1aWxk
-IHRoZW0gYXQgcnVudGltZQpmb3IgdHJ1bHkgb2RkIGNvbWJpbmF0aW9ucyBvciBub3QtdXN1YWwg
-cGluIGNvbmZpZ3VyYXRpb25zLiBJbiBhbnkKY2FzZSwgdGhvc2UgcmVnIGNhbiBiZSAidmFsaWQi
-IDAgc2luY2UgMCBpcyBJT01VWENfR1BSMC4uIHdoaWNoIHlvdSBkbwpub3Qgd2FudCB0byBzZXQu
-IFRoYXQgc2FpZCwgc2V0dGluZyBJT01VWENfR1BSIGNhbiBiZSB1c2VmdWwhIEV0aGVybmV0Cm1h
-eSBuZWVkIChvbiBNWDYgZXhhbXBsZXMpIEVORVRfQ0xLX1NFTCBzZXQsIElQVSBtYXkgbmVlZCB0
-byBzZWxlY3QKTUlQSSBnYXNrZXQgb3IgSU9NVVguIFVzdWFsbHkgdGhvdWdoIEkgd291bGQgYXNz
-dW1lIHRoYXQgeW91IHdvdWxkCmhhdmUgcHJvcGVydGllcyBmb3IgdGhlc2UgdGhvdWdoIGFzIHlv
-dSBkbyBub3Qgd2FudCB0byAidHJhc2giCmJvb3Rsb2FkZXIgY29uZmlndXJhdGlvbiBvZiBhbnkg
-Y2xvY2sgb3IgbXV4IHNldHRpbmdzLCBqdXN0IHVwZGF0ZQp0aGVtIChzbywgZnNsLGV0aGVybmV0
-LWNsb2NrLXNlbCA9MSBvciBmc2wsaXB1LWlvbXV4ID0gPDEgMD4pCgpUaGF0IHNhaWQsIHRoZSB1
-c3VhbCB0aGluZyBpcyB0byBzZXQgdGhlbSB0byAiLTEiIGV4cGxpY2l0bHkgaW4gdGhlCnRyZWUg
-YW5kIGxldCB0aGUgRFQgY29kZSBzb3J0IG91dCB3aGF0IC0xIGFjdHVhbGx5IG1lYW5zICh1c3Vh
-bGx5CjB4ZmZmZmZmZmYgc2luY2UgYnkgZGVmYXVsdCBPRiBjZWxscyBhcmUgMzItYml0LCBidXQg
-aXQncyB0aGUgc2FtZQpkaWZmZXJlbmNlIGlmIGl0J3MgYSA2NC1iaXQgZGV2aWNlIHRyZWUgYmlu
-ZGluZykgc2luY2UgdGhpcyBpcyB0b3RhbGx5CmludmFsaWQuIFRoYXQgd2F5IGEgcGluIHdpdGgg
-bm8gY3RybCBvciBpcHAsIG9yIGN0cmwgYnV0IG5vIGlwcCBvciBtdXgKd291bGQgYmUKCmZzbCxp
-b211eC1waW4gPSA8LTEgLTEgMHgwNWMgMHg4NSAtMSAtMQogICAgICAgICAgICAgICAgICAgICAg
-ICAuLi4+OwoKPiBXZSBzaG91bGQgcHJvYmFibHkgaGF2ZSBpdCBiZSBtdXhfcmVnICsgbXV4X21v
-ZGUgKyBjb25mX3JlZyArCj4gaW5wdXRfcmVnICsgaW5wdXRfdmFsIG9yIHNvbWV0aGluZyB0byBo
-YXZlIHRoZSBvZmZzZXQgYW5kIHZhbHVlIGNvdXBsZWQuCj4gQW55d2F5LCB3ZSB3aWxsIHN0aWxs
-IGhhdmUgZnNsLHBpbnMgZm9ybWF0dGVkIGFzIDxQSU5fRlVOQ19JRCBDT05GSUc+LAo+IGFuZCBv
-bmx5IGRpZmZlcmVuY2UgaXMgUElOX0ZVTkNfSUQgYmVjb21lcyBhbiB1NjQgaW50ZWdlci4gIEJ1
-dCBpdCBjYW4KPiBzYXZlIHVzIHRoYXQgYmlnIGFycmF5IGZyb20gdGhlIGRyaXZlci4KCkFzIGFi
-b3ZlLiBQbGVhc2UgZG8gbm90IGVuY29kZSB0aGUgZGF0YS4gRG9uJ3QgYXNzdW1lIHlvdSBjYW4g
-ZW5jb2RlIGEKNjQtYml0IGludGVnZXIgZWl0aGVyLi4gdGhhdCdzIG5vdCBpbiBhbnkgY29yZSBi
-aW5kaW5nLiBXaGF0IHlvdSBuZWVkCmhlcmUgaXMgYSBtdWx0aS1jZWxsIHByb3BlcnR5IGFzIGFi
-b3ZlLiBUaGF0ICB3YXkgaXQgY2FuIGJlIGV4cGFuZGVkCmlmIE1YNyBoYXMgYW4gZXh0cmEgaW9t
-dXggcmVnaXN0ZXIgc2V0IGZvciBzb21ldGhpbmcgZWxzZSAoImVuYWJsZQphd2Vzb21lIG1vZGUi
-IG9yIHNvKS4KCj4+IFRoZSBxdWVzdGlvbiBjb21lcyB0byBob3cgUElOX05PX01VWF9JRF9CQVNF
-IGdldHMgZGV0ZXJtaW5lZD8KPj4KPiBTbyBQSU5fTk9fTVVYX0lEX0JBU0Ugd2lsbCBiZTogdGhl
-IGxhcmdlc3QgbXV4X3JlZ19vZmZzZXQgLyA0ICsgMSwgcmlnaHQ/CgpOb3BlLiBJdCBzaG91bGQg
-YmUgLTEuIERvIGl0IHByb3Blcmx5LCBwbGVhc2UuIERvIG5vdCAiaGFjayIgbnVtYmVycywKYXMg
-dGhpcyBjYW4gbWVhbiB0aGUgZHJpdmVyIGhhcyB0byBpbnRpbWF0ZWx5IGtub3cgdGhlIGhhcmR3
-YXJlIHdoZW4KaXQgaXMgbmVlZGxlc3MgdG8gZG8gc28uIFRoZSBkcml2ZXIgTUFZIGhvd2V2ZXIg
-IGFzc3VtZSB0aGF0CklPTVVYQ19CQVNFX0FERFIgKyAweGZmZmZmZmZmIGlzIG5vdCByZWFsbHkg
-cG9zc2libGUgLSBjaGVjayB0aGUKb2Zmc2V0IGdlbmVyYXRlZCBhbmQgaWYgaXQgZ29lcyBiZXlv
-bmQgdGhlIHJlZyA9IDxzdGFydCBsZW5ndGg+IHJhbmdlLAppdCBpcyBvYnZpb3VzbHkgaW52YWxp
-ZC4gT3IganVzdCBjaGVjayB0aGUgb2Zmc2V0IGFnYWluc3QgdGhlIGxlbmd0aC4uCndhbGtpbmcg
-aW50byB1bm1hcHBlZCBtZW1vcnkgaW52YWxpZCBpcyBpbnZhbGlkIGFjcm9zcyB0aGUgYm9hcmQu
-CgpPbmUgdGhpbmcgdGhvdWdoLCBJIGRvbid0IHVuZGVyc3RhbmQgd2h5IERvbmcgdGhpbmtzIGl0
-IHdvdWxkIGJlIG1vcmUKZGlmZmljdWx0IHRvIGxvb2sgdXAgYSByZWdpc3RlciBudW1iZXIgaW4g
-dGhlIGRvY3MgKFBERiBzZWFyY2gsIERvbmcsCml0J3MgZWFzeSEpIHZlcnN1cyBsb29raW5nIHVw
-IHRoZSBiaW5kaW5nIG51bWJlciBpbiB0aGUgYmluZGluZwpkb2N1bWVudC4gVGhlc2UgcGFpcnMg
-YXJlIEFMUkVBRFkgZW5jb2RlZCBpbiBvbGRlciBrZXJuZWxzIHRvbyBpbiB0aGF0CjY0IGJpdCBp
-bnRlZ2VyLiBKdXN0IHNwbGl0IHRoZW0gYmFjayBvdXQgYWdhaW4gKHRoZXJlJ3MgY29kZSBpbgpp
-b211eC12My5oIHRvIGRvIHRoaXMgc3RpbGwgaW4gdGhlIGtlcm5lbCkgYW5kIHlvdSBjYW4gZW5j
-b2RlIHlvdXIKZGV2aWNlIHRyZWUuIEluY2x1ZGluZyBoZWFkZXJzLCBtYWNyb3MgaXMgdW5lY2Vz
-c2FyeS4gWW91IG1heSB3YW50IHRvCnBldGl0aW9uIEZyZWVzY2FsZSB0byBjcmVhdGUgYSBwbHVn
-aW4gZm9yIHRoZWlyIElPTVVYIHRvb2wgdGhvdWdoIHRoYXQKbm90IG9ubHkgc3BpdHMgb3V0IHRo
-ZSByZWcvcGFpciB2YWx1ZXMgaW4gQyBzb3VyY2UgZm9ybWF0ICh0aGlzIGlzCnZlcnkgdXNlZnVs
-LCB0aG91Z2gsIHNpbmNlIHlvdSBjYW4gcGFzdGUgaXQgaW50byBhbnl0aGluZyB0aGF0IGNhbiB1
-c2UKd3JpdGVsKCkgdG8gc2V0IHVwIGFsbCBwaW5zIGV4YWN0bHkgYXMgeW91ciBib2FyZCBkZXNp
-Z25lciBkaWN0YXRlZCksCmJ1dCBhbHNvIGRvZXMgaXQgaW4gZGV2aWNlLXRyZWUgYmluZGluZyBw
-YWlycyBhcyBhYm92ZS4gVGhhdCB3b3VsZAptYWtlIGl0IGEgbG90IGVhc2llciBhbGwgcm91bmQs
-IHRvby4uIG5vYm9keSBuZWVkcyB0byBsb29rIHVwIGEKYmluZGluZywgdGhlIGJpbmRpbmcgaXMg
-ImZzbCxpb211eC1waW5zIGRlZmluZXMgcGFpcnMgb2Ygb2Zmc2V0cyBhbmQKdmFsdWVzIGluc2lk
-ZSB0aGUgSU9NVVhDIHVuaXQuIFRoZXNlIG9mZnNldHMgYW5kIHZhbHVlcyBhcmUgZGVmaW5lZCBp
-bgp0aGUgbWFudWFsLiA8c29tZSBleGFtcGxlcyBoZXJlPiIKCi0tIApNYXR0IFNlYWxleSA8bWF0
-dEBnZW5lc2ktdXNhLmNvbT4KUHJvZHVjdCBEZXZlbG9wbWVudCBBbmFseXN0LCBHZW5lc2kgVVNB
-LCBJbmMuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRl
-dmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96
-bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlz
-Y3Vzcwo=
+On Thu, Jul 26, 2012 at 12:55 PM, Thierry Reding
+<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> When using deferred driver probing, PCI host controller drivers may
+> actually require this function after the init stage.
+>
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> ---
+> Changes in v3:
+> - none
+>
+> Changes in v2:
+> - use __devinit annotations
+
+Your original patch removed __init completely.  Here you change it to
+__devinit.  That means we decide whether to discard the function based
+on whether CONFIG_HOTPLUG is supported.  But I think your point is not
+about hotplug; it's merely that we should be able to scan a PCI bus
+after init-time.  We ought to be able to do a late PCI scan even if
+hotplug is not supported.
+
+Therefore, I'd be inclined to remove __init completely unless you have
+another reason for preferring __devinit.
+
+>  drivers/pci/setup-irq.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+> index eb219a1..f0bcd56 100644
+> --- a/drivers/pci/setup-irq.c
+> +++ b/drivers/pci/setup-irq.c
+> @@ -18,7 +18,7 @@
+>  #include <linux/cache.h>
+>
+>
+> -static void __init
+> +static void __devinit
+>  pdev_fixup_irq(struct pci_dev *dev,
+>                u8 (*swizzle)(struct pci_dev *, u8 *),
+>                int (*map_irq)(const struct pci_dev *, u8, u8))
+> @@ -54,7 +54,7 @@ pdev_fixup_irq(struct pci_dev *dev,
+>         pcibios_update_irq(dev, irq);
+>  }
+>
+> -void __init
+> +void __devinit
+>  pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
+>                int (*map_irq)(const struct pci_dev *, u8, u8))
+>  {
+> --
+> 1.7.11.2
+>
