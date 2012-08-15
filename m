@@ -1,144 +1,56 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
-Date: Tue, 14 Aug 2012 17:08:33 -0700
-Message-ID: <CAErSpo40sydj+ufaqXu_iGFncJWuQGAkc-+ucesXJasb7js5-g@mail.gmail.com>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
- <50201E1D.5060200@wwwdotorg.org> <20120813174003.GA2527@avionic-0098.mockup.avionic-design.de>
- <50294BCA.1070807@wwwdotorg.org> <CAErSpo7og1XgOSv_mFCQ=hP7pq0j3gXWh2QFL2wBJjz7kcAq=g@mail.gmail.com>
- <502AA96B.2050709@wwwdotorg.org> <20120814195834.GA10431@avionic-0098.mockup.avionic-design.de>
- <CAErSpo4Bm_Ryx=OK+svjqAwD4N8v0vrheLVdc-N1ijx8i_-N3w@mail.gmail.com> <502AD82F.3080702@wwwdotorg.org>
+From: David Gibson <dwg@au1.ibm.com>
+Subject: Re: [RFC:PATCH 3.6.0-rc1] dtc: Add -P option to dtc for
+ Pre-Processing.
+Date: Wed, 15 Aug 2012 11:11:49 +1000
+Message-ID: <20120815011149.GF8136@truffula.fritz.box>
+References: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <502AD82F.3080702-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mmarek@suse.cz
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 14, 2012 at 3:58 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 08/14/2012 03:55 PM, Bjorn Helgaas wrote:
->> On Tue, Aug 14, 2012 at 12:58 PM, Thierry Reding
->> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
->>> On Tue, Aug 14, 2012 at 01:39:23PM -0600, Stephen Warren wrote:
->>>> On 08/13/2012 05:18 PM, Bjorn Helgaas wrote:
->>>>> On Mon, Aug 13, 2012 at 11:47 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>>> ...
->>>>>> whereas for a device tree boot:
->>>>>>
->>>>>> (same):
->>>>>>> [    2.112217] pci 0000:01:00.0: reg 10: [io  0x0000-0x00ff]
->>>>>>> [    2.117635] pci 0000:01:00.0: reg 18: [mem 0x00000000-0x00000fff 64bit pref]
->>>>>>> [    2.124690] pci 0000:01:00.0: reg 20: [mem 0x00000000-0x00003fff 64bit pref]
->>>>>>> [    2.131731] pci 0000:01:00.0: reg 30: [mem 0x00000000-0x0001ffff pref]
->>>>>> ... (request region happens early)
->>>>>>> [    2.179838] r8169 0000:01:00.0: BAR 0: requesting [io  0x0000-0x00ff]
->>>>>>> [    2.193312] r8169 0000:01:00.0: BAR 2: requesting [mem 0x00000000-0x00000fff 64bit pref]
->>>>>>> [    2.201397] r8169 0000:01:00.0: BAR 2: can't reserve [mem 0x00000000-0x00000fff 64bit pref]
->>>>>>> [    2.209742] r8169 0000:01:00.0: (unregistered net_device): could not request regions
->>>>>> ... (same, just happens too late)
->>>>>>> [    2.236818] pci 0000:01:00.0: BAR 6: assigned [mem 0xa0000000-0xa001ffff pref]
->>>>>>> [    2.244027] pci 0000:01:00.0: BAR 4: assigned [mem 0xa0020000-0xa0023fff 64bit pref]
->>>>>>> [    2.251794] pci 0000:01:00.0: BAR 2: assigned [mem 0xa0024000-0xa0024fff 64bit pref]
->>>>>>> [    2.259542] pci 0000:01:00.0: BAR 0: assigned [io  0x1000-0x10ff]
->>>>>>
->>>>>> I suspect this is all still related to the PCI devices themselves being
->>>>>> probed much earlier in the overall PCI initialization sequence when the
->>>>>> PCI controller is probed later in the boot sequence, whereas PCI device
->>>>>> probe is deferred until the overall PCI initialization sequence is
->>>>>> complete if the PCI controller is probed very early in the boot sequence.
->>>>>
->>>>> I don't know what to apply your patches to (they don't apply cleanly
->>>>> to v3.6-rc2), so I can't see exactly what you're doing.  But it looks
->>>>> like you might be calling pci_bus_add_devices() before
->>>>> pci_bus_assign_resource(), which isn't going to work.
->>>>
->>>> Yes, that's exactly what is happening.
->>>>
->>>> PCIe initialization starts in arch/arm/mach-tegra/pci.e
->>>> tegra_pcie_init() which calls arch/arm/kernel/bios32.c
->>>> pci_common_init(). That function first calls pcibios_init_hw() (in the
->>>> same file, more about this later) and then loops over PCI buses, calling
->>>> amongst other things pci_bus_assign_resources() then pci_bus_add_devices().
->>>>
->>>> The problem is that ARM's pcibios_init_hw() calls pci_scan_root_bus()
->>>> (or a host-driver-specific function which that also calls
->>>> pci_scan_root_bus() in Tegra's case) which in turn calls
->>>> pci_bus_add_devices() right at the end, before control has returned to
->>>> pci_common_init() and hence before pci_bus_assign_resources() has been
->>>> called.
->>>>
->>>> If I modify pci_scan_root_bus() and remove the call to
->>>> pci_bus_add_devices(), everything works as expected.
->>>>
->>>> So, I guess the question is: Should ARM's pcibios_init_hw() not be
->>>> calling pci_scan_root_bus(), or at least presumably the ARM PCI code
->>>> needs to do things in a slightly different order?
->>
->> I think you need to do something like this instead of using pci_scan_root_bus():
->>
->>     pci_create_root_bus()
->>     pci_scan_child_bus()
->>     pci_bus_assign_resources()
->>     pci_bus_add_devices()
->>
->> This is the effective order used by most of the pci_create_root_bus() callers.
->
-> That would pretty much duplicate everything in pci_scan_root_bus(). That
-> might cause divergence down the road.
+On Mon, Aug 13, 2012 at 09:01:53AM +0100, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> 
+> This patch add pre-processing capablity to dtc based on status property.
+> Now the dtc has additional option -P to enable Pre-processing based on
+> status property.
+> 
+> The SOCS have lot of device tree infrastructure files which mark the
+> device nodes as disabled and the board level device tree enables them if
+> required. However while creating device tree blob, the compiler can
+> preprocess the nodes and exclude nodes marked as disabled, doing this
+> way will reduce the size of device tree blob.
+> 
+> In our case this has reduced the blob size from 29K to 15K.
+> 
+> Also nodes with status="disabled" is are never probed by dt platform bus
+> code.
+> 
+> Again, Preprocessing is optional parameter to dtc.
 
-That's true, but it is what most other architectures do, and if you do
-it the same way, we'll be able to converge things more easily later.
+Hrm.
 
-> Can't we make the call to pci_bus_add_devices() optional in
-> pci_scan_root_bus() somehow; one of:
->
-> * Add a parameter to pci_scan_root_bus() controlling this.
->
-> (rather a large patch)
->
-> * Split pci_scan_root_bus() into pci_scan_root_bus() and
-> pci_scan_root_bus_no_add(), such that pci_scan_root_bus() is just a
-> wrapper that calls pci_scan_root_bus_no_add() then pci_bus_add_devices().
->
-> (very simple patch, and the new function can easily be used as/when it's
-> needed, e.g. enabled just for Tegra in 3.6 to reduce risk of regressions)
->
-> * Add a flag to struct pci_bus that requests pci_scan_root_bus() skip
-> the call to pci_bus_add_devices().
->
-> (a flag in the bus struct just for one function seems a little
-> circuitous, but perhaps OK)
->
-> * ifdef out the call to pci_bus_add_devices(), if building for ARM.
->
-> (very simple, and probably correct)
+1) Changes to dtc should be made first against upstream dtc at
+git://git.jdl.com/software/dtc.git.  The version in the kernel is just
+a snapshot of the upstream tree which is updated periodically.
 
-I'd rather not add more variants of pci_scan_root_bus().  We already
-have several very similar things in drivers/pci/probe.c:
+2) I'm not convinced this filtering-by-status is something that
+belongs in dtc, but I'm willing to be persuaded.
 
-  pci_scan_bus()
-  pci_scan_bus_parented()
-  pci_scan_root_bus()
+3) The name has to change.  "preprocess" is far to general a term for
+the very specific function you're implementing here.  Especially when
+there are serious discussions ongoing about having dtc use cpp or a
+similar preprocessor in a general capacity.
 
-And in addition, we have many callers of pci_create_root_bus() that
-look very much like one of these.  I'm trying to consolidate all this,
-but there's a fair amount of work, and I think the simplest thing is
-to just use pci_create_root_bus() for now.
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-> Actually, I'm not totally convinced some other archs shouldn't skip this
-> too; while I couldn't find any other arch that explicitly calls
-> pci_bus_assign_resources() and pci_bus_add_devices() after
-> pci_scan_root_bus(), I did see some that call
-> pci_assign_unassigned_resources() which seems like it might be due to a
-> similar situation?
-
-Yes, that does sound like a similar problem.  In the past, resource
-assignment has been pretty much separate from enumeration, with the
-arch having the responsibility to enumerate, assign, then add devices.
- But that is error-prone and needlessly arch-specific, and I'd like to
-pull it into generic code.  It's just not done yet :)
-
-> * Add another pcibios_*() callback that pci_scan_root_bus() calls to
-> determine whether to call pci_bus_add_devices(), with default
-> implementation.
