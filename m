@@ -1,11 +1,23 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V4] mfd: add MAX8907 core driver
-Date: Wed, 15 Aug 2012 10:28:46 -0600
-Message-ID: <1345048126-24054-1-git-send-email-swarren@wwwdotorg.org>
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
+Date: Wed, 15 Aug 2012 11:49:01 -0500
+Message-ID: <CAKGA1bkNEJbQgwcdZs8PozCgVyOfUE=bDCGkRkKV3VMfbvRMgw@mail.gmail.com>
+References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
+ <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
+ <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
+ <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
+ <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
+ <20120815054436.GK2232@pengutronix.de>
+ <20120815065526.GG19681@shlinux2.ap.freescale.net>
+ <20120815075117.GL2232@pengutronix.de>
+ <20120815092539.GH19681@shlinux2.ap.freescale.net>
+ <20120815135947.GC2258@S2101-09.ap.freescale.net>
+ <20120815153107.GG2258@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120815153107.GG2258-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,774 +28,116 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>
-
-The MAX8907 is an I2C-based power-management IC containing voltage
-regulators, a reset controller, a real-time clock, and a touch-screen
-controller.
-
-The original driver was written by:
-* Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>
-
-Various fixes and enhancements by:
-* Jin Park <jinyoungp-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-* Tom Cherry <tcherry-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-* Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-* Dan Willemsen <dwillemsen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-* Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
-During upstreaming, I (swarren):
-* Converted to regmap.
-* Converted to regmap-irq.
-* Allowed probing from device tree.
-* Renamed from max8907c->max8907, since the driver covers at least the
-  C and B revisions.
-* General cleanup.
-
-Signed-off-by: Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> #v3
----
-v4:
-Updates to match latest max8907c-regulator.c, which is now applied:
-* Document mbatt-supply in DT bindings, modify example to add mbatt
-  regulator and point *-supply properties it.
-* Add MAX8907_MBATT define to max8907.h, increment all other regulator
-  IDs by 1.
-* Remove all references to WLED regulator and associated lxw-supply from
-  DT binding documentation and header file, per review of the regulator
-  driver.
-* Add back IRQ definitions into header.
-v3:
-* Remove usage of new (dropped) regmap_add_irq_chips() API; the IRQ core
-  handles sharing threaded interrupts, so there's no need to do anything
-  much special to use them.
-v2:
-* Rework interrupt code to use regmap-irq. NOTE: This depends on new regmap
-  feature/patches not yet checked in.
-* Implement precious regmap callback to prevent debugfs reading clear-on-
-  read IRQ status registers
-* Fix devm_regmap_init_i2c() parameter
-* Add *-supply properties to DT binding doc.
----
- .../devicetree/bindings/regulator/max8907.txt      |   71 +++++
- drivers/mfd/Kconfig                                |   12 +
- drivers/mfd/Makefile                               |    1 +
- drivers/mfd/max8907.c                              |  331 ++++++++++++++++++++
- include/linux/mfd/max8907.h                        |  250 +++++++++++++++
- 5 files changed, 665 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/max8907.txt
- create mode 100644 drivers/mfd/max8907.c
- create mode 100644 include/linux/mfd/max8907.h
-
-diff --git a/Documentation/devicetree/bindings/regulator/max8907.txt b/Documentation/devicetree/bindings/regulator/max8907.txt
-new file mode 100644
-index 0000000..4fd847f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/max8907.txt
-@@ -0,0 +1,71 @@
-+MAX8907 regulator
-+
-+Required properties:
-+- compatible: "maxim,max8907"
-+- reg: I2C slave address
-+- interrupts: The interrupt output of the controller
-+- mbatt-supply: The input supply for MBATT, BBAT, SDBY, VRTC.
-+- in-v1-supply: The input supply for SD1.
-+- in-v2-supply: The input supply for SD2.
-+- in-v3-supply: The input supply for SD3.
-+- in1-supply: The input supply for LDO1.
-+...
-+- in20-supply: The input supply for LDO20.
-+- regulators: A node that houses a sub-node for each regulator within the
-+  device. Each sub-node is identified using the regulator-compatible
-+  property, with valid values listed below. The content of each sub-node
-+  is defined by the standard binding for regulators; see regulator.txt.
-+
-+Valid regulator-compatible values are:
-+
-+  sd1, sd2, sd3, ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10,
-+  ldo11, ldo12, ldo13, ldo14, ldo15, ldo16, ldo17, ldo18, ldo19, ldo20, out5v,
-+  out33v, bbat, sdby, vrtc.
-+
-+Example:
-+
-+		max8907@3c {
-+			compatible = "maxim,max8907";
-+			reg = <0x3c>;
-+			interrupts = <0 86 0x4>;
-+
-+			mbatt-supply = <&some_reg>;
-+			in-v1-supply = <&mbatt_reg>;
-+			...
-+			in1-supply = <&mbatt_reg>;
-+			...
-+
-+			regulators {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				mbatt_reg: regulator@0 {
-+					reg = <0>;
-+					regulator-compatible = "mbatt";
-+					regulator-name = "vbat_pmu";
-+					regulator-min-microvolt = <5000000>;
-+					regulator-max-microvolt = <5000000>;
-+					regulator-always-on;
-+				};
-+
-+				regulator@1 {
-+					reg = <1>;
-+					regulator-compatible = "sd1";
-+					regulator-name = "nvvdd_sv1,vdd_cpu_pmu";
-+					regulator-min-microvolt = <1000000>;
-+					regulator-max-microvolt = <1000000>;
-+					regulator-always-on;
-+				};
-+
-+				regulator@2 {
-+					reg = <2>;
-+					regulator-compatible = "sd2";
-+					regulator-name = "nvvdd_sv2,vdd_core";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					regulator-always-on;
-+				};
-+...
-+			};
-+		};
-+	};
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index d1facef..856ec00 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -476,6 +476,18 @@ config MFD_MAX77693
- 	  additional drivers must be enabled in order to use the functionality
- 	  of the device.
- 
-+config MFD_MAX8907
-+	tristate "Maxim Semiconductor MAX8907 PMIC Support"
-+	select MFD_CORE
-+	depends on I2C=y && GENERIC_HARDIRQS
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	help
-+	  Say yes here to support for Maxim Semiconductor MAX8907. This is
-+	  a Power Management IC. This driver provides common support for
-+	  accessing the device; additional drivers must be enabled in order
-+	  to use the functionality of the device.
-+
- config MFD_MAX8925
- 	bool "Maxim Semiconductor MAX8925 PMIC Support"
- 	depends on I2C=y && GENERIC_HARDIRQS
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 79dd22d..2a4108d 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -92,6 +92,7 @@ obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
- 
- obj-$(CONFIG_MFD_MAX77686)	+= max77686.o max77686-irq.o
- obj-$(CONFIG_MFD_MAX77693)	+= max77693.o max77693-irq.o
-+obj-$(CONFIG_MFD_MAX8907)	+= max8907.o
- max8925-objs			:= max8925-core.o max8925-i2c.o
- obj-$(CONFIG_MFD_MAX8925)	+= max8925.o
- obj-$(CONFIG_MFD_MAX8997)	+= max8997.o max8997-irq.o
-diff --git a/drivers/mfd/max8907.c b/drivers/mfd/max8907.c
-new file mode 100644
-index 0000000..5295276
---- /dev/null
-+++ b/drivers/mfd/max8907.c
-@@ -0,0 +1,331 @@
-+/*
-+ * max8907.c - mfd driver for MAX8907
-+ *
-+ * Copyright (C) 2010 Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>
-+ * Copyright (C) 2010-2012, NVIDIA CORPORATION. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/max8907.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+static struct mfd_cell max8907_cells[] = {
-+	{ .name = "max8907-regulator", },
-+	{ .name = "max8907-rtc", },
-+};
-+
-+static bool max8907_gen_is_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case MAX8907_REG_ON_OFF_IRQ1:
-+	case MAX8907_REG_ON_OFF_STAT:
-+	case MAX8907_REG_ON_OFF_IRQ2:
-+	case MAX8907_REG_CHG_IRQ1:
-+	case MAX8907_REG_CHG_IRQ2:
-+	case MAX8907_REG_CHG_STAT:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool max8907_gen_is_precious_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case MAX8907_REG_ON_OFF_IRQ1:
-+	case MAX8907_REG_ON_OFF_IRQ2:
-+	case MAX8907_REG_CHG_IRQ1:
-+	case MAX8907_REG_CHG_IRQ2:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool max8907_gen_is_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	return !max8907_gen_is_volatile_reg(dev, reg);
-+}
-+
-+static const struct regmap_config max8907_regmap_gen_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.volatile_reg = max8907_gen_is_volatile_reg,
-+	.precious_reg = max8907_gen_is_precious_reg,
-+	.writeable_reg = max8907_gen_is_writeable_reg,
-+	.max_register = MAX8907_REG_LDO20VOUT,
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static bool max8907_rtc_is_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	if (reg <= MAX8907_REG_RTC_YEAR2)
-+		return true;
-+
-+	switch (reg) {
-+	case MAX8907_REG_RTC_STATUS:
-+	case MAX8907_REG_RTC_IRQ:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool max8907_rtc_is_precious_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case MAX8907_REG_RTC_IRQ:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool max8907_rtc_is_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case MAX8907_REG_RTC_STATUS:
-+	case MAX8907_REG_RTC_IRQ:
-+		return false;
-+	default:
-+		return true;
-+	}
-+}
-+
-+static const struct regmap_config max8907_regmap_rtc_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.volatile_reg = max8907_rtc_is_volatile_reg,
-+	.precious_reg = max8907_rtc_is_precious_reg,
-+	.writeable_reg = max8907_rtc_is_writeable_reg,
-+	.max_register = MAX8907_REG_MPL_CNTL,
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static const struct regmap_irq max8907_chg_irqs[] = {
-+	{ .reg_offset = 0, .mask = 1 << 0, },
-+	{ .reg_offset = 0, .mask = 1 << 1, },
-+	{ .reg_offset = 0, .mask = 1 << 2, },
-+	{ .reg_offset = 1, .mask = 1 << 0, },
-+	{ .reg_offset = 1, .mask = 1 << 1, },
-+	{ .reg_offset = 1, .mask = 1 << 2, },
-+	{ .reg_offset = 1, .mask = 1 << 3, },
-+	{ .reg_offset = 1, .mask = 1 << 4, },
-+	{ .reg_offset = 1, .mask = 1 << 5, },
-+	{ .reg_offset = 1, .mask = 1 << 6, },
-+	{ .reg_offset = 1, .mask = 1 << 7, },
-+};
-+
-+static const struct regmap_irq_chip max8907_chg_irq_chip = {
-+	.name = "max8907 chg",
-+	.status_base = MAX8907_REG_CHG_IRQ1,
-+	.mask_base = MAX8907_REG_CHG_IRQ1_MASK,
-+	.wake_base = MAX8907_REG_CHG_IRQ1_MASK,
-+	.irq_reg_stride = MAX8907_REG_CHG_IRQ2 - MAX8907_REG_CHG_IRQ1,
-+	.num_regs = 2,
-+	.irqs = max8907_chg_irqs,
-+	.num_irqs = ARRAY_SIZE(max8907_chg_irqs),
-+};
-+
-+static const struct regmap_irq max8907_on_off_irqs[] = {
-+	{ .reg_offset = 0, .mask = 1 << 0, },
-+	{ .reg_offset = 0, .mask = 1 << 1, },
-+	{ .reg_offset = 0, .mask = 1 << 2, },
-+	{ .reg_offset = 0, .mask = 1 << 3, },
-+	{ .reg_offset = 0, .mask = 1 << 4, },
-+	{ .reg_offset = 0, .mask = 1 << 5, },
-+	{ .reg_offset = 0, .mask = 1 << 6, },
-+	{ .reg_offset = 0, .mask = 1 << 7, },
-+	{ .reg_offset = 1, .mask = 1 << 0, },
-+	{ .reg_offset = 1, .mask = 1 << 1, },
-+};
-+
-+static const struct regmap_irq_chip max8907_on_off_irq_chip = {
-+	.name = "max8907 on_off",
-+	.status_base = MAX8907_REG_ON_OFF_IRQ1,
-+	.mask_base = MAX8907_REG_ON_OFF_IRQ1_MASK,
-+	.irq_reg_stride = MAX8907_REG_ON_OFF_IRQ2 - MAX8907_REG_ON_OFF_IRQ1,
-+	.num_regs = 2,
-+	.irqs = max8907_on_off_irqs,
-+	.num_irqs = ARRAY_SIZE(max8907_on_off_irqs),
-+};
-+
-+static const struct regmap_irq max8907_rtc_irqs[] = {
-+	{ .reg_offset = 0, .mask = 1 << 2, },
-+	{ .reg_offset = 0, .mask = 1 << 3, },
-+};
-+
-+static const struct regmap_irq_chip max8907_rtc_irq_chip = {
-+	.name = "max8907 rtc",
-+	.status_base = MAX8907_REG_RTC_IRQ,
-+	.mask_base = MAX8907_REG_RTC_IRQ_MASK,
-+	.num_regs = 1,
-+	.irqs = max8907_rtc_irqs,
-+	.num_irqs = ARRAY_SIZE(max8907_rtc_irqs),
-+};
-+
-+static __devinit int max8907_i2c_probe(struct i2c_client *i2c,
-+				       const struct i2c_device_id *id)
-+{
-+	struct max8907 *max8907;
-+	int ret;
-+
-+	max8907 = devm_kzalloc(&i2c->dev, sizeof(struct max8907), GFP_KERNEL);
-+	if (!max8907) {
-+		ret = -ENOMEM;
-+		goto err_alloc_drvdata;
-+	}
-+
-+	max8907->dev = &i2c->dev;
-+	dev_set_drvdata(max8907->dev, max8907);
-+
-+	max8907->i2c_gen = i2c;
-+	i2c_set_clientdata(i2c, max8907);
-+	max8907->regmap_gen = devm_regmap_init_i2c(i2c,
-+						&max8907_regmap_gen_config);
-+	if (IS_ERR(max8907->regmap_gen)) {
-+		ret = PTR_ERR(max8907->regmap_gen);
-+		dev_err(&i2c->dev, "gen regmap init failed: %d\n", ret);
-+		goto err_regmap_gen;
-+	}
-+
-+	max8907->i2c_rtc = i2c_new_dummy(i2c->adapter, MAX8907_RTC_I2C_ADDR);
-+	if (!max8907->i2c_rtc) {
-+		ret = -ENOMEM;
-+		goto err_dummy_rtc;
-+	}
-+	i2c_set_clientdata(max8907->i2c_rtc, max8907);
-+	max8907->regmap_rtc = devm_regmap_init_i2c(max8907->i2c_rtc,
-+						&max8907_regmap_rtc_config);
-+	if (IS_ERR(max8907->regmap_rtc)) {
-+		ret = PTR_ERR(max8907->regmap_rtc);
-+		dev_err(&i2c->dev, "rtc regmap init failed: %d\n", ret);
-+		goto err_regmap_rtc;
-+	}
-+
-+	irq_set_status_flags(max8907->i2c_gen->irq, IRQ_NOAUTOEN);
-+
-+	ret = regmap_add_irq_chip(max8907->regmap_gen, max8907->i2c_gen->irq,
-+				  IRQF_ONESHOT | IRQF_SHARED, -1,
-+				  &max8907_chg_irq_chip,
-+				  &max8907->irqc_chg);
-+	if (ret != 0) {
-+		dev_err(&i2c->dev, "failed to add chg irq chip: %d\n", ret);
-+		goto err_irqc_chg;
-+	}
-+	ret = regmap_add_irq_chip(max8907->regmap_gen, max8907->i2c_gen->irq,
-+				  IRQF_ONESHOT | IRQF_SHARED, -1,
-+				  &max8907_on_off_irq_chip,
-+				  &max8907->irqc_on_off);
-+	if (ret != 0) {
-+		dev_err(&i2c->dev, "failed to add on off irq chip: %d\n", ret);
-+		goto err_irqc_on_off;
-+	}
-+	ret = regmap_add_irq_chip(max8907->regmap_rtc, max8907->i2c_gen->irq,
-+				  IRQF_ONESHOT | IRQF_SHARED, -1,
-+				  &max8907_rtc_irq_chip,
-+				  &max8907->irqc_rtc);
-+	if (ret != 0) {
-+		dev_err(&i2c->dev, "failed to add rtc irq chip: %d\n", ret);
-+		goto err_irqc_rtc;
-+	}
-+
-+	enable_irq(max8907->i2c_gen->irq);
-+
-+	ret = mfd_add_devices(max8907->dev, -1, max8907_cells,
-+			      ARRAY_SIZE(max8907_cells), NULL, 0);
-+	if (ret != 0) {
-+		dev_err(&i2c->dev, "failed to add MFD devices %d\n", ret);
-+		goto err_add_devices;
-+	}
-+
-+	return 0;
-+
-+err_add_devices:
-+	regmap_del_irq_chip(max8907->i2c_gen->irq, max8907->irqc_rtc);
-+err_irqc_rtc:
-+	regmap_del_irq_chip(max8907->i2c_gen->irq, max8907->irqc_on_off);
-+err_irqc_on_off:
-+	regmap_del_irq_chip(max8907->i2c_gen->irq, max8907->irqc_chg);
-+err_irqc_chg:
-+err_regmap_rtc:
-+	i2c_unregister_device(max8907->i2c_rtc);
-+err_dummy_rtc:
-+err_regmap_gen:
-+err_alloc_drvdata:
-+	return ret;
-+}
-+
-+static __devexit int max8907_i2c_remove(struct i2c_client *i2c)
-+{
-+	struct max8907 *max8907 = i2c_get_clientdata(i2c);
-+
-+	mfd_remove_devices(max8907->dev);
-+
-+	regmap_del_irq_chip(max8907->i2c_gen->irq, max8907->irqc_rtc);
-+	regmap_del_irq_chip(max8907->i2c_gen->irq, max8907->irqc_on_off);
-+	regmap_del_irq_chip(max8907->i2c_gen->irq, max8907->irqc_chg);
-+
-+	i2c_unregister_device(max8907->i2c_rtc);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static struct of_device_id max8907_of_match[] = {
-+	{ .compatible = "maxim,max8907" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, max8907_of_match);
-+#endif
-+
-+static const struct i2c_device_id max8907_i2c_id[] = {
-+	{"max8907", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, max8907_i2c_id);
-+
-+static struct i2c_driver max8907_i2c_driver = {
-+	.driver = {
-+		.name = "max8907",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(max8907_of_match),
-+	},
-+	.probe = max8907_i2c_probe,
-+	.remove = max8907_i2c_remove,
-+	.id_table = max8907_i2c_id,
-+};
-+
-+static int __init max8907_i2c_init(void)
-+{
-+	int ret = -ENODEV;
-+
-+	ret = i2c_add_driver(&max8907_i2c_driver);
-+	if (ret != 0)
-+		pr_err("Failed to register I2C driver: %d\n", ret);
-+
-+	return ret;
-+}
-+subsys_initcall(max8907_i2c_init);
-+
-+static void __exit max8907_i2c_exit(void)
-+{
-+	i2c_del_driver(&max8907_i2c_driver);
-+}
-+module_exit(max8907_i2c_exit);
-+
-+MODULE_DESCRIPTION("MAX8907 multi-function core driver");
-+MODULE_AUTHOR("Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/max8907.h b/include/linux/mfd/max8907.h
-new file mode 100644
-index 0000000..283531f
---- /dev/null
-+++ b/include/linux/mfd/max8907.h
-@@ -0,0 +1,250 @@
-+/*
-+ * Functions to access MAX8907 power management chip.
-+ *
-+ * Copyright (C) 2010 Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>
-+ * Copyright (C) 2012, NVIDIA CORPORATION. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __LINUX_MFD_MAX8907_H
-+#define __LINUX_MFD_MAX8907_H
-+
-+#include <linux/mutex.h>
-+#include <linux/pm.h>
-+
-+#define MAX8907_GEN_I2C_ADDR		(0x78 >> 1)
-+#define MAX8907_ADC_I2C_ADDR		(0x8e >> 1)
-+#define MAX8907_RTC_I2C_ADDR		(0xd0 >> 1)
-+
-+/* MAX8907 register map */
-+#define MAX8907_REG_SYSENSEL		0x00
-+#define MAX8907_REG_ON_OFF_IRQ1		0x01
-+#define MAX8907_REG_ON_OFF_IRQ1_MASK	0x02
-+#define MAX8907_REG_ON_OFF_STAT		0x03
-+#define MAX8907_REG_SDCTL1		0x04
-+#define MAX8907_REG_SDSEQCNT1		0x05
-+#define MAX8907_REG_SDV1		0x06
-+#define MAX8907_REG_SDCTL2		0x07
-+#define MAX8907_REG_SDSEQCNT2		0x08
-+#define MAX8907_REG_SDV2		0x09
-+#define MAX8907_REG_SDCTL3		0x0A
-+#define MAX8907_REG_SDSEQCNT3		0x0B
-+#define MAX8907_REG_SDV3		0x0C
-+#define MAX8907_REG_ON_OFF_IRQ2		0x0D
-+#define MAX8907_REG_ON_OFF_IRQ2_MASK	0x0E
-+#define MAX8907_REG_RESET_CNFG		0x0F
-+#define MAX8907_REG_LDOCTL16		0x10
-+#define MAX8907_REG_LDOSEQCNT16		0x11
-+#define MAX8907_REG_LDO16VOUT		0x12
-+#define MAX8907_REG_SDBYSEQCNT		0x13
-+#define MAX8907_REG_LDOCTL17		0x14
-+#define MAX8907_REG_LDOSEQCNT17		0x15
-+#define MAX8907_REG_LDO17VOUT		0x16
-+#define MAX8907_REG_LDOCTL1		0x18
-+#define MAX8907_REG_LDOSEQCNT1		0x19
-+#define MAX8907_REG_LDO1VOUT		0x1A
-+#define MAX8907_REG_LDOCTL2		0x1C
-+#define MAX8907_REG_LDOSEQCNT2		0x1D
-+#define MAX8907_REG_LDO2VOUT		0x1E
-+#define MAX8907_REG_LDOCTL3		0x20
-+#define MAX8907_REG_LDOSEQCNT3		0x21
-+#define MAX8907_REG_LDO3VOUT		0x22
-+#define MAX8907_REG_LDOCTL4		0x24
-+#define MAX8907_REG_LDOSEQCNT4		0x25
-+#define MAX8907_REG_LDO4VOUT		0x26
-+#define MAX8907_REG_LDOCTL5		0x28
-+#define MAX8907_REG_LDOSEQCNT5		0x29
-+#define MAX8907_REG_LDO5VOUT		0x2A
-+#define MAX8907_REG_LDOCTL6		0x2C
-+#define MAX8907_REG_LDOSEQCNT6		0x2D
-+#define MAX8907_REG_LDO6VOUT		0x2E
-+#define MAX8907_REG_LDOCTL7		0x30
-+#define MAX8907_REG_LDOSEQCNT7		0x31
-+#define MAX8907_REG_LDO7VOUT		0x32
-+#define MAX8907_REG_LDOCTL8		0x34
-+#define MAX8907_REG_LDOSEQCNT8		0x35
-+#define MAX8907_REG_LDO8VOUT		0x36
-+#define MAX8907_REG_LDOCTL9		0x38
-+#define MAX8907_REG_LDOSEQCNT9		0x39
-+#define MAX8907_REG_LDO9VOUT		0x3A
-+#define MAX8907_REG_LDOCTL10		0x3C
-+#define MAX8907_REG_LDOSEQCNT10		0x3D
-+#define MAX8907_REG_LDO10VOUT		0x3E
-+#define MAX8907_REG_LDOCTL11		0x40
-+#define MAX8907_REG_LDOSEQCNT11		0x41
-+#define MAX8907_REG_LDO11VOUT		0x42
-+#define MAX8907_REG_LDOCTL12		0x44
-+#define MAX8907_REG_LDOSEQCNT12		0x45
-+#define MAX8907_REG_LDO12VOUT		0x46
-+#define MAX8907_REG_LDOCTL13		0x48
-+#define MAX8907_REG_LDOSEQCNT13		0x49
-+#define MAX8907_REG_LDO13VOUT		0x4A
-+#define MAX8907_REG_LDOCTL14		0x4C
-+#define MAX8907_REG_LDOSEQCNT14		0x4D
-+#define MAX8907_REG_LDO14VOUT		0x4E
-+#define MAX8907_REG_LDOCTL15		0x50
-+#define MAX8907_REG_LDOSEQCNT15		0x51
-+#define MAX8907_REG_LDO15VOUT		0x52
-+#define MAX8907_REG_OUT5VEN		0x54
-+#define MAX8907_REG_OUT5VSEQ		0x55
-+#define MAX8907_REG_OUT33VEN		0x58
-+#define MAX8907_REG_OUT33VSEQ		0x59
-+#define MAX8907_REG_LDOCTL19		0x5C
-+#define MAX8907_REG_LDOSEQCNT19		0x5D
-+#define MAX8907_REG_LDO19VOUT		0x5E
-+#define MAX8907_REG_LBCNFG		0x60
-+#define MAX8907_REG_SEQ1CNFG		0x64
-+#define MAX8907_REG_SEQ2CNFG		0x65
-+#define MAX8907_REG_SEQ3CNFG		0x66
-+#define MAX8907_REG_SEQ4CNFG		0x67
-+#define MAX8907_REG_SEQ5CNFG		0x68
-+#define MAX8907_REG_SEQ6CNFG		0x69
-+#define MAX8907_REG_SEQ7CNFG		0x6A
-+#define MAX8907_REG_LDOCTL18		0x72
-+#define MAX8907_REG_LDOSEQCNT18		0x73
-+#define MAX8907_REG_LDO18VOUT		0x74
-+#define MAX8907_REG_BBAT_CNFG		0x78
-+#define MAX8907_REG_CHG_CNTL1		0x7C
-+#define MAX8907_REG_CHG_CNTL2		0x7D
-+#define MAX8907_REG_CHG_IRQ1		0x7E
-+#define MAX8907_REG_CHG_IRQ2		0x7F
-+#define MAX8907_REG_CHG_IRQ1_MASK	0x80
-+#define MAX8907_REG_CHG_IRQ2_MASK	0x81
-+#define MAX8907_REG_CHG_STAT		0x82
-+#define MAX8907_REG_WLED_MODE_CNTL	0x84
-+#define MAX8907_REG_ILED_CNTL		0x84
-+#define MAX8907_REG_II1RR		0x8E
-+#define MAX8907_REG_II2RR		0x8F
-+#define MAX8907_REG_LDOCTL20		0x9C
-+#define MAX8907_REG_LDOSEQCNT20		0x9D
-+#define MAX8907_REG_LDO20VOUT		0x9E
-+
-+/* RTC register map */
-+#define MAX8907_REG_RTC_SEC		0x00
-+#define MAX8907_REG_RTC_MIN		0x01
-+#define MAX8907_REG_RTC_HOURS		0x02
-+#define MAX8907_REG_RTC_WEEKDAY		0x03
-+#define MAX8907_REG_RTC_DATE		0x04
-+#define MAX8907_REG_RTC_MONTH		0x05
-+#define MAX8907_REG_RTC_YEAR1		0x06
-+#define MAX8907_REG_RTC_YEAR2		0x07
-+#define MAX8907_REG_ALARM0_SEC		0x08
-+#define MAX8907_REG_ALARM0_MIN		0x09
-+#define MAX8907_REG_ALARM0_HOURS	0x0A
-+#define MAX8907_REG_ALARM0_WEEKDAY	0x0B
-+#define MAX8907_REG_ALARM0_DATE		0x0C
-+#define MAX8907_REG_ALARM0_MONTH	0x0D
-+#define MAX8907_REG_ALARM0_YEAR1	0x0E
-+#define MAX8907_REG_ALARM0_YEAR2	0x0F
-+#define MAX8907_REG_ALARM1_SEC		0x10
-+#define MAX8907_REG_ALARM1_MIN		0x11
-+#define MAX8907_REG_ALARM1_HOURS	0x12
-+#define MAX8907_REG_ALARM1_WEEKDAY	0x13
-+#define MAX8907_REG_ALARM1_DATE		0x14
-+#define MAX8907_REG_ALARM1_MONTH	0x15
-+#define MAX8907_REG_ALARM1_YEAR1	0x16
-+#define MAX8907_REG_ALARM1_YEAR2	0x17
-+#define MAX8907_REG_ALARM0_CNTL		0x18
-+#define MAX8907_REG_ALARM1_CNTL		0x19
-+#define MAX8907_REG_RTC_STATUS		0x1A
-+#define MAX8907_REG_RTC_CNTL		0x1B
-+#define MAX8907_REG_RTC_IRQ		0x1C
-+#define MAX8907_REG_RTC_IRQ_MASK	0x1D
-+#define MAX8907_REG_MPL_CNTL		0x1E
-+
-+/* ADC and Touch Screen Controller register map */
-+#define MAX8907_CTL			0
-+#define MAX8907_SEQCNT			1
-+#define MAX8907_VOUT			2
-+
-+/* mask bit fields */
-+#define MAX8907_MASK_LDO_SEQ		0x1C
-+#define MAX8907_MASK_LDO_EN		0x01
-+#define MAX8907_MASK_VBBATTCV		0x03
-+#define MAX8907_MASK_OUT5V_VINEN	0x10
-+#define MAX8907_MASK_OUT5V_ENSRC	0x0E
-+#define MAX8907_MASK_OUT5V_EN		0x01
-+
-+/* Regulator IDs */
-+#define MAX8907_MBATT	0
-+#define MAX8907_SD1	1
-+#define MAX8907_SD2	2
-+#define MAX8907_SD3	3
-+#define MAX8907_LDO1	4
-+#define MAX8907_LDO2	5
-+#define MAX8907_LDO3	6
-+#define MAX8907_LDO4	7
-+#define MAX8907_LDO5	8
-+#define MAX8907_LDO6	9
-+#define MAX8907_LDO7	10
-+#define MAX8907_LDO8	11
-+#define MAX8907_LDO9	12
-+#define MAX8907_LDO10	13
-+#define MAX8907_LDO11	14
-+#define MAX8907_LDO12	15
-+#define MAX8907_LDO13	16
-+#define MAX8907_LDO14	17
-+#define MAX8907_LDO15	18
-+#define MAX8907_LDO16	19
-+#define MAX8907_LDO17	20
-+#define MAX8907_LDO18	21
-+#define MAX8907_LDO19	22
-+#define MAX8907_LDO20	23
-+#define MAX8907_OUT5V	24
-+#define MAX8907_OUT33V	25
-+#define MAX8907_BBAT	26
-+#define MAX8907_SDBY	27
-+#define MAX8907_VRTC	28
-+#define MAX8907_NUM_REGULATORS (MAX8907_VRTC + 1)
-+
-+/* IRQ definitions */
-+enum {
-+	MAX8907_IRQ_VCHG_DC_OVP = 0,
-+	MAX8907_IRQ_VCHG_DC_F,
-+	MAX8907_IRQ_VCHG_DC_R,
-+	MAX8907_IRQ_VCHG_THM_OK_R,
-+	MAX8907_IRQ_VCHG_THM_OK_F,
-+	MAX8907_IRQ_VCHG_MBATTLOW_F,
-+	MAX8907_IRQ_VCHG_MBATTLOW_R,
-+	MAX8907_IRQ_VCHG_RST,
-+	MAX8907_IRQ_VCHG_DONE,
-+	MAX8907_IRQ_VCHG_TOPOFF,
-+	MAX8907_IRQ_VCHG_TMR_FAULT,
-+
-+	MAX8907_IRQ_GPM_RSTIN = 0,
-+	MAX8907_IRQ_GPM_MPL,
-+	MAX8907_IRQ_GPM_SW_3SEC,
-+	MAX8907_IRQ_GPM_EXTON_F,
-+	MAX8907_IRQ_GPM_EXTON_R,
-+	MAX8907_IRQ_GPM_SW_1SEC,
-+	MAX8907_IRQ_GPM_SW_F,
-+	MAX8907_IRQ_GPM_SW_R,
-+	MAX8907_IRQ_GPM_SYSCKEN_F,
-+	MAX8907_IRQ_GPM_SYSCKEN_R,
-+
-+	MAX8907_IRQ_RTC_ALARM1 = 0,
-+	MAX8907_IRQ_RTC_ALARM0,
-+};
-+
-+struct max8907_platform_data {
-+	struct regulator_init_data *init_data[MAX8907_NUM_REGULATORS];
-+};
-+
-+struct regmap_irq_chips_data;
-+
-+struct max8907 {
-+	struct device			*dev;
-+	struct mutex			irq_lock;
-+	struct i2c_client		*i2c_gen;
-+	struct i2c_client		*i2c_rtc;
-+	struct regmap			*regmap_gen;
-+	struct regmap			*regmap_rtc;
-+	struct regmap_irq_chip_data	*irqc_chg;
-+	struct regmap_irq_chip_data	*irqc_on_off;
-+	struct regmap_irq_chip_data	*irqc_rtc;
-+};
-+
-+#endif
--- 
-1.7.0.4
+T24gV2VkLCBBdWcgMTUsIDIwMTIgYXQgMTA6MzEgQU0sIFNoYXduIEd1byA8c2hhd24uZ3VvQGxp
+bmFyby5vcmc+IHdyb3RlOgo+IE9uIFdlZCwgQXVnIDE1LCAyMDEyIGF0IDA5OjU5OjUwUE0gKzA4
+MDAsIFNoYXduIEd1byB3cm90ZToKPj4gT24gV2VkLCBBdWcgMTUsIDIwMTIgYXQgMDU6MjU6NDBQ
+TSArMDgwMCwgRG9uZyBBaXNoZW5nIHdyb3RlOgo+PiA+IE9uIFdlZCwgQXVnIDE1LCAyMDEyIGF0
+IDAzOjUxOjE3UE0gKzA4MDAsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOgo+PiA+IEhtbSwgbm90
+IHN1cmUgaWYgZHQgbWFjcm8gbWF5IHN1cHBvcnQgdGhpcyBraW5kIG9mIHN5bnRheCBidXQgeWVz
+IGlmIGl0IHN1cHBvcnRzLgo+PiA+IEdyYW50LAo+PiA+Cj4+ID4gRG8geW91IGtub3cgaWYgZHQg
+bWFjcm8gY2FuIHN1cHBvcnQgaXQ/Cj4+Cj4+IEkgaGF2ZSB0aGUgc2FtZSBkb3VidCB0aGVyZS4g
+IENvcGllZCBTdGVwaGVuIHdobyBtaWdodCBoYXZlIGEgYmV0dGVyCj4+IGluc2lnaHQgb24gdGhp
+cy4KPj4KPiBSYXRoZXIgdGhhbiBiZXR0aW5nIGhvdyBEVEMgd2lsbCBpbXBsZW1lbnQgbWFjcm8s
+IHdlJ2QgYmV0dGVyIG1ha2UgdGhlCj4gdGhlIHNhZmVzdCBhc3N1bXB0aW9uIC0gaXQgd2lsbCBu
+b3Qgc3VwcG9ydCB0aGF0IHN5bnRheC4KCkl0IHdvbid0LiBEVCBpcyBkZWZpbmVkIGJ5IHByb3Bl
+cnRpZXMgYW5kIHRob3NlIHByb3BlcnRpZXMgaGF2ZSBjZWxscy4KUHJvcGVydGllcwp0aGF0IGhh
+dmUgbW9yZSB0aGFuIG9uZSBjZWxsIG9yIG11bHRpcGxlIGRlZmluaXRpb25zIGluIHRoZW0gaGF2
+ZSB0byBoYXZlIGEKI3NpemUtY2VsbHMgcHJvcGVydHkgdG8gZ28gd2l0aCBpdCBzb21laG93LgoK
+SSBkb24ndCBzZWUgd2hhdCB0aGUgcHJvYmxlbSB3b3VsZCBiZSBoZXJlOyB5b3Ugd2FudCB0byBk
+ZWZpbmUgcGluIHByb3BlcnRpZXMsCnN1cmUsIHRoZXkgYXJlIGludHJpbnNpY2FsbHkgZGVmaW5l
+ZCBieSAzIHBvc3NpYmxlIHJlZ2lzdGVycyBhbmQgdmFsdWUgcGFpcnMuIEluCmFjdHVhbCBmYWN0
+IGlmIHlvdSBkcmlsbCBkb3duIHRvIHRoaXMsIHdoYXQgaGFwcGVucyBpcyB5b3UgZ2V0IGEgcGlu
+IHByb3BlcnR5CndoaWNoIGRlZmluZXMgb2Zmc2V0cyBpbnRvIHRoZSB1bml0LCBhbmQgdmFsdWVz
+IHRvIHN0dWZmIGludG8gdGhvc2UKcmVnaXN0ZXJzLCBzbwp5b3UgY291bGQgZWl0aGVyIGRpY3Rh
+dGUgYSBzaXplLWNlbGwgb2YgNiAoMyBwYWlycyBvZiByZWctdmFsdWUpIG9yIDIKKHJlZywgdmFs
+dWUpLgpJdCB3b3VsZCBiZSBtb3JlIGNvbnZlbmllbnQgZm9yIGEgZHJpdmVyIHRvIGtub3cgd2hh
+dCB0aG9zZSBwYWlycyBhcmUgbWF5YmUsCnNvIDYgaXMgYmV0dGVyLgoKPiBzdGlsbCB3b3JrIG91
+ciBpc3N1ZSwgSSBndWVzcy4gIEFjdHVhbGx5LCB0aGUgZ29hbCBpcyBhbGwgYWJvdXQKPiBlbmNv
+ZGluZyB0aGUgZGF0YSB0aGF0IGlzIGN1cnJlbnRseSBkZWZpbmVkIGluIGRyaXZlciBhcyBhIGJp
+ZyBhcnJheSBvZgo+IHN0cnVjdCBpbXhfcGluX3JlZyBpbiBkZXZpY2UgdHJlZS4KCkFic29sdXRl
+bHkhCgo+IHN0cnVjdCBpbXhfcGluX3JlZyB7Cj4gICAgICAgICB1MTYgcGlkOwo+ICAgICAgICAg
+dTE2IG11eF9yZWc7Cj4gICAgICAgICB1MTYgY29uZl9yZWc7Cj4gICAgICAgICB1OCBtdXhfbW9k
+ZTsKPiAgICAgICAgIHUxNiBpbnB1dF9yZWc7Cj4gICAgICAgICB1OCBpbnB1dF92YWw7Cj4gfTsK
+Pgo+IEFzIHdlIHdpbGwgZmlndXJlIG91dCB0aGUgcGlkIGZyb20gdGhlIG11eF9yZWcgYW5kIGNv
+bmZfcmVnIGFzIGJlbG93LAo+IGl0IGJlY29tZXMgaG93IHdlIGVuY29kZSBvdGhlciBmaWVsZHMu
+ICBBbiB1NjQgY2FuIGp1c3QgY292ZXIgdGhlbS4KCk9yIDMgcGFpcnMgb2YgdmFsdWVzIGNhbiBl
+bmNvZGUgdGhlbS4gRG9uJ3QgbmVlZGxlc3NseSBlbmNvZGUgZGF0YSBpbgp0aGUgZGV2aWNlIHRy
+ZWUgdGhhdCBjYW4ganVzdCBleGlzdCBpbiBhIGNlbGwgb2YgYSBwcm9wZXJ0eS4KCj4gVGhhdCBz
+YWlkLCB0aGUgbGluZSBiZWxvdyBpbiBiaW5kaW5nIGRvYwo+Cj4gICBNWDM1X1BBRF9DT01QQVJF
+X19TRE1BX0VYVERNQV8yIDExCj4KPiBiZWNvbWVzCj4KPiAgIE1YMzVfUEFEX0NPTVBBUkVfX1NE
+TUFfRVhURE1BXzIgMHgwMzJjMDAwODA3MDAwMDAwCgpJIGNhbiBvbmx5IGdpdmUgYSBxdWljayBl
+eGFtcGxlIG9uIE1YNTEsIE1YNTMgb3IgTVg2IHNpbmNlIHRoYXQncyBteQpleHBlcmllbmNlLCBi
+dXQgZXNzZW50aWFsbHkuLiB5b3UncmUgb3ZlcnRoaW5raW5nIGl0LgoKV2hhdCBpdCBiZWNvbWVz
+IGlzCgppb211eGNAMHg3M2YwODAwMCB7CiAgZnNsLGlvbXV4LXBpbnMgPSA8bXV4IHZhbHVlIGN0
+cmwgdmFsdWUgaXBwIHZhbHVlCi8qIE1YNTNfUElOX1NENF9DTURfX1NENF9DTUQgKi8KICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIG11eCB2YWx1ZSBjdHJsIHZhbHVlIGlwcCB2YWx1ZQogICAg
+ICAgLyogZXRjLiAqLwogICAgICAgICAgICAgICAgICAgICAgICAgICAgLi4uPjsKCllvdSBjYW4g
+ZW5jb2RlIHRob3NlIHZhbHVlcyAqaW4gdGhlIGRyaXZlciogYXMgYSBoYXNoIG9yIGxvb2t1cCB0
+byBnZXQKbmFtZXMgZm9yIHRoZW0gaWYgeW91IGxpa2UgaW4gdGhlIGRyaXZlci4uIG9yIGJ1aWxk
+IHRoZW0gYXQgcnVudGltZQpmb3IgdHJ1bHkgb2RkIGNvbWJpbmF0aW9ucyBvciBub3QtdXN1YWwg
+cGluIGNvbmZpZ3VyYXRpb25zLiBJbiBhbnkKY2FzZSwgdGhvc2UgcmVnIGNhbiBiZSAidmFsaWQi
+IDAgc2luY2UgMCBpcyBJT01VWENfR1BSMC4uIHdoaWNoIHlvdSBkbwpub3Qgd2FudCB0byBzZXQu
+IFRoYXQgc2FpZCwgc2V0dGluZyBJT01VWENfR1BSIGNhbiBiZSB1c2VmdWwhIEV0aGVybmV0Cm1h
+eSBuZWVkIChvbiBNWDYgZXhhbXBsZXMpIEVORVRfQ0xLX1NFTCBzZXQsIElQVSBtYXkgbmVlZCB0
+byBzZWxlY3QKTUlQSSBnYXNrZXQgb3IgSU9NVVguIFVzdWFsbHkgdGhvdWdoIEkgd291bGQgYXNz
+dW1lIHRoYXQgeW91IHdvdWxkCmhhdmUgcHJvcGVydGllcyBmb3IgdGhlc2UgdGhvdWdoIGFzIHlv
+dSBkbyBub3Qgd2FudCB0byAidHJhc2giCmJvb3Rsb2FkZXIgY29uZmlndXJhdGlvbiBvZiBhbnkg
+Y2xvY2sgb3IgbXV4IHNldHRpbmdzLCBqdXN0IHVwZGF0ZQp0aGVtIChzbywgZnNsLGV0aGVybmV0
+LWNsb2NrLXNlbCA9MSBvciBmc2wsaXB1LWlvbXV4ID0gPDEgMD4pCgpUaGF0IHNhaWQsIHRoZSB1
+c3VhbCB0aGluZyBpcyB0byBzZXQgdGhlbSB0byAiLTEiIGV4cGxpY2l0bHkgaW4gdGhlCnRyZWUg
+YW5kIGxldCB0aGUgRFQgY29kZSBzb3J0IG91dCB3aGF0IC0xIGFjdHVhbGx5IG1lYW5zICh1c3Vh
+bGx5CjB4ZmZmZmZmZmYgc2luY2UgYnkgZGVmYXVsdCBPRiBjZWxscyBhcmUgMzItYml0LCBidXQg
+aXQncyB0aGUgc2FtZQpkaWZmZXJlbmNlIGlmIGl0J3MgYSA2NC1iaXQgZGV2aWNlIHRyZWUgYmlu
+ZGluZykgc2luY2UgdGhpcyBpcyB0b3RhbGx5CmludmFsaWQuIFRoYXQgd2F5IGEgcGluIHdpdGgg
+bm8gY3RybCBvciBpcHAsIG9yIGN0cmwgYnV0IG5vIGlwcCBvciBtdXgKd291bGQgYmUKCmZzbCxp
+b211eC1waW4gPSA8LTEgLTEgMHgwNWMgMHg4NSAtMSAtMQogICAgICAgICAgICAgICAgICAgICAg
+ICAuLi4+OwoKPiBXZSBzaG91bGQgcHJvYmFibHkgaGF2ZSBpdCBiZSBtdXhfcmVnICsgbXV4X21v
+ZGUgKyBjb25mX3JlZyArCj4gaW5wdXRfcmVnICsgaW5wdXRfdmFsIG9yIHNvbWV0aGluZyB0byBo
+YXZlIHRoZSBvZmZzZXQgYW5kIHZhbHVlIGNvdXBsZWQuCj4gQW55d2F5LCB3ZSB3aWxsIHN0aWxs
+IGhhdmUgZnNsLHBpbnMgZm9ybWF0dGVkIGFzIDxQSU5fRlVOQ19JRCBDT05GSUc+LAo+IGFuZCBv
+bmx5IGRpZmZlcmVuY2UgaXMgUElOX0ZVTkNfSUQgYmVjb21lcyBhbiB1NjQgaW50ZWdlci4gIEJ1
+dCBpdCBjYW4KPiBzYXZlIHVzIHRoYXQgYmlnIGFycmF5IGZyb20gdGhlIGRyaXZlci4KCkFzIGFi
+b3ZlLiBQbGVhc2UgZG8gbm90IGVuY29kZSB0aGUgZGF0YS4gRG9uJ3QgYXNzdW1lIHlvdSBjYW4g
+ZW5jb2RlIGEKNjQtYml0IGludGVnZXIgZWl0aGVyLi4gdGhhdCdzIG5vdCBpbiBhbnkgY29yZSBi
+aW5kaW5nLiBXaGF0IHlvdSBuZWVkCmhlcmUgaXMgYSBtdWx0aS1jZWxsIHByb3BlcnR5IGFzIGFi
+b3ZlLiBUaGF0ICB3YXkgaXQgY2FuIGJlIGV4cGFuZGVkCmlmIE1YNyBoYXMgYW4gZXh0cmEgaW9t
+dXggcmVnaXN0ZXIgc2V0IGZvciBzb21ldGhpbmcgZWxzZSAoImVuYWJsZQphd2Vzb21lIG1vZGUi
+IG9yIHNvKS4KCj4+IFRoZSBxdWVzdGlvbiBjb21lcyB0byBob3cgUElOX05PX01VWF9JRF9CQVNF
+IGdldHMgZGV0ZXJtaW5lZD8KPj4KPiBTbyBQSU5fTk9fTVVYX0lEX0JBU0Ugd2lsbCBiZTogdGhl
+IGxhcmdlc3QgbXV4X3JlZ19vZmZzZXQgLyA0ICsgMSwgcmlnaHQ/CgpOb3BlLiBJdCBzaG91bGQg
+YmUgLTEuIERvIGl0IHByb3Blcmx5LCBwbGVhc2UuIERvIG5vdCAiaGFjayIgbnVtYmVycywKYXMg
+dGhpcyBjYW4gbWVhbiB0aGUgZHJpdmVyIGhhcyB0byBpbnRpbWF0ZWx5IGtub3cgdGhlIGhhcmR3
+YXJlIHdoZW4KaXQgaXMgbmVlZGxlc3MgdG8gZG8gc28uIFRoZSBkcml2ZXIgTUFZIGhvd2V2ZXIg
+IGFzc3VtZSB0aGF0CklPTVVYQ19CQVNFX0FERFIgKyAweGZmZmZmZmZmIGlzIG5vdCByZWFsbHkg
+cG9zc2libGUgLSBjaGVjayB0aGUKb2Zmc2V0IGdlbmVyYXRlZCBhbmQgaWYgaXQgZ29lcyBiZXlv
+bmQgdGhlIHJlZyA9IDxzdGFydCBsZW5ndGg+IHJhbmdlLAppdCBpcyBvYnZpb3VzbHkgaW52YWxp
+ZC4gT3IganVzdCBjaGVjayB0aGUgb2Zmc2V0IGFnYWluc3QgdGhlIGxlbmd0aC4uCndhbGtpbmcg
+aW50byB1bm1hcHBlZCBtZW1vcnkgaW52YWxpZCBpcyBpbnZhbGlkIGFjcm9zcyB0aGUgYm9hcmQu
+CgpPbmUgdGhpbmcgdGhvdWdoLCBJIGRvbid0IHVuZGVyc3RhbmQgd2h5IERvbmcgdGhpbmtzIGl0
+IHdvdWxkIGJlIG1vcmUKZGlmZmljdWx0IHRvIGxvb2sgdXAgYSByZWdpc3RlciBudW1iZXIgaW4g
+dGhlIGRvY3MgKFBERiBzZWFyY2gsIERvbmcsCml0J3MgZWFzeSEpIHZlcnN1cyBsb29raW5nIHVw
+IHRoZSBiaW5kaW5nIG51bWJlciBpbiB0aGUgYmluZGluZwpkb2N1bWVudC4gVGhlc2UgcGFpcnMg
+YXJlIEFMUkVBRFkgZW5jb2RlZCBpbiBvbGRlciBrZXJuZWxzIHRvbyBpbiB0aGF0CjY0IGJpdCBp
+bnRlZ2VyLiBKdXN0IHNwbGl0IHRoZW0gYmFjayBvdXQgYWdhaW4gKHRoZXJlJ3MgY29kZSBpbgpp
+b211eC12My5oIHRvIGRvIHRoaXMgc3RpbGwgaW4gdGhlIGtlcm5lbCkgYW5kIHlvdSBjYW4gZW5j
+b2RlIHlvdXIKZGV2aWNlIHRyZWUuIEluY2x1ZGluZyBoZWFkZXJzLCBtYWNyb3MgaXMgdW5lY2Vz
+c2FyeS4gWW91IG1heSB3YW50IHRvCnBldGl0aW9uIEZyZWVzY2FsZSB0byBjcmVhdGUgYSBwbHVn
+aW4gZm9yIHRoZWlyIElPTVVYIHRvb2wgdGhvdWdoIHRoYXQKbm90IG9ubHkgc3BpdHMgb3V0IHRo
+ZSByZWcvcGFpciB2YWx1ZXMgaW4gQyBzb3VyY2UgZm9ybWF0ICh0aGlzIGlzCnZlcnkgdXNlZnVs
+LCB0aG91Z2gsIHNpbmNlIHlvdSBjYW4gcGFzdGUgaXQgaW50byBhbnl0aGluZyB0aGF0IGNhbiB1
+c2UKd3JpdGVsKCkgdG8gc2V0IHVwIGFsbCBwaW5zIGV4YWN0bHkgYXMgeW91ciBib2FyZCBkZXNp
+Z25lciBkaWN0YXRlZCksCmJ1dCBhbHNvIGRvZXMgaXQgaW4gZGV2aWNlLXRyZWUgYmluZGluZyBw
+YWlycyBhcyBhYm92ZS4gVGhhdCB3b3VsZAptYWtlIGl0IGEgbG90IGVhc2llciBhbGwgcm91bmQs
+IHRvby4uIG5vYm9keSBuZWVkcyB0byBsb29rIHVwIGEKYmluZGluZywgdGhlIGJpbmRpbmcgaXMg
+ImZzbCxpb211eC1waW5zIGRlZmluZXMgcGFpcnMgb2Ygb2Zmc2V0cyBhbmQKdmFsdWVzIGluc2lk
+ZSB0aGUgSU9NVVhDIHVuaXQuIFRoZXNlIG9mZnNldHMgYW5kIHZhbHVlcyBhcmUgZGVmaW5lZCBp
+bgp0aGUgbWFudWFsLiA8c29tZSBleGFtcGxlcyBoZXJlPiIKCi0tIApNYXR0IFNlYWxleSA8bWF0
+dEBnZW5lc2ktdXNhLmNvbT4KUHJvZHVjdCBEZXZlbG9wbWVudCBBbmFseXN0LCBHZW5lc2kgVVNB
+LCBJbmMuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRl
+dmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96
+bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlz
+Y3Vzcwo=
