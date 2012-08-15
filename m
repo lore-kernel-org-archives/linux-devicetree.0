@@ -1,140 +1,239 @@
-From: Vaibhav Hiremath <hvaibhav@ti.com>
-Subject: Re: [RFC RESEND 2/4] ARM: OMAP3: Dynamically disable secure timer
- nodes for secure devices
-Date: Wed, 15 Aug 2012 14:43:28 +0530
-Message-ID: <502B6838.9080907@ti.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-3-git-send-email-jon-hunter@ti.com>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
+Date: Wed, 15 Aug 2012 17:25:40 +0800
+Message-ID: <20120815092539.GH19681@shlinux2.ap.freescale.net>
+References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
+ <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
+ <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
+ <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
+ <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
+ <20120815054436.GK2232@pengutronix.de>
+ <20120815065526.GG19681@shlinux2.ap.freescale.net>
+ <20120815075117.GL2232@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1342218413-30116-3-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Tarun Kanti DebBarma <tarun.kanti@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Paul Walmsley <paul@pwsan.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120815075117.GL2232-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 15, 2012 at 03:51:17PM +0800, Uwe Kleine-K=F6nig wrote:
+> Hello,
+> =
 
+> On Wed, Aug 15, 2012 at 02:55:27PM +0800, Dong Aisheng wrote:
+> > On Wed, Aug 15, 2012 at 07:44:36AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > Hello,
+> > > =
 
-On 7/14/2012 3:56 AM, Jon Hunter wrote:
-> OMAP3 devices may or may not have security features enabled. Security enabled
-> devices are known as high-secure (HS) and devices without security are known as
-> general purpose (GP).
-> 
-> For OMAP3 devices there are 12 general purpose timers available. On secure
-> devices the 12th timer is reserved for secure usage and so cannot be used by
-> the kernel, where as for a GP device it is available. We can detect the OMAP
-> device type, secure or GP, at runtime via an on-chip register. Today, when not
-> using DT, we do not register the 12th timer as a linux device if the device is
-> secure.
-> 
-> When using device tree, device tree is going to register all the timer devices
-> it finds in the device tree blob. To prevent device tree from registering 12th
-> timer on a secure OMAP3 device we can add a status property to the timer
-> binding with the value "disabled" at boot time. Note that timer 12 on a OMAP3
-> device has a property "ti,timer-secure" to indicate that it will not be
-> available on a secure device and so for secure OMAP3 devices, we search for
-> timers with this property and then disable them. Using the prom_add_property()
-> function to dynamically add a property was a recommended approach suggested by
-> Rob Herring [1].
-> 
-> I have tested this on an OMAP3 GP device and faking it to pretend to be a
-> secure device to ensure that any timers marked with "ti,timer-secure" are not
-> registered on boot. I have also made sure that all timers are registered as
-> expected on a GP device by default.
-> 
-> [1] http://comments.gmane.org/gmane.linux.ports.arm.omap/79203
-> 
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> ---
->  arch/arm/mach-omap2/board-generic.c |    1 +
->  arch/arm/mach-omap2/common.h        |    1 +
->  arch/arm/mach-omap2/timer.c         |   36 +++++++++++++++++++++++++++++++++++
->  3 files changed, 38 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> index 6f93a20..20124d7 100644
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -40,6 +40,7 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
->  static void __init omap_generic_init(void)
->  {
->  	omap_sdrc_init(NULL, NULL);
-> +	omap_dmtimer_init();
->  
->  	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
->  }
-> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-> index 1f65b18..d6a4875 100644
-> --- a/arch/arm/mach-omap2/common.h
-> +++ b/arch/arm/mach-omap2/common.h
-> @@ -326,6 +326,7 @@ extern void omap_sdrc_init(struct omap_sdrc_params *sdrc_cs0,
->  				      struct omap_sdrc_params *sdrc_cs1);
->  struct omap2_hsmmc_info;
->  extern int omap4_twl6030_hsmmc_init(struct omap2_hsmmc_info *controllers);
-> +extern void omap_dmtimer_init(void);
->  
->  #endif /* __ASSEMBLER__ */
->  #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
-> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
-> index 13d20c8..e3b9931 100644
-> --- a/arch/arm/mach-omap2/timer.c
-> +++ b/arch/arm/mach-omap2/timer.c
-> @@ -36,6 +36,7 @@
->  #include <linux/clocksource.h>
->  #include <linux/clockchips.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  
->  #include <asm/mach/time.h>
->  #include <plat/dmtimer.h>
-> @@ -482,6 +483,41 @@ static int __init omap2_dm_timer_init(void)
->  }
->  arch_initcall(omap2_dm_timer_init);
->  
-> +static struct property timer_disabled = {
-> +	.name = "status",
-> +	.length = sizeof("disabled"),
-> +	.value = "disabled",
-> +};
-> +
-> +static struct of_device_id omap3_timer_match[] __initdata = {
-> +	{ .compatible = "ti,omap3-timer", },
-> +	{ }
-> +};
-> +
-> +/**
-> + * omap_dmtimer_init - initialisation function when device tree is used
-> + *
-> + * For secure OMAP3 devices, timers with device type "timer-secure" cannot
-> + * be used by the kernel as they are reserved. Therefore, to prevent the
-> + * kernel registering these devices remove them dynamically from the device
-> + * tree on boot.
-> + */
-> +void __init omap_dmtimer_init(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	if (!cpu_is_omap34xx())
-> +		return;
-> +
+> > > (Cc +=3D devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org)
+> > > =
 
-Sorry for responding so late, but why only omap34xx check here?
-Isn't this applicable to all omap & non-omap devices?
+> > > On Wed, Aug 15, 2012 at 11:59:18AM +0800, Dong Aisheng wrote:
+> > > > On 15 August 2012 03:37, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
+> > > > > On Tue, Aug 14, 2012 at 2:20 AM, Dong Aisheng <dong.aisheng@linar=
+o.org> wrote:
+> > > > >> On 13 August 2012 23:12, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
+> > > > >>> I have a minor nit; while renumbering the pinctrl definitions is
+> > > > >>> laudable and device trees can match, there are 16 other pin con=
+trols
+> > > > >>> below EIM_D16 - this makes the start of the IOMUXC pin definiti=
+ons
+> > > > >>> actually be the value calculated by (iomuxc_base + 0x300 + (4*1=
+6) +
+> > > > >>> (pin_id*4)).
+> > > > >>
+> > > > >> What do you mean of this value calculated?
+> > > > >
+> > > > > Well, it just seems the datasheet has been read from the point of=
+ view
+> > > > > of the SW_CTRL settings (pad pullups, drive strength etc.) to def=
+ine
+> > > > > the enums; every pin setting in order from IOMUXC_BASE + 0x3f0 (s=
+orry
+> > > > > I mistyped) has been entered as an enum into this list. Then a ta=
+ble
+> > > > > has been generated using these enums to supply a pin id. Then thi=
+s pin
+> > > > > id is not relevant anymore; it actually gets referenced by it's
+> > > > > *offset into the table*.
+> > > > >
+> > > > Not exactly, probably.
+> > > > Basically we follow the mux reigster offset to define pin id, howev=
+er,
+> > > > there're also some pads may not have mux function but only config
+> > > > which also has a pin id
+> > > > and vice versa.
+> > > > Those pins are not ordered by it's mux regsiter offset.
+> > > > =
 
-Thanks,
-Vaibhav
+> > > > Actually I did not manually search all those pins, instead, i just
+> > > > using the exist ones:
+> > > > arch/arm/plat-mxc/include/mach/iomux-mx51.h
+> > > > Since this exist headfile already covers this case.
+> > > > =
 
-> +	/* If we are a secure device, remove any secure timer nodes */
-> +	if ((omap_type() != OMAP2_DEVICE_TYPE_GP)) {
-> +		for_each_matching_node(np, omap3_timer_match) {
-> +			if (of_get_property(np, "ti,timer-secure", NULL))
-> +				prom_add_property(np, &timer_disabled);
-> +		}
-> +	}
-> +}
-> +
->  /**
->   * omap2_override_clocksource - clocksource override with user configuration
->   *
-> 
+> > > > > In this case, basically the code misses a few pins which have ALT
+> > > > > settings but perhaps not always the ability to change pad control=
+ -
+> > > > > EIM_DA5 to 15 are a good example.
+> > > > >
+> > > > As i said, we already defined those pin ids.
+> > > > =
+
+> > > > > Probably better would be to define the binding almost exactly as =
+it
+> > > > > was done in the old method; iomux_v3_cfg_t took into account the =
+three
+> > > > > register offsets possible for the pin (SW_MUX_CTL, SW_PAD_CTL and=
+ IPP)
+> > > > > and the three values to be put into those registers.
+> > > > >
+> > > > > This has been reduced down in pinctrl to what I find quite strang=
+e,
+> > > > > which is a completely arbitrary pin "id" mapping, which indirectly
+> > > > > references an entry in a table by index which is why pin 1 as a s=
+tart
+> > > > > looks odd.
+> > > > >
+> > > > Start with pin 1 is a bug which caused by my mistake during the ear=
+ly
+> > > > data conversion.
+> > > > =
+
+> > > > > If the binding is entirely i.MX-specific or even i.MX51-specific =
+then
+> > > > > why not define the pins in the device tree the "old" iomux_v3_cfg=
+_t
+> > > > > way, which is the way they are in the table of imx_pin_regs;
+> > > > >
+> > > > >       IMX_PIN_REG(MX51_PAD_EIM_D16, 0x3f0, 0x05c, 5, 0x000, 0), /*
+> > > > > MX51_PAD_EIM_D16__AUD4_RXFS */
+> > > > >
+> > > > > 0x3f0 is the SW_PAD_CTL, 0x05c is the SW_MUX_CTL, 5 is the ALT mo=
+de,
+> > > > > 0x000 is the IPP reg, and 0 the IPP value.
+> > > > >
+> > > > > So fsl,iomux-pins =3D <0x3f0 0x85 0x05c 5 0 0 ... > (PAD, setting=
+s, MUX,
+> > > > > mode/sion, IPP, select - in that order) would be a valid pin
+> > > > > definition and require no table. Sure, the offsets are device spe=
+cific
+> > > > > but then the arbitrary numbering is too.
+> > > > > This way old iomux controls
+> > > > > can be re-derived for people who use the old method in old kernel=
+s, or
+> > > > > use U-Boot with iomux-v3.h taken from Linux (MX6 got ported, I am
+> > > > > porting the Efika to it on MX5 for U-Boot right now). Also that h=
+uge
+> > > > > table goes away - it can be built at runtime, along with the
+> > > > > PAD_NAME__ALT_MODE_NAME description.
+> > > > >
+> > > > I can't agree this is better than the exist one now.
+> > > > It's hard to use in device tree.
+> > > > And how would you parse the pin id from this data array?
+> > > I admit I didn't follow completely the calculation suggestion by Matt,
+> > > but I think in general he has a point. This is more or less what I
+> > > thought when I built the imx35 pinctrl driver.
+> > > =
+
+> > > With the current approach (i.e. put the pinfuncs in some order that
+> > > seems sensible today and then referencing them by index according to
+> > > that ordering) you really get into troubles if you have to add a new
+> > > function. You have to add it to the end to not break existing device
+> > > trees and so the ordering is broken.
+> > > =
+
+> > Actually, we do not mean to maintain the ordering in driver.
+> > It just needs to be align with the pin func ids definitions in binding
+> > doc. So the ordering broken in driver is not an issue, it just looks
+> > not so better if we really have to add a new pin function to the end
+> > due to mistake but this does not break anything to work.
+> Well, if you add a function between say current function 11 and 12 all
+> device trees need fixing, i.e. increase all function ids >=3D 12 by one.
+> You obviously cannot fix out-of-tree users and even fixing the in-tree
+> users is ugly.
+>  =
+
+For such case, we should add it to the end since the exist ids are already
+taken. It will not break any user.
+
+> > > Also "11" has no obvious relation to MX35_PAD_COMPARE__SDMA_EXTDMA_2
+> > > other than a match if you grep over the binding docs (or the driver).
+> > > While "0x32c, 0x008, 7, 0x0, 0" is longer and looks more ugly the
+> > > mapping is obvious and so IMHO preferable.
+> > > =
+
+> > Also, don't you think this is hard to use for devicetree?
+> Not harder than the current approach. Obviously macro support would be
+> nice, but this applies to both approaches.
+> =
+
+> > And we need to reference datasheet to fill these values.
+> I'd list the explicit values in the binding docs as the indexes are
+> documented there now. So the difference for a device-tree writer is just
+> the content that is copy-and-pasted.
+> =
+
+> > I just keep using as the old way at best and i remember Sascha also sug=
+gested
+> > before that we don't want to lose using the macro way as
+> > MX35_PAD_COMPARE__SDMA_EXTDMA_2 to make easy use.
+> > In the future, we will switch to macro when dt supports.
+> > For the way "0x32c, 0x008, 7, 0x0, 0", it's very unconveniently to use =
+macro.
+> That is just
+> =
+
+> 	#define MX35_PAD_COMPARE__SDMA_EXTDMA_2 11
+> =
+
+> vs.
+> =
+
+> 	#define MX35_PAD_COMPARE__SDMA_EXTDMA_2 0x32c, 0x008, 7, 0x0, 0
+> =
+
+> isn't it? (Actually I'd not go for cpp as preprocessor, but that's a
+> different story.)
+> =
+
+Hmm, not sure if dt macro may support this kind of syntax but yes if it sup=
+ports.
+Grant,
+Do you know if dt macro can support it?
+
+Now I'm a bit intend to admit that we probably could do like that if it sup=
+ports.
+The benefit i see is that it could save much code lines in driver while hav=
+ing
+no using experience downgrade.
+
+The left question is that how do we get the pin id from this kind of format=
+ data
+(0x32c, 0x008, 7, 0x0, 0), probably one way may be:
+For normal pads and NO_CONFIG pads, we could get it via:
+mux_reg_offset / 4
+for NO_MUX pads but have CONFIG pads, we may get it via:
+mux_reg_offset / 4 + PIN_NO_MUX_ID_BASE + config_reg_offset /4
+That may fix getting pin id issue from dt.
+
+Another known issue is that via this way, that means the pinctrl subsystem
+can only see the using pads, this is a bit not align with the pinctrl
+subsystem design. No sure if Linus would like to see it.
+
+Regards
+Dong Aisheng
