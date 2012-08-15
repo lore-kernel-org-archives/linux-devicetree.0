@@ -1,90 +1,69 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: imx6q-sabrelite: add eeti egalax
-Date: Wed, 15 Aug 2012 21:01:11 +0800
-Message-ID: <20120815130108.GB2258@S2101-09.ap.freescale.net>
-References: <1345026708-14139-1-git-send-email-jason77.wang@gmail.com>
- <1345026708-14139-2-git-send-email-jason77.wang@gmail.com>
- <1345026708-14139-3-git-send-email-jason77.wang@gmail.com>
- <1345026708-14139-4-git-send-email-jason77.wang@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] spi: spi-altera: Use of_match_ptr
+Date: Wed, 15 Aug 2012 08:09:07 -0500
+Message-ID: <502B9F73.4040508@gmail.com>
+References: <1345015828-8444-1-git-send-email-tklauser@distanz.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1345026708-14139-4-git-send-email-jason77.wang@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Hui Wang <jason77.wang@gmail.com>
-Cc: dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1345015828-8444-1-git-send-email-tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Mark Brown (broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org)" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2012 at 06:31:48PM +0800, Hui Wang wrote:
-> i.MX6Q sabrelite board uses i2c3 to connect an eeti egalax
-> touchscreen controller, add it as an i2c slave device in the dts.
+On 08/15/2012 02:30 AM, Tobias Klauser wrote:
+> Instead of having to define the match table to NULL if CONFIG_OF isn't
+> set, use the of_match_ptr() macro which will do this for us.
 > 
-> Signed-off-by: Hui Wang <jason77.wang@gmail.com>
+> Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+Adding Mark B. as he is helping Grant out with spi.
+
+Rob
+
 > ---
->  arch/arm/boot/dts/imx6q-sabrelite.dts |   16 ++++++++++++++++
->  arch/arm/boot/dts/imx6q.dtsi          |    7 +++++++
->  2 files changed, 23 insertions(+), 0 deletions(-)
+>  drivers/spi/spi-altera.c |    4 +---
+>  1 files changed, 1 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
-> index 72f30f3..4a68e1f 100644
-> --- a/arch/arm/boot/dts/imx6q-sabrelite.dts
-> +++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
-> @@ -54,6 +54,7 @@
->  							   144  0x80000000	/* MX6Q_PAD_EIM_D22__GPIO_3_22 */
->  							   121  0x80000000	/* MX6Q_PAD_EIM_D19__GPIO_3_19 */
->  							   953  0x80000000	/* MX6Q_PAD_GPIO_0__CCM_CLKO */
-> +							   972  0x10		/* MX6Q_PAD_GPIO_9__GPIO_1_9 */
->  							   >;
->  					};
->  				};
-> @@ -115,6 +116,21 @@
->  					VDDIO-supply = <&reg_3p3v>;
->  				};
->  			};
-> +
-> +			i2c@021a8000 { /* I2C3 */
-> +				status = "okay";
-> +				clock-frequency = <100000>;
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_i2c3_1>;
-> +
-> +				egalax_ts@04 {
-> +					compatible = "eeti,egalax_ts";
-> +					reg = <0x04>;
-> +					interrupt-parent = <&gpio1>;
-> +					interrupts = <9 2>;
-
-So you take this interrupt as falling-edge, while I see IRQF_TRIGGER_LOW
-is used in driver with request_threaded_irq call.
-
-Regards,
-Shawn
-
-> +					wakeup-gpios = <&gpio1 9 0>;
-> +				};
-> +			};
->  		};
->  	};
+> diff --git a/drivers/spi/spi-altera.c b/drivers/spi/spi-altera.c
+> index c00d00e..f1fec2a 100644
+> --- a/drivers/spi/spi-altera.c
+> +++ b/drivers/spi/spi-altera.c
+> @@ -307,8 +307,6 @@ static const struct of_device_id altera_spi_match[] = {
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, altera_spi_match);
+> -#else /* CONFIG_OF */
+> -#define altera_spi_match NULL
+>  #endif /* CONFIG_OF */
 >  
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index fd57079..6f833b3 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -552,6 +552,13 @@
->  					};
->  				};
->  
-> +				i2c3 {
-> +					pinctrl_i2c3_1: i2c3grp-1 {
-> +						fsl,pins = <1013 0x4001b8b1	/* MX6Q_PAD_GPIO_5__I2C3_SCL */
-> +							    1037 0x4001b8b1>;	/* MX6Q_PAD_GPIO_16__I2C3_SDA */
-> +					};
-> +				};
-> +
->  				serial2 {
->  					pinctrl_serial2_1: serial2grp-1 {
->  						fsl,pins = <183 0x1b0b1		/* MX6Q_PAD_EIM_D26__UART2_TXD */
-> -- 
-> 1.7.6
+>  static struct platform_driver altera_spi_driver = {
+> @@ -318,7 +316,7 @@ static struct platform_driver altera_spi_driver = {
+>  		.name = DRV_NAME,
+>  		.owner = THIS_MODULE,
+>  		.pm = NULL,
+> -		.of_match_table = altera_spi_match,
+> +		.of_match_table = of_match_ptr(altera_spi_match),
+>  	},
+>  };
+>  module_platform_driver(altera_spi_driver);
 > 
+
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
