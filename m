@@ -1,15 +1,22 @@
-From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC:PATCH dtc-1.3.0] dtc: Add --strip-disabled option to dtc.
-Date: Wed, 15 Aug 2012 13:21:24 +0000
-Message-ID: <502BA254.3050901@freescale.com>
-References: <1345034325-26656-1-git-send-email-srinivas.kandagatla@st.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
+Date: Wed, 15 Aug 2012 21:59:50 +0800
+Message-ID: <20120815135947.GC2258@S2101-09.ap.freescale.net>
+References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
+ <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
+ <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
+ <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
+ <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
+ <20120815054436.GK2232@pengutronix.de>
+ <20120815065526.GG19681@shlinux2.ap.freescale.net>
+ <20120815075117.GL2232@pengutronix.de>
+ <20120815092539.GH19681@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345034325-26656-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Content-Language: en-US
-Content-ID: <FB6F5EC25FD8CC429CF27154201F8019-725oAoX4OcF2GV6JINhBVAC/G2K4zDHf@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120815092539.GH19681-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,21 +27,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "mmarek-AlSwsSmVLrQ@public.gmane.org" <mmarek-AlSwsSmVLrQ@public.gmane.org>, "jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org" <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Srinivas KANDAGATLA wrote:
->   	for_each_child(tree, child) {
-> +		if (strip_disabled && !is_device_node_avaiable(child))
-> +			continue;
-> +
->   		flatten_tree(child, emit, etarget, strbuf, vi);
->   	}
+On Wed, Aug 15, 2012 at 05:25:40PM +0800, Dong Aisheng wrote:
+> On Wed, Aug 15, 2012 at 03:51:17PM +0800, Uwe Kleine-K=F6nig wrote:
+> > That is just
+> > =
 
-Since this function is recursive, children of disabled nodes will also be 
-removed.  You should document that.
+> > 	#define MX35_PAD_COMPARE__SDMA_EXTDMA_2 11
+> > =
 
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+> > vs.
+> > =
+
+> > 	#define MX35_PAD_COMPARE__SDMA_EXTDMA_2 0x32c, 0x008, 7, 0x0, 0
+> > =
+
+> > isn't it? (Actually I'd not go for cpp as preprocessor, but that's a
+> > different story.)
+> > =
+
+> Hmm, not sure if dt macro may support this kind of syntax but yes if it s=
+upports.
+> Grant,
+> Do you know if dt macro can support it?
+> =
+
+I have the same doubt there.  Copied Stephen who might have a better
+insight on this.
+
+> Now I'm a bit intend to admit that we probably could do like that if it s=
+upports.
+> The benefit i see is that it could save much code lines in driver while h=
+aving
+> no using experience downgrade.
+> =
+
+> The left question is that how do we get the pin id from this kind of form=
+at data
+> (0x32c, 0x008, 7, 0x0, 0), probably one way may be:
+> For normal pads and NO_CONFIG pads, we could get it via:
+> mux_reg_offset / 4
+> for NO_MUX pads but have CONFIG pads, we may get it via:
+> mux_reg_offset / 4 + PIN_NO_MUX_ID_BASE + config_reg_offset /4
+
+In case of NO_MUX, mux_reg_offset is 0, so the formula becomes:
+
+	PIN_NO_MUX_ID_BASE + config_reg_offset / 4
+
+The question comes to how PIN_NO_MUX_ID_BASE gets determined?
+
+> That may fix getting pin id issue from dt.
+> =
+
+> Another known issue is that via this way, that means the pinctrl subsystem
+> can only see the using pads, this is a bit not align with the pinctrl
+> subsystem design. No sure if Linus would like to see it.
+> =
+
+I do not quite follow on this.  The "enum imx51_pads" will still be
+there, so all the pads will still be visible to the pinctrl system.
+
+-- =
+
+Regards,
+Shawn
