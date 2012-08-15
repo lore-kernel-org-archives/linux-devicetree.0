@@ -1,56 +1,53 @@
-From: David Gibson <dwg@au1.ibm.com>
+From: Tabi Timur-B04825 <B04825@freescale.com>
 Subject: Re: [RFC:PATCH 3.6.0-rc1] dtc: Add -P option to dtc for
  Pre-Processing.
-Date: Wed, 15 Aug 2012 11:11:49 +1000
-Message-ID: <20120815011149.GF8136@truffula.fritz.box>
+Date: Wed, 15 Aug 2012 02:12:55 +0000
+Message-ID: <CAOZdJXUxguEBJG44kyKH0NW1999a9OBj2M=DEhmf_uSYM6nGaQ@mail.gmail.com>
 References: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com>
+	<20120815011149.GF8136@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com>
+In-Reply-To: <20120815011149.GF8136@truffula.fritz.box>
+Content-Language: en-US
+Content-ID: <6E2B3C1BBF8BBE41AF754E12242C5393@mgd.freescale.com>
 Sender: linux-kbuild-owner@vger.kernel.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mmarek@suse.cz
+To: David Gibson <dwg@au1.ibm.com>
+Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, "mmarek@suse.cz" <mmarek@suse.cz>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 13, 2012 at 09:01:53AM +0100, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> 
-> This patch add pre-processing capablity to dtc based on status property.
-> Now the dtc has additional option -P to enable Pre-processing based on
-> status property.
-> 
-> The SOCS have lot of device tree infrastructure files which mark the
-> device nodes as disabled and the board level device tree enables them if
-> required. However while creating device tree blob, the compiler can
-> preprocess the nodes and exclude nodes marked as disabled, doing this
-> way will reduce the size of device tree blob.
-> 
-> In our case this has reduced the blob size from 29K to 15K.
-> 
-> Also nodes with status="disabled" is are never probed by dt platform bus
-> code.
-> 
-> Again, Preprocessing is optional parameter to dtc.
+On Tue, Aug 14, 2012 at 8:11 PM, David Gibson <dwg@au1.ibm.com> wrote:
+> On Mon, Aug 13, 2012 at 09:01:53AM +0100, Srinivas KANDAGATLA wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>
+>> This patch add pre-processing capablity to dtc based on status property.
+>> Now the dtc has additional option -P to enable Pre-processing based on
+>> status property.
+>>
+>> The SOCS have lot of device tree infrastructure files which mark the
+>> device nodes as disabled and the board level device tree enables them if
+>> required. However while creating device tree blob, the compiler can
+>> preprocess the nodes and exclude nodes marked as disabled, doing this
+>> way will reduce the size of device tree blob.
 
-Hrm.
+IMHO, many devices that are marked as "disabled" in the DTS are
+expecting to be enabled by the boot loader, so just because a node is
+disabled in the DTS does not mean that it will be disabled when Linux
+sees it.
 
-1) Changes to dtc should be made first against upstream dtc at
-git://git.jdl.com/software/dtc.git.  The version in the kernel is just
-a snapshot of the upstream tree which is updated periodically.
+>> In our case this has reduced the blob size from 29K to 15K.
 
-2) I'm not convinced this filtering-by-status is something that
-belongs in dtc, but I'm willing to be persuaded.
+I don't see that as significant.
 
-3) The name has to change.  "preprocess" is far to general a term for
-the very specific function you're implementing here.  Especially when
-there are serious discussions ongoing about having dtc use cpp or a
-similar preprocessor in a general capacity.
+>> Also nodes with status="disabled" is are never probed by dt platform bus
+>> code.
+>>
+>> Again, Preprocessing is optional parameter to dtc.
+
+Using this option would break a lot of our device trees.  Perhaps it
+should be given a better name, like --strip-disabled.
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
+Timur Tabi
+Linux kernel developer at Freescale
