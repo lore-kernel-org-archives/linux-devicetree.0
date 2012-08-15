@@ -1,155 +1,31 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
-Date: Wed, 15 Aug 2012 14:55:27 +0800
-Message-ID: <20120815065526.GG19681@shlinux2.ap.freescale.net>
-References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
- <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
- <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
- <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
- <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
- <20120815054436.GK2232@pengutronix.de>
+From: =?UTF-8?B?w4lyaWMgUGllbA==?= <eric.piel@tremplin-utc.net>
+Subject: Re: [PATCH v3 1/2] lis3: add generic DT matching code
+Date: Wed, 15 Aug 2012 09:13:29 +0200
+Message-ID: <502B4C19.7060701@tremplin-utc.net>
+References: <1343633775-6268-1-git-send-email-zonque@gmail.com> <501E9CE2.20500@gmail.com> <331ABD5ECB02734CA317220B2BBEABC13EA0B8A5@DBDE01.ent.ti.com> <5021631D.1030505@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120815054436.GK2232-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5021631D.1030505@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: "AnilKumar, Chimata" <anilkumar@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Andrew Morton <akpm@osdl.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2012 at 07:44:36AM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello,
-> =
+On 07-08-12 20:49, Daniel Mack wrote:
+:
+>
+> I fixed all these issues now and attached a v4.
+>
+Sorry for the late reply, I had read the v3 but didn't find time to sen=
+d=20
+comments. They are all addressed in v4.
 
-> (Cc +=3D devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org)
-> =
+=46or both [PATCH v4 1/2] and  [PATCH v3 2/2], here is my:
+Reviewed-by: =C3=89ric Piel <eric.piel@tremplin-utc.net>
 
-> On Wed, Aug 15, 2012 at 11:59:18AM +0800, Dong Aisheng wrote:
-> > On 15 August 2012 03:37, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
-> > > On Tue, Aug 14, 2012 at 2:20 AM, Dong Aisheng <dong.aisheng-QSEj5FYQhm5QFI55V6+gNQ@public.gmane.org=
-g> wrote:
-> > >> On 13 August 2012 23:12, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
-> > >>> I have a minor nit; while renumbering the pinctrl definitions is
-> > >>> laudable and device trees can match, there are 16 other pin controls
-> > >>> below EIM_D16 - this makes the start of the IOMUXC pin definitions
-> > >>> actually be the value calculated by (iomuxc_base + 0x300 + (4*16) +
-> > >>> (pin_id*4)).
-> > >>
-> > >> What do you mean of this value calculated?
-> > >
-> > > Well, it just seems the datasheet has been read from the point of view
-> > > of the SW_CTRL settings (pad pullups, drive strength etc.) to define
-> > > the enums; every pin setting in order from IOMUXC_BASE + 0x3f0 (sorry
-> > > I mistyped) has been entered as an enum into this list. Then a table
-> > > has been generated using these enums to supply a pin id. Then this pin
-> > > id is not relevant anymore; it actually gets referenced by it's
-> > > *offset into the table*.
-> > >
-> > Not exactly, probably.
-> > Basically we follow the mux reigster offset to define pin id, however,
-> > there're also some pads may not have mux function but only config
-> > which also has a pin id
-> > and vice versa.
-> > Those pins are not ordered by it's mux regsiter offset.
-> > =
 
-> > Actually I did not manually search all those pins, instead, i just
-> > using the exist ones:
-> > arch/arm/plat-mxc/include/mach/iomux-mx51.h
-> > Since this exist headfile already covers this case.
-> > =
-
-> > > In this case, basically the code misses a few pins which have ALT
-> > > settings but perhaps not always the ability to change pad control -
-> > > EIM_DA5 to 15 are a good example.
-> > >
-> > As i said, we already defined those pin ids.
-> > =
-
-> > > Probably better would be to define the binding almost exactly as it
-> > > was done in the old method; iomux_v3_cfg_t took into account the three
-> > > register offsets possible for the pin (SW_MUX_CTL, SW_PAD_CTL and IPP)
-> > > and the three values to be put into those registers.
-> > >
-> > > This has been reduced down in pinctrl to what I find quite strange,
-> > > which is a completely arbitrary pin "id" mapping, which indirectly
-> > > references an entry in a table by index which is why pin 1 as a start
-> > > looks odd.
-> > >
-> > Start with pin 1 is a bug which caused by my mistake during the early
-> > data conversion.
-> > =
-
-> > > If the binding is entirely i.MX-specific or even i.MX51-specific then
-> > > why not define the pins in the device tree the "old" iomux_v3_cfg_t
-> > > way, which is the way they are in the table of imx_pin_regs;
-> > >
-> > >       IMX_PIN_REG(MX51_PAD_EIM_D16, 0x3f0, 0x05c, 5, 0x000, 0), /*
-> > > MX51_PAD_EIM_D16__AUD4_RXFS */
-> > >
-> > > 0x3f0 is the SW_PAD_CTL, 0x05c is the SW_MUX_CTL, 5 is the ALT mode,
-> > > 0x000 is the IPP reg, and 0 the IPP value.
-> > >
-> > > So fsl,iomux-pins =3D <0x3f0 0x85 0x05c 5 0 0 ... > (PAD, settings, M=
-UX,
-> > > mode/sion, IPP, select - in that order) would be a valid pin
-> > > definition and require no table. Sure, the offsets are device specific
-> > > but then the arbitrary numbering is too.
-> > > This way old iomux controls
-> > > can be re-derived for people who use the old method in old kernels, or
-> > > use U-Boot with iomux-v3.h taken from Linux (MX6 got ported, I am
-> > > porting the Efika to it on MX5 for U-Boot right now). Also that huge
-> > > table goes away - it can be built at runtime, along with the
-> > > PAD_NAME__ALT_MODE_NAME description.
-> > >
-> > I can't agree this is better than the exist one now.
-> > It's hard to use in device tree.
-> > And how would you parse the pin id from this data array?
-> I admit I didn't follow completely the calculation suggestion by Matt,
-> but I think in general he has a point. This is more or less what I
-> thought when I built the imx35 pinctrl driver.
-> =
-
-> With the current approach (i.e. put the pinfuncs in some order that
-> seems sensible today and then referencing them by index according to
-> that ordering) you really get into troubles if you have to add a new
-> function. You have to add it to the end to not break existing device
-> trees and so the ordering is broken.
-> =
-
-Actually, we do not mean to maintain the ordering in driver.
-It just needs to be align with the pin func ids definitions in binding
-doc. So the ordering broken in driver is not an issue, it just looks
-not so better if we really have to add a new pin function to the end
-due to mistake but this does not break anything to work.
-
-> Also "11" has no obvious relation to MX35_PAD_COMPARE__SDMA_EXTDMA_2
-> other than a match if you grep over the binding docs (or the driver).
-> While "0x32c, 0x008, 7, 0x0, 0" is longer and looks more ugly the
-> mapping is obvious and so IMHO preferable.
-> =
-
-Also, don't you think this is hard to use for devicetree?
-And we need to reference datasheet to fill these values.
-
-I just keep using as the old way at best and i remember Sascha also suggest=
-ed
-before that we don't want to lose using the macro way as
-MX35_PAD_COMPARE__SDMA_EXTDMA_2 to make easy use.
-In the future, we will switch to macro when dt supports.
-For the way "0x32c, 0x008, 7, 0x0, 0", it's very unconveniently to use macr=
-o.
-
-Regards
-Dong Aisheng
+Cheers,
+=C3=89ric
