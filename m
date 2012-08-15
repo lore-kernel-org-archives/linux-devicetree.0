@@ -1,12 +1,18 @@
-From: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH-V2] arm/dts: AM33XX: Set the default status of module to
- "disabled" state
-Date: Wed, 15 Aug 2012 16:53:25 +0530
-Message-ID: <1345029805-27987-1-git-send-email-hvaibhav@ti.com>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC:PATCH 3.6.0-rc1] dtc: Add -P option to dtc for
+ Pre-Processing.
+Date: Wed, 15 Aug 2012 21:29:11 +1000
+Message-ID: <20120815112911.GC4171@truffula.fritz.box>
+References: <1344844913-16938-1-git-send-email-srinivas.kandagatla@st.com>
+ <20120815011149.GF8136@truffula.fritz.box>
+ <CAOZdJXUxguEBJG44kyKH0NW1999a9OBj2M=DEhmf_uSYM6nGaQ@mail.gmail.com>
+ <502B70B8.1030709@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <502B70B8.1030709-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,134 +23,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: "mmarek-AlSwsSmVLrQ@public.gmane.org" <mmarek-AlSwsSmVLrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ideally in common SoC dtsi file should set all modules
-to "disabled" state and it should get enabled in respective
-EVM/Board dts file as per usage.
+On Wed, Aug 15, 2012 at 10:49:44AM +0100, Srinivas KANDAGATLA wrote:
+> On 15/08/12 03:12, Tabi Timur-B04825 wrote:
+> > On Tue, Aug 14, 2012 at 8:11 PM, David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> On Mon, Aug 13, 2012 at 09:01:53AM +0100, Srinivas KANDAGATLA wrote:
+> >>> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> >>>
+> >>> This patch add pre-processing capablity to dtc based on status property.
+> >>> Now the dtc has additional option -P to enable Pre-processing based on
+> >>> status property.
+> >>>
+> >>> The SOCS have lot of device tree infrastructure files which mark the
+> >>> device nodes as disabled and the board level device tree enables them if
+> >>> required. However while creating device tree blob, the compiler can
+> >>> preprocess the nodes and exclude nodes marked as disabled, doing this
+> >>> way will reduce the size of device tree blob.
+> > IMHO, many devices that are marked as "disabled" in the DTS are
+> > expecting to be enabled by the boot loader, so just because a node is
+> > disabled in the DTS does not mean that it will be disabled when Linux
+> > sees it.
+> Good to know that,
+> But some of the secured bootloaders like the one's we use don't even
+> touch the dt blob.
 
-This patch sets default status of all modules to "disabled"
-state in am33xx.dtsi file. Currently there are no modules
-supported as part of Bone and EVM dts support, so care
-to add entry "status = "okay"" while adding support for any
-module.
+It's not just a question of bootloaders.  Status "disabled" devices
+can potentially be activated in some way by the OS.  For example ePAPR
+specifies that all secondary CPUs be marked "disabled" with other
+properties indicating the method by which the OS can turn them on.
 
-Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
-Changes from V1:
-	- Fixed indentation issue caused due to extra spaces.
+> >>> In our case this has reduced the blob size from 29K to 15K.
+> > I don't see that as significant.
+> >
+> >>> Also nodes with status="disabled" is are never probed by dt platform bus
+> >>> code.
+> >>>
+> >>> Again, Preprocessing is optional parameter to dtc.
+> > Using this option would break a lot of our device trees.
+> As this is optional parameter, I did not expect it to break the
+> default/existing behavior.
+> Correct me am missing anything?
+> >   Perhaps it
+> > should be given a better name, like --strip-disabled.
+> Thanks for the advice. I agree, Will be reposting the patch making this
+> option as --strip-disabled with CC to Jon Loeliger (dtc maintainer).
 
- arch/arm/boot/dts/am335x-bone.dts |    6 ++++++
- arch/arm/boot/dts/am335x-evm.dts  |    6 ++++++
- arch/arm/boot/dts/am33xx.dtsi     |    9 +++++++++
- 3 files changed, 21 insertions(+), 0 deletions(-)
+--strip-disabled is a reasonable name, however at present dtc doesn't
+support long option names, so there will be some more work enabling
+that.
 
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index a9af4db..a7906cb 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -17,4 +17,10 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
-+
-+	ocp {
-+		uart1: serial@44E09000 {
-+			status = "okay";
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index d6a97d9..5dd8a6b 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -17,4 +17,10 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
-+
-+	ocp {
-+		uart1: serial@44E09000 {
-+			status = "okay";
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 59509c4..5f6c8e3 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -102,36 +102,42 @@
- 			compatible = "ti,omap3-uart";
- 			ti,hwmods = "uart1";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
-
- 		uart2: serial@48022000 {
- 			compatible = "ti,omap3-uart";
- 			ti,hwmods = "uart2";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
-
- 		uart3: serial@48024000 {
- 			compatible = "ti,omap3-uart";
- 			ti,hwmods = "uart3";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
-
- 		uart4: serial@481A6000 {
- 			compatible = "ti,omap3-uart";
- 			ti,hwmods = "uart4";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
-
- 		uart5: serial@481A8000 {
- 			compatible = "ti,omap3-uart";
- 			ti,hwmods = "uart5";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
-
- 		uart6: serial@481AA000 {
- 			compatible = "ti,omap3-uart";
- 			ti,hwmods = "uart6";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
-
- 		i2c1: i2c@44E0B000 {
-@@ -139,6 +145,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c1";
-+			status = "disabled";
- 		};
-
- 		i2c2: i2c@4802A000 {
-@@ -146,6 +153,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c2";
-+			status = "disabled";
- 		};
-
- 		i2c3: i2c@4819C000 {
-@@ -153,6 +161,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c3";
-+			status = "disabled";
- 		};
- 	};
- };
---
-1.7.0.4
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
