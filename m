@@ -1,37 +1,90 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] lis3: add generic DT matching code
-Date: Wed, 15 Aug 2012 10:20:42 +0200
-Message-ID: <502B5BDA.2050204@gmail.com>
-References: <1343633775-6268-1-git-send-email-zonque@gmail.com>
- <501E9CE2.20500@gmail.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA0B8A5@DBDE01.ent.ti.com>
- <5021631D.1030505@gmail.com> <502B4C19.7060701@tremplin-utc.net>
+From: Vaibhav Hiremath <hvaibhav@ti.com>
+Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
+Date: Wed, 15 Aug 2012 14:41:57 +0530
+Message-ID: <502B67DD.6050904@ti.com>
+References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-2-git-send-email-jon-hunter@ti.com> <5000D647.4090200@gmail.com> <500439A8.1050705@ti.com> <500D6CAB.4030504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <502B4C19.7060701-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?B?w4lyaWMgUGllbA==?= <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
-Cc: Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <500D6CAB.4030504@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Rob Herring <robherring2@gmail.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTUuMDguMjAxMiAwOToxMywgw4lyaWMgUGllbCB3cm90ZToKPiBPbiAwNy0wOC0xMiAyMDo0
-OSwgRGFuaWVsIE1hY2sgd3JvdGU6Cj4gOgo+Pgo+PiBJIGZpeGVkIGFsbCB0aGVzZSBpc3N1ZXMg
-bm93IGFuZCBhdHRhY2hlZCBhIHY0Lgo+Pgo+IFNvcnJ5IGZvciB0aGUgbGF0ZSByZXBseSwgSSBo
-YWQgcmVhZCB0aGUgdjMgYnV0IGRpZG4ndCBmaW5kIHRpbWUgdG8gc2VuZCAKPiBjb21tZW50cy4g
-VGhleSBhcmUgYWxsIGFkZHJlc3NlZCBpbiB2NC4KPiAKPiBGb3IgYm90aCBbUEFUQ0ggdjQgMS8y
-XSBhbmQgIFtQQVRDSCB2MyAyLzJdLCBoZXJlIGlzIG15Ogo+IFJldmlld2VkLWJ5OiDDiXJpYyBQ
-aWVsIDxlcmljLnBpZWxAdHJlbXBsaW4tdXRjLm5ldD4KClRoYW5rcyEKCgpEYW5pZWwKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
-Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
-cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+
+
+On 7/23/2012 8:54 PM, Jon Hunter wrote:
+> Hi Rob,
+> 
+> On 07/16/2012 10:56 AM, Jon Hunter wrote:
+>> Hi Rob,
+>>
+>> On 07/13/2012 09:15 PM, Rob Herring wrote:
+>>> On 07/13/2012 05:26 PM, Jon Hunter wrote:
+>>>> Add the 12 GP timers nodes present in OMAP3.
+>>>> Add the 11 GP timers nodes present in OMAP4.
+>>>>
+>>>> Add documentation for timer properties specific to OMAP.
+>>>>
+>>>> For each timer an alias is being added. The purpose for doing this is because
+>>>> the OMAP dmtimer driver uses an ID to distinguish between the different timer
+>>>> instances. For example, a timer can be requested by its ID. By adding an alias
+>>>> for each timer we can then use the function of_alias_get_id() to extract the
+>>>> ID for each timer from the alias name. The same method is used for the TTY
+>>>> serial devices. If it is preferred that such an alias is not added and there
+>>>> is a better way to pass an ID from device-tree let me know.
+>>>
+>>> I'm not sure this is really a good use of aliases. UARTs use aliases
+>>> because it is important that the UART number to tty number is known and
+>>> fixed. IIUC, as an example you are picking timer1 because it has
+>>> properties X, Y and Z. If so, then you should describe those h/w
+>>> properties within the timer nodes so you can pick which timer to use
+>>> based on it's h/w properties.
+>>
+>> Thanks for the feedback. What you suggest could definitely work for most
+>> timers. The only item that I would need to resolve here is the handling
+>> of system timers (ie. those used for clockevents and clocksource). These
+>> system timers (for OMAP) are reserved during early boot based upon the
+>> timer ID today and so this is before the actual main timer driver has
+>> been probed and all the attributes of the timers has been read for
+>> device-tree.
+>>
+>> One thought would be to move the reservation of the system timers out of
+>> the kernel and into device-tree itself. Then we query device tree on
+>> start-up to see which we should use. I am wondering if this could be a
+>> better use of alias? For example, say I want to use timer1 as my
+>> clockevent timer and so I could have an alias of ...
+>>
+>> alias {
+>> 	clockevent_timer = &timer1;
+>> }
+>>
+>> However, I am not sure if this is even correct, because there does not
+>> appear to be an API to search the aliases by name and return the
+>> phandle, just of_alias_get_id(). Alternatively, I could add another
+>> property called "ti,timer-clockevent" that is populated for the timer
+>> used as the clockevent timer.
+> 
+> Do you have any inputs on the above? Does it make sense to reserve timer
+> resources for kernel system timers in device-tree?
+> 
+
+Hey Jon,
+
+Did we get conclude on this? I haven't got anything further on this
+thread, this may block baseport support for the new devices in omap2
+family, like AM33xx and OMAP5.
+
+
+Thanks,
+Vaibhav
+
+> Cheers
+> Jon
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
