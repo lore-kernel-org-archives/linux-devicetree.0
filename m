@@ -1,20 +1,16 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
-Date: Wed, 15 Aug 2012 09:51:17 +0200
-Message-ID: <20120815075117.GL2232@pengutronix.de>
-References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
- <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
- <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
- <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
- <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
- <20120815054436.GK2232@pengutronix.de>
- <20120815065526.GG19681@shlinux2.ap.freescale.net>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] lis3: add generic DT matching code
+Date: Wed, 15 Aug 2012 10:20:42 +0200
+Message-ID: <502B5BDA.2050204@gmail.com>
+References: <1343633775-6268-1-git-send-email-zonque@gmail.com>
+ <501E9CE2.20500@gmail.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA0B8A5@DBDE01.ent.ti.com>
+ <5021631D.1030505@gmail.com> <502B4C19.7060701@tremplin-utc.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120815065526.GG19681-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <502B4C19.7060701-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,172 +21,17 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?B?w4lyaWMgUGllbA==?= <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
+Cc: Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Wed, Aug 15, 2012 at 02:55:27PM +0800, Dong Aisheng wrote:
-> On Wed, Aug 15, 2012 at 07:44:36AM +0200, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> > =
-
-> > (Cc +=3D devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org)
-> > =
-
-> > On Wed, Aug 15, 2012 at 11:59:18AM +0800, Dong Aisheng wrote:
-> > > On 15 August 2012 03:37, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
-> > > > On Tue, Aug 14, 2012 at 2:20 AM, Dong Aisheng <dong.aisheng@linaro.=
-org> wrote:
-> > > >> On 13 August 2012 23:12, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
-> > > >>> I have a minor nit; while renumbering the pinctrl definitions is
-> > > >>> laudable and device trees can match, there are 16 other pin contr=
-ols
-> > > >>> below EIM_D16 - this makes the start of the IOMUXC pin definitions
-> > > >>> actually be the value calculated by (iomuxc_base + 0x300 + (4*16)=
- +
-> > > >>> (pin_id*4)).
-> > > >>
-> > > >> What do you mean of this value calculated?
-> > > >
-> > > > Well, it just seems the datasheet has been read from the point of v=
-iew
-> > > > of the SW_CTRL settings (pad pullups, drive strength etc.) to define
-> > > > the enums; every pin setting in order from IOMUXC_BASE + 0x3f0 (sor=
-ry
-> > > > I mistyped) has been entered as an enum into this list. Then a table
-> > > > has been generated using these enums to supply a pin id. Then this =
-pin
-> > > > id is not relevant anymore; it actually gets referenced by it's
-> > > > *offset into the table*.
-> > > >
-> > > Not exactly, probably.
-> > > Basically we follow the mux reigster offset to define pin id, however,
-> > > there're also some pads may not have mux function but only config
-> > > which also has a pin id
-> > > and vice versa.
-> > > Those pins are not ordered by it's mux regsiter offset.
-> > > =
-
-> > > Actually I did not manually search all those pins, instead, i just
-> > > using the exist ones:
-> > > arch/arm/plat-mxc/include/mach/iomux-mx51.h
-> > > Since this exist headfile already covers this case.
-> > > =
-
-> > > > In this case, basically the code misses a few pins which have ALT
-> > > > settings but perhaps not always the ability to change pad control -
-> > > > EIM_DA5 to 15 are a good example.
-> > > >
-> > > As i said, we already defined those pin ids.
-> > > =
-
-> > > > Probably better would be to define the binding almost exactly as it
-> > > > was done in the old method; iomux_v3_cfg_t took into account the th=
-ree
-> > > > register offsets possible for the pin (SW_MUX_CTL, SW_PAD_CTL and I=
-PP)
-> > > > and the three values to be put into those registers.
-> > > >
-> > > > This has been reduced down in pinctrl to what I find quite strange,
-> > > > which is a completely arbitrary pin "id" mapping, which indirectly
-> > > > references an entry in a table by index which is why pin 1 as a sta=
-rt
-> > > > looks odd.
-> > > >
-> > > Start with pin 1 is a bug which caused by my mistake during the early
-> > > data conversion.
-> > > =
-
-> > > > If the binding is entirely i.MX-specific or even i.MX51-specific th=
-en
-> > > > why not define the pins in the device tree the "old" iomux_v3_cfg_t
-> > > > way, which is the way they are in the table of imx_pin_regs;
-> > > >
-> > > >       IMX_PIN_REG(MX51_PAD_EIM_D16, 0x3f0, 0x05c, 5, 0x000, 0), /*
-> > > > MX51_PAD_EIM_D16__AUD4_RXFS */
-> > > >
-> > > > 0x3f0 is the SW_PAD_CTL, 0x05c is the SW_MUX_CTL, 5 is the ALT mode,
-> > > > 0x000 is the IPP reg, and 0 the IPP value.
-> > > >
-> > > > So fsl,iomux-pins =3D <0x3f0 0x85 0x05c 5 0 0 ... > (PAD, settings,=
- MUX,
-> > > > mode/sion, IPP, select - in that order) would be a valid pin
-> > > > definition and require no table. Sure, the offsets are device speci=
-fic
-> > > > but then the arbitrary numbering is too.
-> > > > This way old iomux controls
-> > > > can be re-derived for people who use the old method in old kernels,=
- or
-> > > > use U-Boot with iomux-v3.h taken from Linux (MX6 got ported, I am
-> > > > porting the Efika to it on MX5 for U-Boot right now). Also that huge
-> > > > table goes away - it can be built at runtime, along with the
-> > > > PAD_NAME__ALT_MODE_NAME description.
-> > > >
-> > > I can't agree this is better than the exist one now.
-> > > It's hard to use in device tree.
-> > > And how would you parse the pin id from this data array?
-> > I admit I didn't follow completely the calculation suggestion by Matt,
-> > but I think in general he has a point. This is more or less what I
-> > thought when I built the imx35 pinctrl driver.
-> > =
-
-> > With the current approach (i.e. put the pinfuncs in some order that
-> > seems sensible today and then referencing them by index according to
-> > that ordering) you really get into troubles if you have to add a new
-> > function. You have to add it to the end to not break existing device
-> > trees and so the ordering is broken.
-> > =
-
-> Actually, we do not mean to maintain the ordering in driver.
-> It just needs to be align with the pin func ids definitions in binding
-> doc. So the ordering broken in driver is not an issue, it just looks
-> not so better if we really have to add a new pin function to the end
-> due to mistake but this does not break anything to work.
-Well, if you add a function between say current function 11 and 12 all
-device trees need fixing, i.e. increase all function ids >=3D 12 by one.
-You obviously cannot fix out-of-tree users and even fixing the in-tree
-users is ugly.
- =
-
-> > Also "11" has no obvious relation to MX35_PAD_COMPARE__SDMA_EXTDMA_2
-> > other than a match if you grep over the binding docs (or the driver).
-> > While "0x32c, 0x008, 7, 0x0, 0" is longer and looks more ugly the
-> > mapping is obvious and so IMHO preferable.
-> > =
-
-> Also, don't you think this is hard to use for devicetree?
-Not harder than the current approach. Obviously macro support would be
-nice, but this applies to both approaches.
-
-> And we need to reference datasheet to fill these values.
-I'd list the explicit values in the binding docs as the indexes are
-documented there now. So the difference for a device-tree writer is just
-the content that is copy-and-pasted.
-
-> I just keep using as the old way at best and i remember Sascha also sugge=
-sted
-> before that we don't want to lose using the macro way as
-> MX35_PAD_COMPARE__SDMA_EXTDMA_2 to make easy use.
-> In the future, we will switch to macro when dt supports.
-> For the way "0x32c, 0x008, 7, 0x0, 0", it's very unconveniently to use ma=
-cro.
-That is just
-
-	#define MX35_PAD_COMPARE__SDMA_EXTDMA_2 11
-
-vs.
-
-	#define MX35_PAD_COMPARE__SDMA_EXTDMA_2 0x32c, 0x008, 7, 0x0, 0
-
-isn't it? (Actually I'd not go for cpp as preprocessor, but that's a
-different story.)
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+T24gMTUuMDguMjAxMiAwOToxMywgw4lyaWMgUGllbCB3cm90ZToKPiBPbiAwNy0wOC0xMiAyMDo0
+OSwgRGFuaWVsIE1hY2sgd3JvdGU6Cj4gOgo+Pgo+PiBJIGZpeGVkIGFsbCB0aGVzZSBpc3N1ZXMg
+bm93IGFuZCBhdHRhY2hlZCBhIHY0Lgo+Pgo+IFNvcnJ5IGZvciB0aGUgbGF0ZSByZXBseSwgSSBo
+YWQgcmVhZCB0aGUgdjMgYnV0IGRpZG4ndCBmaW5kIHRpbWUgdG8gc2VuZCAKPiBjb21tZW50cy4g
+VGhleSBhcmUgYWxsIGFkZHJlc3NlZCBpbiB2NC4KPiAKPiBGb3IgYm90aCBbUEFUQ0ggdjQgMS8y
+XSBhbmQgIFtQQVRDSCB2MyAyLzJdLCBoZXJlIGlzIG15Ogo+IFJldmlld2VkLWJ5OiDDiXJpYyBQ
+aWVsIDxlcmljLnBpZWxAdHJlbXBsaW4tdXRjLm5ldD4KClRoYW5rcyEKCgpEYW5pZWwKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
+Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
+cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
