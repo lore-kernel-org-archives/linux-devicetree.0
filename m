@@ -1,77 +1,89 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v3 05/10] resource: add PCI configuration space support
-Date: Thu, 16 Aug 2012 20:27:03 +0200
-Message-ID: <20120816182703.GA31005@avionic-0098.mockup.avionic-design.de>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
- <1343332512-28762-6-git-send-email-thierry.reding@avionic-design.de>
- <CAErSpo4qg45brVRwEbw3=R04VsbnvUowSMWcT+M6VoAxbf3Cqg@mail.gmail.com>
- <20120814055542.GB16181@avionic-0098.mockup.avionic-design.de>
- <CAErSpo6LYpkC5wop53S1r1z3ov4+w4soqrQARzbbouVs1trzUg@mail.gmail.com>
- <20120814180142.GA9430@avionic-0098.mockup.avionic-design.de>
- <CAErSpo4Efy-Dt67rktzNiYfZfOTSu=pmYtyGd3tR-zZQ3jDGtA@mail.gmail.com>
- <20120815064902.GB15665@avionic-0098.mockup.avionic-design.de>
- <502D0F3C.4010308@wwwdotorg.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH] mmc: sdhci-s3c: Add device tree support
+Date: Thu, 16 Aug 2012 23:57:30 +0530
+Message-ID: <CAJuYYwQ++jWQ1ca=EKY+G5Bs+otOOe6gBoiaNhsJY6G0YdHU8Q@mail.gmail.com>
+References: <CAJuYYwQjN9UtXcfjNXf1Ezw3igfUSQDNEP8X038L4=br6EROUA@mail.gmail.com>
+	<1345134914-21635-1-git-send-email-thomas.abraham@linaro.org>
+	<87fw7mdbj2.fsf@octavius.laptop.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <502D0F3C.4010308-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <87fw7mdbj2.fsf@octavius.laptop.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On 16 August 2012 22:22, Chris Ball <cjb@laptop.org> wrote:
+> Hi Thomas,
+>
+> On Thu, Aug 16 2012, Thomas Abraham wrote:
+>> +Optional Board Specific Properties:
+>> +- One of the following properties for card detect type.
+>> +  - samsung,sdhci-cd-internal: Card detect line from the card slot is
+>> +    connected to the card detect pad of the sdhci controller. A gpio is
+>> +    used for this connection (with possible pin function settings).
+>> +  - samsung,sdhci-cd-gpio: A gpio line (with possible pin function settings)
+>> +    is used a card detect line. This gpio line is not connected to card detect
+>> +    pad of the sdhci controller.
+>> +  - samsung,sdhci-cd-none: There is no card detect line. Polling is used to
+>> +    detect the presence of the card. (DEFAULT, if no card detect property
+>> +    is specified).
+>> +  - samsung,sdhci-cd-permanent: There is no card detect line. The card is
+>> +    permanently connected to the sdhci controller.
+>
+> sdhci-s3c isn't the only driver that's going to have options for
+> different cd configurations -- maybe now is the right time to move
+> these options into the core bindings?
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I agree. It will be better to reduce the custom bindings.
 
-On Thu, Aug 16, 2012 at 09:18:20AM -0600, Stephen Warren wrote:
-> On 08/15/2012 12:49 AM, Thierry Reding wrote:
-> ...
-> > Stephen: Could you try to find out whether the regular
-> > configuration space translation can just be omitted if we already
-> > set up the one for the extended configuration space? In
-> > tegra_pcie_setup_translations(), BAR 0 is setup for regular
-> > configuration space (which requires a 16 MiB region), while BAR 1
-> > is setup for the extended configuration space (requiring a full 256
-> > MiB region). However, if I understand correctly, each of the
-> > registers that can be accessed via the BAR 0 translation can also
-> > be accessed via the BAR 1 translation. That seems like we're=20
-> > wasting the 16 MiB set aside for the BAR 0 mapping.
->=20
-> I have confirmed that in theory, the EXTCFG space can indeed be used
-> to access any register, making the regular config space redundant.
-> However, using the HW this way has apparently received less validation.
+>
+> At OLPC we've just started using:
+>
+>  * "broken-cd" to mean "samsung,sdhci-cd-none",
 
-Okay. I wasn't expecting anything else really. I'll give this a try next
-time I get my hands on some Tegra hardware. If that works maybe we
-should make up for the missing validation by testing this more
-thoroughly.
+Yes, they are mean the same.
 
-Thierry
+>
+>  * the presence of a "cd-gpios" property to imply "samsung,sdhci-cd-gpio".
 
---xHFwDpU9dbj6ez1V
-Content-Type: application/pgp-signature
+"samsung,sdhci-cd-gpio" and "sdhci-cd-internal" both use the cd-gpio line.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+"samsung,sdhci-cd-gpio" means that the cd-gpio line is not connected
+to the card-detect pad of the sdhci controller. Instead, it identifies
+cd-gpio as a gpio pin, connected to the card-detect pin of the "card
+slot" and it can used as a source of external interrupt. The driver
+can register card insert/remove handler for this interrupt and get
+notified about the changes in card state.
 
-iQIcBAEBAgAGBQJQLTt3AAoJEN0jrNd/PrOh57QP/2WauFMNuvW/b7vsckbS+H2P
-r+pAbulRkCGqphnhol9UGf4kEHrCOsyeGiHbKHbqqhT4945VOkWnHf4T8IMGsP5q
-bkUnKU6Tl1Dv2TFTSerWeMfu6L3y1eQzVgKsYOTJ7NiHH7p8D2Lnn4Sg9TxR7f70
-JRzJEEzKV9gtglg0+4+spTvRbNL5UT+quYqSbmHrXdQ8gT3mrxdlOmcGtNH4Ncoq
-aEShNayR/aqX5/zt8tO9nDpzZxyyjhXEzyl/3oNivPlZQagjFIQnvaBi8WcUS+0r
-026w30bzUlnHnsL2E5ulMyjav5mblix+K5Xi0zy43bvImjC2Z62BBGOZjIf2S6Sl
-fL0RMvQKDPyNTcm1ftMTtw39XEOfBAUEpR8Y/e5WyWHP5Xo5175zXx9+acyjB9yr
-ezXjgVAMufVJ8YgBGiA0iHWinH/Jei6javQWX0rHf7mcI96giv8yyLLn9IiYgA3v
-st7vRKJc/BdLaEQQMumExqdq5AAWOap0prpZFP+ibxO5EGxnDLk3GbPvZk67TvG4
-5VxxCredNtMq/niK1qM7WcgBszi6WmlrY0VaP28RUpanEAE01+Piu03BK7oumHAC
-2ee8YjgfyYVXtIrIjKG2T9UKZSVM4wkwIelfEUaA10A/57HOSS+OwBU5iRf075VZ
-TW7JqZbTgSspQnFqZm/Z
-=nuaA
------END PGP SIGNATURE-----
+"sdhci-cd-internal" means that the "cd-gpio" line is used to connect
+the card-detect pin of the card slot and the card-detect pad of the
+sdhci controller. The controller is then aware of any changes in card
+state and the controller generates appropriate interrupts to notify
+changes in card-state.
 
---xHFwDpU9dbj6ez1V--
+>
+>  * "non-removable" to mean "samsung,sdhci-cd-permanent" (this is already
+>    specified in mmc.txt)
+
+Ok.
+
+>
+> Would these work for you?
+
+Yes, the first and the third works, but the second point needs a way
+to identify the type of external card-detection mechanism.
+
+>
+> We don't have a distinction between sdhci-cd-internal and sdhci-cd-gpio,
+> and I'm having trouble working out why one is necessary.  Why does the
+> driver need to know where the gpio came from, aside from knowing which
+> gpio it is and whether it needs to be inverted (with cd-inverted)?
+
+This is as explained above. Maybe other controllers also need
+something similar to "samsung,sdhci-cd-gpio" and "sdhci-cd-internal".
+And so, we could make a generic binding for these as well.
+
+Thanks,
+Thomas.
