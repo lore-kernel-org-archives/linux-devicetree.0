@@ -1,63 +1,113 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [patch] driver-core: dev_to_node() should handle NULL pointers
-Date: Thu, 16 Aug 2012 10:23:47 -0700
-Message-ID: <20120816172347.GA27415@kroah.com>
-References: <20120720065622.GA11710@elgon.mountain>
- <20120720150042.GA1996@kroah.com>
- <20120720151846.GQ16348@mwanda>
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
+Date: Thu, 16 Aug 2012 12:39:09 -0500
+Message-ID: <CAKGA1bncgxP9WX=1K4wOC6ixyjwqLg4-FkUFTOaGgkW5+OOciw@mail.gmail.com>
+References: <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
+ <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
+ <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
+ <20120815054436.GK2232@pengutronix.de>
+ <20120815065526.GG19681@shlinux2.ap.freescale.net>
+ <20120815075117.GL2232@pengutronix.de>
+ <20120815092539.GH19681@shlinux2.ap.freescale.net>
+ <20120815135947.GC2258@S2101-09.ap.freescale.net>
+ <20120815153107.GG2258@S2101-09.ap.freescale.net>
+ <CAKGA1bkNEJbQgwcdZs8PozCgVyOfUE=bDCGkRkKV3VMfbvRMgw@mail.gmail.com>
+ <20120816034506.GI2258@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120720151846.GQ16348@mwanda>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120816034506.GI2258-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2012 at 06:18:46PM +0300, Dan Carpenter wrote:
-> On Fri, Jul 20, 2012 at 08:00:42AM -0700, Greg Kroah-Hartman wrote:
-> > On Fri, Jul 20, 2012 at 09:56:23AM +0300, Dan Carpenter wrote:
-> > > What prompted this patch is that in dma_pool_create() we call
-> > > dev_to_node() before checking whether "dev" is NULL.  It looks like
-> > > there are places which call dma_pool_create() with a NULL pointer.  An
-> > > example is in drivers/usb/gadget/amd5536udc.c.
-> > > 
-> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > ---
-> > > Static checker fix.
-> > > 
-> > > diff --git a/include/linux/device.h b/include/linux/device.h
-> > > index aa7b3b4..c80e7a8d 100644
-> > > --- a/include/linux/device.h
-> > > +++ b/include/linux/device.h
-> > > @@ -714,7 +714,9 @@ int dev_set_name(struct device *dev, const char *name, ...);
-> > >  #ifdef CONFIG_NUMA
-> > >  static inline int dev_to_node(struct device *dev)
-> > >  {
-> > > -	return dev->numa_node;
-> > > +	if (dev)
-> > > +		return dev->numa_node;
-> > > +	return -1;
-> > 
-> > What happens if this function returns -1?  Can the callers properly
-> > handle this?
-> > 
-> 
-> Gar.  Now I'm not sure any more.
-> 
-> -1 means no affinity and it's what the dev_to_node() returns if NUMA
-> is disabled.  But now I think probably it's important to get the
-> NUMA node correct in dma_pool_create() so this isn't the right
-> answer.
-> 
-> dma_pool_create() is not correct.  It has code to handle a NULL
-> "dev" pointer, but the dev_to_node() dereference will cause an oops
-> before we reach it.  I'm think this is a real issue that affects a
-> couple drivers.  Maybe those people compile without NUMA?
-> 
-> I'm not sure the right fix now.
+On Wed, Aug 15, 2012 at 10:45 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Aug 15, 2012 at 11:49:01AM -0500, Matt Sealey wrote:
+>> > Rather than betting how DTC will implement macro, we'd better make the
+>> > the safest assumption - it will not support that syntax.
+>>
+>> It won't.
+>
+> There were a lot of pushing on macro support for DTC.  Though it's
+> going to be very slow, I guess someday we will have it at least for
+> those simple and straight-forward syntax.
+>
+> But right, we shouldn't make any assumption on that.
 
-Ok, I'll drop this one then.
+I'm not sure you'd want a "programmable" device tree that expanded itself out
+using macros. Just imagine what one tiny mistake in syntax could do - stop a
+board from booting, for example.
 
-greg k-h
+You never ran into this on real OF, you never needed it, why would precompiled
+DTs need it?
+
+>> iomuxc@0x73f08000 {
+>>   fsl,iomux-pins = <mux value ctrl value ipp value
+>> /* MX53_PIN_SD4_CMD__SD4_CMD */
+>>                             mux value ctrl value ipp value
+>>        /* etc. */
+>>                             ...>;
+>
+> I do not see problem with this approach either.  But, this is nothing
+> IMX specific.  Essentially, this becomes a common binding for
+> configuring a pin with arbitrary number of register/value pairs.
+
+And indeed, I don't see how this could possibly be a bad thing when
+multiple boards can share such a binding and ease device tree
+generation by making it a task of "cross reference the manual" or
+"read the automated tool output and copy it to the device tree". So
+the name changes to something non-fsl-specific or something and all
+the boards that support it this way can enable it this way, job done,
+common binding for multiple systems?
+
+Side nit: how do you propose in the device tree to enable certain bits
+in certain IOMUXC registers on MX6 or so?
+
+The current solution where pinctrl holds IOMUXC to ransom (it ioremaps
+the register set until _remove) is fine for now, but what if I want to
+change my ENET_CLK_CTL or MIPI_IPU1_MUX or USB_OTG_ID or OCRAM
+pipeline control bits in IOMUXC_GPRn for correct board operation? Is
+this a bootloader responsibility or device tree? It seems odd to make
+pad mux and control a device tree job, but internal path or unit setup
+a bootloader job.
+
+If we're doing this to configure the correct internal paths in the
+SoC, the "correct" place might be in the ethernet@ node, or ipu-csi@
+node as they define the operation and paths of these units, but they
+would be better served to be defined at the pinctrl level and not at
+the unit, since pinctrl "owns" IOMUXC. But having iomuxc@foo contain a
+lot of very strange internal path definitions seems too odd and
+cluttered.
+
+In this case, pinctrl-imx implementation is too generic in claiming
+this entire unit for the purpose. Probably what needs to be done is
+fsl,imx6q-iomuxc gets claimed by an MFD which allows setting these
+feature bits, and pinctrl simply depends on it to implement a pinctrl@
+node underneath it (like regulators are done now).
+
+As for requiring drivers to fetch and use pinctrl data without
+possibility of dummies to allow it to "fail gracefully", I would say
+pinctrl in i.MX drivers at least should not be a requirement - by all
+means, search for the pin definitions, instruct pinctrl to perform
+these operations, but if it does not find a compatible property..
+carry on regardless, maybe with a warning that you MUST have trusted
+your bootloader. Or define a linux,pinctrl-already-done property (this
+would be useful for MX51 uart1 which is muxed to ALT0 by default, so
+pinctrl needn't bother doing anything - it was always there and always
+correctly configured from mask rom time up to Linux anyway..) and as
+such we can omit the warning and just carry on regardless.
+
+-- 
+Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Product Development Analyst, Genesi USA, Inc.
