@@ -1,101 +1,151 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
-Date: Thu, 16 Aug 2012 21:49:02 +0200
-Message-ID: <20120816194902.GA31405@avionic-0098.mockup.avionic-design.de>
-References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com>
- <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
- <502D3E29.1010501@wwwdotorg.org>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH v3 2/3] PM / OPP: Initialize OPP table from device tree
+Date: Thu, 16 Aug 2012 23:05:54 +0200
+Message-ID: <201208162305.55114.rjw@sisk.pl>
+References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org> <1344577046-14847-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <502D3E29.1010501@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-2"
+Content-Transfer-Encoding: 7bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1344577046-14847-3-git-send-email-shawn.guo@linaro.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Shilimkar Santosh <santosh.shilimkar@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+On Friday, August 10, 2012, Shawn Guo wrote:
+> With a lot of devices booting from device tree nowadays, it requires
+> that OPP table can be initialized from device tree.  The patch adds
+> a helper function of_init_opp_table together with a binding doc for
+> that purpose.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 
---cNdxnHkX5QqsyA0e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I need an ACK from whoever maintains the DT bindings for that.
 
-On Thu, Aug 16, 2012 at 12:38:33PM -0600, Stephen Warren wrote:
-> On 08/16/2012 12:08 AM, Alexandre Courbot wrote:
-> > diff --git a/Documentation/power/power_seq.txt b/Documentation/power/po=
-wer_seq.txt
->=20
-> > +Usage by Drivers and Resources Management
-> > +-----------------------------------------
-> > +Power sequences make use of resources that must be properly allocated =
-and
-> > +managed. The power_seq_build() function builds a power sequence from t=
-he
-> > +platform data. It also takes care of resolving and allocating the reso=
-urces
-> > +referenced by the sequence if needed:
-> > +
-> > +  struct power_seq *power_seq_build(struct device *dev, struct list_he=
-ad *ress,
-> > +                                    struct platform_power_seq *pseq);
-> > +
-> > +The 'dev' argument is the device in the name of which the resources ar=
-e to be
-> > +allocated.
-> > +
-> > +The 'ress' argument is a list to which the resolved resources are appe=
-nded. This
-> > +avoids allocating a resource referenced in several power sequences mul=
-tiple
-> > +times.
->=20
-> I see in other parts of the thread, there has been discussion re:
-> needing the separate ress parameter, and requiring the driver to pass
-> this in to multiple power_seq_build calls.
->=20
-> The way the pinctrl subsystem solved this was to have a single function
-> that parsed all pinctrl setting (c.f. all power sequences) at once, and
-> return a single handle. Later, the driver passes this handle
-> pinctrl_lookup_state(), along with the requested state (c.f. sequence
-> name) to search for, and finally passes that handle to
-> pinctrl_select_state(). Doing something similar here would result in:
->=20
-> struct power_seqs *power_seq_get(struct device *dev);
-> void power_seq_put(struct power_seqs *seqs);
-> struct power_seq *power_seq_lookup(struct power_seqs *seqs,
-> 				const char *name);
-> int power_seq_executestruct power_seq *seq);
->=20
-> struct power_seqs *devm_power_seq_get(struct device *dev);
-> void devm_power_seq_put(struct power_seqs *seqs);
+Thanks,
+Rafael
 
-Hehe, this looks very much like what I had in mind when I proposed this
-during the last version of this series. The nice thing about this is
-that the API is very much in line with how other subsystems work.
 
-Thierry
+> ---
+>  Documentation/devicetree/bindings/power/opp.txt |   25 ++++++++++++
+>  drivers/base/power/opp.c                        |   47 +++++++++++++++++++++++
+>  include/linux/opp.h                             |    8 ++++
+>  3 files changed, 80 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/opp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> new file mode 100644
+> index 0000000..74499e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -0,0 +1,25 @@
+> +* Generic OPP Interface
+> +
+> +SoCs have a standard set of tuples consisting of frequency and
+> +voltage pairs that the device will support per voltage domain. These
+> +are called Operating Performance Points or OPPs.
+> +
+> +Properties:
+> +- operating-points: An array of 2-tuples items, and each item consists
+> +  of frequency and voltage like <freq-kHz vol-uV>.
+> +	freq: clock frequency in kHz
+> +	vol: voltage in microvolt
+> +
+> +Examples:
+> +
+> +cpu@0 {
+> +	compatible = "arm,cortex-a9";
+> +	reg = <0>;
+> +	next-level-cache = <&L2>;
+> +	operating-points = <
+> +		/* kHz    uV */
+> +		792000  1100000
+> +		396000  950000
+> +		198000  850000
+> +	>;
+> +};
+> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+> index ac993ea..d946864 100644
+> --- a/drivers/base/power/opp.c
+> +++ b/drivers/base/power/opp.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/rculist.h>
+>  #include <linux/rcupdate.h>
+>  #include <linux/opp.h>
+> +#include <linux/of.h>
+>  
+>  /*
+>   * Internal data structure organization with the OPP layer library is as
+> @@ -674,3 +675,49 @@ struct srcu_notifier_head *opp_get_notifier(struct device *dev)
+>  
+>  	return &dev_opp->head;
+>  }
+> +
+> +#ifdef CONFIG_OF
+> +/**
+> + * of_init_opp_table() - Initialize opp table from device tree
+> + * @dev:	device pointer used to lookup device OPPs.
+> + *
+> + * Register the initial OPP table with the OPP library for given device.
+> + */
+> +int of_init_opp_table(struct device *dev)
+> +{
+> +	const struct property *prop;
+> +	const __be32 *val;
+> +	int nr;
+> +
+> +	prop = of_find_property(dev->of_node, "operating-points", NULL);
+> +	if (!prop)
+> +		return -ENODEV;
+> +	if (!prop->value)
+> +		return -ENODATA;
+> +
+> +	/*
+> +	 * Each OPP is a set of tuples consisting of frequency and
+> +	 * voltage like <freq-kHz vol-uV>.
+> +	 */
+> +	nr = prop->length / sizeof(u32);
+> +	if (nr % 2) {
+> +		dev_err(dev, "%s: Invalid OPP list\n", __func__);
+> +		return -EINVAL;
+> +	}
+> +
+> +	val = prop->value;
+> +	while (nr) {
+> +		unsigned long freq = be32_to_cpup(val++) * 1000;
+> +		unsigned long volt = be32_to_cpup(val++);
+> +
+> +		if (opp_add(dev, freq, volt)) {
+> +			dev_warn(dev, "%s: Failed to add OPP %ld\n",
+> +				 __func__, freq);
+> +			continue;
+> +		}
+> +		nr -= 2;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> diff --git a/include/linux/opp.h b/include/linux/opp.h
+> index 2a4e5fa..214e0eb 100644
+> --- a/include/linux/opp.h
+> +++ b/include/linux/opp.h
+> @@ -48,6 +48,14 @@ int opp_disable(struct device *dev, unsigned long freq);
+>  
+>  struct srcu_notifier_head *opp_get_notifier(struct device *dev);
+>  
+> +#ifdef CONFIG_OF
+> +int of_init_opp_table(struct device *dev);
+> +#else
+> +static inline int of_init_opp_table(struct device *dev)
+> +{
+> +	return -EINVAL;
+> +}
+> +#endif /* CONFIG_OF */
+>  #else
+>  static inline unsigned long opp_get_voltage(struct opp *opp)
+>  {
+> 
 
---cNdxnHkX5QqsyA0e
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQLU6uAAoJEN0jrNd/PrOhr4MP/2snONmcOXVvuStqUEV0YL4Q
-Abm+sqY73pBbdmGxsjlli16xSPNbK4FGgsjBGjEBTgMReTDuei6n8cdG56u4ysUz
-CgklhRlpFdOnInSg11Z4deLIvOTjgT60YowNmgK4+j6HlnbHbwhYGjGTHowkdSNF
-kLANXTWC9moH9+yWR9msm9gBQBprUGQEsF+VypDq2PihXCsr7IS60Eo6I0O/KAFR
-GKPSQgzHwlxG0U5OXYNi7u3qrCiiGoqoNWyYR2KFiqPvHRvgbpgHq+Y8zYDa8wx5
-JNimX62A/Ah2EkyRIVGyBd6bxpvkySRbF3Da5QmhwFjJ4YYyQSHBJakLhvdKWUyx
-mqxDudFxsMmrI+p81fg0mla3J8p8dq3NsTa4GpzrUIB5k5cNYaejd2l0CxTXwtnw
-cGFZxb8lZo/pXm13YW2egPwtW5OOhRdGEA7+Eoea0Rpc/Sm5k0vLAlQRqWGHC3dE
-03Luon2eSb4uW9xrZNLaV1nMac/4Quv471mYX06aXELxUw75eQu6eW14kxvm6uXT
-3AiYkQaHrVyNW5b5NJgQivcfqz70eFtEGa3Ds3wQbU1e+Pj1wxszD67mpzsaUd37
-0iVSM+R04Qr08YYhsM5eK4H/6AqG5H2isYh1zehvwVcjwxC2OQvhEG7E7sjUs6J6
-dxlTH6I1wzhXi4qz7hzQ
-=uCv9
------END PGP SIGNATURE-----
-
---cNdxnHkX5QqsyA0e--
