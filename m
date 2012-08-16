@@ -1,172 +1,115 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v3 9/9] ASoC: omap-mcbsp: Add device tree bindings
-Date: Thu, 16 Aug 2012 16:41:08 +0300
-Message-ID: <1345124468-8876-10-git-send-email-peter.ujfalusi@ti.com>
-References: <1345124468-8876-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1345124468-8876-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 0/6] Integrator devicetree support
+Date: Thu, 16 Aug 2012 13:44:55 +0000
+Message-ID: <201208161344.55723.arnd@arndb.de>
+References: <1345119317-22600-1-git-send-email-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1345119317-22600-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Device tree support for McBSP modules on OMAP2+ SoC.
+On Thursday 16 August 2012, Linus Walleij wrote:
+> This patch set moves all the non-DT platform code into
+> #ifndef CONFIG_OF sections for clarity. The plan is to
+> delete them after deprecation.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- .../devicetree/bindings/sound/omap-mcbsp.txt       |   45 +++++++++++++
- sound/soc/omap/omap-mcbsp.c                        |   66 +++++++++++++++++++-
- 2 files changed, 110 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/omap-mcbsp.txt
+I'm fine with your playing around with this in any way you
+like, but I think in general we should have a new CONFIG_ATAG
+symbol, so you can build a kernel that supports booting
+both with and without DT for the same platform, depending
+on what the boot loader supports.
 
-diff --git a/Documentation/devicetree/bindings/sound/omap-mcbsp.txt b/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
-new file mode 100644
-index 0000000..447cb13
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
-@@ -0,0 +1,45 @@
-+* Texas Instruments OMAP2+ McBSP module
-+
-+Required properties:
-+- compatible: "ti,omap2420-mcbsp" for McBSP on OMAP2420
-+	      "ti,omap2430-mcbsp" for McBSP on OMAP2430
-+	      "ti,omap3-mcbsp" for McBSP on OMAP3
-+	      "ti,omap4-mcbsp" for McBSP on OMAP4 and newer SoC
-+- reg: Register location and size, for OMAP4+ as an array:
-+       <MPU access base address, size>,
-+       <L3 interconnect address, size>;
-+- interrupts: Interrupt numbers for the McBSP port, as an array in case the
-+	      McBSP IP have more interrupt lines:
-+	<OCP compliant irq>,
-+	<TX irq>,
-+	<RX irq>;
-+- interrupt-parent: The parent interrupt controller
-+- ti,buffer-size: Size of the FIFO on the port (OMAP2430 and newer SoC)
-+- ti,hwmods: Name of the hwmod associated to the McBSP port
-+
-+Sidetone support for OMAP3 McBSP2 and 3 ports:
-+- sidetone { }: Within this section the following parameters are required:
-+- reg: Register location and size for the ST block
-+- interrupts: The interrupt number for the ST block
-+- interrupt-parent: The parent interrupt controller for the ST block
-+
-+Example:
-+
-+mcbsp2: mcbsp@49022000 {
-+	compatible = "ti,omap3-mcbsp";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	reg = <0x49022000 0xff>;
-+	interrupts = <0 17 0x4>, /* OCP compliant interrup */
-+		     <0 62 0x4>, /* TX interrup */
-+		     <0 63 0x4>; /* RX interrup */
-+	interrupt-parent = <&intc>;
-+	ti,buffer-size = <1280>;
-+	ti,hwmods = "mcbsp2";
-+
-+	sidetone {
-+		reg = <0x49028000 0xff>;
-+		interrupts = <0 4 0x4>;
-+		interrupt-parent = <&intc>;
-+	};
-+};
-diff --git a/sound/soc/omap/omap-mcbsp.c b/sound/soc/omap/omap-mcbsp.c
-index b9770ee..2e1750e 100644
---- a/sound/soc/omap/omap-mcbsp.c
-+++ b/sound/soc/omap/omap-mcbsp.c
-@@ -26,6 +26,8 @@
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -737,13 +739,74 @@ int omap_mcbsp_st_add_controls(struct snd_soc_pcm_runtime *rtd)
- }
- EXPORT_SYMBOL_GPL(omap_mcbsp_st_add_controls);
- 
-+static struct omap_mcbsp_platform_data omap2420_pdata = {
-+	.reg_step = 4,
-+	.reg_size = 2,
-+};
-+
-+static struct omap_mcbsp_platform_data omap2430_pdata = {
-+	.reg_step = 4,
-+	.reg_size = 4,
-+	.has_ccr = true,
-+};
-+
-+static struct omap_mcbsp_platform_data omap3_pdata = {
-+	.reg_step = 4,
-+	.reg_size = 4,
-+	.has_ccr = true,
-+	.has_wakeup = true,
-+};
-+
-+static struct omap_mcbsp_platform_data omap4_pdata = {
-+	.reg_step = 4,
-+	.reg_size = 4,
-+	.has_ccr = true,
-+	.has_wakeup = true,
-+};
-+
-+static const struct of_device_id omap_mcbsp_of_match[] = {
-+	{
-+		.compatible = "ti,omap2420-mcbsp",
-+		.data = &omap2420_pdata,
-+	},
-+	{
-+		.compatible = "ti,omap2430-mcbsp",
-+		.data = &omap2430_pdata,
-+	},
-+	{
-+		.compatible = "ti,omap3-mcbsp",
-+		.data = &omap3_pdata,
-+	},
-+	{
-+		.compatible = "ti,omap4-mcbsp",
-+		.data = &omap4_pdata,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, omap_mcbsp_of_match);
-+
- static __devinit int asoc_mcbsp_probe(struct platform_device *pdev)
- {
- 	struct omap_mcbsp_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct omap_mcbsp *mcbsp;
-+	const struct of_device_id *match;
- 	int ret;
- 
--	if (!pdata) {
-+	match = of_match_device(omap_mcbsp_of_match, &pdev->dev);
-+	if (match) {
-+		struct device_node *node = pdev->dev.of_node;
-+		int buffer_size;
-+
-+		pdata = devm_kzalloc(&pdev->dev,
-+				     sizeof(struct omap_mcbsp_platform_data),
-+				     GFP_KERNEL);
-+		if (!pdata)
-+			return -ENOMEM;
-+
-+		memcpy(pdata, match->data, sizeof(*pdata));
-+		if (!of_property_read_u32(node, "ti,buffer-size", &buffer_size))
-+			pdata->buffer_size = buffer_size;
-+	} else if (!pdata) {
- 		dev_err(&pdev->dev, "missing platform data.\n");
- 		return -EINVAL;
- 	}
-@@ -785,6 +848,7 @@ static struct platform_driver asoc_mcbsp_driver = {
- 	.driver = {
- 			.name = "omap-mcbsp",
- 			.owner = THIS_MODULE,
-+			.of_match_table = omap_mcbsp_of_match,
- 	},
- 
- 	.probe = asoc_mcbsp_probe,
--- 
-1.7.8.6
+Then you can enclose all the non-DT sections in #ifdef
+CONFIG_ATAG and we can remove them at some later stage.
 
+> - The special PCI adapter in the Integrator has to be DT:ed,
+>   but AFAICT there is still a problem with how to represent
+>   these things in DT. Any hints/examples, Arnd, Rob?
+>   arch/arm/mach-integrator/pci_v3.c
+
+PCI bindings are a bit tricky but they are well-defined,
+see www.openfirmware.org/ofwg/bindings/pci/pci2_1.pdf
+
+The main thing to understand is the use of 3-cell address
+spaces and the interrupt map. Each PCI host must have
+
+         #interrupt-cells = <1>;
+         #size-cells = <2>;
+         #address-cells = <3>;
+
+The "ranges" property is used to transform the PCI
+address space into the host address space.
+
+The first cell identifies the device and address space
+using a bit-masked notation. The important part to
+know here is 
+
+0x00000000 config space
+0x01000000 I/O space
+0x02000000 memory space
+0x03000000 64 bit memory space
+0x42000000 memory space, prefetchable
+0x43000000 64 bit memory space, prefetchable
+
+Each entry in the ranges property consists of 3 cells
+for the PCI address start, one cell for a 32 bit parent
+but start address where this is mapped, and two cells for
+the size.
+For your bus, the ranges then would be defined as 
+
+ranges = <0x00000000 0x00000000 0x00000000 /* configuration space: */
+	  0x61000000 0x00000000 0x00100000 /* 16 MB at 61000000    */
+	  0x01000000 0x00000000 0x00000000 /* I/O space:	   */
+	  0x60000000 0x00000000 0x00010000 /* 64KB at 0x60000000   */
+	  0x02000000 0x00000000 0x40000000 /* non-prefetchable mem */
+	  0x40000000 0x00000000 0x10000000 /* identity-mapped      */
+	  0x42000000 0x00000000 0x50000000 /* prefetchable mem     */
+	  0x50000000 0x00000000 0x10000000> /* identity-mapped     */
+
+I'm not quite sure if I understood the comments about LB_BASE0 etc
+correctly, so it might actually be different.
+
+You also need an interrupt-map, which maps the slots to the
+connected irq lines in a board-specific way:
+
+interrupt-map = <
+	/* IDSEL 9 */
+	0x4800 0 0 1 &pic 14 /* INT A on slot 9 is irq 14 */
+	0x4800 0 0 2 &pic 15 /* INT B on slot 9 is irq 15 */
+	0x4800 0 0 3 &pic 16 /* INT C on slot 9 is irq 16 */
+	0x4800 0 0 4 &pic 17 /* INT D on slot 9 is irq 17 */
+
+	/* IDSEL 10 */
+	0x5000 0 0 1 &pic 15 /* INT A on slot 10 is irq 15 */
+	0x5000 0 0 2 &pic 16 /* INT B on slot 10 is irq 16 */
+	0x5000 0 0 3 &pic 17 /* INT C on slot 10 is irq 17 */
+	0x5000 0 0 4 &pic 14 /* INT D on slot 10 is irq 18 */
+
+	/* IDSEL 11 */
+	0x5800 0 0 1 &pic 16 /* INT A on slot 11 is irq 16 */
+	0x5800 0 0 2 &pic 17 /* INT B on slot 11 is irq 17 */
+	0x5800 0 0 3 &pic 14 /* INT C on slot 11 is irq 18 */
+	0x5800 0 0 4 &pic 15 /* INT D on slot 11 is irq 14 */
+
+	/* IDSEL 12 */
+	0x6000 0 0 1 &pic 17 /* INT A on slot 12 is irq 17 */
+	0x6000 0 0 2 &pic 14 /* INT B on slot 12 is irq 14 */
+	0x6000 0 0 3 &pic 15 /* INT C on slot 12 is irq 15 */
+	0x6000 0 0 4 &pic 16 /* INT D on slot 12 is irq 16 */
+	>;
+
+	Arnd
