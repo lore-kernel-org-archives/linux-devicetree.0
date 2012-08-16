@@ -1,14 +1,13 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/6] ARM: plat-versatile: add DT support to FPGA IRQ
- controller
-Date: Thu, 16 Aug 2012 13:50:48 +0000
-Message-ID: <201208161350.49063.arnd@arndb.de>
-References: <1345119357-22702-1-git-send-email-linus.walleij@linaro.org>
+Subject: Re: [PATCH 5/6] ARM: integrator: convert AMBA devices to device tree
+Date: Thu, 16 Aug 2012 13:56:38 +0000
+Message-ID: <201208161356.38997.arnd@arndb.de>
+References: <1345119373-22774-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345119357-22702-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1345119373-22774-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,15 +23,37 @@ Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-u
 List-Id: devicetree@vger.kernel.org
 
 On Thursday 16 August 2012, Linus Walleij wrote:
-> +- irq-start: the u32 hardware IRQ number of the first interrupt handled by
-> +  this FPGA IRQ instance - since there may be many FPGA IRQ controller
-> +  instances, each will have its unique hardware offset number.
+> +       fpga {
+> +               compatible = "arm,amba-bus", "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               rtc: rtc@15000000 {
+> +                       compatible = "arm,pl031", "arm,primecell";
+> +                       reg = <0x15000000 0x1000>;
+> +                       interrupt-parent = <&pic>;
+> +                       interrupts = <8>;
+> +                       arm,primecell-periphid = <0x00041030>;
+> +               };
+> +
+> +               uart0: uart@16000000 {
+> +                       compatible = "arm,pl011", "arm,primecell";
+> +                       reg = <0x16000000 0x1000>;
+> +                       interrupt-parent = <&pic>;
+> +                       interrupts = <1>;
+> +                       arm,primecell-periphid = <0x00041010>;
+> +               };
+> +
+> +               uart1: uart@17000000 {
+> +                       compatible = "arm,pl011", "arm,primecell";
+> +                       reg = <0x17000000 0x1000>;
+> +                       interrupt-parent = <&pic>;
+> +                       interrupts = <2>;
+> +                       arm,primecell-periphid = <0x00041010>;
+> +               };
 
-The irq-start value is a Linux specific invention, the hardware doesn't
-know anything about these. As long as you depend on specific IRQ numbers
-to get assigned, I would use something like auxdata to find the
-start number. When all devices get their IRQ numbers from the device
-tree, you can move to linear IRQ domains instead of legacy, and let
-the irq domain code pick the numbers.
+When all devices set the same interrupt-parent, you can just as well
+move that property to the fpga node.
 
 	Arnd
