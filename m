@@ -1,212 +1,84 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v3 10/10] ARM: tegra: pcie: Add device tree support
-Date: Thu, 16 Aug 2012 14:15:13 +0200
-Message-ID: <20120816121513.GA10175@avionic-0098.adnet.avionic-design.de>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
- <1343332512-28762-11-git-send-email-thierry.reding@avionic-design.de>
- <20120814201215.GA10542@avionic-0098.mockup.avionic-design.de>
- <CAErSpo6Awbx9-DWM3V02HUg7Xv4tWAhcLO7UKuT_0uXbpZ+nKw@mail.gmail.com>
- <20120815063718.GA15665@avionic-0098.mockup.avionic-design.de>
- <CAErSpo7Y9ADYHwZMjQjDwd7m8jtwgcxsE-NE_K5X_Z+PuV=C4w@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 0/6] Integrator devicetree support
+Date: Thu, 16 Aug 2012 14:15:17 +0200
+Message-ID: <1345119317-22600-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5061928506518882317=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAErSpo7Y9ADYHwZMjQjDwd7m8jtwgcxsE-NE_K5X_Z+PuV=C4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Will Deacon <will.deacon@arm.com>, Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+This is a patch set for devicetree on the Integrator/AP and
+Integrator/CP I've been cooking. I did some stepwise development
+in recent kernels moving to sparse IRQs, per-system clock
+source then common clk. Now we can do single zImage and
+also devicetree on this platform, so this is a first patch
+set.
 
---===============5061928506518882317==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Content-Disposition: inline
+In case you're wondering why, take down your Torvalds
+autobiography and read the title. It was also a bit of
+learning exercise, plus it's fun to run devicetree on this
+ARMv4 system.
 
+This patch set moves all the non-DT platform code into
+#ifndef CONFIG_OF sections for clarity. The plan is to
+delete them after deprecation.
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Remaining roadblocks to deleting non-DT code altogether.
 
-On Wed, Aug 15, 2012 at 05:18:04AM -0700, Bjorn Helgaas wrote:
-> On Tue, Aug 14, 2012 at 11:37 PM, Thierry Reding
-> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> > On Tue, Aug 14, 2012 at 04:50:26PM -0700, Bjorn Helgaas wrote:
-> >> On Tue, Aug 14, 2012 at 1:12 PM, Thierry Reding
-> >> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> >> > On Thu, Jul 26, 2012 at 09:55:12PM +0200, Thierry Reding wrote:
-> >> >> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/teg=
-ra20.dtsi
-> >> >> index a094c97..c886dff 100644
-> >> >> --- a/arch/arm/boot/dts/tegra20.dtsi
-> >> >> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> >> >> @@ -199,6 +199,68 @@
-> >> >>               #size-cells =3D <0>;
-> >> >>       };
-> >> >>
-> >> >> +     pcie-controller {
-> >> >> +             compatible =3D "nvidia,tegra20-pcie";
-> >> >> +             reg =3D <0x80003000 0x00000800   /* PADS registers */
-> >> >> +                    0x80003800 0x00000200   /* AFI registers */
-> >> >> +                    0x81000000 0x01000000   /* configuration space=
- */
-> >> >> +                    0x90000000 0x10000000>; /* extended configurat=
-ion space */
-> >> >> +             interrupts =3D <0 98 0x04   /* controller interrupt */
-> >> >> +                           0 99 0x04>; /* MSI interrupt */
-> >> >> +             status =3D "disabled";
-> >> >> +
-> >> >> +             ranges =3D <0 0 0  0x80000000 0x00001000   /* root po=
-rt 0 */
-> >> >> +                       0 1 0  0x81000000 0x00800000   /* port 0 co=
-nfig space */
-> >> >> +                       0 2 0  0x90000000 0x08000000   /* port 0 ex=
-t config space */
-> >> >> +                       0 3 0  0x82000000 0x00010000   /* port 0 do=
-wnstream I/O */
-> >> >> +                       0 4 0  0xa0000000 0x08000000   /* port 0 no=
-n-prefetchable memory */
-> >> >> +                       0 5 0  0xb0000000 0x08000000   /* port 0 pr=
-efetchable memory */
-> >> >> +
-> >> >> +                       1 0 0  0x80001000 0x00001000   /* root port=
- 1 */
-> >> >> +                       1 1 0  0x81800000 0x00800000   /* port 1 co=
-nfig space */
-> >> >> +                       1 2 0  0x98000000 0x08000000   /* port 1 ex=
-t config space */
-> >> >> +                       1 3 0  0x82010000 0x00010000   /* port 1 do=
-wnstream I/O */
-> >> >> +                       1 4 0  0xa8000000 0x08000000   /* port 1 no=
-n-prefetchable memory */
-> >> >> +                       1 5 0  0xb8000000 0x08000000>; /* port 1 pr=
-efetchable memory */
-> >> >
-> >> > I've been thinking about this some more. The translations for both t=
-he
-> >> > regular and extended configuration spaces are configured in the top-
-> >> > level PCIe controller. It is therefore wrong how they are passed to =
-the
-> >> > PCI host bridges via the ranges property.
-> >> >
-> >> > I remember Mitch saying that it should be passed down to the children
-> >> > because it is partitioned among them, but since the layout is compat=
-ible
-> >> > with ECAM, the partitioning isn't as simple as what's in the tree. In
-> >> > fact the partitions will be dependent on the number of devices attac=
-hed
-> >> > to the host bridges.
-> >>
-> >> I don't understand this last bit about the number of devices attached
-> >> to the host bridges.  Logically, the host bridge has a bus number
-> >> aperture that you can know up front, even before you know anything
-> >> about what devices are below it.  On x86, for example, the ACPI _CRS
-> >> method has something like "[bus 00-7f]" in it, which means that any
-> >> buses in that range are below this bridge.  That doesn't tell us
-> >> anything about which buses actually have devices on them, of course;
-> >> it's just analogous to the secondary and subordinate bus number
-> >> registers in a P2P bridge.
-> >
-> > That's one of the issues I still need to take care of. Currently no bus
-> > resource is attached to the individual bridges (nor the PCI controller
-> > for that matter), so the PCI core will assign them dynamically.
->=20
-> So your PCI controller driver knows how to program the controller bus
-> number aperture?  Sometimes people start by assuming that two host
-> bridges both have [bus 00-ff] apertures, then they enumerate below the
-> first and adjust the bus number apertures based on what they found.
-> For example, if they found buses 00-12 behind the first bridge, they
-> make the apertures [bus 00-12] for the first bridge and [bus 13-ff]
-> for the second.  That might be the case, depending on what firmware
-> set up, but it seems like a dubious way to do it, and of course it
-> precludes a lot of hot-plug scenarios.
->=20
-> > If this
-> > range is known at boot time we could assign ECAM ranges based on the bus
-> > numbers. Standard ECAM ranges, that is. On Tegra this won't work because
-> > as Stephen mentioned in a previous mail, the bus field is not the top
-> > field in the ECAM addresses. Basically what you have is this:
-> >
-> >         [27:24] upper 4 bits of the register address for extended
-> >                 configuration space
-> >         [23:16] bus number
-> >         [15:11] device number
-> >         [10: 8] device function
-> >         [ 8: 0] register
-> >
-> > So the ECAM space cannot be partitioned by bus number.
->=20
-> Ah, OK, so definitely not standard PCIe ECAM.
+- Uncertain about how to do the fpga-irq DT binding so
+  please review closely.
 
-I had an idea about how we could maybe implement a generic ECAM
-mechanism that provides for this kind of mapping as well. Basically,
-every mechanism that can be covered by such an implementation would in
-one way or another specify the above five fields, so how about designing
-it in a way that the driver could define the fields that encode the
-information, so for Tegra, something along these lines:
+- The Integrator/AP ARM core tiles have add-on logic modules
+  called Integrator/IM-PD1 with a load of PrimeCells and
+  stuff. These spawn off a special bus called "lm" in
+  arch/arm/mach-integrator/lm.c, and the core module support
+  is in impd1.c. It'd probably be pretty easy to create
+  device tree bindings for these, but I have no such module
+  and no clue on where to get one. Is anyone actually using
+  it? Russell?
 
-	struct pci_ecam_map pci_ecam_tegra =3D {
-		.register =3D {  0,  7 },
-		.extended =3D { 24, 27 },
-		.function =3D {  8, 10 },
-		.device   =3D { 11, 15 },
-		.bus      =3D { 16, 23 },
-	}
+- The special PCI adapter in the Integrator has to be DT:ed,
+  but AFAICT there is still a problem with how to represent
+  these things in DT. Any hints/examples, Arnd, Rob?
+  arch/arm/mach-integrator/pci_v3.c
 
-For standard ECAM, something like this:
+Yours,
+Linus Walleij
 
-	struct pci_ecam_map pci_ecam_standard =3D {
-		.register =3D {  0,  7 },
-		.extended =3D {  8, 11 },
-		.function =3D { 12, 14 },
-		.device   =3D { 15, 19 },
-		.bus      =3D { 20, 27 },
-	};
+Linus Walleij (6):
+  ARM: integrator: call common init function from machine
+  ARM: integrator: check PL010 device name rather than base address
+  ARM: plat-versatile: add DT support to FPGA IRQ controller
+  ARM: integrator: initial device tree support
+  ARM: integrator: convert AMBA devices to device tree
+  ARM: integrator: convert platform devices to Device Tree
 
-Thierry
+ Documentation/devicetree/bindings/arm/arm-boards   |  12 +
+ .../devicetree/bindings/arm/versatile-fpga-irq.txt |  35 +++
+ arch/arm/boot/dts/integratorap.dts                 |  78 ++++++
+ arch/arm/boot/dts/integratorcp.dts                 | 122 +++++++++
+ arch/arm/mach-integrator/common.h                  |   3 +
+ arch/arm/mach-integrator/core.c                    |  14 +-
+ arch/arm/mach-integrator/integrator_ap.c           | 214 ++++++++++-----
+ arch/arm/mach-integrator/integrator_cp.c           | 296 +++++++++++++--------
+ arch/arm/plat-versatile/fpga-irq.c                 |  41 +++
+ arch/arm/plat-versatile/include/plat/fpga-irq.h    |   2 +
+ 10 files changed, 640 insertions(+), 177 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
+ create mode 100644 arch/arm/boot/dts/integratorap.dts
+ create mode 100644 arch/arm/boot/dts/integratorcp.dts
 
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQLORRAAoJEN0jrNd/PrOhQjQP/3KVbzbr2CCEDg1aidHjZM35
-NR9p0S4S2G7MVxGzx0c7XKoEBGTJb20U+KokJr3ywRiEqrW9r9EVDgKGA1tfcBc0
-BO/7+8fOgLYEQDuBS8kiH1FCwg/5sJokEDUR0EwtrhKKJpcLQSxxUYhSjwTngHKI
-MdToIDnrBXBpFhpQjCugFZxcXN14avKZnW78Hq7zgEGAhsQAKu29g4UJWwigkUU6
-zS3xZsQZbaEdoWZnLmoaEHJ21zD6GryNyi8woc2hEPWy9vWfI6vfz4ZnSSUOJLBI
-2OKUbm9QbNlb52i6sZ/wXhvNgYyiWkArbRYZ8Vkn07SfXa8XI/DFMYiYuLpQNx4d
-fertLtfSKghRP6pzve4CdOdNICvbuVsDemsXcccnchYvCzlPOqc75Ir8j1kOoVlB
-rhSTTmzkLYnVnCYEyAMlgfJJRaIRN7wwLIWmv27USDeXpdkOHaoMGMZrmx7WvZlQ
-UvBx4VbnQVR+BYaUhgspOUpKV21pqamcF1cJwkLaI1DxJhGAZPO4DFwWxxw073Q2
-VaE46pr15Cn2E58wSEdC8becue/qJYt6R2cDMI7LRaYy7NoVooCINxzW7VpjiPS2
-U1K7K1NIYnFnarQdW3DC7AIlOHsANXehW6DJ3hMWXeIK1Olep1x0CRRolXj/+9iT
-GXz0kl+PNYUTYAgPTNwd
-=fZRa
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
-
---===============5061928506518882317==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5061928506518882317==--
+-- 
+1.7.11.2
