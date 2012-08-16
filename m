@@ -1,8 +1,10 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
-Date: Thu, 16 Aug 2012 11:45:11 +0800
-Message-ID: <20120816034506.GI2258@S2101-09.ap.freescale.net>
-References: <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
+Date: Thu, 16 Aug 2012 11:30:07 +0800
+Message-ID: <20120816033006.GA11999@shlinux2.ap.freescale.net>
+References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
+ <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
+ <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
  <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
  <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
  <20120815054436.GK2232@pengutronix.de>
@@ -10,14 +12,12 @@ References: <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
  <20120815075117.GL2232@pengutronix.de>
  <20120815092539.GH19681@shlinux2.ap.freescale.net>
  <20120815135947.GC2258@S2101-09.ap.freescale.net>
- <20120815153107.GG2258@S2101-09.ap.freescale.net>
- <CAKGA1bkNEJbQgwcdZs8PozCgVyOfUE=bDCGkRkKV3VMfbvRMgw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAKGA1bkNEJbQgwcdZs8PozCgVyOfUE=bDCGkRkKV3VMfbvRMgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20120815135947.GC2258-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -28,50 +28,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2012 at 11:49:01AM -0500, Matt Sealey wrote:
-> > Rather than betting how DTC will implement macro, we'd better make the
-> > the safest assumption - it will not support that syntax.
+On Wed, Aug 15, 2012 at 09:59:50PM +0800, Shawn Guo wrote:
+...
+> > Another known issue is that via this way, that means the pinctrl subsystem
+> > can only see the using pads, this is a bit not align with the pinctrl
+> > subsystem design. No sure if Linus would like to see it.
+> > 
+> I do not quite follow on this.  The "enum imx51_pads" will still be
+> there, so all the pads will still be visible to the pinctrl system.
 > 
-> It won't.
+Sorry, i did not describe it accurately.
+The problem is that those pins are visible to pinctrl subystem, but the pinctrl
+subsystem can not manage them all.
+Not sure this meet Linus's original design purpose.
+Because for the way proposed, all the pin's basic properties like mux_reg, config_reg
+are parsed from device tree at runtime.
+If a pin is not used in device tree, the driver can not know this pin's
+corresponding registers.
+Thus, for those unused pins, we can not manage it on mux or config in pinctrl
+subsystem and driver.
 
-There were a lot of pushing on macro support for DTC.  Though it's
-going to be very slow, I guess someday we will have it at least for
-those simple and straight-forward syntax.
+For example, the pin_config_get/pin_config_set API in
+include/linux/pinctrl/consumer.h can not work for such pins.
+Then imx_pinconf_dbg_show in current driver may need change since it does not
+support show all pins's config value.
+It looks like not a big issue currently since i did not see any client driver
+using this API.
+But i'm not sure if we may have this requirement in the future.
+For example, is it possible that pinctrl subsystem may support configure pins
+via sysfs dynamically?
 
-But right, we shouldn't make any assumption on that.
+Linus, Stephen,
+Any comment on it?
 
-> DT is defined by properties and those properties have cells.
-> Properties
-> that have more than one cell or multiple definitions in them have to have a
-> #size-cells property to go with it somehow.
-> 
-> I don't see what the problem would be here; you want to define pin properties,
-> sure, they are intrinsically defined by 3 possible registers and value pairs. In
-> actual fact if you drill down to this, what happens is you get a pin property
-> which defines offsets into the unit, and values to stuff into those
-> registers, so
-> you could either dictate a size-cell of 6 (3 pairs of reg-value) or 2
-> (reg, value).
-> It would be more convenient for a driver to know what those pairs are maybe,
-> so 6 is better.
+If it supports, will imx driver also support config unused pins in devicetree
+via sysfs?
+Probably it may be rarely used and imx just does not support it.
+Then we can get register data from devicetree.
 
-<snip>
-
-> iomuxc@0x73f08000 {
->   fsl,iomux-pins = <mux value ctrl value ipp value
-> /* MX53_PIN_SD4_CMD__SD4_CMD */
->                             mux value ctrl value ipp value
->        /* etc. */
->                             ...>;
-> 
-I do not see problem with this approach either.  But, this is nothing
-IMX specific.  Essentially, this becomes a common binding for
-configuring a pin with arbitrary number of register/value pairs.
-
--- 
-Regards,
-Shawn
+Regards
+Dong Aisheng
