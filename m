@@ -1,17 +1,11 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
-Date: Thu, 16 Aug 2012 13:35:38 -0600
-Message-ID: <502D4B8A.5070509@wwwdotorg.org>
-References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com>
- <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
- <502D3E29.1010501@wwwdotorg.org>
- <20120816184703.GP15365@opensource.wolfsonmicro.com>
- <502D428F.1010901@wwwdotorg.org>
+From: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: dynamic device tree char driver
+Date: Thu, 16 Aug 2012 14:43:45 -0500
+Message-ID: <1345146226-32675-1-git-send-email-atull@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <502D428F.1010901-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,25 +16,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/16/2012 12:57 PM, Stephen Warren wrote:
-> On 08/16/2012 12:47 PM, Mark Brown wrote:
->> On Thu, Aug 16, 2012 at 12:38:33PM -0600, Stephen Warren wrote:
->>
->>> Note that this somewhat conflicts with accessing the top-level power
->>> sequence by name too; perhaps that should be re-thought too. I must
->>> admit this DT rule kinda sucks.
->>
->> Given that currently the information there is useless and ignored is
->> there any reason we can't just change the rule?  It'd be rather more
->> constructive...
-> 
-> I'll start a new thread on that topic and see. I would simplify matters
-> a lot...
 
-In case anyone wants to follow it, it's at:
+Hello,
 
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-August/018502.html
+I'm Alan Tull, interested in dynamic features of device trees.
+
+The following patch adds a char driver to add or remove device tree
+nodes dynamically.  Its ioctl passes a struct with:
+ - size of the blob
+ - pointer to the blob
+
+The path to add the nodes under is coded in the blob with dummy nodes.
+For example the following can be compiled into a blob and sent to this
+driver adding a single node under /soc/apb_periphs:
+
+/dts-v1/;
+/ {
+        soc {
+                apb_periphs {
+                        i2c1: i2c@ffc05000 {
+                                compatible = "snps,designware-i2c";
+                                reg = <0xffc05000 0x1000>;
+                                interrupts = <0 159 4>;
+                                emptyfifo_hold_master = <1>;
+                        };
+                };
+        };
+};
+
+I wanted to get feeback early before I went too far down this particular
+path.  As such, this code doesn't do any notification for drivers yet.
+Also it won't properly add nested nodes yet.  It can add/remove a single
+node and see it show up properly under /proc/device-tree.
+
+Alan Tull
+Altera
