@@ -1,113 +1,77 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
-Date: Thu, 16 Aug 2012 12:39:09 -0500
-Message-ID: <CAKGA1bncgxP9WX=1K4wOC6ixyjwqLg4-FkUFTOaGgkW5+OOciw@mail.gmail.com>
-References: <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
- <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
- <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
- <20120815054436.GK2232@pengutronix.de>
- <20120815065526.GG19681@shlinux2.ap.freescale.net>
- <20120815075117.GL2232@pengutronix.de>
- <20120815092539.GH19681@shlinux2.ap.freescale.net>
- <20120815135947.GC2258@S2101-09.ap.freescale.net>
- <20120815153107.GG2258@S2101-09.ap.freescale.net>
- <CAKGA1bkNEJbQgwcdZs8PozCgVyOfUE=bDCGkRkKV3VMfbvRMgw@mail.gmail.com>
- <20120816034506.GI2258@S2101-09.ap.freescale.net>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3 05/10] resource: add PCI configuration space support
+Date: Thu, 16 Aug 2012 20:27:03 +0200
+Message-ID: <20120816182703.GA31005@avionic-0098.mockup.avionic-design.de>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343332512-28762-6-git-send-email-thierry.reding@avionic-design.de>
+ <CAErSpo4qg45brVRwEbw3=R04VsbnvUowSMWcT+M6VoAxbf3Cqg@mail.gmail.com>
+ <20120814055542.GB16181@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo6LYpkC5wop53S1r1z3ov4+w4soqrQARzbbouVs1trzUg@mail.gmail.com>
+ <20120814180142.GA9430@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo4Efy-Dt67rktzNiYfZfOTSu=pmYtyGd3tR-zZQ3jDGtA@mail.gmail.com>
+ <20120815064902.GB15665@avionic-0098.mockup.avionic-design.de>
+ <502D0F3C.4010308@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120816034506.GI2258-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <502D0F3C.4010308-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2012 at 10:45 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Aug 15, 2012 at 11:49:01AM -0500, Matt Sealey wrote:
->> > Rather than betting how DTC will implement macro, we'd better make the
->> > the safest assumption - it will not support that syntax.
->>
->> It won't.
->
-> There were a lot of pushing on macro support for DTC.  Though it's
-> going to be very slow, I guess someday we will have it at least for
-> those simple and straight-forward syntax.
->
-> But right, we shouldn't make any assumption on that.
 
-I'm not sure you'd want a "programmable" device tree that expanded itself out
-using macros. Just imagine what one tiny mistake in syntax could do - stop a
-board from booting, for example.
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You never ran into this on real OF, you never needed it, why would precompiled
-DTs need it?
+On Thu, Aug 16, 2012 at 09:18:20AM -0600, Stephen Warren wrote:
+> On 08/15/2012 12:49 AM, Thierry Reding wrote:
+> ...
+> > Stephen: Could you try to find out whether the regular
+> > configuration space translation can just be omitted if we already
+> > set up the one for the extended configuration space? In
+> > tegra_pcie_setup_translations(), BAR 0 is setup for regular
+> > configuration space (which requires a 16 MiB region), while BAR 1
+> > is setup for the extended configuration space (requiring a full 256
+> > MiB region). However, if I understand correctly, each of the
+> > registers that can be accessed via the BAR 0 translation can also
+> > be accessed via the BAR 1 translation. That seems like we're=20
+> > wasting the 16 MiB set aside for the BAR 0 mapping.
+>=20
+> I have confirmed that in theory, the EXTCFG space can indeed be used
+> to access any register, making the regular config space redundant.
+> However, using the HW this way has apparently received less validation.
 
->> iomuxc@0x73f08000 {
->>   fsl,iomux-pins = <mux value ctrl value ipp value
->> /* MX53_PIN_SD4_CMD__SD4_CMD */
->>                             mux value ctrl value ipp value
->>        /* etc. */
->>                             ...>;
->
-> I do not see problem with this approach either.  But, this is nothing
-> IMX specific.  Essentially, this becomes a common binding for
-> configuring a pin with arbitrary number of register/value pairs.
+Okay. I wasn't expecting anything else really. I'll give this a try next
+time I get my hands on some Tegra hardware. If that works maybe we
+should make up for the missing validation by testing this more
+thoroughly.
 
-And indeed, I don't see how this could possibly be a bad thing when
-multiple boards can share such a binding and ease device tree
-generation by making it a task of "cross reference the manual" or
-"read the automated tool output and copy it to the device tree". So
-the name changes to something non-fsl-specific or something and all
-the boards that support it this way can enable it this way, job done,
-common binding for multiple systems?
+Thierry
 
-Side nit: how do you propose in the device tree to enable certain bits
-in certain IOMUXC registers on MX6 or so?
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature
 
-The current solution where pinctrl holds IOMUXC to ransom (it ioremaps
-the register set until _remove) is fine for now, but what if I want to
-change my ENET_CLK_CTL or MIPI_IPU1_MUX or USB_OTG_ID or OCRAM
-pipeline control bits in IOMUXC_GPRn for correct board operation? Is
-this a bootloader responsibility or device tree? It seems odd to make
-pad mux and control a device tree job, but internal path or unit setup
-a bootloader job.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-If we're doing this to configure the correct internal paths in the
-SoC, the "correct" place might be in the ethernet@ node, or ipu-csi@
-node as they define the operation and paths of these units, but they
-would be better served to be defined at the pinctrl level and not at
-the unit, since pinctrl "owns" IOMUXC. But having iomuxc@foo contain a
-lot of very strange internal path definitions seems too odd and
-cluttered.
+iQIcBAEBAgAGBQJQLTt3AAoJEN0jrNd/PrOh57QP/2WauFMNuvW/b7vsckbS+H2P
+r+pAbulRkCGqphnhol9UGf4kEHrCOsyeGiHbKHbqqhT4945VOkWnHf4T8IMGsP5q
+bkUnKU6Tl1Dv2TFTSerWeMfu6L3y1eQzVgKsYOTJ7NiHH7p8D2Lnn4Sg9TxR7f70
+JRzJEEzKV9gtglg0+4+spTvRbNL5UT+quYqSbmHrXdQ8gT3mrxdlOmcGtNH4Ncoq
+aEShNayR/aqX5/zt8tO9nDpzZxyyjhXEzyl/3oNivPlZQagjFIQnvaBi8WcUS+0r
+026w30bzUlnHnsL2E5ulMyjav5mblix+K5Xi0zy43bvImjC2Z62BBGOZjIf2S6Sl
+fL0RMvQKDPyNTcm1ftMTtw39XEOfBAUEpR8Y/e5WyWHP5Xo5175zXx9+acyjB9yr
+ezXjgVAMufVJ8YgBGiA0iHWinH/Jei6javQWX0rHf7mcI96giv8yyLLn9IiYgA3v
+st7vRKJc/BdLaEQQMumExqdq5AAWOap0prpZFP+ibxO5EGxnDLk3GbPvZk67TvG4
+5VxxCredNtMq/niK1qM7WcgBszi6WmlrY0VaP28RUpanEAE01+Piu03BK7oumHAC
+2ee8YjgfyYVXtIrIjKG2T9UKZSVM4wkwIelfEUaA10A/57HOSS+OwBU5iRf075VZ
+TW7JqZbTgSspQnFqZm/Z
+=nuaA
+-----END PGP SIGNATURE-----
 
-In this case, pinctrl-imx implementation is too generic in claiming
-this entire unit for the purpose. Probably what needs to be done is
-fsl,imx6q-iomuxc gets claimed by an MFD which allows setting these
-feature bits, and pinctrl simply depends on it to implement a pinctrl@
-node underneath it (like regulators are done now).
-
-As for requiring drivers to fetch and use pinctrl data without
-possibility of dummies to allow it to "fail gracefully", I would say
-pinctrl in i.MX drivers at least should not be a requirement - by all
-means, search for the pin definitions, instruct pinctrl to perform
-these operations, but if it does not find a compatible property..
-carry on regardless, maybe with a warning that you MUST have trusted
-your bootloader. Or define a linux,pinctrl-already-done property (this
-would be useful for MX51 uart1 which is muxed to ALT0 by default, so
-pinctrl needn't bother doing anything - it was always there and always
-correctly configured from mask rom time up to Linux anyway..) and as
-such we can omit the warning and just carry on regardless.
-
--- 
-Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Product Development Analyst, Genesi USA, Inc.
+--xHFwDpU9dbj6ez1V--
