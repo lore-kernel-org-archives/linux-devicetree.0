@@ -1,32 +1,51 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH v2 3/4] ARM: OMAP3: Switch to use the unified audio driver
- (omap-twl4030) for selected boards
-Date: Thu, 16 Aug 2012 09:21:22 +0300
-Message-ID: <502C9162.4020801@compulab.co.il>
-References: <1344935279-32364-1-git-send-email-peter.ujfalusi@ti.com> <1344935279-32364-4-git-send-email-peter.ujfalusi@ti.com>
+From: Hui Wang <jason77.wang@gmail.com>
+Subject: Re: [PATCH v3 2/3] Input: add devicetree binding note for egalax_ts
+Date: Thu, 16 Aug 2012 14:48:00 +0800
+Message-ID: <502C97A0.2010902@gmail.com>
+References: <1345026708-14139-1-git-send-email-jason77.wang@gmail.com> <1345026708-14139-2-git-send-email-jason77.wang@gmail.com> <1345026708-14139-3-git-send-email-jason77.wang@gmail.com> <20120815125353.GA2258@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1344935279-32364-4-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Steve Sakoman <steve@sakoman.com>, Anuj Aggarwal <anuj.aggarwal@ti.com>, Benoit Cousson <b-cousson@ti.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20120815125353.GA2258@S2101-09.ap.freescale.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Hui Wang <jason77.wang@gmail.com>, dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/14/12 12:07, Peter Ujfalusi wrote:
-> These boards have similar audio setup and they can all use the same driver
-> for audio support if it is enabled in the kernel config.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Cc: Igor Grinberg <grinberg@compulab.co.il>
-> Acked-by: Tony Lindgren <tony@atomide.com>
+Shawn Guo wrote:
+> On Wed, Aug 15, 2012 at 06:31:47PM +0800, Hui Wang wrote:
+>   
+>> The egalax_ts driver needs to get the gpio number of the irq pin,
+>> and use this gpio to wake up the controller. So add a note
+>> for this change.
+>>
+>> Signed-off-by: Hui Wang <jason77.wang@gmail.com>
+>> ---
+>>  .../bindings/input/touchscreen/egalax-ts.txt       |   19 +++++++++++++++++++
+>>  1 files changed, 19 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+>> new file mode 100644
+>> index 0000000..df70318
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+>> @@ -0,0 +1,19 @@
+>> +* EETI eGalax Multiple Touch Controller
+>> +
+>> +Required properties:
+>> +- compatible: must be "eeti,egalax_ts"
+>>     
+>
+> Since we define this in the binding anyway, can we have an corresponding
+> .of_match_table in the driver?
+>
+> Regards,
+> Shawn
+>
+>   
+OK, will add it in the driver.
 
-Acked-by: Igor Grinberg <grinberg@compulab.co.il>
-
-Thanks Peter!
-
-
--- 
 Regards,
-Igor.
+Hui.
