@@ -1,139 +1,63 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC RESEND 2/4] ARM: OMAP3: Dynamically disable secure timer
- nodes for secure devices
-Date: Thu, 16 Aug 2012 11:57:42 -0500
-Message-ID: <502D2686.4090107@ti.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-3-git-send-email-jon-hunter@ti.com> <502B6838.9080907@ti.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [patch] driver-core: dev_to_node() should handle NULL pointers
+Date: Thu, 16 Aug 2012 10:23:47 -0700
+Message-ID: <20120816172347.GA27415@kroah.com>
+References: <20120720065622.GA11710@elgon.mountain>
+ <20120720150042.GA1996@kroah.com>
+ <20120720151846.GQ16348@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <502B6838.9080907@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vaibhav Hiremath <hvaibhav@ti.com>
-Cc: Tarun Kanti DebBarma <tarun.kanti@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Paul Walmsley <paul@pwsan.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120720151846.GQ16348@mwanda>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 08/15/2012 04:13 AM, Vaibhav Hiremath wrote:
+On Fri, Jul 20, 2012 at 06:18:46PM +0300, Dan Carpenter wrote:
+> On Fri, Jul 20, 2012 at 08:00:42AM -0700, Greg Kroah-Hartman wrote:
+> > On Fri, Jul 20, 2012 at 09:56:23AM +0300, Dan Carpenter wrote:
+> > > What prompted this patch is that in dma_pool_create() we call
+> > > dev_to_node() before checking whether "dev" is NULL.  It looks like
+> > > there are places which call dma_pool_create() with a NULL pointer.  An
+> > > example is in drivers/usb/gadget/amd5536udc.c.
+> > > 
+> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > ---
+> > > Static checker fix.
+> > > 
+> > > diff --git a/include/linux/device.h b/include/linux/device.h
+> > > index aa7b3b4..c80e7a8d 100644
+> > > --- a/include/linux/device.h
+> > > +++ b/include/linux/device.h
+> > > @@ -714,7 +714,9 @@ int dev_set_name(struct device *dev, const char *name, ...);
+> > >  #ifdef CONFIG_NUMA
+> > >  static inline int dev_to_node(struct device *dev)
+> > >  {
+> > > -	return dev->numa_node;
+> > > +	if (dev)
+> > > +		return dev->numa_node;
+> > > +	return -1;
+> > 
+> > What happens if this function returns -1?  Can the callers properly
+> > handle this?
+> > 
 > 
+> Gar.  Now I'm not sure any more.
 > 
-> On 7/14/2012 3:56 AM, Jon Hunter wrote:
->> OMAP3 devices may or may not have security features enabled. Security enabled
->> devices are known as high-secure (HS) and devices without security are known as
->> general purpose (GP).
->>
->> For OMAP3 devices there are 12 general purpose timers available. On secure
->> devices the 12th timer is reserved for secure usage and so cannot be used by
->> the kernel, where as for a GP device it is available. We can detect the OMAP
->> device type, secure or GP, at runtime via an on-chip register. Today, when not
->> using DT, we do not register the 12th timer as a linux device if the device is
->> secure.
->>
->> When using device tree, device tree is going to register all the timer devices
->> it finds in the device tree blob. To prevent device tree from registering 12th
->> timer on a secure OMAP3 device we can add a status property to the timer
->> binding with the value "disabled" at boot time. Note that timer 12 on a OMAP3
->> device has a property "ti,timer-secure" to indicate that it will not be
->> available on a secure device and so for secure OMAP3 devices, we search for
->> timers with this property and then disable them. Using the prom_add_property()
->> function to dynamically add a property was a recommended approach suggested by
->> Rob Herring [1].
->>
->> I have tested this on an OMAP3 GP device and faking it to pretend to be a
->> secure device to ensure that any timers marked with "ti,timer-secure" are not
->> registered on boot. I have also made sure that all timers are registered as
->> expected on a GP device by default.
->>
->> [1] http://comments.gmane.org/gmane.linux.ports.arm.omap/79203
->>
->> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->> ---
->>  arch/arm/mach-omap2/board-generic.c |    1 +
->>  arch/arm/mach-omap2/common.h        |    1 +
->>  arch/arm/mach-omap2/timer.c         |   36 +++++++++++++++++++++++++++++++++++
->>  3 files changed, 38 insertions(+)
->>
->> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
->> index 6f93a20..20124d7 100644
->> --- a/arch/arm/mach-omap2/board-generic.c
->> +++ b/arch/arm/mach-omap2/board-generic.c
->> @@ -40,6 +40,7 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
->>  static void __init omap_generic_init(void)
->>  {
->>  	omap_sdrc_init(NULL, NULL);
->> +	omap_dmtimer_init();
->>  
->>  	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
->>  }
->> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
->> index 1f65b18..d6a4875 100644
->> --- a/arch/arm/mach-omap2/common.h
->> +++ b/arch/arm/mach-omap2/common.h
->> @@ -326,6 +326,7 @@ extern void omap_sdrc_init(struct omap_sdrc_params *sdrc_cs0,
->>  				      struct omap_sdrc_params *sdrc_cs1);
->>  struct omap2_hsmmc_info;
->>  extern int omap4_twl6030_hsmmc_init(struct omap2_hsmmc_info *controllers);
->> +extern void omap_dmtimer_init(void);
->>  
->>  #endif /* __ASSEMBLER__ */
->>  #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
->> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
->> index 13d20c8..e3b9931 100644
->> --- a/arch/arm/mach-omap2/timer.c
->> +++ b/arch/arm/mach-omap2/timer.c
->> @@ -36,6 +36,7 @@
->>  #include <linux/clocksource.h>
->>  #include <linux/clockchips.h>
->>  #include <linux/slab.h>
->> +#include <linux/of.h>
->>  
->>  #include <asm/mach/time.h>
->>  #include <plat/dmtimer.h>
->> @@ -482,6 +483,41 @@ static int __init omap2_dm_timer_init(void)
->>  }
->>  arch_initcall(omap2_dm_timer_init);
->>  
->> +static struct property timer_disabled = {
->> +	.name = "status",
->> +	.length = sizeof("disabled"),
->> +	.value = "disabled",
->> +};
->> +
->> +static struct of_device_id omap3_timer_match[] __initdata = {
->> +	{ .compatible = "ti,omap3-timer", },
->> +	{ }
->> +};
->> +
->> +/**
->> + * omap_dmtimer_init - initialisation function when device tree is used
->> + *
->> + * For secure OMAP3 devices, timers with device type "timer-secure" cannot
->> + * be used by the kernel as they are reserved. Therefore, to prevent the
->> + * kernel registering these devices remove them dynamically from the device
->> + * tree on boot.
->> + */
->> +void __init omap_dmtimer_init(void)
->> +{
->> +	struct device_node *np;
->> +
->> +	if (!cpu_is_omap34xx())
->> +		return;
->> +
+> -1 means no affinity and it's what the dev_to_node() returns if NUMA
+> is disabled.  But now I think probably it's important to get the
+> NUMA node correct in dma_pool_create() so this isn't the right
+> answer.
 > 
-> Sorry for responding so late, but why only omap34xx check here?
-> Isn't this applicable to all omap & non-omap devices?
+> dma_pool_create() is not correct.  It has code to handle a NULL
+> "dev" pointer, but the dev_to_node() dereference will cause an oops
+> before we reach it.  I'm think this is a real issue that affects a
+> couple drivers.  Maybe those people compile without NUMA?
+> 
+> I'm not sure the right fix now.
 
-It is only applicable to omap3 devices as far as omap is concerned.
+Ok, I'll drop this one then.
 
-By non-omap, you are referring to the AMxxx stuff?
-
-Do AMxxx devices even support security (ie. secure boot and have secure
-peripherals)? If not then this will work for AMxxx devices too.
-
-Let me know if the changelog is not clear why this is needed for an
-omap3 device.
-
-Jon
-
-
+greg k-h
