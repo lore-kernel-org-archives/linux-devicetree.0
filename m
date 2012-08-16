@@ -1,201 +1,212 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 3/3] gpio: Add basic support for TWL6040 GPOs
-Date: Thu, 16 Aug 2012 15:13:15 +0300
-Message-ID: <1345119195-7490-4-git-send-email-peter.ujfalusi@ti.com>
-References: <1345119195-7490-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1345119195-7490-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, peter.ujfalusi@ti.com, Sergio Aguirre <saaguirre@ti.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3 10/10] ARM: tegra: pcie: Add device tree support
+Date: Thu, 16 Aug 2012 14:15:13 +0200
+Message-ID: <20120816121513.GA10175@avionic-0098.adnet.avionic-design.de>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
+ <1343332512-28762-11-git-send-email-thierry.reding@avionic-design.de>
+ <20120814201215.GA10542@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo6Awbx9-DWM3V02HUg7Xv4tWAhcLO7UKuT_0uXbpZ+nKw@mail.gmail.com>
+ <20120815063718.GA15665@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo7Y9ADYHwZMjQjDwd7m8jtwgcxsE-NE_K5X_Z+PuV=C4w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============5061928506518882317=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAErSpo7Y9ADYHwZMjQjDwd7m8jtwgcxsE-NE_K5X_Z+PuV=C4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TWL6040 provides GPO lines to be used for controlling external devices.The number
-of lines different between versions: twl6040 have 3 GPO while TWL6041 have 1.
 
-Signed-off-by: Sergio Aguirre <saaguirre@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/Kconfig        |    7 ++
- drivers/gpio/Makefile       |    1 +
- drivers/gpio/gpio-twl6040.c |  137 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 145 insertions(+), 0 deletions(-)
- create mode 100644 drivers/gpio/gpio-twl6040.c
+--===============5061928506518882317==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Disposition: inline
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b16c8a7..f74633e 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -402,6 +402,13 @@ config GPIO_TWL4030
- 	  Say yes here to access the GPIO signals of various multi-function
- 	  power management chips from Texas Instruments.
- 
-+config GPIO_TWL6040
-+	tristate "TWL6040 GPO"
-+	depends on TWL6040_CORE
-+	help
-+	  Say yes here to access the GPO signals of twl6040
-+	  audio chip from Texas Instruments.
-+
- config GPIO_WM831X
- 	tristate "WM831x GPIOs"
- 	depends on MFD_WM831X
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 153cace..f857b46 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -67,6 +67,7 @@ obj-$(CONFIG_GPIO_TPS6586X)	+= gpio-tps6586x.o
- obj-$(CONFIG_GPIO_TPS65910)	+= gpio-tps65910.o
- obj-$(CONFIG_GPIO_TPS65912)	+= gpio-tps65912.o
- obj-$(CONFIG_GPIO_TWL4030)	+= gpio-twl4030.o
-+obj-$(CONFIG_GPIO_TWL6040)	+= gpio-twl6040.o
- obj-$(CONFIG_GPIO_UCB1400)	+= gpio-ucb1400.o
- obj-$(CONFIG_GPIO_VR41XX)	+= gpio-vr41xx.o
- obj-$(CONFIG_GPIO_VX855)	+= gpio-vx855.o
-diff --git a/drivers/gpio/gpio-twl6040.c b/drivers/gpio/gpio-twl6040.c
-new file mode 100644
-index 0000000..dd58e8b
---- /dev/null
-+++ b/drivers/gpio/gpio-twl6040.c
-@@ -0,0 +1,137 @@
-+/*
-+ * Access to GPOs on TWL6040 chip
-+ *
-+ * Copyright (C) 2012 Texas Instruments, Inc.
-+ *
-+ * Authors:
-+ *	Sergio Aguirre <saaguirre@ti.com>
-+ *	Peter Ujfalusi <peter.ujfalusi@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/kthread.h>
-+#include <linux/irq.h>
-+#include <linux/gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+
-+#include <linux/mfd/twl6040.h>
-+
-+static struct gpio_chip twl6040gpo_chip;
-+
-+static int twl6040gpo_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct twl6040 *twl6040 = dev_get_drvdata(chip->dev->parent);
-+	int ret = 0;
-+
-+	ret = twl6040_reg_read(twl6040, TWL6040_REG_GPOCTL);
-+	if (ret < 0)
-+		return ret;
-+
-+	return (ret >> offset) & 1;
-+}
-+
-+static int twl6040gpo_direction_out(struct gpio_chip *chip, unsigned offset,
-+				    int value)
-+{
-+	/* This only drives GPOs, and can't change direction */
-+	return 0;
-+}
-+
-+static void twl6040gpo_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	struct twl6040 *twl6040 = dev_get_drvdata(chip->dev->parent);
-+	int ret;
-+	u8 gpoctl;
-+
-+	ret = twl6040_reg_read(twl6040, TWL6040_REG_GPOCTL);
-+	if (ret < 0)
-+		return;
-+
-+	if (value)
-+		gpoctl = ret | (1 << offset);
-+	else
-+		gpoctl = ret & ~(1 << offset);
-+
-+	twl6040_reg_write(twl6040, TWL6040_REG_GPOCTL, gpoctl);
-+}
-+
-+static struct gpio_chip twl6040gpo_chip = {
-+	.label			= "twl6040",
-+	.owner			= THIS_MODULE,
-+	.get			= twl6040gpo_get,
-+	.direction_output	= twl6040gpo_direction_out,
-+	.set			= twl6040gpo_set,
-+	.can_sleep		= 1,
-+};
-+
-+/*----------------------------------------------------------------------*/
-+
-+static int __devinit gpo_twl6040_probe(struct platform_device *pdev)
-+{
-+	struct twl6040_gpo_data *pdata = pdev->dev.platform_data;
-+	struct device *twl6040_core_dev = pdev->dev.parent;
-+	struct twl6040 *twl6040 = dev_get_drvdata(twl6040_core_dev);
-+	int ret;
-+
-+	if (pdata)
-+		twl6040gpo_chip.base = pdata->gpio_base;
-+	else
-+		twl6040gpo_chip.base = -1;
-+
-+	if (twl6040_get_revid(twl6040) < TWL6041_REV_ES2_0)
-+		twl6040gpo_chip.ngpio = 3; /* twl6040 have 3 GPO */
-+	else
-+		twl6040gpo_chip.ngpio = 1; /* twl6041 have 1 GPO */
-+
-+	twl6040gpo_chip.dev = &pdev->dev;
-+#ifdef CONFIG_OF_GPIO
-+	twl6040gpo_chip.of_node = twl6040_core_dev->of_node;
-+#endif
-+
-+	ret = gpiochip_add(&twl6040gpo_chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "could not register gpiochip, %d\n", ret);
-+		twl6040gpo_chip.ngpio = 0;
-+	}
-+
-+	return ret;
-+}
-+
-+static int __devexit gpo_twl6040_remove(struct platform_device *pdev)
-+{
-+	return gpiochip_remove(&twl6040gpo_chip);
-+}
-+
-+/* Note:  this hardware lives inside an I2C-based multi-function device. */
-+MODULE_ALIAS("platform:twl6040-gpo");
-+
-+static struct platform_driver gpo_twl6040_driver = {
-+	.driver = {
-+		.name	= "twl6040-gpo",
-+		.owner	= THIS_MODULE,
-+	},
-+	.probe		= gpo_twl6040_probe,
-+	.remove		= gpo_twl6040_remove,
-+};
-+
-+module_platform_driver(gpo_twl6040_driver);
-+
-+MODULE_AUTHOR("Texas Instruments, Inc.");
-+MODULE_DESCRIPTION("GPO interface for TWL6040");
-+MODULE_LICENSE("GPL");
--- 
-1.7.8.6
 
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 15, 2012 at 05:18:04AM -0700, Bjorn Helgaas wrote:
+> On Tue, Aug 14, 2012 at 11:37 PM, Thierry Reding
+> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> > On Tue, Aug 14, 2012 at 04:50:26PM -0700, Bjorn Helgaas wrote:
+> >> On Tue, Aug 14, 2012 at 1:12 PM, Thierry Reding
+> >> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> >> > On Thu, Jul 26, 2012 at 09:55:12PM +0200, Thierry Reding wrote:
+> >> >> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/teg=
+ra20.dtsi
+> >> >> index a094c97..c886dff 100644
+> >> >> --- a/arch/arm/boot/dts/tegra20.dtsi
+> >> >> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> >> >> @@ -199,6 +199,68 @@
+> >> >>               #size-cells =3D <0>;
+> >> >>       };
+> >> >>
+> >> >> +     pcie-controller {
+> >> >> +             compatible =3D "nvidia,tegra20-pcie";
+> >> >> +             reg =3D <0x80003000 0x00000800   /* PADS registers */
+> >> >> +                    0x80003800 0x00000200   /* AFI registers */
+> >> >> +                    0x81000000 0x01000000   /* configuration space=
+ */
+> >> >> +                    0x90000000 0x10000000>; /* extended configurat=
+ion space */
+> >> >> +             interrupts =3D <0 98 0x04   /* controller interrupt */
+> >> >> +                           0 99 0x04>; /* MSI interrupt */
+> >> >> +             status =3D "disabled";
+> >> >> +
+> >> >> +             ranges =3D <0 0 0  0x80000000 0x00001000   /* root po=
+rt 0 */
+> >> >> +                       0 1 0  0x81000000 0x00800000   /* port 0 co=
+nfig space */
+> >> >> +                       0 2 0  0x90000000 0x08000000   /* port 0 ex=
+t config space */
+> >> >> +                       0 3 0  0x82000000 0x00010000   /* port 0 do=
+wnstream I/O */
+> >> >> +                       0 4 0  0xa0000000 0x08000000   /* port 0 no=
+n-prefetchable memory */
+> >> >> +                       0 5 0  0xb0000000 0x08000000   /* port 0 pr=
+efetchable memory */
+> >> >> +
+> >> >> +                       1 0 0  0x80001000 0x00001000   /* root port=
+ 1 */
+> >> >> +                       1 1 0  0x81800000 0x00800000   /* port 1 co=
+nfig space */
+> >> >> +                       1 2 0  0x98000000 0x08000000   /* port 1 ex=
+t config space */
+> >> >> +                       1 3 0  0x82010000 0x00010000   /* port 1 do=
+wnstream I/O */
+> >> >> +                       1 4 0  0xa8000000 0x08000000   /* port 1 no=
+n-prefetchable memory */
+> >> >> +                       1 5 0  0xb8000000 0x08000000>; /* port 1 pr=
+efetchable memory */
+> >> >
+> >> > I've been thinking about this some more. The translations for both t=
+he
+> >> > regular and extended configuration spaces are configured in the top-
+> >> > level PCIe controller. It is therefore wrong how they are passed to =
+the
+> >> > PCI host bridges via the ranges property.
+> >> >
+> >> > I remember Mitch saying that it should be passed down to the children
+> >> > because it is partitioned among them, but since the layout is compat=
+ible
+> >> > with ECAM, the partitioning isn't as simple as what's in the tree. In
+> >> > fact the partitions will be dependent on the number of devices attac=
+hed
+> >> > to the host bridges.
+> >>
+> >> I don't understand this last bit about the number of devices attached
+> >> to the host bridges.  Logically, the host bridge has a bus number
+> >> aperture that you can know up front, even before you know anything
+> >> about what devices are below it.  On x86, for example, the ACPI _CRS
+> >> method has something like "[bus 00-7f]" in it, which means that any
+> >> buses in that range are below this bridge.  That doesn't tell us
+> >> anything about which buses actually have devices on them, of course;
+> >> it's just analogous to the secondary and subordinate bus number
+> >> registers in a P2P bridge.
+> >
+> > That's one of the issues I still need to take care of. Currently no bus
+> > resource is attached to the individual bridges (nor the PCI controller
+> > for that matter), so the PCI core will assign them dynamically.
+>=20
+> So your PCI controller driver knows how to program the controller bus
+> number aperture?  Sometimes people start by assuming that two host
+> bridges both have [bus 00-ff] apertures, then they enumerate below the
+> first and adjust the bus number apertures based on what they found.
+> For example, if they found buses 00-12 behind the first bridge, they
+> make the apertures [bus 00-12] for the first bridge and [bus 13-ff]
+> for the second.  That might be the case, depending on what firmware
+> set up, but it seems like a dubious way to do it, and of course it
+> precludes a lot of hot-plug scenarios.
+>=20
+> > If this
+> > range is known at boot time we could assign ECAM ranges based on the bus
+> > numbers. Standard ECAM ranges, that is. On Tegra this won't work because
+> > as Stephen mentioned in a previous mail, the bus field is not the top
+> > field in the ECAM addresses. Basically what you have is this:
+> >
+> >         [27:24] upper 4 bits of the register address for extended
+> >                 configuration space
+> >         [23:16] bus number
+> >         [15:11] device number
+> >         [10: 8] device function
+> >         [ 8: 0] register
+> >
+> > So the ECAM space cannot be partitioned by bus number.
+>=20
+> Ah, OK, so definitely not standard PCIe ECAM.
+
+I had an idea about how we could maybe implement a generic ECAM
+mechanism that provides for this kind of mapping as well. Basically,
+every mechanism that can be covered by such an implementation would in
+one way or another specify the above five fields, so how about designing
+it in a way that the driver could define the fields that encode the
+information, so for Tegra, something along these lines:
+
+	struct pci_ecam_map pci_ecam_tegra =3D {
+		.register =3D {  0,  7 },
+		.extended =3D { 24, 27 },
+		.function =3D {  8, 10 },
+		.device   =3D { 11, 15 },
+		.bus      =3D { 16, 23 },
+	}
+
+For standard ECAM, something like this:
+
+	struct pci_ecam_map pci_ecam_standard =3D {
+		.register =3D {  0,  7 },
+		.extended =3D {  8, 11 },
+		.function =3D { 12, 14 },
+		.device   =3D { 15, 19 },
+		.bus      =3D { 20, 27 },
+	};
+
+Thierry
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQLORRAAoJEN0jrNd/PrOhQjQP/3KVbzbr2CCEDg1aidHjZM35
+NR9p0S4S2G7MVxGzx0c7XKoEBGTJb20U+KokJr3ywRiEqrW9r9EVDgKGA1tfcBc0
+BO/7+8fOgLYEQDuBS8kiH1FCwg/5sJokEDUR0EwtrhKKJpcLQSxxUYhSjwTngHKI
+MdToIDnrBXBpFhpQjCugFZxcXN14avKZnW78Hq7zgEGAhsQAKu29g4UJWwigkUU6
+zS3xZsQZbaEdoWZnLmoaEHJ21zD6GryNyi8woc2hEPWy9vWfI6vfz4ZnSSUOJLBI
+2OKUbm9QbNlb52i6sZ/wXhvNgYyiWkArbRYZ8Vkn07SfXa8XI/DFMYiYuLpQNx4d
+fertLtfSKghRP6pzve4CdOdNICvbuVsDemsXcccnchYvCzlPOqc75Ir8j1kOoVlB
+rhSTTmzkLYnVnCYEyAMlgfJJRaIRN7wwLIWmv27USDeXpdkOHaoMGMZrmx7WvZlQ
+UvBx4VbnQVR+BYaUhgspOUpKV21pqamcF1cJwkLaI1DxJhGAZPO4DFwWxxw073Q2
+VaE46pr15Cn2E58wSEdC8becue/qJYt6R2cDMI7LRaYy7NoVooCINxzW7VpjiPS2
+U1K7K1NIYnFnarQdW3DC7AIlOHsANXehW6DJ3hMWXeIK1Olep1x0CRRolXj/+9iT
+GXz0kl+PNYUTYAgPTNwd
+=fZRa
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
+
+--===============5061928506518882317==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5061928506518882317==--
