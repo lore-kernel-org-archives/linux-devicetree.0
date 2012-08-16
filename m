@@ -1,15 +1,23 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
-Date: Thu, 16 Aug 2012 11:10:30 -1000
-Message-ID: <502D61C6.5050101@firmworks.com>
-References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com>
- <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
- <502D3E29.1010501@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
+Date: Thu, 16 Aug 2012 15:12:10 -0600
+Message-ID: <502D622A.1030104@wwwdotorg.org>
+References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
+ <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
+ <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
+ <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
+ <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
+ <20120815054436.GK2232@pengutronix.de>
+ <20120815065526.GG19681@shlinux2.ap.freescale.net>
+ <20120815075117.GL2232@pengutronix.de>
+ <20120815092539.GH19681@shlinux2.ap.freescale.net>
+ <20120815135947.GC2258@S2101-09.ap.freescale.net>
+ <20120816033006.GA11999@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <502D3E29.1010501-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20120816033006.GA11999-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,289 +28,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/16/2012 8:38 AM, Stephen Warren wrote:
-> On 08/16/2012 12:08 AM, Alexandre Courbot wrote:
->> Some device drivers (panel backlights especially) need to follow precise
->> sequences for powering on and off, involving gpios, regulators, PWMs
->> with a precise powering order and delays to respect between each steps.
->> These sequences are board-specific, and do not belong to a particular
->> driver - therefore they have been performed by board-specific hook
->> functions to far.
+On 08/15/2012 09:30 PM, Dong Aisheng wrote:
+> On Wed, Aug 15, 2012 at 09:59:50PM +0800, Shawn Guo wrote:
+> ...
+>>> Another known issue is that via this way, that means the pinctrl subsystem
+>>> can only see the using pads, this is a bit not align with the pinctrl
+>>> subsystem design. No sure if Linus would like to see it.
+>>>
+>> I do not quite follow on this.  The "enum imx51_pads" will still be
+>> there, so all the pads will still be visible to the pinctrl system.
 >>
->> With the advent of the device tree and of ARM kernels that are not
->> board-tied, we cannot rely on these board-specific hooks anymore but
->> need a way to implement these sequences in a portable manner. This patch
->> introduces a simple interpreter that can execute such power sequences
->> encoded either as platform data or within the device tree.
+> Sorry, i did not describe it accurately.
+> The problem is that those pins are visible to pinctrl subystem, but the pinctrl
+> subsystem can not manage them all.
+> Not sure this meet Linus's original design purpose.
+> Because for the way proposed, all the pin's basic properties like mux_reg, config_reg
+> are parsed from device tree at runtime.
+> If a pin is not used in device tree, the driver can not know this pin's
+> corresponding registers.
+> Thus, for those unused pins, we can not manage it on mux or config in pinctrl
+> subsystem and driver.
 > 
->> diff --git a/Documentation/devicetree/bindings/power_seq/power_seq.txt b/Documentation/devicetree/bindings/power_seq/power_seq.txt
-> 
->> +Specifying Power Sequences in the Device Tree
->> +=============================================
->> +In the device tree, power sequences are specified as sub-nodes of the device
->> +node and reference resources declared by that device.
->> +
->> +For an introduction about runtime interpreted power sequences, see
->> +Documentation/power/power_seq.txt and include/linux/power_seq.h.
-> 
-> Device tree bindings shouldn't reference Linux documentation; the
-> bindings are supposed to be OS-agnostic.
+> For example, the pin_config_get/pin_config_set API in
+> include/linux/pinctrl/consumer.h can not work for such pins.
 
+Hmmm. Given we support all pin mux/config options from the mapping
+table, I'd question whether that API should even exist any more...
 
-While it is true that bindings should try to be OS-agnostic, there is
-the practical matter of where to put documentation so that it is widely
-accessible.  The Linux source tree is one of the most accessible things
-there is, considering how widely it is replicated.
+> Then imx_pinconf_dbg_show in current driver may need change since it does not
+> support show all pins's config value.
 
-As the original instigator of the policy that the device tree should
-describe the hardware "OS-neutrally", I personally don't have a problem
-with bindings referring to Linux documentation.  I wouldn't like
-references to proprietary and inaccessible documentation.
+The pinctrl core assumes that the pin numbering space could be sparse.
+For example, see that pinconf.c:pinconf_pins_show() "continues" the loop
+if pin_desc_get() fails for a particular pin number. So just based on
+what I've read in this one email, I think this is fine.
 
-> 
->> +Power Sequences Structure
->> +-------------------------
->> +Power sequences are sub-nodes that are named such as the device driver can find
->> +them. The driver's documentation should list the sequence names it recognizes.
-> 
-> That's a little roundabout. That might be better as simply:
-> 
-> Valid power sequence names are defined by each device's binding. For a
-> power sequence named "foo", a node named "foo-power-sequence" defines
-> that sequence.
-> 
->> +Inside a power sequence node are sub-nodes that describe the different steps
->> +of the sequence. Each step must be named sequentially, with the first step
->> +named step0, the second step1, etc. Failure to follow this rule will result in a
->> +parsing error.
-> 
-> Node names shouldn't be interpreted by the code; nodes should all be
-> named after the type of object the represent. Hence, every step should
-> be named just "step" for example.
-> 
-> The node's unit address (@0) should be used to distinguish the nodes.
-> This requires reg properties within each node to match the unit address,
-> and hence #address-cells and #size-cells properties in the power
-> sequence itself.
-> 
-> Note that this somewhat conflicts with accessing the top-level power
-> sequence by name too; perhaps that should be re-thought too. I must
-> admit this DT rule kinda sucks.
-> 
->> +Power Sequences Steps
->> +---------------------
->> +Every step of a sequence describes an action to be performed on a resource. It
->> +generally includes a property named after the resource type, and which value
->> +references the resource to be used. Depending on the resource type, additional
->> +properties can be defined to control the action to be performed.
-> 
-> I think you need to add a property that indicates what type of resource
-> each step applies to. Sure, this is implicit in that if a "gpio"
-> property exists, the step is a GPIO step, but in order to make that
-> work, you'd have to search each node for each possible resource type's
-> property name. It'd be far better to read a single type="gpio" property,
-> then parse the step based on that.
-> 
->> +Example
->> +-------
->> +Here are example sequences declared within a backlight device that use all the
->> +supported resources types:
->> +
->> +	backlight {
->> +		compatible = "pwm-backlight";
->> +		...
->> +
->> +		/* resources used by the sequences */
->> +		pwms = <&pwm 2 5000000>;
->> +		pwm-names = "backlight";
->> +		power-supply = <&backlight_reg>;
->> +		enable-gpio = <&gpio 28 0>;
->> +
->> +		power-on-sequence {
->> +			step0 {
->> +				regulator = "power";
->> +				enable;
->> +			};
->> +			step1 {
->> +				delay = <10000>;
->> +			};
->> +			step2 {
->> +				pwm = "backlight";
->> +				enable;
->> +			};
->> +			step3 {
->> +				gpio = "enable";
->> +				enable;
->> +			};
->> +		};
->> +
->> +		power-off-sequence {
->> +			step0 {
->> +				gpio = "enable";
->> +				disable;
->> +			};
->> +			step1 {
->> +				pwm = "backlight";
->> +				disable;
->> +			};
->> +			step2 {
->> +				delay = <10000>;
->> +			};
->> +			step3 {
->> +				regulator = "power";
->> +				disable;
->> +			};
->> +		};
->> +	};
-> 
-> I notice that for clocks, pwms, and interrupts, the initial step of the
-> lookup is via a single property that lists all know resources of that
-> type. Regulators and GPIOs don't follow this style though. Using the
-> same mechanism for power-sequences would yield something like the
-> following, which would avoid the "node names must be significant" issue
-> I mention above, although it does make everything rather more wordy.
-> 
-> [start my proposal]
->> 	backlight {
->> 		compatible = "pwm-backlight";
->>
->> 		/* resources used by the sequences */
->> 		pwms = <&pwm 2 5000000>;
->> 		pwm-names = "backlight";
->> 		power-supply = <&backlight_reg>;
->> 		bl-enable-gpio = <&gpio 28 0>;
->> 		pwr-seqs = <&bl_on &bl_off>;
->> 		pwr-seq-names = "on", "off";
->>
->> 		#address-cells = <1>;
->> 		#size-cells = <0>;
->>
->> 		bl_on: pwr-seq@0 {
->> 			reg = <0>;
->> 			#address-cells = <1>;
->> 			#size-cells = <0>;
->> 			step@0 {
->> 				reg = <0>;
->> 				type = "regulator";
->> 				regulator = "power";
->> 				enable;
->> 			};
->> 			step@1 {
->> 				reg = <1>;
->> 				type = "delay";
->> 				delay = <10000>;
->> 			};
->> 			step@2 {
->> 				reg = <2>;
->> 				type = "pwm";
->> 				pwm = "backlight";
->> 				enable;
->> 			};
->> 			step@3 {
->> 				reg = <3>;
->> 				type = "gpio";
->> 				gpio = "bl-enable";
->> 				enable;
->> 			};
->> 		};
->>
->> 		bl_off: pwr-seq@1 {
->> 			reg = <1>;
->> 			#address-cells = <1>;
->> 			#size-cells = <0>;
->> 			step@0 {
->> 				reg = <0>;
->> 				type = "gpio";
->> 				gpio = "bl-enable";
->> 				disable;
->> 			};
->> 			step@1 {
->> 				reg = <1>;
->> 				type = "pwm";
->> 				pwm = "backlight";
->> 				disable;
->> 			};
->> 			step@2 {
->> 				reg = <2>;
->> 				type = "delay";
->> 				delay = <10000>;
->> 			};
->> 			step@3 {
->> 				reg = <3>;
->> 				type = "regulator";
->> 				regulator = "power";
->> 				disable;
->> 			};
->> 		};
->> 	};
->>
-> [end my proposal]
-> 
->> diff --git a/Documentation/power/power_seq.txt b/Documentation/power/power_seq.txt
-> 
->> +Usage by Drivers and Resources Management
->> +-----------------------------------------
->> +Power sequences make use of resources that must be properly allocated and
->> +managed. The power_seq_build() function builds a power sequence from the
->> +platform data. It also takes care of resolving and allocating the resources
->> +referenced by the sequence if needed:
->> +
->> +  struct power_seq *power_seq_build(struct device *dev, struct list_head *ress,
->> +                                    struct platform_power_seq *pseq);
->> +
->> +The 'dev' argument is the device in the name of which the resources are to be
->> +allocated.
->> +
->> +The 'ress' argument is a list to which the resolved resources are appended. This
->> +avoids allocating a resource referenced in several power sequences multiple
->> +times.
-> 
-> I see in other parts of the thread, there has been discussion re:
-> needing the separate ress parameter, and requiring the driver to pass
-> this in to multiple power_seq_build calls.
-> 
-> The way the pinctrl subsystem solved this was to have a single function
-> that parsed all pinctrl setting (c.f. all power sequences) at once, and
-> return a single handle. Later, the driver passes this handle
-> pinctrl_lookup_state(), along with the requested state (c.f. sequence
-> name) to search for, and finally passes that handle to
-> pinctrl_select_state(). Doing something similar here would result in:
-> 
-> struct power_seqs *power_seq_get(struct device *dev);
-> void power_seq_put(struct power_seqs *seqs);
-> struct power_seq *power_seq_lookup(struct power_seqs *seqs,
-> 				const char *name);
-> int power_seq_executestruct power_seq *seq);
-> 
-> struct power_seqs *devm_power_seq_get(struct device *dev);
-> void devm_power_seq_put(struct power_seqs *seqs);
-> 
->> +On success, the function returns a devm allocated resolved sequence that is
-> 
-> Perhaps the function should be named devm_power_seq_build(), in order to
-> make this obvious to people who only read the client code, and not this
-> documentation.
-> 
->> +ready to be passed to power_seq_run(). In case of failure, and error code is
->> +returned.
->> +
->> +A resolved power sequence returned by power_seq_build can be run by
->> +power_run_run():
->> +
->> +  int power_seq_run(power_seq *seq);
->> +
->> +It returns 0 if the sequence has successfully been run, or an error code if a
->> +problem occured.
->> +
->> +There is no need to explicitly free the resources used by the sequence as they
->> +are devm-allocated.
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+> It looks like not a big issue currently since i did not see any client driver
+> using this API.
+> But i'm not sure if we may have this requirement in the future.
+> For example, is it possible that pinctrl subsystem may support configure pins
+> via sysfs dynamically?
+
+I can't comment on sysfs specifically, but I believe it would be
+generally true that a pin that isn't know to the pinctrl subsystem can't
+be manipulated in any way.
