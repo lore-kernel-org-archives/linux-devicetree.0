@@ -1,59 +1,55 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: integrator: convert AMBA devices to device tree
-Date: Thu, 16 Aug 2012 13:56:38 +0000
-Message-ID: <201208161356.38997.arnd@arndb.de>
-References: <1345119373-22774-1-git-send-email-linus.walleij@linaro.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
+Date: Thu, 16 Aug 2012 15:14:19 +0100
+Message-ID: <20120816141418.GL15365@opensource.wolfsonmicro.com>
+References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com>
+ <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345119373-22774-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 August 2012, Linus Walleij wrote:
-> +       fpga {
-> +               compatible = "arm,amba-bus", "simple-bus";
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges;
-> +
-> +               rtc: rtc@15000000 {
-> +                       compatible = "arm,pl031", "arm,primecell";
-> +                       reg = <0x15000000 0x1000>;
-> +                       interrupt-parent = <&pic>;
-> +                       interrupts = <8>;
-> +                       arm,primecell-periphid = <0x00041030>;
-> +               };
-> +
-> +               uart0: uart@16000000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x16000000 0x1000>;
-> +                       interrupt-parent = <&pic>;
-> +                       interrupts = <1>;
-> +                       arm,primecell-periphid = <0x00041010>;
-> +               };
-> +
-> +               uart1: uart@17000000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x17000000 0x1000>;
-> +                       interrupt-parent = <&pic>;
-> +                       interrupts = <2>;
-> +                       arm,primecell-periphid = <0x00041010>;
-> +               };
+On Thu, Aug 16, 2012 at 03:08:55PM +0900, Alexandre Courbot wrote:
 
-When all devices set the same interrupt-parent, you can just as well
-move that property to the fpga node.
+> +		power-off-sequence {
+> +			step0 {
+> +				gpio = "enable";
+> +				disable;
 
-	Arnd
+I'd change the name to "reset" or something in the example - avoids any
+confusion with the action.
+
+> +#ifdef CONFIG_REGULATOR
+> +	case POWER_SEQ_REGULATOR:
+> +		if (pdata->regulator.enable)
+> +			err = regulator_enable(step->resource->regulator);
+> +		else
+> +			err = regulator_disable(step->resource->regulator);
+> +		break;
+
+The regulator and GPIO APIs should stub themselves out adequately to not
+need the ifdefs at least for regulator I'd use the stubs since...
+
+> +	/*
+> +	 * should never happen unless the sequence includes a step which
+> +	 * type does not have support compiled in
+> +	 */
+> +	default:
+> +		return -EINVAL;
+
+...this probably isn't what's meant.  It might also be nice to have
+support for bulk_enable() but that's definitely something that could be
+added later.
+
+> +		err = power_seq_step_run(&seq->steps[cpt]);
+> +		if (err) {
+> +			dev_err(dev, "error %d while running power sequence!\n",
+> +				err);
+> +			return err;
+
+I'd also log at least the step number, it'll make diagnostics easier.
