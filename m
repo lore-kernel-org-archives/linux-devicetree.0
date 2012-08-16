@@ -1,14 +1,14 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: integrator: call common init function from
- machine
-Date: Thu, 16 Aug 2012 13:45:46 +0000
-Message-ID: <201208161345.46346.arnd@arndb.de>
-References: <1345119339-22638-1-git-send-email-linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/6] ARM: plat-versatile: add DT support to FPGA IRQ
+ controller
+Date: Thu, 16 Aug 2012 13:50:48 +0000
+Message-ID: <201208161350.49063.arnd@arndb.de>
+References: <1345119357-22702-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345119339-22638-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1345119357-22702-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,18 +24,15 @@ Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-u
 List-Id: devicetree@vger.kernel.org
 
 On Thursday 16 August 2012, Linus Walleij wrote:
-> There is currently a common integrator_init() function set up
-> to be called from an arch_initcall(). The problem is that it is
-> using machine_is_integrator() which is not working with device
-> tree, let's call this from respective machine initilization
-> function and add a parameter to tell whether it's the
-> Integrator/AP or Integrator/CP instead.
-> 
-> There are still machine_is*() calls in the Integrator
-> machines directory, but this one needs to be fixed lest we
-> don't even get a UART console on the Integrator/AP after a
-> Device Tree boot.
-> 
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> +- irq-start: the u32 hardware IRQ number of the first interrupt handled by
+> +  this FPGA IRQ instance - since there may be many FPGA IRQ controller
+> +  instances, each will have its unique hardware offset number.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+The irq-start value is a Linux specific invention, the hardware doesn't
+know anything about these. As long as you depend on specific IRQ numbers
+to get assigned, I would use something like auxdata to find the
+start number. When all devices get their IRQ numbers from the device
+tree, you can move to linear IRQ domains instead of legacy, and let
+the irq domain code pick the numbers.
+
+	Arnd
