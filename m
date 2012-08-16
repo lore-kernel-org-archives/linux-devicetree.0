@@ -1,82 +1,31 @@
-From: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 05/14] ARM: at91: add pinctrl support
-Date: Thu, 16 Aug 2012 09:15:18 -0600
-Message-ID: <2ABEF8B7-7F9C-4A5F-8303-0196970CA300@bsdimp.com>
-References: <20120810124820.GA20557@game.jcrosoft.org>
- <1344603731-32667-1-git-send-email-plagnioj@jcrosoft.com>
- <1344603731-32667-5-git-send-email-plagnioj@jcrosoft.com>
- <CACRpkdZ2__V06Eo8JH451Sup5Nw2jJXVOH2FOfZBp5nNYpCtbg@mail.gmail.com>
- <20120816121852.GA7439@game.jcrosoft.org>
-Mime-Version: 1.0 (Apple Message framework v1084)
-Content-Type: text/plain; charset="us-ascii"
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 05/10] resource: add PCI configuration space support
+Date: Thu, 16 Aug 2012 09:18:20 -0600
+Message-ID: <502D0F3C.4010308@wwwdotorg.org>
+References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de> <1343332512-28762-6-git-send-email-thierry.reding@avionic-design.de> <CAErSpo4qg45brVRwEbw3=R04VsbnvUowSMWcT+M6VoAxbf3Cqg@mail.gmail.com> <20120814055542.GB16181@avionic-0098.mockup.avionic-design.de> <CAErSpo6LYpkC5wop53S1r1z3ov4+w4soqrQARzbbouVs1trzUg@mail.gmail.com> <20120814180142.GA9430@avionic-0098.mockup.avionic-design.de> <CAErSpo4Efy-Dt67rktzNiYfZfOTSu=pmYtyGd3tR-zZQ3jDGtA@mail.gmail.com> <20120815064902.GB15665@avionic-0098.mockup.avionic-design.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120816121852.GA7439-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120815064902.GB15665-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/15/2012 12:49 AM, Thierry Reding wrote:
+...
+> Stephen: Could you try to find out whether the regular
+> configuration space translation can just be omitted if we already
+> set up the one for the extended configuration space? In
+> tegra_pcie_setup_translations(), BAR 0 is setup for regular
+> configuration space (which requires a 16 MiB region), while BAR 1
+> is setup for the extended configuration space (requiring a full 256
+> MiB region). However, if I understand correctly, each of the
+> registers that can be accessed via the BAR 0 translation can also
+> be accessed via the BAR 1 translation. That seems like we're 
+> wasting the 16 MiB set aside for the BAR 0 mapping.
 
-On Aug 16, 2012, at 6:18 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-
-> On 16:38 Wed 15 Aug     , Linus Walleij wrote:
->>> +static void at91_mux_pio3_set_A_periph(void __iomem *pio, unsigned mask)
->>> +{
->>> +
->>> +       __raw_writel(__raw_readl(pio + PIO_ABCDSR1) & ~mask,
->>> +                                               pio + PIO_ABCDSR1);
->>> +       __raw_writel(__raw_readl(pio + PIO_ABCDSR2) & ~mask,
->>> +                                               pio + PIO_ABCDSR2);
->>> +}
->>> +
->>> +static void at91_mux_pio3_set_B_periph(void __iomem *pio, unsigned mask)
->>> +{
->>> +       __raw_writel(__raw_readl(pio + PIO_ABCDSR1) | mask,
->>> +                                               pio + PIO_ABCDSR1);
->>> +       __raw_writel(__raw_readl(pio + PIO_ABCDSR2) & ~mask,
->>> +                                               pio + PIO_ABCDSR2);
->>> +}
->>> +
->>> +static void at91_mux_set_A_periph(void __iomem *pio, unsigned mask)
->>> +{
->>> +       __raw_writel(mask, pio + PIO_ASR);
->>> +}
->>> +
->>> +static void at91_mux_set_B_periph(void __iomem *pio, unsigned mask)
->>> +{
->>> +       __raw_writel(mask, pio + PIO_BSR);
->>> +}
->>> +
->>> +static void at91_mux_set_C_periph(void __iomem *pio, unsigned mask)
->>> +{
->>> +       __raw_writel(__raw_readl(pio + PIO_ABCDSR1) & ~mask, pio + PIO_ABCDSR1);
->>> +       __raw_writel(__raw_readl(pio + PIO_ABCDSR2) | mask, pio + PIO_ABCDSR2);
->>> +}
->>> +
->>> +static void at91_mux_set_D_periph(void __iomem *pio, unsigned mask)
->>> +{
->>> +       __raw_writel(__raw_readl(pio + PIO_ABCDSR1) | mask, pio + PIO_ABCDSR1);
->>> +       __raw_writel(__raw_readl(pio + PIO_ABCDSR2) | mask, pio + PIO_ABCDSR2);
->>> +}
->> 
->> I have no clue whatsoever what is going on here, A? B? C? D?
->> Some small comment or something giving a hint about this grouping
->> system and how it works would be really nice.
-> periph (mux)
->> 
-
-You should read it in the context that's there.  'A_periph', 'B_periph', etc.  These functions select what device is connected to a given pin.  These are designated A, B, C, or D in the data sheets.  The overloading of PIO names with letters and Peripheral names with letters is mildly confusion in the Atmel datasheets, but is something one quickly gets used to.  Adding a one line comment wouldn't hurt here.  Maybe '/* Select proper peripheral for pin mux. */'
-
-No comments on the rest of the patch, since I've only seen the replies to the original and can't find it any of the archives.  From what was quoted, however, this looks like a giant leap forward.  DT in 3.5 looked to be very limited, and this is one of the last pieces needed to avoid any board specific files in the general case.  I'm glad to see it coming along.
-
-Warner
+I have confirmed that in theory, the EXTCFG space can indeed be used
+to access any register, making the regular config space redundant.
+However, using the HW this way has apparently received less validation.
