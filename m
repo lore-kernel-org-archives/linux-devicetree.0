@@ -1,23 +1,13 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
-Date: Thu, 16 Aug 2012 15:12:10 -0600
-Message-ID: <502D622A.1030104@wwwdotorg.org>
-References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
- <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
- <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
- <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
- <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
- <20120815054436.GK2232@pengutronix.de>
- <20120815065526.GG19681@shlinux2.ap.freescale.net>
- <20120815075117.GL2232@pengutronix.de>
- <20120815092539.GH19681@shlinux2.ap.freescale.net>
- <20120815135947.GC2258@S2101-09.ap.freescale.net>
- <20120816033006.GA11999@shlinux2.ap.freescale.net>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: Device tree node names
+Date: Thu, 16 Aug 2012 11:36:31 -1000
+Message-ID: <502D67DF.7010605@firmworks.com>
+References: <502D4B28.4020108@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120816033006.GA11999-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <502D4B28.4020108-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -28,51 +18,107 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2012 09:30 PM, Dong Aisheng wrote:
-> On Wed, Aug 15, 2012 at 09:59:50PM +0800, Shawn Guo wrote:
-> ...
->>> Another known issue is that via this way, that means the pinctrl subsystem
->>> can only see the using pads, this is a bit not align with the pinctrl
->>> subsystem design. No sure if Linus would like to see it.
->>>
->> I do not quite follow on this.  The "enum imx51_pads" will still be
->> there, so all the pads will still be visible to the pinctrl system.
->>
-> Sorry, i did not describe it accurately.
-> The problem is that those pins are visible to pinctrl subystem, but the pinctrl
-> subsystem can not manage them all.
-> Not sure this meet Linus's original design purpose.
-> Because for the way proposed, all the pin's basic properties like mux_reg, config_reg
-> are parsed from device tree at runtime.
-> If a pin is not used in device tree, the driver can not know this pin's
-> corresponding registers.
-> Thus, for those unused pins, we can not manage it on mux or config in pinctrl
-> subsystem and driver.
+On 8/16/2012 9:34 AM, Stephen Warren wrote:
+> As I understand it, there is a rule when writing device tree files (and
+> bindings) that nodes should be named after the type of object they
+> represent, and not the particular instance of the object. Related, node
+> names should not be interpreted as data.
 > 
-> For example, the pin_config_get/pin_config_set API in
-> include/linux/pinctrl/consumer.h can not work for such pins.
+> This rules makes perfect sense when talking about nodes on a bus that
+> represent devices; something like:
+> 
+>     i2c@7000c000 {
+>         compatible = "nvidia,tegra20-i2c";
+>         reg = <0x7000c000 0x100>;
+>         ...
+>     };
+> 
+>     i2c@7000c400 {
+>         compatible = "nvidia,tegra20-i2c";
+>         reg = <0x7000c400 0x100>;
+>         ...
+>     };
+> 
+> However, when nodes are being used to represent configuration
+> information inside a device node, or even when representing
+> pseudo-devices that don't directly exist on a specific bus, this rules
+> becomes quite annoying.
+> 
+> As an example, consider a device that contains 10 voltage regulators
+> (named "ldon" in the chip documentation), and each needs some
+> configuration provided through DT. A simple binding might result in:
+> 
+>     i2c@7000c000 {
+>         ldo0 {
+>             ... (configuration data here)
+>         };
+>         ldo1 {
+>             ...
+>         };
+>         ...
+>     };
+> 
+> Where regulator "name"'s configuration is encoded into node "name".
+> 
+> Instead, if we follow this rule precisely, we end up with something more
+> like:
+> 
+>     i2c@7000c000 {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+> 
+>         ldo@0 {
+>             reg = <0>;
+>             regulator-id = "ldo0";
+>             ...
+>         };
+>         ldo@1 {
+>             reg = <1>;
+>             regulator-id = "ldo1";
+>             ...
+>         };
+>         ...
+>     };
+> 
+> This is a fair bit more wordy, and the only advantage appears to be that
+> it correctly conforms to some apparently arbitrary rule for node naming.
+> 
+> Similar situations exist when describing the set of power sequences
+> needed to enable/disable a device [1] or pinctrl configurations (see
+> Linux kernel file arch/arm/boot/dts/tegra20-harmony.dts, node
+> /pinmux/pinmux where I haven't actually followed this rule correctly) etc.
+> 
+> So, my question is: Can/should we relax this rule? Can we allow drivers
+> (bindings) to require specific node names for things, lookup up specific
+> configuration data by node name and/or enumerate all nodes, and parse
+> data out of the node names (e.g. the value n for nodes named LDOn in the
+> above example)?
 
-Hmmm. Given we support all pin mux/config options from the mapping
-table, I'd question whether that API should even exist any more...
+As far as I'm concerned, within the privacy of your own node, you can do
+whatever you want.  Perhaps others will disagree...
 
-> Then imx_pinconf_dbg_show in current driver may need change since it does not
-> support show all pins's config value.
+The main "rule" for node names is that a user browsing the device tree
+can easily determine what something is.  Thus "ethernet" instead of
+"DEC,21140".
 
-The pinctrl core assumes that the pin numbering space could be sparse.
-For example, see that pinconf.c:pinconf_pins_show() "continues" the loop
-if pin_desc_get() fails for a particular pin number. So just based on
-what I've read in this one email, I think this is fine.
+As an historical note, in early Open Boot, it was just the other way
+around.  I originally thought that node names should be precise - and
+the ill-considered "device_type" property gave the "generic"
+identification.   But it soon became clear that "precise" names were
+neither human-understandable nor actually precise. Pathnames looked like
+gobbledygook with strings of part numbers that only an expert could
+remember, and the evolution of part numbers, coupled with companies
+going out of business and other companies making compatible parts, made
+"precise" names change semi-randomly.  Thus was born the "generic names"
+rethink, in which the name became human-meaningful (but generally
+meaningless to software in any precise sense), device_type was
+deprecated, and compatible appeared, as a list.
 
-> It looks like not a big issue currently since i did not see any client driver
-> using this API.
-> But i'm not sure if we may have this requirement in the future.
-> For example, is it possible that pinctrl subsystem may support configure pins
-> via sysfs dynamically?
-
-I can't comment on sysfs specifically, but I believe it would be
-generally true that a pin that isn't know to the pinctrl subsystem can't
-be manipulated in any way.
+> 
+> [1]
+> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-August/018433.html
+> 
