@@ -1,120 +1,234 @@
-From: Bill Huang <bilhuang@nvidia.com>
-Subject: [PATCH 2/2] mfd: dt: tps65910: add power off control
-Date: Fri, 17 Aug 2012 02:16:29 -0700
-Message-ID: <1345194989-11614-3-git-send-email-bilhuang@nvidia.com>
-References: <1345194989-11614-1-git-send-email-bilhuang@nvidia.com>
+From: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V3 1/2] drm/exynos: add platform_device_id table and
+ driver data for exynos5 drm fimd
+Date: Fri, 17 Aug 2012 15:07:13 +0530
+Message-ID: <CAL1wa8ceNA8+WQ1X3Gu2TXJvWVtCt8UQ80MGptAKpcfQB-5c4w@mail.gmail.com>
+References: <1345111689-14601-1-git-send-email-l.krishna@samsung.com>
+ <1345111689-14601-2-git-send-email-l.krishna@samsung.com>
+ <CAPLVkLt8QTahTK6GU35-hM6nb27TVxM8Cief2qixntMT6yGECQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1345194989-11614-1-git-send-email-bilhuang@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net
-Cc: broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, thierry.reding@avionic-design.de, swarren@wwwdotorg.org, xxie@nvidia.com, lrg@slimlogic.co.uk, jhovold@gmail.com, kyle.manna@fuel7.com, rklein@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Bill Huang <bilhuang@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPLVkLt8QTahTK6GU35-hM6nb27TVxM8Cief2qixntMT6yGECQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Joonyoung Shim <dofmind-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT property "ti,system-power-controller" telling whether or not this
-pmic is in charge of controlling the system power, so the power off
-routine can be hooked up to system call "pm_power_off".
+Hello,
 
-Based on the work by:
-Dan Willemsen <dwillemsen@nvidia.com>
+On Fri, Aug 17, 2012 at 6:18 AM, Joonyoung Shim <dofmind-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> Hi Leela.
+>
+> 2012/8/16 Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+> > The name of the exynos drm fimd device is renamed to exynos-drm-fimd
+> > and two device ids are created for exynos4-fb and exynos5-drm-fimd.
+> > Also, added driver data for exynos5 to pick the fimd version at runtime
+> > and
+> > to choose the VIDTCON register offsets accordingly.
+> >
+> > Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/exynos/exynos_drm_fimd.c |   56
+> > +++++++++++++++++++++++++++---
+> >  1 files changed, 51 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> > b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> > index 24c0bd4..8379c59 100644
+> > --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> > +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> > @@ -57,6 +57,18 @@
+> >
+> >  #define get_fimd_context(dev)
+> > platform_get_drvdata(to_platform_device(dev))
+> >
+> > +enum fimd_version_type {
+> > +       VERSION_8, /* FIMD_VERSION8 */
+> > +};
+> > +
+> > +struct drm_fimd_driver_data {
+>
+> Don't use drm_ prefix for code consistency.
+>
 
-Signed-off-by: Bill Huang <bilhuang@nvidia.com>
----
- Documentation/devicetree/bindings/mfd/tps65910.txt |    4 +++
- drivers/mfd/tps65910.c                             |   22 ++++++++++++++++++++
- include/linux/mfd/tps65910.h                       |    3 ++
- 3 files changed, 29 insertions(+), 0 deletions(-)
+Ok, I'll remove the drm_prefix
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-index db03599..2e33048 100644
---- a/Documentation/devicetree/bindings/mfd/tps65910.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -59,6 +59,8 @@ Optional properties:
-   in TPS6591X datasheet)
- - ti,en-gpio-sleep: enable sleep control for gpios
-   There should be 9 entries here, one for each gpio.
-+- ti,system-power-controller: Telling whether or not this pmic is controlling
-+  the system power.
- 
- Regulator Optional properties:
- - ti,regulator-ext-sleep-control: enable external sleep
-@@ -79,6 +81,8 @@ Example:
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
- 
-+		ti,system-power-controller;
-+
- 		ti,vmbch-threshold = 0;
- 		ti,vmbch2-threshold = 0;
- 		ti,en-ck32k-xtal;
-diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
-index 1c56379..a7925a9 100644
---- a/drivers/mfd/tps65910.c
-+++ b/drivers/mfd/tps65910.c
-@@ -198,6 +198,8 @@ static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
- 
- 	board_info->irq = client->irq;
- 	board_info->irq_base = -1;
-+	board_info->pm_off = of_property_read_bool(np,
-+			"ti,system-power-controller");
- 
- 	return board_info;
- }
-@@ -210,6 +212,21 @@ struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
- }
- #endif
- 
-+static struct i2c_client *tps65910_i2c_client;
-+static void tps65910_power_off(void)
-+{
-+	struct tps65910 *tps65910;
-+
-+	tps65910 = dev_get_drvdata(&tps65910_i2c_client->dev);
-+
-+	if (tps65910_reg_set_bits(tps65910, TPS65910_DEVCTRL,
-+			DEVCTRL_PWR_OFF_MASK) < 0)
-+		return;
-+
-+	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
-+			DEVCTRL_DEV_ON_MASK);
-+}
-+
- static __devinit int tps65910_i2c_probe(struct i2c_client *i2c,
- 					const struct i2c_device_id *id)
- {
-@@ -267,6 +284,11 @@ static __devinit int tps65910_i2c_probe(struct i2c_client *i2c,
- 	tps65910_ck32k_init(tps65910, pmic_plat_data);
- 	tps65910_sleepinit(tps65910, pmic_plat_data);
- 
-+	tps65910_i2c_client = i2c;
-+
-+	if (pmic_plat_data->pm_off && !pm_power_off)
-+		pm_power_off = tps65910_power_off;
-+
- 	return ret;
- }
- 
-diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
-index 9bf8767..ac772b3 100644
---- a/include/linux/mfd/tps65910.h
-+++ b/include/linux/mfd/tps65910.h
-@@ -366,6 +366,8 @@
- 
- 
- /*Register DEVCTRL  (0x80) register.RegisterDescription */
-+#define DEVCTRL_PWR_OFF_MASK				0x80
-+#define DEVCTRL_PWR_OFF_SHIFT				7
- #define DEVCTRL_RTC_PWDN_MASK				0x40
- #define DEVCTRL_RTC_PWDN_SHIFT				6
- #define DEVCTRL_CK32K_CTRL_MASK				0x20
-@@ -809,6 +811,7 @@ struct tps65910_board {
- 	int vmbch2_threshold;
- 	bool en_ck32k_xtal;
- 	bool en_dev_slp;
-+	bool pm_off;
- 	struct tps65910_sleep_keepon_data *slp_keepon;
- 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
- 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
--- 
-1.7.4.1
+> > +       enum fimd_version_type fimd_ver;
+>
+> I don't prefer to check using version, it needs many if statement.
+> Refer s3c-fb driver and how about use changed base address?
+>
+> struct fimd_driverdata {
+>        unsigned int    timing_base;
+> };
+>
+> static struct fimd_driverdata exynos5_fimd_data = {
+>        .timing_base    = 0x20000,
+> };
+>
+
+Ok, If I use the above structure as driver data for exynos5, then the
+register write calls look this way
+
+writel(val, ctx->regs + driver_data->timing_base + VIDTCON1);
+[driver_data->timing_base = 0x20000 in case of exynos5 and 0 in case
+of exynos4]
+and only one statement is enough for both exynos4 and exynos5.
+
+I had put some effort for the patch set
+http://lists.freedesktop.org/archives/dri-devel/2012-August/026076.html
+that contains macro definitions for FIMD_V8_VIDCONX and is already
+merged to kgene's for-next branch.
+If I go with the approach that you suggested then these macros will not be used.
+
+If other reviewers also accepted to use timing_base as driver data,
+then will go for it other wise will keep the code same :) .
+
+> > +};
+> > +
+> > +struct drm_fimd_driver_data exynos5_drm_fimd_driver_data = {
+> > +       .fimd_ver = VERSION_8,
+> > +};
+> > +
+> >  struct fimd_win_data {
+> >         unsigned int            offset_x;
+> >         unsigned int            offset_y;
+> > @@ -91,6 +103,13 @@ struct fimd_context {
+> >         struct exynos_drm_panel_info *panel;
+> >  };
+> >
+> > +static inline struct drm_fimd_driver_data *drm_fimd_get_driver_data(
+> > +       struct platform_device *pdev)
+> > +{
+> > +       return (struct drm_fimd_driver_data *)
+> > +               platform_get_device_id(pdev)->driver_data;
+> > +}
+> > +
+> >  static bool fimd_display_is_connected(struct device *dev)
+> >  {
+> >         DRM_DEBUG_KMS("%s\n", __FILE__);
+> > @@ -194,32 +213,47 @@ static void fimd_commit(struct device *dev)
+> >         struct fimd_context *ctx = get_fimd_context(dev);
+> >         struct exynos_drm_panel_info *panel = ctx->panel;
+> >         struct fb_videomode *timing = &panel->timing;
+> > +       struct drm_fimd_driver_data *driver_data;
+> > +       struct platform_device *pdev = to_platform_device(dev);
+> >         u32 val;
+> >
+> > +       driver_data = drm_fimd_get_driver_data(pdev);
+> >         if (ctx->suspended)
+> >                 return;
+> >
+> >         DRM_DEBUG_KMS("%s\n", __FILE__);
+> >
+> >         /* setup polarity values from machine code. */
+> > -       writel(ctx->vidcon1, ctx->regs + VIDCON1);
+> > +       if (driver_data->fimd_ver == VERSION_8)
+> > +               writel(ctx->vidcon1, ctx->regs + FIMD_V8_VIDCON1);
+> > +       else
+> > +               writel(ctx->vidcon1, ctx->regs + VIDCON1);
+> >
+> >         /* setup vertical timing values. */
+> >         val = VIDTCON0_VBPD(timing->upper_margin - 1) |
+> >                VIDTCON0_VFPD(timing->lower_margin - 1) |
+> >                VIDTCON0_VSPW(timing->vsync_len - 1);
+> > -       writel(val, ctx->regs + VIDTCON0);
+> > +       if (driver_data->fimd_ver == VERSION_8)
+> > +               writel(val, ctx->regs + FIMD_V8_VIDTCON0);
+> > +       else
+> > +               writel(val, ctx->regs + VIDTCON0);
+> >
+> >         /* setup horizontal timing values.  */
+> >         val = VIDTCON1_HBPD(timing->left_margin - 1) |
+> >                VIDTCON1_HFPD(timing->right_margin - 1) |
+> >                VIDTCON1_HSPW(timing->hsync_len - 1);
+> > -       writel(val, ctx->regs + VIDTCON1);
+> > +       if (driver_data->fimd_ver == VERSION_8)
+> > +               writel(val, ctx->regs + FIMD_V8_VIDTCON1);
+> > +       else
+> > +               writel(val, ctx->regs + VIDTCON1);
+> >
+> >         /* setup horizontal and vertical display size. */
+> >         val = VIDTCON2_LINEVAL(timing->yres - 1) |
+> >                VIDTCON2_HOZVAL(timing->xres - 1);
+> > -       writel(val, ctx->regs + VIDTCON2);
+> > +       if (driver_data->fimd_ver == VERSION_8)
+> > +               writel(val, ctx->regs + FIMD_V8_VIDTCON2);
+> > +       else
+> > +               writel(val, ctx->regs + VIDTCON2);
+> >
+> >         /* setup clock source, clock divider, enable dma. */
+> >         val = ctx->vidcon0;
+> > @@ -982,6 +1016,17 @@ static int fimd_runtime_resume(struct device *dev)
+> >  }
+> >  #endif
+> >
+> > +static struct platform_device_id exynos_drm_fimd_driver_ids[] = {
+>
+> Just use "fimd_driver_ids".
+>
+
+Ok, will take care of it.
+
+> > +       {
+> > +               .name           = "exynos4-fb",
+> > +       }, {
+> > +               .name           = "exynos5-drm-fimd",
+>
+> I think this name should be "exynos5-fb" because exynos5 fb driver and
+> clock-exynos5 also use "exynos5-fb".
+>
+
+Ok, will change it.
+Thanks for reviewing the patches.
+
+> > +               .driver_data    = (unsigned
+> > long)&exynos5_drm_fimd_driver_data,
+> > +       },
+> > +       {},
+> > +};
+> > +MODULE_DEVICE_TABLE(platform, exynos_drm_fimd_driver_ids);
+> > +
+> >  static const struct dev_pm_ops fimd_pm_ops = {
+> >         SET_SYSTEM_SLEEP_PM_OPS(fimd_suspend, fimd_resume)
+> >         SET_RUNTIME_PM_OPS(fimd_runtime_suspend, fimd_runtime_resume,
+> > NULL)
+> > @@ -990,8 +1035,9 @@ static const struct dev_pm_ops fimd_pm_ops = {
+> >  struct platform_driver fimd_driver = {
+> >         .probe          = fimd_probe,
+> >         .remove         = __devexit_p(fimd_remove),
+> > +       .id_table       = exynos_drm_fimd_driver_ids,
+> >         .driver         = {
+> > -               .name   = "exynos4-fb",
+> > +               .name   = "exynos-drm-fimd",
+> >                 .owner  = THIS_MODULE,
+> >                 .pm     = &fimd_pm_ops,
+> >         },
+> > --
+> > 1.7.0.4
+> >
+> > _______________________________________________
+> > devicetree-discuss mailing list
+> > devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+> Thanks.
+>
+> --
+> - Joonyoung Shim
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
