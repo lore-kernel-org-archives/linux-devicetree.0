@@ -1,84 +1,65 @@
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 1/2] mfd: dt: tps6586x: Add power off control
-Date: Fri, 17 Aug 2012 12:41:50 +0200
-Message-ID: <20120817104150.GA27633@avionic-0098.mockup.avionic-design.de>
+Subject: Re: [PATCH 2/2] mfd: dt: tps65910: add power off control
+Date: Fri, 17 Aug 2012 12:42:39 +0200
+Message-ID: <20120817104239.GB27633@avionic-0098.mockup.avionic-design.de>
 References: <1345194989-11614-1-git-send-email-bilhuang@nvidia.com>
- <1345194989-11614-2-git-send-email-bilhuang@nvidia.com>
+ <1345194989-11614-3-git-send-email-bilhuang@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+	protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1345194989-11614-2-git-send-email-bilhuang@nvidia.com>
+In-Reply-To: <1345194989-11614-3-git-send-email-bilhuang@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Bill Huang <bilhuang@nvidia.com>
 Cc: sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, swarren@wwwdotorg.org, xxie@nvidia.com, lrg@slimlogic.co.uk, jhovold@gmail.com, kyle.manna@fuel7.com, rklein@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---HcAYCG3uE/tztfnV
+--98e8jtXdkpgskNou
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 17, 2012 at 02:16:28AM -0700, Bill Huang wrote:
-[...]
-> diff --git a/drivers/mfd/tps6586x.c b/drivers/mfd/tps6586x.c
-[...]
-> @@ -505,6 +519,11 @@ static int __devinit tps6586x_i2c_probe(struct i2c_c=
-lient *client,
->  		goto err_add_devs;
->  	}
-> =20
-> +	tps6586x_dev =3D &client->dev;
-> +
-> +	if (pdata->pm_off && !pm_power_off)
-> +		pm_power_off =3D tps6586x_power_off;
-> +
+On Fri, Aug 17, 2012 at 02:16:29AM -0700, Bill Huang wrote:
+> Add DT property "ti,system-power-controller" telling whether or not this
+> pmic is in charge of controlling the system power, so the power off
+> routine can be hooked up to system call "pm_power_off".
+>=20
+> Based on the work by:
+> Dan Willemsen <dwillemsen@nvidia.com>
+>=20
+> Signed-off-by: Bill Huang <bilhuang@nvidia.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/tps65910.txt |    4 +++
+>  drivers/mfd/tps65910.c                             |   22 ++++++++++++++=
+++++++
+>  include/linux/mfd/tps65910.h                       |    3 ++
+>  3 files changed, 29 insertions(+), 0 deletions(-)
 
-I think the assignment of tps6586x_dev needs to go inside the if block
-as well. Otherwise it might be overwritten by another instance for
-systems that actually have more than one tps6586x. Since currently the
-driver can't be built as a module it probably makes little sense to
-clean this up in .remove(), but it might still be worth adding so it
-isn't forgotten if and when somebody tries to convert the driver to a
-module.
-
-I should note that I don't like very much how the pm_power_off works.
-Maybe this should really be changed to allow passing a context for the
-function to work from. Something like:
-
-	pm_power_off =3D tps6586x_power_off;
-	pm_power_off_data =3D &client->dev;
-
-Where pm_power_off() would receive pm_power_off_data as an argument.
-
-Even that's not very pretty. On the other hand this doesn't really buy
-us much because only the storage location of the variable would change
-and nothing else. But it would still make the association of the data
-clearer.
+The same comments as for the tps6586x driver apply here as well.
 
 Thierry
 
---HcAYCG3uE/tztfnV
+--98e8jtXdkpgskNou
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQLh/uAAoJEN0jrNd/PrOhXtEP/Ayc6DAD3u5m6S7qGmcWBjOG
-aMsVYHcuZiFBst3U2BzwuL1ifJdAcnASgUBlKlIhLA6F4F9bWMARBYweLYoKCWt3
-v+Fk11YbKfEiB/SWTOdVtSvZmyK2Rb0kSa0GsWYN8Vh5/lX6hJw/1jzPsBP4Ygt/
-rWtzwjrae/pqNb0PTlpCd07PVc45atha6Rtr/k+sUX9lBpO02wijNOvVVN3+jDmo
-wfgd1fTogCVmg96cI4opKBbO8qfcGZdUw1gTpRYtwN2FzK0YE3waV71Z1VBfOj5C
-O0/RbZWAa0GB6ThBMxPGTPjMlwys54VXNsnUHVWJbuOTliO9Qt4EwoOuOINMMMT3
-r5Du6AQFxoZvlb9E1kdjAIts5MU/3b3BFhdiVmvMYeidLZOl/ZtpqE8CbZJhj6R3
-qOGcBPq5UmabJxmy1eTbj5sJz+2BAVuyN3c8WlkEU+BeqXoB3bo/CgeQ3RtvGSVm
-+73wLcPlO15jRDaVWjWJTTE7LQfpydq2WE8ZyZ1GY5hHm++3Q5eSTTQiEvjuUkvL
-cxelDXGcSGwT7F528mpCGCeNZH8NMS6nqctML7vQThCOLQlzRGJN9HMnh60JlLli
-8+ui2Z73VaE9JF1tHUHVFSVXGpIYuOKVfb3nWF2n24Xs2jIh10zOZWG+9h6FapyK
-5KvAXBn1EdsxmfoljKHc
-=GqzC
+iQIcBAEBAgAGBQJQLiAfAAoJEN0jrNd/PrOhSxUP/27inzoTXZrLGBCY4IbIpCvm
+4uSytMuF2jTg4tjfdyL8oQiZrOmn+tL2P4NmfWtPdPsitCKNN8WfifaWwDKgfRNf
+uYsXqqkTJj3taGf0XUckEjRqFNN4vsEw9/xJPAifFaPe64csr+RjbG2Pv/+p/X5A
+Tq51vakF8ResilT6uLXS+SvRdl1cmkmWYWGwgrrXdkE5DzPMd6LbEvEMMxziVJQS
+r8Q4RtUjjXTX0nwKGobihid2QMwzPTpv7C0zzwQoLkcR0OGSwuatGsc13uLNePyc
+tY+UHiJhv34vu15GU5VpIisy5mFxLGtLzzo5pgdp4E8AfeUgHbIqOHo2OYajgjok
+G4qA2oLtY7w2Xhn5X3L9GImHKhdbq9JgWvvg567aRnOP070d+WrAcXtWDBwjY0ZC
+CGX3l9+KxncJqMvv8I2aqkXj/2mmq4iSoIaCWsDdCxGAt/A++WDJHFQOkvO3O1ON
+YZBD4HnBhiInZcGhxe6tukS8A2wcK9iWemNYaTi4xk4oAR3iSKO9BFSq9F6sXapl
+lftQ1LtK8fPFWoH63vAEkHEGri2V9qtmOFDtf5cOdIdkHsALmq+BscKXMPISanC1
+I6Vux1gS/Exl810JijzvNuuzUa9QsEK8NbTlDzRfGSb0q9ISfmJ/Rj41N6bcRkIe
+UNxl4DRwV3V9/aL2XeaY
+=J3+f
 -----END PGP SIGNATURE-----
 
---HcAYCG3uE/tztfnV--
+--98e8jtXdkpgskNou--
