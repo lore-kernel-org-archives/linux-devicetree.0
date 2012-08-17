@@ -1,53 +1,40 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 2/9] ARM: OMAP: mcbsp: Enable FIFO use
-	for OMAP2430
-Date: Fri, 17 Aug 2012 17:03:23 +0300
-Message-ID: <502E4F2B.6060403@ti.com>
-References: <1345124468-8876-1-git-send-email-peter.ujfalusi@ti.com>
- <1345124468-8876-3-git-send-email-peter.ujfalusi@ti.com>
- <20120817130723.GZ11011@atomide.com> <502E43BC.30708@bitmer.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [RFC:PATCH dtc-1.3.0] dtc: Add --strip-disabled option to dtc.
+Date: Fri, 17 Aug 2012 15:19:31 +0100
+Message-ID: <502E52F3.7090404@st.com>
+References: <1345034325-26656-1-git-send-email-srinivas.kandagatla@st.com>
+ <20120817060415.GC29724@truffula.fritz.box> <502E3632.70208@freescale.com>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <502E43BC.30708@bitmer.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jarkko Nikula <jarkko.nikula@bitmer.com>
-Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <502E3632.70208-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "mmarek-AlSwsSmVLrQ@public.gmane.org" <mmarek-AlSwsSmVLrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/17/2012 04:14 PM, Jarkko Nikula wrote:
-> On 08/17/2012 04:07 PM, Tony Lindgren wrote:
->> * Peter Ujfalusi <peter.ujfalusi@ti.com> [120816 06:41]:
->>> On OMAP2430 all McBSP ports have 128 word long buffer, enable the use of
->>> the FIFO for the audio stack.
->> Is this the case also for 2420? I thought some only had a FIFO at
->> one port?
->>
-> IRCC (I don't have specs), nope. Only 2430 (as noted by Peter) and
-> onwards have FIFO.
-> =
+On 17/08/12 13:16, Tabi Timur-B04825 wrote:
+> David Gibson wrote:
+>> The name still isn't quite right - it doesn't just strip disabled
+>> nodes but anything that isn't "okay", OF defines "failed" at least as
+>> another possibility for the status property.
+> I would say that staus=failed in a DTS is an error.  It doesn't make any 
+> sense.  How can you know before you boot the board whether a device has 
+> failed?
 
-> But that's true that FIFO sizes differ between the ports. E.g. only
-> ports 2 and 3 have 1024+128 deep FIFOs in OMAP3.
-> =
+If you know in advance that device on that SOC is broken, then I guess
+"Fail"/"Failed" can be used in status property.
 
-
-OMAP2420 McBSP does not have FIFO (the IP is closer to OMAP1 McBSP).
-OMAP2430, OMAP4, OMAP5 has 128 word long FIFO on all McBSP ports.
-On OMAP3: McBSP2 have 1024+256 (1280) word FIFO the rest of the ports have =
-128
-long FIFO.
-
-
--- =
-
-P=E9ter
+One user of this flag in kernel device trees is
+./arch/powerpc/boot/dts/mpc8313erdb.dts
