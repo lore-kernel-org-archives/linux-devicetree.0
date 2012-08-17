@@ -1,226 +1,348 @@
-From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC:PATCH dtc-1.3.0] dtc: Add --strip-disabled option to dtc.
-Date: Fri, 17 Aug 2012 16:04:15 +1000
-Message-ID: <20120817060415.GC29724@truffula.fritz.box>
-References: <1345034325-26656-1-git-send-email-srinivas.kandagatla@st.com>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: Re: [PATCH] mmc: sdhci-s3c: Add device tree support
+Date: Fri, 17 Aug 2012 12:00:58 +0530
+Message-ID: <502DE522.8010505@linaro.org>
+References: <CAJuYYwQjN9UtXcfjNXf1Ezw3igfUSQDNEP8X038L4=br6EROUA@mail.gmail.com> <1345134914-21635-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1345034325-26656-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, mmarek-AlSwsSmVLrQ@public.gmane.org, B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1345134914-21635-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2012 at 01:38:45PM +0100, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+On 08/16/2012 10:05 PM, Thomas Abraham wrote:
+> Add device tree based discovery support for Samsung's sdhci controller
 > 
-> This patch allows dtc to strip out nodes in its output based on status
-> property. Now the dtc has additional long option --strip-disabled to
-> strip all the nodes which have status property set to disabled.
-> 
-> SOCs have lot of device tree infrastructure files which mark the
-> device nodes as disabled and the board level device tree enables them if
-> required. However while creating device tree blob, the compiler can
-> exclude nodes marked as disabled, doing this way will reduce the size
-> of device tree blob.
-> 
-> However care has to be taken if your boardloader is is updating status
-> property.
-> 
-> In our case this has reduced the blob size from 29K to 15K.
-> 
-> Also nodes with status="disabled" is are never probed by dt platform bus
-> code.
-> 
-> Again, this is an optional parameter to dtc, Can be used by people who
-> want to strip all the device nodes which are marked as disabled.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> Cc: Ben Dooks <ben-linux@fluff.org>
+> Cc: Kukjin Kim <kgene.kim@samsung.com>
+> Cc: Chris Ball <cjb@laptop.org>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 > ---
-> Hi Jon, 
+> Changes since v3:
 > 
-> I have noticed that the dtb blob also contains device nodes with property status = "disabled", 
-> But these device nodes are not used by device tree platform bus probe code or any of the kernel code.
+> The patch series that adds device tree support for Samsung sdhci controller
+> had six patches in total, of which, the first five patches have been accepted.
+> The sixth patch in the series was dropped since it was using custom Samsung
+> properties for descrbing the bus-width and card-detect gpio, but had otherwise
+> addressed all the comments.
 > 
-> If there is no active code which actually modifies status property at runtime, it makes sense to remove 
-> those nodes from the dtb to reduce the overall size of dtb.
+> This patch reworks the sixth patch in v3 of the sdhci device tree support
+> patch series. The only change in this patch from the v3 version is the use of
+> generic mmc bindings for descrbing the bus-width and card-detect gpio.
 > 
-> The size change will be significant once the SOC adds all the possible devices in to the device trees.
-> As there could be 100s of Ips on SOCs but the board actually uses may be 20-25 IP's.
+>  .../devicetree/bindings/mmc/samsung-sdhci.txt      |   51 +++++++
+>  drivers/mmc/host/sdhci-s3c.c                       |  146 +++++++++++++++++++-
+>  2 files changed, 191 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/samsung-sdhci.txt
 > 
-> My patch adds option --strip-disabled option to dtc to strip such nodes, resulting in only nodes which 
-> are supposed to be instantiated.
-> 
-> This patch is generated on top of git://git.jdl.com/software/dtc.git.
-> 
-> previous discussion on this patch is at:http://comments.gmane.org/gmane.linux.kbuild.devel/8527
-> 
-> Comments?
-> 
-> Thanks,
-> srini
-> 
->  dtc.c        |   14 ++++++++++++--
->  dtc.h        |    4 ++++
->  flattree.c   |    3 +++
->  livetree.c   |   17 +++++++++++++++++
->  treesource.c |    3 +++
->  5 files changed, 39 insertions(+), 2 deletions(-)
-> 
-> diff --git a/dtc.c b/dtc.c
-> index a375683..b303cab 100644
-> --- a/dtc.c
-> +++ b/dtc.c
-> @@ -30,6 +30,7 @@ int quiet;		/* Level of quietness */
->  int reservenum;		/* Number of memory reservation slots */
->  int minsize;		/* Minimum blob size */
->  int padsize;		/* Additional padding to blob */
-> +int strip_disabled;	/* strip disabled nodes in output */
->  int phandle_format = PHANDLE_BOTH;	/* Use linux,phandle or phandle properties */
->  
->  static void fill_fullpaths(struct node *tree, const char *prefix)
-> @@ -96,6 +97,8 @@ static void  __attribute__ ((noreturn)) usage(void)
->  	fprintf(stderr, "\t-W [no-]<checkname>\n");
->  	fprintf(stderr, "\t-E [no-]<checkname>\n");
->  	fprintf(stderr, "\t\t\tenable or disable warnings and errors\n");
-> +	fprintf(stderr, "\t--strip-disabled\n");
-> +	fprintf(stderr, "\t\tStrip nodes with status property as disabled\n");
->  	exit(3);
->  }
->  
-> @@ -112,15 +115,22 @@ int main(int argc, char *argv[])
->  	FILE *outf = NULL;
->  	int outversion = DEFAULT_FDT_VERSION;
->  	long long cmdline_boot_cpuid = -1;
-> +	struct option loptions[] =	{
-> +		{"strip-disabled", no_argument, &strip_disabled, 1},
+> diff --git a/Documentation/devicetree/bindings/mmc/samsung-sdhci.txt b/Documentation/devicetree/bindings/mmc/samsung-sdhci.txt
+> new file mode 100644
+> index 0000000..398540b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/samsung-sdhci.txt
+> @@ -0,0 +1,51 @@
+> +* Samsung's SDHCI Controller device tree bindings
+> +
+> +Samsung's SDHCI controller is used as a connectivity interface with external
+> +MMC, SD and eMMC storage mediums. This file documents differences between the
+> +core mmc properties described by mmc.txt and the properties used by the
+> +Samsung implmentation of the SDHCI controller.
+> +
+> +Required SoC Specific Properties:
+> +- compatible: should be one of the following
+> +  - "samsung,s3c6410-sdhci": For controllers compatible with s3c6410 sdhci
+> +    controller.
+> +  - "samsung,exynos4210-sdhci": For controllers compatible with Exynos4 sdhci
+> +    controller.
+> +
+> +Required Board Specific Properties:
+> +- gpios: Should specify the gpios used for clock, command and data lines. The
+> +  gpio specifier format depends on the gpio controller.
+> +
+> +Optional Board Specific Properties:
+> +- One of the following properties for card detect type.
+> +  - samsung,sdhci-cd-internal: Card detect line from the card slot  is
+> +    connected to the card detect pad of the sdhci controller. A gpio is
+> +    used for this connection (with possible pin function settings).
+> +  - samsung,sdhci-cd-gpio: A gpio line (with possible pin function settings)
+> +    is used a card detect line. This gpio line is not connected to card detect
+> +    pad of the sdhci controller.
+> +  - samsung,sdhci-cd-none: There is no card detect line. Polling is used to
+> +    detect the presence of the card. (DEFAULT, if no card detect property
+> +    is specified).
+> +  - samsung,sdhci-cd-permanent: There is no card detect line. The card is
+> +    permanently connected to the sdhci controller.
+> +
+> +Example:
+> +	sdhci@12530000 {
+> +		compatible = "samsung,exynos4210-sdhci";
+> +		reg = <0x12530000 0x100>;
+> +		interrupts = <<0 75 0>;
+
+Typo: interrupts = <0 75 0>;
+
+> +		bus-width = <4>;
+> +		samsung,sdhci-cd-internal;
+> +		cd-gpios = <&gpk2 2 2 3 3>;
+> +		gpios = <&gpk2 0 2 0 3>,  /* clock line */
+> +			<&gpk2 1 2 0 3>,  /* command line */
+> +			<&gpk2 3 2 3 3>,  /* data line 0 */
+> +			<&gpk2 4 2 3 3>,  /* data line 1 */
+> +			<&gpk2 5 2 3 3>,  /* data line 2 */
+> +			<&gpk2 6 2 3 3>;  /* data line 3 */
 > +	};
->  
->  	quiet      = 0;
->  	reservenum = 0;
->  	minsize    = 0;
->  	padsize    = 0;
-> +	strip_disabled = 0;
->  
-> -	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:"))
-> -			!= EOF) {
-> +	while ((opt = getopt_long(argc, argv,
-> +				"hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:",
-> +				loptions, NULL)) != EOF) {
->  		switch (opt) {
-> +		case 0: /* Long option set */
-> +			break;
->  		case 'I':
->  			inform = optarg;
->  			break;
-> diff --git a/dtc.h b/dtc.h
-> index 7ee2d54..67cdadc 100644
-> --- a/dtc.h
-> +++ b/dtc.h
-> @@ -31,6 +31,7 @@
->  #include <ctype.h>
->  #include <errno.h>
->  #include <unistd.h>
-> +#include <getopt.h>
->  
->  #include <libfdt_env.h>
->  #include <fdt.h>
-> @@ -53,6 +54,7 @@ extern int quiet;		/* Level of quietness */
->  extern int reservenum;		/* Number of memory reservation slots */
->  extern int minsize;		/* Minimum blob size */
->  extern int padsize;		/* Additional padding to blob */
-> +extern int strip_disabled;	/* strip disabled nodes in output */
->  extern int phandle_format;	/* Use linux,phandle or phandle properties */
->  
->  #define PHANDLE_LEGACY	0x1
-> @@ -224,6 +226,8 @@ struct boot_info *build_boot_info(struct reserve_info *reservelist,
->  				  struct node *tree, uint32_t boot_cpuid_phys);
->  void sort_tree(struct boot_info *bi);
->  
-> +int is_device_node_avaiable(struct node *node);
 > +
->  /* Checks */
+> +	Note: This example shows both SoC specific and board specific properties
+> +	in a single device node. The properties can be actually be seperated
+> +	into SoC specific node and board specific node.
+> diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
+> index a50c205..7fcc642 100644
+> --- a/drivers/mmc/host/sdhci-s3c.c
+> +++ b/drivers/mmc/host/sdhci-s3c.c
+> @@ -34,6 +34,9 @@
 >  
->  void parse_checks_option(bool warn, bool error, const char *optarg);
-> diff --git a/flattree.c b/flattree.c
-> index 28d0b23..7d4e13b 100644
-> --- a/flattree.c
-> +++ b/flattree.c
-> @@ -304,6 +304,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
->  	}
+>  #define MAX_BUS_CLK	(4)
 >  
->  	for_each_child(tree, child) {
-> +		if (strip_disabled && !is_device_node_avaiable(child))
-> +			continue;
+> +/* Number of gpio's used is max data bus width + command and clock lines */
+> +#define NUM_GPIOS(x)	(x + 2)
 > +
-
-Hrm, it's not a lot of code, but I don't like that the strip logic is
-duplicated between the flat tree and treesource backends.  What I'd
-prefer to see here is just if (node_is_stripped(...)) with the
-node_is_stripped() function taking into account the option values and
-whatever other information.
-
->  		flatten_tree(child, emit, etarget, strbuf, vi);
->  	}
+>  /**
+>   * struct sdhci_s3c - S3C SDHCI instance
+>   * @host: The SDHCI host created
+> @@ -41,6 +44,7 @@
+>   * @ioarea: The resource created when we claimed the IO area.
+>   * @pdata: The platform data for this controller.
+>   * @cur_clk: The index of the current bus clock.
+> + * @gpios: List of gpio numbers parsed from device tree.
+>   * @clk_io: The clock for the internal bus interface.
+>   * @clk_bus: The clocks that are available for the SD/MMC bus clock.
+>   */
+> @@ -52,6 +56,7 @@ struct sdhci_s3c {
+>  	unsigned int		cur_clk;
+>  	int			ext_cd_irq;
+>  	int			ext_cd_gpio;
+> +	int			*gpios;
 >  
-> diff --git a/livetree.c b/livetree.c
-> index c9209d5..7155926 100644
-> --- a/livetree.c
-> +++ b/livetree.c
-> @@ -607,3 +607,20 @@ void sort_tree(struct boot_info *bi)
->  	sort_reserve_entries(bi);
->  	sort_node(bi->dt);
+>  	struct clk		*clk_io;
+>  	struct clk		*clk_bus[MAX_BUS_CLK];
+> @@ -419,9 +424,109 @@ static void sdhci_s3c_setup_card_detect_gpio(struct sdhci_s3c *sc)
+>  	}
 >  }
-> +
-> +int is_device_node_avaiable(struct node *node)
+>  
+> +#ifdef CONFIG_OF
+> +static int __devinit sdhci_s3c_parse_dt(struct device *dev,
+> +		struct sdhci_host *host, struct s3c_sdhci_platdata *pdata)
 > +{
-> +	struct property *status;
+> +	struct device_node *node = dev->of_node;
+> +	struct sdhci_s3c *ourhost = to_s3c(host);
+> +	u32 max_width;
+> +	int gpio, cnt, ret;
 > +
-> +	status = get_property(node, "status");
-> +	if (status == NULL)
-> +		return 1;
+> +	/* if the bus-width property is not specified, assume width as 1 */
+> +	if (of_property_read_u32(node, "bus-width", &max_width))
+> +		max_width = 1;
+> +	pdata->max_width = max_width;
 > +
-> +	if (status->val.len > 0) {
-> +		if (!strcmp(status->val.val, "okay") ||
-> +			 !strcmp(status->val.val, "ok"))
-> +			return 1;
+> +	ourhost->gpios = devm_kzalloc(dev, NUM_GPIOS(pdata->max_width) *
+> +				sizeof(int), GFP_KERNEL);
+> +	if (!ourhost->gpios)
+> +		return -ENOMEM;
+> +
+> +	/* get the card detection method */
+> +	if (of_get_property(node, "samsung,sdhci-cd-internal", NULL))
+> +		pdata->cd_type = S3C_SDHCI_CD_INTERNAL;
+> +	else if (of_get_property(node, "samsung,sdhci-cd-gpio", NULL))
+> +		pdata->cd_type = S3C_SDHCI_CD_GPIO;
+> +	else if (of_get_property(node, "samsung,sdhci-cd-none", NULL))
+> +		pdata->cd_type = S3C_SDHCI_CD_NONE;
+> +	else if (of_get_property(node, "samsung,sdhci-cd-permanent", NULL))
+> +		pdata->cd_type = S3C_SDHCI_CD_PERMANENT;
+> +	else
+> +		pdata->cd_type = S3C_SDHCI_CD_NONE;
+> +
+> +	/* get the gpio used for card detection */
+> +	if (pdata->cd_type == S3C_SDHCI_CD_GPIO ||
+> +			pdata->cd_type == S3C_SDHCI_CD_INTERNAL) {
+> +		gpio = of_get_named_gpio(node, "cd-gpios", 0);
+> +		if (!gpio_is_valid(gpio)) {
+> +			dev_err(dev, "invalid card detect gpio specified\n");
+> +			return -EINVAL;
+> +		}
 > +	}
-
-The name still isn't quite right - it doesn't just strip disabled
-nodes but anything that isn't "okay", OF defines "failed" at least as
-another possibility for the status property.
-
-> +	return 0;
-> +}
-> diff --git a/treesource.c b/treesource.c
-> index 33eeba5..2f1ac1a 100644
-> --- a/treesource.c
-> +++ b/treesource.c
-> @@ -255,6 +255,9 @@ static void write_tree_source_node(FILE *f, struct node *tree, int level)
->  		write_propval(f, prop);
->  	}
->  	for_each_child(tree, child) {
-> +		if (strip_disabled && !is_device_node_avaiable(child))
-> +			continue;
 > +
->  		fprintf(f, "\n");
->  		write_tree_source_node(f, child, level+1);
+> +	if (pdata->cd_type == S3C_SDHCI_CD_GPIO) {
+> +		pdata->ext_cd_gpio = gpio;
+> +		ourhost->ext_cd_gpio = -1;
+> +		if (of_get_property(node, "cd-inverted", NULL))
+> +			pdata->ext_cd_gpio_invert = 1;
+> +	} else if (pdata->cd_type == S3C_SDHCI_CD_INTERNAL) {
+> +		ret = gpio_request(gpio, "sdhci-cd");
+> +		if (ret) {
+> +			dev_err(dev, "card detect gpio request failed\n");
+> +			return -EINVAL;
+> +		}
+> +		ourhost->ext_cd_gpio = gpio;
+> +	}
+> +
+> +	/* get the gpios for command, clock and data lines */
+> +	for (cnt = 0; cnt < NUM_GPIOS(pdata->max_width); cnt++) {
+> +		gpio = of_get_gpio(node, cnt);
+> +		if (!gpio_is_valid(gpio)) {
+> +			dev_err(dev, "invalid gpio[%d]\n", cnt);
+> +			goto err_free_dt_cd_gpio;
+> +		}
+> +		ourhost->gpios[cnt] = gpio;
+> +	}
+> +
+> +	for (cnt = 0; cnt < NUM_GPIOS(pdata->max_width); cnt++) {
+> +		ret = gpio_request(ourhost->gpios[cnt], "sdhci-gpio");
+> +		if (ret) {
+> +			dev_err(dev, "gpio[%d] request failed\n", cnt);
+> +			goto err_free_dt_gpios;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> + err_free_dt_gpios:
+> +	while (--cnt >= 0)
+> +		gpio_free(ourhost->gpios[cnt]);
+> + err_free_dt_cd_gpio:
+> +	if (pdata->cd_type == S3C_SDHCI_CD_INTERNAL)
+> +		gpio_free(ourhost->ext_cd_gpio);
+> +	return -EINVAL;
+> +}
+> +#else
+> +static int __devinit sdhci_s3c_parse_dt(struct device *dev,
+> +		struct sdhci_host *host, struct s3c_sdhci_platdata *pdata)
+> +{
+> +	return -EINVAL;
+> +}
+> +#endif
+> +
+> +static const struct of_device_id sdhci_s3c_dt_match[];
+> +
+>  static inline struct sdhci_s3c_drv_data *sdhci_s3c_get_driver_data(
+>  			struct platform_device *pdev)
+>  {
+> +#ifdef CONFIG_OF
+> +	if (pdev->dev.of_node) {
+> +		const struct of_device_id *match;
+> +		match = of_match_node(sdhci_s3c_dt_match, pdev->dev.of_node);
+> +		return (struct sdhci_s3c_drv_data *)match->data;
+> +	}
+> +#endif
+>  	return (struct sdhci_s3c_drv_data *)
+>  			platform_get_device_id(pdev)->driver_data;
+>  }
+> @@ -436,7 +541,7 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
+>  	struct resource *res;
+>  	int ret, irq, ptr, clks;
+>  
+> -	if (!pdev->dev.platform_data) {
+> +	if (!pdev->dev.platform_data && !pdev->dev.of_node) {
+>  		dev_err(dev, "no device data specified\n");
+>  		return -ENOENT;
 >  	}
+> @@ -452,21 +557,28 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
+>  		dev_err(dev, "sdhci_alloc_host() failed\n");
+>  		return PTR_ERR(host);
+>  	}
+> +	sc = sdhci_priv(host);
+>  
+>  	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>  	if (!pdata) {
+>  		ret = -ENOMEM;
+> -		goto err_io_clk;
+> +		goto err_pdata;
+> +	}
+> +
+> +	if (pdev->dev.of_node) {
+> +		ret = sdhci_s3c_parse_dt(&pdev->dev, host, pdata);
+> +		if (ret)
+> +			goto err_pdata;
+> +	} else {
+> +		memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
+> +		sc->ext_cd_gpio = -1; /* invalid gpio number */
+>  	}
+> -	memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
+>  
+>  	drv_data = sdhci_s3c_get_driver_data(pdev);
+> -	sc = sdhci_priv(host);
+>  
+>  	sc->host = host;
+>  	sc->pdev = pdev;
+>  	sc->pdata = pdata;
+> -	sc->ext_cd_gpio = -1; /* invalid gpio number */
+>  
+>  	platform_set_drvdata(pdev, host);
+>  
+> @@ -631,6 +743,12 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
+>  	clk_put(sc->clk_io);
+>  
+>   err_io_clk:
+> +	for (ptr = 0; ptr < NUM_GPIOS(sc->pdata->max_width); ptr++)
+> +		gpio_free(sc->gpios[ptr]);
+> +	if (pdata->cd_type == S3C_SDHCI_CD_INTERNAL)
+> +		gpio_free(sc->ext_cd_gpio);
+> +
+> + err_pdata:
+>  	sdhci_free_host(host);
+>  
+>  	return ret;
+> @@ -638,9 +756,9 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
+>  
+>  static int __devexit sdhci_s3c_remove(struct platform_device *pdev)
+>  {
+> -	struct s3c_sdhci_platdata *pdata = pdev->dev.platform_data;
+>  	struct sdhci_host *host =  platform_get_drvdata(pdev);
+>  	struct sdhci_s3c *sc = sdhci_priv(host);
+> +	struct s3c_sdhci_platdata *pdata = sc->pdata;
+>  	int ptr;
+>  
+>  	if (pdata->cd_type == S3C_SDHCI_CD_EXTERNAL && pdata->ext_cd_cleanup)
+> @@ -665,6 +783,11 @@ static int __devexit sdhci_s3c_remove(struct platform_device *pdev)
+>  	clk_disable(sc->clk_io);
+>  	clk_put(sc->clk_io);
+>  
+> +	if (pdev->dev.of_node) {
+> +		for (ptr = 0; ptr < NUM_GPIOS(sc->pdata->max_width); ptr++)
+> +			gpio_free(sc->gpios[ptr]);
+> +	}
+> +
+>  	sdhci_free_host(host);
+>  	platform_set_drvdata(pdev, NULL);
+>  
+> @@ -737,6 +860,16 @@ static struct platform_device_id sdhci_s3c_driver_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(platform, sdhci_s3c_driver_ids);
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id sdhci_s3c_dt_match[] = {
+> +	{ .compatible = "samsung,s3c6410-sdhci", },
+> +	{ .compatible = "samsung,exynos4210-sdhci",
+> +		.data = &exynos4_sdhci_drv_data },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
+> +#endif
+> +
+>  static struct platform_driver sdhci_s3c_driver = {
+>  	.probe		= sdhci_s3c_probe,
+>  	.remove		= __devexit_p(sdhci_s3c_remove),
+> @@ -744,6 +877,7 @@ static struct platform_driver sdhci_s3c_driver = {
+>  	.driver		= {
+>  		.owner	= THIS_MODULE,
+>  		.name	= "s3c-sdhci",
+> +		.of_match_table = of_match_ptr(sdhci_s3c_dt_match),
+>  		.pm	= SDHCI_S3C_PMOPS,
+>  	},
+>  };
+> 
+
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Tushar Behera
