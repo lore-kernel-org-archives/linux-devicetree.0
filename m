@@ -1,200 +1,161 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: Re: [PATCH] ARM: EXYNOS: Add MFC device tree support
-Date: Fri, 17 Aug 2012 04:50:14 +0000 (GMT)
-Message-ID: <22088923.161871345179014012.JavaMail.weblogic@epml10>
-Reply-To: arun.kk@samsung.com
+From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Subject: RE: [RFC RESEND 2/4] ARM: OMAP3: Dynamically disable secure timer
+ nodes for secure devices
+Date: Fri, 17 Aug 2012 05:32:53 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EA91D63@DBDE01.ent.ti.com>
+References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
+ <1342218413-30116-3-git-send-email-jon-hunter@ti.com>
+ <502B6838.9080907@ti.com> <502D2686.4090107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: base64
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>, SUNIL JOSHI <joshi@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <502D2686.4090107-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Hunter, Jon" <jon-hunter-l0cyMroinI0@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "DebBarma, Tarun Kanti" <tarun.kanti-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzLA0KVGhhbmsgeW91IGZvciB0aGUgY29tbWVudHMuDQpQbGVhc2UgZmluZCBteSBy
-ZXNwb25zZSBpbmxpbmUuDQoNCi0tLS0tLS0gT3JpZ2luYWwgTWVzc2FnZSAtLS0tLS0tDQpTZW5k
-ZXIgOiBUaG9tYXMgQWJyYWhhbTx0aG9tYXMuYWJyYWhhbUBsaW5hcm8ub3JnPiANCkRhdGUgICA6
-IEF1ZyAxNiwgMjAxMiAxNzoxMiAoR01UKzA1OjMwKQ0KVGl0bGUgIDogUmU6IFtQQVRDSF0gQVJN
-OiBFWFlOT1M6IEFkZCBNRkMgZGV2aWNlIHRyZWUgc3VwcG9ydA0KDQpPbiAxNiBBdWd1c3QgMjAx
-MiAxODowMSwgQXJ1biBLdW1hciBLIDxhcnVuLmtrQHNhbXN1bmcuY29tPiB3cm90ZToNCj4gRnJv
-bTogTmF2ZWVuIEtyaXNobmEgQ2hhdHJhZGhpIDxjaC5uYXZlZW5Ac2Ftc3VuZy5jb20+DQo+DQo+
-IFRoaXMgcGF0Y2ggYWRkcyBkZXZpY2UgdHJlZSBlbnRyeSBmb3IgTUZDIGluIHRoZSBFeHlub3MN
-Cj4gbWFjaGluZXMuIEV4eW5vczQgU29DcyBzdXBwb3J0IE1GQyB2NSB2ZXJzaW9uIGFuZCBFeHlu
-b3M1IGhhcw0KPiBNRkMgdjYueCB2ZXJzaW9uLiBTbyBtYWtpbmcgdGhlIHJlcXVpcmVkIGNoYW5n
-ZXMgaW4gdGhlIGNsb2NrDQo+IGZpbGVzIGFuZCBhZGRzIE1GQyB0byB0aGUgRFQgZGV2aWNlIGxp
-c3QuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IE5hdmVlbiBLcmlzaG5hIENoYXRyYWRoaSA8Y2gubmF2
-ZWVuQHNhbXN1bmcuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBBcnVuIEt1bWFyIEsgPGFydW4ua2tA
-c2Ftc3VuZy5jb20+DQo+IC0tLQ0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVw
-LW1mYy50eHQgICAgICAgICAgfCAgIDI0ICsrKysrKysrKysrKysrKysrKysrDQo+ICBhcmNoL2Fy
-bS9ib290L2R0cy9leHlub3M0MjEwLmR0c2kgICAgICAgICAgICAgICAgICB8ICAgMTAgKysrKysr
-KysNCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAuZHRzaSAgICAgICAgICAgICAgICAg
-IHwgICAxMCArKysrKysrKw0KPiAgYXJjaC9hcm0vbWFjaC1leHlub3MvY2xvY2stZXh5bm9zNS5j
-ICAgICAgICAgICAgICAgfCAgICAyICstDQo+ICBhcmNoL2FybS9tYWNoLWV4eW5vcy9tYWNoLWV4
-eW5vczQtZHQuYyAgICAgICAgICAgICB8ICAgMjIgKysrKysrKysrKysrKysrKysrDQo+ICBhcmNo
-L2FybS9tYWNoLWV4eW5vcy9tYWNoLWV4eW5vczUtZHQuYyAgICAgICAgICAgICB8ICAgMjIgKysr
-KysrKysrKysrKysrKysrDQo+ICA2IGZpbGVzIGNoYW5nZWQsIDg5IGluc2VydGlvbnMoKyksIDEg
-ZGVsZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL21lZGlhL3M1cC1tZmMudHh0DQo+DQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLW1mYy50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLW1mYy50eHQNCj4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uYjliZDI2Ng0KPiAtLS0gL2Rldi9udWxsDQo+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zNXAtbWZjLnR4dA0K
-PiBAQCAtMCwwICsxLDI0IEBADQo+ICsqIFNhbXN1bmcgTXVsdGkgRm9ybWF0IENvZGVjIChNRkMp
-DQo+ICsNCj4gK011bHQgRm9ybWF0IENvZGVjIChNRkMpIGlzIHRoZSBJUCBwcmVzZW50IGluIFNh
-bXN1bmcgU29DcyB3aGljaA0KPiArc3VwcG9ydHMgaGlnaCByZXNvbHV0aW9uIGRlY29kaW5nIGFu
-ZCBlbmNvZGluZyBmdW5jdGlvbmFsaXRpZXMuDQo+DQo+IEluIGFkZGl0aW9uIHRvIHRoaXMsIHNw
-ZWNpZnlpbmcgdGhhdCBtZmMgaXMgdXNlZCBmb3IgdmlkZW8NCj4gZW5jb2RlL2RlY29kZSB3b3Vs
-ZCBiZSBpbmZvcm1hdGl2ZS4NCg0KT2suIEkgd2lsbCBtYWtlIGl0IG1vcmUgZGVzY3JpcHRpdmUu
-DQoNCj4gKw0KPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKyAgLSBjb21wYXRpYmxlIDogdmFs
-dWUgc2hvdWxkIGJlIGVpdGhlciBvbmUgYW1vbmcgdGhlIGZvbGxvd2luZw0KPiArICAgICAgIChh
-KSAic2Ftc3VuZyxzNXAtbWZjLXY1IiBmb3IgTUZDIHY1IHByZXNlbnQgaW4gRXh5bm9zNCBTb0Nz
-DQo+ICsgICAgICAgKGIpICJzYW1zdW5nLHM1cC1tZmMtdjYiIGZvciBNRkMgdjYueCBwcmVzZW50
-IGluIEV4eW5vczUgU29Dcw0KPg0KPiAiczVwIiBzaG91bGQgYmUgZHJvcHBlZCBmcm9tIHRoZSBj
-b21wYXRpYmxlIHZhbHVlcy4gRm9yIGV4YW1wbGUsIGl0DQo+IHNob3VsZCBiZSAic2Ftc3VuZyxt
-ZmMtdjUiLCB3aGljaCBpcyBzdWZmaWNpZW50IHRvIGlkZW50aWZ5IHRoZQ0KPiB2ZXJzaW9uIG9m
-IHRoZSBtZmMgY29udHJvbGxlci4NCg0KT2sgd2lsbCByZW1vdmUgczVwLg0KDQo+ICsNCj4gKyAg
-LSByZWcgOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIElQIHJlZ2lzdGVycyBhbmQgbGVu
-Z3RoIG9mIG1lbW9yeQ0KPiArICAgICAgICAgbWFwcGVkIHJlZ2lvbi4NCj4gKw0KPiArICAtIGlu
-dGVycnVwdHMgOiBNRkMgaW50ZXJ1cHQgbnVtYmVyIHRvIHRoZSBDUFUuDQo+ICsNCj4gKyAgLSBz
-YW1zdW5nLG1mYy1yIDogQmFzZSBhZGRyZXNzIG9mIHRoZSBmaXJzdCBtZW1vcnkgYmFuayB1c2Vk
-IGJ5IE1GQw0KPiArICAgICAgICAgICAgICAgICAgIGZvciBETUEgY29udGlndW91cyBtZW1vcnkg
-YWxsb2NhdGlvbi4NCj4gKw0KPiArICAtIHNhbXN1bmcsbWZjLXItc2l6ZSA6IFNpemUgb2YgdGhl
-IGZpcnN0IG1lbW9yeSBiYW5rLg0KPg0KPiBJdCBpcyBub3QgYWxsb3dlZCB0byBwYXNzIGJ1ZmZl
-ciBiYXNlIGFkZHJlc3MgYW5kIHNpemUgZnJvbSBkZXZpY2UNCj4gdHJlZS4gRGV2aWNlIHRyZWUg
-bm9kZSBzaG91bGQgZGVzY3JpYmUgb25seSB0aGUgTUZDIGNvbnRyb2xsZXINCj4gaGFyZHdhcmUu
-IEFueSBtZW1vcnkgbWFuYWdlbWVudCByZWxhdGVkIGluZm9ybWF0aW9uIHNob3VsZCBiZSBoYW5k
-bGVkDQo+IG91dHNpZGUgb2YgZGV2aWNlIHRyZWUuIFRoaXMgaGVscHMgdGhlIGJpbmRpbmdzIHRv
-IGJlIHJldXNhYmxlIGFjcm9zcw0KPiBtdWx0aXBsZSBvcGVyYXRpbmcgc3lzdGVtcy4NCg0KVGhl
-IG1mYy1sIGFuZCBtZmMtciBiYXNlIGFkZHJlc3MgYW5kIHNpemUgaXMgYm9hcmQgc3BlY2lmaWMg
-aW5mbyB3aGljaCBoYXMgdG8NCmJlIHBhc3NlZCB0byB0aGUgZHJpdmVyLiBUaGlzIGlzIHVzZWQg
-Zm9yIERNQSBjb250aWd1b3VzIGFsbG9jYXRpb24gYnkgZHJpdmVyIGFuZCB0aGlzIHZhbHVlDQpj
-YW4gY2hhbmdlIG9uIGEgZGlmZmVyZW50IGJvYXJkLiANClNvIGluIHRoYXQgY2FzZSwgaSB3aWxs
-IHBhc3MgaXQgYXMgcGxhdGZvcm0gZGF0YSB0byB0aGUgZHJpdmVyIGZyb20gbWFjaC1leHlub3M1
-LWR0LmMgZmlsZS4NCkkgaG9wZSB0aGF0IHdvdWxkIGJlIG9rLg0KDQo+ICsNCj4gKyAgLSBzYW1z
-dW5nLG1mYy1sIDogQmFzZSBhZGRyZXNzIG9mIHRoZSBzZWNvbmQgbWVtb3J5IGJhbmsgdXNlZCBi
-eSBNRkMNCj4gKyAgICAgICAgICAgICAgICAgICBmb3IgRE1BIGNvbnRpZ3VvdXMgbWVtb3J5IGFs
-bG9jYXRpb24uDQo+ICsNCj4gKyAgLSBzYW1zdW5nLG1mYy1sLXNpemUgOiBTaXplIG9mIHRoZSBz
-ZWNvbmQgbWVtb3J5IGJhbmsuDQo+DQo+IFNhbWUgY29tbWVudCBhcyBhYm92ZS4gQW5kIHRoZSBi
-aW5kaW5ncyBkb2N1bWVudGF0aW9uIGlzIHVzdWFsbHkNCj4gaW5jbHVkZWQgaW4gdGhlIHNhbWUg
-cGF0Y2ggdGhhdCBhZGRzIGRldmljZSB0cmVlIHN1cHBvcnQgZm9yIHRoZQ0KPiBkcml2ZXIuDQoN
-Ck9rDQoNCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQyMTAuZHRzaSBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQyMTAuZHRzaQ0KPiBpbmRleCAwMjg5MWZlLi5iNWVl
-NDNkIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M0MjEwLmR0c2kNCj4g
-KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDIxMC5kdHNpDQo+IEBAIC01Niw2ICs1Niwx
-NiBAQA0KPiAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwwIDQzIDA+Ow0KPiAgICAgICAg
-IH07DQo+DQo+ICsgICAgICAgbWZjIHsNCj4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
-c2Ftc3VuZyxzNXAtbWZjIjsNCj4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDEzNDAwMDAwIDB4
-MTAwMDA+Ow0KPiArICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwwIDk0IDA+Ow0KPiArICAg
-ICAgICAgICAgICAgc2Ftc3VuZyxtZmMtciA9IDwweDQzMDAwMDAwPjsNCj4gKyAgICAgICAgICAg
-ICAgIHNhbXN1bmcsbWZjLXItc2l6ZSA9IDw4Mzg4NjA4PjsNCj4gKyAgICAgICAgICAgICAgIHNh
-bXN1bmcsbWZjLWwgPSA8MHg1MTAwMDAwMD47DQo+ICsgICAgICAgICAgICAgICBzYW1zdW5nLG1m
-Yy1sLXNpemUgPSA8ODM4ODYwOD47DQo+ICsgICAgICAgfTsNCj4gKw0KPiAgICAgICAgIHJ0Y0Ax
-MDA3MDAwMCB7DQo+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInNhbXN1bmcsczNjNjQx
-MC1ydGMiOw0KPiAgICAgICAgICAgICAgICAgcmVnID0gPDB4MTAwNzAwMDAgMHgxMDA+Ow0KPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC5kdHNpIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvZXh5bm9zNTI1MC5kdHNpDQo+IGluZGV4IDAwNGFhYTguLjNjNzYyYTQgMTAwNjQ0
-DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAuZHRzaQ0KPiArKysgYi9hcmNo
-L2FybS9ib290L2R0cy9leHlub3M1MjUwLmR0c2kNCj4gQEAgLTU4LDYgKzU4LDE2IEBADQo+ICAg
-ICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgNDIgMD47DQo+ICAgICAgICAgfTsNCj4NCj4g
-KyAgICAgICBtZmMgew0KPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM1
-cC1tZmMtdjYiOw0KPiArICAgICAgICAgICAgICAgcmVnID0gPDB4MTEwMDAwMDAgMHgxMDAwMD47
-DQo+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgOTYgMD47DQo+ICsgICAgICAgICAg
-ICAgICBzYW1zdW5nLG1mYy1yID0gPDB4NDMwMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgc2Ft
-c3VuZyxtZmMtci1zaXplID0gPDgzODg2MDg+Ow0KPiArICAgICAgICAgICAgICAgc2Ftc3VuZyxt
-ZmMtbCA9IDwweDUxMDAwMDAwPjsNCj4gKyAgICAgICAgICAgICAgIHNhbXN1bmcsbWZjLWwtc2l6
-ZSA9IDw4Mzg4NjA4PjsNCj4gKyAgICAgICB9Ow0KPiArDQo+ICAgICAgICAgcnRjIHsNCj4gICAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic2Ftc3VuZyxzM2M2NDEwLXJ0YyI7DQo+ICAgICAg
-ICAgICAgICAgICByZWcgPSA8MHgxMDFFMDAwMCAweDEwMD47DQo+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybS9tYWNoLWV4eW5vcy9jbG9jay1leHlub3M1LmMgYi9hcmNoL2FybS9tYWNoLWV4eW5vcy9j
-bG9jay1leHlub3M1LmMNCj4gaW5kZXggM2IwMGUyOS4uYzg1ZTdiMiAxMDA2NDQNCj4gLS0tIGEv
-YXJjaC9hcm0vbWFjaC1leHlub3MvY2xvY2stZXh5bm9zNS5jDQo+ICsrKyBiL2FyY2gvYXJtL21h
-Y2gtZXh5bm9zL2Nsb2NrLWV4eW5vczUuYw0KPiBAQCAtNjA3LDcgKzYwNyw3IEBAIHN0YXRpYyBz
-dHJ1Y3QgY2xrIGV4eW5vczVfaW5pdF9jbG9ja3Nfb2ZmW10gPSB7DQo+ICAgICAgICAgICAgICAg
-ICAuY3RybGJpdCAgICAgICAgPSAoMSA8PCAyNSksDQo+ICAgICAgICAgfSwgew0KPiAgICAgICAg
-ICAgICAgICAgLm5hbWUgICAgICAgICAgID0gIm1mYyIsDQo+IC0gICAgICAgICAgICAgICAuZGV2
-bmFtZSAgICAgICAgPSAiczVwLW1mYyIsDQo+ICsgICAgICAgICAgICAgICAuZGV2bmFtZSAgICAg
-ICAgPSAiczVwLW1mYy12NiIsDQo+ICAgICAgICAgICAgICAgICAuZW5hYmxlICAgICAgICAgPSBl
-eHlub3M1X2Nsa19pcF9tZmNfY3RybCwNCj4gICAgICAgICAgICAgICAgIC5jdHJsYml0ICAgICAg
-ICA9ICgxIDw8IDApLA0KPiAgICAgICAgIH0sIHsNCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21h
-Y2gtZXh5bm9zL21hY2gtZXh5bm9zNC1kdC5jIGIvYXJjaC9hcm0vbWFjaC1leHlub3MvbWFjaC1l
-eHlub3M0LWR0LmMNCj4gaW5kZXggYjJiNWQ1Zi4uYzRhMGUxNiAxMDA2NDQNCj4gLS0tIGEvYXJj
-aC9hcm0vbWFjaC1leHlub3MvbWFjaC1leHlub3M0LWR0LmMNCj4gKysrIGIvYXJjaC9hcm0vbWFj
-aC1leHlub3MvbWFjaC1leHlub3M0LWR0LmMNCj4gQEAgLTEzLDYgKzEzLDcgQEANCj4NCj4gICNp
-bmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3NlcmlhbF9j
-b3JlLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvbWVtYmxvY2suaD4NCj4NCj4gICNpbmNsdWRlIDxh
-c20vbWFjaC9hcmNoLmg+DQo+ICAjaW5jbHVkZSA8YXNtL2hhcmR3YXJlL2dpYy5oPg0KPiBAQCAt
-NjMsNiArNjQsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rldl9hdXhkYXRhIGV4eW5vczQy
-MTBfYXV4ZGF0YV9sb29rdXBbXSBfX2luaXRjb25zdCA9IHsNCj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAiZXh5bm9zNDIxMC1zcGkuMiIsIE5VTEwpLA0KPiAgICAgICAgIE9GX0RF
-Vl9BVVhEQVRBKCJhcm0scGwzMzAiLCBFWFlOT1M0X1BBX1BETUEwLCAiZG1hLXBsMzMwLjAiLCBO
-VUxMKSwNCj4gICAgICAgICBPRl9ERVZfQVVYREFUQSgiYXJtLHBsMzMwIiwgRVhZTk9TNF9QQV9Q
-RE1BMSwgImRtYS1wbDMzMC4xIiwgTlVMTCksDQo+ICsgICAgICAgT0ZfREVWX0FVWERBVEEoInNh
-bXN1bmcsczVwLW1mYyIsIDB4MTM0MDAwMDAsICJzNXAtbWZjIiwgTlVMTCksDQo+ICAgICAgICAg
-e30sDQo+ICB9Ow0KPg0KPiBAQCAtODMsNiArODUsMjUgQEAgc3RhdGljIGNoYXIgY29uc3QgKmV4
-eW5vczQyMTBfZHRfY29tcGF0W10gX19pbml0ZGF0YSA9IHsNCj4gICAgICAgICBOVUxMDQo+ICB9
-Ow0KPg0KPiArc3RhdGljIHZvaWQgczVwX21mY19yZXNlcnZlX21lbShwaHlzX2FkZHJfdCByYmFz
-ZSwgdW5zaWduZWQgaW50IHJzaXplLA0KPiArICAgICAgICAgICAgICAgcGh5c19hZGRyX3QgbGJh
-c2UsIHVuc2lnbmVkIGludCBsc2l6ZSkgew0KPiArDQo+ICsgICAgICAgaWYgKG1lbWJsb2NrX3Jl
-bW92ZShsYmFzZSwgbHNpemUpKSB7DQo+ICsgICAgICAgICAgICAgICBwcl9lcnIoIkZhaWxlZCB0
-byByZXNlcnZlIGJhbmsxIG1lbW9yeSBmb3IgTUZDIGRldmljZQ0KIik7DQo+ICsgICAgICAgICAg
-ICAgICBXQVJOX09OKDEpOw0KPiArICAgICAgIH0NCj4gKw0KPiArICAgICAgIGlmIChtZW1ibG9j
-a19yZW1vdmUocmJhc2UsIHJzaXplKSkgew0KPiArICAgICAgICAgICAgICAgcHJfZXJyKCJGYWls
-ZWQgdG8gcmVzZXJ2ZSBiYW5rMiBtZW1vcnkgZm9yIE1GQyBkZXZpY2UNCiIpOw0KPiArICAgICAg
-ICAgICAgICAgV0FSTl9PTigxKTsNCj4gKyAgICAgICB9DQo+ICt9DQo+DQo+IEl0IHdvdWxkIGJl
-IGJldHRlciB0byBzcGxpdCB0aGUgZGV2aWNlIHRyZWUgcmVsYXRlZCBjaGFuZ2VzIGFuZCB0aGUN
-Cj4gZHJpdmVyIGJ1ZmZlciBtYW5hZ2VtZW50IHJlbGF0ZWQgY2hhbmdlcyBpbiBzZXBhcmF0ZSBw
-YXRjaGVzLg0KDQpPay4NCg0KPiArDQo+ICtzdGF0aWMgdm9pZCBfX2luaXQgZXh5bm9zNF9yZXNl
-cnZlKHZvaWQpDQo+ICt7DQo+ICsgICAgICAgczVwX21mY19yZXNlcnZlX21lbSgweDQzMDAwMDAw
-LCA4IDw8IDIwLCAweDUxMDAwMDAwLCA4IDw8IDIwKTsNCj4gK30NCj4gKw0KPiAgRFRfTUFDSElO
-RV9TVEFSVChFWFlOT1M0MjEwX0RULCAiU2Ftc3VuZyBFeHlub3M0IChGbGF0dGVuZWQgRGV2aWNl
-IFRyZWUpIikNCj4gICAgICAgICAvKiBNYWludGFpbmVyOiBUaG9tYXMgQWJyYWhhbSA8dGhvbWFz
-LmFicmFoYW1AbGluYXJvLm9yZz4gKi8NCj4gICAgICAgICAuaW5pdF9pcnEgICAgICAgPSBleHlu
-b3M0X2luaXRfaXJxLA0KPiBAQCAtOTMsNCArMTE0LDUgQEAgRFRfTUFDSElORV9TVEFSVChFWFlO
-T1M0MjEwX0RULCAiU2Ftc3VuZyBFeHlub3M0IChGbGF0dGVuZWQgRGV2aWNlIFRyZWUpIikNCj4g
-ICAgICAgICAudGltZXIgICAgICAgICAgPSAmZXh5bm9zNF90aW1lciwNCj4gICAgICAgICAuZHRf
-Y29tcGF0ICAgICAgPSBleHlub3M0MjEwX2R0X2NvbXBhdCwNCj4gICAgICAgICAucmVzdGFydCAg
-ICAgICAgPSBleHlub3M0X3Jlc3RhcnQsDQo+ICsgICAgICAgLnJlc2VydmUgICAgICAgID0gZXh5
-bm9zNF9yZXNlcnZlLA0KPiAgTUFDSElORV9FTkQNCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21h
-Y2gtZXh5bm9zL21hY2gtZXh5bm9zNS1kdC5jIGIvYXJjaC9hcm0vbWFjaC1leHlub3MvbWFjaC1l
-eHlub3M1LWR0LmMNCj4gaW5kZXggZWY3NzBiYy4uODk4ZDJkZSAxMDA2NDQNCj4gLS0tIGEvYXJj
-aC9hcm0vbWFjaC1leHlub3MvbWFjaC1leHlub3M1LWR0LmMNCj4gKysrIGIvYXJjaC9hcm0vbWFj
-aC1leHlub3MvbWFjaC1leHlub3M1LWR0LmMNCj4gQEAgLTExLDYgKzExLDcgQEANCj4NCj4gICNp
-bmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3NlcmlhbF9j
-b3JlLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvbWVtYmxvY2suaD4NCj4NCj4gICNpbmNsdWRlIDxh
-c20vbWFjaC9hcmNoLmg+DQo+ICAjaW5jbHVkZSA8YXNtL2hhcmR3YXJlL2dpYy5oPg0KPiBAQCAt
-NTYsNiArNTcsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rldl9hdXhkYXRhIGV4eW5vczUy
-NTBfYXV4ZGF0YV9sb29rdXBbXSBfX2luaXRjb25zdCA9IHsNCj4gICAgICAgICBPRl9ERVZfQVVY
-REFUQSgiYXJtLHBsMzMwIiwgRVhZTk9TNV9QQV9QRE1BMCwgImRtYS1wbDMzMC4wIiwgTlVMTCks
-DQo+ICAgICAgICAgT0ZfREVWX0FVWERBVEEoImFybSxwbDMzMCIsIEVYWU5PUzVfUEFfUERNQTEs
-ICJkbWEtcGwzMzAuMSIsIE5VTEwpLA0KPiAgICAgICAgIE9GX0RFVl9BVVhEQVRBKCJhcm0scGwz
-MzAiLCBFWFlOT1M1X1BBX01ETUExLCAiZG1hLXBsMzMwLjIiLCBOVUxMKSwNCj4gKyAgICAgICBP
-Rl9ERVZfQVVYREFUQSgic2Ftc3VuZyxzNXAtbWZjLXY2IiwgMHgxMTAwMDAwMCwgInM1cC1tZmMt
-djYiLCBOVUxMKSwNCj4gICAgICAgICB7fSwNCj4gIH07DQo+DQo+IEBAIC03Niw2ICs3OCwyNSBA
-QCBzdGF0aWMgY2hhciBjb25zdCAqZXh5bm9zNTI1MF9kdF9jb21wYXRbXSBfX2luaXRkYXRhID0g
-ew0KPiAgICAgICAgIE5VTEwNCj4gIH07DQo+DQo+ICtzdGF0aWMgdm9pZCBzNXBfbWZjX3Jlc2Vy
-dmVfbWVtKHBoeXNfYWRkcl90IHJiYXNlLCB1bnNpZ25lZCBpbnQgcnNpemUsDQo+ICsgICAgICAg
-ICAgICAgICBwaHlzX2FkZHJfdCBsYmFzZSwgdW5zaWduZWQgaW50IGxzaXplKSB7DQo+ICsNCj4g
-KyAgICAgICBpZiAobWVtYmxvY2tfcmVtb3ZlKGxiYXNlLCBsc2l6ZSkpIHsNCj4gKyAgICAgICAg
-ICAgICAgIHByX2VycigiRmFpbGVkIHRvIHJlc2VydmUgYmFuazEgbWVtb3J5IGZvciBNRkMgZGV2
-aWNlDQoiKTsNCj4gKyAgICAgICAgICAgICAgIFdBUk5fT04oMSk7DQo+ICsgICAgICAgfQ0KPiAr
-DQo+ICsgICAgICAgaWYgKG1lbWJsb2NrX3JlbW92ZShyYmFzZSwgcnNpemUpKSB7DQo+ICsgICAg
-ICAgICAgICAgICBwcl9lcnIoIkZhaWxlZCB0byByZXNlcnZlIGJhbmsyIG1lbW9yeSBmb3IgTUZD
-IGRldmljZQ0KIik7DQo+ICsgICAgICAgICAgICAgICBXQVJOX09OKDEpOw0KPiArICAgICAgIH0N
-Cj4gK30NCj4gKw0KPiArc3RhdGljIHZvaWQgX19pbml0IGV4eW5vczVfcmVzZXJ2ZSh2b2lkKQ0K
-PiArew0KPiArICAgICAgIHM1cF9tZmNfcmVzZXJ2ZV9tZW0oMHg0MzAwMDAwMCwgOCA8PCAyMCwg
-MHg1MTAwMDAwMCwgOCA8PCAyMCk7DQo+ICt9DQo+ICsNCj4gIERUX01BQ0hJTkVfU1RBUlQoRVhZ
-Tk9TNV9EVCwgIlNBTVNVTkcgRVhZTk9TNSAoRmxhdHRlbmVkIERldmljZSBUcmVlKSIpDQo+ICAg
-ICAgICAgLyogTWFpbnRhaW5lcjogS3VramluIEtpbSA8a2dlbmUua2ltQHNhbXN1bmcuY29tPiAq
-Lw0KPiAgICAgICAgIC5pbml0X2lycSAgICAgICA9IGV4eW5vczVfaW5pdF9pcnEsDQo+IEBAIC04
-Niw0ICsxMDcsNSBAQCBEVF9NQUNISU5FX1NUQVJUKEVYWU5PUzVfRFQsICJTQU1TVU5HIEVYWU5P
-UzUgKEZsYXR0ZW5lZCBEZXZpY2UgVHJlZSkiKQ0KPiAgICAgICAgIC50aW1lciAgICAgICAgICA9
-ICZleHlub3M0X3RpbWVyLA0KPiAgICAgICAgIC5kdF9jb21wYXQgICAgICA9IGV4eW5vczUyNTBf
-ZHRfY29tcGF0LA0KPiAgICAgICAgIC5yZXN0YXJ0ICAgICAgICA9IGV4eW5vczVfcmVzdGFydCwN
-Cj4gKyAgICAgICAucmVzZXJ2ZSAgICAgICAgPSBleHlub3M1X3Jlc2VydmUsDQo+ICBNQUNISU5F
-X0VORA0KPiAtLQ0KPiAxLjcuMC40DQo+DQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhp
-cyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1zYW1zdW5nLXNvYyIgaW4N
-Cj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4g
-TW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8t
-aW5mby5odG1sDQo8cD4mbmJzcDs8L3A+PHA+Jm5ic3A7PC9wPg==
+On Thu, Aug 16, 2012 at 22:27:42, Hunter, Jon wrote:
+> 
+> On 08/15/2012 04:13 AM, Vaibhav Hiremath wrote:
+> > 
+> > 
+> > On 7/14/2012 3:56 AM, Jon Hunter wrote:
+> >> OMAP3 devices may or may not have security features enabled. Security enabled
+> >> devices are known as high-secure (HS) and devices without security are known as
+> >> general purpose (GP).
+> >>
+> >> For OMAP3 devices there are 12 general purpose timers available. On secure
+> >> devices the 12th timer is reserved for secure usage and so cannot be used by
+> >> the kernel, where as for a GP device it is available. We can detect the OMAP
+> >> device type, secure or GP, at runtime via an on-chip register. Today, when not
+> >> using DT, we do not register the 12th timer as a linux device if the device is
+> >> secure.
+> >>
+> >> When using device tree, device tree is going to register all the timer devices
+> >> it finds in the device tree blob. To prevent device tree from registering 12th
+> >> timer on a secure OMAP3 device we can add a status property to the timer
+> >> binding with the value "disabled" at boot time. Note that timer 12 on a OMAP3
+> >> device has a property "ti,timer-secure" to indicate that it will not be
+> >> available on a secure device and so for secure OMAP3 devices, we search for
+> >> timers with this property and then disable them. Using the prom_add_property()
+> >> function to dynamically add a property was a recommended approach suggested by
+> >> Rob Herring [1].
+> >>
+> >> I have tested this on an OMAP3 GP device and faking it to pretend to be a
+> >> secure device to ensure that any timers marked with "ti,timer-secure" are not
+> >> registered on boot. I have also made sure that all timers are registered as
+> >> expected on a GP device by default.
+> >>
+> >> [1] http://comments.gmane.org/gmane.linux.ports.arm.omap/79203
+> >>
+> >> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+> >> ---
+> >>  arch/arm/mach-omap2/board-generic.c |    1 +
+> >>  arch/arm/mach-omap2/common.h        |    1 +
+> >>  arch/arm/mach-omap2/timer.c         |   36 +++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 38 insertions(+)
+> >>
+> >> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+> >> index 6f93a20..20124d7 100644
+> >> --- a/arch/arm/mach-omap2/board-generic.c
+> >> +++ b/arch/arm/mach-omap2/board-generic.c
+> >> @@ -40,6 +40,7 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
+> >>  static void __init omap_generic_init(void)
+> >>  {
+> >>  	omap_sdrc_init(NULL, NULL);
+> >> +	omap_dmtimer_init();
+> >>  
+> >>  	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
+> >>  }
+> >> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+> >> index 1f65b18..d6a4875 100644
+> >> --- a/arch/arm/mach-omap2/common.h
+> >> +++ b/arch/arm/mach-omap2/common.h
+> >> @@ -326,6 +326,7 @@ extern void omap_sdrc_init(struct omap_sdrc_params *sdrc_cs0,
+> >>  				      struct omap_sdrc_params *sdrc_cs1);
+> >>  struct omap2_hsmmc_info;
+> >>  extern int omap4_twl6030_hsmmc_init(struct omap2_hsmmc_info *controllers);
+> >> +extern void omap_dmtimer_init(void);
+> >>  
+> >>  #endif /* __ASSEMBLER__ */
+> >>  #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
+> >> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
+> >> index 13d20c8..e3b9931 100644
+> >> --- a/arch/arm/mach-omap2/timer.c
+> >> +++ b/arch/arm/mach-omap2/timer.c
+> >> @@ -36,6 +36,7 @@
+> >>  #include <linux/clocksource.h>
+> >>  #include <linux/clockchips.h>
+> >>  #include <linux/slab.h>
+> >> +#include <linux/of.h>
+> >>  
+> >>  #include <asm/mach/time.h>
+> >>  #include <plat/dmtimer.h>
+> >> @@ -482,6 +483,41 @@ static int __init omap2_dm_timer_init(void)
+> >>  }
+> >>  arch_initcall(omap2_dm_timer_init);
+> >>  
+> >> +static struct property timer_disabled = {
+> >> +	.name = "status",
+> >> +	.length = sizeof("disabled"),
+> >> +	.value = "disabled",
+> >> +};
+> >> +
+> >> +static struct of_device_id omap3_timer_match[] __initdata = {
+> >> +	{ .compatible = "ti,omap3-timer", },
+> >> +	{ }
+> >> +};
+> >> +
+> >> +/**
+> >> + * omap_dmtimer_init - initialisation function when device tree is used
+> >> + *
+> >> + * For secure OMAP3 devices, timers with device type "timer-secure" cannot
+> >> + * be used by the kernel as they are reserved. Therefore, to prevent the
+> >> + * kernel registering these devices remove them dynamically from the device
+> >> + * tree on boot.
+> >> + */
+> >> +void __init omap_dmtimer_init(void)
+> >> +{
+> >> +	struct device_node *np;
+> >> +
+> >> +	if (!cpu_is_omap34xx())
+> >> +		return;
+> >> +
+> > 
+> > Sorry for responding so late, but why only omap34xx check here?
+> > Isn't this applicable to all omap & non-omap devices?
+> 
+> It is only applicable to omap3 devices as far as omap is concerned.
+> 
+> By non-omap, you are referring to the AMxxx stuff?
+> 
+> Do AMxxx devices even support security (ie. secure boot and have secure
+> peripherals)? If not then this will work for AMxxx devices too.
+> 
+
+Yes it does. 
+
+AM33xx has 8 timers and Timer-0 is a secure timer. As in case of OMAP3, we 
+do not even register timer-0 to kernel.
+
+
+> Let me know if the changelog is not clear why this is needed for an
+> omap3 device.
+> 
+
+The changelog description is clear, but it is not only restricted to OMAP3.
+
+Thanks,
+Vaibhav
