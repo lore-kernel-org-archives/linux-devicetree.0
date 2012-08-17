@@ -1,28 +1,41 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 0/9] ARM/ASoC: OMAP McBSP device tree support
-Date: Fri, 17 Aug 2012 06:10:24 -0700
-Message-ID: <20120817131023.GE11011@atomide.com>
-References: <1345124468-8876-1-git-send-email-peter.ujfalusi@ti.com>
- <20120817101838.GB30548@opensource.wolfsonmicro.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: Device tree node names
+Date: Fri, 17 Aug 2012 03:10:48 -1000
+Message-ID: <502E42D8.7020205@firmworks.com>
+References: <502D4B28.4020108@wwwdotorg.org> <502D67DF.7010605@firmworks.com>
+ <20120817113610.GB32216@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120817101838.GB30548@opensource.wolfsonmicro.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Liam Girdwood <lrg@ti.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120817113610.GB32216-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Mark Brown <broonie@opensource.wolfsonmicro.com> [120817 03:18]:
-> On Thu, Aug 16, 2012 at 04:40:59PM +0300, Peter Ujfalusi wrote:
+On 8/17/2012 1:36 AM, Mark Brown wrote:
+> On Thu, Aug 16, 2012 at 11:36:31AM -1000, Mitch Bradley wrote:
 > 
-> > in order to be able to add DT support for the McBSP driver which is used on all
-> > OMAP platforms (OMAP1/2/3/4/5) I needed to make some cleanups to the stack:
+>> The main "rule" for node names is that a user browsing the device tree
+>> can easily determine what something is.  Thus "ethernet" instead of
+>> "DEC,21140".
 > 
-> Tony, are you OK with these changes going via ASoC?
+> Does this actually buy us much?  It seems like it's something that's
+> much better addressed through comments in the device tree than with
+> syntax.
+> 
 
-Yes, had one 2420 related question about the FIFO, other than that
-I've acked the omap related patches.
-
-Tony
+By "comments in the device tree", I assume that you mean "comments in
+the DTS source file".  In real Open Firmware, there is no DTS source
+file - device nodes are created dynamically by the boot firmware.
+Pathnames are visible to, and typed by, users of that firmware.
