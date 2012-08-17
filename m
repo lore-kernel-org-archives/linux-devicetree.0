@@ -1,39 +1,84 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: Associating devices with multiple parents
-Date: Fri, 17 Aug 2012 11:37:22 +0100
-Message-ID: <20120817103722.GA32216@opensource.wolfsonmicro.com>
-References: <502D4B28.4020108@wwwdotorg.org> <502D6A3A.7060808@firmworks.com>
- <CACxGe6uqWG7kRUL0o3qPCMDvG52UyqTMez+AT1yK55X-xgaRuQ@mail.gmail.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 1/2] mfd: dt: tps6586x: Add power off control
+Date: Fri, 17 Aug 2012 12:41:50 +0200
+Message-ID: <20120817104150.GA27633@avionic-0098.mockup.avionic-design.de>
+References: <1345194989-11614-1-git-send-email-bilhuang@nvidia.com>
+ <1345194989-11614-2-git-send-email-bilhuang@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACxGe6uqWG7kRUL0o3qPCMDvG52UyqTMez+AT1yK55X-xgaRuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1345194989-11614-2-git-send-email-bilhuang@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bill Huang <bilhuang@nvidia.com>
+Cc: sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, swarren@wwwdotorg.org, xxie@nvidia.com, lrg@slimlogic.co.uk, jhovold@gmail.com, kyle.manna@fuel7.com, rklein@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 16, 2012 at 04:20:47PM -0600, Grant Likely wrote:
-> On Aug 16, 2012 3:46 PM, "Mitch Bradley" <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
 
-> > Is there an established Linux convention for expressing that dual-parent
-> > relationship for I2C?  The phandle schemes for cross-tree gpio, clk, and
-> > interrupt relationships obviously bear some resemblance to the problem,
-> > but I haven't seen anything for I2C.
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Yes. Place the codec under the i2c controller and use a tope level audio
-> complex node with phandles to both the codec and i2s nodes.
+On Fri, Aug 17, 2012 at 02:16:28AM -0700, Bill Huang wrote:
+[...]
+> diff --git a/drivers/mfd/tps6586x.c b/drivers/mfd/tps6586x.c
+[...]
+> @@ -505,6 +519,11 @@ static int __devinit tps6586x_i2c_probe(struct i2c_c=
+lient *client,
+>  		goto err_add_devs;
+>  	}
+> =20
+> +	tps6586x_dev =3D &client->dev;
+> +
+> +	if (pdata->pm_off && !pm_power_off)
+> +		pm_power_off =3D tps6586x_power_off;
+> +
 
-The nVidia bindings are probably the best ones to look at as an example
-here.
+I think the assignment of tps6586x_dev needs to go inside the if block
+as well. Otherwise it might be overwritten by another instance for
+systems that actually have more than one tps6586x. Since currently the
+driver can't be built as a module it probably makes little sense to
+clean this up in .remove(), but it might still be worth adding so it
+isn't forgotten if and when somebody tries to convert the driver to a
+module.
+
+I should note that I don't like very much how the pm_power_off works.
+Maybe this should really be changed to allow passing a context for the
+function to work from. Something like:
+
+	pm_power_off =3D tps6586x_power_off;
+	pm_power_off_data =3D &client->dev;
+
+Where pm_power_off() would receive pm_power_off_data as an argument.
+
+Even that's not very pretty. On the other hand this doesn't really buy
+us much because only the storage location of the variable would change
+and nothing else. But it would still make the association of the data
+clearer.
+
+Thierry
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQLh/uAAoJEN0jrNd/PrOhXtEP/Ayc6DAD3u5m6S7qGmcWBjOG
+aMsVYHcuZiFBst3U2BzwuL1ifJdAcnASgUBlKlIhLA6F4F9bWMARBYweLYoKCWt3
+v+Fk11YbKfEiB/SWTOdVtSvZmyK2Rb0kSa0GsWYN8Vh5/lX6hJw/1jzPsBP4Ygt/
+rWtzwjrae/pqNb0PTlpCd07PVc45atha6Rtr/k+sUX9lBpO02wijNOvVVN3+jDmo
+wfgd1fTogCVmg96cI4opKBbO8qfcGZdUw1gTpRYtwN2FzK0YE3waV71Z1VBfOj5C
+O0/RbZWAa0GB6ThBMxPGTPjMlwys54VXNsnUHVWJbuOTliO9Qt4EwoOuOINMMMT3
+r5Du6AQFxoZvlb9E1kdjAIts5MU/3b3BFhdiVmvMYeidLZOl/ZtpqE8CbZJhj6R3
+qOGcBPq5UmabJxmy1eTbj5sJz+2BAVuyN3c8WlkEU+BeqXoB3bo/CgeQ3RtvGSVm
++73wLcPlO15jRDaVWjWJTTE7LQfpydq2WE8ZyZ1GY5hHm++3Q5eSTTQiEvjuUkvL
+cxelDXGcSGwT7F528mpCGCeNZH8NMS6nqctML7vQThCOLQlzRGJN9HMnh60JlLli
+8+ui2Z73VaE9JF1tHUHVFSVXGpIYuOKVfb3nWF2n24Xs2jIh10zOZWG+9h6FapyK
+5KvAXBn1EdsxmfoljKHc
+=GqzC
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
