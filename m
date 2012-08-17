@@ -1,17 +1,14 @@
-From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: RE: [RFC RESEND 2/4] ARM: OMAP3: Dynamically disable secure timer
- nodes for secure devices
-Date: Fri, 17 Aug 2012 05:32:53 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EA91D63@DBDE01.ent.ti.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
- <1342218413-30116-3-git-send-email-jon-hunter@ti.com>
- <502B6838.9080907@ti.com> <502D2686.4090107@ti.com>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC:PATCH dtc-1.3.0] dtc: Add --strip-disabled option to dtc.
+Date: Fri, 17 Aug 2012 16:04:15 +1000
+Message-ID: <20120817060415.GC29724@truffula.fritz.box>
+References: <1345034325-26656-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <502D2686.4090107-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1345034325-26656-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,140 +19,208 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Hunter, Jon" <jon-hunter-l0cyMroinI0@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "DebBarma, Tarun Kanti" <tarun.kanti-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, mmarek-AlSwsSmVLrQ@public.gmane.org, B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jdl-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 16, 2012 at 22:27:42, Hunter, Jon wrote:
+On Wed, Aug 15, 2012 at 01:38:45PM +0100, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 > 
-> On 08/15/2012 04:13 AM, Vaibhav Hiremath wrote:
-> > 
-> > 
-> > On 7/14/2012 3:56 AM, Jon Hunter wrote:
-> >> OMAP3 devices may or may not have security features enabled. Security enabled
-> >> devices are known as high-secure (HS) and devices without security are known as
-> >> general purpose (GP).
-> >>
-> >> For OMAP3 devices there are 12 general purpose timers available. On secure
-> >> devices the 12th timer is reserved for secure usage and so cannot be used by
-> >> the kernel, where as for a GP device it is available. We can detect the OMAP
-> >> device type, secure or GP, at runtime via an on-chip register. Today, when not
-> >> using DT, we do not register the 12th timer as a linux device if the device is
-> >> secure.
-> >>
-> >> When using device tree, device tree is going to register all the timer devices
-> >> it finds in the device tree blob. To prevent device tree from registering 12th
-> >> timer on a secure OMAP3 device we can add a status property to the timer
-> >> binding with the value "disabled" at boot time. Note that timer 12 on a OMAP3
-> >> device has a property "ti,timer-secure" to indicate that it will not be
-> >> available on a secure device and so for secure OMAP3 devices, we search for
-> >> timers with this property and then disable them. Using the prom_add_property()
-> >> function to dynamically add a property was a recommended approach suggested by
-> >> Rob Herring [1].
-> >>
-> >> I have tested this on an OMAP3 GP device and faking it to pretend to be a
-> >> secure device to ensure that any timers marked with "ti,timer-secure" are not
-> >> registered on boot. I have also made sure that all timers are registered as
-> >> expected on a GP device by default.
-> >>
-> >> [1] http://comments.gmane.org/gmane.linux.ports.arm.omap/79203
-> >>
-> >> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-> >> ---
-> >>  arch/arm/mach-omap2/board-generic.c |    1 +
-> >>  arch/arm/mach-omap2/common.h        |    1 +
-> >>  arch/arm/mach-omap2/timer.c         |   36 +++++++++++++++++++++++++++++++++++
-> >>  3 files changed, 38 insertions(+)
-> >>
-> >> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> >> index 6f93a20..20124d7 100644
-> >> --- a/arch/arm/mach-omap2/board-generic.c
-> >> +++ b/arch/arm/mach-omap2/board-generic.c
-> >> @@ -40,6 +40,7 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
-> >>  static void __init omap_generic_init(void)
-> >>  {
-> >>  	omap_sdrc_init(NULL, NULL);
-> >> +	omap_dmtimer_init();
-> >>  
-> >>  	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
-> >>  }
-> >> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-> >> index 1f65b18..d6a4875 100644
-> >> --- a/arch/arm/mach-omap2/common.h
-> >> +++ b/arch/arm/mach-omap2/common.h
-> >> @@ -326,6 +326,7 @@ extern void omap_sdrc_init(struct omap_sdrc_params *sdrc_cs0,
-> >>  				      struct omap_sdrc_params *sdrc_cs1);
-> >>  struct omap2_hsmmc_info;
-> >>  extern int omap4_twl6030_hsmmc_init(struct omap2_hsmmc_info *controllers);
-> >> +extern void omap_dmtimer_init(void);
-> >>  
-> >>  #endif /* __ASSEMBLER__ */
-> >>  #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
-> >> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
-> >> index 13d20c8..e3b9931 100644
-> >> --- a/arch/arm/mach-omap2/timer.c
-> >> +++ b/arch/arm/mach-omap2/timer.c
-> >> @@ -36,6 +36,7 @@
-> >>  #include <linux/clocksource.h>
-> >>  #include <linux/clockchips.h>
-> >>  #include <linux/slab.h>
-> >> +#include <linux/of.h>
-> >>  
-> >>  #include <asm/mach/time.h>
-> >>  #include <plat/dmtimer.h>
-> >> @@ -482,6 +483,41 @@ static int __init omap2_dm_timer_init(void)
-> >>  }
-> >>  arch_initcall(omap2_dm_timer_init);
-> >>  
-> >> +static struct property timer_disabled = {
-> >> +	.name = "status",
-> >> +	.length = sizeof("disabled"),
-> >> +	.value = "disabled",
-> >> +};
-> >> +
-> >> +static struct of_device_id omap3_timer_match[] __initdata = {
-> >> +	{ .compatible = "ti,omap3-timer", },
-> >> +	{ }
-> >> +};
-> >> +
-> >> +/**
-> >> + * omap_dmtimer_init - initialisation function when device tree is used
-> >> + *
-> >> + * For secure OMAP3 devices, timers with device type "timer-secure" cannot
-> >> + * be used by the kernel as they are reserved. Therefore, to prevent the
-> >> + * kernel registering these devices remove them dynamically from the device
-> >> + * tree on boot.
-> >> + */
-> >> +void __init omap_dmtimer_init(void)
-> >> +{
-> >> +	struct device_node *np;
-> >> +
-> >> +	if (!cpu_is_omap34xx())
-> >> +		return;
-> >> +
-> > 
-> > Sorry for responding so late, but why only omap34xx check here?
-> > Isn't this applicable to all omap & non-omap devices?
+> This patch allows dtc to strip out nodes in its output based on status
+> property. Now the dtc has additional long option --strip-disabled to
+> strip all the nodes which have status property set to disabled.
 > 
-> It is only applicable to omap3 devices as far as omap is concerned.
+> SOCs have lot of device tree infrastructure files which mark the
+> device nodes as disabled and the board level device tree enables them if
+> required. However while creating device tree blob, the compiler can
+> exclude nodes marked as disabled, doing this way will reduce the size
+> of device tree blob.
 > 
-> By non-omap, you are referring to the AMxxx stuff?
+> However care has to be taken if your boardloader is is updating status
+> property.
 > 
-> Do AMxxx devices even support security (ie. secure boot and have secure
-> peripherals)? If not then this will work for AMxxx devices too.
+> In our case this has reduced the blob size from 29K to 15K.
 > 
-
-Yes it does. 
-
-AM33xx has 8 timers and Timer-0 is a secure timer. As in case of OMAP3, we 
-do not even register timer-0 to kernel.
-
-
-> Let me know if the changelog is not clear why this is needed for an
-> omap3 device.
+> Also nodes with status="disabled" is are never probed by dt platform bus
+> code.
 > 
+> Again, this is an optional parameter to dtc, Can be used by people who
+> want to strip all the device nodes which are marked as disabled.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> ---
+> Hi Jon, 
+> 
+> I have noticed that the dtb blob also contains device nodes with property status = "disabled", 
+> But these device nodes are not used by device tree platform bus probe code or any of the kernel code.
+> 
+> If there is no active code which actually modifies status property at runtime, it makes sense to remove 
+> those nodes from the dtb to reduce the overall size of dtb.
+> 
+> The size change will be significant once the SOC adds all the possible devices in to the device trees.
+> As there could be 100s of Ips on SOCs but the board actually uses may be 20-25 IP's.
+> 
+> My patch adds option --strip-disabled option to dtc to strip such nodes, resulting in only nodes which 
+> are supposed to be instantiated.
+> 
+> This patch is generated on top of git://git.jdl.com/software/dtc.git.
+> 
+> previous discussion on this patch is at:http://comments.gmane.org/gmane.linux.kbuild.devel/8527
+> 
+> Comments?
+> 
+> Thanks,
+> srini
+> 
+>  dtc.c        |   14 ++++++++++++--
+>  dtc.h        |    4 ++++
+>  flattree.c   |    3 +++
+>  livetree.c   |   17 +++++++++++++++++
+>  treesource.c |    3 +++
+>  5 files changed, 39 insertions(+), 2 deletions(-)
+> 
+> diff --git a/dtc.c b/dtc.c
+> index a375683..b303cab 100644
+> --- a/dtc.c
+> +++ b/dtc.c
+> @@ -30,6 +30,7 @@ int quiet;		/* Level of quietness */
+>  int reservenum;		/* Number of memory reservation slots */
+>  int minsize;		/* Minimum blob size */
+>  int padsize;		/* Additional padding to blob */
+> +int strip_disabled;	/* strip disabled nodes in output */
+>  int phandle_format = PHANDLE_BOTH;	/* Use linux,phandle or phandle properties */
+>  
+>  static void fill_fullpaths(struct node *tree, const char *prefix)
+> @@ -96,6 +97,8 @@ static void  __attribute__ ((noreturn)) usage(void)
+>  	fprintf(stderr, "\t-W [no-]<checkname>\n");
+>  	fprintf(stderr, "\t-E [no-]<checkname>\n");
+>  	fprintf(stderr, "\t\t\tenable or disable warnings and errors\n");
+> +	fprintf(stderr, "\t--strip-disabled\n");
+> +	fprintf(stderr, "\t\tStrip nodes with status property as disabled\n");
+>  	exit(3);
+>  }
+>  
+> @@ -112,15 +115,22 @@ int main(int argc, char *argv[])
+>  	FILE *outf = NULL;
+>  	int outversion = DEFAULT_FDT_VERSION;
+>  	long long cmdline_boot_cpuid = -1;
+> +	struct option loptions[] =	{
+> +		{"strip-disabled", no_argument, &strip_disabled, 1},
+> +	};
+>  
+>  	quiet      = 0;
+>  	reservenum = 0;
+>  	minsize    = 0;
+>  	padsize    = 0;
+> +	strip_disabled = 0;
+>  
+> -	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:"))
+> -			!= EOF) {
+> +	while ((opt = getopt_long(argc, argv,
+> +				"hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:",
+> +				loptions, NULL)) != EOF) {
+>  		switch (opt) {
+> +		case 0: /* Long option set */
+> +			break;
+>  		case 'I':
+>  			inform = optarg;
+>  			break;
+> diff --git a/dtc.h b/dtc.h
+> index 7ee2d54..67cdadc 100644
+> --- a/dtc.h
+> +++ b/dtc.h
+> @@ -31,6 +31,7 @@
+>  #include <ctype.h>
+>  #include <errno.h>
+>  #include <unistd.h>
+> +#include <getopt.h>
+>  
+>  #include <libfdt_env.h>
+>  #include <fdt.h>
+> @@ -53,6 +54,7 @@ extern int quiet;		/* Level of quietness */
+>  extern int reservenum;		/* Number of memory reservation slots */
+>  extern int minsize;		/* Minimum blob size */
+>  extern int padsize;		/* Additional padding to blob */
+> +extern int strip_disabled;	/* strip disabled nodes in output */
+>  extern int phandle_format;	/* Use linux,phandle or phandle properties */
+>  
+>  #define PHANDLE_LEGACY	0x1
+> @@ -224,6 +226,8 @@ struct boot_info *build_boot_info(struct reserve_info *reservelist,
+>  				  struct node *tree, uint32_t boot_cpuid_phys);
+>  void sort_tree(struct boot_info *bi);
+>  
+> +int is_device_node_avaiable(struct node *node);
+> +
+>  /* Checks */
+>  
+>  void parse_checks_option(bool warn, bool error, const char *optarg);
+> diff --git a/flattree.c b/flattree.c
+> index 28d0b23..7d4e13b 100644
+> --- a/flattree.c
+> +++ b/flattree.c
+> @@ -304,6 +304,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
+>  	}
+>  
+>  	for_each_child(tree, child) {
+> +		if (strip_disabled && !is_device_node_avaiable(child))
+> +			continue;
+> +
 
-The changelog description is clear, but it is not only restricted to OMAP3.
+Hrm, it's not a lot of code, but I don't like that the strip logic is
+duplicated between the flat tree and treesource backends.  What I'd
+prefer to see here is just if (node_is_stripped(...)) with the
+node_is_stripped() function taking into account the option values and
+whatever other information.
 
-Thanks,
-Vaibhav
+>  		flatten_tree(child, emit, etarget, strbuf, vi);
+>  	}
+>  
+> diff --git a/livetree.c b/livetree.c
+> index c9209d5..7155926 100644
+> --- a/livetree.c
+> +++ b/livetree.c
+> @@ -607,3 +607,20 @@ void sort_tree(struct boot_info *bi)
+>  	sort_reserve_entries(bi);
+>  	sort_node(bi->dt);
+>  }
+> +
+> +int is_device_node_avaiable(struct node *node)
+> +{
+> +	struct property *status;
+> +
+> +	status = get_property(node, "status");
+> +	if (status == NULL)
+> +		return 1;
+> +
+> +	if (status->val.len > 0) {
+> +		if (!strcmp(status->val.val, "okay") ||
+> +			 !strcmp(status->val.val, "ok"))
+> +			return 1;
+> +	}
+
+The name still isn't quite right - it doesn't just strip disabled
+nodes but anything that isn't "okay", OF defines "failed" at least as
+another possibility for the status property.
+
+> +	return 0;
+> +}
+> diff --git a/treesource.c b/treesource.c
+> index 33eeba5..2f1ac1a 100644
+> --- a/treesource.c
+> +++ b/treesource.c
+> @@ -255,6 +255,9 @@ static void write_tree_source_node(FILE *f, struct node *tree, int level)
+>  		write_propval(f, prop);
+>  	}
+>  	for_each_child(tree, child) {
+> +		if (strip_disabled && !is_device_node_avaiable(child))
+> +			continue;
+> +
+>  		fprintf(f, "\n");
+>  		write_tree_source_node(f, child, level+1);
+>  	}
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
