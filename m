@@ -1,29 +1,191 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 3/3] ARM: dts: imx6q-sabrelite: add eeti egalax
-Date: Fri, 17 Aug 2012 08:33:31 +0800
-Message-ID: <20120817003329.GC24242@S2101-09.ap.freescale.net>
-References: <1345114051-3052-1-git-send-email-jason77.wang@gmail.com>
- <1345114051-3052-2-git-send-email-jason77.wang@gmail.com>
- <1345114051-3052-3-git-send-email-jason77.wang@gmail.com>
- <1345114051-3052-4-git-send-email-jason77.wang@gmail.com>
+From: Joonyoung Shim <dofmind-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 1/2] drm/exynos: add platform_device_id table and
+ driver data for exynos5 drm fimd
+Date: Fri, 17 Aug 2012 09:48:24 +0900
+Message-ID: <CAPLVkLt8QTahTK6GU35-hM6nb27TVxM8Cief2qixntMT6yGECQ@mail.gmail.com>
+References: <1345111689-14601-1-git-send-email-l.krishna@samsung.com>
+ <1345111689-14601-2-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1345114051-3052-4-git-send-email-jason77.wang@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Hui Wang <jason77.wang@gmail.com>
-Cc: dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1345111689-14601-2-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 16, 2012 at 06:47:31PM +0800, Hui Wang wrote:
-> i.MX6Q sabrelite board uses i2c3 to connect an eeti egalax
-> touchscreen controller, add it as an i2c slave device in the dts.
-> 
-> Signed-off-by: Hui Wang <jason77.wang@gmail.com>
+Hi Leela.
 
-Looks good.  Will apply it after the driver part gets accepted.
+2012/8/16 Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+> The name of the exynos drm fimd device is renamed to exynos-drm-fimd
+> and two device ids are created for exynos4-fb and exynos5-drm-fimd.
+> Also, added driver data for exynos5 to pick the fimd version at runtime and
+> to choose the VIDTCON register offsets accordingly.
+>
+> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_fimd.c |   56 +++++++++++++++++++++++++++---
+>  1 files changed, 51 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> index 24c0bd4..8379c59 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> @@ -57,6 +57,18 @@
+>
+>  #define get_fimd_context(dev)  platform_get_drvdata(to_platform_device(dev))
+>
+> +enum fimd_version_type {
+> +       VERSION_8, /* FIMD_VERSION8 */
+> +};
+> +
+> +struct drm_fimd_driver_data {
+
+Don't use drm_ prefix for code consistency.
+
+> +       enum fimd_version_type fimd_ver;
+
+I don't prefer to check using version, it needs many if statement.
+Refer s3c-fb driver and how about use changed base address?
+
+struct fimd_driverdata {
+       unsigned int    timing_base;
+};
+
+static struct fimd_driverdata exynos5_fimd_data = {
+       .timing_base    = 0x20000,
+};
+
+> +};
+> +
+> +struct drm_fimd_driver_data exynos5_drm_fimd_driver_data = {
+> +       .fimd_ver = VERSION_8,
+> +};
+> +
+>  struct fimd_win_data {
+>         unsigned int            offset_x;
+>         unsigned int            offset_y;
+> @@ -91,6 +103,13 @@ struct fimd_context {
+>         struct exynos_drm_panel_info *panel;
+>  };
+>
+> +static inline struct drm_fimd_driver_data *drm_fimd_get_driver_data(
+> +       struct platform_device *pdev)
+> +{
+> +       return (struct drm_fimd_driver_data *)
+> +               platform_get_device_id(pdev)->driver_data;
+> +}
+> +
+>  static bool fimd_display_is_connected(struct device *dev)
+>  {
+>         DRM_DEBUG_KMS("%s\n", __FILE__);
+> @@ -194,32 +213,47 @@ static void fimd_commit(struct device *dev)
+>         struct fimd_context *ctx = get_fimd_context(dev);
+>         struct exynos_drm_panel_info *panel = ctx->panel;
+>         struct fb_videomode *timing = &panel->timing;
+> +       struct drm_fimd_driver_data *driver_data;
+> +       struct platform_device *pdev = to_platform_device(dev);
+>         u32 val;
+>
+> +       driver_data = drm_fimd_get_driver_data(pdev);
+>         if (ctx->suspended)
+>                 return;
+>
+>         DRM_DEBUG_KMS("%s\n", __FILE__);
+>
+>         /* setup polarity values from machine code. */
+> -       writel(ctx->vidcon1, ctx->regs + VIDCON1);
+> +       if (driver_data->fimd_ver == VERSION_8)
+> +               writel(ctx->vidcon1, ctx->regs + FIMD_V8_VIDCON1);
+> +       else
+> +               writel(ctx->vidcon1, ctx->regs + VIDCON1);
+>
+>         /* setup vertical timing values. */
+>         val = VIDTCON0_VBPD(timing->upper_margin - 1) |
+>                VIDTCON0_VFPD(timing->lower_margin - 1) |
+>                VIDTCON0_VSPW(timing->vsync_len - 1);
+> -       writel(val, ctx->regs + VIDTCON0);
+> +       if (driver_data->fimd_ver == VERSION_8)
+> +               writel(val, ctx->regs + FIMD_V8_VIDTCON0);
+> +       else
+> +               writel(val, ctx->regs + VIDTCON0);
+>
+>         /* setup horizontal timing values.  */
+>         val = VIDTCON1_HBPD(timing->left_margin - 1) |
+>                VIDTCON1_HFPD(timing->right_margin - 1) |
+>                VIDTCON1_HSPW(timing->hsync_len - 1);
+> -       writel(val, ctx->regs + VIDTCON1);
+> +       if (driver_data->fimd_ver == VERSION_8)
+> +               writel(val, ctx->regs + FIMD_V8_VIDTCON1);
+> +       else
+> +               writel(val, ctx->regs + VIDTCON1);
+>
+>         /* setup horizontal and vertical display size. */
+>         val = VIDTCON2_LINEVAL(timing->yres - 1) |
+>                VIDTCON2_HOZVAL(timing->xres - 1);
+> -       writel(val, ctx->regs + VIDTCON2);
+> +       if (driver_data->fimd_ver == VERSION_8)
+> +               writel(val, ctx->regs + FIMD_V8_VIDTCON2);
+> +       else
+> +               writel(val, ctx->regs + VIDTCON2);
+>
+>         /* setup clock source, clock divider, enable dma. */
+>         val = ctx->vidcon0;
+> @@ -982,6 +1016,17 @@ static int fimd_runtime_resume(struct device *dev)
+>  }
+>  #endif
+>
+> +static struct platform_device_id exynos_drm_fimd_driver_ids[] = {
+
+Just use "fimd_driver_ids".
+
+> +       {
+> +               .name           = "exynos4-fb",
+> +       }, {
+> +               .name           = "exynos5-drm-fimd",
+
+I think this name should be "exynos5-fb" because exynos5 fb driver and
+clock-exynos5 also use "exynos5-fb".
+
+> +               .driver_data    = (unsigned long)&exynos5_drm_fimd_driver_data,
+> +       },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(platform, exynos_drm_fimd_driver_ids);
+> +
+>  static const struct dev_pm_ops fimd_pm_ops = {
+>         SET_SYSTEM_SLEEP_PM_OPS(fimd_suspend, fimd_resume)
+>         SET_RUNTIME_PM_OPS(fimd_runtime_suspend, fimd_runtime_resume, NULL)
+> @@ -990,8 +1035,9 @@ static const struct dev_pm_ops fimd_pm_ops = {
+>  struct platform_driver fimd_driver = {
+>         .probe          = fimd_probe,
+>         .remove         = __devexit_p(fimd_remove),
+> +       .id_table       = exynos_drm_fimd_driver_ids,
+>         .driver         = {
+> -               .name   = "exynos4-fb",
+> +               .name   = "exynos-drm-fimd",
+>                 .owner  = THIS_MODULE,
+>                 .pm     = &fimd_pm_ops,
+>         },
+> --
+> 1.7.0.4
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+Thanks.
 
 -- 
-Regards,
-Shawn
+- Joonyoung Shim
