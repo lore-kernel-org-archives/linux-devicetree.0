@@ -1,29 +1,24 @@
 From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 1/3] Input: egalax_ts: get gpio from devicetree node
-Date: Fri, 17 Aug 2012 08:31:27 +0800
-Message-ID: <20120817003125.GA24242@S2101-09.ap.freescale.net>
+Subject: Re: [PATCH v4 2/3] Input: add devicetree binding note for egalax_ts
+Date: Fri, 17 Aug 2012 08:32:11 +0800
+Message-ID: <20120817003209.GB24242@S2101-09.ap.freescale.net>
 References: <1345114051-3052-1-git-send-email-jason77.wang@gmail.com>
  <1345114051-3052-2-git-send-email-jason77.wang@gmail.com>
+ <1345114051-3052-3-git-send-email-jason77.wang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1345114051-3052-2-git-send-email-jason77.wang@gmail.com>
+In-Reply-To: <1345114051-3052-3-git-send-email-jason77.wang@gmail.com>
 Sender: linux-input-owner@vger.kernel.org
 To: Hui Wang <jason77.wang@gmail.com>
 Cc: dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 16, 2012 at 06:47:29PM +0800, Hui Wang wrote:
-> The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework
-> and don't support this API anymore.
-> 
-> The i.MX6q sabrelite platform equips an egalax touchscreen controller,
-> and this platform already transfered to GENERIC_GPIO framework, to
-> support this driver, we use a more generic way to get gpio.
-> 
-> Add a return value checking for waking up the controller in the probe
-> function, this guarantee only a workable device can pass init.
+On Thu, Aug 16, 2012 at 06:47:30PM +0800, Hui Wang wrote:
+> The egalax_ts driver needs to get the gpio number of the irq pin,
+> and use this gpio to wake up the controller. So add a note
+> for this change.
 > 
 > Signed-off-by: Hui Wang <jason77.wang@gmail.com>
 
