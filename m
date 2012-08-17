@@ -1,67 +1,71 @@
-From: Bill Huang <bilhuang-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 1/2] mfd: dt: tps6586x: Add power off control
-Date: Sat, 18 Aug 2012 06:45:32 +0800
-Message-ID: <A7051F87A141B744BCAF487D48E5B3BDF5BA98283F@HKMAIL02.nvidia.com>
-References: <1345194989-11614-1-git-send-email-bilhuang@nvidia.com>
- <1345194989-11614-2-git-send-email-bilhuang@nvidia.com>
- <20120817104150.GA27633@avionic-0098.mockup.avionic-design.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
+Date: Sat, 18 Aug 2012 00:04:26 +0100
+Message-ID: <20120817230426.GC21888@opensource.wolfsonmicro.com>
+References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com>
+ <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
+ <502D3E29.1010501@wwwdotorg.org>
+ <502D61C6.5050101@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120817104150.GA27633-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: 'Thierry Reding' <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: "kyle.manna-CaKDIOJzjcgAvxtiuMwx3w@public.gmane.org" <kyle.manna-CaKDIOJzjcgAvxtiuMwx3w@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "lrg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org" <lrg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Xin Xie <xxie-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <502D61C6.5050101@firmworks.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <acourbot@nvidia.com>, linux-fbdev@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, linux-tegra@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-nvpublic
-> On Fri, Aug 17, 2012 at 02:16:28AM -0700, Bill Huang wrote:
-> [...]
-> > diff --git a/drivers/mfd/tps6586x.c b/drivers/mfd/tps6586x.c
-> [...]
-> > @@ -505,6 +519,11 @@ static int __devinit tps6586x_i2c_probe(struct i2c_client *client,
-> >  		goto err_add_devs;
-> >  	}
-> >
-> > +	tps6586x_dev = &client->dev;
-> > +
-> > +	if (pdata->pm_off && !pm_power_off)
-> > +		pm_power_off = tps6586x_power_off;
-> > +
-> 
-> I think the assignment of tps6586x_dev needs to go inside the if block as well. Otherwise it might be
-> overwritten by another instance for systems that actually have more than one tps6586x. Since currently
-> the driver can't be built as a module it probably makes little sense to clean this up in .remove(),
-> but it might still be worth adding so it isn't forgotten if and when somebody tries to convert the
-> driver to a module.
-> 
-Thanks, good point.
 
-> I should note that I don't like very much how the pm_power_off works.
-> Maybe this should really be changed to allow passing a context for the function to work from.
-> Something like:
-> 
-> 	pm_power_off = tps6586x_power_off;
-> 	pm_power_off_data = &client->dev;
-> 
-> Where pm_power_off() would receive pm_power_off_data as an argument.
-> 
-> Even that's not very pretty. On the other hand this doesn't really buy us much because only the
-> storage location of the variable would change and nothing else. But it would still make the
-> association of the data clearer.
-> 
-> Thierry
-> 
-> * Unknown Key
-> * 0x7F3EB3A1
+--TiqCXmo5T1hvSQQg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Aug 16, 2012 at 11:10:30AM -1000, Mitch Bradley wrote:
+> On 8/16/2012 8:38 AM, Stephen Warren wrote:
+
+> > Device tree bindings shouldn't reference Linux documentation; the
+> > bindings are supposed to be OS-agnostic.
+
+> While it is true that bindings should try to be OS-agnostic, there is
+> the practical matter of where to put documentation so that it is widely
+> accessible.  The Linux source tree is one of the most accessible things
+> there is, considering how widely it is replicated.
+
+> As the original instigator of the policy that the device tree should
+> describe the hardware "OS-neutrally", I personally don't have a problem
+> with bindings referring to Linux documentation.  I wouldn't like
+> references to proprietary and inaccessible documentation.
+
+OS agnosticness isn't the only issue here - the other problem with using
+Linux documentation is that except for things that are specifically
+userspace interfaces and the DT bindings nothing is intended to be
+stable so bindings defined in terms of Linux documentation may randomly
+change.  We're not doing an awesome job of that with DT right now but we
+should try and so we ought to avoid including non-ABI things in ABIs
+like this.
+
+--TiqCXmo5T1hvSQQg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQLs3zAAoJEFJkBDiqVpZ4NucQAJowkgvCBihoqNrplgWBVFgj
+eps2rAS3cFRH8aUzgqi31UuAvyHmxxnI1+BoT4k256E86vC+b6asdeSov3iUGTKZ
+zZ6JKvaNIhkWaFYDKsciztyFbrF+26Eq2qRgLImM2vy0Z/yjayQGrI1DVJ3z9B00
+3WIaAwC7Q8SNc6Ilwnw1jOGWMGWe+2Gp8Z+BOXt3bsmqeESoQvaxP2tedU2/NYgX
+WdYbOy/eP5lC46/R35yuGvRSeCs0AU3/Ii0psRzn7eVlCwViqSBl2ST7H8rGa1Qx
+Vn94ZyWN6gVgBjadQqX6B35By05uhl/fyKA01kX1CL5JQowD0tjno+E9Ai8objER
+JuWzBH7IPKxY+p47Ak5sGhB2yrFdtJCNEQv8lnAoRLPM0C9X9D5vwmQkc1hNMSr4
+rDdiZ8xowXEfAnOcMBVryWrQcaUvpW2rvshTxuVvWamn9Mg1F4PD1m0X/nzcprv4
+hYgtOu3oF7M7rj1RpFdKdZRX7+J3HvmtRdB58E1mNJrqcGag0YhjNtBu7CFrRsrd
+dm1V8vjqKiEufh80lpvIZ+ipWcG6JAGplrL/vEwd0prv8beHGM6RUH6wMOngsVe0
+r6gZFkmTnJP5at09+4Yep99RNpFn6dPjN+ijWmAYrCqVn3JmKJK+lUnQTk/i2D12
+7Ivne2SQwes7v1TvJeQg
+=V2+Q
+-----END PGP SIGNATURE-----
+
+--TiqCXmo5T1hvSQQg--
