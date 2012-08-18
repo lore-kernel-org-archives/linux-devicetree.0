@@ -1,13 +1,16 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [patch] video: mb862xxfb: prevent divide by zero bug
-Date: Sat, 18 Aug 2012 20:35:07 +0200
-Message-ID: <20120818203507.558ccf09@wker>
-References: <20120818155541.GB22424@elgon.mountain>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] OF: pinctrl: MIPS: lantiq: adds support for FALCON SoC
+Date: Sun, 19 Aug 2012 00:22:29 +0200
+Message-ID: <CACRpkdbWf=r1rfQ5Q_G=OSaPqF0iq43nDikz3+GdPReToC4wEw@mail.gmail.com>
+References: <1343112660-12245-1-git-send-email-blogic@openwrt.org>
+ <1343112660-12245-3-git-send-email-blogic@openwrt.org>
+ <CACRpkdYP8PdcnS2h_-+n9ZdBmMuBPUv9so9WsUyS-X5rMz1qsQ@mail.gmail.com>
+ <502C030D.1030604@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120818155541.GB22424-mgFCXtclrQlZLf2FXnZxJA@public.gmane.org>
+In-Reply-To: <502C030D.1030604-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,33 +21,15 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Thomas Langer <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 18 Aug 2012 18:55:41 +0300
-Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
+On Wed, Aug 15, 2012 at 10:14 PM, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
 
-> Do a sanity check on these before using them as divisors.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+> Is it ok if i have these pinctrl patches go upstream via the MIPS tree ?
 
-Acked-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Yes, go ahead.
 
-> diff --git a/drivers/video/mb862xx/mb862xxfbdrv.c b/drivers/video/mb862xx/mb862xxfbdrv.c
-> index 00ce1f3..57d940b 100644
-> --- a/drivers/video/mb862xx/mb862xxfbdrv.c
-> +++ b/drivers/video/mb862xx/mb862xxfbdrv.c
-> @@ -328,6 +328,8 @@ static int mb862xxfb_ioctl(struct fb_info *fbi, unsigned int cmd,
->  	case MB862XX_L1_SET_CFG:
->  		if (copy_from_user(l1_cfg, argp, sizeof(*l1_cfg)))
->  			return -EFAULT;
-> +		if (l1_cfg->dh == 0 || l1_cfg->dw == 0)
-> +			return -EINVAL;
->  		if ((l1_cfg->sw >= l1_cfg->dw) && (l1_cfg->sh >= l1_cfg->dh)) {
->  			/* downscaling */
->  			outreg(cap, GC_CAP_CSC,
-
-Thanks,
-
-Anatolij
+Yours,
+Linus Walleij
