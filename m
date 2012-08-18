@@ -1,13 +1,12 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: dynamic device tree char driver
-Date: Sat, 18 Aug 2012 10:45:45 -0500
-Message-ID: <502FB8A9.4030907@gmail.com>
-References: <1345146226-32675-1-git-send-email-atull@altera.com>
+From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: [patch] video: mb862xxfb: prevent divide by zero bug
+Date: Sat, 18 Aug 2012 18:55:41 +0300
+Message-ID: <20120818155541.GB22424@elgon.mountain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345146226-32675-1-git-send-email-atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,64 +17,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/16/2012 02:43 PM, Alan Tull wrote:
-> 
-> Hello,
-> 
-> I'm Alan Tull, interested in dynamic features of device trees.
+Do a sanity check on these before using them as divisors.
 
-Hey Alan. How are you doing?
+Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
 
-> The following patch adds a char driver to add or remove device tree
-> nodes dynamically.  Its ioctl passes a struct with:
->  - size of the blob
->  - pointer to the blob
-> 
-> The path to add the nodes under is coded in the blob with dummy nodes.
-> For example the following can be compiled into a blob and sent to this
-> driver adding a single node under /soc/apb_periphs:
-> 
-> /dts-v1/;
-> / {
->         soc {
->                 apb_periphs {
->                         i2c1: i2c@ffc05000 {
->                                 compatible = "snps,designware-i2c";
->                                 reg = <0xffc05000 0x1000>;
->                                 interrupts = <0 159 4>;
->                                 emptyfifo_hold_master = <1>;
->                         };
->                 };
->         };
-> };
-> 
-> I wanted to get feeback early before I went too far down this particular
-> path.  As such, this code doesn't do any notification for drivers yet.
-> Also it won't properly add nested nodes yet.  It can add/remove a single
-> node and see it show up properly under /proc/device-tree.
-
-Have you looked at arch/powerpc/platforms/pseries/reconfig.c?
-
-There was also a recent discussion titled "OF_DYNAMIC usage" that you
-should look at.
-
-I don't think a char driver and ioctls will fly...
-
-Another option could be kexecing with a new DTB if you can live with a
-reboot.
-
-Rob
-
-> 
-> Alan Tull
-> Altera
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+diff --git a/drivers/video/mb862xx/mb862xxfbdrv.c b/drivers/video/mb862xx/mb862xxfbdrv.c
+index 00ce1f3..57d940b 100644
+--- a/drivers/video/mb862xx/mb862xxfbdrv.c
++++ b/drivers/video/mb862xx/mb862xxfbdrv.c
+@@ -328,6 +328,8 @@ static int mb862xxfb_ioctl(struct fb_info *fbi, unsigned int cmd,
+ 	case MB862XX_L1_SET_CFG:
+ 		if (copy_from_user(l1_cfg, argp, sizeof(*l1_cfg)))
+ 			return -EFAULT;
++		if (l1_cfg->dh == 0 || l1_cfg->dw == 0)
++			return -EINVAL;
+ 		if ((l1_cfg->sw >= l1_cfg->dw) && (l1_cfg->sh >= l1_cfg->dh)) {
+ 			/* downscaling */
+ 			outreg(cap, GC_CAP_CSC,
