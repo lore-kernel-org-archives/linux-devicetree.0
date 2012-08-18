@@ -1,71 +1,55 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
-Date: Sat, 18 Aug 2012 00:04:26 +0100
-Message-ID: <20120817230426.GC21888@opensource.wolfsonmicro.com>
-References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com>
- <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
- <502D3E29.1010501@wwwdotorg.org>
- <502D61C6.5050101@firmworks.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 2/9] ARM: OMAP: mcbsp: Enable FIFO use
+	for OMAP2430
+Date: Fri, 17 Aug 2012 23:08:10 -0700
+Message-ID: <20120818060810.GH11011@atomide.com>
+References: <1345124468-8876-1-git-send-email-peter.ujfalusi@ti.com>
+ <1345124468-8876-3-git-send-email-peter.ujfalusi@ti.com>
+ <20120817130723.GZ11011@atomide.com> <502E43BC.30708@bitmer.com>
+ <502E4F2B.6060403@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <502D61C6.5050101@firmworks.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <acourbot@nvidia.com>, linux-fbdev@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, linux-tegra@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <502E4F2B.6060403@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [120817 07:03]:
+> On 08/17/2012 04:14 PM, Jarkko Nikula wrote:
+> > On 08/17/2012 04:07 PM, Tony Lindgren wrote:
+> >> * Peter Ujfalusi <peter.ujfalusi@ti.com> [120816 06:41]:
+> >>> On OMAP2430 all McBSP ports have 128 word long buffer, enable the use of
+> >>> the FIFO for the audio stack.
+> >> Is this the case also for 2420? I thought some only had a FIFO at
+> >> one port?
+> >>
+> > IRCC (I don't have specs), nope. Only 2430 (as noted by Peter) and
+> > onwards have FIFO.
+> > 
+> > But that's true that FIFO sizes differ between the ports. E.g. only
+> > ports 2 and 3 have 1024+128 deep FIFOs in OMAP3.
+> > 
+> 
+> OMAP2420 McBSP does not have FIFO (the IP is closer to OMAP1 McBSP).
+> OMAP2430, OMAP4, OMAP5 has 128 word long FIFO on all McBSP ports.
+> On OMAP3: McBSP2 have 1024+256 (1280) word FIFO the rest of the ports have 128
+> long FIFO.
 
---TiqCXmo5T1hvSQQg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, is this patch still correct so it does not try to enable FIFO
+for 2420?
 
-On Thu, Aug 16, 2012 at 11:10:30AM -1000, Mitch Bradley wrote:
-> On 8/16/2012 8:38 AM, Stephen Warren wrote:
+Regards,
 
-> > Device tree bindings shouldn't reference Linux documentation; the
-> > bindings are supposed to be OS-agnostic.
-
-> While it is true that bindings should try to be OS-agnostic, there is
-> the practical matter of where to put documentation so that it is widely
-> accessible.  The Linux source tree is one of the most accessible things
-> there is, considering how widely it is replicated.
-
-> As the original instigator of the policy that the device tree should
-> describe the hardware "OS-neutrally", I personally don't have a problem
-> with bindings referring to Linux documentation.  I wouldn't like
-> references to proprietary and inaccessible documentation.
-
-OS agnosticness isn't the only issue here - the other problem with using
-Linux documentation is that except for things that are specifically
-userspace interfaces and the DT bindings nothing is intended to be
-stable so bindings defined in terms of Linux documentation may randomly
-change.  We're not doing an awesome job of that with DT right now but we
-should try and so we ought to avoid including non-ABI things in ABIs
-like this.
-
---TiqCXmo5T1hvSQQg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQLs3zAAoJEFJkBDiqVpZ4NucQAJowkgvCBihoqNrplgWBVFgj
-eps2rAS3cFRH8aUzgqi31UuAvyHmxxnI1+BoT4k256E86vC+b6asdeSov3iUGTKZ
-zZ6JKvaNIhkWaFYDKsciztyFbrF+26Eq2qRgLImM2vy0Z/yjayQGrI1DVJ3z9B00
-3WIaAwC7Q8SNc6Ilwnw1jOGWMGWe+2Gp8Z+BOXt3bsmqeESoQvaxP2tedU2/NYgX
-WdYbOy/eP5lC46/R35yuGvRSeCs0AU3/Ii0psRzn7eVlCwViqSBl2ST7H8rGa1Qx
-Vn94ZyWN6gVgBjadQqX6B35By05uhl/fyKA01kX1CL5JQowD0tjno+E9Ai8objER
-JuWzBH7IPKxY+p47Ak5sGhB2yrFdtJCNEQv8lnAoRLPM0C9X9D5vwmQkc1hNMSr4
-rDdiZ8xowXEfAnOcMBVryWrQcaUvpW2rvshTxuVvWamn9Mg1F4PD1m0X/nzcprv4
-hYgtOu3oF7M7rj1RpFdKdZRX7+J3HvmtRdB58E1mNJrqcGag0YhjNtBu7CFrRsrd
-dm1V8vjqKiEufh80lpvIZ+ipWcG6JAGplrL/vEwd0prv8beHGM6RUH6wMOngsVe0
-r6gZFkmTnJP5at09+4Yep99RNpFn6dPjN+ijWmAYrCqVn3JmKJK+lUnQTk/i2D12
-7Ivne2SQwes7v1TvJeQg
-=V2+Q
------END PGP SIGNATURE-----
-
---TiqCXmo5T1hvSQQg--
+Tony
