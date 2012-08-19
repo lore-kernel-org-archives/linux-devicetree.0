@@ -1,332 +1,128 @@
-From: Marcos Silva Cunha <marcos21xx@gmail.com>
-Subject: Re: [PATCH 0/8] *** ARM: Update arch-vt8500 to Devicetree ***
-Date: Sat, 18 Aug 2012 18:22:23 -0700 (PDT)
-Message-ID: <f807b970-dbc1-4c58-8647-42d5291b096b@googlegroups.com>
-References: <1344389967-8465-1-git-send-email-linux@prisktech.co.nz>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC/PATCH 09/13] media: s5k6aa: Add support for device tree
+ based instantiation
+Date: Sun, 19 Aug 2012 13:02:37 +0300
+Message-ID: <20120819100237.GB721@valkosipuli.retiisi.org.uk>
+References: <4FBFE1EC.9060209@samsung.com>
+ <1393020.I6XBuRyBXi@avalon>
+ <5011AB03.2070900@gmail.com>
+ <1451056.l0aSnQP8f4@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="----=_Part_1116_30113199.1345339343681"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1344389967-8465-1-git-send-email-linux@prisktech.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: vt8500-wm8505-linux-kernel@googlegroups.com
-Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, rtc-linux@googlegroups.com, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Alan Stern <stern@rowland.harvard.edu>, Eric Andersson <eric.andersson@unixphere.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, Neil Zhang <zhangwm@marvell.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>, Alessandro Zummo <a.zummo@towertech.it>, Linus Walleij <linus.walleij@stericsson.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1451056.l0aSnQP8f4@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, riverful.kim@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_1116_30113199.1345339343681
-Content-Type: multipart/alternative;
-	boundary="----=_Part_1117_23553027.1345339343681"
+Hi Laurent and Sylwester,
 
-------=_Part_1117_23553027.1345339343681
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+My apologies for the late answer.
 
-These patches can be used directly on kernel.org's main tarballs? Or just 
-on gitorious/vt8500 ?
+On Fri, Jul 27, 2012 at 12:50:13AM +0200, Laurent Pinchart wrote:
+> Hi Sylwester,
+> 
+> On Thursday 26 July 2012 22:39:31 Sylwester Nawrocki wrote:
+> > On 07/26/2012 05:21 PM, Laurent Pinchart wrote:
+> > > On Friday 25 May 2012 21:52:48 Sylwester Nawrocki wrote:
+> > >> The driver initializes all board related properties except the s_power()
+> > >> callback to board code. The platforms that require this callback are not
+> > >> supported by this driver yet for CONFIG_OF=y.
+> > >> 
+> > >> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+> > >> Signed-off-by: Bartlomiej Zolnierkiewicz<b.zolnierkie@samsung.com>
+> > >> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
+> > >> ---
+> > >> 
+> > >>   .../bindings/camera/samsung-s5k6aafx.txt           |   57 +++++++++
+> > >>   drivers/media/video/s5k6aa.c                       |  129 +++++++++----
+> > >>   2 files changed, 146 insertions(+), 40 deletions(-)
+> > >>   create mode 100644
+> > >> 
+> > >> Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
+> > >> 
+> > >> diff --git
+> > >> a/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
+> > >> b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt new file
+> > >> mode 100644
+> > >> index 0000000..6685a9c
+> > >> --- /dev/null
+> > >> +++ b/Documentation/devicetree/bindings/camera/samsung-s5k6aafx.txt
+> > >> @@ -0,0 +1,57 @@
+> > >> +Samsung S5K6AAFX camera sensor
+> > >> +------------------------------
+> > >> +
+> > >> +Required properties:
+> > >> +
+> > >> +- compatible : "samsung,s5k6aafx";
+> > >> +- reg : base address of the device on I2C bus;
+> > >> +- video-itu-601-bus : parallel bus with HSYNC and VSYNC - ITU-R BT.601;
+> > >> +- vdd_core-supply : digital core voltage supply 1.5V (1.4V to 1.6V);
+> > >> +- vdda-supply : analog power voltage supply 2.8V (2.6V to 3.0V);
+> > >> +- vdd_reg-supply : regulator input power voltage supply 1.8V (1.7V to
+> > >> 1.9V) +		   or 2.8V (2.6V to 3.0);
+> > >> +- vddio-supply : I/O voltage supply 1.8V (1.65V to 1.95V)
+> > >> +		 or 2.8V (2.5V to 3.1V);
+> > >> +
+> > >> +Optional properties:
+> > >> +
+> > >> +- clock-frequency : the IP's main (system bus) clock frequency in Hz,
+> > >> the default
+> > > 
+> > > Is that the input clock frequency ? Can't it vary ? Instead of accessing
+> > > the
+> > Yes, the description is incorrect in this patch, it should read:
+> > 
+> > +- clock-frequency : the sensor's master clock frequency in Hz;
+> > 
+> > and be a required property. As in this patch:
+> > https://github.com/snawrocki/linux/commit/e8a5f890dec0d7414b656bb1d1ac97d5e7
+> > abe563
+> > 
+> > It could vary (as this is a PLL input frequency), so probably a range would
+> > be a better alternative. Given that host device won't always be able to set
+> > this exact value...
+> 
+> A range sounds good, or perhaps a list of ranges. Sakari, what would you need 
+> for the SMIA++ driver ?
 
-On Tuesday, 7 August 2012 22:39:18 UTC-3, Tony Prisk wrote:
->
-> This patchset updates arch-vt8500 to devicetree and removes all the 
-> old-style 
-> code. Support for WM8650 has also been added. 
->
-> Example dts/dtsi files are given for the three currently supported models. 
->
-> Major changes: 
->
-> GPIO code has been converted to a platform_device and rewritten as WM8505 
-> support was broken. Add support for WM8650 gpio controller. 
->
-> UHCI support was missing. Added this as a generic non-pci uhci controller 
-> as 
-> it doesn't require anything special. Should be usable by any system that 
-> doesn't 
-> have special requirements to get the UHCI controller working. 
->
-> Framebuffer code patched to support WM8650. The bindings for this are of 
-> concern 
-> but there doesn't seem to be a formalized binding yet. This patch is based 
-> off 
-> Sascha Hauer's current patch on the dri-devel mailing list and should be 
-> easily 
-> patched out when its finalized. 
->
-> Patchset based on Arnd's arm-soc/for-next branch. 
->
->
-> Could I get this reviewed, hopefully for inclusion into v3.7. 
->
-> Regards 
-> Tony Prisk 
->
->
-> Tony Prisk (8): 
->   arm: vt8500: Add device tree files for VIA/Wondermedia SoC's 
->   rtc: vt8500: Add devicetree support for vt8500-rtc 
->   serial: vt8500: Add devicetree support for vt8500-serial 
->   usb: vt8500: Add devicetree support for vt8500-ehci and -uhci. 
->   video: vt8500: Add devicetree support for vt8500-fb and wm8505-fb 
->   arm: vt8500: Update arch-vt8500 to devicetree support. 
->   arm: vt8500: doc: Add device tree bindings for arch-vt8500 devices 
->   ARM: vt8500: gpio: Devicetree support for arch-vt8500 
->
->  Documentation/devicetree/bindings/arm/vt8500.txt   |   15 + 
->  .../bindings/arm/vt8500/via,vt8500-intc.txt        |   16 + 
->  .../bindings/arm/vt8500/via,vt8500-pmc.txt         |   13 + 
->  .../bindings/arm/vt8500/via,vt8500-timer.txt       |   15 + 
->  .../devicetree/bindings/gpio/gpio_vt8500.txt       |   24 ++ 
->  .../devicetree/bindings/rtc/via,vt8500-rtc.txt     |   15 + 
->  .../bindings/tty/serial/via,vt8500-uart.txt        |   15 + 
->  .../devicetree/bindings/usb/platform-uhci.txt      |   15 + 
->  .../devicetree/bindings/usb/via,vt8500-ehci.txt    |   15 + 
->  .../devicetree/bindings/vendor-prefixes.txt        |    2 + 
->  .../devicetree/bindings/video/via,vt8500-fb.txt    |   46 +++ 
->  .../devicetree/bindings/video/wm,prizm-ge-rops.txt |   13 + 
->  .../devicetree/bindings/video/wm,wm8505-fb.txt     |   20 ++ 
->  arch/arm/Kconfig                                   |    2 + 
->  arch/arm/boot/dts/vt8500.dtsi                      |   99 ++++++ 
->  arch/arm/boot/dts/vt8500_ref.dts                   |   31 ++ 
->  arch/arm/boot/dts/wm8505.dtsi                      |  125 ++++++++ 
->  arch/arm/boot/dts/wm8505_ref.dts                   |   31 ++ 
->  arch/arm/boot/dts/wm8650.dtsi                      |   95 ++++++ 
->  arch/arm/boot/dts/wm8650_ref.dts                   |   31 ++ 
->  arch/arm/mach-vt8500/Kconfig                       |   72 +---- 
->  arch/arm/mach-vt8500/Makefile                      |    9 +- 
->  arch/arm/mach-vt8500/bv07.c                        |   80 ----- 
->  arch/arm/mach-vt8500/common.h                      |   25 ++ 
->  arch/arm/mach-vt8500/devices-vt8500.c              |   91 ------ 
->  arch/arm/mach-vt8500/devices-wm8505.c              |   99 ------ 
->  arch/arm/mach-vt8500/devices.c                     |  270 
-> ----------------- 
->  arch/arm/mach-vt8500/devices.h                     |   88 ------ 
->  arch/arm/mach-vt8500/gpio.c                        |  240 --------------- 
->  arch/arm/mach-vt8500/include/mach/restart.h        |    4 +- 
->  arch/arm/mach-vt8500/include/mach/vt8500_irqs.h    |   88 ------ 
->  arch/arm/mach-vt8500/include/mach/vt8500_regs.h    |   79 ----- 
->  arch/arm/mach-vt8500/include/mach/wm8505_irqs.h    |  115 ------- 
->  arch/arm/mach-vt8500/include/mach/wm8505_regs.h    |   78 ----- 
->  arch/arm/mach-vt8500/irq.c                         |  160 +++++----- 
->  arch/arm/mach-vt8500/restart.c                     |   54 ---- 
->  arch/arm/mach-vt8500/timer.c                       |   56 +++- 
->  arch/arm/mach-vt8500/vt8500.c                      |  192 ++++++++++++ 
->  arch/arm/mach-vt8500/wm8505_7in.c                  |   79 ----- 
->  drivers/gpio/Kconfig                               |    6 + 
->  drivers/gpio/Makefile                              |    1 + 
->  drivers/gpio/gpio-vt8500.c                         |  318 
-> ++++++++++++++++++++ 
->  drivers/rtc/rtc-vt8500.c                           |    7 + 
->  drivers/tty/serial/vt8500_serial.c                 |    7 + 
->  drivers/usb/host/Kconfig                           |    4 +- 
->  drivers/usb/host/ehci-vt8500.c                     |   24 +- 
->  drivers/usb/host/uhci-hcd.c                        |    5 + 
->  drivers/usb/host/uhci-platform.c                   |  166 ++++++++++ 
->  drivers/video/Kconfig                              |    6 +- 
->  drivers/video/vt8500lcdfb.c                        |   77 ++++- 
->  drivers/video/wm8505fb.c                           |   95 +++++- 
->  drivers/video/wmt_ge_rops.c                        |    7 + 
->  52 files changed, 1674 insertions(+), 1566 deletions(-) 
->  create mode 100644 Documentation/devicetree/bindings/arm/vt8500.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/arm/vt8500/via,vt8500-intc.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/arm/vt8500/via,vt8500-pmc.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/arm/vt8500/via,vt8500-timer.txt 
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_vt8500.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/rtc/via,vt8500-rtc.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/tty/serial/via,vt8500-uart.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/usb/platform-uhci.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/video/via,vt8500-fb.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/video/wm,prizm-ge-rops.txt 
->  create mode 100644 
-> Documentation/devicetree/bindings/video/wm,wm8505-fb.txt 
->  create mode 100644 arch/arm/boot/dts/vt8500.dtsi 
->  create mode 100644 arch/arm/boot/dts/vt8500_ref.dts 
->  create mode 100644 arch/arm/boot/dts/wm8505.dtsi 
->  create mode 100644 arch/arm/boot/dts/wm8505_ref.dts 
->  create mode 100644 arch/arm/boot/dts/wm8650.dtsi 
->  create mode 100644 arch/arm/boot/dts/wm8650_ref.dts 
->  delete mode 100644 arch/arm/mach-vt8500/bv07.c 
->  create mode 100644 arch/arm/mach-vt8500/common.h 
->  delete mode 100644 arch/arm/mach-vt8500/devices-vt8500.c 
->  delete mode 100644 arch/arm/mach-vt8500/devices-wm8505.c 
->  delete mode 100644 arch/arm/mach-vt8500/devices.c 
->  delete mode 100644 arch/arm/mach-vt8500/devices.h 
->  delete mode 100644 arch/arm/mach-vt8500/gpio.c 
->  delete mode 100644 arch/arm/mach-vt8500/include/mach/vt8500_irqs.h 
->  delete mode 100644 arch/arm/mach-vt8500/include/mach/vt8500_regs.h 
->  delete mode 100644 arch/arm/mach-vt8500/include/mach/wm8505_irqs.h 
->  delete mode 100644 arch/arm/mach-vt8500/include/mach/wm8505_regs.h 
->  delete mode 100644 arch/arm/mach-vt8500/restart.c 
->  create mode 100644 arch/arm/mach-vt8500/vt8500.c 
->  delete mode 100644 arch/arm/mach-vt8500/wm8505_7in.c 
->  create mode 100644 drivers/gpio/gpio-vt8500.c 
->  create mode 100644 drivers/usb/host/uhci-platform.c 
->
-> -- 
-> 1.7.9.5 
->
->
-------=_Part_1117_23553027.1345339343681
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Typically the sensor's external clock is derived from another clock using a
+divisor. This means there's usually quite limited selection of possible
+clock frequencies since the sensors usually have a small range of possible
+frequencies such as 6 -- 27 MHz or even less.
 
-These patches can be used directly on kernel.org's main tarballs? Or just on gitorious/vt8500 ?<br><br>On Tuesday, 7 August 2012 22:39:18 UTC-3, Tony Prisk  wrote:<blockquote class="gmail_quote" style="margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;">This patchset updates arch-vt8500 to devicetree and removes all the old-style
-<br>code. Support for WM8650 has also been added.
-<br>
-<br>Example dts/dtsi files are given for the three currently supported models.
-<br>
-<br>Major changes:
-<br>
-<br>GPIO code has been converted to a platform_device and rewritten as WM8505
-<br>support was broken. Add support for WM8650 gpio controller.
-<br>
-<br>UHCI support was missing. Added this as a generic non-pci uhci controller as
-<br>it doesn't require anything special. Should be usable by any system that doesn't
-<br>have special requirements to get the UHCI controller working.
-<br>
-<br>Framebuffer code patched to support WM8650. The bindings for this are of concern
-<br>but there doesn't seem to be a formalized binding yet. This patch is based off
-<br>Sascha Hauer's current patch on the dri-devel mailing list and should be easily
-<br>patched out when its finalized.
-<br>
-<br>Patchset based on Arnd's arm-soc/for-next branch.
-<br>
-<br>
-<br>Could I get this reviewed, hopefully for inclusion into v3.7.
-<br>
-<br>Regards
-<br>Tony Prisk
-<br>
-<br>
-<br>Tony Prisk (8):
-<br>&nbsp; arm: vt8500: Add device tree files for VIA/Wondermedia SoC's
-<br>&nbsp; rtc: vt8500: Add devicetree support for vt8500-rtc
-<br>&nbsp; serial: vt8500: Add devicetree support for vt8500-serial
-<br>&nbsp; usb: vt8500: Add devicetree support for vt8500-ehci and -uhci.
-<br>&nbsp; video: vt8500: Add devicetree support for vt8500-fb and wm8505-fb
-<br>&nbsp; arm: vt8500: Update arch-vt8500 to devicetree support.
-<br>&nbsp; arm: vt8500: doc: Add device tree bindings for arch-vt8500 devices
-<br>&nbsp; ARM: vt8500: gpio: Devicetree support for arch-vt8500
-<br>
-<br>&nbsp;Documentation/devicetree/<wbr>bindings/arm/vt8500.txt &nbsp; | &nbsp; 15 +
-<br>&nbsp;.../bindings/arm/vt8500/via,<wbr>vt8500-intc.txt &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 16 +
-<br>&nbsp;.../bindings/arm/vt8500/via,<wbr>vt8500-pmc.txt &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 13 +
-<br>&nbsp;.../bindings/arm/vt8500/via,<wbr>vt8500-timer.txt &nbsp; &nbsp; &nbsp; | &nbsp; 15 +
-<br>&nbsp;.../devicetree/bindings/gpio/<wbr>gpio_vt8500.txt &nbsp; &nbsp; &nbsp; | &nbsp; 24 ++
-<br>&nbsp;.../devicetree/bindings/rtc/<wbr>via,vt8500-rtc.txt &nbsp; &nbsp; | &nbsp; 15 +
-<br>&nbsp;.../bindings/tty/serial/via,<wbr>vt8500-uart.txt &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 15 +
-<br>&nbsp;.../devicetree/bindings/usb/<wbr>platform-uhci.txt &nbsp; &nbsp; &nbsp;| &nbsp; 15 +
-<br>&nbsp;.../devicetree/bindings/usb/<wbr>via,vt8500-ehci.txt &nbsp; &nbsp;| &nbsp; 15 +
-<br>&nbsp;.../devicetree/bindings/<wbr>vendor-prefixes.txt &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp;2 +
-<br>&nbsp;.../devicetree/bindings/<wbr>video/via,vt8500-fb.txt &nbsp; &nbsp;| &nbsp; 46 +++
-<br>&nbsp;.../devicetree/bindings/<wbr>video/wm,prizm-ge-rops.txt | &nbsp; 13 +
-<br>&nbsp;.../devicetree/bindings/<wbr>video/wm,wm8505-fb.txt &nbsp; &nbsp; | &nbsp; 20 ++
-<br>&nbsp;arch/arm/Kconfig &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp;2 +
-<br>&nbsp;arch/arm/boot/dts/vt8500.dtsi &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 99 ++++++
-<br>&nbsp;arch/arm/boot/dts/vt8500_ref.<wbr>dts &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 31 ++
-<br>&nbsp;arch/arm/boot/dts/wm8505.dtsi &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp;125 ++++++++
-<br>&nbsp;arch/arm/boot/dts/wm8505_ref.<wbr>dts &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 31 ++
-<br>&nbsp;arch/arm/boot/dts/wm8650.dtsi &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 95 ++++++
-<br>&nbsp;arch/arm/boot/dts/wm8650_ref.<wbr>dts &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 31 ++
-<br>&nbsp;arch/arm/mach-vt8500/Kconfig &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 72 +----
-<br>&nbsp;arch/arm/mach-vt8500/Makefile &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp;9 +-
-<br>&nbsp;arch/arm/mach-vt8500/bv07.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 80 -----
-<br>&nbsp;arch/arm/mach-vt8500/common.h &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 25 ++
-<br>&nbsp;arch/arm/mach-vt8500/devices-<wbr>vt8500.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 91 ------
-<br>&nbsp;arch/arm/mach-vt8500/devices-<wbr>wm8505.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 99 ------
-<br>&nbsp;arch/arm/mach-vt8500/devices.<wbr>c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp;270 -----------------
-<br>&nbsp;arch/arm/mach-vt8500/devices.<wbr>h &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 88 ------
-<br>&nbsp;arch/arm/mach-vt8500/gpio.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp;240 ---------------
-<br>&nbsp;arch/arm/mach-vt8500/include/<wbr>mach/restart.h &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp;4 +-
-<br>&nbsp;arch/arm/mach-vt8500/include/<wbr>mach/vt8500_irqs.h &nbsp; &nbsp;| &nbsp; 88 ------
-<br>&nbsp;arch/arm/mach-vt8500/include/<wbr>mach/vt8500_regs.h &nbsp; &nbsp;| &nbsp; 79 -----
-<br>&nbsp;arch/arm/mach-vt8500/include/<wbr>mach/wm8505_irqs.h &nbsp; &nbsp;| &nbsp;115 -------
-<br>&nbsp;arch/arm/mach-vt8500/include/<wbr>mach/wm8505_regs.h &nbsp; &nbsp;| &nbsp; 78 -----
-<br>&nbsp;arch/arm/mach-vt8500/irq.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp;160 +++++-----
-<br>&nbsp;arch/arm/mach-vt8500/restart.<wbr>c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 54 ----
-<br>&nbsp;arch/arm/mach-vt8500/timer.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 56 +++-
-<br>&nbsp;arch/arm/mach-vt8500/vt8500.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp;192 ++++++++++++
-<br>&nbsp;arch/arm/mach-vt8500/wm8505_<wbr>7in.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 79 -----
-<br>&nbsp;drivers/gpio/Kconfig &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp;6 +
-<br>&nbsp;drivers/gpio/Makefile &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp;1 +
-<br>&nbsp;drivers/gpio/gpio-vt8500.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp;318 ++++++++++++++++++++
-<br>&nbsp;drivers/rtc/rtc-vt8500.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp;7 +
-<br>&nbsp;drivers/tty/serial/vt8500_<wbr>serial.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp;7 +
-<br>&nbsp;drivers/usb/host/Kconfig &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp;4 +-
-<br>&nbsp;drivers/usb/host/ehci-vt8500.<wbr>c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 24 +-
-<br>&nbsp;drivers/usb/host/uhci-hcd.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp;5 +
-<br>&nbsp;drivers/usb/host/uhci-<wbr>platform.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp;166 ++++++++++
-<br>&nbsp;drivers/video/Kconfig &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp;6 +-
-<br>&nbsp;drivers/video/vt8500lcdfb.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; 77 ++++-
-<br>&nbsp;drivers/video/wm8505fb.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 95 +++++-
-<br>&nbsp;drivers/video/wmt_ge_rops.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp;7 +
-<br>&nbsp;52 files changed, 1674 insertions(+), 1566 deletions(-)
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/arm/vt8500.txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/arm/vt8500/via,<wbr>vt8500-intc.txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/arm/vt8500/via,<wbr>vt8500-pmc.txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/arm/vt8500/via,<wbr>vt8500-timer.txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/gpio/gpio_vt8500.txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/rtc/via,vt8500-rtc.<wbr>txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/tty/serial/via,<wbr>vt8500-uart.txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/usb/platform-uhci.txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/usb/via,vt8500-ehci.<wbr>txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/video/via,vt8500-fb.<wbr>txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/video/wm,prizm-ge-<wbr>rops.txt
-<br>&nbsp;create mode 100644 Documentation/devicetree/<wbr>bindings/video/wm,wm8505-fb.<wbr>txt
-<br>&nbsp;create mode 100644 arch/arm/boot/dts/vt8500.dtsi
-<br>&nbsp;create mode 100644 arch/arm/boot/dts/vt8500_ref.<wbr>dts
-<br>&nbsp;create mode 100644 arch/arm/boot/dts/wm8505.dtsi
-<br>&nbsp;create mode 100644 arch/arm/boot/dts/wm8505_ref.<wbr>dts
-<br>&nbsp;create mode 100644 arch/arm/boot/dts/wm8650.dtsi
-<br>&nbsp;create mode 100644 arch/arm/boot/dts/wm8650_ref.<wbr>dts
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/bv07.c
-<br>&nbsp;create mode 100644 arch/arm/mach-vt8500/common.h
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/devices-<wbr>vt8500.c
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/devices-<wbr>wm8505.c
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/devices.c
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/devices.h
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/gpio.c
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/include/<wbr>mach/vt8500_irqs.h
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/include/<wbr>mach/vt8500_regs.h
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/include/<wbr>mach/wm8505_irqs.h
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/include/<wbr>mach/wm8505_regs.h
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/restart.c
-<br>&nbsp;create mode 100644 arch/arm/mach-vt8500/vt8500.c
-<br>&nbsp;delete mode 100644 arch/arm/mach-vt8500/wm8505_<wbr>7in.c
-<br>&nbsp;create mode 100644 drivers/gpio/gpio-vt8500.c
-<br>&nbsp;create mode 100644 drivers/usb/host/uhci-<wbr>platform.c
-<br>
-<br>-- 
-<br>1.7.9.5
-<br>
-<br></blockquote>
-------=_Part_1117_23553027.1345339343681--
+Also it's important to choose the frequency in such a way that it doesn't
+interfere with other devices in the system. The frequency also must be
+picked so that one can achieve the desired highest data transfer rate. The
+sensors are also quite flexible in their internal clock tree configuration,
+but in the situation where the desired data rate is close to sensor limits
+there may be additional constraints. Still it's always possible to come up
+with a best value for the board while other values are inferior.
 
-------=_Part_1116_30113199.1345339343681
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+For these reasons I see little point in providing anything else than just a
+single value for the external clock frequency. This value is board-specific.
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > > sensor clock frequency from the FIMC driver you should reference a clock
+> > > in the sensor DT node. That obviously requires generic clock support,
+> > > which might not be available for your platform yet (that's one of the
+> > > reasons the OMAP3 ISP driver doesn't support DT yet).
+> > 
+> > I agree it might be better, but waiting unknown number of kernel releases
+> > for the platforms to get converted to common clock API is not a good
+> > alternative either. I guess we could have some transitional solutions while
+> > other subsystems are getting adapted.
+> 
+> I agree, we need an interim solution.
 
-------=_Part_1116_30113199.1345339343681--
+The SMIA++ driver allows the platform data to have either the clock name or
+a function pointer to set the clock frequency. If the clock name is there
+it'll be used instead. The function pointer can be removed once it's no
+longer needed.
+
+Kind regards,
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	jabber/XMPP/Gmail: sailus@retiisi.org.uk
