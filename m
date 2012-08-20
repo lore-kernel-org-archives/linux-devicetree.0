@@ -1,18 +1,15 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: imx6q: replace clk_register_clkdev with clock
- DT lookup
-Date: Mon, 20 Aug 2012 23:16:11 +0800
-Message-ID: <20120820151609.GN24242@S2101-09.ap.freescale.net>
-References: <1345104526-14797-1-git-send-email-shawn.guo@linaro.org>
- <1345104526-14797-3-git-send-email-shawn.guo@linaro.org>
- <503232E0.3000007@gmail.com>
- <CAKGA1bn2uCWE8YkGR4EzTxZ_bXJ_ov2diq63uxQ=dT7b6Fu9GQ@mail.gmail.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 dtc-1.3.0] dtc: Add --strip-disabled option to dtc(v2).
+Date: Mon, 20 Aug 2012 16:19:24 +0100
+Message-ID: <5032557C.8020507@st.com>
+References: <1345458247-15701-1-git-send-email-srinivas.kandagatla@st.com>
+ <E1T3RzA-0002rn-SS@jdl.com>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKGA1bn2uCWE8YkGR4EzTxZ_bXJ_ov2diq63uxQ=dT7b6Fu9GQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <E1T3RzA-0002rn-SS-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,44 +20,56 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: mmarek-AlSwsSmVLrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 20, 2012 at 09:54:48AM -0500, Matt Sealey wrote:
-> Yet another arbitrary array...
-> 
-> I'm not sure why you would move the registration lookup into the DT
+On 20/08/12 14:25, Jon Loeliger wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>>
+>> This patch allows dtc to strip out nodes in its output based on status
+>> property. Now the dtc has additional long option --strip-disabled to
+>> strip all the nodes which do not have status property set to "okay" or
+>> "ok". Nodes which do not have status property are not stripped.
+>>
+>> SOCs have lot of device tree infrastructure files which mark the
+>> device nodes as disabled and the board level device tree enables them if
+>> required. However while creating device tree blob, the compiler can
+>> exclude nodes marked as disabled, doing this way will reduce the size
+>> of device tree blob. The size change will be significant once the SOC
+>> adds all the possible devices in to the device trees. As there could be
+>> 100s of Ips on SOCs but the board actually uses may be 20-25 IP's.
+>>
+>> However care has to be taken if your boardloader is is updating status
+>> property.
+>>
+>> In our case this has reduced the blob size from 29K to 15K.
+>>
+>> Also nodes with status="disabled" is are never probed by dt platform bus
+>> code.
+>>
+>> Again, this is an optional parameter to dtc, Can be used by people who
+>> want to strip all the device nodes which do not have status property set
+>> to "okay" or "ok".
+> I don't know.  This all strikes me as a means to hack around
+> our total lack of a properly constructed tree based on real
+> data and valid node presence.  That is, if we had a better
+> means of constructing your tree in the first place, it would
+> not habve 50% overhead of dead nodes.
+I agree with you to some extent,
+But, Lets say a given SOC can support 5 UARTs But the board actually has
+only one wired up.
+Device tree for SOC has 5 entries for UART with disabled and only one
+UART is enabled by board level device tree.
+This is just once instance, think about SPI's, I2C, PWM's, Ethernets,
+memory devices... and other IP's which might wired up for particular boards.
 
-Because I do not want to patch kernel every time I need a new lookup.
-Furthermore, looking at function imx53_qsb_init in imx53-dt.c, you
-will find that lookup for sgtl5000 is really board specific and should
-go to device tree.
-
-> and use an arbitrarily ordered array again. Sure, you're looking it up
-> entirely within the device tree here, but a better solution would be
-> to not name clocks twice, and structure your clock definition
-> properly.
-> 
-> What's wrong with;
-> 
-> ccm@020c4000 {
->    ...
->    my_clock: clock@0 {
->        name = "my_clock_name";
->    }
-> }
-> 
-> uart@nnnnnnnn {
->    ...
->    clocks = <&my_clock>;
-> }
-> 
-> ?
-> 
-It turns a property into 185 nodes, which will just bloat the device
-tree.  This issue has been discussed for a plenty of times.
-
--- 
-Regards,
-Shawn
+>
+> It should be built in a positive sense, perhaps with includes, or a
+> better system, and not edited out based on questionable negative data.
+>
+> This just seems like a fundamentally wrong approach to me.
+>
+> jdl
+>
+>
