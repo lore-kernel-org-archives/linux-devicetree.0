@@ -1,886 +1,248 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: imx6q: replace clk_register_clkdev with clock DT
- lookup
-Date: Mon, 20 Aug 2012 09:54:48 -0500
-Message-ID: <CAKGA1bn2uCWE8YkGR4EzTxZ_bXJ_ov2diq63uxQ=dT7b6Fu9GQ@mail.gmail.com>
-References: <1345104526-14797-1-git-send-email-shawn.guo@linaro.org>
- <1345104526-14797-3-git-send-email-shawn.guo@linaro.org>
- <503232E0.3000007@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RESEND v4] spi/pl022: add devicetree support
+Date: Mon, 20 Aug 2012 17:02:47 +0200
+Message-ID: <CACRpkdavHm4d+Yw5-drjToRJr1+N0ku4xE97xn+5svxxyqhtDQ@mail.gmail.com>
+References: <1345462769-17386-1-git-send-email-aletes.xgr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <503232E0.3000007-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1345462769-17386-1-git-send-email-aletes.xgr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Roland Stigge <stigge@antcom.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, Gabriel FERNANDEZ <gabriel.fernandez@stericsson.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Yet another arbitrary array...
+(Currently make sure to include Mark Brown (see To: line) on all SPI patches,
+as he's collecting them.)
 
-I'm not sure why you would move the registration lookup into the DT
-and use an arbitrarily ordered array again. Sure, you're looking it up
-entirely within the device tree here, but a better solution would be
-to not name clocks twice, and structure your clock definition
-properly.
+On Mon, Aug 20, 2012 at 1:39 PM, Alexandre Pereira da Silva
+<aletes.xgr@gmail.com> wrote:
 
-What's wrong with;
+> Add the chipselect array and cur_cs properties to pl022 main structure
 
-ccm@020c4000 {
-   ...
-   my_clock: clock@0 {
-       name = "my_clock_name";
-   }
-}
+OK...
 
-uart@nnnnnnnn {
-   ...
-   clocks = <&my_clock>;
-}
+> diff --git a/Documentation/devicetree/bindings/spi/spi_pl022.txt b/Documentation/devicetree/bindings/spi/spi_pl022.txt
 
-?
+This looks fine to me.
 
--- 
-Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Product Development Analyst, Genesi USA, Inc.
+> +#include <linux/gpio.h>
+> +#include <linux/of_gpio.h>
 
+Hm, it looks like two changes are embedded in this patch.
 
-On Mon, Aug 20, 2012 at 7:51 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 08/16/2012 03:08 AM, Shawn Guo wrote:
->> It really becomes an issue that every time a device needs to look
->> up (clk_get) a clock we have to patch kernel clock file to call
->> clk_register_clkdev for that clock.
->>
->> Since clock DT support which is meant to resolve clock lookup in device
->> tree is in place, the patch moves imx6q client devices' clock lookup
->> over to device tree, so that any new lookup to be added at later time
->> can just get done in DT instead of kernel.
->>
->> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >
-> Looks good. For both patches:
+>  /*
+>   * This macro is used to define some register default values.
+> @@ -389,6 +391,8 @@ struct pl022 {
+>         char                            *dummypage;
+>         bool                            dma_running;
+>  #endif
+> +       int cur_cs;
+> +       int chipselect[0];
+>  };
+
+You forgot to add kerneldoc for these two. Please add!
+
+int chipselect[0] really? isn't int *chipselect what you really want
+to store in there?
+
+> +       if (gpio_is_valid(pl022->cur_cs))
+> +               gpio_set_value(pl022->cur_cs, command);
+> +       else
+> +               pl022->cur_chip->cs_control(command);
+> +}
+
+So it seems like this should be two patches:
+
+- One adding pl022->cur_cs and the ability for the driver to control
+the chip select directly from msg->spi->chip_select
+Make sure it is possible to populate pl022->chipselect also
+from platform data since many people are using that
+still.
+
+- Another patch adding device tree and that stuff.
+
+So please split it in two.
+
+> -                       pl022->cur_chip->cs_control(SSP_CHIP_DESELECT);
+> +                       pl022_cs_control(pl022, SSP_CHIP_DESELECT);
+
+All these are OK and go in the first patch.
+
+> +       pl022->cur_cs = pl022->chipselect[msg->spi->chip_select];
+
+Goes into the first patch...
+
+> @@ -1761,12 +1772,14 @@ static const struct pl022_config_chip pl022_default_chip_info = {
+>  static int pl022_setup(struct spi_device *spi)
+>  {
+>         struct pl022_config_chip const *chip_info;
+> +       struct pl022_config_chip chip_info_dt;
+
+Goes into second patch.
+
+>         struct chip_data *chip;
+>         struct ssp_clock_params clk_freq = { .cpsdvsr = 0, .scr = 0};
+>         int status = 0;
+>         struct pl022 *pl022 = spi_master_get_devdata(spi->master);
+>         unsigned int bits = spi->bits_per_word;
+>         u32 tmp;
+> +       struct device_node *np = spi->dev.of_node;
+
+Does this compile if CONFIG_OF is not selected?
+
+I have seen other drivers have #ifdef CONFIG_OF around these
+things.
+
+Make sure you test-compile without DT.
+
+> @@ -1789,10 +1802,36 @@ static int pl022_setup(struct spi_device *spi)
+>         chip_info = spi->controller_data;
 >
-> Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>         if (chip_info == NULL) {
+> -               chip_info = &pl022_default_chip_info;
+> -               /* spi_board_info.controller_data not is supplied */
+> -               dev_dbg(&spi->dev,
+> -                       "using default controller_data settings\n");
+> +               if (np) {
+> +                       chip_info_dt = pl022_default_chip_info;
+> +
+> +                       of_property_read_u32(np, "pl022,hierarchy",
+> +                               &chip_info_dt.hierarchy);
+> +                       of_property_read_u32(np, "pl022,interface",
+> +                               &chip_info_dt.iface);
+> +                       chip_info_dt.slave_tx_disable =
+> +                               of_property_read_bool(np,
+> +                                       "pl022,slave-tx-disable");
+> +                       of_property_read_u32(np, "pl022,com-mode",
+> +                               &chip_info_dt.com_mode);
+> +                       of_property_read_u32(np, "pl022,rx-level-trig",
+> +                               &chip_info_dt.rx_lev_trig);
+> +                       of_property_read_u32(np, "pl022,tx-level-trig",
+> +                               &chip_info_dt.tx_lev_trig);
+> +                       of_property_read_u32(np, "pl022,ctrl-len",
+> +                               &chip_info_dt.ctrl_len);
+> +                       of_property_read_u32(np, "pl022,wait-state",
+> +                               &chip_info_dt.wait_state);
+> +                       of_property_read_u32(np, "pl022,duplex",
+> +                               &chip_info_dt.duplex);
+> +
+> +                       chip_info = &chip_info_dt;
+> +               } else {
+> +                       chip_info = &pl022_default_chip_info;
+> +                       /* spi_board_info.controller_data not is supplied */
+> +                       dev_dbg(&spi->dev,
+> +                               "using default controller_data settings\n");
+> +               }
+
+Goes into second patch.
+
+> @@ -1835,8 +1874,9 @@ static int pl022_setup(struct spi_device *spi)
+>         chip->xfer_type = chip_info->com_mode;
+>         if (!chip_info->cs_control) {
+>                 chip->cs_control = null_cs_control;
+> -               dev_warn(&spi->dev,
+> -                        "chip select function is NULL for this chip\n");
+> +               if (!gpio_is_valid(pl022->chipselect[spi->chip_select]))
+> +                       dev_warn(&spi->dev,
+> +                                "chip select function is NULL for this chip\n");
+>         } else
+>                 chip->cs_control = chip_info->cs_control;
+
+Goes into first patch.
+
+> @@ -1988,7 +2028,8 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
+>         struct pl022_ssp_controller *platform_info = adev->dev.platform_data;
+>         struct spi_master *master;
+>         struct pl022 *pl022 = NULL;     /*Data for this driver */
+> -       int status = 0;
+> +       struct device_node *np = adev->dev.of_node;
+
+Does this compile without CONFIG_OF?
+(Second patch)
+
+> +       int status = 0, i, num_cs;
 >
->> ---
->>  .../devicetree/bindings/clock/imx6q-clock.txt      |  223 +++++++++++++++++
->>  arch/arm/boot/dts/imx6q-sabrelite.dts              |    1 +
->>  arch/arm/boot/dts/imx6q.dtsi                       |  261 +++++++++++++++++++-
->>  arch/arm/mach-imx/clk-imx6q.c                      |   41 +---
->>  arch/arm/mach-imx/mach-imx6q.c                     |    1 -
->>  5 files changed, 477 insertions(+), 50 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->> new file mode 100644
->> index 0000000..19d8126
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->> @@ -0,0 +1,223 @@
->> +* Clock bindings for Freescale i.MX6 Quad
->> +
->> +Required properties:
->> +- compatible: Should be "fsl,imx6q-ccm"
->> +- reg: Address and length of the register set
->> +- interrupts: Should contain CCM interrupt
->> +- #clock-cells: Should be <1>
->> +- clock-output-names: A list of clock output names that CCM provides.
->> +  The full list of all valid clock names and IDs is below.
->> +
->> +     Name                    ID
->> +     ---------------------------
->> +     dummy                   0
->> +     ckil                    1
->> +     ckih                    2
->> +     osc                     3
->> +     pll2_pfd0_352m          4
->> +     pll2_pfd1_594m          5
->> +     pll2_pfd2_396m          6
->> +     pll3_pfd0_720m          7
->> +     pll3_pfd1_540m          8
->> +     pll3_pfd2_508m          9
->> +     pll3_pfd3_454m          10
->> +     pll2_198m               11
->> +     pll3_120m               12
->> +     pll3_80m                13
->> +     pll3_60m                14
->> +     twd                     15
->> +     step                    16
->> +     pll1_sw                 17
->> +     periph_pre              18
->> +     periph2_pre             19
->> +     periph_clk2_sel         20
->> +     periph2_clk2_sel        21
->> +     axi_sel                 22
->> +     esai_sel                23
->> +     asrc_sel                24
->> +     spdif_sel               25
->> +     gpu2d_axi               26
->> +     gpu3d_axi               27
->> +     gpu2d_core_sel          28
->> +     gpu3d_core_sel          29
->> +     gpu3d_shader_sel        30
->> +     ipu1_sel                31
->> +     ipu2_sel                32
->> +     ldb_di0_sel             33
->> +     ldb_di1_sel             34
->> +     ipu1_di0_pre_sel        35
->> +     ipu1_di1_pre_sel        36
->> +     ipu2_di0_pre_sel        37
->> +     ipu2_di1_pre_sel        38
->> +     ipu1_di0_sel            39
->> +     ipu1_di1_sel            40
->> +     ipu2_di0_sel            41
->> +     ipu2_di1_sel            42
->> +     hsi_tx_sel              43
->> +     pcie_axi_sel            44
->> +     ssi1_sel                45
->> +     ssi2_sel                46
->> +     ssi3_sel                47
->> +     usdhc1_sel              48
->> +     usdhc2_sel              49
->> +     usdhc3_sel              50
->> +     usdhc4_sel              51
->> +     enfc_sel                52
->> +     emi_sel                 53
->> +     emi_slow_sel            54
->> +     vdo_axi_sel             55
->> +     vpu_axi_sel             56
->> +     cko1_sel                57
->> +     periph                  58
->> +     periph2                 59
->> +     periph_clk2             60
->> +     periph2_clk2            61
->> +     ipg                     62
->> +     ipg_per                 63
->> +     esai_pred               64
->> +     esai_podf               65
->> +     asrc_pred               66
->> +     asrc_podf               67
->> +     spdif_pred              68
->> +     spdif_podf              69
->> +     can_root                70
->> +     ecspi_root              71
->> +     gpu2d_core_podf         72
->> +     gpu3d_core_podf         73
->> +     gpu3d_shader            74
->> +     ipu1_podf               75
->> +     ipu2_podf               76
->> +     ldb_di0_podf            77
->> +     ldb_di1_podf            78
->> +     ipu1_di0_pre            79
->> +     ipu1_di1_pre            80
->> +     ipu2_di0_pre            81
->> +     ipu2_di1_pre            82
->> +     hsi_tx_podf             83
->> +     ssi1_pred               84
->> +     ssi1_podf               85
->> +     ssi2_pred               86
->> +     ssi2_podf               87
->> +     ssi3_pred               88
->> +     ssi3_podf               89
->> +     uart_serial_podf        90
->> +     usdhc1_podf             91
->> +     usdhc2_podf             92
->> +     usdhc3_podf             93
->> +     usdhc4_podf             94
->> +     enfc_pred               95
->> +     enfc_podf               96
->> +     emi_podf                97
->> +     emi_slow_podf           98
->> +     vpu_axi_podf            99
->> +     cko1_podf               100
->> +     axi                     101
->> +     mmdc_ch0_axi_podf       102
->> +     mmdc_ch1_axi_podf       103
->> +     arm                     104
->> +     ahb                     105
->> +     apbh_dma                106
->> +     asrc                    107
->> +     can1_ipg                108
->> +     can1_serial             109
->> +     can2_ipg                110
->> +     can2_serial             111
->> +     ecspi1                  112
->> +     ecspi2                  113
->> +     ecspi3                  114
->> +     ecspi4                  115
->> +     ecspi5                  116
->> +     enet                    117
->> +     esai                    118
->> +     gpt_ipg                 119
->> +     gpt_ipg_per             120
->> +     gpu2d_core              121
->> +     gpu3d_core              122
->> +     hdmi_iahb               123
->> +     hdmi_isfr               124
->> +     i2c1                    125
->> +     i2c2                    126
->> +     i2c3                    127
->> +     iim                     128
->> +     enfc                    129
->> +     ipu1                    130
->> +     ipu1_di0                131
->> +     ipu1_di1                132
->> +     ipu2                    133
->> +     ipu2_di0                134
->> +     ldb_di0                 135
->> +     ldb_di1                 136
->> +     ipu2_di1                137
->> +     hsi_tx                  138
->> +     mlb                     139
->> +     mmdc_ch0_axi            140
->> +     mmdc_ch1_axi            141
->> +     ocram                   142
->> +     openvg_axi              143
->> +     pcie_axi                144
->> +     pwm1                    145
->> +     pwm2                    146
->> +     pwm3                    147
->> +     pwm4                    148
->> +     per1_bch                149
->> +     gpmi_bch_apb            150
->> +     gpmi_bch                151
->> +     gpmi_io                 152
->> +     gpmi_apb                153
->> +     sata                    154
->> +     sdma                    155
->> +     spba                    156
->> +     ssi1                    157
->> +     ssi2                    158
->> +     ssi3                    159
->> +     uart_ipg                160
->> +     uart_serial             161
->> +     usboh3                  162
->> +     usdhc1                  163
->> +     usdhc2                  164
->> +     usdhc3                  165
->> +     usdhc4                  166
->> +     vdo_axi                 167
->> +     vpu_axi                 168
->> +     cko1                    169
->> +     pll1_sys                170
->> +     pll2_bus                171
->> +     pll3_usb_otg            172
->> +     pll4_audio              173
->> +     pll5_video              174
->> +     pll6_mlb                175
->> +     pll7_usb_host           176
->> +     pll8_enet               177
->> +     ssi1_ipg                178
->> +     ssi2_ipg                179
->> +     ssi3_ipg                180
->> +     rom                     181
->> +     usbphy1                 182
->> +     usbphy2                 183
->> +     ldb_di0_div_3_5         184
->> +     ldb_di1_div_3_5         185
->> +
->> +  The ID will be used by clock consumer in the first cell of "clocks"
->> +  phandle to specify the desired clock.
->> +
->> +Examples:
->> +
->> +clks: ccm@020c4000 {
->> +     compatible = "fsl,imx6q-ccm";
->> +     reg = <0x020c4000 0x4000>;
->> +     interrupts = <0 87 0x04 0 88 0x04>;
->> +     #clock-cells = <1>;
->> +     clock-output-names = ...
->> +                          "uart_ipg",
->> +                          "uart_serial",
->> +                          ...;
->> +};
->> +
->> +uart1: serial@02020000 {
->> +     compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
->> +     reg = <0x02020000 0x4000>;
->> +     interrupts = <0 26 0x04>;
->> +     clocks = <&clks 160>, <&clks 161>;
->> +     clock-names = "ipg", "per";
->> +     status = "disabled";
->> +};
->> diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
->> index 72f30f3..cfdbe53 100644
->> --- a/arch/arm/boot/dts/imx6q-sabrelite.dts
->> +++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
->> @@ -111,6 +111,7 @@
->>                               codec: sgtl5000@0a {
->>                                       compatible = "fsl,sgtl5000";
->>                                       reg = <0x0a>;
->> +                                     clocks = <&clks 169>;
->>                                       VDDA-supply = <&reg_2p5v>;
->>                                       VDDIO-supply = <&reg_3p3v>;
->>                               };
->> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
->> index 0052fe7..acff2dc 100644
->> --- a/arch/arm/boot/dts/imx6q.dtsi
->> +++ b/arch/arm/boot/dts/imx6q.dtsi
->> @@ -93,18 +93,23 @@
->>               dma-apbh@00110000 {
->>                       compatible = "fsl,imx6q-dma-apbh", "fsl,imx28-dma-apbh";
->>                       reg = <0x00110000 0x2000>;
->> +                     clocks = <&clks 106>;
->>               };
->>
->>               gpmi-nand@00112000 {
->> -                    compatible = "fsl,imx6q-gpmi-nand";
->> -                    #address-cells = <1>;
->> -                    #size-cells = <1>;
->> -                    reg = <0x00112000 0x2000>, <0x00114000 0x2000>;
->> -                    reg-names = "gpmi-nand", "bch";
->> -                    interrupts = <0 13 0x04>, <0 15 0x04>;
->> -                    interrupt-names = "gpmi-dma", "bch";
->> -                    fsl,gpmi-dma-channel = <0>;
->> -                    status = "disabled";
->> +                     compatible = "fsl,imx6q-gpmi-nand";
->> +                     #address-cells = <1>;
->> +                     #size-cells = <1>;
->> +                     reg = <0x00112000 0x2000>, <0x00114000 0x2000>;
->> +                     reg-names = "gpmi-nand", "bch";
->> +                     interrupts = <0 13 0x04>, <0 15 0x04>;
->> +                     interrupt-names = "gpmi-dma", "bch";
->> +                     clocks = <&clks 152>, <&clks 153>, <&clks 151>,
->> +                              <&clks 150>, <&clks 149>;
->> +                     clock-names = "gpmi_io", "gpmi_apb", "gpmi_bch",
->> +                                   "gpmi_bch_apb", "per1_bch";
->> +                     fsl,gpmi-dma-channel = <0>;
->> +                     status = "disabled";
->>               };
->>
->>               timer@00a00600 {
->> @@ -146,6 +151,8 @@
->>                                       compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
->>                                       reg = <0x02008000 0x4000>;
->>                                       interrupts = <0 31 0x04>;
->> +                                     clocks = <&clks 112>, <&clks 112>;
->> +                                     clock-names = "ipg", "per";
->>                                       status = "disabled";
->>                               };
->>
->> @@ -155,6 +162,8 @@
->>                                       compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
->>                                       reg = <0x0200c000 0x4000>;
->>                                       interrupts = <0 32 0x04>;
->> +                                     clocks = <&clks 113>, <&clks 113>;
->> +                                     clock-names = "ipg", "per";
->>                                       status = "disabled";
->>                               };
->>
->> @@ -164,6 +173,8 @@
->>                                       compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
->>                                       reg = <0x02010000 0x4000>;
->>                                       interrupts = <0 33 0x04>;
->> +                                     clocks = <&clks 114>, <&clks 114>;
->> +                                     clock-names = "ipg", "per";
->>                                       status = "disabled";
->>                               };
->>
->> @@ -173,6 +184,8 @@
->>                                       compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
->>                                       reg = <0x02014000 0x4000>;
->>                                       interrupts = <0 34 0x04>;
->> +                                     clocks = <&clks 115>, <&clks 115>;
->> +                                     clock-names = "ipg", "per";
->>                                       status = "disabled";
->>                               };
->>
->> @@ -182,6 +195,8 @@
->>                                       compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
->>                                       reg = <0x02018000 0x4000>;
->>                                       interrupts = <0 35 0x04>;
->> +                                     clocks = <&clks 116>, <&clks 116>;
->> +                                     clock-names = "ipg", "per";
->>                                       status = "disabled";
->>                               };
->>
->> @@ -189,6 +204,8 @@
->>                                       compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
->>                                       reg = <0x02020000 0x4000>;
->>                                       interrupts = <0 26 0x04>;
->> +                                     clocks = <&clks 160>, <&clks 161>;
->> +                                     clock-names = "ipg", "per";
->>                                       status = "disabled";
->>                               };
->>
->> @@ -201,6 +218,7 @@
->>                                       compatible = "fsl,imx6q-ssi","fsl,imx21-ssi";
->>                                       reg = <0x02028000 0x4000>;
->>                                       interrupts = <0 46 0x04>;
->> +                                     clocks = <&clks 178>;
->>                                       fsl,fifo-depth = <15>;
->>                                       fsl,ssi-dma-events = <38 37>;
->>                                       status = "disabled";
->> @@ -210,6 +228,7 @@
->>                                       compatible = "fsl,imx6q-ssi","fsl,imx21-ssi";
->>                                       reg = <0x0202c000 0x4000>;
->>                                       interrupts = <0 47 0x04>;
->> +                                     clocks = <&clks 179>;
->>                                       fsl,fifo-depth = <15>;
->>                                       fsl,ssi-dma-events = <42 41>;
->>                                       status = "disabled";
->> @@ -219,6 +238,7 @@
->>                                       compatible = "fsl,imx6q-ssi","fsl,imx21-ssi";
->>                                       reg = <0x02030000 0x4000>;
->>                                       interrupts = <0 48 0x04>;
->> +                                     clocks = <&clks 180>;
->>                                       fsl,fifo-depth = <15>;
->>                                       fsl,ssi-dma-events = <46 45>;
->>                                       status = "disabled";
->> @@ -358,6 +378,7 @@
->>                               compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
->>                               reg = <0x020bc000 0x4000>;
->>                               interrupts = <0 80 0x04>;
->> +                             clocks = <&clks 0>;
->>                               status = "disabled";
->>                       };
->>
->> @@ -365,13 +386,203 @@
->>                               compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
->>                               reg = <0x020c0000 0x4000>;
->>                               interrupts = <0 81 0x04>;
->> +                             clocks = <&clks 0>;
->>                               status = "disabled";
->>                       };
->>
->> -                     ccm@020c4000 {
->> +                     clks: ccm@020c4000 {
->>                               compatible = "fsl,imx6q-ccm";
->>                               reg = <0x020c4000 0x4000>;
->>                               interrupts = <0 87 0x04 0 88 0x04>;
->> +                             #clock-cells = <1>;
->> +                             clock-output-names =
->> +                                     "dummy",                /* 0 */
->> +                                     "ckil",                 /* 1 */
->> +                                     "ckih",                 /* 2 */
->> +                                     "osc",                  /* 3 */
->> +                                     "pll2_pfd0_352m",       /* 4 */
->> +                                     "pll2_pfd1_594m",       /* 5 */
->> +                                     "pll2_pfd2_396m",       /* 6 */
->> +                                     "pll3_pfd0_720m",       /* 7 */
->> +                                     "pll3_pfd1_540m",       /* 8 */
->> +                                     "pll3_pfd2_508m",       /* 9 */
->> +                                     "pll3_pfd3_454m",       /* 10 */
->> +                                     "pll2_198m",            /* 11 */
->> +                                     "pll3_120m",            /* 12 */
->> +                                     "pll3_80m",             /* 13 */
->> +                                     "pll3_60m",             /* 14 */
->> +                                     "twd",                  /* 15 */
->> +                                     "step",                 /* 16 */
->> +                                     "pll1_sw",              /* 17 */
->> +                                     "periph_pre",           /* 18 */
->> +                                     "periph2_pre",          /* 19 */
->> +                                     "periph_clk2_sel",      /* 20 */
->> +                                     "periph2_clk2_sel",     /* 21 */
->> +                                     "axi_sel",              /* 22 */
->> +                                     "esai_sel",             /* 23 */
->> +                                     "asrc_sel",             /* 24 */
->> +                                     "spdif_sel",            /* 25 */
->> +                                     "gpu2d_axi",            /* 26 */
->> +                                     "gpu3d_axi",            /* 27 */
->> +                                     "gpu2d_core_sel",       /* 28 */
->> +                                     "gpu3d_core_sel",       /* 29 */
->> +                                     "gpu3d_shader_sel",     /* 30 */
->> +                                     "ipu1_sel",             /* 31 */
->> +                                     "ipu2_sel",             /* 32 */
->> +                                     "ldb_di0_sel",          /* 33 */
->> +                                     "ldb_di1_sel",          /* 34 */
->> +                                     "ipu1_di0_pre_sel",     /* 35 */
->> +                                     "ipu1_di1_pre_sel",     /* 36 */
->> +                                     "ipu2_di0_pre_sel",     /* 37 */
->> +                                     "ipu2_di1_pre_sel",     /* 38 */
->> +                                     "ipu1_di0_sel",         /* 39 */
->> +                                     "ipu1_di1_sel",         /* 40 */
->> +                                     "ipu2_di0_sel",         /* 41 */
->> +                                     "ipu2_di1_sel",         /* 42 */
->> +                                     "hsi_tx_sel",           /* 43 */
->> +                                     "pcie_axi_sel",         /* 44 */
->> +                                     "ssi1_sel",             /* 45 */
->> +                                     "ssi2_sel",             /* 46 */
->> +                                     "ssi3_sel",             /* 47 */
->> +                                     "usdhc1_sel",           /* 48 */
->> +                                     "usdhc2_sel",           /* 49 */
->> +                                     "usdhc3_sel",           /* 50 */
->> +                                     "usdhc4_sel",           /* 51 */
->> +                                     "enfc_sel",             /* 52 */
->> +                                     "emi_sel",              /* 53 */
->> +                                     "emi_slow_sel",         /* 54 */
->> +                                     "vdo_axi_sel",          /* 55 */
->> +                                     "vpu_axi_sel",          /* 56 */
->> +                                     "cko1_sel",             /* 57 */
->> +                                     "periph",               /* 58 */
->> +                                     "periph2",              /* 59 */
->> +                                     "periph_clk2",          /* 60 */
->> +                                     "periph2_clk2",         /* 61 */
->> +                                     "ipg",                  /* 62 */
->> +                                     "ipg_per",              /* 63 */
->> +                                     "esai_pred",            /* 64 */
->> +                                     "esai_podf",            /* 65 */
->> +                                     "asrc_pred",            /* 66 */
->> +                                     "asrc_podf",            /* 67 */
->> +                                     "spdif_pred",           /* 68 */
->> +                                     "spdif_podf",           /* 69 */
->> +                                     "can_root",             /* 70 */
->> +                                     "ecspi_root",           /* 71 */
->> +                                     "gpu2d_core_podf",      /* 72 */
->> +                                     "gpu3d_core_podf",      /* 73 */
->> +                                     "gpu3d_shader",         /* 74 */
->> +                                     "ipu1_podf",            /* 75 */
->> +                                     "ipu2_podf",            /* 76 */
->> +                                     "ldb_di0_podf",         /* 77 */
->> +                                     "ldb_di1_podf",         /* 78 */
->> +                                     "ipu1_di0_pre",         /* 79 */
->> +                                     "ipu1_di1_pre",         /* 80 */
->> +                                     "ipu2_di0_pre",         /* 81 */
->> +                                     "ipu2_di1_pre",         /* 82 */
->> +                                     "hsi_tx_podf",          /* 83 */
->> +                                     "ssi1_pred",            /* 84 */
->> +                                     "ssi1_podf",            /* 85 */
->> +                                     "ssi2_pred",            /* 86 */
->> +                                     "ssi2_podf",            /* 87 */
->> +                                     "ssi3_pred",            /* 88 */
->> +                                     "ssi3_podf",            /* 89 */
->> +                                     "uart_serial_podf",     /* 90 */
->> +                                     "usdhc1_podf",          /* 91 */
->> +                                     "usdhc2_podf",          /* 92 */
->> +                                     "usdhc3_podf",          /* 93 */
->> +                                     "usdhc4_podf",          /* 94 */
->> +                                     "enfc_pred",            /* 95 */
->> +                                     "enfc_podf",            /* 96 */
->> +                                     "emi_podf",             /* 97 */
->> +                                     "emi_slow_podf",        /* 98 */
->> +                                     "vpu_axi_podf",         /* 99 */
->> +                                     "cko1_podf",            /* 100 */
->> +                                     "axi",                  /* 101 */
->> +                                     "mmdc_ch0_axi_podf",    /* 102 */
->> +                                     "mmdc_ch1_axi_podf",    /* 103 */
->> +                                     "arm",                  /* 104 */
->> +                                     "ahb",                  /* 105 */
->> +                                     "apbh_dma",             /* 106 */
->> +                                     "asrc",                 /* 107 */
->> +                                     "can1_ipg",             /* 108 */
->> +                                     "can1_serial",          /* 109 */
->> +                                     "can2_ipg",             /* 110 */
->> +                                     "can2_serial",          /* 111 */
->> +                                     "ecspi1",               /* 112 */
->> +                                     "ecspi2",               /* 113 */
->> +                                     "ecspi3",               /* 114 */
->> +                                     "ecspi4",               /* 115 */
->> +                                     "ecspi5",               /* 116 */
->> +                                     "enet",                 /* 117 */
->> +                                     "esai",                 /* 118 */
->> +                                     "gpt_ipg",              /* 119 */
->> +                                     "gpt_ipg_per",          /* 120 */
->> +                                     "gpu2d_core",           /* 121 */
->> +                                     "gpu3d_core",           /* 122 */
->> +                                     "hdmi_iahb",            /* 123 */
->> +                                     "hdmi_isfr",            /* 124 */
->> +                                     "i2c1",                 /* 125 */
->> +                                     "i2c2",                 /* 126 */
->> +                                     "i2c3",                 /* 127 */
->> +                                     "iim",                  /* 128 */
->> +                                     "enfc",                 /* 129 */
->> +                                     "ipu1",                 /* 130 */
->> +                                     "ipu1_di0",             /* 131 */
->> +                                     "ipu1_di1",             /* 132 */
->> +                                     "ipu2",                 /* 133 */
->> +                                     "ipu2_di0",             /* 134 */
->> +                                     "ldb_di0",              /* 135 */
->> +                                     "ldb_di1",              /* 136 */
->> +                                     "ipu2_di1",             /* 137 */
->> +                                     "hsi_tx",               /* 138 */
->> +                                     "mlb",                  /* 139 */
->> +                                     "mmdc_ch0_axi",         /* 140 */
->> +                                     "mmdc_ch1_axi",         /* 141 */
->> +                                     "ocram",                /* 142 */
->> +                                     "openvg_axi",           /* 143 */
->> +                                     "pcie_axi",             /* 144 */
->> +                                     "pwm1",                 /* 145 */
->> +                                     "pwm2",                 /* 146 */
->> +                                     "pwm3",                 /* 147 */
->> +                                     "pwm4",                 /* 148 */
->> +                                     "per1_bch",             /* 149 */
->> +                                     "gpmi_bch_apb",         /* 150 */
->> +                                     "gpmi_bch",             /* 151 */
->> +                                     "gpmi_io",              /* 152 */
->> +                                     "gpmi_apb",             /* 153 */
->> +                                     "sata",                 /* 154 */
->> +                                     "sdma",                 /* 155 */
->> +                                     "spba",                 /* 156 */
->> +                                     "ssi1",                 /* 157 */
->> +                                     "ssi2",                 /* 158 */
->> +                                     "ssi3",                 /* 159 */
->> +                                     "uart_ipg",             /* 160 */
->> +                                     "uart_serial",          /* 161 */
->> +                                     "usboh3",               /* 162 */
->> +                                     "usdhc1",               /* 163 */
->> +                                     "usdhc2",               /* 164 */
->> +                                     "usdhc3",               /* 165 */
->> +                                     "usdhc4",               /* 166 */
->> +                                     "vdo_axi",              /* 167 */
->> +                                     "vpu_axi",              /* 168 */
->> +                                     "cko1",                 /* 169 */
->> +                                     "pll1_sys",             /* 170 */
->> +                                     "pll2_bus",             /* 171 */
->> +                                     "pll3_usb_otg",         /* 172 */
->> +                                     "pll4_audio",           /* 173 */
->> +                                     "pll5_video",           /* 174 */
->> +                                     "pll6_mlb",             /* 175 */
->> +                                     "pll7_usb_host",        /* 176 */
->> +                                     "pll8_enet",            /* 177 */
->> +                                     "ssi1_ipg",             /* 178 */
->> +                                     "ssi2_ipg",             /* 179 */
->> +                                     "ssi3_ipg",             /* 180 */
->> +                                     "rom",                  /* 181 */
->> +                                     "usbphy1",              /* 182 */
->> +                                     "usbphy2",              /* 183 */
->> +                                     "ldb_di0_div_3_5",      /* 184 */
->> +                                     "ldb_di1_div_3_5",      /* 185 */
->> +                                     "end_of_list";
->>                       };
->>
->>                       anatop@020c8000 {
->> @@ -468,12 +679,14 @@
->>                               compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
->>                               reg = <0x020c9000 0x1000>;
->>                               interrupts = <0 44 0x04>;
->> +                             clocks = <&clks 182>;
->>                       };
->>
->>                       usbphy2: usbphy@020ca000 {
->>                               compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
->>                               reg = <0x020ca000 0x1000>;
->>                               interrupts = <0 45 0x04>;
->> +                             clocks = <&clks 183>;
->>                       };
->>
->>                       snvs@020cc000 {
->> @@ -608,6 +821,9 @@
->>                               compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
->>                               reg = <0x020ec000 0x4000>;
->>                               interrupts = <0 2 0x04>;
->> +                             clocks = <&clks 155>, <&clks 155>;
->> +                             clock-names = "ipg", "ahb";
->> +                             fsl,sdma-ram-script-name = "imx/sdma/sdma-imx6q-to1.bin";
->>                       };
->>               };
->>
->> @@ -631,6 +847,7 @@
->>                               compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
->>                               reg = <0x02184000 0x200>;
->>                               interrupts = <0 43 0x04>;
->> +                             clocks = <&clks 162>;
->>                               fsl,usbphy = <&usbphy1>;
->>                               status = "disabled";
->>                       };
->> @@ -639,6 +856,7 @@
->>                               compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
->>                               reg = <0x02184200 0x200>;
->>                               interrupts = <0 40 0x04>;
->> +                             clocks = <&clks 162>;
->>                               fsl,usbphy = <&usbphy2>;
->>                               status = "disabled";
->>                       };
->> @@ -647,6 +865,7 @@
->>                               compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
->>                               reg = <0x02184400 0x200>;
->>                               interrupts = <0 41 0x04>;
->> +                             clocks = <&clks 162>;
->>                               status = "disabled";
->>                       };
->>
->> @@ -654,6 +873,7 @@
->>                               compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
->>                               reg = <0x02184600 0x200>;
->>                               interrupts = <0 42 0x04>;
->> +                             clocks = <&clks 162>;
->>                               status = "disabled";
->>                       };
->>
->> @@ -661,6 +881,8 @@
->>                               compatible = "fsl,imx6q-fec";
->>                               reg = <0x02188000 0x4000>;
->>                               interrupts = <0 118 0x04 0 119 0x04>;
->> +                             clocks = <&clks 117>, <&clks 117>;
->> +                             clock-names = "ipg", "ahb";
->>                               status = "disabled";
->>                       };
->>
->> @@ -673,6 +895,8 @@
->>                               compatible = "fsl,imx6q-usdhc";
->>                               reg = <0x02190000 0x4000>;
->>                               interrupts = <0 22 0x04>;
->> +                             clocks = <&clks 163>, <&clks 163>, <&clks 163>;
->> +                             clock-names = "ipg", "ahb", "per";
->>                               status = "disabled";
->>                       };
->>
->> @@ -680,6 +904,8 @@
->>                               compatible = "fsl,imx6q-usdhc";
->>                               reg = <0x02194000 0x4000>;
->>                               interrupts = <0 23 0x04>;
->> +                             clocks = <&clks 164>, <&clks 164>, <&clks 164>;
->> +                             clock-names = "ipg", "ahb", "per";
->>                               status = "disabled";
->>                       };
->>
->> @@ -687,6 +913,8 @@
->>                               compatible = "fsl,imx6q-usdhc";
->>                               reg = <0x02198000 0x4000>;
->>                               interrupts = <0 24 0x04>;
->> +                             clocks = <&clks 165>, <&clks 165>, <&clks 165>;
->> +                             clock-names = "ipg", "ahb", "per";
->>                               status = "disabled";
->>                       };
->>
->> @@ -694,6 +922,8 @@
->>                               compatible = "fsl,imx6q-usdhc";
->>                               reg = <0x0219c000 0x4000>;
->>                               interrupts = <0 25 0x04>;
->> +                             clocks = <&clks 166>, <&clks 166>, <&clks 166>;
->> +                             clock-names = "ipg", "ahb", "per";
->>                               status = "disabled";
->>                       };
->>
->> @@ -703,6 +933,7 @@
->>                               compatible = "fsl,imx6q-i2c", "fsl,imx1-i2c";
->>                               reg = <0x021a0000 0x4000>;
->>                               interrupts = <0 36 0x04>;
->> +                             clocks = <&clks 125>;
->>                               status = "disabled";
->>                       };
->>
->> @@ -712,6 +943,7 @@
->>                               compatible = "fsl,imx6q-i2c", "fsl,imx1-i2c";
->>                               reg = <0x021a4000 0x4000>;
->>                               interrupts = <0 37 0x04>;
->> +                             clocks = <&clks 126>;
->>                               status = "disabled";
->>                       };
->>
->> @@ -721,6 +953,7 @@
->>                               compatible = "fsl,imx6q-i2c", "fsl,imx1-i2c";
->>                               reg = <0x021a8000 0x4000>;
->>                               interrupts = <0 38 0x04>;
->> +                             clocks = <&clks 127>;
->>                               status = "disabled";
->>                       };
->>
->> @@ -784,6 +1017,8 @@
->>                               compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
->>                               reg = <0x021e8000 0x4000>;
->>                               interrupts = <0 27 0x04>;
->> +                             clocks = <&clks 160>, <&clks 161>;
->> +                             clock-names = "ipg", "per";
->>                               status = "disabled";
->>                       };
->>
->> @@ -791,6 +1026,8 @@
->>                               compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
->>                               reg = <0x021ec000 0x4000>;
->>                               interrupts = <0 28 0x04>;
->> +                             clocks = <&clks 160>, <&clks 161>;
->> +                             clock-names = "ipg", "per";
->>                               status = "disabled";
->>                       };
->>
->> @@ -798,6 +1035,8 @@
->>                               compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
->>                               reg = <0x021f0000 0x4000>;
->>                               interrupts = <0 29 0x04>;
->> +                             clocks = <&clks 160>, <&clks 161>;
->> +                             clock-names = "ipg", "per";
->>                               status = "disabled";
->>                       };
->>
->> @@ -805,6 +1044,8 @@
->>                               compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
->>                               reg = <0x021f4000 0x4000>;
->>                               interrupts = <0 30 0x04>;
->> +                             clocks = <&clks 160>, <&clks 161>;
->> +                             clock-names = "ipg", "per";
->>                               status = "disabled";
->>                       };
->>               };
->> diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
->> index 8e46407..433c683 100644
->> --- a/arch/arm/mach-imx/clk-imx6q.c
->> +++ b/arch/arm/mach-imx/clk-imx6q.c
->> @@ -387,48 +387,11 @@ int __init mx6q_clocks_init(void)
->>                       pr_err("i.MX6q clk %d: register failed with %ld\n",
->>                               i, PTR_ERR(clk[i]));
->>
->> +     of_clk_add_provider(np, of_clk_src_onecell_get, NULL);
->> +
->>       clk_register_clkdev(clk[gpt_ipg], "ipg", "imx-gpt.0");
->>       clk_register_clkdev(clk[gpt_ipg_per], "per", "imx-gpt.0");
->>       clk_register_clkdev(clk[twd], NULL, "smp_twd");
->> -     clk_register_clkdev(clk[apbh_dma], NULL, "110000.dma-apbh");
->> -     clk_register_clkdev(clk[per1_bch], "per1_bch", "112000.gpmi-nand");
->> -     clk_register_clkdev(clk[gpmi_bch_apb], "gpmi_bch_apb", "112000.gpmi-nand");
->> -     clk_register_clkdev(clk[gpmi_bch], "gpmi_bch", "112000.gpmi-nand");
->> -     clk_register_clkdev(clk[gpmi_apb], "gpmi_apb", "112000.gpmi-nand");
->> -     clk_register_clkdev(clk[gpmi_io], "gpmi_io", "112000.gpmi-nand");
->> -     clk_register_clkdev(clk[usboh3], NULL, "2184000.usb");
->> -     clk_register_clkdev(clk[usboh3], NULL, "2184200.usb");
->> -     clk_register_clkdev(clk[usboh3], NULL, "2184400.usb");
->> -     clk_register_clkdev(clk[usboh3], NULL, "2184600.usb");
->> -     clk_register_clkdev(clk[usbphy1], NULL, "20c9000.usbphy");
->> -     clk_register_clkdev(clk[usbphy2], NULL, "20ca000.usbphy");
->> -     clk_register_clkdev(clk[uart_serial], "per", "2020000.serial");
->> -     clk_register_clkdev(clk[uart_ipg], "ipg", "2020000.serial");
->> -     clk_register_clkdev(clk[uart_serial], "per", "21e8000.serial");
->> -     clk_register_clkdev(clk[uart_ipg], "ipg", "21e8000.serial");
->> -     clk_register_clkdev(clk[uart_serial], "per", "21ec000.serial");
->> -     clk_register_clkdev(clk[uart_ipg], "ipg", "21ec000.serial");
->> -     clk_register_clkdev(clk[uart_serial], "per", "21f0000.serial");
->> -     clk_register_clkdev(clk[uart_ipg], "ipg", "21f0000.serial");
->> -     clk_register_clkdev(clk[uart_serial], "per", "21f4000.serial");
->> -     clk_register_clkdev(clk[uart_ipg], "ipg", "21f4000.serial");
->> -     clk_register_clkdev(clk[enet], NULL, "2188000.ethernet");
->> -     clk_register_clkdev(clk[usdhc1], NULL, "2190000.usdhc");
->> -     clk_register_clkdev(clk[usdhc2], NULL, "2194000.usdhc");
->> -     clk_register_clkdev(clk[usdhc3], NULL, "2198000.usdhc");
->> -     clk_register_clkdev(clk[usdhc4], NULL, "219c000.usdhc");
->> -     clk_register_clkdev(clk[i2c1], NULL, "21a0000.i2c");
->> -     clk_register_clkdev(clk[i2c2], NULL, "21a4000.i2c");
->> -     clk_register_clkdev(clk[i2c3], NULL, "21a8000.i2c");
->> -     clk_register_clkdev(clk[ecspi1], NULL, "2008000.ecspi");
->> -     clk_register_clkdev(clk[ecspi2], NULL, "200c000.ecspi");
->> -     clk_register_clkdev(clk[ecspi3], NULL, "2010000.ecspi");
->> -     clk_register_clkdev(clk[ecspi4], NULL, "2014000.ecspi");
->> -     clk_register_clkdev(clk[ecspi5], NULL, "2018000.ecspi");
->> -     clk_register_clkdev(clk[sdma], NULL, "20ec000.sdma");
->> -     clk_register_clkdev(clk[dummy], NULL, "20bc000.wdog");
->> -     clk_register_clkdev(clk[dummy], NULL, "20c0000.wdog");
->> -     clk_register_clkdev(clk[ssi1_ipg], NULL, "2028000.ssi");
->>       clk_register_clkdev(clk[cko1_sel], "cko1_sel", NULL);
->>       clk_register_clkdev(clk[ahb], "ahb", NULL);
->>       clk_register_clkdev(clk[cko1], "cko1", NULL);
->> diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
->> index 6f9c23b..957f5fe 100644
->> --- a/arch/arm/mach-imx/mach-imx6q.c
->> +++ b/arch/arm/mach-imx/mach-imx6q.c
->> @@ -94,7 +94,6 @@ static void __init imx6q_sabrelite_cko1_setup(void)
->>       clk_set_parent(cko1_sel, ahb);
->>       rate = clk_round_rate(cko1, 16000000);
->>       clk_set_rate(cko1, rate);
->> -     clk_register_clkdev(cko1, NULL, "0-000a");
->>  put_clk:
->>       if (!IS_ERR(cko1_sel))
->>               clk_put(cko1_sel);
->>
+>         dev_info(&adev->dev,
+>                  "ARM PL022 driver, device ID: 0x%08x\n", adev->periphid);
+> @@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
+>                 goto err_no_pdata;
+>         }
 >
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> +       num_cs = platform_info->num_chipselect;
+> +       if (IS_ENABLED(CONFIG_OF))
+> +               of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
+> +
+> +
+
+Shouldn't it be the other way around: platform data overrides
+DT data. Attempt DT and if platform_info->num_chipselect
+!= 0 let it override.
+
+(Second patch.)
+
+>         /* Allocate master with space for data */
+> -       master = spi_alloc_master(dev, sizeof(struct pl022));
+> +       master = spi_alloc_master(dev,
+> +               sizeof(struct pl022) + sizeof(int) * num_cs);
+
+First patch.
+
+>         if (master == NULL) {
+>                 dev_err(&adev->dev, "probe - cannot alloc SPI master\n");
+>                 status = -ENOMEM;
+> @@ -2017,13 +2064,41 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
+>          * on this board
+>          */
+>         master->bus_num = platform_info->bus_id;
+> -       master->num_chipselect = platform_info->num_chipselect;
+> +       master->num_chipselect = num_cs;
+
+OK first patch.
+
+>         master->cleanup = pl022_cleanup;
+>         master->setup = pl022_setup;
+>         master->prepare_transfer_hardware = pl022_prepare_transfer_hardware;
+>         master->transfer_one_message = pl022_transfer_one_message;
+>         master->unprepare_transfer_hardware = pl022_unprepare_transfer_hardware;
+>         master->rt = platform_info->rt;
+> +       master->dev.of_node = dev->of_node;
+
+Does this compile without CONFIG_OF?
+Second patch.
+
+> +       if (IS_ENABLED(CONFIG_OF)) {
+> +               for (i = 0; i < num_cs; i++) {
+> +                       int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
+> +
+> +                       if (cs_gpio == -EPROBE_DEFER) {
+> +                               status = -EPROBE_DEFER;
+> +                               goto err_no_gpio;
+> +                       }
+> +
+> +                       pl022->chipselect[i] = cs_gpio;
+> +
+> +                       if (gpio_is_valid(cs_gpio)) {
+> +                               if (gpio_request(cs_gpio, "ssp-pl022"))
+> +                                       dev_err(&adev->dev,
+> +                                               "could not request %d gpio\n",
+> +                                               cs_gpio);
+> +                               else if (gpio_direction_output(cs_gpio, 1))
+> +                                       dev_err(&adev->dev,
+> +                                               "could set gpio %d as output\n",
+> +                                               cs_gpio);
+> +                       }
+> +               }
+> +       } else {
+> +               for (i = 0; i < num_cs; i++)
+> +                       pl022->chipselect[i] = -EINVAL;
+
+Why? Instead, add a  int *chipselects; field to the struct pl022_ssp_controller
+platform data in include/linux/amba/pl022.h and copy it from there if
+num_chipselects in the same data != 0.
+
+(First patch.)
+
+Yours,
+Linus Walleij
