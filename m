@@ -1,351 +1,156 @@
-From: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RESEND v4] spi/pl022: add devicetree support
-Date: Mon, 20 Aug 2012 08:39:29 -0300
-Message-ID: <1345462769-17386-1-git-send-email-aletes.xgr@gmail.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv7] arm/dts: omap4-sdp: Add keypad data
+Date: Mon, 20 Aug 2012 13:53:34 +0200
+Message-ID: <5032253E.9000106@ti.com>
+References: <1344942937-4685-1-git-send-email-sourav.poddar@ti.com>
+ <CAKdam57n1jA5_7EOLcsB=u5X4wX6hPVXoZ2HLrnpEKS3kLZ=OQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKdam57n1jA5_7EOLcsB=u5X4wX6hPVXoZ2HLrnpEKS3kLZ=OQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Poddar, Sourav" <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the chipselect array and cur_cs properties to pl022 main structure
+Hi Sourav,
 
-Add a wrapper function to decide if the cs should be controlled by the
-cs_control callback or the chipselect gpio
+On 08/20/2012 01:19 PM, Poddar, Sourav wrote:
+> Hi All,
+> 
+> On Tue, Aug 14, 2012 at 4:45 PM, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org> wrote:
+>> Add keypad data node in omap4 device tree file.
+>> Also fill the device tree binding parameters
+>> with the required value in "omap4-sdp" dts file.
+>>
+>> Tested on omap4430 sdp.
+>>
+>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+>> ---
+>> v6->v7
+>> Add key name as a comment.
+>>  arch/arm/boot/dts/omap4-sdp.dts |   70 +++++++++++++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/omap4.dtsi    |    5 +++
+>>  2 files changed, 75 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+>> index 72216e9..8e200f4 100644
+>> --- a/arch/arm/boot/dts/omap4-sdp.dts
+>> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+>> @@ -113,6 +113,76 @@
+>>                         "DMic", "Digital Mic",
+>>                         "Digital Mic", "Digital Mic1 Bias";
+>>         };
+>> +
+>> +       keypad {
+>> +               keypad,num-rows = <8>;
+>> +               keypad,num-columns = <8>;
+>> +               linux,keymap = < 0x00000012 /* KEY_E */
+>> +                       0x00010013 /* KEY_R */
+>> +                       0x00020014 /* KEY_T */
+>> +                       0x00030066 /* KEY_HOME */
+>> +                       0x0004003f /* KEY_F5 */
+>> +                       0x000500f0 /* KEY_UNKNOWN */
+>> +                       0x00060017 /* KEY_I */
+>> +                       0x0007002a /* KEY_LEFTSHIFT */
+>> +                       0x01000020 /* KEY_D*/
+>> +                       0x01010021 /* KEY_F */
+>> +                       0x01020022 /* KEY_G */
+>> +                       0x010300e7 /* KEY_SEND */
+>> +                       0x01040040 /* KEY_F6 */
+>> +                       0x010500f0 /* KEY_UNKNOWN */
+>> +                       0x01060025 /* KEY_K */
+>> +                       0x0107001c /* KEY_ENTER */
+>> +                       0x0200002d /* KEY_X */
+>> +                       0x0201002e /* KEY_C */
+>> +                       0x0202002f /* KEY_V */
+>> +                       0x0203006b /* KEY_END */
+>> +                       0x02040041 /* KEY_F7 */
+>> +                       0x020500f0 /* KEY_UNKNOWN */
+>> +                       0x02060034 /* KEY_DOT */
+>> +                       0x0207003a /* KEY_CAPSLOCK */
+>> +                       0x0300002c /* KEY_Z */
+>> +                       0x0301004e /* KEY_KPLUS */
+>> +                       0x03020030 /* KEY_B */
+>> +                       0x0303003b /* KEY_F1 */
+>> +                       0x03040042 /* KEY_F8 */
+>> +                       0x030500f0 /* KEY_UNKNOWN */
+>> +                       0x03060018 /* KEY_O */
+>> +                       0x03070039 /* KEY_SPACE */
+>> +                       0x04000011 /* KEY_W */
+>> +                       0x04010015 /* KEY_Y */
+>> +                       0x04020016 /* KEY_U */
+>> +                       0x0403003c /* KEY_F2 */
+>> +                       0x04040073 /* KEY_VOLUMEUP */
+>> +                       0x040500f0 /* KEY_UNKNOWN */
+>> +                       0x04060026 /* KEY_L */
+>> +                       0x04070069 /* KEY_LEFT */
+>> +                       0x0500001f /* KEY_S */
+>> +                       0x05010023 /* KEY_H */
+>> +                       0x05020024 /* KEY_J */
+>> +                       0x0503003d /* KEY_F3 */
+>> +                       0x05040043 /* KEY_F9 */
+>> +                       0x05050072 /* KEY_VOLUMEDOWN */
+>> +                       0x05060032 /* KEY_M */
+>> +                       0x0507006a /* KEY_RIGHT */
+>> +                       0x06000010 /* KEY_Q */
+>> +                       0x0601001e /* KEY_A */
+>> +                       0x06020031 /* KEY_N */
+>> +                       0x0603009e /* KEY_BACK */
+>> +                       0x0604000e /* KEY_BACKSPACE */
+>> +                       0x060500f0 /* KEY_UNKNOWN */
+>> +                       0x06060019 /* KEY_P */
+>> +                       0x06070067 /* KEY_UP */
+>> +                       0x07000094 /* KEY_PROG1 */
+>> +                       0x07010095 /* KEY_PROG2 */
+>> +                       0x070200ca /* KEY_PROG3 */
+>> +                       0x070300cb /* KEY_PROG4 */
+>> +                       0x0704003e /* KEY_F4 */
+>> +                       0x070500f0 /* KEY_UNKNOWN */
+>> +                       0x07060160 /* KEY_OK */
+>> +                       0x0707006c >; /* KEY_DOWN */
+>> +               linux,input-no-autorepeat;
+>> +       };
+>>  };
+>>
+>>  &i2c1 {
+>> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+>> index 04cbbcb..e78a1f1 100644
+>> --- a/arch/arm/boot/dts/omap4.dtsi
+>> +++ b/arch/arm/boot/dts/omap4.dtsi
+>> @@ -296,4 +296,9 @@
+>>                         ti,hwmods = "dmic";
+>>                 };
+>>         };
+>> +
+>> +       keypad {
+>> +               compatible = "ti,omap4-keypad";
+>> +               ti,hwmods = "kbd";
+>> +       };
+>>  };
+>> --
+>> 1.7.1
+>>
+> Any more comments on this?
 
-Populate chipselect property from cs-gpios
+That's perfect.
 
-Populate master->dev.of_node, so the spi bus can find child spi
-devices and register them
+I'll take it and send it with other DT patches to Tony.
 
-At pl022 setup, fill chip_data structure from dt nodes, if not provided
-by platform.
-
-Signed-off-by: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
----
-Applies to v3.6-rc1
-
-Changes since v3:
-* Proper use of IS_ENABLED
-
-Changes since v2:
-* Use IS_ENABLED instead of #ifdef
-* Remove bogus const change
-
-Changes since v1:
-* return EPROBE_DEFFER if gpios are not initialized yet
-
-Thanks Thierry Reding for reviewing and improvements suggestions
-
- .../devicetree/bindings/spi/spi_pl022.txt          |   15 +++
- drivers/spi/spi-pl022.c                            |  114 ++++++++++++++++----
- 2 files changed, 110 insertions(+), 19 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi_pl022.txt b/Documentation/devicetree/bindings/spi/spi_pl022.txt
-index 306ec3f..b089ec7 100644
---- a/Documentation/devicetree/bindings/spi/spi_pl022.txt
-+++ b/Documentation/devicetree/bindings/spi/spi_pl022.txt
-@@ -6,7 +6,22 @@ Required properties:
- - interrupts : Should contain SPI controller interrupt
- 
- Optional properties:
-+- pl022,num-chipselects : total number of chipselects
- - cs-gpios : should specify GPIOs used for chipselects.
-   The gpios will be referred to as reg = <index> in the SPI child nodes.
-   If unspecified, a single SPI device without a chip select can be used.
- 
-+SPI slave nodes must be children of the SPI master node and can
-+contain the following properties.
-+See include/linux/amba/pl022.h for more details
-+
-+- pl022,hierarchy : master or slave interface
-+- pl022,interface : interface type
-+- pl022,slave-tx-disable : disconnect tx line in slave mode
-+- pl022,com-mode : polling, interrupt or dma
-+- pl022,rx-level-trig : Rx FIFO watermark level
-+- pl022,tx-level-trig : Tx FIFO watermark level
-+- pl022,ctrl-len : Microwire interface: Control length
-+- pl022,wait-state : Microwire interface: Wait state
-+- pl022,duplex : Microwire interface: Full/Half duplex
-+
-diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
-index 400ae21..d8d7d21 100644
---- a/drivers/spi/spi-pl022.c
-+++ b/drivers/spi/spi-pl022.c
-@@ -40,6 +40,8 @@
- #include <linux/dma-mapping.h>
- #include <linux/scatterlist.h>
- #include <linux/pm_runtime.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
- 
- /*
-  * This macro is used to define some register default values.
-@@ -389,6 +391,8 @@ struct pl022 {
- 	char				*dummypage;
- 	bool				dma_running;
- #endif
-+	int cur_cs;
-+	int chipselect[0];
- };
- 
- /**
-@@ -433,6 +437,14 @@ static void null_cs_control(u32 command)
- 	pr_debug("pl022: dummy chip select control, CS=0x%x\n", command);
- }
- 
-+static void pl022_cs_control(struct pl022 *pl022, u32 command)
-+{
-+	if (gpio_is_valid(pl022->cur_cs))
-+		gpio_set_value(pl022->cur_cs, command);
-+	else
-+		pl022->cur_chip->cs_control(command);
-+}
-+
- /**
-  * giveback - current spi_message is over, schedule next message and call
-  * callback of this message. Assumes that caller already
-@@ -479,7 +491,7 @@ static void giveback(struct pl022 *pl022)
- 		if (next_msg && next_msg->spi != pl022->cur_msg->spi)
- 			next_msg = NULL;
- 		if (!next_msg || pl022->cur_msg->state == STATE_ERROR)
--			pl022->cur_chip->cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		else
- 			pl022->next_msg_cs_active = true;
- 
-@@ -813,8 +825,7 @@ static void dma_callback(void *data)
- 	/* Update total bytes transferred */
- 	msg->actual_length += pl022->cur_transfer->len;
- 	if (pl022->cur_transfer->cs_change)
--		pl022->cur_chip->
--			cs_control(SSP_CHIP_DESELECT);
-+		pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 
- 	/* Move to next transfer */
- 	msg->state = next_transfer(pl022);
-@@ -1247,8 +1258,7 @@ static irqreturn_t pl022_interrupt_handler(int irq, void *dev_id)
- 		/* Update total bytes transferred */
- 		msg->actual_length += pl022->cur_transfer->len;
- 		if (pl022->cur_transfer->cs_change)
--			pl022->cur_chip->
--				cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		/* Move to next transfer */
- 		msg->state = next_transfer(pl022);
- 		tasklet_schedule(&pl022->pump_transfers);
-@@ -1333,7 +1343,7 @@ static void pump_transfers(unsigned long data)
- 
- 		/* Reselect chip select only if cs_change was requested */
- 		if (previous->cs_change)
--			pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 	} else {
- 		/* STATE_START */
- 		message->state = STATE_RUNNING;
-@@ -1372,7 +1382,7 @@ static void do_interrupt_dma_transfer(struct pl022 *pl022)
- 
- 	/* Enable target chip, if not already active */
- 	if (!pl022->next_msg_cs_active)
--		pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+		pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 
- 	if (set_up_next_transfer(pl022, pl022->cur_transfer)) {
- 		/* Error path */
-@@ -1424,12 +1434,12 @@ static void do_polling_transfer(struct pl022 *pl022)
- 			if (previous->delay_usecs)
- 				udelay(previous->delay_usecs);
- 			if (previous->cs_change)
--				pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+				pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 		} else {
- 			/* STATE_START */
- 			message->state = STATE_RUNNING;
- 			if (!pl022->next_msg_cs_active)
--				pl022->cur_chip->cs_control(SSP_CHIP_SELECT);
-+				pl022_cs_control(pl022, SSP_CHIP_SELECT);
- 		}
- 
- 		/* Configuration Changing Per Transfer */
-@@ -1461,7 +1471,7 @@ static void do_polling_transfer(struct pl022 *pl022)
- 		/* Update total byte transferred */
- 		message->actual_length += pl022->cur_transfer->len;
- 		if (pl022->cur_transfer->cs_change)
--			pl022->cur_chip->cs_control(SSP_CHIP_DESELECT);
-+			pl022_cs_control(pl022, SSP_CHIP_DESELECT);
- 		/* Move to next transfer */
- 		message->state = next_transfer(pl022);
- 	}
-@@ -1490,6 +1500,7 @@ static int pl022_transfer_one_message(struct spi_master *master,
- 
- 	/* Setup the SPI using the per chip configuration */
- 	pl022->cur_chip = spi_get_ctldata(msg->spi);
-+	pl022->cur_cs = pl022->chipselect[msg->spi->chip_select];
- 
- 	restore_state(pl022);
- 	flush(pl022);
-@@ -1761,12 +1772,14 @@ static const struct pl022_config_chip pl022_default_chip_info = {
- static int pl022_setup(struct spi_device *spi)
- {
- 	struct pl022_config_chip const *chip_info;
-+	struct pl022_config_chip chip_info_dt;
- 	struct chip_data *chip;
- 	struct ssp_clock_params clk_freq = { .cpsdvsr = 0, .scr = 0};
- 	int status = 0;
- 	struct pl022 *pl022 = spi_master_get_devdata(spi->master);
- 	unsigned int bits = spi->bits_per_word;
- 	u32 tmp;
-+	struct device_node *np = spi->dev.of_node;
- 
- 	if (!spi->max_speed_hz)
- 		return -EINVAL;
-@@ -1789,10 +1802,36 @@ static int pl022_setup(struct spi_device *spi)
- 	chip_info = spi->controller_data;
- 
- 	if (chip_info == NULL) {
--		chip_info = &pl022_default_chip_info;
--		/* spi_board_info.controller_data not is supplied */
--		dev_dbg(&spi->dev,
--			"using default controller_data settings\n");
-+		if (np) {
-+			chip_info_dt = pl022_default_chip_info;
-+
-+			of_property_read_u32(np, "pl022,hierarchy",
-+				&chip_info_dt.hierarchy);
-+			of_property_read_u32(np, "pl022,interface",
-+				&chip_info_dt.iface);
-+			chip_info_dt.slave_tx_disable =
-+				of_property_read_bool(np,
-+					"pl022,slave-tx-disable");
-+			of_property_read_u32(np, "pl022,com-mode",
-+				&chip_info_dt.com_mode);
-+			of_property_read_u32(np, "pl022,rx-level-trig",
-+				&chip_info_dt.rx_lev_trig);
-+			of_property_read_u32(np, "pl022,tx-level-trig",
-+				&chip_info_dt.tx_lev_trig);
-+			of_property_read_u32(np, "pl022,ctrl-len",
-+				&chip_info_dt.ctrl_len);
-+			of_property_read_u32(np, "pl022,wait-state",
-+				&chip_info_dt.wait_state);
-+			of_property_read_u32(np, "pl022,duplex",
-+				&chip_info_dt.duplex);
-+
-+			chip_info = &chip_info_dt;
-+		} else {
-+			chip_info = &pl022_default_chip_info;
-+			/* spi_board_info.controller_data not is supplied */
-+			dev_dbg(&spi->dev,
-+				"using default controller_data settings\n");
-+		}
- 	} else
- 		dev_dbg(&spi->dev,
- 			"using user supplied controller_data settings\n");
-@@ -1835,8 +1874,9 @@ static int pl022_setup(struct spi_device *spi)
- 	chip->xfer_type = chip_info->com_mode;
- 	if (!chip_info->cs_control) {
- 		chip->cs_control = null_cs_control;
--		dev_warn(&spi->dev,
--			 "chip select function is NULL for this chip\n");
-+		if (!gpio_is_valid(pl022->chipselect[spi->chip_select]))
-+			dev_warn(&spi->dev,
-+				 "chip select function is NULL for this chip\n");
- 	} else
- 		chip->cs_control = chip_info->cs_control;
- 
-@@ -1988,7 +2028,8 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 	struct pl022_ssp_controller *platform_info = adev->dev.platform_data;
- 	struct spi_master *master;
- 	struct pl022 *pl022 = NULL;	/*Data for this driver */
--	int status = 0;
-+	struct device_node *np = adev->dev.of_node;
-+	int status = 0, i, num_cs;
- 
- 	dev_info(&adev->dev,
- 		 "ARM PL022 driver, device ID: 0x%08x\n", adev->periphid);
-@@ -1998,8 +2039,14 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 		goto err_no_pdata;
- 	}
- 
-+	num_cs = platform_info->num_chipselect;
-+	if (IS_ENABLED(CONFIG_OF))
-+		of_property_read_u32(np, "pl022,num-chipselects", &num_cs);
-+
-+
- 	/* Allocate master with space for data */
--	master = spi_alloc_master(dev, sizeof(struct pl022));
-+	master = spi_alloc_master(dev,
-+		sizeof(struct pl022) + sizeof(int) * num_cs);
- 	if (master == NULL) {
- 		dev_err(&adev->dev, "probe - cannot alloc SPI master\n");
- 		status = -ENOMEM;
-@@ -2017,13 +2064,41 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
- 	 * on this board
- 	 */
- 	master->bus_num = platform_info->bus_id;
--	master->num_chipselect = platform_info->num_chipselect;
-+	master->num_chipselect = num_cs;
- 	master->cleanup = pl022_cleanup;
- 	master->setup = pl022_setup;
- 	master->prepare_transfer_hardware = pl022_prepare_transfer_hardware;
- 	master->transfer_one_message = pl022_transfer_one_message;
- 	master->unprepare_transfer_hardware = pl022_unprepare_transfer_hardware;
- 	master->rt = platform_info->rt;
-+	master->dev.of_node = dev->of_node;
-+
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		for (i = 0; i < num_cs; i++) {
-+			int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
-+
-+			if (cs_gpio == -EPROBE_DEFER) {
-+				status = -EPROBE_DEFER;
-+				goto err_no_gpio;
-+			}
-+
-+			pl022->chipselect[i] = cs_gpio;
-+
-+			if (gpio_is_valid(cs_gpio)) {
-+				if (gpio_request(cs_gpio, "ssp-pl022"))
-+					dev_err(&adev->dev,
-+						"could not request %d gpio\n",
-+						cs_gpio);
-+				else if (gpio_direction_output(cs_gpio, 1))
-+					dev_err(&adev->dev,
-+						"could set gpio %d as output\n",
-+						cs_gpio);
-+			}
-+		}
-+	} else {
-+		for (i = 0; i < num_cs; i++)
-+			pl022->chipselect[i] = -EINVAL;
-+	}
- 
- 	/*
- 	 * Supports mode 0-3, loopback, and active low CS. Transfers are
-@@ -2130,6 +2205,7 @@ pl022_probe(struct amba_device *adev, const struct amba_id *id)
-  err_no_ioremap:
- 	amba_release_regions(adev);
-  err_no_ioregion:
-+ err_no_gpio:
- 	spi_master_put(master);
-  err_no_master:
-  err_no_pdata:
--- 
-1.7.10
-
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Regards,
+Benoit
