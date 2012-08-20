@@ -1,45 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 10/11] arm: mvebu: enable PINCTRL usage
-Date: Mon, 20 Aug 2012 16:29:55 +0200
-Message-ID: <CACRpkda+X5-GtsMJ07TA7UBbbk1W+pJzTtQjQJ8VPD9z_5UoDQ@mail.gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1344689809-6223-11-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: add of_clk_src_onecell_get() support
+Date: Mon, 20 Aug 2012 22:30:44 +0800
+Message-ID: <20120820143042.GL24242@S2101-09.ap.freescale.net>
+References: <1345104526-14797-1-git-send-email-shawn.guo@linaro.org>
+ <1345104526-14797-2-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1344689809-6223-11-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1345104526-14797-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 11, 2012 at 2:56 PM, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
+On Thu, Aug 16, 2012 at 04:08:45PM +0800, Shawn Guo wrote:
+> For those SoCs that have hundreds of clock outputs, their clock
+> DT bindings could reasonably define #clock-cells as 1 and require
+> the client device specify the index of the clock it consumes in the
+> cell of its "clocks" phandle.
+> 
+> Add a generic of_clk_src_onecell_get() function for this purpose.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/clk/clk.c            |   15 +++++++++++++++
+>  include/linux/clk-provider.h |    1 +
+>  2 files changed, 16 insertions(+), 0 deletions(-)
+> 
+Mike,
 
-> From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->
-> Now that we have a proper pinctrl driver for Marvell EBU platforms,
-> enable PINCTRL support in ARCH_MVEBU.
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Can you please apply this patch on clk tree if it looks good to you?
+I plan to ask arm-soc people pull in clk tree as dependency and then
+have the other 3 patches in the series to go via arm-soc tree.
 
-(...)
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 361f513..95317a9 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -573,6 +573,7 @@ config ARCH_MVEBU
->         select GENERIC_IRQ_CHIP
->         select IRQ_DOMAIN
->         select COMMON_CLK
-> +       select PINCTRL
->         help
->           Support for the Marvell SoC Family with device tree support
-
-So this symbol collects all the DT-migrated platforms?
-
-Probably OK but want to figure out if the PLAT_NOMADIK symbol
-is applicable.
-
-Yours,
-Linus Walleij
+Regards,
+Shawn
