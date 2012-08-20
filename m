@@ -1,137 +1,116 @@
-From: "Poddar, Sourav" <sourav.poddar@ti.com>
-Subject: Re: [PATCHv7] arm/dts: omap4-sdp: Add keypad data
-Date: Mon, 20 Aug 2012 16:49:36 +0530
-Message-ID: <CAKdam57n1jA5_7EOLcsB=u5X4wX6hPVXoZ2HLrnpEKS3kLZ=OQ@mail.gmail.com>
-References: <1344942937-4685-1-git-send-email-sourav.poddar@ti.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2 1/2] mfd: dt: tps6586x: Add power off control
+Date: Mon, 20 Aug 2012 13:34:23 +0200
+Message-ID: <20120820113423.GA5996@avionic-0098.mockup.avionic-design.de>
+References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com>
+ <1345424876-4365-2-git-send-email-bilhuang@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1344942937-4685-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1345424876-4365-2-git-send-email-bilhuang@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bill Huang <bilhuang@nvidia.com>
+Cc: sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, swarren@wwwdotorg.org, xxie@nvidia.com, lrg@slimlogic.co.uk, jhovold@gmail.com, kyle.manna@fuel7.com, rklein@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
 
-On Tue, Aug 14, 2012 at 4:45 PM, Sourav Poddar <sourav.poddar@ti.com> wrote:
-> Add keypad data node in omap4 device tree file.
-> Also fill the device tree binding parameters
-> with the required value in "omap4-sdp" dts file.
->
-> Tested on omap4430 sdp.
->
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Aug 19, 2012 at 06:07:55PM -0700, Bill Huang wrote:
+> Add DT property "ti,system-power-controller" telling whether or not this
+> pmic is in charge of controlling the system power, so the power off
+> routine can be hooked up to system call "pm_power_off".
+>=20
+> Based on the work by:
+> Dan Willemsen <dwillemsen@nvidia.com>
+>=20
+> Signed-off-by: Bill Huang <bilhuang@nvidia.com>
+> Tested-by: Stephen Warren <swarren@wwwdotorg.org>
 > ---
-> v6->v7
-> Add key name as a comment.
->  arch/arm/boot/dts/omap4-sdp.dts |   70 +++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi    |    5 +++
->  2 files changed, 75 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-> index 72216e9..8e200f4 100644
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -113,6 +113,76 @@
->                         "DMic", "Digital Mic",
->                         "Digital Mic", "Digital Mic1 Bias";
->         };
-> +
-> +       keypad {
-> +               keypad,num-rows = <8>;
-> +               keypad,num-columns = <8>;
-> +               linux,keymap = < 0x00000012 /* KEY_E */
-> +                       0x00010013 /* KEY_R */
-> +                       0x00020014 /* KEY_T */
-> +                       0x00030066 /* KEY_HOME */
-> +                       0x0004003f /* KEY_F5 */
-> +                       0x000500f0 /* KEY_UNKNOWN */
-> +                       0x00060017 /* KEY_I */
-> +                       0x0007002a /* KEY_LEFTSHIFT */
-> +                       0x01000020 /* KEY_D*/
-> +                       0x01010021 /* KEY_F */
-> +                       0x01020022 /* KEY_G */
-> +                       0x010300e7 /* KEY_SEND */
-> +                       0x01040040 /* KEY_F6 */
-> +                       0x010500f0 /* KEY_UNKNOWN */
-> +                       0x01060025 /* KEY_K */
-> +                       0x0107001c /* KEY_ENTER */
-> +                       0x0200002d /* KEY_X */
-> +                       0x0201002e /* KEY_C */
-> +                       0x0202002f /* KEY_V */
-> +                       0x0203006b /* KEY_END */
-> +                       0x02040041 /* KEY_F7 */
-> +                       0x020500f0 /* KEY_UNKNOWN */
-> +                       0x02060034 /* KEY_DOT */
-> +                       0x0207003a /* KEY_CAPSLOCK */
-> +                       0x0300002c /* KEY_Z */
-> +                       0x0301004e /* KEY_KPLUS */
-> +                       0x03020030 /* KEY_B */
-> +                       0x0303003b /* KEY_F1 */
-> +                       0x03040042 /* KEY_F8 */
-> +                       0x030500f0 /* KEY_UNKNOWN */
-> +                       0x03060018 /* KEY_O */
-> +                       0x03070039 /* KEY_SPACE */
-> +                       0x04000011 /* KEY_W */
-> +                       0x04010015 /* KEY_Y */
-> +                       0x04020016 /* KEY_U */
-> +                       0x0403003c /* KEY_F2 */
-> +                       0x04040073 /* KEY_VOLUMEUP */
-> +                       0x040500f0 /* KEY_UNKNOWN */
-> +                       0x04060026 /* KEY_L */
-> +                       0x04070069 /* KEY_LEFT */
-> +                       0x0500001f /* KEY_S */
-> +                       0x05010023 /* KEY_H */
-> +                       0x05020024 /* KEY_J */
-> +                       0x0503003d /* KEY_F3 */
-> +                       0x05040043 /* KEY_F9 */
-> +                       0x05050072 /* KEY_VOLUMEDOWN */
-> +                       0x05060032 /* KEY_M */
-> +                       0x0507006a /* KEY_RIGHT */
-> +                       0x06000010 /* KEY_Q */
-> +                       0x0601001e /* KEY_A */
-> +                       0x06020031 /* KEY_N */
-> +                       0x0603009e /* KEY_BACK */
-> +                       0x0604000e /* KEY_BACKSPACE */
-> +                       0x060500f0 /* KEY_UNKNOWN */
-> +                       0x06060019 /* KEY_P */
-> +                       0x06070067 /* KEY_UP */
-> +                       0x07000094 /* KEY_PROG1 */
-> +                       0x07010095 /* KEY_PROG2 */
-> +                       0x070200ca /* KEY_PROG3 */
-> +                       0x070300cb /* KEY_PROG4 */
-> +                       0x0704003e /* KEY_F4 */
-> +                       0x070500f0 /* KEY_UNKNOWN */
-> +                       0x07060160 /* KEY_OK */
-> +                       0x0707006c >; /* KEY_DOWN */
-> +               linux,input-no-autorepeat;
-> +       };
->  };
->
->  &i2c1 {
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index 04cbbcb..e78a1f1 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -296,4 +296,9 @@
->                         ti,hwmods = "dmic";
->                 };
->         };
-> +
-> +       keypad {
-> +               compatible = "ti,omap4-keypad";
-> +               ti,hwmods = "kbd";
-> +       };
->  };
-> --
-> 1.7.1
->
-Any more comments on this?
+>  .../devicetree/bindings/regulator/tps6586x.txt     |    6 ++++++
+>  drivers/mfd/tps6586x.c                             |   19 ++++++++++++++=
++++++
+>  include/linux/mfd/tps6586x.h                       |    1 +
+>  3 files changed, 26 insertions(+), 0 deletions(-)
 
-~Sourav
+Hi,
+
+I've seen the following while trying this patch applied on top of next-2012=
+0817:
+
+[   40.581151] Power down.
+[   41.583160] ------------[ cut here ]------------
+[   41.587784] WARNING: at /home/thierry.reding/src/kernel/linux-ipmp.git/d=
+rivers/i2c/busses/i2c-tegra.c:525 tegra_i2c_xfer+0x21c/0x29c()
+[   41.599850] Modules linked in:
+[   41.602927] [<c0014074>] (unwind_backtrace+0x0/0xf8) from [<c00265a8>] (=
+warn_slowpath_common+0x4c/0x64)
+[   41.612304] [<c00265a8>] (warn_slowpath_common+0x4c/0x64) from [<c00265d=
+c>] (warn_slowpath_null+0x1c/0x24)
+[   41.621947] [<c00265dc>] (warn_slowpath_null+0x1c/0x24) from [<c02a2944>=
+] (tegra_i2c_xfer+0x21c/0x29c)
+[   41.631244] [<c02a2944>] (tegra_i2c_xfer+0x21c/0x29c) from [<c029f5e8>] =
+(__i2c_transfer+0x44/0x80)
+[   41.640192] [<c029f5e8>] (__i2c_transfer+0x44/0x80) from [<c02a0698>] (i=
+2c_transfer+0x7c/0xb8)
+[   41.648796] [<c02a0698>] (i2c_transfer+0x7c/0xb8) from [<c0232a60>] (reg=
+map_i2c_read+0x48/0x64)
+[   41.657485] [<c0232a60>] (regmap_i2c_read+0x48/0x64) from [<c0230304>] (=
+_regmap_raw_read+0x90/0x98)
+[   41.666518] [<c0230304>] (_regmap_raw_read+0x90/0x98) from [<c023035c>] =
+(_regmap_read+0x50/0xa8)
+[   41.675290] [<c023035c>] (_regmap_read+0x50/0xa8) from [<c02300c4>] (_re=
+gmap_update_bits+0x24/0x64)
+[   41.684322] [<c02300c4>] (_regmap_update_bits+0x24/0x64) from [<c0230b88=
+>] (regmap_update_bits+0x3c/0x58)
+[   41.693885] [<c0230b88>] (regmap_update_bits+0x3c/0x58) from [<c0237c30>=
+] (tps6586x_power_off+0x18/0x38)
+[   41.703362] [<c0237c30>] (tps6586x_power_off+0x18/0x38) from [<c000edf4>=
+] (machine_power_off+0x1c/0x24)
+[   41.712749] [<c000edf4>] (machine_power_off+0x1c/0x24) from [<c0037ca4>]=
+ (sys_reboot+0x138/0x1b0)
+[   41.721612] [<c0037ca4>] (sys_reboot+0x138/0x1b0) from [<c000e000>] (ret=
+_fast_syscall+0x0/0x30)
+[   41.730293] ---[ end trace 9af366974fefa459 ]---
+[   41.734906] tegra-i2c tegra-i2c.3: i2c transfer timed out
+[   41.740689] Kernel panic - not syncing: Attempted to kill init! exitcode=
+=3D0x00000000
+[   41.740689]=20
+[   41.749823] [<c0014074>] (unwind_backtrace+0x0/0xf8) from [<c03e7090>] (=
+panic+0x8c/0x1d8)
+[   41.757993] [<c03e7090>] (panic+0x8c/0x1d8) from [<c002b7b8>] (do_exit+0=
+x694/0x750)
+[   41.765636] [<c002b7b8>] (do_exit+0x694/0x750) from [<c002bad0>] (do_gro=
+up_exit+0x3c/0xb0)
+[   41.773884] [<c002bad0>] (do_group_exit+0x3c/0xb0) from [<c002bb54>] (__=
+wake_up_parent+0x0/0x18)
+
+Thierry
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQMiC/AAoJEN0jrNd/PrOhiYEQALfHXXAnQSwm5zlTloPZGPQo
+MnRBhNJskwHBl1Wpkn+iZvFsjvMCW6yWFsRSED9M3sH7jH8lHknKW91Uf01ZO8AR
+u25B+DAygmye0KVWOvV7Dp574OwMSs7op1oN/GkixVspfEoZNMaU9zOQNmsXLN4T
+7KkvwMJIaFJj3RzS27YxA0h6lAcUsOLkzmY5WGZdnjbUCfr4mQ/9gYaX6NrECEFZ
+bSAcukhxAMuKSGdwlzOlfaXger78joount8rdIy2zL8xFtUA4FS4zrxc0ofExBH5
+2nCp0+JsZjG9ty5vcuMFeiJ2tOjX37EJiZ3lEG5tjwSLSFanbMcMJBvd6lgIdydO
+s/p8QbeZtoMZu1jm9P/zT0Hq/RrrITEohjFl35WzFs0zDJnPJ9EmhHCBBt5H29zg
+kGX2m8mBATJTBjMKkSFwavJJptzfVOrslFaRLJKYOyQ6PkB62chI6PlFgMYMGbOx
+U7ckvOQuuir4IISoyOvrx5JZ4lsDumTpqPgY9VEy5MR0QvcqvJMX47ztC6TZWBzb
+WumVBOTux/gPKpeF4jM6dul1Hrb6BVgBQyP+G3AVYwdfTDCSnr2/hB3uwUR9GqDp
+H11Y8RjTeepZI4DnacRHX0HcGCI+z1xXX35BgLZoKSs1evXfHXazzXhM2frwv6OV
+FYAqfloD+nq+kDDL6Znl
+=XZuQ
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
