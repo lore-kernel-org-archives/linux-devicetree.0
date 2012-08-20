@@ -1,46 +1,53 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH RESEND v4] spi/pl022: add devicetree support
-Date: Mon, 20 Aug 2012 10:53:35 -0500
-Message-ID: <50325D7F.5050003@gmail.com>
-References: <1345462769-17386-1-git-send-email-aletes.xgr@gmail.com> <50324835.6030806@gmail.com> <503258CE.9030106@antcom.de>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC:PATCH dtc-1.3.0] dtc: Add --strip-disabled option to dtc.
+Date: Mon, 20 Aug 2012 10:59:16 -0500
+Message-ID: <50325ED4.2070403@freescale.com>
+References: <1345034325-26656-1-git-send-email-srinivas.kandagatla@st.com>
+ <20120817060415.GC29724@truffula.fritz.box> <502E3632.70208@freescale.com>
+ <502E52F3.7090404@st.com> <502E64F9.2020400@freescale.com>
+ <5031F706.3050509@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <503258CE.9030106@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, "Mark Brown (broonie@opensource.wolfsonmicro.com)" <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5031F706.3050509-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "mmarek-AlSwsSmVLrQ@public.gmane.org" <mmarek-AlSwsSmVLrQ@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/20/2012 10:33 AM, Roland Stigge wrote:
-> On 08/20/2012 04:22 PM, Rob Herring wrote:
->>>  .../devicetree/bindings/spi/spi_pl022.txt          |   15 +++
->>>  drivers/spi/spi-pl022.c                            |  114 ++++++++++++++++----
->>>  2 files changed, 110 insertions(+), 19 deletions(-)
+On 08/20/2012 03:36 AM, Srinivas KANDAGATLA wrote:
+> On 17/08/12 16:36, Timur Tabi wrote:
+>> Srinivas KANDAGATLA wrote:
+>>> If you know in advance that device on that SOC is broken, then I guess
+>>> "Fail"/"Failed" can be used in status property.
 >>>
->>> diff --git a/Documentation/devicetree/bindings/spi/spi_pl022.txt b/Documentation/devicetree/bindings/spi/spi_pl022.txt
->>> index 306ec3f..b089ec7 100644
->>> --- a/Documentation/devicetree/bindings/spi/spi_pl022.txt
->>> +++ b/Documentation/devicetree/bindings/spi/spi_pl022.txt
->>> @@ -6,7 +6,22 @@ Required properties:
->>>  - interrupts : Should contain SPI controller interrupt
->>>  
->>>  Optional properties:
->>> +- pl022,num-chipselects : total number of chipselects
+>>> One user of this flag in kernel device trees is
+>>> ./arch/powerpc/boot/dts/mpc8313erdb.dts
+>> 	/* Remove this (or change to "okay") if you have
+>> 	 * a REVA3 or later board, if you apply one of the
+>> 	 * workarounds listed in section 8.5 of the board
+>> 	 * manual, or if you are adapting this device tree
+>> 	 * to a different board.
+>> 	 */
+>> 	status = "fail";
 >>
->> We have this for other spi controllers too. Define a generic property.
-> 
-> Currently, we have:
-> 
-> num-cs
-> ti,spi-num-cs
-> fsl,spi-num-chipselects
-> fsl,espi-num-chipselects
-> (pl022,num-chipselects)
-> 
-> Would "num-cs" be the right one to use?
+>> I'm not sure this is the right way to do it. 
+> I agree, the way fail status is used is pretty much redundant to what
+> "disabled" is used for.
+> I think the device trees files should have status as "okay" or "ok" or
+> "disabled" or skip status property totally.
 
-Well, it is either that or invent something new, so I think num-cs is fine.
+The distinction between "disabled" and "fail" is useful when the OS
+knows how to enable a node (e.g. by manipulating muxing).
 
-Rob
+-Scott
