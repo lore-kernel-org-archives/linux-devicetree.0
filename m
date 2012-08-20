@@ -1,65 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RESEND v4] spi/pl022: add devicetree support
-Date: Mon, 20 Aug 2012 17:09:57 +0200
-Message-ID: <CACRpkdbJkL9bD-hG29LmB1mPAUpg5kwdQEfkMKNV4vRM9Sq87g@mail.gmail.com>
-References: <1345462769-17386-1-git-send-email-aletes.xgr@gmail.com>
-	<50324835.6030806@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: imx6q: replace clk_register_clkdev with clock
+ DT lookup
+Date: Mon, 20 Aug 2012 23:16:11 +0800
+Message-ID: <20120820151609.GN24242@S2101-09.ap.freescale.net>
+References: <1345104526-14797-1-git-send-email-shawn.guo@linaro.org>
+ <1345104526-14797-3-git-send-email-shawn.guo@linaro.org>
+ <503232E0.3000007@gmail.com>
+ <CAKGA1bn2uCWE8YkGR4EzTxZ_bXJ_ov2diq63uxQ=dT7b6Fu9GQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50324835.6030806@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Roland Stigge <stigge@antcom.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, "Mark Brown (broonie@opensource.wolfsonmicro.com)" <broonie@opensource.wolfsonmicro.com>, Viresh Kumar <viresh.kumar@linaro.org>, sachin.verma@st.co
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKGA1bn2uCWE8YkGR4EzTxZ_bXJ_ov2diq63uxQ=dT7b6Fu9GQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 20, 2012 at 4:22 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On 08/20/2012 06:39 AM, Alexandre Pereira da Silva wrote:
+On Mon, Aug 20, 2012 at 09:54:48AM -0500, Matt Sealey wrote:
+> Yet another arbitrary array...
+> 
+> I'm not sure why you would move the registration lookup into the DT
 
->> +- pl022,hierarchy : master or slave interface
->
-> Is attaching a master and using the pl022 as a slave really a supported
-> use case?
+Because I do not want to patch kernel every time I need a new lookup.
+Furthermore, looking at function imx53_qsb_init in imx53-dt.c, you
+will find that lookup for sgtl5000 is really board specific and should
+go to device tree.
 
-No not currently. People doing this crazy stuff need to have
-the kernel with the hard real-time patches and lightening response
-first. But it's in the platform data because it's a feature supported by
-the hardware.
+> and use an arbitrarily ordered array again. Sure, you're looking it up
+> entirely within the device tree here, but a better solution would be
+> to not name clocks twice, and structure your clock definition
+> properly.
+> 
+> What's wrong with;
+> 
+> ccm@020c4000 {
+>    ...
+>    my_clock: clock@0 {
+>        name = "my_clock_name";
+>    }
+> }
+> 
+> uart@nnnnnnnn {
+>    ...
+>    clocks = <&my_clock>;
+> }
+> 
+> ?
+> 
+It turns a property into 185 nodes, which will just bloat the device
+tree.  This issue has been discussed for a plenty of times.
 
-> The DT spi bindings are really designed for a master node with
-> N slave nodes. So there is more general question of how to describe a
-> spi controller as a slave. It's not really one I care to answer as the
-> Linux spi framework isn't designed to act as a slave.
-
-Currently the code should hardwire this to master and not define
-a binding for it I think.
-
->> +- pl022,slave-tx-disable : disconnect tx line in slave mode
-
-Applies also to this, then.
-
->> +- pl022,com-mode : polling, interrupt or dma
->> +- pl022,rx-level-trig : Rx FIFO watermark level
->> +- pl022,tx-level-trig : Tx FIFO watermark level
->> +- pl022,ctrl-len : Microwire interface: Control length
->> +- pl022,wait-state : Microwire interface: Wait state
->> +- pl022,duplex : Microwire interface: Full/Half duplex
->
-> Most of these properties aren't used anywhere in the kernel other than
-> u300 and I'm not sure what to purpose of dummy_chip_info is.
-
-It is used for loopback-testing of the PL022. They're probably
-not necessary there either.
-
-> Perhaps
-> Linus has some input? I think either they can be decided by the spi
-> controller (com-mode, fifo watermark) or should be standard properties
-> (microwire settings). I would argue they should be removed if the spi
-> framework doesn't have support in a standard way.
-
-Uncertain about this, others would need to comment.
-At some point there has been a chip needing these to be set
-to some magic values.
-
-Yours,
-Linus Walleij
+-- 
+Regards,
+Shawn
