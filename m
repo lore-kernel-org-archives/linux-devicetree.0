@@ -1,213 +1,137 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 dtc-1.3.0] dtc: Add --strip-disabled option to dtc(v2).
-Date: Mon, 20 Aug 2012 11:24:07 +0100
-Message-ID: <1345458247-15701-1-git-send-email-srinivas.kandagatla@st.com>
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [PATCHv7] arm/dts: omap4-sdp: Add keypad data
+Date: Mon, 20 Aug 2012 16:49:36 +0530
+Message-ID: <CAKdam57n1jA5_7EOLcsB=u5X4wX6hPVXoZ2HLrnpEKS3kLZ=OQ@mail.gmail.com>
+References: <1344942937-4685-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: mmarek-AlSwsSmVLrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1344942937-4685-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Hi All,
 
-This patch allows dtc to strip out nodes in its output based on status
-property. Now the dtc has additional long option --strip-disabled to
-strip all the nodes which do not have status property set to "okay" or
-"ok". Nodes which do not have status property are not stripped.
+On Tue, Aug 14, 2012 at 4:45 PM, Sourav Poddar <sourav.poddar@ti.com> wrote:
+> Add keypad data node in omap4 device tree file.
+> Also fill the device tree binding parameters
+> with the required value in "omap4-sdp" dts file.
+>
+> Tested on omap4430 sdp.
+>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> ---
+> v6->v7
+> Add key name as a comment.
+>  arch/arm/boot/dts/omap4-sdp.dts |   70 +++++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi    |    5 +++
+>  2 files changed, 75 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+> index 72216e9..8e200f4 100644
+> --- a/arch/arm/boot/dts/omap4-sdp.dts
+> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+> @@ -113,6 +113,76 @@
+>                         "DMic", "Digital Mic",
+>                         "Digital Mic", "Digital Mic1 Bias";
+>         };
+> +
+> +       keypad {
+> +               keypad,num-rows = <8>;
+> +               keypad,num-columns = <8>;
+> +               linux,keymap = < 0x00000012 /* KEY_E */
+> +                       0x00010013 /* KEY_R */
+> +                       0x00020014 /* KEY_T */
+> +                       0x00030066 /* KEY_HOME */
+> +                       0x0004003f /* KEY_F5 */
+> +                       0x000500f0 /* KEY_UNKNOWN */
+> +                       0x00060017 /* KEY_I */
+> +                       0x0007002a /* KEY_LEFTSHIFT */
+> +                       0x01000020 /* KEY_D*/
+> +                       0x01010021 /* KEY_F */
+> +                       0x01020022 /* KEY_G */
+> +                       0x010300e7 /* KEY_SEND */
+> +                       0x01040040 /* KEY_F6 */
+> +                       0x010500f0 /* KEY_UNKNOWN */
+> +                       0x01060025 /* KEY_K */
+> +                       0x0107001c /* KEY_ENTER */
+> +                       0x0200002d /* KEY_X */
+> +                       0x0201002e /* KEY_C */
+> +                       0x0202002f /* KEY_V */
+> +                       0x0203006b /* KEY_END */
+> +                       0x02040041 /* KEY_F7 */
+> +                       0x020500f0 /* KEY_UNKNOWN */
+> +                       0x02060034 /* KEY_DOT */
+> +                       0x0207003a /* KEY_CAPSLOCK */
+> +                       0x0300002c /* KEY_Z */
+> +                       0x0301004e /* KEY_KPLUS */
+> +                       0x03020030 /* KEY_B */
+> +                       0x0303003b /* KEY_F1 */
+> +                       0x03040042 /* KEY_F8 */
+> +                       0x030500f0 /* KEY_UNKNOWN */
+> +                       0x03060018 /* KEY_O */
+> +                       0x03070039 /* KEY_SPACE */
+> +                       0x04000011 /* KEY_W */
+> +                       0x04010015 /* KEY_Y */
+> +                       0x04020016 /* KEY_U */
+> +                       0x0403003c /* KEY_F2 */
+> +                       0x04040073 /* KEY_VOLUMEUP */
+> +                       0x040500f0 /* KEY_UNKNOWN */
+> +                       0x04060026 /* KEY_L */
+> +                       0x04070069 /* KEY_LEFT */
+> +                       0x0500001f /* KEY_S */
+> +                       0x05010023 /* KEY_H */
+> +                       0x05020024 /* KEY_J */
+> +                       0x0503003d /* KEY_F3 */
+> +                       0x05040043 /* KEY_F9 */
+> +                       0x05050072 /* KEY_VOLUMEDOWN */
+> +                       0x05060032 /* KEY_M */
+> +                       0x0507006a /* KEY_RIGHT */
+> +                       0x06000010 /* KEY_Q */
+> +                       0x0601001e /* KEY_A */
+> +                       0x06020031 /* KEY_N */
+> +                       0x0603009e /* KEY_BACK */
+> +                       0x0604000e /* KEY_BACKSPACE */
+> +                       0x060500f0 /* KEY_UNKNOWN */
+> +                       0x06060019 /* KEY_P */
+> +                       0x06070067 /* KEY_UP */
+> +                       0x07000094 /* KEY_PROG1 */
+> +                       0x07010095 /* KEY_PROG2 */
+> +                       0x070200ca /* KEY_PROG3 */
+> +                       0x070300cb /* KEY_PROG4 */
+> +                       0x0704003e /* KEY_F4 */
+> +                       0x070500f0 /* KEY_UNKNOWN */
+> +                       0x07060160 /* KEY_OK */
+> +                       0x0707006c >; /* KEY_DOWN */
+> +               linux,input-no-autorepeat;
+> +       };
+>  };
+>
+>  &i2c1 {
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index 04cbbcb..e78a1f1 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -296,4 +296,9 @@
+>                         ti,hwmods = "dmic";
+>                 };
+>         };
+> +
+> +       keypad {
+> +               compatible = "ti,omap4-keypad";
+> +               ti,hwmods = "kbd";
+> +       };
+>  };
+> --
+> 1.7.1
+>
+Any more comments on this?
 
-SOCs have lot of device tree infrastructure files which mark the
-device nodes as disabled and the board level device tree enables them if
-required. However while creating device tree blob, the compiler can
-exclude nodes marked as disabled, doing this way will reduce the size
-of device tree blob. The size change will be significant once the SOC
-adds all the possible devices in to the device trees. As there could be
-100s of Ips on SOCs but the board actually uses may be 20-25 IP's.
-
-However care has to be taken if your boardloader is is updating status
-property.
-
-In our case this has reduced the blob size from 29K to 15K.
-
-Also nodes with status="disabled" is are never probed by dt platform bus
-code.
-
-Again, this is an optional parameter to dtc, Can be used by people who
-want to strip all the device nodes which do not have status property set
-to "okay" or "ok".
-
-
-Changes from v1:
-	Add node_is_stripped function and also update help with more info.
-
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
----
-
-
-patch is generated on top of git://git.jdl.com/software/dtc.git.
-
-previous discussion on this patch is at
-http://comments.gmane.org/gmane.linux.kbuild.devel/8527
-and
-http://comments.gmane.org/gmane.linux.drivers.devicetree/19626
-
-
-
- dtc.c        |   14 ++++++++++++--
- dtc.h        |    6 ++++++
- flattree.c   |    3 +++
- livetree.c   |   24 ++++++++++++++++++++++++
- treesource.c |    3 +++
- 5 files changed, 48 insertions(+), 2 deletions(-)
-
-diff --git a/dtc.c b/dtc.c
-index a375683..5d44c20 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -30,6 +30,7 @@ int quiet;		/* Level of quietness */
- int reservenum;		/* Number of memory reservation slots */
- int minsize;		/* Minimum blob size */
- int padsize;		/* Additional padding to blob */
-+int strip_disabled;	/* strip disabled nodes in output */
- int phandle_format = PHANDLE_BOTH;	/* Use linux,phandle or phandle properties */
- 
- static void fill_fullpaths(struct node *tree, const char *prefix)
-@@ -96,6 +97,8 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t-W [no-]<checkname>\n");
- 	fprintf(stderr, "\t-E [no-]<checkname>\n");
- 	fprintf(stderr, "\t\t\tenable or disable warnings and errors\n");
-+	fprintf(stderr, "\t--strip-disabled\n");
-+	fprintf(stderr, "\t\tStrip nodes with status property not set to \"okay\" or \"ok\". (usefull\n\t\tto reduce the ouput size)\n");
- 	exit(3);
- }
- 
-@@ -112,15 +115,22 @@ int main(int argc, char *argv[])
- 	FILE *outf = NULL;
- 	int outversion = DEFAULT_FDT_VERSION;
- 	long long cmdline_boot_cpuid = -1;
-+	struct option loptions[] =	{
-+		{"strip-disabled", no_argument, &strip_disabled, 1},
-+	};
- 
- 	quiet      = 0;
- 	reservenum = 0;
- 	minsize    = 0;
- 	padsize    = 0;
-+	strip_disabled = 0;
- 
--	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:"))
--			!= EOF) {
-+	while ((opt = getopt_long(argc, argv,
-+				"hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:",
-+				loptions, NULL)) != EOF) {
- 		switch (opt) {
-+		case 0: /* Long option set */
-+			break;
- 		case 'I':
- 			inform = optarg;
- 			break;
-diff --git a/dtc.h b/dtc.h
-index 7ee2d54..6be2422 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -31,6 +31,7 @@
- #include <ctype.h>
- #include <errno.h>
- #include <unistd.h>
-+#include <getopt.h>
- 
- #include <libfdt_env.h>
- #include <fdt.h>
-@@ -53,6 +54,7 @@ extern int quiet;		/* Level of quietness */
- extern int reservenum;		/* Number of memory reservation slots */
- extern int minsize;		/* Minimum blob size */
- extern int padsize;		/* Additional padding to blob */
-+extern int strip_disabled;	/* strip disabled nodes in output */
- extern int phandle_format;	/* Use linux,phandle or phandle properties */
- 
- #define PHANDLE_LEGACY	0x1
-@@ -224,6 +226,10 @@ struct boot_info *build_boot_info(struct reserve_info *reservelist,
- 				  struct node *tree, uint32_t boot_cpuid_phys);
- void sort_tree(struct boot_info *bi);
- 
-+int is_device_node_avaiable(struct node *node);
-+
-+int node_is_stripped(struct node *node);
-+
- /* Checks */
- 
- void parse_checks_option(bool warn, bool error, const char *optarg);
-diff --git a/flattree.c b/flattree.c
-index 28d0b23..e649082 100644
---- a/flattree.c
-+++ b/flattree.c
-@@ -304,6 +304,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
- 	}
- 
- 	for_each_child(tree, child) {
-+		if (node_is_stripped(child))
-+			continue;
-+
- 		flatten_tree(child, emit, etarget, strbuf, vi);
- 	}
- 
-diff --git a/livetree.c b/livetree.c
-index c9209d5..e4777f9 100644
---- a/livetree.c
-+++ b/livetree.c
-@@ -607,3 +607,27 @@ void sort_tree(struct boot_info *bi)
- 	sort_reserve_entries(bi);
- 	sort_node(bi->dt);
- }
-+
-+int is_device_node_avaiable(struct node *node)
-+{
-+	struct property *status;
-+
-+	status = get_property(node, "status");
-+	if (status == NULL)
-+		return 1;
-+
-+	if (status->val.len > 0) {
-+		if (!strcmp(status->val.val, "okay") ||
-+			 !strcmp(status->val.val, "ok"))
-+			return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+int node_is_stripped(struct node *node)
-+{
-+	if (strip_disabled && !is_device_node_avaiable(node))
-+		return 1;
-+	return 0;
-+}
-diff --git a/treesource.c b/treesource.c
-index 33eeba5..c80c12c 100644
---- a/treesource.c
-+++ b/treesource.c
-@@ -255,6 +255,9 @@ static void write_tree_source_node(FILE *f, struct node *tree, int level)
- 		write_propval(f, prop);
- 	}
- 	for_each_child(tree, child) {
-+		if (node_is_stripped(child))
-+			continue;
-+
- 		fprintf(f, "\n");
- 		write_tree_source_node(f, child, level+1);
- 	}
--- 
-1.7.0.4
+~Sourav
