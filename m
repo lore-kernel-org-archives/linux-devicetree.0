@@ -1,38 +1,42 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/6] Integrator devicetree support
-Date: Sun, 19 Aug 2012 11:52:32 -0400 (EDT)
-Message-ID: <alpine.LFD.2.02.1208191148520.1754@xanadu.home>
-References: <1345119317-22600-1-git-send-email-linus.walleij@linaro.org>
- <201208161344.55723.arnd@arndb.de>
- <CACRpkdYYgdzAU=nyL7dQbdMLx3z3G+K7ba0uJe1=aX=BLeF_sg@mail.gmail.com>
+From: Bill Huang <bilhuang@nvidia.com>
+Subject: [PATCH v2 0/2] mfd: dt: add power off support for Tegra20/Tegra30
+Date: Sun, 19 Aug 2012 18:07:54 -0700
+Message-ID: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdYYgdzAU=nyL7dQbdMLx3z3G+K7ba0uJe1=aX=BLeF_sg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net
+Cc: broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, thierry.reding@avionic-design.de, swarren@wwwdotorg.org, xxie@nvidia.com, lrg@slimlogic.co.uk, jhovold@gmail.com, kyle.manna@fuel7.com, rklein@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Bill Huang <bilhuang@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 19 Aug 2012, Linus Walleij wrote:
+This patch series add new property into regulator DT for telling whether or not
+to hook pmic's power off routine to system call "pm_power_off".
 
-> But then we hit #ifdeffing and compiling out a lot of dangerous stuff
-> in arch/arm/kernel and then I get the creeps. I can try, but I think
-> this is typical Nico territory for example...
+Patch 1 add power off support for Tegra20 boards using TPS6586x
+Patch 2 add power off support for Tegra30 boards using TPS65910
 
-I did post a patch moving all the ATAG stuff to a separate source file a 
-while ago, exactly for that purpose.  I should try to dig it out and 
-refresh it.
+Verified on Seaboard (Tegra20) and Cardhu (Tegra30)
 
+V2:
+* Take multiple pmic instances into consideration while assigning global variables
+  as per suggestion from Thierry Reding <thierry.reding@avionic-design.de>
 
-Nicolas
+V1:
+* Based on master branch of sameo/mfd-2.6.git
+
+Bill Huang (2):
+  mfd: dt: tps6586x: Add power off control
+  mfd: dt: tps65910: add power off control
+
+ Documentation/devicetree/bindings/mfd/tps65910.txt |    4 +++
+ .../devicetree/bindings/regulator/tps6586x.txt     |    6 +++++
+ drivers/mfd/tps6586x.c                             |   19 +++++++++++++++++
+ drivers/mfd/tps65910.c                             |   22 ++++++++++++++++++++
+ include/linux/mfd/tps6586x.h                       |    1 +
+ include/linux/mfd/tps65910.h                       |    3 ++
+ 6 files changed, 55 insertions(+), 0 deletions(-)
+
+-- 
+1.7.4.1
+
