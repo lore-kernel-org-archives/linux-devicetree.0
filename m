@@ -1,40 +1,47 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 04/11] pinctrl: mvebu: add pinctrl driver for Armada 370
-Date: Mon, 20 Aug 2012 18:48:32 +0200
-Message-ID: <50326A60.1070007@gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1344689809-6223-5-git-send-email-sebastian.hesselbarth@gmail.com> <CACRpkdYNZar7865-T12J37h3AWA9-8R1R5tymuOhaB0b3ddEAA@mail.gmail.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [RFC:PATCH dtc-1.3.0] dtc: Add --strip-disabled option to dtc.
+Date: Mon, 20 Aug 2012 07:16:17 -1000
+Message-ID: <503270E1.6050902@firmworks.com>
+References: <1345034325-26656-1-git-send-email-srinivas.kandagatla@st.com>
+ <20120817060415.GC29724@truffula.fritz.box> <502E3632.70208@freescale.com>
+ <502E52F3.7090404@st.com> <502E64F9.2020400@freescale.com>
+ <5031F706.3050509@st.com> <50322F9C.2070403@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYNZar7865-T12J37h3AWA9-8R1R5tymuOhaB0b3ddEAA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50322F9C.2070403-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "mmarek-AlSwsSmVLrQ@public.gmane.org" <mmarek-AlSwsSmVLrQ@public.gmane.org>, Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/20/2012 04:25 PM, Linus Walleij wrote:
->> +config PINCTRL_ARMADA_370
->> +       bool "Support for Marvell Armada 370 SoCs"
->> +       depends on PINCTRL_MVEBU
->> +       depends on MACH_ARMADA_370_XP
->
-> select PINCTRL_MVEBU simply?
->
-> And then have the Armada Kconfig
->
-> select PINCTRL
-> select PINCTRL_ARMADA_370
+On 8/20/2012 2:37 AM, Tabi Timur-B04825 wrote:
+> Srinivas KANDAGATLA wrote:
+>>>> But assuming that this really is the best approach, then it would make
+>>>> sense for --strip-disabled to leave this node in the dtb, because
+>>>> otherwise there would be no way to re-enable it.
+>> --strip-disabled should still get rid for nodes marked as failed
+>> as-well, because fail means something serious and un-recoverable.
+> 
+> Well, I don't know if that's true.  Does status=fail really mean 
+> unrecoverable?
 
-Linus, Thomas, Gregory,
+My intention when I first conceived of the status property is that
+"fail" means that something has determined that the device is not
+working properly and the software does not know how to make it work.
 
-this is really difficult here ;) I thought I could just add PINCTRL_DOVE
-to MACH_DOVE inside ARCH_MVEBU, PINCTRL_KIRKWOOD to MACH_KIRKWOOD, aso.
-But there is a common MACH_ARMADA_370_XP for both 370 and XP obviously.
+That is distinct from "disabled", which means that the choice has been
+made not to use the device.
 
-If it is ok for you I will add both PINCTRL_ stubs to the Kconfig and
-you work it out if you ever have two distinct MACHs? Or it could remain
-selectable in pinctrl/Kconfig but that will then be different with the
-other stubs.
-
-Sebastian
+In the modern world of SoC with physically-unconnected functional units,
+perhaps a new value would be appropriate: status="unused".
