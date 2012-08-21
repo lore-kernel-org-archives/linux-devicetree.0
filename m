@@ -1,108 +1,107 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] serial: pl011: honour serial aliases in device tree
-Date: Tue, 21 Aug 2012 08:26:15 -0500
-Message-ID: <50338C77.4060700@gmail.com>
-References: <1345544302-12406-1-git-send-email-matthew.leach@arm.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: smsc: Add support for smsc gpio io/keypad driver
+Date: Tue, 21 Aug 2012 16:27:44 +0300
+Message-ID: <20120821132741.GI10347@arwen.pp.htv.fi>
+References: <1345545940-2232-1-git-send-email-sourav.poddar@ti.com>
+ <1345545940-2232-2-git-send-email-sourav.poddar@ti.com>
+ <20120821124146.GA21557@sirena.org.uk>
+ <20120821124243.GG10347@arwen.pp.htv.fi>
+ <20120821132222.GF7995@opensource.wolfsonmicro.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1345544302-12406-1-git-send-email-matthew.leach@arm.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Matthew Leach <matthew.leach@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/mixed; boundary="===============2430233603340970938=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120821132222.GF7995-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/21/2012 05:18 AM, Matthew Leach wrote:
-> If the order of UART nodes is changed in the device tree, then tty dev
-> devices are attached to different serial ports causing the console to
-> be directed to a different physical serial port. The "serial" aliases
-> in the device tree should prevent this.
-> 
-> This patch ensures that the UART driver creates tty devices that
-> honour these aliases if a device tree is present.
-> 
-> Signed-off-by: Matthew Leach <matthew.leach@arm.com>
 
-One comment/question below, but otherwise:
-
-Acked-by: Rob Herring <rob.herring@calxeda.com>
-
-> ---
->  drivers/tty/serial/amba-pl011.c |   39 +++++++++++++++++++++++++++++++++++++++
->  1 files changed, 39 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index c17923e..5919599 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -52,6 +52,7 @@
->  #include <linux/scatterlist.h>
->  #include <linux/delay.h>
->  #include <linux/types.h>
-> +#include <linux/of_device.h>
->  #include <linux/pinctrl/consumer.h>
->  
->  #include <asm/io.h>
-> @@ -1869,6 +1870,42 @@ static struct uart_driver amba_reg = {
->  	.cons			= AMBA_CONSOLE,
->  };
->  
-> +#ifdef CONFIG_OF
-
-Now that we have IS_ENABLED, perhaps we want to put this inside the
-function instead?
-
-if (!IS_ENABLED(CONFIG_OF))
-	return index;
+--===============2430233603340970938==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JVYm2bz4YjPqKA1I"
+Content-Disposition: inline
 
 
-> +static int pl011_probe_dt_alias(int index, struct device *dev)
-> +{
-> +	struct device_node *np;
-> +	static bool seen_dev_with_alias = false;
-> +	static bool seen_dev_without_alias = false;
-> +	int ret = index;
-> +
-> +	np = dev->of_node;
-> +	if (!np)
-> +		return ret;
-> +
-> +	ret = of_alias_get_id(np, "serial");
-> +	if (IS_ERR_VALUE(ret)) {
-> +		seen_dev_without_alias = true;
-> +		ret = index;
-> +	} else {
-> +		seen_dev_with_alias = true;
-> +		if (ret >= ARRAY_SIZE(amba_ports) || amba_ports[ret] != NULL) {
-> +			dev_warn(dev, "requested serial port %d  not available.\n", ret);
-> +			ret = index;
-> +		}
-> +	}
-> +
-> +	if (seen_dev_with_alias && seen_dev_without_alias)
-> +		dev_warn(dev, "aliased and non-aliased serial devices found in device tree. Serial port enumeration may be unpredictable.\n");
-> +
-> +	return ret;
-> +}
-> +#else
-> +static int pl011_probe_dt_alias(int index, struct device *dev)
-> +{
-> +	return index;
-> +}
-> +#endif
-> +
->  static int pl011_probe(struct amba_device *dev, const struct amba_id *id)
->  {
->  	struct uart_amba_port *uap;
-> @@ -1891,6 +1928,8 @@ static int pl011_probe(struct amba_device *dev, const struct amba_id *id)
->  		goto out;
->  	}
->  
-> +	i = pl011_probe_dt_alias(i, &dev->dev);
-> +
->  	base = ioremap(dev->res.start, resource_size(&dev->res));
->  	if (!base) {
->  		ret = -ENOMEM;
-> 
+--JVYm2bz4YjPqKA1I
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Aug 21, 2012 at 02:22:22PM +0100, Mark Brown wrote:
+> On Tue, Aug 21, 2012 at 03:42:45PM +0300, Felipe Balbi wrote:
+> > On Tue, Aug 21, 2012 at 01:41:46PM +0100, Mark Brown wrote:
+> > > > +	regmap_read(smsc->regmap, SMSC_DEV_ID, &ret);
+> > > > +	dev_dbg(&i2c->dev, "SMSC Device ID: %d\n", ret);
+>=20
+> > > I'd make these log messages dev_info() or something.
+>=20
+> > dev_info() ? It'lll just make boot noisier for no good reason. Which
+> > user wants to see this during boot up ? That's a debugging feature for
+> > develop IMHO.
+>=20
+> Most of the registers appeared to be chip revision information which is
+> most definitely useful to tell people about, though possibly with neater
+> formatting ("why is this batch of boards failing...  oh, right").  If
+> they're fixed device IDs then the driver should instead be verifying
+> that the registers contain the expected values and bombing out if they
+> don't.  Either way dev_dbg() isn't too helpful.
+
+I still beg to differ. Even if it fails, dmesg will still contain the
+message (provided you have it enabled). I really don't think we want
+this to print to console on every boot.
+
+If you're still testing your new batch of boards, you're not just a
+simple user and you will have debugging enabled anyway. dev_info() will
+be visible to anyone who's got a console running. Not sure how useful
+that would be to my neighbor.
+
+--=20
+balbi
+
+--JVYm2bz4YjPqKA1I
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQM4zNAAoJEIaOsuA1yqRE2u0P/1E2CIENR9R9DEuu1Zna1UJ6
+hrefGLqEJMtFtQp4FgTb74Ah+yi7UcDBuODTNDR8YLZ81s38ITGp60akRtujuHeX
+QkKToGPy6B3pDgD4bQe2DRKJ/om7U+Zw3QiU8GdUpznxO/wDcwSWoucDk5hZjKN6
+/hFf/oT1ws60ECBI4zC028hYQ/MXymEy7k16XVvgd7KEHlxqaYmMAWeZaNY9fJlq
+JNLVaXblYKj/LiJ9m80PJUrLb7+nrFJGIgftvXwd5pBrFB8UBpy9zSxaKrD6O2Ox
+68y9/VFjR6ssHAgI3zL0LofobZMOfaQ2h63TiLI+NoHTz08LnZK/EUHKnT+keTLi
+guX0MjXCmM35qm24Ft8IIxMlG+Z6B8obCGjziZTr0vlTgX1yYVw3oWL8EK9oh8GC
+iBhicTUrMTYXiX+0nQ0jmOFcrKUnE488a/AFg+1VqMbcW6oOveHzDf5G6kOgEHq7
+FTsDodRfi8T6dD3hv7QIWZ0JVHnDSu+PRzWJ6P0hDADiTzheFBIlAzz8ZFN2VueM
+6O8/Lrnh//4HSRirCXMPvxLFhQMjXvY7R7+S4pmXCzhc39+wOwQwn9fbk0yxc1jD
+hvKJ8odxvS/EkKi58UiW5VfLFHI2K0kHHMKetLlVJPn29YQ7UFbEVTY9YYCmp5QZ
+Qeh6KBPriMn7z5jFIh0W
+=dtOa
+-----END PGP SIGNATURE-----
+
+--JVYm2bz4YjPqKA1I--
+
+--===============2430233603340970938==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2430233603340970938==--
