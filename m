@@ -1,58 +1,83 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Tue, 21 Aug 2012 18:00:52 +0530
-Message-ID: <CAJuYYwSqyU5Q5LZF5RQkYtGfTXPHoE-Sf2qnEesk5vioCyQ1AA@mail.gmail.com>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
-	<201208211101.21612.arnd@arndb.de>
-	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
-	<87k3ws5uhs.fsf@octavius.laptop.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: smsc: Add support for smsc gpio io/keypad driver
+Date: Tue, 21 Aug 2012 13:41:46 +0100
+Message-ID: <20120821124146.GA21557@sirena.org.uk>
+References: <1345545940-2232-1-git-send-email-sourav.poddar@ti.com>
+ <1345545940-2232-2-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <87k3ws5uhs.fsf@octavius.laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1345545940-2232-2-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 August 2012 17:26, Chris Ball <cjb@laptop.org> wrote:
-> Hi,
->
-> On Tue, Aug 21 2012, Thomas Abraham wrote:
->> I am trying to have a way to represent a gpio line as card detect line
->> that is not connected to the card-detect pad of the mmc controller but
->> instead used as a gpio interrupt line or polled gpio line.
->>
->> 'broken-cd' would imply that the card-detect pad of the mmc controller
->> is not connected to the card-detect pin at the slot. The 'cd-gpios'
->> property in that case would let the driver code to use the 'cd-gpios'
->> line as the external gpio interrupt or poll it.
->
-> How about this?
->
-> broken-cd: No CD available, use polling.
->
-> cd-gpios: The CD pin on the host is working and brought out to a GPIO.
->
-> external-cd-gpios: The CD pin on the host is broken, but there's an
->                    independent external GPIO available.
->
->
-> (Each host should only have one of these properties.)
+On Tue, Aug 21, 2012 at 04:15:37PM +0530, Sourav Poddar wrote:
 
-How about a property using 'cd-external' property in place of
-'external-cd-gpios'.  'cd-external' would mean that the gpio listed by
-'cd-gpios' is a gpio line which is not connected the card-detect pad
-of the mmc controller.
+> +config MFD_SMSC
+> +       bool "Support for the SMSC ECE1099 series chips"
+> +       depends on I2C=y && MFD_CORE && REGMAP_I2C
 
-This can simplfy the dt parsing code since it is required to look for
-only one gpio property, which is 'cd-gpios' which implies lesser error
-handling code. 'cd-external' can qualify it further as an external cd
-pin.
+This needs to select REGMAP_I2C not depend on it.  REGMAP_I2C will only
+be enabled by being selected.
 
-Either way, I am fine with the binding you have proposed. If you post
-a patch for these new bindings, I will base the sdhci-s3c dt patch on
-top of that patch.
+> +int smsc_read(struct device *child, unsigned int reg,
+> +	unsigned int *dest)
+> +{
+> +	struct smsc     *smsc = dev_get_drvdata(child->parent);
+> +
+> +	return regmap_read(smsc->regmap, reg, dest);
+> +}
+> +EXPORT_SYMBOL_GPL(smsc_read);
 
-Thanks,
-Thomas.
+I'd suggest making these static inlines in the header given that they're
+so trivial.
+
+> +static struct regmap_config smsc_regmap_config = {
+> +		.reg_bits = 8,
+> +		.val_bits = 8,
+> +		.cache_type = REGCACHE_COMPRESSED,
+> +};
+
+Indentation is weird here.  For the cache we should have at least
+.max_register defined and given the functionality there must surely be
+some volatile registers (I'm surprised this works at all as it is, the
+cache should break things).
+
+> +	of_property_read_u32(node, "clock", &smsc->clk);
+> +
+
+This is all unconditional, there should be a dependency on this in
+Kconfig.
+
+> +	regmap_read(smsc->regmap, SMSC_DEV_ID, &ret);
+> +	dev_dbg(&i2c->dev, "SMSC Device ID: %d\n", ret);
+
+I'd make these log messages dev_info() or something.
+
+> +err:
+> +	kfree(smsc);
+
+Use devm_kzalloc() for this.
+
+> +static const struct i2c_device_id smsc_i2c_id[] = {
+> +	{ "smsc", 0},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(i2c, smsc_i2c_id);
+
+This should probably list the part name rather than "smsc" - that seems
+far too generic a name to use, obviously smsc produce more than one
+part!
