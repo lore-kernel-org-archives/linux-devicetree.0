@@ -1,9 +1,11 @@
 From: Thomas Abraham <thomas.abraham@linaro.org>
 Subject: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Tue, 21 Aug 2012 16:39:30 +0530
-Message-ID: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Date: Tue, 21 Aug 2012 16:39:31 +0530
+Message-ID: <1345547371-6784-2-git-send-email-thomas.abraham@linaro.org>
+References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
 To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 Cc: linux-samsung-soc@vger.kernel.org, cjb@laptop.org, arnd@arndb.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
@@ -34,3 +36,4 @@ index 8a6811f..1aa527a 100644
  
 -- 
 1.6.6.rc2
+
