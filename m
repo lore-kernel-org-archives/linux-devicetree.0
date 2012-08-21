@@ -1,69 +1,99 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
-Date: Tue, 21 Aug 2012 17:57:38 +0100
-Message-ID: <20120821165738.GY7995@opensource.wolfsonmicro.com>
-References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com>
- <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
- <1345535069.4085.7.camel@deskari>
- <1562509.b0FYTUZ1D8@percival>
- <20120821083329.GA28992@avionic-0098.adnet.avionic-design.de>
- <1345539465.4085.22.camel@deskari>
- <20120821091306.GA4819@avionic-0098.mockup.avionic-design.de>
- <1345542860.4085.40.camel@deskari>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
+Date: Tue, 21 Aug 2012 23:03:59 +0530
+Message-ID: <CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
+References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
+	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
+	<87k3ws5uhs.fsf@octavius.laptop.org>
+	<201208211208.49987.arnd@arndb.de>
+	<87393g5mic.fsf@octavius.laptop.org>
+	<5033A34E.7040201@gmail.com>
+	<87pq6k46jg.fsf@octavius.laptop.org>
+	<5033B0F0.7050506@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Ubca5Sl/zyRO+Ah+"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1345542860.4085.40.camel@deskari>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Alex Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5033B0F0.7050506@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, patches@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On 21 August 2012 21:31, Rob Herring <robherring2@gmail.com> wrote:
+> On 08/21/2012 10:18 AM, Chris Ball wrote:
+>> Hi,
+>>
+>> On Tue, Aug 21 2012, Rob Herring wrote:
+>>>> cd-gpios and cd-external can be present on the same node.  if broken-cd
+>>>> is present, it must be the only one of these nodes used.
+>>>
+>>> I don't see the point of cd-external. Either you just use the CD
+>>> interrupt defined within the SDHCI or you have a gpio line independent
+>>> of the SDHCI and use cd-gpios.
+>>
+>> You've described two of the possible cases, but not the third.  In the
+>> third case, you have a gpio line that is not independent of the SDHCI,
+>> because it is the SDHCI's CD pin brought out to be directly accessible
+>> via a GPIO.
+>
+> That is covered by absence of cd-gpios and broken-cd. Any *-gpios
+> property means the signal is a GPIO line controlled by a GPIO controller.
+>
+> I suppose you could have the CD state readable via the SDHCI, but the
+> interrupt comes from a GPIO controller. Or vice-versa, but that's a
+> pretty broken use case if you can't pick which way you are going to use
+> things.
+>
+>>
+>> The difference is in the handling of the interrupt -- if you don't have
+>> "cd-external" then you're just using the SDHCI's interrupt, but if you
+>> have an independent line then you're going to need to register your own
+>> IRQ handler on it, and "cd-external" signifies that.
+>>
+>> Thomas wrote this explanation earlier in the thread:
+>>> "samsung,sdhci-cd-gpio" means that the cd-gpio line is not connected
+>>> to the card-detect pad of the sdhci controller. Instead, it identifies
+>>> cd-gpio as a gpio pin, connected to the card-detect pin of the "card
+>>> slot" and it can used as a source of external interrupt. The driver
+>>> can register card insert/remove handler for this interrupt and get
+>>> notified about the changes in card state.
+>>>
+>>> "sdhci-cd-internal" means that the "cd-gpio" line is used to connect
+>>> the card-detect pin of the card slot and the card-detect pad of the
+>>> sdhci controller. The controller is then aware of any changes in card
+>>> state and the controller generates appropriate interrupts to notify
+>>> changes in card-state.
+>>
+>
+> It seems you are mixing pin muxing and who controls/handles the CD
+> detect signal. Pin muxing is a separate issue and should be addressed by
+> pin mux bindings. Either the signal functions as a GPIO or it functions
+> as a CD as part of the SDHCI. You may have muxing on the CD pin that
+> allows it to function either way, but the DT binding should describe how
+> you want it to be configured and used.
 
---Ubca5Sl/zyRO+Ah+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok, I agree with Rob. I was mixing pin muxing here. So if we have
+'cd-gpios' and 'broken-cd' as generic bindings, would the following be
+valid?
 
-On Tue, Aug 21, 2012 at 12:54:20PM +0300, Tomi Valkeinen wrote:
+[A] cd-gpios not present ,  broken-cd not present : This means that
+there is no card detect pin available. Controller drivers are free to
+infer this as "card detection is broken" and use implementation
+specific behavior.
 
-> However, if we already have a generic driver for that type of panel,
-> (which we would need anyway for the DT based approach), the developer
-> only needs to add the name of the panel and the data for the power
-> sequence to the panel driver's database, which is about the same amount
-> of work as with DT.
+[B] cd-gpio not present , broken-cd present :  This means that there
+is nothing connected to the card-detect pad of the mmc host
+controller. Controller drivers are free to use implementation specific
+behavior to deal with card detection.
 
-> So it's really just a question of where to put the data in question, DT
-> or driver. Both contain the same data, and the data structure may also
-> be the same. In DT's case it just needs to be parsed first, whereas in
-> database case you'll enter the data in structs.
+[C] cd-gpio present, broken-cd not present : This means that 'cd-gpio'
+line connects card-detect pad of the controller to the card-detect pin
+of the mmc slot.
 
-I think the device tree idiomatic way of doing this is to have a bunch
-of .dtsi files for the panels which then get included by reference in
-the board files.  This isn't helpful to people working on non-DT
-architectures though.
+[D] cd-gpio present, broken-cd present : This means that there is
+nothing connected to the card-detect pad of the mmc host controller.
+Controller drivers are free to use the 'cd-gpio' line in any
+implementation specific way.
 
---Ubca5Sl/zyRO+Ah+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQM734AAoJEFJkBDiqVpZ4h28P/iblWU1WkmSB3gX1ANEaTXg2
-MiYoBQNiUON4KY+6nOse+vEGsWlhsNaCmsxxp1zp/yNeG5zzPUhcosh6qK00IxMI
-dlu1zMJ5Ng4KNq7xAVf2OisX8UAfUNK4PxdzwClGhmy7/oSN+/ojajhRDRAWlODw
-4V5diV6t6USWZocfTrsIHBMJju1vMgm9H6T6JoND7azvt+mk65PQFh6IIQyMJWRx
-Q4EDivYkcrLLR2cmLlPq9SAqCy0Jhym0HkL8tYNgQafu4/SjlkRTc3heLiQzMmDB
-cnaPjrEkIjn3ONqBsueBismBQR6I7Q4lt3u+XVwVu8i1Cc4aOIpAelhh40ZE7DM/
-+vgsQsulybCO9c+WxxK+6ZGnEsHOPIoAyJ3V4Dk4zG0+22W/JQPRl9DPfd2i96CN
-W6TXAoqXhsAawCVjt/MLCzzmuxk9qX6R9+aBLQF4d2MygVLKeOm6MM9Jm/XOxf0b
-BWfHADatomudMD8Ewxij+uB+4sgp+O9pzWnERASqERO06yvUWM9QO2uuNYMNNfGV
-ZMtV+LPspwnZxvOtSKgG7DENcVScMq1KNJQMjrp5X6bEhaaKwyO6F0MHMYAnJmAl
-nNVjct/Rbio/XYcySv2bcUln81iNu5qJCeyGVhirJNHeWFt2EnbJc5RUSZa5K7eC
-+uTonIehAvqSzbGlma7H
-=FIV2
------END PGP SIGNATURE-----
-
---Ubca5Sl/zyRO+Ah+--
+Thanks,
+Thomas.
