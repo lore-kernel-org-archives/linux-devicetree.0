@@ -1,41 +1,90 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Tue, 21 Aug 2012 09:21:47 -0500
-Message-ID: <5033997B.9010605@gmail.com>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org> <CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com> <87k3ws5uhs.fsf@octavius.laptop.org> <201208211208.49987.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201208211208.49987.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, patches@linaro.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ASoC: omap-mcbsp: Device tree binding documentation update
+Date: Tue, 21 Aug 2012 17:33:56 +0300
+Message-ID: <1345559636-23370-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/21/2012 07:08 AM, Arnd Bergmann wrote:
-> On Tuesday 21 August 2012, Chris Ball wrote:
->> How about this?
->>
->> broken-cd: No CD available, use polling.
->>
->> cd-gpios: The CD pin on the host is working and brought out to a GPIO.
->>
->> external-cd-gpios: The CD pin on the host is broken, but there's an
->>                    independent external GPIO available.
->>
->>
->> (Each host should only have one of these properties.)
-> 
-> The fsl-imx-esdhc.txt binding already has all three cases, but
-> describes them differently:
-> 
-> fsl,cd-internal: when present, the CD pin on the host is working
-> cd-gpios: when present, contains the gpio line that CD is connected to
-> If both are absent, it has to use polling.
+To reflect the final devicetree node structure of McBSPs.
 
-This makes the most sense to me. However, I prefer broken-cd over
-cd-internal. The binding should add properties for exceptions, not SDHCI
-spec compliant implementations.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
 
-Rob
+Hello,
+
+the initial OMAP McBSP DT structure was not able to describe the IP (and it's
+versions) correctly.
+The main issue was the sidetone block of McBSP2/3 on OMAP3.
+With this change in the DT description the OS can get the needed information
+about the IP.
+
+The sidetone is still not supported when the Linux kernel is booted with DT
+since we still depend on hwmod to fill the resources.
+
+This patch depend on the McBSP DT support series going via audio tree.
+
+Regards,
+Peter
+
+ .../devicetree/bindings/sound/omap-mcbsp.txt       |   28 +++++++------------
+ 1 files changed, 10 insertions(+), 18 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/omap-mcbsp.txt b/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
+index 447cb13..17cce44 100644
+--- a/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
++++ b/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
+@@ -8,38 +8,30 @@ Required properties:
+ - reg: Register location and size, for OMAP4+ as an array:
+        <MPU access base address, size>,
+        <L3 interconnect address, size>;
++- reg-names: Array of strings associated with the address space
+ - interrupts: Interrupt numbers for the McBSP port, as an array in case the
+ 	      McBSP IP have more interrupt lines:
+ 	<OCP compliant irq>,
+ 	<TX irq>,
+ 	<RX irq>;
++- interrupt-names: Array of strings associated with the interrupt numbers
+ - interrupt-parent: The parent interrupt controller
+ - ti,buffer-size: Size of the FIFO on the port (OMAP2430 and newer SoC)
+ - ti,hwmods: Name of the hwmod associated to the McBSP port
+ 
+-Sidetone support for OMAP3 McBSP2 and 3 ports:
+-- sidetone { }: Within this section the following parameters are required:
+-- reg: Register location and size for the ST block
+-- interrupts: The interrupt number for the ST block
+-- interrupt-parent: The parent interrupt controller for the ST block
+-
+ Example:
+ 
+ mcbsp2: mcbsp@49022000 {
+ 	compatible = "ti,omap3-mcbsp";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	reg = <0x49022000 0xff>;
+-	interrupts = <0 17 0x4>, /* OCP compliant interrup */
+-		     <0 62 0x4>, /* TX interrup */
+-		     <0 63 0x4>; /* RX interrup */
++	reg = <0x49022000 0xff>,
++	      <0x49028000 0xff>;
++	reg-names = "mpu", "sidetone";
++	interrupts = <0 17 0x4>, /* OCP compliant interrupt */
++		     <0 62 0x4>, /* TX interrupt */
++		     <0 63 0x4>, /* RX interrupt */
++		     <0 4 0x4>;  /* Sidetone */
++	interrupt-names = "common", "tx", "rx", "sidetone";
+ 	interrupt-parent = <&intc>;
+ 	ti,buffer-size = <1280>;
+ 	ti,hwmods = "mcbsp2";
+-
+-	sidetone {
+-		reg = <0x49028000 0xff>;
+-		interrupts = <0 4 0x4>;
+-		interrupt-parent = <&intc>;
+-	};
+ };
+-- 
+1.7.8.6
+
