@@ -1,211 +1,65 @@
 From: Felipe Balbi <balbi@ti.com>
 Subject: Re: [PATCH 2/4] Input: keypad: Add smsc ece1099 keypad driver
-Date: Tue, 21 Aug 2012 13:45:49 +0300
-Message-ID: <20120821104549.GT10347@arwen.pp.htv.fi>
+Date: Tue, 21 Aug 2012 13:46:48 +0300
+Message-ID: <20120821104647.GU10347@arwen.pp.htv.fi>
 References: <1345545940-2232-1-git-send-email-sourav.poddar@ti.com>
  <1345545940-2232-3-git-send-email-sourav.poddar@ti.com>
 Reply-To: balbi@ti.com
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zpd1bWBxfrI+71+6"
-Return-path: <linux-input-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="CYcXvPfqKSDi0QhV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <1345545940-2232-3-git-send-email-sourav.poddar@ti.com>
-Sender: linux-input-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Sourav Poddar <sourav.poddar@ti.com>
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---zpd1bWBxfrI+71+6
+--CYcXvPfqKSDi0QhV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+Hi,
+
 On Tue, Aug 21, 2012 at 04:15:38PM +0530, Sourav Poddar wrote:
-> From: G, Manjunath Kondaiah <manjugk@ti.com>
->=20
-> SMSC ECE1099 is a keyboard scan or GPIO expansion device.The device
-> supports a keypad scan matrix of 23*8.This driver uses this
-> device as a keypad driver.
->=20
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> +static struct platform_driver smsc_driver =3D {
+> +	.driver =3D {
+> +		.name	=3D "smsc-keypad",
+> +		.of_match_table =3D of_match_ptr(smsc_keypad_dt_match),
+> +		.owner  =3D THIS_MODULE,
+> +	},
+> +	.probe		=3D smsc_probe,
+> +	.remove		=3D smsc_remove,
 
-looks good. If you just fix my comment on free_irq() below, you can add:
-
-Acked-by: Felipe Balbi <balbi@ti.com>
-
-> +static int __devinit
-> +smsc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct smsc *smsc =3D dev_get_drvdata(pdev->dev.parent);
-> +	struct input_dev *input;
-> +	struct smsc_keypad *kp;
-> +	int ret =3D 0, error;
-> +	int col, i, max_keys, row_shift;
-> +	int irq;
-> +	int addr_start, addr;
-> +
-> +	kp =3D devm_kzalloc(dev, sizeof(*kp), GFP_KERNEL);
-> +
-> +	input =3D input_allocate_device();
-> +	if (!kp || !input) {
-> +		error =3D -ENOMEM;
-> +		goto err1;
-> +	}
-> +
-> +	error =3D smsc_keypad_parse_dt(&pdev->dev, kp);
-> +	if (error)
-> +		return error;
-> +
-> +	/* Get the debug Device */
-> +	kp->input =3D input;
-> +	kp->smsc =3D smsc;
-> +	kp->irq =3D platform_get_irq(pdev, 0);
-> +	kp->dev =3D dev;
-> +
-> +	for (col =3D 0; col < 16; col++) {
-> +		kp->last_key_state[col] =3D 0;
-> +		kp->last_key_ms[col] =3D 0;
-> +	}
-> +
-> +	/* setup input device */
-> +	 __set_bit(EV_KEY, input->evbit);
-> +
-> +	/* Enable auto repeat feature of Linux input subsystem */
-> +	if (!(kp->no_autorepeat))
-> +		__set_bit(EV_REP, input->evbit);
-> +
-> +	input_set_capability(input, EV_MSC, MSC_SCAN);
-> +	input->name             =3D "SMSC Keypad";
-> +	input->phys             =3D "smsc_keypad/input0";
-> +	input->dev.parent       =3D &pdev->dev;
-> +	input->id.bustype       =3D BUS_HOST;
-> +	input->id.vendor        =3D 0x0001;
-> +	input->id.product       =3D 0x0001;
-> +	input->id.version       =3D 0x0003;
-> +
-> +	error =3D input_register_device(input);
-> +	if (error) {
-> +		dev_err(kp->dev,
-> +			"Unable to register twl4030 keypad device\n");
-> +		goto err1;
-> +	}
-> +
-> +	/* Mask all GPIO interrupts (0x37-0x3B) */
-> +	for (addr =3D 0x37; addr < 0x3B; addr++)
-> +		smsc_write(dev, addr, 0);
-> +
-> +	/* Set all outputs high (0x05-0x09) */
-> +	for (addr =3D 0x05; addr < 0x09; addr++)
-> +		smsc_write(dev, addr, 0xff);
-> +
-> +	/* Clear all GPIO interrupts (0x32-0x36) */
-> +	for (addr =3D 0x32; addr < 0x36; addr++)
-> +		smsc_write(dev, addr, 0xff);
-> +
-> +	addr_start =3D 0x12;
-> +	for (i =3D 0; i <=3D kp->rows; i++) {
-> +		addr =3D 0x12 + i;
-> +		smsc_write(dev, addr, SMSC_KP_KSI);
-> +	}
-> +
-> +	addr_start =3D  0x1A;
-> +	for (i =3D 0; i <=3D kp->cols; i++) {
-> +		addr =3D 0x1A + i;
-> +		smsc_write(dev, addr, SMSC_KP_KSO);
-> +	}
-> +
-> +	addr =3D SMSC_KP_INT_STAT;
-> +	smsc_write(dev, addr, SMSC_KP_SET_HIGH);
-> +
-> +	addr =3D SMSC_WKUP_CTRL;
-> +	smsc_write(dev, addr, SMSC_KP_SET_LOW_PWR);
-> +
-> +	addr =3D SMSC_KP_OUT;
-> +	smsc_write(dev, addr, SMSC_KSO_ALL_LOW);
-> +
-> +	row_shift =3D get_count_order(kp->cols);
-> +	max_keys =3D kp->rows << row_shift;
-> +
-> +	kp->row_shift =3D row_shift;
-> +	kp->keymap =3D kzalloc(max_keys * sizeof(kp->keymap[0]),
-> +					GFP_KERNEL);
-> +	if (!kp->keymap) {
-> +		dev_err(&pdev->dev, "Not enough memory for keymap\n");
-> +		error =3D -ENOMEM;
-> +	}
-> +
-> +	matrix_keypad_build_keymap(NULL, NULL, kp->rows,
-> +			kp->cols, kp->keymap, input);
-> +
-> +	/*
-> +	* This ISR will always execute in kernel thread context because of
-> +	* the need to access the SMSC over the I2C bus.
-> +	*/
-> +	ret =3D devm_request_threaded_irq(dev, kp->irq, NULL, do_kp_irq,
-> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT, pdev->name, kp);
-> +	if (ret) {
-> +		dev_dbg(&pdev->dev, "request_irq failed for irq no=3D%d\n",
-> +			irq);
-> +		goto err2;
-> +	}
-> +
-> +	/* Enable smsc keypad interrupts */
-> +	ret =3D smsc_write(dev, SMSC_KP_INT_MASK, 0xff);
-> +	if (ret < 0)
-> +		goto err2;
-> +
-> +	return 0;
-> +
-> +err2:
-> +	input_unregister_device(input);
-> +	free_irq(kp->irq, NULL);
-
-you're using devm_request_threaded_irq, this is unnecessary
-
-> +err1:
-> +	input_free_device(input);
-> +	return ret;
-> +}
-> +
-> +static int smsc_remove(struct platform_device *pdev)
-> +{
-> +	struct smsc_keypad *kp =3D platform_get_drvdata(pdev);
-> +	free_irq(kp->irq, kp);
-
-ditto.
-
+one extra comment which I forgot. You probably should put your remove on
+__devexit and add __devexit_p(smsc_remove) here.
 
 --=20
 balbi
 
---zpd1bWBxfrI+71+6
+--CYcXvPfqKSDi0QhV
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQM2bdAAoJEIaOsuA1yqREJeQP/A2punS/wXhdUtGToTI1bI6k
-gb35BA8HWCEiUpC9ln73fTq4HFxKqUDLehgSbli8nJFkPTTtd7oWECT1+w2d1Drb
-3rJ2RsRqr50HNjVjYkm6NIchheMP8X4VsVQR27hHXPOArFQ9TfBockuU+QtWz2Up
-AKigg6hf7zQ+PGof3A0uqV38aGh/NcSR0deZVST8goHmAtBKg+3TYI+kyDkQjZRQ
-gBrbxFE4zYo2HFD9bHCIk9rguh0ln3LvGREiz0i3qY8cF40QS1MqnJqG3CbSrcLx
-U8Qo8GZ0yeauEJxcLStP8ZPuzFIvs490hAOjbcwml29nS1cwgIPm5kvm8QaHL/Hz
-Rg1XM5+BQfGkyjjTPR9aGE1wYY3FFrZNKuWp3833hpqHj4RXYVeaU5T26/IA5yxo
-W6+7jw1NKFDYakbwKtHl2/1aVVioZNZtPBWqEdAFT4130YtjqCzAWa2ziliFWfmm
-bycIYGr74pB4fwgO0ESl0f6hVS+3w/RNJevNBI802dH+o0BgTV3Z8J7Q37uBz8Z2
-NnKfVEHVeoO+5UPEGNPb1PmOZd3MlKr/C0cenKMGdsR11iBASGTEIE5tTQGRN7q5
-mrEpNpJTWE98Yt12fPB/cmYhUL7OU7DSBaGReTAVNJHxV8Riwb/qS8kJYPCvuLK5
-saN/SFwEHJSl6i27tHH+
-=VYEi
+iQIcBAEBAgAGBQJQM2cXAAoJEIaOsuA1yqREPmUP/AvfScXSgoi2kWD4jh7ksRu+
+RdNDVUDRgngMphOkYn5xIqGsVXPauweofTJqGl+8XRAnotS9WxnmHPww4sB7lbA3
+n4HlfLKw8j6PDeWO9JslvyN6HLI3IJIHIVLOv97XUsra7cPHrHyuwivjp8pLx7I2
+agIEbqpe+Cm9yzdm39J+qmF7+qrgRO8krRIEAwwiad6GWlDblBSjh0hSN2mzkDNy
+Zr+OjXc69gxCXpzaFCi/W+XNL+/h4eVNtCF6AsIKRaq44iE2LunF2mJdZsE6NbC0
+p0AKuQ4ZoqDZegZmnTTHWOS9JXfWrYaiPiVtqRFl9og3tDHTPJXUKd01cbeN6WSy
+E45GJaEMh/+JDcBJFyc6tJbQjvaM5hMVWISsnqWS545h1G3Y5IX9k380+7sffQ5j
++NA5YRYXxZ8106Yl/WqLHWI92vvcuP2FwBDd9uFEAtNxb+5GOHX7L1Sg9f3qskYX
++GiaYFzgrLcMAfeRP5RkMCrO4j577bIgkPu5/zIWKeUWhxFmmLQQLVvr9RyVGFX0
+QrSinE9Vg2RuXwW6EvWRa57f89u0En0EGU2bzV6oEA8oPTf8vNEwbgHdo1bK8brz
+VZ3YoHS1byeE+u1IYyUeGomOM8BdTY0on5LxcMrvrlG/2Ia7DQk+YJJvY/OFCzX5
+OCu1V+LGo9eM7E7Glyw3
+=Swyd
 -----END PGP SIGNATURE-----
 
---zpd1bWBxfrI+71+6--
+--CYcXvPfqKSDi0QhV--
