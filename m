@@ -1,200 +1,139 @@
-From: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
-Subject: Re: [PATCH v5 2/2] spi/pl022: Add devicetree support
-Date: Tue, 21 Aug 2012 13:12:54 -0300
-Message-ID: <CAAAP30FxjUzwuifRJW_NP5Y=o9DXHD5TcX_AOd_BSt25_TxV6g@mail.gmail.com>
-References: <1345564885-11970-1-git-send-email-stigge@antcom.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: dynamic device tree char driver
+Date: Tue, 21 Aug 2012 11:51:58 -0500
+Message-ID: <5033BCAE.6080902@gmail.com>
+References: <1345146226-32675-1-git-send-email-atull@altera.com>
+ <502FB8A9.4030907@gmail.com> <1345559902.4616.157.camel@atc-linux-1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1345564885-11970-1-git-send-email-stigge@antcom.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roland Stigge <stigge@antcom.de>
-Cc: linus.walleij@linaro.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, gabriel.fernandez@stericsson.com, lee.jones@linaro.org, viresh.kumar@linaro.org, sachin.verma@st.co
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1345559902.4616.157.camel@atc-linux-1>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2012 at 1:01 PM, Roland Stigge <stigge@antcom.de> wrote:
-> This patch adds device tree support to the spi-pl022 driver.
->
-> Based on the initial patch by Alexandre Pereira da Silva <aletes.xgr@gmail.com>
->
-> Signed-off-by: Roland Stigge <stigge@antcom.de>
+On 08/21/2012 09:38 AM, Alan Tull wrote:
+> On Sat, 2012-08-18 at 10:45 -0500, Rob Herring wrote:
+>> On 08/16/2012 02:43 PM, Alan Tull wrote:
+>>>
+>>> Hello,
+>>>
+>>> I'm Alan Tull, interested in dynamic features of device trees.
+>>
+>> Hey Alan. How are you doing?
+> Doing good! Nice to hear from you.
+> 
+>>
+>>> The following patch adds a char driver to add or remove device tree
+>>> nodes dynamically.  Its ioctl passes a struct with:
+>>>  - size of the blob
+>>>  - pointer to the blob
+>>>
+>>> The path to add the nodes under is coded in the blob with dummy nodes.
+>>> For example the following can be compiled into a blob and sent to this
+>>> driver adding a single node under /soc/apb_periphs:
+>>>
+>>> /dts-v1/;
+>>> / {
+>>>         soc {
+>>>                 apb_periphs {
+>>>                         i2c1: i2c@ffc05000 {
+>>>                                 compatible = "snps,designware-i2c";
+>>>                                 reg = <0xffc05000 0x1000>;
+>>>                                 interrupts = <0 159 4>;
+>>>                                 emptyfifo_hold_master = <1>;
+>>>                         };
+>>>                 };
+>>>         };
+>>> };
+>>>
+>>> I wanted to get feeback early before I went too far down this particular
+>>> path.  As such, this code doesn't do any notification for drivers yet.
+>>> Also it won't properly add nested nodes yet.  It can add/remove a single
+>>> node and see it show up properly under /proc/device-tree.
+>>
+>> Have you looked at arch/powerpc/platforms/pseries/reconfig.c?
+> Yes.  In fact I borrowed a three functions from it and gave credit in
+> the patch.  I'm trying to do something that is architecture independent
+> and that uses the same type of device tree files (blobs) as are used
+> during bootup. In my case it will run on an ARM which will have soft
+> peripherals instantiated in a FPGA.  So after bootup we want to be able
+> to reconfigure the IP in the FPGA dynamically, then reconfigure the
+> device tree and load some drivers.  Pretty cool stuff.That's why I'm
+> interested in doing this dynamically without a reboot.
+> 
+> 
+>> There was also a recent discussion titled "OF_DYNAMIC usage" that you
+>> should look at.
+>>
+>> I don't think a char driver and ioctls will fly...
+> Doh!  Yes, I know the thread.  For some reason, I thought it would be
+> better to post a patch as a new thread rather than posting a patch to
+> the "OF_DYNAMIC usage" thread but perhaps not.  Sorry for forking the
+> discussion.
 
-Acked-By: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+The fork is fine. Just making sure you were aware of it.
 
-> ---
->
->  Documentation/devicetree/bindings/spi/spi_pl022.txt |   15 +++
->  drivers/spi/spi-pl022.c                             |   79 +++++++++++++++++---
->  2 files changed, 85 insertions(+), 9 deletions(-)
->
-> --- linux-2.6.orig/Documentation/devicetree/bindings/spi/spi_pl022.txt
-> +++ linux-2.6/Documentation/devicetree/bindings/spi/spi_pl022.txt
-> @@ -6,7 +6,22 @@ Required properties:
->  - interrupts : Should contain SPI controller interrupt
->
->  Optional properties:
-> +- num-cs : total number of chipselects
->  - cs-gpios : should specify GPIOs used for chipselects.
->    The gpios will be referred to as reg = <index> in the SPI child nodes.
->    If unspecified, a single SPI device without a chip select can be used.
->
-> +SPI slave nodes must be children of the SPI master node and can
-> +contain the following properties.
-> +
-> +- pl022,interface : interface type:
-> +       0: SPI
-> +       1: Texas Instruments Synchronous Serial Frame Format
-> +       2: Microwire (Half Duplex)
-> +- pl022,com-mode : polling, interrupt or dma
-> +- pl022,rx-level-trig : Rx FIFO watermark level
-> +- pl022,tx-level-trig : Tx FIFO watermark level
-> +- pl022,ctrl-len : Microwire interface: Control length
-> +- pl022,wait-state : Microwire interface: Wait state
-> +- pl022,duplex : Microwire interface: Full/Half duplex
-> +
-> --- linux-2.6.orig/drivers/spi/spi-pl022.c
-> +++ linux-2.6/drivers/spi/spi-pl022.c
-> @@ -41,6 +41,7 @@
->  #include <linux/scatterlist.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/gpio.h>
-> +#include <linux/of_gpio.h>
->
->  /*
->   * This macro is used to define some register default values.
-> @@ -1778,12 +1779,14 @@ static const struct pl022_config_chip pl
->  static int pl022_setup(struct spi_device *spi)
->  {
->         struct pl022_config_chip const *chip_info;
-> +       struct pl022_config_chip chip_info_dt;
->         struct chip_data *chip;
->         struct ssp_clock_params clk_freq = { .cpsdvsr = 0, .scr = 0};
->         int status = 0;
->         struct pl022 *pl022 = spi_master_get_devdata(spi->master);
->         unsigned int bits = spi->bits_per_word;
->         u32 tmp;
-> +       struct device_node *np = spi->dev.of_node;
->
->         if (!spi->max_speed_hz)
->                 return -EINVAL;
-> @@ -1806,10 +1809,32 @@ static int pl022_setup(struct spi_device
->         chip_info = spi->controller_data;
->
->         if (chip_info == NULL) {
-> -               chip_info = &pl022_default_chip_info;
-> -               /* spi_board_info.controller_data not is supplied */
-> -               dev_dbg(&spi->dev,
-> -                       "using default controller_data settings\n");
-> +               if (np) {
-> +                       chip_info_dt = pl022_default_chip_info;
-> +
-> +                       chip_info_dt.hierarchy = SSP_MASTER;
-> +                       of_property_read_u32(np, "pl022,interface",
-> +                               &chip_info_dt.iface);
-> +                       of_property_read_u32(np, "pl022,com-mode",
-> +                               &chip_info_dt.com_mode);
-> +                       of_property_read_u32(np, "pl022,rx-level-trig",
-> +                               &chip_info_dt.rx_lev_trig);
-> +                       of_property_read_u32(np, "pl022,tx-level-trig",
-> +                               &chip_info_dt.tx_lev_trig);
-> +                       of_property_read_u32(np, "pl022,ctrl-len",
-> +                               &chip_info_dt.ctrl_len);
-> +                       of_property_read_u32(np, "pl022,wait-state",
-> +                               &chip_info_dt.wait_state);
-> +                       of_property_read_u32(np, "pl022,duplex",
-> +                               &chip_info_dt.duplex);
-> +
-> +                       chip_info = &chip_info_dt;
-> +               } else {
-> +                       chip_info = &pl022_default_chip_info;
-> +                       /* spi_board_info.controller_data not is supplied */
-> +                       dev_dbg(&spi->dev,
-> +                               "using default controller_data settings\n");
-> +               }
->         } else
->                 dev_dbg(&spi->dev,
->                         "using user supplied controller_data settings\n");
-> @@ -2006,7 +2031,8 @@ pl022_probe(struct amba_device *adev, co
->         struct pl022_ssp_controller *platform_info = adev->dev.platform_data;
->         struct spi_master *master;
->         struct pl022 *pl022 = NULL;     /*Data for this driver */
-> -       int status = 0, i;
-> +       struct device_node *np = adev->dev.of_node;
-> +       int status = 0, i, num_cs;
->
->         dev_info(&adev->dev,
->                  "ARM PL022 driver, device ID: 0x%08x\n", adev->periphid);
-> @@ -2016,9 +2042,19 @@ pl022_probe(struct amba_device *adev, co
->                 goto err_no_pdata;
->         }
->
-> +       if (platform_info->num_chipselect) {
-> +               num_cs = platform_info->num_chipselect;
-> +       } else if (IS_ENABLED(CONFIG_OF)) {
-> +               of_property_read_u32(np, "num-cs", &num_cs);
-> +       } else {
-> +               dev_err(&adev->dev, "probe: no chip select defined\n");
-> +               status = -ENODEV;
-> +               goto err_no_pdata;
-> +       }
-> +
->         /* Allocate master with space for data */
->         master = spi_alloc_master(dev, sizeof(struct pl022) + sizeof(int) *
-> -                                 platform_info->num_chipselect);
-> +                                 num_cs);
->         if (master == NULL) {
->                 dev_err(&adev->dev, "probe - cannot alloc SPI master\n");
->                 status = -ENOMEM;
-> @@ -2037,17 +2073,41 @@ pl022_probe(struct amba_device *adev, co
->          * on this board
->          */
->         master->bus_num = platform_info->bus_id;
-> -       master->num_chipselect = platform_info->num_chipselect;
-> +       master->num_chipselect = num_cs;
->         master->cleanup = pl022_cleanup;
->         master->setup = pl022_setup;
->         master->prepare_transfer_hardware = pl022_prepare_transfer_hardware;
->         master->transfer_one_message = pl022_transfer_one_message;
->         master->unprepare_transfer_hardware = pl022_unprepare_transfer_hardware;
->         master->rt = platform_info->rt;
-> +       master->dev.of_node = dev->of_node;
->
-> -       if (platform_info->num_chipselect && platform_info->chipselects)
-> -               for (i = 0; i < platform_info->num_chipselect; i++)
-> +       if (platform_info->num_chipselect && platform_info->chipselects) {
-> +               for (i = 0; i < num_cs; i++)
->                         pl022->chipselect[i] = platform_info->chipselects[i];
-> +       } else if (IS_ENABLED(CONFIG_OF)) {
-> +               for (i = 0; i < num_cs; i++) {
-> +                       int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
-> +
-> +                       if (cs_gpio == -EPROBE_DEFER) {
-> +                               status = -EPROBE_DEFER;
-> +                               goto err_no_gpio;
-> +                       }
-> +
-> +                       pl022->chipselect[i] = cs_gpio;
-> +
-> +                       if (gpio_is_valid(cs_gpio)) {
-> +                               if (gpio_request(cs_gpio, "ssp-pl022"))
-> +                                       dev_err(&adev->dev,
-> +                                               "could not request %d gpio\n",
-> +                                               cs_gpio);
-> +                               else if (gpio_direction_output(cs_gpio, 1))
-> +                                       dev_err(&adev->dev,
-> +                                               "could set gpio %d as output\n",
-> +                                               cs_gpio);
-> +                       }
-> +               }
-> +       }
->
->         /*
->          * Supports mode 0-3, loopback, and active low CS. Transfers are
-> @@ -2157,6 +2217,7 @@ pl022_probe(struct amba_device *adev, co
->   err_no_ioremap:
->         amba_release_regions(adev);
->   err_no_ioregion:
-> + err_no_gpio:
->         spi_master_put(master);
->   err_no_master:
->   err_no_pdata:
+> That is where I got the idea of doing ioctls.  I am assuming that
+> there's only going to be one proper place in the tree for each blob to
+> get inserted, so I leave that path information in the blob rather than
+> storing it passing it as a separate parameter of the ioctl.
+
+ioctls simply won't fly. So I would start by extending the current
+interface to do blobs. From a user standpoint, something like this is
+certainly easier to use than an ioctl:
+
+echo "add blob" > /proc/devicetree/ofdt
+cat blob.dtb > /proc/devicetree/ofdt
+
+> reconfig.c's interface is pretty bad.  It uses /proc as the place for
+> the user to write commands.  The commands are broken up such that the
+> userspace has to 'add _node', then do 'add_property' a few times.  Also
+> it had to introduce a flag "OF_DYNAMIC" (not to be confused with
+> "CONFIG_OF_DYNAMIC") to keep of_node_release from releasing the nodes
+> that are allocated in reconfig.c.  Seems messy.
+> 
+> With an ioctl, the userspace can just send a single command to add a
+> blob.  The blob can contain one node or many nodes as long as they all
+> end up under the same path.  Removing nodes is just as straightforward
+> and clean.
+
+Whether paths are part of the blob are debatable. I'm sure you and your
+competitors can put your heads together and come up with something. :)
+
+Rob
+
+>>
+>> Another option could be kexecing with a new DTB if you can live with a
+>> reboot.
+> We are looking at reconfiguring soft peripheral in a FPGA on the fly.
+> So a reboot won't work here.
+> 
+>>
+>> Rob
+>>
+>>>
+>>> Alan Tull
+>>> Altera
+>>>
+>>> _______________________________________________
+>>> devicetree-discuss mailing list
+>>> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>>>
+>>
+>>
+> 
+> 
+> 
