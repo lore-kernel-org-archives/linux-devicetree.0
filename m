@@ -1,93 +1,37 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Tue, 21 Aug 2012 10:48:43 -0400
-Message-ID: <87393g5mic.fsf@octavius.laptop.org>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
-	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
-	<87k3ws5uhs.fsf@octavius.laptop.org>
-	<201208211208.49987.arnd@arndb.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [RFC/PATCH 4/4] gpio: smscece: Add support for gpio IO
+ expander feature
+Date: Tue, 21 Aug 2012 15:50:09 +0100
+Message-ID: <20120821145009.GE21557@sirena.org.uk>
+References: <1345545940-2232-1-git-send-email-sourav.poddar@ti.com>
+ <1345545940-2232-5-git-send-email-sourav.poddar@ti.com>
+ <20120821105333.GW10347@arwen.pp.htv.fi>
+ <CAKdam56DiFpnoQwrHe1tjQWLMy5vP9ynstNj_n=OyMxkJJAUOA@mail.gmail.com>
+ <20120821120052.GD10347@arwen.pp.htv.fi>
+ <CAKdam55SqXiCGv766yxoY1GdDjxNCYNaDdNZPaeLTAXc+3+c6g@mail.gmail.com>
+ <20120821122217.GF10347@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201208211208.49987.arnd@arndb.de> (Arnd Bergmann's message of
-	"Tue, 21 Aug 2012 12:08:49 +0000")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, patches@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120821122217.GF10347@arwen.pp.htv.fi>
+Sender: linux-input-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: "Poddar, Sourav" <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, adding Shawn and Wolfram,
+On Tue, Aug 21, 2012 at 03:22:18PM +0300, Felipe Balbi wrote:
+> On Tue, Aug 21, 2012 at 05:50:28PM +0530, Poddar, Sourav wrote:
 
-On Tue, Aug 21 2012, Arnd Bergmann wrote:
-> On Tuesday 21 August 2012, Chris Ball wrote:
->> How about this?
->> 
->> broken-cd: No CD available, use polling.
->> 
->> cd-gpios: The CD pin on the host is working and brought out to a GPIO.
->> 
->> external-cd-gpios: The CD pin on the host is broken, but there's an
->>                    independent external GPIO available.
->> 
->> 
->> (Each host should only have one of these properties.)
->
-> The fsl-imx-esdhc.txt binding already has all three cases, but
-> describes them differently:
->
-> fsl,cd-internal: when present, the CD pin on the host is working
-> cd-gpios: when present, contains the gpio line that CD is connected to
-> If both are absent, it has to use polling.
+> > If I am understanding correctly, if they both uses the same bit we cannot
+> > use both for a particular user. ?
 
-Aside: the bindings do not match the code.  The bindings document says
-to use "fsl,cd-internal", and imx51-babbage.dts does so -- but the code
-doesn't check for "fsl,cd-internal", it checks for "fsl,cd-controller":
+> we can, it's just a bit more complex. If a user request both LOW and
+> HIGH, then you start with HIGH, once it triggers, before calling the
+> nested IRQ handler, you need to change it LOW. When low triggers, before
+> calling the nested IRQ handler, you need to change it to HIGH again. And
+> so on. I'm just not sure if that's valid on linux IRQ subsystem.
 
-        if (of_get_property(np, "fsl,cd-controller", NULL))
-                boarddata->cd_type = ESDHC_CD_CONTROLLER;
-
-The same confusion is present for fsl,wp-{controller,internal}.
-
-Ignoring that, these bindings are similar, but not the same -- imx-esdhc
-only allows one of the cd_type cases to be true, so you either have
-cd-internal or you have cd-gpios:
-
-        if (of_get_property(np, "fsl,cd-controller", NULL))
-                boarddata->cd_type = ESDHC_CD_CONTROLLER;
-
-        boarddata->cd_gpio = of_get_named_gpio(np, "cd-gpios", 0);
-        if (gpio_is_valid(boarddata->cd_gpio))
-                boarddata->cd_type = ESDHC_CD_GPIO;
-
-This differs from Thomas's binding -- he wants a way to say "the cd-gpio
-mentioned in cd-gpios is [internal/external] to the card's CD pin".
-
-Rob Herring said:
-> This makes the most sense to me. However, I prefer broken-cd over
-> cd-internal. The binding should add properties for exceptions, not SDHCI
-> spec compliant implementations.
-
-Agreed, I was going to say the same thing.  Putting it all together, it
-sounds like we want:
-
-no extra properties:  the CD pin on the host just works.
-broken-cd:            the CD pin on the host is broken; use polling.
-cd-gpios:             the GPIO listed is the CD pin on the host being
-                      brought out directly to a GPIO.
-cd-external:          when used with cd-gpios, specifies that the GPIO
-                      in cd-gpios is external to the CD pin on the host.
-
-cd-gpios and cd-external can be present on the same node.  if broken-cd
-is present, it must be the only one of these nodes used.
-
-Shawn, I guess I'll leave it up to you on whether/when you'd like to
-move away from the "fsl," properties to the new common ones?
-
-If this looks okay to everyone, I'll send a patch soon.
-
-Thanks!
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+The given example was for keypress - usually a system would use edge
+triggered interrupts in combination with reading the GPIO state rather
+than level triggered interrupts.
