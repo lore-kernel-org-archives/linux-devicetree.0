@@ -1,13 +1,13 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: pwm: mxs-pwm.txt: Fix reg field annotation
-Date: Tue, 21 Aug 2012 13:25:51 -0500
-Message-ID: <5033D2AF.8010401@gmail.com>
-References: <1345564243-30085-1-git-send-email-fabio.estevam@freescale.com>
+Subject: Re: [PATCH v2] devicetree: serial: Add documentation for imx serial
+Date: Tue, 21 Aug 2012 13:27:27 -0500
+Message-ID: <5033D30F.5060909@gmail.com>
+References: <1345568699-31842-1-git-send-email-fabio.estevam@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345564243-30085-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1345568699-31842-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,9 +22,8 @@ To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/21/2012 10:50 AM, Fabio Estevam wrote:
-> In the reg field we should annotate the register address space in hexadecimal
-> format.
+On 08/21/2012 12:04 PM, Fabio Estevam wrote:
+> Add documentation for imx serial.
 > 
 > Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
@@ -33,23 +32,51 @@ Applied for 3.7.
 
 Rob
 
-> Change since v1:
-> - Fix subject to include 'pwm: mxs-pwm.txt'
+> Changes since v1:
+> - Add 'alias' entry
+>  .../devicetree/bindings/serial/fsl-imx-uart.txt    |   35 ++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
 > 
->  Documentation/devicetree/bindings/pwm/mxs-pwm.txt |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.txt b/Documentation/devicetree/bindings/pwm/mxs-pwm.txt
-> index b16f4a5..11963e4 100644
-> --- a/Documentation/devicetree/bindings/pwm/mxs-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.txt
-> @@ -11,7 +11,7 @@ Example:
->  
->  pwm: pwm@80064000 {
->  	compatible = "fsl,imx28-pwm", "fsl,imx23-pwm";
-> -	reg = <0x80064000 2000>;
-> +	reg = <0x80064000 0x2000>;
->  	#pwm-cells = <2>;
->  	fsl,pwm-number = <8>;
->  };
+> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> new file mode 100644
+> index 0000000..c58573b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> @@ -0,0 +1,35 @@
+> +* Freescale i.MX UART controller
+> +
+> +Required properties:
+> +- compatible : should be "fsl,imx21-uart"
+> +- reg : Address and length of the register set for the device
+> +- interrupts : Should contain UART interrupt number
+> +
+> +Optional properties:
+> +- fsl,uart-has-rtscts: indicate that RTS/CTS signals are used
+> +
+> +Note: Each uart controller should have an alias correctly numbered
+> +in "aliases" node.
+> +
+> +Example:
+> +
+> +- From imx51.dtsi:
+> +aliases {
+> +	serial0 = &uart1;
+> +	serial1 = &uart2;
+> +	serial2 = &uart3;
+> +};
+> +
+> +uart1: serial@73fbc000 {
+> +	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
+> +	reg = <0x73fbc000 0x4000>;
+> +	interrupts = <31>;
+> +	status = "disabled";
+> +}
+> +
+> +- From imx51-babbage.dts:
+> +uart1: serial@73fbc000 {
+> +	fsl,uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
 > 
