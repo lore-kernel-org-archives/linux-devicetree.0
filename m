@@ -1,65 +1,108 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/4] mfd: smsc: Add support for smsc gpio io/keypad driver
-Date: Tue, 21 Aug 2012 14:22:22 +0100
-Message-ID: <20120821132222.GF7995@opensource.wolfsonmicro.com>
-References: <1345545940-2232-1-git-send-email-sourav.poddar@ti.com>
- <1345545940-2232-2-git-send-email-sourav.poddar@ti.com>
- <20120821124146.GA21557@sirena.org.uk>
- <20120821124243.GG10347@arwen.pp.htv.fi>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] serial: pl011: honour serial aliases in device tree
+Date: Tue, 21 Aug 2012 08:26:15 -0500
+Message-ID: <50338C77.4060700@gmail.com>
+References: <1345544302-12406-1-git-send-email-matthew.leach@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3yNHWXBV/QO9xKNm"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120821124243.GG10347@arwen.pp.htv.fi>
-Sender: linux-input-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Sourav Poddar <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1345544302-12406-1-git-send-email-matthew.leach@arm.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Matthew Leach <matthew.leach@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+On 08/21/2012 05:18 AM, Matthew Leach wrote:
+> If the order of UART nodes is changed in the device tree, then tty dev
+> devices are attached to different serial ports causing the console to
+> be directed to a different physical serial port. The "serial" aliases
+> in the device tree should prevent this.
+> 
+> This patch ensures that the UART driver creates tty devices that
+> honour these aliases if a device tree is present.
+> 
+> Signed-off-by: Matthew Leach <matthew.leach@arm.com>
 
---3yNHWXBV/QO9xKNm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+One comment/question below, but otherwise:
 
-On Tue, Aug 21, 2012 at 03:42:45PM +0300, Felipe Balbi wrote:
-> On Tue, Aug 21, 2012 at 01:41:46PM +0100, Mark Brown wrote:
-> > > +	regmap_read(smsc->regmap, SMSC_DEV_ID, &ret);
-> > > +	dev_dbg(&i2c->dev, "SMSC Device ID: %d\n", ret);
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
-> > I'd make these log messages dev_info() or something.
+> ---
+>  drivers/tty/serial/amba-pl011.c |   39 +++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 39 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+> index c17923e..5919599 100644
+> --- a/drivers/tty/serial/amba-pl011.c
+> +++ b/drivers/tty/serial/amba-pl011.c
+> @@ -52,6 +52,7 @@
+>  #include <linux/scatterlist.h>
+>  #include <linux/delay.h>
+>  #include <linux/types.h>
+> +#include <linux/of_device.h>
+>  #include <linux/pinctrl/consumer.h>
+>  
+>  #include <asm/io.h>
+> @@ -1869,6 +1870,42 @@ static struct uart_driver amba_reg = {
+>  	.cons			= AMBA_CONSOLE,
+>  };
+>  
+> +#ifdef CONFIG_OF
 
-> dev_info() ? It'lll just make boot noisier for no good reason. Which
-> user wants to see this during boot up ? That's a debugging feature for
-> develop IMHO.
+Now that we have IS_ENABLED, perhaps we want to put this inside the
+function instead?
 
-Most of the registers appeared to be chip revision information which is
-most definitely useful to tell people about, though possibly with neater
-formatting ("why is this batch of boards failing...  oh, right").  If
-they're fixed device IDs then the driver should instead be verifying
-that the registers contain the expected values and bombing out if they
-don't.  Either way dev_dbg() isn't too helpful.
+if (!IS_ENABLED(CONFIG_OF))
+	return index;
 
---3yNHWXBV/QO9xKNm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+> +static int pl011_probe_dt_alias(int index, struct device *dev)
+> +{
+> +	struct device_node *np;
+> +	static bool seen_dev_with_alias = false;
+> +	static bool seen_dev_without_alias = false;
+> +	int ret = index;
+> +
+> +	np = dev->of_node;
+> +	if (!np)
+> +		return ret;
+> +
+> +	ret = of_alias_get_id(np, "serial");
+> +	if (IS_ERR_VALUE(ret)) {
+> +		seen_dev_without_alias = true;
+> +		ret = index;
+> +	} else {
+> +		seen_dev_with_alias = true;
+> +		if (ret >= ARRAY_SIZE(amba_ports) || amba_ports[ret] != NULL) {
+> +			dev_warn(dev, "requested serial port %d  not available.\n", ret);
+> +			ret = index;
+> +		}
+> +	}
+> +
+> +	if (seen_dev_with_alias && seen_dev_without_alias)
+> +		dev_warn(dev, "aliased and non-aliased serial devices found in device tree. Serial port enumeration may be unpredictable.\n");
+> +
+> +	return ret;
+> +}
+> +#else
+> +static int pl011_probe_dt_alias(int index, struct device *dev)
+> +{
+> +	return index;
+> +}
+> +#endif
+> +
+>  static int pl011_probe(struct amba_device *dev, const struct amba_id *id)
+>  {
+>  	struct uart_amba_port *uap;
+> @@ -1891,6 +1928,8 @@ static int pl011_probe(struct amba_device *dev, const struct amba_id *id)
+>  		goto out;
+>  	}
+>  
+> +	i = pl011_probe_dt_alias(i, &dev->dev);
+> +
+>  	base = ioremap(dev->res.start, resource_size(&dev->res));
+>  	if (!base) {
+>  		ret = -ENOMEM;
+> 
 
-iQIcBAEBAgAGBQJQM4t4AAoJEFJkBDiqVpZ47ycP/3WlVznBTOKwzSi3GAfbVkUN
-qLeaURQHyUCVP95PzsrrnelTdWJb0nH0fDh51RwpywlwHOjMry8fqVXba4/BVwQS
-xMsGNvhRkhcXfV7CkvqtdGEqBiGH2ZW8ksOoPB9CO2SJhcH5KpzEFnvPlDDg9+8L
-MBGlIuB37WASTj7B8lEdW66FbQe+ZAYIKt5vIolUIoK6P048Ys43bldwq0FjaYZF
-AZv2qdz0CACSDlmcoMBMfw91pavo+kdeHFIUMoThU3QVAkAhbXGyRhhPBPkalGiI
-bvHchuVz3x92IvXclt7EQRkTHFIvHgIgBddYQBsa36lD4A/GfxwGFVtwl8BsPZiX
-34tFTA+KA/oXArE3tO/OmEhXSbSG/AUYYdFfl0b54oV/5+KBGkrCOVsx+UuuysHw
-LQYj6vJPTzNrgnMaP4HyUrBtnt2fyJNZSocpjborf++8B4fTM5jVQInT6IQNnUEM
-XfluppGEUJoLnLeWTGgdev0JzCZ/mzzXaKqtUcxSQO1AELvVOa1AnbxrUcnRIk2M
-8sDnES6BYokH+4UgIOSnucieYTlhI639xCEGJq31Yom1CE2DVrG0DbcncLUhkzmm
-BD6f8h0jmeQ5CbTNGVMgt5hy9wuLK2dEBY9V+Ha1sZD5SPe3k/7Dc5AHsrEKHsIC
-Nnhomm337Jkcj5Ytlelc
-=5Dag
------END PGP SIGNATURE-----
-
---3yNHWXBV/QO9xKNm--
