@@ -1,90 +1,54 @@
-From: Matthew Leach <matthew.leach@arm.com>
-Subject: [PATCH] serial: pl011: honour serial aliases in device tree
-Date: Tue, 21 Aug 2012 11:18:22 +0100
-Message-ID: <1345544302-12406-1-git-send-email-matthew.leach@arm.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, Matthew Leach <matthew.leach@arm.com>
+From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Subject: [PATCH 1/2] input: samsung-keypad: Use of_match_ptr()
+Date: Tue, 21 Aug 2012 12:41:46 +0200
+Message-ID: <1345545706-27420-1-git-send-email-tklauser@distanz.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If the order of UART nodes is changed in the device tree, then tty dev
-devices are attached to different serial ports causing the console to
-be directed to a different physical serial port. The "serial" aliases
-in the device tree should prevent this.
+Instead of having to define the match table to NULL if CONFIG_OF isn't
+set, use the of_match_ptr() macro which will do this for us.
 
-This patch ensures that the UART driver creates tty devices that
-honour these aliases if a device tree is present.
-
-Signed-off-by: Matthew Leach <matthew.leach@arm.com>
+Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
 ---
- drivers/tty/serial/amba-pl011.c |   39 +++++++++++++++++++++++++++++++++++++++
- 1 files changed, 39 insertions(+), 0 deletions(-)
+ drivers/input/keyboard/samsung-keypad.c |    4 +---
+ 1 files changed, 1 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index c17923e..5919599 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -52,6 +52,7 @@
- #include <linux/scatterlist.h>
- #include <linux/delay.h>
- #include <linux/types.h>
-+#include <linux/of_device.h>
- #include <linux/pinctrl/consumer.h>
- 
- #include <asm/io.h>
-@@ -1869,6 +1870,42 @@ static struct uart_driver amba_reg = {
- 	.cons			= AMBA_CONSOLE,
+diff --git a/drivers/input/keyboard/samsung-keypad.c b/drivers/input/keyboard/samsung-keypad.c
+index a061ba6..e2f31c8 100644
+--- a/drivers/input/keyboard/samsung-keypad.c
++++ b/drivers/input/keyboard/samsung-keypad.c
+@@ -662,8 +662,6 @@ static const struct of_device_id samsung_keypad_dt_match[] = {
+ 	{},
  };
+ MODULE_DEVICE_TABLE(of, samsung_keypad_dt_match);
+-#else
+-#define samsung_keypad_dt_match NULL
+ #endif
  
-+#ifdef CONFIG_OF
-+static int pl011_probe_dt_alias(int index, struct device *dev)
-+{
-+	struct device_node *np;
-+	static bool seen_dev_with_alias = false;
-+	static bool seen_dev_without_alias = false;
-+	int ret = index;
-+
-+	np = dev->of_node;
-+	if (!np)
-+		return ret;
-+
-+	ret = of_alias_get_id(np, "serial");
-+	if (IS_ERR_VALUE(ret)) {
-+		seen_dev_without_alias = true;
-+		ret = index;
-+	} else {
-+		seen_dev_with_alias = true;
-+		if (ret >= ARRAY_SIZE(amba_ports) || amba_ports[ret] != NULL) {
-+			dev_warn(dev, "requested serial port %d  not available.\n", ret);
-+			ret = index;
-+		}
-+	}
-+
-+	if (seen_dev_with_alias && seen_dev_without_alias)
-+		dev_warn(dev, "aliased and non-aliased serial devices found in device tree. Serial port enumeration may be unpredictable.\n");
-+
-+	return ret;
-+}
-+#else
-+static int pl011_probe_dt_alias(int index, struct device *dev)
-+{
-+	return index;
-+}
-+#endif
-+
- static int pl011_probe(struct amba_device *dev, const struct amba_id *id)
- {
- 	struct uart_amba_port *uap;
-@@ -1891,6 +1928,8 @@ static int pl011_probe(struct amba_device *dev, const struct amba_id *id)
- 		goto out;
- 	}
- 
-+	i = pl011_probe_dt_alias(i, &dev->dev);
-+
- 	base = ioremap(dev->res.start, resource_size(&dev->res));
- 	if (!base) {
- 		ret = -ENOMEM;
+ static struct platform_device_id samsung_keypad_driver_ids[] = {
+@@ -684,7 +682,7 @@ static struct platform_driver samsung_keypad_driver = {
+ 	.driver		= {
+ 		.name	= "samsung-keypad",
+ 		.owner	= THIS_MODULE,
+-		.of_match_table = samsung_keypad_dt_match,
++		.of_match_table = of_match_ptr(samsung_keypad_dt_match),
+ 		.pm	= &samsung_keypad_pm_ops,
+ 	},
+ 	.id_table	= samsung_keypad_driver_ids,
 -- 
-1.7.0.4
-
+1.7.5.4
