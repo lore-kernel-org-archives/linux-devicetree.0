@@ -1,42 +1,75 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 04/11] pinctrl: mvebu: add pinctrl driver for Armada 370
-Date: Mon, 20 Aug 2012 20:51:59 +0200
-Message-ID: <20120820205159.63001848@skate>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1344689809-6223-5-git-send-email-sebastian.hesselbarth@gmail.com>
-	<CACRpkdYNZar7865-T12J37h3AWA9-8R1R5tymuOhaB0b3ddEAA@mail.gmail.com>
-	<50326A60.1070007@gmail.com>
-	<20120820193622.4e539451@skate>
-	<50327B8F.3050503@gmail.com>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC:PATCH dtc-1.3.0] dtc: Add --strip-disabled option to dtc.
+Date: Tue, 21 Aug 2012 10:11:59 +1000
+Message-ID: <20120821001159.GJ29724@truffula.fritz.box>
+References: <1345034325-26656-1-git-send-email-srinivas.kandagatla@st.com>
+ <20120817060415.GC29724@truffula.fritz.box>
+ <502E3632.70208@freescale.com> <502E52F3.7090404@st.com>
+ <502E64F9.2020400@freescale.com> <5031F706.3050509@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50327B8F.3050503@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5031F706.3050509-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: "mmarek-AlSwsSmVLrQ@public.gmane.org" <mmarek-AlSwsSmVLrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le Mon, 20 Aug 2012 20:01:51 +0200,
-Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> a =C3=A9crit :
+On Mon, Aug 20, 2012 at 09:36:22AM +0100, Srinivas KANDAGATLA wrote:
+> On 17/08/12 16:36, Timur Tabi wrote:
+> > Srinivas KANDAGATLA wrote:
+> >> If you know in advance that device on that SOC is broken, then I guess
+> >> "Fail"/"Failed" can be used in status property.
+> >>
+> >> One user of this flag in kernel device trees is
+> >> ./arch/powerpc/boot/dts/mpc8313erdb.dts
+> > 	/* Remove this (or change to "okay") if you have
+> > 	 * a REVA3 or later board, if you apply one of the
+> > 	 * workarounds listed in section 8.5 of the board
+> > 	 * manual, or if you are adapting this device tree
+> > 	 * to a different board.
+> > 	 */
+> > 	status = "fail";
+> >
+> > I'm not sure this is the right way to do it. 
+> I agree, the way fail status is used is pretty much redundant to what
+> "disabled" is used for.
+> I think the device trees files should have status as "okay" or "ok" or
+> "disabled" or skip status property totally.
+> 
+> >  Normally, the boot loader
+> > should be able to detect the board revision, and it should dynamically set
+> > the 'status'.  We have other devices that fail if a work-around is not
+> > applied, and we don't use this approach.
+> >
+> > But assuming that this really is the best approach, then it would make
+> > sense for --strip-disabled to leave this node in the dtb, because
+> > otherwise there would be no way to re-enable it.
+> --strip-disabled should still get rid for nodes marked as failed
+> as-well, because fail means something serious and un-recoverable.
+> 
+> I think bootloader should not even consider nodes with status as
+> fail, as the device is unlikely to become operational without
+> repair.
 
-> > If that's fine with you, then I would prefer if we keep the single
-> > MACH_ARMADA_370_XP symbol for now, so that your pinctrl set of
-> > patches does not depend on something else. We would do the small
-> > Kconfig option refactoring as a follow-up set of patches. Thoughts?
->=20
-> Despite any objections, I will remove all arch/arm/*/Kconfig patches
-> from pinctrl patch set.
+I do worry about the usability implications of that - if a device that
+was previously working stops working and is marked as "failed" it's
+fairly easy for the user/admin to see what's going on.  If the device
+simply vanishes completely that would be rather more mysterious.
 
-Ok, fine with me, but we'll have to send separate patches for those,
-then.
-
-Thanks!
-
-Thomas
---=20
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
