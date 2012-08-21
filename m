@@ -1,90 +1,121 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ASoC: omap-mcbsp: Device tree binding documentation update
-Date: Tue, 21 Aug 2012 17:33:56 +0300
-Message-ID: <1345559636-23370-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
+From: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: dynamic device tree char driver
+Date: Tue, 21 Aug 2012 09:38:22 -0500
+Message-ID: <1345559902.4616.157.camel@atc-linux-1>
+References: <1345146226-32675-1-git-send-email-atull@altera.com>
+ <502FB8A9.4030907@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <502FB8A9.4030907-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To reflect the final devicetree node structure of McBSPs.
+On Sat, 2012-08-18 at 10:45 -0500, Rob Herring wrote:
+> On 08/16/2012 02:43 PM, Alan Tull wrote:
+> > 
+> > Hello,
+> > 
+> > I'm Alan Tull, interested in dynamic features of device trees.
+> 
+> Hey Alan. How are you doing?
+Doing good! Nice to hear from you.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
+> 
+> > The following patch adds a char driver to add or remove device tree
+> > nodes dynamically.  Its ioctl passes a struct with:
+> >  - size of the blob
+> >  - pointer to the blob
+> > 
+> > The path to add the nodes under is coded in the blob with dummy nodes.
+> > For example the following can be compiled into a blob and sent to this
+> > driver adding a single node under /soc/apb_periphs:
+> > 
+> > /dts-v1/;
+> > / {
+> >         soc {
+> >                 apb_periphs {
+> >                         i2c1: i2c@ffc05000 {
+> >                                 compatible = "snps,designware-i2c";
+> >                                 reg = <0xffc05000 0x1000>;
+> >                                 interrupts = <0 159 4>;
+> >                                 emptyfifo_hold_master = <1>;
+> >                         };
+> >                 };
+> >         };
+> > };
+> > 
+> > I wanted to get feeback early before I went too far down this particular
+> > path.  As such, this code doesn't do any notification for drivers yet.
+> > Also it won't properly add nested nodes yet.  It can add/remove a single
+> > node and see it show up properly under /proc/device-tree.
+> 
+> Have you looked at arch/powerpc/platforms/pseries/reconfig.c?
+Yes.  In fact I borrowed a three functions from it and gave credit in
+the patch.  I'm trying to do something that is architecture independent
+and that uses the same type of device tree files (blobs) as are used
+during bootup. In my case it will run on an ARM which will have soft
+peripherals instantiated in a FPGA.  So after bootup we want to be able
+to reconfigure the IP in the FPGA dynamically, then reconfigure the
+device tree and load some drivers.  Pretty cool stuff.That's why I'm
+interested in doing this dynamically without a reboot.
 
-Hello,
 
-the initial OMAP McBSP DT structure was not able to describe the IP (and it's
-versions) correctly.
-The main issue was the sidetone block of McBSP2/3 on OMAP3.
-With this change in the DT description the OS can get the needed information
-about the IP.
+> There was also a recent discussion titled "OF_DYNAMIC usage" that you
+> should look at.
+> 
+> I don't think a char driver and ioctls will fly...
+Doh!  Yes, I know the thread.  For some reason, I thought it would be
+better to post a patch as a new thread rather than posting a patch to
+the "OF_DYNAMIC usage" thread but perhaps not.  Sorry for forking the
+discussion.
 
-The sidetone is still not supported when the Linux kernel is booted with DT
-since we still depend on hwmod to fill the resources.
+That is where I got the idea of doing ioctls.  I am assuming that
+there's only going to be one proper place in the tree for each blob to
+get inserted, so I leave that path information in the blob rather than
+storing it passing it as a separate parameter of the ioctl.
 
-This patch depend on the McBSP DT support series going via audio tree.
+reconfig.c's interface is pretty bad.  It uses /proc as the place for
+the user to write commands.  The commands are broken up such that the
+userspace has to 'add _node', then do 'add_property' a few times.  Also
+it had to introduce a flag "OF_DYNAMIC" (not to be confused with
+"CONFIG_OF_DYNAMIC") to keep of_node_release from releasing the nodes
+that are allocated in reconfig.c.  Seems messy.
 
-Regards,
-Peter
+With an ioctl, the userspace can just send a single command to add a
+blob.  The blob can contain one node or many nodes as long as they all
+end up under the same path.  Removing nodes is just as straightforward
+and clean.
 
- .../devicetree/bindings/sound/omap-mcbsp.txt       |   28 +++++++------------
- 1 files changed, 10 insertions(+), 18 deletions(-)
+> 
+> Another option could be kexecing with a new DTB if you can live with a
+> reboot.
+We are looking at reconfiguring soft peripheral in a FPGA on the fly.
+So a reboot won't work here.
 
-diff --git a/Documentation/devicetree/bindings/sound/omap-mcbsp.txt b/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
-index 447cb13..17cce44 100644
---- a/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
-+++ b/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
-@@ -8,38 +8,30 @@ Required properties:
- - reg: Register location and size, for OMAP4+ as an array:
-        <MPU access base address, size>,
-        <L3 interconnect address, size>;
-+- reg-names: Array of strings associated with the address space
- - interrupts: Interrupt numbers for the McBSP port, as an array in case the
- 	      McBSP IP have more interrupt lines:
- 	<OCP compliant irq>,
- 	<TX irq>,
- 	<RX irq>;
-+- interrupt-names: Array of strings associated with the interrupt numbers
- - interrupt-parent: The parent interrupt controller
- - ti,buffer-size: Size of the FIFO on the port (OMAP2430 and newer SoC)
- - ti,hwmods: Name of the hwmod associated to the McBSP port
- 
--Sidetone support for OMAP3 McBSP2 and 3 ports:
--- sidetone { }: Within this section the following parameters are required:
--- reg: Register location and size for the ST block
--- interrupts: The interrupt number for the ST block
--- interrupt-parent: The parent interrupt controller for the ST block
--
- Example:
- 
- mcbsp2: mcbsp@49022000 {
- 	compatible = "ti,omap3-mcbsp";
--	#address-cells = <1>;
--	#size-cells = <1>;
--	reg = <0x49022000 0xff>;
--	interrupts = <0 17 0x4>, /* OCP compliant interrup */
--		     <0 62 0x4>, /* TX interrup */
--		     <0 63 0x4>; /* RX interrup */
-+	reg = <0x49022000 0xff>,
-+	      <0x49028000 0xff>;
-+	reg-names = "mpu", "sidetone";
-+	interrupts = <0 17 0x4>, /* OCP compliant interrupt */
-+		     <0 62 0x4>, /* TX interrupt */
-+		     <0 63 0x4>, /* RX interrupt */
-+		     <0 4 0x4>;  /* Sidetone */
-+	interrupt-names = "common", "tx", "rx", "sidetone";
- 	interrupt-parent = <&intc>;
- 	ti,buffer-size = <1280>;
- 	ti,hwmods = "mcbsp2";
--
--	sidetone {
--		reg = <0x49028000 0xff>;
--		interrupts = <0 4 0x4>;
--		interrupt-parent = <&intc>;
--	};
- };
--- 
-1.7.8.6
-
+> 
+> Rob
+> 
+> > 
+> > Alan Tull
+> > Altera
+> > 
+> > _______________________________________________
+> > devicetree-discuss mailing list
+> > devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > https://lists.ozlabs.org/listinfo/devicetree-discuss
+> > 
+> 
+> 
