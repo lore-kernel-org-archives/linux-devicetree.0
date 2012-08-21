@@ -1,81 +1,62 @@
-From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 dtc-1.3.0] dtc: Add --strip-disabled option to dtc(v2).
-Date: Tue, 21 Aug 2012 13:17:48 +1000
-Message-ID: <20120821031748.GK29724@truffula.fritz.box>
-References: <1345458247-15701-1-git-send-email-srinivas.kandagatla@st.com>
- <E1T3RzA-0002rn-SS@jdl.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 04/11] pinctrl: mvebu: add pinctrl driver for Armada 370
+Date: Tue, 21 Aug 2012 09:12:41 +0200
+Message-ID: <503334E9.508@free-electrons.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1344689809-6223-5-git-send-email-sebastian.hesselbarth@gmail.com> <CACRpkdYNZar7865-T12J37h3AWA9-8R1R5tymuOhaB0b3ddEAA@mail.gmail.com> <50326A60.1070007@gmail.com> <20120820193622.4e539451@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1T3RzA-0002rn-SS-CYoMK+44s/E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: mmarek-AlSwsSmVLrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120820193622.4e539451@skate>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Ben Dooks <ben.dooks@codethink.co.uk>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-B1;3202;0cOn Mon, Aug 20, 2012 at 08:25:40AM -0500, Jon Loeliger wrote:
-> > From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> > 
-> > This patch allows dtc to strip out nodes in its output based on status
-> > property. Now the dtc has additional long option --strip-disabled to
-> > strip all the nodes which do not have status property set to "okay" or
-> > "ok". Nodes which do not have status property are not stripped.
-> > 
-> > SOCs have lot of device tree infrastructure files which mark the
-> > device nodes as disabled and the board level device tree enables them if
-> > required. However while creating device tree blob, the compiler can
-> > exclude nodes marked as disabled, doing this way will reduce the size
-> > of device tree blob. The size change will be significant once the SOC
-> > adds all the possible devices in to the device trees. As there could be
-> > 100s of Ips on SOCs but the board actually uses may be 20-25 IP's.
-> > 
-> > However care has to be taken if your boardloader is is updating status
-> > property.
-> > 
-> > In our case this has reduced the blob size from 29K to 15K.
-> > 
-> > Also nodes with status="disabled" is are never probed by dt platform bus
-> > code.
-> > 
-> > Again, this is an optional parameter to dtc, Can be used by people who
-> > want to strip all the device nodes which do not have status property set
-> > to "okay" or "ok".
-> 
-> I don't know.  This all strikes me as a means to hack around
-> our total lack of a properly constructed tree based on real
-> data and valid node presence.  That is, if we had a better
-> means of constructing your tree in the first place, it would
-> not habve 50% overhead of dead nodes.
-> 
-> It should be built in a positive sense, perhaps with includes, or a
-> better system, and not edited out based on questionable negative data.
-> 
-> This just seems like a fundamentally wrong approach to me.
+On 08/20/2012 07:36 PM, Thomas Petazzoni wrote:
+> Le Mon, 20 Aug 2012 18:48:32 +0200,
+> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> a =C3=A9crit =
+:
+>=20
+>> this is really difficult here ;) I thought I could just add PINCTRL_=
+DOVE
+>> to MACH_DOVE inside ARCH_MVEBU, PINCTRL_KIRKWOOD to MACH_KIRKWOOD, a=
+so.
+>> But there is a common MACH_ARMADA_370_XP for both 370 and XP obvious=
+ly.
+>>
+>> If it is ok for you I will add both PINCTRL_ stubs to the Kconfig an=
+d
+>> you work it out if you ever have two distinct MACHs? Or it could rem=
+ain
+>> selectable in pinctrl/Kconfig but that will then be different with t=
+he
+>> other stubs.
+>=20
+> In order to keep the consistency with other SoC families, maybe we ca=
+n
+> split the 370 and XP options in two separate MACH_ARMADA_370 and
+> MACH_ARMADA_XP. So, in the ideal world, once all Marvell EBU SoCs are
+> converted to DT+mach-mvebu, we should have:
+>=20
+>  *) arch/arm/Kconfig defines MACH_MVEBU
+>=20
+>  *) arch/arm/mach-mvebu/Kconfig defines MACH_KIRKWOOD, MACH_DOVE,
+>     MACH_MX78X00, MACH_ARMADA_370, MACH_ARMADA_XP, MACH_ORION5X
+>=20
+> Then, an user is free to build a single kernel image that supports al=
+l,
+> or a selection of the supported Marvell EBU SoCs.
 
-I'm also rather dubious about this particular use case.  On the other
-hand, I don't think it's unreasonable for dtc to grow various options
-to filter/mangle fdts in particular ways, even if they're only of use
-fairly rarely (we already have sort, for example).  After all, dtc
-already has all the code to input and output trees in various formats,
-and people working with fdts will generally have dtc available.
+I agree with Thomas
 
-How would you feel about a much more general version of this, which
-would filter/strip nodes based on any given property=value or
-property!=value condition.
+>=20
+> Thomas
+>=20
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
