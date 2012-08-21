@@ -1,52 +1,70 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Tue, 21 Aug 2012 16:44:49 +0530
-Message-ID: <CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
-	<201208211101.21612.arnd@arndb.de>
+From: "Poddar, Sourav" <sourav.poddar@ti.com>
+Subject: Re: [PATCH 3/4] arm/dts: omap5-evm: Add keypad support
+Date: Tue, 21 Aug 2012 16:50:50 +0530
+Message-ID: <CAKdam54=+vn7YepPoDVkKaXm+0cxGNZ=w4v-eYbW4VtmWxmYBQ@mail.gmail.com>
+References: <1345545940-2232-1-git-send-email-sourav.poddar@ti.com>
+	<1345545940-2232-4-git-send-email-sourav.poddar@ti.com>
+	<20120821104744.GV10347@arwen.pp.htv.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201208211101.21612.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, patches@linaro.org, Chris Ball <cjb@laptop.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20120821104744.GV10347@arwen.pp.htv.fi>
+Sender: linux-input-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 August 2012 16:31, Arnd Bergmann <arnd@arndb.de> wrote:
+Hi,
+
+On Tue, Aug 21, 2012 at 4:17 PM, Felipe Balbi <balbi@ti.com> wrote:
+> On Tue, Aug 21, 2012 at 04:15:39PM +0530, Sourav Poddar wrote:
+>> Add keypad data node in omap5-evm.
+>>
+>> Based on I2C support patch for omap5, which has been
+>> already posted as a different series.
+>>
+>> Cc: Benoit Cousson <b-cousson@ti.com>
+>> Cc: Felipe Balbi <balbi@ti.com>
+>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> Tested on omap5430 sdp with 3.5 custom kernel.
+>>
+>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
 >
-> On Tuesday 21 August 2012, Thomas Abraham wrote:
-> > diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
-> > b/Documentation/devicetree/bindings/mmc/mmc.txt
-> > index 8a6811f..1aa527a 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> > @@ -16,6 +16,8 @@ Optional properties:
-> >  - wp-inverted: when present, polarity on the wp gpio line is inverted
-> >  - non-removable: non-removable slot (like eMMC)
-> >  - max-frequency: maximum operating clock frequency
-> > +- broken-cd: when present, indicates that the cd-gpios line is not
-> > +       connected to the card-detect pad of the MMC host controller.
+> after fixing my only comment below, you can add my:
 >
-> What is the difference between listing the cd line as broken and
-> listing no cd line at all?
-
-I am trying to have a way to represent a gpio line as card detect line
-that is not connected to the card-detect pad of the mmc controller but
-instead used as a gpio interrupt line or polled gpio line.
-
-'broken-cd' would imply that the card-detect pad of the mmc controller
-is not connected to the card-detect pin at the slot. The 'cd-gpios'
-property in that case would let the driver code to use the 'cd-gpios'
-line as the external gpio interrupt or poll it.
-
-Thanks,
-Thomas.
-
+> Acked-by: Felipe Balbi <balbi@ti.com>
 >
->         Arnd
+>> ---
+>>  arch/arm/boot/dts/omap5-evm.dts |   95 +++++++++++++++++++++++++++++++++++++++
+>>  1 files changed, 95 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
+>> index 200c39a..6473983 100644
+>> --- a/arch/arm/boot/dts/omap5-evm.dts
+>> +++ b/arch/arm/boot/dts/omap5-evm.dts
+>> @@ -18,3 +18,98 @@
+>>               reg = <0x80000000 0x40000000>; /* 1 GB */
+>>       };
+>>  };
+>> +
+>> +&i2c5 {
+>> +     clock-frequency = <400000>;
+>> +
+>> +     smsc@38 {
+>> +             compatible = "smsc";
+>> +             reg = <0x38>;
+>> +             clock = <0x13>;
+>> +             keypad {
+>> +                     compatible = "smsc,keypad";
+>> +                     interrupt-parent = <&gpio5>;
+>> +                     interrupts = <23>; /* gpio line 151 */
+>> +                     keypad,num-rows = <8>;
+>> +                     keypad,num-columns = <16>;
+>> +                     linux,keymap = < 0x20041 /*KEY_F7*/
+>
+> please add spaces around /* and */ so it's easier to read. Ditto to all
+> others.
+>
+Yes, will add spaces in the new version.
 > --
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> balbi
