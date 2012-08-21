@@ -1,18 +1,16 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Tue, 21 Aug 2012 08:32:54 -1000
-Message-ID: <5033D456.9040808@firmworks.com>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
- <CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
- <87k3ws5uhs.fsf@octavius.laptop.org> <201208211208.49987.arnd@arndb.de>
- <87393g5mic.fsf@octavius.laptop.org> <5033A34E.7040201@gmail.com>
- <87pq6k46jg.fsf@octavius.laptop.org> <5033B0F0.7050506@gmail.com>
- <CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
+From: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: dynamic device tree char driver
+Date: Tue, 21 Aug 2012 11:55:21 -0700
+Message-ID: <71B37E0559AC6849A68C5BA94C509FB45A02736C8A@SJ-ITMSG02.altera.priv.altera.com>
+References: <1345146226-32675-1-git-send-email-atull@altera.com>
+ <502FB8A9.4030907@gmail.com> <1345559902.4616.157.camel@atc-linux-1>
+ <5033BCAE.6080902@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5033BCAE.6080902-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,117 +21,142 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+To: "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/21/2012 7:33 AM, Thomas Abraham wrote:
-> On 21 August 2012 21:31, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 08/21/2012 10:18 AM, Chris Ball wrote:
->>> Hi,
->>>
->>> On Tue, Aug 21 2012, Rob Herring wrote:
->>>>> cd-gpios and cd-external can be present on the same node.  if broken-cd
->>>>> is present, it must be the only one of these nodes used.
->>>>
->>>> I don't see the point of cd-external. Either you just use the CD
->>>> interrupt defined within the SDHCI or you have a gpio line independent
->>>> of the SDHCI and use cd-gpios.
->>>
->>> You've described two of the possible cases, but not the third.  In the
->>> third case, you have a gpio line that is not independent of the SDHCI,
->>> because it is the SDHCI's CD pin brought out to be directly accessible
->>> via a GPIO.
->>
->> That is covered by absence of cd-gpios and broken-cd. Any *-gpios
->> property means the signal is a GPIO line controlled by a GPIO controller.
->>
->> I suppose you could have the CD state readable via the SDHCI, but the
->> interrupt comes from a GPIO controller. Or vice-versa, but that's a
->> pretty broken use case if you can't pick which way you are going to use
->> things.
->>
->>>
->>> The difference is in the handling of the interrupt -- if you don't have
->>> "cd-external" then you're just using the SDHCI's interrupt, but if you
->>> have an independent line then you're going to need to register your own
->>> IRQ handler on it, and "cd-external" signifies that.
->>>
->>> Thomas wrote this explanation earlier in the thread:
->>>> "samsung,sdhci-cd-gpio" means that the cd-gpio line is not connected
->>>> to the card-detect pad of the sdhci controller. Instead, it identifies
->>>> cd-gpio as a gpio pin, connected to the card-detect pin of the "card
->>>> slot" and it can used as a source of external interrupt. The driver
->>>> can register card insert/remove handler for this interrupt and get
->>>> notified about the changes in card state.
->>>>
->>>> "sdhci-cd-internal" means that the "cd-gpio" line is used to connect
->>>> the card-detect pin of the card slot and the card-detect pad of the
->>>> sdhci controller. The controller is then aware of any changes in card
->>>> state and the controller generates appropriate interrupts to notify
->>>> changes in card-state.
->>>
->>
->> It seems you are mixing pin muxing and who controls/handles the CD
->> detect signal. Pin muxing is a separate issue and should be addressed by
->> pin mux bindings. Either the signal functions as a GPIO or it functions
->> as a CD as part of the SDHCI. You may have muxing on the CD pin that
->> allows it to function either way, but the DT binding should describe how
->> you want it to be configured and used.
-> 
-> Ok, I agree with Rob. I was mixing pin muxing here. So if we have
-> 'cd-gpios' and 'broken-cd' as generic bindings, would the following be
-> valid?
-> 
-> [A] cd-gpios not present ,  broken-cd not present : This means that
-> there is no card detect pin available. Controller drivers are free to
-> infer this as "card detection is broken" and use implementation
-> specific behavior.
-> 
-> [B] cd-gpio not present , broken-cd present :  This means that there
-> is nothing connected to the card-detect pad of the mmc host
-> controller. Controller drivers are free to use implementation specific
-> behavior to deal with card detection.
-> 
-> [C] cd-gpio present, broken-cd not present : This means that 'cd-gpio'
-> line connects card-detect pad of the controller to the card-detect pin
-> of the mmc slot.
-> 
-> [D] cd-gpio present, broken-cd present : This means that there is
-> nothing connected to the card-detect pad of the mmc host controller.
-> Controller drivers are free to use the 'cd-gpio' line in any
-> implementation specific way.
+On Tue, 2012-08-21 at 11:51 -0500, Rob Herring wrote:
+> On 08/21/2012 09:38 AM, Alan Tull wrote:
+> > On Sat, 2012-08-18 at 10:45 -0500, Rob Herring wrote:
+> >> On 08/16/2012 02:43 PM, Alan Tull wrote:
+> >>>
+> >>> Hello,
+> >>>
+> >>> I'm Alan Tull, interested in dynamic features of device trees.
+> >>
+> >> Hey Alan. How are you doing?
+> > Doing good! Nice to hear from you.
+> >
+> >>
+> >>> The following patch adds a char driver to add or remove device tree
+> >>> nodes dynamically.  Its ioctl passes a struct with:
+> >>>  - size of the blob
+> >>>  - pointer to the blob
+> >>>
+> >>> The path to add the nodes under is coded in the blob with dummy nodes.
+> >>> For example the following can be compiled into a blob and sent to this
+> >>> driver adding a single node under /soc/apb_periphs:
+> >>>
+> >>> /dts-v1/;
+> >>> / {
+> >>>         soc {
+> >>>                 apb_periphs {
+> >>>                         i2c1: i2c@ffc05000 {
+> >>>                                 compatible = "snps,designware-i2c";
+> >>>                                 reg = <0xffc05000 0x1000>;
+> >>>                                 interrupts = <0 159 4>;
+> >>>                                 emptyfifo_hold_master = <1>;
+> >>>                         };
+> >>>                 };
+> >>>         };
+> >>> };
+> >>>
+> >>> I wanted to get feeback early before I went too far down this particular
+> >>> path.  As such, this code doesn't do any notification for drivers yet.
+> >>> Also it won't properly add nested nodes yet.  It can add/remove a single
+> >>> node and see it show up properly under /proc/device-tree.
+> >>
+> >> Have you looked at arch/powerpc/platforms/pseries/reconfig.c?
+> > Yes.  In fact I borrowed a three functions from it and gave credit in
+> > the patch.  I'm trying to do something that is architecture independent
+> > and that uses the same type of device tree files (blobs) as are used
+> > during bootup. In my case it will run on an ARM which will have soft
+> > peripherals instantiated in a FPGA.  So after bootup we want to be able
+> > to reconfigure the IP in the FPGA dynamically, then reconfigure the
+> > device tree and load some drivers.  Pretty cool stuff.That's why I'm
+> > interested in doing this dynamically without a reboot.
+> >
+> >
+> >> There was also a recent discussion titled "OF_DYNAMIC usage" that you
+> >> should look at.
+> >>
+> >> I don't think a char driver and ioctls will fly...
+> > Doh!  Yes, I know the thread.  For some reason, I thought it would be
+> > better to post a patch as a new thread rather than posting a patch to
+> > the "OF_DYNAMIC usage" thread but perhaps not.  Sorry for forking the
+> > discussion.
+>
+> The fork is fine. Just making sure you were aware of it.
+>
+> > That is where I got the idea of doing ioctls.  I am assuming that
+> > there's only going to be one proper place in the tree for each blob to
+> > get inserted, so I leave that path information in the blob rather than
+> > storing it passing it as a separate parameter of the ioctl.
+>
+> ioctls simply won't fly. So I would start by extending the current
+> interface to do blobs. From a user standpoint, something like this is
+> certainly easier to use than an ioctl:
+>
+> echo "add blob" > /proc/devicetree/ofdt
+> cat blob.dtb > /proc/devicetree/ofdt
+
+That does have the advantage of not needing a userspace app.  But
+something could write to /proc/devicetree/ofdt between the echo and the
+cat.  A way to prevent that would be
+
+echo "add blob" > add.txt
+cat add.txt blob.dtb > /proc/devicetree/ofdt
+
+In real world use, there would be a set of dtb's and a userspace app
+that would prepend the "add blob" command when sending it to proc.
+
+I am a bit surprised that it is considered fine to cat a binary file
+to /proc.  I'm used to thinking that as all being readable text.
+
+>
+> > reconfig.c's interface is pretty bad.  It uses /proc as the place for
+> > the user to write commands.  The commands are broken up such that the
+> > userspace has to 'add _node', then do 'add_property' a few times.  Also
+> > it had to introduce a flag "OF_DYNAMIC" (not to be confused with
+> > "CONFIG_OF_DYNAMIC") to keep of_node_release from releasing the nodes
+> > that are allocated in reconfig.c.  Seems messy.
+> >
+> > With an ioctl, the userspace can just send a single command to add a
+> > blob.  The blob can contain one node or many nodes as long as they all
+> > end up under the same path.  Removing nodes is just as straightforward
+> > and clean.
+>
+> Whether paths are part of the blob are debatable. I'm sure you and your
+> competitors can put your heads together and come up with something. :)
+>
+> Rob
+>
+> >>
+> >> Another option could be kexecing with a new DTB if you can live with a
+> >> reboot.
+> > We are looking at reconfiguring soft peripheral in a FPGA on the fly.
+> > So a reboot won't work here.
+> >
+> >>
+> >> Rob
+> >>
+> >>>
+> >>> Alan Tull
+> >>> Altera
+> >>>
+> >>> _______________________________________________
+> >>> devicetree-discuss mailing list
+> >>> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> >>> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> >>>
+> >>
+> >>
+> >
+> >
+> >
+>
+>
 
 
-Matrix encoding is too complicated; my brain froze when trying to decode
-the message above.  I favor properties that can be understood in
-isolation.  The following proberties are mutually-exclusive.
-
-<no properties present>: The standard SDHCI register bit just works.  No
-additional setup is necessary (either the system is hardwired to work
-correctly or external software has already done any necessary setup).
-
-broken-cd <no value>: CD is just not available - neither via the
-standard SDHCI register bit/interrupt, nor by an external GPIO.
-
-cd-gpios <&gpio, active_low> : The standard SDHCI register bit does not
-work, but CD is available via the specified GPIO.  If active_low is 0,
-reading 1 from the GPIO pin means that the card is present, otherwise
-reading 0 from the GPIO pin means that the card is present.  I must
-emphasize that this is an external GPIO, accessed via GPIO mechanisms,
-not a connection of a multipurpose pin to the SDHCI core.
-
-cd-pin <&pin> : The standard SDHCI register bit works, but the SDHCI
-driver must ask for the indicated multipurpose pin to be connected to
-the SDHCI controller as the CD pin.  I don't know what &pin is, exactly,
-as I haven't been paying attention to the pinmux discussions.
-
-
-> 
-> Thanks,
-> Thomas.
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+Confidentiality Notice.
+This message may contain information that is confidential or otherwise protected from disclosure. If you are not the intended recipient, you are hereby notified that any use, disclosure, dissemination, distribution,  or copying  of this message, or any attachments, is strictly prohibited.  If you have received this message in error, please advise the sender by reply e-mail, and delete the message and any attachments.  Thank you.
