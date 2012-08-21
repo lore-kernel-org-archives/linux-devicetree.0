@@ -1,66 +1,62 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [2/2] spi: Add SPI master controller for OCTEON SOCs.
-Date: Tue, 21 Aug 2012 13:38:02 -0700
-Message-ID: <5033F1AA.4080308@caviumnetworks.com>
-References: <1336772086-17248-3-git-send-email-ddaney.cavm@gmail.com> <20120821194936.GA7145@roeck-us.net>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] serial: pl011: honour serial aliases in device tree
+Date: Tue, 21 Aug 2012 21:42:04 +0100
+Message-ID: <20120821204204.GA8316@mudshark.cambridge.arm.com>
+References: <1345564094-16565-1-git-send-email-matthew.leach@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120821194936.GA7145@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: David Daney <ddaney.cavm@gmail.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, David Daney <david.daney@cavium.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1345564094-16565-1-git-send-email-matthew.leach-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matthew Leach <matthew.leach-5wv7dgnIgG8@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/21/2012 12:49 PM, Guenter Roeck wrote:
-> On Fri, May 11, 2012 at 08:34:46PM -0000, David Daney wrote:
->> From: David Daney <david.daney@cavium.com>
->>
->> Add the driver, link it into the kbuild system and provide device tree
->> binding documentation.
->>
->> Signed-off-by: David Daney <david.daney@cavium.com>
->> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->>
-> [ ... ]
->
->> +
->> +static int __devexit octeon_spi_remove(struct platform_device *pdev)
->> +{
->> +	struct octeon_spi *p = platform_get_drvdata(pdev);
->> +	struct spi_master *master = p->my_master;
->> +
->> +	spi_unregister_master(master);
->> +
->
-> I know it is a bit late, but ...
+Hi Matthew,
 
-In this case, just in time.  I am now finally getting back to fixing the 
-issues with this driver, and looking to merging it in the near future.
+On Tue, Aug 21, 2012 at 04:48:14PM +0100, Matthew Leach wrote:
+> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+> index d3553b5..33c90f6 100644
+> --- a/drivers/tty/serial/amba-pl011.c
+> +++ b/drivers/tty/serial/amba-pl011.c
+> @@ -52,6 +52,8 @@
+>  #include <linux/scatterlist.h>
+>  #include <linux/delay.h>
+>  #include <linux/types.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/sizes.h>
+>  
+> @@ -1869,6 +1871,38 @@ static struct uart_driver amba_reg = {
+>  	.cons			= AMBA_CONSOLE,
+>  };
+>  
+> +static int pl011_probe_dt_alias(int index, struct device *dev)
+> +{
+> +	struct device_node *np;
+> +	static bool seen_dev_with_alias = false;
+> +	static bool seen_dev_without_alias = false;
+> +	int ret = index;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF))
+> +		return index;
 
-David Daney
+May as well return ret here for consistency. With that:
 
->
-> The call to spi_unregister_master() frees the memory associated with master,
-> ie 'p', and the spi_master_put() below without matching spi_master_get() is
-> unnecessary/wrong. One possible fix would be to use
->
-> 	struct spi_master *master = spi_master_get(p->my_master);
->
-> above. That protects master and p while it is still being used, and makes use
-> of the call to spi_master_put() below. Another option might be to move
-> cvmx_write_csr() ahead of the call to spi_unregister_master() and drop the
-> call to spi_master_put().
->
-> Guenter
->
->> +	/* Clear the CSENA* and put everything in a known state. */
->> +	cvmx_write_csr(p->register_base + OCTEON_SPI_CFG, 0);
->> +	spi_master_put(master);
->> +	return 0;
->> +}
->> +
->
+Reviewed-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 
+I guess this goes via Greg's tree rather than the ARM one?
 
+Will
