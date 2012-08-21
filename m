@@ -1,61 +1,68 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/4] mfd: smsc: Add support for smsc gpio io/keypad driver
-Date: Tue, 21 Aug 2012 15:42:45 +0300
-Message-ID: <20120821124243.GG10347@arwen.pp.htv.fi>
-References: <1345545940-2232-1-git-send-email-sourav.poddar@ti.com>
- <1345545940-2232-2-git-send-email-sourav.poddar@ti.com>
- <20120821124146.GA21557@sirena.org.uk>
-Reply-To: balbi@ti.com
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
+Date: Tue, 21 Aug 2012 14:46:59 +0200
+Message-ID: <CACRpkdaKUt2UFrcRH41dFMxTVcN-Z2yqPKnc1r_O56+tcaiL5w@mail.gmail.com>
+References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
+ <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
+ <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
+ <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
+ <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
+ <20120815054436.GK2232@pengutronix.de>
+ <20120815065526.GG19681@shlinux2.ap.freescale.net>
+ <20120815075117.GL2232@pengutronix.de>
+ <20120815092539.GH19681@shlinux2.ap.freescale.net>
+ <20120815135947.GC2258@S2101-09.ap.freescale.net>
+ <20120816033006.GA11999@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J1ldk4ymECC/Y9sn"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120821124146.GA21557@sirena.org.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Sourav Poddar <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120816033006.GA11999-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 16, 2012 at 5:30 AM, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
---J1ldk4ymECC/Y9sn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The problem is that those pins are visible to pinctrl subystem, but the pinctrl
+> subsystem can not manage them all.
+> Not sure this meet Linus's original design purpose.
 
-On Tue, Aug 21, 2012 at 01:41:46PM +0100, Mark Brown wrote:
-> > +	regmap_read(smsc->regmap, SMSC_DEV_ID, &ret);
-> > +	dev_dbg(&i2c->dev, "SMSC Device ID: %d\n", ret);
->=20
-> I'd make these log messages dev_info() or something.
+The U300 driver has *lots* of pins it cannot manage. I have no strong
+opinions on this, often if there are lots of pins and say some ranges
+here and there are controllable, you may want to register them all
+(with names) just so that you can get something intuitive out of the
+pin numbers.
 
-dev_info() ? It'lll just make boot noisier for no good reason. Which
-user wants to see this during boot up ? That's a debugging feature for
-develop IMHO.
+But the descriptors are actually sparse, so you don't have to have
+a consecutive pin range and can actually just register the pins you
+want with the names you want. It's your pick...
 
---=20
-balbi
+> But i'm not sure if we may have this requirement in the future.
+> For example, is it possible that pinctrl subsystem may support configure pins
+> via sysfs dynamically?
 
---J1ldk4ymECC/Y9sn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Not sysfs. For GPIO this ended up in a bad place.
+Maybe /dev/pinctrl0, /dev/pinctrl1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+But I don't think we want to expose individual pin configs to
+userspace. Maybe pinctrl states. Dunno, has to be designed,
+and surely pins can be totally numb and unconfigurable as well....
 
-iQIcBAEBAgAGBQJQM4JDAAoJEIaOsuA1yqREyHgP/2209InzsuTouGTtyopqRUTI
-8KAx2RzoVLNcP0qwGyEDd8jNyYXpcp5x4uwNsSRn3tL8zMC6RWuDl7LtWGTs7pBC
-hn4x2sEOw0IP1jVYjDucX6FICxpXO3sxG3THFU4f6Yu4LvNFZI30mDL1qkd9Dvzj
-71v33lfamXo9QIZJJqUBjNvHy5I4LX8R22kP/0x9DyrBHNcOSq0GWQ0KGqiwEY9V
-OVwsMk5zXnntU1cbj803MIgCQNsVDyJZnFpng6G8/rgcnzQHd7X2tFG/NyMbVpfz
-IrdDLeKpomui8zO7L3nVRdoofauekL4s61gNWb6Zc8Q4FrSfn/qyNZtO9xXHwdJ9
-pBl+Fit18uSWjpG5TLj5NxehpbBe6Gr3+V9wpGb8v8TGdOLn2M+mkKWplnl1yOaB
-ohKeSyrCH1W8szrDp8xQK60h61LPS1hcY8wfQIMQTPkqxtZ5lQ1ipaD1bIllGbDf
-V97Xy0peYc9Oz9PTvT5ktPQAQ6YOZkJPAoZ8FnOD9qlevQ4W2IQBjulY8FSvIV1l
-bRBayJYEfjF/wcrB9bBTqfMCKc4Q8MgbP9nHxuHvokNEbd2/QJDCpn3DnPNu+7iK
-jSjPPqKW99Kp9OIvgDPDD9k8erK1a3xASf+ZAJ3GsLMgnYo1Qf/AuB1gX8ueX6Wy
-UVrH7jQNDoVUY5S/J8LE
-=oLTt
------END PGP SIGNATURE-----
+> If it supports, will imx driver also support config unused pins in devicetree
+> via sysfs?
 
---J1ldk4ymECC/Y9sn--
+DT *or* /dev/foo I guess.
+
+Yours,
+Linus Walleij
