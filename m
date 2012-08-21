@@ -1,139 +1,69 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: dynamic device tree char driver
-Date: Tue, 21 Aug 2012 11:51:58 -0500
-Message-ID: <5033BCAE.6080902@gmail.com>
-References: <1345146226-32675-1-git-send-email-atull@altera.com>
- <502FB8A9.4030907@gmail.com> <1345559902.4616.157.camel@atc-linux-1>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
+Date: Tue, 21 Aug 2012 17:57:38 +0100
+Message-ID: <20120821165738.GY7995@opensource.wolfsonmicro.com>
+References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com>
+ <1345097337-24170-2-git-send-email-acourbot@nvidia.com>
+ <1345535069.4085.7.camel@deskari>
+ <1562509.b0FYTUZ1D8@percival>
+ <20120821083329.GA28992@avionic-0098.adnet.avionic-design.de>
+ <1345539465.4085.22.camel@deskari>
+ <20120821091306.GA4819@avionic-0098.mockup.avionic-design.de>
+ <1345542860.4085.40.camel@deskari>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345559902.4616.157.camel@atc-linux-1>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Ubca5Sl/zyRO+Ah+"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1345542860.4085.40.camel@deskari>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Alex Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/21/2012 09:38 AM, Alan Tull wrote:
-> On Sat, 2012-08-18 at 10:45 -0500, Rob Herring wrote:
->> On 08/16/2012 02:43 PM, Alan Tull wrote:
->>>
->>> Hello,
->>>
->>> I'm Alan Tull, interested in dynamic features of device trees.
->>
->> Hey Alan. How are you doing?
-> Doing good! Nice to hear from you.
-> 
->>
->>> The following patch adds a char driver to add or remove device tree
->>> nodes dynamically.  Its ioctl passes a struct with:
->>>  - size of the blob
->>>  - pointer to the blob
->>>
->>> The path to add the nodes under is coded in the blob with dummy nodes.
->>> For example the following can be compiled into a blob and sent to this
->>> driver adding a single node under /soc/apb_periphs:
->>>
->>> /dts-v1/;
->>> / {
->>>         soc {
->>>                 apb_periphs {
->>>                         i2c1: i2c@ffc05000 {
->>>                                 compatible = "snps,designware-i2c";
->>>                                 reg = <0xffc05000 0x1000>;
->>>                                 interrupts = <0 159 4>;
->>>                                 emptyfifo_hold_master = <1>;
->>>                         };
->>>                 };
->>>         };
->>> };
->>>
->>> I wanted to get feeback early before I went too far down this particular
->>> path.  As such, this code doesn't do any notification for drivers yet.
->>> Also it won't properly add nested nodes yet.  It can add/remove a single
->>> node and see it show up properly under /proc/device-tree.
->>
->> Have you looked at arch/powerpc/platforms/pseries/reconfig.c?
-> Yes.  In fact I borrowed a three functions from it and gave credit in
-> the patch.  I'm trying to do something that is architecture independent
-> and that uses the same type of device tree files (blobs) as are used
-> during bootup. In my case it will run on an ARM which will have soft
-> peripherals instantiated in a FPGA.  So after bootup we want to be able
-> to reconfigure the IP in the FPGA dynamically, then reconfigure the
-> device tree and load some drivers.  Pretty cool stuff.That's why I'm
-> interested in doing this dynamically without a reboot.
-> 
-> 
->> There was also a recent discussion titled "OF_DYNAMIC usage" that you
->> should look at.
->>
->> I don't think a char driver and ioctls will fly...
-> Doh!  Yes, I know the thread.  For some reason, I thought it would be
-> better to post a patch as a new thread rather than posting a patch to
-> the "OF_DYNAMIC usage" thread but perhaps not.  Sorry for forking the
-> discussion.
 
-The fork is fine. Just making sure you were aware of it.
+--Ubca5Sl/zyRO+Ah+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> That is where I got the idea of doing ioctls.  I am assuming that
-> there's only going to be one proper place in the tree for each blob to
-> get inserted, so I leave that path information in the blob rather than
-> storing it passing it as a separate parameter of the ioctl.
+On Tue, Aug 21, 2012 at 12:54:20PM +0300, Tomi Valkeinen wrote:
 
-ioctls simply won't fly. So I would start by extending the current
-interface to do blobs. From a user standpoint, something like this is
-certainly easier to use than an ioctl:
+> However, if we already have a generic driver for that type of panel,
+> (which we would need anyway for the DT based approach), the developer
+> only needs to add the name of the panel and the data for the power
+> sequence to the panel driver's database, which is about the same amount
+> of work as with DT.
 
-echo "add blob" > /proc/devicetree/ofdt
-cat blob.dtb > /proc/devicetree/ofdt
+> So it's really just a question of where to put the data in question, DT
+> or driver. Both contain the same data, and the data structure may also
+> be the same. In DT's case it just needs to be parsed first, whereas in
+> database case you'll enter the data in structs.
 
-> reconfig.c's interface is pretty bad.  It uses /proc as the place for
-> the user to write commands.  The commands are broken up such that the
-> userspace has to 'add _node', then do 'add_property' a few times.  Also
-> it had to introduce a flag "OF_DYNAMIC" (not to be confused with
-> "CONFIG_OF_DYNAMIC") to keep of_node_release from releasing the nodes
-> that are allocated in reconfig.c.  Seems messy.
-> 
-> With an ioctl, the userspace can just send a single command to add a
-> blob.  The blob can contain one node or many nodes as long as they all
-> end up under the same path.  Removing nodes is just as straightforward
-> and clean.
+I think the device tree idiomatic way of doing this is to have a bunch
+of .dtsi files for the panels which then get included by reference in
+the board files.  This isn't helpful to people working on non-DT
+architectures though.
 
-Whether paths are part of the blob are debatable. I'm sure you and your
-competitors can put your heads together and come up with something. :)
+--Ubca5Sl/zyRO+Ah+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Rob
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
->>
->> Another option could be kexecing with a new DTB if you can live with a
->> reboot.
-> We are looking at reconfiguring soft peripheral in a FPGA on the fly.
-> So a reboot won't work here.
-> 
->>
->> Rob
->>
->>>
->>> Alan Tull
->>> Altera
->>>
->>> _______________________________________________
->>> devicetree-discuss mailing list
->>> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>> https://lists.ozlabs.org/listinfo/devicetree-discuss
->>>
->>
->>
-> 
-> 
-> 
+iQIcBAEBAgAGBQJQM734AAoJEFJkBDiqVpZ4h28P/iblWU1WkmSB3gX1ANEaTXg2
+MiYoBQNiUON4KY+6nOse+vEGsWlhsNaCmsxxp1zp/yNeG5zzPUhcosh6qK00IxMI
+dlu1zMJ5Ng4KNq7xAVf2OisX8UAfUNK4PxdzwClGhmy7/oSN+/ojajhRDRAWlODw
+4V5diV6t6USWZocfTrsIHBMJju1vMgm9H6T6JoND7azvt+mk65PQFh6IIQyMJWRx
+Q4EDivYkcrLLR2cmLlPq9SAqCy0Jhym0HkL8tYNgQafu4/SjlkRTc3heLiQzMmDB
+cnaPjrEkIjn3ONqBsueBismBQR6I7Q4lt3u+XVwVu8i1Cc4aOIpAelhh40ZE7DM/
++vgsQsulybCO9c+WxxK+6ZGnEsHOPIoAyJ3V4Dk4zG0+22W/JQPRl9DPfd2i96CN
+W6TXAoqXhsAawCVjt/MLCzzmuxk9qX6R9+aBLQF4d2MygVLKeOm6MM9Jm/XOxf0b
+BWfHADatomudMD8Ewxij+uB+4sgp+O9pzWnERASqERO06yvUWM9QO2uuNYMNNfGV
+ZMtV+LPspwnZxvOtSKgG7DENcVScMq1KNJQMjrp5X6bEhaaKwyO6F0MHMYAnJmAl
+nNVjct/Rbio/XYcySv2bcUln81iNu5qJCeyGVhirJNHeWFt2EnbJc5RUSZa5K7eC
++uTonIehAvqSzbGlma7H
+=FIV2
+-----END PGP SIGNATURE-----
+
+--Ubca5Sl/zyRO+Ah+--
