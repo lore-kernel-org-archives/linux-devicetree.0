@@ -1,209 +1,74 @@
-From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v5 2/2] spi/pl022: Add devicetree support
-Date: Tue, 21 Aug 2012 18:01:25 +0200
-Message-ID: <1345564885-11970-1-git-send-email-stigge@antcom.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
+Date: Tue, 21 Aug 2012 11:01:52 -0500
+Message-ID: <5033B0F0.7050506@gmail.com>
+References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org> <CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com> <87k3ws5uhs.fsf@octavius.laptop.org> <201208211208.49987.arnd@arndb.de> <87393g5mic.fsf@octavius.laptop.org> <5033A34E.7040201@gmail.com> <87pq6k46jg.fsf@octavius.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.verma-lpHj6iFQ3dU@public.gmane.org
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <87pq6k46jg.fsf@octavius.laptop.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Abraham <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, patches@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support to the spi-pl022 driver.
+On 08/21/2012 10:18 AM, Chris Ball wrote:
+> Hi,
+> 
+> On Tue, Aug 21 2012, Rob Herring wrote:
+>>> cd-gpios and cd-external can be present on the same node.  if broken-cd
+>>> is present, it must be the only one of these nodes used.
+>>
+>> I don't see the point of cd-external. Either you just use the CD
+>> interrupt defined within the SDHCI or you have a gpio line independent
+>> of the SDHCI and use cd-gpios.
+> 
+> You've described two of the possible cases, but not the third.  In the
+> third case, you have a gpio line that is not independent of the SDHCI,
+> because it is the SDHCI's CD pin brought out to be directly accessible
+> via a GPIO.
 
-Based on the initial patch by Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+That is covered by absence of cd-gpios and broken-cd. Any *-gpios
+property means the signal is a GPIO line controlled by a GPIO controller.
 
-Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
----
+I suppose you could have the CD state readable via the SDHCI, but the
+interrupt comes from a GPIO controller. Or vice-versa, but that's a
+pretty broken use case if you can't pick which way you are going to use
+things.
 
- Documentation/devicetree/bindings/spi/spi_pl022.txt |   15 +++
- drivers/spi/spi-pl022.c                             |   79 +++++++++++++++++---
- 2 files changed, 85 insertions(+), 9 deletions(-)
+> 
+> The difference is in the handling of the interrupt -- if you don't have
+> "cd-external" then you're just using the SDHCI's interrupt, but if you
+> have an independent line then you're going to need to register your own
+> IRQ handler on it, and "cd-external" signifies that.
+> 
+> Thomas wrote this explanation earlier in the thread:
+>> "samsung,sdhci-cd-gpio" means that the cd-gpio line is not connected
+>> to the card-detect pad of the sdhci controller. Instead, it identifies
+>> cd-gpio as a gpio pin, connected to the card-detect pin of the "card
+>> slot" and it can used as a source of external interrupt. The driver
+>> can register card insert/remove handler for this interrupt and get
+>> notified about the changes in card state.
+>>
+>> "sdhci-cd-internal" means that the "cd-gpio" line is used to connect
+>> the card-detect pin of the card slot and the card-detect pad of the
+>> sdhci controller. The controller is then aware of any changes in card
+>> state and the controller generates appropriate interrupts to notify
+>> changes in card-state.
+> 
 
---- linux-2.6.orig/Documentation/devicetree/bindings/spi/spi_pl022.txt
-+++ linux-2.6/Documentation/devicetree/bindings/spi/spi_pl022.txt
-@@ -6,7 +6,22 @@ Required properties:
- - interrupts : Should contain SPI controller interrupt
- 
- Optional properties:
-+- num-cs : total number of chipselects
- - cs-gpios : should specify GPIOs used for chipselects.
-   The gpios will be referred to as reg = <index> in the SPI child nodes.
-   If unspecified, a single SPI device without a chip select can be used.
- 
-+SPI slave nodes must be children of the SPI master node and can
-+contain the following properties.
-+
-+- pl022,interface : interface type:
-+	0: SPI
-+	1: Texas Instruments Synchronous Serial Frame Format
-+	2: Microwire (Half Duplex)
-+- pl022,com-mode : polling, interrupt or dma
-+- pl022,rx-level-trig : Rx FIFO watermark level
-+- pl022,tx-level-trig : Tx FIFO watermark level
-+- pl022,ctrl-len : Microwire interface: Control length
-+- pl022,wait-state : Microwire interface: Wait state
-+- pl022,duplex : Microwire interface: Full/Half duplex
-+
---- linux-2.6.orig/drivers/spi/spi-pl022.c
-+++ linux-2.6/drivers/spi/spi-pl022.c
-@@ -41,6 +41,7 @@
- #include <linux/scatterlist.h>
- #include <linux/pm_runtime.h>
- #include <linux/gpio.h>
-+#include <linux/of_gpio.h>
- 
- /*
-  * This macro is used to define some register default values.
-@@ -1778,12 +1779,14 @@ static const struct pl022_config_chip pl
- static int pl022_setup(struct spi_device *spi)
- {
- 	struct pl022_config_chip const *chip_info;
-+	struct pl022_config_chip chip_info_dt;
- 	struct chip_data *chip;
- 	struct ssp_clock_params clk_freq = { .cpsdvsr = 0, .scr = 0};
- 	int status = 0;
- 	struct pl022 *pl022 = spi_master_get_devdata(spi->master);
- 	unsigned int bits = spi->bits_per_word;
- 	u32 tmp;
-+	struct device_node *np = spi->dev.of_node;
- 
- 	if (!spi->max_speed_hz)
- 		return -EINVAL;
-@@ -1806,10 +1809,32 @@ static int pl022_setup(struct spi_device
- 	chip_info = spi->controller_data;
- 
- 	if (chip_info == NULL) {
--		chip_info = &pl022_default_chip_info;
--		/* spi_board_info.controller_data not is supplied */
--		dev_dbg(&spi->dev,
--			"using default controller_data settings\n");
-+		if (np) {
-+			chip_info_dt = pl022_default_chip_info;
-+
-+			chip_info_dt.hierarchy = SSP_MASTER;
-+			of_property_read_u32(np, "pl022,interface",
-+				&chip_info_dt.iface);
-+			of_property_read_u32(np, "pl022,com-mode",
-+				&chip_info_dt.com_mode);
-+			of_property_read_u32(np, "pl022,rx-level-trig",
-+				&chip_info_dt.rx_lev_trig);
-+			of_property_read_u32(np, "pl022,tx-level-trig",
-+				&chip_info_dt.tx_lev_trig);
-+			of_property_read_u32(np, "pl022,ctrl-len",
-+				&chip_info_dt.ctrl_len);
-+			of_property_read_u32(np, "pl022,wait-state",
-+				&chip_info_dt.wait_state);
-+			of_property_read_u32(np, "pl022,duplex",
-+				&chip_info_dt.duplex);
-+
-+			chip_info = &chip_info_dt;
-+		} else {
-+			chip_info = &pl022_default_chip_info;
-+			/* spi_board_info.controller_data not is supplied */
-+			dev_dbg(&spi->dev,
-+				"using default controller_data settings\n");
-+		}
- 	} else
- 		dev_dbg(&spi->dev,
- 			"using user supplied controller_data settings\n");
-@@ -2006,7 +2031,8 @@ pl022_probe(struct amba_device *adev, co
- 	struct pl022_ssp_controller *platform_info = adev->dev.platform_data;
- 	struct spi_master *master;
- 	struct pl022 *pl022 = NULL;	/*Data for this driver */
--	int status = 0, i;
-+	struct device_node *np = adev->dev.of_node;
-+	int status = 0, i, num_cs;
- 
- 	dev_info(&adev->dev,
- 		 "ARM PL022 driver, device ID: 0x%08x\n", adev->periphid);
-@@ -2016,9 +2042,19 @@ pl022_probe(struct amba_device *adev, co
- 		goto err_no_pdata;
- 	}
- 
-+	if (platform_info->num_chipselect) {
-+		num_cs = platform_info->num_chipselect;
-+	} else if (IS_ENABLED(CONFIG_OF)) {
-+		of_property_read_u32(np, "num-cs", &num_cs);
-+	} else {
-+		dev_err(&adev->dev, "probe: no chip select defined\n");
-+		status = -ENODEV;
-+		goto err_no_pdata;
-+	}
-+
- 	/* Allocate master with space for data */
- 	master = spi_alloc_master(dev, sizeof(struct pl022) + sizeof(int) *
--				  platform_info->num_chipselect);
-+				  num_cs);
- 	if (master == NULL) {
- 		dev_err(&adev->dev, "probe - cannot alloc SPI master\n");
- 		status = -ENOMEM;
-@@ -2037,17 +2073,41 @@ pl022_probe(struct amba_device *adev, co
- 	 * on this board
- 	 */
- 	master->bus_num = platform_info->bus_id;
--	master->num_chipselect = platform_info->num_chipselect;
-+	master->num_chipselect = num_cs;
- 	master->cleanup = pl022_cleanup;
- 	master->setup = pl022_setup;
- 	master->prepare_transfer_hardware = pl022_prepare_transfer_hardware;
- 	master->transfer_one_message = pl022_transfer_one_message;
- 	master->unprepare_transfer_hardware = pl022_unprepare_transfer_hardware;
- 	master->rt = platform_info->rt;
-+	master->dev.of_node = dev->of_node;
- 
--	if (platform_info->num_chipselect && platform_info->chipselects)
--		for (i = 0; i < platform_info->num_chipselect; i++)
-+	if (platform_info->num_chipselect && platform_info->chipselects) {
-+		for (i = 0; i < num_cs; i++)
- 			pl022->chipselect[i] = platform_info->chipselects[i];
-+	} else if (IS_ENABLED(CONFIG_OF)) {
-+		for (i = 0; i < num_cs; i++) {
-+			int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
-+
-+			if (cs_gpio == -EPROBE_DEFER) {
-+				status = -EPROBE_DEFER;
-+				goto err_no_gpio;
-+			}
-+
-+			pl022->chipselect[i] = cs_gpio;
-+
-+			if (gpio_is_valid(cs_gpio)) {
-+				if (gpio_request(cs_gpio, "ssp-pl022"))
-+					dev_err(&adev->dev,
-+						"could not request %d gpio\n",
-+						cs_gpio);
-+				else if (gpio_direction_output(cs_gpio, 1))
-+					dev_err(&adev->dev,
-+						"could set gpio %d as output\n",
-+						cs_gpio);
-+			}
-+		}
-+	}
- 
- 	/*
- 	 * Supports mode 0-3, loopback, and active low CS. Transfers are
-@@ -2157,6 +2217,7 @@ pl022_probe(struct amba_device *adev, co
-  err_no_ioremap:
- 	amba_release_regions(adev);
-  err_no_ioregion:
-+ err_no_gpio:
- 	spi_master_put(master);
-  err_no_master:
-  err_no_pdata:
+It seems you are mixing pin muxing and who controls/handles the CD
+detect signal. Pin muxing is a separate issue and should be addressed by
+pin mux bindings. Either the signal functions as a GPIO or it functions
+as a CD as part of the SDHCI. You may have muxing on the CD pin that
+allows it to function either way, but the DT binding should describe how
+you want it to be configured and used.
 
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Rob
+
+> Thanks,
+> 
+> - Chris.
+> 
+
