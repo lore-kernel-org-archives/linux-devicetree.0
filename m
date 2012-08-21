@@ -1,70 +1,91 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx5: start numbering pad from 0
-Date: Tue, 21 Aug 2012 14:52:43 +0200
-Message-ID: <CACRpkdZghkK8eCVdzEm2bQizVq=U-Zg90i43vD9YMkS+2WxVNA@mail.gmail.com>
-References: <1344869278-27334-1-git-send-email-shawn.guo@linaro.org>
- <CAKGA1b=DqyZvSre3C4YQ3GM6RuFtFsGWDkF784iKggrNzwiKpg@mail.gmail.com>
- <CAP1dx+zQvBurT9oCmfJ0dGHHV3rbgdy+0Yh_hoPL9jQB8QNxKw@mail.gmail.com>
- <CAKGA1bmHqyDGyvZjEcQ+RO1jHiZNZKNu3BGkyUXzYfwVaySYEQ@mail.gmail.com>
- <CAP1dx+x0_j_f3Pj+9+YHcwoTqjGLXouf7t+SoCCMVGKJNOHCPw@mail.gmail.com>
- <20120815054436.GK2232@pengutronix.de>
- <20120815065526.GG19681@shlinux2.ap.freescale.net>
- <20120815075117.GL2232@pengutronix.de>
- <20120815092539.GH19681@shlinux2.ap.freescale.net>
- <20120815135947.GC2258@S2101-09.ap.freescale.net>
- <20120816033006.GA11999@shlinux2.ap.freescale.net>
- <502D622A.1030104@wwwdotorg.org>
+From: Rob Herring <rob.herring@calxeda.com>
+Subject: Re: [PATCH 2/2] ARM: imx6q: replace clk_register_clkdev with clock
+ DT lookup
+Date: Tue, 21 Aug 2012 07:53:55 -0500
+Message-ID: <503384E3.4030705@calxeda.com>
+References: <1345104526-14797-1-git-send-email-shawn.guo@linaro.org>
+ <1345104526-14797-3-git-send-email-shawn.guo@linaro.org>
+ <503232E0.3000007@gmail.com>
+ <CAKGA1bn2uCWE8YkGR4EzTxZ_bXJ_ov2diq63uxQ=dT7b6Fu9GQ@mail.gmail.com>
+ <20120820151609.GN24242@S2101-09.ap.freescale.net>
+ <CAKGA1bnfhMC8QG9OqBbpy5iq6ZAfEgrYMg_LVd50U7yikLhDAg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <502D622A.1030104-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAKGA1bnfhMC8QG9OqBbpy5iq6ZAfEgrYMg_LVd50U7yikLhDAg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matt Sealey <matt@genesi-usa.com>
+Cc: Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 16, 2012 at 11:12 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 08/15/2012 09:30 PM, Dong Aisheng wrote:
 
->> For example, the pin_config_get/pin_config_set API in
->> include/linux/pinctrl/consumer.h can not work for such pins.
->
-> Hmmm. Given we support all pin mux/config options from the mapping
-> table, I'd question whether that API should even exist any more...
 
-If there are no in-kernel users we can delete it. But I can surely see
-things like PCI lab boards etc wanting to have full control over pins
-from userspace, just like they can hammer GPIO's on/off today
-from userspace (i.e. embedded SoCs is not the only use case)
-so I wouldn't rule it out. I think this use case is quite real for
-automatic control, robotics, factory lines... those guys do use GPIO
-sysfs like that already today.
+On 08/20/2012 12:22 PM, Matt Sealey wrote:
+> On Mon, Aug 20, 2012 at 10:16 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
+>> On Mon, Aug 20, 2012 at 09:54:48AM -0500, Matt Sealey wrote:
+>>> Yet another arbitrary array...
+>>>
+>>> I'm not sure why you would move the registration lookup into the DT
+>>
+>> Because I do not want to patch kernel every time I need a new lookup.
+>> Furthermore, looking at function imx53_qsb_init in imx53-dt.c, you
+>> will find that lookup for sgtl5000 is really board specific and should
+>> go to device tree.
+>>
+>>> and use an arbitrarily ordered array again. Sure, you're looking it up
+>>> entirely within the device tree here, but a better solution would be
+>>> to not name clocks twice, and structure your clock definition
+>>> properly.
+>>>
+>>> What's wrong with;
+>>>
+>>> ccm@020c4000 {
+>>>    ...
+>>>    my_clock: clock@0 {
+>>>        name = "my_clock_name";
+>>>    }
+>>> }
+>>>
+>>> uart@nnnnnnnn {
+>>>    ...
+>>>    clocks = <&my_clock>;
+>>> }
+>>>
+>>> ?
+>>>
+>> It turns a property into 185 nodes, which will just bloat the device
+>> tree.  This issue has been discussed for a plenty of times.
+> 
+> It's not bloat just because it is by its very definition "a big list", is it?
+> 
+> How do you explain duplicating the clock names in the array AND in the
+> device node as NOT being bloated?
 
->> It looks like not a big issue currently since i did not see any client driver
->> using this API.
->> But i'm not sure if we may have this requirement in the future.
->> For example, is it possible that pinctrl subsystem may support configure pins
->> via sysfs dynamically?
->
-> I can't comment on sysfs specifically, but I believe it would be
-> generally true that a pin that isn't know to the pinctrl subsystem can't
-> be manipulated in any way.
+Read the clock binding doc. Names are optional and the 2 names are not
+the same. One is the name of the output on the CCM and one is the name
+on input to the module.
 
-sysfs over my dead body ... but exposing pin names to userspace is
-another thing, and might be interesting, in case we want to just
-sort of list all pins on the system from some command line tool or
-HW-info control panel. But that requires designing the userspace
-device interface first, so no need to haste.
+While generally optional, Shawn has chosen to require at least the
+output names. In the case of defining a signal clock controller node
+with lots of outputs, that is the right choice.
 
-Yours,
-Linus Walleij
+Rob
+
+> 
+> You're going to have to define these clocks as a tree with parents and
+> leaf nodes anyway in the clock subsystem. Why not define these in the
+> device tree in total and reference them by handle when you build the
+> entire clock tree from the ground up? Or will it just be all the
+> clocks defined in Linux, but the lookups (which is what I see here)
+> moved into the DT? Why not form the lookups as part of the definition
+> of the clock tree?
+> 
