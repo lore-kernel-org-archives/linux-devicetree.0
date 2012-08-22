@@ -1,28 +1,32 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 8/9] ARM: mvebu: Add pinctrl support to Armada 370
- SoC
-Date: Wed, 22 Aug 2012 14:46:19 -0600
-Message-ID: <5035451B.3020708@wwwdotorg.org>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-9-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 2/9] ARM: OMAP: mcbsp: Enable FIFO use for OMAP2430
+Date: Wed, 22 Aug 2012 14:01:14 -0700
+Message-ID: <20120822210114.GL11011@atomide.com>
+References: <1345124468-8876-1-git-send-email-peter.ujfalusi@ti.com>
+ <1345124468-8876-3-git-send-email-peter.ujfalusi@ti.com>
+ <20120822191139.GI7995@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1345623750-10645-9-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120822191139.GI7995@opensource.wolfsonmicro.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Liam Girdwood <lrg@ti.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2012 02:22 AM, Sebastian Hesselbarth wrote:
-> This commits adds the necessary device tree information to define the
-> compatible property for the pinctrl driver instance of Armada 370 SoC.
+* Mark Brown <broonie@opensource.wolfsonmicro.com> [120822 12:12]:
+> On Thu, Aug 16, 2012 at 04:41:01PM +0300, Peter Ujfalusi wrote:
+> > On OMAP2430 all McBSP ports have 128 word long buffer, enable the use of
+> > the FIFO for the audio stack.
+> > 
+> > Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> > Acked-by: Jarkko Nikula <jarkko.nikula@bitmer.com>
+> 
+> I applied this - Tony, from the thread it seemed you were OK even though
+> you didn't explicitly ack it?
 
-> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+Ah yes sorry, I'm fine with it. Sounds like you already applied it,
+so too late to ack. But just in case:
 
-> +
-> +                pinctrl@d0018000 {
-> +			        compatible = "marvell,mv88f6710-pinctrl";
-> +	        };
-
-The indentation here is a mix of spaces and TABs.
+Acked-by: Tony Lindgren <tony@atomide.com>
