@@ -1,57 +1,32 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Wed, 22 Aug 2012 20:26:56 +0800
-Message-ID: <20120822122655.GW24242@S2101-09.ap.freescale.net>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
- <CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
- <87k3ws5uhs.fsf@octavius.laptop.org>
- <201208211208.49987.arnd@arndb.de>
- <87393g5mic.fsf@octavius.laptop.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RESEND PATCH v4 0/2] omap: add ocp2scp as a bus driver
+Date: Wed, 22 Aug 2012 12:34:30 +0000
+Message-ID: <201208221234.31193.arnd@arndb.de>
+References: <1345624803-16379-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87393g5mic.fsf@octavius.laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Abraham <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, patches@linaro.org, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1345624803-16379-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+On Wednesday 22 August 2012, Kishon Vijay Abraham I wrote:
+> This patch series has been lying here for long. If no one has any
+> comments on this patch series, can someone pick it up?
 
-On Tue, Aug 21, 2012 at 10:48:43AM -0400, Chris Ball wrote:
-> Aside: the bindings do not match the code.  The bindings document says
-> to use "fsl,cd-internal", and imx51-babbage.dts does so -- but the code
-> doesn't check for "fsl,cd-internal", it checks for "fsl,cd-controller":
-> 
->         if (of_get_property(np, "fsl,cd-controller", NULL))
->                 boarddata->cd_type = ESDHC_CD_CONTROLLER;
-> 
-> The same confusion is present for fsl,wp-{controller,internal}.
-> 
-I'm trying to fix the mismatch between dts and code, but seeing that
-the "controller" mode has been broken for quite a while.  I just ran
-a bisect and was told as below.
+I've added them now as a drivers/ocp2scp branch arm-soc and pulled
+them into the next/drivers topic branch.
 
-30832ab56c80d96cfaf5a786524f0d8c57fadfa1 is the first bad commit
-commit 30832ab56c80d96cfaf5a786524f0d8c57fadfa1
-Author: Todd Poynor <toddpoynor@google.com>
-Date:   Tue Dec 27 15:48:46 2011 +0200
-
-    mmc: sdhci: Always pass clock request value zero to set_clock host op
-
-    To allow the set_clock host op to disable the SDCLK source when not
-    needed, always call the host op when the requested clock speed is
-    zero.  Do this even if host->clock already equals zero, because
-    the SDHCI driver may set that value (without calling the host op)
-    to force an update at the next (non-zero-speed) call.
-
-    Signed-off-by: Todd Poynor <toddpoynor@google.com>
-    Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-    Signed-off-by: Chris Ball <cjb@laptop.org>
-
-Reverting the commit will get "controller" mode back to work.
-
--- 
-Regards,
-Shawn
+	Arnd
