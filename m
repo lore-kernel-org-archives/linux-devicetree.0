@@ -1,205 +1,75 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] misc/at25,
- dt: Improve at25 SPI eeprom device tree bindings.
-Date: Wed, 22 Aug 2012 12:03:57 -0700
-Message-ID: <1345662238-15211-2-git-send-email-ddaney.cavm@gmail.com>
-References: <1345662238-15211-1-git-send-email-ddaney.cavm@gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 1/9] ARM/ASoC: omap-mcbsp: Move OMAP2+
+ clock parenting code to ASoC driver
+Date: Wed, 22 Aug 2012 20:10:44 +0100
+Message-ID: <20120822191043.GH7995@opensource.wolfsonmicro.com>
+References: <1345124468-8876-1-git-send-email-peter.ujfalusi@ti.com>
+ <1345124468-8876-2-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345662238-15211-1-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1968721904901407734=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1345124468-8876-2-git-send-email-peter.ujfalusi@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Commit 002176db (misc: at25: Parse dt settings) added device tree
-bindings the differ significantly in style from the I2C EEPROM
-bindings and don't seem well vetted.  Here I deprecate (but still
-support) the "at25,*" properties, and add what I hope is a better
-alternative.  These new bindings also happen to be deployed in the
-field and were previously submitted for consideration here:
+--===============1968721904901407734==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IIdFmnBmmFp+Aeao"
+Content-Disposition: inline
 
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-May/015556.html
 
-The advantages of the new bindings are that they are similar to the
-I2C EEPROMs and they don't conflate read-only and the address width
-modes in a binary encoded blob.
+--IIdFmnBmmFp+Aeao
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Cc: Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/misc/at25.txt | 34 +++++++---
- drivers/misc/eeprom/at25.c                      | 83 +++++++++++++++++--------
- 2 files changed, 82 insertions(+), 35 deletions(-)
+On Thu, Aug 16, 2012 at 04:41:00PM +0300, Peter Ujfalusi wrote:
+> Move the McBSP CLKS re-parenting code to ASoC driver from
+> arch/arm/mach-omap2.
+> The call fort the re-parenting has been already limited to OMAP2+ SoC in
+> the ASoC driver. There is no longer need to have callback function for it.
 
-diff --git a/Documentation/devicetree/bindings/misc/at25.txt b/Documentation/devicetree/bindings/misc/at25.txt
-index ab3c327..1d34471 100644
---- a/Documentation/devicetree/bindings/misc/at25.txt
-+++ b/Documentation/devicetree/bindings/misc/at25.txt
-@@ -1,21 +1,35 @@
--Atmel AT25 eeprom
-+EEPROMs (SPI) compatible with Atmel at25.
- 
- Required properties:
- - compatible : "atmel,at25".
- - reg : chip select number
- - spi-max-frequency : max spi frequency to use
-+- pagesize : size of the eeprom page
-+- size : total eeprom size in bytes
-+- address-width : number of address bits (one of 8, 16, or 24)
- 
-+Optional properties:
-+- spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
-+- spi-cpol : SPI inverse clock polarity, as per spi-bus bindings.
-+- read-only : this parameter-less property disables writes to the eeprom
-+
-+Obsolete legacy properties are can be used in place of "size", "pagesize",
-+"address-width", and "read-only":
- - at25,byte-len : total eeprom size in bytes
- - at25,addr-mode : addr-mode flags, as defined in include/linux/spi/eeprom.h
- - at25,page-size : size of the eeprom page
- 
--Examples:
--at25@0 {
--	compatible = "atmel,at25";
--	reg = <0>
--	spi-max-frequency = <5000000>;
-+Additional compatible properties are also allowed.
-+
-+Example:
-+	at25@0 {
-+		compatible = "atmel,at25", "st,m95256";
-+		reg = <0>
-+		spi-max-frequency = <5000000>;
-+		spi-cpha;
-+		spi-cpol;
- 
--	at25,byte-len = <0x8000>;
--	at25,addr-mode = <2>;
--	at25,page-size = <64>;
--};
-+		pagesize = <64>;
-+		size = <32768>;
-+		address-width = <16>;
-+	};
-diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-index 25003d6..4ed93dd 100644
---- a/drivers/misc/eeprom/at25.c
-+++ b/drivers/misc/eeprom/at25.c
-@@ -302,6 +302,61 @@ static ssize_t at25_mem_write(struct memory_accessor *mem, const char *buf,
- 
- /*-------------------------------------------------------------------------*/
- 
-+static int at25_np_to_chip(struct device *dev,
-+			   struct device_node *np,
-+			   struct spi_eeprom *chip)
-+{
-+	u32 val;
-+
-+	memset(chip, 0, sizeof(*chip));
-+	strncpy(chip->name, np->name, sizeof(chip->name));
-+
-+	if (of_property_read_u32(np, "size", &val) == 0 ||
-+	    of_property_read_u32(np, "at25,byte-len", &val) == 0) {
-+		chip->byte_len = val;
-+	} else {
-+		dev_err(dev, "Error: missing \"size\" property\n");
-+		return -ENODEV;
-+	}
-+
-+	if (of_property_read_u32(np, "pagesize", &val) == 0 ||
-+	    of_property_read_u32(np, "at25,page-size", &val) == 0) {
-+		chip->page_size = (u16)val;
-+	} else {
-+		dev_err(dev, "Error: missing \"pagesize\" property\n");
-+		return -ENODEV;
-+	}
-+
-+	if (of_property_read_u32(np, "at25,addr-mode", &val) == 0) {
-+		chip->flags = (u16)val;
-+	} else {
-+		if (of_property_read_u32(np, "address-width", &val)) {
-+			dev_err(dev,
-+				"Error: missing \"address-width\" property\n");
-+			return -ENODEV;
-+		}
-+		switch (val) {
-+		case 8:
-+			chip->flags |= EE_ADDR1;
-+			break;
-+		case 16:
-+			chip->flags |= EE_ADDR2;
-+			break;
-+		case 24:
-+			chip->flags |= EE_ADDR3;
-+			break;
-+		default:
-+			dev_err(dev,
-+				"Error: bad \"address-width\" property: %u\n",
-+				val);
-+			return -ENODEV;
-+		}
-+		if (of_find_property(np, "read-only", NULL))
-+			chip->flags |= EE_READONLY;
-+	}
-+	return 0;
-+}
-+
- static int at25_probe(struct spi_device *spi)
- {
- 	struct at25_data	*at25 = NULL;
-@@ -314,33 +369,11 @@ static int at25_probe(struct spi_device *spi)
- 	/* Chip description */
- 	if (!spi->dev.platform_data) {
- 		if (np) {
--			u32 val;
--
--			memset(&chip, 0, sizeof(chip));
--			strncpy(chip.name, np->name, 10);
--
--			err = of_property_read_u32(np, "at25,byte-len", &val);
--			if (err) {
--				dev_dbg(&spi->dev, "invalid chip dt description\n");
--				goto fail;
--			}
--			chip.byte_len = val;
--
--			err = of_property_read_u32(np, "at25,addr-mode", &val);
--			if (err) {
--				dev_dbg(&spi->dev, "invalid chip dt description\n");
--				goto fail;
--			}
--			chip.flags = (u16)val;
--
--			err = of_property_read_u32(np, "at25,page-size", &val);
--			if (err) {
--				dev_dbg(&spi->dev, "invalid chip dt description\n");
-+			err = at25_np_to_chip(&spi->dev, np, &chip);
-+			if (err)
- 				goto fail;
--			}
--			chip.page_size = (u16)val;
- 		} else {
--			dev_dbg(&spi->dev, "no chip description\n");
-+			dev_err(&spi->dev, "Error: no chip description\n");
- 			err = -ENODEV;
- 			goto fail;
- 		}
--- 
-1.7.11.4
+Applied, thanks.
+
+--IIdFmnBmmFp+Aeao
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQNS6tAAoJEFJkBDiqVpZ4ypgP+QHvkaPltipdOy9lHnJAP6s8
+ABmXKk4i5QBoB/Bqh9DYXhiI7sp0/W8s3mUXRrsM4STsxWJtq2hyzBj+Au0pDJeW
+CsPlDK4ioq5h3TnlJgbitaEV9Yemi6Sm5XA7EfYEKYP+O2sCbrw4xlcyXjsw+pO/
+McziGT2iIw3e07Z38izLNLqFZIk8e2pksJEf+UxGd8AyGtw2GcnKXWLmXMRmxpKG
+ihPoZz72ylpZEYU8pZR1AsCbv5NQnM/j3Nk+GRuSSFOYOqWSaGA+SoObFIAPYkdC
+uxck20nM5RHaFsN7DltJ2JZIF98lp6l6w1ljDpfRG47KYBwm6H37aB9aDmppwlWU
+byO8gpPQ5acB1xGksrtXVflg5iNxfYnROeDipZYdtI7xElZV1SsQ7Z1NFLgqBC6E
++gPWc4rqCiyYs4FDr7hPJu5Pk5n3dO9JraU6QwQXLzhXXhouEFd+5rYtm6R7UELT
+ndCYwzDaBqSZbpdbHFcY2pcbKy/pfaHNLwaJvuJnNHDKQDngNqtoTXaTo9okE1Ti
+x140I8tPqDs4GENmm6awgaA3hTqqv86SNapOA8RkD4YNCOm7b7BY4PIw0JGZzosK
+AKghKGt59I0pbXDciaAEPbuDCtkJW2qmwDwJa+76A4A7O07JMiTWnEsU8nYjD8t4
+DgyerSL/HhlUs9VJzTKu
+=8XGd
+-----END PGP SIGNATURE-----
+
+--IIdFmnBmmFp+Aeao--
+
+--===============1968721904901407734==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1968721904901407734==--
