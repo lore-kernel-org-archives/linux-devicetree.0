@@ -1,96 +1,64 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Can one  set GPIO direction in pinmux definition?
-Date: Wed, 22 Aug 2012 13:52:45 -0600
-Message-ID: <5035388D.2060909@wwwdotorg.org>
-References: <5034FCB2.5040709@grid-net.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Wed, 22 Aug 2012 14:43:07 -0600
+Message-ID: <5035445B.6000500@wwwdotorg.org>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5034FCB2.5040709-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2012 09:37 AM, Subodh Nijsure wrote:
-> 
-> For a MX28 based hardware I am working with I need to use AUART4
-> 
-> I need to configure this AUART4 as uart only when necessary and at all
-> other times pins associated with AUART4 need to be configured as inputs.
+On 08/22/2012 02:22 AM, Sebastian Hesselbarth wrote:
+> This patch adds a pinctrl driver core for Marvell SoCs plus DT
+> binding documentation. This core driver will be used by SoC family
+> specific drivers, i.e. Armada XP, Armada 370, Dove, Kirkwood, aso.
 
-Out of curiosity, why?
+> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt
 
-BTW, you didn't CC any of the IMX maintainers, so it's likely they won't
-see your question. I've CC'd LinusW, Shawn, and Dong.
+This, and all the other binding documents in this series, all look sane
+to me.
 
-> I am using following DT definitions to setup AUART4 mux  but can't
-> figure out how to setup pin direction via DT, can it be done or I need
-> to do it in C code?
-> 
->         apb@80000000 {
->                 apbh@80000000 {
->                                 auart4_pins_a: auart4@0 {
->                                         reg = <0>;
->                                         fsl,pinmux-ids = <
->                                                 0x3142 /*
-> MX28_PAD_SAIF0_MCLK__AUART4_CTS */
->                                                 0x3152 /*
-> MX28_PAD_SAIF0_LRCLK__AUART4_RTS */
->                                                 0x3162 /*
-> MX28_PAD_SAIF0_BITCLK__AUART4_RX */
->                                                 0x3172 /*
-> MX28_PAD_SAIF0_SDATA0__AUART4_TX */
->                                         >;
->                                         fsl,drive-strength = <0>;
->                                         fsl,voltage = <1>;
->                                         fsl,pull-up = <0>;
->                                 };
->                                 auart4_highz_pins: auart4-gpio@0 {
->                                         reg = <0>;
->                                         fsl,pinmux-ids = <
->                                                 0x3143 /*
-> MX28_PAD_SAIF0_MCLK__GPIO_3_20 */
->                                                 0x3153 /*
-> MX28_PAD_SAIF0_LRCLK__GPIO_3_21 */
->                                                 0x3163 /*
-> MX28_PAD_SAIF0_BITCLK__GPIO_3_22 */
->                                                 0x3173 /*
-> MX28_PAD_SAIF0_SDATA0__GPIO_3_23 */
->                                         >;
->                                         fsl,drive-strength = <0>;
->                                         fsl,voltage = <1>;
->                                         fsl,pull-up = <0>;
->                                 };
->                  };
->           };
+> +++ b/drivers/pinctrl/pinctrl-mvebu.c
 
-I don't know IMX HW, but where is highz controlled? On other SoCs I'm
-familiar with, when a pad is configured as a GPIO, the highz state is
-controlled by the GPIO module, so there's nothing pinmux can do about
-it. Even if the pinmux HW does control highz, gpio_direction_*() are
-still meant to communicate with the pinctrl driver to implement this, so
-overriding it through the pinctrl configuration seems like a bad thing.
+> +static int mvebu_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
 
-So I think your UART driver would have to request the GPIOs, and set
-them as inputs. So, I guess your UART node below would need a property
-listing the GPIOs to do this to.
 
->                 apbx@80040000 {
->                         auart4: serial@80072000 {
->                                 pinctrl-names = "default", "auart";
->                                 pinctrl-0 = <&auart4_highz_pins>;
->                                 pinctrl-1 = <&auart4_pins_a>;
->                                 status = "okay";
->                         };
->                };
+> +	of_property_for_each_string(np, "marvell,pins", prop, group) {
+> +		struct mvebu_pinctrl_group *grp =
+> +			mvebu_pinctrl_find_group_by_name(pctl, group);
+> +
+> +		if (!grp) {
+> +			dev_err(pctl->dev, "unknown pin %s", group);
+> +			continue;
+> +		}
+> +
+> +		if (!mvebu_pinctrl_find_setting_by_name(pctl, grp, function)) {
+> +			dev_err(pctl->dev, "unsupported function %s on pin %s",
+> +				function, group);
+> +			continue;
+> +		}
+
+The error-checking here isn't strictly necessary; the pinctrl core will
+error-check all the names if/when the map entries are used. So, you
+could probably get away with just assigning the pin/function names
+directly into (*map) and hence remove some code here. Still, it's not a
+big deal either way.
+
+> +static int __devinit mvebu_pinctrl_dt_parse_function(struct mvebu_pinctrl *pctl,
+
+> +static int __devinit mvebu_pinctrl_dt_parse(struct platform_device *pdev,
+> +					struct mvebu_pinctrl *pctl)
+
+I don't understand what those two functions do, or a good chunk of
+probe(). It seems like they're setting up the ability to get/set pin
+configrations in addition to pin muxing, although if that's so, it seems
+odd that none of the binding documents specify any way of controlling
+pin configuration from device tree. Are you expecting drivers to call
+APIs such as pin_config_set() directly, rather than controlling pin
+config through DT?
+
