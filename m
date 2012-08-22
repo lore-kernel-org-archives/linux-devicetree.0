@@ -1,70 +1,135 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Wed, 22 Aug 2012 20:29:12 +0530
-Message-ID: <CAJuYYwTT4HhG4AnAVwbFufTVT9SxzL+czGXFdM4rL2jJBsmGFw@mail.gmail.com>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
-	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
-	<87k3ws5uhs.fsf@octavius.laptop.org>
-	<201208211208.49987.arnd@arndb.de>
-	<87393g5mic.fsf@octavius.laptop.org>
-	<5033A34E.7040201@gmail.com>
-	<87pq6k46jg.fsf@octavius.laptop.org>
-	<5033B0F0.7050506@gmail.com>
-	<CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
-	<20120822055151.GT24242@S2101-09.ap.freescale.net>
-	<877gsr5iz1.fsf@octavius.laptop.org>
-	<CAJuYYwQz00ZzB5MxRG66XEPZApAtS6bwJAafmw3b=7DD7u+Crg@mail.gmail.com>
-	<87y5l7421h.fsf@octavius.laptop.org>
-	<CAJuYYwQLUs5qb8NqtPf3=ytNHJ_VdnN8Z4yWwyk2+OTftdWFXw@mail.gmail.com>
-	<87393f3rkj.fsf@octavius.laptop.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Device tree node names
+Date: Wed, 22 Aug 2012 09:19:12 -0600
+Message-ID: <5034F870.2010604@wwwdotorg.org>
+References: <502D4B28.4020108@wwwdotorg.org> <502D67DF.7010605@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <87393f3rkj.fsf@octavius.laptop.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, patches@linaro.org, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <502D67DF.7010605-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 August 2012 20:24, Chris Ball <cjb@laptop.org> wrote:
-> Hi Thomas,
->
-> On Wed, Aug 22 2012, Thomas Abraham wrote:
->>> none          -> currently "samsung,sdhci-cd-internal"
->>> broken-cd     -> currently "samsung,sdhci-cd-none"
->>> cd-gpios      -> currently "samsung,sdhci-cd-gpios"
->>> non-removable -> currently "samsung,sdhci-cd-permanent"
->>> cd-gpios + samsung,sdhci-cd-external -> currently "samsung,sdhci-cd-external"
->>>
->>> How does that sound?
+Grant, Rob, Segher, Arnd, Olof,
+
+Can you please state if you agree with Mitch's opinion below? Thanks.
+
+On 08/16/2012 03:36 PM, Mitch Bradley wrote:
+> On 8/16/2012 9:34 AM, Stephen Warren wrote:
+>> As I understand it, there is a rule when writing device tree files (and
+>> bindings) that nodes should be named after the type of object they
+>> represent, and not the particular instance of the object. Related, node
+>> names should not be interpreted as data.
 >>
->> Not quite there yet. It is not possible to leave out cd-gpios for
->> "samsung,sdhci-cd-internal" since the current Samsung pinmux
->> configuration piggybacks on gpio dt binding. Can we use the following
->> instead.
+>> This rules makes perfect sense when talking about nodes on a bus that
+>> represent devices; something like:
 >>
->> none               -> currently "samsung,sdhci-cd-none"
->> broken-cd        -> currently "samsung,sdhci-cd-none"
->> cd-gpios          -> currently "samsung,sdhci-cd-gpios"
->> non-removable -> currently "samsung,sdhci-cd-permanent"
->> cd-gpios + samsung,sdhci-cd-internal -> currently "samsung,sdhci-cd-internal"
->
-> I see.  Okay; unless anyone has better ideas, it sounds like you should
-> go ahead and do that -- with something like this in your binding docs:
+>>     i2c@7000c000 {
+>>         compatible = "nvidia,tegra20-i2c";
+>>         reg = <0x7000c000 0x100>;
+>>         ...
+>>     };
+>>
+>>     i2c@7000c400 {
+>>         compatible = "nvidia,tegra20-i2c";
+>>         reg = <0x7000c400 0x100>;
+>>         ...
+>>     };
+>>
+>> However, when nodes are being used to represent configuration
+>> information inside a device node, or even when representing
+>> pseudo-devices that don't directly exist on a specific bus, this rules
+>> becomes quite annoying.
+>>
+>> As an example, consider a device that contains 10 voltage regulators
+>> (named "ldon" in the chip documentation), and each needs some
+>> configuration provided through DT. A simple binding might result in:
+>>
+>>     i2c@7000c000 {
+>>         ldo0 {
+>>             ... (configuration data here)
+>>         };
+>>         ldo1 {
+>>             ...
+>>         };
+>>         ...
+>>     };
+>>
+>> Where regulator "name"'s configuration is encoded into node "name".
+>>
+>> Instead, if we follow this rule precisely, we end up with something more
+>> like:
+>>
+>>     i2c@7000c000 {
+>>         #address-cells = <1>;
+>>         #size-cells = <0>;
+>>
+>>         ldo@0 {
+>>             reg = <0>;
+>>             regulator-id = "ldo0";
+>>             ...
+>>         };
+>>         ldo@1 {
+>>             reg = <1>;
+>>             regulator-id = "ldo1";
+>>             ...
+>>         };
+>>         ...
+>>     };
+>>
+>> This is a fair bit more wordy, and the only advantage appears to be that
+>> it correctly conforms to some apparently arbitrary rule for node naming.
+>>
+>> Similar situations exist when describing the set of power sequences
+>> needed to enable/disable a device [1] or pinctrl configurations (see
+>> Linux kernel file arch/arm/boot/dts/tegra20-harmony.dts, node
+>> /pinmux/pinmux where I haven't actually followed this rule correctly) etc.
+>>
+>> So, my question is: Can/should we relax this rule? Can we allow drivers
+>> (bindings) to require specific node names for things, lookup up specific
+>> configuration data by node name and/or enumerate all nodes, and parse
+>> data out of the node names (e.g. the value n for nodes named LDOn in the
+>> above example)?
+> 
+> As far as I'm concerned, within the privacy of your own node, you can do
+> whatever you want.  Perhaps others will disagree...
 
-Ok.
+If everyone agrees with this, it'll certainly give a lot more
+flexibility for individual bindings to come up with simple
+representations for configuration data within their own node.
 
->
-> "This binding differs from the core MMC binding by requiring a cd-gpios
-> property to be present to use internal card-detection.  If no cd-gpios
-> are present (and "non-removable" is missing) the driver will poll for
-> card-detection as if a "broken-cd" property was provided."
->
-> I'll send out the new core bindings doc shortly.  Finishing off another
-> thread -- the "samsung-sdhci.txt" name is okay.
+Nodes that represent addressable buses would of course continue to use
+standardized conventions in my opinion.
 
-Thanks Chris for your time on this subject. I will prepare the
-sdhci-s3c dt support patch on top of your new core bindings patch.
-
-Thanks,
-Thomas.
+> The main "rule" for node names is that a user browsing the device tree
+> can easily determine what something is.  Thus "ethernet" instead of
+> "DEC,21140".
+> 
+> As an historical note, in early Open Boot, it was just the other way
+> around.  I originally thought that node names should be precise - and
+> the ill-considered "device_type" property gave the "generic"
+> identification.   But it soon became clear that "precise" names were
+> neither human-understandable nor actually precise. Pathnames looked like
+> gobbledygook with strings of part numbers that only an expert could
+> remember, and the evolution of part numbers, coupled with companies
+> going out of business and other companies making compatible parts, made
+> "precise" names change semi-randomly.  Thus was born the "generic names"
+> rethink, in which the name became human-meaningful (but generally
+> meaningless to software in any precise sense), device_type was
+> deprecated, and compatible appeared, as a list.
+> 
+>>
+>> [1]
+>> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-August/018433.html
