@@ -1,36 +1,51 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv3 3/9] serial: vt8500: Add devicetree support for
-Date: Wed, 22 Aug 2012 06:44:17 +0000
-Message-ID: <201208220644.18059.arnd@arndb.de>
-References: <1345582058-2291-1-git-send-email-linux@prisktech.co.nz> <20120821231255.71a7515a@pyramind.ukuu.org.uk> <1345617278.7491.4.camel@gitbox>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH 0/7] add imx-syscon driver for general registers access
+Date: Wed, 22 Aug 2012 15:18:41 +0800
+Message-ID: <1345619928-15446-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1345617278.7491.4.camel@gitbox>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vt8500-wm8505-linux-kernel-/JYPxA39Uh6Zox4op4iWzw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, paul.liu@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 22 August 2012, Tony Prisk wrote:
-> The original patch was very simple, but I revisited it to fix other
-> issues and forgot to add the relevant comments.
-> 
-> Port size is changed to fix a problem - WM8505 actually had 6 uart's
-> defined in platform data but the vt8500_ports variable was only 4.
-> 
-> I have added devicetree port id support as well.
+This patch series mainly adds an imx-syscon driver which is used to access
+general system controller registers like IOMUXC GPR and ANATOP,
+after that, we convert all the exist private access general registers code to use
+standard API from imx-syscon to access registers.
+Finally we remove the old mfd anatop driver which is only for anatop register
+access.
 
-If you do multiple things in one driver, you should normally send multiple
-patches as well, each with a description why that change is done.
-It may seem silly at first to send out a one-line patch next to a 100-line
-patch for the same file, but those cases are actually the ones where it's
-most important.
+The patch series is based on linus's tree since commit 9160338.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dong Aisheng (7):
+  mfd: add imx syscon driver based on regmap
+  ARM: imx6q: add iomuxc gpr support into imx-syscon
+  ARM: imx6q: add anatop support into imx-syscon
+  regulator: anatop-regulator: convert to use imx-syscon to access
+    anatop register
+  ARM: imx6q: convert to use imx-syscon to access anatop registers
+  ARM: dts: imx6q: add simple-bus compatible string for anatop
+  mfd: anatop-mfd: remove anatop driver
+
+ .../devicetree/bindings/mfd/imx-syscon.txt         |   11 +
+ arch/arm/boot/dts/imx6q.dtsi                       |   15 +-
+ arch/arm/mach-imx/Kconfig                          |    2 +-
+ arch/arm/mach-imx/mach-imx6q.c                     |   25 +--
+ drivers/mfd/Kconfig                                |   14 +-
+ drivers/mfd/Makefile                               |    2 +-
+ drivers/mfd/anatop-mfd.c                           |  124 --------
+ drivers/mfd/imx-syscon.c                           |  193 ++++++++++++
+ drivers/regulator/Kconfig                          |    2 +-
+ drivers/regulator/anatop-regulator.c               |   17 +-
+ include/linux/fsl/imx6q-iomuxc-gpr.h               |  319 ++++++++++++++++++++
+ include/linux/mfd/anatop.h                         |   40 ---
+ include/linux/mfd/imx-syscon.h                     |   22 ++
+ 13 files changed, 585 insertions(+), 201 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/imx-syscon.txt
+ delete mode 100644 drivers/mfd/anatop-mfd.c
+ create mode 100644 drivers/mfd/imx-syscon.c
+ create mode 100644 include/linux/fsl/imx6q-iomuxc-gpr.h
+ delete mode 100644 include/linux/mfd/anatop.h
+ create mode 100644 include/linux/mfd/imx-syscon.h
