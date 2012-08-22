@@ -1,61 +1,76 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 05/14] ARM: at91: add pinctrl support
-Date: Wed, 22 Aug 2012 09:34:48 -0600
-Message-ID: <5034FC18.2090400@wwwdotorg.org>
-References: <20120810124820.GA20557@game.jcrosoft.org>
- <1344603731-32667-1-git-send-email-plagnioj@jcrosoft.com>
- <1344603731-32667-5-git-send-email-plagnioj@jcrosoft.com>
- <CACRpkdZ2__V06Eo8JH451Sup5Nw2jJXVOH2FOfZBp5nNYpCtbg@mail.gmail.com>
+From: Subodh Nijsure <snijsure@grid-net.com>
+Subject: Can one  set GPIO direction in pinmux definition?
+Date: Wed, 22 Aug 2012 08:37:22 -0700
+Message-ID: <5034FCB2.5040709@grid-net.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdZ2__V06Eo8JH451Sup5Nw2jJXVOH2FOfZBp5nNYpCtbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2012 08:38 AM, Linus Walleij wrote:
-> (Hm maybe I should've read this patch first, well whatever.)
-> 
-> On Fri, Aug 10, 2012 at 3:02 PM, Jean-Christophe PLAGNIOL-VILLARD
-> <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> 
->> This is also include the gpio controller as the IP share both.
->> Each soc will have to describe the SoC limitation and pin configuration via
->> DT.
 
->> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+For a MX28 based hardware I am working with I need to use AUART4
 
->> +Required properties for iomux controller:
->> +- compatible: "atmel,at91rm9200-pinctrl"
->> +- atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
->> +  configured in this periph mode. All the periph and bank need to be describe.
-> 
-> Can you please be more elaborate on this mux-mask, like what each bit
-> means and why the bits are arranged like that and what it means on the
-> AT91 platform.... I was first reading the .dts and was like ?woot? so
-> I go to the bindings doc and I read this and I'm still like ?woot?..
+I need to configure this AUART4 as uart only when necessary and at all 
+other times pins associated with AUART4 need to be configured as inputs.
 
-Yes, I'm a little confused what this is, and wouldn't have a clue how to
-fill it in.
+I am using following DT definitions to setup AUART4 mux  but can't 
+figure out how to setup pin direction via DT, can it be done or I need 
+to do it in C code?
 
->> +static int at91_dt_node_to_map(struct pinctrl_dev *pctldev,
->> +                       struct device_node *np,
->> +                       struct pinctrl_map **map, unsigned *num_maps)
-> 
-> DT parse code, looks nice but would request Stephen to have a look
-> at it.
+         apb@80000000 {
+                 apbh@80000000 {
+                                 auart4_pins_a: auart4@0 {
+                                         reg = <0>;
+                                         fsl,pinmux-ids = <
+                                                 0x3142 /* 
+MX28_PAD_SAIF0_MCLK__AUART4_CTS */
+                                                 0x3152 /* 
+MX28_PAD_SAIF0_LRCLK__AUART4_RTS */
+                                                 0x3162 /* 
+MX28_PAD_SAIF0_BITCLK__AUART4_RX */
+                                                 0x3172 /* 
+MX28_PAD_SAIF0_SDATA0__AUART4_TX */
+                                         >;
+                                         fsl,drive-strength = <0>;
+                                         fsl,voltage = <1>;
+                                         fsl,pull-up = <0>;
+                                 };
+                                 auart4_highz_pins: auart4-gpio@0 {
+                                         reg = <0>;
+                                         fsl,pinmux-ids = <
+                                                 0x3143 /* 
+MX28_PAD_SAIF0_MCLK__GPIO_3_20 */
+                                                 0x3153 /* 
+MX28_PAD_SAIF0_LRCLK__GPIO_3_21 */
+                                                 0x3163 /* 
+MX28_PAD_SAIF0_BITCLK__GPIO_3_22 */
+                                                 0x3173 /* 
+MX28_PAD_SAIF0_SDATA0__GPIO_3_23 */
+                                         >;
+                                         fsl,drive-strength = <0>;
+                                         fsl,voltage = <1>;
+                                         fsl,pull-up = <0>;
+                                 };
+                  };
+           };
 
-I think it looks reasonable; I don't see any obvious issues at a quick
-glance.
+                 apbx@80040000 {
+                         auart4: serial@80072000 {
+                                 pinctrl-names = "default", "auart";
+                                 pinctrl-0 = <&auart4_highz_pins>;
+                                 pinctrl-1 = <&auart4_pins_a>;
+                                 status = "okay";
+                         };
+                };
