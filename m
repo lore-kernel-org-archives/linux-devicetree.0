@@ -1,13 +1,14 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3] dtc: Add ability to delete nodes and properties
-Date: Tue, 21 Aug 2012 22:12:58 -0600
-Message-ID: <50345C4A.50704@nvidia.com>
-References: <1344401415-3214-1-git-send-email-swarren@wwwdotorg.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] devicetree: serial: Add documentation for imx serial
+Date: Wed, 22 Aug 2012 13:06:50 +0800
+Message-ID: <20120822050648.GR24242@S2101-09.ap.freescale.net>
+References: <1345568699-31842-1-git-send-email-fabio.estevam@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1344401415-3214-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1345568699-31842-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,33 +19,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/07/2012 10:50 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Tue, Aug 21, 2012 at 02:04:59PM -0300, Fabio Estevam wrote:
+> Add documentation for imx serial.
 > 
-> dtc currently allows the contents of properties to be changed, and the
-> contents of nodes to be added to. There are situations where removing
-> properties or nodes may be useful. This change implements the following
-> syntax to do that:
-> 
->     / {
->         /delete-property/ propname;
->         /delete-node/ nodename;
->     };
-> 
-> or:
-> 
->     /delete-node/ &noderef;
-
-David, does this look OK? I believe I've addresses the issues you
-requested in order to give your ack. Thanks.
-
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
-> v3:
-> * Switch syntax from "propname /delprop/" to "/delete-property/ propname".
->   Similar for /delete-node/.
-> * Modify for_each_label() to skip deleted labels, and introduce
->   for_each_label_withdel() for the case where we do want to include deleted
->   labels in the iteration. Similar for properties and children.
+> Changes since v1:
+> - Add 'alias' entry
+>  .../devicetree/bindings/serial/fsl-imx-uart.txt    |   35 ++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+
+Isn't there already one, Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt?
+
+It looks we should merge the following two folders.
+
+- Documentation/devicetree/bindings/serial/
+- Documentation/devicetree/bindings/tty/serial/
+
+-- 
+Regards,
+Shawn
