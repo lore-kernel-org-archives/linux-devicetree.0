@@ -1,40 +1,60 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCHv3 3/9] serial: vt8500: Add devicetree support for
- vt8500-serial
-Date: Tue, 21 Aug 2012 23:12:55 +0100
-Message-ID: <20120821231255.71a7515a@pyramind.ukuu.org.uk>
-References: <1345582058-2291-1-git-send-email-linux@prisktech.co.nz>
- <1345582058-2291-4-git-send-email-linux@prisktech.co.nz>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: imx6q: replace clk_register_clkdev with clock
+ DT lookup
+Date: Wed, 22 Aug 2012 10:47:09 +0800
+Message-ID: <20120822024707.GP24242@S2101-09.ap.freescale.net>
+References: <1345104526-14797-1-git-send-email-shawn.guo@linaro.org>
+ <1345104526-14797-3-git-send-email-shawn.guo@linaro.org>
+ <503232E0.3000007@gmail.com>
+ <CAKGA1bn2uCWE8YkGR4EzTxZ_bXJ_ov2diq63uxQ=dT7b6Fu9GQ@mail.gmail.com>
+ <20120820151609.GN24242@S2101-09.ap.freescale.net>
+ <CAKGA1bnfhMC8QG9OqBbpy5iq6ZAfEgrYMg_LVd50U7yikLhDAg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1345582058-2291-4-git-send-email-linux@prisktech.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Prisk <linux@prisktech.co.nz>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-fbdev@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@stericsson.com>, Arnd Bergmann <arnd@arndb.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, vt8500-wm8505-linux-kernel@googlegroup.com, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, linux-serial@vger.kernel.org, rtc-linux@googlegroups.com, Stephen Warren <swarren@nvidia.com>, Mike Turquette <mturquette@ti.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKGA1bnfhMC8QG9OqBbpy5iq6ZAfEgrYMg_LVd50U7yikLhDAg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Aug 2012 08:47:32 +1200
-Tony Prisk <linux@prisktech.co.nz> wrote:
+On Mon, Aug 20, 2012 at 12:22:56PM -0500, Matt Sealey wrote:
+> It's not bloat just because it is by its very definition "a big list", is it?
+> 
+Grep for_each_node_by_*() and for_each_*_node() (include/linux/of.h)
+in the tree to see how often these global device tree searching is
+used, you may know how important not having so many nodes is.
 
-> Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
-> ---
->  drivers/tty/serial/vt8500_serial.c |   37 ++++++++++++++++++++++++++++++++----
->  1 file changed, 33 insertions(+), 4 deletions(-)
+> How do you explain duplicating the clock names in the array AND in the
+> device node as NOT being bloated?
+> 
+> You're going to have to define these clocks as a tree with parents and
+> leaf nodes anyway in the clock subsystem. Why not define these in the
+> device tree in total and reference them by handle when you build the
+> entire clock tree from the ground up? Or will it just be all the
+> clocks defined in Linux, but the lookups (which is what I see here)
+> moved into the DT? Why not form the lookups as part of the definition
+> of the clock tree?
+> 
+This is something I had tried long time before, but it did not get
+accepted because:
 
-Can we have a comment attached to a change this size. In particular one
-describing why it gone from 4 to 6 ports, and why the port id twiddling.
+* It's unnecessary to encode the entire clock tree which is SoC
+  specific in device tree.  Clock driver is a good place for that.
 
-Is there a reason you can't use the device tree port id ?
+* Again, doing so will bloat device tree with hundreds of nodes.
 
-What are the regression risks for existing users expecting the pdev->id
-binding ?
+-- 
+Regards,
+Shawn
