@@ -1,85 +1,88 @@
-From: David Daney <ddaney.cavm@gmail.com>
+From: Timur Tabi <timur@freescale.com>
 Subject: Re: [PATCH] netdev/phy: add MDIO bus multiplexer driven by a memory-mapped
  FPGA
-Date: Wed, 22 Aug 2012 15:24:05 -0700
-Message-ID: <50355C05.6000407@gmail.com>
-References: <1345671954-6398-1-git-send-email-timur@freescale.com>
+Date: Wed, 22 Aug 2012 17:38:37 -0500
+Message-ID: <50355F6D.4070002@freescale.com>
+References: <1345671954-6398-1-git-send-email-timur@freescale.com> <50355C05.6000407@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1345671954-6398-1-git-send-email-timur@freescale.com>
+In-Reply-To: <50355C05.6000407@gmail.com>
 Sender: netdev-owner@vger.kernel.org
-To: Timur Tabi <timur@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
-Cc: Andy Fleming <afleming@freescale.com>, David Miller <davem@davemloft.net>, netdev@vger.kernel.org, david.daney@cavium.com
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Andy Fleming <afleming@freescale.com>, David Miller <davem@davemloft.net>, netdev@vger.kernel.org, david.daney@cavium.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2012 02:45 PM, Timur Tabi wrote:
-> An FPGA controls which sub-bus is connected to the master MDIO bus.  The
-> FPGA must be memory-mapped and contain only 8-bit registers (which keeps
-> things simple).
->
-> Tested on a Freescale P5020DS board which uses the "PIXIS" FPGA attached
-> to the localbus.
->
-> Signed-off-by: Timur Tabi <timur@freescale.com>
-> ---
->   .../devicetree/bindings/net/mdio-mux-fpga.txt      |   74 ++++++++
->   drivers/net/phy/Kconfig                            |   13 ++
->   drivers/net/phy/Makefile                           |    1 +
->   drivers/net/phy/mdio-mux-fpga.c                    |  186 ++++++++++++++++++++
+David Daney wrote:
 
-I am fine with the general concept of the patch, so I am going to start 
-a Bike Shedding session with it over the names of some of the things here.
+> I wonder if *fpga is really a good name for this.  It is a general 
+> purpose multiplexer with a memory mapped control register.  I would call 
+> it something like mdio-mux-mmioreg.
 
-I wonder if *fpga is really a good name for this.  It is a general 
-purpose multiplexer with a memory mapped control register.  I would call 
-it something like mdio-mux-mmioreg.
+At one point, I thought of using mdio-mux-bitbang, but -mmioreg is better.
+ Thanks.
 
+>> +- mdio-mux-device : phandle, points to the FPGA (or similar) node.  This
+>> +	must be a memory-mapped device with 8-bit registers.
+> 
+> You shouldn't need this.  Just make the multiplexer a child of FPGA node 
+> to indicate where it lives.
 
->   4 files changed, 274 insertions(+), 0 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/net/mdio-mux-fpga.txt
->   create mode 100644 drivers/net/phy/mdio-mux-fpga.c
->
-> diff --git a/Documentation/devicetree/bindings/net/mdio-mux-fpga.txt b/Documentation/devicetree/bindings/net/mdio-mux-fpga.txt
-> new file mode 100644
-> index 0000000..ef567c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/mdio-mux-fpga.txt
-> @@ -0,0 +1,74 @@
-> +Properties for an MDIO bus multiplexer/switch controlled by an FPGA register.
-> +
-> +This is a special case of a MDIO bus multiplexer.  An FPGA register is used
-> +to control which child bus is connected.
-> +
-> +Required properties in addition to the generic multiplexer properties:
-> +
-> +- compatible : string, must contain "mdio-mux-fpga"
-> +
-> +- mdio-mux-device : phandle, points to the FPGA (or similar) node.  This
-> +	must be a memory-mapped device with 8-bit registers.
+The problem is that we don't normally consider the FPGA node to be a bus,
+so its child nodes won't get probed.  That's why I have this:
 
-You shouldn't need this.  Just make the multiplexer a child of FPGA node 
-to indicate where it lives.
+compatible = "mdio-mux-fpga", "mdio-mux";
+                               ^^^^^^^^
 
+This allows me to have multiple mdio-mux parent nodes (which I do, since I
+have multiple mdio bus muxes), and they all get registered and probed
+properly because I also do this:
 
-> +
-> +- mdio-mux-register : integer, contains the offset of the register that
-> +	controls the bus multiplexer.
+static const struct of_device_id of_device_ids[] __devinitconst = {
+	{
+		.compatible	= "simple-bus"
+	},
+	{
+		.compatible	= "fsl,srio",
+	},
+...
+	{
+		.compatible	= "mdio-mux",
+	},
+	{}
+};
 
-This should just be the normal "reg" properly
+The .compatible = "mdio-mux" is what causes all of the mdio-mux nodes to
+be registered.  Therefore, it's simpler if all the mdio-mux nodes are root
+nodes.
 
+>> +
+>> +- mdio-mux-register : integer, contains the offset of the register that
+>> +	controls the bus multiplexer.
+> 
+> This should just be the normal "reg" properly
 
-> +
-> +- mdio-mux-mask : integer, contains an 8-bit mask that specifies which
-> +	bits in the register control the actual bus multiplexer.  The
-> +	'reg' property of each child mdio-mux node must be constrained by
-> +	this mask.
-> +
+Ok.
 
-"reg-mask" ??
+>> +- mdio-mux-mask : integer, contains an 8-bit mask that specifies which
+>> +	bits in the register control the actual bus multiplexer.  The
+>> +	'reg' property of each child mdio-mux node must be constrained by
+>> +	this mask.
+>> +
+> 
+> "reg-mask" ??
 
-Do you need a shift too?
+Ok.
 
+> 
+> Do you need a shift too?
 
-David Daney
+The 'reg' property of the mdio bus child nodes should take the shift into
+account.  That's why, in the example, I have mask=0x6 and reg=0 or reg=2.
+ There's even code in the driver to make sure that the 'reg' values are
+constrained to the mask.
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
