@@ -1,63 +1,75 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Wed, 22 Aug 2012 07:08:26 -0400
-Message-ID: <87y5l7421h.fsf@octavius.laptop.org>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
-	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
-	<87k3ws5uhs.fsf@octavius.laptop.org>
-	<201208211208.49987.arnd@arndb.de>
-	<87393g5mic.fsf@octavius.laptop.org> <5033A34E.7040201@gmail.com>
-	<87pq6k46jg.fsf@octavius.laptop.org> <5033B0F0.7050506@gmail.com>
-	<CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
-	<20120822055151.GT24242@S2101-09.ap.freescale.net>
-	<877gsr5iz1.fsf@octavius.laptop.org>
-	<CAJuYYwQz00ZzB5MxRG66XEPZApAtS6bwJAafmw3b=7DD7u+Crg@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 1/2] spi/pl022: Add chip select handling via GPIO
+Date: Wed, 22 Aug 2012 13:09:27 +0200
+Message-ID: <CACRpkdZcO0er7+7FjiyV9xtLgcybguoy3SAM_gh8c8u6UotDfQ@mail.gmail.com>
+References: <1345564813-11895-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwQz00ZzB5MxRG66XEPZApAtS6bwJAafmw3b=7DD7u+Crg@mail.gmail.com>
-	(Thomas Abraham's message of "Wed, 22 Aug 2012 16:21:33 +0530")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, patches@linaro.org, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1345564813-11895-1-git-send-email-stigge@antcom.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: aletes.xgr@gmail.com, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, gabriel.fernandez@stericsson.com, lee.jones@linaro.org, viresh.kumar@linaro.org, sachin.verma@st.co
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Tue, Aug 21, 2012 at 6:00 PM, Roland Stigge <stigge@antcom.de> wrote:
 
-On Wed, Aug 22 2012, Thomas Abraham wrote:
->> This matches Mitch's last suggestion exactly -- I think we're all agreed
->> on these properties now.  The only remaining question is how to handle
->> the pinctrl for CD in Thomas's case.
+> This patch adds the ability for the driver to control the chip select directly.
+> This enables independence from cs_control callbacks.  Configurable via
+> platform_data, to be extended as DT in the following patch.
 >
-> Hi Chris,
+> Based on the initial patch by Alexandre Pereira da Silva <aletes.xgr@gmail.com>
 >
-> For sdhci-s3c driver, the 'broken-cd' and 'cd-gpios' bindings are
-> sufficient. But, are drivers free to use implementation specific
-> behavior when using these bindings. Or do we strictly adhere to the
-> table which Shawn has listed. For sdhci-s3c driver, I would like to
-> deviate from the "implication" column listed above.
+> Signed-off-by: Roland Stigge <stigge@antcom.de>
 
-I'd rather you use the implications described above for the names
-described above; there's not much point in defining named behaviors
-across the subsystem if they're actually different in each driver.
+(...)
+>  /*
+>   * This macro is used to define some register default values.
+> @@ -356,6 +357,8 @@ struct vendor_data {
+>   * @sgt_rx: scattertable for the RX transfer
+>   * @sgt_tx: scattertable for the TX transfer
+>   * @dummypage: a dummy page used for driving data on the bus with DMA
+> + * @cur_cs: current chip select (gpio)
+> + * @chipselect: list of chipselects (gpios)
+>   */
+>  struct pl022 {
+>         struct amba_device              *adev;
+> @@ -389,6 +392,8 @@ struct pl022 {
+>         char                            *dummypage;
+>         bool                            dma_running;
+>  #endif
+> +       int cur_cs;
+> +       int *chipselect;
 
-But I think you can still use driver-internal properties that change the
-interpretation of those names in a documented way.  If the meaning of
-cd-gpios is modified when coupled with your "samsung,sdhci-cd-external",
-that's okay with me.  That should cover all the cases you need until you
-migrate to using pinctrl, right?  So, you could immediately support:
+Since this is an array, it should be named "chipselects" (plural).
 
-none          -> currently "samsung,sdhci-cd-internal"
-broken-cd     -> currently "samsung,sdhci-cd-none"
-cd-gpios      -> currently "samsung,sdhci-cd-gpios"
-non-removable -> currently "samsung,sdhci-cd-permanent"
-cd-gpios + samsung,sdhci-cd-external -> currently "samsung,sdhci-cd-external"
+(...)
+> @@ -1840,8 +1852,9 @@ static int pl022_setup(struct spi_device
+>         chip->xfer_type = chip_info->com_mode;
+>         if (!chip_info->cs_control) {
+>                 chip->cs_control = null_cs_control;
+> -               dev_warn(&spi->dev,
+> -                        "chip select function is NULL for this chip\n");
+> +               if (!gpio_is_valid(pl022->chipselect[spi->chip_select]))
+> +                       dev_warn(&spi->dev,
+> +                                "chip select function is NULL for this chip\n");
 
-How does that sound?
+This dev_warn() is wrong. Alter to a proper warning message.
+
+> @@ -2016,6 +2030,7 @@ pl022_probe(struct amba_device *adev, co
+>         pl022->master_info = platform_info;
+>         pl022->adev = adev;
+>         pl022->vendor = id->data;
+> +       pl022->chipselect = (int *)&master[1];
+
+That last thing looks pretty awkward, atleast a comment
+explaining what is going on is necessary. I would have done
+it like this:
+
+/* Point chipselects to allocated memory beyond the main struct */
+pl022->chipselects = (int *) pl022 + sizeof(struct pl022);
+
+Maybe it's simpler to just devm_kzalloc() this array.
 
 Thanks,
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+Linus Walleij
