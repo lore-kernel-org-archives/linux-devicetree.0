@@ -1,67 +1,57 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] ASoC: omap-mcbsp: Device tree binding documentation
- update
-Date: Wed, 22 Aug 2012 20:18:35 +0100
-Message-ID: <20120822191835.GQ7995@opensource.wolfsonmicro.com>
-References: <1345559636-23370-1-git-send-email-peter.ujfalusi@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] spi: Master driver for NXP SC18IS602/603
+Date: Wed, 22 Aug 2012 12:19:59 -0700
+Message-ID: <20120822191959.GA12403@roeck-us.net>
+References: <1345305987-1954-1-git-send-email-linux@roeck-us.net>
+ <20120822183230.GC7995@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="10AxbcBAbBOxkJp7"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1345559636-23370-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
+In-Reply-To: <20120822183230.GC7995@opensource.wolfsonmicro.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: spi-devel-general@lists.sourceforge.net, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 22, 2012 at 07:32:30PM +0100, Mark Brown wrote:
+> On Sat, Aug 18, 2012 at 09:06:27AM -0700, Guenter Roeck wrote:
+> > This driver adds support for NXP SC18IS602/603 I2C to SPI bus bridge.
+> > 
+> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> Applied, thanks.  One small thing:
+> 
+> > +static int sc18is602_probe(struct i2c_client *client,
+> > +			   const struct i2c_device_id *id)
+> > +{
+> > +	struct device *dev = &client->dev;
+> > +	struct device_node *np = dev->of_node;
+> > +	struct sc18is602_platform_data *pdata = dev_get_platdata(dev);
+> > +	struct sc18is602 *hw;
+> > +	struct spi_master *master;
+> > +	int error;
+> > +
+> > +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C |
+> > +				     I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
+> > +		return -ENODEV;
+> 
+> This feels like the wrong thing to do here: given that the user needs to
+> explicitly ask for the device to be instantiated we really ought to be
+> one the right bus so this should be more of an error.  Not sure what I
+> can constructively sugget except for an error message and perhaps
+> returning -EINVAL though.
 
---10AxbcBAbBOxkJp7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Mark,
 
-On Tue, Aug 21, 2012 at 05:33:56PM +0300, Peter Ujfalusi wrote:
-> To reflect the final devicetree node structure of McBSPs.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Makes sense. Changing the return value to -EINVAL results in the following
+warning message from the driver subsystem.
 
-Applied, thanks.
+sc18is602: probe of 7-0010 failed with error -22
 
-> the initial OMAP McBSP DT structure was not able to describe the IP (and =
-it's
-> versions) correctly.
-> The main issue was the sidetone block of McBSP2/3 on OMAP3.
-> With this change in the DT description the OS can get the needed informat=
-ion
-> about the IP.
->=20
-> The sidetone is still not supported when the Linux kernel is booted with =
-DT
-> since we still depend on hwmod to fill the resources.
+I think this should be good enough, as there are other possible reasons for the
+call to fail which result in similar messages. Do you want to make that change,
+or should I change it and resubmit ?
 
-I pasted this into the changelog to explain what's going on.
-
---10AxbcBAbBOxkJp7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQNTCFAAoJEFJkBDiqVpZ4CDYP/2+R2ulLM85xxrxm45a0pe5y
-4otTF69/+fmHfusfgdITkPNzuN2Y7kv4nbDrg9Lhxh6EUSdhMKRARfD50g1mVPCf
-GyL9l6PRnAGtffS72Je3dmk0xtn+BrKslaNZQ0XcOeKcgUs3c4fn9ZV5cQLFfsIn
-+Jh/gtZWqo/k7iD53Y6wViVAtdyzkbknP56V74WGx48b0n8nF0cSUE8asUNAsyUQ
-KZ1ygaPKp4cp0dqFuHz0g7atZpqLDw+dM5TSAsmo8uFWfEFqOU8EbQPyOpwk9I7M
-40+VA/DTn5emzVobBPlSpnTB7l5/0AxFAKtgHyYUS4xfTamyxPH91r8MDnw7l7z/
-0UJQqRaIR2xiTCPdQupevuvXVfvang9z+4wh7ym6K7lUSla3LJwVvAX1AiZGPQ31
-BMCYtIjEc4tVAJFls3drLqdmuxqOt4dgzVrzgXSR2hmG7CWqokR2b1kRWc/yYJwj
-2wNJtiC+favMZ59YwK3W7F9+wfkWMJTHga5bn123/m9FMuRKq5gEZtA+S1TruYX0
-1CqPriGB76w2Iq6awLPQY0SdPpzDXyYGCG3p6wkoCO0+FMnulz/8b5IoS6i7hJyA
-Q85UIk/2x2vDpKXh5n+b2DwThiOk0U2gtktUdV0zAV3cMk5OPB7CA3lzdWdxRKLZ
-XVczokaqyHQMmOc1t6el
-=Ig/+
------END PGP SIGNATURE-----
-
---10AxbcBAbBOxkJp7--
+Thanks,
+Guenter
