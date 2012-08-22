@@ -1,78 +1,82 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Wed, 22 Aug 2012 17:34:53 +0530
-Message-ID: <CAJuYYwQLUs5qb8NqtPf3=ytNHJ_VdnN8Z4yWwyk2+OTftdWFXw@mail.gmail.com>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
-	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
-	<87k3ws5uhs.fsf@octavius.laptop.org>
-	<201208211208.49987.arnd@arndb.de>
-	<87393g5mic.fsf@octavius.laptop.org>
-	<5033A34E.7040201@gmail.com>
-	<87pq6k46jg.fsf@octavius.laptop.org>
-	<5033B0F0.7050506@gmail.com>
-	<CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
-	<20120822055151.GT24242@S2101-09.ap.freescale.net>
-	<877gsr5iz1.fsf@octavius.laptop.org>
-	<CAJuYYwQz00ZzB5MxRG66XEPZApAtS6bwJAafmw3b=7DD7u+Crg@mail.gmail.com>
-	<87y5l7421h.fsf@octavius.laptop.org>
+From: Bill Huang <bilhuang@nvidia.com>
+Subject: RE: [PATCH v2 1/2] mfd: dt: tps6586x: Add power off control
+Date: Wed, 22 Aug 2012 20:07:15 +0800
+Message-ID: <A7051F87A141B744BCAF487D48E5B3BDF5BA982847@HKMAIL02.nvidia.com>
+References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com>
+ <1345424876-4365-2-git-send-email-bilhuang@nvidia.com>
+ <20120820113423.GA5996@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <87y5l7421h.fsf@octavius.laptop.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, patches@linaro.org, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120820113423.GA5996@avionic-0098.mockup.avionic-design.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Thierry Reding' <thierry.reding@avionic-design.de>
+Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Xin Xie <xxie@nvidia.com>, "lrg@slimlogic.co.uk" <lrg@slimlogic.co.uk>, "jhovold@gmail.com" <jhovold@gmail.com>, "kyle.manna@fuel7.com" <kyle.manna@fuel7.com>, Rhyland Klein <rklein@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 August 2012 16:38, Chris Ball <cjb@laptop.org> wrote:
-> Hi Thomas,
->
-> On Wed, Aug 22 2012, Thomas Abraham wrote:
->>> This matches Mitch's last suggestion exactly -- I think we're all agreed
->>> on these properties now.  The only remaining question is how to handle
->>> the pinctrl for CD in Thomas's case.
->>
->> Hi Chris,
->>
->> For sdhci-s3c driver, the 'broken-cd' and 'cd-gpios' bindings are
->> sufficient. But, are drivers free to use implementation specific
->> behavior when using these bindings. Or do we strictly adhere to the
->> table which Shawn has listed. For sdhci-s3c driver, I would like to
->> deviate from the "implication" column listed above.
->
-> I'd rather you use the implications described above for the names
-> described above; there's not much point in defining named behaviors
-> across the subsystem if they're actually different in each driver.
+nvpublic
+> On Sun, Aug 19, 2012 at 06:07:55PM -0700, Bill Huang wrote:
+> > Add DT property "ti,system-power-controller" telling whether or not
+> > this pmic is in charge of controlling the system power, so the power
+> > off routine can be hooked up to system call "pm_power_off".
+> >
+> > Based on the work by:
+> > Dan Willemsen <dwillemsen@nvidia.com>
+> >
+> > Signed-off-by: Bill Huang <bilhuang@nvidia.com>
+> > Tested-by: Stephen Warren <swarren@wwwdotorg.org>
+> > ---
+> >  .../devicetree/bindings/regulator/tps6586x.txt     |    6 ++++++
+> >  drivers/mfd/tps6586x.c                             |   19 +++++++++++++++++++
+> >  include/linux/mfd/tps6586x.h                       |    1 +
+> >  3 files changed, 26 insertions(+), 0 deletions(-)
+> 
+> Hi,
+> 
+> I've seen the following while trying this patch applied on top of next-20120817:
+> 
+> [   40.581151] Power down.
+> [   41.583160] ------------[ cut here ]------------
+> [   41.587784] WARNING: at /home/thierry.reding/src/kernel/linux-ipmp.git/drivers/i2c/busses/i2c-
+> tegra.c:525 tegra_i2c_xfer+0x21c/0x29c()
+> [   41.599850] Modules linked in:
+> [   41.602927] [<c0014074>] (unwind_backtrace+0x0/0xf8) from [<c00265a8>]
+> (warn_slowpath_common+0x4c/0x64)
+> [   41.612304] [<c00265a8>] (warn_slowpath_common+0x4c/0x64) from [<c00265dc>]
+> (warn_slowpath_null+0x1c/0x24)
+> [   41.621947] [<c00265dc>] (warn_slowpath_null+0x1c/0x24) from [<c02a2944>]
+> (tegra_i2c_xfer+0x21c/0x29c)
+> [   41.631244] [<c02a2944>] (tegra_i2c_xfer+0x21c/0x29c) from [<c029f5e8>] (__i2c_transfer+0x44/0x80)
+> [   41.640192] [<c029f5e8>] (__i2c_transfer+0x44/0x80) from [<c02a0698>] (i2c_transfer+0x7c/0xb8)
+> [   41.648796] [<c02a0698>] (i2c_transfer+0x7c/0xb8) from [<c0232a60>] (regmap_i2c_read+0x48/0x64)
+> [   41.657485] [<c0232a60>] (regmap_i2c_read+0x48/0x64) from [<c0230304>] (_regmap_raw_read+0x90/0x98)
+> [   41.666518] [<c0230304>] (_regmap_raw_read+0x90/0x98) from [<c023035c>] (_regmap_read+0x50/0xa8)
+> [   41.675290] [<c023035c>] (_regmap_read+0x50/0xa8) from [<c02300c4>] (_regmap_update_bits+0x24/0x64)
+> [   41.684322] [<c02300c4>] (_regmap_update_bits+0x24/0x64) from [<c0230b88>]
+> (regmap_update_bits+0x3c/0x58)
+> [   41.693885] [<c0230b88>] (regmap_update_bits+0x3c/0x58) from [<c0237c30>]
+> (tps6586x_power_off+0x18/0x38)
+> [   41.703362] [<c0237c30>] (tps6586x_power_off+0x18/0x38) from [<c000edf4>]
+> (machine_power_off+0x1c/0x24)
+> [   41.712749] [<c000edf4>] (machine_power_off+0x1c/0x24) from [<c0037ca4>] (sys_reboot+0x138/0x1b0)
+> [   41.721612] [<c0037ca4>] (sys_reboot+0x138/0x1b0) from [<c000e000>] (ret_fast_syscall+0x0/0x30)
+> [   41.730293] ---[ end trace 9af366974fefa459 ]---
+> [   41.734906] tegra-i2c tegra-i2c.3: i2c transfer timed out
+> [   41.740689] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+> [   41.740689]
+> [   41.749823] [<c0014074>] (unwind_backtrace+0x0/0xf8) from [<c03e7090>] (panic+0x8c/0x1d8)
+> [   41.757993] [<c03e7090>] (panic+0x8c/0x1d8) from [<c002b7b8>] (do_exit+0x694/0x750)
+> [   41.765636] [<c002b7b8>] (do_exit+0x694/0x750) from [<c002bad0>] (do_group_exit+0x3c/0xb0)
+> [   41.773884] [<c002bad0>] (do_group_exit+0x3c/0xb0) from [<c002bb54>] (__wake_up_parent+0x0/0x18)
 
-Ok.
+Thanks Thierry, I can repro this on Tegra20 inconsistently and found, if current cpu is not cpu0 when doing "machine_shutdown" (it will call "smp_send_stop"), i2c controller will failed to do any transaction (looks like gic interrupt will be disabled), I'll debug further to find out the root cause.
 
->
-> But I think you can still use driver-internal properties that change the
-> interpretation of those names in a documented way.  If the meaning of
-> cd-gpios is modified when coupled with your "samsung,sdhci-cd-external",
-> that's okay with me.  That should cover all the cases you need until you
-> migrate to using pinctrl, right?  So, you could immediately support:
->
-> none          -> currently "samsung,sdhci-cd-internal"
-> broken-cd     -> currently "samsung,sdhci-cd-none"
-> cd-gpios      -> currently "samsung,sdhci-cd-gpios"
-> non-removable -> currently "samsung,sdhci-cd-permanent"
-> cd-gpios + samsung,sdhci-cd-external -> currently "samsung,sdhci-cd-external"
->
-> How does that sound?
+By the way, Tegra30 is good since it will always be cpu0 when doing "machine_shutdown", I still don't know why it makes the difference against Tegra20 since I'm not familiar with those cpu stuffs and what make it behave differently, I'll study a bit, thanks.
 
-Not quite there yet. It is not possible to leave out cd-gpios for
-"samsung,sdhci-cd-internal" since the current Samsung pinmux
-configuration piggybacks on gpio dt binding. Can we use the following
-instead.
-
-none               -> currently "samsung,sdhci-cd-none"
-broken-cd        -> currently "samsung,sdhci-cd-none"
-cd-gpios          -> currently "samsung,sdhci-cd-gpios"
-non-removable -> currently "samsung,sdhci-cd-permanent"
-cd-gpios + samsung,sdhci-cd-internal -> currently "samsung,sdhci-cd-internal"
-
-Thanks Chris.
-
-Regards,
-Thomas.
+> 
+> Thierry
+> 
+> * Unknown Key
+> * 0x7F3EB3A1
