@@ -1,61 +1,78 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH 6/7] ARM: dts: imx6q: add simple-bus compatible string
- for anatop
-Date: Wed, 22 Aug 2012 19:02:10 +0800
-Message-ID: <20120822110209.GC10057@shlinux2.ap.freescale.net>
-References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
- <1345619928-15446-7-git-send-email-b29396@freescale.com>
- <20120822085236.GK4011@b20223-02.ap.freescale.net>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
+Date: Wed, 22 Aug 2012 17:34:53 +0530
+Message-ID: <CAJuYYwQLUs5qb8NqtPf3=ytNHJ_VdnN8Z4yWwyk2+OTftdWFXw@mail.gmail.com>
+References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
+	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
+	<87k3ws5uhs.fsf@octavius.laptop.org>
+	<201208211208.49987.arnd@arndb.de>
+	<87393g5mic.fsf@octavius.laptop.org>
+	<5033A34E.7040201@gmail.com>
+	<87pq6k46jg.fsf@octavius.laptop.org>
+	<5033B0F0.7050506@gmail.com>
+	<CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
+	<20120822055151.GT24242@S2101-09.ap.freescale.net>
+	<877gsr5iz1.fsf@octavius.laptop.org>
+	<CAJuYYwQz00ZzB5MxRG66XEPZApAtS6bwJAafmw3b=7DD7u+Crg@mail.gmail.com>
+	<87y5l7421h.fsf@octavius.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120822085236.GK4011@b20223-02.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhao Richard-B20223 <B20223@freescale.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lrg@ti.com" <lrg@ti.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "paul.liu@linaro.org" <paul.liu@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <87y5l7421h.fsf@octavius.laptop.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, patches@linaro.org, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 22, 2012 at 04:52:36PM +0800, Zhao Richard-B20223 wrote:
-> On Wed, Aug 22, 2012 at 03:18:47PM +0800, Dong Aisheng wrote:
-> > From: Dong Aisheng <dong.aisheng@linaro.org>
-> > 
-> > Originally the anatop regulator devices are populated by mfd anatop driver.
-> > Since mfd anatop driver will be deleted later, we change to populate the
-> > regulator devices by devicetree automatically.
-> > This will cause some warning messages as follows during boot due to device
-> > recreation: "vdd1p1: Failed to create debugfs directory"
-> > But it does not break any function.
-> > Later, we will remove mfd anatop driver which can get rid of this
-> > error message.
-> > 
-> > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/imx6q.dtsi |    2 +-
-> >  1 files changed, 1 insertions(+), 1 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> > index 7076be0..426f735 100644
-> > --- a/arch/arm/boot/dts/imx6q.dtsi
-> > +++ b/arch/arm/boot/dts/imx6q.dtsi
-> > @@ -379,7 +379,7 @@
-> >  			};
-> >  
-> >  			anatop: anatop@020c8000 {
-> > -				compatible = "fsl,imx6q-anatop", "fsl,imx-syscon";
-> > +				compatible = "fsl,imx6q-anatop", "fsl,imx-syscon", "simple-bus";
-> To prevent bisect break, it should merge with patch #4.
-Yes, i will try it and merge them if needed.
+On 22 August 2012 16:38, Chris Ball <cjb@laptop.org> wrote:
+> Hi Thomas,
+>
+> On Wed, Aug 22 2012, Thomas Abraham wrote:
+>>> This matches Mitch's last suggestion exactly -- I think we're all agreed
+>>> on these properties now.  The only remaining question is how to handle
+>>> the pinctrl for CD in Thomas's case.
+>>
+>> Hi Chris,
+>>
+>> For sdhci-s3c driver, the 'broken-cd' and 'cd-gpios' bindings are
+>> sufficient. But, are drivers free to use implementation specific
+>> behavior when using these bindings. Or do we strictly adhere to the
+>> table which Shawn has listed. For sdhci-s3c driver, I would like to
+>> deviate from the "implication" column listed above.
+>
+> I'd rather you use the implications described above for the names
+> described above; there's not much point in defining named behaviors
+> across the subsystem if they're actually different in each driver.
 
-> It's really strange to use simple-bus, because it's not a bus.
-I can't say it's strange or not.
-There are existing using examples, imx28.dtsi.
+Ok.
 
-> I like more the way how anatop driver handle it. Anatop driver populate
-> devices in its code.
-The anatop mfd driver will be deleted later.
-So the proper solution may be generating regulator devices automatically when call
-of_platform_populate in mach code rather than populate it in driver itself.
+>
+> But I think you can still use driver-internal properties that change the
+> interpretation of those names in a documented way.  If the meaning of
+> cd-gpios is modified when coupled with your "samsung,sdhci-cd-external",
+> that's okay with me.  That should cover all the cases you need until you
+> migrate to using pinctrl, right?  So, you could immediately support:
+>
+> none          -> currently "samsung,sdhci-cd-internal"
+> broken-cd     -> currently "samsung,sdhci-cd-none"
+> cd-gpios      -> currently "samsung,sdhci-cd-gpios"
+> non-removable -> currently "samsung,sdhci-cd-permanent"
+> cd-gpios + samsung,sdhci-cd-external -> currently "samsung,sdhci-cd-external"
+>
+> How does that sound?
 
-Regards
-Dong Aisheng
+Not quite there yet. It is not possible to leave out cd-gpios for
+"samsung,sdhci-cd-internal" since the current Samsung pinmux
+configuration piggybacks on gpio dt binding. Can we use the following
+instead.
+
+none               -> currently "samsung,sdhci-cd-none"
+broken-cd        -> currently "samsung,sdhci-cd-none"
+cd-gpios          -> currently "samsung,sdhci-cd-gpios"
+non-removable -> currently "samsung,sdhci-cd-permanent"
+cd-gpios + samsung,sdhci-cd-internal -> currently "samsung,sdhci-cd-internal"
+
+Thanks Chris.
+
+Regards,
+Thomas.
