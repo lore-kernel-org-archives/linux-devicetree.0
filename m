@@ -1,37 +1,99 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [rtc-linux] [PATCHv3 8/9] arm: vt8500: gpio: Devicetree support
- for arch-vt8500
-Date: Wed, 22 Aug 2012 11:21:32 +0200
-Message-ID: <CACRpkdZnQyLSRQ6cRpFBurAv2cv44einGAsT86FLCqsj1euDMA@mail.gmail.com>
-References: <1345582058-2291-1-git-send-email-linux@prisktech.co.nz>
-	<1345582058-2291-9-git-send-email-linux@prisktech.co.nz>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: imx6q: replace clk_register_clkdev with clock
+ DT lookup
+Date: Wed, 22 Aug 2012 17:27:29 +0800
+Message-ID: <20120822092726.GV24242@S2101-09.ap.freescale.net>
+References: <1345104526-14797-1-git-send-email-shawn.guo@linaro.org>
+ <1345104526-14797-3-git-send-email-shawn.guo@linaro.org>
+ <503232E0.3000007@gmail.com>
+ <CAKGA1bn2uCWE8YkGR4EzTxZ_bXJ_ov2diq63uxQ=dT7b6Fu9GQ@mail.gmail.com>
+ <20120820151609.GN24242@S2101-09.ap.freescale.net>
+ <CAKGA1bnfhMC8QG9OqBbpy5iq6ZAfEgrYMg_LVd50U7yikLhDAg@mail.gmail.com>
+ <20120821122753.GU18957@n2100.arm.linux.org.uk>
+ <5033891D.90509@calxeda.com>
+ <20120822083223.GW18957@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1345582058-2291-9-git-send-email-linux@prisktech.co.nz>
-Sender: linux-serial-owner@vger.kernel.org
-To: Tony Prisk <linux@prisktech.co.nz>
-Cc: vt8500-wm8505-linux-kernel@googlegroup.com, Russell King <linux@arm.linux.org.uk>, Alessandro Zummo <a.zummo@towertech.it>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@stericsson.com>, Mike Turquette <mturquette@ti.com>, Stephen Warren <swarren@nvidia.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120822083223.GW18957-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2012 at 10:47 PM, Tony Prisk <linux@prisktech.co.nz> wrote:
+On Wed, Aug 22, 2012 at 09:32:23AM +0100, Russell King - ARM Linux wrote:
+> On Tue, Aug 21, 2012 at 08:11:57AM -0500, Rob Herring wrote:
+> > On 08/21/2012 07:27 AM, Russell King - ARM Linux wrote:
+> > > So now, you're not dealing with inventing a whole load of names for clocks
+> > > on a platform, instead what you're doing is describing _where_ the clock
+> > > comes from in the system for a particular device by device node and index
+> > > into it - just like we do for interrupts.
+> > 
+> > That is what we're doing. The names are optional for DT, but happen to
+> > be required for struct clk now. If we don't put something in DT, then
+> > the clock names will have to be something generic like ccm-1..ccm-185.
+> 
+> And that's what's wrong.  Clocks themselves should _not_ be required to
+> be named.
+> 
+> If you use purely "producer node + index" then you don't need to name a
+> whole bunch of clocks, and you don't need to have an array of clock names
+> in the DT file.  This also gets rid of the time consuming strcmp against
+> every clock, which has already been raised as a problem with the existing
+> clk_get().
+> 
+Ok, if I got your point correctly, it's about amending the following
+changes, and then we can get rid of that big clock-output-names list
+from dts.
 
-> Converted the existing arch-vt8500 gpio to a platform_device.
-> Added support for WM8505 and WM8650 GPIO controllers.
-(...)
-> +       unsigned val;
+Regards,
+Shawn
 
-I asked about the datatype for this "val", it sure isn't "unsigned".
+--8<---
 
-I suspected the registers were only 8bit and so it should be u8.
-But atleast use u32 if you must use all these bits.
+diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+index 433c683..d52f3f4 100644
+--- a/arch/arm/mach-imx/clk-imx6q.c
++++ b/arch/arm/mach-imx/clk-imx6q.c
+@@ -387,7 +387,7 @@ int __init mx6q_clocks_init(void)
+                        pr_err("i.MX6q clk %d: register failed with %ld\n",
+                                i, PTR_ERR(clk[i]));
 
-(...)
-> +       val = readl(vt8500_chip->base + vt8500_chip->regs->en);
-> +       val |= BIT(offset);
-> +       writel(val, vt8500_chip->base + vt8500_chip->regs->en);
+-       of_clk_add_provider(np, of_clk_src_onecell_get, NULL);
++       of_clk_add_provider(np, of_clk_src_onecell_get, clk);
 
-BTW: have you considered [readl|writel]_relaxed?
+        clk_register_clkdev(clk[gpt_ipg], "ipg", "imx-gpt.0");
+        clk_register_clkdev(clk[gpt_ipg_per], "per", "imx-gpt.0");
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 06bc0b5..a010ed6 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -1584,16 +1584,10 @@ EXPORT_SYMBOL_GPL(of_clk_src_simple_get);
 
-Yours,
-Linus Walleij
+ struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data)
+ {
+-       const char *clk_name;
++       struct clk **clks = data;
+        int idx = clkspec->args[0];
+-       int ret;
+-
+-       ret = of_property_read_string_index(clkspec->np, "clock-output-names",
+-                                           idx, &clk_name);
+-       if (ret < 0)
+-               return ERR_PTR(ret);
+
+-       return __clk_lookup(clk_name);
++       return clks[idx];
+ }
+ EXPORT_SYMBOL_GPL(of_clk_src_onecell_get);
