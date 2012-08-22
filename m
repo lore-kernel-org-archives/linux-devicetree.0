@@ -1,76 +1,58 @@
-From: Subodh Nijsure <snijsure@grid-net.com>
-Subject: Can one  set GPIO direction in pinmux definition?
-Date: Wed, 22 Aug 2012 08:37:22 -0700
-Message-ID: <5034FCB2.5040709@grid-net.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 4/7] regulator: anatop-regulator: convert to use
+ imx-syscon to access anatop register
+Date: Wed, 22 Aug 2012 16:59:53 +0100
+Message-ID: <20120822155953.GQ7995@opensource.wolfsonmicro.com>
+References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
+ <1345619928-15446-5-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="53AZ357FMu84hmXL"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1345619928-15446-5-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, paul.liu@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 
-For a MX28 based hardware I am working with I need to use AUART4
+--53AZ357FMu84hmXL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I need to configure this AUART4 as uart only when necessary and at all 
-other times pins associated with AUART4 need to be configured as inputs.
+On Wed, Aug 22, 2012 at 03:18:45PM +0800, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+>=20
+> Using standard imx syscon API to access anatop register.
 
-I am using following DT definitions to setup AUART4 mux  but can't 
-figure out how to setup pin direction via DT, can it be done or I need 
-to do it in C code?
+Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
 
-         apb@80000000 {
-                 apbh@80000000 {
-                                 auart4_pins_a: auart4@0 {
-                                         reg = <0>;
-                                         fsl,pinmux-ids = <
-                                                 0x3142 /* 
-MX28_PAD_SAIF0_MCLK__AUART4_CTS */
-                                                 0x3152 /* 
-MX28_PAD_SAIF0_LRCLK__AUART4_RTS */
-                                                 0x3162 /* 
-MX28_PAD_SAIF0_BITCLK__AUART4_RX */
-                                                 0x3172 /* 
-MX28_PAD_SAIF0_SDATA0__AUART4_TX */
-                                         >;
-                                         fsl,drive-strength = <0>;
-                                         fsl,voltage = <1>;
-                                         fsl,pull-up = <0>;
-                                 };
-                                 auart4_highz_pins: auart4-gpio@0 {
-                                         reg = <0>;
-                                         fsl,pinmux-ids = <
-                                                 0x3143 /* 
-MX28_PAD_SAIF0_MCLK__GPIO_3_20 */
-                                                 0x3153 /* 
-MX28_PAD_SAIF0_LRCLK__GPIO_3_21 */
-                                                 0x3163 /* 
-MX28_PAD_SAIF0_BITCLK__GPIO_3_22 */
-                                                 0x3173 /* 
-MX28_PAD_SAIF0_SDATA0__GPIO_3_23 */
-                                         >;
-                                         fsl,drive-strength = <0>;
-                                         fsl,voltage = <1>;
-                                         fsl,pull-up = <0>;
-                                 };
-                  };
-           };
+With the conversion to regmap it'd also be good to convert the driver to
+use the regmap helper functions for enable and voltage operations if
+possible.
 
-                 apbx@80040000 {
-                         auart4: serial@80072000 {
-                                 pinctrl-names = "default", "auart";
-                                 pinctrl-0 = <&auart4_highz_pins>;
-                                 pinctrl-1 = <&auart4_pins_a>;
-                                 status = "okay";
-                         };
-                };
+--53AZ357FMu84hmXL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQNQHiAAoJEFJkBDiqVpZ40WgP/1n6YfpTrh9CnDHO2Z4beL58
+MK/dZTm+WTzzvLBbYSEWeQqoqM7DurkIovAHXF4a17Tjh5smDc/eqfVx6TiRpzfj
+zumFWjA8zevXGW66yxy9VKP5bFBKFL4FOExKOsoUtRieN7cMEO19wtu999AXQeQu
+EWq/OHE6Y0r8m2hbCS+XzPUiDizV7IwtypW4Q1hrTdGxtf5PksxomkC+v7GjMvss
+zBHKDvQ+/rHtDKE8B9znQeBY0DJAYHIQSwNpVovwluPaapYJxaGCxPV1kNTTB3ya
+j7NeCq1I8Qmvso3sVEbXMJI8TVs6jm8nnFVIjbm5/6+BSKZK80y1hbqCFymggwAX
+G5GUj+Nn90v+Og5K3FlvfrOrmZ/gsl08JrVEh9/xCtp020f5lAcollqILj29noyb
+JCLc2rzWl74QMg9ZNBzlLwqSllOrj2sMMTTLjLcdEhQz5MOSUaDzJa+80f7vd++y
++foBkUYCuCHjWSDEw+jmcjYJ9rTdptmT+2tBJ48SH9ccjmfIfVMXPAqjrFxFvQ7l
+vAJ6K7PDA4gnoEbSETUxwLXJ8MKC63miUty/RvzBasOKK8QNFz/j1PWM/r/nzfJT
+kEm4sltG07YERCtv20mC9QlF0d2QVlqHGJO1v0RaJvfP3F9eWUcigUl1z1FX9sER
+yn6AC2ykf/wAyEvz0A3u
+=q8hH
+-----END PGP SIGNATURE-----
+
+--53AZ357FMu84hmXL--
