@@ -1,99 +1,109 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: Re: [PATCHv3 7/9] arm: vt8500: doc: Add device tree bindings for
- arch-vt8500 devices
-Date: Thu, 23 Aug 2012 09:32:35 +1200
-Message-ID: <1345671155.2090.8.camel@gitbox>
-References: <1345582058-2291-1-git-send-email-linux@prisktech.co.nz>
-	 <1345582058-2291-8-git-send-email-linux@prisktech.co.nz>
-	 <50354A09.7070507@wwwdotorg.org>
+From: Subodh Nijsure <snijsure-4jo+YWezP1RWk0Htik3J/w@public.gmane.org>
+Subject: Re: Can one  set GPIO direction in pinmux definition?
+Date: Wed, 22 Aug 2012 15:10:00 -0700
+Message-ID: <503558B8.4010603@grid-net.com>
+References: <5034FCB2.5040709@grid-net.com> <5035388D.2060909@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <50354A09.7070507@wwwdotorg.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-fbdev@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@stericsson.com>, Arnd Bergmann <arnd@arndb.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, vt8500-wm8505-linux-kernel@googlegroup.com, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, linux-serial@vger.kernel.org, rtc-linux@googlegroups.com, Stephen Warren <swarren@nvidia.com>, Mike Turquette <mturquette@ti.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5035388D.2060909-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-08-22 at 15:07 -0600, Stephen Warren wrote:
-> On 08/21/2012 02:47 PM, Tony Prisk wrote:
-> > Bindings for gpio, interrupt controller, power management controller,
-> > timer, realtime clock, serial uart, ehci and uhci controllers and
-> > framebuffer controllers used on the arch-vt8500 platform.
-> > 
-> > Framebuffer binding also specifies a 'display' node which is required
-> > for determining the lcd panel data.
-> 
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio_vt8500.txt b/Documentation/devicetree/bindings/gpio/gpio_vt8500.txt
-> 
-> > +- #gpio-cells : should be <3>.
-> > +	1) bank
-> > +	2) pin number
-> > +	3) flags
-> 
-> Should this enumerate what legal values are for flags, or point at a
-> standard document that does?
+On 08/22/2012 12:52 PM, Stephen Warren wrote:
+> On 08/22/2012 09:37 AM, Subodh Nijsure wrote:
+>> For a MX28 based hardware I am working with I need to use AUART4
+>>
+>> I need to configure this AUART4 as uart only when necessary and at all
+>> other times pins associated with AUART4 need to be configured as inputs.
+> Out of curiosity, why?
+Out hardware is connected to external equipment, electric meter via this 
+UART.
+This electricity meter can also be read externally by an optical reader.
+Since this is a shared bus, we can't be sitting on that bus with our 
+interface configured as UART as it prevents optical reader from talking 
+to the meter. There are ways we can tell is optical meter is connected, 
+if we detect that its connected we configure these pins as input else 
+configure them for UART functionality.
 
-There currently are no supported flags - guess this was an oversight.
-I'll take a look if there are any that we might require in the future
-and implement them otherwise I'll drop the flags reference.
+> BTW, you didn't CC any of the IMX maintainers, so it's likely they won't
+> see your question. I've CC'd LinusW, Shawn, and Dong.
+thanks.
+>> I am using following DT definitions to setup AUART4 mux  but can't
+>> figure out how to setup pin direction via DT, can it be done or I need
+>> to do it in C code?
+>>
+>>          apb@80000000 {
+>>                  apbh@80000000 {
+>>                                  auart4_pins_a: auart4@0 {
+>>                                          reg = <0>;
+>>                                          fsl,pinmux-ids = <
+>>                                                  0x3142 /*
+>> MX28_PAD_SAIF0_MCLK__AUART4_CTS */
+>>                                                  0x3152 /*
+>> MX28_PAD_SAIF0_LRCLK__AUART4_RTS */
+>>                                                  0x3162 /*
+>> MX28_PAD_SAIF0_BITCLK__AUART4_RX */
+>>                                                  0x3172 /*
+>> MX28_PAD_SAIF0_SDATA0__AUART4_TX */
+>>                                          >;
+>>                                          fsl,drive-strength = <0>;
+>>                                          fsl,voltage = <1>;
+>>                                          fsl,pull-up = <0>;
+>>                                  };
+>>                                  auart4_highz_pins: auart4-gpio@0 {
+>>                                          reg = <0>;
+>>                                          fsl,pinmux-ids = <
+>>                                                  0x3143 /*
+>> MX28_PAD_SAIF0_MCLK__GPIO_3_20 */
+>>                                                  0x3153 /*
+>> MX28_PAD_SAIF0_LRCLK__GPIO_3_21 */
+>>                                                  0x3163 /*
+>> MX28_PAD_SAIF0_BITCLK__GPIO_3_22 */
+>>                                                  0x3173 /*
+>> MX28_PAD_SAIF0_SDATA0__GPIO_3_23 */
+>>                                          >;
+>>                                          fsl,drive-strength = <0>;
+>>                                          fsl,voltage = <1>;
+>>                                          fsl,pull-up = <0>;
+>>                                  };
+>>                   };
+>>            };
+> I don't know IMX HW, but where is highz controlled? On other SoCs I'm
+> familiar with, when a pad is configured as a GPIO, the highz state is
+> controlled by the GPIO module, so there's nothing pinmux can do about
+> it. Even if the pinmux HW does control highz, gpio_direction_*() are
+> still meant to communicate with the pinctrl driver to implement this, so
+> overriding it through the pinctrl configuration seems like a bad thing.
+>
+> So I think your UART driver would have to request the GPIOs, and set
+> them as inputs. So, I guess your UART node below would need a property
+> listing the GPIOs to do this to.
+Right now that is what I am doing in my code, requesting GPIOs in UART 
+drivers and setting up the direction. I just wanted to make sure there 
+wasn't way to setup pin direction using pinmux itself.
 
-> 
-> > diff --git a/Documentation/devicetree/bindings/tty/serial/via,vt8500-uart.txt b/Documentation/devicetree/bindings/tty/serial/via,vt8500-uart.txt
-> 
-> > +	uart@d8210000 {
-> > +		compatible = "via,vt8500-uart";
-> > +		reg = <0xd8210000 0x1040>;
-> > +		interrupts = <47>;
-> > +	};
-> 
-> How does the UART know what frequency its clock input is, in order to
-> calculate dividers? Should there be a clocks property to link to the
-> input clock, so the rate can be queried? If so, a reference to the
-> common clock binding, plus a specification of which clocks must be
-> listed in the clock property should be included here.
-> 
+>>                  apbx@80040000 {
+>>                          auart4: serial@80072000 {
+>>                                  pinctrl-names = "default", "auart";
+>>                                  pinctrl-0 = <&auart4_highz_pins>;
+>>                                  pinctrl-1 = <&auart4_pins_a>;
+>>                                  status = "okay";
+>>                          };
+>>                 };
+>>
 
-I didn't revisit the code that had already been posted in v1/v2 when I
-added the common clock code and there was no clock handling code at that
-point. The uart's are all clocked via a clkgen that outputs 24Mhz and
-this was hardcoded in the driver.
-I will correct this and add the appropriate device tree entries and
-documentation.
-
-> > diff --git a/Documentation/devicetree/bindings/video/via,vt8500-fb.txt b/Documentation/devicetree/bindings/video/via,vt8500-fb.txt
-> 
-> > +VIA VT8500 Display
-> > +-----------------------------------------------------
-> > +Required properties:
-> > +- xres : lcd panel horizontal resolution
-> > +- yres : lcd panel vertical resolution
-> > +- left-margin,
-> > +- right-margin,
-> > +- hsync-len: lcd panel horizontal timings in pixels
-> > +- upper-margin,
-> > +- lower-margin,
-> > +- vsync-len: lcd panel verticals timings in pixels
-> > +- bpp: lcd panel bit-depth.
-> > +	<16> for RGB565, <32> for RGB888
-> 
-> Shouldn't this reference Sascha Hauer's binding document (although I
-> suppose it isn't checked in yet), and just document the additions? I
-> wonder if this binding should be written assuming Sascha's binding doc
-> will be checked in?
-
-I haven't seen Sascha's binding yet - I'm not even sure its been agreed
-upon but it does seem to be the most likely candidate so far. Hopefully
-it will get accepted in this window, and I will have time to do exactly
-as you commented, which was the plan from the start. This binding was
-based on the most current one I had seen suggested at the time.
-
-
-Given the additional comments for this patch set, and the required
-changes I'll hold off posting v4 until everything is tidied up.
-
-Regards
-
-Tony Prisk
-
+Thanks.
+-Subodh
