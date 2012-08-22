@@ -1,72 +1,62 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Wed, 22 Aug 2012 14:00:32 +0800
-Message-ID: <20120822060030.GU24242@S2101-09.ap.freescale.net>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
- <CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
- <87k3ws5uhs.fsf@octavius.laptop.org>
- <201208211208.49987.arnd@arndb.de>
- <87393g5mic.fsf@octavius.laptop.org>
+From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Subject: Re: [PATCHv3 3/9] serial: vt8500: Add devicetree support for
+Date: Wed, 22 Aug 2012 18:34:38 +1200
+Message-ID: <1345617278.7491.4.camel@gitbox>
+References: <1345582058-2291-1-git-send-email-linux@prisktech.co.nz>
+	 <1345582058-2291-4-git-send-email-linux@prisktech.co.nz>
+	 <20120821231255.71a7515a@pyramind.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87393g5mic.fsf@octavius.laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Abraham <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, patches@linaro.org, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120821231255.71a7515a-38n7/U1jhRXW96NNrWNlrekiAK3p4hvP@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vt8500-wm8505-linux-kernel-/JYPxA39Uh6Zox4op4iWzw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2012 at 10:48:43AM -0400, Chris Ball wrote:
-> Aside: the bindings do not match the code.  The bindings document says
-> to use "fsl,cd-internal", and imx51-babbage.dts does so -- but the code
-> doesn't check for "fsl,cd-internal", it checks for "fsl,cd-controller":
+On Tue, 2012-08-21 at 23:12 +0100, Alan Cox wrote:
+> On Wed, 22 Aug 2012 08:47:32 +1200
+> Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org> wrote:
 > 
->         if (of_get_property(np, "fsl,cd-controller", NULL))
->                 boarddata->cd_type = ESDHC_CD_CONTROLLER;
+> > Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+> > ---
+> >  drivers/tty/serial/vt8500_serial.c |   37 ++++++++++++++++++++++++++++++++----
+> >  1 file changed, 33 insertions(+), 4 deletions(-)
 > 
-> The same confusion is present for fsl,wp-{controller,internal}.
+> Can we have a comment attached to a change this size. In particular one
+> describing why it gone from 4 to 6 ports, and why the port id twiddling.
 > 
-Thanks for spotting it.  I will submit a patch to fix binding doc and
-dts.
+> Is there a reason you can't use the device tree port id ?
+> 
+> What are the regression risks for existing users expecting the pdev->id
+> binding ?
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> Ignoring that, these bindings are similar, but not the same -- imx-esdhc
-> only allows one of the cd_type cases to be true, so you either have
-> cd-internal or you have cd-gpios:
-> 
->         if (of_get_property(np, "fsl,cd-controller", NULL))
->                 boarddata->cd_type = ESDHC_CD_CONTROLLER;
-> 
->         boarddata->cd_gpio = of_get_named_gpio(np, "cd-gpios", 0);
->         if (gpio_is_valid(boarddata->cd_gpio))
->                 boarddata->cd_type = ESDHC_CD_GPIO;
-> 
-> This differs from Thomas's binding -- he wants a way to say "the cd-gpio
-> mentioned in cd-gpios is [internal/external] to the card's CD pin".
-> 
-> Rob Herring said:
-> > This makes the most sense to me. However, I prefer broken-cd over
-> > cd-internal. The binding should add properties for exceptions, not SDHCI
-> > spec compliant implementations.
-> 
-> Agreed, I was going to say the same thing.  Putting it all together, it
-> sounds like we want:
-> 
-> no extra properties:  the CD pin on the host just works.
-> broken-cd:            the CD pin on the host is broken; use polling.
-> cd-gpios:             the GPIO listed is the CD pin on the host being
->                       brought out directly to a GPIO.
-> cd-external:          when used with cd-gpios, specifies that the GPIO
->                       in cd-gpios is external to the CD pin on the host.
-> 
-> cd-gpios and cd-external can be present on the same node.  if broken-cd
-> is present, it must be the only one of these nodes used.
-> 
-> Shawn, I guess I'll leave it up to you on whether/when you'd like to
-> move away from the "fsl," properties to the new common ones?
-> 
-Ok, I will move to the common one once it appears on your tree.
+Sorry Alan,
 
--- 
-Regards,
-Shawn
+The original patch was very simple, but I revisited it to fix other
+issues and forgot to add the relevant comments.
+
+Port size is changed to fix a problem - WM8505 actually had 6 uart's
+defined in platform data but the vt8500_ports variable was only 4.
+
+I have added devicetree port id support as well.
+
+No regression risks as the entire platform is being converted to
+devicetree and existing code dropped in this patchset.
+
+Patchv4 3/9 to follow.
+
+Regards
+
+Tony Prisk
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
