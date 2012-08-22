@@ -1,14 +1,14 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 4/4] clk: mxs: replace imx23 clk_register_clkdev with clock
- DT lookup
-Date: Wed, 22 Aug 2012 21:36:30 +0800
-Message-ID: <1345642590-29905-5-git-send-email-shawn.guo@linaro.org>
-References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
+From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v6 3/3] DT bindings documentation: "num-cs" property for SPI
+ controllers
+Date: Wed, 22 Aug 2012 15:49:19 +0200
+Message-ID: <1345643359-16584-3-git-send-email-stigge@antcom.de>
+References: <1345643359-16584-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345642590-29905-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1345643359-16584-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,300 +19,29 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.verma-lpHj6iFQ3dU@public.gmane.org
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It really becomes a maintenance issue that every time a device needs
-to look up (clk_get) a clock we have to patch kernel clock file to call
-clk_register_clkdev for that clock.
+Several SPI controller drivers have defined differently named properties for
+the number of chip selects.  Now adding "num-cs" as a reference name for new
+bindings.
 
-Since clock DT support which is meant to resolve clock lookup in device
-tree is in place, the patch moves imx23 client devices' clock lookup
-over to device tree, so that any new lookup to be added at later time
-can just get done in DT instead of kernel.
+Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/clock/imx23-clock.txt      |   76 ++++++++++++++++++++
- arch/arm/boot/dts/imx23.dtsi                       |   16 ++++-
- drivers/clk/mxs/clk-imx23.c                        |   55 +++------------
- 3 files changed, 100 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/imx23-clock.txt
+ Documentation/devicetree/bindings/spi/spi-bus.txt |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/imx23-clock.txt b/Documentation/devicetree/bindings/clock/imx23-clock.txt
-new file mode 100644
-index 0000000..a0b867e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx23-clock.txt
-@@ -0,0 +1,76 @@
-+* Clock bindings for Freescale i.MX23
+--- linux-2.6.orig/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ linux-2.6/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -21,6 +21,9 @@ assumption that board specific platform
+ chip selects.  Individual drivers can define additional properties to
+ support describing the chip select layout.
+ 
++Optional property:
++- num-cs : total number of chipselects
 +
-+Required properties:
-+- compatible: Should be "fsl,imx23-clkctrl"
-+- reg: Address and length of the register set
-+- #clock-cells: Should be <1>
-+
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell.  The following is a full list of i.MX23
-+clocks and IDs.
-+
-+	Clock		ID
-+	------------------
-+	ref_xtal	0
-+	pll		1
-+	ref_cpu		2
-+	ref_emi		3
-+	ref_pix		4
-+	ref_io		5
-+	saif_sel	6
-+	lcdif_sel	7
-+	gpmi_sel	8
-+	ssp_sel		9
-+	emi_sel		10
-+	cpu		11
-+	etm_sel		12
-+	cpu_pll		13
-+	cpu_xtal	14
-+	hbus		15
-+	xbus		16
-+	lcdif_div	17
-+	ssp_div		18
-+	gpmi_div	19
-+	emi_pll		20
-+	emi_xtal	21
-+	etm_div		22
-+	saif_div	23
-+	clk32k_div	24
-+	rtc		25
-+	adc		26
-+	spdif_div	27
-+	clk32k		28
-+	dri		29
-+	pwm		30
-+	filt		31
-+	uart		32
-+	ssp		33
-+	gpmi		34
-+	spdif		35
-+	emi		36
-+	saif		37
-+	lcdif		38
-+	etm		39
-+	usb		40
-+	usb_pwr		41
-+
-+Examples:
-+
-+clks: clkctrl@80040000 {
-+	compatible = "fsl,imx23-clkctrl";
-+	reg = <0x80040000 0x2000>;
-+	#clock-cells = <1>;
-+	clock-output-names =
-+		...
-+		"uart",		/* 32 */
-+		...
-+		"end_of_list";
-+};
-+
-+auart0: serial@8006c000 {
-+	compatible = "fsl,imx23-auart";
-+	reg = <0x8006c000 0x2000>;
-+	interrupts = <24 25 23>;
-+	clocks = <&clks 32>;
-+	status = "disabled";
-+};
-diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
-index e613831..ba55bee 100644
---- a/arch/arm/boot/dts/imx23.dtsi
-+++ b/arch/arm/boot/dts/imx23.dtsi
-@@ -52,6 +52,7 @@
- 			dma-apbh@80004000 {
- 				compatible = "fsl,imx23-dma-apbh";
- 				reg = <0x80004000 0x2000>;
-+				clocks = <&clks 15>;
- 			};
- 
- 			ecc@80008000 {
-@@ -67,6 +68,7 @@
- 				reg-names = "gpmi-nand", "bch";
- 				interrupts = <13>, <56>;
- 				interrupt-names = "gpmi-dma", "bch";
-+				clocks = <&clks 34>;
- 				fsl,gpmi-dma-channel = <4>;
- 				status = "disabled";
- 			};
-@@ -74,6 +76,7 @@
- 			ssp0: ssp@80010000 {
- 				reg = <0x80010000 0x2000>;
- 				interrupts = <15 14>;
-+				clocks = <&clks 33>;
- 				fsl,ssp-dma-channel = <1>;
- 				status = "disabled";
- 			};
-@@ -280,6 +283,7 @@
- 			dma-apbx@80024000 {
- 				compatible = "fsl,imx23-dma-apbx";
- 				reg = <0x80024000 0x2000>;
-+				clocks = <&clks 16>;
- 			};
- 
- 			dcp@80028000 {
-@@ -306,12 +310,14 @@
- 				compatible = "fsl,imx23-lcdif";
- 				reg = <0x80030000 2000>;
- 				interrupts = <46 45>;
-+				clocks = <&clks 38>;
- 				status = "disabled";
- 			};
- 
- 			ssp1: ssp@80034000 {
- 				reg = <0x80034000 0x2000>;
- 				interrupts = <2 20>;
-+				clocks = <&clks 33>;
- 				fsl,ssp-dma-channel = <2>;
- 				status = "disabled";
- 			};
-@@ -329,9 +335,10 @@
- 			reg = <0x80040000 0x40000>;
- 			ranges;
- 
--			clkctl@80040000 {
-+			clks: clkctrl@80040000 {
-+				compatible = "fsl,imx23-clkctrl";
- 				reg = <0x80040000 0x2000>;
--				status = "disabled";
-+				#clock-cells = <1>;
- 			};
- 
- 			saif0: saif@80042000 {
-@@ -383,6 +390,7 @@
- 			pwm: pwm@80064000 {
- 				compatible = "fsl,imx23-pwm";
- 				reg = <0x80064000 0x2000>;
-+				clocks = <&clks 30>;
- 				#pwm-cells = <2>;
- 				fsl,pwm-number = <5>;
- 				status = "disabled";
-@@ -397,6 +405,7 @@
- 				compatible = "fsl,imx23-auart";
- 				reg = <0x8006c000 0x2000>;
- 				interrupts = <24 25 23>;
-+				clocks = <&clks 32>;
- 				status = "disabled";
- 			};
- 
-@@ -404,6 +413,7 @@
- 				compatible = "fsl,imx23-auart";
- 				reg = <0x8006e000 0x2000>;
- 				interrupts = <59 60 58>;
-+				clocks = <&clks 32>;
- 				status = "disabled";
- 			};
- 
-@@ -411,6 +421,8 @@
- 				compatible = "arm,pl011", "arm,primecell";
- 				reg = <0x80070000 0x2000>;
- 				interrupts = <0>;
-+				clocks = <&clks 32>, <&clks 16>;
-+				clock-names = "uart", "apb_pclk";
- 				status = "disabled";
- 			};
- 
-diff --git a/drivers/clk/mxs/clk-imx23.c b/drivers/clk/mxs/clk-imx23.c
-index 844043ad0..9f6d155 100644
---- a/drivers/clk/mxs/clk-imx23.c
-+++ b/drivers/clk/mxs/clk-imx23.c
-@@ -14,6 +14,7 @@
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- #include <mach/common.h>
- #include <mach/mx23.h>
- #include "clk.h"
-@@ -71,44 +72,6 @@ static void __init clk_misc_init(void)
- 	__mxs_setl(30 << BP_FRAC_IOFRAC, FRAC);
- }
- 
--static struct clk_lookup uart_lookups[] = {
--	{ .dev_id = "duart", },
--	{ .dev_id = "mxs-auart.0", },
--	{ .dev_id = "mxs-auart.1", },
--	{ .dev_id = "8006c000.serial", },
--	{ .dev_id = "8006e000.serial", },
--	{ .dev_id = "80070000.serial", },
--};
--
--static struct clk_lookup hbus_lookups[] = {
--	{ .dev_id = "imx23-dma-apbh", },
--	{ .dev_id = "80004000.dma-apbh", },
--};
--
--static struct clk_lookup xbus_lookups[] = {
--	{ .dev_id = "duart", .con_id = "apb_pclk"},
--	{ .dev_id = "80070000.serial", .con_id = "apb_pclk"},
--	{ .dev_id = "imx23-dma-apbx", },
--	{ .dev_id = "80024000.dma-apbx", },
--};
--
--static struct clk_lookup ssp_lookups[] = {
--	{ .dev_id = "imx23-mmc.0", },
--	{ .dev_id = "imx23-mmc.1", },
--	{ .dev_id = "80010000.ssp", },
--	{ .dev_id = "80034000.ssp", },
--};
--
--static struct clk_lookup lcdif_lookups[] = {
--	{ .dev_id = "imx23-fb", },
--	{ .dev_id = "80030000.lcdif", },
--};
--
--static struct clk_lookup gpmi_lookups[] = {
--	{ .dev_id = "imx23-gpmi-nand", },
--	{ .dev_id = "8000c000.gpmi-nand", },
--};
--
- static const char *sel_pll[]  __initconst = { "pll", "ref_xtal", };
- static const char *sel_cpu[]  __initconst = { "ref_cpu", "ref_xtal", };
- static const char *sel_pix[]  __initconst = { "ref_pix", "ref_xtal", };
-@@ -127,6 +90,7 @@ enum imx23_clk {
- };
- 
- static struct clk *clks[clk_max];
-+static struct clk_onecell_data clk_data;
- 
- static enum imx23_clk clks_init_on[] __initdata = {
- 	cpu, hbus, xbus, emi, uart,
-@@ -134,6 +98,7 @@ static enum imx23_clk clks_init_on[] __initdata = {
- 
- int __init mx23_clocks_init(void)
- {
-+	struct device_node *np;
- 	int i;
- 
- 	clk_misc_init();
-@@ -188,14 +153,14 @@ int __init mx23_clocks_init(void)
- 			return PTR_ERR(clks[i]);
- 		}
- 
-+	np = of_find_compatible_node(NULL, NULL, "fsl,imx23-clkctrl");
-+	if (np) {
-+		clk_data.clks = clks;
-+		clk_data.clk_num = ARRAY_SIZE(clks);
-+		of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
-+	}
-+
- 	clk_register_clkdev(clks[clk32k], NULL, "timrot");
--	clk_register_clkdev(clks[pwm], NULL, "80064000.pwm");
--	clk_register_clkdevs(clks[hbus], hbus_lookups, ARRAY_SIZE(hbus_lookups));
--	clk_register_clkdevs(clks[xbus], xbus_lookups, ARRAY_SIZE(xbus_lookups));
--	clk_register_clkdevs(clks[uart], uart_lookups, ARRAY_SIZE(uart_lookups));
--	clk_register_clkdevs(clks[ssp], ssp_lookups, ARRAY_SIZE(ssp_lookups));
--	clk_register_clkdevs(clks[gpmi], gpmi_lookups, ARRAY_SIZE(gpmi_lookups));
--	clk_register_clkdevs(clks[lcdif], lcdif_lookups, ARRAY_SIZE(lcdif_lookups));
- 
- 	for (i = 0; i < ARRAY_SIZE(clks_init_on); i++)
- 		clk_prepare_enable(clks[clks_init_on[i]]);
--- 
-1.7.5.4
+ SPI slave nodes must be children of the SPI master node and can
+ contain the following properties.
+ - reg             - (required) chip select address of device.
