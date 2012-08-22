@@ -1,109 +1,61 @@
 From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH 1/7] mfd: add imx syscon driver based on regmap
-Date: Wed, 22 Aug 2012 18:57:30 +0800
-Message-ID: <20120822105729.GB10057@shlinux2.ap.freescale.net>
+Subject: Re: [PATCH 6/7] ARM: dts: imx6q: add simple-bus compatible string
+ for anatop
+Date: Wed, 22 Aug 2012 19:02:10 +0800
+Message-ID: <20120822110209.GC10057@shlinux2.ap.freescale.net>
 References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
- <1345619928-15446-2-git-send-email-b29396@freescale.com>
- <20120822082940.GJ4011@b20223-02.ap.freescale.net>
+ <1345619928-15446-7-git-send-email-b29396@freescale.com>
+ <20120822085236.GK4011@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120822082940.GJ4011@b20223-02.ap.freescale.net>
+In-Reply-To: <20120822085236.GK4011@b20223-02.ap.freescale.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Zhao Richard-B20223 <B20223@freescale.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lrg@ti.com" <lrg@ti.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "paul.liu@linaro.org" <paul.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 22, 2012 at 04:29:41PM +0800, Zhao Richard-B20223 wrote:
-> On Wed, Aug 22, 2012 at 03:18:42PM +0800, Dong Aisheng wrote:
+On Wed, Aug 22, 2012 at 04:52:36PM +0800, Zhao Richard-B20223 wrote:
+> On Wed, Aug 22, 2012 at 03:18:47PM +0800, Dong Aisheng wrote:
 > > From: Dong Aisheng <dong.aisheng@linaro.org>
 > > 
-> > Add regmap based imx syscon driver.
-> > This is usually used for access misc bits in registers which does not belong
-> > to a specific module, for example, IOMUXC GPR and ANATOP.
-> > With this driver, we provide a standard API for client driver to call to
-> > access registers which are registered into syscon.
+> > Originally the anatop regulator devices are populated by mfd anatop driver.
+> > Since mfd anatop driver will be deleted later, we change to populate the
+> > regulator devices by devicetree automatically.
+> > This will cause some warning messages as follows during boot due to device
+> > recreation: "vdd1p1: Failed to create debugfs directory"
+> > But it does not break any function.
+> > Later, we will remove mfd anatop driver which can get rid of this
+> > error message.
 > > 
 > > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
 > > ---
-> > Currently it's just simply for IMX, however the driver really is not too
-> > much imx specific.
-> > If people want, we probably could extend it to support other platforms too.
-> > ---
-> >  .../devicetree/bindings/mfd/imx-syscon.txt         |   11 +
-> >  drivers/mfd/Kconfig                                |    8 +
-> >  drivers/mfd/Makefile                               |    1 +
-> >  drivers/mfd/imx-syscon.c                           |  193 ++++++++++++++++++++
-> >  include/linux/mfd/imx-syscon.h                     |   22 +++
-> >  5 files changed, 235 insertions(+), 0 deletions(-)
+> >  arch/arm/boot/dts/imx6q.dtsi |    2 +-
+> >  1 files changed, 1 insertions(+), 1 deletions(-)
 > > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/imx-syscon.txt b/Documentation/devicetree/bindings/mfd/imx-syscon.txt
-> > new file mode 100644
-> > index 0000000..4a72994
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/imx-syscon.txt
-> > @@ -0,0 +1,11 @@
-> > +* Freescale IMX System Controller Registers R/W driver
-> > +
-> > +Required properties:
-> > +- compatible: Should contain "fsl,imx-syscon".
-> > +- reg: the register range can be access from imx-syscon
-> > +
-> > +Examples:
-> > +gpr: iomuxc-gpr@020e0000 {
-> > +	compatible = "fsl,imx6q-iomuxc", "fsl,imx-syscon";
-> why is it compatible with iomuxc?
-> 
-The first one usually is describing the device itself,
-the second one is the required compatible string for using imx-sycon.
+> > diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> > index 7076be0..426f735 100644
+> > --- a/arch/arm/boot/dts/imx6q.dtsi
+> > +++ b/arch/arm/boot/dts/imx6q.dtsi
+> > @@ -379,7 +379,7 @@
+> >  			};
+> >  
+> >  			anatop: anatop@020c8000 {
+> > -				compatible = "fsl,imx6q-anatop", "fsl,imx-syscon";
+> > +				compatible = "fsl,imx6q-anatop", "fsl,imx-syscon", "simple-bus";
+> To prevent bisect break, it should merge with patch #4.
+Yes, i will try it and merge them if needed.
 
-btw, it looks i'd better change "fsl,imx6q-iomuxc" to "fsl,imx6q-iomuxc-gpr"
-since the later is the real case for us which is in patch 2/7.
+> It's really strange to use simple-bus, because it's not a bus.
+I can't say it's strange or not.
+There are existing using examples, imx28.dtsi.
 
-> > +static int imx_syscon_match(struct device *dev, void *data)
-> > +{
-> > +	struct imx_syscon *syscon = dev_get_drvdata(dev);
-> > +	struct device_node *dn = data;
-> > +
-> > +	return (syscon->dev->of_node == dn) ? 1 : 0;
-> > +}
-> > +
-> > +int imx_syscon_write(struct device_node *np, u32 reg, u32 val)
-> For API function, is it better to use struct device rather not np?
->  - it won't need to search dev in below code every time it access
->    registers.
-The purpose is not require client driver to know the implementation details
-of imx_syscon_{read/write} API, it's more easy to use since client only
-needs pass the device node to which it wants to read/write.
-
-For search dev, it doesn't look like a big issue since it only search devices
-attached on the driver which is very quick.
-And hide it in common API does not require every client driver to write
-duplicated codes.
-
-> > +static int __devinit imx_syscon_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct device_node *np = dev->of_node;
-> > +	struct imx_syscon *syscon;
-> > +	struct resource res;
-> > +	int ret;
-> > +
-> > +	if (!np)
-> > +		return -ENOENT;
-> > +
-> > +	syscon = devm_kzalloc(&pdev->dev, sizeof(struct imx_syscon),
-> > +			    GFP_KERNEL);
-> > +	if (!syscon)
-> > +		return -ENOMEM;
-> > +
-> > +	syscon->base = of_iomap(np, 0);
-> no request? use devm_request_and_ioremap?
-> 
-The io space registered into imx-sycon may be overlapped with other device,
-e.g. iomuxc gpr overlapped with iomuxc. So we do not request it here.
-There are also some exist examples, imx28 pinctrl with gpio devices contained.
+> I like more the way how anatop driver handle it. Anatop driver populate
+> devices in its code.
+The anatop mfd driver will be deleted later.
+So the proper solution may be generating regulator devices automatically when call
+of_platform_populate in mach code rather than populate it in driver itself.
 
 Regards
 Dong Aisheng
