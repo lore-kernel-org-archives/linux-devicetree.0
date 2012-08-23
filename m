@@ -1,64 +1,90 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 05/14] ARM: at91: add pinctrl support
-Date: Thu, 23 Aug 2012 11:49:31 -0600
-Message-ID: <50366D2B.4010807@wwwdotorg.org>
-References: <20120810124820.GA20557@game.jcrosoft.org>
- <1344603731-32667-1-git-send-email-plagnioj@jcrosoft.com>
- <1344603731-32667-5-git-send-email-plagnioj@jcrosoft.com>
- <CACRpkdZ2__V06Eo8JH451Sup5Nw2jJXVOH2FOfZBp5nNYpCtbg@mail.gmail.com>
- <5034FC18.2090400@wwwdotorg.org>
- <CACQ1gAieByr5vMmyyCuGtS8AgnnRZPPhLZY8sKvwvcQYe5ieUA@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Thu, 23 Aug 2012 11:54:12 -0600
+Message-ID: <50366E44.4030606@wwwdotorg.org>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com> <5035445B.6000500@wwwdotorg.org> <CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACQ1gAieByr5vMmyyCuGtS8AgnnRZPPhLZY8sKvwvcQYe5ieUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMjMvMjAxMiAwMTowNiBBTSwgUmljaGFyZCBHZW5vdWQgd3JvdGU6Cj4gMjAxMi84LzIy
-IFN0ZXBoZW4gV2FycmVuIDxzd2FycmVuQHd3d2RvdG9yZy5vcmc+Ogo+Pj4+ICtSZXF1aXJlZCBw
-cm9wZXJ0aWVzIGZvciBpb211eCBjb250cm9sbGVyOgo+Pj4+ICstIGNvbXBhdGlibGU6ICJhdG1l
-bCxhdDkxcm05MjAwLXBpbmN0cmwiCj4+Pj4gKy0gYXRtZWwsbXV4LW1hc2s6IGFycmF5IG9mIG1h
-c2sgKHBlcmlwaCBwZXIgYmFuaykgdG8gZGVzY3JpYmUgaWYgYSBwaW4gY2FuIGJlCj4+Pj4gKyAg
-Y29uZmlndXJlZCBpbiB0aGlzIHBlcmlwaCBtb2RlLiBBbGwgdGhlIHBlcmlwaCBhbmQgYmFuayBu
-ZWVkIHRvIGJlIGRlc2NyaWJlLgo+Pj4KPj4+IENhbiB5b3UgcGxlYXNlIGJlIG1vcmUgZWxhYm9y
-YXRlIG9uIHRoaXMgbXV4LW1hc2ssIGxpa2Ugd2hhdCBlYWNoIGJpdAo+Pj4gbWVhbnMgYW5kIHdo
-eSB0aGUgYml0cyBhcmUgYXJyYW5nZWQgbGlrZSB0aGF0IGFuZCB3aGF0IGl0IG1lYW5zIG9uIHRo
-ZQo+Pj4gQVQ5MSBwbGF0Zm9ybS4uLi4gSSB3YXMgZmlyc3QgcmVhZGluZyB0aGUgLmR0cyBhbmQg
-d2FzIGxpa2UgP3dvb3Q/IHNvCj4+PiBJIGdvIHRvIHRoZSBiaW5kaW5ncyBkb2MgYW5kIEkgcmVh
-ZCB0aGlzIGFuZCBJJ20gc3RpbGwgbGlrZSA/d29vdD8uLgo+Pgo+PiBZZXMsIEknbSBhIGxpdHRs
-ZSBjb25mdXNlZCB3aGF0IHRoaXMgaXMsIGFuZCB3b3VsZG4ndCBoYXZlIGEgY2x1ZSBob3cgdG8K
-Pj4gZmlsbCBpdCBpbi4KPgo+IFdpdGggYSBwcmFjdGljYWwgZXhhbXBsZSBpdCdzIGVhc2llciB0
-byB1bmRlcnN0YW5kLgo+IFRha2UgYSBTQU05WDUgcmVsZWFzZSBtYW51YWwgKGhlcmUgaXMgc2Ft
-OWczNSk6Cj4gaHR0cDovL3d3dy5hdG1lbC5jb20vSW1hZ2VzL2RvYzExMDUzLnBkZiBwYWdlIDEx
-ICjCpzQuMyBwYWNrYWdlIHBpbm91dCkKPiBpbiB0aGUgZmlsZSBhcmNoL2FybS9ib290L2R0cy9h
-dDkxc2FtOXg1LmR0c2kgeW91J3ZlIGdvdCB0aGUgdGhlCj4gYXRtZWwsbXV4LW1hc2sgbGlrZSB0
-aGF0Ogo+Cj4gLyogcGVyaXBoQSAgcGVyaXBoQiAgICBwZXJpcGhDICAgICAqLwo+IDB4ZmZmZmZm
-ZmYgMHhmZmUwMzk5ZiAweGMwMDAwMDFjICAvKiBwaW9BICovCj4gMHgwMDA3ZmZmZiAweDgwMDBm
-ZTNmIDB4MDAwMDAwMDAgIC8qIHBpb0IgKi8KPiAweDgwMDAwMDAwIDB4MDdjMGZmZmYgMHhiODNm
-ZmZmZiAgLyogcGlvQyAqLwo+IDB4MDAzZmZmZmYgMHgwMDNmODAwMCAweDAwMDAwMDAwICAvKiBw
-aW9EICovCj4gCj4gTGV0J3MgdGFrZSB0aGUgUGlvQSAtIHBlcmlwaGVyYWwgQjogMHhmZmUwMzk5
-Zgo+IEZyb20gdGhlIGRvY3VtZW50YXRpb24gdGFibGUgNC0zLCB3ZSBjYW4gZXh0cmFjdCB0aGUg
-Y29sdW1uIFBJTwo+IFBlcmlwZXJhbCBCIGZvciBhbGwgc2lnbmFscyBQQTAtUEEzMToKLi4uCj4g
-RWFjaCB0aW1lIGl0J3MgcG9zc2libGUgdG8gbXV4IGEgcGluIHRvIHRoZSBwZXJpcGhlcmFsIEIg
-ZnVuY3Rpb24gKGllCj4gd2hlbiB0aGVyZSdzIG5vICItLS0tLSIpIHRoZSBjb3JyZXNwb25kaW5n
-IGJpdCBpcyBzZXQ6Ci4uLgo+ID0+IHRoaXMgZ2l2ZXMgMHgzOTlmCgpBaCBPSy4gSXQgd291bGQg
-YmUgYSBnb29kIGlkZWEgdG8gYnJpZWZseSBkZXNjcmliZSB0aGlzIHByb2Nlc3MgaW4gdGhlCmJp
-bmRpbmcgZG9jdW1lbnQgSSB0aGluay4gSSBhc3N1bWUgdGhpcyBwcm9wZXJ0eSBleGlzdHMgdG8g
-YXZvaWQgdGhlCmtlcm5lbCBkcml2ZXIgaGF2aW5nIHRvIGNvbnRhaW4gdGFibGVzIGZvciBlYWNo
-IEF0bWVsIGRldmljZTsgdGhlIGRyaXZlcgppcyBnZW5lcmljLgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBs
-aXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
-YWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On 08/23/2012 03:45 AM, Sebastian Hesselbarth wrote:
+> On 8/22/12, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 08/22/2012 02:22 AM, Sebastian Hesselbarth wrote:
+>>> +++ b/drivers/pinctrl/pinctrl-mvebu.c
+>>
+>>> +static int mvebu_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+>>
+>>> +	of_property_for_each_string(np, "marvell,pins", prop, group) {
+>>> +		struct mvebu_pinctrl_group *grp =
+>>> +			mvebu_pinctrl_find_group_by_name(pctl, group);
+>>> +
+>>> +		if (!grp) {
+>>> +			dev_err(pctl->dev, "unknown pin %s", group);
+>>> +			continue;
+>>> +		}
+>>> +
+>>> +		if (!mvebu_pinctrl_find_setting_by_name(pctl, grp, function)) {
+>>> +			dev_err(pctl->dev, "unsupported function %s on pin %s",
+>>> +				function, group);
+>>> +			continue;
+>>> +		}
+>>
+>> The error-checking here isn't strictly necessary; the pinctrl core will
+>> error-check all the names if/when the map entries are used. So, you
+>> could probably get away with just assigning the pin/function names
+>> directly into (*map) and hence remove some code here. Still, it's not a
+>> big deal either way.
+> 
+> Hi Stephen,
+> 
+> as these error checks are only performed once, I'd like to have them there
+> as they give hints when someone uses wrong marvell,pins/function names
+> in DT.
+> 
+>>> +static int __devinit mvebu_pinctrl_dt_parse_function(struct mvebu_pinctrl
+>>> *pctl,
+>>
+>>> +static int __devinit mvebu_pinctrl_dt_parse(struct platform_device
+>>> *pdev,
+>>> +					struct mvebu_pinctrl *pctl)
+>>
+>> I don't understand what those two functions do, or a good chunk of
+>> probe(). It seems like they're setting up the ability to get/set pin
+>> configrations in addition to pin muxing, although if that's so, it seems
+>> odd that none of the binding documents specify any way of controlling
+>> pin configuration from device tree. Are you expecting drivers to call
+>> APIs such as pin_config_set() directly, rather than controlling pin
+>> config through DT?
+> 
+> probe() receives some structs from the SoC specific driver stubs that
+> describe, e.g. how many muxable pins are available, which pingroup they
+> belong to (marvell,pins), what valid register values are and how they are
+> named (marvell,function). Although, all mvebu SoC share a good part of
+> pinmux register layout, there are especially for dove some very different
+> ways to mux pins. As mvebu pinctrl is a true mux-only driver, i.e. no
+> pin drive strength or pin direction configuration, we decided not to have
+> single pins controlable but only pingroups even if they comprise only a
+> single pin.
+> 
+> dt_parse() and dt_parse_function() build up structs that get used later on
+> in mvebu_pinmux_ops that require indexed functions. I can join them with
+> dt_node_to_map() but that would require incremental kzalloc for the
+> corresponding array. Or I could (functionally) leave dt_parse() to allocate
+> the array and only join dt_parse_function() with dt_node_to_map().
+
+So everything you said makes sense, in that the core driver is
+parameterizable and receives data from a SoC-variant-specific driver
+indicating which pins/groups/functions are available. I'm still not sure
+though why the translation of the pin/group/function structures passed
+to probe into other data structures requires accessing the DT at all;
+the set of available pins/groups/functions isn't configured through DT,
+and doesn't need to be limited to only those options actually used in
+DT, so can't you just process all the data that's passed to probe
+without interaction with the DT?
+
