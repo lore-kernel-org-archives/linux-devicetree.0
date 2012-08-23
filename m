@@ -1,55 +1,68 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
-Date: Thu, 23 Aug 2012 12:29:52 +0530
-Message-ID: <CAJuYYwRDPU=m=XkYx8FPts=ar0pWyN7iTH5+6Kmb5KWMdT8pPg@mail.gmail.com>
-References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
-	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
-	<87k3ws5uhs.fsf@octavius.laptop.org>
-	<201208211208.49987.arnd@arndb.de>
-	<87393g5mic.fsf@octavius.laptop.org>
-	<5033A34E.7040201@gmail.com>
-	<87pq6k46jg.fsf@octavius.laptop.org>
-	<5033B0F0.7050506@gmail.com>
-	<CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
-	<20120822055151.GT24242@S2101-09.ap.freescale.net>
-	<877gsr5iz1.fsf@octavius.laptop.org>
-	<CAJuYYwQz00ZzB5MxRG66XEPZApAtS6bwJAafmw3b=7DD7u+Crg@mail.gmail.com>
-	<87y5l7421h.fsf@octavius.laptop.org>
-	<CAJuYYwQLUs5qb8NqtPf3=ytNHJ_VdnN8Z4yWwyk2+OTftdWFXw@mail.gmail.com>
-	<50351256.60507@firmworks.com>
+From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 05/14] ARM: at91: add pinctrl support
+Date: Thu, 23 Aug 2012 09:06:46 +0200
+Message-ID: <CACQ1gAieByr5vMmyyCuGtS8AgnnRZPPhLZY8sKvwvcQYe5ieUA@mail.gmail.com>
+References: <20120810124820.GA20557@game.jcrosoft.org>
+ <1344603731-32667-1-git-send-email-plagnioj@jcrosoft.com>
+ <1344603731-32667-5-git-send-email-plagnioj@jcrosoft.com>
+ <CACRpkdZ2__V06Eo8JH451Sup5Nw2jJXVOH2FOfZBp5nNYpCtbg@mail.gmail.com>
+ <5034FC18.2090400@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <50351256.60507@firmworks.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Chris Ball <cjb@laptop.org>, linux-samsung-soc@vger.kernel.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5034FC18.2090400-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22 August 2012 22:39, Mitch Bradley <wmb@firmworks.com> wrote:
-> Sorry to interject on a topic that seems to have already been decided,
-> but I'm confused by one thing and would like clarification.  I
-> understand that you need to use a GPIO-style specifier as a surrogate
-> for a pinmux specification - that much is clear.  What is not clear is
-> why it's necessary to (ab)use the name "cd-gpios" for it.
->
-> Why not use a different property name, e.g. "samsung,cd-pinmux-gpio =
-> <gpio-specifier>" for the "cd-gpios + samsung,sdhci-cd-internal" case?
-> Then both "samsung,sdhci-cdi-internal" and "samsung,sdhci-cd-external"
-> could go away.  There would only be one system-dependent property
-> "samsung,cd-pinmux-gpio" whose name would make it clear that it's
-> conflating pinmuxing and gpios.
-
-Right, I agree. I will prepare the sdhci-s3c based on Chris's new
-generic binding patch and your suggestion.
-
->
-> I think the scheme I propose would be clearer, less likely to confuse
-> other people who try to use the driver as a model, require less
-> hand-waving in the documentation, and easier to change to a proper
-> pinmuxing scheme should that become available later.
-
-Thanks for your time.
-
-Regards,
-Thomas.
+MjAxMi84LzIyIFN0ZXBoZW4gV2FycmVuIDxzd2FycmVuQHd3d2RvdG9yZy5vcmc+Ogo+Pj4gK1Jl
+cXVpcmVkIHByb3BlcnRpZXMgZm9yIGlvbXV4IGNvbnRyb2xsZXI6Cj4+PiArLSBjb21wYXRpYmxl
+OiAiYXRtZWwsYXQ5MXJtOTIwMC1waW5jdHJsIgo+Pj4gKy0gYXRtZWwsbXV4LW1hc2s6IGFycmF5
+IG9mIG1hc2sgKHBlcmlwaCBwZXIgYmFuaykgdG8gZGVzY3JpYmUgaWYgYSBwaW4gY2FuIGJlCj4+
+PiArICBjb25maWd1cmVkIGluIHRoaXMgcGVyaXBoIG1vZGUuIEFsbCB0aGUgcGVyaXBoIGFuZCBi
+YW5rIG5lZWQgdG8gYmUgZGVzY3JpYmUuCj4+Cj4+IENhbiB5b3UgcGxlYXNlIGJlIG1vcmUgZWxh
+Ym9yYXRlIG9uIHRoaXMgbXV4LW1hc2ssIGxpa2Ugd2hhdCBlYWNoIGJpdAo+PiBtZWFucyBhbmQg
+d2h5IHRoZSBiaXRzIGFyZSBhcnJhbmdlZCBsaWtlIHRoYXQgYW5kIHdoYXQgaXQgbWVhbnMgb24g
+dGhlCj4+IEFUOTEgcGxhdGZvcm0uLi4uIEkgd2FzIGZpcnN0IHJlYWRpbmcgdGhlIC5kdHMgYW5k
+IHdhcyBsaWtlID93b290PyBzbwo+PiBJIGdvIHRvIHRoZSBiaW5kaW5ncyBkb2MgYW5kIEkgcmVh
+ZCB0aGlzIGFuZCBJJ20gc3RpbGwgbGlrZSA/d29vdD8uLgo+Cj4gWWVzLCBJJ20gYSBsaXR0bGUg
+Y29uZnVzZWQgd2hhdCB0aGlzIGlzLCBhbmQgd291bGRuJ3QgaGF2ZSBhIGNsdWUgaG93IHRvCj4g
+ZmlsbCBpdCBpbi4KV2l0aCBhIHByYWN0aWNhbCBleGFtcGxlIGl0J3MgZWFzaWVyIHRvIHVuZGVy
+c3RhbmQuClRha2UgYSBTQU05WDUgcmVsZWFzZSBtYW51YWwgKGhlcmUgaXMgc2FtOWczNSk6Cmh0
+dHA6Ly93d3cuYXRtZWwuY29tL0ltYWdlcy9kb2MxMTA1My5wZGYgcGFnZSAxMSAowqc0LjMgcGFj
+a2FnZSBwaW5vdXQpCmluIHRoZSBmaWxlIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTFzYW05eDUuZHRz
+aSB5b3UndmUgZ290IHRoZSB0aGUKYXRtZWwsbXV4LW1hc2sgbGlrZSB0aGF0OgovKiBwZXJpcGhB
+ICBwZXJpcGhCICAgIHBlcmlwaEMgICAgICovCjB4ZmZmZmZmZmYgMHhmZmUwMzk5ZiAweGMwMDAw
+MDFjICAvKiBwaW9BICovCjB4MDAwN2ZmZmYgMHg4MDAwZmUzZiAweDAwMDAwMDAwICAvKiBwaW9C
+ICovCjB4ODAwMDAwMDAgMHgwN2MwZmZmZiAweGI4M2ZmZmZmICAvKiBwaW9DICovCjB4MDAzZmZm
+ZmYgMHgwMDNmODAwMCAweDAwMDAwMDAwICAvKiBwaW9EICovCgpMZXQncyB0YWtlIHRoZSBQaW9B
+IC0gcGVyaXBoZXJhbCBCOiAweGZmZTAzOTlmCkZyb20gdGhlIGRvY3VtZW50YXRpb24gdGFibGUg
+NC0zLCB3ZSBjYW4gZXh0cmFjdCB0aGUgY29sdW1uIFBJTwpQZXJpcGVyYWwgQiBmb3IgYWxsIHNp
+Z25hbHMgUEEwLVBBMzE6CiAgICAgUElPIFBlcmlwaGVyYWwgQgpQQTAgIFNQSTFfTlBDUzEKUEEx
+ICBTUEkxX05QQ1MyClBBMiAgTUNJMV9EQTEKUEEzICBNQ0kxX0RBMgpQQTQgIE1DSTFfREEzClBB
+NSAgLS0tLS0tLS0KUEE2ICAtLS0tLS0tLQpQQTcgIFNQSTBfTlBDUzEKUEE4ICBTUEkxX05QQ1Mw
+ClBBOSAgLS0tLS0tLS0KUEExMCAtLS0tLS0tLQpQQTExIE1DSTFfREEwClBBMTIgTUNJMV9DREEK
+UEExMyBNQ0kxX0NLClBBMTQgLS0tLS0tLS0KUEExNSAtLS0tLS0tLQpldGMuLi4KRWFjaCB0aW1l
+IGl0J3MgcG9zc2libGUgdG8gbXV4IGEgcGluIHRvIHRoZSBwZXJpcGhlcmFsIEIgZnVuY3Rpb24g
+KGllCndoZW4gdGhlcmUncyBubyAiLS0tLS0iKSB0aGUgY29ycmVzcG9uZGluZyBiaXQgaXMgc2V0
+OgogICAgIFBJTyBQZXJpcGhlcmFsIEIKUEEwICBTUEkxX05QQ1MxICAgMQpQQTEgIFNQSTFfTlBD
+UzIgICAxClBBMiAgTUNJMV9EQTEgICAgIDEKUEEzICBNQ0kxX0RBMiAgICAgMQoKUEE0ICBNQ0kx
+X0RBMyAgICAgMQpQQTUgIC0tLS0tLS0tICAgICAwClBBNiAgLS0tLS0tLS0gICAgIDAKUEE3ICBT
+UEkwX05QQ1MxICAgMQoKUEE4ICBTUEkxX05QQ1MwICAgMQpQQTkgIC0tLS0tLS0tICAgICAwClBB
+MTAgLS0tLS0tLS0gICAgIDAKUEExMSBNQ0kxX0RBMCAgICAgMQoKUEExMiBNQ0kxX0NEQSAgICAg
+MQpQQTEzIE1DSTFfQ0sgICAgICAxClBBMTQgLS0tLS0tLS0gICAgIDAKUEExNSAtLS0tLS0tLSAg
+ICAgMAoKPT4gdGhpcyBnaXZlcyAweDM5OWYKCgoKQmVzdCByZWdhcmRzLApSaWNoYXJkCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
+Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
+cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
