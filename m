@@ -1,63 +1,71 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 4/7] regulator: anatop-regulator: convert to use
- imx-syscon to access anatop register
-Date: Thu, 23 Aug 2012 12:17:41 +0100
-Message-ID: <20120823111741.GX7995@opensource.wolfsonmicro.com>
-References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
- <1345619928-15446-5-git-send-email-b29396@freescale.com>
- <20120822155953.GQ7995@opensource.wolfsonmicro.com>
- <20120823071503.GF10057@shlinux2.ap.freescale.net>
+From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Subject: RE: [PATCHv4 0/9] *** ARM: Update arch-vt8500 to Devicetree ***
+Date: Thu, 23 Aug 2012 12:58:29 +0000
+Message-ID: <76F764B079F92A4E843589C893D0A022DAF68C14@SERVER.prisktech.co.nz>
+References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>,
+ <201208231040.16702.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vZbAFtxic7ONUJfi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120823071503.GF10057@shlinux2.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lrg@ti.com" <lrg@ti.com>, Zhao Richard-B20223 <B20223@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "paul.liu@linaro.org" <paul.liu@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201208231040.16702.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWNGWvitb5QawA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+>On Thursday 23 August 2012, Tony Prisk wrote:
+>> Patchset based on Arnd's arm-soc/for-next branch.
+>>
+>>
+>> Could I get this reviewed, hopefully for inclusion into v3.7.
 
---vZbAFtxic7ONUJfi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>I can take them into the arm-soc tree if there are no new comments.
+>For the last two patches, you need to get an Acked-by comment from the
+>gpio and clk maintainers, respectively, or you should send them
+>the patches for inclusion in those subsystem trees.
 
-On Thu, Aug 23, 2012 at 03:15:04PM +0800, Dong Aisheng wrote:
-> On Wed, Aug 22, 2012 at 11:59:53PM +0800, Mark Brown wrote:
+>        Arnd
 
-> > With the conversion to regmap it'd also be good to convert the driver to
-> > use the regmap helper functions for enable and voltage operations if
-> > possible.
 
-> The anatop-regulator driver only implements set_voltage_sel/get_voltage_sel
-> which i have already converted, what do you mean others like
-> 'for enable and voltage operations' i should also convert?
+Linus W has provided some feedback on the gpio driver - I missed the
+issues he raised the first time around so just waiting for him to take a look
+at v4 when he's got time.
 
-Those operations should ideally be converted to use the generic regmap
-implementation now the device uses regmap - regmap_get_voltage_sel_regmap
-and so on.
+I haven't heard from Mike T in regards to the new clock code - He did
+reply about the original patch (pre-devicetree) but I asked him to hold off
+reviewing it because it was going to be rewritten.
 
---vZbAFtxic7ONUJfi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+EHCI/UHCI has gone to -next (on patchv2) via usb-next
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
+There haven't been any changes to it in v3/v4.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+GPIO going via another tree isn't really an issue if necessary.
 
-iQIcBAEBAgAGBQJQNhFOAAoJEFJkBDiqVpZ4FMUQAJqRf050UwEgd+lOkw7TQESB
-JIlAGwap4ik235uGuM96R++oRCcOKOKx2bc+fM4bixKUH8FDAUBDEc+v9YPo4ACI
-D9Trr1w0fntF5wz7ZjOUxM/MEPohqPOlZ6BmKYc+EhY4EM70qJyzi+PNX4nkEG/P
-kIgYu8O00MbzwEtQshu/nFYCPzIKScpvThZUq3C8AWy1pX6i9MEblD+cjCx88iuZ
-CPA+k/dGgtBDhxPr1z+Iax59ze+q4l3oLpX0tXC8mBrymY8Tlz89ZXmtroa2ZH3l
-D868iChT0TX/l2JgIku+XgYOCzRX5cpW3jScU1bIT6Ly75ryPM50hWUQ70WydZR/
-/qsHobyWlgVQfNnHFddlZPr8lD1z9WmKX8Drx7uE71zPsAtreZZ+h+Jd79vxFMZo
-i87gOGHWW2F8Fkx6d7QrRNEsF1cjbciqFZAqpWCi2dfBoD/Mh3pjVTx4eIedSUKv
-sxkgXt8oNzN/XarlUaNHv7Pb32OIcLlImmCjmGxdIrtZ1Ce1JomYM61FshMVr6yf
-Mb9i/XZ3qTvXwFV6yNMSVu6YlTHczSbTUO9/OSh8XETKd1dFZm2iGCrOCogLYw/3
-6Q09xhis1a4y5T0SRP5bfuKdSentio15xjuKdrdJb+/m8V3/d+lgHUO3oshAlgQX
-k2SaZUiSwoBspqn9AwZQ
-=ihQw
------END PGP SIGNATURE-----
+Without the clock patch (9/9), the mach-vt8500 patch (6/9) won't compile
+due to unresolved symbols.
 
---vZbAFtxic7ONUJfi--
+In arch/arm/mach-vt8500/vt8500.c - you will get an unresolved symbol
+for 'vtwm_clk_init'
+
+Not sure if this matters, thought I should point it out.
+Does it need to compile cleanly in your tree (which is what I would assume),
+or just once its all combined in -next?
+Does it matter that the usb patches are already in -next?
+
+I don't really understand the requirements around submitting to individual
+trees and which (if any) of these points are actually issues.
+
+Regards
+
+Tony Prisk
