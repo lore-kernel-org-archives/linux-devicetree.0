@@ -1,31 +1,176 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [rtc-linux] RE: [PATCHv4 0/9] *** ARM: Update arch-vt8500 to
- Devicetree ***
-Date: Thu, 23 Aug 2012 15:34:08 +0200
-Message-ID: <CACRpkda-xuo1+cunCb6bYdRsCn4CWuSLdxTjib=Gz1kqMz-xEQ@mail.gmail.com>
-References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>
-	<201208231040.16702.arnd@arndb.de>
-	<76F764B079F92A4E843589C893D0A022DAF68C14@SERVER.prisktech.co.nz>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH V4] mtd: m25p80: Make fast read configurable via DT
+Date: Thu, 23 Aug 2012 15:41:53 +0200
+Message-ID: <1345729313-10831-1-git-send-email-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <76F764B079F92A4E843589C893D0A022DAF68C14-A1+cU8XkcJSYgi1/3OOQJ8krCUz0bFs7@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2012 at 2:58 PM, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org> wrote:
+Add DT property "m25p,fast-read" that signalises the particular
+chip supports "fast read" opcode.
 
-> Linus W has provided some feedback on the gpio driver - I missed the
-> issues he raised the first time around so just waiting for him to take a look
-> at v4 when he's got time.
+Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mtd/m25p80.txt |   29 ++++++++++++++++++++
+ drivers/mtd/devices/m25p80.c                     |   32 +++++++++++++---------
+ 2 files changed, 48 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/m25p80.txt
 
-Reviewed and OK:ed, looking good now.
+V2: Add documentation for the DT property.
+V3: Use of_property_get_bool() instead of of_find_property().
+V4: Adjust the documentation's "compatible:" section, make it not
+    Linux-specific, but keep the reference to Linux's list of
+    supported devices. Also, use the default name, spansion,m25p80
+    in the example.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Documentation/devicetree/bindings/mtd/m25p80.txt
+new file mode 100644
+index 0000000..701bb58
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
+@@ -0,0 +1,29 @@
++* MTD SPI driver for ST M25Pxx (and similar) serial flash chips
++
++Required properties:
++- #address-cells, #size-cells : Must be present if the device has sub-nodes
++  representing partitions.
++- compatible : Should be the manufacturer and the name of the chip. Bear in mind
++               the DT binding is not Linux-only, but in case of Linux, see the
++               "m25p_ids" table in drivers/mtd/devices/m25p80.c for the list of
++               supported chips.
++- reg : Chip-Select number
++- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
++
++Optional properties:
++- m25p,fast-read : Use the "fast read" opcode to read data from the chip instead
++                   of the usual "read" opcode. This opcode isn not supported by
++                   all chips and support for it can not be detected at runtime.
++                   Refer to your chips' datasheet to check if this is supported
++                   by your chip.
++
++Example:
++
++	flash: m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,m25p80";
++		reg = <0>;
++		spi-max-frequency = <40000000>;
++		m25p,fast-read;
++	};
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index d16f75c..a08d4ec 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -73,14 +73,6 @@
+ #define	MAX_READY_WAIT_JIFFIES	(40 * HZ)	/* M25P16 specs 40s max chip erase */
+ #define	MAX_CMD_SIZE		5
+ 
+-#ifdef CONFIG_M25PXX_USE_FAST_READ
+-#define OPCODE_READ 	OPCODE_FAST_READ
+-#define FAST_READ_DUMMY_BYTE 1
+-#else
+-#define OPCODE_READ 	OPCODE_NORM_READ
+-#define FAST_READ_DUMMY_BYTE 0
+-#endif
+-
+ #define JEDEC_MFR(_jedec_id)	((_jedec_id) >> 16)
+ 
+ /****************************************************************************/
+@@ -93,6 +85,7 @@ struct m25p {
+ 	u16			addr_width;
+ 	u8			erase_opcode;
+ 	u8			*command;
++	bool			fast_read;
+ };
+ 
+ static inline struct m25p *mtd_to_m25p(struct mtd_info *mtd)
+@@ -342,6 +335,7 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+ 	struct m25p *flash = mtd_to_m25p(mtd);
+ 	struct spi_transfer t[2];
+ 	struct spi_message m;
++	uint8_t opcode;
+ 
+ 	pr_debug("%s: %s from 0x%08x, len %zd\n", dev_name(&flash->spi->dev),
+ 			__func__, (u32)from, len);
+@@ -354,7 +348,7 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+ 	 * Should add 1 byte DUMMY_BYTE.
+ 	 */
+ 	t[0].tx_buf = flash->command;
+-	t[0].len = m25p_cmdsz(flash) + FAST_READ_DUMMY_BYTE;
++	t[0].len = m25p_cmdsz(flash) + (flash->fast_read ? 1 : 0);
+ 	spi_message_add_tail(&t[0], &m);
+ 
+ 	t[1].rx_buf = buf;
+@@ -376,12 +370,14 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+ 	 */
+ 
+ 	/* Set up the write data buffer. */
+-	flash->command[0] = OPCODE_READ;
++	opcode = flash->fast_read ? OPCODE_FAST_READ : OPCODE_NORM_READ;
++	flash->command[0] = opcode;
+ 	m25p_addr2cmd(flash, from, flash->command);
+ 
+ 	spi_sync(flash->spi, &m);
+ 
+-	*retlen = m.actual_length - m25p_cmdsz(flash) - FAST_READ_DUMMY_BYTE;
++	*retlen = m.actual_length - m25p_cmdsz(flash) -
++			(flash->fast_read ? 1 : 0);
+ 
+ 	mutex_unlock(&flash->lock);
+ 
+@@ -804,9 +800,10 @@ static int __devinit m25p_probe(struct spi_device *spi)
+ 	struct flash_info		*info;
+ 	unsigned			i;
+ 	struct mtd_part_parser_data	ppdata;
++	struct device_node		*np = spi->dev.of_node;
+ 
+ #ifdef CONFIG_MTD_OF_PARTS
+-	if (!of_device_is_available(spi->dev.of_node))
++	if (!of_device_is_available(np))
+ 		return -ENODEV;
+ #endif
+ 
+@@ -858,7 +855,8 @@ static int __devinit m25p_probe(struct spi_device *spi)
+ 	flash = kzalloc(sizeof *flash, GFP_KERNEL);
+ 	if (!flash)
+ 		return -ENOMEM;
+-	flash->command = kmalloc(MAX_CMD_SIZE + FAST_READ_DUMMY_BYTE, GFP_KERNEL);
++	flash->command = kmalloc(MAX_CMD_SIZE + (flash->fast_read ? 1 : 0),
++					GFP_KERNEL);
+ 	if (!flash->command) {
+ 		kfree(flash);
+ 		return -ENOMEM;
+@@ -915,6 +913,14 @@ static int __devinit m25p_probe(struct spi_device *spi)
+ 	flash->page_size = info->page_size;
+ 	flash->mtd.writebufsize = flash->page_size;
+ 
++	flash->fast_read = false;
++	if (np && of_property_read_bool(np, "m25p,fast-read"))
++		flash->fast_read = true;
++
++#ifdef CONFIG_M25PXX_USE_FAST_READ
++	flash->fast_read = true;
++#endif
++
+ 	if (info->addr_width)
+ 		flash->addr_width = info->addr_width;
+ 	else {
+-- 
+1.7.10.4
