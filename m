@@ -1,90 +1,63 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 1/7] mfd: add imx syscon driver based on regmap
-Date: Thu, 23 Aug 2012 12:06:47 +0100
-Message-ID: <20120823110647.GU7995@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 4/7] regulator: anatop-regulator: convert to use
+ imx-syscon to access anatop register
+Date: Thu, 23 Aug 2012 12:17:41 +0100
+Message-ID: <20120823111741.GX7995@opensource.wolfsonmicro.com>
 References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
- <1345619928-15446-2-git-send-email-b29396@freescale.com>
- <20120822160241.GR7995@opensource.wolfsonmicro.com>
- <20120823072629.GG10057@shlinux2.ap.freescale.net>
+ <1345619928-15446-5-git-send-email-b29396@freescale.com>
+ <20120822155953.GQ7995@opensource.wolfsonmicro.com>
+ <20120823071503.GF10057@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7447032118048260948=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120823072629.GG10057-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "paul.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <paul.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vZbAFtxic7ONUJfi"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120823071503.GF10057@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lrg@ti.com" <lrg@ti.com>, Zhao Richard-B20223 <B20223@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "paul.liu@linaro.org" <paul.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============7447032118048260948==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zfUJHOO+0QrREfab"
-Content-Disposition: inline
-
-
---zfUJHOO+0QrREfab
+--vZbAFtxic7ONUJfi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Aug 23, 2012 at 03:26:30PM +0800, Dong Aisheng wrote:
-> On Thu, Aug 23, 2012 at 12:02:41AM +0800, Mark Brown wrote:
+On Thu, Aug 23, 2012 at 03:15:04PM +0800, Dong Aisheng wrote:
+> On Wed, Aug 22, 2012 at 11:59:53PM +0800, Mark Brown wrote:
 
-> > It'd be good to provide a way of retrieving the regmap so that drivers
-> > for subsystems with generic regmap code could use the framework features
-> > (regulator is one example that I just mentioned in my other mail).
+> > With the conversion to regmap it'd also be good to convert the driver to
+> > use the regmap helper functions for enable and voltage operations if
+> > possible.
 
-> Do you mean something like:
-> regmap = syscon_regmap_dev_lookup(np, "fsl,anatop");
-> regmap_write(regmap, reg, val);
+> The anatop-regulator driver only implements set_voltage_sel/get_voltage_sel
+> which i have already converted, what do you mean others like
+> 'for enable and voltage operations' i should also convert?
 
-> Then drivers can use generic regmap framework features rather than depend
-> on what imx-syscon implemented, is that correct?
+Those operations should ideally be converted to use the generic regmap
+implementation now the device uses regmap - regmap_get_voltage_sel_regmap
+and so on.
 
-Yes, this is mainly for cases where the subsystem has helper functions
-that can work with regmap.
-
---zfUJHOO+0QrREfab
+--vZbAFtxic7ONUJfi
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQNg7AAAoJEFJkBDiqVpZ4MMEP/AwOzMlpcS8qIHrRB4k/ELDF
-fBzkP3bWtdVqwCyJjc4JU/oEz/g8o15vXwB+VIsGwf0e5Htk7X7U5eza78eXu/V4
-2qah5HMSJSi+gu+HjM24665O5wAwr6VqbokXaDtB8VdlXVxICh7Bi7Cib/rr8riI
-8FFf6TyvRnoHdF7WswXDSdAN84aVW2Vk6vX8egzZHIh/MIgmBdUd3xuk7/sm+1M+
-O/1SejKVo54cygeSg/L73be4evknYs/r0LwGNyHuIc5mKZ5VXqzKSeA2mkvkZAKS
-pb9LgsV/6J09BRI0i8xknl5rCbZ56U7C0GYQnwkHTWqsKuHZ8CzZ/k7GZ/1Evq99
-0jFe/n6ioKMd+AnN85EhNtpTmO5Z8kJseEyBIFQhrLMf1NX2dAmUKR3lo/YhA0n0
-eUdf5BthODvrtiRkizUXhXz1cZ8PfNzWmQLnPX8aBM7V0lTZHA7XJ1E6j8wunW8w
-OyRE117Y2+1lsA2R0PUh5/Xl8/VDNWS2gNG7ZHDbxJUDbw2d7dE06J8ibcuLxAN3
-Lt5nncusVy8uuvj/qHS7Jnra62qNPP7MwFbG6Y/s6pzBgmfyjQIbLTLLv6F4NRyI
-B5t4qu1avPP+MHbnXM/OVZCNxG7W6DgGdO7vK/PYRmnm8QvCGE1SvGBu+3I9nOR4
-GpLFT0IPp60aB+eOnRsw
-=IvBW
+iQIcBAEBAgAGBQJQNhFOAAoJEFJkBDiqVpZ4FMUQAJqRf050UwEgd+lOkw7TQESB
+JIlAGwap4ik235uGuM96R++oRCcOKOKx2bc+fM4bixKUH8FDAUBDEc+v9YPo4ACI
+D9Trr1w0fntF5wz7ZjOUxM/MEPohqPOlZ6BmKYc+EhY4EM70qJyzi+PNX4nkEG/P
+kIgYu8O00MbzwEtQshu/nFYCPzIKScpvThZUq3C8AWy1pX6i9MEblD+cjCx88iuZ
+CPA+k/dGgtBDhxPr1z+Iax59ze+q4l3oLpX0tXC8mBrymY8Tlz89ZXmtroa2ZH3l
+D868iChT0TX/l2JgIku+XgYOCzRX5cpW3jScU1bIT6Ly75ryPM50hWUQ70WydZR/
+/qsHobyWlgVQfNnHFddlZPr8lD1z9WmKX8Drx7uE71zPsAtreZZ+h+Jd79vxFMZo
+i87gOGHWW2F8Fkx6d7QrRNEsF1cjbciqFZAqpWCi2dfBoD/Mh3pjVTx4eIedSUKv
+sxkgXt8oNzN/XarlUaNHv7Pb32OIcLlImmCjmGxdIrtZ1Ce1JomYM61FshMVr6yf
+Mb9i/XZ3qTvXwFV6yNMSVu6YlTHczSbTUO9/OSh8XETKd1dFZm2iGCrOCogLYw/3
+6Q09xhis1a4y5T0SRP5bfuKdSentio15xjuKdrdJb+/m8V3/d+lgHUO3oshAlgQX
+k2SaZUiSwoBspqn9AwZQ
+=ihQw
 -----END PGP SIGNATURE-----
 
---zfUJHOO+0QrREfab--
-
---===============7447032118048260948==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============7447032118048260948==--
+--vZbAFtxic7ONUJfi--
