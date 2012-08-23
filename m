@@ -1,49 +1,55 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: Re: [PATCH 4/7] regulator: anatop-regulator: convert to use
- imx-syscon to access anatop register
-Date: Thu, 23 Aug 2012 14:12:03 +0800
-Message-ID: <20120823061202.GM4011@b20223-02.ap.freescale.net>
-References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
- <1345619928-15446-5-git-send-email-b29396@freescale.com>
- <5035BDBF.9020602@wwwdotorg.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH] mmc: dt: Add 'broken-cd' DT binding
+Date: Thu, 23 Aug 2012 12:29:52 +0530
+Message-ID: <CAJuYYwRDPU=m=XkYx8FPts=ar0pWyN7iTH5+6Kmb5KWMdT8pPg@mail.gmail.com>
+References: <1345547371-6784-1-git-send-email-thomas.abraham@linaro.org>
+	<CAJuYYwSv+dum8RP9xy+AZCH9pTU0peDpwjt7TA5zn3MFsG1uWA@mail.gmail.com>
+	<87k3ws5uhs.fsf@octavius.laptop.org>
+	<201208211208.49987.arnd@arndb.de>
+	<87393g5mic.fsf@octavius.laptop.org>
+	<5033A34E.7040201@gmail.com>
+	<87pq6k46jg.fsf@octavius.laptop.org>
+	<5033B0F0.7050506@gmail.com>
+	<CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
+	<20120822055151.GT24242@S2101-09.ap.freescale.net>
+	<877gsr5iz1.fsf@octavius.laptop.org>
+	<CAJuYYwQz00ZzB5MxRG66XEPZApAtS6bwJAafmw3b=7DD7u+Crg@mail.gmail.com>
+	<87y5l7421h.fsf@octavius.laptop.org>
+	<CAJuYYwQLUs5qb8NqtPf3=ytNHJ_VdnN8Z4yWwyk2+OTftdWFXw@mail.gmail.com>
+	<50351256.60507@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5035BDBF.9020602@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, devicetree-discuss@lists.ozlabs.org, paul.liu@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <50351256.60507@firmworks.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Chris Ball <cjb@laptop.org>, linux-samsung-soc@vger.kernel.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 22, 2012 at 11:21:03PM -0600, Stephen Warren wrote:
-> On 08/22/2012 01:18 AM, Dong Aisheng wrote:
-> > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> 
-> > diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-> 
-> > @@ -109,7 +110,11 @@ static int __devinit anatop_regulator_probe(struct platform_device *pdev)
-> >  	rdesc->ops = &anatop_rops;
-> >  	rdesc->type = REGULATOR_VOLTAGE;
-> >  	rdesc->owner = THIS_MODULE;
-> > -	sreg->mfd = anatopmfd;
-> > +
-> > +	sreg->anatop = of_parse_phandle(np, "fsl,anatop", 0);
-> > +	if (!sreg->anatop)
-> > +		return -ENODEV;
-> 
-> In fact, that imx_syscon_lookup function I proposed could even do the
-> of_parse_phandle() internally, so perhaps:
-> 
-> foo->syscon_dev = imx_syscon_lookup(np, "fsl,anatop", 0);
-> if (IS_ERR(foo->syscon_dev))
->     return PTR_ERR(foo->syscon_dev);
-> 
-> with imx_syscon_lookup() internally knowing when to return EPROBE_DEFER
-> rather than any other permanent error code (e.g. for missing property,
-> bad phandle, etc.)
-In some case that we access register in machine code, we don't have any
-phandler. The node is got by find compatible or by path.
+On 22 August 2012 22:39, Mitch Bradley <wmb@firmworks.com> wrote:
+> Sorry to interject on a topic that seems to have already been decided,
+> but I'm confused by one thing and would like clarification.  I
+> understand that you need to use a GPIO-style specifier as a surrogate
+> for a pinmux specification - that much is clear.  What is not clear is
+> why it's necessary to (ab)use the name "cd-gpios" for it.
+>
+> Why not use a different property name, e.g. "samsung,cd-pinmux-gpio =
+> <gpio-specifier>" for the "cd-gpios + samsung,sdhci-cd-internal" case?
+> Then both "samsung,sdhci-cdi-internal" and "samsung,sdhci-cd-external"
+> could go away.  There would only be one system-dependent property
+> "samsung,cd-pinmux-gpio" whose name would make it clear that it's
+> conflating pinmuxing and gpios.
 
-Thanks
-Richard 
+Right, I agree. I will prepare the sdhci-s3c based on Chris's new
+generic binding patch and your suggestion.
+
+>
+> I think the scheme I propose would be clearer, less likely to confuse
+> other people who try to use the driver as a model, require less
+> hand-waving in the documentation, and easier to change to a proper
+> pinmuxing scheme should that become available later.
+
+Thanks for your time.
+
+Regards,
+Thomas.
