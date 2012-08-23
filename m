@@ -1,17 +1,18 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 05/14] ARM: at91: add pinctrl support
-Date: Thu, 23 Aug 2012 09:06:46 +0200
-Message-ID: <CACQ1gAieByr5vMmyyCuGtS8AgnnRZPPhLZY8sKvwvcQYe5ieUA@mail.gmail.com>
-References: <20120810124820.GA20557@game.jcrosoft.org>
- <1344603731-32667-1-git-send-email-plagnioj@jcrosoft.com>
- <1344603731-32667-5-git-send-email-plagnioj@jcrosoft.com>
- <CACRpkdZ2__V06Eo8JH451Sup5Nw2jJXVOH2FOfZBp5nNYpCtbg@mail.gmail.com>
- <5034FC18.2090400@wwwdotorg.org>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/7] mfd: add imx syscon driver based on regmap
+Date: Thu, 23 Aug 2012 15:06:58 +0800
+Message-ID: <20120823070657.GE10057@shlinux2.ap.freescale.net>
+References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
+ <1345619928-15446-2-git-send-email-b29396@freescale.com>
+ <20120822082940.GJ4011@b20223-02.ap.freescale.net>
+ <20120822105729.GB10057@shlinux2.ap.freescale.net>
+ <5035BCB1.8000801@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5034FC18.2090400-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5035BCB1.8000801-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,46 +24,67 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "paul.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <paul.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxMi84LzIyIFN0ZXBoZW4gV2FycmVuIDxzd2FycmVuQHd3d2RvdG9yZy5vcmc+Ogo+Pj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXMgZm9yIGlvbXV4IGNvbnRyb2xsZXI6Cj4+PiArLSBjb21wYXRpYmxl
-OiAiYXRtZWwsYXQ5MXJtOTIwMC1waW5jdHJsIgo+Pj4gKy0gYXRtZWwsbXV4LW1hc2s6IGFycmF5
-IG9mIG1hc2sgKHBlcmlwaCBwZXIgYmFuaykgdG8gZGVzY3JpYmUgaWYgYSBwaW4gY2FuIGJlCj4+
-PiArICBjb25maWd1cmVkIGluIHRoaXMgcGVyaXBoIG1vZGUuIEFsbCB0aGUgcGVyaXBoIGFuZCBi
-YW5rIG5lZWQgdG8gYmUgZGVzY3JpYmUuCj4+Cj4+IENhbiB5b3UgcGxlYXNlIGJlIG1vcmUgZWxh
-Ym9yYXRlIG9uIHRoaXMgbXV4LW1hc2ssIGxpa2Ugd2hhdCBlYWNoIGJpdAo+PiBtZWFucyBhbmQg
-d2h5IHRoZSBiaXRzIGFyZSBhcnJhbmdlZCBsaWtlIHRoYXQgYW5kIHdoYXQgaXQgbWVhbnMgb24g
-dGhlCj4+IEFUOTEgcGxhdGZvcm0uLi4uIEkgd2FzIGZpcnN0IHJlYWRpbmcgdGhlIC5kdHMgYW5k
-IHdhcyBsaWtlID93b290PyBzbwo+PiBJIGdvIHRvIHRoZSBiaW5kaW5ncyBkb2MgYW5kIEkgcmVh
-ZCB0aGlzIGFuZCBJJ20gc3RpbGwgbGlrZSA/d29vdD8uLgo+Cj4gWWVzLCBJJ20gYSBsaXR0bGUg
-Y29uZnVzZWQgd2hhdCB0aGlzIGlzLCBhbmQgd291bGRuJ3QgaGF2ZSBhIGNsdWUgaG93IHRvCj4g
-ZmlsbCBpdCBpbi4KV2l0aCBhIHByYWN0aWNhbCBleGFtcGxlIGl0J3MgZWFzaWVyIHRvIHVuZGVy
-c3RhbmQuClRha2UgYSBTQU05WDUgcmVsZWFzZSBtYW51YWwgKGhlcmUgaXMgc2FtOWczNSk6Cmh0
-dHA6Ly93d3cuYXRtZWwuY29tL0ltYWdlcy9kb2MxMTA1My5wZGYgcGFnZSAxMSAowqc0LjMgcGFj
-a2FnZSBwaW5vdXQpCmluIHRoZSBmaWxlIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTFzYW05eDUuZHRz
-aSB5b3UndmUgZ290IHRoZSB0aGUKYXRtZWwsbXV4LW1hc2sgbGlrZSB0aGF0OgovKiBwZXJpcGhB
-ICBwZXJpcGhCICAgIHBlcmlwaEMgICAgICovCjB4ZmZmZmZmZmYgMHhmZmUwMzk5ZiAweGMwMDAw
-MDFjICAvKiBwaW9BICovCjB4MDAwN2ZmZmYgMHg4MDAwZmUzZiAweDAwMDAwMDAwICAvKiBwaW9C
-ICovCjB4ODAwMDAwMDAgMHgwN2MwZmZmZiAweGI4M2ZmZmZmICAvKiBwaW9DICovCjB4MDAzZmZm
-ZmYgMHgwMDNmODAwMCAweDAwMDAwMDAwICAvKiBwaW9EICovCgpMZXQncyB0YWtlIHRoZSBQaW9B
-IC0gcGVyaXBoZXJhbCBCOiAweGZmZTAzOTlmCkZyb20gdGhlIGRvY3VtZW50YXRpb24gdGFibGUg
-NC0zLCB3ZSBjYW4gZXh0cmFjdCB0aGUgY29sdW1uIFBJTwpQZXJpcGVyYWwgQiBmb3IgYWxsIHNp
-Z25hbHMgUEEwLVBBMzE6CiAgICAgUElPIFBlcmlwaGVyYWwgQgpQQTAgIFNQSTFfTlBDUzEKUEEx
-ICBTUEkxX05QQ1MyClBBMiAgTUNJMV9EQTEKUEEzICBNQ0kxX0RBMgpQQTQgIE1DSTFfREEzClBB
-NSAgLS0tLS0tLS0KUEE2ICAtLS0tLS0tLQpQQTcgIFNQSTBfTlBDUzEKUEE4ICBTUEkxX05QQ1Mw
-ClBBOSAgLS0tLS0tLS0KUEExMCAtLS0tLS0tLQpQQTExIE1DSTFfREEwClBBMTIgTUNJMV9DREEK
-UEExMyBNQ0kxX0NLClBBMTQgLS0tLS0tLS0KUEExNSAtLS0tLS0tLQpldGMuLi4KRWFjaCB0aW1l
-IGl0J3MgcG9zc2libGUgdG8gbXV4IGEgcGluIHRvIHRoZSBwZXJpcGhlcmFsIEIgZnVuY3Rpb24g
-KGllCndoZW4gdGhlcmUncyBubyAiLS0tLS0iKSB0aGUgY29ycmVzcG9uZGluZyBiaXQgaXMgc2V0
-OgogICAgIFBJTyBQZXJpcGhlcmFsIEIKUEEwICBTUEkxX05QQ1MxICAgMQpQQTEgIFNQSTFfTlBD
-UzIgICAxClBBMiAgTUNJMV9EQTEgICAgIDEKUEEzICBNQ0kxX0RBMiAgICAgMQoKUEE0ICBNQ0kx
-X0RBMyAgICAgMQpQQTUgIC0tLS0tLS0tICAgICAwClBBNiAgLS0tLS0tLS0gICAgIDAKUEE3ICBT
-UEkwX05QQ1MxICAgMQoKUEE4ICBTUEkxX05QQ1MwICAgMQpQQTkgIC0tLS0tLS0tICAgICAwClBB
-MTAgLS0tLS0tLS0gICAgIDAKUEExMSBNQ0kxX0RBMCAgICAgMQoKUEExMiBNQ0kxX0NEQSAgICAg
-MQpQQTEzIE1DSTFfQ0sgICAgICAxClBBMTQgLS0tLS0tLS0gICAgIDAKUEExNSAtLS0tLS0tLSAg
-ICAgMAoKPT4gdGhpcyBnaXZlcyAweDM5OWYKCgoKQmVzdCByZWdhcmRzLApSaWNoYXJkCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
-Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
-cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Thu, Aug 23, 2012 at 01:16:33PM +0800, Stephen Warren wrote:
+> On 08/22/2012 04:57 AM, Dong Aisheng wrote:
+> > On Wed, Aug 22, 2012 at 04:29:41PM +0800, Zhao Richard-B20223 wrote:
+> >> On Wed, Aug 22, 2012 at 03:18:42PM +0800, Dong Aisheng wrote:
+> >>> Add regmap based imx syscon driver.
+> >>> This is usually used for access misc bits in registers which does not belong
+> >>> to a specific module, for example, IOMUXC GPR and ANATOP.
+> >>> With this driver, we provide a standard API for client driver to call to
+> >>> access registers which are registered into syscon.
+> 
+> >>> +static int imx_syscon_match(struct device *dev, void *data)
+> >>> +{
+> >>> +	struct imx_syscon *syscon = dev_get_drvdata(dev);
+> >>> +	struct device_node *dn = data;
+> >>> +
+> >>> +	return (syscon->dev->of_node == dn) ? 1 : 0;
+> >>> +}
+> >>> +
+> >>> +int imx_syscon_write(struct device_node *np, u32 reg, u32 val)
+> >>
+> >> For API function, is it better to use struct device rather not np?
+> >>  - it won't need to search dev in below code every time it access
+> >>    registers.
+> >
+> > The purpose is not require client driver to know the implementation details
+> > of imx_syscon_{read/write} API, it's more easy to use since client only
+> > needs pass the device node to which it wants to read/write.
+> > 
+> > For search dev, it doesn't look like a big issue since it only search devices
+> > attached on the driver which is very quick.
+> > And hide it in common API does not require every client driver to write
+> > duplicated codes.
+> 
+> You could still implement a function:
+> 
+> struct device *imx_syscon_lookup(struct device_node *np)
+> 
+> ... and require all clients to call that, and pass the dev to the other
+> functions. That'd still keep all the lookup code in one place, but
+> prevent it having to run every time, no matter how small it is.
+> 
+> I think such an API is required anyway, since client drivers need some
+> way to determine whether the imx_syscon driver is available yet, and if
+> not defer their probe until it is.
+> 
+> So, clients would do:
+> 
+> foo->syscon_dev = imx_syscon_lookup(np);
+> if (!foo->syscon_dev)
+>     return -EPROBE_DEFER;
+> 
+> rather than:
+> 
+> foo->syscon_np = np;
+> 
+> Not too much overhead/boiler-plate in each client driver.
+> 
+Looks like a good idea.
+
+Regards
+Dong Aisheng
