@@ -1,53 +1,148 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
-Date: Fri, 24 Aug 2012 01:01:13 +0200
-Message-ID: <5036B639.20608@gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com> <5035445B.6000500@wwwdotorg.org> <CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com> <50366E44.4030606@wwwdotorg.org> <50369305.6050304@gmail.com> <50369FEE.8000003@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 1/4] pinctrl: add samsung pinctrl and gpiolib driver
+Date: Thu, 23 Aug 2012 17:12:43 -0600
+Message-ID: <5036B8EB.5050502@wwwdotorg.org>
+References: <1345720529-32315-1-git-send-email-thomas.abraham@linaro.org> <1345720529-32315-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50369FEE.8000003@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1345720529-32315-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, dong.aisheng@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2012 11:26 PM, Stephen Warren wrote:
-> As you may have guessed, I strongly prefer the hard-coded static table
-> based approach, or at least separating the definition of known
-> pins/groups/functions from the configuration nodes that define which
-> particular mux settings to actually use.
->
-> Puting this all a little more simply, the pinctrl core wants to generate
-> a list of all known functions. It is a single global/unified list. It
-> first calls pinmux_ops.get_functions_count() to find out how many
-> functions there are in the list, then pinmux_ops.get_function_name() for
-> each one to find its name, then pinmux_ops.get_function_groups() to find
-> out which groups allow that function to be mux'd onto them.
+On 08/23/2012 05:15 AM, Thomas Abraham wrote:
+> Add a new device tree enabled pinctrl and gpiolib driver for Samsung
+> SoC's. This driver provides a common and extensible framework for all
+> Samsung SoC's to interface with the pinctrl and gpiolib subsystems. This
+> driver supports only device tree based instantiation and hence can be
+> used only on those Samsung platforms that have device tree enabled.
+> 
+> This driver is split into two parts: the pinctrl interface and the gpiolib
+> interface. The pinctrl interface registers pinctrl devices with the pinctrl
+> subsystem and gpiolib interface registers gpio chips with the gpiolib
+> subsystem. The information about the pins, pin groups, pin functions and
+> gpio chips, which are SoC specific, are parsed from device tree node.
 
-Ok, now this becomes a little bit more clear to me.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
 
-Consider uart1 on dove is muxable to:
-mpp2 uart1(rts), mpp3 uart1(cts), mpp21 uart1(rts), mpp22 uart1(cts),
-and finally mpp_uart1(rx and tx).
+BTW, this is a very nicely written and complete/precise binding
+document. Well done.
 
-So possible, valid combinations for uart1 would be:
-(a) mpp_uart1;
-(b) mpp_uart1, mpp2, mpp3;
-(c) mpp_uart1, mpp21, mpp22;
-(d) mpp_uart1, mpp2, mpp22;
-(e) mpp_uart1, mpp21, mpp3;
+> +Samsung GPIO and Pin Mux/Config controller
+> +
+> +Samsung's ARM based SoC's integrates a GPIO and Pin mux/config hardware
+> +controller. It controls the input/output settings on the available pads/pins
+> +and also provides ability to multiplex and configure the output of various
+> +on-chip controllers onto these pads.
+> +
+> +Required Properties:
+> +- compatible: should be one of the following.
+> +  - "samsung,pinctrl-exynos4210": for Exynos4210 compatible pin-controller.
+> +  - "samsung,pinctrl-exynos5250": for Exynos5250 compatible pin-controller.
+> +
+> +- reg: Base address of the pin controller hardware module and length of
+> +  the address space it occupies.
+> +
+> +- interrupts: interrupt specifier for the controller. The format and value of
+> +  the interrupt specifier depends on the interrupt parent for the controller.
+> +
+> +- Pin mux/config groups as child nodes: The pin mux (selecting pin function
 
-Now what we currently do is, use DT to setup all known functions with e.g.
-marvell,pins = "mpp_uart1", "mpp2", "mpp22" and marvell,function = "uart1".
-This requires to count all pinctrl DT node children to count the known
-functions that can ever be muxed to. It will never allow to mux uart1 to sw
-flow control during run-time when there was no DT child node for it.
+Direct child nodes of the pin-controller, not a second level?
 
-But you are proposing to scan the list passed from SoC specific driver for all
-possible marvell,function ("uart1", "uart2", "sdio0", ...) and build up lists
-of pingroups that can be used with this specific marvell,function; or even build
-up lists of pingroups that allow uart1(rts), and another one for uart1(cts), ...?
+While that's quite legal, it means that if you need a particular client
+module to use 4 pins, 2 of which need one samsung,pin-function value and
+2 of which need a different pin-function value, then the client device's
+pinctrl-0 property has to have two entries.
 
-Sebastian
+i.e. a completely hypothetical example roughly based on yours below:
+
+	pinctrl_1: pinctrl@11000000 {
+		uart0_rxd: uart0-rxd {
+			samsung,pins = "gpa0-0";
+			samsung,pin-function = <2>;
+			samsung,pin-pud = <0>;
+			samsung,pin-drv = <0>;
+		};
+
+		uart0_txd: uart0-txd {
+			samsung,pins = "gpa0-1";
+			samsung,pin-function = <1>;
+			samsung,pin-pud = <0>;
+			samsung,pin-drv = <0>;
+		};
+	};
+
+	uart@13800000 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&uart0_rxd &uart0_txd>;
+	};
+
+rather than:
+
+	pinctrl_1: pinctrl@11000000 {
+		uart0_opt1: uart0-opt1 {
+			uart0_rxd: uart0-rxd {
+				samsung,pins = "gpa0-0";
+				samsung,pin-function = <2>;
+				samsung,pin-pud = <0>;
+				samsung,pin-drv = <0>;
+			};
+
+			uart0_txd: uart0-txd {
+				samsung,pins = "gpa0-1";
+				samsung,pin-function = <1>;
+				samsung,pin-pud = <0>;
+				samsung,pin-drv = <0>;
+			};
+		};
+	};
+
+	uart@13800000 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&uart0_opt1;
+	};
+
+The latter layout simplifies writing the client nodes, since all the
+related settings can be grouped together by whoever writes the pinctrl
+node, rather than every client author having to work out all the entries
+to include in the list.
+
+That all said, the way you've defined the binding is perfectly
+legitimate, and I don't have any kind of issue with it; it's just
+something you might want to consider.
+
+Irrespective of whether you choose to keep the binding as-is, or change
+it, please consider it:
+
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+
+> +  The values specified by these config properties should be dervied from the
+
+s/dervied/derived/
+
+> +External GPIO and Wakeup Interrupts:
+> +
+> +The controller supports two types of external interrupts over gpio. The first
+> +is the external gpio interrupt and second is the external wakeup interrupts.
+> +The difference between the two is that the external wakeup interrupts can be
+> +used as system wakeup events.
+> +
+> +A. External GPIO Interrupts: For supporting external gpio interrupts, the
+> +   properties should be specified in the pin-controller device node.
+
+s/the properties/the following properties/ ?
+
+> +Aliases:
+> +
+> +All the pin controller nodes should be represented in the aliases node using
+> +the following format 'pinctrl{n}' where n is a unique number for the alias.
+
+There /should/ be an alias, or there /may/ be; I'm not sure why
+requiring or recommending an alias would be particularly important for
+this device?
+
+I've only had time to review the binding document so far.
