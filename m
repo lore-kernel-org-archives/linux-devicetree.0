@@ -1,86 +1,53 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] [v2] netdev/phy: add MDIO bus multiplexer driven by a
- memory-mapped device
-Date: Thu, 23 Aug 2012 16:54:53 -0600
-Message-ID: <5036B4BD.70208@wwwdotorg.org>
-References: <1345751071-23128-1-git-send-email-timur@freescale.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Fri, 24 Aug 2012 01:01:13 +0200
+Message-ID: <5036B639.20608@gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com> <5035445B.6000500@wwwdotorg.org> <CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com> <50366E44.4030606@wwwdotorg.org> <50369305.6050304@gmail.com> <50369FEE.8000003@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345751071-23128-1-git-send-email-timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andy Fleming <afleming-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50369FEE.8000003@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2012 01:44 PM, Timur Tabi wrote:
-> Add support for an MDIO bus multiplexer controlled by a simple memory-mapped
-> device, like an FPGA.  The device must be memory-mapped and contain only
-> 8-bit registers (which keeps things simple).
+On 08/23/2012 11:26 PM, Stephen Warren wrote:
+> As you may have guessed, I strongly prefer the hard-coded static table
+> based approach, or at least separating the definition of known
+> pins/groups/functions from the configuration nodes that define which
+> particular mux settings to actually use.
+>
+> Puting this all a little more simply, the pinctrl core wants to generate
+> a list of all known functions. It is a single global/unified list. It
+> first calls pinmux_ops.get_functions_count() to find out how many
+> functions there are in the list, then pinmux_ops.get_function_name() for
+> each one to find its name, then pinmux_ops.get_function_groups() to find
+> out which groups allow that function to be mux'd onto them.
 
-> +++ b/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
+Ok, now this becomes a little bit more clear to me.
 
-> +	/* The FPGA node */
-> +	fpga: board-control@3,0 {
-> +		compatible = "fsl,p5020ds-fpga", "fsl,fpga-ngpixis";
-> +		reg = <3 0 0x30>;
+Consider uart1 on dove is muxable to:
+mpp2 uart1(rts), mpp3 uart1(cts), mpp21 uart1(rts), mpp22 uart1(cts),
+and finally mpp_uart1(rx and tx).
 
-Why not add the following here:
+So possible, valid combinations for uart1 would be:
+(a) mpp_uart1;
+(b) mpp_uart1, mpp2, mpp3;
+(c) mpp_uart1, mpp21, mpp22;
+(d) mpp_uart1, mpp2, mpp22;
+(e) mpp_uart1, mpp21, mpp3;
 
-	#address-cells = <1>:
-	#size-cells = <1>;
-	ranges = <...>;
+Now what we currently do is, use DT to setup all known functions with e.g.
+marvell,pins = "mpp_uart1", "mpp2", "mpp22" and marvell,function = "uart1".
+This requires to count all pinctrl DT node children to count the known
+functions that can ever be muxed to. It will never allow to mux uart1 to sw
+flow control during run-time when there was no DT child node for it.
 
-> +
-> +		mdio-mux-emi2 {
-> +			compatible = "mdio-mux-mmioreg", "mdio-mux";
-> +			mdio-parent-bus = <&xmdio0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <9>; // BRDCFG1
+But you are proposing to scan the list passed from SoC specific driver for all
+possible marvell,function ("uart1", "uart2", "sdio0", ...) and build up lists
+of pingroups that can be used with this specific marvell,function; or even build
+up lists of pingroups that allow uart1(rts), and another one for uart1(cts), ...?
 
-Then, that'd have to be <9 1>;
-
-That way, ...
-
-> diff --git a/drivers/net/phy/mdio-mux-mmioreg.c b/drivers/net/phy/mdio-mux-mmioreg.c
-
-> +static int __devinit mdio_mux_mmioreg_probe(struct platform_device *pdev)
-
-> +	/* The MMIO device is the parent of this device */
-> +	np2 = of_get_parent(np);
-> +	if (!np2) {
-> +		dev_err(&pdev->dev, "could not find parent MMIO device\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = of_address_to_resource(np2, 0, &res);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "could not obtain memory map for node %s\n",
-> +			np2->full_name);
-> +		return ret;
-> +	}
-> +	s->phys = res.start;
-
-You could simplify all that into just "of_iomap(np, 0)", and all the
-address translation etc. happens entirely automatically, in the standard
-fashion for DT.
-
-The advantage here is that it completely decouples the mdio-mux-mmioreg
-driver from any knowledge of its parent; you could just as easily use
-this driver/binding as a device directly on some SoC bus, rather than
-requiring there to be a parent device above it. After all, the mux
-register might be some random standalone on-SoC register (although I
-wonder if that case might not be better covered by a mdio-mux-pinctrl
-driver instead; I guess it depends on how special-purpose the mux
-register is).
+Sebastian
