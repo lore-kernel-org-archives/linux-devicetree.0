@@ -1,46 +1,333 @@
-From: "Yann E. MORIN" <yann.morin.1998-GANU6spQydw@public.gmane.org>
-Subject: RFC: New release for DTC?
-Date: Thu, 23 Aug 2012 20:15:39 +0200
-Message-ID: <201208232015.39613.yann.morin.1998@free.fr>
+From: Timur Tabi <timur@freescale.com>
+Subject: [PATCH] [v2] netdev/phy: add MDIO bus multiplexer driven by a memory-mapped device
+Date: Thu, 23 Aug 2012 14:44:31 -0500
+Message-ID: <1345751071-23128-1-git-send-email-timur@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Andy Fleming <afleming@freescale.com>, David Miller <davem@davemloft.net>, ddaney.cavm@gmail.com, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hello All!
+Add support for an MDIO bus multiplexer controlled by a simple memory-mapped
+device, like an FPGA.  The device must be memory-mapped and contain only
+8-bit registers (which keeps things simple).
 
-Following advice from Jon Loeliger, I would suggest that a new release
-of DTC be tagged and packaged.
+Tested on a Freescale P5020DS board which uses the "PIXIS" FPGA attached
+to the localbus.
 
-It is important for some projects to rely on a released version, rather
-than use a random cset from the repository. Comes to mind, the automated
-build-systems, such as buildroot.
+Signed-off-by: Timur Tabi <timur@freescale.com>
+---
+ .../devicetree/bindings/net/mdio-mux-mmioreg.txt   |   73 ++++++++
+ drivers/net/phy/Kconfig                            |   13 ++
+ drivers/net/phy/Makefile                           |    1 +
+ drivers/net/phy/mdio-mux-mmioreg.c                 |  185 ++++++++++++++++++++
+ 4 files changed, 272 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
+ create mode 100644 drivers/net/phy/mdio-mux-mmioreg.c
 
-Of course, I can help, if need be! ;-)
-
-Are there any others who think that a release would make sense?
-
-Thank you!
-
-Regards,
-Yann E. MORIN.
-
+diff --git a/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt b/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
+new file mode 100644
+index 0000000..251aa10
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
+@@ -0,0 +1,73 @@
++Properties for an MDIO bus multiplexer controlled by a memory-mapped device
++
++This is a special case of a MDIO bus multiplexer.  A memory-mapped device,
++like an FPGA, is used to control which child bus is connected.  The mdio-mux
++node must be a child of the memory-mapped device.  The driver currently only
++supports devices with 8-bit registers.
++
++Required properties in addition to the generic multiplexer properties:
++
++- compatible : string, must contain "mdio-mux-mmioreg"
++
++- reg : integer, contains the offset of the register that
++	controls the bus multiplexer.
++
++- mux-mask : integer, contains an 8-bit mask that specifies which
++	bits in the register control the actual bus multiplexer.  The
++	'reg' property of each child mdio-mux node must be constrained by
++	this mask.
++
++Example:
++
++The FPGA node defines a memory-mapped FPGA with a register space of 0x30 bytes.
++For the "EMI2" MDIO bus, register 9 (BRDCFG1) controls the mux on that bus.
++A bitmask of 0x6 means that bits 1 and 2 (bit 0 is lsb) are the bits on
++BRDCFG1 that control the actual mux.
++
++	/* The FPGA node */
++	fpga: board-control@3,0 {
++		compatible = "fsl,p5020ds-fpga", "fsl,fpga-ngpixis";
++		reg = <3 0 0x30>;
++
++		mdio-mux-emi2 {
++			compatible = "mdio-mux-mmioreg", "mdio-mux";
++			mdio-parent-bus = <&xmdio0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <9>; // BRDCFG1
++			mux-mask = <0x6>; // EMI2
++
++			emi2_slot1: mdio@0 {	// Slot 1 XAUI (FM2)
++				reg = <0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				phy_xgmii_slot1: ethernet-phy@0 {
++					compatible = "ethernet-phy-ieee802.3-c45";
++					reg = <4>;
++				};
++			};
++
++			emi2_slot2: mdio@2 {	// Slot 2 XAUI (FM1)
++				reg = <2>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				phy_xgmii_slot2: ethernet-phy@4 {
++					compatible = "ethernet-phy-ieee802.3-c45";
++					reg = <0>;
++				};
++			};
++		};
++	};
++
++	/* The parent MDIO bus. */
++	xmdio0: mdio@f1000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "fsl,fman-xmdio";
++		reg = <0xf1000 0x1000>;
++		interrupts = <100 1 0 0>;
++	};
++
++
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 3090dc6..0268edd 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -159,6 +159,19 @@ config MDIO_BUS_MUX_GPIO
+ 	  several child MDIO busses to a parent bus.  Child bus
+ 	  selection is under the control of GPIO lines.
+ 
++config MDIO_BUS_MUX_MMIOREG
++	tristate "Support for MMIO device-controlled MDIO bus multiplexers"
++	depends on OF_MDIO
++	select MDIO_BUS_MUX
++	help
++	  This module provides a driver for MDIO bus multiplexers that
++	  are controlled via a simple memory-mapped device, like an FPGA.
++	  The multiplexer connects one of several child MDIO busses to a
++	  parent bus.  Child bus selection is under the control of one of
++	  the FPGA's registers.
++
++	  Currently, only 8-bit registers are supported.
++
+ endif # PHYLIB
+ 
+ config MICREL_KS8995MA
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index 6d2dc6c..426674d 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -28,3 +28,4 @@ obj-$(CONFIG_MICREL_KS8995MA)	+= spi_ks8995.o
+ obj-$(CONFIG_AMD_PHY)		+= amd.o
+ obj-$(CONFIG_MDIO_BUS_MUX)	+= mdio-mux.o
+ obj-$(CONFIG_MDIO_BUS_MUX_GPIO)	+= mdio-mux-gpio.o
++obj-$(CONFIG_MDIO_BUS_MUX_MMIOREG) += mdio-mux-mmioreg.o
+diff --git a/drivers/net/phy/mdio-mux-mmioreg.c b/drivers/net/phy/mdio-mux-mmioreg.c
+new file mode 100644
+index 0000000..e706c695
+--- /dev/null
++++ b/drivers/net/phy/mdio-mux-mmioreg.c
+@@ -0,0 +1,185 @@
++/*
++ * Simple memory-mapped device MDIO MUX driver
++ *
++ * Author: Timur Tabi <timur@freescale.com>
++ *
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include <linux/platform_device.h>
++#include <linux/device.h>
++#include <linux/of_mdio.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/phy.h>
++#include <linux/mdio-mux.h>
++
++struct mdio_mux_mmioreg_state {
++	void *mux_handle;
++	phys_addr_t phys;
++	unsigned int offset;
++	uint8_t mask;
++};
++
++/*
++ * MDIO multiplexing switch function
++ *
++ * This function is called by the mdio-mux layer when it thinks the mdio bus
++ * multiplexer needs to switch.
++ *
++ * 'current_child' is the current value of the mux register (masked via
++ * s->mask).
++ *
++ * 'desired_child' is the value of the 'reg' property of the target child MDIO
++ * node.
++ *
++ * The first time this function is called, current_child == -1.
++ *
++ * If current_child == desired_child, then the mux is already set to the
++ * correct bus.
++ */
++static int mdio_mux_mmioreg_switch_fn(int current_child, int desired_child,
++				      void *data)
++{
++	struct mdio_mux_mmioreg_state *s = data;
++
++	if (current_child ^ desired_child) {
++		void *p = ioremap(s->phys + s->offset, 1);
++		uint8_t x, y;
++
++		if (!p)
++			return -ENOMEM;
++
++		x = ioread8(p);
++		y = (x & ~s->mask) | desired_child;
++		if (x != y) {
++			iowrite8((x & ~s->mask) | desired_child, p);
++			pr_debug("%s: %02x -> %02x\n", __func__, x, y);
++		}
++
++		iounmap(p);
++	}
++
++	return 0;
++}
++
++static int __devinit mdio_mux_mmioreg_probe(struct platform_device *pdev)
++{
++	struct device_node *np2, *np = pdev->dev.of_node;
++	struct mdio_mux_mmioreg_state *s;
++	struct resource res;
++	const __be32 *iprop;
++	int len, ret;
++
++	dev_dbg(&pdev->dev, "probing node %s\n", np->full_name);
++
++	s = devm_kzalloc(&pdev->dev, sizeof(*s), GFP_KERNEL);
++	if (!s)
++		return -ENOMEM;
++
++	/* The MMIO device is the parent of this device */
++	np2 = of_get_parent(np);
++	if (!np2) {
++		dev_err(&pdev->dev, "could not find parent MMIO device\n");
++		return -ENODEV;
++	}
++
++	ret = of_address_to_resource(np2, 0, &res);
++	if (ret) {
++		dev_err(&pdev->dev, "could not obtain memory map for node %s\n",
++			np2->full_name);
++		return ret;
++	}
++	s->phys = res.start;
++
++	iprop = of_get_property(np, "reg", &len);
++	if (!iprop || len != sizeof(uint32_t)) {
++		dev_err(&pdev->dev, "missing or invalid 'reg' property\n");
++		return -EINVAL;
++	}
++	s->offset = be32_to_cpup(iprop);
++	if (s->offset >= resource_size(&res)) {
++		dev_err(&pdev->dev, "'reg' property value of %u is too large\n",
++			s->offset);
++		return -EINVAL;
++	}
++
++	iprop = of_get_property(np, "mux-mask", &len);
++	if (!iprop || len != sizeof(uint32_t)) {
++		dev_err(&pdev->dev, "missing or invalid mux-mask property\n");
++		return -ENODEV;
++	}
++	if (be32_to_cpup(iprop) > 255) {
++		dev_err(&pdev->dev, "only 8-bit registers are supported\n");
++		return -EINVAL;
++	}
++	s->mask = be32_to_cpup(iprop);
++
++	/*
++	 * Verify that the 'reg' property of each child MDIO bus does not
++	 * set any bits outside of the 'mask'.
++	 */
++	for_each_available_child_of_node(np, np2) {
++		iprop = of_get_property(np2, "reg", &len);
++		if (!iprop || len != sizeof(uint32_t)) {
++			dev_err(&pdev->dev, "mdio-mux child node %s is "
++				"missing a 'reg' property\n", np2->full_name);
++			return -ENODEV;
++		}
++		if (be32_to_cpup(iprop) & ~s->mask) {
++			dev_err(&pdev->dev, "mdio-mux child node %s has "
++				"a 'reg' value with unmasked bits\n",
++				np2->full_name);
++			return -ENODEV;
++		}
++	}
++
++	ret = mdio_mux_init(&pdev->dev, mdio_mux_mmioreg_switch_fn,
++			    &s->mux_handle, s);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register mdio-mux bus %s\n",
++			np->full_name);
++		return ret;
++	}
++
++	pdev->dev.platform_data = s;
++
++	return 0;
++}
++
++static int __devexit mdio_mux_mmioreg_remove(struct platform_device *pdev)
++{
++	struct mdio_mux_mmioreg_state *s = dev_get_platdata(&pdev->dev);
++
++	mdio_mux_uninit(s->mux_handle);
++
++	return 0;
++}
++
++static struct of_device_id mdio_mux_mmioreg_match[] = {
++	{
++		.compatible = "mdio-mux-mmioreg",
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, mdio_mux_mmioreg_match);
++
++static struct platform_driver mdio_mux_mmioreg_driver = {
++	.driver = {
++		.name		= "mdio-mux-mmioreg",
++		.owner		= THIS_MODULE,
++		.of_match_table = mdio_mux_mmioreg_match,
++	},
++	.probe		= mdio_mux_mmioreg_probe,
++	.remove		= __devexit_p(mdio_mux_mmioreg_remove),
++};
++
++module_platform_driver(mdio_mux_mmioreg_driver);
++
++MODULE_AUTHOR("Timur Tabi <timur@freescale.com>");
++MODULE_DESCRIPTION("Memory-mapped device MDIO MUX driver");
++MODULE_LICENSE("GPL v2");
 -- 
-.-----------------.--------------------.------------------.--------------------.
-|  Yann E. MORIN  | Real-Time Embedded | /"\ ASCII RIBBON | Erics' conspiracy: |
-| +33 662 376 056 | Software  Designer | \ / CAMPAIGN     |  ___               |
-| +33 223 225 172 `------------.-------:  X  AGAINST      |  \e/  There is no  |
-| http://ymorin.is-a-geek.org/ | _/*\_ | / \ HTML MAIL    |   v   conspiracy.  |
-'------------------------------^-------^------------------^--------------------'
+1.7.3.4
