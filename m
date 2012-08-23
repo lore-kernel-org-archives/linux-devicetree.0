@@ -1,132 +1,27 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
-Date: Thu, 23 Aug 2012 11:45:27 +0200
-Message-ID: <CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com>
-	<5035445B.6000500@wwwdotorg.org>
+From: Alan Cox <alan@linux.intel.com>
+Subject: Re: [PATCHv4 3/9] serial: vt8500: Add devicetree support for
+ vt8500-serial
+Date: Thu, 23 Aug 2012 11:53:00 +0100
+Message-ID: <20120823115300.5fdb5cd1@bob.linux.org.uk>
+References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>
+	<1345707346-9035-4-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5035445B.6000500@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1345707346-9035-4-git-send-email-linux@prisktech.co.nz>
+Sender: linux-serial-owner@vger.kernel.org
+To: Tony Prisk <linux@prisktech.co.nz>
+Cc: vt8500-wm8505-linux-kernel@googlegroups.com, Russell King <linux@arm.linux.org.uk>, Alessandro Zummo <a.zummo@towertech.it>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@stericsson.com>, Mike Turquette <mturquette@ti.com>, Stephen Warren <swarren@nvidia.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, rtc-linux@googlegroups.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/22/12, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/22/2012 02:22 AM, Sebastian Hesselbarth wrote:
->> +++ b/drivers/pinctrl/pinctrl-mvebu.c
->
->> +static int mvebu_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
->
->> +	of_property_for_each_string(np, "marvell,pins", prop, group) {
->> +		struct mvebu_pinctrl_group *grp =
->> +			mvebu_pinctrl_find_group_by_name(pctl, group);
->> +
->> +		if (!grp) {
->> +			dev_err(pctl->dev, "unknown pin %s", group);
->> +			continue;
->> +		}
->> +
->> +		if (!mvebu_pinctrl_find_setting_by_name(pctl, grp, function)) {
->> +			dev_err(pctl->dev, "unsupported function %s on pin %s",
->> +				function, group);
->> +			continue;
->> +		}
->
-> The error-checking here isn't strictly necessary; the pinctrl core will
-> error-check all the names if/when the map entries are used. So, you
-> could probably get away with just assigning the pin/function names
-> directly into (*map) and hence remove some code here. Still, it's not a
-> big deal either way.
+On Thu, 23 Aug 2012 19:35:39 +1200
+Tony Prisk <linux@prisktech.co.nz> wrote:
 
-Hi Stephen,
+> Increase vt8500_max_ports to 6 as the WM8505 as 6 available uarts.
+> Use devicetree port id as primary addressing for ports but allow
+> auto-allocation if id not specified.
 
-as these error checks are only performed once, I'd like to have them there
-as they give hints when someone uses wrong marvell,pins/function names
-in DT.
+Acked-by: Alan Cox <alan@linux.intel.com>
 
->> +static int __devinit mvebu_pinctrl_dt_parse_function(struct mvebu_pinctrl
->> *pctl,
->
->> +static int __devinit mvebu_pinctrl_dt_parse(struct platform_device
->> *pdev,
->> +					struct mvebu_pinctrl *pctl)
->
-> I don't understand what those two functions do, or a good chunk of
-> probe(). It seems like they're setting up the ability to get/set pin
-> configrations in addition to pin muxing, although if that's so, it seems
-> odd that none of the binding documents specify any way of controlling
-> pin configuration from device tree. Are you expecting drivers to call
-> APIs such as pin_config_set() directly, rather than controlling pin
-> config through DT?
-
-probe() receives some structs from the SoC specific driver stubs that
-describe, e.g. how many muxable pins are available, which pingroup they
-belong to (marvell,pins), what valid register values are and how they are
-named (marvell,function). Although, all mvebu SoC share a good part of
-pinmux register layout, there are especially for dove some very different
-ways to mux pins. As mvebu pinctrl is a true mux-only driver, i.e. no
-pin drive strength or pin direction configuration, we decided not to have
-single pins controlable but only pingroups even if they comprise only a
-single pin.
-
-dt_parse() and dt_parse_function() build up structs that get used later on
-in mvebu_pinmux_ops that require indexed functions. I can join them with
-dt_node_to_map() but that would require incremental kzalloc for the
-corresponding array. Or I could (functionally) leave dt_parse() to allocate
-the array and only join dt_parse_function() with dt_node_to_map().
-
-There is an example of how to use pinctrl in marvell.mvebu-pinctrl.txt:
-uart1: serial@12100 {
-	compatible = "ns16550a";
-	reg = <0x12100 0x100>;
-	reg-shift = <2>;
-	interrupts = <7>;
-
-	pinctrl-0 = <&pmx_uart1_sw>;
-};
-
-pinctrl: pinctrl@d0200 {
-	compatible = "marvell,dove-pinctrl";
-	reg = <0xd0200 0x20>;
-
-	pmx_uart1_sw: pmx-uart1-sw {
-		marvell,pins = "mpp_uart1";
-		marvell,function = "uart1";
-	};
-};
-
-In my understanding this will allow uart1 to switch the pingroup "mpp_uart1"
-to the function "uart1". The pinctrl core driver is taking care of
-translating mpp_uart1
-to the corresponding pingroup and mvebu core driver of translating
-uart1 into the required
-register values to set the requested function. Is it so odd, that we
-use names instead
-of direct register values in DT? I agree, that maybe picking an example for dove
-that is a little bit different in pingroup naming isn't the best
-choice but it still gives
-you an idea how to use it.
-
-Consider this (virtual) example:
-Muxing some SATA functions to pins 24 and 37 would require to set
-register values
-to 0x3 on pin 24 and 0x6 on pin 37. The proposed driver still allows
-us to have a DT
-description of
-
-pmx_sata_example: pmx-sata-example {
-	marvell,pins = "mpp24", "mpp37";
-	marvell,function = "sata";
-};
-
-because the SoC specific driver passes function "sata" on pins 24 and
-37 with the
-corresponding register values. These are fed by the mvebu core driver
-that builds
-up all required pins, pingroups, and pinmux functions.
-
-Sebastian
+for the serial bits
